@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": ""
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,7 +216,7 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
             "message": ""
@@ -785,6 +791,9 @@
       },
       "copy": {
         "label": ""
+      },
+      "open": {
+        "label": ""
       }
     }
   },
@@ -796,6 +805,7 @@
       "apply": "Uporabi",
       "backToOverview": "",
       "create": "Ustvarite spletno stran",
+      "createAnother": "",
       "edit": "Uredi",
       "import": "",
       "insert": "Vstavite",
@@ -937,7 +947,8 @@
         "moveUp": "Premaknite se navzgor",
         "moveDown": "Premaknite se navzdol",
         "createAbove": "",
-        "createBelow": ""
+        "createBelow": "",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "",
@@ -956,6 +967,10 @@
           "create": "",
           "changePosition": "Spremeni položaj"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1063,6 +1078,15 @@
               "label": ""
             }
           }
+        },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
         },
         "items": {
           "label": "",
@@ -1172,6 +1196,14 @@
           "label": ""
         },
         "dateFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
           "label": "",
           "description": ""
         }
@@ -1355,6 +1387,13 @@
         "isFormatFahrenheit": {
           "label": ""
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Lokacija vremena"
         },
@@ -1372,6 +1411,13 @@
           "label": "",
           "description": ""
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Počisti",
@@ -1407,6 +1453,10 @@
     "healthMonitoring": {
       "name": "",
       "description": "",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": ""
@@ -2265,7 +2315,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "",
               "firstDayOfWeek": "Prvi dan v tednu",
               "accessibility": "Dostopnost"
             }
@@ -2534,10 +2584,17 @@
               "button": {
                 "createApiToken": ""
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "",
-                  "createdBy": ""
+                  "createdBy": "",
+                  "actions": ""
                 }
               }
             }

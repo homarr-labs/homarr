@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Používanie ikon pre pingy"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Predvolený vyhľadávací nástroj sa úspešne zmenil"
+            "message": ""
           },
           "error": {
-            "message": "Nie je možné zmeniť predvolený vyhľadávací nástroj"
+            "message": ""
           }
         }
       },
@@ -785,6 +791,9 @@
       },
       "copy": {
         "label": "Skopírovať URL"
+      },
+      "open": {
+        "label": ""
       }
     }
   },
@@ -796,6 +805,7 @@
       "apply": "Použiť",
       "backToOverview": "Späť na prehľad",
       "create": "Vytvoriť",
+      "createAnother": "",
       "edit": "Upraviť",
       "import": "Importovať",
       "insert": "Vložiť",
@@ -937,7 +947,8 @@
         "moveUp": "Posunúť nahor",
         "moveDown": "Posunúť nadol",
         "createAbove": "Nová kategória vyššie",
-        "createBelow": "Nová kategória nižšie"
+        "createBelow": "Nová kategória nižšie",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Nová kategória",
@@ -956,6 +967,10 @@
           "create": "Nová kategória",
           "changePosition": "Zmeniť pozíciu"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1063,6 +1078,15 @@
               "label": "Mriežka"
             }
           }
+        },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
         },
         "items": {
           "label": "Záložky",
@@ -1174,6 +1198,14 @@
         "dateFormat": {
           "label": "Formát Dátumu",
           "description": "Ako by mal dátum vyzerať"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -1355,6 +1387,13 @@
         "isFormatFahrenheit": {
           "label": "Teplota vo stupňoch Fahrenheita"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Poloha počasia"
         },
@@ -1372,6 +1411,13 @@
           "label": "Formát Dátumu",
           "description": "Ako by mal dátum vyzerať"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Jasno",
@@ -1407,6 +1453,10 @@
     "healthMonitoring": {
       "name": "Monitorovanie stavu systému",
       "description": "Zobrazuje informácie o stave a kondícii vášho systému.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Teplota CPU v stupňoch Fahrenheita"
@@ -2265,7 +2315,7 @@
                   "mobile": "Mobilná"
                 }
               },
-              "defaultSearchEngine": "Predvolený vyhľadávací nástroj",
+              "search": "",
               "firstDayOfWeek": "Prvý deň v týždni",
               "accessibility": "Prístupnosť"
             }
@@ -2534,10 +2584,17 @@
               "button": {
                 "createApiToken": "Vytvorte token API"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Vytvoril/a"
+                  "createdBy": "Vytvoril/a",
+                  "actions": ""
                 }
               }
             }

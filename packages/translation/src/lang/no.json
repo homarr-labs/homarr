@@ -2,130 +2,130 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Velkommen til Homarr",
+        "subtitle": "La oss begynne med å sette opp Homarr-forekomsten din.",
+        "description": "For å komme i gang, velg hvordan du vil sette opp din Homarr forekomst.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Start fra begynnelsen",
+          "importOldmarr": "Importer fra Homarr før 1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Importer data",
+        "subtitle": "Du kan importere data fra en eksisterende Homarr-forekomst.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Dra zip-filen hit eller klikk for å bla gjennom",
+          "description": "Den opplastede zip-filen vil bli behandlet og du kan velge hva du ønsker å importere"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Endre fil"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Importinnstillinger",
+          "description": "Konfigurer import oppførsel"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "Fant {count} tavler",
+          "description": "Velg alle tavler med størrelse du vil importere",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Velg alle",
+            "unselectAll": "Velg bort alle"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Importoversikt",
+          "description": "I oversikten nedenfor kan du se hva som vil bli importert",
           "action": {
-            "import": ""
+            "import": "Bekreft import og fortsett"
           },
           "entities": {
             "apps": "Apper",
             "boards": "Tavler",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "Integrasjoner",
+            "credentialUsers": "Påloggings-brukere"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Angi import-token",
           "field": {
             "token": {
-              "label": "",
-              "description": ""
+              "label": "Token",
+              "description": "Angi vist import-token for din forrige Homarr forekomst"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Ugyldig token",
+              "message": "Token du anga er ugyldig"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Admin-bruker",
+        "subtitle": "Angi innloggingsdetaljene for administratorbrukeren din.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Bruker opprettet",
+            "message": "Bruker opprettet"
           },
           "error": {
-            "title": ""
+            "title": "Brukeropprettelse feilet"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "Ekstern gruppe",
+        "subtitle": "Angi gruppen som skal brukes for eksterne brukere.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Gruppenavn",
+            "description": "Navnet må stemme med administratorgruppe av ekstern leverandør"
           }
         }
       },
       "settings": {
         "title": "Innstillinger",
-        "subtitle": ""
+        "subtitle": "Konfigurer serverinnstillinger."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Fullfør oppsett",
+        "subtitle": "Alt er klart!",
+        "description": "Du har fullført installasjonsprosessen. Du kan nå bruke Homarr. Velg din neste handling:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Gå til {name} tavlen",
+          "createBoard": "Opprett din første tavle",
+          "inviteUser": "Inviter andre brukere",
+          "docs": "Les dokumentasjonen"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Tilbake til start"
   },
   "user": {
     "title": "Brukere",
     "name": "Bruker",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Logg inn på din bruker",
+        "subtitle": "Velkommen tilbake! Vennligst skriv inn påloggingsinformasjon"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Bli med i Homarr",
+        "subtitle": "Velkommen til Homarr! Vennligst opprett en konto",
+        "description": "Du ble invitert av {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Ny Homarr installasjon",
+        "subtitle": "Vennligst opprett den første administratorbrukeren"
       }
     },
     "field": {
       "email": {
         "label": "E-post",
-        "verified": ""
+        "verified": "Verifisert"
       },
       "username": {
         "label": "Brukernavn"
@@ -133,46 +133,52 @@
       "password": {
         "label": "Passord",
         "requirement": {
-          "length": "",
+          "length": "Inkluderer minst 8 tegn",
           "lowercase": "Inkluderer liten bokstav",
           "uppercase": "Inkluderer stor bokstav",
           "number": "Inkluderer nummer",
-          "special": ""
+          "special": "Inkluderer spesialsymbol"
         }
       },
       "passwordConfirm": {
         "label": "Bekreft passord"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Forrige passord"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Hjem tavle"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Bruk ikoner for pinger"
+      },
+      "defaultSearchEngine": {
+        "label": "Standard søkemotor"
+      },
+      "openSearchInNewTab": {
+        "label": "Åpne søkeresultater i ny fane"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Brukernavn allerede tatt"
     },
     "action": {
       "login": {
         "label": "Logg Inn",
-        "labelWith": "",
+        "labelWith": "Logg inn med {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Innlogging vellykket",
+            "message": "Du er nå innlogget"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Innlogging feilet",
+            "message": "Din innlogging feilet"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Glemt passord?",
+          "description": "En administrator kan bruke følgende kommando for å tilbakestille passordet:"
         }
       },
       "register": {
@@ -180,91 +186,91 @@
         "notification": {
           "success": {
             "title": "Konto opprettet",
-            "message": ""
+            "message": "Vennligst logg inn for å fortsette"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kontoopprettelse feilet",
+            "message": "Kontoen din kunne ikke opprettes"
           }
         }
       },
       "create": "Opprett bruker",
       "changePassword": {
-        "label": "",
+        "label": "Endre passord",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Passordet er endret"
           },
           "error": {
-            "message": ""
+            "message": "Kunne ikke endre passord"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Hjem tavle ble endret"
           },
           "error": {
-            "message": ""
+            "message": "Kune ikke endre hjem tavle"
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Søkeinnstillingene endret"
           },
           "error": {
-            "message": ""
+            "message": "Kunne ikke endre søkeinnstillingene"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Første dag i uken endret"
           },
           "error": {
-            "message": ""
+            "message": "Kunne ikke endre første dag i uken"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ping av ikoner endret"
           },
           "error": {
-            "message": ""
+            "message": "Kunne ikke endre ping av ikoner"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Endre bilde",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Bilde endret"
             },
             "error": {
-              "message": ""
+              "message": "Kunne ikke endre bilde"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "Bilde er for stort",
+              "message": "Maks bildestørrelse er {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Fjern bilde",
+          "confirm": "Er du sikker på at du ønsker å fjerne bildet?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Bilde fjernet"
             },
             "error": {
-              "message": ""
+              "message": "Kunne ikke fjerne bilde"
             }
           }
         }
@@ -272,42 +278,42 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Profil oppdatert"
           },
           "error": {
-            "message": ""
+            "message": "Kan ikke oppdatere profil"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Slett bruker permanent",
+        "description": "Sletter denne brukeren inkludert deres innstillinger. Vil ikke slette tavler. Brukeren vil ikke bli varslet.",
+        "confirm": "Er du sikker på at du vil slette brukeren {username} med innstillinger dems?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Velg bruker",
+        "notFound": "Ingen bruker funnet"
       },
       "transfer": {
-        "label": ""
+        "label": "Velg ny eier"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Grupper",
+    "name": "Gruppe",
+    "search": "Finn en gruppe",
     "field": {
       "name": "Navn",
-      "members": ""
+      "members": "Medlemmer"
     },
     "permission": {
       "admin": {
         "title": "Administrator",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Administrator",
+            "description": "Medlemmer med denne tillatelsen har full tilgang til alle funksjoner og innstillinger"
           }
         }
       },
@@ -315,20 +321,20 @@
         "title": "Apper",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Opprett apper",
+            "description": "Tillat medlemmer å opprette apper"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Bruk alle apper",
+            "description": "Tillat medlemmer å legge alle apper til tavlene sine"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Endre alle apper",
+            "description": "Tillat medlemmer å endre alle apper"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Full app tilgang",
+            "description": "Tillat medlemmer å administrere, bruke og slette alle apper"
           }
         }
       },
@@ -336,215 +342,215 @@
         "title": "Tavler",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Opprett tavler",
+            "description": "Tillat medlemmer å opprette tavler"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Vis alle tavler",
+            "description": "Tillat medlemmer å se alle tavler"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Endre alle tavler",
+            "description": "Tillat medlemmer å endre alle tavler (inkluderer ikke tilgangskontroll og faresone)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Full tavle tilgang",
+            "description": "Tillat medlemmer å se, endre og slette alle tavler (inkludert tilgangskontroll og faresone)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integrasjoner",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Opprett integrasjon",
+            "description": "Tillat medlemmer å opprette integrasjoner"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Bruke alle integrasjoner",
+            "description": "Tillat medlemmer å legge alle integrasjoner til tavlene sine"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Samhandle med alle integrasjoner",
+            "description": "Tillat medlemmer til å samhandle med alle integrasjoner"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Full integrasjons-tilgang",
+            "description": "Tillat medlemmer til å bruke og samhandle med alle integrasjoner"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Medier",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Last opp medier",
+            "description": "Tillat medlemmer å laste opp medier"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Vis alle medier",
+            "description": "Tillat medlemmer å se alle medier"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Full medie tilgang",
+            "description": "Tillat medlemmer å administrere og slette alle medier"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Andre",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Se logger",
+            "description": "Tillat medlemmer å se logger"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Søkemotorer",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Opprette søkemotorer",
+            "description": "Tillat medlemmer å opprette søkemotorer"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Endre alle søkemotorer",
+            "description": "Tillate medlemmer til å endre alle søkemotorer"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Full søkemotor tilgang",
+            "description": "Tillat medlemmer å administrere og slette alle søkemotorer"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Noen medlemmer er fra eksterne leverandører og kan ikke administreres her",
+      "external": "Alle medlemmer er fra eksterne leverandører og kan ikke administreres her"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Denne gruppen er reservert for systembruk og begrenser noen handlinger. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Ny gruppe",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Gruppe opprettet"
           },
           "error": {
-            "message": ""
+            "message": "Gruppen kunne ikke opprettes"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Overfør eierskap",
+        "description": "Overfør eierskap til denne gruppen til en annen bruker.",
+        "confirm": "Er du sikker på at du ønsker å overføre eierskapet til gruppen {name} til {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Gruppen {group} ble vellykket overført til {user}"
           },
           "error": {
-            "message": ""
+            "message": "Kunne ikke overføre eierskap"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Legg til medlem"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Fjern medlem",
+        "confirm": "Er du sikker på at du vil fjerne {user} fra denne gruppen?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Slett gruppe",
+        "description": "Når du sletter en gruppe, er det ingen tilbakeføring. Ver sikker på at du ønsker å slette.",
+        "confirm": "Er du sikker på at du vil slette gruppen {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Slettet gruppe {name}"
           },
           "error": {
-            "message": ""
+            "message": "Kunne ikke slette gruppe {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Tillatelser lagret",
+            "message": "Tillatelsene er lagret"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Tillatelser ikke lagret",
+            "message": "Tillatelsene er ikke lagret"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Gruppen {name} ble lagret"
           },
           "error": {
-            "message": ""
+            "message": "Kunne ikke lagre gruppe {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Velg gruppe",
+        "notFound": "Ingen gruppe funnet"
       }
     }
   },
   "app": {
-    "search": "",
+    "search": "Finn en app",
     "page": {
       "list": {
         "title": "Apper",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Det er ingen apper enda",
+          "action": "Opprett din første app"
         }
       },
       "create": {
-        "title": "",
+        "title": "Ny app",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Opprettelse vellykket",
+            "message": "App opprettet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Opprettelse mislyktes",
+            "message": "App kunne ikke opprettes"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Rediger app",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Endringer fullført",
+            "message": "App lagret"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kunne ikke fullføre endringer",
+            "message": "App kunne ikke lagres"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Slett app",
+        "message": "Er du sikker på at du vil slette appen {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Slettet",
+            "message": "App slettet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Sletting feilet",
+            "message": "Kunne ikke slette appen"
           }
         }
       }
@@ -554,65 +560,65 @@
         "label": "Navn"
       },
       "description": {
-        "label": ""
+        "label": "Beskrivelse"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Velg app",
+        "notFound": "Ingen app funnet"
       }
     }
   },
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Integrasjoner",
+        "search": "Søk integrasjoner",
         "noResults": {
-          "title": ""
+          "title": "Det er ingen integrasjoner enda"
         }
       },
       "create": {
-        "title": "",
+        "title": "Ny {name} integrasjon",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Opprettelse vellykket",
+            "message": "Integrasjon opprettet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Opprettelse mislyktes",
+            "message": "Integrasjonen kunne ikke opprettes"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Rediger {name} integrasjon",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Endringer fullført",
+            "message": "Integrasjonen ble lagret"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kunne ikke fullføre endringer",
+            "message": "Integrasjonen kunne ikke lagres"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Slett integrasjon",
+        "message": "Er du sikker på at du vil slette integrasjonen {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Slettet",
+            "message": "Integrasjon slettet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Sletting feilet",
+            "message": "Kunne ikke slette integrasjonen"
           }
         }
       }
@@ -622,137 +628,137 @@
         "label": "Navn"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Opprett søkemotor",
+        "description": "Integrasjon \"{kind}\" kan brukes med søkemotorene. Huk av her for å automatisk konfigurere søkemotor."
       }
     },
     "action": {
-      "create": ""
+      "create": "Ny integrasjon"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Test tilkobling og opprett",
+        "edit": "Test tilkobling og lagre"
       },
-      "alertNotice": "",
+      "alertNotice": "Lagre-knappen er aktivert når en vellykket tilkobling er opprettet",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "Tilkobling vellykket",
+          "message": "Tilkoblingen ble opprettet"
         },
         "invalidUrl": {
           "title": "Ugyldig URL",
-          "message": ""
+          "message": "URL er ugyldig"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Manglende innloggingsinformasjon",
+          "message": "Ikke all data ble angitt"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Ugyldig innloggingsinformasjon",
+          "message": "Innloggingsinformasjon er ugyldig"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Tilkobling feilet",
+          "message": "Tilkobling kunne ikke opprettes"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Ugyldig forespørsel",
+          "message": "Forespørselen er feilformet"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Uautorisert",
+          "message": "Sannsynligvis feil innloggingsinformasjon"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Forbudt",
+          "message": "Sannsynligvis manglende tillatelser"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "Ikke funnet",
+          "message": "Sannsynligvis feil url eller bane"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Intern server feil",
+          "message": "Serveren støtte på en feil"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Tjenesten er ikke tilgjengelig",
+          "message": "Serveren er for tiden utilgjengelig"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Tilkobling avbrutt",
+          "message": "Tilkoblingen ble avbrutt"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "Domene ikke funnet",
+          "message": "Domenet kunne ikke bli funnet"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Tilkobling avvist",
+          "message": "Tilkoblingen ble avvist"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "Ugyldig JSON",
+          "message": "Svaret var ikke gyldig JSON"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Feil bane",
+          "message": "Banen er sannsynligvis ikke riktig"
         }
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Hemmeligheter",
+      "lastUpdated": "Sist oppdatert {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "Ingen verdi satt",
+        "tooltip": "Denne nødvendige hemmeligheten er ikke satt enda"
       },
-      "secureNotice": "",
+      "secureNotice": "Denne hemmeligheten kan ikke hentes etter opprettelse",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Tilbakestill hemmelighet",
+        "message": "Er du sikker på at du vil tilbakestille denne hemmeligheten?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Ingen hemmeligheter",
+        "text": "Ingen hemmeligheter kreves for denne integrasjonen"
       },
       "kind": {
         "username": {
           "label": "Brukernavn",
-          "newLabel": ""
+          "newLabel": "Nytt brukernavn"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API-nøkkel",
+          "newLabel": "Ny API-nøkkel"
         },
         "password": {
           "label": "Passord",
           "newLabel": "Nytt passord"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Token ID",
+          "newLabel": "Ny token ID"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Område",
+          "newLabel": "Nytt område"
         }
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "Velg integrasjon i elementer",
+      "interact": "Samhandle med integrasjoner",
+      "full": "Full integrasjons-tilgang"
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Medier",
+    "search": "Finn et medie",
     "field": {
       "name": "Navn",
       "size": "Størrelse",
@@ -760,127 +766,131 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Last opp medie",
+        "file": "Velg fil",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Medie lastet opp"
           },
           "error": {
-            "message": ""
+            "message": "Mediet kunne ikke lastes opp"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Slett medie",
+        "description": "Er du sikker på at du vil slette mediet <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Mediet slettet"
           },
           "error": {
-            "message": ""
+            "message": "Mediet kunne ikke slettes"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "Kopier URL"
+      },
+      "open": {
+        "label": "Åpne medie"
       }
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Beta",
     "error": "Feil",
     "action": {
       "add": "Legg til",
       "apply": "Bruk",
-      "backToOverview": "",
+      "backToOverview": "Tilbake til oversikt",
       "create": "Opprett",
+      "createAnother": "Opprett og start på nytt",
       "edit": "Rediger",
-      "import": "",
+      "import": "Import",
       "insert": "Sett inn",
       "remove": "Fjern",
       "save": "Lagre",
       "saveChanges": "Lagre endringer",
       "cancel": "Avbryt",
       "delete": "Slett",
-      "discard": "",
+      "discard": "Forkast",
       "confirm": "Bekreft",
-      "continue": "",
+      "continue": "Fortsett",
       "previous": "Tidligere",
       "next": "Neste",
-      "checkoutDocs": "",
-      "checkLogs": "",
+      "checkoutDocs": "Les dokumentasjonen",
+      "checkLogs": "Sjekk loggene for mer informasjon",
       "tryAgain": "Prøv igjen",
-      "loading": ""
+      "loading": "Laster"
     },
-    "here": "",
+    "here": "her",
     "iconPicker": {
-      "label": "",
-      "header": ""
+      "label": "Ikon-URL",
+      "header": "Skriv navn eller objekt å filtrere for ikoner... Homarr vil søke gjennom {countIcons} ikoner for deg."
     },
     "colorScheme": {
       "options": {
-        "light": "",
-        "dark": ""
+        "light": "Lys",
+        "dark": "Mørk"
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
-      "hours": "",
-      "minutes": ""
+      "min": "Min",
+      "max": "Maks",
+      "days": "Dager",
+      "hours": "Timer",
+      "minutes": "Minutter"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Opprettelse vellykket",
+        "error": "Opprettelse mislyktes"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Sletting vellykket",
+        "error": "Sletting feilet"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Endringer fullført",
+        "error": "Kunne ikke fullføre endringer"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Overføring vellykket",
+        "error": "Overføring feilet"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Velg en eller flere verdier"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Legg til flere verdier",
+      "addLabel": "Legg til {value}"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Velg verdi",
       "badge": {
-        "recommended": ""
+        "recommended": "Anbefalt"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "Bytt til mørk modus",
+        "switchToLightMode": "Bytt til lys modus",
+        "management": "Administrasjon",
         "preferences": "Dine innstillinger",
-        "logout": "",
+        "logout": "Logg ut",
         "login": "Logg Inn",
-        "homeBoard": "",
-        "loggedOut": "",
-        "updateAvailable": ""
+        "homeBoard": "Hjem-tavlen din",
+        "loggedOut": "Logget ut",
+        "updateAvailable": "{countUpdates} oppdateringer tilgjengelig: {tag}"
       }
     },
     "dangerZone": "Faresonen",
     "noResults": "Ingen resultater funnet",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Vis forhåndsvisning",
+      "hide": "Skjul forhåndsvisning"
     },
     "zod": {
       "errors": {
@@ -890,7 +900,7 @@
           "startsWith": "Dette feltet må starte med {startsWith}",
           "endsWith": "Dette feltet må slutte med {endsWith}",
           "includes": "Dette feltet må inneholde {includes}",
-          "invalidEmail": ""
+          "invalidEmail": "Dette feltet må være en gyldig e-post"
         },
         "tooSmall": {
           "string": "Dette feltet må være på minst {minimum} tegn",
@@ -901,14 +911,14 @@
           "number": "Dette feltet må være mindre enn eller lik {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
-          "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "passwordsDoNotMatch": "Passordene er ikke like",
+          "passwordRequirements": "Passordet oppfyller ikke kravene",
+          "boardAlreadyExists": "En tavle med dette navnet finnes allerede",
+          "invalidFileType": "Ugyldig filtype, forventet {expected}",
+          "invalidFileName": "Ugyldig filnavn",
+          "fileTooLarge": "Filen er for stor, maks størrelse er {maxSize}",
+          "invalidConfiguration": "Ugyldig konfigurasjon",
+          "groupNameTaken": "Gruppenavn allerede tatt"
         }
       }
     }
@@ -916,12 +926,12 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Ny dynamisk seksjon",
+        "remove": "Fjern dynamisk seksjon"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Fjern dynamisk seksjon",
+        "message": "Er du sikker på at du vil fjerne denne dynamiske delen? Elementer vil bli flyttet til samme sted i overordnet seksjon."
       }
     },
     "category": {
@@ -931,42 +941,47 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "Ny kategori",
+        "edit": "Endre kategorinavn",
+        "remove": "Fjern kategori",
         "moveUp": "Flytte opp",
         "moveDown": "Flytt ned",
-        "createAbove": "",
-        "createBelow": ""
+        "createAbove": "Ny kategori over",
+        "createBelow": "Ny kategori under",
+        "openAllInNewTabs": ""
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Ny kategori",
+        "submit": "Legg til kategori"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Fjern kategori",
+        "message": "Er du sikker på at du vil slette kategorien {name}?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Endre kategorinavn",
+        "submit": "Endre kategorinavn"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "Ny kategori",
           "changePosition": "Endre posisjon"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Nytt element",
+      "import": "Importer element",
+      "edit": "Rediger element",
+      "moveResize": "Flytt / endre størrelse element",
+      "duplicate": "Dupliser element",
+      "remove": "Slett element"
     },
     "menu": {
       "label": {
@@ -974,12 +989,12 @@
       }
     },
     "create": {
-      "title": "",
-      "search": "",
-      "addToBoard": ""
+      "title": "Velg element du vil legge til",
+      "search": "Filtrer elementer",
+      "addToBoard": "Legg til tavle"
     },
     "moveResize": {
-      "title": "",
+      "title": "Flytt / endre størrelse på element",
       "field": {
         "width": {
           "label": "Bredde"
@@ -988,67 +1003,67 @@
           "label": "Høyde"
         },
         "xOffset": {
-          "label": ""
+          "label": "X forskyvning"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y forskyvning"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "Rediger element",
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Avanserte innstillinger",
+        "title": "Avanserte elementinnstillinger"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integrasjoner"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Egendefinerte css-klasser"
         }
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Slett element",
+      "message": "Er du sikker på at du vil slette dette elementet?"
     }
   },
   "widget": {
     "app": {
-      "name": "",
-      "description": "",
+      "name": "App",
+      "description": "Bygger inn en app i tavlen.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Velg app"
         },
         "openInNewTab": {
           "label": "Åpne i ny fane"
         },
         "showTitle": {
-          "label": ""
+          "label": "Vis app navn"
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Vis beskrivelse verktøytips"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "Aktiver enkel ping"
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Ingen app",
+          "tooltip": "Du har ikke valgt en gyldig app"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Bokmerke",
+      "description": "Viser flere applinker",
       "option": {
         "title": {
-          "label": ""
+          "label": "Tittel"
         },
         "layout": {
           "label": "Oppsett",
@@ -1060,19 +1075,28 @@
               "label": "Vertikal"
             },
             "grid": {
-              "label": ""
+              "label": "Rutenettet"
             }
           }
         },
+        "hideIcon": {
+          "label": "Skjul ikoner"
+        },
+        "hideHostname": {
+          "label": "Skjul vertsnavn"
+        },
+        "openNewTab": {
+          "label": "Åpne i ny fane"
+        },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Bokmerke",
+          "add": "Legg til bokmerke"
         }
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "DNS Hole Sammendrag",
+      "description": "Viser sammendrag av DNS Hole",
       "option": {
         "layout": {
           "label": "Oppsett",
@@ -1084,28 +1108,28 @@
               "label": "Vertikal"
             },
             "grid": {
-              "label": ""
+              "label": "Rutenett"
             }
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Bruk farger fra Pi-Hole"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "Kunne ikke hente DNS Hole Sammendrag",
+        "integrationsDisconnected": "Ingen data er tilgjengelig, alle integrasjoner frakoblet"
       },
       "data": {
         "adsBlockedToday": "Blokkert i dag",
         "adsBlockedTodayPercentage": "Blokkert i dag",
         "dnsQueriesToday": "Spørringer i dag",
-        "domainsBeingBlocked": ""
+        "domainsBeingBlocked": "Domener på blokkliste"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "På grunn av flere integrasjons Homarr kan ikke kalkulere nøyaktig antall domener som blokkeres"
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "DNS Hole kontroller",
       "description": "Kontroller PiHole eller AdGuard fra dashbordet",
       "option": {
         "layout": {
@@ -1118,87 +1142,95 @@
               "label": "Vertikal"
             },
             "grid": {
-              "label": ""
+              "label": "Rutenett"
             }
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Vis av/på alle knapper"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Kunne ikke kontrollere DNS Hole"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
-        "set": "",
+        "enableAll": "Aktiver alle",
+        "disableAll": "Deaktiver Alle",
+        "setTimer": "Sett tidtaker",
+        "set": "Angi",
         "enabled": "Aktivert",
         "disabled": "Deaktivert",
-        "processing": "",
-        "disconnected": "",
-        "hours": "",
-        "minutes": "",
-        "unlimited": ""
+        "processing": "Prosesserer",
+        "disconnected": "Frakoblet",
+        "hours": "Timer",
+        "minutes": "Minutter",
+        "unlimited": "Blank for ubegrenset"
       }
     },
     "clock": {
-      "name": "",
+      "name": "Dato og tid",
       "description": "Viser gjeldende dato og klokkeslett.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Tilpasset Tittel/By visning",
+          "description": "Vis av en egendefinert tittel eller navnet på byen/landet øverst i klokken."
         },
         "customTitle": {
-          "label": ""
+          "label": "Tittel"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24-timersformat",
+          "description": "Bruk 24-timers format i stedet for 12-timers format"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Vis sekunder"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Bruk en fast tidssone"
         },
         "timezone": {
           "label": "Tidssone",
-          "description": ""
+          "description": "Velg tidssonen etter IANA-standarden"
         },
         "showDate": {
-          "label": ""
+          "label": "Vis dato"
         },
         "dateFormat": {
+          "label": "Datoformat",
+          "description": "Hvordan datoen skal se ut"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
           "label": "",
           "description": ""
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Minecraft Server Status",
+      "description": "Viser statusen til en Minecraft server",
       "option": {
         "title": {
-          "label": ""
+          "label": "Tittel"
         },
         "domain": {
-          "label": ""
+          "label": "Serveradresse"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Bedrock server"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "Online",
+        "offline": "Offline"
       }
     },
     "notebook": {
       "name": "Notisbok",
-      "description": "",
+      "description": "En enkel notatbok widget som støtter markdown",
       "option": {
         "showToolbar": {
           "label": "Vis verktøylinjen for å hjelpe deg med å skrive markdown"
@@ -1228,7 +1260,7 @@
         "checkList": "Sjekkliste",
         "increaseIndent": "Øk innrykk",
         "decreaseIndent": "Reduser innrykk",
-        "link": "",
+        "link": "Link",
         "unlink": "Fjern lenke",
         "image": "Bygg inn bilde",
         "addTable": "Legg til tabell",
@@ -1258,7 +1290,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Bygg inn innhold fra Internett. Noen nettsteder kan begrense adgang.",
       "option": {
         "embedUrl": {
@@ -1290,32 +1322,32 @@
         }
       },
       "error": {
-        "noUrl": "",
-        "unsupportedProtocol": "",
+        "noUrl": "Ingen iFrame URL angitt",
+        "unsupportedProtocol": "URL som er oppgitt bruker en ikke-støttet protokoll. Bruk en av ({supportedProtocols})",
         "noBrowerSupport": "Nettleseren din støtter ikke iframes. Vennligst oppdater nettleseren din."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Enhet status",
+      "description": "Vis status for en enhet og aktiver det valgfritt",
       "option": {
         "entityId": {
           "label": "Enhets-ID"
         },
         "displayName": {
-          "label": ""
+          "label": "Visningsnavn"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Enhet målingsenhet"
         },
         "clickable": {
-          "label": ""
+          "label": "Klikkbar"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Kjør automatisering",
+      "description": "Utløs en automatisering med ett klikk",
       "option": {
         "displayName": {
           "label": "Visningsnavn"
@@ -1325,26 +1357,26 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "Kjør {name}"
       }
     },
     "calendar": {
       "name": "Kalender",
-      "description": "",
+      "description": "Vis hendelser fra integrasjonene dine i en kalendervisning innenfor en bestemt relativ tidsperiode",
       "option": {
         "releaseType": {
           "label": "Radarr utgivelsestype",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "På Kino",
+            "digitalRelease": "Digital utgivelse",
+            "physicalRelease": "Fysisk utgivelse"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Start fra"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Slutt på"
         }
       }
     },
@@ -1353,25 +1385,39 @@
       "description": "Viser gjeldende værinformasjon for en angitt plassering.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperatur i Fahrenheit"
+        },
+        "disableTemperatureDecimals": {
+          "label": "Deaktivere temperaturdesimaler"
+        },
+        "showCurrentWindSpeed": {
+          "label": "Vis nåværende vindhastighet",
+          "description": "Bare på nåværende vær"
         },
         "location": {
           "label": "Vær plassering"
         },
         "showCity": {
-          "label": ""
+          "label": "Vis by"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Vis værmelding"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Antall dagers værvarsel",
+          "description": "Når widget ikke er bred nok, blir færre dager vist"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Datoformat",
+          "description": "Hvordan datoen skal se ut"
         }
+      },
+      "currentWindSpeed": "{currentWindSpeed} km/t",
+      "dailyForecast": {
+        "sunrise": "Soloppgang",
+        "sunset": "Solnedgang",
+        "maxWindSpeed": "Maks. vindhastighet: {maxWindSpeed} km/t",
+        "maxWindGusts": "Maks. vindkast: {maxWindGusts} km/t"
       },
       "kind": {
         "clear": "Tøm",
@@ -1392,21 +1438,25 @@
     },
     "indexerManager": {
       "name": "Indekserings-behandler status",
-      "description": "",
+      "description": "Status for indekserere",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Åpne indekserer-side i ny fane"
         }
       },
       "title": "Indekserings-behandler",
       "testAll": "Test alle",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Kunne ikke hente indekser status"
       }
     },
     "healthMonitoring": {
       "name": "Systemhelseovervåking",
       "description": "Viser informasjon som viser helsen og statusen til systemet(e).",
+      "tab": {
+        "system": "System",
+        "cluster": "Cluster"
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU-temp i Fahrenheit"
@@ -1421,94 +1471,94 @@
           "label": "Vis filsysteminfo"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Standard fane"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Krav til seksjonsindikator"
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "information": "Informasjon",
+        "processor": "Prosessor: {cpuModelName}",
+        "memory": "Minne: {memory}GiB",
+        "memoryAvailable": "Tilgjengelig: {memoryAvailable}GiB ({percent}%)",
+        "version": "Versjon: {version}",
+        "uptime": "Oppetid: {months} Måneder, {days} Dager, {hours} Timer, {minutes} Minutter",
+        "loadAverage": "Gjennomsnittsbelastning:",
+        "minute": "1 minutt",
+        "minutes": "{count} minutter",
+        "used": "Brukt",
         "available": "Tilgjengelig",
-        "lastSeen": ""
+        "lastSeen": "Siste statusoppdatering: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Kunne ikke hente helse status"
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Noder"
           },
           "qemu": {
-            "name": ""
+            "name": "VMer"
           },
           "lxc": {
-            "name": ""
+            "name": "LXCer"
           },
           "storage": {
-            "name": ""
+            "name": "Lagring"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "Node",
+            "vmId": "VM ID",
+            "plugin": "Plugin"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "Kjerner",
+            "memory": "Minne",
+            "storage": "Lagring",
+            "uptime": "Oppetid",
+            "haState": "HA status",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Lokal lagring",
+              "shared": "Delt lagring"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "Navn",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Node"
           }
         }
       }
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
+        "query": "By / Postnummer",
+        "latitude": "Breddegrad",
+        "longitude": "Lengdegrad",
+        "disabledTooltip": "Skriv inn en by eller et postnummer",
+        "unknownLocation": "Ukjent sted",
         "search": "Søk",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "By",
+            "country": "Land",
+            "coordinates": "Koordinater",
+            "population": "Befolkning"
           },
           "action": {
-            "select": ""
+            "select": "Velg {city}, {countryCode}"
           },
           "population": {
             "fallback": "Ukjent"
@@ -1516,16 +1566,16 @@
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "Ingen integrasjon funnet",
+        "description": "Klikk <here></here> for å opprette en ny integrasjon"
       },
       "app": {
-        "noData": "",
-        "description": ""
+        "noData": "Ingen app funnet",
+        "description": "Klikk <here></here> for å opprette en ny app"
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "Ingen integrasjon valgt",
+        "noData": "Ingen integrasjonsdata er tilgjengelig"
       },
       "option": {}
     },
@@ -1534,176 +1584,176 @@
       "description": "Bygg inn en videostrøm eller video fra et kamera eller et nettsted",
       "option": {
         "feedUrl": {
-          "label": ""
+          "label": "Feed URL"
         },
         "hasAutoPlay": {
           "label": "Autospill",
-          "description": ""
+          "description": "Autoavspilling fungerer bare når den er dempet på grunn av restriksjoner i nettleseren"
         },
         "isMuted": {
-          "label": ""
+          "label": "Dempet"
         },
         "hasControls": {
-          "label": ""
+          "label": "Vis kontroller"
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "Ingen Video-URL oppgitt",
+        "forYoutubeUseIframe": "For YouTube-videoer bruk alternativet iframe"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Pågående medieserver-strømmer",
+      "description": "Vis pågående strømmer på dine media-servere",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
-        "id": ""
+        "user": "Bruker",
+        "name": "Navn",
+        "id": "Id"
       }
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "Nedlastings-klient",
+      "description": "Lar deg se og behandle nedlastinger fra både Torrent og Usenet klienter.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Kolonner som skal vises"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Aktiver elementsortering"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Kolonnen som brukes for sortering som standard"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Inverter sortering"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Vis usenet oppføringer markert som fullført"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Vis torrentoppføringer markert som fullført"
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "Skjul fullført torrent under denne terskelen (i kiB/s)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "Kategorier/merker for filtrering"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Filtrer som hvitliste"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Bruk filter for å beregne ratio"
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "Velg kolonner i elementer",
+        "noCommunications": "Kan ikke laste inn data fra integrasjon"
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Kontroller"
         },
         "added": {
-          "columnTitle": "",
+          "columnTitle": "Lagt til",
           "detailsTitle": "Dato lagt til"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Ekstra",
+          "detailsTitle": "Kategorier (eller ekstra informasjon)"
         },
         "downSpeed": {
           "columnTitle": "Ned",
           "detailsTitle": "Nedlastings- hastighet"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "#",
+          "detailsTitle": "Gjeldende indeks i klienten"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "Id"
         },
         "integration": {
           "columnTitle": "Integrasjon"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Jobb navn"
         },
         "progress": {
           "columnTitle": "Fremgang",
-          "detailsTitle": ""
+          "detailsTitle": "Nedlastings fremdrift"
         },
         "ratio": {
           "columnTitle": "Forhold",
-          "detailsTitle": ""
+          "detailsTitle": "Torrent-ratio (mottatt/sendt)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Totalt ned",
+          "detailsTitle": "Totalt nedlastet"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Totalt opp",
+          "detailsTitle": "Totalt opplastet"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Filstørrelse",
+          "detailsTitle": "Total størrelse for utvalg/filer"
         },
         "state": {
           "columnTitle": "Status",
-          "detailsTitle": ""
+          "detailsTitle": "Jobb status"
         },
         "time": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Fullfør tid",
+          "detailsTitle": "Tid siden/til fullførelse"
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Type",
+          "detailsTitle": "Nedlastings-klient type"
         },
         "upSpeed": {
           "columnTitle": "Opp",
-          "detailsTitle": ""
+          "detailsTitle": "Opplastnings hastighet"
         }
       },
       "states": {
         "downloading": "Laster ned",
-        "queued": "",
+        "queued": "I kø",
         "paused": "Pauset",
         "completed": "Fullført",
-        "failed": "",
-        "processing": "",
-        "leeching": "",
-        "stalled": "",
+        "failed": "Feilet",
+        "processing": "Behandler",
+        "leeching": "Laster ned",
+        "stalled": "Stanset",
         "unknown": "Ukjent",
-        "seeding": ""
+        "seeding": "Deler"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
-          "resume": ""
+          "modalTitle": "Nedlastings-klient liste",
+          "pause": "Pause alle klienter/elementer",
+          "resume": "Fortsett alle klienter/elementer"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "Pause klient",
+          "resume": "Fortsett klient"
         },
         "item": {
-          "pause": "",
-          "resume": "",
+          "pause": "Pause element",
+          "resume": "Fortsett element",
           "delete": {
-            "title": "",
-            "modalTitle": "",
-            "entry": "",
-            "entryAndFiles": ""
+            "title": "Slett element",
+            "modalTitle": "Er du sikker på at du vil slette denne jobben?",
+            "entry": "Slett oppføring",
+            "entryAndFiles": "Slett oppføring og fil(er)"
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "Global ratio"
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "Liste over mediaspillforespørsler",
       "description": "Se en liste over alle medieforespørsler fra din Overseerr eller Jellyseerr instans",
       "option": {
         "linksTargetNewTab": {
@@ -1711,21 +1761,21 @@
         }
       },
       "pending": {
-        "approve": "",
-        "approving": "",
-        "decline": ""
+        "approve": "Godkjenn forespørsel",
+        "approving": "Godkjenner forespørsel...",
+        "decline": "Avslå forespørsel"
       },
       "availability": {
         "unknown": "Ukjent",
-        "pending": "",
-        "processing": "",
+        "pending": "Pågår",
+        "processing": "Prosesserer",
         "partiallyAvailable": "Delvis",
         "available": "Tilgjengelig"
       },
-      "toBeDetermined": ""
+      "toBeDetermined": "Uavklart"
     },
     "mediaRequests-requestStats": {
-      "name": "",
+      "name": "Statistikk for mediaforespørsler",
       "description": "Statistikk om dine medieforespørsler",
       "option": {},
       "titles": {
@@ -1733,189 +1783,189 @@
           "main": "Media statistikk",
           "approved": "Allerede godkjent",
           "pending": "Venter på godkjenning",
-          "processing": "",
-          "declined": "",
-          "available": "",
+          "processing": "Prosesseres",
+          "declined": "Allerede avslått",
+          "available": "Allerede tilgjengelig",
           "tv": "TV forespørsler",
           "movie": "Film forespørsler",
           "total": "Totalt"
         },
         "users": {
           "main": "Topp brukere",
-          "requests": ""
+          "requests": "Forespørsler"
         }
       }
     },
     "mediaTranscoding": {
-      "name": "",
-      "description": "",
+      "name": "Konvertering av medier",
+      "description": "Statistikk, gjeldende kø- og arbeidstakerstatus på din media transkoding",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Standardvisning"
         },
         "queuePageSize": {
-          "label": ""
+          "label": "Sidestørrelse i kø"
         }
       },
       "tab": {
-        "workers": "",
+        "workers": "Arbeidere",
         "queue": "Kø",
-        "statistics": ""
+        "statistics": "Statistikk"
       },
-      "currentIndex": "",
+      "currentIndex": "{start}-{end} av {total}",
       "healthCheck": {
-        "title": "",
-        "queued": "",
+        "title": "Helsesjekk",
+        "queued": "I kø",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Frisk",
+          "unhealthy": "Ustabil"
         }
       },
       "panel": {
         "statistics": {
           "empty": "Tøm",
-          "transcodes": "",
-          "transcodesCount": "",
-          "healthChecksCount": "",
-          "filesCount": "",
-          "savedSpace": "",
-          "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "transcodes": "Transkoder",
+          "transcodesCount": "Transkoder: {value}",
+          "healthChecksCount": "Helsesjekker: {value}",
+          "filesCount": "Filer: {value}",
+          "savedSpace": "Diskplass spart: {value}",
+          "healthChecks": "Helsesjekker",
+          "videoCodecs": "Kodeker",
+          "videoContainers": "Containere",
+          "videoResolutions": "Oppløsninger"
         },
         "workers": {
           "empty": "Tøm",
           "table": {
-            "file": "",
+            "file": "Fil",
             "eta": "Gjenstående tid (estimat)",
             "progress": "Fremgang",
-            "transcode": "",
-            "healthCheck": ""
+            "transcode": "Transkode",
+            "healthCheck": "Helsesjekk"
           }
         },
         "queue": {
           "empty": "Tøm",
           "table": {
-            "file": "",
+            "file": "Fil",
             "size": "Størrelse",
-            "transcode": "",
-            "healthCheck": ""
+            "transcode": "Transkode",
+            "healthCheck": "Helsesjekk"
           }
         }
       }
     },
     "rssFeed": {
-      "name": "",
-      "description": "",
+      "name": "RSS feed",
+      "description": "Overvåk og vis en eller flere generiske RSS, ATOM eller JSON-feeder",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "Feed URLer"
         },
         "enableRtl": {
-          "label": ""
+          "label": "Aktiver RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Beskrivelse linje klemme"
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Antall poster grense"
         }
       }
     }
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "Redigeringsmodus aktivert",
+      "disabled": "Redigeringsmodus deaktivert"
     },
     "dimensions": {
-      "title": ""
+      "title": "Endre dimensjoner"
     }
   },
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "Dupliser tavle",
+        "message": "Det vil duplisere tavlen {name} med alt innhold. Hvis widgeter refererer til integrasjoner du ikke har tilgang til, vil de bli fjernet.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Tavle duplisert",
+            "message": "Tavlen ble kopiert"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kunne ikke duplisere tavlen",
+            "message": "Tavlen kunne ikke dupliseres"
           }
         }
       },
       "edit": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Endringer fullført",
+            "message": "Tavlen lagret"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kunne ikke fullføre endringer",
+            "message": "Tavlen kunne ikke lagres"
           }
         },
         "confirmLeave": {
-          "title": "",
-          "message": ""
+          "title": "Ulagrede endringer",
+          "message": "Du har ulagrede endringer, er du sikker på at du vil avslutte?"
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "Importer fra homarr før 1.0.0",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Importen var vellykket",
+            "message": "Tavlen ble importert"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Import feilet",
+            "message": "Tavlen kunne ikke importeres, sjekk loggene for ytterligere detaljer"
           }
         },
         "form": {
           "file": {
-            "label": "",
-            "invalidError": ""
+            "label": "Velg JSON-fil",
+            "invalidError": "Ugyldig konfigurasjonsfil"
           },
           "apps": {
             "label": "Apper",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "Unngå duplikater",
+              "description": "Ignorerer apper der en app med samme href allerede eksisterer"
             },
             "onlyImportApps": {
-              "label": "",
-              "description": ""
+              "label": "Bare importer apper",
+              "description": "Bare legge til appene, tavlen må gjenskapes manuelt"
             }
           },
           "name": {
-            "label": ""
+            "label": "Navn på tavle"
           },
           "screenSize": {
-            "label": "",
-            "description": "",
+            "label": "Skjerm størrelse",
+            "description": "I versjoner før 1.0 fantes tre forskjellige moduser, slik at du kunne velge antall kolonner for hver skjermstørrelse.",
             "option": {
               "sm": "Liten",
-              "md": "",
+              "md": "Medium",
               "lg": "Stor"
             }
           },
           "sidebarBehavior": {
-            "label": "",
-            "description": "",
+            "label": "Oppførsel for sidepanelet",
+            "description": "Sidestolper ble fjernet i 1.0, du kan velge hva som skal skje med elementene inne i dem.",
             "option": {
               "lastSection": {
-                "label": "",
-                "description": ""
+                "label": "Siste seksjon",
+                "description": "Sidepanelet vil bli vist under den siste seksjonen"
               },
               "removeItems": {
-                "label": "",
-                "description": ""
+                "label": "Slett elementer",
+                "description": "Elementer som finnes i sidepanelet vil bli fjernet"
               }
             }
           }
@@ -1924,51 +1974,51 @@
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "Side tittel"
       },
       "metaTitle": {
-        "label": ""
+        "label": "Metatittel"
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "Logobilde URL"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "Favicon bilde URL"
       },
       "backgroundImageUrl": {
-        "label": ""
+        "label": "URL for bakgrunnsbilde"
       },
       "backgroundImageAttachment": {
         "label": "Bakgrunnsbildevedlegg",
         "option": {
           "fixed": {
-            "label": "",
-            "description": ""
+            "label": "Låst",
+            "description": "Bakgrunn forblir i samme posisjon."
           },
           "scroll": {
-            "label": "",
-            "description": ""
+            "label": "Skroll",
+            "description": "Bakgrunnsbilde skroller med musen."
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "",
+        "label": "Bakgrunnsbildet gjentas",
         "option": {
           "repeat": {
-            "label": "",
-            "description": ""
+            "label": "Gjenta",
+            "description": "Bildet gjentas så mye som nødvendig for å dekke hele bakgrunnsbildets område."
           },
           "no-repeat": {
-            "label": "",
-            "description": ""
+            "label": "Ingen gjentakelse",
+            "description": "Bildet blir ikke gjentatt og kan kanskje ikke fylle hele området."
           },
           "repeat-x": {
-            "label": "",
-            "description": ""
+            "label": "Gjenta X",
+            "description": "Samme som 'Gjenta', men bare på horisontal akse."
           },
           "repeat-y": {
-            "label": "",
-            "description": ""
+            "label": "Gjenta Y",
+            "description": "Samme som 'Gjenta', men bare på vertikal akse."
           }
         }
       },
@@ -1976,12 +2026,12 @@
         "label": "Størrelse på bakgrunnsbilde",
         "option": {
           "cover": {
-            "label": "",
-            "description": ""
+            "label": "Omslag",
+            "description": "Skaler bildet så lite som mulig for å dekke hele vinduet ved å beskjære seg over for mye plass."
           },
           "contain": {
-            "label": "",
-            "description": ""
+            "label": "Begrens",
+            "description": "Skalerer bildet så stort som mulig i beholderen uten å beskjære eller strekke ut bildet."
           }
         }
       },
@@ -1992,36 +2042,36 @@
         "label": "Sekundærfarge"
       },
       "opacity": {
-        "label": ""
+        "label": "Gjennomsiktighet"
       },
       "customCss": {
-        "label": "",
+        "label": "Tilpasset css for denne tavlen",
         "description": "Videre kan du tilpasse dashbordet ved hjelp av CSS, dette er bare anbefalt for erfarne brukere",
         "customClassesAlert": {
-          "title": "",
-          "description": ""
+          "title": "Egendefinerte css-klasser",
+          "description": "Du kan legge til egendefinerte css-klasser i tavleelementene dine i de avanserte alternativene for hvert element og bruke dem i egendefinert CSS ovenfor."
         }
       },
       "columnCount": {
-        "label": ""
+        "label": "Antall kolonner"
       },
       "name": {
         "label": "Navn"
       },
       "isPublic": {
         "label": "Offentlig",
-        "description": ""
+        "description": "Offentlige tavler er tilgjengelige for alle, selv uten en konto."
       }
     },
     "content": {
-      "metaTitle": ""
+      "metaTitle": "{boardName} tavle"
     },
     "setting": {
-      "title": "",
+      "title": "Innstillinger for {boardName} tavle",
       "section": {
         "general": {
           "title": "Generelt",
-          "unrecognizedLink": ""
+          "unrecognizedLink": "Den angitte koblingen ble ikke gjenkjent og vil ikke forhåndsvise, den kan likevel fungere."
         },
         "layout": {
           "title": "Oppsett"
@@ -2030,23 +2080,23 @@
           "title": "Bakgrunn"
         },
         "color": {
-          "title": ""
+          "title": "Farger"
         },
         "customCss": {
-          "title": ""
+          "title": "Egendefinert css"
         },
         "access": {
-          "title": "",
+          "title": "Adgangskontroll",
           "permission": {
             "item": {
               "view": {
                 "label": "Vis tavle"
               },
               "modify": {
-                "label": ""
+                "label": "Endre tavle"
               },
               "full": {
-                "label": ""
+                "label": "Full tilgang"
               }
             }
           }
@@ -2055,41 +2105,41 @@
           "title": "Faresonen",
           "action": {
             "rename": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "Endre navn på tavle",
+              "description": "Endring av navn ødelegger noen koblinger til tavlen.",
+              "button": "Endre navn",
               "modal": {
-                "title": ""
+                "title": "Omdøp tavle"
               }
             },
             "visibility": {
-              "label": "",
+              "label": "Endre synlighet på tavle",
               "description": {
-                "public": "",
-                "private": ""
+                "public": "Denne tavlen er offentlig.",
+                "private": "Denne tavlen er privat."
               },
               "button": {
-                "public": "",
-                "private": ""
+                "public": "Gjør privat",
+                "private": "Gjør offentlig"
               },
               "confirm": {
                 "public": {
-                  "title": "",
-                  "description": ""
+                  "title": "Gjør tavlen privat",
+                  "description": "Er du sikker på at du vil gjøre denne tavlen privat? Dette vil skjule tavlen fra det offentlige. Lenker for gjestebrukere vil ikke fungere lenger."
                 },
                 "private": {
-                  "title": "",
-                  "description": ""
+                  "title": "Gjør tavlen offentlig",
+                  "description": "Er du sikker på at du vil gjøre denne tavlen offentlig? Tavlen vil være tilgjengelig for alle."
                 }
               }
             },
             "delete": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "Slett tavle",
+              "description": "Når du sletter en tavle, er det ingen tilbakeføring. Ver sikker på at du ønsker å slette.",
+              "button": "Slett tavle",
               "confirm": {
                 "title": "Slett tavle",
-                "description": ""
+                "description": "Er du sikker på at du vil slette tavlen? Dette vil permanent slette tavlen og alt innholdet."
               }
             }
           }
@@ -2098,72 +2148,72 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Velkommen til Homarr",
+        "description": "Et moderne dashbord som gjør alle apper og tjenester dine lett tilgjengelig.",
+        "link": "Opprett din første tavle",
+        "notice": "For at denne siden skal forsvinne, opprett en tavle og sett den som hjemtavlen"
       },
       "notFound": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Tavle ikke funnet",
+        "description": "Tavlen som ble spesifisert ble enten ikke funnet eller så har du ikke tilgang til tavlen.",
+        "link": "Se alle tavler",
+        "notice": "Sjekk lenken eller kontakt en administrator hvis du tror den skal være tilgjengelig"
       },
       "homeBoard": {
-        "title": "",
+        "title": "Ingen hjemtavle",
         "admin": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Du har ikke angitt en hjemmetavle for serveren enda.",
+          "link": "Konfigurer global hjemtavle",
+          "notice": "For at denne siden skal forsvinne for alle brukere, sett en hjem-tavle for serveren"
         },
         "user": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Du har ikke angitt en hjemmtavle ennå.",
+          "link": "Konfigurer din hjemtavle",
+          "notice": "For å få denne siden til å forsvinne må du angi hjemtavlen i innstillingene dine"
         },
         "anonymous": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Serveradministratoren har ikke angitt en hjemtavle enda.",
+          "link": "Se offentlige tavler",
+          "notice": "For at denne siden skal forsvinne for alle brukere, be server administratoren sette en hjem-tavle for serveren"
         }
       }
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "Administrasjon",
     "title": {
-      "morning": "",
-      "afternoon": "",
-      "evening": ""
+      "morning": "God morgen, {username}",
+      "afternoon": "God ettermiddag, {username}",
+      "evening": "God kveld, {username}"
     },
     "notFound": {
-      "title": "",
-      "text": ""
+      "title": "Ikke funnet",
+      "text": "Fant ikke den forespurte ressursen"
     },
     "navbar": {
       "items": {
         "home": "Hjem",
         "boards": "Tavler",
         "apps": "Apper",
-        "integrations": "",
-        "searchEngies": "",
-        "medias": "",
+        "integrations": "Integrasjoner",
+        "searchEngies": "Søkemotorer",
+        "medias": "Medier",
         "users": {
           "label": "Brukere",
           "items": {
             "manage": "Administrer",
             "invites": "Invitasjoner",
-            "groups": ""
+            "groups": "Grupper"
           }
         },
         "tools": {
           "label": "Verktøy",
           "items": {
-            "docker": "",
-            "logs": "",
-            "api": "",
-            "certificates": "",
-            "tasks": ""
+            "docker": "Docker",
+            "logs": "Logger",
+            "api": "API",
+            "certificates": "Sertifikater",
+            "tasks": "Oppgaver"
           }
         },
         "settings": "Innstillinger",
@@ -2171,9 +2221,9 @@
           "label": "Hjelp",
           "items": {
             "documentation": "Dokumentasjon",
-            "submitIssue": "",
+            "submitIssue": "Send inn en sak",
             "discord": "Discord",
-            "sourceCode": ""
+            "sourceCode": "Kildekode"
           }
         },
         "about": "Info"
@@ -2185,57 +2235,57 @@
           "board": "Tavler",
           "user": "Brukere",
           "invite": "Invitasjoner",
-          "integration": "",
+          "integration": "Integrasjoner",
           "app": "Apper",
-          "group": ""
+          "group": "Grupper"
         },
         "statisticLabel": {
           "boards": "Tavler",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "Ressurser",
+          "authentication": "Autentisering",
+          "authorization": "Autorisasjon"
         }
       },
       "board": {
         "title": "Dine tavler",
         "action": {
           "new": {
-            "label": ""
+            "label": "Ny tavle"
           },
           "open": {
-            "label": ""
+            "label": "Åpne tavle"
           },
           "settings": {
             "label": "Innstillinger"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "Sett som din hjemtavle",
             "badge": {
               "label": "Hjem",
-              "tooltip": ""
+              "tooltip": "Denne tavlen vil vises som din hjemtavle"
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Sett som din mobil hjemtavle",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Mobil",
+              "tooltip": "Denne tavlen vil vises som din mobil hjemtavle"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Dupliser tavle"
           },
           "delete": {
             "label": "Slett permanent",
             "confirm": {
               "title": "Slett tavle",
-              "description": ""
+              "description": "Er du sikker på at du vil slette tavlen {name}?"
             }
           }
         },
         "visibility": {
-          "public": "",
-          "private": ""
+          "public": "Denne tavlen er offentlig",
+          "private": "Denne tavlen er privat"
         },
         "modal": {
           "createBoard": {
@@ -2248,24 +2298,24 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "Inkluder medier fra alle brukere"
       },
       "user": {
-        "back": "",
-        "fieldsDisabledExternalProvider": "",
+        "back": "Tilbake til brukere",
+        "fieldsDisabledExternalProvider": "Enkelte felt er deaktivert fordi de er administrert av en ekstern autentiseringsleverandør.",
         "setting": {
           "general": {
             "title": "Generelt",
             "item": {
-              "language": "",
+              "language": "Språk og region",
               "board": {
-                "title": "",
+                "title": "Hjem tavle",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Generelt",
+                  "mobile": "Mobil"
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "Søk",
               "firstDayOfWeek": "Første dag i uken",
               "accessibility": "Hjelpemidler"
             }
@@ -2282,50 +2332,50 @@
           "title": "Brukere"
         },
         "edit": {
-          "metaTitle": ""
+          "metaTitle": "Rediger bruker {username}"
         },
         "create": {
           "metaTitle": "Opprett bruker",
-          "title": "",
+          "title": "Opprett ny bruker",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "Personlig informasjon"
             },
             "security": {
               "label": "Sikkerhet"
             },
             "groups": {
-              "label": "",
-              "title": "",
-              "description": ""
+              "label": "Grupper",
+              "title": "Velg alle gruppene brukeren skal være medlem av",
+              "description": "{everyoneGroup} gruppen er tildelt alle brukere og kan ikke fjernes."
             },
             "review": {
-              "label": ""
+              "label": "Se over"
             },
             "completed": {
-              "title": ""
+              "title": "Bruker opprettet"
             },
             "error": {
-              "title": ""
+              "title": "Brukeropprettelse feilet"
             }
           },
           "action": {
-            "createAnother": "",
-            "back": ""
+            "createAnother": "Opprett enda en bruker",
+            "back": "Gå tilbake til brukerlisten"
           }
         },
         "invite": {
           "title": "Administrer brukerinvitasjoner",
           "action": {
             "new": {
-              "title": "",
+              "title": "Ny invitasjon",
               "description": "Etter utløpet vil en invitasjon ikke lenger være gyldig, og mottakeren av invitasjonen vil ikke kunne opprette en konto."
             },
             "copy": {
-              "title": "",
-              "description": "",
+              "title": "Kopier invitasjon",
+              "description": "Invitasjonen din har blitt generert. Når dette vinduet lukkes, <b>vil du ikke kunne kopiere denne lenken igjen.</b> Hvis du ikke lenger ønsker å invitere denne personen, kan du slette invitasjonen.",
               "link": "Invitasjonslenke",
-              "button": ""
+              "button": "Kopier og lukk"
             },
             "delete": {
               "title": "Slett invitasjon",
@@ -2334,7 +2384,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Skaper"
@@ -2343,29 +2393,29 @@
               "label": "Utløpsdato"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
       },
       "group": {
-        "back": "",
+        "back": "Tilbake til grupper",
         "setting": {
           "general": {
             "title": "Generelt",
             "owner": "Eier",
-            "ownerOfGroup": "",
-            "ownerOfGroupDeleted": ""
+            "ownerOfGroup": "Eier av denne gruppen",
+            "ownerOfGroupDeleted": "Eieren av gruppen ble slettet. Den har for øyeblikket ingen eier."
           },
           "members": {
-            "title": "",
-            "search": "",
-            "notFound": ""
+            "title": "Medlemmer",
+            "search": "Finn et medlem",
+            "notFound": "Ingen medlemmer funnet"
           },
           "permissions": {
-            "title": "",
+            "title": "Rettigheter",
             "form": {
-              "unsavedChanges": ""
+              "unsavedChanges": "Du har ulagrede endringer!"
             }
           }
         }
@@ -2374,154 +2424,154 @@
         "title": "Innstillinger",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Innstillinger lagret"
           },
           "error": {
-            "message": ""
+            "message": "Lagring av innstillingene feilet"
           }
         },
         "section": {
           "analytics": {
-            "title": "",
+            "title": "Statistikk",
             "general": {
-              "title": "",
-              "text": ""
+              "title": "Send anonym brukerdata",
+              "text": "Homarr vil sende anonymt brukerdata med åpen kildekode programvaren Umami. Det vil aldri samle inn personlig informasjon og følger derfor GDPR & CCPA fullstendig. Vi oppfordrer deg til å aktivere sending av brukerdata da det hjelper teamet vårt å identifisere problemer og sette prioritering."
             },
             "widgetData": {
-              "title": "",
-              "text": ""
+              "title": "Widget data",
+              "text": "Send hvilke widgeter (og deres antall) du har konfigurert. Inkluderer ikke nettadresser, navn eller andre data."
             },
             "integrationData": {
-              "title": "",
-              "text": ""
+              "title": "Integrasjonsdata",
+              "text": "Send hvilke integrasjoner (og deres antall) du har konfigurert. Inkluderer ikke nettadresser, navn eller andre data."
             },
             "usersData": {
-              "title": "",
-              "text": ""
+              "title": "Brukeres data",
+              "text": "Send antall brukere og om du har aktivert SSO"
             }
           },
           "crawlingAndIndexing": {
-            "title": "",
-            "warning": "",
+            "title": "Tråling og indeksering",
+            "warning": "Å aktivere eller deaktivere innstillinger her vil sterkt påvirke hvordan søkemotorer vil indeksere og kringkaste siden din. En hvilken som helst innstilling er en forespørsel, og det er opp til kravlerne til søkemotorene om de bruker disse innstillingene. Alle endringer kan ta opp til flere dager eller uker. Noen innstillinger kan være søkemotorspesifikk.",
             "noIndex": {
-              "title": "",
-              "text": ""
+              "title": "Ingen indeks",
+              "text": "Ikke indekser nettstedet på søkemotorer og ikke vis det i noen søkeresultater"
             },
             "noFollow": {
-              "title": "",
-              "text": ""
+              "title": "Ikke følg",
+              "text": "Ikke følg noen linker under indeksering. Deaktivering av dette vil føre til kravlere som følger alle linker på Homarr."
             },
             "noTranslate": {
-              "title": "",
-              "text": ""
+              "title": "Ikke oversett",
+              "text": "Når nettstedets språk sannsynligvis ikke er det brukeren ønsker å lese, vil Google vise en oversettelseslenke i søkeresultatene"
             },
             "noSiteLinksSearchBox": {
-              "title": "",
-              "text": ""
+              "title": "Ingen nettlenker søkeboks",
+              "text": "Google vil bygge en søkeboks med de samlede linkene sammen med andre direkte lenker. Aktivering av dette vil spørre Google om å deaktivere denne boksen."
             }
           },
           "board": {
             "title": "Tavler",
             "homeBoard": {
-              "label": "",
-              "mobileLabel": "",
-              "description": ""
+              "label": "Global hjemtavle",
+              "mobileLabel": "Global mobiltavle",
+              "description": "Bare offentlige tavler er tilgjengelige for valg"
             }
           },
           "search": {
-            "title": "",
+            "title": "Søk",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "Global standard søkemotor",
+              "description": "Integrasjonssøkemotorer kan ikke velges her"
             }
           },
           "appearance": {
             "title": "Utseende",
             "defaultColorScheme": {
-              "label": "",
+              "label": "Standard fargetema",
               "options": {
-                "light": "",
-                "dark": ""
+                "light": "Lys",
+                "dark": "Mørk"
               }
             }
           },
           "culture": {
-            "title": "",
+            "title": "Kultur",
             "defaultLocale": {
-              "label": ""
+              "label": "Standardspråk"
             }
           }
         }
       },
       "tool": {
         "tasks": {
-          "title": "",
+          "title": "Oppgaver",
           "status": {
-            "idle": "",
+            "idle": "Inaktiv",
             "running": "Kjører",
             "error": "Feil"
           },
           "job": {
             "minecraftServerStatus": {
-              "label": ""
+              "label": "Minecraft serverstatus"
             },
             "iconsUpdater": {
-              "label": ""
+              "label": "Ikon oppdatering"
             },
             "analytics": {
-              "label": ""
+              "label": "Statistikk"
             },
             "smartHomeEntityState": {
-              "label": ""
+              "label": "Smart hjem enhets tilstand"
             },
             "ping": {
-              "label": ""
+              "label": "Pinger"
             },
             "mediaServer": {
               "label": "Medieserver"
             },
             "mediaOrganizer": {
-              "label": ""
+              "label": "Media organisatorer"
             },
             "downloads": {
-              "label": ""
+              "label": "Nedlastinger"
             },
             "mediaRequestStats": {
-              "label": ""
+              "label": "Statistikk for mediaforespørsler"
             },
             "mediaRequestList": {
-              "label": ""
+              "label": "Liste over mediaspillforespørsler"
             },
             "rssFeeds": {
-              "label": ""
+              "label": "RSS feed"
             },
             "indexerManager": {
-              "label": ""
+              "label": "Indekserings-behandler"
             },
             "healthMonitoring": {
-              "label": ""
+              "label": "Systemhelseovervåking"
             },
             "dnsHole": {
-              "label": ""
+              "label": "DNS Hole Data"
             },
             "sessionCleanup": {
-              "label": ""
+              "label": "Økt opprydding"
             },
             "updateChecker": {
-              "label": ""
+              "label": "Oppdateringssjekk"
             },
             "mediaTranscoding": {
-              "label": ""
+              "label": "Media transkoding"
             }
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "",
-              "description": "",
-              "button": ""
+              "title": "API token opprettet",
+              "description": "API token ble opprettet. Vær forsiktig, dette tokenet er kryptert i databasen og vil aldri bli overført igjen til deg. Hvis du mister denne token, kan du ikke lenger hente den spesifikke koden.",
+              "button": "Kopier og lukk"
             }
           },
           "tab": {
@@ -2529,15 +2579,22 @@
               "label": "Dokumentasjon"
             },
             "apiKey": {
-              "label": "",
-              "title": "",
+              "label": "Autentisering",
+              "title": "API nøkler",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "Opprett API token"
+              },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
               },
               "table": {
                 "header": {
-                  "id": "",
-                  "createdBy": ""
+                  "id": "ID",
+                  "createdBy": "Opprettet av",
+                  "actions": ""
                 }
               }
             }
@@ -2545,31 +2602,31 @@
         }
       },
       "about": {
-        "version": "",
-        "text": "",
+        "version": "Versjon {version}",
+        "text": "Homarr er et samfunnsdrevet åpen kildekode-prosjekt som vedlikeholdes av frivillige. Takket være disse personene, har Homarr vært et voksende prosjekt siden 2021. Teamet vårt jobber på Homarr fra mange forskjellige land og i fritiden uten kompensasjon.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Bidragsytere",
+            "subtitle": "{count} vedlikeholder kode og Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Oversettere",
+            "subtitle": "{count} bidrar med oversettelser på mange språk"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Biblioteker",
+            "subtitle": "{count} brukt i koden til Homarr"
           }
         }
       }
     }
   },
   "docker": {
-    "title": "",
+    "title": "Containere",
     "table": {
-      "updated": "",
-      "search": "",
-      "selected": ""
+      "updated": "Oppdatert {when}",
+      "search": "Søk i {count} containere",
+      "selected": "{selectCount} av {totalCount} containere valgt"
     },
     "field": {
       "name": {
@@ -2582,13 +2639,13 @@
           "running": "Kjører",
           "paused": "Pauset",
           "restarting": "Starter på nytt",
-          "exited": "",
+          "exited": "Avsluttet",
           "removing": "Fjerner",
-          "dead": ""
+          "dead": "Død"
         }
       },
       "containerImage": {
-        "label": ""
+        "label": "Image"
       },
       "ports": {
         "label": "Porter"
@@ -2596,15 +2653,15 @@
     },
     "action": {
       "start": {
-        "label": "",
+        "label": "Start",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Containere startet",
+            "message": "Containerene ble startet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Containere ikke startet",
+            "message": "Containerene kunne ikke startes"
           }
         }
       },
@@ -2612,12 +2669,12 @@
         "label": "Stopp",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Containere stoppet",
+            "message": "Containerene ble stoppet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Containere ikke stoppet",
+            "message": "Containerene kunne ikke stoppes"
           }
         }
       },
@@ -2625,12 +2682,12 @@
         "label": "Omstart",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Containere restartet",
+            "message": "Containerene ble restartet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Containere ikke restartet",
+            "message": "Containerene kunne ikke restartes"
           }
         }
       },
@@ -2638,76 +2695,76 @@
         "label": "Fjern",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Containere fjernet",
+            "message": "Containerene ble fjernet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Containere ikke fjernet",
+            "message": "Containerene kunne ikke fjernes"
           }
         }
       },
       "refresh": {
-        "label": "",
+        "label": "Oppfrisk",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Containere oppfrisket",
+            "message": "Du ser nå på de siste dataene"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Containere ikke oppfrisket",
+            "message": "Noe gikk galt under du oppforfrisking av containerne"
           }
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Legg til i Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Lagt til i Homarr",
+            "message": "Valgte apper er lagt til i Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Kunne ikke legge til i Homarr",
+            "message": "Valgte apper er kunne ikke legges til i Homarr"
           }
         },
         "modal": {
-          "title": ""
+          "title": "Legg til docker container(e) i Homarr"
         }
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Klarte ikke hente Docker-containere"
     }
   },
   "permission": {
-    "title": "",
+    "title": "Rettigheter",
     "userSelect": {
-      "title": ""
+      "title": "Legg til brukerrettighet"
     },
     "groupSelect": {
-      "title": ""
+      "title": "Legg til grupperettigheter"
     },
     "tab": {
       "user": "Brukere",
-      "group": "",
-      "inherited": ""
+      "group": "Grupper",
+      "inherited": "Arvede grupper"
     },
     "field": {
       "user": {
         "label": "Bruker"
       },
       "group": {
-        "label": ""
+        "label": "Gruppe"
       },
       "permission": {
-        "label": ""
+        "label": "Rettighet"
       }
     },
     "action": {
-      "saveUser": "",
-      "saveGroup": ""
+      "saveUser": "Lagre brukertilgang",
+      "saveGroup": "Lagre gruppetilgang"
     }
   },
   "navigationStructure": {
@@ -2717,30 +2774,30 @@
         "label": "Tavler"
       },
       "integrations": {
-        "label": "",
+        "label": "Integrasjoner",
         "edit": {
           "label": "Rediger"
         },
         "new": {
-          "label": ""
+          "label": "Ny"
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Søkemotorer",
         "new": {
-          "label": ""
+          "label": "Ny"
         },
         "edit": {
           "label": "Rediger"
         }
       },
       "medias": {
-        "label": ""
+        "label": "Medier"
       },
       "apps": {
         "label": "Apper",
         "new": {
-          "label": ""
+          "label": "Ny"
         },
         "edit": {
           "label": "Rediger"
@@ -2755,7 +2812,7 @@
         "security": "Sikkerhet",
         "board": "Tavler",
         "groups": {
-          "label": ""
+          "label": "Grupper"
         },
         "invites": {
           "label": "Invitasjoner"
@@ -2764,13 +2821,13 @@
       "tools": {
         "label": "Verktøy",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
-          "label": ""
+          "label": "Logger"
         },
         "certificates": {
-          "label": ""
+          "label": "Sertifikater"
         }
       },
       "settings": {
@@ -2782,28 +2839,28 @@
     }
   },
   "search": {
-    "placeholder": "",
-    "nothingFound": "",
+    "placeholder": "Søk etter hva som helst",
+    "nothingFound": "Ingenting funnet",
     "error": {
-      "fetch": ""
+      "fetch": "Det oppstod en feil under henting av data"
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "Søk etter apper, integrasjon eller tavler",
         "group": {
           "app": {
             "title": "Apper",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Åpne app URL"
                 },
                 "edit": {
-                  "label": ""
+                  "label": "Rediger app"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Velg en handling for appen"
               }
             }
           },
@@ -2812,122 +2869,122 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Åpne tavle"
                 },
                 "homeBoard": {
-                  "label": ""
+                  "label": "Sett som hjemtavle"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Sett som mobil hjemtavle"
                 },
                 "settings": {
-                  "label": ""
+                  "label": "Åpne instillinger"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Velg en handling for tavlen"
               }
             }
           },
           "integration": {
-            "title": ""
+            "title": "Integrasjoner"
           }
         }
       },
       "command": {
-        "help": "",
+        "help": "Aktiver kommandomodus",
         "group": {
           "localCommand": {
-            "title": ""
+            "title": "Lokale kommandoer"
           },
           "globalCommand": {
-            "title": "",
+            "title": "Globale kommandoer",
             "option": {
               "colorScheme": {
-                "light": "",
-                "dark": ""
+                "light": "Bytt til lys modus",
+                "dark": "Bytt til mørk modus"
               },
               "language": {
-                "label": "",
+                "label": "Endre språk",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Velg ønsket språk"
                   }
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "Opprett en ny tavle"
               },
               "importBoard": {
-                "label": ""
+                "label": "Importer en tavle"
               },
               "newApp": {
-                "label": ""
+                "label": "Opprett en ny app"
               },
               "newIntegration": {
-                "label": "",
+                "label": "Opprett en ny integrasjon",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Velg integrasjonstype du vil opprette"
                   }
                 }
               },
               "newUser": {
-                "label": ""
+                "label": "Opprett ny bruker"
               },
               "newInvite": {
-                "label": ""
+                "label": "Opprett en ny invitasjon"
               },
               "newGroup": {
-                "label": ""
+                "label": "Opprett en ny gruppe"
               }
             }
           }
         }
       },
       "media": {
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": ""
+        "requestMovie": "Forespør en film",
+        "requestSeries": "Forespør en serie",
+        "openIn": "Åpne i {kind}"
       },
       "external": {
-        "help": "",
+        "help": "Bruk en ekstern søkemotor",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Søkemotorer",
             "children": {
               "action": {
                 "search": {
-                  "label": ""
+                  "label": "Søk med {name}"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Velg en handling for søkemotoren"
               },
               "searchResults": {
-                "title": ""
+                "title": "Velg et søkeresultat for handlinger"
               }
             },
             "option": {
               "google": {
-                "name": "",
-                "description": ""
+                "name": "Google",
+                "description": "Søk på nettet med Google"
               },
               "bing": {
-                "name": "",
-                "description": ""
+                "name": "Bing",
+                "description": "Søk på nettet med Bing"
               },
               "duckduckgo": {
-                "name": "",
-                "description": ""
+                "name": "DuckDuckGo",
+                "description": "Søk på nettet med DuckDuckGo"
               },
               "torrent": {
                 "name": "Torrenter",
-                "description": ""
+                "description": "Søk etter torrents på torrentdownloads.pro"
               },
               "youTube": {
-                "name": "",
-                "description": ""
+                "name": "YouTube",
+                "description": "Søk etter videoer på YouTube"
               }
             }
           }
@@ -2936,7 +2993,7 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "Moduser"
           },
           "help": {
             "title": "Hjelp",
@@ -2945,7 +3002,7 @@
                 "label": "Dokumentasjon"
               },
               "submitIssue": {
-                "label": ""
+                "label": "Send inn en sak"
               },
               "discord": {
                 "label": "Discord"
@@ -2957,81 +3014,81 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Søk",
             "option": {
               "other": {
-                "label": ""
+                "label": "Søk med en annen søkemotor"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "Ingen standard søkemotor",
+                "description": "Angi en standard søkemotor i innstillingene"
               },
               "search": {
-                "label": ""
+                "label": "Søk etter \"{query}\" med {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Start å skrive for å søke"
               }
             }
           },
           "local": {
-            "title": ""
+            "title": "Lokale resultater"
           }
         }
       },
       "page": {
-        "help": "",
+        "help": "Søk etter sider",
         "group": {
           "page": {
-            "title": "",
+            "title": "Sider",
             "option": {
               "manageHome": {
-                "label": ""
+                "label": "Administrer hjemmeside"
               },
               "manageBoard": {
-                "label": ""
+                "label": "Administrer tavler"
               },
               "manageApp": {
-                "label": ""
+                "label": "Administrer apper"
               },
               "manageIntegration": {
-                "label": ""
+                "label": "Administrer integrasjoner"
               },
               "manageSearchEngine": {
-                "label": ""
+                "label": "Administrere søkemotorer"
               },
               "manageMedia": {
-                "label": ""
+                "label": "Administrere medier"
               },
               "manageUser": {
                 "label": "Administrer brukere"
               },
               "manageInvite": {
-                "label": ""
+                "label": "Administrer invitasjoner"
               },
               "manageGroup": {
-                "label": ""
+                "label": "Administrer grupper"
               },
               "manageDocker": {
-                "label": ""
+                "label": "Administrer docker"
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API"
               },
               "manageLog": {
-                "label": ""
+                "label": "Se logger"
               },
               "manageTask": {
-                "label": ""
+                "label": "Administrer oppgaver"
               },
               "manageSettings": {
-                "label": ""
+                "label": "Globale innstillinger"
               },
               "about": {
                 "label": "Info"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Hjem tavle"
               },
               "preferences": {
                 "label": "Dine innstillinger"
@@ -3041,37 +3098,37 @@
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "Søk etter bruker og grupper",
         "group": {
           "user": {
             "title": "Brukere",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Vis brukerdetaljer"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Velg en handling for brukeren"
               }
             }
           },
           "group": {
-            "title": "",
+            "title": "Grupper",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Vis gruppedetaljer"
                 },
                 "manageMember": {
-                  "label": ""
+                  "label": "Administrere medlemmer"
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "Administrer rettigheter"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Velg en handling for gruppen"
               }
             }
           }
@@ -3079,72 +3136,72 @@
       }
     },
     "engine": {
-      "search": "",
+      "search": "Finn en søkemotor",
       "field": {
         "name": {
           "label": "Navn"
         },
         "short": {
-          "label": ""
+          "label": "Kort"
         },
         "urlTemplate": {
-          "label": ""
+          "label": "URL søkemal"
         },
         "description": {
-          "label": ""
+          "label": "Beskrivelse"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Søkemotorer",
           "noResults": {
-            "title": "",
-            "action": ""
+            "title": "Det er ingen søkemotorer enda",
+            "action": "Opprett din første søkemotor"
           },
-          "interactive": ""
+          "interactive": "Interaktiv, bruker en integrasjon"
         },
         "create": {
-          "title": "",
+          "title": "Ny søkemotor",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Søkemotor opprettet",
+              "message": "Søkemotoren ble opprettet"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Søkemotor ikke opprettet",
+              "message": "Søkemotoren kunne ikke opprettes"
             }
           }
         },
         "edit": {
-          "title": "",
+          "title": "Rediger søkemotor",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Endringer fullført",
+              "message": "Søkemotor lagret"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Kunne ikke fullføre endringer",
+              "message": "Søkemotoren kunne ikke lagres"
             }
           },
-          "configControl": "",
+          "configControl": "Konfigurasjon",
           "searchEngineType": {
-            "generic": "",
-            "fromIntegration": ""
+            "generic": "Generisk",
+            "fromIntegration": "Fra integrasjon"
           }
         },
         "delete": {
-          "title": "",
-          "message": "",
+          "title": "Slett søkemotor",
+          "message": "Er du sikker på at du vil slette søkemotoren '{name}'?",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Søkemotor slettet",
+              "message": "Søkemotoren ble slettet"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Søkemotor ikke slettet",
+              "message": "Søkemotoren kunne ikke slettes"
             }
           }
         }
@@ -3152,15 +3209,15 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "Forespørsel \"{name}\"",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "Sesong",
+                "episodes": "Episoder"
               }
             },
             "button": {
-              "send": ""
+              "send": "Send forespørsel"
             }
           }
         }
@@ -3170,39 +3227,39 @@
   "certificate": {
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "Betrodde sertifikater",
+        "description": "Brukes av Homarr for å be om data fra integrasjoner.",
         "noResults": {
-          "title": ""
+          "title": "Det er ingen sertifikater enda"
         },
-        "expires": ""
+        "expires": "Utløper {when}"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Legg til sertifikat",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sertifikat lagt til",
+            "message": "Sertifikatet ble lagt til"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Legge til sertifikat feilet",
+            "message": "Sertifikatet kunne ikke legges til"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "Fjern sertifikat",
+        "confirm": "Er du sikker på at du ønsker å fjerne sertifikatet?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Sertifikat fjernet",
+            "message": "Sertifikatet ble fjernet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Sertifikat ikke fjernet",
+            "message": "Sertifikatet kunne ikke fjernes"
           }
         }
       }

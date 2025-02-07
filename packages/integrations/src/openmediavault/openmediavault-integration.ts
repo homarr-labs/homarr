@@ -63,9 +63,6 @@ export class OpenMediaVaultIntegration extends Integration {
     if (!smartResult.success) {
       throw new Error("Invalid SMART information response");
     }
-    if (!cpuTempResult.success) {
-      throw new Error("Invalid CPU temperature response");
-    }
 
     const fileSystem = fileSystemResult.data.response.map((fileSystem) => ({
       deviceName: fileSystem.devicename,
@@ -94,7 +91,7 @@ export class OpenMediaVaultIntegration extends Integration {
       },
       rebootRequired: systemResult.data.response.rebootRequired,
       availablePkgUpdates: systemResult.data.response.availablePkgUpdates,
-      cpuTemp: cpuTempResult.data.response.cputemp,
+      cpuTemp: cpuTempResult.success ? cpuTempResult.data.response.cputemp : undefined,
       fileSystem,
       smart,
     };

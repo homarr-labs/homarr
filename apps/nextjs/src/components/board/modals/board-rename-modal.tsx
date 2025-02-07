@@ -1,12 +1,12 @@
 "use client";
 
 import { Button, Group, Stack, TextInput } from "@mantine/core";
+import type { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 interface InnerProps {

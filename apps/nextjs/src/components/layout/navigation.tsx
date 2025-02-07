@@ -1,7 +1,7 @@
 import type { JSX } from "react";
-import { AppShellNavbar, AppShellSection, ScrollArea } from "@mantine/core";
+import { AppShellNavbar, AppShellSection, Image, ScrollArea } from "@mantine/core";
 
-import type { TablerIcon } from "@homarr/ui";
+import type { TablerIcon, TablerIconProps } from "@homarr/ui";
 
 import type { ClientNavigationLink } from "./navigation-link";
 import { CommonNavLink } from "./navigation-link";
@@ -27,8 +27,13 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
             return null;
           }
 
-          const { icon: TablerIcon, ...props } = link;
-          const Icon = <TablerIcon size={20} stroke={1.5} />;
+          const { icon: TablerIcon, iconProps, ...props } = link;
+          const Icon =
+            typeof TablerIcon === "string" ? (
+              <Image src={TablerIcon} w={20} h={20} />
+            ) : (
+              <TablerIcon size={20} stroke={1.5} {...iconProps} />
+            );
           let clientLink: ClientNavigationLink;
           if ("items" in props) {
             clientLink = {
@@ -38,7 +43,7 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
                 .map((item) => {
                   return {
                     ...item,
-                    icon: <item.icon size={20} stroke={1.5} />,
+                    icon: <item.icon size={20} stroke={1.5} {...iconProps} />,
                   };
                 }),
             } as ClientNavigationLink;
@@ -55,7 +60,8 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
 
 interface CommonNavigationLinkProps {
   label: string;
-  icon: TablerIcon;
+  icon: TablerIcon | string;
+  iconProps?: TablerIconProps;
   hidden?: boolean;
 }
 

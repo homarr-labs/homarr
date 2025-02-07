@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "為 Pings 使用 icon"
+      },
+      "defaultSearchEngine": {
+        "label": "預設搜尋引擎"
+      },
+      "openSearchInNewTab": {
+        "label": "於新分頁中開啟搜尋結果"
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "預設搜尋引擎已變更成功"
+            "message": "搜尋設定更改成功"
           },
           "error": {
-            "message": "預設搜尋引擎無法變更"
+            "message": "無法更改搜尋設定"
           }
         }
       },
@@ -735,12 +741,12 @@
           "newLabel": "新密碼"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "密鑰 ID",
+          "newLabel": "新密鑰 ID"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "領域",
+          "newLabel": "新領域"
         }
       }
     },
@@ -785,6 +791,9 @@
       },
       "copy": {
         "label": "複製網址"
+      },
+      "open": {
+        "label": "開啟多媒體"
       }
     }
   },
@@ -796,6 +805,7 @@
       "apply": "應用",
       "backToOverview": "返回總覽",
       "create": "創建",
+      "createAnother": "創建並重新開始",
       "edit": "編輯",
       "import": "匯入",
       "insert": "插入",
@@ -905,7 +915,7 @@
           "passwordRequirements": "密碼不符合要求",
           "boardAlreadyExists": "此面板名稱已存在",
           "invalidFileType": "無效的檔案類型，例如 {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "無效的檔案名稱",
           "fileTooLarge": "檔案太大，最大大小為 {maxSize}",
           "invalidConfiguration": "無效設定",
           "groupNameTaken": "用戶組名稱已存在"
@@ -937,7 +947,8 @@
         "moveUp": "上移",
         "moveDown": "下移",
         "createAbove": "新分類之上",
-        "createBelow": "新分類之下"
+        "createBelow": "新分類之下",
+        "openAllInNewTabs": "於分頁中開啟全部"
       },
       "create": {
         "title": "創建分類",
@@ -956,6 +967,10 @@
           "create": "創建分類",
           "changePosition": "變更位置"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "於分頁中開啟全部",
+        "text": "某些瀏覽器可能會因安全性考量而阻止批量開啟分頁，Homarr 無法開啟所有視窗，因為您的瀏覽器已封鎖此操作，請允許「開啟彈出式視窗」，然後重試"
       }
     }
   },
@@ -1063,6 +1078,15 @@
               "label": "網格"
             }
           }
+        },
+        "hideIcon": {
+          "label": "隱藏 icons"
+        },
+        "hideHostname": {
+          "label": "隱藏 hostname"
+        },
+        "openNewTab": {
+          "label": "於新分頁開啟"
         },
         "items": {
           "label": "書籤",
@@ -1174,6 +1198,14 @@
         "dateFormat": {
           "label": "日期格式",
           "description": "日期應該是什麼樣式"
+        },
+        "customTimeFormat": {
+          "label": "自訂時間格式",
+          "description": "使用 ISO 8601 格式化時間 (此操作將覆蓋其他選項)"
+        },
+        "customDateFormat": {
+          "label": "自訂日期格式",
+          "description": "使用 ISO 8601 格式化日期 (此操作將覆蓋其他選項)"
         }
       }
     },
@@ -1355,6 +1387,13 @@
         "isFormatFahrenheit": {
           "label": "華氏溫度"
         },
+        "disableTemperatureDecimals": {
+          "label": "關閉溫度小數點"
+        },
+        "showCurrentWindSpeed": {
+          "label": "顯示當前風速",
+          "description": "僅限當前天氣"
+        },
         "location": {
           "label": "天氣位置"
         },
@@ -1372,6 +1411,13 @@
           "label": "日期格式",
           "description": "日期應該是什麼樣式"
         }
+      },
+      "currentWindSpeed": "{currentWindSpeed} 公里/時",
+      "dailyForecast": {
+        "sunrise": "日出",
+        "sunset": "日落",
+        "maxWindSpeed": "最大風速：{maxWindSpeed} 公里/時",
+        "maxWindGusts": "最大陣風：{maxWindGusts} 公里/時"
       },
       "kind": {
         "clear": "晴朗",
@@ -1407,6 +1453,10 @@
     "healthMonitoring": {
       "name": "系統健康監測",
       "description": "顯示系統運行狀態",
+      "tab": {
+        "system": "系統",
+        "cluster": "叢集"
+      },
       "option": {
         "fahrenheit": {
           "label": "處理器溫度"
@@ -1421,10 +1471,10 @@
           "label": "顯示檔案系統訊息"
         },
         "defaultTab": {
-          "label": ""
+          "label": "預設頁面"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "部分指示需求"
         }
       },
       "popover": {
@@ -1447,47 +1497,47 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "處理器",
+          "memory": "記憶體"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "節點數"
           },
           "qemu": {
-            "name": ""
+            "name": "虛擬機"
           },
           "lxc": {
-            "name": ""
+            "name": "LXCs"
           },
           "storage": {
-            "name": ""
+            "name": "儲存裝置"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "節點",
+            "vmId": "虛擬機 ID",
+            "plugin": "插件"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "核心數",
+            "memory": "記憶體",
+            "storage": "儲存裝置",
+            "uptime": "運行時間",
+            "haState": "HA 狀態",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "本機儲存",
+              "shared": "共享儲存"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "名稱",
+            "cpu": "處理器",
+            "memory": "記憶體",
+            "node": "節點"
           }
         }
       }
@@ -2162,7 +2212,7 @@
             "docker": "Docker",
             "logs": "Logs",
             "api": "API",
-            "certificates": "",
+            "certificates": "憑證",
             "tasks": "任務"
           }
         },
@@ -2216,10 +2266,10 @@
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "設定為移動裝置面板",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "移動裝置",
+              "tooltip": "此面板將顯示為移動裝置主面板"
             }
           },
           "duplicate": {
@@ -2259,13 +2309,13 @@
             "item": {
               "language": "語言與地區",
               "board": {
-                "title": "",
+                "title": "主面板",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "一般",
+                  "mobile": "移動裝置"
                 }
               },
-              "defaultSearchEngine": "預設搜尋引擎",
+              "search": "搜尋",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "無障礙服務"
             }
@@ -2424,7 +2474,7 @@
             "title": "面板",
             "homeBoard": {
               "label": "全局主面板",
-              "mobileLabel": "",
+              "mobileLabel": "全局移動裝置主面板",
               "description": "只有公開面板可供選擇"
             }
           },
@@ -2534,10 +2584,17 @@
               "button": {
                 "createApiToken": "創建 API 密鑰"
               },
+              "modal": {
+                "delete": {
+                  "title": "刪除 API 密鑰",
+                  "text": "這將永久刪除 API 金鑰，使用此金鑰的 API 客戶端將無法再進行身份驗證或執行 API 請求，此操作無法撤銷"
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "創建者"
+                  "createdBy": "創建者",
+                  "actions": "動作"
                 }
               }
             }
@@ -2770,7 +2827,7 @@
           "label": "Logs"
         },
         "certificates": {
-          "label": ""
+          "label": "憑證"
         }
       },
       "settings": {
@@ -2818,7 +2875,7 @@
                   "label": "設定為主面板"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "設定為移動裝置面板"
                 },
                 "settings": {
                   "label": "開啟設定"
@@ -3170,39 +3227,39 @@
   "certificate": {
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "可信任的憑證",
+        "description": "由 Homarr 用於集成中請求數據",
         "noResults": {
-          "title": ""
+          "title": "尚無憑證"
         },
-        "expires": ""
+        "expires": "到期 {when}"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "新增憑證",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "憑證已新增",
+            "message": "此憑證已新增成功"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "新增憑證失敗",
+            "message": "此憑證無法新增"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "移除憑證",
+        "confirm": "確定要移除這個憑證？",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "憑證已移除",
+            "message": "此憑證已移除成功"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "憑證未被移除",
+            "message": "此憑證無法被移除"
           }
         }
       }

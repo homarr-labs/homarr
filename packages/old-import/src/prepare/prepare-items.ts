@@ -10,5 +10,5 @@ export const prepareItems = (
 ) =>
   widgets
     .map((widget) => mapWidget(widget, boardSize, appsMap, sectionMap))
-    .filter((widget) => widget !== null)
-    .concat(apps.map((app) => mapApp(app, boardSize, appsMap, sectionMap)));
+    .concat(apps.map((app) => mapApp(app, boardSize, appsMap, sectionMap)))
+    .filter((widget) => widget !== null);

@@ -5,15 +5,31 @@ import { useParams } from "next/navigation";
 import { Calendar } from "@mantine/dates";
 import dayjs from "dayjs";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { CalendarEvent } from "@homarr/integrations/types";
+import { useSettings } from "@homarr/settings";
 
 import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
 import classes from "./component.module.css";
 
-export default function CalendarWidget({ isEditMode, integrationIds, options }: WidgetComponentProps<"calendar">) {
+export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
   const [month, setMonth] = useState(new Date());
+
+  if (props.integrationIds.length === 0) {
+    return <CalendarBase {...props} events={[]} month={month} setMonth={setMonth} />;
+  }
+
+  return <FetchCalendar month={month} setMonth={setMonth} {...props} />;
+}
+
+interface FetchCalendarProps extends WidgetComponentProps<"calendar"> {
+  month: Date;
+  setMonth: (date: Date) => void;
+}
+
+const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }: FetchCalendarProps) => {
   const [events] = clientApi.widget.calendar.findAllEvents.useSuspenseQuery(
     {
       integrationIds,
@@ -28,15 +44,29 @@ export default function CalendarWidget({ isEditMode, integrationIds, options }: 
       retry: false,
     },
   );
+
+  return <CalendarBase isEditMode={isEditMode} events={events} month={month} setMonth={setMonth} options={options} />;
+};
+
+interface CalendarBaseProps {
+  isEditMode: boolean;
+  events: RouterOutputs["widget"]["calendar"]["findAllEvents"];
+  month: Date;
+  setMonth: (date: Date) => void;
+  options: WidgetComponentProps<"calendar">["options"];
+}
+
+const CalendarBase = ({ isEditMode, events, month, setMonth, options }: CalendarBaseProps) => {
   const params = useParams();
   const locale = params.locale as string;
-  const [firstDayOfWeek] = clientApi.user.getFirstDayOfWeekForUserOrDefault.useSuspenseQuery();
+  const { firstDayOfWeek } = useSettings();
 
   return (
     <Calendar
       defaultDate={new Date()}
       onPreviousMonth={setMonth}
       onNextMonth={setMonth}
+      highlightToday
       locale={locale}
       hideWeekdays={false}
       date={month}
@@ -95,4 +125,4 @@ export default function CalendarWidget({ isEditMode, integrationIds, options }: 
       }}
     />
   );
-}
+};

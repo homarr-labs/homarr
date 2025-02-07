@@ -2,130 +2,130 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Bem-vindo ao Homarr",
+        "subtitle": "Vamos começar configurando a sua instância Homarr.",
+        "description": "Para começar, por favor selecione como você deseja configurar sua instância Homarr.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Começar do zero",
+          "importOldmarr": "Importe de uma instância Homarr anterior a 1,0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Importar dados",
+        "subtitle": "Você pode importar dados de uma instância existente do Homarr.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Arraste o arquivo zip aqui ou clique para procurar",
+          "description": "O arquivo zip enviado será processado e você poderá selecionar o que deseja importar"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Alterar arquivo"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Importar configurações",
+          "description": "Configure o comportamento da importação"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "{count} quadros encontrados",
+          "description": "Escolha todos os quadros com o tamanho que você deseja importar",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Selecionar todos",
+            "unselectAll": "Desmarcar Todos"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Resumo da importação",
+          "description": "No resumo abaixo, você pode ver o que será importado",
           "action": {
-            "import": ""
+            "import": "Confirmar a importação e continuar"
           },
           "entities": {
             "apps": "Aplicativos",
             "boards": "Placas",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "Integrações",
+            "credentialUsers": "Usuários credenciados"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Insira o token de importação",
           "field": {
             "token": {
-              "label": "",
-              "description": ""
+              "label": "Token",
+              "description": "Insira o token de importação mostrado em sua instância homarr anterior"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Token inválido",
+              "message": "O token que você inseriu é inválido"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Usuário Administrador",
+        "subtitle": "Especifique as credenciais para seu usuário administrador.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Usuário criado",
+            "message": "O usuário foi criado com sucesso"
           },
           "error": {
-            "title": ""
+            "title": "Falha ao criar usuário"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "Grupo externo",
+        "subtitle": "Especifique o grupo que deve ser usado para usuários externos.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Nome do grupo",
+            "description": "O nome tem que coincidir com o grupo administrador do provedor externo"
           }
         }
       },
       "settings": {
         "title": "Configurações",
-        "subtitle": ""
+        "subtitle": "Definir as configurações do servidor."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Concluir configuração",
+        "subtitle": "Você está pronto para começar!",
+        "description": "Você concluiu com sucesso o processo de configuração. Agora você pode começar a usar o Homarr. Selecione sua próxima ação:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Ir para o quadro {name}",
+          "createBoard": "Crie seu primeiro quadro",
+          "inviteUser": "Convidar outros usuários",
+          "docs": "Ler a documentação"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Voltar ao início"
   },
   "user": {
     "title": "Usuários",
     "name": "Usuário",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Acesse a sua conta",
+        "subtitle": "Bem-vindo(a) de volta! Por favor, insira suas credenciais"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Junte-se ao Homarr",
+        "subtitle": "Bem-vindo ao Homarr! Por favor, crie sua conta",
+        "description": "Você foi convidado(a) por {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Nova instalação do Homarr",
+        "subtitle": "Por favor, crie o usuário administrador inicial"
       }
     },
     "field": {
       "email": {
         "label": "E-mail",
-        "verified": ""
+        "verified": "Verificado"
       },
       "username": {
         "label": "Usuário"
@@ -133,46 +133,52 @@
       "password": {
         "label": "Senha",
         "requirement": {
-          "length": "",
+          "length": "Inclua pelo menos 8 caracteres",
           "lowercase": "Inclui letras minúsculas",
           "uppercase": "Inclui letras maiúsculas",
           "number": "Inclui número",
-          "special": ""
+          "special": "Inclua um caractere especial"
         }
       },
       "passwordConfirm": {
         "label": "Confirmar senha"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Senha anterior"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Quadro inicial"
       },
       "pingIconsEnabled": {
+        "label": "Usar ícone para pings"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
         "label": ""
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Nome de usuário já em uso"
     },
     "action": {
       "login": {
         "label": "“Login”",
-        "labelWith": "",
+        "labelWith": "Iniciar sessão com {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Início de sessão bem-sucedido",
+            "message": "Agora você está conectado"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Falha ao iniciar sessão",
+            "message": "Seu acesso falhou"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Esqueceu sua senha?",
+          "description": "Um administrador pode usar o seguinte comando para redefinir sua senha:"
         }
       },
       "register": {
@@ -180,37 +186,37 @@
         "notification": {
           "success": {
             "title": "Conta criada",
-            "message": ""
+            "message": "Por favor, entre para continuar"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Criação da conta falhou",
+            "message": "Sua conta não pode ser criada"
           }
         }
       },
       "create": "Criar usuário",
       "changePassword": {
-        "label": "",
+        "label": "Alterar senha",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Senha alterada com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não é possível alterar a senha"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Quadro inicial alterado com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível alterar o quadro inicial"
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
             "message": ""
@@ -223,48 +229,48 @@
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Primeiro dia da semana alterado com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível alterar o primeiro dia da semana"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ícones de ping alterados com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível alternar ícones de ping"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Alterar imagem",
           "notification": {
             "success": {
-              "message": ""
+              "message": "A imagem foi alterada com sucesso"
             },
             "error": {
-              "message": ""
+              "message": "Não é possível alterar a imagem"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "A imagem é muito grande",
+              "message": "O tamanho máximo da imagem é {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Remover imagem",
+          "confirm": "Tem certeza de que deseja remover esta imagem?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Imagem removida com sucesso"
             },
             "error": {
-              "message": ""
+              "message": "Não é possível remover a imagem"
             }
           }
         }
@@ -272,34 +278,34 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Perfil atualizado com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível atualizar o perfil"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Excluir usuário permanentemente",
+        "description": "Exclui esse usuário incluindo suas preferências. Isso não removerá nenhum quadro. O usuário não sera notificado.",
+        "confirm": "Tem certeza que deseja excluir o usuário {username} e suas preferências?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Selecionar usuário",
+        "notFound": "Nenhum usuário encontrado"
       },
       "transfer": {
-        "label": ""
+        "label": "Selecionar novo proprietário"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Grupos",
+    "name": "Grupo",
+    "search": "Encontrar um grupo",
     "field": {
       "name": "Nome",
-      "members": ""
+      "members": "Membros"
     },
     "permission": {
       "admin": {
@@ -438,9 +444,9 @@
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Transferir propriedade",
+        "description": "Transferir propriedade deste grupo para outro usuário.",
+        "confirm": "Tem certeza de que deseja transferir a propriedade do grupo {name} para {username}?",
         "notification": {
           "success": {
             "message": ""
@@ -785,6 +791,9 @@
       },
       "copy": {
         "label": ""
+      },
+      "open": {
+        "label": ""
       }
     }
   },
@@ -796,6 +805,7 @@
       "apply": "Aplicar",
       "backToOverview": "",
       "create": "Criar",
+      "createAnother": "",
       "edit": "Editar",
       "import": "",
       "insert": "Inserir",
@@ -937,7 +947,8 @@
         "moveUp": "Subir",
         "moveDown": "Mover para baixo",
         "createAbove": "",
-        "createBelow": ""
+        "createBelow": "",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "",
@@ -956,6 +967,10 @@
           "create": "",
           "changePosition": "Mudar de posição"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1063,6 +1078,15 @@
               "label": ""
             }
           }
+        },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
         },
         "items": {
           "label": "",
@@ -1172,6 +1196,14 @@
           "label": ""
         },
         "dateFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
           "label": "",
           "description": ""
         }
@@ -1355,6 +1387,13 @@
         "isFormatFahrenheit": {
           "label": ""
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Localização do tempo"
         },
@@ -1372,6 +1411,13 @@
           "label": "",
           "description": ""
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Limpar",
@@ -1407,6 +1453,10 @@
     "healthMonitoring": {
       "name": "Monitoramento da integridade do sistema",
       "description": "Exibe informações que mostram a saúde e status de seu(s) sistema(s).",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Temperatura da CPU em Fahrenheit"
@@ -2265,7 +2315,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "",
               "firstDayOfWeek": "Primeiro dia da semana",
               "accessibility": "Acessibilidade"
             }
@@ -2534,10 +2584,17 @@
               "button": {
                 "createApiToken": ""
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "",
-                  "createdBy": ""
+                  "createdBy": "",
+                  "actions": ""
                 }
               }
             }

@@ -51,7 +51,7 @@
           "title": "Введіть токен імпорту",
           "field": {
             "token": {
-              "label": "Токен.",
+              "label": "Токен",
               "description": "Введіть показаний токен імпорту з вашого попереднього екземпляра homarr"
             }
           },
@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Використовувати значки для ping"
+      },
+      "defaultSearchEngine": {
+        "label": "Стандартна система пошуку"
+      },
+      "openSearchInNewTab": {
+        "label": "Відкрити результати пошуку в новій вкладці"
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Стандартну систему пошуку змінено успішно"
+            "message": "Налаштування пошуку успішно змінено"
           },
           "error": {
-            "message": "Не вдалося змінити стандартну систему пошуку"
+            "message": "Не вдалося змінити налаштування пошуку"
           }
         }
       },
@@ -316,19 +322,19 @@
         "item": {
           "create": {
             "label": "Створення додатків",
-            "description": ""
+            "description": "Дозволити учасникам створювати додатки"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Використовувати всі додатки",
+            "description": "Дозволити учасникам додавати будь-які додатки до своїх дошок"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Змінювати всі додатки",
+            "description": "Дозволити учасникам змінювати всі додатки"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Повний доступ до додатка",
+            "description": "Дозволити учасникам керувати, використовувати і видаляти будь-які додатки"
           }
         }
       },
@@ -336,84 +342,84 @@
         "title": "Дошки",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Створити дошки",
+            "description": "Дозволити учасникам створювати дошки"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Переглядати всі дошки",
+            "description": "Дозволити учасникам переглядати всі дошки"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Змінювати всі дошки",
+            "description": "Дозволити учасникам змінювати всі дошки (не включає контроль доступу та небезпечну зону)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Повний доступ до дошки",
+            "description": "Дозволити учасникам переглядати, змінювати та видаляти всі дошки (включаючи контроль доступу та небезпечну зону)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Інтеграції",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Створювати інтеграції",
+            "description": "Дозволити учасникам створювати інтеграції"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Використовувати всі інтеграції",
+            "description": "Дозволяє учасникам додавати будь-які інтеграції до своїх дошок"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Взаємодіяти з будь-якою інтеграцією",
+            "description": "Дозволити учасникам взаємодіяти з будь-якою інтеграцією"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Повний доступ до інтеграції",
+            "description": "Дозволити учасникам керувати, використовувати та взаємодіяти з будь-якою інтеграцією"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Медіа",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Завантажити медіафайли",
+            "description": "Дозволити учасникам завантажувати медіафайли"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Переглядати всі медіафайли",
+            "description": "Дозволити учасникам переглядати всі медіафайли"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Повний доступ до медіафайлів",
+            "description": "Дозволити учасникам керувати та видаляти будь-які медіафайли"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Інше",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Переглядати логи",
+            "description": "Дозволити учасникам переглядати логи"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Пошукові системи",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Створення пошукових систем",
+            "description": "Дозволити учасникам створювати пошукові системи"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Змінити всі пошукові системи",
+            "description": "Дозволити учасникам змінювати всі пошукові системи"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Повний доступ до пошукових систем",
+            "description": "Дозволити учасникам керувати та видаляти будь-які пошукові системи"
           }
         }
       }
@@ -423,24 +429,24 @@
       "external": ""
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Ця група зарезервована для використання системою та обмежує деякі дії. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Нова група",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Групу успішно створено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося створити групу"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Змінити власника",
+        "description": "Передати право власності на цю групу іншому користувачеві.",
+        "confirm": "Ви впевнені, що бажаєте передати право власності на групу {name} користувачу {username}?",
         "notification": {
           "success": {
             "message": "Група {group} перенесена до {user}"
@@ -499,7 +505,7 @@
     }
   },
   "app": {
-    "search": "",
+    "search": "Пошук додатків",
     "page": {
       "list": {
         "title": "Додатки",
@@ -594,25 +600,25 @@
         "notification": {
           "success": {
             "title": "Зміни застосовано",
-            "message": ""
+            "message": "Інтеграція успішно збережена"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося застосувати зміни",
+            "message": "Не вдалося зберегти інтеграцію"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Видалити інтеграцію",
+        "message": "Ви впевнені, що хочете видалити інтеграцію {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Успішно видалено",
+            "message": "Інтеграцію успішно видалено"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося видалити",
+            "message": "Не вдалося видалити інтеграцію"
           }
         }
       }
@@ -625,27 +631,27 @@
         "label": ""
       },
       "attemptSearchEngineCreation": {
-        "label": "",
+        "label": "Створення пошукових систем",
         "description": ""
       }
     },
     "action": {
-      "create": ""
+      "create": "Нова інтеграція"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Перевірити підключення та створити",
+        "edit": "Перевірити підключення та зберегти"
       },
-      "alertNotice": "",
+      "alertNotice": "Кнопка \"Зберегти\" стане доступною після успішного підключення",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "З'єднання встановлено",
+          "message": "З'єднання успішно встановлено"
         },
         "invalidUrl": {
           "title": "Неправильна URL-адреса",
-          "message": ""
+          "message": "Невірна URL-адреса"
         },
         "secretNotDefined": {
           "title": "",
@@ -656,11 +662,11 @@
           "message": ""
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Помилка підключення",
+          "message": "Не вдалося встановити з'єднання"
         },
         "badRequest": {
-          "title": "",
+          "title": "Невірний запит",
           "message": ""
         },
         "unauthorized": {
@@ -668,48 +674,48 @@
           "message": ""
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Заборонено",
+          "message": "Ймовірно, відсутні дозволи"
         },
         "notFound": {
-          "title": "",
+          "title": "Не знайдено",
           "message": ""
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Внутрішня помилка сервера",
+          "message": "На сервері сталася помилка"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Сервіс недоступний",
+          "message": "Сервер зараз недоступний"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Підключення перервано",
+          "message": "Підключення було перервано"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "Домен не знайдено",
+          "message": "Домен не знайдено"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "У підключенні відмовлено",
+          "message": "У підключенні було відмовлено"
         },
         "invalidJson": {
-          "title": "",
+          "title": "Невірний JSON",
           "message": ""
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Неправильний шлях",
+          "message": "Ймовірно, шлях не правильний"
         }
       }
     },
     "secrets": {
       "title": "",
-      "lastUpdated": "",
+      "lastUpdated": "Останнє оновлення {date}",
       "notSet": {
-        "label": "",
+        "label": "Значення не вказано",
         "tooltip": "Обов’язковий ключ ще не був встановлений"
       },
       "secureNotice": "Цей секрет неможливо буде побачити після створення",
@@ -727,8 +733,8 @@
           "newLabel": "Нове ім'я користувача"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Ключ API",
+          "newLabel": "Новий ключ API"
         },
         "password": {
           "label": "Пароль",
@@ -746,13 +752,13 @@
     },
     "permission": {
       "use": "",
-      "interact": "",
-      "full": ""
+      "interact": "Взаємодія з інтеграціями",
+      "full": "Повний доступ до інтеграції"
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Медіа",
+    "search": "Пошук медіафайлів",
     "field": {
       "name": "Ім’я",
       "size": "Розмір",
@@ -761,126 +767,130 @@
     "action": {
       "upload": {
         "label": "",
-        "file": "",
+        "file": "Виберіть файл",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Медіафайл успішно завантажено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося завантажити медіафайл"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Видалити медіа",
+        "description": "Ви впевнені, що хочете видалити медіа <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Медіафайл успішно видалено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося видалити медіафайл"
           }
         }
       },
       "copy": {
         "label": ""
+      },
+      "open": {
+        "label": "Відкрити медіа"
       }
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Бета-версія",
     "error": "Помилка",
     "action": {
       "add": "Додати",
       "apply": "Застосувати",
-      "backToOverview": "",
+      "backToOverview": "Назад до огляду",
       "create": "Створити",
+      "createAnother": "",
       "edit": "Редагувати",
-      "import": "",
+      "import": "Імпорт",
       "insert": "Вставити",
       "remove": "Видалити",
       "save": "Зберегти",
       "saveChanges": "Зберегти зміни",
       "cancel": "Скасувати",
       "delete": "Видалити",
-      "discard": "",
+      "discard": "Відмінити",
       "confirm": "Підтвердити",
-      "continue": "",
+      "continue": "Продовжити",
       "previous": "Попередній",
       "next": "Далі",
-      "checkoutDocs": "",
-      "checkLogs": "",
+      "checkoutDocs": "Переглянути документацію",
+      "checkLogs": "Щоб дізнатися більше, перевірте логи",
       "tryAgain": "Повторіть спробу",
-      "loading": ""
+      "loading": "Завантаження"
     },
-    "here": "",
+    "here": "тут",
     "iconPicker": {
       "label": "",
       "header": ""
     },
     "colorScheme": {
       "options": {
-        "light": "",
-        "dark": ""
+        "light": "Світла",
+        "dark": "Темна"
       }
     },
     "information": {
       "min": "",
       "max": "",
-      "days": "",
-      "hours": "",
-      "minutes": ""
+      "days": "Днів",
+      "hours": "Годин",
+      "minutes": "Хвилин"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Успішно створено",
+        "error": "Не вдалося створити"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Успішно видалено",
+        "error": "Не вдалося видалити"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Зміни успішно застосовано",
+        "error": "Не вдалося застосувати зміни"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Передача пройшла успішно",
+        "error": "Помилка передачі"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Виберіть одне або декілька значень"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Додати більше значень",
+      "addLabel": "Додати {value}"
     },
     "select": {
       "placeholder": "",
       "badge": {
-        "recommended": ""
+        "recommended": "Рекомендовано"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
-        "preferences": "Ваші уподобання",
-        "logout": "",
+        "switchToDarkMode": "Перемикнути на темну тему",
+        "switchToLightMode": "Перемикнути на світлу тему",
+        "management": "Управління",
+        "preferences": "Ваші налаштування",
+        "logout": "Вийти",
         "login": "Логін",
-        "homeBoard": "",
-        "loggedOut": "",
+        "homeBoard": "Ваша домашня дошка",
+        "loggedOut": "Ви вийшли",
         "updateAvailable": ""
       }
     },
     "dangerZone": "Небезпечна зона",
     "noResults": "Результатів не знайдено",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Показати попередній перегляд",
+      "hide": "Приховати попередній перегляд"
     },
     "zod": {
       "errors": {
@@ -890,7 +900,7 @@
           "startsWith": "Це поле повинно починатися з {startsWith}",
           "endsWith": "Це поле повинно закінчуватися на {endsWith}",
           "includes": "Це поле повинно містити {includes}",
-          "invalidEmail": ""
+          "invalidEmail": "Це поле має бути дійсною електронною поштою"
         },
         "tooSmall": {
           "string": "Це поле повинно мати довжину не менше {minimum} символів",
@@ -901,14 +911,14 @@
           "number": "Це поле повинно бути менше або дорівнювати {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
+          "passwordsDoNotMatch": "Паролі не збігаються",
+          "passwordRequirements": "Пароль не відповідає вимогам",
+          "boardAlreadyExists": "Дошка з такою назвою вже існує",
           "invalidFileType": "",
           "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "fileTooLarge": "Файл завеликий, максимальний розмір становить {maxSize}",
+          "invalidConfiguration": "Невірна конфігурація",
+          "groupNameTaken": "Назва групи вже зайнята"
         }
       }
     }
@@ -931,42 +941,47 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
-        "moveUp": "Рухайся.",
-        "moveDown": "Вниз.",
-        "createAbove": "",
-        "createBelow": ""
+        "create": "Нова категорія",
+        "edit": "Перейменувати категорію",
+        "remove": "Видалити категорію",
+        "moveUp": "Перемістити вгору",
+        "moveDown": "Перемістити вниз",
+        "createAbove": "Нові категорії зверху",
+        "createBelow": "Нова категорія знизу",
+        "openAllInNewTabs": ""
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Нова категорія",
+        "submit": "Додати категорію"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Видалити категорію",
+        "message": "Ви впевнені, що хочете видалити категорію {name}?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Перейменувати категорію",
+        "submit": "Перейменувати категорію"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "Нова категорія",
           "changePosition": "Змінити положення"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Новий елемент",
+      "import": "Імпортувати елемент",
+      "edit": "Редагувати елемент",
+      "moveResize": "Перемістити/змінити розмір",
+      "duplicate": "Дублювати елемент",
+      "remove": "Видалити елемент"
     },
     "menu": {
       "label": {
@@ -974,12 +989,12 @@
       }
     },
     "create": {
-      "title": "",
-      "search": "",
-      "addToBoard": ""
+      "title": "Виберіть елемент для додавання",
+      "search": "Фільтр елементів",
+      "addToBoard": "Додати до дошки"
     },
     "moveResize": {
-      "title": "",
+      "title": "Перемістити/змінити розмір",
       "field": {
         "width": {
           "label": "Ширина"
@@ -996,38 +1011,38 @@
       }
     },
     "edit": {
-      "title": "",
+      "title": "Редагувати елемент",
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Розширені налаштування",
+        "title": "Розширені налаштування елемента"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Інтеграції"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Користувацькі css класи"
         }
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Видалити елемент",
+      "message": "Ви впевнені, що хочете видалити цей елемент?"
     }
   },
   "widget": {
     "app": {
-      "name": "",
-      "description": "",
+      "name": "Додаток",
+      "description": "Вбудовує додаток до дошки.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Виберіть додаток"
         },
         "openInNewTab": {
           "label": "Відкрити в новій вкладці"
         },
         "showTitle": {
-          "label": ""
+          "label": "Показувати назву додатка"
         },
         "showDescriptionTooltip": {
           "label": ""
@@ -1038,17 +1053,17 @@
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Немає додатку",
+          "tooltip": "Ви не обрали дійсну програму"
         }
       }
     },
     "bookmarks": {
-      "name": "",
+      "name": "Закладки",
       "description": "",
       "option": {
         "title": {
-          "label": ""
+          "label": "Назва"
         },
         "layout": {
           "label": "Макет",
@@ -1060,13 +1075,22 @@
               "label": "Вертикальний"
             },
             "grid": {
-              "label": ""
+              "label": "Сітка"
             }
           }
         },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": "Приховати імена хостів"
+        },
+        "openNewTab": {
+          "label": "Відкрити в новій вкладці"
+        },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Закладки",
+          "add": "Додати закладку"
         }
       }
     },
@@ -1084,7 +1108,7 @@
               "label": "Вертикальний"
             },
             "grid": {
-              "label": ""
+              "label": "Сітка"
             }
           }
         },
@@ -1094,11 +1118,11 @@
       },
       "error": {
         "internalServerError": "",
-        "integrationsDisconnected": ""
+        "integrationsDisconnected": "Немає даних, всі інтеграції відключені"
       },
       "data": {
-        "adsBlockedToday": "",
-        "adsBlockedTodayPercentage": "",
+        "adsBlockedToday": "Заблоковано сьогодні",
+        "adsBlockedTodayPercentage": "Заблоковано сьогодні",
         "dnsQueriesToday": "Запити за сьогодні",
         "domainsBeingBlocked": ""
       },
@@ -1118,7 +1142,7 @@
               "label": "Вертикальний"
             },
             "grid": {
-              "label": ""
+              "label": "Сітка"
             }
           }
         },
@@ -1132,68 +1156,76 @@
       "controls": {
         "enableAll": "",
         "disableAll": "",
-        "setTimer": "",
+        "setTimer": "Встановити таймер",
         "set": "",
         "enabled": "Увімкнено",
         "disabled": "Вимкнено",
-        "processing": "",
-        "disconnected": "",
-        "hours": "",
-        "minutes": "",
+        "processing": "Обробка",
+        "disconnected": "Відключено",
+        "hours": "Годин",
+        "minutes": "Хвилин",
         "unlimited": ""
       }
     },
     "clock": {
-      "name": "",
-      "description": "Відображає поточну дату і час.",
+      "name": "Дата і час",
+      "description": "Показує поточні дату і час.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Налаштувати відображення назви міста",
+          "description": "Відобразити свою назву чи назву міста/країни зверху годинника."
         },
         "customTitle": {
-          "label": ""
+          "label": "Назва"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24-годинний формат",
+          "description": "Використовувати 24-годинний формат замість 12-годинного"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Показувати секунди"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Використовувати фіксований часовий пояс"
         },
         "timezone": {
           "label": "Часовий пояс",
-          "description": ""
+          "description": "Виберіть часовий пояс відповідно до стандарту IANA"
         },
         "showDate": {
-          "label": ""
+          "label": "Показувати дату"
         },
         "dateFormat": {
+          "label": "Формат дати",
+          "description": "Як має виглядати дата"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
           "label": "",
           "description": ""
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Статус сервера Minecraft",
+      "description": "Відображає статус сервера Minecraft",
       "option": {
         "title": {
-          "label": ""
+          "label": "Назва"
         },
         "domain": {
-          "label": ""
+          "label": "Адреса сервера"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Сервер Bedrock"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "Онлайн",
+        "offline": "Офлайн"
       }
     },
     "notebook": {
@@ -1201,7 +1233,7 @@
       "description": "",
       "option": {
         "showToolbar": {
-          "label": "Показати панель інструментів для написання націнки"
+          "label": "Показати панель інструментів для допомоги з розміткою"
         },
         "allowReadOnlyCheck": {
           "label": ""
@@ -1211,13 +1243,13 @@
         }
       },
       "controls": {
-        "bold": "",
-        "italic": "",
-        "strikethrough": "",
-        "underline": "",
-        "colorText": "",
+        "bold": "Жирний",
+        "italic": "Курсив",
+        "strikethrough": "Закреслений",
+        "underline": "Підкреслений",
+        "colorText": "Колір тексту",
         "colorHighlight": "",
-        "code": "",
+        "code": "Код",
         "clear": "",
         "heading": "",
         "align": "",
@@ -1228,11 +1260,11 @@
         "checkList": "",
         "increaseIndent": "",
         "decreaseIndent": "",
-        "link": "",
-        "unlink": "",
+        "link": "Посилання",
+        "unlink": "Видалити посилання",
         "image": "",
-        "addTable": "",
-        "deleteTable": "",
+        "addTable": "Додати таблицю",
+        "deleteTable": "Видалити таблицю",
         "colorCell": "",
         "mergeCell": "",
         "addColumnLeft": "",
@@ -1243,13 +1275,13 @@
         "deleteRow": ""
       },
       "align": {
-        "left": "Ліворуч.",
+        "left": "Ліворуч",
         "center": "Центр",
-        "right": "Так."
+        "right": "Праворуч"
       },
       "popover": {
         "clearColor": "",
-        "source": "",
+        "source": "Джерело",
         "widthPlaceholder": "",
         "columns": "",
         "rows": "",
@@ -1258,7 +1290,7 @@
       }
     },
     "iframe": {
-      "name": "IFrame",
+      "name": "iFrame",
       "description": "Вставити будь-який контент з інтернету. Деякі вебсайти можуть обмежувати доступ.",
       "option": {
         "embedUrl": {
@@ -1303,7 +1335,7 @@
           "label": "Ідентифікатор об'єкта"
         },
         "displayName": {
-          "label": ""
+          "label": "Відображуване ім'я"
         },
         "entityUnit": {
           "label": ""
@@ -1314,8 +1346,8 @@
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Запустити автоматизацію",
+      "description": "Запустити автоматизацію одним натисканням",
       "option": {
         "displayName": {
           "label": "Відображати ім'я"
@@ -1325,7 +1357,7 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "Запустити {name}"
       }
     },
     "calendar": {
@@ -1335,13 +1367,13 @@
         "releaseType": {
           "label": "Radarr - тип релізів",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "У кінотеатрі",
+            "digitalRelease": "Цифровий випуск",
+            "physicalRelease": "Фізичний випуск"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Почати з"
         },
         "filterFutureMonths": {
           "label": ""
@@ -1353,25 +1385,39 @@
       "description": "Показує поточну інформацію про погоду в заданому місці.",
       "option": {
         "isFormatFahrenheit": {
+          "label": "Температура за Фаренгейтом"
+        },
+        "disableTemperatureDecimals": {
           "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
         },
         "location": {
           "label": "Погодна локація"
         },
         "showCity": {
-          "label": ""
+          "label": "Показувати місто"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Показувати прогноз погоди"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Кількість днів прогнозу",
+          "description": "Якщо віджет недостатньо широкий, відображається менше днів"
         },
         "dateFormat": {
-          "label": "",
+          "label": "Формат дати",
           "description": ""
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Ясно",
@@ -1392,10 +1438,10 @@
     },
     "indexerManager": {
       "name": "Статус менеджера індексування",
-      "description": "",
+      "description": "Статус ваших індексаторів",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Відкрити сайт індексатора у новій вкладці"
         }
       },
       "title": "Менеджер індексації",
@@ -1405,17 +1451,21 @@
       }
     },
     "healthMonitoring": {
-      "name": "",
+      "name": "Моніторинг системних ресурсів",
       "description": "",
+      "tab": {
+        "system": "",
+        "cluster": "Кластер"
+      },
       "option": {
         "fahrenheit": {
-          "label": ""
+          "label": "Температура ЦП у Фаренгейтах"
         },
         "cpu": {
-          "label": ""
+          "label": "Показати інформацію про ЦП"
         },
         "memory": {
-          "label": ""
+          "label": "Показати інформацію про пам'ять"
         },
         "fileSystem": {
           "label": ""
@@ -1428,26 +1478,26 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
+        "information": "Інформація",
+        "processor": "Процесор: {cpuModelName}",
         "memory": "",
         "memoryAvailable": "",
-        "version": "",
+        "version": "Версія: {version}",
         "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
-        "available": "",
-        "lastSeen": ""
+        "loadAverage": "Середнє навантаження:",
+        "minute": "1 хвилина",
+        "minutes": "{count} хвилин(и)",
+        "used": "Використано",
+        "available": "Доступно",
+        "lastSeen": "Останнє оновлення статусу: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Не вдалося отримати дані про стан системи"
       },
       "cluster": {
         "summary": {
-          "cpu": "",
+          "cpu": "ЦП",
           "memory": ""
         },
         "resource": {
@@ -1461,31 +1511,31 @@
             "name": ""
           },
           "storage": {
-            "name": ""
+            "name": "Сховище"
           }
         },
         "popover": {
           "rightSection": {
             "node": "",
             "vmId": "",
-            "plugin": ""
+            "plugin": "Плагін"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
+            "cpu": "Ядра",
+            "memory": "Пам'ять",
+            "storage": "Сховище",
+            "uptime": "Час роботи",
             "haState": "",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Локальне сховище",
+              "shared": "Спільне сховище"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
+            "name": "Назва",
+            "cpu": "ЦП",
             "memory": "",
             "node": ""
           }
@@ -1494,21 +1544,21 @@
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
+        "query": "Місто / Поштовий індекс",
+        "latitude": "Широта",
+        "longitude": "Довгота",
+        "disabledTooltip": "Введіть місто або поштовий індекс",
+        "unknownLocation": "Невідоме місцерозташування",
         "search": "Пошук",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "Місто",
+            "country": "Країна",
+            "coordinates": "Координати",
+            "population": "Населення"
           },
           "action": {
-            "select": ""
+            "select": "Виберіть {city}, {countryCode}"
           },
           "population": {
             "fallback": "Невідомо"
@@ -1516,16 +1566,16 @@
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "Не знайдено інтеграції",
+        "description": "Натисніть <here></here> для створення нової інтеграції"
       },
       "app": {
-        "noData": "",
-        "description": ""
+        "noData": "Додаток не знайдено",
+        "description": "Натисніть <here></here> щоб створити новий додаток"
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "Інтеграція не вибрана",
+        "noData": "Немає даних про інтеграцію"
       },
       "option": {}
     },
@@ -1541,42 +1591,42 @@
           "description": ""
         },
         "isMuted": {
-          "label": ""
+          "label": "Без звуку"
         },
         "hasControls": {
-          "label": ""
+          "label": "Показати елементи керування"
         }
       },
       "error": {
         "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "forYoutubeUseIframe": "Для відео YouTube використовуйте опцію iframe"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Поточні потоки медіасервера",
+      "description": "Показує поточні потоки з ваших медіасерверів",
       "option": {},
       "items": {
-        "user": "",
-        "name": "",
-        "id": ""
+        "user": "Користувач",
+        "name": "Назва",
+        "id": "Id"
       }
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "Завантаження",
+      "description": "Дозволяє переглядати та керувати завантаженнями від клієнтів Torrent та Usenet.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Стовпці, що відображаються"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Увімкнути сортування елементів"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Стовпець для сортування за замовчуванням"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Зворотнє сортування"
         },
         "showCompletedUsenet": {
           "label": ""
@@ -1585,7 +1635,7 @@
           "label": ""
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "Приховувати завершені торенти нижче за цей поріг (у КіБ/с)"
         },
         "categoryFilter": {
           "label": ""
@@ -1594,23 +1644,23 @@
           "label": ""
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Використати фільтр при розрахунку рейтингу"
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "Вибір стовпців в елементах",
+        "noCommunications": "Не вдалося завантажити дані з інтеграції"
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Управління"
         },
         "added": {
-          "columnTitle": "",
+          "columnTitle": "Додано",
           "detailsTitle": "Дата додавання"
         },
         "category": {
-          "columnTitle": "",
+          "columnTitle": "Додатково",
           "detailsTitle": ""
         },
         "downSpeed": {
@@ -1618,21 +1668,21 @@
           "detailsTitle": "Швидкість завантаження"
         },
         "index": {
-          "columnTitle": "",
+          "columnTitle": "#",
           "detailsTitle": ""
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "Id"
         },
         "integration": {
           "columnTitle": "Інтеграція"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Назва"
         },
         "progress": {
           "columnTitle": "Прогрес",
-          "detailsTitle": ""
+          "detailsTitle": "Прогрес завантаження"
         },
         "ratio": {
           "columnTitle": "Співвідношення",
@@ -1640,31 +1690,31 @@
         },
         "received": {
           "columnTitle": "",
-          "detailsTitle": ""
+          "detailsTitle": "Всього завантажено"
         },
         "sent": {
           "columnTitle": "",
-          "detailsTitle": ""
+          "detailsTitle": "Всього вивантажено"
         },
         "size": {
-          "columnTitle": "",
+          "columnTitle": "Розмір файлу",
           "detailsTitle": ""
         },
         "state": {
           "columnTitle": "Стан",
-          "detailsTitle": ""
+          "detailsTitle": "Стан"
         },
         "time": {
-          "columnTitle": "",
+          "columnTitle": "Час завершення",
           "detailsTitle": ""
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Тип",
+          "detailsTitle": "Тип клієнта"
         },
         "upSpeed": {
           "columnTitle": "Віддача",
-          "detailsTitle": ""
+          "detailsTitle": "Швидкість вивантаження"
         }
       },
       "states": {
@@ -1672,38 +1722,38 @@
         "queued": "У черзі",
         "paused": "Призупинено",
         "completed": "Завершено",
-        "failed": "",
-        "processing": "",
-        "leeching": "",
+        "failed": "Невдало",
+        "processing": "В обробці",
+        "leeching": "Завантажується",
         "stalled": "",
         "unknown": "Невідомо",
-        "seeding": ""
+        "seeding": "Роздається"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
-          "resume": ""
+          "modalTitle": "Завантажити список клієнтів",
+          "pause": "Призупинити всі клієнти/елементи",
+          "resume": "Відновити всі клієнти/елементи"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "Призупинити клієнт",
+          "resume": "Відновити клієнт"
         },
         "item": {
-          "pause": "",
+          "pause": "Призупинити елемент",
           "resume": "",
           "delete": {
-            "title": "",
-            "modalTitle": "",
-            "entry": "",
-            "entryAndFiles": ""
+            "title": "Видалити елемент",
+            "modalTitle": "Ви дійсно бажаєте видалити це?",
+            "entry": "Видалити запис",
+            "entryAndFiles": "Видалити запис і файл(и)"
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "Загальний рейтинг"
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "Список медіа запитів",
       "description": "Перегляньте список усіх медіазапитів від ваших Overseerr або Jellyseerr",
       "option": {
         "linksTargetNewTab": {
@@ -1711,21 +1761,21 @@
         }
       },
       "pending": {
-        "approve": "",
+        "approve": "Схвалити запит",
         "approving": "",
-        "decline": ""
+        "decline": "Відхилити запит"
       },
       "availability": {
         "unknown": "Невідомо",
-        "pending": "",
-        "processing": "",
-        "partiallyAvailable": "",
-        "available": ""
+        "pending": "В очікуванні",
+        "processing": "В обробці",
+        "partiallyAvailable": "Частково доступно",
+        "available": "Доступно"
       },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
-      "name": "",
+      "name": "Статистика медіазапитів",
       "description": "Статистика ваших запитів у медіа",
       "option": {},
       "titles": {
@@ -1733,28 +1783,28 @@
           "main": "Медіа-статистика",
           "approved": "Вже затверджено",
           "pending": "Очікує схвалення",
-          "processing": "",
-          "declined": "",
-          "available": "",
-          "tv": "Запити на ТБ",
+          "processing": "Обробляється",
+          "declined": "Вже відхилено",
+          "available": "Вже доступно",
+          "tv": "Запити на серіали",
           "movie": "Запити на фільми",
           "total": "Всього"
         },
         "users": {
           "main": "Найкращі користувачі",
-          "requests": ""
+          "requests": "Запитів"
         }
       }
     },
     "mediaTranscoding": {
-      "name": "",
+      "name": "Перекодування медіа",
       "description": "",
       "option": {
         "defaultView": {
           "label": "Вигляд за замовчуванням"
         },
         "queuePageSize": {
-          "label": ""
+          "label": "Розмір сторінки черги"
         }
       },
       "tab": {
@@ -1806,7 +1856,7 @@
       }
     },
     "rssFeed": {
-      "name": "",
+      "name": "RSS-канали",
       "description": "",
       "option": {
         "feedUrls": {
@@ -1830,50 +1880,50 @@
       "disabled": ""
     },
     "dimensions": {
-      "title": ""
+      "title": "Змінити розміри"
     }
   },
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "Скопіювати дошку",
+        "message": "Це продублює дошку {name} з усім її вмістом. Якщо віджети посилаються на інтеграції, які ви не можете використовувати, їх буде видалено.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Дошку скопійовано",
+            "message": "Дошку успішно продубльовано"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Неможливо продублювати дошку",
+            "message": "Дошку не може бути продубльовано"
           }
         }
       },
       "edit": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Зміни успішно застосовано",
+            "message": "Дошка успішно збережена"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося застосувати зміни",
+            "message": "Не вдалося зберегти дошку"
           }
         },
         "confirmLeave": {
-          "title": "",
-          "message": ""
+          "title": "Незбережені зміни",
+          "message": "У вас є незбережені зміни. Ви впевнені, що хочете вийти?"
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "Імпорт з homarr до версії 1.0.0",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Успішно імпортовано",
+            "message": "Дошка успішно імпортована"
           },
           "error": {
-            "title": "",
+            "title": "Помилка імпорту",
             "message": ""
           }
         },
@@ -1885,20 +1935,20 @@
           "apps": {
             "label": "Додатки",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "Уникати дублікатів",
+              "description": "Ігнорує додатки, якщо додаток з таким самим посиланням вже існує"
             },
             "onlyImportApps": {
-              "label": "",
+              "label": "Імпортувати лише додатки",
               "description": ""
             }
           },
           "name": {
-            "label": ""
+            "label": "Назва дошки"
           },
           "screenSize": {
-            "label": "",
-            "description": "",
+            "label": "Розмір екрану",
+            "description": "У версіях до 1.0 існувало три різні режими, тому ви могли вибрати кількість стовпців для кожного розміру екрана.",
             "option": {
               "sm": "Малий",
               "md": "Середній",
@@ -1924,7 +1974,7 @@
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "Назва сторінки"
       },
       "metaTitle": {
         "label": ""
@@ -1943,7 +1993,7 @@
         "option": {
           "fixed": {
             "label": "",
-            "description": ""
+            "description": "Фон залишається в тому ж положенні."
           },
           "scroll": {
             "label": "",
@@ -1992,7 +2042,7 @@
         "label": "Вторинний колір"
       },
       "opacity": {
-        "label": ""
+        "label": "Непрозорість"
       },
       "customCss": {
         "label": "",
@@ -2030,23 +2080,23 @@
           "title": "Фон"
         },
         "color": {
-          "title": ""
+          "title": "Кольори"
         },
         "customCss": {
           "title": ""
         },
         "access": {
-          "title": "",
+          "title": "Управління доступом",
           "permission": {
             "item": {
               "view": {
-                "label": "Дошка оголошень"
+                "label": "Перегляд дошки"
               },
               "modify": {
-                "label": ""
+                "label": "Змінювати дошку"
               },
               "full": {
-                "label": ""
+                "label": "Повний доступ"
               }
             }
           }
@@ -2055,41 +2105,41 @@
           "title": "Небезпечна зона",
           "action": {
             "rename": {
-              "label": "",
+              "label": "Перейменувати дошку",
               "description": "",
-              "button": "",
+              "button": "Змінити назву",
               "modal": {
-                "title": ""
+                "title": "Перейменувати дошку"
               }
             },
             "visibility": {
-              "label": "",
+              "label": "Змінити видимість дошки",
               "description": {
-                "public": "",
-                "private": ""
+                "public": "Ця дошка є загальнодоступною.",
+                "private": "Ця дошка є приватною."
               },
               "button": {
-                "public": "",
-                "private": ""
+                "public": "Зробити приватною",
+                "private": "Зробити загальнодоступною"
               },
               "confirm": {
                 "public": {
-                  "title": "",
+                  "title": "Зробити дошку приватною",
                   "description": ""
                 },
                 "private": {
                   "title": "",
-                  "description": ""
+                  "description": "Ви впевнені, що хочете зробити цю дошку публічною? Це зробить дошку доступною для всіх."
                 }
               }
             },
             "delete": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "Видалити цю дошку",
+              "description": "Як тільки ви видалите дошку, вона вже не повернеться. Будь ласка, будьте певні.",
+              "button": "Видалити цю дошку",
               "confirm": {
                 "title": "Видалити дошку",
-                "description": ""
+                "description": "Ви впевнені, що хочете видалити цю дошку? Ця дія остаточно видалить дошку з усім її вмістом."
               }
             }
           }
@@ -2098,33 +2148,33 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Ласкаво просимо до Homarr",
+        "description": "Витончена сучасна інформаційна панель, на якій усі ваші програми та служби будуть під рукою.",
+        "link": "Створіть свою першу дошку",
+        "notice": "Щоб ця сторінка зникла, створіть дошку та встановіть її як домашню"
       },
       "notFound": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Дошка не знайдена",
+        "description": "Вказана дошка або не знайдена, або Ви не маєте до неї доступу.",
+        "link": "Переглянути всі дошки",
+        "notice": "Перевірте посилання або зверніться до адміністратора, якщо вважаєте, що вона має бути доступна"
       },
       "homeBoard": {
-        "title": "",
+        "title": "Немає домашньої дошки",
         "admin": {
-          "description": "",
+          "description": "Ви ще не встановили домашню дошку для сервера.",
           "link": "",
-          "notice": ""
+          "notice": "Щоб змусити цю сторінку зникнути для всіх користувачів, встановіть домашню плату для сервера"
         },
         "user": {
-          "description": "",
-          "link": "",
+          "description": "Ви ще не встановили домашню дошку.",
+          "link": "Налаштуйте домашню дошку",
           "notice": ""
         },
         "anonymous": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Адміністратор сервера ще не встановив домашню дошку.",
+          "link": "Переглянути публічні дошки",
+          "notice": "Щоб ця сторінка зникла, попросіть адміністратора сервера встановити домашню дошку для сервера"
         }
       }
     }
@@ -2132,48 +2182,48 @@
   "management": {
     "metaTitle": "",
     "title": {
-      "morning": "",
-      "afternoon": "",
-      "evening": ""
+      "morning": "Доброго ранку, {username}",
+      "afternoon": "Доброго дня, {username}",
+      "evening": "Доброго вечора, {username}"
     },
     "notFound": {
-      "title": "",
-      "text": ""
+      "title": "Не знайдено",
+      "text": "Не вдалося знайти запитуваний ресурс"
     },
     "navbar": {
       "items": {
         "home": "Головна",
         "boards": "Дошки",
         "apps": "Додатки",
-        "integrations": "",
-        "searchEngies": "",
-        "medias": "",
+        "integrations": "Інтеграції",
+        "searchEngies": "Пошукові системи",
+        "medias": "Медіа",
         "users": {
           "label": "Користувачі",
           "items": {
             "manage": "Керувати",
             "invites": "Запрошує",
-            "groups": ""
+            "groups": "Групи"
           }
         },
         "tools": {
           "label": "Інструменти",
           "items": {
-            "docker": "",
-            "logs": "",
-            "api": "",
-            "certificates": "",
-            "tasks": ""
+            "docker": "Докер",
+            "logs": "Логи",
+            "api": "API",
+            "certificates": "Сертифікати",
+            "tasks": "Завдання"
           }
         },
         "settings": "Налаштування",
         "help": {
-          "label": "Допоможіть!",
+          "label": "Допомога",
           "items": {
             "documentation": "Документація",
-            "submitIssue": "",
-            "discord": "Розбрат у громаді",
-            "sourceCode": ""
+            "submitIssue": "Повідомити про проблему",
+            "discord": "Discord",
+            "sourceCode": "Вихідний код"
           }
         },
         "about": "Про програму"
@@ -2184,57 +2234,57 @@
         "statistic": {
           "board": "Дошки",
           "user": "Користувачі",
-          "invite": "Запрошує",
-          "integration": "",
+          "invite": "Запрошення",
+          "integration": "Інтеграції",
           "app": "Додатки",
-          "group": ""
+          "group": "Групи"
         },
         "statisticLabel": {
           "boards": "Дошки",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "Ресурси",
+          "authentication": "Аутентифікація",
+          "authorization": "Авторизація"
         }
       },
       "board": {
         "title": "Твої дошки",
         "action": {
           "new": {
-            "label": ""
+            "label": "Нова дошка"
           },
           "open": {
-            "label": ""
+            "label": "Відкрити дошку"
           },
           "settings": {
             "label": "Налаштування"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "Встановити як домашню дошку",
             "badge": {
               "label": "Головна",
-              "tooltip": ""
+              "tooltip": "Ця дошка буде вашою домашньою дошкою"
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Встановити як мобільну дошку",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Мобільна",
+              "tooltip": "Ця дошка буде вашою мобільною дошкою"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Скопіювати дошку"
           },
           "delete": {
             "label": "Видалити назавжди",
             "confirm": {
               "title": "Видалити дошку",
-              "description": ""
+              "description": "Ви впевнені, що хочете видалити дошку {name}?"
             }
           }
         },
         "visibility": {
-          "public": "",
+          "public": "Ця дошка є публічною",
           "private": ""
         },
         "modal": {
@@ -2257,15 +2307,15 @@
           "general": {
             "title": "Загальне",
             "item": {
-              "language": "",
+              "language": "Мова та Регіон",
               "board": {
-                "title": "",
+                "title": "Домашня дошка",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Загальна",
+                  "mobile": "Мобільна"
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "Пошук",
               "firstDayOfWeek": "Перший день тижня",
               "accessibility": "Доступність"
             }
@@ -2282,11 +2332,11 @@
           "title": "Користувачі"
         },
         "edit": {
-          "metaTitle": ""
+          "metaTitle": "Редагувати користувача {username}"
         },
         "create": {
           "metaTitle": "Створити користувача",
-          "title": "",
+          "title": "Створити нового користувача",
           "step": {
             "personalInformation": {
               "label": ""
@@ -2295,37 +2345,37 @@
               "label": "Безпека"
             },
             "groups": {
-              "label": "",
-              "title": "",
+              "label": "Групи",
+              "title": "Виберіть усі групи, учасником яких має бути користувач",
               "description": ""
             },
             "review": {
-              "label": ""
+              "label": "Огляд"
             },
             "completed": {
-              "title": ""
+              "title": "Користувача створено"
             },
             "error": {
-              "title": ""
+              "title": "Не вдалося створити користувача"
             }
           },
           "action": {
-            "createAnother": "",
-            "back": ""
+            "createAnother": "Створити іншого користувача",
+            "back": "Повернутися до списку користувачів"
           }
         },
         "invite": {
           "title": "Керування запрошеннями користувачів",
           "action": {
             "new": {
-              "title": "",
+              "title": "Нове запрошення",
               "description": "Після закінчення терміну дії запрошення буде недійсним, і одержувач запрошення не зможе створити обліковий запис."
             },
             "copy": {
-              "title": "",
+              "title": "Копіювати запрошення",
               "description": "",
               "link": "Посилання на запрошення",
-              "button": ""
+              "button": "Копіювати та закрити"
             },
             "delete": {
               "title": "Видалити запрошення",
@@ -2343,29 +2393,29 @@
               "label": "Термін придатності"
             },
             "token": {
-              "label": "Токен."
+              "label": "Токен"
             }
           }
         }
       },
       "group": {
-        "back": "",
+        "back": "Назад до груп",
         "setting": {
           "general": {
             "title": "Загальне",
             "owner": "Власник",
-            "ownerOfGroup": "",
-            "ownerOfGroupDeleted": ""
+            "ownerOfGroup": "Власник цієї групи",
+            "ownerOfGroupDeleted": "Власника цієї групи видалено. Наразі не має власника."
           },
           "members": {
-            "title": "",
-            "search": "",
-            "notFound": ""
+            "title": "Учасники",
+            "search": "Знайти учасника",
+            "notFound": "Учасників не знайдено"
           },
           "permissions": {
-            "title": "",
+            "title": "Дозволи",
             "form": {
-              "unsavedChanges": ""
+              "unsavedChanges": "У вас є незбережені зміни!"
             }
           }
         }
@@ -2374,88 +2424,88 @@
         "title": "Налаштування",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Налаштування успішно збережено"
           },
           "error": {
-            "message": ""
+            "message": "Не вдалося зберегти налаштування"
           }
         },
         "section": {
           "analytics": {
-            "title": "",
+            "title": "Аналітика",
             "general": {
-              "title": "",
-              "text": ""
+              "title": "Надсилати анонімну аналітику",
+              "text": "Homarr буде відправляти анонімну аналітику з використанням програмного забезпечення з відкритим вихідним кодом Umami. Він ніколи не збирає жодної особистої інформації і, таким чином, сумісний з GDPR та CCPA. Ми заохочуємо вас увімкнути аналітику, тому що це допомагає нашій команді визначати проблеми та пріоритетні задачі."
             },
             "widgetData": {
-              "title": "",
-              "text": ""
+              "title": "Дані віджетів",
+              "text": "Надсилати, які віджети (і їх кількість) ви налаштували. Не містить URL, назви, або будь-які інші дані."
             },
             "integrationData": {
-              "title": "",
-              "text": ""
+              "title": "Дані інтеграції",
+              "text": "Надсилати, які віджети (і їх кількість) ви налаштували. Не містить URL, назви, або будь-які інші дані."
             },
             "usersData": {
-              "title": "",
-              "text": ""
+              "title": "Дані користувачів",
+              "text": "Надсилати кількість користувачів і чи активували ви SSO"
             }
           },
           "crawlingAndIndexing": {
-            "title": "",
-            "warning": "",
+            "title": "Пошукові сканери та індексація",
+            "warning": "Увімкнення або вимкнення будь-яких налаштувань тут серйозно вплине на те, як пошукові системи індексуватимуть і скануватимуть вашу сторінку. Будь-яке налаштування є запитом, і пошуковий сканер має застосувати ці налаштування. Будь-які зміни можуть зайняти кілька днів або тижнів. Деякі налаштування можуть залежати від пошукової системи.",
             "noIndex": {
-              "title": "",
-              "text": ""
+              "title": "Не індексувати (No Index)",
+              "text": "Не індексувати сайт у пошукових системах і не показувати його в жодному результаті пошуку"
             },
             "noFollow": {
-              "title": "",
-              "text": ""
+              "title": "Не переходити (No follow)",
+              "text": "Не переходьте за посиланнями під час індексації. Якщо вимкнути це, то сканери намагатимуться переходити за всіма посиланнями на Homarr."
             },
             "noTranslate": {
-              "title": "",
-              "text": ""
+              "title": "Не перекладати (No translate)",
+              "text": "Якщо мова сайту не є тією, яку користувач, імовірно, захоче прочитати, Google покаже посилання на переклад у результатах пошуку"
             },
             "noSiteLinksSearchBox": {
-              "title": "",
-              "text": ""
+              "title": "Без вікна пошуку з посиланнями на сайт",
+              "text": "Google створює вікно пошуку зі просканованими посиланнями разом з іншими прямими посиланнями. Ввімкнення цього налаштування просить Google відключити таке вікно пошуку."
             }
           },
           "board": {
             "title": "Дошки",
             "homeBoard": {
-              "label": "",
-              "mobileLabel": "",
-              "description": ""
+              "label": "Глобальна домашня дошка",
+              "mobileLabel": "Глобальна мобільна дошка",
+              "description": "Тут доступні тільки публічні дошки"
             }
           },
           "search": {
-            "title": "",
+            "title": "Пошук",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "Глобальна система пошуку за замовчуванням",
+              "description": "Пошукові системи з інтеграцій тут недоступні"
             }
           },
           "appearance": {
             "title": "Вигляд",
             "defaultColorScheme": {
-              "label": "",
+              "label": "Стандартна кольорова тема",
               "options": {
-                "light": "",
-                "dark": ""
+                "light": "Світла",
+                "dark": "Темна"
               }
             }
           },
           "culture": {
-            "title": "",
+            "title": "Культура",
             "defaultLocale": {
-              "label": ""
+              "label": "Стандартна мова"
             }
           }
         }
       },
       "tool": {
         "tasks": {
-          "title": "",
+          "title": "Завдання",
           "status": {
             "idle": "",
             "running": "Запущено",
@@ -2463,13 +2513,13 @@
           },
           "job": {
             "minecraftServerStatus": {
-              "label": ""
+              "label": "Статус сервера Minecraft"
             },
             "iconsUpdater": {
               "label": ""
             },
             "analytics": {
-              "label": ""
+              "label": "Аналітика"
             },
             "smartHomeEntityState": {
               "label": ""
@@ -2516,12 +2566,12 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "",
-              "description": "",
-              "button": ""
+              "title": "API токен створено",
+              "description": "API-токен було створено. Будьте обережні, цей токен шифрується в базі даних і більше ніколи не буде переданий вам. Якщо ви втратите цей токен, у вас більше не буде змоги отримати цей токен.",
+              "button": "Копіювати та закрити"
             }
           },
           "tab": {
@@ -2529,15 +2579,22 @@
               "label": "Документація"
             },
             "apiKey": {
-              "label": "",
-              "title": "",
+              "label": "Аутентифікація",
+              "title": "Ключі API",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "Створити API токен"
+              },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
               },
               "table": {
                 "header": {
                   "id": "ІДЕНТИФІКАТОР",
-                  "createdBy": ""
+                  "createdBy": "",
+                  "actions": ""
                 }
               }
             }
@@ -2545,20 +2602,20 @@
         }
       },
       "about": {
-        "version": "",
-        "text": "",
+        "version": "Версія {version}",
+        "text": "Homarr — це проєкт із відкритим кодом, керований спільнотою, який підтримується волонтерами. Завдяки цим людям проєкт Homarr розвивається з 2021 року. Наша команда працює над Homarr абсолютно віддалено з різних країн у вільний час без жодної компенсації.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Учасники",
+            "subtitle": "{count} - стільки людей розробляє код та Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Перекладачі",
+            "subtitle": "{count} - стільки людей допомагають перекладати багатьма мовами"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Бібліотеки",
+            "subtitle": "{count} - стільки бібліотек використано в коді Homarr"
           }
         }
       }
@@ -2567,9 +2624,9 @@
   "docker": {
     "title": "Контейнери",
     "table": {
-      "updated": "",
+      "updated": "Оновлено {when}",
       "search": "",
-      "selected": ""
+      "selected": "Вибрано {selectCount} із {totalCount} контейнерів"
     },
     "field": {
       "name": {
@@ -2584,7 +2641,7 @@
           "restarting": "Перезапуск",
           "exited": "",
           "removing": "Видалення",
-          "dead": ""
+          "dead": "Несправний"
         }
       },
       "containerImage": {
@@ -2599,12 +2656,12 @@
         "label": "Пуск",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Контейнери запущено",
+            "message": "Контейнери успішно запущені"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Контейнери не запущено",
+            "message": "Не вдалося запустити контейнери"
           }
         }
       },
@@ -2612,12 +2669,12 @@
         "label": "Зупинити",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Контейнери зупинено",
+            "message": "Контейнери успішно зупинені"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Контейнери не зупинені",
+            "message": "Контейнери не вдалося зупинити"
           }
         }
       },
@@ -2625,12 +2682,12 @@
         "label": "Перезапустити",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Контейнери перезавантажено",
+            "message": "Контейнери успішно перезавантажено"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Контейнери не перезавантажено",
+            "message": "Не вдалося перезапустити контейнери"
           }
         }
       },
@@ -2638,42 +2695,42 @@
         "label": "Видалити",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Контейнери видалено",
+            "message": "Контейнери успішно видалені"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Контейнери не видалено",
+            "message": "Не вдалося видалити контейнери"
           }
         }
       },
       "refresh": {
-        "label": "",
+        "label": "Оновити",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Контейнери оновлено",
+            "message": "Зараз ви переглядаєте останні дані"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Контейнери не оновлено",
+            "message": "Під час оновлення контейнерів сталася помилка"
           }
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Додати до Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Додано до Homarr",
+            "message": "Обрані додатки додано до Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося додати до Homarr",
+            "message": "Не вдалося додати обрані додатки до Homarr"
           }
         },
         "modal": {
-          "title": ""
+          "title": "Додати контейнер(и) докер до Homarr"
         }
       }
     },
@@ -2682,32 +2739,32 @@
     }
   },
   "permission": {
-    "title": "",
+    "title": "Дозволи",
     "userSelect": {
-      "title": ""
+      "title": "Додати дозвіл для користувача"
     },
     "groupSelect": {
-      "title": ""
+      "title": "Додати дозвіл для групи"
     },
     "tab": {
       "user": "Користувачі",
-      "group": "",
-      "inherited": ""
+      "group": "Групи",
+      "inherited": "Унаслідувані групи"
     },
     "field": {
       "user": {
         "label": "Користувач"
       },
       "group": {
-        "label": ""
+        "label": "Група"
       },
       "permission": {
-        "label": ""
+        "label": "Дозвіл"
       }
     },
     "action": {
-      "saveUser": "",
-      "saveGroup": ""
+      "saveUser": "Зберегти дозвіл користувача",
+      "saveGroup": "Зберегти дозвіл групи"
     }
   },
   "navigationStructure": {
@@ -2717,7 +2774,7 @@
         "label": "Дошки"
       },
       "integrations": {
-        "label": "",
+        "label": "Інтеграції",
         "edit": {
           "label": "Редагувати"
         },
@@ -2726,7 +2783,7 @@
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Пошукові системи",
         "new": {
           "label": ""
         },
@@ -2735,7 +2792,7 @@
         }
       },
       "medias": {
-        "label": ""
+        "label": "Медіа"
       },
       "apps": {
         "label": "Додатки",
@@ -2755,22 +2812,22 @@
         "security": "Безпека",
         "board": "Дошки",
         "groups": {
-          "label": ""
+          "label": "Групи"
         },
         "invites": {
-          "label": "Запрошує"
+          "label": "Запрошення"
         }
       },
       "tools": {
         "label": "Інструменти",
         "docker": {
-          "label": ""
+          "label": "Докер"
         },
         "logs": {
-          "label": ""
+          "label": "Логи"
         },
         "certificates": {
-          "label": ""
+          "label": "Сертифікати"
         }
       },
       "settings": {
@@ -2783,23 +2840,23 @@
   },
   "search": {
     "placeholder": "",
-    "nothingFound": "",
+    "nothingFound": "Нічого не знайдено",
     "error": {
       "fetch": ""
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "Пошук додатків, інтеграцій, або дошок",
         "group": {
           "app": {
             "title": "Додатки",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Відкрити посилання на додаток"
                 },
                 "edit": {
-                  "label": ""
+                  "label": "Редагувати додаток"
                 }
               },
               "detail": {
@@ -2812,16 +2869,16 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Відкрити дошку"
                 },
                 "homeBoard": {
-                  "label": ""
+                  "label": "Встановити як домашню дошку"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Встановити як мобільну дошку"
                 },
                 "settings": {
-                  "label": ""
+                  "label": "Відкрити налаштування"
                 }
               },
               "detail": {
@@ -2830,25 +2887,25 @@
             }
           },
           "integration": {
-            "title": ""
+            "title": "Інтеграції"
           }
         }
       },
       "command": {
-        "help": "",
+        "help": "Активувати командний режим",
         "group": {
           "localCommand": {
-            "title": ""
+            "title": "Локальні команди"
           },
           "globalCommand": {
             "title": "",
             "option": {
               "colorScheme": {
-                "light": "",
-                "dark": ""
+                "light": "Перемикнути на світлу тему",
+                "dark": "Перемикнути на темну тему"
               },
               "language": {
-                "label": "",
+                "label": "Змінити мову",
                 "children": {
                   "detail": {
                     "title": ""
@@ -2856,78 +2913,78 @@
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "Створити нову дошку"
               },
               "importBoard": {
-                "label": ""
+                "label": "Імпортувати дошку"
               },
               "newApp": {
-                "label": ""
+                "label": "Створити новий додаток"
               },
               "newIntegration": {
-                "label": "",
+                "label": "Створити нову інтеграцію",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Виберіть тип інтеграції, який потрібно створити"
                   }
                 }
               },
               "newUser": {
-                "label": ""
+                "label": "Створити нового користувача"
               },
               "newInvite": {
-                "label": ""
+                "label": "Створити нове запрошення"
               },
               "newGroup": {
-                "label": ""
+                "label": "Створити нову групу"
               }
             }
           }
         }
       },
       "media": {
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": ""
+        "requestMovie": "Запросити фільм",
+        "requestSeries": "Запросити серіал",
+        "openIn": "Відкрити в {kind}"
       },
       "external": {
-        "help": "",
+        "help": "Використовувати зовнішню пошукову систему",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Пошукові системи",
             "children": {
               "action": {
                 "search": {
-                  "label": ""
+                  "label": "Шукати з {name}"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Виберіть дію для пошукової системи"
               },
               "searchResults": {
-                "title": ""
+                "title": "Виберіть результат пошуку для дій"
               }
             },
             "option": {
               "google": {
-                "name": "",
-                "description": ""
+                "name": "Google",
+                "description": "Пошук в мережі з Google"
               },
               "bing": {
-                "name": "",
-                "description": ""
+                "name": "Bing",
+                "description": "Пошук в мережі з Bing"
               },
               "duckduckgo": {
-                "name": "",
-                "description": ""
+                "name": "DuckDuckGo",
+                "description": "Пошук в мережі з DuckDuckGo"
               },
               "torrent": {
                 "name": "Torrent",
                 "description": ""
               },
               "youTube": {
-                "name": "",
-                "description": ""
+                "name": "YouTube",
+                "description": "Пошук відео на YouTube"
               }
             }
           }
@@ -2936,19 +2993,19 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "Режими"
           },
           "help": {
-            "title": "Допоможіть!",
+            "title": "Допомога",
             "option": {
               "documentation": {
                 "label": "Документація"
               },
               "submitIssue": {
-                "label": ""
+                "label": "Повідомити про проблему"
               },
               "discord": {
-                "label": "Розбрат у громаді"
+                "label": "Discord"
               }
             }
           }
@@ -2957,33 +3014,33 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Пошук",
             "option": {
               "other": {
-                "label": ""
+                "label": "Пошук за допомогою іншої пошукової системи"
               },
               "no-default": {
-                "label": "",
+                "label": "Немає стандартної пошукової системи",
                 "description": ""
               },
               "search": {
-                "label": ""
+                "label": "Пошук \"{query}\" з {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Почніть вводити для пошуку"
               }
             }
           },
           "local": {
-            "title": ""
+            "title": "Локальні результати"
           }
         }
       },
       "page": {
-        "help": "",
+        "help": "Пошук сторінок",
         "group": {
           "page": {
-            "title": "",
+            "title": "Сторінки",
             "option": {
               "manageHome": {
                 "label": ""
@@ -3031,7 +3088,7 @@
                 "label": "Про програму"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Домашня дошка"
               },
               "preferences": {
                 "label": "Ваші уподобання"
@@ -3041,7 +3098,7 @@
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "Пошук користувачів або груп",
         "group": {
           "user": {
             "title": "Користувачі",
@@ -3057,21 +3114,21 @@
             }
           },
           "group": {
-            "title": "",
+            "title": "Групи",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Показати деталі групи"
                 },
                 "manageMember": {
-                  "label": ""
+                  "label": "Керувати учасниками"
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "Керування дозволами"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Вибрати дію для групи"
               }
             }
           }
@@ -3091,12 +3148,12 @@
           "label": ""
         },
         "description": {
-          "label": ""
+          "label": "Опис"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Пошукові системи",
           "noResults": {
             "title": "",
             "action": ""
@@ -3104,47 +3161,47 @@
           "interactive": ""
         },
         "create": {
-          "title": "",
+          "title": "Нова пошукова система",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Пошукова система створена",
+              "message": "Пошукова система успішно створена"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Пошукова система не створена",
+              "message": "Не вдалося створити пошукову систему"
             }
           }
         },
         "edit": {
-          "title": "",
+          "title": "Редагувати систему пошуку",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Зміни успішно застосовано",
+              "message": "Пошукову систему успішно збережено"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Не вдалося застосувати зміни",
+              "message": "Не вдалося зберегти пошукову систему"
             }
           },
-          "configControl": "",
+          "configControl": "Конфігурація",
           "searchEngineType": {
             "generic": "",
-            "fromIntegration": ""
+            "fromIntegration": "З інтеграції"
           }
         },
         "delete": {
-          "title": "",
-          "message": "",
+          "title": "Видалити пошукову систему",
+          "message": "Ви впевнені, що хочете видалити пошукову систему \"{name}\"?",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Пошукову систему видалено",
+              "message": "Пошукову систему успішно видалено"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Пошукова система не видалена",
+              "message": "Не вдалося видалити пошукову систему"
             }
           }
         }
@@ -3152,15 +3209,15 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "Запит \"{name}\"",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "Сезон",
+                "episodes": "Серії"
               }
             },
             "button": {
-              "send": ""
+              "send": "Надіслати запит"
             }
           }
         }
@@ -3173,36 +3230,36 @@
         "title": "",
         "description": "",
         "noResults": {
-          "title": ""
+          "title": "Сертифікати відсутні"
         },
         "expires": ""
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Додати сертифікат",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Додано сертифікат",
+            "message": "Сертифікат було успішно додано"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Не вдалося додати сертифікат",
+            "message": "Не вдалося додати сертифікат"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "Видалити сертифікат",
+        "confirm": "Ви впевнені, що хочете видалити сертифікат?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Сертифікат видалено",
+            "message": "Сертифікат успішно видалено"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Сертификат не видалено",
+            "message": "Не вдалося видалити сертифікат"
           }
         }
       }

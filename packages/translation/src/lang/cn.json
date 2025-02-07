@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "为 ping 使用图标"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "默认搜索引擎更改成功"
+            "message": ""
           },
           "error": {
-            "message": "无法更改默认的搜索引擎"
+            "message": ""
           }
         }
       },
@@ -735,12 +741,12 @@
           "newLabel": "新密码"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "令牌ID",
+          "newLabel": "新令牌 ID"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "领域",
+          "newLabel": "新领域"
         }
       }
     },
@@ -785,6 +791,9 @@
       },
       "copy": {
         "label": "复制 URL"
+      },
+      "open": {
+        "label": "打开媒体"
       }
     }
   },
@@ -796,6 +805,7 @@
       "apply": "应用",
       "backToOverview": "返回概览",
       "create": "创建",
+      "createAnother": "",
       "edit": "编辑",
       "import": "导入",
       "insert": "插入",
@@ -905,7 +915,7 @@
           "passwordRequirements": "密码不符合要求",
           "boardAlreadyExists": "具有此名称的面板已存在",
           "invalidFileType": "无效的文件类型，例如 {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "文件名无效",
           "fileTooLarge": "文件太大，最大大小为 {maxSize}",
           "invalidConfiguration": "无效配置",
           "groupNameTaken": "用户组名称已存在"
@@ -937,7 +947,8 @@
         "moveUp": "上移",
         "moveDown": "下移",
         "createAbove": "上方新建分类",
-        "createBelow": "下方新建分类"
+        "createBelow": "下方新建分类",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "新建分类",
@@ -956,6 +967,10 @@
           "create": "新建分类",
           "changePosition": "换位"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1063,6 +1078,15 @@
               "label": "网格"
             }
           }
+        },
+        "hideIcon": {
+          "label": "隐藏图标"
+        },
+        "hideHostname": {
+          "label": "隐藏主机名"
+        },
+        "openNewTab": {
+          "label": "在新标签页中打开"
         },
         "items": {
           "label": "书签",
@@ -1174,6 +1198,14 @@
         "dateFormat": {
           "label": "日期格式",
           "description": "日期应该是什么样的"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -1355,6 +1387,13 @@
         "isFormatFahrenheit": {
           "label": "华氏温度"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "天气位置"
         },
@@ -1372,6 +1411,13 @@
           "label": "日期格式",
           "description": "日期应该是什么样的"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "晴朗",
@@ -1407,6 +1453,10 @@
     "healthMonitoring": {
       "name": "系统健康监测",
       "description": "显示系统运行状况和状态的信息。",
+      "tab": {
+        "system": "系统",
+        "cluster": "集群"
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU 温度（华氏度）"
@@ -1421,10 +1471,10 @@
           "label": "显示文件系统信息"
         },
         "defaultTab": {
-          "label": ""
+          "label": "默认标签"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "部分指标要求"
         }
       },
       "popover": {
@@ -1447,47 +1497,47 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "处理器",
+          "memory": "内存"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "节点"
           },
           "qemu": {
-            "name": ""
+            "name": "虚拟机"
           },
           "lxc": {
-            "name": ""
+            "name": "LXCs"
           },
           "storage": {
-            "name": ""
+            "name": "存储"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "节点",
+            "vmId": "虚拟 ID",
+            "plugin": "插件"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "核心",
+            "memory": "内存",
+            "storage": "存储",
+            "uptime": "运行时间",
+            "haState": "HA 状态",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "本地存储",
+              "shared": "共享存储"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "名称",
+            "cpu": "处理器",
+            "memory": "内存",
+            "node": "节点"
           }
         }
       }
@@ -2162,7 +2212,7 @@
             "docker": "Docker",
             "logs": "日志",
             "api": "API",
-            "certificates": "",
+            "certificates": "证书",
             "tasks": "任务"
           }
         },
@@ -2265,7 +2315,7 @@
                   "mobile": "手机"
                 }
               },
-              "defaultSearchEngine": "默认搜索引擎",
+              "search": "",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "无障碍服务"
             }
@@ -2534,10 +2584,17 @@
               "button": {
                 "createApiToken": "创建 API 令牌"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "创建者"
+                  "createdBy": "创建者",
+                  "actions": ""
                 }
               }
             }
@@ -2770,7 +2827,7 @@
           "label": "日志"
         },
         "certificates": {
-          "label": ""
+          "label": "证书"
         }
       },
       "settings": {
@@ -3170,39 +3227,39 @@
   "certificate": {
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "可信证书",
+        "description": "Homarr 用于从集成请求数据。",
         "noResults": {
-          "title": ""
+          "title": "还没有证书"
         },
-        "expires": ""
+        "expires": "到期时间 {when}"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "添加证书",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "已添加证书",
+            "message": "已成功添加证书"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "添加证书失败",
+            "message": "无法添加证书"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "删除证书",
+        "confirm": "您确定要删除证书吗？",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "证书已删除",
+            "message": "证书删除成功"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "证书未删除",
+            "message": "无法删除证书"
           }
         }
       }

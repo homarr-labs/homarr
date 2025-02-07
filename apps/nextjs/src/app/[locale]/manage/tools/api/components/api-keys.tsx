@@ -1,14 +1,15 @@
 "use client";
 
-import { useMemo } from "react";
-import { Button, Group, Stack, Text, Title } from "@mantine/core";
+import { useCallback, useMemo } from "react";
+import { ActionIcon, Button, Group, Stack, Text, Title } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import { useModalAction } from "@homarr/modals";
+import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
 
@@ -20,7 +21,8 @@ interface ApiKeysManagementProps {
 
 export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
   const { openModal } = useModalAction(CopyApiKeyModal);
-  const { mutate, isPending } = clientApi.apiKeys.create.useMutation({
+  const { openConfirmModal } = useConfirmModal();
+  const { mutate: mutateCreate, isPending: isPendingCreate } = clientApi.apiKeys.create.useMutation({
     async onSuccess(data) {
       openModal({
         apiKey: data.apiKey,
@@ -28,7 +30,26 @@ export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
       await revalidatePathActionAsync("/manage/tools/api");
     },
   });
+  const { mutateAsync: mutateDeleteAsync, isPending: isPendingDelete } = clientApi.apiKeys.delete.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync("/manage/tools/api");
+    },
+  });
+
   const t = useScopedI18n("management.page.tool.api.tab.apiKey");
+  const handleDelete = useCallback(
+    (id: string) => {
+      openConfirmModal({
+        title: t("modal.delete.title"),
+        children: t("modal.delete.text"),
+        // eslint-disable-next-line no-restricted-syntax
+        async onConfirm() {
+          await mutateDeleteAsync({ apiKeyId: id });
+        },
+      });
+    },
+    [t, openConfirmModal, mutateDeleteAsync],
+  );
 
   const columns = useMemo<MRT_ColumnDef<RouterOutputs["apiKeys"]["getAll"][number]>[]>(
     () => [
@@ -46,8 +67,18 @@ export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
           </Group>
         ),
       },
+      {
+        header: t("table.header.actions"),
+        Cell: ({ row }) => (
+          <Group gap="xs">
+            <ActionIcon onClick={() => handleDelete(row.original.id)} loading={isPendingDelete} c="red">
+              <IconTrash size="1rem" />
+            </ActionIcon>
+          </Group>
+        ),
+      },
     ],
-    [t],
+    [t, handleDelete, isPendingDelete],
   );
 
   const table = useMantineReactTable({
@@ -56,9 +87,9 @@ export const ApiKeysManagement = ({ apiKeys }: ApiKeysManagementProps) => {
     renderTopToolbarCustomActions: () => (
       <Button
         onClick={() => {
-          mutate();
+          mutateCreate();
         }}
-        loading={isPending}
+        loading={isPendingCreate}
       >
         {t("button.createApiToken")}
       </Button>

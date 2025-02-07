@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Symbole für Pings verwenden"
+      },
+      "defaultSearchEngine": {
+        "label": "Standard Suchmaschine"
+      },
+      "openSearchInNewTab": {
+        "label": "Suchergebnisse in neuem Tab öffnen"
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Standard-Suchmaschine erfolgreich geändert"
+            "message": "Sucheinstellungen erfolgreich geändert"
           },
           "error": {
-            "message": "Standard Suchmaschine kann nicht geändert werden"
+            "message": "Sucheinstellungen konnten nicht geändert werden"
           }
         }
       },
@@ -735,12 +741,12 @@
           "newLabel": "Neues Passwort"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Token ID",
+          "newLabel": "Neue Token ID"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Bereich",
+          "newLabel": "Neuer Bereich"
         }
       }
     },
@@ -785,6 +791,9 @@
       },
       "copy": {
         "label": "URL in Zwischenablage kopieren"
+      },
+      "open": {
+        "label": "Medium öffnen"
       }
     }
   },
@@ -796,6 +805,7 @@
       "apply": "Übernehmen",
       "backToOverview": "Zurück zur Übersicht",
       "create": "Erstellen",
+      "createAnother": "",
       "edit": "Bearbeiten",
       "import": "Import",
       "insert": "Einfügen",
@@ -905,7 +915,7 @@
           "passwordRequirements": "Passwort erfüllt nicht alle Anforderungen",
           "boardAlreadyExists": "Ein Board mit diesem Namen existiert bereits",
           "invalidFileType": "Ungültiger Dateityp, erwartete {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "Ungültiger Dateiname",
           "fileTooLarge": "Datei ist zu groß, maximale Größe ist {maxSize}",
           "invalidConfiguration": "Ungültige Konfiguration",
           "groupNameTaken": "Gruppenname bereits vergeben"
@@ -937,7 +947,8 @@
         "moveUp": "Nach oben bewegen",
         "moveDown": "Nach unten bewegen",
         "createAbove": "Neue Kategorie oben",
-        "createBelow": "Neue Kategorie unten"
+        "createBelow": "Neue Kategorie unten",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Neue Kategorie",
@@ -956,6 +967,10 @@
           "create": "Neue Kategorie",
           "changePosition": "Position wechseln"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1063,6 +1078,15 @@
               "label": "Raster"
             }
           }
+        },
+        "hideIcon": {
+          "label": "Symbole verbergen"
+        },
+        "hideHostname": {
+          "label": "Hostnamen ausblenden"
+        },
+        "openNewTab": {
+          "label": "In neuem Tab öffnen"
         },
         "items": {
           "label": "Lesezeichen",
@@ -1174,6 +1198,14 @@
         "dateFormat": {
           "label": "Datumsformat",
           "description": "Wie das Datum aussehen sollte"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -1355,6 +1387,13 @@
         "isFormatFahrenheit": {
           "label": "Temperatur in Fahrenheit"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Wetterstandort"
         },
@@ -1372,6 +1411,13 @@
           "label": "Datumsformat",
           "description": "Wie das Datum aussehen sollte"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Klar",
@@ -1407,6 +1453,10 @@
     "healthMonitoring": {
       "name": "Überwachung des Systemzustands",
       "description": "Zeigt Informationen zum Zustand und Status Ihres/Ihrer Systeme(s) an.",
+      "tab": {
+        "system": "System",
+        "cluster": "Gruppe"
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU-Temperatur in Fahrenheit"
@@ -1421,10 +1471,10 @@
           "label": "Dateisystem Info anzeigen"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Standard Tab"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Anforderung der Sektionsindikatoren"
         }
       },
       "popover": {
@@ -1447,47 +1497,47 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Nodes"
           },
           "qemu": {
-            "name": ""
+            "name": "VMs"
           },
           "lxc": {
-            "name": ""
+            "name": "LXCs"
           },
           "storage": {
-            "name": ""
+            "name": "Speicher"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "Node",
+            "vmId": "VM ID",
+            "plugin": "Plugin"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "Kerne",
+            "memory": "Speicher",
+            "storage": "Speicher",
+            "uptime": "Laufzeit",
+            "haState": "HA Status",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Lokaler Speicher",
+              "shared": "Geteilter Speicher"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "Name",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Node"
           }
         }
       }
@@ -1564,57 +1614,57 @@
     },
     "downloads": {
       "name": "Download Client",
-      "description": "",
+      "description": "Ermöglicht es Ihnen, Ihre Downloads sowohl von Torrent- als auch von Usenet-Clients anzusehen und zu verwalten.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Anzuzeigende Spalten"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Sortierung von Elementen aktivieren"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Standardmäßig verwendete Spalte zur Sortierung"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Sortierung umkehren"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Usenet Einträge anzeigen die abgeschlossen wurden"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Torrent Einträge anzeigen die abgeschlossen wurden"
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden (in kiB/s)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "Kategorien/Labels zum Filtern"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Als Whitelist filtern"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Filter zur Berechnung des Verhältnisses verwenden"
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "Spalten in Elementen auswählen",
+        "noCommunications": "Kann keine Daten von der Integration laden"
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Steuerung"
         },
         "added": {
-          "columnTitle": "",
+          "columnTitle": "Hinzugefügt",
           "detailsTitle": "Hinzugefügt am"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Extras",
+          "detailsTitle": "Kategorien (Oder zusätzliche Informationen)"
         },
         "downSpeed": {
-          "columnTitle": "",
+          "columnTitle": "Download",
           "detailsTitle": "Download Geschwindigkeit"
         },
         "index": {
@@ -1622,49 +1672,49 @@
           "detailsTitle": "Aktueller Index im Client"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "ID"
         },
         "integration": {
-          "columnTitle": ""
+          "columnTitle": "Integration"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Job Name"
         },
         "progress": {
           "columnTitle": "Fortschritt",
-          "detailsTitle": ""
+          "detailsTitle": "Download Fortschritt"
         },
         "ratio": {
           "columnTitle": "Verhältnis",
-          "detailsTitle": ""
+          "detailsTitle": "Torrent Verhältnis (Empfangen/Gesendet)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Download gesamt",
+          "detailsTitle": "Insgesamt heruntergeladen"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Upload gesamt",
+          "detailsTitle": "Insgesamt hochgeladen"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Dateigröße",
+          "detailsTitle": "Gesamtgröße der Auswahl/Dateien"
         },
         "state": {
           "columnTitle": "Staat",
-          "detailsTitle": ""
+          "detailsTitle": "Jobstatus"
         },
         "time": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Endzeit",
+          "detailsTitle": "Zeit danach/zur Fertigstellung"
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Typ",
+          "detailsTitle": "Download Client"
         },
         "upSpeed": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Upload",
+          "detailsTitle": "Upload Geschwindigkeit"
         }
       },
       "states": {
@@ -1672,29 +1722,29 @@
         "queued": "In der Warteschlange",
         "paused": "Pausiert",
         "completed": "Abgeschlossen",
-        "failed": "",
-        "processing": "",
-        "leeching": "",
-        "stalled": "",
+        "failed": "Fehlgeschlagen",
+        "processing": "Wird verarbeitet",
+        "leeching": "Leeching",
+        "stalled": "Angehalten",
         "unknown": "Unbekannt",
-        "seeding": ""
+        "seeding": "Seede"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
-          "resume": ""
+          "modalTitle": "Liste der Download Clients",
+          "pause": "Alle Clients/Elemente pausieren",
+          "resume": "Alle Clients/Elemente fortsetzen"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "Client pausieren",
+          "resume": "Client fortsetzen"
         },
         "item": {
-          "pause": "",
-          "resume": "",
+          "pause": "Element pausieren",
+          "resume": "Element fortsetzen",
           "delete": {
-            "title": "",
-            "modalTitle": "",
+            "title": "Element löschen",
+            "modalTitle": "Sind Sie sicher, dass Sie diesen Auftrag löschen möchten?",
             "entry": "Eintrag löschen",
             "entryAndFiles": "Eintrag und Datei(en) löschen"
           }
@@ -1873,32 +1923,32 @@
             "message": "Das Board wurde erfolgreich importiert"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Import fehlgeschlagen",
+            "message": "Das Board konnte nicht importiert werden, überprüfen Sie die Protokolle für weitere Details"
           }
         },
         "form": {
           "file": {
-            "label": "",
-            "invalidError": ""
+            "label": "Wähle eine JSON-Datei",
+            "invalidError": "Ungültige Konfigurationsdatei"
           },
           "apps": {
-            "label": "",
+            "label": "Apps",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "Duplikate vermeiden",
+              "description": "Ignoriert Apps, bei denen eine App mit dem gleichen href bereits existiert"
             },
             "onlyImportApps": {
-              "label": "",
-              "description": ""
+              "label": "Nur Apps importieren",
+              "description": "Fügt nur die Apps hinzu, das Board muss manuell neu erstellt werden"
             }
           },
           "name": {
-            "label": ""
+            "label": "Board Name"
           },
           "screenSize": {
-            "label": "",
-            "description": "",
+            "label": "Bildschirmgröße",
+            "description": "In Versionen vor 1.0 gab es drei verschiedene Modi, so dass Sie die Anzahl der Spalten für jede Bildschirmgröße festlegen konnten.",
             "option": {
               "sm": "Klein",
               "md": "Mittel",
@@ -1906,16 +1956,16 @@
             }
           },
           "sidebarBehavior": {
-            "label": "",
-            "description": "",
+            "label": "Verhalten der Seitenleiste",
+            "description": "Seitenleisten wurden in 1.0 entfernt, Sie können wählen, was mit den Elementen in ihnen passieren soll.",
             "option": {
               "lastSection": {
-                "label": "",
-                "description": ""
+                "label": "Letzter Abschnitt",
+                "description": "Seitenleiste wird unterhalb des letzten Abschnitts angezeigt"
               },
               "removeItems": {
-                "label": "",
-                "description": ""
+                "label": "Elemente entfernen",
+                "description": "Elemente in der Seitenleiste werden entfernt"
               }
             }
           }
@@ -1924,51 +1974,51 @@
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "Seitentitel"
       },
       "metaTitle": {
-        "label": ""
+        "label": "Metatitel"
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "URL des Logos"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "URL des Favicons"
       },
       "backgroundImageUrl": {
-        "label": ""
+        "label": "URL des Hintergrundbildes"
       },
       "backgroundImageAttachment": {
         "label": "Anhang des Hintergrundbildes",
         "option": {
           "fixed": {
-            "label": "",
-            "description": ""
+            "label": "Fixiert",
+            "description": "Hintergrund bleibt in der gleichen Position."
           },
           "scroll": {
-            "label": "",
-            "description": ""
+            "label": "Scrollen",
+            "description": "Hintergrund scrollt mit der Maus mit."
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "",
+        "label": "Hintergrundbild wiederholen",
         "option": {
           "repeat": {
-            "label": "",
-            "description": ""
+            "label": "Wiederholen",
+            "description": "Das Bild wird so oft wiederholt, wie nötig, um den gesamten Bildbereich des Hintergrundbildes abzudecken."
           },
           "no-repeat": {
-            "label": "",
-            "description": ""
+            "label": "Nicht wiederholen",
+            "description": "Das Bild wird nicht wiederholt und kann nicht den gesamten Raum füllen."
           },
           "repeat-x": {
-            "label": "",
-            "description": ""
+            "label": "X Wiederholen",
+            "description": "Wie 'Wiederholen', nur auf der horizontalen Achse."
           },
           "repeat-y": {
-            "label": "",
-            "description": ""
+            "label": "Y Wiederholen",
+            "description": "Wie 'Wiederholen', nur auf der horizontalen Achse."
           }
         }
       },
@@ -1976,12 +2026,12 @@
         "label": "Hintergrundbild-Größe",
         "option": {
           "cover": {
-            "label": "",
-            "description": ""
+            "label": "Cover",
+            "description": "Skaliert das Bild so klein wie möglich, um das gesamte Fenster zu bedecken, indem der überschüssige Bereich zugeschnitten wird."
           },
           "contain": {
-            "label": "",
-            "description": ""
+            "label": "Enthält",
+            "description": "Skaliert das Bild so groß wie möglich innerhalb seines Behälters, ohne das Bild zu schneiden oder zu dehnen."
           }
         }
       },
@@ -1992,36 +2042,36 @@
         "label": "Sekundärfarbe"
       },
       "opacity": {
-        "label": ""
+        "label": "Transparenz"
       },
       "customCss": {
-        "label": "",
+        "label": "Benutzerdefinierte css für dieses Board",
         "description": "Außerdem können Sie Ihr Dashboard mittels CSS anpassen, dies wird nur für erfahrene Benutzer empfohlen",
         "customClassesAlert": {
-          "title": "",
-          "description": ""
+          "title": "Benutzerdefinierte Klassen",
+          "description": "Sie können in den erweiterten Optionen jedes Elements eigene Klassen zu Ihren Board-Elementen hinzufügen und diese in dem benutzerdefinierten CSS oben verwenden."
         }
       },
       "columnCount": {
-        "label": ""
+        "label": "Anzahl der Spalten"
       },
       "name": {
-        "label": ""
+        "label": "Name"
       },
       "isPublic": {
         "label": "Öffentlich",
-        "description": ""
+        "description": "Öffentliche Boards sind für jedermann zugänglich, auch ohne Benutzerkonto."
       }
     },
     "content": {
-      "metaTitle": ""
+      "metaTitle": "{boardName} Board"
     },
     "setting": {
-      "title": "",
+      "title": "Einstellungen für {boardName} Board",
       "section": {
         "general": {
           "title": "Allgemein",
-          "unrecognizedLink": ""
+          "unrecognizedLink": "Der angegebene Link wird nicht erkannt und wird nicht in der Vorschau angezeigt, er könnte jedoch trotzdem funktionieren."
         },
         "layout": {
           "title": "Ansicht"
@@ -2138,13 +2188,13 @@
     },
     "notFound": {
       "title": "Nicht gefunden",
-      "text": ""
+      "text": "Konnte die angeforderte Ressource nicht finden"
     },
     "navbar": {
       "items": {
         "home": "Startseite",
-        "boards": "",
-        "apps": "",
+        "boards": "Boards",
+        "apps": "Apps",
         "integrations": "Integrationen",
         "searchEngies": "Suchmaschinen",
         "medias": "Medien",
@@ -2159,11 +2209,11 @@
         "tools": {
           "label": "Werkzeuge",
           "items": {
-            "docker": "",
-            "logs": "",
-            "api": "",
-            "certificates": "",
-            "tasks": ""
+            "docker": "Docker",
+            "logs": "Logs",
+            "api": "API",
+            "certificates": "Zertifikate",
+            "tasks": "Aufgaben"
           }
         },
         "settings": "Einstellungen",
@@ -2171,9 +2221,9 @@
           "label": "Hilfe",
           "items": {
             "documentation": "Dokumentation",
-            "submitIssue": "",
-            "discord": "",
-            "sourceCode": ""
+            "submitIssue": "Ein Problem melden",
+            "discord": "Community Discord",
+            "sourceCode": "Quellcode"
           }
         },
         "about": "Über"
@@ -2182,15 +2232,15 @@
     "page": {
       "home": {
         "statistic": {
-          "board": "",
+          "board": "Boards",
           "user": "Benutzer",
           "invite": "Einladungen",
           "integration": "Integrationen",
-          "app": "",
+          "app": "Apps",
           "group": "Gruppen"
         },
         "statisticLabel": {
-          "boards": "",
+          "boards": "Boards",
           "resources": "",
           "authentication": "",
           "authorization": ""
@@ -2265,7 +2315,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "",
               "firstDayOfWeek": "Erster Tag der Woche",
               "accessibility": "Barrierefreiheit"
             }
@@ -2388,16 +2438,16 @@
               "text": ""
             },
             "widgetData": {
-              "title": "",
-              "text": ""
+              "title": "Widget Daten",
+              "text": "Senden Sie die Widgets (und deren Anzahl) die Sie konfiguriert haben. Enthält keine URLs, Namen oder andere Daten."
             },
             "integrationData": {
-              "title": "",
-              "text": ""
+              "title": "Integrationsdaten",
+              "text": "Senden Sie die Intregrationen (und deren Anzahl) die Sie konfiguriert haben. Enthält keine URLs, Namen oder andere Daten."
             },
             "usersData": {
-              "title": "",
-              "text": ""
+              "title": "Benutzerdaten",
+              "text": "Senden Sie die Anzahl der Benutzer und ob Sie SSO aktiviert haben"
             }
           },
           "crawlingAndIndexing": {
@@ -2421,24 +2471,24 @@
             }
           },
           "board": {
-            "title": "",
+            "title": "Boards",
             "homeBoard": {
-              "label": "",
-              "mobileLabel": "",
-              "description": ""
+              "label": "Globales Home Board",
+              "mobileLabel": "Globales Mobil Board",
+              "description": "Nur öffentliche Boards stehen zur Auswahl"
             }
           },
           "search": {
-            "title": "",
+            "title": "Suche",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "Standard Suchmaschine",
+              "description": "Integrations Suchmaschinen können hier nicht ausgewählt werden"
             }
           },
           "appearance": {
             "title": "Aussehen",
             "defaultColorScheme": {
-              "label": "",
+              "label": "Standard Farbschema",
               "options": {
                 "light": "Hell",
                 "dark": "Dunkel"
@@ -2446,82 +2496,82 @@
             }
           },
           "culture": {
-            "title": "",
+            "title": "Kultur",
             "defaultLocale": {
-              "label": ""
+              "label": "Standardsprache"
             }
           }
         }
       },
       "tool": {
         "tasks": {
-          "title": "",
+          "title": "Aufgaben",
           "status": {
-            "idle": "",
+            "idle": "Inaktiv",
             "running": "Wird ausgeführt",
             "error": "Fehler"
           },
           "job": {
             "minecraftServerStatus": {
-              "label": ""
+              "label": "Status des Minecraft Servers"
             },
             "iconsUpdater": {
-              "label": ""
+              "label": "Symbol Updater"
             },
             "analytics": {
-              "label": ""
+              "label": "Nutzungsdaten"
             },
             "smartHomeEntityState": {
-              "label": ""
+              "label": "Status der Smart Home Entitäten"
             },
             "ping": {
-              "label": ""
+              "label": "Pings"
             },
             "mediaServer": {
               "label": "Medien Server"
             },
             "mediaOrganizer": {
-              "label": ""
+              "label": "Medienorganisatoren"
             },
             "downloads": {
-              "label": ""
+              "label": "Downloads"
             },
             "mediaRequestStats": {
-              "label": ""
+              "label": "Statistik der Medienanfragen"
             },
             "mediaRequestList": {
-              "label": ""
+              "label": "Liste der Medienanfragen"
             },
             "rssFeeds": {
-              "label": ""
+              "label": "RSS Feeds"
             },
             "indexerManager": {
               "label": "Index Manager"
             },
             "healthMonitoring": {
-              "label": ""
+              "label": "Überwachung des Gesundheit"
             },
             "dnsHole": {
-              "label": ""
+              "label": "DNS Hole Daten"
             },
             "sessionCleanup": {
-              "label": ""
+              "label": "Sitzung bereinigen"
             },
             "updateChecker": {
-              "label": ""
+              "label": "Updateprüfer"
             },
             "mediaTranscoding": {
-              "label": ""
+              "label": "Medien Transkodierung"
             }
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "",
-              "description": "",
-              "button": ""
+              "title": "API Token erstellt",
+              "description": "API Token wurde erstellt. Seien Sie vorsichtig, dieser Token wird in der Datenbank verschlüsselt und nie wieder an Sie übertragen. Wenn Sie diesen Token verlegen, können Sie ihn nicht mehr abrufen.",
+              "button": "Kopieren und schließen"
             }
           },
           "tab": {
@@ -2529,15 +2579,22 @@
               "label": "Dokumentation"
             },
             "apiKey": {
-              "label": "",
-              "title": "",
+              "label": "Authentifizierung",
+              "title": "API Schlüssel",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "API Token erstellen"
+              },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
               },
               "table": {
                 "header": {
-                  "id": "",
-                  "createdBy": ""
+                  "id": "ID",
+                  "createdBy": "Erstellt von",
+                  "actions": ""
                 }
               }
             }
@@ -2545,20 +2602,20 @@
         }
       },
       "about": {
-        "version": "",
-        "text": "",
+        "version": "Version {version}",
+        "text": "Homarr ist ein gemeinschaftsorientiertes Open-Source Projekt, das von Freiwilligen betreut wird. Dank dieser Menschen ist Homarr seit 2021 ein wachsendes Projekt. Unser Team, sitzhaft mit ihren Migliedern in vielen verschiedenen Ländern, arbeitet in ihrer Freizeit ohne Vergütung.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Mitwirkende",
+            "subtitle": "{count} Wartung von Code & Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Übersetzer",
+            "subtitle": "{count} tragen Übersetzungen in viele Sprachen bei"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Bibliotheken",
+            "subtitle": "{count} im Code von Homarr verwendet"
           }
         }
       }
@@ -2567,13 +2624,13 @@
   "docker": {
     "title": "Container",
     "table": {
-      "updated": "",
-      "search": "",
-      "selected": ""
+      "updated": "Aktualisiert {when}",
+      "search": "Seach {count} Container",
+      "selected": "{selectCount} von {totalCount} ausgewählten Containern"
     },
     "field": {
       "name": {
-        "label": ""
+        "label": "Name"
       },
       "state": {
         "label": "Staat",
@@ -2582,16 +2639,16 @@
           "running": "Aktiv",
           "paused": "Pausiert",
           "restarting": "Startet neu",
-          "exited": "",
+          "exited": "Beendet",
           "removing": "Wird entfernt",
-          "dead": ""
+          "dead": "Tot"
         }
       },
       "containerImage": {
-        "label": ""
+        "label": "Image"
       },
       "ports": {
-        "label": ""
+        "label": "Ports"
       }
     },
     "action": {
@@ -2599,12 +2656,12 @@
         "label": "Starten",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Container gestartet",
+            "message": "Die Container wurden erfolgreich gestartet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Container nicht gestartet",
+            "message": "Die Container konnten nicht gestartet werden"
           }
         }
       },
@@ -2612,12 +2669,12 @@
         "label": "Stopp",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Container gestoppt",
+            "message": "Die Container wurden erfolgreich gestoppt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Container nicht gestoppt",
+            "message": "Die Container konnten nicht gestoppt werden"
           }
         }
       },
@@ -2625,12 +2682,12 @@
         "label": "Neustarten",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Container neu gestartet",
+            "message": "Die Container wurden erfolgreich neu gestartet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Container nicht neu gestartet",
+            "message": "Die Container konnten nicht neu gestartet werden"
           }
         }
       },
@@ -2638,61 +2695,61 @@
         "label": "Entfernen",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Container entfernt",
+            "message": "Die Container wurden erfolgreich entfernt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Container nicht entfernt",
+            "message": "Die Behälter konnten nicht entfernt werden"
           }
         }
       },
       "refresh": {
-        "label": "",
+        "label": "Aktualisieren",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Container aktualisiert",
+            "message": "Sie sehen jetzt die neuesten Daten"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Container nicht aktualisiert",
+            "message": "Beim Aktualisieren der Container ist ein Fehler aufgetreten"
           }
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Zu Homarr hinzufügen",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Zu Homarr hinzufügen",
+            "message": "Ausgewählte Apps wurden zu Homarr hinzugefügt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Konnte nicht zu Homarr hinzugefügt werden",
+            "message": "Ausgewählte Apps konnten nicht zu Homarr hinzugefügt werden"
           }
         },
         "modal": {
-          "title": ""
+          "title": "Docker Container zu Homarr hinzufügen"
         }
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Fehler beim Abrufen der Docker Container"
     }
   },
   "permission": {
-    "title": "",
+    "title": "Berechtigungen",
     "userSelect": {
-      "title": ""
+      "title": "Benutzerberechtigung hinzufügen"
     },
     "groupSelect": {
-      "title": ""
+      "title": "Gruppenberechtigung hinzufügen"
     },
     "tab": {
       "user": "Benutzer",
       "group": "Gruppen",
-      "inherited": ""
+      "inherited": "Vererbte Gruppen"
     },
     "field": {
       "user": {
@@ -2702,19 +2759,19 @@
         "label": "Gruppe"
       },
       "permission": {
-        "label": ""
+        "label": "Berechtigung"
       }
     },
     "action": {
-      "saveUser": "",
-      "saveGroup": ""
+      "saveUser": "Benutzerberechtigung hinzufügen",
+      "saveGroup": "Gruppenberechtigung hinzufügen"
     }
   },
   "navigationStructure": {
     "manage": {
       "label": "Verwalten",
       "boards": {
-        "label": ""
+        "label": "Boards"
       },
       "integrations": {
         "label": "Integrationen",
@@ -2722,13 +2779,13 @@
           "label": "Bearbeiten"
         },
         "new": {
-          "label": ""
+          "label": "Neu"
         }
       },
       "search-engines": {
         "label": "Suchmaschinen",
         "new": {
-          "label": ""
+          "label": "Neu"
         },
         "edit": {
           "label": "Bearbeiten"
@@ -2738,9 +2795,9 @@
         "label": "Medien"
       },
       "apps": {
-        "label": "",
+        "label": "Apps",
         "new": {
-          "label": ""
+          "label": "Neu"
         },
         "edit": {
           "label": "Bearbeiten"
@@ -2753,7 +2810,7 @@
         },
         "general": "Allgemein",
         "security": "Sicherheit",
-        "board": "",
+        "board": "Boards",
         "groups": {
           "label": "Gruppen"
         },
@@ -2764,13 +2821,13 @@
       "tools": {
         "label": "Werkzeuge",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "logs": {
-          "label": ""
+          "label": "Logs"
         },
         "certificates": {
-          "label": ""
+          "label": "Zertifikate"
         }
       },
       "settings": {
@@ -2782,50 +2839,50 @@
     }
   },
   "search": {
-    "placeholder": "",
-    "nothingFound": "",
+    "placeholder": "Nach allem suchen",
+    "nothingFound": "Keine Treffer",
     "error": {
-      "fetch": ""
+      "fetch": "Beim Abrufen der Daten ist ein Fehler aufgetreten"
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "Nach Apps, Integrationen oder Boards suchen",
         "group": {
           "app": {
-            "title": "",
+            "title": "Apps",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "App URL öffnen"
                 },
                 "edit": {
                   "label": "App bearbeiten"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Wählen Sie eine Aktion für die App"
               }
             }
           },
           "board": {
-            "title": "",
+            "title": "Boards",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Board öffnen"
                 },
                 "homeBoard": {
-                  "label": ""
+                  "label": "Als Home Board festlegen"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Als mobiles Board festlegen"
                 },
                 "settings": {
-                  "label": ""
+                  "label": "Einstellungen öffnen"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Wählen Sie eine Aktion für die App"
               }
             }
           },
@@ -3194,15 +3251,15 @@
       },
       "remove": {
         "label": "",
-        "confirm": "",
+        "confirm": "Sind Sie sicher, dass Sie das Zertifikat entfernen möchten?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Zertifikat entfernt",
+            "message": "Das Zertifikat wurde erfolgreich entfern"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Zertifikat nicht entfernt",
+            "message": "Das Zertifikat konnte nicht entfernt werden"
           }
         }
       }

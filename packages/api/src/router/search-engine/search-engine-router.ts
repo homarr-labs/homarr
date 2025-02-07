@@ -1,10 +1,11 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { asc, createId, eq, like, sql } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import { searchEngines, users } from "@homarr/db/schema";
 import { integrationCreator } from "@homarr/integrations";
-import { validation, z } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
@@ -194,6 +195,12 @@ export const searchEngineRouter = createTRPCRouter({
     .requiresPermission("search-engine-full-all")
     .input(validation.common.byId)
     .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(users)
+        .set({
+          defaultSearchEngineId: null,
+        })
+        .where(eq(users.defaultSearchEngineId, input.id));
       await ctx.db.delete(searchEngines).where(eq(searchEngines.id, input.id));
     }),
 });

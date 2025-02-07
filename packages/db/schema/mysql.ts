@@ -68,6 +68,7 @@ export const users = mysqlTable("user", {
   defaultSearchEngineId: varchar({ length: 64 }).references(() => searchEngines.id, {
     onDelete: "set null",
   }),
+  openSearchInNewTab: boolean().default(false).notNull(),
   colorScheme: varchar({ length: 5 }).$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: tinyint().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: boolean().default(false).notNull(),
@@ -325,6 +326,24 @@ export const sections = mysqlTable("section", {
   }),
 });
 
+export const sectionCollapseStates = mysqlTable(
+  "section_collapse_state",
+  {
+    userId: varchar({ length: 64 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    sectionId: varchar({ length: 64 })
+      .notNull()
+      .references(() => sections.id, { onDelete: "cascade" }),
+    collapsed: boolean().default(false).notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.userId, table.sectionId],
+    }),
+  }),
+);
+
 export const items = mysqlTable("item", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   sectionId: varchar({ length: 64 })
@@ -561,6 +580,18 @@ export const sectionRelations = relations(sections, ({ many, one }) => ({
   board: one(boards, {
     fields: [sections.boardId],
     references: [boards.id],
+  }),
+  collapseStates: many(sectionCollapseStates),
+}));
+
+export const sectionCollapseStateRelations = relations(sectionCollapseStates, ({ one }) => ({
+  user: one(users, {
+    fields: [sectionCollapseStates.userId],
+    references: [users.id],
+  }),
+  section: one(sections, {
+    fields: [sectionCollapseStates.sectionId],
+    references: [sections.id],
   }),
 }));
 

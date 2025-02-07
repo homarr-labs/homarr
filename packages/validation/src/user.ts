@@ -110,8 +110,9 @@ const changeHomeBoardSchema = z.object({
   mobileHomeBoardId: z.string().nullable(),
 });
 
-const changeDefaultSearchEngineSchema = z.object({
-  defaultSearchEngineId: z.string().min(1),
+const changeSearchPreferencesSchema = z.object({
+  defaultSearchEngineId: z.string().min(1).nullable(),
+  openInNewTab: z.boolean(),
 });
 
 const changeColorSchemeSchema = z.object({
@@ -137,7 +138,7 @@ export const userSchemas = {
   editProfile: editProfileSchema,
   changePassword: changePasswordSchema,
   changeHomeBoards: changeHomeBoardSchema,
-  changeDefaultSearchEngine: changeDefaultSearchEngineSchema,
+  changeSearchPreferences: changeSearchPreferencesSchema,
   changePasswordApi: changePasswordApiSchema,
   changeColorScheme: changeColorSchemeSchema,
   firstDayOfWeek: firstDayOfWeekSchema,

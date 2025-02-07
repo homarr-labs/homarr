@@ -18,8 +18,8 @@ import superjson from "superjson";
 import type { SuperJSONResult } from "superjson";
 
 import type { AppRouter } from "@homarr/api";
-import { clientApi, getTrpcUrl } from "@homarr/api/client";
-import { createHeadersCallbackForSource } from "@homarr/api/shared";
+import { clientApi } from "@homarr/api/client";
+import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 
 import { env } from "~/env";
 
@@ -94,6 +94,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
             false: unstable_httpBatchStreamLink({
               transformer: superjson,
               url: getTrpcUrl(),
+              maxURLLength: 2083, // Suggested by tRPC: https://trpc.io/docs/client/links/httpBatchLink#setting-a-maximum-url-length
               headers: createHeadersCallbackForSource("nextjs-react (json)"),
             }),
           }),

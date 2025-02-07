@@ -1,4 +1,4 @@
-import { z } from "@homarr/validation";
+import { z } from "zod";
 
 export const statsResponseSchema = z.object({
   time_units: z.enum(["hours", "days"]),

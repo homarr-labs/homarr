@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Gebruik iconen voor pings"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Standaard zoekmachine succesvol gewijzigd"
+            "message": ""
           },
           "error": {
-            "message": "Standaard zoekmachine kan niet worden gewijzigd"
+            "message": ""
           }
         }
       },
@@ -785,6 +791,9 @@
       },
       "copy": {
         "label": "URL kopiëren"
+      },
+      "open": {
+        "label": "Media openen"
       }
     }
   },
@@ -796,6 +805,7 @@
       "apply": "Toepassen",
       "backToOverview": "Terug naar overzicht",
       "create": "Aanmaken",
+      "createAnother": "",
       "edit": "Bewerken",
       "import": "Importeren",
       "insert": "Invoegen",
@@ -937,7 +947,8 @@
         "moveUp": "Omhoog",
         "moveDown": "Omlaag",
         "createAbove": "Nieuwe categorie hierboven",
-        "createBelow": "Nieuwe categorie hieronder"
+        "createBelow": "Nieuwe categorie hieronder",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Nieuwe categorie",
@@ -956,6 +967,10 @@
           "create": "Nieuwe categorie",
           "changePosition": "Positie wijzigen"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1063,6 +1078,15 @@
               "label": "Raster"
             }
           }
+        },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
         },
         "items": {
           "label": "Bladwijzers",
@@ -1174,6 +1198,14 @@
         "dateFormat": {
           "label": "Datumnotatie",
           "description": "Hoe de datum eruit moet zien"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -1355,6 +1387,13 @@
         "isFormatFahrenheit": {
           "label": "Temperatuur in fahrenheit"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Weerlocatie"
         },
@@ -1372,6 +1411,13 @@
           "label": "Datumnotatie",
           "description": "Hoe de datum eruit moet zien"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Wissen",
@@ -1407,6 +1453,10 @@
     "healthMonitoring": {
       "name": "Systeem gezondheidsmonitoring",
       "description": "Toont informatie over de gezondheid en status van je systeem(en).",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU-temperatuur in fahrenheit"
@@ -2265,7 +2315,7 @@
                   "mobile": "Mobiel"
                 }
               },
-              "defaultSearchEngine": "Standaard zoekmachine",
+              "search": "",
               "firstDayOfWeek": "Eerste dag van de week",
               "accessibility": "Toegankelijkheid"
             }
@@ -2534,10 +2584,17 @@
               "button": {
                 "createApiToken": "API-token aanmaken"
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "ID",
-                  "createdBy": "Aangemaakt door"
+                  "createdBy": "Aangemaakt door",
+                  "actions": ""
                 }
               }
             }

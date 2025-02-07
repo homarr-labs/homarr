@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": ""
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,7 +216,7 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
             "message": ""
@@ -785,6 +791,9 @@
       },
       "copy": {
         "label": ""
+      },
+      "open": {
+        "label": ""
       }
     }
   },
@@ -796,6 +805,7 @@
       "apply": "Aplicar",
       "backToOverview": "",
       "create": "Crear",
+      "createAnother": "",
       "edit": "Editar",
       "import": "",
       "insert": "Insertar",
@@ -937,7 +947,8 @@
         "moveUp": "Mover hacia arriba",
         "moveDown": "Mover hacia abajo",
         "createAbove": "",
-        "createBelow": ""
+        "createBelow": "",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "",
@@ -956,6 +967,10 @@
           "create": "",
           "changePosition": "Cambiar posición"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1063,6 +1078,15 @@
               "label": ""
             }
           }
+        },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
         },
         "items": {
           "label": "",
@@ -1172,6 +1196,14 @@
           "label": ""
         },
         "dateFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
           "label": "",
           "description": ""
         }
@@ -1355,6 +1387,13 @@
         "isFormatFahrenheit": {
           "label": ""
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Ubicación"
         },
@@ -1372,6 +1411,13 @@
           "label": "",
           "description": ""
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Despejado",
@@ -1407,6 +1453,10 @@
     "healthMonitoring": {
       "name": "Monitorización de Salud del Sistema",
       "description": "Muestra información sobre la salud y el estado de tu(s) sistema(s).",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Temperatura de la CPU en grados Fahrenheit"
@@ -2265,7 +2315,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "",
               "firstDayOfWeek": "Primer día de la semana",
               "accessibility": "Accesibilidad"
             }
@@ -2534,10 +2584,17 @@
               "button": {
                 "createApiToken": ""
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "",
-                  "createdBy": ""
+                  "createdBy": "",
+                  "actions": ""
                 }
               }
             }

@@ -4,13 +4,13 @@ import Link from "next/link";
 import type { SegmentedControlItem } from "@mantine/core";
 import { Button, Fieldset, Grid, Group, SegmentedControl, Stack, Textarea, TextInput } from "@mantine/core";
 import { WidgetIntegrationSelect } from "node_modules/@homarr/widgets/src/widget-integration-select";
+import type { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
 import { searchEngineTypes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import type { z } from "@homarr/validation";
 import { validation } from "@homarr/validation";
 
 import { IconPicker } from "~/components/icons/picker/icon-picker";
@@ -58,7 +58,7 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
             />
           </Grid.Col>
         </Grid>
-        <IconPicker initialValue={initialValues?.iconUrl} {...form.getInputProps("iconUrl")} />
+        <IconPicker {...form.getInputProps("iconUrl")} />
 
         <Fieldset legend={t("search.engine.page.edit.configControl")}>
           <SegmentedControl

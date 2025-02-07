@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconBox, IconPencil } from "@tabler/icons-react";
+import { z } from "zod";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -9,7 +10,6 @@ import { auth } from "@homarr/auth/next";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { SearchInput, TablePagination } from "@homarr/ui";
-import { z } from "@homarr/validation";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
@@ -45,7 +45,7 @@ export default async function AppsPage(props: AppsPageProps) {
       <Stack>
         <Title>{t("page.list.title")}</Title>
         <Group justify="space-between" align="center">
-          <SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} />
+          <SearchInput placeholder={`${t("search")}...`} defaultValue={searchParams.search} flexExpand />
           {session.user.permissions.includes("app-create") && (
             <MobileAffixButton component={Link} href="/manage/apps/new">
               {t("page.create.title")}
@@ -80,7 +80,7 @@ const AppCard = async ({ app }: AppCardProps) => {
   return (
     <Card withBorder>
       <Group justify="space-between" wrap="nowrap">
-        <Group align="top" justify="start" wrap="nowrap">
+        <Group align="top" justify="start" wrap="nowrap" style={{ flex: "1" }}>
           <Avatar
             size="sm"
             src={app.iconUrl}
@@ -91,7 +91,7 @@ const AppCard = async ({ app }: AppCardProps) => {
               },
             }}
           />
-          <Stack gap={0}>
+          <Stack gap={0} style={{ flex: "1" }}>
             <Text fw={500} lineClamp={1}>
               {app.name}
             </Text>
@@ -101,7 +101,7 @@ const AppCard = async ({ app }: AppCardProps) => {
               </Text>
             )}
             {app.href && (
-              <Anchor href={app.href} lineClamp={1} size="sm" w="min-content">
+              <Anchor href={app.href} lineClamp={1} size="sm" style={{ wordBreak: "break-all" }}>
                 {app.href}
               </Anchor>
             )}

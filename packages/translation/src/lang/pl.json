@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Użyj ikon dla pingów"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,13 +216,13 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Domyślna wyszukiwarka zmieniona pomyślnie"
+            "message": ""
           },
           "error": {
-            "message": "Nie można zmienić domyślnej wyszukiwarki"
+            "message": ""
           }
         }
       },
@@ -785,6 +791,9 @@
       },
       "copy": {
         "label": "Kopiuj adres URL"
+      },
+      "open": {
+        "label": ""
       }
     }
   },
@@ -796,6 +805,7 @@
       "apply": "Zastosuj",
       "backToOverview": "Powrót do widoku ogólnego",
       "create": "Utwórz",
+      "createAnother": "",
       "edit": "Edytuj",
       "import": "Importuj",
       "insert": "Wstaw",
@@ -937,7 +947,8 @@
         "moveUp": "Przenieś w górę",
         "moveDown": "Przenieś w dół",
         "createAbove": "Nowa kategoria powyżej",
-        "createBelow": "Nowa kategoria poniżej"
+        "createBelow": "Nowa kategoria poniżej",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Nowa kategoria",
@@ -956,6 +967,10 @@
           "create": "Nowa kategoria",
           "changePosition": "Zmiana pozycji"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1063,6 +1078,15 @@
               "label": "Siatka"
             }
           }
+        },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
         },
         "items": {
           "label": "Zakładki",
@@ -1174,6 +1198,14 @@
         "dateFormat": {
           "label": "Format daty",
           "description": "Jak powinna wyglądać data"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -1355,6 +1387,13 @@
         "isFormatFahrenheit": {
           "label": "Temperatura w Fahrenheit"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Lokalizacja pogody"
         },
@@ -1372,6 +1411,13 @@
           "label": "Format daty",
           "description": "Jak powinna wyglądać data"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Bezchmurnie",
@@ -1407,6 +1453,10 @@
     "healthMonitoring": {
       "name": "Monitorowanie zdrowia  systemu",
       "description": "Wyświetla informacje o stanie Twojego systemu(ów).",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Temperatura procesora w Fahrenheit"
@@ -2265,7 +2315,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "",
               "firstDayOfWeek": "Pierwszy dzień tygodnia",
               "accessibility": "Ułatwienia dostępu"
             }
@@ -2534,10 +2584,17 @@
               "button": {
                 "createApiToken": ""
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "",
-                  "createdBy": ""
+                  "createdBy": "",
+                  "actions": ""
                 }
               }
             }

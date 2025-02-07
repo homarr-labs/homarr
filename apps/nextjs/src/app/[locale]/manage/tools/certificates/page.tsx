@@ -59,10 +59,17 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
           {x509Certificates.map((cert) => (
             <Card key={cert.x509.fingerprint} withBorder>
               <Group wrap="nowrap">
-                <IconCertificate color={getMantineColor(iconColor(cert.x509.validToDate), 6)} size={32} stroke={1.5} />
-                <Stack flex={1} gap="xs">
-                  <Group justify="space-between">
-                    <Text fw={500}>{cert.x509.subject}</Text>
+                <IconCertificate
+                  color={getMantineColor(iconColor(cert.x509.validToDate), 6)}
+                  style={{ minWidth: 32 }}
+                  size={32}
+                  stroke={1.5}
+                />
+                <Stack flex={1} gap="xs" maw="calc(100% - 48px)">
+                  <Group justify="space-between" wrap="nowrap">
+                    <Text fw={500} lineClamp={1} style={{ wordBreak: "break-all" }}>
+                      {cert.x509.subject}
+                    </Text>
                     <Text c="gray.6" ta="end" size="sm">
                       {cert.fileName}
                     </Text>

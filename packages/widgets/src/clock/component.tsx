@@ -17,6 +17,8 @@ export default function ClockWidget({ options }: WidgetComponentProps<"clock">) 
   const secondsFormat = options.showSeconds ? ":ss" : "";
   const timeFormat = options.is24HourFormat ? `HH:mm${secondsFormat}` : `h:mm${secondsFormat} A`;
   const dateFormat = options.dateFormat;
+  const customTimeFormat = options.customTimeFormat;
+  const customDateFormat = options.customDateFormat;
   const timezone = options.useCustomTimezone ? options.timezone : Intl.DateTimeFormat().resolvedOptions().timeZone;
   const time = useCurrentTime(options);
   return (
@@ -27,11 +29,15 @@ export default function ClockWidget({ options }: WidgetComponentProps<"clock">) 
         </Text>
       )}
       <Text className="clock-time-text" fw={700} size="22.5cqmin" lh="1">
-        {dayjs(time).tz(timezone).format(timeFormat)}
+        {options.customTimeFormat
+          ? dayjs(time).tz(timezone).format(customTimeFormat)
+          : dayjs(time).tz(timezone).format(timeFormat)}
       </Text>
       {options.showDate && (
-        <Text className="clock-date-text" size="12.5cqmin" pt="1cqmin" lineClamp={1}>
-          {dayjs(time).tz(timezone).format(dateFormat)}
+        <Text className="clock-date-text" size="12.5cqmin" p="1cqmin" lineClamp={1}>
+          {options.customDateFormat
+            ? dayjs(time).tz(timezone).format(customDateFormat)
+            : dayjs(time).tz(timezone).format(dateFormat)}
         </Text>
       )}
     </Stack>

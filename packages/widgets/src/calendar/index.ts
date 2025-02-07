@@ -1,8 +1,8 @@
 import { IconCalendar } from "@tabler/icons-react";
+import { z } from "zod";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
-import { z } from "@homarr/validation";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -27,4 +27,5 @@ export const { definition, componentLoader } = createWidgetDefinition("calendar"
     }),
   })),
   supportedIntegrations: getIntegrationKindsByCategory("calendar"),
+  integrationsRequired: false,
 }).withDynamicImport(() => import("./component"));

@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Ikonok használata a pingekhez"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,7 +216,7 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
             "message": ""
@@ -785,6 +791,9 @@
       },
       "copy": {
         "label": "URL másolása"
+      },
+      "open": {
+        "label": ""
       }
     }
   },
@@ -796,6 +805,7 @@
       "apply": "Alkalmaz",
       "backToOverview": "Vissza az áttekintéshez",
       "create": "Létrehozás",
+      "createAnother": "",
       "edit": "Szerkesztés",
       "import": "Importálás",
       "insert": "Beillesztés",
@@ -937,7 +947,8 @@
         "moveUp": "Felfelé mozgatás",
         "moveDown": "Mozgatás le",
         "createAbove": "",
-        "createBelow": ""
+        "createBelow": "",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "",
@@ -956,6 +967,10 @@
           "create": "",
           "changePosition": "Pozíció módosítása"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1063,6 +1078,15 @@
               "label": "Rács"
             }
           }
+        },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
         },
         "items": {
           "label": "Könyjelzők",
@@ -1174,6 +1198,14 @@
         "dateFormat": {
           "label": "Dátum formátum",
           "description": "Hogyan nézzen ki a dátum"
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
+          "description": ""
         }
       }
     },
@@ -1355,6 +1387,13 @@
         "isFormatFahrenheit": {
           "label": ""
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Időjárás helye"
         },
@@ -1372,6 +1411,13 @@
           "label": "Dátum formátum",
           "description": "Hogyan nézzen ki a dátum"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Tiszta",
@@ -1407,6 +1453,10 @@
     "healthMonitoring": {
       "name": "Rendszerállapot-felügyelet",
       "description": "Megjeleníti a rendszer(ek) állapotát és állapotát mutató információkat.",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "CPU hőmérséklet Fahrenheitben"
@@ -2265,7 +2315,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "",
+              "search": "",
               "firstDayOfWeek": "A hét első napja",
               "accessibility": "Kisegítő lehetőségek"
             }
@@ -2534,10 +2584,17 @@
               "button": {
                 "createApiToken": ""
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "Azonosító",
-                  "createdBy": ""
+                  "createdBy": "",
+                  "actions": ""
                 }
               }
             }

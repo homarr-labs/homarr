@@ -7,6 +7,7 @@ import "~/styles/gridstack.scss";
 import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
+import { isNullOrWhitespace } from "@homarr/common";
 import { getI18n } from "@homarr/translation/server";
 
 import { createMetaTitle } from "~/metadata";
@@ -48,11 +49,13 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
         return {
           title: board.metaTitle ?? createMetaTitle(t("board.content.metaTitle", { boardName: board.name })),
           icons: {
-            icon: board.faviconImageUrl ? board.faviconImageUrl : undefined,
-            apple: board.faviconImageUrl ? board.faviconImageUrl : undefined,
+            icon: !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : undefined,
+            apple: !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : undefined,
           },
           appleWebApp: {
-            startupImage: { url: board.faviconImageUrl ? board.faviconImageUrl : "/logo/logo.png" },
+            startupImage: {
+              url: !isNullOrWhitespace(board.faviconImageUrl) ? board.faviconImageUrl : "/logo/logo.png",
+            },
           },
         };
       } catch (error) {

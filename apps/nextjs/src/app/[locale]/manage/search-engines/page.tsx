@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconPencil, IconSearch } from "@tabler/icons-react";
+import { z } from "zod";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -9,7 +10,6 @@ import { auth } from "@homarr/auth/next";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { SearchInput, TablePagination } from "@homarr/ui";
-import { z } from "@homarr/validation";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
@@ -45,7 +45,7 @@ export default async function SearchEnginesPage(props: SearchEnginesPageProps) {
       <Stack>
         <Title>{tEngine("page.list.title")}</Title>
         <Group justify="space-between" align="center">
-          <SearchInput placeholder={`${tEngine("search")}...`} defaultValue={searchParams.search} />
+          <SearchInput placeholder={`${tEngine("search")}...`} defaultValue={searchParams.search} flexExpand />
           {session.user.permissions.includes("search-engine-create") && (
             <MobileAffixButton component={Link} href="/manage/search-engines/new">
               {tEngine("page.create.title")}

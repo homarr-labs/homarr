@@ -151,6 +151,12 @@
       },
       "pingIconsEnabled": {
         "label": "Používat ikony pro pingy"
+      },
+      "defaultSearchEngine": {
+        "label": ""
+      },
+      "openSearchInNewTab": {
+        "label": ""
       }
     },
     "error": {
@@ -210,7 +216,7 @@
           }
         }
       },
-      "changeDefaultSearchEngine": {
+      "changeSearchPreferences": {
         "notification": {
           "success": {
             "message": ""
@@ -785,6 +791,9 @@
       },
       "copy": {
         "label": "Zkopírovat URL"
+      },
+      "open": {
+        "label": ""
       }
     }
   },
@@ -796,6 +805,7 @@
       "apply": "Použít",
       "backToOverview": "Zpět na přehled",
       "create": "Vytvořit",
+      "createAnother": "",
       "edit": "Upravit",
       "import": "Importovat",
       "insert": "Vložit",
@@ -937,7 +947,8 @@
         "moveUp": "Posunout nahoru",
         "moveDown": "Posunout dolů",
         "createAbove": "Nová kategorie nad",
-        "createBelow": "Nová kategorie pod"
+        "createBelow": "Nová kategorie pod",
+        "openAllInNewTabs": ""
       },
       "create": {
         "title": "Nová kategorie",
@@ -956,6 +967,10 @@
           "create": "Nová kategorie",
           "changePosition": "Změnit pozici"
         }
+      },
+      "openAllInNewTabs": {
+        "title": "",
+        "text": ""
       }
     }
   },
@@ -1063,6 +1078,15 @@
               "label": ""
             }
           }
+        },
+        "hideIcon": {
+          "label": ""
+        },
+        "hideHostname": {
+          "label": ""
+        },
+        "openNewTab": {
+          "label": ""
         },
         "items": {
           "label": "",
@@ -1173,6 +1197,14 @@
         },
         "dateFormat": {
           "label": "Formát data",
+          "description": ""
+        },
+        "customTimeFormat": {
+          "label": "",
+          "description": ""
+        },
+        "customDateFormat": {
+          "label": "",
           "description": ""
         }
       }
@@ -1355,6 +1387,13 @@
         "isFormatFahrenheit": {
           "label": "Teplota ve Fahrenheitech"
         },
+        "disableTemperatureDecimals": {
+          "label": ""
+        },
+        "showCurrentWindSpeed": {
+          "label": "",
+          "description": ""
+        },
         "location": {
           "label": "Lokalita pro počasí"
         },
@@ -1372,6 +1411,13 @@
           "label": "Formát data",
           "description": "Jak by datum mělo vypadat"
         }
+      },
+      "currentWindSpeed": "",
+      "dailyForecast": {
+        "sunrise": "",
+        "sunset": "",
+        "maxWindSpeed": "",
+        "maxWindGusts": ""
       },
       "kind": {
         "clear": "Jasno",
@@ -1407,6 +1453,10 @@
     "healthMonitoring": {
       "name": "Monitorování stavu systému",
       "description": "Zobrazuje informace o stavu a kondici Vašeho systému (systémů).",
+      "tab": {
+        "system": "",
+        "cluster": ""
+      },
       "option": {
         "fahrenheit": {
           "label": "Teplota CPU ve stupních Fahrenheit"
@@ -2265,7 +2315,7 @@
                   "mobile": ""
                 }
               },
-              "defaultSearchEngine": "Výchozí vyhledávač",
+              "search": "",
               "firstDayOfWeek": "První den v týdnu",
               "accessibility": "Přístupnost"
             }
@@ -2534,10 +2584,17 @@
               "button": {
                 "createApiToken": ""
               },
+              "modal": {
+                "delete": {
+                  "title": "",
+                  "text": ""
+                }
+              },
               "table": {
                 "header": {
                   "id": "",
-                  "createdBy": ""
+                  "createdBy": "",
+                  "actions": ""
                 }
               }
             }
