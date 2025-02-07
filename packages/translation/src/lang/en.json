@@ -2007,6 +2007,11 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "Quick create app"
+        }
       }
     },
     "field": {
