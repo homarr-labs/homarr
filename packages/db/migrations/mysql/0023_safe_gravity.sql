@@ -1,1 +1,0 @@
-ALTER TABLE `board` ADD `disable_status` boolean DEFAULT false NOT NULL;
