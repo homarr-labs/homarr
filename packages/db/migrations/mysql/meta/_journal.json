@@ -176,6 +176,20 @@
       "when": 1738961147412,
       "tag": "0024_mean_vin_gonzales",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1739020765054,
+      "tag": "0025_add_layouts",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1739021074603,
+      "tag": "0026_migrate_item_and_section_for_layouts",
+      "breakpoints": true
     }
   ]
 }

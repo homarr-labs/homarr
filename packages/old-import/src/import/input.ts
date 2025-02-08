@@ -4,14 +4,7 @@ import { zfd } from "zod-form-data";
 
 import { initialOldmarrImportSettings } from "../settings";
 
-const boardSelectionMapSchema = z.map(
-  z.string(),
-  z.object({
-    sm: z.boolean().nullable(),
-    md: z.boolean().nullable(),
-    lg: z.boolean().nullable(),
-  }),
-);
+const boardSelectionMapSchema = z.map(z.string(), z.boolean());
 
 export const importInitialOldmarrInputSchema = zfd.formData({
   file: zfd.file(),

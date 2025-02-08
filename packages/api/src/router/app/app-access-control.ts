@@ -21,21 +21,16 @@ const getAllAppIdsOnPublicBoardsAsync = async () => {
   const itemsWithApps = await db.query.items.findMany({
     where: or(eq(items.kind, "app"), eq(items.kind, "bookmarks")),
     with: {
-      section: {
-        columns: {}, // Nothing
-        with: {
-          board: {
-            columns: {
-              isPublic: true,
-            },
-          },
+      board: {
+        columns: {
+          isPublic: true,
         },
       },
     },
   });
 
   return itemsWithApps
-    .filter((item) => item.section.board.isPublic)
+    .filter((item) => item.board.isPublic)
     .flatMap((item) => {
       if (item.kind === "app") {
         const parsedOptions = SuperJSON.parse<WidgetComponentProps<"app">["options"]>(item.options);

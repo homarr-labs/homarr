@@ -9,6 +9,7 @@ import {
   int,
   mysqlTable,
   primaryKey,
+  smallint,
   text,
   timestamp,
   tinyint,
@@ -271,7 +272,6 @@ export const boards = mysqlTable("board", {
   secondaryColor: text().default("#fd7e14").notNull(),
   opacity: int().default(100).notNull(),
   customCss: text(),
-  columnCount: int().default(10).notNull(),
   disableStatus: boolean().default(false).notNull(),
 });
 
@@ -311,16 +311,73 @@ export const boardGroupPermissions = mysqlTable(
   }),
 );
 
+export const layouts = mysqlTable("layout", {
+  id: varchar({ length: 64 }).notNull().primaryKey(),
+  name: varchar({ length: 32 }).notNull(),
+  boardId: varchar({ length: 64 })
+    .notNull()
+    .references(() => boards.id, { onDelete: "cascade" }),
+  columnCount: tinyint().notNull(),
+  breakpoint: smallint().notNull().default(0),
+});
+
+export const layoutItemSections = mysqlTable(
+  "layout_item_section",
+  {
+    itemId: varchar({ length: 64 })
+      .notNull()
+      .references(() => items.id, { onDelete: "cascade" }),
+    sectionId: varchar({ length: 64 })
+      .notNull()
+      .references(() => sections.id, { onDelete: "cascade" }),
+    layoutId: varchar({ length: 64 })
+      .notNull()
+      .references(() => layouts.id, { onDelete: "cascade" }),
+    xOffset: int().notNull(),
+    yOffset: int().notNull(),
+    width: int().notNull(),
+    height: int().notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.itemId, table.sectionId, table.layoutId],
+    }),
+  }),
+);
+
+export const layoutSections = mysqlTable(
+  "layout_section",
+  {
+    sectionId: varchar({ length: 64 })
+      .notNull()
+      .references(() => sections.id, { onDelete: "cascade" }),
+    layoutId: varchar({ length: 64 })
+      .notNull()
+      .references(() => layouts.id, { onDelete: "cascade" }),
+    parentSectionId: varchar({ length: 64 }).references((): AnyMySqlColumn => sections.id, {
+      onDelete: "cascade",
+    }),
+    xOffset: int().notNull(),
+    yOffset: int().notNull(),
+    width: int().notNull(),
+    height: int().notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.sectionId, table.layoutId],
+    }),
+  }),
+);
+
 export const sections = mysqlTable("section", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   boardId: varchar({ length: 64 })
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   kind: text().$type<SectionKind>().notNull(),
-  xOffset: int().notNull(),
-  yOffset: int().notNull(),
-  width: int(),
-  height: int(),
+  xOffset: int(),
+  yOffset: int(),
+
   name: text(),
   parentSectionId: varchar({ length: 64 }).references((): AnyMySqlColumn => sections.id, {
     onDelete: "cascade",
@@ -347,14 +404,10 @@ export const sectionCollapseStates = mysqlTable(
 
 export const items = mysqlTable("item", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
-  sectionId: varchar({ length: 64 })
+  boardId: varchar({ length: 64 })
     .notNull()
-    .references(() => sections.id, { onDelete: "cascade" }),
+    .references(() => boards.id, { onDelete: "cascade" }),
   kind: text().$type<WidgetKind>().notNull(),
-  xOffset: int().notNull(),
-  yOffset: int().notNull(),
-  width: int().notNull(),
-  height: int().notNull(),
   options: text().default('{"json": {}}').notNull(), // empty superjson object
   advancedOptions: text().default('{"json": {}}').notNull(), // empty superjson object
 });
@@ -568,21 +621,28 @@ export const integrationSecretRelations = relations(integrationSecrets, ({ one }
 
 export const boardRelations = relations(boards, ({ many, one }) => ({
   sections: many(sections),
+  items: many(items),
   creator: one(users, {
     fields: [boards.creatorId],
     references: [users.id],
   }),
   userPermissions: many(boardUserPermissions),
   groupPermissions: many(boardGroupPermissions),
+  layouts: many(layouts),
 }));
 
 export const sectionRelations = relations(sections, ({ many, one }) => ({
-  items: many(items),
   board: one(boards, {
     fields: [sections.boardId],
     references: [boards.id],
   }),
   collapseStates: many(sectionCollapseStates),
+  layouts: many(layoutSections, {
+    relationName: "layoutSectionRelations__section__sectionId",
+  }),
+  children: many(layoutSections, {
+    relationName: "layoutSectionRelations__section__parentSectionId",
+  }),
 }));
 
 export const sectionCollapseStateRelations = relations(sectionCollapseStates, ({ one }) => ({
@@ -597,11 +657,12 @@ export const sectionCollapseStateRelations = relations(sectionCollapseStates, ({
 }));
 
 export const itemRelations = relations(items, ({ one, many }) => ({
-  section: one(sections, {
-    fields: [items.sectionId],
-    references: [sections.id],
-  }),
   integrations: many(integrationItems),
+  layouts: many(layoutItemSections),
+  board: one(boards, {
+    fields: [items.boardId],
+    references: [boards.id],
+  }),
 }));
 
 export const integrationItemRelations = relations(integrationItems, ({ one }) => ({
@@ -621,4 +682,45 @@ export const searchEngineRelations = relations(searchEngines, ({ one, many }) =>
     references: [integrations.id],
   }),
   usersWithDefault: many(users),
+}));
+
+export const layoutItemSectionRelations = relations(layoutItemSections, ({ one }) => ({
+  item: one(items, {
+    fields: [layoutItemSections.itemId],
+    references: [items.id],
+  }),
+  section: one(sections, {
+    fields: [layoutItemSections.sectionId],
+    references: [sections.id],
+  }),
+  layout: one(layouts, {
+    fields: [layoutItemSections.layoutId],
+    references: [layouts.id],
+  }),
+}));
+
+export const layoutSectionRelations = relations(layoutSections, ({ one }) => ({
+  section: one(sections, {
+    fields: [layoutSections.sectionId],
+    references: [sections.id],
+    relationName: "layoutSectionRelations__section__sectionId",
+  }),
+  layout: one(layouts, {
+    fields: [layoutSections.layoutId],
+    references: [layouts.id],
+  }),
+  parentSection: one(sections, {
+    fields: [layoutSections.parentSectionId],
+    references: [sections.id],
+    relationName: "layoutSectionRelations__section__parentSectionId",
+  }),
+}));
+
+export const layoutRelations = relations(layouts, ({ one, many }) => ({
+  items: many(layoutItemSections),
+  sections: many(layoutSections),
+  board: one(boards, {
+    fields: [layouts.boardId],
+    references: [boards.id],
+  }),
 }));

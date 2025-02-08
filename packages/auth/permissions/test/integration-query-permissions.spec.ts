@@ -29,13 +29,13 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
     const integrations = [
       {
         id: "1",
-        items: [{ item: { section: { boardId: "1" } } }],
+        items: [{ item: { boardId: "1" } }],
         userPermissions: [],
         groupPermissions: [],
       },
       {
         id: "2",
-        items: [{ item: { section: { boardId: "2" } } }],
+        items: [{ item: { boardId: "2" } }],
         userPermissions: [],
         groupPermissions: [],
       },
@@ -63,7 +63,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
     const integrations = [
       {
         id: "1",
-        items: [{ item: { section: { boardId: "1" } } }],
+        items: [{ item: { boardId: "1" } }],
         userPermissions: [],
         groupPermissions: [],
       },
@@ -131,9 +131,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],
@@ -145,16 +143,12 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
           {
             item: {
-              section: {
-                boardId: "2",
-              },
+              boardId: "2",
             },
           },
         ],
@@ -189,9 +183,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],
@@ -203,9 +195,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "2",
-              },
+              boardId: "2",
             },
           },
         ],
@@ -240,9 +230,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],
@@ -254,16 +242,12 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
           {
             item: {
-              section: {
-                boardId: "2",
-              },
+              boardId: "2",
             },
           },
         ],
@@ -300,9 +284,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],
@@ -314,9 +296,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "2",
-              },
+              boardId: "2",
             },
           },
         ],
@@ -353,9 +333,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],
@@ -367,9 +345,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "2",
-              },
+              boardId: "2",
             },
           },
         ],
@@ -401,9 +377,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],
@@ -415,16 +389,12 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "2",
-              },
+              boardId: "2",
             },
           },
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],
@@ -452,9 +422,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],
@@ -466,16 +434,12 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "2",
-              },
+              boardId: "2",
             },
           },
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],
@@ -502,9 +466,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],
@@ -516,9 +478,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "2",
-              },
+              boardId: "2",
             },
           },
         ],
@@ -543,9 +503,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],
@@ -557,9 +515,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "2",
-              },
+              boardId: "2",
             },
           },
         ],
@@ -585,9 +541,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],
@@ -599,16 +553,12 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
         items: [
           {
             item: {
-              section: {
-                boardId: "2",
-              },
+              boardId: "2",
             },
           },
           {
             item: {
-              section: {
-                boardId: "1",
-              },
+              boardId: "1",
             },
           },
         ],

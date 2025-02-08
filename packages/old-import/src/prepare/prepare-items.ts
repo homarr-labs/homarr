@@ -4,11 +4,12 @@ import { mapApp, mapWidget } from "../mappers/map-item";
 
 export const prepareItems = (
   { apps, widgets }: Pick<OldmarrConfig, "apps" | "widgets">,
-  boardSize: BoardSize,
   appsMap: Map<string, { id: string }>,
   sectionMap: Map<string, { id: string }>,
+  layoutMap: Record<BoardSize, string>,
+  boardId: string,
 ) =>
   widgets
-    .map((widget) => mapWidget(widget, boardSize, appsMap, sectionMap))
-    .concat(apps.map((app) => mapApp(app, boardSize, appsMap, sectionMap)))
+    .map((widget) => mapWidget(widget, appsMap, sectionMap, layoutMap, boardId))
+    .concat(apps.map((app) => mapApp(app, appsMap, sectionMap, layoutMap, boardId)))
     .filter((widget) => widget !== null);

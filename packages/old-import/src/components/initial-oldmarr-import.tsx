@@ -4,7 +4,6 @@ import SuperJSON from "superjson";
 
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useModalAction } from "@homarr/modals";
-import { boardSizes } from "@homarr/old-schema";
 
 // We don't have access to the API client here, so we need to import it from the API package
 // In the future we should consider having the used router also in this package
@@ -13,7 +12,6 @@ import type { AnalyseResult } from "../analyse/analyse-oldmarr-import";
 import { prepareMultipleImports } from "../prepare/prepare-multiple";
 import type { InitialOldmarrImportSettings } from "../settings";
 import { defaultSidebarBehaviour } from "../settings";
-import type { BoardSelectionMap, BoardSizeRecord } from "./initial/board-selection-card";
 import { BoardSelectionCard } from "./initial/board-selection-card";
 import { ImportSettingsCard } from "./initial/import-settings-card";
 import { ImportSummaryCard } from "./initial/import-summary-card";
@@ -25,8 +23,8 @@ interface InitialOldmarrImportProps {
 }
 
 export const InitialOldmarrImport = ({ file, analyseResult }: InitialOldmarrImportProps) => {
-  const [boardSelections, setBoardSelections] = useState<BoardSelectionMap>(
-    new Map(createDefaultSelections(analyseResult.configs)),
+  const [boardSelections, setBoardSelections] = useState<Map<string, boolean>>(
+    new Map(analyseResult.configs.filter(({ config }) => config !== null).map(({ name }) => [name, true])),
   );
   const [settings, setSettings] = useState<InitialOldmarrImportSettings>({
     onlyImportApps: false,
@@ -93,20 +91,4 @@ export const InitialOldmarrImport = ({ file, analyseResult }: InitialOldmarrImpo
       />
     </Stack>
   );
-};
-
-const createDefaultSelections = (configs: AnalyseResult["configs"]) => {
-  return configs
-    .map(({ name, config }) => {
-      if (!config) return null;
-
-      const shapes = config.apps.flatMap((app) => app.shape).concat(config.widgets.flatMap((widget) => widget.shape));
-      const boardSizeRecord = boardSizes.reduce<BoardSizeRecord>((acc, size) => {
-        const allInclude = shapes.every((shape) => Boolean(shape[size]));
-        acc[size] = allInclude ? true : null;
-        return acc;
-      }, {} as BoardSizeRecord);
-      return [name, boardSizeRecord];
-    })
-    .filter((selection): selection is [string, BoardSizeRecord] => Boolean(selection));
 };

@@ -176,6 +176,20 @@
       "when": 1738961178990,
       "tag": "0024_bitter_scrambler",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "6",
+      "when": 1739019735627,
+      "tag": "0025_add_layouts",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "6",
+      "when": 1739020151133,
+      "tag": "0026_migrate_item_and_section_for_layouts",
+      "breakpoints": true
     }
   ]
 }

@@ -1,8 +1,12 @@
 import { createId } from "@homarr/db";
 import { logger } from "@homarr/log";
+import type { BoardSize } from "@homarr/old-schema";
+import { boardSizes, getBoardSizeName } from "@homarr/old-schema";
 
 import { fixSectionIssues } from "../../fix-section-issues";
 import { mapBoard } from "../../mappers/map-board";
+import { mapBreakpoint } from "../../mappers/map-breakpoint";
+import { mapColumnCount } from "../../mappers/map-column-count";
 import { moveWidgetsAndAppsIfMerge } from "../../move-widgets-and-apps-merge";
 import { prepareItems } from "../../prepare/prepare-items";
 import type { prepareMultipleImports } from "../../prepare/prepare-multiple";
@@ -14,7 +18,14 @@ export const createBoardInsertCollection = (
   { preparedApps, preparedBoards }: Omit<ReturnType<typeof prepareMultipleImports>, "preparedIntegrations">,
   settings: InitialOldmarrImportSettings,
 ) => {
-  const insertCollection = createDbInsertCollection(["apps", "boards", "sections", "items"]);
+  const insertCollection = createDbInsertCollection([
+    "apps",
+    "boards",
+    "layouts",
+    "layoutItemSections",
+    "sections",
+    "items",
+  ]);
   logger.info("Preparing boards for insert collection");
 
   const appsMap = new Map(
@@ -49,7 +60,6 @@ export const createBoardInsertCollection = (
     const { wrappers, categories, wrapperIdsToMerge } = fixSectionIssues(board.config);
     const { apps, widgets } = moveWidgetsAndAppsIfMerge(board.config, wrapperIdsToMerge, {
       ...settings,
-      screenSize: board.size,
       name: board.name,
     });
 
@@ -58,6 +68,25 @@ export const createBoardInsertCollection = (
     const mappedBoard = mapBoard(board);
     logger.debug(`Mapped board fileName=${board.name} boardId=${mappedBoard.id}`);
     insertCollection.boards.push(mappedBoard);
+
+    const layoutMapping = boardSizes.reduce(
+      (acc, size) => {
+        acc[size] = createId();
+        return acc;
+      },
+      {} as Record<BoardSize, string>,
+    );
+
+    insertCollection.layouts.push(
+      ...boardSizes.map((size) => ({
+        id: layoutMapping[size],
+        boardId: mappedBoard.id,
+        columnCount: mapColumnCount(board.config, size),
+        breakpoint: mapBreakpoint(size),
+        name: getBoardSizeName(size),
+      })),
+    );
+
     const preparedSections = prepareSections(mappedBoard.id, { wrappers, categories });
 
     for (const section of preparedSections.values()) {
@@ -65,8 +94,11 @@ export const createBoardInsertCollection = (
     }
     logger.debug(`Added sections to board insert collection count=${insertCollection.sections.length}`);
 
-    const preparedItems = prepareItems({ apps, widgets }, board.size, appsMap, preparedSections);
-    preparedItems.forEach((item) => insertCollection.items.push(item));
+    const preparedItems = prepareItems({ apps, widgets }, appsMap, preparedSections, layoutMapping, mappedBoard.id);
+    preparedItems.forEach(({ layouts, ...item }) => {
+      insertCollection.items.push(item);
+      insertCollection.layoutItemSections.push(...layouts);
+    });
     logger.debug(`Added items to board insert collection count=${insertCollection.items.length}`);
   });
 

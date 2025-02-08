@@ -1,6 +1,7 @@
 import { objectEntries } from "@homarr/common";
 import { logger } from "@homarr/log";
-import type { OldmarrApp, OldmarrConfig, OldmarrWidget } from "@homarr/old-schema";
+import type { BoardSize, OldmarrApp, OldmarrConfig, OldmarrWidget } from "@homarr/old-schema";
+import { boardSizes } from "@homarr/old-schema";
 
 import { OldHomarrScreenSizeError } from "./import-error";
 import { mapColumnCount } from "./mappers/map-column-count";
@@ -28,9 +29,21 @@ export const moveWidgetsAndAppsIfMerge = (
 
   logger.debug(`Merging wrappers at the end of the board count=${wrapperIdsToMerge.length}`);
 
-  let offset = 0;
+  const offsets = boardSizes.reduce(
+    (previous, screenSize) => {
+      previous[screenSize] = 0;
+      return previous;
+    },
+    {} as Record<BoardSize, number>,
+  );
   for (const id of wrapperIdsToMerge) {
-    let requiredHeight = 0;
+    const requiredHeights = boardSizes.reduce(
+      (previous, screenSize) => {
+        previous[screenSize] = 0;
+        return previous;
+      },
+      {} as Record<BoardSize, number>,
+    );
     const affected = affectedMap.get(id);
     if (!affected) {
       continue;
@@ -44,18 +57,20 @@ export const moveWidgetsAndAppsIfMerge = (
       // Move item to first wrapper
       app.area.properties.id = firstId;
 
-      const screenSizeShape = app.shape[configuration.screenSize];
-      if (!screenSizeShape) {
-        throw new OldHomarrScreenSizeError("app", app.id, configuration.screenSize);
-      }
+      for (const screenSize of boardSizes) {
+        const screenSizeShape = app.shape[screenSize];
+        if (!screenSizeShape) {
+          throw new OldHomarrScreenSizeError("app", app.id, screenSize);
+        }
 
-      // Find the highest widget in the wrapper to increase the offset accordingly
-      if (screenSizeShape.location.y + screenSizeShape.size.height > requiredHeight) {
-        requiredHeight = screenSizeShape.location.y + screenSizeShape.size.height;
-      }
+        // Find the highest widget in the wrapper to increase the offset accordingly
+        if (screenSizeShape.location.y + screenSizeShape.size.height > requiredHeights[screenSize]) {
+          requiredHeights[screenSize] = screenSizeShape.location.y + screenSizeShape.size.height;
+        }
 
-      // Move item down as much as needed to not overlap with other items
-      screenSizeShape.location.y += offset;
+        // Move item down as much as needed to not overlap with other items
+        screenSizeShape.location.y += offsets[screenSize];
+      }
     }
 
     for (const widget of widgets) {
@@ -63,21 +78,25 @@ export const moveWidgetsAndAppsIfMerge = (
       // Move item to first wrapper
       widget.area.properties.id = firstId;
 
-      const screenSizeShape = widget.shape[configuration.screenSize];
-      if (!screenSizeShape) {
-        throw new OldHomarrScreenSizeError("widget", widget.id, configuration.screenSize);
-      }
+      for (const screenSize of boardSizes) {
+        const screenSizeShape = widget.shape[screenSize];
+        if (!screenSizeShape) {
+          throw new OldHomarrScreenSizeError("widget", widget.id, screenSize);
+        }
 
-      // Find the highest widget in the wrapper to increase the offset accordingly
-      if (screenSizeShape.location.y + screenSizeShape.size.height > requiredHeight) {
-        requiredHeight = screenSizeShape.location.y + screenSizeShape.size.height;
-      }
+        // Find the highest widget in the wrapper to increase the offset accordingly
+        if (screenSizeShape.location.y + screenSizeShape.size.height > requiredHeights[screenSize]) {
+          requiredHeights[screenSize] = screenSizeShape.location.y + screenSizeShape.size.height;
+        }
 
-      // Move item down as much as needed to not overlap with other items
-      screenSizeShape.location.y += offset;
+        // Move item down as much as needed to not overlap with other items
+        screenSizeShape.location.y += offsets[screenSize];
+      }
     }
 
-    offset += requiredHeight;
+    for (const screenSize of boardSizes) {
+      offsets[screenSize] += requiredHeights[screenSize];
+    }
   }
 
   if (configuration.sidebarBehaviour === "last-section") {
@@ -86,14 +105,18 @@ export const moveWidgetsAndAppsIfMerge = (
       old.settings.customization.layout.enabledLeftSidebar ||
       areas.some((area) => area.type === "sidebar" && area.properties.location === "left")
     ) {
-      offset = moveWidgetsAndAppsInLeftSidebar(old, firstId, offset, configuration.screenSize);
+      for (const screenSize of boardSizes) {
+        offsets[screenSize] = moveWidgetsAndAppsInLeftSidebar(old, firstId, offsets[screenSize], screenSize);
+      }
     }
 
     if (
       old.settings.customization.layout.enabledRightSidebar ||
       areas.some((area) => area.type === "sidebar" && area.properties.location === "right")
     ) {
-      moveWidgetsAndAppsInRightSidebar(old, firstId, offset, configuration.screenSize);
+      for (const screenSize of boardSizes) {
+        moveWidgetsAndAppsInRightSidebar(old, firstId, offsets[screenSize], screenSize);
+      }
     }
   } else {
     // Remove all widgets and apps in the sidebar
@@ -110,7 +133,7 @@ const moveWidgetsAndAppsInLeftSidebar = (
   old: OldmarrConfig,
   firstId: string,
   offset: number,
-  screenSize: OldmarrImportConfiguration["screenSize"],
+  screenSize: BoardSize,
 ) => {
   const columnCount = mapColumnCount(old, screenSize);
   let requiredHeight = updateItems({
@@ -186,7 +209,7 @@ const moveWidgetsAndAppsInRightSidebar = (
   old: OldmarrConfig,
   firstId: string,
   offset: number,
-  screenSize: OldmarrImportConfiguration["screenSize"],
+  screenSize: BoardSize,
 ) => {
   const columnCount = mapColumnCount(old, screenSize);
   const xOffsetDelta = Math.max(columnCount - 2, 0);
@@ -255,10 +278,7 @@ const moveWidgetsAndAppsInRightSidebar = (
   });
 };
 
-const createItemSnapshot = (
-  item: OldmarrApp | OldmarrWidget,
-  screenSize: OldmarrImportConfiguration["screenSize"],
-) => ({
+const createItemSnapshot = (item: OldmarrApp | OldmarrWidget, screenSize: BoardSize) => ({
   x: item.shape[screenSize]?.location.x,
   y: item.shape[screenSize]?.location.y,
   height: item.shape[screenSize]?.size.height,
@@ -285,7 +305,7 @@ const updateItems = (options: {
   items: (OldmarrApp | OldmarrWidget)[];
   filter: (item: OldmarrApp | OldmarrWidget) => boolean;
   update: (item: OldmarrApp | OldmarrWidget) => void;
-  screenSize: OldmarrImportConfiguration["screenSize"];
+  screenSize: BoardSize;
 }) => {
   const items = options.items.filter(options.filter);
   let requiredHeight = 0;

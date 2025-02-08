@@ -2186,6 +2186,20 @@
       }
     }
   },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "Name"
+      },
+      "columnCount": {
+        "label": "Column count"
+      },
+      "breakpoint": {
+        "label": "Breakpoint",
+        "description": "Layout will be used on all screens larger than this breakpoint until the next bigger breakpoint."
+      }
+    }
+  },
   "management": {
     "metaTitle": "Management",
     "title": {

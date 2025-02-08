@@ -8,14 +8,6 @@ export const prepareSingleImport = (config: OldmarrConfig, settings: OldmarrImpo
 
   return {
     preparedApps: prepareApps(validAnalyseConfigs),
-    preparedBoards: settings.onlyImportApps
-      ? []
-      : [
-          {
-            name: settings.name,
-            size: settings.screenSize,
-            config,
-          },
-        ],
+    preparedBoards: settings.onlyImportApps ? [] : validAnalyseConfigs,
   };
 };

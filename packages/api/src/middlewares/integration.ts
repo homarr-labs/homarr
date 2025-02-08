@@ -37,15 +37,7 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
         userPermissions: true,
         items: {
           with: {
-            item: {
-              with: {
-                section: {
-                  columns: {
-                    boardId: true,
-                  },
-                },
-              },
-            },
+            item: true,
           },
         },
       },
@@ -107,15 +99,7 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
               secrets: true,
               items: {
                 with: {
-                  item: {
-                    with: {
-                      section: {
-                        columns: {
-                          boardId: true,
-                        },
-                      },
-                    },
-                  },
+                  item: true,
                 },
               },
               userPermissions: true,
