@@ -4,11 +4,11 @@ interface ImageColoredProps {
   src: string;
   color: MantineColor;
   alt: string;
-  styles?: React.CSSProperties;
+  style?: React.CSSProperties;
   className?: string;
 }
 
-export const ImageColored = ({ src, color, alt, styles, className }: ImageColoredProps) => {
+export const ImageColored = ({ src, color, alt, style, className }: ImageColoredProps) => {
   const theme = useMantineTheme();
 
   return (
@@ -17,7 +17,7 @@ export const ImageColored = ({ src, color, alt, styles, className }: ImageColore
       role="img"
       aria-label={alt}
       style={{
-        ...styles,
+        ...style,
         backgroundColor: getThemeColor(color, theme),
         maskSize: "contain",
         maskRepeat: "no-repeat",

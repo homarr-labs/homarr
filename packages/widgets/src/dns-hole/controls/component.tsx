@@ -335,7 +335,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
             src={iconUrl}
             color="iconColor"
             alt={data.integration.name}
-            styles={{
+            style={{
               height: "20cqmin",
               width: "20cqmin",
               filter: !isConnected ? "grayscale(100%)" : undefined,

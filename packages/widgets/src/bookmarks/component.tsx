@@ -196,7 +196,7 @@ const VerticalItem = ({
             color="iconColor"
             alt={app.name}
             className={classes.bookmarkIconWithColor}
-            styles={{
+            style={{
               maxHeight: "100%",
               maxWidth: "100%",
               overflow: "auto",
@@ -247,7 +247,7 @@ const HorizontalItem = ({
             color="iconColor"
             alt={app.name}
             className={classes.bookmarkIconWithColor}
-            styles={{
+            style={{
               overflow: "auto",
               scale: 0.8,
               minHeight: "100cqh",

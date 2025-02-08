@@ -86,7 +86,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
               color="iconColor"
               alt={app.name}
               className={combineClasses(classes.appIcon, classes.appIconWithColor, "app-icon")}
-              styles={{
+              style={{
                 height: "100%",
                 width: "100%",
               }}
