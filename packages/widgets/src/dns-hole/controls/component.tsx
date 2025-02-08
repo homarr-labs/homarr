@@ -27,7 +27,7 @@ import { useIntegrationConnected } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { ImageColored } from "@homarr/ui";
+import { MaskedImage } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
@@ -331,7 +331,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
     >
       <Flex className="dns-hole-controls-item-container" gap="4cqmin" align="center" direction="row">
         {hasIconColor ? (
-          <ImageColored
+          <MaskedImage
             src={iconUrl}
             color="iconColor"
             alt={data.integration.name}

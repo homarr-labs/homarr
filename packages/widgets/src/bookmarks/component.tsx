@@ -18,7 +18,7 @@ import {
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
-import { ImageColored } from "@homarr/ui";
+import { MaskedImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./bookmark.module.css";
@@ -191,7 +191,7 @@ const VerticalItem = ({
       </Text>
       {!hideIcon &&
         (hasIconColor ? (
-          <ImageColored
+          <MaskedImage
             src={app.iconUrl}
             color="iconColor"
             alt={app.name}
@@ -242,7 +242,7 @@ const HorizontalItem = ({
     <Group wrap="nowrap">
       {!hideIcon &&
         (hasIconColor ? (
-          <ImageColored
+          <MaskedImage
             src={app.iconUrl}
             color="iconColor"
             alt={app.name}

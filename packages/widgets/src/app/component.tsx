@@ -9,7 +9,7 @@ import combineClasses from "clsx";
 import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
-import { ImageColored } from "@homarr/ui";
+import { MaskedImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
@@ -81,7 +81,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
             </Text>
           )}
           {theme.other.hasIconColor ? (
-            <ImageColored
+            <MaskedImage
               src={app.iconUrl}
               color="iconColor"
               alt={app.name}

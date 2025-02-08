@@ -1,6 +1,6 @@
 import { getThemeColor, MantineColor, useMantineTheme } from "@mantine/core";
 
-interface ImageColoredProps {
+interface MaskedImageProps {
   src: string;
   color: MantineColor;
   alt: string;
@@ -8,7 +8,7 @@ interface ImageColoredProps {
   className?: string;
 }
 
-export const ImageColored = ({ src, color, alt, style, className }: ImageColoredProps) => {
+export const MaskedImage = ({ src, color, alt, style, className }: MaskedImageProps) => {
   const theme = useMantineTheme();
 
   return (

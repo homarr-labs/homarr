@@ -11,4 +11,4 @@ export { UserAvatarGroup } from "./user-avatar-group";
 export { CustomPasswordInput } from "./password-input/password-input";
 export { IntegrationAvatar } from "./integration-avatar";
 export { BetaBadge } from "./beta-badge";
-export { ImageColored } from "./image-colored";
+export { MaskedImage } from "./masked-image";
