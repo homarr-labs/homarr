@@ -237,7 +237,7 @@ describe("editProfile shoud update user", () => {
     expect(user).toHaveLength(1);
     expect(user[0]).containSubset({
       id: defaultOwnerId,
-      name: "ABC",
+      name: "abc",
       email: "abc@gmail.com",
       emailVerified,
     });
@@ -272,7 +272,7 @@ describe("editProfile shoud update user", () => {
     expect(user).toHaveLength(1);
     expect(user[0]).containSubset({
       id: defaultOwnerId,
-      name: "ABC",
+      name: "abc",
       email: "myNewEmail@gmail.com",
       emailVerified: null,
     });
