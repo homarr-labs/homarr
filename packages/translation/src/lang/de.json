@@ -2052,6 +2052,10 @@
           "description": "Sie können in den erweiterten Optionen jedes Elements eigene Klassen zu Ihren Board-Elementen hinzufügen und diese in dem benutzerdefinierten CSS oben verwenden."
         }
       },
+      "disableStatus": {
+        "label": "",
+        "description": ""
+      },
       "columnCount": {
         "label": "Anzahl der Spalten"
       },
@@ -2084,6 +2088,9 @@
         },
         "customCss": {
           "title": "Benutzerdefiniertes CSS"
+        },
+        "behavior": {
+          "title": ""
         },
         "access": {
           "title": "Zugriffskontrolle",
@@ -2476,6 +2483,17 @@
               "label": "Globales Home Board",
               "mobileLabel": "Globales Mobil Board",
               "description": "Nur öffentliche Boards stehen zur Auswahl"
+            },
+            "status": {
+              "title": "",
+              "enableStatusByDefault": {
+                "label": "",
+                "description": ""
+              },
+              "forceDisableStatus": {
+                "label": "",
+                "description": ""
+              }
             }
           },
           "search": {

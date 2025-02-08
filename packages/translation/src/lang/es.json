@@ -2052,6 +2052,10 @@
           "description": ""
         }
       },
+      "disableStatus": {
+        "label": "",
+        "description": ""
+      },
       "columnCount": {
         "label": ""
       },
@@ -2083,6 +2087,9 @@
           "title": ""
         },
         "customCss": {
+          "title": ""
+        },
+        "behavior": {
           "title": ""
         },
         "access": {
@@ -2476,6 +2483,17 @@
               "label": "",
               "mobileLabel": "",
               "description": ""
+            },
+            "status": {
+              "title": "",
+              "enableStatusByDefault": {
+                "label": "",
+                "description": ""
+              },
+              "forceDisableStatus": {
+                "label": "",
+                "description": ""
+              }
             }
           },
           "search": {

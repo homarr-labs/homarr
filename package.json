@@ -53,17 +53,33 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.0.5"
   },
-  "packageManager": "pnpm@9.15.5",
+  "packageManager": "pnpm@10.2.1",
   "engines": {
     "node": ">=22.13.1"
   },
   "pnpm": {
+    "onlyBuiltDependencies": [
+      "@tree-sitter-grammars/tree-sitter-yaml",
+      "bcrypt",
+      "better-sqlite3",
+      "cpu-features",
+      "esbuild",
+      "sharp",
+      "ssh2",
+      "tree-sitter",
+      "tree-sitter-json"
+    ],
     "allowNonAppliedPatches": true,
     "overrides": {
       "proxmox-api>undici": "7.3.0"
     },
     "patchedDependencies": {
       "pretty-print-error": "patches/pretty-print-error.patch"
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "@scarf/scarf",
+      "core-js-pure",
+      "protobufjs"
+    ]
   }
 }

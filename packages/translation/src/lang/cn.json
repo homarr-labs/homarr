@@ -2052,6 +2052,10 @@
           "description": "您可以在每个项目的高级选项中添加自定义类别到您的面板项目并在上面的自定义 CSS 中使用它们。"
         }
       },
+      "disableStatus": {
+        "label": "",
+        "description": ""
+      },
       "columnCount": {
         "label": "列数"
       },
@@ -2084,6 +2088,9 @@
         },
         "customCss": {
           "title": "自定义 css"
+        },
+        "behavior": {
+          "title": ""
         },
         "access": {
           "title": "访问控制",
@@ -2476,6 +2483,17 @@
               "label": "全局主面板",
               "mobileLabel": "全局手机面板",
               "description": "只有公共面板可供选择"
+            },
+            "status": {
+              "title": "",
+              "enableStatusByDefault": {
+                "label": "",
+                "description": ""
+              },
+              "forceDisableStatus": {
+                "label": "",
+                "description": ""
+              }
             }
           },
           "search": {
