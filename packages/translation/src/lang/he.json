@@ -805,7 +805,7 @@
       "apply": "החל",
       "backToOverview": "חזרה לסקירה כללית",
       "create": "צור",
-      "createAnother": "",
+      "createAnother": "צור והתחל מחדש",
       "edit": "עריכה",
       "import": "ייבוא",
       "insert": "הוספה",
@@ -948,7 +948,7 @@
         "moveDown": "הזזה למטה",
         "createAbove": "קטגוריה חדשה למעלה",
         "createBelow": "קטגוריה חדשה למטה",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "פתח הכל בכרטיסיות"
       },
       "create": {
         "title": "קטגוריה חדשה",
@@ -969,8 +969,8 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "פתח הכל בכרטיסיות",
+        "text": "דפדפנים מסוימים עשויים לחסום פתיחה בכמות גדולה של כרטיסיות מסיבות אבטחה. Homarr לא הצליח לפתוח את כל החלונות, מכיוון שהדפדפן שלך חסם את הפעולה הזו. אפשר \"פתח חלונות קופצים\" ונסה שוב."
       }
     }
   },
@@ -1200,12 +1200,12 @@
           "description": "איך צריך להיראות התאריך"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "פורמט זמן מותאם אישית",
+          "description": "השתמש ב-ISO 8601 כדי לעצב תצוגת זמן (זה ידרוס אפשרויות אחרות)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "פורמט זמן מותאם אישית",
+          "description": "השתמש ב-ISO 8601 כדי לעצב תצוגת זמן (זה ידרוס אפשרויות אחרות)"
         }
       }
     },
@@ -2052,6 +2052,10 @@
           "description": "אתה יכול להוסיף מחלקות מותאמות אישית לפריטי הלוח שלך באפשרויות המתקדמות של כל פריט ולהשתמש בהן בעיצוב המותאם אישית למעלה."
         }
       },
+      "disableStatus": {
+        "label": "",
+        "description": ""
+      },
       "columnCount": {
         "label": "ספירת עמודות"
       },
@@ -2084,6 +2088,9 @@
         },
         "customCss": {
           "title": "עיצוב מותאם אישית"
+        },
+        "behavior": {
+          "title": ""
         },
         "access": {
           "title": "בקרת גישה",
@@ -2476,6 +2483,17 @@
               "label": "לוח בית גלובלי",
               "mobileLabel": "לוח גלובלי למכשיר נייד",
               "description": "רק לוחות ציבוריים זמינים לבחירה"
+            },
+            "status": {
+              "title": "",
+              "enableStatusByDefault": {
+                "label": "",
+                "description": ""
+              },
+              "forceDisableStatus": {
+                "label": "",
+                "description": ""
+              }
             }
           },
           "search": {
@@ -2586,15 +2604,15 @@
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "מחיקת מפתח API",
+                  "text": "פעולה זו תמחק לצמיתות את אסימון ה-API. לקוחות API המשתמשים באסימון זה אינם יכולים עוד לאמת ולבצע בקשות API. לא ניתן לבטל פעולה זו."
                 }
               },
               "table": {
                 "header": {
                   "id": "מספר מזהה",
                   "createdBy": "נוצר על ידי",
-                  "actions": ""
+                  "actions": "פעולות"
                 }
               }
             }

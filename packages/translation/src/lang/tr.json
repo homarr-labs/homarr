@@ -2052,6 +2052,10 @@
           "description": "Düzenlenen her aracın gelişmiş seçenekler sekmesinde bulunan alanı kullanarak panel öğelerinizi CSS ile özelleştirebilir ve ya yukarıdaki özel CSS alanını kullanabilirsiniz."
         }
       },
+      "disableStatus": {
+        "label": "",
+        "description": ""
+      },
       "columnCount": {
         "label": "Sütun Sayısı"
       },
@@ -2084,6 +2088,9 @@
         },
         "customCss": {
           "title": "Özel Css"
+        },
+        "behavior": {
+          "title": ""
         },
         "access": {
           "title": "Erişim Kontrolü",
@@ -2476,6 +2483,17 @@
               "label": "Genel öntanımlı panel",
               "mobileLabel": "Genel öntanımlı mobil panel",
               "description": "Seçim yalnızca herkese açık paneller için kullanılabilir"
+            },
+            "status": {
+              "title": "",
+              "enableStatusByDefault": {
+                "label": "",
+                "description": ""
+              },
+              "forceDisableStatus": {
+                "label": "",
+                "description": ""
+              }
             }
           },
           "search": {

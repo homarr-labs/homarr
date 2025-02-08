@@ -2052,6 +2052,10 @@
           "description": "Vlastné triedy môžete pridať k položkám nástenky v rozšírených možnostiach každej položky a použiť ich vo vlastnom CSS vyššie."
         }
       },
+      "disableStatus": {
+        "label": "",
+        "description": ""
+      },
       "columnCount": {
         "label": "Počet stĺpcov"
       },
@@ -2084,6 +2088,9 @@
         },
         "customCss": {
           "title": "Vlastné css"
+        },
+        "behavior": {
+          "title": ""
         },
         "access": {
           "title": "Kontrola prístupu",
@@ -2476,6 +2483,17 @@
               "label": "Globálna domovská nástenka",
               "mobileLabel": "Globálna mobilná doska",
               "description": "Na výber sú k dispozícii iba verejné tabule"
+            },
+            "status": {
+              "title": "",
+              "enableStatusByDefault": {
+                "label": "",
+                "description": ""
+              },
+              "forceDisableStatus": {
+                "label": "",
+                "description": ""
+              }
             }
           },
           "search": {

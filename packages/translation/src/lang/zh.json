@@ -2052,6 +2052,10 @@
           "description": "可以於每個項目中的進階選項中新增自定義類別至面板，並於自定義 CSS html 中使用他們"
         }
       },
+      "disableStatus": {
+        "label": "",
+        "description": ""
+      },
       "columnCount": {
         "label": "列數"
       },
@@ -2084,6 +2088,9 @@
         },
         "customCss": {
           "title": "自定義 CSS html"
+        },
+        "behavior": {
+          "title": ""
         },
         "access": {
           "title": "訪問控制",
@@ -2476,6 +2483,17 @@
               "label": "全局主面板",
               "mobileLabel": "全局移動裝置主面板",
               "description": "只有公開面板可供選擇"
+            },
+            "status": {
+              "title": "",
+              "enableStatusByDefault": {
+                "label": "",
+                "description": ""
+              },
+              "forceDisableStatus": {
+                "label": "",
+                "description": ""
+              }
             }
           },
           "search": {

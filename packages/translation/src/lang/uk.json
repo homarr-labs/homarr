@@ -2052,6 +2052,10 @@
           "description": ""
         }
       },
+      "disableStatus": {
+        "label": "",
+        "description": ""
+      },
       "columnCount": {
         "label": ""
       },
@@ -2083,6 +2087,9 @@
           "title": "Кольори"
         },
         "customCss": {
+          "title": ""
+        },
+        "behavior": {
           "title": ""
         },
         "access": {
@@ -2476,6 +2483,17 @@
               "label": "Глобальна домашня дошка",
               "mobileLabel": "Глобальна мобільна дошка",
               "description": "Тут доступні тільки публічні дошки"
+            },
+            "status": {
+              "title": "",
+              "enableStatusByDefault": {
+                "label": "",
+                "description": ""
+              },
+              "forceDisableStatus": {
+                "label": "",
+                "description": ""
+              }
             }
           },
           "search": {
