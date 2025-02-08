@@ -247,7 +247,7 @@ describe("create should create a new integration", () => {
     expect(dbSearchEngine!.short).toBe("j");
     expect(dbSearchEngine!.name).toBe(input.name);
     expect(dbSearchEngine!.iconUrl).toBe(
-      "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/jellyseerr.png",
+      "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyseerr.svg",
     );
   });
 
