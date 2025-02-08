@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { z } from "zod";

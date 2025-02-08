@@ -76,7 +76,8 @@ export const getCurrentLayout = (board: RouterOutputs["board"]["getBoardByName"]
     .find((layout) => layout.breakpoint <= window.innerWidth)?.id!;
 };
 
-export const getBoardLayouts = (board: RouterOutputs["board"]["getBoardByName"]) => [board.id];
+export const getBoardLayouts = (board: RouterOutputs["board"]["getBoardByName"]) =>
+  board.layouts.map((layout) => layout.id);
 
 export const useLayouts = () => {
   const board = useRequiredBoard();

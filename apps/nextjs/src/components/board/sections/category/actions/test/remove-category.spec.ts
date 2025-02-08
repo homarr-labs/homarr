@@ -1,7 +1,16 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
-import type { DynamicSection, Item, Section } from "~/app/[locale]/boards/_types";
+import * as boardContext from "@homarr/boards/context";
+
+import type { DynamicSection, Section } from "~/app/[locale]/boards/_types";
+import {
+  BoardMockBuilder,
+  CategorySectionMockBuilder,
+  DynamicSectionMockBuilder,
+  EmptySectionMockBuilder,
+  ItemMockBuilder,
+} from "~/components/board/items/actions/test/shared";
 import { removeCategoryCallback } from "../remove-category";
 
 describe("Remove Category", () => {
@@ -13,114 +22,126 @@ describe("Remove Category", () => {
   ])(
     "should remove category",
     (removeId, initialYOffsets, expectedYOffsets, expectedRemovals, expectedLocationOfItems) => {
-      const sections = createSections(initialYOffsets);
-
+      // Arrange
+      const layoutId = "1";
       const input = removeId.toString();
 
-      const result = removeCategoryCallback({ id: input })({ sections } as never);
+      const board = new BoardMockBuilder()
+        .addLayout({ id: layoutId })
+        .addSections(createSections(initialYOffsets))
+        .addItems(createSectionItems(initialYOffsets, layoutId))
+        .build();
 
+      vi.spyOn(boardContext, "getBoardLayouts").mockReturnValue([layoutId]);
+
+      // Act
+      const result = removeCategoryCallback({ id: input })(board);
+
+      // Assert
       expect(result.sections.map((section) => parseInt(section.id, 10))).toEqual(expectedYOffsets);
       expectedRemovals.forEach((expectedRemoval) => {
         expect(result.sections.find((section) => section.id === expectedRemoval.toString())).toBeUndefined();
       });
-      const aboveSection = result.sections.find((section) => section.id === expectedLocationOfItems.toString());
-      expect(aboveSection?.items.map((item) => parseInt(item.id, 10))).toEqual(
-        expect.arrayContaining(expectedRemovals),
+      const aboveSectionItems = result.items.filter(
+        (item) => item.layouts[0]?.sectionId === expectedLocationOfItems.toString(),
       );
+      expect(aboveSectionItems.map((item) => parseInt(item.id, 10))).toEqual(expect.arrayContaining(expectedRemovals));
     },
   );
 
   test("should correctly move items to above empty section", () => {
+    // Arrange
+    const layoutId = "1";
+    const sectionIds = {
+      above: "2",
+      category: "3",
+      below: "4",
+      dynamic: "7",
+    };
     const initialYOffsets = [0, 1, 2, 3, 4, 5, 6];
-    const sections: Section[] = createSections(initialYOffsets);
-    const aboveSection = sections.find((section) => section.yOffset === 2)!;
-    aboveSection.items = [
-      createItem({ id: "above-1" }),
-      createItem({ id: "above-2", yOffset: 3, xOffset: 2, height: 2 }),
-    ];
-    const removedCategory = sections.find((section) => section.yOffset === 3)!;
-    removedCategory.items = [
-      createItem({ id: "category-1" }),
-      createItem({ id: "category-2", yOffset: 2, xOffset: 4, width: 4 }),
-    ];
-    const removedEmptySection = sections.find((section) => section.yOffset === 4)!;
-    removedEmptySection.items = [
-      createItem({ id: "below-1", xOffset: 5 }),
-      createItem({ id: "below-2", yOffset: 1, xOffset: 1, height: 2 }),
-    ];
-    sections.push(
-      createDynamicSection({
-        id: "7",
-        parentSectionId: "3",
-        yOffset: 7,
-        height: 3,
-        items: [createItem({ id: "dynamic-1" })],
-      }),
-    );
 
-    const input = "3";
+    const board = new BoardMockBuilder()
+      .addLayout({ id: layoutId })
+      .addSections(createSections(initialYOffsets))
+      .addItems(createSectionItems([0, 1, 5, 6], layoutId)) // Only add items to other sections
+      .addDynamicSection(
+        new DynamicSectionMockBuilder({ id: sectionIds.dynamic })
+          .addLayout({ layoutId, parentSectionId: sectionIds.category, yOffset: 7, height: 3 })
+          .build(),
+      )
+      .addItem(new ItemMockBuilder({ id: "above-1" }).addLayout({ layoutId, sectionId: sectionIds.above }).build())
+      .addItem(
+        new ItemMockBuilder({ id: "above-2" })
+          .addLayout({ layoutId, sectionId: sectionIds.above, yOffset: 3, xOffset: 2, height: 2 })
+          .build(),
+      )
+      .addItem(
+        new ItemMockBuilder({ id: "category-1" }).addLayout({ layoutId, sectionId: sectionIds.category }).build(),
+      )
+      .addItem(
+        new ItemMockBuilder({ id: "category-2" })
+          .addLayout({ layoutId, sectionId: sectionIds.category, yOffset: 2, xOffset: 4, width: 4 })
+          .build(),
+      )
+      .addItem(
+        new ItemMockBuilder({ id: "below-1" }).addLayout({ layoutId, sectionId: sectionIds.below, xOffset: 5 }).build(),
+      )
+      .addItem(
+        new ItemMockBuilder({ id: "below-2" })
+          .addLayout({ layoutId, sectionId: sectionIds.below, yOffset: 1, xOffset: 1, height: 2 })
+          .build(),
+      )
+      .addItem(new ItemMockBuilder({ id: "dynamic-1" }).addLayout({ layoutId, sectionId: sectionIds.dynamic }).build())
+      .build();
 
-    const result = removeCategoryCallback({ id: input })({ sections } as never);
+    vi.spyOn(boardContext, "getBoardLayouts").mockReturnValue([layoutId]);
 
+    // Act
+    const result = removeCategoryCallback({ id: sectionIds.category })(board);
+
+    // Assert
     expect(result.sections.map((section) => parseInt(section.id, 10))).toEqual([0, 1, 2, 5, 6, 7]);
-    const aboveSectionResult = result.sections.find((section) => section.id === "2")!;
-    expect(aboveSectionResult.items).toEqual(
-      expect.arrayContaining([
-        createItem({ id: "above-1" }),
-        createItem({ id: "above-2", yOffset: 3, xOffset: 2, height: 2 }),
-        createItem({ id: "category-1", yOffset: 5 }),
-        createItem({ id: "category-2", yOffset: 7, xOffset: 4, width: 4 }),
-        createItem({ id: "below-1", yOffset: 15, xOffset: 5 }),
-        createItem({ id: "below-2", yOffset: 16, xOffset: 1, height: 2 }),
-      ]),
-    );
+    const aboveSectionItems = result.items.filter((item) => item.layouts[0]?.sectionId === sectionIds.above);
+    expect(aboveSectionItems.length).toBe(6);
+
+    expect(
+      aboveSectionItems
+        .map((item) => ({
+          ...item,
+          ...item.layouts[0]!,
+        }))
+        .sort((itemA, itemB) => itemA.yOffset - itemB.yOffset),
+    ).toEqual([
+      expect.objectContaining({ id: "above-1", yOffset: 0, xOffset: 0 }),
+      expect.objectContaining({ id: "above-2", yOffset: 3, xOffset: 2, height: 2 }),
+      expect.objectContaining({ id: "category-1", yOffset: 5, xOffset: 0 }),
+      expect.objectContaining({ id: "category-2", yOffset: 7, xOffset: 4, width: 4 }),
+      expect.objectContaining({ id: "below-1", yOffset: 15, xOffset: 5 }),
+      expect.objectContaining({ id: "below-2", yOffset: 16, xOffset: 1, height: 2 }),
+    ]);
+
     const dynamicSection = result.sections.find((section): section is DynamicSection => section.id === "7")!;
-    expect(dynamicSection.yOffset).toBe(12);
-    expect(dynamicSection.parentSectionId).toBe("2");
+    expect(dynamicSection.layouts.at(0)?.yOffset).toBe(12);
+    expect(dynamicSection.layouts[0]?.parentSectionId).toBe("2");
   });
 });
 
-const createItem = (item: Partial<{ id: string; width: number; height: number; yOffset: number; xOffset: number }>) => {
-  return {
-    id: item.id ?? "0",
-    kind: "app",
-    options: {},
-    advancedOptions: {
-      customCssClasses: [],
-    },
-    height: item.height ?? 1,
-    width: item.width ?? 1,
-    yOffset: item.yOffset ?? 0,
-    xOffset: item.xOffset ?? 0,
-    integrationIds: [],
-  } satisfies Item;
-};
-
-const createDynamicSection = (
-  section: Partial<
-    Pick<DynamicSection, "id" | "height" | "width" | "yOffset" | "xOffset" | "parentSectionId" | "items">
-  >,
-) => {
-  return {
-    id: section.id ?? "0",
-    kind: "dynamic",
-    height: section.height ?? 1,
-    width: section.width ?? 1,
-    yOffset: section.yOffset ?? 0,
-    xOffset: section.xOffset ?? 0,
-    parentSectionId: section.parentSectionId ?? "0",
-    items: section.items ?? [],
-  } satisfies DynamicSection;
-};
-
 const createSections = (initialYOffsets: number[]) => {
-  return initialYOffsets.map((yOffset, index) => ({
-    id: yOffset.toString(),
-    kind: index % 2 === 0 ? "empty" : "category",
-    name: "Category",
-    collapsed: false,
-    yOffset,
-    xOffset: 0,
-    items: [createItem({ id: yOffset.toString() })],
-  })) satisfies Section[];
+  return initialYOffsets.map((yOffset, index) =>
+    index % 2 === 0
+      ? new EmptySectionMockBuilder({
+          id: yOffset.toString(),
+          yOffset,
+        }).build()
+      : new CategorySectionMockBuilder({
+          id: yOffset.toString(),
+          yOffset,
+        }).build(),
+  ) satisfies Section[];
+};
+
+const createSectionItems = (initialYOffsets: number[], layoutId: string) => {
+  return initialYOffsets.map((yOffset) =>
+    new ItemMockBuilder({ id: yOffset.toString() }).addLayout({ layoutId, sectionId: yOffset.toString() }).build(),
+  );
 };

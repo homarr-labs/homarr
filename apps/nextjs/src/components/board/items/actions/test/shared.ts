@@ -1,6 +1,6 @@
 import { createId } from "@homarr/db";
 
-import type { Board, DynamicSection, EmptySection, Item, Section } from "~/app/[locale]/boards/_types";
+import type { Board, CategorySection, DynamicSection, EmptySection, Item, Section } from "~/app/[locale]/boards/_types";
 
 export class BoardMockBuilder {
   private readonly board: Board;
@@ -21,6 +21,7 @@ export class BoardMockBuilder {
       name: "board",
       opacity: 100,
       isPublic: true,
+      disableStatus: false,
       customCss: "",
       creatorId: createId(),
       creator: {
@@ -58,8 +59,18 @@ export class BoardMockBuilder {
     return this;
   }
 
+  public addSections(sections: Section[]): BoardMockBuilder {
+    this.board.sections.push(...sections);
+    return this;
+  }
+
   public addItem(item?: Partial<Item>): BoardMockBuilder {
     this.board.items.push(new ItemMockBuilder(item).build());
+    return this;
+  }
+
+  public addItems(items: Item[]): BoardMockBuilder {
+    this.board.items.push(...items);
     return this;
   }
 
@@ -140,6 +151,26 @@ export class EmptySectionMockBuilder {
   }
 
   public build(): EmptySection {
+    return this.section;
+  }
+}
+
+export class CategorySectionMockBuilder {
+  private readonly section: CategorySection;
+
+  constructor(section?: Partial<CategorySection>) {
+    this.section = {
+      id: createId(),
+      kind: "category",
+      xOffset: 0,
+      yOffset: 0,
+      name: "Category",
+      collapsed: false,
+      ...section,
+    } satisfies CategorySection;
+  }
+
+  public build(): CategorySection {
     return this.section;
   }
 }
