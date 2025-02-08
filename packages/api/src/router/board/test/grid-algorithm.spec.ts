@@ -6,6 +6,10 @@ import { generateResponsiveGridFor } from "../grid-algorithm";
 
 const ROOT_SECTION_ID = "section";
 
+/**
+ * If you want to see how the layouts progress between the different layouts, you can find images here:
+ * https://github.com/homarr-labs/architecture-documentation/tree/main/grid-algorithm#graphical-representation-of-the-algorithm
+ */
 describe("Grid Algorithm", () => {
   test.each(itemTests)("should convert a grid with %i columns to a grid with %i columns", (_, _ignored, item) => {
     const input = generateInputFromText(item.input);
