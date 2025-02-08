@@ -25,7 +25,7 @@ export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
       transitionProps={{
         transition: "pop",
       }}
-      onChange={() => setOpend(false)}
+      onChange={setOpend}
       opened={opened}
       disabled={disabled}
     >
