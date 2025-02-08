@@ -2052,6 +2052,10 @@
           "description": "Du kan legge til egendefinerte css-klasser i tavleelementene dine i de avanserte alternativene for hvert element og bruke dem i egendefinert CSS ovenfor."
         }
       },
+      "disableStatus": {
+        "label": "",
+        "description": ""
+      },
       "columnCount": {
         "label": "Antall kolonner"
       },
@@ -2084,6 +2088,9 @@
         },
         "customCss": {
           "title": "Egendefinert css"
+        },
+        "behavior": {
+          "title": ""
         },
         "access": {
           "title": "Adgangskontroll",
@@ -2476,6 +2483,17 @@
               "label": "Global hjemtavle",
               "mobileLabel": "Global mobiltavle",
               "description": "Bare offentlige tavler er tilgjengelige for valg"
+            },
+            "status": {
+              "title": "",
+              "enableStatusByDefault": {
+                "label": "",
+                "description": ""
+              },
+              "forceDisableStatus": {
+                "label": "",
+                "description": ""
+              }
             }
           },
           "search": {

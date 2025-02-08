@@ -2052,6 +2052,10 @@
           "description": "Je kunt aangepaste classes toevoegen aan je borditems in de geavanceerde opties van elk item en ze gebruiken in de aangepaste CSS hierboven."
         }
       },
+      "disableStatus": {
+        "label": "",
+        "description": ""
+      },
       "columnCount": {
         "label": "Kolom aantal"
       },
@@ -2084,6 +2088,9 @@
         },
         "customCss": {
           "title": "Aangepaste CSS"
+        },
+        "behavior": {
+          "title": ""
         },
         "access": {
           "title": "Toegangsbeheer",
@@ -2476,6 +2483,17 @@
               "label": "Globaal home-bord",
               "mobileLabel": "Globaal mobiel bord",
               "description": "Alleen openbare borden zijn beschikbaar voor selectie"
+            },
+            "status": {
+              "title": "",
+              "enableStatusByDefault": {
+                "label": "",
+                "description": ""
+              },
+              "forceDisableStatus": {
+                "label": "",
+                "description": ""
+              }
             }
           },
           "search": {
