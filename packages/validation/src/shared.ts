@@ -65,6 +65,7 @@ const createDynamicSchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItem
     width: z.number(),
     height: z.number(),
     items: z.array(itemSchema),
+    borderColor: z.string().nullish(),
     parentSectionId: z.string(),
   });
 

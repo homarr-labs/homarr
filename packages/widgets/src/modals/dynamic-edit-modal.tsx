@@ -44,11 +44,11 @@ export const DynamicEditModal = createModal<ModalProps>(({ actions, innerProps }
     >
       <FormProvider form={form}>
         <Stack>
-          <TextInput 
-            label={t("section.dynamic.option.borderColor.label")} 
-            placeholder={"#000000"} 
+          <TextInput
+            label={t("section.dynamic.option.borderColor.label")}
+            placeholder={"#000000"}
             {...form.getInputProps("options.borderColor")}
-           />
+          />
           <Group justify="space-between">
             <Group justify="end" w={{ base: "100%", xs: "auto" }}>
               <Button onClick={actions.closeModal} variant="subtle" color="gray">

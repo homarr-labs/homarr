@@ -23,11 +23,14 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSection }
   const openEditModal = () => {
     openModal({
       kind: ["dynamic"],
-      value: { options: { ...section.options} },
+      value: { options: { ...section.options } },
       onSuccessfulEdit: ({ options }) => {
-        updateDynamicSection({ itemId: section.id, newOptions: { 
-          ...options,
-        } });
+        updateDynamicSection({
+          itemId: section.id,
+          newOptions: {
+            ...options,
+          },
+        });
       },
     });
   };

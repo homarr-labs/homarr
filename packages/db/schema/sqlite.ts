@@ -307,6 +307,7 @@ export const sections = sqliteTable("section", {
   width: int(),
   height: int(),
   name: text(),
+  borderColor: text(),
   parentSectionId: text().references((): AnySQLiteColumn => sections.id, {
     onDelete: "cascade",
   }),
