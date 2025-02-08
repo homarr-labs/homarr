@@ -2,7 +2,7 @@ import type { RefObject } from "react";
 import { createRef, useCallback, useEffect, useRef } from "react";
 import { useElementSize } from "@mantine/hooks";
 
-import { useRequiredBoard } from "@homarr/boards/context";
+import { getCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import type { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode } from "@homarr/gridstack";
 
@@ -68,10 +68,13 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
 
   const board = useRequiredBoard();
 
+  const currentLayoutId = getCurrentLayout(board);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId)!;
   const columnCount =
     section.kind === "dynamic" && "width" in section && typeof section.width === "number"
       ? section.width
-      : board.columnCount;
+      : currentLayout.columnCount;
 
   const itemRefKeys = Object.keys(itemRefs.current);
   // define items in itemRefs for easy access and reference to items

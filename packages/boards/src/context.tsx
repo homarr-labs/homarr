@@ -70,10 +70,14 @@ export const useOptionalBoard = () => {
 };
 
 export const getCurrentLayout = (board: RouterOutputs["board"]["getBoardByName"]) => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
-  return board.layouts
-    .sort((layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint)
-    .find((layout) => layout.breakpoint <= window.innerWidth)?.id!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  if (typeof window === "undefined") return board.layouts.at(0)!.id;
+
+  const sortedLayouts = board.layouts.sort((layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint);
+
+  // Fallback to smallest if none exists with breakpoint smaller than window width
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return sortedLayouts.find((layout) => layout.breakpoint <= window.innerWidth)?.id ?? sortedLayouts.at(0)!.id;
 };
 
 export const getBoardLayouts = (board: RouterOutputs["board"]["getBoardByName"]) =>

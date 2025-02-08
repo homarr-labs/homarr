@@ -257,7 +257,6 @@ export const boards = sqliteTable("board", {
   secondaryColor: text().default("#fd7e14").notNull(),
   opacity: int().default(100).notNull(),
   customCss: text(),
-  columnCount: int().default(10).notNull(),
   disableStatus: int({ mode: "boolean" }).default(false).notNull(),
 });
 
@@ -307,6 +306,7 @@ export const layouts = sqliteTable("layout", {
   breakpoint: int().notNull().default(0),
 });
 
+// TODO: Rename to itemSectionLayouts
 export const layoutItemSections = sqliteTable(
   "layout_item_section",
   {
@@ -331,6 +331,7 @@ export const layoutItemSections = sqliteTable(
   }),
 );
 
+// TODO: Rename to sectionLayouts
 export const layoutSections = sqliteTable(
   "layout_section",
   {
@@ -361,14 +362,9 @@ export const sections = sqliteTable("section", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   kind: text().$type<SectionKind>().notNull(),
-  xOffset: int().notNull(),
-  yOffset: int().notNull(),
-  width: int(),
-  height: int(),
+  xOffset: int(),
+  yOffset: int(),
   name: text(),
-  parentSectionId: text().references((): AnySQLiteColumn => sections.id, {
-    onDelete: "cascade",
-  }),
 });
 
 export const sectionCollapseStates = sqliteTable(
@@ -395,10 +391,6 @@ export const items = sqliteTable("item", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   kind: text().$type<WidgetKind>().notNull(),
-  xOffset: int().notNull(),
-  yOffset: int().notNull(),
-  width: int().notNull(),
-  height: int().notNull(),
   options: text().default('{"json": {}}').notNull(), // empty superjson object
   advancedOptions: text().default('{"json": {}}').notNull(), // empty superjson object
 });

@@ -57,10 +57,21 @@ const savePartialSettingsSchema = z
     secondaryColor: hexColorSchema,
     opacity: z.number().min(0).max(100),
     customCss: z.string().max(16384),
-    columnCount: z.number().min(1).max(24),
     disableStatus: z.boolean(),
   })
   .partial();
+
+const saveLayoutsSchema = z.object({
+  id: z.string(),
+  layouts: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string().trim().nonempty().max(32),
+      columnCount: z.number().min(1).max(24),
+      breakpoint: z.number().min(0).max(32767),
+    }),
+  ),
+});
 
 const saveSchema = z.object({
   id: z.string(),
@@ -90,6 +101,7 @@ export const boardSchemas = {
   name: boardNameSchema,
   byName: byNameSchema,
   savePartialSettings: savePartialSettingsSchema,
+  saveLayouts: saveLayoutsSchema,
   save: saveSchema,
   create: createSchema,
   duplicate: duplicateSchema,

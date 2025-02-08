@@ -1,43 +1,91 @@
 "use client";
 
-import { Button, Grid, Group, Input, Slider, Stack } from "@mantine/core";
+import { Button, Fieldset, Grid, Group, Input, NumberInput, Slider, Stack, Text, TextInput } from "@mantine/core";
 
+import { clientApi } from "@homarr/api/client";
+import { createId } from "@homarr/db/client";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
 import type { Board } from "../../_types";
-import { useSavePartialSettingsMutation } from "./_shared";
 
 interface Props {
   board: Board;
 }
 export const LayoutSettingsContent = ({ board }: Props) => {
   const t = useI18n();
-  const { mutate: savePartialSettings, isPending } = useSavePartialSettingsMutation(board);
-  const form = useZodForm(validation.board.savePartialSettings.pick({ columnCount: true }).required(), {
+  const utils = clientApi.useUtils();
+  const { mutate: saveLayouts, isPending } = clientApi.board.saveLayouts.useMutation({
+    onSettled() {
+      void utils.board.getBoardByName.invalidate({ name: board.name });
+      void utils.board.getHomeBoard.invalidate();
+    },
+  });
+  const form = useZodForm(validation.board.saveLayouts.omit({ id: true }).required(), {
     initialValues: {
-      columnCount: board.columnCount,
+      layouts: board.layouts,
     },
   });
 
   return (
     <form
       onSubmit={form.onSubmit((values) => {
-        savePartialSettings({
+        saveLayouts({
           id: board.id,
           ...values,
         });
       })}
     >
       <Stack>
-        <Grid>
-          <Grid.Col span={{ sm: 12, md: 6 }}>
-            <Input.Wrapper label={t("board.field.columnCount.label")}>
-              <Slider mt="xs" min={1} max={24} step={1} {...form.getInputProps("columnCount")} />
-            </Input.Wrapper>
-          </Grid.Col>
-        </Grid>
+        <Stack gap="sm">
+          <Group justify="space-between" align="center">
+            <Text fw={500}>Responsive layouts</Text>
+            <Button
+              variant="subtle"
+              onClick={() => {
+                form.setValues({
+                  layouts: [
+                    ...form.values.layouts,
+                    {
+                      id: createId(),
+                      name: "",
+                      columnCount: 10,
+                      breakpoint: 0,
+                    },
+                  ],
+                });
+              }}
+            >
+              Add layout
+            </Button>
+          </Group>
+
+          {form.values.layouts.map((layout, index) => (
+            <Fieldset key={layout.id} legend={layout.name} bg="transparent">
+              <Grid>
+                <Grid.Col span={{ sm: 12, md: 6 }}>
+                  <TextInput {...form.getInputProps(`layouts.${index}.name`)} label={t("layout.field.name.label")} />
+                </Grid.Col>
+
+                <Grid.Col span={{ sm: 12, md: 6 }}>
+                  <Input.Wrapper label={t("layout.field.columnCount.label")}>
+                    <Slider mt="xs" min={1} max={24} step={1} {...form.getInputProps(`layouts.${index}.columnCount`)} />
+                  </Input.Wrapper>
+                </Grid.Col>
+
+                <Grid.Col span={{ sm: 12, md: 6 }}>
+                  <NumberInput
+                    {...form.getInputProps(`layouts.${index}.breakpoint`)}
+                    label={t("layout.field.breakpoint.label")}
+                    description={t("layout.field.breakpoint.description")}
+                  />
+                </Grid.Col>
+              </Grid>
+            </Fieldset>
+          ))}
+        </Stack>
+
         <Group justify="end">
           <Button type="submit" loading={isPending} color="teal">
             {t("common.action.saveChanges")}

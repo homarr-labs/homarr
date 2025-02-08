@@ -1,43 +1,50 @@
+import { useMemo } from "react";
+
 import { getCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 
-import type { DynamicSectionItem, Section, SectionItem } from "~/app/[locale]/boards/_types";
+import type { DynamicSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 
 export const useSectionItems = (sectionId: string): { innerSections: DynamicSectionItem[]; items: SectionItem[] } => {
   const board = useRequiredBoard();
-  const innerSections = board.sections
-    .filter(
-      (innerSection): innerSection is Exclude<Section, { kind: "category" } | { kind: "empty" }> =>
-        innerSection.kind === "dynamic",
-    )
-    .map(({ layouts, ...innerSection }) => {
-      const currentLayoutId = getCurrentLayout(board);
-      const layout = layouts.find((layout) => layout.layoutId === currentLayoutId);
+  const currentLayoutId = getCurrentLayout(board);
 
-      if (!layout) return null;
+  const innerSections = useMemo(
+    () =>
+      board.sections
+        .filter((innerSection) => innerSection.kind === "dynamic")
+        .map(({ layouts, ...innerSection }) => {
+          const layout = layouts.find((layout) => layout.layoutId === currentLayoutId);
 
-      return {
-        ...layout,
-        ...innerSection,
-        type: "section" as const,
-      };
-    })
-    .filter((item) => item !== null)
-    .filter((innerSection) => innerSection.parentSectionId === sectionId);
+          if (!layout) return null;
 
-  const items = board.items
-    .map(({ layouts, ...item }) => {
-      const currentLayoutId = getCurrentLayout(board);
-      const layout = layouts.find((layout) => layout.layoutId === currentLayoutId);
-      if (!layout) return null;
+          return {
+            ...layout,
+            ...innerSection,
+            type: "section" as const,
+          };
+        })
+        .filter((item) => item !== null)
+        .filter((innerSection) => innerSection.parentSectionId === sectionId),
+    [board.sections, currentLayoutId, sectionId],
+  );
 
-      return {
-        ...layout,
-        ...item,
-        type: "item" as const,
-      };
-    })
-    .filter((item) => item !== null)
-    .filter((item) => item.sectionId === sectionId);
+  const items = useMemo(
+    () =>
+      board.items
+        .map(({ layouts, ...item }) => {
+          const layout = layouts.find((layout) => layout.layoutId === currentLayoutId);
+          if (!layout) return null;
+
+          return {
+            ...layout,
+            ...item,
+            type: "item" as const,
+          };
+        })
+        .filter((item) => item !== null)
+        .filter((item) => item.sectionId === sectionId),
+    [board.items, currentLayoutId, sectionId],
+  );
 
   return {
     innerSections,
