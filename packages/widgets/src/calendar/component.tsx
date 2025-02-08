@@ -121,7 +121,9 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
             )?.date,
           }))
           .filter((event): event is CalendarEvent => Boolean(event.date));
-        return <CalendarDay date={tileDate} events={eventsForDate} disabled={isEditMode || events.length === 0} />;
+        return (
+          <CalendarDay date={tileDate} events={eventsForDate} disabled={isEditMode || eventsForDate.length === 0} />
+        );
       }}
     />
   );

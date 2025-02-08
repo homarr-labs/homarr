@@ -39,12 +39,12 @@ export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
           style={{
             alignContent: "center",
             borderRadius: "3.5cqmin",
-            cursor: events.length === 0 || disabled ? "default" : "pointer",
+            cursor: disabled ? "default" : "pointer",
           }}
           onClick={() => {
-            if (events.length > 0 && !disabled) {
-              setOpend((prev) => !prev);
-            }
+            if (disabled) return;
+
+            setOpend((prev) => !prev);
           }}
         >
           <div
