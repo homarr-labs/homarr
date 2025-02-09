@@ -22,7 +22,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@extractus/feed-extractor": "7.1.3",
+    "@extractus/feed-extractor": "7.1.4",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
