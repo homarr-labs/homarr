@@ -3,6 +3,17 @@ import type { MRT_Localization } from "mantine-react-table";
 import { objectKeys } from "@homarr/common";
 
 export const localeConfigurations = {
+  ca: {
+    name: "Català",
+    translatedName: "Catalan",
+    flagIcon: "es-ct",
+    importMrtLocalization() {
+      return import("./mantine-react-table/ca.json");
+    },
+    importDayJsLocale() {
+      return import("dayjs/locale/ca").then((module) => module.default);
+    },
+  },
   cn: {
     name: "中文",
     translatedName: "Chinese (Simplified)",
