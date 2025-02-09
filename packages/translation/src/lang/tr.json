@@ -2053,8 +2053,8 @@
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "Uygulama durumunu devre dışı bırak",
+        "description": "Bu paneldeki tüm uygulamaların durum denetimini devre dışı bırakır"
       },
       "columnCount": {
         "label": "Sütun Sayısı"
@@ -2090,7 +2090,7 @@
           "title": "Özel Css"
         },
         "behavior": {
-          "title": ""
+          "title": "Davranış"
         },
         "access": {
           "title": "Erişim Kontrolü",
@@ -2485,14 +2485,14 @@
               "description": "Seçim yalnızca herkese açık paneller için kullanılabilir"
             },
             "status": {
-              "title": "",
+              "title": "Uygulama durumu",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "Varsayılan olarak durumu etkinleştir",
+                "description": "Bir uygulama öğesi eklerken, durum varsayılan olarak etkinleştirilecektir"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "Durumu zorla devre dışı bırak",
+                "description": "Uygulamalar için durum tüm kullanıcılar için devre dışı bırakılacak ve etkinleştirilemeyecek"
               }
             }
           },
