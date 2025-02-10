@@ -11,7 +11,7 @@
       }
     ],
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
-    "typeRoots": ["node_modules/@types", "node_modules/@homarr/types/src"],
+    "typeRoots": ["node_modules/@types", "node_modules/@homarr/ui/src/theme"],
     "types": ["theme.other"]
   },
   "include": [".", ".next/types/**/*.ts"],
