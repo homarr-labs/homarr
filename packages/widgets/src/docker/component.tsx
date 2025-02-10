@@ -1,7 +1,7 @@
 "use client";
 
 import type { MantineColor, MantineStyleProp } from "@mantine/core";
-import { ActionIcon, Avatar, Badge, Group, Progress, Stack, Text, Tooltip } from "@mantine/core";
+import { ActionIcon, Avatar, Badge, Group, Stack, Text, Tooltip } from "@mantine/core";
 import type { IconProps } from "@tabler/icons-react";
 import { IconBrandDocker, IconPlayerPlay, IconPlayerStop, IconRotateClockwise } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -33,17 +33,18 @@ export default function DockerWidget({ options }: WidgetComponentProps<"docker">
 
   const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
     return (
-      <Badge size="10cqmin" radius="sm" variant="light" color={containerStates[state]}>
+      <Badge size="10cqmin" radius="sm" variant="transparent" color={containerStates[state]}>
         <Text size="6cqmin">{tDocker(`field.state.option.${state}`)}</Text>
       </Badge>
     );
   };
 
-  const progressColor = (percentage: number) => {
-    if (percentage < 40) return "green";
-    else if (percentage < 60) return "yellow";
-    else if (percentage < 90) return "orange";
-    else return "red";
+  const badgeColor = (number: number, state: string) => {
+    if (number === 0 && state !== "running") return "red";
+    if (number < 40) return "green";
+    if (number < 60) return "yellow";
+    if (number < 90) return "orange";
+    return "red";
   };
 
   const safeValue = (value?: number, fallback = 0) => value ?? fallback;
@@ -63,7 +64,7 @@ export default function DockerWidget({ options }: WidgetComponentProps<"docker">
         style: {
           fontSize: "7cqmin",
           padding: "2cqmin",
-          width: "30%",
+          width: "25%",
         },
       },
       Cell({ row }) {
@@ -72,7 +73,7 @@ export default function DockerWidget({ options }: WidgetComponentProps<"docker">
             <Avatar variant="outline" radius="md" size="10cqmin" src={row.original.iconUrl}>
               {row.original.name.at(0)?.toUpperCase()}
             </Avatar>
-            <Text size="8cqmin" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+            <Text p="0.5" size="6cqmin" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
               {row.original.name.charAt(0).toUpperCase() + row.original.name.slice(1).toLowerCase()}
             </Text>
           </Group>
@@ -100,19 +101,19 @@ export default function DockerWidget({ options }: WidgetComponentProps<"docker">
         style: {
           fontSize: "7cqmin",
           padding: "2cqmin",
-          width: "15%",
+          width: "20%",
         },
       },
       Cell({ row }) {
         return (
-          <Progress.Root size="5cqmin">
-            <Tooltip label={`${row.original.cpuUsage}%`}>
-              <Progress.Section
-                value={safeValue(row.original.cpuUsage)}
-                color={progressColor(safeValue(row.original.cpuUsage))}
-              />
-            </Tooltip>
-          </Progress.Root>
+          <Badge
+            size="10cqmin"
+            radius="sm"
+            variant="transparent"
+            color={badgeColor(safeValue(row.original.cpuUsage), row.original.state)}
+          >
+            <Text size="6cqmin">{`${row.original.cpuUsage}%`}</Text>
+          </Badge>
         );
       },
     },
@@ -123,19 +124,21 @@ export default function DockerWidget({ options }: WidgetComponentProps<"docker">
         style: {
           fontSize: "7cqmin",
           padding: "2cqmin",
-          width: "15%",
+          width: "20%",
         },
       },
       Cell({ row }) {
         return (
-          <Progress.Root size="5cqmin">
-            <Tooltip label={`${row.original.memoryUsage}MiB`}>
-              <Progress.Section
-                value={safeValue(row.original.memoryUsage)}
-                color={progressColor(safeValue(row.original.memoryUsage))}
-              />
-            </Tooltip>
-          </Progress.Root>
+          <Badge
+            size="10cqmin"
+            radius="sm"
+            variant="transparent"
+            color={badgeColor(safeValue(row.original.memoryUsage), row.original.state)}
+          >
+            <Text size="6cqmin">
+              {isNaN(safeValue(row.original.memoryUsage)) ? "N/A" : `${row.original.memoryUsage}MiB`}
+            </Text>
+          </Badge>
         );
       },
     },
@@ -146,7 +149,7 @@ export default function DockerWidget({ options }: WidgetComponentProps<"docker">
         style: {
           fontSize: "7cqmin",
           padding: "2cqmin",
-          width: "15%",
+          width: "10%",
         },
       },
       Cell({ row }) {
@@ -186,7 +189,7 @@ export default function DockerWidget({ options }: WidgetComponentProps<"docker">
               label={row.original.state === "running" ? t("docker.action.stop.label") : t("docker.action.start.label")}
             >
               <ActionIcon
-                variant="light"
+                variant="transparent"
                 radius={999}
                 size="var(--button-size)"
                 onClick={() => handleActionAsync(row.original.state === "running" ? "stop" : "start")}
@@ -200,7 +203,7 @@ export default function DockerWidget({ options }: WidgetComponentProps<"docker">
             </Tooltip>
             <Tooltip label={t("docker.action.restart.label")}>
               <ActionIcon
-                variant="light"
+                variant="transparent"
                 radius={999}
                 size="var(--button-size)"
                 onClick={() => handleActionAsync("restart")}
