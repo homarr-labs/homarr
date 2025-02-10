@@ -13,9 +13,8 @@ import { commonItemSchema, createSectionSchema } from "./shared";
 
 const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 
-const hexColorNullableSchema = z
-  .string()
-  .regex(/^(#[0-9A-Fa-f]{6}|)$/)
+const hexColorNullableSchema = hexColorSchema
+  .or(z.literal(""))
   .nullable()
   .transform((value) => (value?.trim().length === 0 ? null : value));
 
