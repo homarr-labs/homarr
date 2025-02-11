@@ -9,7 +9,7 @@ import classes from "./masked-image.module.css";
 interface MaskedImageProps {
   imageUrl: string;
   color: MantineColor;
-  alt?: string | undefined;
+  alt?: string;
   style?: React.CSSProperties;
   className?: string;
   maskSize?: Property.MaskSize;
@@ -38,9 +38,9 @@ export const MaskedImage = ({
         {
           ...style,
           "--image-color": getThemeColor(color, theme),
-          maskSize: maskSize,
-          maskRepeat: maskRepeat,
-          maskPosition: maskPosition,
+          maskSize,
+          maskRepeat,
+          maskPosition,
           maskImage: `url(${imageUrl})`,
         } as React.CSSProperties
       }

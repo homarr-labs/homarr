@@ -8,8 +8,8 @@ import { MaskedImage } from "./masked-image";
 interface MaskedOrNormalImageProps {
   imageUrl: string;
   hasColor?: boolean;
-  color?: MantineColor | undefined;
-  alt?: string | undefined;
+  color?: MantineColor;
+  alt?: string;
   style?: React.CSSProperties;
   className?: string;
   fit?: Property.ObjectFit;
@@ -30,30 +30,26 @@ export const MaskedOrNormalImage = ({
   maskRepeat = "no-repeat",
   maskPosition = "center",
 }: MaskedOrNormalImageProps) => {
-  return (
-    <>
-      {hasColor ? (
-        <MaskedImage
-          imageUrl={imageUrl}
-          color={color}
-          alt={alt}
-          className={combineClasses("masked-image", className)}
-          maskSize={maskSize}
-          maskRepeat={maskRepeat}
-          maskPosition={maskPosition}
-          style={{
-            ...style,
-          }}
-        />
-      ) : (
-        <Image
-          className={combineClasses("normal-image", className)}
-          src={imageUrl}
-          alt={alt}
-          fit={fit}
-          style={{ ...style }}
-        />
-      )}
-    </>
+  return hasColor ? (
+    <MaskedImage
+      imageUrl={imageUrl}
+      color={color}
+      alt={alt}
+      className={combineClasses("masked-image", className)}
+      maskSize={maskSize}
+      maskRepeat={maskRepeat}
+      maskPosition={maskPosition}
+      style={{
+        ...style,
+      }}
+    />
+  ) : (
+    <Image
+      className={combineClasses("normal-image", className)}
+      src={imageUrl}
+      alt={alt}
+      fit={fit}
+      style={{ ...style }}
+    />
   );
 };
