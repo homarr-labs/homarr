@@ -38,7 +38,7 @@
     "@mantine/spotlight": "^7.16.3",
     "@tabler/icons-react": "^3.30.0",
     "jotai": "^2.11.3",
-    "next": "15.1.6",
+    "next": "15.1.7",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "use-deep-compare-effect": "^1.8.1"
