@@ -1048,7 +1048,7 @@
           "label": "Show description tooltip"
         },
         "pingEnabled": {
-          "label": "Enable simple ping"
+          "label": "Enable status check"
         }
       },
       "error": {
@@ -2055,6 +2055,10 @@
           "description": "You can add custom classes to your board items in the advanced options of each item and use them in the custom CSS above."
         }
       },
+      "disableStatus": {
+        "label": "Disable app status",
+        "description": "Disables the status check for all apps on this board"
+      },
       "columnCount": {
         "label": "Column count"
       },
@@ -2087,6 +2091,9 @@
         },
         "customCss": {
           "title": "Custom css"
+        },
+        "behavior": {
+          "title": "Behavior"
         },
         "access": {
           "title": "Access control",
@@ -2479,6 +2486,17 @@
               "label": "Global home board",
               "mobileLabel": "Global mobile board",
               "description": "Only public boards are available for selection"
+            },
+            "status": {
+              "title": "App status",
+              "enableStatusByDefault": {
+                "label": "Enable status by default",
+                "description": "When adding an app item, the status will be enabled by default"
+              },
+              "forceDisableStatus": {
+                "label": "Force disable status",
+                "description": "Status for apps will be disabled for all users and can't be enabled"
+              }
             }
           },
           "search": {

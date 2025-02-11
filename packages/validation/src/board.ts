@@ -64,6 +64,7 @@ const savePartialSettingsSchema = z
     customCss: z.string().max(16384),
     columnCount: z.number().min(1).max(24),
     iconColor: hexColorNullableSchema,
+    disableStatus: z.boolean(),
   })
   .partial();
 

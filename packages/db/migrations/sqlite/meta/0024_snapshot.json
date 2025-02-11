@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "409343f3-c0a4-4dc5-a841-415dcc53e79d",
-  "prevId": "ba880f77-8e3b-4e54-883e-84ec71739d36",
+  "id": "7111fcfa-dd13-42d5-b3f1-6dd094628858",
+  "prevId": "f1f5327f-6803-4b9e-a006-cff157d77fc8",
   "tables": {
     "account": {
       "name": "account",
@@ -445,12 +445,13 @@
           "autoincrement": false,
           "default": 10
         },
-        "icon_color": {
-          "name": "icon_color",
-          "type": "text",
+        "disable_status": {
+          "name": "disable_status",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
         }
       },
       "indexes": {

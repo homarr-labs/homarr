@@ -2052,6 +2052,10 @@
           "description": "可以於每個項目中的進階選項中新增自定義類別至面板，並於自定義 CSS html 中使用他們"
         }
       },
+      "disableStatus": {
+        "label": "停用應用程式狀態",
+        "description": "停用此面板上所有應用程式的狀態檢查"
+      },
       "columnCount": {
         "label": "列數"
       },
@@ -2084,6 +2088,9 @@
         },
         "customCss": {
           "title": "自定義 CSS html"
+        },
+        "behavior": {
+          "title": "行為"
         },
         "access": {
           "title": "訪問控制",
@@ -2476,6 +2483,17 @@
               "label": "全局主面板",
               "mobileLabel": "全局移動裝置主面板",
               "description": "只有公開面板可供選擇"
+            },
+            "status": {
+              "title": "應用程式狀態",
+              "enableStatusByDefault": {
+                "label": "啟用狀態為預設",
+                "description": "新增應用程式時，狀態將預設為啟用"
+              },
+              "forceDisableStatus": {
+                "label": "強制停用狀態",
+                "description": "所有使用者的應用程式狀態將被停用，且無法使用"
+              }
             }
           },
           "search": {

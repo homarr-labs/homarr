@@ -7,6 +7,8 @@ import { IconLoader } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
+import { useSettings } from "@homarr/settings";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
@@ -19,6 +21,8 @@ import { PingIndicator } from "./ping/ping-indicator";
 export default function AppWidget({ options, isEditMode }: WidgetComponentProps<"app">) {
   const t = useI18n();
   const theme = useMantineTheme();
+  const settings = useSettings();
+  const board = useRequiredBoard();
   const [app] = clientApi.app.byId.useSuspenseQuery(
     {
       id: options.appId,
@@ -92,7 +96,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
           />
         </Flex>
       </Tooltip.Floating>
-      {options.pingEnabled && app.href ? (
+      {options.pingEnabled && !settings.forceDisableStatus && !board.disableStatus && app.href ? (
         <Suspense fallback={<PingDot icon={IconLoader} color="blue" tooltip={`${t("common.action.loading")}…`} />}>
           <PingIndicator href={app.href} />
         </Suspense>

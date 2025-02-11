@@ -162,6 +162,20 @@
       "when": 1737927609085,
       "tag": "0022_modern_sunfire",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "6",
+      "when": 1738686324915,
+      "tag": "0023_fix_on_delete_actions",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "6",
+      "when": 1738961178990,
+      "tag": "0024_bitter_scrambler",
+      "breakpoints": true
     }
   ]
 }

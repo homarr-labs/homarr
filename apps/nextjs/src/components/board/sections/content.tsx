@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 
+import { useRequiredBoard } from "@homarr/boards/context";
+
 import type { DynamicSection, Item, Section } from "~/app/[locale]/boards/_types";
-import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 import { BoardItemContent } from "../items/item-content";
 import { BoardDynamicSection } from "./dynamic-section";
 import { GridStackItem } from "./gridstack/gridstack-item";

@@ -5,12 +5,13 @@ import { Box, LoadingOverlay, Stack } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 
 import { BoardCategorySection } from "~/components/board/sections/category-section";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
 import { BoardBackgroundVideo } from "~/components/layout/background";
 import { fullHeightWithoutHeaderAndFooter } from "~/constants";
-import { useIsBoardReady, useRequiredBoard } from "./_context";
+import { useIsBoardReady } from "./_ready-context";
 
 let boardName: string | null = null;
 

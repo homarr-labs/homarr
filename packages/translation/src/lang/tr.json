@@ -1048,7 +1048,7 @@
           "label": "Açıklama ipucunu göster"
         },
         "pingEnabled": {
-          "label": "Basit ping'i etkinleştir"
+          "label": "Durum denetimini etkinleştir"
         }
       },
       "error": {
@@ -2052,6 +2052,10 @@
           "description": "Düzenlenen her aracın gelişmiş seçenekler sekmesinde bulunan alanı kullanarak panel öğelerinizi CSS ile özelleştirebilir ve ya yukarıdaki özel CSS alanını kullanabilirsiniz."
         }
       },
+      "disableStatus": {
+        "label": "Uygulama durumunu devre dışı bırak",
+        "description": "Bu paneldeki tüm uygulamaların durum denetimini devre dışı bırakır"
+      },
       "columnCount": {
         "label": "Sütun Sayısı"
       },
@@ -2084,6 +2088,9 @@
         },
         "customCss": {
           "title": "Özel Css"
+        },
+        "behavior": {
+          "title": "Davranış"
         },
         "access": {
           "title": "Erişim Kontrolü",
@@ -2164,7 +2171,7 @@
         "admin": {
           "description": "Sunucu için henüz öntanımlı panel belirlemediniz.",
           "link": "Sunucu geneli için öntanımlı panel atayın",
-          "notice": "Bu sayfayı tüm kullanıcılardan gizlemek için sunucu için bir ana panel ayarlayın"
+          "notice": "Bu sayfayı tüm kullanıcılardan gizlemek için sunucuya öntanımlı panel atayın"
         },
         "user": {
           "description": "Henüz bir ev paneli belirlemediniz.",
@@ -2476,6 +2483,17 @@
               "label": "Genel öntanımlı panel",
               "mobileLabel": "Genel öntanımlı mobil panel",
               "description": "Seçim yalnızca herkese açık paneller için kullanılabilir"
+            },
+            "status": {
+              "title": "Uygulama durumu",
+              "enableStatusByDefault": {
+                "label": "Varsayılan olarak durumu etkinleştir",
+                "description": "Bir uygulama öğesi eklerken, durum varsayılan olarak etkinleştirilecektir"
+              },
+              "forceDisableStatus": {
+                "label": "Durumu zorla devre dışı bırak",
+                "description": "Uygulamalar için durum tüm kullanıcılar için devre dışı bırakılacak ve etkinleştirilemeyecek"
+              }
             }
           },
           "search": {

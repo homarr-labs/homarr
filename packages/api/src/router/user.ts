@@ -523,12 +523,10 @@ const createUserAsync = async (db: Database, input: Omit<z.infer<typeof validati
   const salt = await createSaltAsync();
   const hashedPassword = await hashPasswordAsync(input.password, salt);
 
-  const username = input.username.toLowerCase();
-
   const userId = createId();
   await db.insert(users).values({
     id: userId,
-    name: username,
+    name: input.username,
     email: input.email,
     password: hashedPassword,
     salt,
@@ -543,7 +541,7 @@ const checkUsernameAlreadyTakenAndThrowAsync = async (
   ignoreId?: string,
 ) => {
   const user = await db.query.users.findFirst({
-    where: and(eq(users.name, username.toLowerCase()), eq(users.provider, provider)),
+    where: and(eq(users.name, username), eq(users.provider, provider)),
   });
 
   if (!user) return;

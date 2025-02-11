@@ -259,6 +259,7 @@ export const boards = sqliteTable("board", {
   customCss: text(),
   columnCount: int().default(10).notNull(),
   iconColor: text(),
+  disableStatus: int({ mode: "boolean" }).default(false).notNull(),
 });
 
 export const boardUserPermissions = sqliteTable(

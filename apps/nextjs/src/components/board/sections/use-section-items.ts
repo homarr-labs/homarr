@@ -1,5 +1,6 @@
+import { useRequiredBoard } from "@homarr/boards/context";
+
 import type { Section } from "~/app/[locale]/boards/_types";
-import { useRequiredBoard } from "~/app/[locale]/boards/(content)/_context";
 
 export const useSectionItems = (section: Section) => {
   const board = useRequiredBoard();

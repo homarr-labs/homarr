@@ -94,6 +94,8 @@ export default async function Layout(props: {
           board: {
             homeBoardId: serverSettings.board.homeBoardId,
             mobileHomeBoardId: serverSettings.board.mobileHomeBoardId,
+            enableStatusByDefault: serverSettings.board.enableStatusByDefault,
+            forceDisableStatus: serverSettings.board.forceDisableStatus,
           },
           search: { defaultSearchEngineId: serverSettings.search.defaultSearchEngineId },
         }}

@@ -9,6 +9,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
+import { useSettings } from "@homarr/settings";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { BoardItemAdvancedOptions } from "@homarr/validation";
 import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
@@ -29,6 +30,7 @@ interface WidgetPreviewPageContentProps {
 }
 
 export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPreviewPageContentProps) => {
+  const settings = useSettings();
   const t = useScopedI18n("widgetPreview");
   const { openModal: openWidgetEditModal } = useModalAction(WidgetEditModal);
   const { openModal: openPreviewDimensionsModal } = useModalAction(PreviewDimensionsModal);
@@ -43,7 +45,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
     integrationIds: string[];
     advancedOptions: BoardItemAdvancedOptions;
   }>({
-    options: reduceWidgetOptionsWithDefaultValues(kind, {}),
+    options: reduceWidgetOptionsWithDefaultValues(kind, settings, {}),
     integrationIds: [],
     advancedOptions: {
       customCssClasses: [],
@@ -63,8 +65,9 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
           (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
       ),
       integrationSupport: "supportedIntegrations" in currentDefinition,
+      settings,
     });
-  }, [currentDefinition, integrationData, kind, openWidgetEditModal, state]);
+  }, [currentDefinition, integrationData, kind, openWidgetEditModal, settings, state]);
 
   const Comp = loadWidgetDynamic(kind);
 

@@ -1,1 +1,0 @@
-ALTER TABLE `board` MODIFY COLUMN `icon_color` text;

@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "9985201c-ab0d-43b6-bd61-4ab401064836",
-  "prevId": "a1ca8cae-8cc2-4ace-9e26-ee3e371a19e2",
+  "id": "f670b3a4-69ef-4ef8-9f1b-26a92dda2858",
+  "prevId": "bb3e417c-c928-4840-be08-94b5562cddd5",
   "tables": {
     "account": {
       "name": "account",
@@ -455,12 +455,13 @@
           "autoincrement": false,
           "default": 10
         },
-        "icon_color": {
-          "name": "icon_color",
-          "type": "text",
+        "disable_status": {
+          "name": "disable_status",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
         }
       },
       "indexes": {},

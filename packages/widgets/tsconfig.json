@@ -5,6 +5,6 @@
     "typeRoots": ["node_modules/@types", "node_modules/@homarr/ui/src/theme"],
     "types": ["theme.other"]
   },
-  "include": ["*.ts", "src"],
+  "include": ["*.ts", "src", "*.tsx"],
   "exclude": ["node_modules"]
 }
