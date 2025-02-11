@@ -1,29 +1,49 @@
-import { getThemeColor, MantineColor, useMantineTheme } from "@mantine/core";
+import React from "react";
+import { getThemeColor, useMantineTheme } from "@mantine/core";
+import type { MantineColor } from "@mantine/core";
+import combineClasses from "clsx";
+import type { Property } from "csstype";
+
+import classes from "./masked-image.module.css";
 
 interface MaskedImageProps {
-  src: string;
+  imageUrl: string;
   color: MantineColor;
-  alt: string;
+  alt?: string | undefined;
   style?: React.CSSProperties;
   className?: string;
+  maskSize?: Property.MaskSize;
+  maskRepeat?: Property.MaskRepeat;
+  maskPosition?: Property.MaskPosition;
 }
 
-export const MaskedImage = ({ src, color, alt, style, className }: MaskedImageProps) => {
+export const MaskedImage = ({
+  imageUrl,
+  color,
+  alt,
+  style,
+  className,
+  maskSize = "contain",
+  maskRepeat = "no-repeat",
+  maskPosition = "center",
+}: MaskedImageProps) => {
   const theme = useMantineTheme();
 
   return (
     <div
-      className={className}
+      className={combineClasses(classes.maskedImage, className)}
       role="img"
       aria-label={alt}
-      style={{
-        ...style,
-        backgroundColor: getThemeColor(color, theme),
-        maskSize: "contain",
-        maskRepeat: "no-repeat",
-        maskPosition: "center",
-        maskImage: `url(${src})`,
-      }}
+      style={
+        {
+          ...style,
+          "--image-color": getThemeColor(color, theme),
+          maskSize: maskSize,
+          maskRepeat: maskRepeat,
+          maskPosition: maskPosition,
+          maskImage: `url(${imageUrl})`,
+        } as React.CSSProperties
+      }
     />
   );
 };

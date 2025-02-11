@@ -2,14 +2,14 @@
 
 import type { PropsWithChildren } from "react";
 import { Suspense } from "react";
-import { Flex, Image, Text, Tooltip, UnstyledButton, useMantineTheme } from "@mantine/core";
+import { Flex, Text, Tooltip, UnstyledButton, useMantineTheme } from "@mantine/core";
 import { IconLoader } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
-import { MaskedImage } from "@homarr/ui";
+import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
@@ -80,20 +80,16 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
               {app.name}
             </Text>
           )}
-          {theme.other.hasIconColor ? (
-            <MaskedImage
-              src={app.iconUrl}
-              color="iconColor"
-              alt={app.name}
-              className={combineClasses(classes.appIcon, classes.appIconWithColor, "app-icon")}
-              style={{
-                height: "100%",
-                width: "100%",
-              }}
-            />
-          ) : (
-            <Image className={combineClasses(classes.appIcon, "app-icon")} src={app.iconUrl} alt={app.name} />
-          )}
+          <MaskedOrNormalImage
+            imageUrl={app.iconUrl}
+            hasColor={theme.other.hasIconColor}
+            alt={app.name}
+            className={combineClasses(classes.appIcon, "app-icon")}
+            style={{
+              height: "100%",
+              width: "100%",
+            }}
+          />
         </Flex>
       </Tooltip.Floating>
       {options.pingEnabled && app.href ? (

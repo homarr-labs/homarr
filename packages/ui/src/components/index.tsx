@@ -12,3 +12,4 @@ export { CustomPasswordInput } from "./password-input/password-input";
 export { IntegrationAvatar } from "./integration-avatar";
 export { BetaBadge } from "./beta-badge";
 export { MaskedImage } from "./masked-image";
+export { MaskedOrNormalImage } from "./masked-or-normal-image";

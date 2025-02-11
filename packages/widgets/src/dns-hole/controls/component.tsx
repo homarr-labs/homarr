@@ -9,7 +9,6 @@ import {
   Button,
   Card,
   Flex,
-  Image,
   ScrollArea,
   Stack,
   Text,
@@ -27,7 +26,7 @@ import { useIntegrationConnected } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { MaskedImage } from "@homarr/ui";
+import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
@@ -330,29 +329,17 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
       radius="2.5cqmin"
     >
       <Flex className="dns-hole-controls-item-container" gap="4cqmin" align="center" direction="row">
-        {hasIconColor ? (
-          <MaskedImage
-            src={iconUrl}
-            color="iconColor"
-            alt={data.integration.name}
-            style={{
-              height: "20cqmin",
-              width: "20cqmin",
-              filter: !isConnected ? "grayscale(100%)" : undefined,
-            }}
-          />
-        ) : (
-          <Image
-            className="dns-hole-controls-item-icon"
-            src={integrationDefs[data.integration.kind].iconUrl}
-            w="20cqmin"
-            h="20cqmin"
-            fit="contain"
-            style={{
-              filter: !isConnected ? "grayscale(100%)" : undefined,
-            }}
-          />
-        )}
+        <MaskedOrNormalImage
+          imageUrl={iconUrl}
+          hasColor={hasIconColor}
+          alt={data.integration.name}
+          className="dns-hole-controls-item-icon"
+          style={{
+            height: "20cqmin",
+            width: "20cqmin",
+            filter: !isConnected ? "grayscale(100%)" : undefined,
+          }}
+        />
         <Flex className="dns-hole-controls-item-data-stack" direction="column" gap="1.5cqmin">
           <Text className="dns-hole-controls-item-integration-name" fz="7cqmin">
             {data.integration.name}

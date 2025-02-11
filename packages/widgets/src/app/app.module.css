@@ -12,6 +12,6 @@
   scale: 0.9;
 }
 
-.appWithUrl:hover > .appIconWithColor {
+.appWithUrl:hover > div.appIcon {
   background-color: var(--mantine-color-iconColor-filled-hover);
 }

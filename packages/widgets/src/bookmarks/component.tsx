@@ -7,7 +7,6 @@ import {
   Divider,
   Flex,
   Group,
-  Image,
   Stack,
   Text,
   Title,
@@ -18,7 +17,7 @@ import {
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
-import { MaskedImage } from "@homarr/ui";
+import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./bookmark.module.css";
@@ -189,35 +188,21 @@ const VerticalItem = ({
       <Text fw={700} ta="center" size="20cqmin">
         {app.name}
       </Text>
-      {!hideIcon &&
-        (hasIconColor ? (
-          <MaskedImage
-            src={app.iconUrl}
-            color="iconColor"
-            alt={app.name}
-            className={classes.bookmarkIconWithColor}
-            style={{
-              maxHeight: "100%",
-              maxWidth: "100%",
-              overflow: "auto",
-              flex: 1,
-              scale: 0.8,
-            }}
-          />
-        ) : (
-          <Image
-            style={{
-              maxHeight: "100%",
-              maxWidth: "100%",
-              overflow: "auto",
-              flex: 1,
-              objectFit: "contain",
-              scale: 0.8,
-            }}
-            src={app.iconUrl}
-            alt={app.name}
-          />
-        ))}
+      {!hideIcon && (
+        <MaskedOrNormalImage
+          imageUrl={app.iconUrl}
+          hasColor={hasIconColor}
+          alt={app.name}
+          className={classes.bookmarkIcon}
+          style={{
+            maxHeight: "100%",
+            maxWidth: "100%",
+            overflow: "auto",
+            flex: 1,
+            scale: 0.8,
+          }}
+        />
+      )}
       {!hideHostname && (
         <Anchor ta="center" component="span" size="12cqmin">
           {app.href ? new URL(app.href).hostname : undefined}
@@ -240,37 +225,22 @@ const HorizontalItem = ({
 }) => {
   return (
     <Group wrap="nowrap">
-      {!hideIcon &&
-        (hasIconColor ? (
-          <MaskedImage
-            src={app.iconUrl}
-            color="iconColor"
-            alt={app.name}
-            className={classes.bookmarkIconWithColor}
-            style={{
-              overflow: "auto",
-              scale: 0.8,
-              minHeight: "100cqh",
-              maxHeight: "100cqh",
-              minWidth: "100cqh",
-              maxWidth: "100cqh",
-            }}
-          />
-        ) : (
-          <Image
-            style={{
-              overflow: "auto",
-              objectFit: "contain",
-              scale: 0.8,
-              minHeight: "100cqh",
-              maxHeight: "100cqh",
-              minWidth: "100cqh",
-              maxWidth: "100cqh",
-            }}
-            src={app.iconUrl}
-            alt={app.name}
-          />
-        ))}
+      {!hideIcon && (
+        <MaskedOrNormalImage
+          imageUrl={app.iconUrl}
+          hasColor={hasIconColor}
+          alt={app.name}
+          className={classes.bookmarkIcon}
+          style={{
+            overflow: "auto",
+            scale: 0.8,
+            minHeight: "100cqh",
+            maxHeight: "100cqh",
+            minWidth: "100cqh",
+            maxWidth: "100cqh",
+          }}
+        />
+      )}
       <Stack justify="space-between" gap={0}>
         <Text fw={700} size="45cqh" lineClamp={1}>
           {app.name}
