@@ -189,7 +189,7 @@ importers:
         version: 1.0.14(rollup@4.21.3)(webpack-sources@3.2.3)
       '@t3-oss/env-nextjs':
         specifier: ^0.12.0
-        version: 0.12.0(typescript@5.7.3)(zod@3.24.1)
+        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
       '@tabler/icons-react':
         specifier: ^3.30.0
         version: 3.30.0(react@19.0.0)
@@ -281,8 +281,8 @@ importers:
         specifier: ^1.8.1
         version: 1.8.1(react@19.0.0)
       zod:
-        specifier: ^3.24.1
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -595,10 +595,10 @@ importers:
         version: 2.2.2
       trpc-to-openapi:
         specifier: ^2.1.3
-        version: 2.1.3(@trpc/server@11.0.0-rc.761(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.1))(zod@3.24.1)
+        version: 2.1.3(@trpc/server@11.0.0-rc.761(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.2))(zod@3.24.2)
       zod:
-        specifier: ^3.24.1
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -644,7 +644,7 @@ importers:
         version: link:../validation
       '@t3-oss/env-nextjs':
         specifier: ^0.12.0
-        version: 0.12.0(typescript@5.7.3)(zod@3.24.1)
+        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1
@@ -670,8 +670,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
       zod:
-        specifier: ^3.24.1
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -806,8 +806,8 @@ importers:
         specifier: 7.3.0
         version: 7.3.0
       zod:
-        specifier: ^3.24.1
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -995,7 +995,7 @@ importers:
         version: 2.2.2
       '@t3-oss/env-nextjs':
         specifier: ^0.12.0
-        version: 0.12.0(typescript@5.7.3)(zod@3.24.1)
+        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
       '@testcontainers/mysql':
         specifier: ^10.18.0
         version: 10.18.0
@@ -1013,7 +1013,7 @@ importers:
         version: 0.39.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(mysql2@3.12.0)
       drizzle-zod:
         specifier: ^0.7.0
-        version: 0.7.0(drizzle-orm@0.39.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(mysql2@3.12.0))(zod@3.24.1)
+        version: 0.7.0(drizzle-orm@0.39.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(mysql2@3.12.0))(zod@3.24.2)
       mysql2:
         specifier: 3.12.0
         version: 3.12.0
@@ -1075,7 +1075,7 @@ importers:
         version: link:../common
       '@t3-oss/env-nextjs':
         specifier: ^0.12.0
-        version: 0.12.0(typescript@5.7.3)(zod@3.24.1)
+        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
       dockerode:
         specifier: ^4.0.4
         version: 4.0.4
@@ -1114,8 +1114,8 @@ importers:
         specifier: ^7.16.3
         version: 7.16.3(react@19.0.0)
       zod:
-        specifier: ^3.24.1
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1209,8 +1209,8 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2
       zod:
-        specifier: ^3.24.1
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1344,8 +1344,8 @@ importers:
         specifier: 19.0.0
         version: 19.0.0(react@19.0.0)
       zod:
-        specifier: ^3.24.1
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1448,11 +1448,11 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       zod:
-        specifier: ^3.24.1
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
       zod-form-data:
         specifier: ^2.0.5
-        version: 2.0.5(zod@3.24.1)
+        version: 2.0.5(zod@3.24.2)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1479,8 +1479,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../common
       zod:
-        specifier: ^3.24.1
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1875,11 +1875,11 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../translation
       zod:
-        specifier: ^3.24.1
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
       zod-form-data:
         specifier: ^2.0.5
-        version: 2.0.5(zod@3.24.1)
+        version: 2.0.5(zod@3.24.2)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -2032,8 +2032,8 @@ importers:
         specifier: ^8.21.0
         version: 8.21.0
       zod:
-        specifier: ^3.24.1
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -10035,8 +10035,8 @@ packages:
     peerDependencies:
       zod: ^3.21.4
 
-  zod@3.24.1:
-    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
+  zod@3.24.2:
+    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
 
 snapshots:
 
@@ -12009,17 +12009,17 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@t3-oss/env-core@0.12.0(typescript@5.7.3)(zod@3.24.1)':
+  '@t3-oss/env-core@0.12.0(typescript@5.7.3)(zod@3.24.2)':
     optionalDependencies:
       typescript: 5.7.3
-      zod: 3.24.1
+      zod: 3.24.2
 
-  '@t3-oss/env-nextjs@0.12.0(typescript@5.7.3)(zod@3.24.1)':
+  '@t3-oss/env-nextjs@0.12.0(typescript@5.7.3)(zod@3.24.2)':
     dependencies:
-      '@t3-oss/env-core': 0.12.0(typescript@5.7.3)(zod@3.24.1)
+      '@t3-oss/env-core': 0.12.0(typescript@5.7.3)(zod@3.24.2)
     optionalDependencies:
       typescript: 5.7.3
-      zod: 3.24.1
+      zod: 3.24.2
 
   '@tabler/icons-react@3.30.0(react@19.0.0)':
     dependencies:
@@ -13906,10 +13906,10 @@ snapshots:
       better-sqlite3: 11.8.1
       mysql2: 3.12.0
 
-  drizzle-zod@0.7.0(drizzle-orm@0.39.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(mysql2@3.12.0))(zod@3.24.1):
+  drizzle-zod@0.7.0(drizzle-orm@0.39.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(mysql2@3.12.0))(zod@3.24.2):
     dependencies:
       drizzle-orm: 0.39.3(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.8.1)(mysql2@3.12.0)
-      zod: 3.24.1
+      zod: 3.24.2
 
   dunder-proto@1.0.1:
     dependencies:
@@ -17947,14 +17947,14 @@ snapshots:
 
   triple-beam@1.4.1: {}
 
-  trpc-to-openapi@2.1.3(@trpc/server@11.0.0-rc.761(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.1))(zod@3.24.1):
+  trpc-to-openapi@2.1.3(@trpc/server@11.0.0-rc.761(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.2))(zod@3.24.2):
     dependencies:
       '@trpc/server': 11.0.0-rc.761(typescript@5.7.3)
       co-body: 6.2.0
       h3: 1.13.0
       openapi3-ts: 4.4.0
-      zod: 3.24.1
-      zod-openapi: 2.19.0(zod@3.24.1)
+      zod: 3.24.2
+      zod-openapi: 2.19.0(zod@3.24.2)
     optionalDependencies:
       '@rollup/rollup-linux-x64-gnu': 4.6.1
 
@@ -18720,12 +18720,12 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-form-data@2.0.5(zod@3.24.1):
+  zod-form-data@2.0.5(zod@3.24.2):
     dependencies:
-      zod: 3.24.1
+      zod: 3.24.2
 
-  zod-openapi@2.19.0(zod@3.24.1):
+  zod-openapi@2.19.0(zod@3.24.2):
     dependencies:
-      zod: 3.24.1
+      zod: 3.24.2
 
-  zod@3.24.1: {}
+  zod@3.24.2: {}
