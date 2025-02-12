@@ -1182,7 +1182,7 @@ importers:
         version: 19.0.0
       zod:
         specifier: ^3.24.1
-        version: 3.24.1
+        version: 3.24.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
