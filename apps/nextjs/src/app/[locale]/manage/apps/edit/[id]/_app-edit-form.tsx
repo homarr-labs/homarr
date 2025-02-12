@@ -10,8 +10,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { validation } from "@homarr/validation";
-
-import { AppForm } from "../../../../../../../../../packages/ui/src/components/forms/new-app/_form";
+import { AppForm } from "@homarr/forms-collection";
 
 interface AppEditFormProps {
   app: RouterOutputs["app"]["byId"];
