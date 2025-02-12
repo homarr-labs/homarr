@@ -2010,7 +2010,8 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "Quick create app"
+          "title": "Create app on the fly",
+          "createAndUse": "Create and use"
         }
       }
     },
