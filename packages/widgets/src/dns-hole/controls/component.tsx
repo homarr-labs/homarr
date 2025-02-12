@@ -9,12 +9,12 @@ import {
   Button,
   Card,
   Flex,
-  Image,
   ScrollArea,
   Stack,
   Text,
   Tooltip,
   UnstyledButton,
+  useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCircleFilled, IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
@@ -26,6 +26,7 @@ import { useIntegrationConnected } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
+import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
@@ -39,6 +40,7 @@ export default function DnsHoleControlsWidget({
   integrationIds,
   isEditMode,
 }: WidgetComponentProps<typeof widgetKind>) {
+  const theme = useMantineTheme();
   // DnsHole integrations with interaction permissions
   const integrationsWithInteractions = useIntegrationsWithInteractAccess()
     .map(({ id }) => id)
@@ -275,6 +277,7 @@ export default function DnsHoleControlsWidget({
               setSelectedIntegrationIds={setSelectedIntegrationIds}
               open={open}
               t={t}
+              hasIconColor={theme.other.hasIconColor}
             />
           ))}
         </Stack>
@@ -297,6 +300,7 @@ interface ControlsCardProps {
   setSelectedIntegrationIds: (integrationId: string[]) => void;
   open: () => void;
   t: TranslationFunction;
+  hasIconColor: boolean;
 }
 
 const ControlsCard: React.FC<ControlsCardProps> = ({
@@ -306,12 +310,15 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   setSelectedIntegrationIds,
   open,
   t,
+  hasIconColor,
 }) => {
   const isConnected = useIntegrationConnected(data.integration.updatedAt, { timeout: 30000 });
   const isEnabled = data.summary.status ? data.summary.status === "enabled" : undefined;
   const isInteractPermitted = integrationsWithInteractions.includes(data.integration.id);
   // Use all factors to infer the state of the action buttons
   const controlEnabled = isInteractPermitted && isEnabled !== undefined && isConnected;
+
+  const iconUrl = integrationDefs[data.integration.kind].iconUrl;
 
   return (
     <Card
@@ -322,13 +329,16 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
       radius="2.5cqmin"
     >
       <Flex className="dns-hole-controls-item-container" gap="4cqmin" align="center" direction="row">
-        <Image
+        <MaskedOrNormalImage
+          imageUrl={iconUrl}
+          hasColor={hasIconColor}
+          alt={data.integration.name}
           className="dns-hole-controls-item-icon"
-          src={integrationDefs[data.integration.kind].iconUrl}
-          w="20cqmin"
-          h="20cqmin"
-          fit="contain"
-          style={{ filter: !isConnected ? "grayscale(100%)" : undefined }}
+          style={{
+            height: "20cqmin",
+            width: "20cqmin",
+            filter: !isConnected ? "grayscale(100%)" : undefined,
+          }}
         />
         <Flex className="dns-hole-controls-item-data-stack" direction="column" gap="1.5cqmin">
           <Text className="dns-hole-controls-item-integration-name" fz="7cqmin">

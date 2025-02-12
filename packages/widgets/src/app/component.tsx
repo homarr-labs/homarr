@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Suspense } from "react";
-import { Flex, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { Flex, Text, Tooltip, UnstyledButton, useMantineTheme } from "@mantine/core";
 import { IconLoader } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -11,6 +11,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
+import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
@@ -19,6 +20,7 @@ import { PingIndicator } from "./ping/ping-indicator";
 
 export default function AppWidget({ options, isEditMode }: WidgetComponentProps<"app">) {
   const t = useI18n();
+  const theme = useMantineTheme();
   const settings = useSettings();
   const board = useRequiredBoard();
   const [app] = clientApi.app.byId.useSuspenseQuery(
@@ -69,7 +71,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
         styles={{ tooltip: { maxWidth: 300 } }}
       >
         <Flex
-          className={combineClasses("app-flex-wrapper", app.name, app.id)}
+          className={combineClasses("app-flex-wrapper", app.name, app.id, app.href && classes.appWithUrl)}
           h="100%"
           w="100%"
           direction="column"
@@ -82,7 +84,16 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
               {app.name}
             </Text>
           )}
-          <img src={app.iconUrl} alt={app.name} className={combineClasses(classes.appIcon, "app-icon")} />
+          <MaskedOrNormalImage
+            imageUrl={app.iconUrl}
+            hasColor={theme.other.hasIconColor}
+            alt={app.name}
+            className={combineClasses(classes.appIcon, "app-icon")}
+            style={{
+              height: "100%",
+              width: "100%",
+            }}
+          />
         </Flex>
       </Tooltip.Floating>
       {options.pingEnabled && !settings.forceDisableStatus && !board.disableStatus && app.href ? (
