@@ -4,7 +4,7 @@ import { memo, useMemo } from "react";
 import Link from "next/link";
 import type { SelectProps } from "@mantine/core";
 import { Anchor, Button, Group, Loader, Select, Text } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
+import { IconCheck, IconRocket } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -20,7 +20,7 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
   const t = useI18n();
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
-  const { data: apps, isPending } = clientApi.app.selectable.useQuery();
+  const { data: apps, isPending, refetch } = clientApi.app.selectable.useQuery();
 
   const { openModal } = useModalAction(QuickAddAppModal);
 
@@ -60,7 +60,22 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
         styles={{ root: { flex: "1" } }}
         {...form.getInputProps(`options.${property}`)}
       />
-      <Button onClick={() => openModal({})}>Quick Create</Button>
+      <Button
+        mt={3}
+        rightSection={<IconRocket size="1.5rem" />}
+        variant="default"
+        onClick={() =>
+          openModal({
+            // eslint-disable-next-line no-restricted-syntax
+            async onClose(createdAppId) {
+              await refetch();
+              form.setFieldValue(`options.${property}`, createdAppId);
+            },
+          })
+        }
+      >
+        Create app on the fly
+      </Button>
     </Group>
   );
 };
