@@ -1970,6 +1970,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "Create app on the fly",
+          "createAndUse": "Create and use"
+        }
       }
     },
     "field": {
