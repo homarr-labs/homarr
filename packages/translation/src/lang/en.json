@@ -1542,6 +1542,17 @@
         }
       }
     },
+    "docker": {
+      "name": "Docker stats",
+      "description": "Stats of your containers",
+      "option": {},
+      "error": {
+        "internalServerError": "Failed to fetch containers stats"
+      },
+      "footer": {
+        "total": "Total {count} containers"
+      }
+    },
     "common": {
       "location": {
         "query": "City / Postal code",
@@ -2662,6 +2673,14 @@
           "dead": "Dead"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": "CPU"
+        },
+        "memory": {
+          "label": "Memory"
+        }
+      },
       "containerImage": {
         "label": "Image"
       },
@@ -2670,6 +2689,7 @@
       }
     },
     "action": {
+      "title": "Actions",
       "start": {
         "label": "Start",
         "notification": {
