@@ -16,9 +16,8 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { ContainerState } from "../../../docker/src";
-import type { WidgetComponentProps } from "../definition";
 
-export default function DockerWidget({ options }: WidgetComponentProps<"docker">) {
+export default function DockerWidget() {
   const t = useI18n();
   const tDocker = useScopedI18n("docker");
   const containerStates = {

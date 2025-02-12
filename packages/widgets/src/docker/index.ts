@@ -6,7 +6,7 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("docker", {
   icon: IconBrandDocker,
   createOptions() {
-    return optionsBuilder.from((factory) => ({}));
+    return optionsBuilder.from(() => ({}));
   },
   errors: {
     INTERNAL_SERVER_ERROR: {
