@@ -836,8 +836,8 @@
       }
     },
     "information": {
-      "min": "",
-      "max": "",
+      "min": "Мін",
+      "max": "Макс",
       "days": "Днів",
       "hours": "Годин",
       "minutes": "Хвилин"
@@ -2543,7 +2543,7 @@
               "label": ""
             },
             "ping": {
-              "label": ""
+              "label": "Пінги"
             },
             "mediaServer": {
               "label": "Медіа сервер"
@@ -2797,13 +2797,13 @@
           "label": "Редагувати"
         },
         "new": {
-          "label": ""
+          "label": "Нова"
         }
       },
       "search-engines": {
         "label": "Пошукові системи",
         "new": {
-          "label": ""
+          "label": "Нова"
         },
         "edit": {
           "label": "Редагувати"
