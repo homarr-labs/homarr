@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 import type { SelectProps } from "@mantine/core";
-import { Combobox, Input, InputBase, useCombobox } from "@mantine/core";
+import { Combobox, ComboboxClearButton, Input, InputBase, useCombobox } from "@mantine/core";
 import { useUncontrolled } from "@mantine/hooks";
 
 interface BaseSelectItem {
@@ -11,7 +11,7 @@ interface BaseSelectItem {
 }
 
 export interface SelectWithCustomItemsProps<TSelectItem extends BaseSelectItem>
-  extends Pick<SelectProps, "label" | "error" | "defaultValue" | "value" | "onChange" | "placeholder"> {
+  extends Pick<SelectProps, "label" | "error" | "defaultValue" | "value" | "onChange" | "placeholder" | "clearable"> {
   data: TSelectItem[];
   description?: string;
   withAsterisk?: boolean;
@@ -32,6 +32,7 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
   placeholder,
   SelectOption,
   w,
+  clearable,
   ...props
 }: Props<TSelectItem>) => {
   const combobox = useCombobox({
@@ -65,6 +66,8 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
     [setValue, data, combobox],
   );
 
+  const _clearable = clearable && !!_value;
+
   return (
     <Combobox store={combobox} withinPortal={false} onOptionSubmit={onOptionSubmit}>
       <Combobox.Target>
@@ -73,9 +76,11 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
           component="button"
           type="button"
           pointer
-          rightSection={<Combobox.Chevron />}
+          __clearSection={<ComboboxClearButton onClear={() => setValue(null, null)} />}
+          __clearable={_clearable}
+          __defaultRightSection={<Combobox.Chevron />}
           onClick={toggle}
-          rightSectionPointerEvents="none"
+          rightSectionPointerEvents={_clearable ? "all" : "none"}
           multiline
           w={w}
         >
