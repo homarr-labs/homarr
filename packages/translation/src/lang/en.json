@@ -305,7 +305,15 @@
     "search": "Find a group",
     "field": {
       "name": "Name",
-      "members": "Members"
+      "members": "Members",
+      "homeBoard": {
+        "label": "Home board",
+        "description": "Only boards accessible to the group can be selected"
+      },
+      "mobileBoard": {
+        "label": "Mobile board",
+        "description": "Only boards accessible to the group can be selected"
+      }
     },
     "permission": {
       "admin": {
@@ -501,6 +509,20 @@
       "select": {
         "label": "Select group",
         "notFound": "No group found"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "Settings saved",
+              "message": "Board settings saved successfully"
+            },
+            "error": {
+              "title": "Failed to save settings",
+              "message": "Unable to save board settings"
+            }
+          }
+        }
       }
     }
   },
@@ -2413,6 +2435,13 @@
             "owner": "Owner",
             "ownerOfGroup": "Owner of this group",
             "ownerOfGroupDeleted": "The owner of this group was deleted. It currently has no owner."
+          },
+          "setting": {
+            "title": "Settings",
+            "alert": "Group settings are prioritized by the order of groups in the list. The top settings overwrite the bottom settings.",
+            "board": {
+              "title": "Boards"
+            }
           },
           "members": {
             "title": "Members",

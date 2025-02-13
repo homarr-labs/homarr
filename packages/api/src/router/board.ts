@@ -13,6 +13,7 @@ import {
   boardUserPermissions,
   groupMembers,
   groupPermissions,
+  groups,
   integrationGroupPermissions,
   integrationItems,
   integrationUserPermissions,
@@ -22,7 +23,7 @@ import {
   users,
 } from "@homarr/db/schema";
 import type { WidgetKind } from "@homarr/definitions";
-import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
+import { everyoneGroup, getPermissionsWithChildren, getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
 import { importOldmarrAsync } from "@homarr/old-import";
 import { importJsonFileSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
@@ -57,6 +58,37 @@ export const boardRouter = createTRPCRouter({
       where: eq(boards.isPublic, true),
     });
   }),
+  getBoardsForGroup: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ groupId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const dbEveryoneAndCurrentGroup = await ctx.db.query.groups.findMany({
+        where: or(eq(groups.name, everyoneGroup), eq(groups.id, input.groupId)),
+        with: {
+          boardPermissions: true,
+          permissions: true,
+        },
+      });
+
+      const distinctPermissions = new Set(
+        dbEveryoneAndCurrentGroup.flatMap((group) => group.permissions.map(({ permission }) => permission)),
+      );
+      const canViewAllBoards = getPermissionsWithChildren([...distinctPermissions]).includes("board-view-all");
+
+      const boardIds = dbEveryoneAndCurrentGroup.flatMap((group) =>
+        group.boardPermissions.map(({ boardId }) => boardId),
+      );
+      const boardWhere = canViewAllBoards ? undefined : or(eq(boards.isPublic, true), inArray(boards.id, boardIds));
+
+      return await ctx.db.query.boards.findMany({
+        columns: {
+          id: true,
+          name: true,
+          logoImageUrl: true,
+        },
+        where: boardWhere,
+      });
+    }),
   getAllBoards: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
     const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
@@ -89,6 +121,7 @@ export const boardRouter = createTRPCRouter({
       columns: {
         id: true,
         name: true,
+        logoImageUrl: true,
         isPublic: true,
       },
       with: {
