@@ -153,10 +153,10 @@
         "label": "为 ping 使用图标"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "默认搜索引擎"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "在新标签页中打开搜索结果"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "搜索首选项更改成功"
           },
           "error": {
-            "message": ""
+            "message": "无法更改搜索首选项"
           }
         }
       },
@@ -805,7 +805,7 @@
       "apply": "应用",
       "backToOverview": "返回概览",
       "create": "创建",
-      "createAnother": "",
+      "createAnother": "创建并重新开始",
       "edit": "编辑",
       "import": "导入",
       "insert": "插入",
@@ -948,7 +948,7 @@
         "moveDown": "下移",
         "createAbove": "上方新建分类",
         "createBelow": "下方新建分类",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "在标签中打开全部"
       },
       "create": {
         "title": "新建分类",
@@ -969,8 +969,8 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "在标签中打开全部",
+        "text": "某些浏览器可能出于安全原因阻止大批打开标签页。 Homarr 无法打开所有窗口，因为您的浏览器屏蔽了此操作。请允许“打开弹出窗口”并重试。"
       }
     }
   },
@@ -1048,7 +1048,7 @@
           "label": "显示描述提示"
         },
         "pingEnabled": {
-          "label": "启用简单的 ping"
+          "label": "启用状态检查"
         }
       },
       "error": {
@@ -1200,12 +1200,12 @@
           "description": "日期应该是什么样的"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "自定义时间格式",
+          "description": "使用 ISO 8601 格式化时间 (这将覆盖其他选项)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "自定义日期格式",
+          "description": "使用 ISO 8601 格式化日期(这将覆盖其他选项)"
         }
       }
     },
@@ -1388,11 +1388,11 @@
           "label": "华氏温度"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "禁用温度小数"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "显示当前风速",
+          "description": "仅在当前天气时"
         },
         "location": {
           "label": "天气位置"
@@ -1412,12 +1412,12 @@
           "description": "日期应该是什么样的"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} km/h",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "日出",
+        "sunset": "日落",
+        "maxWindSpeed": "最大风速：{maxWindSpeed} km/h",
+        "maxWindGusts": "最大阵风：{maxWindGusts} km/h"
       },
       "kind": {
         "clear": "晴朗",
@@ -2053,8 +2053,8 @@
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "禁用应用状态",
+        "description": "禁用此面板上所有应用的状态检查"
       },
       "columnCount": {
         "label": "列数"
@@ -2090,7 +2090,7 @@
           "title": "自定义 css"
         },
         "behavior": {
-          "title": ""
+          "title": "行为"
         },
         "access": {
           "title": "访问控制",
@@ -2322,7 +2322,7 @@
                   "mobile": "手机"
                 }
               },
-              "search": "",
+              "search": "搜索",
               "firstDayOfWeek": "一周的第一天",
               "accessibility": "无障碍服务"
             }
@@ -2485,14 +2485,14 @@
               "description": "只有公共面板可供选择"
             },
             "status": {
-              "title": "",
+              "title": "应用状态",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "启用默认状态",
+                "description": "添加应用项目时，默认将启用状态"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "强制禁用状态",
+                "description": "所有用户的应用状态将被禁用，无法启用"
               }
             }
           },
@@ -2604,15 +2604,15 @@
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "删除 API 令牌",
+                  "text": "这将永久删除 API 令牌。使用此令牌的 API 客户端无法再进行身份验证并执行 API 请求。此操作无法撤消。"
                 }
               },
               "table": {
                 "header": {
                   "id": "ID",
                   "createdBy": "创建者",
-                  "actions": ""
+                  "actions": "操作"
                 }
               }
             }
