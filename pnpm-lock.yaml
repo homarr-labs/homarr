@@ -82,6 +82,18 @@ importers:
 
   apps/nextjs:
     dependencies:
+      '@dnd-kit/core':
+        specifier: ^6.3.1
+        version: 6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@dnd-kit/modifiers':
+        specifier: ^9.0.0
+        version: 9.0.0(@dnd-kit/core@6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
+      '@dnd-kit/sortable':
+        specifier: ^10.0.0
+        version: 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
+      '@dnd-kit/utilities':
+        specifier: ^3.2.2
+        version: 3.2.2(react@19.0.0)
       '@homarr/analytics':
         specifier: workspace:^0.1.0
         version: link:../../packages/analytics
@@ -2350,6 +2362,12 @@ packages:
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
+
+  '@dnd-kit/modifiers@9.0.0':
+    resolution: {integrity: sha512-ybiLc66qRGuZoC20wdSSG6pDXFikui/dCNGthxv4Ndy8ylErY0N3KVxY2bgo7AWwIbxDmXDg3ylAFmnrjcbVvw==}
+    peerDependencies:
+      '@dnd-kit/core': ^6.3.0
+      react: '>=16.8.0'
 
   '@dnd-kit/sortable@10.0.0':
     resolution: {integrity: sha512-+xqhmIIzvAYMGfBYYnbKuNicfSsk4RksY2XdmJhT+HAC01nix6fHCztU68jooFiMUB01Ky3F0FyOvhG/BZrWkg==}
@@ -10309,7 +10327,7 @@ snapshots:
   '@dnd-kit/accessibility@3.1.1(react@19.0.0)':
     dependencies:
       react: 19.0.0
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@dnd-kit/core@6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
@@ -10317,19 +10335,26 @@ snapshots:
       '@dnd-kit/utilities': 3.2.2(react@19.0.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
-      tslib: 2.7.0
+      tslib: 2.8.1
+
+  '@dnd-kit/modifiers@9.0.0(@dnd-kit/core@6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@dnd-kit/core': 6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@dnd-kit/utilities': 3.2.2(react@19.0.0)
+      react: 19.0.0
+      tslib: 2.8.1
 
   '@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@dnd-kit/core': 6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@dnd-kit/utilities': 3.2.2(react@19.0.0)
       react: 19.0.0
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@dnd-kit/utilities@3.2.2(react@19.0.0)':
     dependencies:
       react: 19.0.0
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@drizzle-team/brocli@0.10.2': {}
 
@@ -10800,7 +10825,7 @@ snapshots:
 
   '@formatjs/intl-localematcher@0.5.5':
     dependencies:
-      tslib: 2.7.0
+      tslib: 2.8.1
 
   '@grpc/grpc-js@1.12.5':
     dependencies:

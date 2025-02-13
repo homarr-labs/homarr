@@ -1,30 +1,19 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Anchor, Group, Stack, Table, TableTbody, TableTd, TableTh, TableThead, TableTr, Title } from "@mantine/core";
-import { z } from "zod";
+import { Card, Group, Stack, Text, ThemeIcon, Title, UnstyledButton } from "@mantine/core";
+import { IconChevronRight, IconUsersGroup } from "@tabler/icons-react";
 
-import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import type { inferSearchParamsFromSchema } from "@homarr/common/types";
+import { everyoneGroup } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
-import { SearchInput, TablePagination, UserAvatarGroup } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
-import { AddGroup } from "./_add-group";
+import { GroupsList } from "./_client";
+import classes from "./groups.module.css";
 
-const searchParamsSchema = z.object({
-  search: z.string().optional(),
-  pageSize: z.string().regex(/\d+/).transform(Number).catch(10),
-  page: z.string().regex(/\d+/).transform(Number).catch(1),
-});
-
-interface GroupsListPageProps {
-  searchParams: Promise<inferSearchParamsFromSchema<typeof searchParamsSchema>>;
-}
-
-export default async function GroupsListPage(props: GroupsListPageProps) {
+export default async function GroupsListPage() {
   const session = await auth();
 
   if (!session?.user.permissions.includes("admin")) {
@@ -32,55 +21,38 @@ export default async function GroupsListPage(props: GroupsListPageProps) {
   }
 
   const t = await getI18n();
-  const searchParams = searchParamsSchema.parse(await props.searchParams);
-  const { items: groups, totalCount } = await api.group.getPaginated(searchParams);
+  const groups = await api.group.getAll();
+  const dbEveryoneGroup = groups.find((group) => group.name === everyoneGroup);
+  const groupsWithoutEveryone = groups.filter((group) => group.name !== everyoneGroup);
 
   return (
     <ManageContainer size="xl">
       <DynamicBreadcrumb />
       <Stack>
         <Title>{t("group.title")}</Title>
-        <Group justify="space-between">
-          <SearchInput placeholder={`${t("group.search")}...`} defaultValue={searchParams.search} />
-          <AddGroup />
-        </Group>
-        <Table striped highlightOnHover>
-          <TableThead>
-            <TableTr>
-              <TableTh>{t("group.field.name")}</TableTh>
-              <TableTh>{t("group.field.members")}</TableTh>
-            </TableTr>
-          </TableThead>
-          <TableTbody>
-            {groups.map((group) => (
-              <Row key={group.id} group={group} />
-            ))}
-          </TableTbody>
-        </Table>
 
-        <Group justify="end">
-          <TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />
-        </Group>
+        {dbEveryoneGroup && (
+          <UnstyledButton component={Link} href={`/manage/users/groups/${dbEveryoneGroup.id}`}>
+            <Card className={classes.everyoneGroup}>
+              <Group align="center">
+                <ThemeIcon radius="xl" variant="light">
+                  <IconUsersGroup size={16} />
+                </ThemeIcon>
+
+                <Stack gap={0} flex={1}>
+                  <Text fw={500}>Default group</Text>
+                  <Text size="sm" c="gray.6">
+                    {everyoneGroup} - All signed in users
+                  </Text>
+                </Stack>
+                <IconChevronRight size={20} />
+              </Group>
+            </Card>
+          </UnstyledButton>
+        )}
+
+        <GroupsList groups={groupsWithoutEveryone} />
       </Stack>
     </ManageContainer>
   );
 }
-
-interface RowProps {
-  group: RouterOutputs["group"]["getPaginated"]["items"][number];
-}
-
-const Row = ({ group }: RowProps) => {
-  return (
-    <TableTr>
-      <TableTd>
-        <Anchor component={Link} href={`/manage/users/groups/${group.id}`}>
-          {group.name}
-        </Anchor>
-      </TableTd>
-      <TableTd>
-        <UserAvatarGroup users={group.members} size="sm" limit={5} />
-      </TableTd>
-    </TableTr>
-  );
-};
