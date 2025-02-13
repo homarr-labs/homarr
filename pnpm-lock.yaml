@@ -1167,8 +1167,8 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0
       '@ctrl/qbittorrent':
-        specifier: ^9.3.0
-        version: 9.3.0
+        specifier: ^9.4.0
+        version: 9.4.0
       '@ctrl/transmission':
         specifier: ^7.2.0
         version: 7.2.0
@@ -2321,8 +2321,8 @@ packages:
     resolution: {integrity: sha512-wENP7LH4BmCjz+gXVq7Nzz20zMjY/huuG7aDk/yu/LhFdC84e/l8222rCIAo0lwhU451lFcJKLcOmtG6TNrBAQ==}
     engines: {node: '>=18'}
 
-  '@ctrl/qbittorrent@9.3.0':
-    resolution: {integrity: sha512-wQcJ4JrUpG1lj1eqeHnuXlP37wc4OtNLz+3b6FoHa8VNpDuD9zsyJI3UpzhrymA1vYMoohHJmoIw8T2yI/W6Rw==}
+  '@ctrl/qbittorrent@9.4.0':
+    resolution: {integrity: sha512-oyxeUed82WED+l36C+2SCKGJEU3quTgH/EYl4kAnwID95dDbfd3UDyTYdsg8OqrDpUPKs7+JI2Gn9hJaPh3lAA==}
     engines: {node: '>=18'}
 
   '@ctrl/shared-torrent@6.2.1':
@@ -10273,7 +10273,7 @@ snapshots:
       rfc4648: 1.5.3
       uint8array-extras: 1.4.0
 
-  '@ctrl/qbittorrent@9.3.0':
+  '@ctrl/qbittorrent@9.4.0':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
       '@ctrl/shared-torrent': 6.2.1
@@ -16315,7 +16315,7 @@ snapshots:
     dependencies:
       '@babel/code-frame': 7.26.2
       index-to-position: 0.1.2
-      type-fest: 4.30.2
+      type-fest: 4.34.1
 
   parse-ms@3.0.0: {}
 
@@ -16879,14 +16879,14 @@ snapshots:
     dependencies:
       find-up-simple: 1.0.0
       read-pkg: 9.0.1
-      type-fest: 4.30.2
+      type-fest: 4.34.1
 
   read-pkg@9.0.1:
     dependencies:
       '@types/normalize-package-data': 2.4.4
       normalize-package-data: 6.0.2
       parse-json: 8.1.0
-      type-fest: 4.30.2
+      type-fest: 4.34.1
       unicorn-magic: 0.1.0
 
   readable-stream@2.3.8:
@@ -18189,7 +18189,7 @@ snapshots:
       consola: 3.2.3
       defu: 6.1.4
       mime: 3.0.0
-      node-fetch-native: 1.6.4
+      node-fetch-native: 1.6.6
       pathe: 1.1.2
 
   unicode-emoji-modifier-base@1.0.0: {}
