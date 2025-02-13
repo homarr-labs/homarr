@@ -111,16 +111,19 @@ export const appRouter = createTRPCRouter({
   create: permissionRequiredProcedure
     .requiresPermission("app-create")
     .input(validation.app.manage)
-    .output(z.void())
+    .output(z.object({ appId: z.string() }))
     .meta({ openapi: { method: "POST", path: "/api/apps", tags: ["apps"], protect: true } })
     .mutation(async ({ ctx, input }) => {
+      const id = createId();
       await ctx.db.insert(apps).values({
-        id: createId(),
+        id,
         name: input.name,
         description: input.description,
         iconUrl: input.iconUrl,
         href: input.href,
       });
+
+      return { appId: id };
     }),
   createMany: permissionRequiredProcedure
     .requiresPermission("app-create")
