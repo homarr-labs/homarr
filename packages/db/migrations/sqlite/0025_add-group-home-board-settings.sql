@@ -16,8 +16,6 @@ CREATE TABLE `__new_group` (
 	FOREIGN KEY (`mobile_home_board_id`) REFERENCES `board`(`id`) ON UPDATE no action ON DELETE set null
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `group_name_unique` ON `__new_group` (`name`);
---> statement-breakpoint
 INSERT INTO `__new_group`("id", "name", "owner_id", "position") SELECT "id", "name", "owner_id", -1 FROM `group` WHERE "name" = 'everyone';
 --> statement-breakpoint
 INSERT INTO `__new_group`("id", "name", "owner_id", "position") SELECT "id", "name", "owner_id", ROW_NUMBER() OVER(ORDER BY "name") FROM `group` WHERE "name" != 'everyone';
@@ -25,6 +23,8 @@ INSERT INTO `__new_group`("id", "name", "owner_id", "position") SELECT "id", "na
 DROP TABLE `group`;
 --> statement-breakpoint
 ALTER TABLE `__new_group` RENAME TO `group`;
+--> statement-breakpoint
+CREATE UNIQUE INDEX `group_name_unique` ON `group` (`name`);
 --> statement-breakpoint
 COMMIT TRANSACTION;
 --> statement-breakpoint
