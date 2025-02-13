@@ -4,9 +4,9 @@ ALTER TABLE `group` ADD `mobile_home_board_id` varchar(64);
 --> statement-breakpoint
 ALTER TABLE `group` ADD `position` smallint;
 --> statement-breakpoint
-UPDATE SET `position` = -1 WHERE `name` = 'everyone';
+UPDATE `group` SET `position` = -1 WHERE `name` = 'everyone';
 --> statement-breakpoint
-UPDATE SET `position` = ROW_NUMBER() OVER(ORDER BY `name`) WHERE `name` != 'everyone';
+UPDATE `group` SET `position` = ROW_NUMBER() OVER(ORDER BY `name`) WHERE `name` != 'everyone';
 --> statement-breakpoint
 ALTER TABLE `group` MODIFY `position` smallint NOT NULL;
 --> statement-breakpoint
