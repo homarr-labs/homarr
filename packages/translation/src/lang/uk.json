@@ -1391,7 +1391,7 @@
           "label": ""
         },
         "showCurrentWindSpeed": {
-          "label": "",
+          "label": "Показати поточну швидкість вітру",
           "description": ""
         },
         "location": {
@@ -1409,14 +1409,14 @@
         },
         "dateFormat": {
           "label": "Формат дати",
-          "description": ""
+          "description": "Як має виглядати дата"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} км/год",
       "dailyForecast": {
         "sunrise": "",
         "sunset": "",
-        "maxWindSpeed": "",
+        "maxWindSpeed": "Максимальна швидкість вітру: {maxWindSpeed} км/год",
         "maxWindGusts": ""
       },
       "kind": {
@@ -2292,7 +2292,7 @@
         },
         "visibility": {
           "public": "Ця дошка є публічною",
-          "private": ""
+          "private": "Ця дошка є приватною"
         },
         "modal": {
           "createBoard": {
@@ -2346,7 +2346,7 @@
           "title": "Створити нового користувача",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "Особиста інформація"
             },
             "security": {
               "label": "Безпека"
@@ -2485,9 +2485,9 @@
               "description": "Тут доступні тільки публічні дошки"
             },
             "status": {
-              "title": "",
+              "title": "Статус додатка",
               "enableStatusByDefault": {
-                "label": "",
+                "label": "Увімкнути статус за замовчуванням",
                 "description": ""
               },
               "forceDisableStatus": {
@@ -2552,7 +2552,7 @@
               "label": ""
             },
             "downloads": {
-              "label": ""
+              "label": "Завантаження"
             },
             "mediaRequestStats": {
               "label": ""
@@ -2815,7 +2815,7 @@
       "apps": {
         "label": "Додатки",
         "new": {
-          "label": ""
+          "label": "Новий"
         },
         "edit": {
           "label": "Редагувати"
@@ -2916,7 +2916,7 @@
             "title": "Локальні команди"
           },
           "globalCommand": {
-            "title": "",
+            "title": "Глобальні команди",
             "option": {
               "colorScheme": {
                 "light": "Перемикнути на світлу тему",
