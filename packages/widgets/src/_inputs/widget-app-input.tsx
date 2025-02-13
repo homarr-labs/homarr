@@ -9,9 +9,9 @@ import { IconCheck, IconRocket } from "@tabler/icons-react";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
+import { QuickAddAppModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
 
-import { QuickAddAppModal } from "../../../modals-collection/src";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
@@ -74,7 +74,7 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
           })
         }
       >
-        Create app on the fly
+        {t("widget.common.app.quickCreate")}
       </Button>
     </Group>
   );
