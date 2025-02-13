@@ -124,12 +124,7 @@ export const IconPicker = ({ value: propsValue, onChange, error, onFocus, onBlur
           <InputBase
             flex={1}
             rightSection={<Combobox.Chevron />}
-            leftSection={
-              previewUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={previewUrl} alt="" style={{ width: 20, height: 20 }} />
-              ) : null
-            }
+            leftSection={previewUrl ? <img src={previewUrl} alt="" style={{ width: 20, height: 20 }} /> : null}
             value={search}
             onChange={(event) => {
               combobox.openDropdown();

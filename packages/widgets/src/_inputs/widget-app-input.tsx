@@ -3,15 +3,15 @@
 import { memo, useMemo } from "react";
 import Link from "next/link";
 import type { SelectProps } from "@mantine/core";
-import { Anchor, Button, Group, Loader, Select, Text } from "@mantine/core";
+import { Anchor, Button, Group, Loader, Select, SimpleGrid, Text } from "@mantine/core";
 import { IconCheck, IconRocket } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useModalAction } from "@homarr/modals";
+import { QuickAddAppModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
 
-import { QuickAddAppModal } from "../../../modals-collection/src";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
@@ -30,7 +30,7 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
   );
 
   return (
-    <Group>
+    <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: "md" }} style={{ alignItems: "center" }}>
       <Select
         label={tInput("label")}
         searchable
@@ -74,9 +74,9 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
           })
         }
       >
-        Create app on the fly
+        {t("widget.common.app.quickCreate")}
       </Button>
-    </Group>
+    </SimpleGrid>
   );
 };
 
