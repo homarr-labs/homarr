@@ -4,8 +4,6 @@ ALTER TABLE `group` ADD `mobile_home_board_id` varchar(64);
 --> statement-breakpoint
 ALTER TABLE `group` ADD `position` smallint;
 --> statement-breakpoint
-UPDATE `group` SET `position` = -1 WHERE `name` = 'everyone';
---> statement-breakpoint
 CREATE TABLE `temp_group` (
     `id` varchar(64) NOT NULL,
     `name` varchar(255) NOT NULL,
@@ -17,6 +15,8 @@ INSERT INTO `temp_group`(`id`, `name`, `position`) SELECT `id`, `name`, ROW_NUMB
 UPDATE `group` SET `position`=(SELECT `position` FROM `temp_group` WHERE `temp_group`.`id`=`group`.`id`);
 --> statement-breakpoint
 DROP TABLE `temp_group`;
+--> statement-breakpoint
+UPDATE `group` SET `position` = -1 WHERE `name` = 'everyone';
 --> statement-breakpoint
 ALTER TABLE `group` MODIFY `position` smallint NOT NULL;
 --> statement-breakpoint
