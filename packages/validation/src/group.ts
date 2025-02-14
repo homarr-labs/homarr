@@ -33,6 +33,10 @@ const savePermissionsSchema = z.object({
   permissions: z.array(zodEnumFromArray(groupPermissionKeys)),
 });
 
+const savePositionsSchema = z.object({
+  positions: z.array(z.string()),
+});
+
 const groupUserSchema = z.object({ groupId: z.string(), userId: z.string() });
 
 export const groupSchemas = {
@@ -42,4 +46,5 @@ export const groupSchemas = {
   groupUser: groupUserSchema,
   savePartialSettings: savePartialSettingsSchema,
   settings: settingsSchema,
+  savePositions: savePositionsSchema,
 };

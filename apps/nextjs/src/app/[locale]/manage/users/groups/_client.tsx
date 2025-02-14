@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Group, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
@@ -18,7 +18,17 @@ interface GroupsListProps {
 
 export const GroupsList = ({ groups }: GroupsListProps) => {
   const [search, setSearch] = useState("");
-  const filteredGroups = groups.filter((group) => group.name.toLowerCase().includes(search.toLowerCase()));
+  const initialGroupIds = useMemo(
+    () => groups.sort((groupA, groupB) => groupA.position - groupB.position).map((group) => group.id),
+    [groups],
+  );
+  const filteredGroups = useMemo(
+    () =>
+      groups
+        .filter((group) => group.name.toLowerCase().includes(search.toLowerCase()))
+        .sort((groupA, groupB) => groupA.position - groupB.position),
+    [groups, search],
+  );
   const t = useI18n();
 
   return (
@@ -34,7 +44,7 @@ export const GroupsList = ({ groups }: GroupsListProps) => {
         <AddGroup />
       </Group>
 
-      <GroupsTable groups={filteredGroups} hasFilter={search.length !== 0} />
+      <GroupsTable groups={filteredGroups} initialGroupIds={initialGroupIds} hasFilter={search.length !== 0} />
     </>
   );
 };

@@ -523,6 +523,16 @@
             }
           }
         }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": "Position changed successfully"
+          },
+          "error": {
+            "message": "Unable to change position"
+          }
+        }
       }
     }
   },
@@ -910,6 +920,7 @@
     },
     "dangerZone": "Danger zone",
     "noResults": "No results found",
+    "unsavedChanges": "You have unsaved changes!",
     "preview": {
       "show": "Show preview",
       "hide": "Hide preview"

@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import type { Database } from "@homarr/db";
-import { and, createId, eq, like, not, sql } from "@homarr/db";
+import { and, createId, eq, handleTransactionsAsync, like, not, sql } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
@@ -241,6 +241,29 @@ export const groupRouter = createTRPCRouter({
           mobileHomeBoardId: input.settings.mobileHomeBoardId,
         })
         .where(eq(groups.id, input.id));
+    }),
+  savePositions: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(validation.group.savePositions)
+    .mutation(async ({ input, ctx }) => {
+      const positions = input.positions.map((id, index) => ({ id, position: index + 1 }));
+
+      await handleTransactionsAsync(ctx.db, {
+        handleAsync: async (db, schema) => {
+          await db.transaction(async (trx) => {
+            for (const { id, position } of positions) {
+              await trx.update(schema.groups).set({ position }).where(eq(groups.id, id));
+            }
+          });
+        },
+        handleSync: (db) => {
+          db.transaction((trx) => {
+            for (const { id, position } of positions) {
+              trx.update(groups).set({ position }).where(eq(groups.id, id)).run();
+            }
+          });
+        },
+      });
     }),
   savePermissions: permissionRequiredProcedure
     .requiresPermission("admin")
