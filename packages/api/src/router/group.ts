@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import type { Database } from "@homarr/db";
 import { and, createId, eq, like, not, sql } from "@homarr/db";
+import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
 import { validation } from "@homarr/validation";
@@ -177,10 +178,13 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await checkSimilarNameAndThrowAsync(ctx.db, input.name);
 
+      const maxPosition = await getMaxGroupPositionAsync(ctx.db);
+
       const groupId = createId();
       await ctx.db.insert(groups).values({
         id: groupId,
         name: input.name,
+        position: maxPosition + 1,
       });
 
       await ctx.db.insert(groupPermissions).values({
@@ -196,10 +200,13 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await checkSimilarNameAndThrowAsync(ctx.db, input.name);
 
+      const maxPosition = await getMaxGroupPositionAsync(ctx.db);
+
       const id = createId();
       await ctx.db.insert(groups).values({
         id,
         name: input.name,
+        position: maxPosition + 1,
         ownerId: ctx.session.user.id,
       });
 
@@ -235,7 +242,6 @@ export const groupRouter = createTRPCRouter({
         })
         .where(eq(groups.id, input.id));
     }),
-
   savePermissions: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(validation.group.savePermissions)

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { and, createId, eq, like } from "@homarr/db";
+import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { boards, groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
 import { credentialsAdminGroup } from "@homarr/definitions";
@@ -31,12 +32,14 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
 
+      const maxPosition = await getMaxGroupPositionAsync(ctx.db);
       const userId = await createUserAsync(ctx.db, input);
       const groupId = createId();
       await ctx.db.insert(groups).values({
         id: groupId,
         name: credentialsAdminGroup,
         ownerId: userId,
+        position: maxPosition + 1,
       });
       await ctx.db.insert(groupPermissions).values({
         groupId,
