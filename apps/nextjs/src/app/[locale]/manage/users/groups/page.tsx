@@ -40,9 +40,9 @@ export default async function GroupsListPage() {
                 </ThemeIcon>
 
                 <Stack gap={0} flex={1}>
-                  <Text fw={500}>Default group</Text>
+                  <Text fw={500}>{t("group.defaultGroup.name")}</Text>
                   <Text size="sm" c="gray.6">
-                    {everyoneGroup} - All signed in users
+                    {t("group.defaultGroup.description", { name: everyoneGroup })}
                   </Text>
                 </Stack>
                 <IconChevronRight size={20} />

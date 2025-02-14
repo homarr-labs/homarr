@@ -51,8 +51,6 @@ export const GroupHomeBoards = ({ homeBoardId, mobileHomeBoardId, groupId }: Gro
     );
   });
 
-  // TODO: add home board selection when loading it
-
   return (
     <form onSubmit={handleSubmit}>
       <Stack gap="md">
