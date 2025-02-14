@@ -105,7 +105,8 @@ export class SonarrIntegration extends MediaOrganizerIntegration {
 
 const sonarrCalendarEventImageSchema = z.array(
   z.object({
-    coverType: z.enum(["screenshot", "poster", "banner", "fanart", "clearlogo"]),
+    // See https://github.com/Sonarr/Sonarr/blob/9e5ebdc6245d4714776b53127a1e6b63c25fbcb9/src/NzbDrone.Core/MediaCover/MediaCover.cs#L5-L14
+    coverType: z.enum(["unknown", "poster", "banner", "fanart", "screenshot", "headshot", "clearlogo"]),
     remoteUrl: z.string().url(),
   }),
 );
