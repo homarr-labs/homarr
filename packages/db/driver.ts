@@ -1,9 +1,11 @@
+import type { Database as BetterSqlite3Connection } from "better-sqlite3";
 import Database from "better-sqlite3";
 import type { Logger } from "drizzle-orm";
 import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import { drizzle as drizzleSqlite } from "drizzle-orm/better-sqlite3";
 import type { MySql2Database } from "drizzle-orm/mysql2";
 import { drizzle as drizzleMysql } from "drizzle-orm/mysql2";
+import type { Pool as MysqlConnectionPool } from "mysql2";
 import mysql from "mysql2";
 
 import { logger } from "@homarr/log";
@@ -29,7 +31,7 @@ const init = () => {
   }
 };
 
-export let connection: Database.Database | mysql.Connection;
+export let connection: BetterSqlite3Connection | MysqlConnectionPool;
 export let database: HomarrDatabase;
 
 class WinstonDrizzleLogger implements Logger {
@@ -49,14 +51,17 @@ const initBetterSqlite = () => {
 
 const initMySQL2 = () => {
   if (!env.DB_HOST) {
-    connection = mysql.createConnection({ uri: env.DB_URL });
+    connection = mysql.createPool({ uri: env.DB_URL, maxIdle: 0, idleTimeout: 60000, enableKeepAlive: true });
   } else {
-    connection = mysql.createConnection({
+    connection = mysql.createPool({
       host: env.DB_HOST,
       database: env.DB_NAME,
       port: env.DB_PORT,
       user: env.DB_USER,
       password: env.DB_PASSWORD,
+      maxIdle: 0,
+      idleTimeout: 60000,
+      enableKeepAlive: true,
     });
   }
 

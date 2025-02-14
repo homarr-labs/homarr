@@ -2052,6 +2052,10 @@
           "description": "Вы можете добавлять пользовательские классы к элементам панели в расширенных настройках каждого элемента и использовать их в пользовательском CSS выше."
         }
       },
+      "disableStatus": {
+        "label": "",
+        "description": ""
+      },
       "columnCount": {
         "label": "Количество столбцов"
       },
@@ -2084,6 +2088,9 @@
         },
         "customCss": {
           "title": "Пользовательский CSS"
+        },
+        "behavior": {
+          "title": ""
         },
         "access": {
           "title": "Управление доступом",
@@ -2476,6 +2483,17 @@
               "label": "Глобальная домашняя панель",
               "mobileLabel": "Глобальная мобильная панель",
               "description": "Для выбора доступны только публичные панели"
+            },
+            "status": {
+              "title": "",
+              "enableStatusByDefault": {
+                "label": "",
+                "description": ""
+              },
+              "forceDisableStatus": {
+                "label": "",
+                "description": ""
+              }
             }
           },
           "search": {

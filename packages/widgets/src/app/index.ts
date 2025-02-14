@@ -5,13 +5,24 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("app", {
   icon: IconApps,
-  options: optionsBuilder.from((factory) => ({
-    appId: factory.app(),
-    openInNewTab: factory.switch({ defaultValue: true }),
-    showTitle: factory.switch({ defaultValue: true }),
-    showDescriptionTooltip: factory.switch({ defaultValue: false }),
-    pingEnabled: factory.switch({ defaultValue: false }),
-  })),
+  createOptions(settings) {
+    return optionsBuilder.from(
+      (factory) => ({
+        appId: factory.app(),
+        openInNewTab: factory.switch({ defaultValue: true }),
+        showTitle: factory.switch({ defaultValue: true }),
+        showDescriptionTooltip: factory.switch({ defaultValue: false }),
+        pingEnabled: factory.switch({ defaultValue: settings.enableStatusByDefault }),
+      }),
+      {
+        pingEnabled: {
+          shouldHide() {
+            return settings.forceDisableStatus;
+          },
+        },
+      },
+    );
+  },
   errors: {
     NOT_FOUND: {
       icon: IconDeviceDesktopX,

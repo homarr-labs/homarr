@@ -1048,7 +1048,7 @@
           "label": "Vis beskrivelsesværktøjstip"
         },
         "pingEnabled": {
-          "label": "Aktivér simpel ping"
+          "label": "Aktiver statustjek"
         }
       },
       "error": {
@@ -2052,6 +2052,10 @@
           "description": "Du kan tilføje brugerdefinerede klasser til dine tavle elementer i de avancerede muligheder for hvert element og bruge dem i den brugerdefinerede CSS ovenfor."
         }
       },
+      "disableStatus": {
+        "label": "Deaktiver app status",
+        "description": "Deaktiverer statustjek for alle apps på denne tavle"
+      },
       "columnCount": {
         "label": "Kolonne antal"
       },
@@ -2084,6 +2088,9 @@
         },
         "customCss": {
           "title": "Brugerdefineret CSS"
+        },
+        "behavior": {
+          "title": "Virkemåde"
         },
         "access": {
           "title": "Adgangskontrol",
@@ -2476,6 +2483,17 @@
               "label": "Global hjemmetavle",
               "mobileLabel": "Global mobiltavle",
               "description": "Kun offentlige tavler er tilgængelige til udvælgelse"
+            },
+            "status": {
+              "title": "App status",
+              "enableStatusByDefault": {
+                "label": "Aktiver status som standard",
+                "description": "Når du tilføjer et app element, vil status blive aktiveret som standard"
+              },
+              "forceDisableStatus": {
+                "label": "Gennemtving status deaktivering",
+                "description": "Status for apps vil blive deaktiveret for alle brugere og kan ikke blive aktiveret"
+              }
             }
           },
           "search": {

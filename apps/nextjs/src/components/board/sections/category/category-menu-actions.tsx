@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { fetchApi } from "@homarr/api/client";
 import { createId } from "@homarr/db/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
@@ -99,8 +100,9 @@ export const useCategoryMenuActions = (category: CategorySection) => {
     );
   }, [category, openModal, renameCategory, t]);
 
+  const settings = useSettings();
   const openAllInNewTabs = useCallback(async () => {
-    const appIds = filterByItemKind(category.items, "app").map((item) => {
+    const appIds = filterByItemKind(category.items, settings, "app").map((item) => {
       return item.options.appId;
     });
 
@@ -119,7 +121,7 @@ export const useCategoryMenuActions = (category: CategorySection) => {
       });
       break;
     }
-  }, [category, t, openConfirmModal]);
+  }, [category, t, openConfirmModal, settings]);
 
   return {
     addCategoryAbove,

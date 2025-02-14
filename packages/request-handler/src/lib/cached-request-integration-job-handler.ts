@@ -5,7 +5,7 @@ import { hashObjectBase64, Stopwatch } from "@homarr/common";
 import { decryptSecret } from "@homarr/common/server";
 import type { MaybeArray } from "@homarr/common/types";
 import { db } from "@homarr/db";
-import { getItemsWithIntegrationsAsync } from "@homarr/db/queries";
+import { getItemsWithIntegrationsAsync, getServerSettingsAsync } from "@homarr/db/queries";
 import type { WidgetKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
@@ -33,6 +33,7 @@ export const createRequestIntegrationJobHandler = <
   },
 ) => {
   return async () => {
+    const serverSettings = await getServerSettingsAsync(db);
     const itemsForIntegration = await getItemsWithIntegrationsAsync(db, {
       kinds: widgetKinds,
     });
@@ -52,7 +53,17 @@ export const createRequestIntegrationJobHandler = <
       const oneOrMultipleInputs = getInput[itemForIntegration.kind](
         reduceWidgetOptionsWithDefaultValues(
           itemForIntegration.kind,
-          SuperJSON.parse(itemForIntegration.options),
+          {
+            defaultSearchEngineId: serverSettings.search.defaultSearchEngineId,
+            openSearchInNewTab: true,
+            firstDayOfWeek: 1,
+            homeBoardId: serverSettings.board.homeBoardId,
+            mobileHomeBoardId: serverSettings.board.mobileHomeBoardId,
+            pingIconsEnabled: true,
+            enableStatusByDefault: serverSettings.board.enableStatusByDefault,
+            forceDisableStatus: serverSettings.board.forceDisableStatus,
+          },
+          SuperJSON.parse<Record<string, unknown>>(itemForIntegration.options),
         ) as never,
       );
       for (const { integration } of itemForIntegration.integrations) {

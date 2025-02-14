@@ -153,10 +153,10 @@
         "label": "Użyj ikon dla pingów"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Domyślna wyszukiwarka"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Otwórz wyniki wyszukiwania w nowej karcie"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ustawienia wyszukiwania zostały zmienione"
           },
           "error": {
-            "message": ""
+            "message": "Nie można zmienić preferencji wyszukiwania"
           }
         }
       },
@@ -741,8 +741,8 @@
           "newLabel": "Nowe hasło"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Token ID",
+          "newLabel": "Nowy token ID"
         },
         "realm": {
           "label": "",
@@ -915,7 +915,7 @@
           "passwordRequirements": "Twoje hasło nie spełnia wymagań.",
           "boardAlreadyExists": "Tablica o tej nazwie już istnieje",
           "invalidFileType": "Nieprawidłowy typ pliku, oczekiwany {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "Nieprawidłowa nazwa pliku",
           "fileTooLarge": "Plik jest zbyt duży, maksymalny rozmiar to {maxSize}",
           "invalidConfiguration": "Nieprawidłowa konfiguracja",
           "groupNameTaken": "Nazwa użytkownika jest już zajęta"
@@ -948,7 +948,7 @@
         "moveDown": "Przenieś w dół",
         "createAbove": "Nowa kategoria powyżej",
         "createBelow": "Nowa kategoria poniżej",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "Otwórz wszystkie w kartach"
       },
       "create": {
         "title": "Nowa kategoria",
@@ -969,7 +969,7 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
+        "title": "Otwórz wszystkie w kartach",
         "text": ""
       }
     }
@@ -1080,13 +1080,13 @@
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "Ukryj ikony"
         },
         "hideHostname": {
           "label": ""
         },
         "openNewTab": {
-          "label": ""
+          "label": "Otwórz w nowej karcie"
         },
         "items": {
           "label": "Zakładki",
@@ -1200,8 +1200,8 @@
           "description": "Jak powinna wyglądać data"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Własny format czasu",
+          "description": "Użyj ISO 8601 do formatu czasu (spowoduje nadpisanie innych opcji)"
         },
         "customDateFormat": {
           "label": "",
@@ -1414,8 +1414,8 @@
       },
       "currentWindSpeed": "",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
+        "sunrise": "Wschód słońca",
+        "sunset": "Zachód słońca",
         "maxWindSpeed": "",
         "maxWindGusts": ""
       },
@@ -1454,7 +1454,7 @@
       "name": "Monitorowanie zdrowia  systemu",
       "description": "Wyświetla informacje o stanie Twojego systemu(ów).",
       "tab": {
-        "system": "",
+        "system": "System",
         "cluster": ""
       },
       "option": {
@@ -1497,8 +1497,8 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
@@ -1518,16 +1518,16 @@
           "rightSection": {
             "node": "",
             "vmId": "",
-            "plugin": ""
+            "plugin": "Wtyczka"
           },
           "detail": {
             "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "memory": "Pamięć",
+            "storage": "Magazyn",
+            "uptime": "Czas pracy",
+            "haState": "Stan HA",
             "storageType": {
-              "local": "",
+              "local": "Magazyn lokalny",
               "shared": ""
             }
           }
@@ -2052,6 +2052,10 @@
           "description": ""
         }
       },
+      "disableStatus": {
+        "label": "",
+        "description": ""
+      },
       "columnCount": {
         "label": ""
       },
@@ -2083,6 +2087,9 @@
           "title": ""
         },
         "customCss": {
+          "title": ""
+        },
+        "behavior": {
           "title": ""
         },
         "access": {
@@ -2476,6 +2483,17 @@
               "label": "",
               "mobileLabel": "",
               "description": ""
+            },
+            "status": {
+              "title": "",
+              "enableStatusByDefault": {
+                "label": "",
+                "description": ""
+              },
+              "forceDisableStatus": {
+                "label": "",
+                "description": ""
+              }
             }
           },
           "search": {
