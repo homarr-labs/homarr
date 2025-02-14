@@ -66,7 +66,7 @@ export const SelectWithCustomItems = <TSelectItem extends BaseSelectItem>({
     [setValue, data, combobox],
   );
 
-  const _clearable = clearable && !!_value;
+  const _clearable = clearable && Boolean(_value);
 
   return (
     <Combobox store={combobox} withinPortal={false} onOptionSubmit={onOptionSubmit}>

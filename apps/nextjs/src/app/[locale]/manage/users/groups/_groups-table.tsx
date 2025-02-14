@@ -170,7 +170,7 @@ const DraggableRow = ({ group, disabled }: DraggableRowProps) => {
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition: transition,
+    transition,
   };
 
   if (isDragging) {
