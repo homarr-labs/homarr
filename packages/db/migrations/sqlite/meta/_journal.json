@@ -183,6 +183,13 @@
       "when": 1739468826756,
       "tag": "0025_add-group-home-board-settings",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "6",
+      "when": 1739907755789,
+      "tag": "0026_add-border-radius",
+      "breakpoints": true
     }
   ]
 }
