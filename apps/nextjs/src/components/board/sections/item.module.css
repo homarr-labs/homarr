@@ -9,4 +9,22 @@
   }
   background-color: var(--background-color) !important;
   border-color: var(--border-color) !important;
+
+  container-type: size;
+
+  --spacing-base: 0.5cqmin;
+  --mantine-spacing-xs: calc(1 * var(--spacing-base) * var(--custom-spacing-scale));
+  --mantine-spacing-sm: calc(2 * var(--spacing-base) * var(--custom-spacing-scale));
+  --mantine-spacing-md: calc(4 * var(--spacing-base) * var(--custom-spacing-scale));
+  --mantine-spacing-lg: calc(8 * var(--spacing-base) * var(--custom-spacing-scale));
+  --mantine-spacing-xl: calc(16 * var(--spacing-base) * var(--custom-spacing-scale));
+
+  --text-size-base: 5cqmin;
+  --mantine-font-size-xs: calc(1 * var(--text-size-base) * var(--custom-text-size-scale));
+  --mantine-font-size-sm: calc(1.5 * var(--text-size-base) * var(--custom-text-size-scale));
+  --mantine-font-size-md: calc(2.5 * var(--text-size-base) * var(--custom-text-size-scale));
+  --mantine-font-size-lg: calc(4 * var(--text-size-base) * var(--custom-text-size-scale));
+  --mantine-font-size-xl: calc(6 * var(--text-size-base) * var(--custom-text-size-scale));
+
+  --text-lh: 1.35;
 }

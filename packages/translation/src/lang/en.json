@@ -1022,6 +1022,13 @@
         },
         "customCssClasses": {
           "label": "Custom css classes"
+        },
+        "customTextSize":{
+          "label": "Custom Font Size Scale"
+        },
+        "customSpacing":{
+          "label": "Custom Spacing Scale",
+          "description": "Space between and around elements of the widget"
         }
       }
     },

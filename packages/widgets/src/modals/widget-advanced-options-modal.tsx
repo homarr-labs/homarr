@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Group, Stack } from "@mantine/core";
+import { Button, Group, NumberInput, Stack } from "@mantine/core";
 
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
@@ -29,6 +29,23 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, in
         <TextMultiSelect
           label={t("item.edit.field.customCssClasses.label")}
           {...form.getInputProps("customCssClasses")}
+        />
+        <NumberInput
+          label={t("item.edit.field.customTextSize.label")}
+          min={0}
+          max={10}
+          step={0.1}
+          defaultValue={1}
+          {...form.getInputProps("customTextSize")}
+        />
+        <NumberInput
+          label={t("item.edit.field.customSpacing.label")}
+          description={t("item.edit.field.customSpacing.description")}
+          min={0}
+          max={10}
+          step={0.1}
+          defaultValue={1}
+          {...form.getInputProps("customSpacing")}
         />
         <Group justify="end">
           <Button onClick={actions.closeModal} variant="subtle" color="gray">

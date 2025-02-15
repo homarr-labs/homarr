@@ -60,6 +60,8 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
         integrationIds: z.array(z.string()),
         advancedOptions: z.object({
           customCssClasses: z.array(z.string()),
+          customTextSize: z.number().min(0).max(10),
+          customSpacing: z.number().min(0).max(10),
         }),
       }),
     ),

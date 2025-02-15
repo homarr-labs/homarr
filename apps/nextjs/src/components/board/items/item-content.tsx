@@ -35,8 +35,9 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
       styles={{
         root: {
           "--opacity": board.opacity / 100,
-          containerType: "size",
           overflow: item.kind === "iframe" ? "hidden" : undefined,
+          "--custom-text-size-scale": item.advancedOptions.customTextSize,
+          "--custom-spacing-scale": item.advancedOptions.customSpacing,
         },
       }}
       p={0}
