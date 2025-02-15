@@ -322,6 +322,7 @@ export const sections = mysqlTable("section", {
   width: int(),
   height: int(),
   name: text(),
+  options: text().default("{}").notNull(),
   parentSectionId: varchar({ length: 64 }).references((): AnyMySqlColumn => sections.id, {
     onDelete: "cascade",
   }),

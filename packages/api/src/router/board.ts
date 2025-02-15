@@ -510,6 +510,7 @@ export const boardRouter = createTRPCRouter({
                 height: "height" in section ? section.height : null,
                 width: "width" in section ? section.width : null,
                 parentSectionId: "parentSectionId" in section ? section.parentSectionId : null,
+                options: section.kind === "dynamic" ? section.options : "{}",
                 name: "name" in section ? section.name : null,
                 boardId: dbBoard.id,
               })),
@@ -602,6 +603,7 @@ export const boardRouter = createTRPCRouter({
                 width: prev?.kind === "dynamic" && "width" in section ? section.width : null,
                 parentSectionId:
                   prev?.kind === "dynamic" && "parentSectionId" in section ? section.parentSectionId : null,
+                options: prev?.kind === "dynamic" && "options" in section ? section.options : "{}",
                 name: prev?.kind === "category" && "name" in section ? section.name : null,
               })
               .where(eq(sections.id, section.id));
@@ -758,6 +760,7 @@ export const boardRouter = createTRPCRouter({
                 width: prev?.kind === "dynamic" && "width" in section ? section.width : null,
                 parentSectionId:
                   prev?.kind === "dynamic" && "parentSectionId" in section ? section.parentSectionId : null,
+                options: prev?.kind === "dynamic" && "options" in section ? section.options : "{}",
                 name: prev?.kind === "category" && "name" in section ? section.name : null,
               })
               .where(eq(sections.id, section.id))
