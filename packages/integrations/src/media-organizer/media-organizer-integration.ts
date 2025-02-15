@@ -7,11 +7,15 @@ export abstract class MediaOrganizerIntegration extends Integration {
    * We do this to attempt to find the best quality image for the show.
    */
   protected readonly priorities: string[] = [
-    "cover", // Official, perfect aspect ratio
+    "cover", // Official, perfect aspect ratio, best for music
     "poster", // Official, perfect aspect ratio
     "banner", // Official, bad aspect ratio
+    "disc", // Official, second best for music / books
+    "logo", // Official, possibly unrelated
     "fanart", // Unofficial, possibly bad quality
     "screenshot", // Bad aspect ratio, possibly bad quality
-    "clearlogo", // Without background, bad aspect ratio
+    "clearlogo", // Without background, bad aspect ratio,
+    "headshot", // Unrelated
+    "unknown", // Not known, possibly good or bad, better not to choose
   ];
 }
