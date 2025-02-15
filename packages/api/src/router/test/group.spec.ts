@@ -43,6 +43,7 @@ describe("paginated should return a list of groups with pagination", () => {
         [1, 2, 3, 4, 5].map((number) => ({
           id: number.toString(),
           name: `Group ${number}`,
+          position: number,
         })),
       );
 
@@ -66,6 +67,7 @@ describe("paginated should return a list of groups with pagination", () => {
       [1, 2, 3, 4, 5].map((number) => ({
         id: number.toString(),
         name: `Group ${number}`,
+        position: number,
       })),
     );
 
@@ -89,6 +91,7 @@ describe("paginated should return a list of groups with pagination", () => {
     await db.insert(groups).values({
       id: groupId,
       name: "Group",
+      position: 1,
     });
     await db.insert(groupMembers).values({
       groupId,
@@ -123,6 +126,7 @@ describe("paginated should return a list of groups with pagination", () => {
         ["first", "second", "third", "forth", "fifth"].map((key, index) => ({
           id: index.toString(),
           name: key,
+          position: index + 1,
         })),
       );
 
@@ -163,10 +167,12 @@ describe("byId should return group by id including members and permissions", () 
       {
         id: groupId,
         name: "Group",
+        position: 1,
       },
       {
         id: createId(),
         name: "Another group",
+        position: 2,
       },
     ]);
     await db.insert(groupMembers).values({
@@ -202,6 +208,7 @@ describe("byId should return group by id including members and permissions", () 
     await db.insert(groups).values({
       id: "2",
       name: "Group",
+      position: 1,
     });
 
     // Act
@@ -278,6 +285,7 @@ describe("create should create group in database", () => {
     await db.insert(groups).values({
       id: createId(),
       name: similarName,
+      position: 1,
     });
 
     // Act
@@ -314,10 +322,12 @@ describe("update should update name with value that is no duplicate", () => {
       {
         id: groupId,
         name: initialValue,
+        position: 1,
       },
       {
         id: createId(),
         name: "Third",
+        position: 2,
       },
     ]);
 
@@ -347,10 +357,12 @@ describe("update should update name with value that is no duplicate", () => {
       {
         id: groupId,
         name: "Something",
+        position: 1,
       },
       {
         id: createId(),
         name: initialDuplicate,
+        position: 2,
       },
     ]);
 
@@ -373,6 +385,7 @@ describe("update should update name with value that is no duplicate", () => {
     await db.insert(groups).values({
       id: createId(),
       name: "something",
+      position: 1,
     });
 
     // Act
@@ -413,6 +426,7 @@ describe("savePermissions should save permissions for group", () => {
     await db.insert(groups).values({
       id: groupId,
       name: "Group",
+      position: 1,
     });
     await db.insert(groupPermissions).values({
       groupId,
@@ -442,6 +456,7 @@ describe("savePermissions should save permissions for group", () => {
     await db.insert(groups).values({
       id: createId(),
       name: "Group",
+      position: 1,
     });
 
     // Act
@@ -494,6 +509,7 @@ describe("transferOwnership should transfer ownership of group", () => {
       id: groupId,
       name: "Group",
       ownerId: defaultOwnerId,
+      position: 1,
     });
 
     // Act
@@ -518,6 +534,7 @@ describe("transferOwnership should transfer ownership of group", () => {
     await db.insert(groups).values({
       id: createId(),
       name: "Group",
+      position: 1,
     });
 
     // Act
@@ -559,10 +576,12 @@ describe("deleteGroup should delete group", () => {
       {
         id: groupId,
         name: "Group",
+        position: 1,
       },
       {
         id: createId(),
         name: "Another group",
+        position: 2,
       },
     ]);
 
@@ -586,6 +605,7 @@ describe("deleteGroup should delete group", () => {
     await db.insert(groups).values({
       id: createId(),
       name: "Group",
+      position: 1,
     });
 
     // Act
@@ -638,6 +658,7 @@ describe("addMember should add member to group", () => {
       id: groupId,
       name: "Group",
       ownerId: defaultOwnerId,
+      position: 1,
     });
 
     // Act
@@ -715,6 +736,7 @@ describe("addMember should add member to group", () => {
       id: groupId,
       name: "Group",
       ownerId: defaultOwnerId,
+      position: 1,
     });
 
     // Act
@@ -753,6 +775,7 @@ describe("removeMember should remove member from group", () => {
       id: groupId,
       name: "Group",
       ownerId: defaultOwnerId,
+      position: 1,
     });
     await db.insert(groupMembers).values({
       groupId,
@@ -833,6 +856,7 @@ describe("removeMember should remove member from group", () => {
       id: groupId,
       name: "Group",
       ownerId: defaultOwnerId,
+      position: 1,
     });
     await db.insert(groupMembers).values({
       groupId,

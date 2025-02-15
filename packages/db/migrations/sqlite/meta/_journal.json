@@ -176,6 +176,13 @@
       "when": 1738961178990,
       "tag": "0024_bitter_scrambler",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "6",
+      "when": 1739468826756,
+      "tag": "0025_add-group-home-board-settings",
+      "breakpoints": true
     }
   ]
 }

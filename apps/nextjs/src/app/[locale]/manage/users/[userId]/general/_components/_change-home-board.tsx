@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Group, Select, Stack } from "@mantine/core";
+import { Button, Group, Stack } from "@mantine/core";
 import type { z } from "zod";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -11,9 +11,12 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
+import type { Board } from "~/app/[locale]/boards/_types";
+import { BoardSelect } from "~/components/board/board-select";
+
 interface ChangeHomeBoardFormProps {
   user: RouterOutputs["user"]["getById"];
-  boardsData: { value: string; label: string }[];
+  boardsData: Pick<Board, "id" | "name" | "logoImageUrl">[];
 }
 
 export const ChangeHomeBoardForm = ({ user, boardsData }: ChangeHomeBoardFormProps) => {
@@ -54,16 +57,18 @@ export const ChangeHomeBoardForm = ({ user, boardsData }: ChangeHomeBoardFormPro
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="md">
-        <Select
+        <BoardSelect
           label={t("management.page.user.setting.general.item.board.type.general")}
+          clearable
+          boards={boardsData}
           w="100%"
-          data={boardsData}
           {...form.getInputProps("homeBoardId")}
         />
-        <Select
+        <BoardSelect
           label={t("management.page.user.setting.general.item.board.type.mobile")}
+          clearable
+          boards={boardsData}
           w="100%"
-          data={boardsData}
           {...form.getInputProps("mobileHomeBoardId")}
         />
 
