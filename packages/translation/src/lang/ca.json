@@ -401,21 +401,21 @@
         "title": "",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Veure registres",
+            "description": "Permet que els membres visualitzin els registres"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Motors de cerca",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Crea motors de cerca",
+            "description": "Permet que els membres crein motors de cerca"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modifica tots els motors de cerca",
+            "description": "Permet que els membres modifiquin tots els motors de cerca"
           },
           "full-all": {
             "label": "",

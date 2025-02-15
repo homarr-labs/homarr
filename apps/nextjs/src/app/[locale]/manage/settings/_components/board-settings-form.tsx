@@ -1,13 +1,12 @@
 "use client";
 
-import { Group, Switch, Text } from "@mantine/core";
-import { IconLayoutDashboard } from "@tabler/icons-react";
+import { Switch, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import type { ServerSettings } from "@homarr/server-settings";
 import { useScopedI18n } from "@homarr/translation/client";
-import { SelectWithCustomItems } from "@homarr/ui";
 
+import { BoardSelect } from "~/components/board/board-select";
 import { CommonSettingsForm } from "./common-form";
 
 export const BoardSettingsForm = ({ defaultValues }: { defaultValues: ServerSettings["board"] }) => {
@@ -18,42 +17,19 @@ export const BoardSettingsForm = ({ defaultValues }: { defaultValues: ServerSett
     <CommonSettingsForm settingKey="board" defaultValues={defaultValues}>
       {(form) => (
         <>
-          <SelectWithCustomItems
+          <BoardSelect
             label={tBoard("homeBoard.label")}
             description={tBoard("homeBoard.description")}
-            data={selectableBoards.map((board) => ({
-              value: board.id,
-              label: board.name,
-              image: board.logoImageUrl,
-            }))}
-            SelectOption={({ label, image }: { value: string; label: string; image: string | null }) => (
-              <Group>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                {image ? <img width={16} height={16} src={image} alt={label} /> : <IconLayoutDashboard size={16} />}
-                <Text fz="sm" fw={500}>
-                  {label}
-                </Text>
-              </Group>
-            )}
+            clearable
+            boards={selectableBoards}
             {...form.getInputProps("homeBoardId")}
           />
-          <SelectWithCustomItems
+
+          <BoardSelect
             label={tBoard("homeBoard.mobileLabel")}
             description={tBoard("homeBoard.description")}
-            data={selectableBoards.map((board) => ({
-              value: board.id,
-              label: board.name,
-              image: board.logoImageUrl,
-            }))}
-            SelectOption={({ label, image }: { value: string; label: string; image: string | null }) => (
-              <Group>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                {image ? <img width={16} height={16} src={image} alt={label} /> : <IconLayoutDashboard size={16} />}
-                <Text fz="sm" fw={500}>
-                  {label}
-                </Text>
-              </Group>
-            )}
+            clearable
+            boards={selectableBoards}
             {...form.getInputProps("mobileHomeBoardId")}
           />
 

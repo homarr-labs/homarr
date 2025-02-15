@@ -301,6 +301,7 @@ describe("authorizeWithLdapCredentials", () => {
     await db.insert(groups).values({
       id: groupId,
       name: "homarr_example",
+      position: 1,
     });
 
     // Act
