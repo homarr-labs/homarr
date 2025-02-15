@@ -30,7 +30,7 @@ export const BoardDynamicSection = ({ section }: Props) => {
           root: {
             "--opacity": board.opacity / 100,
             overflow: "hidden",
-            borderColor: options.borderColor + " !important",
+            borderColor: options.borderColor ? `${options.borderColor} !important` : undefined,
           },
         }}
         p={0}
