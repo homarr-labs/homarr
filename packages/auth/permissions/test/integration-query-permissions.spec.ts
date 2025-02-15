@@ -272,7 +272,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
       },
     ];
     await db.insert(boards).values(createMockBoard({ id: "1" }));
-    await db.insert(groups).values({ id: "1", name: "" });
+    await db.insert(groups).values({ id: "1", name: "", position: 1 });
     await db.insert(groupMembers).values({ userId: session.user.id, groupId: "1" });
     await db.insert(boardGroupPermissions).values({ groupId: "1", boardId: "1", permission: "view" });
 
@@ -325,7 +325,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
       },
     ];
     await db.insert(boards).values(createMockBoard({ id: "1" }));
-    await db.insert(groups).values({ id: "1", name: "" });
+    await db.insert(groups).values({ id: "1", name: "", position: 1 });
     await db.insert(groupMembers).values({ userId: session.user.id, groupId: "1" });
     await db.insert(boardGroupPermissions).values({ groupId: "1", boardId: "1", permission: "view" });
 
@@ -379,7 +379,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
     ];
     await db.insert(boards).values(createMockBoard({ id: "1" }));
     await db.insert(boards).values(createMockBoard({ id: "2" }));
-    await db.insert(groups).values({ id: "1", name: "" });
+    await db.insert(groups).values({ id: "1", name: "", position: 1 });
     await db.insert(groupMembers).values({ userId: session.user.id, groupId: "1" });
     await db.insert(boardGroupPermissions).values({ groupId: "1", boardId: "2", permission: "view" });
     await db.insert(boardUserPermissions).values({ userId: session.user.id, boardId: "1", permission: "view" });

@@ -2,7 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import type { Database } from "@homarr/db";
-import { and, createId, eq, like, not, sql } from "@homarr/db";
+import { and, createId, eq, handleTransactionsAsync, like, not, sql } from "@homarr/db";
+import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
 import { validation } from "@homarr/validation";
@@ -12,6 +13,30 @@ import { throwIfCredentialsDisabled } from "./invite/checks";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
 export const groupRouter = createTRPCRouter({
+  getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
+    const dbGroups = await ctx.db.query.groups.findMany({
+      with: {
+        members: {
+          with: {
+            user: {
+              columns: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return dbGroups.map((group) => ({
+      ...group,
+      members: group.members.map((member) => member.user),
+    }));
+  }),
+
   getPaginated: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(validation.common.paginated)
@@ -153,10 +178,13 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await checkSimilarNameAndThrowAsync(ctx.db, input.name);
 
+      const maxPosition = await getMaxGroupPositionAsync(ctx.db);
+
       const groupId = createId();
       await ctx.db.insert(groups).values({
         id: groupId,
         name: input.name,
+        position: maxPosition + 1,
       });
 
       await ctx.db.insert(groupPermissions).values({
@@ -172,10 +200,13 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       await checkSimilarNameAndThrowAsync(ctx.db, input.name);
 
+      const maxPosition = await getMaxGroupPositionAsync(ctx.db);
+
       const id = createId();
       await ctx.db.insert(groups).values({
         id,
         name: input.name,
+        position: maxPosition + 1,
         ownerId: ctx.session.user.id,
       });
 
@@ -196,6 +227,43 @@ export const groupRouter = createTRPCRouter({
           name: input.name,
         })
         .where(eq(groups.id, input.id));
+    }),
+  savePartialSettings: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(validation.group.savePartialSettings)
+    .mutation(async ({ input, ctx }) => {
+      await throwIfGroupNotFoundAsync(ctx.db, input.id);
+
+      await ctx.db
+        .update(groups)
+        .set({
+          homeBoardId: input.settings.homeBoardId,
+          mobileHomeBoardId: input.settings.mobileHomeBoardId,
+        })
+        .where(eq(groups.id, input.id));
+    }),
+  savePositions: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(validation.group.savePositions)
+    .mutation(async ({ input, ctx }) => {
+      const positions = input.positions.map((id, index) => ({ id, position: index + 1 }));
+
+      await handleTransactionsAsync(ctx.db, {
+        handleAsync: async (db, schema) => {
+          await db.transaction(async (trx) => {
+            for (const { id, position } of positions) {
+              await trx.update(schema.groups).set({ position }).where(eq(groups.id, id));
+            }
+          });
+        },
+        handleSync: (db) => {
+          db.transaction((trx) => {
+            for (const { id, position } of positions) {
+              trx.update(groups).set({ position }).where(eq(groups.id, id)).run();
+            }
+          });
+        },
+      });
     }),
   savePermissions: permissionRequiredProcedure
     .requiresPermission("admin")
