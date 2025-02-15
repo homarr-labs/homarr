@@ -1,9 +1,12 @@
 import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
+dayjs.extend(duration);
+
 dayjs.updateLocale("en", {
   relativeTime: {
     future: "in %s",
@@ -36,6 +39,10 @@ export class Stopwatch {
       return `${Math.floor(difference)} ms`;
     }
     return dayjs().millisecond(this.startTime).fromNow(true);
+  }
+
+  getElapsedInMilliseconds() {
+    return performance.now() - this.startTime;
   }
 
   reset() {

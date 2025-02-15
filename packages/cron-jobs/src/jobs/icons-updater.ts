@@ -11,6 +11,7 @@ import { createCronJob } from "../lib";
 
 export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
   runOnStart: true,
+  expectedMaximumDurationInMillis: 10 * 1000,
 }).withCallback(async () => {
   logger.info("Updating icon repository cache...");
   const stopWatch = new Stopwatch();
