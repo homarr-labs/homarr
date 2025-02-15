@@ -373,6 +373,7 @@ export const sections = sqliteTable("section", {
   xOffset: int(),
   yOffset: int(),
   name: text(),
+  options: text().default("{}").notNull(),
 });
 
 export const sectionCollapseStates = sqliteTable(

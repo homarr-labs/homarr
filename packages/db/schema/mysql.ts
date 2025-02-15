@@ -388,6 +388,7 @@ export const sections = mysqlTable("section", {
   xOffset: int(),
   yOffset: int(),
   name: text(),
+  options: text().default("{}").notNull(),
 });
 
 export const sectionCollapseStates = mysqlTable(

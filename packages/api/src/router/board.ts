@@ -736,6 +736,7 @@ export const boardRouter = createTRPCRouter({
                 kind: section.kind,
                 yOffset: section.kind !== "dynamic" ? section.yOffset : null,
                 xOffset: section.kind === "dynamic" ? null : 0,
+                options: section.kind === "dynamic" ? section.options : "{}",
                 name: "name" in section ? section.name : null,
                 boardId: dbBoard.id,
               })),
@@ -861,6 +862,7 @@ export const boardRouter = createTRPCRouter({
               .set({
                 yOffset: prev?.kind !== "dynamic" && "yOffset" in section ? section.yOffset : null,
                 xOffset: prev?.kind !== "dynamic" && "yOffset" in section ? 0 : null,
+                options: prev?.kind === "dynamic" && "options" in section ? section.options : "{}",
                 name: prev?.kind === "category" && "name" in section ? section.name : null,
               })
               .where(eq(schema.sections.id, section.id));
@@ -1069,6 +1071,7 @@ export const boardRouter = createTRPCRouter({
               .set({
                 yOffset: prev?.kind !== "dynamic" && "yOffset" in section ? section.yOffset : null,
                 xOffset: prev?.kind !== "dynamic" && "yOffset" in section ? 0 : null,
+                options: prev?.kind === "dynamic" && "options" in section ? section.options : "{}",
                 name: prev?.kind === "category" && "name" in section ? section.name : null,
               })
               .where(eq(sections.id, section.id))

@@ -11,9 +11,15 @@ interface Props {
   section: DynamicSectionItem;
 }
 
+interface Options {
+  borderColor: string;
+}
+
 export const BoardDynamicSection = ({ section }: Props) => {
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
+  const options = JSON.parse(section.options) as Options;
+  
   return (
     <Box className="grid-stack-item-content">
       <Card
@@ -25,6 +31,7 @@ export const BoardDynamicSection = ({ section }: Props) => {
           root: {
             "--opacity": board.opacity / 100,
             overflow: "hidden",
+            borderColor: options.borderColor + " !important",
           },
         }}
         radius={board.itemRadius}

@@ -1,9 +1,10 @@
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconDotsVertical, IconTrash } from "@tabler/icons-react";
+import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
-import { useConfirmModal } from "@homarr/modals";
+import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { DynamicEditModal } from "@homarr/widgets/modals";
 
 import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
 import { useDynamicSectionActions } from "./dynamic-actions";
@@ -11,11 +12,33 @@ import { useDynamicSectionActions } from "./dynamic-actions";
 export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionItem }) => {
   const t = useI18n();
   const tDynamic = useScopedI18n("section.dynamic");
-  const { removeDynamicSection } = useDynamicSectionActions();
+  const tItem = useScopedI18n("item");
+  const { openModal } = useModalAction(DynamicEditModal);
+  const { updateDynamicSection, removeDynamicSection } = useDynamicSectionActions();
   const { openConfirmModal } = useConfirmModal();
   const [isEditMode] = useEditMode();
 
   if (!isEditMode) return null;
+
+  const openEditModal = () => {
+    openModal({
+      kind: ["dynamic"],
+      value: {
+        options:
+          typeof section.options === "string"
+            ? (JSON.parse(section.options) as Record<string, unknown>)
+            : (section.options as Record<string, unknown>),
+      },
+      onSuccessfulEdit: ({ options }) => {
+        updateDynamicSection({
+          itemId: section.id,
+          newOptions: {
+            ...options,
+          },
+        });
+      },
+    });
+  };
 
   const openRemoveModal = () => {
     openConfirmModal({
@@ -35,6 +58,11 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionIt
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown miw={128}>
+        <Menu.Label>{tItem("menu.label.settings")}</Menu.Label>
+        <Menu.Item leftSection={<IconPencil size={16} />} onClick={openEditModal}>
+          {tItem("action.edit")}
+        </Menu.Item>
+        <Menu.Divider />
         <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
         <Menu.Item c="red.6" leftSection={<IconTrash size={16} />} onClick={openRemoveModal}>
           {tDynamic("action.remove")}

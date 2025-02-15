@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { useUpdateBoard } from "@homarr/boards/updater";
 
 import { addDynamicSectionCallback } from "./actions/add-dynamic-section";
+import { updateDynamicSectionCallback } from "./actions/update-dynamic-section";
 import type { RemoveDynamicSectionInput } from "./actions/remove-dynamic-section";
 import { removeDynamicSectionCallback } from "./actions/remove-dynamic-section";
 
@@ -13,6 +14,11 @@ export const useDynamicSectionActions = () => {
     updateBoard(addDynamicSectionCallback());
   }, [updateBoard]);
 
+  const updateDynamicSection = useCallback(() => {
+    updateBoard(updateDynamicSectionCallback());
+  }, [updateBoard],
+  );
+
   const removeDynamicSection = useCallback(
     (input: RemoveDynamicSectionInput) => {
       updateBoard(removeDynamicSectionCallback(input));
@@ -22,6 +28,7 @@ export const useDynamicSectionActions = () => {
 
   return {
     addDynamicSection,
+    updateDynamicSection,
     removeDynamicSection,
   };
 };
