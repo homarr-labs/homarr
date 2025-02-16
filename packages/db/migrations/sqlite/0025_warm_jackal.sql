@@ -1,1 +1,1 @@
-ALTER TABLE `section` ADD `options` text DEFAULT '{}' NOT NULL;
+ALTER TABLE `section` ADD `options` text DEFAULT '{"json": {}}' NOT NULL;
