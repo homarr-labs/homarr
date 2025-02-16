@@ -61,7 +61,7 @@ const emptySectionSchema = z.object({
 const dynamicSectionSchema = z.object({
   id: z.string(),
   kind: z.literal("dynamic"),
-  options: z.string().default("{}"),
+  options: z.string().default('{"json": {}}'),
   layouts: z.array(
     z.object({
       layoutId: z.string(),

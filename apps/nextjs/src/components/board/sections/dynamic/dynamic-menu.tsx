@@ -1,4 +1,5 @@
 import { ActionIcon, Menu } from "@mantine/core";
+import superjson from "superjson";
 import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
@@ -26,7 +27,7 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionIt
       value: {
         options:
           typeof section.options === "string"
-            ? (JSON.parse(section.options) as Record<string, unknown>)
+            ? (superjson.parse(section.options))
             : (section.options as Record<string, unknown>),
       },
       onSuccessfulEdit: ({ options }) => {

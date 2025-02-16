@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import superjson from "superjson";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
 

@@ -388,7 +388,7 @@ export const sections = mysqlTable("section", {
   xOffset: int(),
   yOffset: int(),
   name: text(),
-  options: text().default("{}").notNull(),
+  options: text().default('{"json": {}}').notNull(), // empty superjson object
 });
 
 export const sectionCollapseStates = mysqlTable(
