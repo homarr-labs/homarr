@@ -60,7 +60,6 @@ export const DynamicEditModal = createModal<ModalProps>(({ actions, innerProps }
     </form>
   );
 }).withOptions({
-  keepMounted: true,
   defaultTitle(t) {
     return t("item.edit.title");
   },
