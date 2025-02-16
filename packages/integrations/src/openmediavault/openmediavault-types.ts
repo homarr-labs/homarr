@@ -25,7 +25,7 @@ export const fileSystemSchema = z.object({
     z.object({
       devicename: z.string(),
       used: z.string(),
-      available: z.string(),
+      available: z.string().or(z.number()),
       percentage: z.number(),
     }),
   ),

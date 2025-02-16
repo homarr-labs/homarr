@@ -67,7 +67,7 @@ export class OpenMediaVaultIntegration extends Integration {
     const fileSystem = fileSystemResult.data.response.map((fileSystem) => ({
       deviceName: fileSystem.devicename,
       used: fileSystem.used,
-      available: fileSystem.available,
+      available: fileSystem.available.toString(),
       percentage: fileSystem.percentage,
     }));
 
