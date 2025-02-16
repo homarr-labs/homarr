@@ -1,9 +1,7 @@
 {
   "extends": "@homarr/tsconfig/base.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
-    "typeRoots": ["node_modules/@types", "node_modules/@homarr/ui/src/theme"],
-    "types": ["theme.other"]
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
   "include": ["*.ts", "src", "*.tsx"],
   "exclude": ["node_modules"]

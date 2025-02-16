@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Suspense } from "react";
-import { Flex, Text, Tooltip, UnstyledButton, useMantineTheme } from "@mantine/core";
+import { Flex, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconLoader } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -20,7 +20,6 @@ import { PingIndicator } from "./ping/ping-indicator";
 
 export default function AppWidget({ options, isEditMode }: WidgetComponentProps<"app">) {
   const t = useI18n();
-  const theme = useMantineTheme();
   const settings = useSettings();
   const board = useRequiredBoard();
   const [app] = clientApi.app.byId.useSuspenseQuery(
@@ -86,7 +85,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
           )}
           <MaskedOrNormalImage
             imageUrl={app.iconUrl}
-            hasColor={theme.other.hasIconColor}
+            hasColor={board.iconColor !== null}
             alt={app.name}
             className={combineClasses(classes.appIcon, "app-icon")}
             style={{

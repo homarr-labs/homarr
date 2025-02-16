@@ -24,9 +24,6 @@ export const BoardMantineProvider = ({
     },
     primaryColor: "primaryColor",
     autoContrast: true,
-    other: {
-      hasIconColor: board.iconColor !== null,
-    },
   });
 
   return (

@@ -1,21 +1,10 @@
 "use client";
 
-import {
-  Anchor,
-  Box,
-  Card,
-  Divider,
-  Flex,
-  Group,
-  Stack,
-  Text,
-  Title,
-  UnstyledButton,
-  useMantineTheme,
-} from "@mantine/core";
+import { Anchor, Box, Card, Divider, Flex, Group, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
@@ -23,7 +12,7 @@ import type { WidgetComponentProps } from "../definition";
 import classes from "./bookmark.module.css";
 
 export default function BookmarksWidget({ options, width, height, itemId }: WidgetComponentProps<"bookmarks">) {
-  const theme = useMantineTheme();
+  const board = useRequiredBoard();
   const [data] = clientApi.app.byIds.useSuspenseQuery(options.items, {
     select(data) {
       return data.sort((appA, appB) => options.items.indexOf(appA.id) - options.items.indexOf(appB.id));
@@ -64,7 +53,7 @@ export default function BookmarksWidget({ options, width, height, itemId }: Widg
           hideIcon={options.hideIcon}
           hideHostname={options.hideHostname}
           openNewTab={options.openNewTab}
-          hasIconColor={theme.other.hasIconColor}
+          hasIconColor={board.iconColor !== null}
         />
       )}
       {options.layout !== "grid" && (
@@ -74,7 +63,7 @@ export default function BookmarksWidget({ options, width, height, itemId }: Widg
           hideIcon={options.hideIcon}
           hideHostname={options.hideHostname}
           openNewTab={options.openNewTab}
-          hasIconColor={theme.other.hasIconColor}
+          hasIconColor={board.iconColor !== null}
         />
       )}
     </Stack>

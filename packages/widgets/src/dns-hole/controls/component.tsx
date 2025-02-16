@@ -3,25 +3,14 @@
 import "../../widgets-common.css";
 
 import { useState } from "react";
-import {
-  ActionIcon,
-  Badge,
-  Button,
-  Card,
-  Flex,
-  ScrollArea,
-  Stack,
-  Text,
-  Tooltip,
-  UnstyledButton,
-  useMantineTheme,
-} from "@mantine/core";
+import { ActionIcon, Badge, Button, Card, Flex, ScrollArea, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCircleFilled, IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { useIntegrationConnected } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import type { TranslationFunction } from "@homarr/translation";
@@ -40,7 +29,7 @@ export default function DnsHoleControlsWidget({
   integrationIds,
   isEditMode,
 }: WidgetComponentProps<typeof widgetKind>) {
-  const theme = useMantineTheme();
+  const board = useRequiredBoard();
   // DnsHole integrations with interaction permissions
   const integrationsWithInteractions = useIntegrationsWithInteractAccess()
     .map(({ id }) => id)
@@ -277,7 +266,7 @@ export default function DnsHoleControlsWidget({
               setSelectedIntegrationIds={setSelectedIntegrationIds}
               open={open}
               t={t}
-              hasIconColor={theme.other.hasIconColor}
+              hasIconColor={board.iconColor !== null}
             />
           ))}
         </Stack>
