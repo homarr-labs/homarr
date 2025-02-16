@@ -22,9 +22,9 @@ export const createBoardInsertCollection = (
     "apps",
     "boards",
     "layouts",
-    "layoutItemSections",
     "sections",
     "items",
+    "layoutItemSections",
   ]);
   logger.info("Preparing boards for insert collection");
 
