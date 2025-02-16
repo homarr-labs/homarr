@@ -308,7 +308,7 @@ export const sections = sqliteTable("section", {
   width: int(),
   height: int(),
   name: text(),
-  options: text().default("{}").notNull(),
+    options: text().default('{"json": {}}').notNull(), // empty superjson object
   parentSectionId: text().references((): AnySQLiteColumn => sections.id, {
     onDelete: "cascade",
   }),

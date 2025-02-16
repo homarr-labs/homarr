@@ -322,7 +322,7 @@ export const sections = mysqlTable("section", {
   width: int(),
   height: int(),
   name: text(),
-  options: text().default("{}").notNull(),
+  options: text().default('{"json": {}}').notNull(), // empty superjson object
   parentSectionId: varchar({ length: 64 }).references((): AnyMySqlColumn => sections.id, {
     onDelete: "cascade",
   }),

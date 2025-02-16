@@ -1,4 +1,5 @@
 import { Box, Card } from "@mantine/core";
+import superjson from "superjson";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 
@@ -11,13 +12,9 @@ interface Props {
   section: DynamicSection;
 }
 
-interface Options {
-  borderColor: string;
-}
-
 export const BoardDynamicSection = ({ section }: Props) => {
   const board = useRequiredBoard();
-  const options = JSON.parse(section.options) as Options;
+  const options = superjson.parse(section.options);
 
   return (
     <Box className="grid-stack-item-content">
