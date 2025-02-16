@@ -183,6 +183,13 @@
       "when": 1739468826756,
       "tag": "0025_add-group-home-board-settings",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "6",
+      "when": 1739740826991,
+      "tag": "0026_friendly_quentin_quire",
+      "breakpoints": true
     }
   ]
 }
