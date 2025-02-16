@@ -305,7 +305,15 @@
     "search": "Знайти групу",
     "field": {
       "name": "Ім’я",
-      "members": "Учасники"
+      "members": "Учасники",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Виберіть групу",
         "notFound": "Груп не знайдено"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Небезпечна зона",
     "noResults": "Результатів не знайдено",
+    "unsavedChanges": "",
     "preview": {
       "show": "Показати попередній перегляд",
       "hide": "Приховати попередній перегляд"
@@ -2413,6 +2450,13 @@
             "owner": "Власник",
             "ownerOfGroup": "Власник цієї групи",
             "ownerOfGroupDeleted": "Власника цієї групи видалено. Наразі не має власника."
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "Учасники",

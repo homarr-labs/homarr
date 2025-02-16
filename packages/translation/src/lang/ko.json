@@ -305,7 +305,15 @@
     "search": "",
     "field": {
       "name": "이름",
-      "members": ""
+      "members": "",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "",
         "notFound": ""
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "위험한 설정",
     "noResults": "결과를 찾을 수 없습니다.",
+    "unsavedChanges": "",
     "preview": {
       "show": "",
       "hide": ""
@@ -2413,6 +2450,13 @@
             "owner": "",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "",
