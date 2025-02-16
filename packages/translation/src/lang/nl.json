@@ -305,7 +305,15 @@
     "search": "Vind een groep",
     "field": {
       "name": "Naam",
-      "members": "Leden"
+      "members": "Leden",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Groep selecteren",
         "notFound": "Geen groep gevonden"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Gevarenzone",
     "noResults": "Geen resultaten gevonden",
+    "unsavedChanges": "",
     "preview": {
       "show": "Voorbeeld weergeven",
       "hide": "Voorbeeld verbergen"
@@ -1048,7 +1085,7 @@
           "label": "Beschrijving tooltip weergeven"
         },
         "pingEnabled": {
-          "label": "Eenvoudige ping inschakelen"
+          "label": "Statuscontrole inschakelen"
         }
       },
       "error": {
@@ -2413,6 +2450,13 @@
             "owner": "Eigenaar",
             "ownerOfGroup": "Eigenaar van deze groep",
             "ownerOfGroupDeleted": "De eigenaar van deze groep is verwijderd. Het heeft momenteel geen eigenaar."
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "Leden",

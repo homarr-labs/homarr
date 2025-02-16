@@ -305,7 +305,15 @@
     "search": "Vyhľadať skupinu",
     "field": {
       "name": "Názov",
-      "members": "Členovia"
+      "members": "Členovia",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Vybrať skupinu",
         "notFound": "Nenašla sa žiadna skupina"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Nebezpečná zóna",
     "noResults": "Nenašli sa žiadne výsledky",
+    "unsavedChanges": "",
     "preview": {
       "show": "Zobraziť náhľad",
       "hide": "Skryť náhľad"
@@ -2413,6 +2450,13 @@
             "owner": "Vlastník",
             "ownerOfGroup": "Vlastník tejto skupiny",
             "ownerOfGroupDeleted": "Vlastník tejto skupiny bol odstránený. V súčasnosti nemá žiadneho vlastníka."
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "Členovia",

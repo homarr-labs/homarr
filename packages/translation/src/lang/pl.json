@@ -305,7 +305,15 @@
     "search": "Znajdź grupę",
     "field": {
       "name": "Nazwa",
-      "members": "Członkowie"
+      "members": "Członkowie",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Wybierz grupę",
         "notFound": "Nie znaleziono grupy"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Strefa zagrożenia",
     "noResults": "Nie znaleziono żadnych wyników",
+    "unsavedChanges": "",
     "preview": {
       "show": "Pokaż podgląd",
       "hide": "Ukryj podgląd"
@@ -2413,6 +2450,13 @@
             "owner": "Właściciel",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "",
