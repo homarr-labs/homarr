@@ -7,15 +7,12 @@ import Transport from "winston-transport";
 // of the base functionality and `.exceptions.handle()`.
 //
 export class RedisTransport extends Transport {
-  /** @type {Redis} */
-  redis;
+  private redis: Redis | null = null;
 
   /**
    * Log the info to the Redis channel
-   * @param {{ message: string; timestamp: string; level: string; }} info
-   * @param {() => void} callback
    */
-  log(info, callback) {
+  log(info: { message: string; timestamp: string; level: string }, callback: () => void) {
     setImmediate(() => {
       this.emit("logged", info);
     });

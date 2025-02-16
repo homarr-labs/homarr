@@ -5,11 +5,7 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./src/index.d.ts",
-      "default": "./src/index.mjs"
-    },
-    "./override": "./src/override.cjs"
+    ".": "./src/index.ts"
   },
   "typesVersions": {
     "*": {
@@ -26,9 +22,11 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
+    "@homarr/env": "workspace:^0.1.0",
     "ioredis": "5.5.0",
     "superjson": "2.2.2",
-    "winston": "3.17.0"
+    "winston": "3.17.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

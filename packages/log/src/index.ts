@@ -1,12 +1,14 @@
+import type { transport as Transport } from "winston";
 import winston, { format, transports } from "winston";
 
-import { RedisTransport } from "./redis-transport.mjs";
+import { env } from "./env";
+import { RedisTransport } from "./redis-transport";
 
 const logMessageFormat = format.printf(({ level, message, timestamp }) => {
-  return `${timestamp} ${level}: ${message}`;
+  return `${timestamp as string} ${level}: ${message as string}`;
 });
 
-const logTransports = [new transports.Console()];
+const logTransports: Transport[] = [new transports.Console()];
 
 // Only add the Redis transport if we are not in CI
 if (!(Boolean(process.env.CI) || Boolean(process.env.DISABLE_REDIS_LOGS))) {
@@ -16,7 +18,7 @@ if (!(Boolean(process.env.CI) || Boolean(process.env.DISABLE_REDIS_LOGS))) {
 const logger = winston.createLogger({
   format: format.combine(format.colorize(), format.timestamp(), logMessageFormat),
   transports: logTransports,
-  level: process.env.LOG_LEVEL || "info",
+  level: env.LOG_LEVEL,
 });
 
 export { logger };
