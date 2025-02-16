@@ -5,7 +5,7 @@ import { z } from "zod";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { DeviceType } from "@homarr/common/server";
 import type { Database, InferInsertModel, InferSelectModel, SQL } from "@homarr/db";
-import { and, createId, eq, handleTransactionsAsync, inArray, like, or } from "@homarr/db";
+import { and, asc, createId, eq, handleTransactionsAsync, inArray, isNull, like, not, or } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
   boardGroupPermissions,
@@ -13,6 +13,7 @@ import {
   boardUserPermissions,
   groupMembers,
   groupPermissions,
+  groups,
   integrationGroupPermissions,
   integrationItems,
   integrationUserPermissions,
@@ -22,7 +23,7 @@ import {
   users,
 } from "@homarr/db/schema";
 import type { WidgetKind } from "@homarr/definitions";
-import { getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
+import { everyoneGroup, getPermissionsWithChildren, getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
 import { importOldmarrAsync } from "@homarr/old-import";
 import { importJsonFileSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
@@ -57,6 +58,37 @@ export const boardRouter = createTRPCRouter({
       where: eq(boards.isPublic, true),
     });
   }),
+  getBoardsForGroup: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ groupId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const dbEveryoneAndCurrentGroup = await ctx.db.query.groups.findMany({
+        where: or(eq(groups.name, everyoneGroup), eq(groups.id, input.groupId)),
+        with: {
+          boardPermissions: true,
+          permissions: true,
+        },
+      });
+
+      const distinctPermissions = new Set(
+        dbEveryoneAndCurrentGroup.flatMap((group) => group.permissions.map(({ permission }) => permission)),
+      );
+      const canViewAllBoards = getPermissionsWithChildren([...distinctPermissions]).includes("board-view-all");
+
+      const boardIds = dbEveryoneAndCurrentGroup.flatMap((group) =>
+        group.boardPermissions.map(({ boardId }) => boardId),
+      );
+      const boardWhere = canViewAllBoards ? undefined : or(eq(boards.isPublic, true), inArray(boards.id, boardIds));
+
+      return await ctx.db.query.boards.findMany({
+        columns: {
+          id: true,
+          name: true,
+          logoImageUrl: true,
+        },
+        where: boardWhere,
+      });
+    }),
   getAllBoards: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
     const permissionsOfCurrentUserWhenPresent = await ctx.db.query.boardUserPermissions.findMany({
@@ -89,6 +121,7 @@ export const boardRouter = createTRPCRouter({
       columns: {
         id: true,
         name: true,
+        logoImageUrl: true,
         isPublic: true,
       },
       with: {
@@ -976,9 +1009,13 @@ export const boardRouter = createTRPCRouter({
  * For an example of a user with deviceType = 'mobile' it would go through the following order:
  * 1. user.mobileHomeBoardId
  * 2. user.homeBoardId
- * 3. serverSettings.mobileHomeBoardId
- * 4. serverSettings.homeBoardId
- * 5. show NOT_FOUND error
+ * 3. group.mobileHomeBoardId of the lowest positions group
+ * 4. group.homeBoardId of the lowest positions group
+ * 5. everyoneGroup.mobileHomeBoardId
+ * 6. everyoneGroup.homeBoardId
+ * 7. serverSettings.mobileHomeBoardId
+ * 8. serverSettings.homeBoardId
+ * 9. show NOT_FOUND error
  */
 const getHomeIdBoardAsync = async (
   db: Database,
@@ -986,12 +1023,46 @@ const getHomeIdBoardAsync = async (
   deviceType: DeviceType,
 ) => {
   const settingKey = deviceType === "mobile" ? "mobileHomeBoardId" : "homeBoardId";
-  if (user?.[settingKey] || user?.homeBoardId) {
-    return user[settingKey] ?? user.homeBoardId;
-  } else {
+
+  if (!user) {
     const boardSettings = await getServerSettingByKeyAsync(db, "board");
     return boardSettings[settingKey] ?? boardSettings.homeBoardId;
   }
+
+  if (user[settingKey]) return user[settingKey];
+  if (user.homeBoardId) return user.homeBoardId;
+
+  const lowestGroupExceptEveryone = await db
+    .select({
+      homeBoardId: groups.homeBoardId,
+      mobileHomeBoardId: groups.mobileHomeBoardId,
+    })
+    .from(groups)
+    .leftJoin(groupMembers, eq(groups.id, groupMembers.groupId))
+    .where(
+      and(
+        eq(groupMembers.userId, user.id),
+        not(eq(groups.name, everyoneGroup)),
+        not(isNull(groups[settingKey])),
+        not(isNull(groups.homeBoardId)),
+      ),
+    )
+    .orderBy(asc(groups.position))
+    .limit(1)
+    .then((result) => result[0]);
+
+  if (lowestGroupExceptEveryone?.[settingKey]) return lowestGroupExceptEveryone[settingKey];
+  if (lowestGroupExceptEveryone?.homeBoardId) return lowestGroupExceptEveryone.homeBoardId;
+
+  const dbEveryoneGroup = await db.query.groups.findFirst({
+    where: eq(groups.name, everyoneGroup),
+  });
+
+  if (dbEveryoneGroup?.[settingKey]) return dbEveryoneGroup[settingKey];
+  if (dbEveryoneGroup?.homeBoardId) return dbEveryoneGroup.homeBoardId;
+
+  const boardSettings = await getServerSettingByKeyAsync(db, "board");
+  return boardSettings[settingKey] ?? boardSettings.homeBoardId;
 };
 
 const noBoardWithSimilarNameAsync = async (db: Database, name: string, ignoredIds: string[] = []) => {

@@ -22,6 +22,7 @@ export class OnboardingActions {
       await this.db.insert(sqliteSchema.groups).values({
         id: createId(),
         name: input.group,
+        position: 1,
       });
     }
   }

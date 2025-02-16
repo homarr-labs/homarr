@@ -95,8 +95,9 @@ export default async function EditUserPage(props: Props) {
         <ChangeHomeBoardForm
           user={user}
           boardsData={boards.map((board) => ({
-            value: board.id,
-            label: board.name,
+            id: board.id,
+            name: board.name,
+            logoImageUrl: board.logoImageUrl,
           }))}
         />
       </Stack>

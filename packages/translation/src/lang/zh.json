@@ -305,7 +305,15 @@
     "search": "尋找用戶組",
     "field": {
       "name": "名稱",
-      "members": "成員"
+      "members": "成員",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "選擇用戶組",
         "notFound": "用戶組不存在"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "危險區域",
     "noResults": "未找到結果",
+    "unsavedChanges": "",
     "preview": {
       "show": "顯示預覽",
       "hide": "隱藏預覽"
@@ -2413,6 +2450,13 @@
             "owner": "所有者",
             "ownerOfGroup": "該用戶組的所有者",
             "ownerOfGroupDeleted": "此用戶組的所有者已被移除，目前沒有所有者"
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "成員",

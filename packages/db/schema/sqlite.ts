@@ -133,6 +133,13 @@ export const groups = sqliteTable("group", {
   ownerId: text().references(() => users.id, {
     onDelete: "set null",
   }),
+  homeBoardId: text().references(() => boards.id, {
+    onDelete: "set null",
+  }),
+  mobileHomeBoardId: text().references(() => boards.id, {
+    onDelete: "set null",
+  }),
+  position: int().notNull(),
 });
 
 export const groupPermissions = sqliteTable("groupPermission", {
@@ -487,6 +494,16 @@ export const groupRelations = relations(groups, ({ one, many }) => ({
     fields: [groups.ownerId],
     references: [users.id],
   }),
+  homeBoard: one(boards, {
+    fields: [groups.homeBoardId],
+    references: [boards.id],
+    relationName: "groupRelations__board__homeBoardId",
+  }),
+  mobileHomeBoard: one(boards, {
+    fields: [groups.mobileHomeBoardId],
+    references: [boards.id],
+    relationName: "groupRelations__board__mobileHomeBoardId",
+  }),
 }));
 
 export const groupPermissionRelations = relations(groupPermissions, ({ one }) => ({
@@ -562,6 +579,12 @@ export const boardRelations = relations(boards, ({ many, one }) => ({
   }),
   userPermissions: many(boardUserPermissions),
   groupPermissions: many(boardGroupPermissions),
+  groupHomes: many(groups, {
+    relationName: "groupRelations__board__homeBoardId",
+  }),
+  mobileHomeBoard: many(groups, {
+    relationName: "groupRelations__board__mobileHomeBoardId",
+  }),
 }));
 
 export const sectionRelations = relations(sections, ({ many, one }) => ({

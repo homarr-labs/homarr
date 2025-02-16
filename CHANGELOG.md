@@ -1,3 +1,29 @@
+## [1.6.0](https://github.com/homarr-labs/homarr/compare/v1.5.0...v1.6.0) (2025-02-14)
+
+### Features
+
+* **lang:** add catalan language ([#2283](https://github.com/homarr-labs/homarr/issues/2283)) ([749b0c6](https://github.com/homarr-labs/homarr/commit/749b0c6ee9dc7802ae10393b90e19bf3c43bf9e0))
+* **settings:** add simple-ping settings ([#2118](https://github.com/homarr-labs/homarr/issues/2118)) ([dff6cb9](https://github.com/homarr-labs/homarr/commit/dff6cb9d31c3884bf811774a7c90dad27ac19691))
+
+### Bug Fixes
+
+* add error handling for available updates ([#2289](https://github.com/homarr-labs/homarr/issues/2289)) ([0502e47](https://github.com/homarr-labs/homarr/commit/0502e477707932db96b25372ddab8263572b389c))
+* add mysql pool with keep-alive to not close the connection ([#2282](https://github.com/homarr-labs/homarr/issues/2282)) ([a38afb0](https://github.com/homarr-labs/homarr/commit/a38afb05d35cf2bdba378be3744f3a8b6c9d38f6))
+* **calendar:** info popover overlap ([#2268](https://github.com/homarr-labs/homarr/issues/2268)) ([584c660](https://github.com/homarr-labs/homarr/commit/584c660906f5ae7e8ab1c88ce9cfbbbbdcdb5145))
+* **deps:** update dependency @ctrl/qbittorrent to ^9.3.0 ([#2310](https://github.com/homarr-labs/homarr/issues/2310)) ([8649fac](https://github.com/homarr-labs/homarr/commit/8649faca7929daff426607f104057fce26edd049))
+* **deps:** update dependency @ctrl/qbittorrent to ^9.4.0 ([#2315](https://github.com/homarr-labs/homarr/issues/2315)) ([4d3cc1d](https://github.com/homarr-labs/homarr/commit/4d3cc1d80698e659a669de7d4bd0d185ad68605e))
+* **deps:** update dependency @extractus/feed-extractor to v7.1.4 ([#2281](https://github.com/homarr-labs/homarr/issues/2281)) ([7edaa48](https://github.com/homarr-labs/homarr/commit/7edaa48fb9bcf48e8b734beec5a8bad003124233))
+* **deps:** update dependency drizzle-orm to ^0.39.3 ([#2295](https://github.com/homarr-labs/homarr/issues/2295)) ([8ec0080](https://github.com/homarr-labs/homarr/commit/8ec0080fca17c530cdd0576ba101299a0f769463))
+* **deps:** update dependency jotai to ^2.12.0 ([#2306](https://github.com/homarr-labs/homarr/issues/2306)) ([fc43da5](https://github.com/homarr-labs/homarr/commit/fc43da59f845934da428bcafd4ec46551ace8a81))
+* **deps:** update dependency sass to ^1.85.0 ([#2326](https://github.com/homarr-labs/homarr/issues/2326)) ([8ee39eb](https://github.com/homarr-labs/homarr/commit/8ee39eb6db89fdeaec0fae7988ffa97280c2f5ab))
+* **deps:** update dependency typescript-eslint to ^8.24.0 ([#2297](https://github.com/homarr-labs/homarr/issues/2297)) ([8371f46](https://github.com/homarr-labs/homarr/commit/8371f46d34ad36fd25f23d91804d3f95439d7012))
+* **deps:** update dependency zod to ^3.24.2 ([#2311](https://github.com/homarr-labs/homarr/issues/2311)) ([379675a](https://github.com/homarr-labs/homarr/commit/379675a901637a1b878595a80d0776d05311218d))
+* **deps:** update mantine monorepo to ^7.16.3 ([#2275](https://github.com/homarr-labs/homarr/issues/2275)) ([42a6814](https://github.com/homarr-labs/homarr/commit/42a68140b1493cc171977d996eea16d876dce60c))
+* **deps:** update nextjs monorepo to ^15.1.7 ([#2302](https://github.com/homarr-labs/homarr/issues/2302)) ([2399967](https://github.com/homarr-labs/homarr/commit/2399967868652436ee6827bce8883c1b4a00af0e))
+* **deps:** update turbo monorepo to ^2.4.1 ([#2296](https://github.com/homarr-labs/homarr/issues/2296)) ([2b9f834](https://github.com/homarr-labs/homarr/commit/2b9f834d9645aaf5f5aa1b8a5f1e48300389ac8b))
+* **deps:** update turbo monorepo to ^2.4.2 ([#2313](https://github.com/homarr-labs/homarr/issues/2313)) ([1045465](https://github.com/homarr-labs/homarr/commit/10454656a286c320a8d3b5ff12a138025d871b20))
+* **users:** edit profile username not lowercase ([#2279](https://github.com/homarr-labs/homarr/issues/2279)) ([b7fd247](https://github.com/homarr-labs/homarr/commit/b7fd2470ee0d85821f79a34e839e62fbab6989c6))
+
 ## [1.5.0](https://github.com/homarr-labs/homarr/compare/v1.4.0...v1.5.0) (2025-02-07)
 
 ### Features

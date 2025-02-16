@@ -94,7 +94,19 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
 
 const readarrCalendarEventImageSchema = z.array(
   z.object({
-    coverType: z.enum(["screenshot", "poster", "banner", "fanart", "clearlogo", "cover"]),
+    // See https://github.com/Readarr/Readarr/blob/e5519d60c969105db2f2ab3a8f1cf61814551bb9/src/NzbDrone.Core/MediaCover/MediaCover.cs#L8-L20
+    coverType: z.enum([
+      "unknown",
+      "poster",
+      "banner",
+      "fanart",
+      "screenshot",
+      "headshot",
+      "cover",
+      "disc",
+      "logo",
+      "clearlogo",
+    ]),
     url: z.string().transform((url) => url.replace(/\?lastWrite=[0-9]+/, "")), // returns a random string, needs to be removed for loading the image
   }),
 );

@@ -305,7 +305,15 @@
     "search": "Finde eine Benutzergruppe",
     "field": {
       "name": "Name",
-      "members": "Mitglieder"
+      "members": "Mitglieder",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Gruppe auswählen",
         "notFound": "Keine Gruppe gefunden"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Gefahrenbereich",
     "noResults": "Die Suche ergab keine Treffer",
+    "unsavedChanges": "",
     "preview": {
       "show": "Vorschau ansehen",
       "hide": "Vorschau ausblenden"
@@ -2413,6 +2450,13 @@
             "owner": "Eigentümer",
             "ownerOfGroup": "Eigentümer dieser Gruppe",
             "ownerOfGroupDeleted": "Der Eigentümer dieser Gruppe wurde gelöscht. Derzeit hat sie keinen Besitzer."
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "Mitglieder",
