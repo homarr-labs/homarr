@@ -14,7 +14,11 @@ const dockerCache = createCacheChannel<{
   containers: (ContainerInfo & { instance: string; iconUrl: string | null; cpuUsage: number; memoryUsage: number })[];
 }>("docker-containers", 5 * 60 * 1000);
 
-const previousStats = new Map<string, { totalUsage: number; systemUsage: number }>();
+const statsCache = createCacheChannel<Map<string, { totalUsage: number; systemUsage: number }>>(
+  "docker-stats",
+  5 * 60 * 1000,
+);
+// const previousStats = new Map<string, { totalUsage: number; systemUsage: number }>();
 
 export const dockerRouter = createTRPCRouter({
   // The first time getContainers runs, there’s no previous CPU usage data, so the percentage will be 0
@@ -29,7 +33,9 @@ export const dockerRouter = createTRPCRouter({
               Promise.all(
                 containers.map(async (container) => {
                   const stats = await instance.getContainer(container.Id).stats({ stream: false });
-                  const prevStats = previousStats.get(container.Id);
+                  const statsData = await statsCache.getAsync();
+                  const prevStats = statsData?.data.get(container.Id);
+                  // const prevStats = previousStats.get(container.Id);
                   const totalUsage = stats.cpu_stats.cpu_usage.total_usage;
                   const systemUsage = stats.cpu_stats.system_cpu_usage;
                   const cpuCount = stats.cpu_stats.online_cpus;
@@ -43,13 +49,16 @@ export const dockerRouter = createTRPCRouter({
                     }
                   }
 
-                  previousStats.set(container.Id, { totalUsage, systemUsage });
+                  // previousStats.set(container.Id, { totalUsage, systemUsage });
+                  const newStats = new Map<string, { totalUsage: number; systemUsage: number }>();
+                  newStats.set(container.Id, { totalUsage, systemUsage });
+                  await statsCache.setAsync(newStats);
 
                   return {
                     ...container,
                     instance: key,
                     cpuUsage: Math.round(cpuPercent * 100) / 100,
-                    memoryUsage: parseFloat((stats.memory_stats.usage / (1024 * 1024)).toFixed(2)),
+                    memoryUsage: stats.memory_stats.usage,
                   };
                 }),
               ),

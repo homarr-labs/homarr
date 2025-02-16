@@ -134,9 +134,7 @@ export default function DockerWidget() {
             variant="transparent"
             color={badgeColor(safeValue(row.original.memoryUsage), row.original.state)}
           >
-            <Text size="6cqmin">
-              {isNaN(safeValue(row.original.memoryUsage)) ? "N/A" : `${row.original.memoryUsage}MiB`}
-            </Text>
+            <Text size="6cqmin">{(safeValue(row.original.memoryUsage) / (1024 * 1024)).toFixed(2)} MiB</Text>
           </Badge>
         );
       },
@@ -216,7 +214,7 @@ export default function DockerWidget() {
     },
   ];
 
-  const { data } = clientApi.widget.docker.getContainers.useQuery();
+  const { data } = clientApi.docker.getContainers.useQuery();
   const relativeTime = useTimeAgo(data?.timestamp ? new Date(data.timestamp) : new Date());
 
   const totalContainers = data?.containers.length ?? 0;

@@ -1,5 +1,4 @@
 import { createTRPCRouter } from "../../trpc";
-import { dockerRouter } from "../docker/docker-router";
 import { appRouter } from "./app";
 import { calendarRouter } from "./calendar";
 import { dnsHoleRouter } from "./dns-hole";
@@ -31,6 +30,5 @@ export const widgetRouter = createTRPCRouter({
   healthMonitoring: healthMonitoringRouter,
   mediaTranscoding: mediaTranscodingRouter,
   minecraft: minecraftRouter,
-  docker: dockerRouter,
   options: optionsRouter,
 });
