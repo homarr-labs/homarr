@@ -305,7 +305,15 @@
     "search": "Finn en gruppe",
     "field": {
       "name": "Navn",
-      "members": "Medlemmer"
+      "members": "Medlemmer",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Velg gruppe",
         "notFound": "Ingen gruppe funnet"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Faresonen",
     "noResults": "Ingen resultater funnet",
+    "unsavedChanges": "",
     "preview": {
       "show": "Vis forhåndsvisning",
       "hide": "Skjul forhåndsvisning"
@@ -2413,6 +2450,13 @@
             "owner": "Eier",
             "ownerOfGroup": "Eier av denne gruppen",
             "ownerOfGroupDeleted": "Eieren av gruppen ble slettet. Den har for øyeblikket ingen eier."
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "Medlemmer",
