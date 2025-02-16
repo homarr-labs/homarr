@@ -305,7 +305,15 @@
     "search": "尋找用戶組",
     "field": {
       "name": "名稱",
-      "members": "成員"
+      "members": "成員",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "選擇用戶組",
         "notFound": "用戶組不存在"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "危險區域",
     "noResults": "未找到結果",
+    "unsavedChanges": "",
     "preview": {
       "show": "顯示預覽",
       "hide": "隱藏預覽"
@@ -2053,8 +2090,8 @@
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "停用應用程式狀態",
+        "description": "停用此面板上所有應用程式的狀態檢查"
       },
       "columnCount": {
         "label": "列數"
@@ -2090,7 +2127,7 @@
           "title": "自定義 CSS html"
         },
         "behavior": {
-          "title": ""
+          "title": "行為"
         },
         "access": {
           "title": "訪問控制",
@@ -2414,6 +2451,13 @@
             "ownerOfGroup": "該用戶組的所有者",
             "ownerOfGroupDeleted": "此用戶組的所有者已被移除，目前沒有所有者"
           },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
+          },
           "members": {
             "title": "成員",
             "search": "尋找成員",
@@ -2485,14 +2529,14 @@
               "description": "只有公開面板可供選擇"
             },
             "status": {
-              "title": "",
+              "title": "應用程式狀態",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "啟用狀態為預設",
+                "description": "新增應用程式時，狀態將預設為啟用"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "強制停用狀態",
+                "description": "所有使用者的應用程式狀態將被停用，且無法使用"
               }
             }
           },

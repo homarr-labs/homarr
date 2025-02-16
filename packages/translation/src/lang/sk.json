@@ -153,10 +153,10 @@
         "label": "Používanie ikon pre pingy"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Predvolený vyhľadávací nástroj"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Otvoriť výsledky vyhľadávania na novej karte"
       }
     },
     "error": {
@@ -305,7 +305,15 @@
     "search": "Vyhľadať skupinu",
     "field": {
       "name": "Názov",
-      "members": "Členovia"
+      "members": "Členovia",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Vybrať skupinu",
         "notFound": "Nenašla sa žiadna skupina"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -741,11 +777,11 @@
           "newLabel": "Nové heslo"
         },
         "tokenId": {
-          "label": "",
+          "label": "Token ID",
           "newLabel": ""
         },
         "realm": {
-          "label": "",
+          "label": "Ríša",
           "newLabel": ""
         }
       }
@@ -793,7 +829,7 @@
         "label": "Skopírovať URL"
       },
       "open": {
-        "label": ""
+        "label": "Otvoriť médiá"
       }
     }
   },
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Nebezpečná zóna",
     "noResults": "Nenašli sa žiadne výsledky",
+    "unsavedChanges": "",
     "preview": {
       "show": "Zobraziť náhľad",
       "hide": "Skryť náhľad"
@@ -915,7 +952,7 @@
           "passwordRequirements": "Heslo nespĺňa požiadavky",
           "boardAlreadyExists": "Doska s týmto názvom už existuje",
           "invalidFileType": "Neplatný typ súboru, očakáva sa {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "Neplatný názov súboru",
           "fileTooLarge": "Súbor je príliš veľký, maximálna veľkosť je {maxSize}",
           "invalidConfiguration": "Neplatná konfigurácia",
           "groupNameTaken": "Názov skupiny je už obsadený"
@@ -1080,13 +1117,13 @@
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "Skryť ikony"
         },
         "hideHostname": {
           "label": ""
         },
         "openNewTab": {
-          "label": ""
+          "label": "Otvoriť na novej karte"
         },
         "items": {
           "label": "Záložky",
@@ -1414,8 +1451,8 @@
       },
       "currentWindSpeed": "",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
+        "sunrise": "Východ slnka",
+        "sunset": "Západ slnka",
         "maxWindSpeed": "",
         "maxWindGusts": ""
       },
@@ -1454,8 +1491,8 @@
       "name": "Monitorovanie stavu systému",
       "description": "Zobrazuje informácie o stave a kondícii vášho systému.",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "Systém",
+        "cluster": "Cluster"
       },
       "option": {
         "fahrenheit": {
@@ -1471,7 +1508,7 @@
           "label": "Zobraziť informácie o súborovom systéme"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Predvolená karta"
         },
         "sectionIndicatorRequirement": {
           "label": ""
@@ -1497,44 +1534,44 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
             "name": ""
           },
           "qemu": {
-            "name": ""
+            "name": "Virtuálne stroje"
           },
           "lxc": {
             "name": ""
           },
           "storage": {
-            "name": ""
+            "name": "Úložisko"
           }
         },
         "popover": {
           "rightSection": {
             "node": "",
             "vmId": "",
-            "plugin": ""
+            "plugin": "Rozšírenie"
           },
           "detail": {
             "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
+            "memory": "Pamäť",
+            "storage": "Úložisko",
+            "uptime": "Doba prevádzky",
             "haState": "",
             "storageType": {
-              "local": "",
+              "local": "Lokálne úložisko",
               "shared": ""
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
+            "name": "Názov",
             "cpu": "",
             "memory": "",
             "node": ""
@@ -2414,6 +2451,13 @@
             "ownerOfGroup": "Vlastník tejto skupiny",
             "ownerOfGroupDeleted": "Vlastník tejto skupiny bol odstránený. V súčasnosti nemá žiadneho vlastníka."
           },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
+          },
           "members": {
             "title": "Členovia",
             "search": "Nájdite člena",
@@ -3268,11 +3312,11 @@
         }
       },
       "remove": {
-        "label": "",
+        "label": "Odstrániť certifikát",
         "confirm": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Certifikát odstránený",
             "message": ""
           },
           "error": {

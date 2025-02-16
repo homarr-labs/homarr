@@ -25,6 +25,7 @@ describe("getCurrentUserPermissions", () => {
     await db.insert(groups).values({
       id: "2",
       name: "test",
+      position: 1,
     });
     await db.insert(groupPermissions).values({
       groupId: "2",
@@ -51,6 +52,7 @@ describe("getCurrentUserPermissions", () => {
     await db.insert(groups).values({
       id: "2",
       name: "test",
+      position: 1,
     });
     await db.insert(groupPermissions).values({
       groupId: "2",
@@ -81,6 +83,7 @@ describe("getCurrentUserPermissions", () => {
     await db.insert(groups).values({
       id: mockId,
       name: "test",
+      position: 1,
     });
     await db.insert(groupMembers).values({
       userId: mockId,

@@ -16,6 +16,10 @@ class WinstonCronJobLogger implements Logger {
   logError(error: unknown) {
     logger.error(error);
   }
+
+  logWarning(message: string) {
+    logger.warn(message);
+  }
 }
 
 export const { createCronJob, createCronJobGroup } = createCronJobFunctions<

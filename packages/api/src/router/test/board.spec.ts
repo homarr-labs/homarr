@@ -205,6 +205,7 @@ describe("getAllBoards should return all boards accessable to the current user",
       await db.insert(groups).values({
         id: groupId,
         name: "group1",
+        position: 1,
       });
 
       await db.insert(groupMembers).values({
@@ -1166,6 +1167,7 @@ describe("getBoardPermissions should return board permissions", () => {
     await db.insert(groups).values({
       id: groupId,
       name: "group1",
+      position: 1,
     });
 
     await db.insert(boardGroupPermissions).values({
@@ -1260,6 +1262,7 @@ describe("saveGroupBoardPermissions should save group board permissions", () => 
       await db.insert(groups).values({
         id: groupId,
         name: "group1",
+        position: 1,
       });
 
       const boardId = createId();

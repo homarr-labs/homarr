@@ -305,7 +305,15 @@
     "search": "Finn en gruppe",
     "field": {
       "name": "Navn",
-      "members": "Medlemmer"
+      "members": "Medlemmer",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Velg gruppe",
         "notFound": "Ingen gruppe funnet"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Faresonen",
     "noResults": "Ingen resultater funnet",
+    "unsavedChanges": "",
     "preview": {
       "show": "Vis forhåndsvisning",
       "hide": "Skjul forhåndsvisning"
@@ -948,7 +985,7 @@
         "moveDown": "Flytt ned",
         "createAbove": "Ny kategori over",
         "createBelow": "Ny kategori under",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "Åpne alle i faner"
       },
       "create": {
         "title": "Ny kategori",
@@ -969,8 +1006,8 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "Åpne alle i faner",
+        "text": "Noen nettlesere kan blokkere åpning av faner av sikkerhetsgrunner. Homarr kunne ikke åpne alle vinduer, fordi nettleseren din blokkerte denne handlingen. Vennligst tillat \"Åpne pop-up vinduer\" og prøv på nytt."
       }
     }
   },
@@ -1200,12 +1237,12 @@
           "description": "Hvordan datoen skal se ut"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Egendefinert tidsformat",
+          "description": "Bruk ISO 8601 til å formatere tid (dette vil overstyre andre alternativer)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Egendefinert dato format",
+          "description": "Bruk ISO 8601 til å formatere datoen (dette vil overstyre andre alternativer)"
         }
       }
     },
@@ -2053,8 +2090,8 @@
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "Deaktiver status for app",
+        "description": "Deaktiverer statussjekk for alle apper på denne tavlen"
       },
       "columnCount": {
         "label": "Antall kolonner"
@@ -2090,7 +2127,7 @@
           "title": "Egendefinert css"
         },
         "behavior": {
-          "title": ""
+          "title": "Adferd"
         },
         "access": {
           "title": "Adgangskontroll",
@@ -2414,6 +2451,13 @@
             "ownerOfGroup": "Eier av denne gruppen",
             "ownerOfGroupDeleted": "Eieren av gruppen ble slettet. Den har for øyeblikket ingen eier."
           },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
+          },
           "members": {
             "title": "Medlemmer",
             "search": "Finn et medlem",
@@ -2485,14 +2529,14 @@
               "description": "Bare offentlige tavler er tilgjengelige for valg"
             },
             "status": {
-              "title": "",
+              "title": "App status",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "Aktiver status som standard",
+                "description": "Når du legger til et appelement, vil statusen være aktivert som standard"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "Tving deaktivering status",
+                "description": "Status for apper vil være deaktivert for alle brukere og kan ikke aktiveres"
               }
             }
           },
@@ -2604,15 +2648,15 @@
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "Slett API token",
+                  "text": "Dette vil permanent slette API-token. API-klienter som bruker dette tokenet kan ikke lenger autentisere og utføre API-forespørsler. Denne handlingen kan ikke angres."
                 }
               },
               "table": {
                 "header": {
                   "id": "ID",
                   "createdBy": "Opprettet av",
-                  "actions": ""
+                  "actions": "Handlinger"
                 }
               }
             }

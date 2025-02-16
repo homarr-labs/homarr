@@ -305,7 +305,15 @@
     "search": "Поиск группы",
     "field": {
       "name": "Название",
-      "members": "Участники"
+      "members": "Участники",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Выбрать группу",
         "notFound": "Группы не найдены"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Опасная зона",
     "noResults": "Ничего не найдено",
+    "unsavedChanges": "",
     "preview": {
       "show": "Показать предпросмотр",
       "hide": "Скрыть предпросмотр"
@@ -2413,6 +2450,13 @@
             "owner": "Владелец",
             "ownerOfGroup": "Владелец этой группы",
             "ownerOfGroupDeleted": "Владелец этой группы был удалён. В данный момент у группы нет владельца."
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "Участники",

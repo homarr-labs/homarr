@@ -305,7 +305,15 @@
     "search": "Grup bul",
     "field": {
       "name": "İsim",
-      "members": "Üyeler"
+      "members": "Üyeler",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Grup Seç",
         "notFound": "Grup bulunamadı"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Tehlikeli Bölge",
     "noResults": "Sonuç bulunamadı",
+    "unsavedChanges": "",
     "preview": {
       "show": "Ara Renkleri Göster",
       "hide": "Ara Renkleri Gizle"
@@ -1048,7 +1085,7 @@
           "label": "Açıklama ipucunu göster"
         },
         "pingEnabled": {
-          "label": "Basit ping'i etkinleştir"
+          "label": "Durum denetimini etkinleştir"
         }
       },
       "error": {
@@ -2171,7 +2208,7 @@
         "admin": {
           "description": "Sunucu için henüz öntanımlı panel belirlemediniz.",
           "link": "Sunucu geneli için öntanımlı panel atayın",
-          "notice": "Bu sayfayı tüm kullanıcılardan gizlemek için sunucu için bir ana panel ayarlayın"
+          "notice": "Bu sayfayı tüm kullanıcılardan gizlemek için sunucuya öntanımlı panel atayın"
         },
         "user": {
           "description": "Henüz bir ev paneli belirlemediniz.",
@@ -2413,6 +2450,13 @@
             "owner": "Sahip",
             "ownerOfGroup": "Bu grubun sahibi",
             "ownerOfGroupDeleted": "Bu grubun sahibi silindi. Şu anda bir sahibi yok."
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "Üyeler",

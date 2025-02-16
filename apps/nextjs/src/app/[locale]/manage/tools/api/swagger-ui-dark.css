@@ -1434,26 +1434,30 @@
     }
 
     ::-webkit-scrollbar-button:vertical:start:decrement {
-      background: linear-gradient(130deg, #696969 40%, rgba(255, 0, 0, 0) 41%),
+      background:
+        linear-gradient(130deg, #696969 40%, rgba(255, 0, 0, 0) 41%),
         linear-gradient(230deg, #696969 40%, transparent 41%), linear-gradient(0deg, #696969 40%, transparent 31%);
       background-color: #b6b6b6;
     }
 
     ::-webkit-scrollbar-button:vertical:end:increment {
-      background: linear-gradient(310deg, #696969 40%, transparent 41%),
-        linear-gradient(50deg, #696969 40%, transparent 41%), linear-gradient(180deg, #696969 40%, transparent 31%);
+      background:
+        linear-gradient(310deg, #696969 40%, transparent 41%), linear-gradient(50deg, #696969 40%, transparent 41%),
+        linear-gradient(180deg, #696969 40%, transparent 31%);
       background-color: #b6b6b6;
     }
 
     ::-webkit-scrollbar-button:horizontal:end:increment {
-      background: linear-gradient(210deg, #696969 40%, transparent 41%),
-        linear-gradient(330deg, #696969 40%, transparent 41%), linear-gradient(90deg, #696969 30%, transparent 31%);
+      background:
+        linear-gradient(210deg, #696969 40%, transparent 41%), linear-gradient(330deg, #696969 40%, transparent 41%),
+        linear-gradient(90deg, #696969 30%, transparent 31%);
       background-color: #b6b6b6;
     }
 
     ::-webkit-scrollbar-button:horizontal:start:decrement {
-      background: linear-gradient(30deg, #696969 40%, transparent 41%),
-        linear-gradient(150deg, #696969 40%, transparent 41%), linear-gradient(270deg, #696969 30%, transparent 31%);
+      background:
+        linear-gradient(30deg, #696969 40%, transparent 41%), linear-gradient(150deg, #696969 40%, transparent 41%),
+        linear-gradient(270deg, #696969 30%, transparent 31%);
       background-color: #b6b6b6;
     }
 
@@ -1681,28 +1685,32 @@
     }
 
     ::-webkit-scrollbar-button:vertical:start:decrement {
-      background: linear-gradient(130deg, #696969 40%, rgba(255, 0, 0, 0) 41%),
+      background:
+        linear-gradient(130deg, #696969 40%, rgba(255, 0, 0, 0) 41%),
         linear-gradient(230deg, #696969 40%, rgba(0, 0, 0, 0) 41%),
         linear-gradient(0deg, #696969 40%, rgba(0, 0, 0, 0) 31%);
       background-color: #b6b6b6;
     }
 
     ::-webkit-scrollbar-button:vertical:end:increment {
-      background: linear-gradient(310deg, #696969 40%, rgba(0, 0, 0, 0) 41%),
+      background:
+        linear-gradient(310deg, #696969 40%, rgba(0, 0, 0, 0) 41%),
         linear-gradient(50deg, #696969 40%, rgba(0, 0, 0, 0) 41%),
         linear-gradient(180deg, #696969 40%, rgba(0, 0, 0, 0) 31%);
       background-color: #b6b6b6;
     }
 
     ::-webkit-scrollbar-button:horizontal:end:increment {
-      background: linear-gradient(210deg, #696969 40%, rgba(0, 0, 0, 0) 41%),
+      background:
+        linear-gradient(210deg, #696969 40%, rgba(0, 0, 0, 0) 41%),
         linear-gradient(330deg, #696969 40%, rgba(0, 0, 0, 0) 41%),
         linear-gradient(90deg, #696969 30%, rgba(0, 0, 0, 0) 31%);
       background-color: #b6b6b6;
     }
 
     ::-webkit-scrollbar-button:horizontal:start:decrement {
-      background: linear-gradient(30deg, #696969 40%, rgba(0, 0, 0, 0) 41%),
+      background:
+        linear-gradient(30deg, #696969 40%, rgba(0, 0, 0, 0) 41%),
         linear-gradient(150deg, #696969 40%, rgba(0, 0, 0, 0) 41%),
         linear-gradient(270deg, #696969 30%, rgba(0, 0, 0, 0) 31%);
       background-color: #b6b6b6;

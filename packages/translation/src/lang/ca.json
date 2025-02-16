@@ -305,7 +305,15 @@
     "search": "Troba un grup",
     "field": {
       "name": "Nom",
-      "members": "Membres"
+      "members": "Membres",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -401,21 +409,21 @@
         "title": "",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Veure registres",
+            "description": "Permet que els membres visualitzin els registres"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Motors de cerca",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Crea motors de cerca",
+            "description": "Permet que els membres crein motors de cerca"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modifica tots els motors de cerca",
+            "description": "Permet que els membres modifiquin tots els motors de cerca"
           },
           "full-all": {
             "label": "",
@@ -501,7 +509,35 @@
       "select": {
         "label": "",
         "notFound": ""
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "",
     "noResults": "",
+    "unsavedChanges": "",
     "preview": {
       "show": "",
       "hide": ""
@@ -2413,6 +2450,13 @@
             "owner": "",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "",

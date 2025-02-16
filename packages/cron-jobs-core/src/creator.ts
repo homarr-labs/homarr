@@ -16,6 +16,7 @@ export interface CreateCronJobCreatorOptions<TAllowedNames extends string> {
 
 interface CreateCronJobOptions {
   runOnStart?: boolean;
+  expectedMaximumDurationInMillis?: number;
   beforeStart?: () => MaybePromise<void>;
 }
 
@@ -25,6 +26,7 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
   options: CreateCronJobOptions,
   creatorOptions: CreateCronJobCreatorOptions<TAllowedNames>,
 ) => {
+  const expectedMaximumDurationInMillis = options.expectedMaximumDurationInMillis ?? 1000;
   return (callback: () => MaybePromise<void>) => {
     const catchingCallbackAsync = async () => {
       try {
@@ -34,9 +36,16 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
         const beforeCallbackTook = stopwatch.getElapsedInHumanWords();
         await callback();
         const callbackTook = stopwatch.getElapsedInHumanWords();
-        creatorOptions.logger.logInfo(
+        creatorOptions.logger.logDebug(
           `The callback of '${name}' cron job succeeded (before callback took ${beforeCallbackTook}, callback took ${callbackTook})`,
         );
+
+        const durationInMillis = stopwatch.getElapsedInMilliseconds();
+        if (durationInMillis > expectedMaximumDurationInMillis) {
+          creatorOptions.logger.logWarning(
+            `The callback of '${name}' succeeded but took ${(durationInMillis - expectedMaximumDurationInMillis).toFixed(2)}ms longer than expected (${expectedMaximumDurationInMillis}ms). This may indicate that your network performance, host performance or something else is too slow. If this happens too often, it should be looked into.`,
+          );
+        }
         await creatorOptions.onCallbackSuccess?.(name);
       } catch (error) {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
