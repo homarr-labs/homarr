@@ -1,4 +1,5 @@
 import type { AdapterAccount } from "@auth/core/adapters";
+import type { MantineSize } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import { relations, sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
@@ -265,6 +266,7 @@ export const boards = sqliteTable("board", {
   opacity: int().default(100).notNull(),
   customCss: text(),
   columnCount: int().default(10).notNull(),
+  itemRadius: text().$type<MantineSize>().default("lg").notNull(),
   disableStatus: int({ mode: "boolean" }).default(false).notNull(),
 });
 

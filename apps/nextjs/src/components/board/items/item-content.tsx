@@ -33,6 +33,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
         "grid-stack-item-content",
         item.advancedOptions.customCssClasses.join(" "),
       )}
+      radius={board.itemRadius}
       withBorder
       styles={{
         root: {

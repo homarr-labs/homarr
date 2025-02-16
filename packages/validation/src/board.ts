@@ -58,6 +58,7 @@ const savePartialSettingsSchema = z
     opacity: z.number().min(0).max(100),
     customCss: z.string().max(16384),
     columnCount: z.number().min(1).max(24),
+    itemRadius: z.union([z.literal("xs"), z.literal("sm"), z.literal("md"), z.literal("lg"), z.literal("xl")]),
     disableStatus: z.boolean(),
   })
   .partial();
