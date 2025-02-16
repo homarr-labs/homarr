@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import superjson from "superjson";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { createId } from "@homarr/db/client";
@@ -31,7 +32,7 @@ export const useDynamicSectionActions = () => {
         height: 1,
         width: 1,
         items: [],
-        options: "{}",
+        options: superjson.stringify({}),
         parentSectionId: lastSection.id,
         // We omit xOffset and yOffset because gridstack will use the first available position
       } satisfies Omit<DynamicSection, "xOffset" | "yOffset">;
@@ -52,7 +53,7 @@ export const useDynamicSectionActions = () => {
             if (section.id === itemId && section.kind === "dynamic") {
               return {
                 ...section,
-                options: typeof newOptions === "string" ? newOptions : JSON.stringify(newOptions),
+                options: typeof newOptions === "string" ? newOptions : superjson.stringify(newOptions),
               };
             }
 

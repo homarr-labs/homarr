@@ -65,7 +65,7 @@ const createDynamicSchema = <TItemSchema extends z.ZodTypeAny>(itemSchema: TItem
     width: z.number(),
     height: z.number(),
     items: z.array(itemSchema),
-    options: z.string().default("{}"),
+    options: z.string().default('{"json": {}}'), // empty superjson object
     parentSectionId: z.string(),
   });
 
