@@ -6,10 +6,11 @@ import { rootCertificates } from "node:tls";
 import axios from "axios";
 import { fetch } from "undici";
 
+import { env } from "@homarr/common/env";
 import { LoggingAgent } from "@homarr/common/server";
 
 const getCertificateFolder = () => {
-  return process.env.NODE_ENV === "production"
+  return env.NODE_ENV === "production"
     ? path.join("/appdata", "trusted-certificates")
     : process.env.LOCAL_CERTIFICATE_PATH;
 };

@@ -1,8 +1,8 @@
-import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
-import { createBooleanSchema, createDurationSchema, shouldSkipEnvValidation } from "@homarr/common/env-validation";
 import { supportedAuthProviders } from "@homarr/definitions";
+import { createEnv } from "@homarr/env";
+import { createBooleanSchema, createDurationSchema } from "@homarr/env/schemas";
 
 const authProvidersSchema = z
   .string()
@@ -22,8 +22,7 @@ const authProvidersSchema = z
   )
   .default("credentials");
 
-const skipValidation = shouldSkipEnvValidation();
-const authProviders = skipValidation ? [] : authProvidersSchema.parse(process.env.AUTH_PROVIDERS);
+const authProviders = authProvidersSchema.safeParse(process.env.AUTH_PROVIDERS).data ?? [];
 
 export const env = createEnv({
   server: {
@@ -59,32 +58,5 @@ export const env = createEnv({
         }
       : {}),
   },
-  client: {},
-  runtimeEnv: {
-    AUTH_LOGOUT_REDIRECT_URL: process.env.AUTH_LOGOUT_REDIRECT_URL,
-    AUTH_SESSION_EXPIRY_TIME: process.env.AUTH_SESSION_EXPIRY_TIME,
-    AUTH_PROVIDERS: process.env.AUTH_PROVIDERS,
-    AUTH_LDAP_BASE: process.env.AUTH_LDAP_BASE,
-    AUTH_LDAP_BIND_DN: process.env.AUTH_LDAP_BIND_DN,
-    AUTH_LDAP_BIND_PASSWORD: process.env.AUTH_LDAP_BIND_PASSWORD,
-    AUTH_LDAP_GROUP_CLASS: process.env.AUTH_LDAP_GROUP_CLASS,
-    AUTH_LDAP_GROUP_FILTER_EXTRA_ARG: process.env.AUTH_LDAP_GROUP_FILTER_EXTRA_ARG,
-    AUTH_LDAP_GROUP_MEMBER_ATTRIBUTE: process.env.AUTH_LDAP_GROUP_MEMBER_ATTRIBUTE,
-    AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE: process.env.AUTH_LDAP_GROUP_MEMBER_USER_ATTRIBUTE,
-    AUTH_LDAP_SEARCH_SCOPE: process.env.AUTH_LDAP_SEARCH_SCOPE,
-    AUTH_LDAP_URI: process.env.AUTH_LDAP_URI,
-    AUTH_OIDC_CLIENT_ID: process.env.AUTH_OIDC_CLIENT_ID,
-    AUTH_OIDC_CLIENT_NAME: process.env.AUTH_OIDC_CLIENT_NAME,
-    AUTH_OIDC_CLIENT_SECRET: process.env.AUTH_OIDC_CLIENT_SECRET,
-    AUTH_OIDC_ISSUER: process.env.AUTH_OIDC_ISSUER,
-    AUTH_OIDC_SCOPE_OVERWRITE: process.env.AUTH_OIDC_SCOPE_OVERWRITE,
-    AUTH_OIDC_GROUPS_ATTRIBUTE: process.env.AUTH_OIDC_GROUPS_ATTRIBUTE,
-    AUTH_LDAP_USERNAME_ATTRIBUTE: process.env.AUTH_LDAP_USERNAME_ATTRIBUTE,
-    AUTH_LDAP_USER_MAIL_ATTRIBUTE: process.env.AUTH_LDAP_USER_MAIL_ATTRIBUTE,
-    AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG: process.env.AUTH_LDAP_USERNAME_FILTER_EXTRA_ARG,
-    AUTH_OIDC_AUTO_LOGIN: process.env.AUTH_OIDC_AUTO_LOGIN,
-    AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE: process.env.AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE,
-  },
-  skipValidation,
-  emptyStringAsUndefined: true,
+  experimental__runtimeEnv: process.env,
 });

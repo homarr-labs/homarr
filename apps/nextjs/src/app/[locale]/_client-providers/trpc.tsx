@@ -20,8 +20,7 @@ import type { SuperJSONResult } from "superjson";
 import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
-
-import { env } from "~/env";
+import { env } from "@homarr/common/env";
 
 const getWebSocketProtocol = () => {
   // window is not defined on server side
@@ -66,7 +65,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
       links: [
         loggerLink({
           enabled: (opts) =>
-            process.env.NODE_ENV === "development" || (opts.direction === "down" && opts.result instanceof Error),
+            env.NODE_ENV === "development" || (opts.direction === "down" && opts.result instanceof Error),
         }),
         splitLink({
           condition: ({ type }) => type === "subscription",

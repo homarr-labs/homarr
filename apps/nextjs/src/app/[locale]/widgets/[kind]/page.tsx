@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import { Center } from "@mantine/core";
 
+import { env } from "@homarr/common/env";
 import { db } from "@homarr/db";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetImports } from "@homarr/widgets";
 
-import { env } from "~/env";
 import { WidgetPreviewPageContent } from "./_content";
 
 interface Props {
