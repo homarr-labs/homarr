@@ -511,6 +511,7 @@ export const boardRouter = createTRPCRouter({
           primaryColor: input.primaryColor,
           secondaryColor: input.secondaryColor,
           opacity: input.opacity,
+          iconColor: input.iconColor,
 
           // custom css
           customCss: input.customCss,

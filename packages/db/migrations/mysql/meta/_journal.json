@@ -183,6 +183,13 @@
       "when": 1739469710187,
       "tag": "0025_add-group-home-board-settings",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1739740990442,
+      "tag": "0026_eager_firebird",
+      "breakpoints": true
     }
   ]
 }
