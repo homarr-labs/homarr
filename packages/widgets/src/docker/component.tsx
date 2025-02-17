@@ -214,7 +214,9 @@ export default function DockerWidget() {
     },
   ];
 
-  const { data } = clientApi.docker.getContainers.useQuery();
+  const { data } = clientApi.docker.getContainers.useQuery(undefined, {
+    refetchInterval: 5000,
+  });
   const relativeTime = useTimeAgo(data?.timestamp ? new Date(data.timestamp) : new Date());
 
   const totalContainers = data?.containers.length ?? 0;

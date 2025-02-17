@@ -16,9 +16,8 @@ const dockerCache = createCacheChannel<{
 
 const statsCache = createCacheChannel<Map<string, { totalUsage: number; systemUsage: number }>>(
   "docker-stats",
-  5 * 60 * 1000,
+  30 * 1000,
 );
-// const previousStats = new Map<string, { totalUsage: number; systemUsage: number }>();
 
 export const dockerRouter = createTRPCRouter({
   // The first time getContainers runs, there’s no previous CPU usage data, so the percentage will be 0
@@ -26,6 +25,9 @@ export const dockerRouter = createTRPCRouter({
     const result = await dockerCache
       .consumeAsync(async () => {
         const dockerInstances = DockerSingleton.getInstances();
+        const statsData = await statsCache.getAsync();
+        const prevStats = statsData?.data ?? new Map<string, { totalUsage: number; systemUsage: number }>();
+
         const containers = await Promise.all(
           // Return all the containers of all the instances into only one item
           dockerInstances.map(({ instance, host: key }) =>
@@ -33,26 +35,24 @@ export const dockerRouter = createTRPCRouter({
               Promise.all(
                 containers.map(async (container) => {
                   const stats = await instance.getContainer(container.Id).stats({ stream: false });
-                  const statsData = await statsCache.getAsync();
-                  const prevStats = statsData?.data.get(container.Id);
-                  // const prevStats = previousStats.get(container.Id);
+
                   const totalUsage = stats.cpu_stats.cpu_usage.total_usage;
                   const systemUsage = stats.cpu_stats.system_cpu_usage;
                   const cpuCount = stats.cpu_stats.online_cpus;
+                  const previous = prevStats.get(container.Id);
 
                   let cpuPercent = 0;
-                  if (prevStats) {
-                    const totalDiff = totalUsage - prevStats.totalUsage;
-                    const systemDiff = systemUsage - prevStats.systemUsage;
+                  if (previous) {
+                    const totalDiff = totalUsage - previous.totalUsage;
+                    const systemDiff = systemUsage - previous.systemUsage;
                     if (systemDiff > 0) {
                       cpuPercent = (totalDiff / systemDiff) * cpuCount * 100;
                     }
                   }
 
-                  // previousStats.set(container.Id, { totalUsage, systemUsage });
-                  const newStats = new Map<string, { totalUsage: number; systemUsage: number }>();
-                  newStats.set(container.Id, { totalUsage, systemUsage });
-                  await statsCache.setAsync(newStats);
+                  // Update statsCache without overwriting everything
+                  prevStats.set(container.Id, { totalUsage, systemUsage });
+                  await statsCache.setAsync(prevStats);
 
                   return {
                     ...container,
