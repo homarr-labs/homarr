@@ -1,9 +1,15 @@
 import { useCallback } from "react";
+import superjson from "superjson";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { createId } from "@homarr/db/client";
 
 import type { DynamicSection, EmptySection } from "~/app/[locale]/boards/_types";
+
+interface UpdateDynamicSection {
+  itemId: string;
+  newOptions: Record<string, unknown>;
+}
 
 interface RemoveDynamicSection {
   id: string;
@@ -26,6 +32,7 @@ export const useDynamicSectionActions = () => {
         height: 1,
         width: 1,
         items: [],
+        options: superjson.stringify({}),
         parentSectionId: lastSection.id,
         // We omit xOffset and yOffset because gridstack will use the first available position
       } satisfies Omit<DynamicSection, "xOffset" | "yOffset">;
@@ -36,6 +43,27 @@ export const useDynamicSectionActions = () => {
       };
     });
   }, [updateBoard]);
+
+  const updateDynamicSection = useCallback(
+    ({ itemId, newOptions }: UpdateDynamicSection) => {
+      updateBoard((previous) => {
+        return {
+          ...previous,
+          sections: previous.sections.map((section) => {
+            if (section.id === itemId && section.kind === "dynamic") {
+              return {
+                ...section,
+                options: typeof newOptions === "string" ? newOptions : superjson.stringify(newOptions),
+              };
+            }
+
+            return section;
+          }),
+        };
+      });
+    },
+    [updateBoard],
+  );
 
   const removeDynamicSection = useCallback(
     ({ id }: RemoveDynamicSection) => {
@@ -84,6 +112,7 @@ export const useDynamicSectionActions = () => {
 
   return {
     addDynamicSection,
+    updateDynamicSection,
     removeDynamicSection,
   };
 };
