@@ -307,12 +307,12 @@
       "name": "İsim",
       "members": "Üyeler",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Ana Panel",
+        "description": "Yalnızca grubun erişebildiği paneller seçilebilir"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Mobil panel",
+        "description": "Yalnızca grubun erişebildiği paneller seçilebilir"
       }
     },
     "permission": {
@@ -514,12 +514,12 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Ayarlar kaydedildi",
+              "message": "Panel ayarları başarıyla kaydedildi"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Ayarlar kaydedilemedi",
+              "message": "Panel ayarları kaydedilemiyor"
             }
           }
         }
@@ -527,17 +527,17 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Konum başarıyla değiştirildi"
           },
           "error": {
-            "message": ""
+            "message": "Konum değiştirilemiyor"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "Varsayılan grup",
+      "description": "Tüm oturum açmış kullanıcılar - {name}"
     }
   },
   "app": {
@@ -924,7 +924,7 @@
     },
     "dangerZone": "Tehlikeli Bölge",
     "noResults": "Sonuç bulunamadı",
-    "unsavedChanges": "",
+    "unsavedChanges": "Kaydedilmemiş değişiklikleriniz var!",
     "preview": {
       "show": "Ara Renkleri Göster",
       "hide": "Ara Renkleri Gizle"
@@ -2452,10 +2452,10 @@
             "ownerOfGroupDeleted": "Bu grubun sahibi silindi. Şu anda bir sahibi yok."
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "Ayarlar",
+            "alert": "Grup ayarları, listedeki grupların sırasına göre önceliklendirilir. En üstteki ayarlar en alttaki ayarları geçersiz kılar.",
             "board": {
-              "title": ""
+              "title": "Paneller"
             }
           },
           "members": {
