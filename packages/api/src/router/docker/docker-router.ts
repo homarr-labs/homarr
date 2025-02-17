@@ -3,18 +3,25 @@ import { z } from "zod";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
-import { DockerSingleton } from "@homarr/docker";
 import type { Container, ContainerInfo, ContainerState, Docker, Port } from "@homarr/docker";
+import { DockerSingleton } from "@homarr/docker";
 import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 
 const dockerCache = createCacheChannel<{
-  containers: (ContainerInfo & { instance: string; iconUrl: string | null })[];
+  containers: (ContainerInfo & { instance: string; iconUrl: string | null; cpuUsage: number; memoryUsage: number })[];
 }>("docker-containers", 5 * 60 * 1000);
 
+const statsCache = createCacheChannel<Map<string, { totalUsage: number; systemUsage: number }>>(
+  "docker-stats",
+  5 * 60 * 1000,
+);
+// const previousStats = new Map<string, { totalUsage: number; systemUsage: number }>();
+
 export const dockerRouter = createTRPCRouter({
+  // The first time getContainers runs, there’s no previous CPU usage data, so the percentage will be 0
   getContainers: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
     const result = await dockerCache
       .consumeAsync(async () => {
@@ -23,10 +30,38 @@ export const dockerRouter = createTRPCRouter({
           // Return all the containers of all the instances into only one item
           dockerInstances.map(({ instance, host: key }) =>
             instance.listContainers({ all: true }).then((containers) =>
-              containers.map((container) => ({
-                ...container,
-                instance: key,
-              })),
+              Promise.all(
+                containers.map(async (container) => {
+                  const stats = await instance.getContainer(container.Id).stats({ stream: false });
+                  const statsData = await statsCache.getAsync();
+                  const prevStats = statsData?.data.get(container.Id);
+                  // const prevStats = previousStats.get(container.Id);
+                  const totalUsage = stats.cpu_stats.cpu_usage.total_usage;
+                  const systemUsage = stats.cpu_stats.system_cpu_usage;
+                  const cpuCount = stats.cpu_stats.online_cpus;
+
+                  let cpuPercent = 0;
+                  if (prevStats) {
+                    const totalDiff = totalUsage - prevStats.totalUsage;
+                    const systemDiff = systemUsage - prevStats.systemUsage;
+                    if (systemDiff > 0) {
+                      cpuPercent = (totalDiff / systemDiff) * cpuCount * 100;
+                    }
+                  }
+
+                  // previousStats.set(container.Id, { totalUsage, systemUsage });
+                  const newStats = new Map<string, { totalUsage: number; systemUsage: number }>();
+                  newStats.set(container.Id, { totalUsage, systemUsage });
+                  await statsCache.setAsync(newStats);
+
+                  return {
+                    ...container,
+                    instance: key,
+                    cpuUsage: Math.round(cpuPercent * 100) / 100,
+                    memoryUsage: stats.memory_stats.usage,
+                  };
+                }),
+              ),
             ),
           ),
         ).then((containers) => containers.flat());
@@ -169,10 +204,12 @@ interface DockerContainer {
   image: string;
   ports: Port[];
   iconUrl: string | null;
+  cpuUsage?: number;
+  memoryUsage?: number;
 }
 
 function sanitizeContainers(
-  containers: (ContainerInfo & { instance: string; iconUrl: string | null })[],
+  containers: (ContainerInfo & { instance: string; iconUrl: string | null; cpuUsage: number; memoryUsage: number })[],
 ): DockerContainer[] {
   return containers.map((container) => {
     return {
@@ -183,6 +220,8 @@ function sanitizeContainers(
       image: container.Image,
       ports: container.Ports,
       iconUrl: container.iconUrl,
+      cpuUsage: container.cpuUsage,
+      memoryUsage: container.memoryUsage,
     };
   });
 }
