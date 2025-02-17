@@ -305,7 +305,15 @@
     "search": "Grup bul",
     "field": {
       "name": "İsim",
-      "members": "Üyeler"
+      "members": "Üyeler",
+      "homeBoard": {
+        "label": "Ana Panel",
+        "description": "Yalnızca grubun erişebildiği paneller seçilebilir"
+      },
+      "mobileBoard": {
+        "label": "Mobil panel",
+        "description": "Yalnızca grubun erişebildiği paneller seçilebilir"
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Grup Seç",
         "notFound": "Grup bulunamadı"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "Ayarlar kaydedildi",
+              "message": "Panel ayarları başarıyla kaydedildi"
+            },
+            "error": {
+              "title": "Ayarlar kaydedilemedi",
+              "message": "Panel ayarları kaydedilemiyor"
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": "Konum başarıyla değiştirildi"
+          },
+          "error": {
+            "message": "Konum değiştirilemiyor"
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "Varsayılan grup",
+      "description": "Tüm oturum açmış kullanıcılar - {name}"
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Tehlikeli Bölge",
     "noResults": "Sonuç bulunamadı",
+    "unsavedChanges": "Kaydedilmemiş değişiklikleriniz var!",
     "preview": {
       "show": "Ara Renkleri Göster",
       "hide": "Ara Renkleri Gizle"
@@ -2413,6 +2450,13 @@
             "owner": "Sahip",
             "ownerOfGroup": "Bu grubun sahibi",
             "ownerOfGroupDeleted": "Bu grubun sahibi silindi. Şu anda bir sahibi yok."
+          },
+          "setting": {
+            "title": "Ayarlar",
+            "alert": "Grup ayarları, listedeki grupların sırasına göre önceliklendirilir. En üstteki ayarlar en alttaki ayarları geçersiz kılar.",
+            "board": {
+              "title": "Paneller"
+            }
           },
           "members": {
             "title": "Üyeler",

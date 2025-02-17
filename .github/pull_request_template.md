@@ -6,7 +6,7 @@
 
 **Thank you for your contribution. Please ensure that your pull request meets the following pull request:**
 
-- [ ] Builds without warnings or errors (``pnpm buid``, autofix with ``pnpm format:fix``)
+- [ ] Builds without warnings or errors (``pnpm build``, autofix with ``pnpm format:fix``)
 - [ ] Pull request targets ``dev`` branch
 - [ ] Commits follow the [conventional commits guideline](https://www.conventionalcommits.org/en/v1.0.0/)
 - [ ] No shorthand variable names are used (eg. ``x``, ``y``, ``i`` or any abbrevation)
