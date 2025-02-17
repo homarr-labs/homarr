@@ -599,7 +599,17 @@
         "label": "Description"
       },
       "url": {
-        "label": "Url"
+        "label": "Url",
+        "placeholder": "https://...."
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "Use different URL for ping",
+          "description": "Useful if Homarr can directly access using an internal hostname or network to avoid bandwidth usage of ISP"
+        },
+        "input": {
+          "placeholder": "https://...."
+        }
       }
     },
     "action": {

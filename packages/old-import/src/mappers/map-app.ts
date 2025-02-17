@@ -11,6 +11,7 @@ export const mapOldmarrApp = (app: OldmarrApp): InferSelectModel<typeof apps> =>
     iconUrl: app.appearance.iconUrl,
     description: app.behaviour.tooltipDescription ?? null,
     href: app.behaviour.externalUrl || app.url,
+    pingUrl: app.behaviour.externalUrl.length > 0 ? app.behaviour.externalUrl : null,
   };
 };
 
@@ -23,5 +24,6 @@ export const mapOldmarrBookmarkApp = (
     iconUrl: app.iconUrl,
     description: null,
     href: app.href,
+    pingUrl: null,
   };
 };

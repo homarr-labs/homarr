@@ -1,8 +1,10 @@
 "use client";
 
+import type { ChangeEventHandler } from "react";
 import { useRef } from "react";
 import Link from "next/link";
-import { Button, Group, Stack, Textarea, TextInput } from "@mantine/core";
+import { Button, Checkbox, Collapse, Group, Stack, Textarea, TextInput } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import type { z } from "zod";
 
 import { useZodForm } from "@homarr/form";
@@ -39,6 +41,7 @@ export const AppForm = ({
       description: initialValues?.description ?? "",
       iconUrl: initialValues?.iconUrl ?? "",
       href: initialValues?.href ?? "",
+      pingUrl: initialValues?.pingUrl ?? "",
     },
   });
 
@@ -54,13 +57,43 @@ export const AppForm = ({
     originalHandleSubmit(values, redirect, afterSuccess);
   };
 
+  const [opened, { open, close }] = useDisclosure((initialValues?.pingUrl?.length ?? 0) > 0);
+
+  const handleClickDifferentUrlPing: ChangeEventHandler<HTMLInputElement> = () => {
+    if (!opened) {
+      open();
+    } else {
+      close();
+      form.setFieldValue("pingUrl", "");
+    }
+  };
+
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
         <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
         <IconPicker {...form.getInputProps("iconUrl")} />
         <Textarea {...form.getInputProps("description")} label={t("app.field.description.label")} />
-        <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
+        <TextInput
+          {...form.getInputProps("href")}
+          label={t("app.field.url.label")}
+          placeholder={t("app.field.url.placeholder")}
+        />
+
+        <Checkbox
+          checked={opened}
+          onChange={handleClickDifferentUrlPing}
+          label={t("app.field.useDifferentUrlForPing.checkbox.label")}
+          description={t("app.field.useDifferentUrlForPing.checkbox.description")}
+          mt="md"
+        />
+
+        <Collapse in={opened}>
+          <TextInput
+            placeholder={t("app.field.useDifferentUrlForPing.input.placeholder")}
+            {...form.getInputProps("pingUrl")}
+          />
+        </Collapse>
 
         <Group justify="end">
           {showBackToOverview && (

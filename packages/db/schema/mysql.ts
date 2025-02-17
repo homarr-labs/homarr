@@ -376,6 +376,7 @@ export const apps = mysqlTable("app", {
   description: text(),
   iconUrl: text().notNull(),
   href: text(),
+  pingUrl: text(),
 });
 
 export const integrationItems = mysqlTable(

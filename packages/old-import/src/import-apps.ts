@@ -120,6 +120,7 @@ const addMappingFor = <TApp extends OldmarrApp | BookmarkApp>(
         href: existing.href,
         iconUrl: existing.iconUrl,
         description: existing.description,
+        pingUrl: existing.pingUrl,
         exists: true,
       });
       continue;
@@ -144,6 +145,7 @@ const convertApp = (app: OldmarrApp): DbAppWithoutId => ({
   href: app.behaviour.externalUrl === "" ? app.url : app.behaviour.externalUrl,
   iconUrl: app.appearance.iconUrl,
   description: app.behaviour.tooltipDescription ?? null,
+  pingUrl: app.behaviour.externalUrl.length > 0 ? app.behaviour.externalUrl : null,
 });
 
 /**
@@ -154,4 +156,5 @@ const convertApp = (app: OldmarrApp): DbAppWithoutId => ({
 const convertBookmarkApp = (app: BookmarkApp): DbAppWithoutId => ({
   ...app,
   description: null,
+  pingUrl: null,
 });
