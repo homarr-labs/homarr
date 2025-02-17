@@ -1,0 +1,28 @@
+import { notFound } from "next/navigation";
+import { Stack, Title } from "@mantine/core";
+
+import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
+
+import { PodsTable } from "~/app/[locale]/manage/tools/kubernetes/pods/pods-table";
+import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { env } from "~/env";
+
+export default async function PodsPage() {
+  const session = await auth();
+  if (!(session?.user.permissions.includes("admin") && env.ENABLE_KUBERNETES)) {
+    notFound();
+  }
+
+  const pods = await api.kubernetes.getPods();
+
+  return (
+    <>
+      <DynamicBreadcrumb />
+      <Stack>
+        <Title order={1}>Pods</Title>
+        <PodsTable initialPods={pods} />
+      </Stack>
+    </>
+  );
+}
