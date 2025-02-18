@@ -1,5 +1,5 @@
 {
-  "name": "@homarr/modals-collection",
+  "name": "@homarr/forms-collection",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -23,22 +23,14 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",
+    "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
-    "@homarr/forms-collection": "workspace:^0.1.0",
-    "@homarr/modals": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
-    "@homarr/old-import": "workspace:^0.1.0",
-    "@homarr/old-schema": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
-    "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "^7.17.0",
-    "@tabler/icons-react": "^3.30.0",
-    "dayjs": "^1.11.13",
-    "next": "15.1.7",
     "react": "19.0.0",
-    "react-dom": "19.0.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
