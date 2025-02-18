@@ -10,6 +10,7 @@ import {
   Group,
   InputWrapper,
   isLightColor,
+  Select,
   Slider,
   Stack,
   Text,
@@ -40,6 +41,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
       secondaryColor: board.secondaryColor,
       opacity: board.opacity,
       iconColor: board.iconColor ?? "",
+      itemRadius: board.itemRadius,
     },
   });
   const [showPreview, { toggle }] = useDisclosure(false);
@@ -105,6 +107,18 @@ export const ColorSettingsContent = ({ board }: Props) => {
               format="hex"
               swatches={Object.values(theme.colors).map((color) => color[6])}
               {...form.getInputProps("iconColor")}
+            />
+            <Select
+              label={t("board.field.itemRadius.label")}
+              description={t("board.field.itemRadius.description")}
+              data={[
+                { label: t("board.field.itemRadius.option.xs"), value: "xs" },
+                { label: t("board.field.itemRadius.option.sm"), value: "sm" },
+                { label: t("board.field.itemRadius.option.md"), value: "md" },
+                { label: t("board.field.itemRadius.option.lg"), value: "lg" },
+                { label: t("board.field.itemRadius.option.xl"), value: "xl" },
+              ]}
+              {...form.getInputProps("itemRadius")}
             />
           </Grid.Col>
         </Grid>

@@ -1,4 +1,5 @@
 import type { AdapterAccount } from "@auth/core/adapters";
+import type { MantineSize } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import { relations } from "drizzle-orm";
 import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
@@ -281,6 +282,7 @@ export const boards = mysqlTable("board", {
   customCss: text(),
   columnCount: int().default(10).notNull(),
   iconColor: text(),
+  itemRadius: text().$type<MantineSize>().default("lg").notNull(),
   disableStatus: boolean().default(false).notNull(),
 });
 

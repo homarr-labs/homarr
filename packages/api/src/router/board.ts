@@ -518,6 +518,7 @@ export const boardRouter = createTRPCRouter({
 
           // layout settings
           columnCount: input.columnCount,
+          itemRadius: input.itemRadius,
 
           // Behavior settings
           disableStatus: input.disableStatus,

@@ -2099,6 +2099,17 @@
       "columnCount": {
         "label": "Column count"
       },
+      "itemRadius": {
+        "label": "Item radius",
+        "description": "Changes the roundness of tiles on your board",
+        "option": {
+          "xs": "Very small",
+          "sm": "Small",
+          "md": "Medium",
+          "lg": "Large",
+          "xl": "Very large"
+        }
+      },
       "name": {
         "label": "Name"
       },
@@ -2123,8 +2134,8 @@
         "background": {
           "title": "Background"
         },
-        "color": {
-          "title": "Colors"
+        "appearance": {
+          "title": "Appearance"
         },
         "customCss": {
           "title": "Custom css"

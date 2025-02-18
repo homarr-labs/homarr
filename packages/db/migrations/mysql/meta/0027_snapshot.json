@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "d9fefe07-15be-4265-8b33-64bc90f09268",
-  "prevId": "9bdd2fb3-f81f-45cb-aac4-9f1bbddbf2f4",
+  "id": "d8ad8f73-0756-4124-bd11-8dcffb7f8cb1",
+  "prevId": "d9fefe07-15be-4265-8b33-64bc90f09268",
   "tables": {
     "account": {
       "name": "account",
@@ -454,6 +454,13 @@
           "notNull": true,
           "autoincrement": false,
           "default": 10
+        },
+        "icon_color": {
+          "name": "icon_color",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         },
         "item_radius": {
           "name": "item_radius",
