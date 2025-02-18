@@ -1003,7 +1003,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../server-settings
       '@mantine/core':
-        specifier: ^7.16.3
+        specifier: ^7.17.0
         version: 7.17.0(@mantine/hooks@7.17.0(react@19.0.0))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
