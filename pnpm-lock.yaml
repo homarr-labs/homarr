@@ -202,9 +202,6 @@ importers:
       '@million/lint':
         specifier: 1.0.14
         version: 1.0.14(rollup@4.21.3)(webpack-sources@3.2.3)
-      '@t3-oss/env-nextjs':
-        specifier: ^0.12.0
-        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
       '@tabler/icons-react':
         specifier: ^3.30.0
         version: 3.30.0(react@19.0.0)
@@ -651,15 +648,15 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../env
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
-      '@t3-oss/env-nextjs':
-        specifier: ^0.12.0
-        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1
@@ -802,6 +799,9 @@ importers:
 
   packages/common:
     dependencies:
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../env
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -999,6 +999,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../env
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -1011,9 +1014,6 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
-      '@t3-oss/env-nextjs':
-        specifier: ^0.12.0
-        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
       '@testcontainers/mysql':
         specifier: ^10.18.0
         version: 10.18.0
@@ -1091,9 +1091,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
-      '@t3-oss/env-nextjs':
-        specifier: ^0.12.0
-        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../env
       dockerode:
         specifier: ^4.0.4
         version: 4.0.4
@@ -1110,6 +1110,31 @@ importers:
       '@types/dockerode':
         specifier: ^3.3.34
         version: 3.3.34
+      eslint:
+        specifier: ^9.20.1
+        version: 9.20.1
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+
+  packages/env:
+    dependencies:
+      '@t3-oss/env-nextjs':
+        specifier: ^0.12.0
+        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
       eslint:
         specifier: ^9.20.1
         version: 9.20.1
@@ -1300,6 +1325,9 @@ importers:
 
   packages/log:
     dependencies:
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../env
       ioredis:
         specifier: 5.5.0
         version: 5.5.0
@@ -1309,6 +1337,9 @@ importers:
       winston:
         specifier: 3.17.0
         version: 3.17.0
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -16475,7 +16506,7 @@ snapshots:
     dependencies:
       '@babel/code-frame': 7.26.2
       index-to-position: 0.1.2
-      type-fest: 4.34.1
+      type-fest: 4.30.2
 
   parse-ms@3.0.0: {}
 
@@ -17039,14 +17070,14 @@ snapshots:
     dependencies:
       find-up-simple: 1.0.0
       read-pkg: 9.0.1
-      type-fest: 4.34.1
+      type-fest: 4.30.2
 
   read-pkg@9.0.1:
     dependencies:
       '@types/normalize-package-data': 2.4.4
       normalize-package-data: 6.0.2
       parse-json: 8.1.0
-      type-fest: 4.34.1
+      type-fest: 4.30.2
       unicorn-magic: 0.1.0
 
   readable-stream@2.3.8:
@@ -18354,7 +18385,7 @@ snapshots:
       consola: 3.2.3
       defu: 6.1.4
       mime: 3.0.0
-      node-fetch-native: 1.6.6
+      node-fetch-native: 1.6.4
       pathe: 1.1.2
 
   unicode-emoji-modifier-base@1.0.0: {}

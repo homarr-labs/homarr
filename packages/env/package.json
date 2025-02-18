@@ -1,16 +1,12 @@
 {
-  "name": "@homarr/common",
+  "name": "@homarr/env",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "type": "module",
   "exports": {
     ".": "./index.ts",
-    "./types": "./src/types.ts",
-    "./server": "./src/server.ts",
-    "./client": "./src/client.ts",
-    "./env": "./env.ts",
-    "./env-validation": "./src/env-validation.ts"
+    "./schemas": "./src/schemas.ts"
   },
   "typesVersions": {
     "*": {
@@ -27,13 +23,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@homarr/env": "workspace:^0.1.0",
-    "@homarr/log": "workspace:^0.1.0",
-    "dayjs": "^1.11.13",
-    "next": "15.1.7",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "undici": "7.3.0",
+    "@t3-oss/env-nextjs": "^0.12.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
