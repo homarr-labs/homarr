@@ -9,11 +9,12 @@ import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
-import { IconPicker } from "~/components/icons/picker/icon-picker";
+import { IconPicker } from "../icon-picker/icon-picker";
 
 type FormType = z.infer<typeof validation.app.manage>;
 
 interface AppFormProps {
+  showBackToOverview: boolean;
   buttonLabels: {
     submit: string;
     submitAndCreateAnother?: string;
@@ -25,6 +26,7 @@ interface AppFormProps {
 
 export const AppForm = ({
   buttonLabels,
+  showBackToOverview,
   handleSubmit: originalHandleSubmit,
   initialValues,
   isPending,
@@ -61,9 +63,11 @@ export const AppForm = ({
         <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
 
         <Group justify="end">
-          <Button variant="default" component={Link} href="/manage/apps">
-            {t("common.action.backToOverview")}
-          </Button>
+          {showBackToOverview && (
+            <Button variant="default" component={Link} href="/manage/apps">
+              {t("common.action.backToOverview")}
+            </Button>
+          )}
           {buttonLabels.submitAndCreateAnother && (
             <Button
               type="submit"

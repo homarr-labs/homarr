@@ -7,11 +7,10 @@ import type { z } from "zod";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import { AppForm } from "@homarr/forms-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { validation } from "@homarr/validation";
-
-import { AppForm } from "../../_form";
 
 interface AppEditFormProps {
   app: RouterOutputs["app"]["byId"];
@@ -58,6 +57,7 @@ export const AppEditForm = ({ app }: AppEditFormProps) => {
       initialValues={app}
       handleSubmit={handleSubmit}
       isPending={isPending}
+      showBackToOverview
     />
   );
 };

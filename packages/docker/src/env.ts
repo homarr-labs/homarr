@@ -1,7 +1,6 @@
-import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
-import { shouldSkipEnvValidation } from "@homarr/common/env-validation";
+import { createEnv } from "@homarr/env";
 
 export const env = createEnv({
   server: {
@@ -9,10 +8,5 @@ export const env = createEnv({
     DOCKER_HOSTNAMES: z.string().optional(),
     DOCKER_PORTS: z.string().optional(),
   },
-  runtimeEnv: {
-    DOCKER_HOSTNAMES: process.env.DOCKER_HOSTNAMES,
-    DOCKER_PORTS: process.env.DOCKER_PORTS,
-  },
-  skipValidation: shouldSkipEnvValidation(),
-  emptyStringAsUndefined: true,
+  experimental__runtimeEnv: process.env,
 });

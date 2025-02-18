@@ -25,6 +25,7 @@
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
+    "@homarr/forms-collection": "workspace:^0.1.0",
     "@homarr/modals": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
     "@homarr/old-import": "workspace:^0.1.0",

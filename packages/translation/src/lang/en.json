@@ -1608,7 +1608,8 @@
       },
       "app": {
         "noData": "No app found",
-        "description": "Click <here></here> to create a new app"
+        "description": "Click <here></here> to create a new app",
+        "quickCreate": "Create app on the fly"
       },
       "error": {
         "noIntegration": "No integration selected",
@@ -2006,6 +2007,12 @@
               }
             }
           }
+        }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "Create app on the fly",
+          "createAndUse": "Create and use"
         }
       }
     },

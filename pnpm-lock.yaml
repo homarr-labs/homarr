@@ -127,6 +127,9 @@ importers:
       '@homarr/form':
         specifier: workspace:^0.1.0
         version: link:../../packages/form
+      '@homarr/forms-collection':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/forms-collection
       '@homarr/gridstack':
         specifier: ^1.12.0
         version: 1.12.0
@@ -199,9 +202,6 @@ importers:
       '@million/lint':
         specifier: 1.0.14
         version: 1.0.14(rollup@4.21.3)(webpack-sources@3.2.3)
-      '@t3-oss/env-nextjs':
-        specifier: ^0.12.0
-        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
       '@tabler/icons-react':
         specifier: ^3.30.0
         version: 3.30.0(react@19.0.0)
@@ -216,16 +216,16 @@ importers:
         version: 5.66.7(@tanstack/react-query@5.66.7(react@19.0.0))(next@15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react@19.0.0)
       '@trpc/client':
         specifier: next
-        version: 11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3)
+        version: 11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3)
       '@trpc/next':
         specifier: next
-        version: 11.0.0-rc.781(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3))(@trpc/react-query@11.0.0-rc.781(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3))(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(next@15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
+        version: 11.0.0-rc.788(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3))(@trpc/react-query@11.0.0-rc.788(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3))(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(next@15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
       '@trpc/react-query':
         specifier: next
-        version: 11.0.0-rc.781(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
+        version: 11.0.0-rc.788(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
       '@trpc/server':
         specifier: next
-        version: 11.0.0-rc.781(typescript@5.7.3)
+        version: 11.0.0-rc.788(typescript@5.7.3)
       '@xterm/addon-canvas':
         specifier: ^0.7.0
         version: 0.7.0(@xterm/xterm@5.5.0)
@@ -580,13 +580,13 @@ importers:
         version: link:../validation
       '@trpc/client':
         specifier: next
-        version: 11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3)
+        version: 11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3)
       '@trpc/react-query':
         specifier: next
-        version: 11.0.0-rc.781(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
+        version: 11.0.0-rc.788(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
       '@trpc/server':
         specifier: next
-        version: 11.0.0-rc.781(typescript@5.7.3)
+        version: 11.0.0-rc.788(typescript@5.7.3)
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
@@ -607,7 +607,7 @@ importers:
         version: 2.2.2
       trpc-to-openapi:
         specifier: ^2.1.3
-        version: 2.1.3(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.2))(zod@3.24.2)
+        version: 2.1.3(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.2))(zod@3.24.2)
       zod:
         specifier: ^3.24.2
         version: 3.24.2
@@ -648,15 +648,15 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../env
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
-      '@t3-oss/env-nextjs':
-        specifier: ^0.12.0
-        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1
@@ -799,6 +799,9 @@ importers:
 
   packages/common:
     dependencies:
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../env
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -996,6 +999,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../env
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -1008,9 +1014,6 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
-      '@t3-oss/env-nextjs':
-        specifier: ^0.12.0
-        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
       '@testcontainers/mysql':
         specifier: ^10.18.0
         version: 10.18.0
@@ -1088,9 +1091,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
-      '@t3-oss/env-nextjs':
-        specifier: ^0.12.0
-        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../env
       dockerode:
         specifier: ^4.0.4
         version: 4.0.4
@@ -1114,6 +1117,31 @@ importers:
         specifier: ^5.7.3
         version: 5.7.3
 
+  packages/env:
+    dependencies:
+      '@t3-oss/env-nextjs':
+        specifier: ^0.12.0
+        version: 0.12.0(typescript@5.7.3)(zod@3.24.2)
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^9.20.1
+        version: 9.20.1
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+
   packages/form:
     dependencies:
       '@homarr/common':
@@ -1128,6 +1156,55 @@ importers:
       '@mantine/form':
         specifier: ^7.17.0
         version: 7.17.0(react@19.0.0)
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^9.20.1
+        version: 9.20.1
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+
+  packages/forms-collection:
+    dependencies:
+      '@homarr/api':
+        specifier: workspace:^0.1.0
+        version: link:../api
+      '@homarr/auth':
+        specifier: workspace:^0.1.0
+        version: link:../auth
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
+      '@homarr/form':
+        specifier: workspace:^0.1.0
+        version: link:../form
+      '@homarr/notifications':
+        specifier: workspace:^0.1.0
+        version: link:../notifications
+      '@homarr/translation':
+        specifier: workspace:^0.1.0
+        version: link:../translation
+      '@homarr/validation':
+        specifier: workspace:^0.1.0
+        version: link:../validation
+      '@mantine/core':
+        specifier: ^7.17.0
+        version: 7.17.0(@mantine/hooks@7.17.0(react@19.0.0))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react:
+        specifier: 19.0.0
+        version: 19.0.0
       zod:
         specifier: ^3.24.2
         version: 3.24.2
@@ -1248,6 +1325,9 @@ importers:
 
   packages/log:
     dependencies:
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../env
       ioredis:
         specifier: 5.5.0
         version: 5.5.0
@@ -1257,6 +1337,9 @@ importers:
       winston:
         specifier: 3.17.0
         version: 3.17.0
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1319,6 +1402,9 @@ importers:
       '@homarr/form':
         specifier: workspace:^0.1.0
         version: link:../form
+      '@homarr/forms-collection':
+        specifier: workspace:^0.1.0
+        version: link:../forms-collection
       '@homarr/modals':
         specifier: workspace:^0.1.0
         version: link:../modals
@@ -1947,6 +2033,9 @@ importers:
       '@homarr/modals':
         specifier: workspace:^0.1.0
         version: link:../modals
+      '@homarr/modals-collection':
+        specifier: workspace:^0.1.0
+        version: link:../modals-collection
       '@homarr/notifications':
         specifier: workspace:^0.1.0
         version: link:../notifications
@@ -4398,19 +4487,19 @@ packages:
       tree-sitter:
         optional: true
 
-  '@trpc/client@11.0.0-rc.781':
-    resolution: {integrity: sha512-zAXsTPzk4RnvxSg6oOs4NSjorHufxIZ9rU6jGCHW4JrrIQP34RwruufUViC+xwrNLz17wIjKNvraQDT+cjowmw==}
+  '@trpc/client@11.0.0-rc.788':
+    resolution: {integrity: sha512-88+jCRr7RtoAbJPOKQ2jxE+KSuPfenohPf7wddFBGWQGTYFUifPpJgk9ihWPGMxEboFBqtfgXqZMrvmgUiZicw==}
     peerDependencies:
-      '@trpc/server': 11.0.0-rc.781+df4d4ede3
+      '@trpc/server': 11.0.0-rc.788+a8e9f72c0
       typescript: '>=5.7.2'
 
-  '@trpc/next@11.0.0-rc.781':
-    resolution: {integrity: sha512-rDV5Ult/GA3g7rNR4JRes8zReTsL/96K3sQH+79uY3G3HASaKb1U3nFjiB0/toI/4EoHW0jFSx/WDsTrKIqrsw==}
+  '@trpc/next@11.0.0-rc.788':
+    resolution: {integrity: sha512-cNjsv87VeWhqg2qUM7EdGJxixcVRcPrurYcnZY7kJOGf+Iyv+ybxIZhNA7smLyvih0i1sqUt8bFyWw1veTEzWA==}
     peerDependencies:
       '@tanstack/react-query': ^5.59.15
-      '@trpc/client': 11.0.0-rc.781+df4d4ede3
-      '@trpc/react-query': 11.0.0-rc.781+df4d4ede3
-      '@trpc/server': 11.0.0-rc.781+df4d4ede3
+      '@trpc/client': 11.0.0-rc.788+a8e9f72c0
+      '@trpc/react-query': 11.0.0-rc.788+a8e9f72c0
+      '@trpc/server': 11.0.0-rc.788+a8e9f72c0
       next: '*'
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -4421,18 +4510,18 @@ packages:
       '@trpc/react-query':
         optional: true
 
-  '@trpc/react-query@11.0.0-rc.781':
-    resolution: {integrity: sha512-BLd7JfFCJ1fNigpNek0fMARm4fbk7BbheMY8/jNggnE9CkcEqnsOzq+wP6ji8kX8c4NVbxdF5L4PQmEA+3uaNA==}
+  '@trpc/react-query@11.0.0-rc.788':
+    resolution: {integrity: sha512-0cU3O6hqPH9FwllH5K2b6yZcYdv5aAoZ3gh4j57sDqyI115XjS+a1fBd9SgZun61b9YCR4OsbaEiFJZKmsBMDQ==}
     peerDependencies:
       '@tanstack/react-query': ^5.62.8
-      '@trpc/client': 11.0.0-rc.781+df4d4ede3
-      '@trpc/server': 11.0.0-rc.781+df4d4ede3
+      '@trpc/client': 11.0.0-rc.788+a8e9f72c0
+      '@trpc/server': 11.0.0-rc.788+a8e9f72c0
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
       typescript: '>=5.7.2'
 
-  '@trpc/server@11.0.0-rc.781':
-    resolution: {integrity: sha512-KmZDE2Qa+zfKTIbvsNNZESUK0Zoeo0k8/ZPPMzTh0+Tm7L6yeFNk+i4npC1i8Nxr8pxaJUIG5Jab7Rv00hsoHQ==}
+  '@trpc/server@11.0.0-rc.788':
+    resolution: {integrity: sha512-ifsIgRSUXJFSqS7v+XUvt4pcIG2PDw1cKmvL40MhrgPRxG+VBlizxDLk3xXnXrkYVrw6jlDCik5oi+ZMXkHiDA==}
     peerDependencies:
       typescript: '>=5.7.2'
 
@@ -12383,33 +12472,33 @@ snapshots:
       tree-sitter: 0.22.1
     optional: true
 
-  '@trpc/client@11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3)':
+  '@trpc/client@11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3)':
     dependencies:
-      '@trpc/server': 11.0.0-rc.781(typescript@5.7.3)
+      '@trpc/server': 11.0.0-rc.788(typescript@5.7.3)
       typescript: 5.7.3
 
-  '@trpc/next@11.0.0-rc.781(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3))(@trpc/react-query@11.0.0-rc.781(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3))(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(next@15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)':
+  '@trpc/next@11.0.0-rc.788(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3))(@trpc/react-query@11.0.0-rc.788(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3))(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(next@15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)':
     dependencies:
-      '@trpc/client': 11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3)
-      '@trpc/server': 11.0.0-rc.781(typescript@5.7.3)
+      '@trpc/client': 11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3)
+      '@trpc/server': 11.0.0-rc.788(typescript@5.7.3)
       next: 15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.0)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       typescript: 5.7.3
     optionalDependencies:
       '@tanstack/react-query': 5.66.7(react@19.0.0)
-      '@trpc/react-query': 11.0.0-rc.781(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
+      '@trpc/react-query': 11.0.0-rc.788(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
 
-  '@trpc/react-query@11.0.0-rc.781(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)':
+  '@trpc/react-query@11.0.0-rc.788(@tanstack/react-query@5.66.7(react@19.0.0))(@trpc/client@11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3))(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.7.3)':
     dependencies:
       '@tanstack/react-query': 5.66.7(react@19.0.0)
-      '@trpc/client': 11.0.0-rc.781(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(typescript@5.7.3)
-      '@trpc/server': 11.0.0-rc.781(typescript@5.7.3)
+      '@trpc/client': 11.0.0-rc.788(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(typescript@5.7.3)
+      '@trpc/server': 11.0.0-rc.788(typescript@5.7.3)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       typescript: 5.7.3
 
-  '@trpc/server@11.0.0-rc.781(typescript@5.7.3)':
+  '@trpc/server@11.0.0-rc.788(typescript@5.7.3)':
     dependencies:
       typescript: 5.7.3
 
@@ -16417,7 +16506,7 @@ snapshots:
     dependencies:
       '@babel/code-frame': 7.26.2
       index-to-position: 0.1.2
-      type-fest: 4.34.1
+      type-fest: 4.30.2
 
   parse-ms@3.0.0: {}
 
@@ -16981,14 +17070,14 @@ snapshots:
     dependencies:
       find-up-simple: 1.0.0
       read-pkg: 9.0.1
-      type-fest: 4.34.1
+      type-fest: 4.30.2
 
   read-pkg@9.0.1:
     dependencies:
       '@types/normalize-package-data': 2.4.4
       normalize-package-data: 6.0.2
       parse-json: 8.1.0
-      type-fest: 4.34.1
+      type-fest: 4.30.2
       unicorn-magic: 0.1.0
 
   readable-stream@2.3.8:
@@ -18054,9 +18143,9 @@ snapshots:
 
   triple-beam@1.4.1: {}
 
-  trpc-to-openapi@2.1.3(@trpc/server@11.0.0-rc.781(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.2))(zod@3.24.2):
+  trpc-to-openapi@2.1.3(@trpc/server@11.0.0-rc.788(typescript@5.7.3))(zod-openapi@2.19.0(zod@3.24.2))(zod@3.24.2):
     dependencies:
-      '@trpc/server': 11.0.0-rc.781(typescript@5.7.3)
+      '@trpc/server': 11.0.0-rc.788(typescript@5.7.3)
       co-body: 6.2.0
       h3: 1.13.0
       openapi3-ts: 4.4.0
@@ -18296,7 +18385,7 @@ snapshots:
       consola: 3.2.3
       defu: 6.1.4
       mime: 3.0.0
-      node-fetch-native: 1.6.6
+      node-fetch-native: 1.6.4
       pathe: 1.1.2
 
   unicode-emoji-modifier-base@1.0.0: {}
