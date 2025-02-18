@@ -7,6 +7,8 @@ export const env = createEnv({
   shared: {
     PORT: z.coerce.number().default(3000),
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+    ENABLE_DOCKER: z.coerce.boolean().default(true),
+    ENABLE_KUBERNETES: z.coerce.boolean().default(false),
   },
   /**
    * Specify your server-side environment variables schema here. This way you can ensure the app isn't
@@ -26,6 +28,10 @@ export const env = createEnv({
   runtimeEnv: {
     PORT: process.env.PORT,
     NODE_ENV: process.env.NODE_ENV,
+    ENABLE_DOCKER: process.env.NEXT_PUBLIC_ENABLE_DOCKER ? process.env.NEXT_PUBLIC_ENABLE_DOCKER === "true" : true,
+    ENABLE_KUBERNETES: process.env.NEXT_PUBLIC_ENABLE_KUBERNETES
+      ? process.env.NEXT_PUBLIC_ENABLE_KUBERNETES === "true"
+      : false,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   skipValidation: shouldSkipEnvValidation(),
