@@ -116,7 +116,19 @@ export class LidarrIntegration extends MediaOrganizerIntegration {
 
 const lidarrCalendarEventImageSchema = z.array(
   z.object({
-    coverType: z.enum(["screenshot", "poster", "banner", "fanart", "clearlogo", "cover"]),
+    // See https://github.com/Lidarr/Lidarr/blob/bc6417229e9da3d3cab418f92b46eec7a76168c2/src/NzbDrone.Core/MediaCover/MediaCover.cs#L8-L20
+    coverType: z.enum([
+      "unknown",
+      "poster",
+      "banner",
+      "fanart",
+      "screenshot",
+      "headshot",
+      "cover",
+      "disc",
+      "logo",
+      "clearlogo",
+    ]),
     remoteUrl: z.string().url(),
   }),
 );
