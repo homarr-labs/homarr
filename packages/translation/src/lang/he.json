@@ -1608,7 +1608,8 @@
       },
       "app": {
         "noData": "לא נמצאה אפליקציה",
-        "description": "לחץ על <here></here> כדי ליצור אפליקציה חדשה"
+        "description": "לחץ על <here></here> כדי ליצור אפליקציה חדשה",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "לא נבחרה אינטגרציה",
@@ -2007,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2096,6 +2103,17 @@
       "columnCount": {
         "label": "ספירת עמודות"
       },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
+      },
       "name": {
         "label": "שם"
       },
@@ -2120,8 +2138,8 @@
         "background": {
           "title": "רקע"
         },
-        "color": {
-          "title": "צבעים"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "עיצוב מותאם אישית"

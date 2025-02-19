@@ -1608,7 +1608,8 @@
       },
       "app": {
         "noData": "Приложения не найдены",
-        "description": "Нажмите <here></here>, чтобы создать новое приложение"
+        "description": "Нажмите <here></here>, чтобы создать новое приложение",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Интеграция не выбрана",
@@ -2007,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2096,6 +2103,17 @@
       "columnCount": {
         "label": "Количество столбцов"
       },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
+      },
       "name": {
         "label": "Название"
       },
@@ -2120,8 +2138,8 @@
         "background": {
           "title": "Фон"
         },
-        "color": {
-          "title": "Цвета"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "Пользовательский CSS"

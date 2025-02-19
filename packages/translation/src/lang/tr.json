@@ -1608,7 +1608,8 @@
       },
       "app": {
         "noData": "Uygulama bulunamadı",
-        "description": "Yeni bir uygulama oluşturmak için <here></here> tıklayın"
+        "description": "Yeni bir uygulama oluşturmak için <here></here> tıklayın",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Hiçbir entegrasyon seçilmedi",
@@ -2007,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2096,6 +2103,17 @@
       "columnCount": {
         "label": "Sütun Sayısı"
       },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
+      },
       "name": {
         "label": "İsim"
       },
@@ -2120,8 +2138,8 @@
         "background": {
           "title": "Arkaplan"
         },
-        "color": {
-          "title": "Renkler"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "Özel Css"

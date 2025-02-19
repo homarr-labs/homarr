@@ -1608,7 +1608,8 @@
       },
       "app": {
         "noData": "未找到應用程式",
-        "description": "點擊 <here></here> 創建新的應用程式"
+        "description": "點擊 <here></here> 創建新的應用程式",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "未選擇集成",
@@ -2007,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2096,6 +2103,17 @@
       "columnCount": {
         "label": "列數"
       },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
+      },
       "name": {
         "label": "名稱"
       },
@@ -2120,8 +2138,8 @@
         "background": {
           "title": "背景"
         },
-        "color": {
-          "title": "配色"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "自定義 CSS html"

@@ -1608,7 +1608,8 @@
       },
       "app": {
         "noData": "Ingen app fundet",
-        "description": "Klik på <here></here> for at oprette en ny app"
+        "description": "Klik på <here></here> for at oprette en ny app",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Ingen integration valgt",
@@ -2007,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2096,6 +2103,17 @@
       "columnCount": {
         "label": "Kolonne antal"
       },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
+      },
       "name": {
         "label": "Navn"
       },
@@ -2120,8 +2138,8 @@
         "background": {
           "title": "Baggrund"
         },
-        "color": {
-          "title": "Farver"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "Brugerdefineret CSS"
