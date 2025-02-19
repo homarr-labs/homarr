@@ -1608,7 +1608,8 @@
       },
       "app": {
         "noData": "Nenašla sa žiadna aplikácia",
-        "description": "Kliknutím na <here></here> vytvorte novú aplikáciu"
+        "description": "Kliknutím na <here></here> vytvorte novú aplikáciu",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Nie je vybraná žiadna integrácia",
@@ -2007,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2096,6 +2103,17 @@
       "columnCount": {
         "label": "Počet stĺpcov"
       },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
+      },
       "name": {
         "label": "Názov"
       },
@@ -2120,8 +2138,8 @@
         "background": {
           "title": "Pozadie"
         },
-        "color": {
-          "title": "Farby"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "Vlastné css"

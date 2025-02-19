@@ -1608,7 +1608,8 @@
       },
       "app": {
         "noData": "Nem található alkalmazás",
-        "description": ""
+        "description": "",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "",
@@ -2007,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2096,6 +2103,17 @@
       "columnCount": {
         "label": ""
       },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
+      },
       "name": {
         "label": "Név"
       },
@@ -2120,7 +2138,7 @@
         "background": {
           "title": "Háttér"
         },
-        "color": {
+        "appearance": {
           "title": ""
         },
         "customCss": {
