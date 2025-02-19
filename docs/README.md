@@ -101,7 +101,7 @@ Since we are updating Homarr very frequently, we recommend reading our official 
 <br/>
 <br/>
 
-[![Contribute Section](docs/section-contribute.png)](https://opencollective.com/homarr)
+[![Contribute Section](./section-contribute.png)](https://opencollective.com/homarr)
 
 <br/>
 
