@@ -2088,6 +2088,9 @@
       "opacity": {
         "label": "Opacity"
       },
+      "iconColor": {
+        "label": "Icon color"
+      },
       "customCss": {
         "label": "Custom css for this board",
         "description": "Further, customize your dashboard using CSS, only recommended for experienced users",

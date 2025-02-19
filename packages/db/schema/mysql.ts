@@ -281,6 +281,7 @@ export const boards = mysqlTable("board", {
   opacity: int().default(100).notNull(),
   customCss: text(),
   columnCount: int().default(10).notNull(),
+  iconColor: text(),
   itemRadius: text().$type<MantineSize>().default("lg").notNull(),
   disableStatus: boolean().default(false).notNull(),
 });

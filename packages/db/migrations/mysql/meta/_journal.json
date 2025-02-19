@@ -190,6 +190,13 @@
       "when": 1739907771355,
       "tag": "0026_add-border-radius",
       "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "5",
+      "when": 1739915526818,
+      "tag": "0027_acoustic_karma",
+      "breakpoints": true
     }
   ]
 }
