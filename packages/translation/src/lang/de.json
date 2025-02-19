@@ -1608,7 +1608,8 @@
       },
       "app": {
         "noData": "Keine App gefunden",
-        "description": "Klicken Sie <here></here> um eine neue App zu erstellen"
+        "description": "Klicken Sie <here></here> um eine neue App zu erstellen",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Keine Integration ausgewählt",
@@ -2007,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2096,6 +2103,17 @@
       "columnCount": {
         "label": "Anzahl der Spalten"
       },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
+      },
       "name": {
         "label": "Name"
       },
@@ -2120,8 +2138,8 @@
         "background": {
           "title": "Hintergrund"
         },
-        "color": {
-          "title": "Farben"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "Benutzerdefiniertes CSS"

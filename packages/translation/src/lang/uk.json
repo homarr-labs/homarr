@@ -1608,7 +1608,8 @@
       },
       "app": {
         "noData": "Додаток не знайдено",
-        "description": "Натисніть <here></here> щоб створити новий додаток"
+        "description": "Натисніть <here></here> щоб створити новий додаток",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Інтеграція не вибрана",
@@ -2007,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2096,6 +2103,17 @@
       "columnCount": {
         "label": ""
       },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
+      },
       "name": {
         "label": "Ім’я"
       },
@@ -2120,8 +2138,8 @@
         "background": {
           "title": "Фон"
         },
-        "color": {
-          "title": "Кольори"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": ""
