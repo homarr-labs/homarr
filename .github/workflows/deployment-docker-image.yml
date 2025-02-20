@@ -105,7 +105,7 @@ jobs:
   deploy-amd64:
     name: Deploy docker image for amd64
     needs: release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     env:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
