@@ -110,17 +110,12 @@ jobs:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
       DEPLOY_BETA: ${{ github.ref_name == 'beta' }}
+    outputs:
+      imageid: ${{ steps.buildPushAction.outputs.imageid }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ needs.release.outputs.git_ref }}
-      - name: Discord notification
-        if: ${{ github.events.inputs.send-notifications != false }}
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@master
-        with:
-          args: "Deployment of an amd64 image for version '${{env.NEXT_VERSION}}' has been triggered: [run ${{ github.run_number }}](<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>)"
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -150,12 +145,6 @@ jobs:
           network: host
         env:
           SKIP_ENV_VALIDATION: true
-      - name: Discord notification
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@master
-        with:
-          args: "Deployment of an amd64 image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'."
   deploy-arm64:
     name: Deploy docker image for arm64
     needs: release
@@ -164,17 +153,12 @@ jobs:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
       DEPLOY_BETA: ${{ github.ref_name == 'beta' }}
+    outputs:
+      imageid: ${{ steps.buildPushAction.outputs.imageid }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ needs.release.outputs.git_ref }}
-      - name: Discord notification
-        if: ${{ github.events.inputs.send-notifications != false }}
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@master
-        with:
-          args: "Deployment of an arm64 image for version '${{env.NEXT_VERSION}}' has been triggered: [run ${{ github.run_number }}](<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>)"
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -204,9 +188,18 @@ jobs:
           network: host
         env:
           SKIP_ENV_VALIDATION: true
+
+  complete:
+    name: Complete deployment and notify
+    needs: [deploy-amd64, deploy-arm64]
+    runs-on: ubuntu-latest
+    env:
+      amd64_imageid: ${{ needs.deploy-amd64.outputs.imageid }}
+      arm64_imageid: ${{ needs.deploy-arm64.outputs.imageid }}
+    steps:
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Deployment of an arm64 image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'."
+          args: "Successfully deployed images for branch **${{ github.ref_name }}**.\n\n- **amd64**: ${{ env.amd64_imageid }}\n- **arm64**: ${{ env.arm64_imageid }}"
