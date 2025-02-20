@@ -2088,6 +2088,9 @@
       "opacity": {
         "label": ""
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "",
         "description": "さらに、CSS を使用してダッシュボードをカスタマイズします。経験豊富なユーザーにのみお勧めします。",

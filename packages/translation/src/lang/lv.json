@@ -2088,6 +2088,9 @@
       "opacity": {
         "label": ""
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "",
         "description": "Turklāt pielāgojiet paneli, izmantojot CSS, ieteicams tikai pieredzējušiem lietotājiem",

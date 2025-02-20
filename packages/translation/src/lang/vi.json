@@ -2088,6 +2088,9 @@
       "opacity": {
         "label": ""
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "",
         "description": "Ngoài ra có thể tùy chỉnh bảng điều khiển của bạn bằng CSS, chỉ được đề xuất cho người dùng có kinh nghiệm",

@@ -2088,6 +2088,9 @@
       "opacity": {
         "label": "不透明度"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "自定義此面板 CSS html",
         "description": "僅推薦有經驗的使用者使用 CSS html",

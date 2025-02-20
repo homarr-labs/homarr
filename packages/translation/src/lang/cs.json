@@ -2088,6 +2088,9 @@
       "opacity": {
         "label": ""
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "",
         "description": "Dále si můžete přizpůsobit ovládací panel pomocí CSS, doporučujeme pouze zkušeným uživatelům",

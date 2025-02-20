@@ -2088,6 +2088,9 @@
       "opacity": {
         "label": "不透明度"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "自定义此面板的 css",
         "description": "只推荐有经验的用户使用 CSS 自定义面板",

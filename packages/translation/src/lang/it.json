@@ -2088,6 +2088,9 @@
       "opacity": {
         "label": ""
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "",
         "description": "Inoltre, personalizza la dashboard utilizzando i CSS, consigliato solo agli utenti esperti",
