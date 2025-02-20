@@ -32,7 +32,7 @@ export const useDynamicSectionActions = () => {
         height: 1,
         width: 1,
         items: [],
-        options: superjson.stringify({}),
+        options: '{"json": {}}',
         parentSectionId: lastSection.id,
         // We omit xOffset and yOffset because gridstack will use the first available position
       } satisfies Omit<DynamicSection, "xOffset" | "yOffset">;

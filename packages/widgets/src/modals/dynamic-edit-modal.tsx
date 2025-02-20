@@ -22,7 +22,6 @@ interface ModalProps {
 export const DynamicEditModal = createModal<ModalProps>(({ actions, innerProps }) => {
   const t = useI18n();
 
-  // Translate the error messages
   z.setErrorMap(zodErrorMap(t));
   const form = useForm({
     mode: "controlled",
