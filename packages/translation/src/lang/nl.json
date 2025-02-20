@@ -2088,6 +2088,9 @@
       "opacity": {
         "label": "Dekking"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "Aangepaste CSS voor dit bord",
         "description": "Pas je dashboard verder aan met behulp van CSS, alleen aanbevolen voor ervaren gebruikers",

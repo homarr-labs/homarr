@@ -2088,6 +2088,9 @@
       "opacity": {
         "label": "Opaklık"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "Bu panel için özel css",
         "description": "CSS kullanarak panelizi özelleştirin, sadece tecrübeli kullanıcılar için tavsiye edilir",

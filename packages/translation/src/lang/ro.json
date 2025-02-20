@@ -2088,6 +2088,9 @@
       "opacity": {
         "label": ""
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "",
         "description": "În plus, personalizați-vă planșa folosind CSS, recomandat doar pentru utilizatorii experimentați",

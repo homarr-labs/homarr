@@ -2088,6 +2088,9 @@
       "opacity": {
         "label": ""
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "",
         "description": "Dadatno prilagodite pogled s CSS. Priporočljivo le za izkušene uporabnike",
