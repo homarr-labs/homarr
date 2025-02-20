@@ -1,8 +1,9 @@
 import type { JSX, PropsWithChildren } from "react";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { AppShellMain } from "@mantine/core";
 import { TRPCError } from "@trpc/server";
 
+import { auth } from "@homarr/auth/next";
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
 import { logger } from "@homarr/log";
@@ -32,8 +33,14 @@ export const createBoardLayout = <TParams extends Params>({
   }: PropsWithChildren<{
     params: Promise<TParams>;
   }>) => {
+    const session = await auth();
     const initialBoard = await getInitialBoard(await params).catch((error) => {
       if (error instanceof TRPCError && error.code === "NOT_FOUND") {
+        if (!session) {
+          logger.debug("No home board found for anonymous user, redirecting to login");
+          redirect("/auth/login");
+        }
+
         logger.warn(error);
         notFound();
       }
