@@ -681,11 +681,6 @@
           "name": "group_name_unique",
           "columns": ["name"]
         }
-      },
-      "checkConstraint": {}
-    },
-    "iconRepository": {
-      "name": "iconRepository",
       "columns": {
         "id": {
           "name": "id",
