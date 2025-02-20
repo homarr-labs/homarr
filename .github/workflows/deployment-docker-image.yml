@@ -105,7 +105,7 @@ jobs:
   deploy-amd64:
     name: Deploy docker image for amd64
     needs: release
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-latest
     env:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
@@ -120,7 +120,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Deployment of an image for version '${{env.NEXT_VERSION}}' has been triggered: [run ${{ github.run_number }}](<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>)"
+          args: "Deployment of an amd64 image for version '${{env.NEXT_VERSION}}' has been triggered: [run ${{ github.run_number }}](<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>)"
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -155,11 +155,11 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Deployment of image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'."
+          args: "Deployment of an amd64 image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'."
   deploy-arm64:
     name: Deploy docker image for arm64
     needs: release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     env:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
@@ -174,7 +174,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Deployment of an image for version '${{env.NEXT_VERSION}}' has been triggered: [run ${{ github.run_number }}](<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>)"
+          args: "Deployment of an arm64 image for version '${{env.NEXT_VERSION}}' has been triggered: [run ${{ github.run_number }}](<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>)"
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -209,4 +209,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Deployment of image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'."
+          args: "Deployment of an arm64 image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'."
