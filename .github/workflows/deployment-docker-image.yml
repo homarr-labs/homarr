@@ -96,13 +96,14 @@ jobs:
         run: |
           git config user.name "Releases Homarr"
           git config user.email "175486441+homarr-releases[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git fetch origin dev
           git checkout dev
           git pull origin dev
-          git merge ${{ github.ref_name }}
+          git rebase ${{ github.ref_name }}
           git push origin dev
-  deploy:
-    name: Deploy docker image
+  deploy-amd64:
+    name: Deploy docker image for amd64
     needs: release
     runs-on: ubuntu-latest
     env:
@@ -126,8 +127,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Docker meta
@@ -143,7 +142,61 @@ jobs:
         id: buildPushAction
         uses: docker/build-push-action@v6
         with:
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          network: host
+        env:
+          SKIP_ENV_VALIDATION: true
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Deployment of image has completed for branch ${{ github.ref_name }}. Image ID is '${{ steps.buildPushAction.outputs.imageid }}'."
+  deploy-arm64:
+    name: Deploy docker image for arm64
+    needs: release
+    runs-on: ubuntu-latest
+    env:
+      NEXT_VERSION: ${{ needs.release.outputs.version }}
+      DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
+      DEPLOY_BETA: ${{ github.ref_name == 'beta' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release.outputs.git_ref }}
+      - name: Discord notification
+        if: ${{ github.events.inputs.send-notifications != false }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Deployment of an image for version '${{env.NEXT_VERSION}}' has been triggered: [run ${{ github.run_number }}](<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>)"
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          tags: |
+            ${{ env.DEPLOY_LATEST == 'true' && 'type=raw,value=latest' || null }}
+            ${{ env.DEPLOY_BETA == 'true' && 'type=raw,value=beta' || null }}
+            type=raw,value=${{ env.NEXT_VERSION }}
+      - name: Build and push
+        id: buildPushAction
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/arm64
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
