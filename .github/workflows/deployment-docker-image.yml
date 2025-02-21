@@ -15,8 +15,9 @@ on:
         description: Send notifications
 
 permissions:
-  contents: write
-  packages: write
+  contents: write # Required to update package.json version
+  packages: write # Required for pushing to GHCR
+  actions: write # Required for uploading/downloading artifacts
 
 env:
   SKIP_ENV_VALIDATION: true
@@ -102,104 +103,136 @@ jobs:
           git pull origin dev
           git rebase ${{ github.ref_name }}
           git push origin dev
-  deploy-amd64:
-    name: Deploy docker image for amd64
+  build-amd64:
+    name: Build docker image for amd64
     needs: release
     runs-on: ubuntu-latest
-    env:
-      NEXT_VERSION: ${{ needs.release.outputs.version }}
-      DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
-      DEPLOY_BETA: ${{ github.ref_name == 'beta' }}
     outputs:
-      imageid: ${{ steps.buildPushAction.outputs.imageid }}
+      artifact-id: ${{ steps.upload-image.outputs.artifact-id }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ needs.release.outputs.git_ref }}
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
-          tags: |
-            ${{ env.DEPLOY_LATEST == 'true' && 'type=raw,value=latest' || null }}
-            ${{ env.DEPLOY_BETA == 'true' && 'type=raw,value=beta' || null }}
-            type=raw,value=${{ env.NEXT_VERSION }}
-      - name: Build and push
-        id: buildPushAction
+      - name: Build
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64
           context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          load: true
+          push: false # Never push the image here, we will push it in a later step
+          tags: builded-image
           network: host
         env:
           SKIP_ENV_VALIDATION: true
-  deploy-arm64:
-    name: Deploy docker image for arm64
+      - name: Create image artifact
+        run: docker save -o image-amd64.tar builded-image
+      - name: Upload image artifact
+        id: upload-image
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-amd64
+          path: image-amd64.tar
+          retention-days: 1
+
+  build-arm64:
+    name: Build docker image for arm64
     needs: release
     runs-on: ubuntu-24.04-arm
-    env:
-      NEXT_VERSION: ${{ needs.release.outputs.version }}
-      DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
-      DEPLOY_BETA: ${{ github.ref_name == 'beta' }}
     outputs:
-      imageid: ${{ steps.buildPushAction.outputs.imageid }}
+      artifact-id: ${{ steps.upload-image.outputs.artifact-id }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ needs.release.outputs.git_ref }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/arm64
+          context: .
+          load: true
+          push: false # Never push the image here, we will push it in a later step
+          tags: builded-image
+          network: host
+        env:
+          SKIP_ENV_VALIDATION: true
+      - name: Create image artifact
+        run: docker save -o image-arm64.tar builded-image
+      - name: Upload image artifact
+        id: upload-image
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-arm64
+          path: image-arm64.tar
+          retention-days: 1
+
+  push:
+    name: Complete deployment and notify
+    needs: [release, build-amd64, build-arm64]
+    runs-on: ubuntu-latest
+    env:
+      NEXT_VERSION: ${{ needs.release.outputs.version }}
+      DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
+      DEPLOY_BETA: ${{ github.ref_name == 'beta' }}
+    steps:
+      - name: Download amd64 image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: image-amd64
+          path: .
+      - name: Load amd64 image artifact
+        run: docker load -i image-amd64.tar
+      - name: Download arm64 image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: image-arm64
+          path: .
+      - name: Load arm64 image artifact
+        run: docker load -i image-arm64.tar
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
-          tags: |
-            ${{ env.DEPLOY_LATEST == 'true' && 'type=raw,value=latest' || null }}
-            ${{ env.DEPLOY_BETA == 'true' && 'type=raw,value=beta' || null }}
-            type=raw,value=${{ env.NEXT_VERSION }}
-      - name: Build and push
-        id: buildPushAction
-        uses: docker/build-push-action@v6
-        with:
-          platforms: linux/arm64
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          network: host
-        env:
-          SKIP_ENV_VALIDATION: true
 
-  complete:
-    name: Complete deployment and notify
-    needs: [deploy-amd64, deploy-arm64]
-    runs-on: ubuntu-latest
-    env:
-      amd64_imageid: ${{ needs.deploy-amd64.outputs.imageid }}
-      arm64_imageid: ${{ needs.deploy-arm64.outputs.imageid }}
-    steps:
+      - name: Push beta
+        if: env.DEPLOY_BETA == 'true'
+        run: |
+          docker tag builded-image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:temp-beta
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:temp-beta
+      - name: Push latest
+        if: env.DEPLOY_LATEST == 'true'
+        run: |
+          docker tag builded-image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:temp-latest
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:temp-latest
+      - name: Push version
+        run: |
+          docker tag builded-image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{env.NEXT_VERSION}}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{env.NEXT_VERSION}}
+
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Successfully deployed images for branch **${{ github.ref_name }}**.\n\n- **amd64**: ${{ env.amd64_imageid }}\n- **arm64**: ${{ env.arm64_imageid }}"
+          args: "Successfully deployed images for branch **${{ github.ref_name }}**. Tagged as **${{env.NEXT_VERSION}}**."
+
+  cleanup:
+    name: Cleanup artifacts
+    runs-on: ubuntu-latest
+    needs: [build-amd64, build-arm64, push]
+    steps:
+      - name: Remove amd64 artifact
+        if: always()
+        continue-on-error: true # Ignore if unable to remove artifacts
+        run: |
+          curl -X DELETE --silent --location --user ${{github.actor}}:${{secrets.GITHUB_TOKEN}} https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ needs.build-amd64.outputs.artifact-id }}
+      - name: Remove arm64 artifact
+        if: always()
+        continue-on-error: true # Ignore if unable to remove artifacts
+        run: |
+          curl -X DELETE --silent --location --user ${{github.actor}}:${{secrets.GITHUB_TOKEN}} https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ needs.build-arm64.outputs.artifact-id }}
