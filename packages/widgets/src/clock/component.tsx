@@ -22,19 +22,19 @@ export default function ClockWidget({ options }: WidgetComponentProps<"clock">) 
   const timezone = options.useCustomTimezone ? options.timezone : Intl.DateTimeFormat().resolvedOptions().timeZone;
   const time = useCurrentTime(options);
   return (
-    <Stack className="clock-text-stack" h="100%" align="center" justify="center" gap="10cqmin">
+    <Stack className="clock-text-stack" h="100%" align="center" justify="center" gap="lg">
       {options.customTitleToggle && (
-        <Text className="clock-customTitle-text" size="12.5cqmin" ta="center">
+        <Text className="clock-customTitle-text" ta="center">
           {options.customTitle}
         </Text>
       )}
-      <Text className="clock-time-text" fw={700} size="22.5cqmin" lh="1">
+      <Text className="clock-time-text" fw="bold" size="lg" lh={1}>
         {options.customTimeFormat
           ? dayjs(time).tz(timezone).format(customTimeFormat)
           : dayjs(time).tz(timezone).format(timeFormat)}
       </Text>
       {options.showDate && (
-        <Text className="clock-date-text" size="12.5cqmin" p="1cqmin" lineClamp={1}>
+        <Text className="clock-date-text" lineClamp={1}>
           {options.customDateFormat
             ? dayjs(time).tz(timezone).format(customDateFormat)
             : dayjs(time).tz(timezone).format(dateFormat)}
