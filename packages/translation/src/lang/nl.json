@@ -305,7 +305,15 @@
     "search": "Vind een groep",
     "field": {
       "name": "Naam",
-      "members": "Leden"
+      "members": "Leden",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Groep selecteren",
         "notFound": "Geen groep gevonden"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Gevarenzone",
     "noResults": "Geen resultaten gevonden",
+    "unsavedChanges": "",
     "preview": {
       "show": "Voorbeeld weergeven",
       "hide": "Voorbeeld verbergen"
@@ -1048,7 +1085,7 @@
           "label": "Beschrijving tooltip weergeven"
         },
         "pingEnabled": {
-          "label": "Eenvoudige ping inschakelen"
+          "label": "Statuscontrole inschakelen"
         }
       },
       "error": {
@@ -1571,7 +1608,8 @@
       },
       "app": {
         "noData": "Geen app gevonden",
-        "description": "Klik <here></here> om een nieuwe app aan te maken"
+        "description": "Klik <here></here> om een nieuwe app aan te maken",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Geen integratie geselecteerd",
@@ -1970,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2044,6 +2088,9 @@
       "opacity": {
         "label": "Dekking"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "Aangepaste CSS voor dit bord",
         "description": "Pas je dashboard verder aan met behulp van CSS, alleen aanbevolen voor ervaren gebruikers",
@@ -2058,6 +2105,17 @@
       },
       "columnCount": {
         "label": "Kolom aantal"
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "Naam"
@@ -2083,8 +2141,8 @@
         "background": {
           "title": "Achtergrond"
         },
-        "color": {
-          "title": "Kleuren"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "Aangepaste CSS"
@@ -2413,6 +2471,13 @@
             "owner": "Eigenaar",
             "ownerOfGroup": "Eigenaar van deze groep",
             "ownerOfGroupDeleted": "De eigenaar van deze groep is verwijderd. Het heeft momenteel geen eigenaar."
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "Leden",

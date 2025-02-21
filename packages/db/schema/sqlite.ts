@@ -1,4 +1,5 @@
 import type { AdapterAccount } from "@auth/core/adapters";
+import type { MantineSize } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import { relations, sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
@@ -133,6 +134,13 @@ export const groups = sqliteTable("group", {
   ownerId: text().references(() => users.id, {
     onDelete: "set null",
   }),
+  homeBoardId: text().references(() => boards.id, {
+    onDelete: "set null",
+  }),
+  mobileHomeBoardId: text().references(() => boards.id, {
+    onDelete: "set null",
+  }),
+  position: int().notNull(),
 });
 
 export const groupPermissions = sqliteTable("groupPermission", {
@@ -258,6 +266,8 @@ export const boards = sqliteTable("board", {
   opacity: int().default(100).notNull(),
   customCss: text(),
   columnCount: int().default(10).notNull(),
+  iconColor: text(),
+  itemRadius: text().$type<MantineSize>().default("lg").notNull(),
   disableStatus: int({ mode: "boolean" }).default(false).notNull(),
 });
 
@@ -486,6 +496,16 @@ export const groupRelations = relations(groups, ({ one, many }) => ({
     fields: [groups.ownerId],
     references: [users.id],
   }),
+  homeBoard: one(boards, {
+    fields: [groups.homeBoardId],
+    references: [boards.id],
+    relationName: "groupRelations__board__homeBoardId",
+  }),
+  mobileHomeBoard: one(boards, {
+    fields: [groups.mobileHomeBoardId],
+    references: [boards.id],
+    relationName: "groupRelations__board__mobileHomeBoardId",
+  }),
 }));
 
 export const groupPermissionRelations = relations(groupPermissions, ({ one }) => ({
@@ -561,6 +581,12 @@ export const boardRelations = relations(boards, ({ many, one }) => ({
   }),
   userPermissions: many(boardUserPermissions),
   groupPermissions: many(boardGroupPermissions),
+  groupHomes: many(groups, {
+    relationName: "groupRelations__board__homeBoardId",
+  }),
+  mobileHomeBoard: many(groups, {
+    relationName: "groupRelations__board__mobileHomeBoardId",
+  }),
 }));
 
 export const sectionRelations = relations(sections, ({ many, one }) => ({

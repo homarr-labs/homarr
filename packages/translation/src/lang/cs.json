@@ -305,7 +305,15 @@
     "search": "Najít skupinu",
     "field": {
       "name": "Název",
-      "members": "Členové"
+      "members": "Členové",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Vyberte skupinu",
         "notFound": "Nebyla nalezena žádná skupina"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Nebezpečná zóna",
     "noResults": "Nebyly nalezeny žádné výsledky",
+    "unsavedChanges": "",
     "preview": {
       "show": "Zobrazit náhled",
       "hide": "Skrýt náhled"
@@ -1571,7 +1608,8 @@
       },
       "app": {
         "noData": "",
-        "description": "Klikněte na <here></here> pro vytvoření nové aplikace"
+        "description": "Klikněte na <here></here> pro vytvoření nové aplikace",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Nebyla vybrána žádná integrace",
@@ -1970,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2044,6 +2088,9 @@
       "opacity": {
         "label": ""
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "",
         "description": "Dále si můžete přizpůsobit ovládací panel pomocí CSS, doporučujeme pouze zkušeným uživatelům",
@@ -2058,6 +2105,17 @@
       },
       "columnCount": {
         "label": ""
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "Název"
@@ -2083,7 +2141,7 @@
         "background": {
           "title": "Pozadí"
         },
-        "color": {
+        "appearance": {
           "title": ""
         },
         "customCss": {
@@ -2413,6 +2471,13 @@
             "owner": "Vlastník",
             "ownerOfGroup": "Vlastník této skupiny",
             "ownerOfGroupDeleted": "Vlastník této skupiny byl odstraněn. V současné době nemá žádného vlastníka."
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "Členové",

@@ -305,7 +305,15 @@
     "search": "查找群组",
     "field": {
       "name": "名称",
-      "members": "成员"
+      "members": "成员",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "选择用户组",
         "notFound": "未找到用户组"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "危险",
     "noResults": "未找到结果",
+    "unsavedChanges": "",
     "preview": {
       "show": "显示预览",
       "hide": "隐藏预览"
@@ -1571,7 +1608,8 @@
       },
       "app": {
         "noData": "未找到应用",
-        "description": "点击 <here></here> 创建一个新的应用"
+        "description": "点击 <here></here> 创建一个新的应用",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "未选择集成",
@@ -1970,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2044,6 +2088,9 @@
       "opacity": {
         "label": "不透明度"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "自定义此面板的 css",
         "description": "只推荐有经验的用户使用 CSS 自定义面板",
@@ -2058,6 +2105,17 @@
       },
       "columnCount": {
         "label": "列数"
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "名称"
@@ -2083,8 +2141,8 @@
         "background": {
           "title": "背景"
         },
-        "color": {
-          "title": "配色"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "自定义 css"
@@ -2413,6 +2471,13 @@
             "owner": "所有者",
             "ownerOfGroup": "该组的所有者",
             "ownerOfGroupDeleted": "此用户组的所有者已被删除。它目前没有所有者。"
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "成员",

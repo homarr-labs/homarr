@@ -27,6 +27,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
+    "@homarr/env": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
     "next": "15.1.7",

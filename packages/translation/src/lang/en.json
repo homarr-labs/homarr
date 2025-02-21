@@ -305,7 +305,15 @@
     "search": "Find a group",
     "field": {
       "name": "Name",
-      "members": "Members"
+      "members": "Members",
+      "homeBoard": {
+        "label": "Home board",
+        "description": "Only boards accessible to the group can be selected"
+      },
+      "mobileBoard": {
+        "label": "Mobile board",
+        "description": "Only boards accessible to the group can be selected"
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Select group",
         "notFound": "No group found"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "Settings saved",
+              "message": "Board settings saved successfully"
+            },
+            "error": {
+              "title": "Failed to save settings",
+              "message": "Unable to save board settings"
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": "Position changed successfully"
+          },
+          "error": {
+            "message": "Unable to change position"
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "Default group",
+      "description": "{name} - All signed in users"
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Danger zone",
     "noResults": "No results found",
+    "unsavedChanges": "You have unsaved changes!",
     "preview": {
       "show": "Show preview",
       "hide": "Hide preview"
@@ -1571,7 +1608,8 @@
       },
       "app": {
         "noData": "No app found",
-        "description": "Click <here></here> to create a new app"
+        "description": "Click <here></here> to create a new app",
+        "quickCreate": "Create app on the fly"
       },
       "error": {
         "noIntegration": "No integration selected",
@@ -1970,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "Create app on the fly",
+          "createAndUse": "Create and use"
+        }
       }
     },
     "field": {
@@ -2044,6 +2088,9 @@
       "opacity": {
         "label": "Opacity"
       },
+      "iconColor": {
+        "label": "Icon color"
+      },
       "customCss": {
         "label": "Custom css for this board",
         "description": "Further, customize your dashboard using CSS, only recommended for experienced users",
@@ -2058,6 +2105,17 @@
       },
       "columnCount": {
         "label": "Column count"
+      },
+      "itemRadius": {
+        "label": "Item radius",
+        "description": "Changes the roundness of tiles on your board",
+        "option": {
+          "xs": "Very small",
+          "sm": "Small",
+          "md": "Medium",
+          "lg": "Large",
+          "xl": "Very large"
+        }
       },
       "name": {
         "label": "Name"
@@ -2083,8 +2141,8 @@
         "background": {
           "title": "Background"
         },
-        "color": {
-          "title": "Colors"
+        "appearance": {
+          "title": "Appearance"
         },
         "customCss": {
           "title": "Custom css"
@@ -2413,6 +2471,13 @@
             "owner": "Owner",
             "ownerOfGroup": "Owner of this group",
             "ownerOfGroupDeleted": "The owner of this group was deleted. It currently has no owner."
+          },
+          "setting": {
+            "title": "Settings",
+            "alert": "Group settings are prioritized by the order of groups in the list. The top settings overwrite the bottom settings.",
+            "board": {
+              "title": "Boards"
+            }
           },
           "members": {
             "title": "Members",

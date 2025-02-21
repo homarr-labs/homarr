@@ -28,6 +28,7 @@ const seedEveryoneGroupAsync = async (db: Database) => {
   await db.insert(groups).values({
     id: createId(),
     name: everyoneGroup,
+    position: -1,
   });
   console.log("Created group 'everyone' through seed");
 };

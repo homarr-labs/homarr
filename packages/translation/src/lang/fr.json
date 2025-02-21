@@ -305,7 +305,15 @@
     "search": "Trouver un groupe",
     "field": {
       "name": "Nom",
-      "members": "Membres"
+      "members": "Membres",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Sélectionner un groupe",
         "notFound": "Aucun groupe trouvé"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "Zone de danger",
     "noResults": "Aucun résultat trouvé",
+    "unsavedChanges": "",
     "preview": {
       "show": "Afficher l’aperçu",
       "hide": "Masquer l'aperçu"
@@ -1571,7 +1608,8 @@
       },
       "app": {
         "noData": "",
-        "description": ""
+        "description": "",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "",
@@ -1970,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2044,6 +2088,9 @@
       "opacity": {
         "label": ""
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "",
         "description": "En outre, vous pouvez personnaliser votre tableau de bord à l'aide de CSS. Réservé aux utilisateurs expérimentés.",
@@ -2058,6 +2105,17 @@
       },
       "columnCount": {
         "label": ""
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "Nom"
@@ -2083,7 +2141,7 @@
         "background": {
           "title": "Fond"
         },
-        "color": {
+        "appearance": {
           "title": ""
         },
         "customCss": {
@@ -2413,6 +2471,13 @@
             "owner": "Propriétaire",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "",

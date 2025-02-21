@@ -305,7 +305,15 @@
     "search": "尋找用戶組",
     "field": {
       "name": "名稱",
-      "members": "成員"
+      "members": "成員",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "選擇用戶組",
         "notFound": "用戶組不存在"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -888,6 +924,7 @@
     },
     "dangerZone": "危險區域",
     "noResults": "未找到結果",
+    "unsavedChanges": "",
     "preview": {
       "show": "顯示預覽",
       "hide": "隱藏預覽"
@@ -1571,7 +1608,8 @@
       },
       "app": {
         "noData": "未找到應用程式",
-        "description": "點擊 <here></here> 創建新的應用程式"
+        "description": "點擊 <here></here> 創建新的應用程式",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "未選擇集成",
@@ -1970,6 +2008,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2044,6 +2088,9 @@
       "opacity": {
         "label": "不透明度"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "自定義此面板 CSS html",
         "description": "僅推薦有經驗的使用者使用 CSS html",
@@ -2058,6 +2105,17 @@
       },
       "columnCount": {
         "label": "列數"
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "名稱"
@@ -2083,8 +2141,8 @@
         "background": {
           "title": "背景"
         },
-        "color": {
-          "title": "配色"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "自定義 CSS html"
@@ -2413,6 +2471,13 @@
             "owner": "所有者",
             "ownerOfGroup": "該用戶組的所有者",
             "ownerOfGroupDeleted": "此用戶組的所有者已被移除，目前沒有所有者"
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "成員",

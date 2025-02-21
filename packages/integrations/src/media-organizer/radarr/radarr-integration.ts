@@ -106,7 +106,8 @@ export class RadarrIntegration extends MediaOrganizerIntegration {
 
 const radarrCalendarEventImageSchema = z.array(
   z.object({
-    coverType: z.enum(["screenshot", "poster", "banner", "fanart", "clearlogo"]),
+    // See https://github.com/Radarr/Radarr/blob/a3b1512552a8a5bc0c0d399d961ccbf0dba97749/src/NzbDrone.Core/MediaCover/MediaCover.cs#L6-L15
+    coverType: z.enum(["unknown", "poster", "banner", "fanart", "screenshot", "headshot", "clearlogo"]),
     remoteUrl: z.string().url(),
   }),
 );
