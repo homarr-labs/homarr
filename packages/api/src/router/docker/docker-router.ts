@@ -3,30 +3,65 @@ import { z } from "zod";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
-import { DockerSingleton } from "@homarr/docker";
 import type { Container, ContainerInfo, ContainerState, Docker, Port } from "@homarr/docker";
+import { DockerSingleton } from "@homarr/docker";
 import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 
 const dockerCache = createCacheChannel<{
-  containers: (ContainerInfo & { instance: string; iconUrl: string | null })[];
+  containers: (ContainerInfo & { instance: string; iconUrl: string | null; cpuUsage: number; memoryUsage: number })[];
 }>("docker-containers", 5 * 60 * 1000);
 
+const statsCache = createCacheChannel<Map<string, { totalUsage: number; systemUsage: number }>>(
+  "docker-stats",
+  30 * 1000,
+);
+
 export const dockerRouter = createTRPCRouter({
+  // The first time getContainers runs, there’s no previous CPU usage data, so the percentage will be 0
   getContainers: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
     const result = await dockerCache
       .consumeAsync(async () => {
         const dockerInstances = DockerSingleton.getInstances();
+        const statsData = await statsCache.getAsync();
+        const prevStats = statsData?.data ?? new Map<string, { totalUsage: number; systemUsage: number }>();
+
         const containers = await Promise.all(
           // Return all the containers of all the instances into only one item
           dockerInstances.map(({ instance, host: key }) =>
             instance.listContainers({ all: true }).then((containers) =>
-              containers.map((container) => ({
-                ...container,
-                instance: key,
-              })),
+              Promise.all(
+                containers.map(async (container) => {
+                  const stats = await instance.getContainer(container.Id).stats({ stream: false });
+
+                  const totalUsage = stats.cpu_stats.cpu_usage.total_usage;
+                  const systemUsage = stats.cpu_stats.system_cpu_usage;
+                  const cpuCount = stats.cpu_stats.online_cpus;
+                  const previous = prevStats.get(container.Id);
+
+                  let cpuPercent = 0;
+                  if (previous) {
+                    const totalDiff = totalUsage - previous.totalUsage;
+                    const systemDiff = systemUsage - previous.systemUsage;
+                    if (systemDiff > 0) {
+                      cpuPercent = (totalDiff / systemDiff) * cpuCount * 100;
+                    }
+                  }
+
+                  // Update statsCache without overwriting everything
+                  prevStats.set(container.Id, { totalUsage, systemUsage });
+                  await statsCache.setAsync(prevStats);
+
+                  return {
+                    ...container,
+                    instance: key,
+                    cpuUsage: Math.round(cpuPercent * 100) / 100,
+                    memoryUsage: stats.memory_stats.usage,
+                  };
+                }),
+              ),
             ),
           ),
         ).then((containers) => containers.flat());
@@ -169,10 +204,12 @@ interface DockerContainer {
   image: string;
   ports: Port[];
   iconUrl: string | null;
+  cpuUsage?: number;
+  memoryUsage?: number;
 }
 
 function sanitizeContainers(
-  containers: (ContainerInfo & { instance: string; iconUrl: string | null })[],
+  containers: (ContainerInfo & { instance: string; iconUrl: string | null; cpuUsage: number; memoryUsage: number })[],
 ): DockerContainer[] {
   return containers.map((container) => {
     return {
@@ -183,6 +220,8 @@ function sanitizeContainers(
       image: container.Image,
       ports: container.Ports,
       iconUrl: container.iconUrl,
+      cpuUsage: container.cpuUsage,
+      memoryUsage: container.memoryUsage,
     };
   });
 }
