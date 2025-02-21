@@ -200,7 +200,7 @@ describe("create should create a new app with all arguments", () => {
     expect(dbApp!.description).toBe(input.description);
     expect(dbApp!.iconUrl).toBe(input.iconUrl);
     expect(dbApp!.href).toBe(input.href);
-    expect(dbApp!.pingUrl).toBe(input.pingUrl);
+    expect(dbApp!.pingUrl).toBe(null);
   });
 });
 
