@@ -22,12 +22,12 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
-import classes from "./component.module.css";
+import { useRequiredBoard } from "@homarr/boards/context";
 
 export default function MediaServerWidget({
-  integrationIds,
-  isEditMode,
-}: WidgetComponentProps<"mediaRequests-requestStats">) {
+                                            integrationIds,
+                                            isEditMode,
+                                          }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const [requestStats] = clientApi.widget.mediaRequests.getStats.useSuspenseQuery(
     {
@@ -42,9 +42,10 @@ export default function MediaServerWidget({
 
   const { width, height, ref } = useElementSize();
 
+  const board = useRequiredBoard();
+
   if (requestStats.users.length === 0 && requestStats.stats.length === 0) throw new NoIntegrationDataError();
 
-  //Add processing and available
   const data = [
     {
       name: "approved",
@@ -93,19 +94,18 @@ export default function MediaServerWidget({
       className="mediaRequests-stats-layout"
       display="flex"
       h="100%"
-      gap="2cqmin"
-      p="2cqmin"
+      gap="sm"
+      p="sm"
       align="center"
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
     >
-      <Text className="mediaRequests-stats-stats-title" size="6.5cqmin">
+      <Text className="mediaRequests-stats-stats-title" fw={"bold"} size="md">
         {t("titles.stats.main")}
       </Text>
-      <Grid className="mediaRequests-stats-stats-grid" gutter={0} w="100%">
+      <Grid className="mediaRequests-stats-stats-grid" gutter={10} w="100%">
         {data.map((stat) => (
           <Grid.Col
             className={combineClasses(
-              classes.gridElement,
               "mediaRequests-stats-stat-wrapper",
               `mediaRequests-stats-stat-${stat.name}`,
             )}
@@ -113,17 +113,19 @@ export default function MediaServerWidget({
             span={3}
           >
             <Tooltip label={t(`titles.stats.${stat.name}`)}>
-              <Stack className="mediaRequests-stats-stat-stack" align="center" gap="2cqmin" p="2cqmin">
-                <stat.icon className="mediaRequests-stats-stat-icon" size="7.5cqmin" />
-                <Text className="mediaRequests-stats-stat-value" size="5cqmin">
-                  {stat.number}
-                </Text>
-              </Stack>
+              <Card p={0} radius={board.itemRadius} bg={"dark.7"}>
+                <Stack className="mediaRequests-stats-stat-stack" align="center" gap={0} p="xs">
+                  <stat.icon className="mediaRequests-stats-stat-icon" size={30}/>
+                  <Text className="mediaRequests-stats-stat-value" size="md">
+                    {stat.number}
+                  </Text>
+                </Stack>
+              </Card>
             </Tooltip>
           </Grid.Col>
         ))}
       </Grid>
-      <Text className="mediaRequests-stats-users-title" size="6.5cqmin">
+      <Text className="mediaRequests-stats-users-title" fw={"bold"} size="md">
         {t("titles.users.main")}
       </Text>
       <Stack
@@ -132,8 +134,9 @@ export default function MediaServerWidget({
         w="100%"
         ref={ref}
         display="flex"
-        gap="2cqmin"
-        style={{ overflow: "hidden" }}
+        gap="sm"
+        style={{ overflow: "hidden", justifyContent: "end" }}
+
       >
         {requestStats.users.slice(0, Math.max(Math.floor((height / width) * 5), 1)).map((user) => (
           <Card
@@ -142,39 +145,38 @@ export default function MediaServerWidget({
               `mediaRequests-stats-users-user-${user.id}`,
             )}
             key={user.id}
-            withBorder
-            p="2cqmin"
-            flex={1}
-            mah="38.5cqmin"
-            radius="2.5cqmin"
+            bg={"dark.7"}
+            p="sm"
+            radius={board.itemRadius}
           >
-            <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="2cqmin" display="flex">
+            <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="sm" display="flex">
               <Tooltip label={user.integration.name}>
                 <Avatar
                   className="mediaRequests-stats-users-user-avatar"
-                  size="12.5cqmin"
+                  size="md"
                   src={user.avatar}
-                  bd={`0.5cqmin solid ${user.integration.kind === "overseerr" ? "#ECB000" : "#6677CC"}`}
+                  bd={`2px solid ${user.integration.kind === "overseerr" ? "#ECB000" : "#6677CC"}`}
                 />
               </Tooltip>
-              <Stack className="mediaRequests-stats-users-user-infos" gap="2cqmin">
-                <Text className="mediaRequests-stats-users-user-userName" size="6cqmin">
+              <Stack className="mediaRequests-stats-users-user-infos" gap={0}>
+                <Text className="mediaRequests-stats-users-user-userName" fw={"bold"} size="md">
                   {user.displayName}
                 </Text>
-                <Text className="mediaRequests-stats-users-user-request-count" size="4cqmin">
+                <Text className="mediaRequests-stats-users-user-request-count" size="md">
                   {`${t("titles.users.requests")}: ${user.requestCount}`}
                 </Text>
               </Stack>
-              <Space flex={1} />
+              <Space flex={1}/>
               <ActionIcon
                 className="mediaRequests-stats-users-user-link-button"
                 variant="light"
                 color="var(--mantine-color-text)"
-                size="10cqmin"
+                size={40}
                 component="a"
+                radius={board.itemRadius}
                 href={user.link}
               >
-                <IconExternalLink className="mediaRequests-stats-users-user-link-icon" size="7.5cqmin" />
+                <IconExternalLink className="mediaRequests-stats-users-user-link-icon" size={25}/>
               </ActionIcon>
             </Group>
           </Card>

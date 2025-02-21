@@ -7,6 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { useRequiredBoard } from "@homarr/boards/context";
 
 export default function IndexerManagerWidget({ options, integrationIds }: WidgetComponentProps<"indexerManager">) {
   const t = useI18n();
@@ -22,6 +23,7 @@ export default function IndexerManagerWidget({ options, integrationIds }: Widget
   const utils = clientApi.useUtils();
 
   const { mutate: testAll, isPending } = clientApi.widget.indexerManager.testAllIndexers.useMutation();
+  const board = useRequiredBoard();
 
   clientApi.widget.indexerManager.subscribeIndexersStatus.useSubscription(
     { integrationIds },
@@ -36,21 +38,22 @@ export default function IndexerManagerWidget({ options, integrationIds }: Widget
     },
   );
 
-  const iconStyle = { height: "7.5cqmin", width: "7.5cqmin" };
-
   return (
-    <Flex className="indexer-manager-container" h="100%" direction="column" gap="2.5cqmin" p="2.5cqmin" align="center">
-      <Text className="indexer-manager-title" size="6.5cqmin">
-        <IconReportSearch className="indexer-manager-title-icon" size="7cqmin" /> {t("widget.indexerManager.title")}
-      </Text>
-      <Card className="indexer-manager-list-container" w="100%" p="2.5cqmin" radius="md" flex={1} withBorder>
+    <Flex className="indexer-manager-container" h="100%" direction="column" gap="sm" p="sm" align="center">
+      <Flex className="indexer-manager-title" align={"center"} gap={"xs"}>
+        <IconReportSearch className="indexer-manager-title-icon" size={30}/>
+        <Text size="md" fw={"bold"}>
+          {t("widget.indexerManager.title")}
+        </Text>
+      </Flex>
+      <Card className="indexer-manager-list-container" w="100%" p="sm" radius={board.itemRadius} flex={1} bg={"dark.7"}>
         <ScrollArea className="indexer-manager-list-scroll-area" h="100%">
           {indexersData.map(({ integrationId, indexers }) => (
             <Container className={`indexer-manager-${integrationId}-list-container`} p={0} key={integrationId}>
               {indexers.map((indexer) => (
                 <Group
                   className={`indexer-manager-line indexer-manager-${indexer.name}`}
-                  h="7.5cqmin"
+                  h={30}
                   key={indexer.id}
                   justify="space-between"
                 >
@@ -59,7 +62,7 @@ export default function IndexerManagerWidget({ options, integrationIds }: Widget
                     href={indexer.url}
                     target={options.openIndexerSiteInNewTab ? "_blank" : "_self"}
                   >
-                    <Text className="indexer-manager-line-anchor-text" c="dimmed" size="5cqmin">
+                    <Text className="indexer-manager-line-anchor-text" c="dimmed" size="md">
                       {indexer.name}
                     </Text>
                   </Anchor>
@@ -67,13 +70,13 @@ export default function IndexerManagerWidget({ options, integrationIds }: Widget
                     <IconCircleX
                       className="indexer-manager-line-status-icon indexer-manager-line-icon-disabled"
                       color="#d9534f"
-                      style={iconStyle}
+                      size={24}
                     />
                   ) : (
                     <IconCircleCheck
                       className="indexer-manager-line-status-icon indexer-manager-line-icon-enabled"
                       color="#2ecc71"
-                      style={iconStyle}
+                      size={24}
                     />
                   )}
                 </Group>
@@ -85,11 +88,9 @@ export default function IndexerManagerWidget({ options, integrationIds }: Widget
       <Button
         className="indexer-manager-test-button"
         w="100%"
-        fz="5cqmin"
-        h="12.5cqmin"
-        radius="md"
+        radius={board.itemRadius}
         variant="light"
-        leftSection={<IconTestPipe style={iconStyle} />}
+        leftSection={<IconTestPipe size={"1rem"}/>}
         loading={isPending}
         loaderProps={{ type: "dots" }}
         onClick={() => {

@@ -10,6 +10,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
+import { useRequiredBoard } from "@homarr/boards/context";
 
 export default function MediaServerWidget({
   integrationIds,
@@ -56,23 +57,23 @@ export default function MediaServerWidget({
   );
 
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
+  const board = useRequiredBoard();
 
   if (mediaRequests.length === 0) throw new NoIntegrationDataError();
 
   return (
     <ScrollArea
       className="mediaRequests-list-scrollArea"
-      scrollbarSize="2cqmin"
+      scrollbarSize="md"
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
     >
-      <Stack className="mediaRequests-list-list" gap="2cqmin" p="2cqmin">
+      <Stack className="mediaRequests-list-list" gap="sm" p="sm">
         {mediaRequests.map((mediaRequest) => (
           <Card
             className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${mediaRequest.type} mediaRequests-list-item-${mediaRequest.status}`}
             key={mediaRequest.id}
-            h="20cqmin"
-            radius="2cqmin"
-            p="2cqmin"
+            radius={board.itemRadius}
+            p="sm"
             withBorder
           >
             <Image
@@ -95,28 +96,24 @@ export default function MediaServerWidget({
               wrap="nowrap"
               gap={0}
             >
-              <Group className="mediaRequests-list-item-left-side" h="100%" gap="4cqmin" wrap="nowrap" flex={1}>
+              <Group className="mediaRequests-list-item-left-side" h="100%" gap="md" wrap="nowrap" flex={1}>
                 <Image
                   className="mediaRequests-list-item-poster"
                   src={mediaRequest.posterImagePath}
-                  h="100%"
-                  w="10cqmin"
-                  radius="1cqmin"
+                  h={60}
+                  w="auto"
+                  radius={"md"}
                 />
-                <Stack className="mediaRequests-list-item-media-infos" gap="1cqmin">
-                  <Group className="mediaRequests-list-item-info-first-line" gap="2cqmin" wrap="nowrap">
-                    <Text className="mediaRequests-list-item-media-year" size="3.5cqmin" pt="0.75cqmin">
+                <Stack className="mediaRequests-list-item-media-infos" gap={0}>
+                  <Group className="mediaRequests-list-item-info-first-line" gap="sm" align={"end"} wrap="nowrap">
+                    <Text className="mediaRequests-list-item-media-year" size="md" pt="xs">
                       {mediaRequest.airDate?.getFullYear() ?? t("toBeDetermined")}
                     </Text>
                     <Badge
                       className="mediaRequests-list-item-media-status"
                       color={getAvailabilityProperties(mediaRequest.availability, t).color}
                       variant="light"
-                      fz="3.5cqmin"
-                      lh="4cqmin"
-                      size="5cqmin"
-                      pt="0.75cqmin"
-                      px="2cqmin"
+                      size="md"
                     >
                       {getAvailabilityProperties(mediaRequest.availability, t).label}
                     </Badge>
@@ -126,26 +123,27 @@ export default function MediaServerWidget({
                     href={mediaRequest.href}
                     c="var(--mantine-color-text)"
                     target={options.linksTargetNewTab ? "_blank" : "_self"}
-                    fz="5cqmin"
+                    fz="md"
+                    fw={"bold"}
                     lineClamp={1}
                   >
                     {mediaRequest.name || "unknown"}
                   </Anchor>
                 </Stack>
               </Group>
-              <Stack className="mediaRequests-list-item-right-side" gap="1cqmin" align="end">
-                <Group className="mediaRequests-list-item-request-user" gap="2cqmin" wrap="nowrap">
+              <Stack className="mediaRequests-list-item-right-side" gap="xs" ms={"lg"} align="end">
+                <Group className="mediaRequests-list-item-request-user" gap="sm" wrap="nowrap">
                   <Avatar
                     className="mediaRequests-list-item-request-user-avatar"
                     src={mediaRequest.requestedBy?.avatar}
-                    size="6cqmin"
+                    size="sm"
                   />
                   <Anchor
                     className="mediaRequests-list-item-request-user-name"
                     href={mediaRequest.requestedBy?.link}
                     c="var(--mantine-color-text)"
                     target={options.linksTargetNewTab ? "_blank" : "_self"}
-                    fz="5cqmin"
+                    fz="md"
                     lineClamp={1}
                     style={{ wordBreak: "break-all" }}
                   >
@@ -153,13 +151,14 @@ export default function MediaServerWidget({
                   </Anchor>
                 </Group>
                 {mediaRequest.status === MediaRequestStatus.PendingApproval && (
-                  <Group className="mediaRequests-list-item-pending-buttons" gap="2cqmin">
+                  <Group className="mediaRequests-list-item-pending-buttons" gap="sm">
                     <Tooltip label={t("pending.approve")}>
                       <ActionIcon
                         className="mediaRequests-list-item-pending-button-approve"
                         variant="light"
                         color="green"
-                        size="5cqmin"
+                        size="md"
+                        radius={"md"}
                         onClick={() => {
                           mutateRequestAnswer({
                             integrationId: mediaRequest.integrationId,
@@ -168,7 +167,7 @@ export default function MediaServerWidget({
                           });
                         }}
                       >
-                        <IconThumbUp size="4cqmin" />
+                        <IconThumbUp size={23} />
                       </ActionIcon>
                     </Tooltip>
                     <Tooltip label={t("pending.decline")}>
@@ -176,7 +175,8 @@ export default function MediaServerWidget({
                         className="mediaRequests-list-item-pending-button-decline"
                         variant="light"
                         color="red"
-                        size="5cqmin"
+                        size="md"
+                        radius={"md"}
                         onClick={() => {
                           mutateRequestAnswer({
                             integrationId: mediaRequest.integrationId,
@@ -185,7 +185,7 @@ export default function MediaServerWidget({
                           });
                         }}
                       >
-                        <IconThumbDown size="4cqmin" />
+                        <IconThumbDown size={23} />
                       </ActionIcon>
                     </Tooltip>
                   </Group>

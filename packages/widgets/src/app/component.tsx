@@ -74,12 +74,11 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
           h="100%"
           w="100%"
           direction="column"
-          p="7.5cqmin"
           justify="center"
           align="center"
         >
           {options.showTitle && (
-            <Text className="app-title" fw={700} ta="center" size="12.5cqmin">
+            <Text className="app-title" fw={700} ta="center">
               {app.name}
             </Text>
           )}

@@ -179,12 +179,12 @@ export default function DnsHoleControlsWidget({
       className="dns-hole-controls-stack"
       h="100%"
       direction="column"
-      p="2.5cqmin"
-      gap="2.5cqmin"
+      p="sm"
+      gap="sm"
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
     >
       {controlAllButtonsVisible && (
-        <Flex className="dns-hole-controls-buttons" gap="2.5cqmin">
+        <Flex className="dns-hole-controls-buttons" gap="sm">
           <Tooltip label={t("widget.dnsHoleControls.controls.enableAll")}>
             <Button
               className="dns-hole-controls-enable-all-button"
@@ -193,14 +193,14 @@ export default function DnsHoleControlsWidget({
               variant="light"
               color="green"
               h="fit-content"
-              p="1.25cqmin"
+              p="xs"
               bd={0}
-              radius="2.5cqmin"
+              radius={board.itemRadius}
               flex={1}
             >
               <IconPlayerPlay
                 className="dns-hole-controls-enable-all-icon"
-                style={{ height: "7.5cqmin", width: "7.5cqmin" }}
+                size={24}
               />
             </Button>
           </Tooltip>
@@ -216,14 +216,14 @@ export default function DnsHoleControlsWidget({
               variant="light"
               color="yellow"
               h="fit-content"
-              p="1.25cqmin"
+              p="xs"
               bd={0}
-              radius="2.5cqmin"
+              radius={board.itemRadius}
               flex={1}
             >
               <IconClockPause
                 className="dns-hole-controls-timer-all-icon"
-                style={{ height: "7.5cqmin", width: "7.5cqmin" }}
+                size={24}
               />
             </Button>
           </Tooltip>
@@ -236,14 +236,14 @@ export default function DnsHoleControlsWidget({
               variant="light"
               color="red"
               h="fit-content"
-              p="1.25cqmin"
+              p="xs"
               bd={0}
-              radius="2.5cqmin"
+              radius={board.itemRadius}
               flex={1}
             >
               <IconPlayerStop
                 className="dns-hole-controls-disable-all-icon"
-                style={{ height: "7.5cqmin", width: "7.5cqmin" }}
+                size={24}
               />
             </Button>
           </Tooltip>
@@ -253,7 +253,7 @@ export default function DnsHoleControlsWidget({
       <ScrollArea className="dns-hole-controls-integration-list-scroll-area flexed-scroll-area">
         <Stack
           className="dns-hole-controls-integration-list"
-          gap="2.5cqmin"
+          gap="sm"
           flex={1}
           justify={controlAllButtonsVisible ? "flex-end" : "space-evenly"}
         >
@@ -306,6 +306,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   const isInteractPermitted = integrationsWithInteractions.includes(data.integration.id);
   // Use all factors to infer the state of the action buttons
   const controlEnabled = isInteractPermitted && isEnabled !== undefined && isConnected;
+  const board = useRequiredBoard();
 
   const iconUrl = integrationDefs[data.integration.kind].iconUrl;
 
@@ -313,27 +314,28 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
     <Card
       className={`dns-hole-controls-integration-item-outer-shell dns-hole-controls-integration-item-${data.integration.id} dns-hole-controls-integration-item-${data.integration.name}`}
       key={data.integration.id}
-      withBorder
-      p="2.5cqmin"
-      radius="2.5cqmin"
+      bg={"dark.7"}
+      p="sm"
+      py={8}
+      radius={board.itemRadius}
     >
-      <Flex className="dns-hole-controls-item-container" gap="4cqmin" align="center" direction="row">
+      <Flex className="dns-hole-controls-item-container" gap="md" align="center" direction="row">
         <MaskedOrNormalImage
           imageUrl={iconUrl}
           hasColor={hasIconColor}
           alt={data.integration.name}
           className="dns-hole-controls-item-icon"
           style={{
-            height: "20cqmin",
-            width: "20cqmin",
+            height: 30,
+            width: 30,
             filter: !isConnected ? "grayscale(100%)" : undefined,
           }}
         />
-        <Flex className="dns-hole-controls-item-data-stack" direction="column" gap="1.5cqmin">
-          <Text className="dns-hole-controls-item-integration-name" fz="7cqmin">
+        <Flex className="dns-hole-controls-item-data-stack" direction="column" gap={5}>
+          <Text className="dns-hole-controls-item-integration-name" fz="md" fw={"bold"}>
             {data.integration.name}
           </Text>
-          <Flex className="dns-hole-controls-item-controls" direction="row" gap="1.5cqmin">
+          <Flex className="dns-hole-controls-item-controls" direction="row" gap="lg">
             <UnstyledButton
               className="dns-hole-controls-item-toggle-button"
               disabled={!controlEnabled}
@@ -343,20 +345,18 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
             >
               <Badge
                 className={`dns-hole-controls-item-toggle-button-styling${controlEnabled ? " hoverable-component clickable-component" : ""}`}
-                bd="0.1cqmin solid var(--border-color)"
-                px="2.5cqmin"
-                h="7.5cqmin"
-                fz="4.5cqmin"
-                lts="0.1cqmin"
+                bd="1px solid var(--border-color)"
+                px="sm"
+                h="lg"
                 color="var(--background-color)"
                 c="var(--mantine-color-text)"
-                styles={{ section: { marginInlineEnd: "2.5cqmin" }, root: { cursor: "inherit" } }}
+                styles={{ section: { marginInlineEnd: "sm" }, root: { cursor: "inherit" } }}
                 leftSection={
                   isConnected && (
                     <IconCircleFilled
                       className="dns-hole-controls-item-status-icon"
                       color={dnsLightStatus(isEnabled)}
-                      style={{ height: "3.5cqmin", width: "3.5cqmin" }}
+                      size={16}
                     />
                   )
                 }
@@ -374,27 +374,28 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                 )}
               </Badge>
             </UnstyledButton>
-            <ActionIcon
-              className="dns-hole-controls-item-timer-button"
-              display={isInteractPermitted ? undefined : "none"}
-              disabled={!controlEnabled || !isEnabled}
-              color="yellow"
-              size="fit-content"
-              radius="999px 999px 0px 999px"
-              bd={0}
-              variant="subtle"
-              onClick={() => {
-                setSelectedIntegrationIds([data.integration.id]);
-                open();
-              }}
-            >
-              <IconClockPause
-                className="dns-hole-controls-item-timer-icon"
-                style={{ height: "7.5cqmin", width: "7.5cqmin" }}
-              />
-            </ActionIcon>
           </Flex>
         </Flex>
+        <ActionIcon
+          className="dns-hole-controls-item-timer-button"
+          display={isInteractPermitted ? undefined : "none"}
+          disabled={!controlEnabled || !isEnabled}
+          color="yellow"
+          size={30}
+          radius={board.itemRadius}
+          bd={0}
+          ms={"auto"}
+          variant="subtle"
+          onClick={() => {
+            setSelectedIntegrationIds([data.integration.id]);
+            open();
+          }}
+        >
+          <IconClockPause
+            className="dns-hole-controls-item-timer-icon"
+            size={20}
+          />
+        </ActionIcon>
       </Flex>
     </Card>
   );

@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Container, Popover, useMantineTheme } from "@mantine/core";
+import { Container, Popover, Text, useMantineTheme } from "@mantine/core";
 
 import type { CalendarEvent } from "@homarr/integrations/types";
 
 import { CalendarEventList } from "./calendar-event-list";
+import { useRequiredBoard } from "@homarr/boards/context";
 
 interface CalendarDayProps {
   date: Date;
@@ -12,8 +13,11 @@ interface CalendarDayProps {
 }
 
 export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
-  const [opened, setOpend] = useState(false);
+  const [opened, setOpened] = useState(false);
   const { primaryColor } = useMantineTheme();
+  const board = useRequiredBoard();
+  const mantineTheme = useMantineTheme();
+  const actualItemRadius = mantineTheme.radius[board.itemRadius];
 
   return (
     <Popover
@@ -25,7 +29,7 @@ export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
       transitionProps={{
         transition: "pop",
       }}
-      onChange={setOpend}
+      onChange={setOpened}
       opened={opened}
       disabled={disabled}
     >
@@ -35,34 +39,28 @@ export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
           w="100%"
           p={0}
           m={0}
-          bd={`1cqmin solid ${opened && !disabled ? primaryColor : "transparent"}`}
+          bd={`3px solid ${opened && !disabled ? primaryColor : "transparent"}`}
+          pos={"relative"}
+
           style={{
             alignContent: "center",
-            borderRadius: "3.5cqmin",
+            borderRadius: actualItemRadius,
             cursor: disabled ? "default" : "pointer",
           }}
           onClick={() => {
             if (disabled) return;
 
-            setOpend((prev) => !prev);
+            setOpened((prev) => !prev);
           }}
         >
-          <div
-            style={{
-              textAlign: "center",
-              whiteSpace: "nowrap",
-              fontSize: "5cqmin",
-              lineHeight: "5cqmin",
-              paddingTop: "1.25cqmin",
-            }}
-          >
+          <Text ta={"center"}>
             {date.getDate()}
-          </div>
-          <NotificationIndicator events={events} />
+          </Text>
+          <NotificationIndicator events={events}/>
         </Container>
       </Popover.Target>
       <Popover.Dropdown>
-        <CalendarEventList events={events} />
+        <CalendarEventList events={events}/>
       </Popover.Dropdown>
     </Popover>
   );
@@ -75,14 +73,14 @@ interface NotificationIndicatorProps {
 const NotificationIndicator = ({ events }: NotificationIndicatorProps) => {
   const notificationEvents = [...new Set(events.map((event) => event.links[0]?.notificationColor))].filter(String);
   return (
-    <Container h="0.7cqmin" w="80%" display="flex" p={0} style={{ flexDirection: "row", justifyContent: "center" }}>
+    <Container h="xs" w="75%" display="flex" pos={"absolute"} bottom={0} left={"12.5%"} p={0}
+               style={{ flexDirection: "row", justifyContent: "center" }}>
       {notificationEvents.map((notificationEvent) => {
         return (
           <Container
             key={notificationEvent}
             bg={notificationEvent}
-            h="100%"
-            mx="0.25cqmin"
+            h={4}
             p={0}
             style={{ flex: 1, borderRadius: "1000px" }}
           />

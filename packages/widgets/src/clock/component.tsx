@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Stack, Text } from "@mantine/core";
+import { Stack, Text, Title } from "@mantine/core";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import timezones from "dayjs/plugin/timezone";
@@ -22,19 +22,19 @@ export default function ClockWidget({ options }: WidgetComponentProps<"clock">) 
   const timezone = options.useCustomTimezone ? options.timezone : Intl.DateTimeFormat().resolvedOptions().timeZone;
   const time = useCurrentTime(options);
   return (
-    <Stack className="clock-text-stack" h="100%" align="center" justify="center" gap="10cqmin">
+    <Stack className="clock-text-stack" h="100%" align="center" justify="center" gap="sm">
       {options.customTitleToggle && (
-        <Text className="clock-customTitle-text" size="12.5cqmin" ta="center">
+        <Text className="clock-customTitle-text" size="md" ta="center">
           {options.customTitle}
         </Text>
       )}
-      <Text className="clock-time-text" fw={700} size="22.5cqmin" lh="1">
+      <Title className="clock-time-text" fw={700} order={1} lh="1">
         {options.customTimeFormat
           ? dayjs(time).tz(timezone).format(customTimeFormat)
           : dayjs(time).tz(timezone).format(timeFormat)}
-      </Text>
+      </Title>
       {options.showDate && (
-        <Text className="clock-date-text" size="12.5cqmin" p="1cqmin" lineClamp={1}>
+        <Text className="clock-date-text" size="md" p="sm" lineClamp={1}>
           {options.customDateFormat
             ? dayjs(time).tz(timezone).format(customDateFormat)
             : dayjs(time).tz(timezone).format(dateFormat)}

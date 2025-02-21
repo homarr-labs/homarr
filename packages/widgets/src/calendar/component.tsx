@@ -13,6 +13,8 @@ import { useSettings } from "@homarr/settings";
 import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
 import classes from "./component.module.css";
+import { useRequiredBoard } from "@homarr/boards/context";
+import { useMantineTheme } from "@mantine/core";
 
 export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
   const [month, setMonth] = useState(new Date());
@@ -60,6 +62,9 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
   const params = useParams();
   const locale = params.locale as string;
   const { firstDayOfWeek } = useSettings();
+  const board = useRequiredBoard();
+  const mantineTheme = useMantineTheme();
+  const actualItemRadius = mantineTheme.radius[board.itemRadius];
 
   return (
     <Calendar
@@ -72,43 +77,38 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
       date={month}
       maxLevel="month"
       firstDayOfWeek={firstDayOfWeek}
-      w="100%"
-      h="100%"
       static={isEditMode}
       className={classes.calendar}
+      w={"100%"}
+      h={"100%"}
       styles={{
         calendarHeaderControl: {
           pointerEvents: isEditMode ? "none" : undefined,
-          height: "12cqmin",
-          width: "12cqmin",
-          borderRadius: "3.5cqmin",
+          borderRadius: "md",
         },
         calendarHeaderLevel: {
-          height: "12cqmin",
-          fontSize: "6cqmin",
           pointerEvents: "none",
         },
         levelsGroup: {
           height: "100%",
-          padding: "2.5cqmin",
+          padding: "md",
         },
         calendarHeader: {
           maxWidth: "unset",
           marginBottom: 0,
         },
-        day: {
-          width: "12cqmin",
-          height: "12cqmin",
-          borderRadius: "3.5cqmin",
-        },
         monthCell: {
-          textAlign: "center",
+          textAlign: "center"
+        },
+        day: {
+          borderRadius: actualItemRadius,
+          width: 50,
+          height: 50
         },
         month: {
           height: "100%",
         },
         weekday: {
-          fontSize: "5.5cqmin",
           padding: 0,
         },
       }}
