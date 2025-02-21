@@ -74,11 +74,7 @@ export const AppForm = ({
         <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
         <IconPicker {...form.getInputProps("iconUrl")} />
         <Textarea {...form.getInputProps("description")} label={t("app.field.description.label")} />
-        <TextInput
-          {...form.getInputProps("href")}
-          label={t("app.field.url.label")}
-          placeholder={t("app.field.url.placeholder")}
-        />
+        <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
 
         <Checkbox
           checked={opened}
@@ -89,10 +85,7 @@ export const AppForm = ({
         />
 
         <Collapse in={opened}>
-          <TextInput
-            placeholder={t("app.field.useDifferentUrlForPing.input.placeholder")}
-            {...form.getInputProps("pingUrl")}
-          />
+          <TextInput {...form.getInputProps("pingUrl")} />
         </Collapse>
 
         <Group justify="end">

@@ -145,7 +145,7 @@ const convertApp = (app: OldmarrApp): DbAppWithoutId => ({
   href: app.behaviour.externalUrl === "" ? app.url : app.behaviour.externalUrl,
   iconUrl: app.appearance.iconUrl,
   description: app.behaviour.tooltipDescription ?? null,
-  pingUrl: app.behaviour.externalUrl.length > 0 ? app.behaviour.externalUrl : null,
+  pingUrl: app.url.length > 0 ? app.url : null,
 });
 
 /**
