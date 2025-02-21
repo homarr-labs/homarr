@@ -27,7 +27,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "dotenv": "^16.4.7",
     "tsx": "4.19.3",
-    "ws": "^8.18.0"
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
