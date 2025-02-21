@@ -122,12 +122,12 @@ jobs:
           context: .
           load: true
           push: false # Never push the image here, we will push it in a later step
-          tags: builded-image
+          tags: homarr-amd64
           network: host
         env:
           SKIP_ENV_VALIDATION: true
       - name: Create image artifact
-        run: docker save -o image-amd64.tar builded-image
+        run: docker save -o image-amd64.tar homarr-amd64
       - name: Upload image artifact
         id: upload-image
         uses: actions/upload-artifact@v4
@@ -155,12 +155,12 @@ jobs:
           context: .
           load: true
           push: false # Never push the image here, we will push it in a later step
-          tags: builded-image
+          tags: homarr-arm64
           network: host
         env:
           SKIP_ENV_VALIDATION: true
       - name: Create image artifact
-        run: docker save -o image-arm64.tar builded-image
+        run: docker save -o image-arm64.tar homarr-arm64
       - name: Upload image artifact
         id: upload-image
         uses: actions/upload-artifact@v4
@@ -202,17 +202,17 @@ jobs:
       - name: Push beta
         if: env.DEPLOY_BETA == 'true'
         run: |
-          docker tag builded-image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:temp-beta
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:temp-beta
+          docker manifest create "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:beta" homarr-amd64 homarr-arm64
+          docker manifest push "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:beta"
       - name: Push latest
         if: env.DEPLOY_LATEST == 'true'
         run: |
-          docker tag builded-image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:temp-latest
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:temp-latest
+          docker manifest create "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" homarr-amd64 homarr-arm64
+          docker manifest push "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
       - name: Push version
         run: |
-          docker tag builded-image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{env.NEXT_VERSION}}
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{env.NEXT_VERSION}}
+          docker manifest create "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.NEXT_VERSION }}" homarr-amd64 homarr-arm64
+          docker manifest push "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.NEXT_VERSION }}"
 
       - name: Discord notification
         env:
