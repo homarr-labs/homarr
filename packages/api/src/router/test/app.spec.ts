@@ -158,6 +158,7 @@ describe("create should create a new app with all arguments", () => {
       description: "React components and hooks library",
       iconUrl: "https://mantine.dev/favicon.svg",
       href: "https://mantine.dev",
+      pingUrl: "https://mantine.dev/a",
     };
 
     // Act
@@ -170,6 +171,7 @@ describe("create should create a new app with all arguments", () => {
     expect(dbApp!.description).toBe(input.description);
     expect(dbApp!.iconUrl).toBe(input.iconUrl);
     expect(dbApp!.href).toBe(input.href);
+    expect(dbApp!.pingUrl).toBe(input.pingUrl);
   });
 
   test("should create a new app only with required arguments", async () => {
@@ -185,6 +187,7 @@ describe("create should create a new app with all arguments", () => {
       description: null,
       iconUrl: "https://mantine.dev/favicon.svg",
       href: null,
+      pingUrl: "",
     };
 
     // Act
@@ -197,6 +200,7 @@ describe("create should create a new app with all arguments", () => {
     expect(dbApp!.description).toBe(input.description);
     expect(dbApp!.iconUrl).toBe(input.iconUrl);
     expect(dbApp!.href).toBe(input.href);
+    expect(dbApp!.pingUrl).toBe(null);
   });
 });
 
@@ -225,6 +229,7 @@ describe("update should update an app", () => {
       description: "React components and hooks library",
       iconUrl: "https://mantine.dev/favicon.svg2",
       href: "https://mantine.dev",
+      pingUrl: "https://mantine.dev/a",
     };
 
     // Act
@@ -257,6 +262,7 @@ describe("update should update an app", () => {
         iconUrl: "https://mantine.dev/favicon.svg",
         description: null,
         href: null,
+        pingUrl: "",
       });
 
     // Assert
