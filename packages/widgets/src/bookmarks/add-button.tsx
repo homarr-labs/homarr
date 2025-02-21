@@ -9,7 +9,14 @@ import type { SortableItemListInput } from "../options";
 import { AppSelectModal } from "./app-select-modal";
 
 export const BookmarkAddButton: SortableItemListInput<
-  { name: string; description: string | null; id: string; iconUrl: string; href: string | null },
+  {
+    name: string;
+    description: string | null;
+    id: string;
+    iconUrl: string;
+    href: string | null;
+    pingUrl: string | null;
+  },
   string
 >["AddButton"] = ({ addItem, values }) => {
   const { openModal } = useModalAction(AppSelectModal);

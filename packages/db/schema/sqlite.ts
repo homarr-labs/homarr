@@ -361,6 +361,7 @@ export const apps = sqliteTable("app", {
   description: text(),
   iconUrl: text().notNull(),
   href: text(),
+  pingUrl: text(),
 });
 
 export const integrationItems = sqliteTable(

@@ -97,7 +97,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
       </Tooltip.Floating>
       {options.pingEnabled && !settings.forceDisableStatus && !board.disableStatus && app.href ? (
         <Suspense fallback={<PingDot icon={IconLoader} color="blue" tooltip={`${t("common.action.loading")}…`} />}>
-          <PingIndicator href={app.href} />
+          <PingIndicator href={app.pingUrl ?? app.href} />
         </Suspense>
       ) : null}
     </AppLink>

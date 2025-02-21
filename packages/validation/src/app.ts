@@ -17,6 +17,14 @@ const manageAppSchema = z.object({
     .or(z.literal(""))
     .transform((value) => (value.length === 0 ? null : value))
     .nullable(),
+  pingUrl: z
+    .string()
+    .trim()
+    .url()
+    .regex(/^https?:\/\//) // Only allow http and https for security reasons (javascript: is not allowed)
+    .or(z.literal(""))
+    .transform((value) => (value.length === 0 ? null : value))
+    .nullable(),
 });
 
 const editAppSchema = manageAppSchema.and(z.object({ id: z.string() }));
