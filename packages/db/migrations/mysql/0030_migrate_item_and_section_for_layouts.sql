@@ -7,11 +7,13 @@ ALTER TABLE `section` MODIFY COLUMN `x_offset` int;
 --> statement-breakpoint
 ALTER TABLE `section` MODIFY COLUMN `y_offset` int;
 --> statement-breakpoint
-ALTER TABLE `item` ADD `board_id` varchar(64) NOT NULL;
+ALTER TABLE `item` ADD `board_id` varchar(64);
 --> statement-breakpoint
 ALTER TABLE `item` ADD CONSTRAINT `item_board_id_board_id_fk` FOREIGN KEY (`board_id`) REFERENCES `board`(`id`) ON DELETE cascade ON UPDATE no action;
 --> statement-breakpoint
 UPDATE `item` JOIN `section` ON `item`.`section_id`=`section`.`id` SET `item`.`board_id` = `section`.`board_id`;
+--> statement-breakpoint
+ALTER TABLE `item` MODIFY COLUMN `board_id` varchar(64) NOT NULL;
 --> statement-breakpoint
 ALTER TABLE `board` DROP COLUMN `column_count`;
 --> statement-breakpoint
