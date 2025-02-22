@@ -56,7 +56,11 @@ export const appRouter = createTRPCRouter({
     }),
   selectable: protectedProcedure
     .input(z.void())
-    .output(z.array(selectAppSchema.pick({ id: true, name: true, iconUrl: true, href: true, description: true })))
+    .output(
+      z.array(
+        selectAppSchema.pick({ id: true, name: true, iconUrl: true, href: true, pingUrl: true, description: true }),
+      ),
+    )
     .meta({
       openapi: {
         method: "GET",
@@ -73,6 +77,7 @@ export const appRouter = createTRPCRouter({
           iconUrl: true,
           description: true,
           href: true,
+          pingUrl: true,
         },
         orderBy: asc(apps.name),
       });
@@ -111,16 +116,20 @@ export const appRouter = createTRPCRouter({
   create: permissionRequiredProcedure
     .requiresPermission("app-create")
     .input(validation.app.manage)
-    .output(z.void())
+    .output(z.object({ appId: z.string() }))
     .meta({ openapi: { method: "POST", path: "/api/apps", tags: ["apps"], protect: true } })
     .mutation(async ({ ctx, input }) => {
+      const id = createId();
       await ctx.db.insert(apps).values({
-        id: createId(),
+        id,
         name: input.name,
         description: input.description,
         iconUrl: input.iconUrl,
         href: input.href,
+        pingUrl: input.pingUrl === "" ? null : input.pingUrl,
       });
+
+      return { appId: id };
     }),
   createMany: permissionRequiredProcedure
     .requiresPermission("app-create")
@@ -161,6 +170,7 @@ export const appRouter = createTRPCRouter({
           description: input.description,
           iconUrl: input.iconUrl,
           href: input.href,
+          pingUrl: input.pingUrl === "" ? null : input.pingUrl,
         })
         .where(eq(apps.id, input.id));
     }),

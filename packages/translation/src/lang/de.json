@@ -305,7 +305,15 @@
     "search": "Finde eine Benutzergruppe",
     "field": {
       "name": "Name",
-      "members": "Mitglieder"
+      "members": "Mitglieder",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Gruppe auswählen",
         "notFound": "Keine Gruppe gefunden"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -564,6 +600,12 @@
       },
       "url": {
         "label": "URL"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -805,7 +847,7 @@
       "apply": "Übernehmen",
       "backToOverview": "Zurück zur Übersicht",
       "create": "Erstellen",
-      "createAnother": "",
+      "createAnother": "Erstellen und neu starten",
       "edit": "Bearbeiten",
       "import": "Import",
       "insert": "Einfügen",
@@ -888,6 +930,7 @@
     },
     "dangerZone": "Gefahrenbereich",
     "noResults": "Die Suche ergab keine Treffer",
+    "unsavedChanges": "",
     "preview": {
       "show": "Vorschau ansehen",
       "hide": "Vorschau ausblenden"
@@ -948,7 +991,7 @@
         "moveDown": "Nach unten bewegen",
         "createAbove": "Neue Kategorie oben",
         "createBelow": "Neue Kategorie unten",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "Alle in Tabs öffnen"
       },
       "create": {
         "title": "Neue Kategorie",
@@ -969,8 +1012,8 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "Alle in tabs öffnen",
+        "text": "Einige Browser können aus Sicherheitsgründen das Öffnen von mehreren Tabs aufeinmal blockieren. Homarr konnte nicht alle Fenster öffnen, weil Ihr Browser diese Aktion blockiert hat. Bitte erlauben Sie \"Pop-up Fenster öffnen\" und versuchen Sie es erneut."
       }
     }
   },
@@ -1048,7 +1091,7 @@
           "label": "Beschreibungs des Tooltips anzeigen"
         },
         "pingEnabled": {
-          "label": "Einfachen Ping aktivieren"
+          "label": "Statusüberprüfung aktivieren"
         }
       },
       "error": {
@@ -1200,12 +1243,12 @@
           "description": "Wie das Datum aussehen sollte"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Benutzerdefiniertes Zeitformat",
+          "description": "ISO 8601 Standard benutzen um die Zeit zu formatieren (dies wird andere Optionen überschreiben)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Benutzerdefiniertes Datumsformat",
+          "description": "ISO 8601 Standard benutzen um das Datum zu formatieren (dies wird andere Optionen überschreiben)"
         }
       }
     },
@@ -1388,11 +1431,11 @@
           "label": "Temperatur in Fahrenheit"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Deaktivieren der Temperatur Dezimalstellen"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "Aktuelle Windgeschwindigkeit anzeigen",
+          "description": "Nur bei aktuellem Wetter"
         },
         "location": {
           "label": "Wetterstandort"
@@ -1412,12 +1455,12 @@
           "description": "Wie das Datum aussehen sollte"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} km/h",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "Sonnenaufgang",
+        "sunset": "Sonnenuntergang",
+        "maxWindSpeed": "Maximale Windgeschwindigkeit: {maxWindSpeed} km/h",
+        "maxWindGusts": "Maximale Windböen: {maxWindGusts} km/h"
       },
       "kind": {
         "clear": "Klar",
@@ -1571,7 +1614,8 @@
       },
       "app": {
         "noData": "Keine App gefunden",
-        "description": "Klicken Sie <here></here> um eine neue App zu erstellen"
+        "description": "Klicken Sie <here></here> um eine neue App zu erstellen",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Keine Integration ausgewählt",
@@ -1970,6 +2014,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2044,6 +2094,9 @@
       "opacity": {
         "label": "Transparenz"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "Benutzerdefinierte css für dieses Board",
         "description": "Außerdem können Sie Ihr Dashboard mittels CSS anpassen, dies wird nur für erfahrene Benutzer empfohlen",
@@ -2053,11 +2106,22 @@
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "App Status deaktivieren",
+        "description": "Deaktiviert die Statusüberprüfung für alle Apps auf diesem Board"
       },
       "columnCount": {
         "label": "Anzahl der Spalten"
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "Name"
@@ -2083,14 +2147,14 @@
         "background": {
           "title": "Hintergrund"
         },
-        "color": {
-          "title": "Farben"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "Benutzerdefiniertes CSS"
         },
         "behavior": {
-          "title": ""
+          "title": "Verhalten"
         },
         "access": {
           "title": "Zugriffskontrolle",
@@ -2248,81 +2312,81 @@
         },
         "statisticLabel": {
           "boards": "Boards",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "Ressourcen",
+          "authentication": "Authentifizierung",
+          "authorization": "Autorisierung"
         }
       },
       "board": {
         "title": "Deine Boards",
         "action": {
           "new": {
-            "label": ""
+            "label": "Neues Board"
           },
           "open": {
-            "label": ""
+            "label": "Board öffnen"
           },
           "settings": {
             "label": "Einstellungen"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "Als Home Board festlegen",
             "badge": {
               "label": "Startseite",
-              "tooltip": ""
+              "tooltip": "Dieses Board wird als Startboard angezeigt"
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Als Mobiles Board festlegen",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Mobil",
+              "tooltip": "Dieses Board wird als Ihr mobiles Board angezeigt"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Board duplizieren"
           },
           "delete": {
             "label": "Dauerhaft löschen",
             "confirm": {
               "title": "Board löschen",
-              "description": ""
+              "description": "Sind Sie sicher, dass Sie das Board {name} löschen möchten?"
             }
           }
         },
         "visibility": {
-          "public": "",
-          "private": ""
+          "public": "Dieses Board ist öffentlich",
+          "private": "Dieses Board ist privat"
         },
         "modal": {
           "createBoard": {
             "field": {
               "name": {
-                "label": ""
+                "label": "Name"
               }
             }
           }
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "Medien von allen Benutzern einbeziehen"
       },
       "user": {
-        "back": "",
-        "fieldsDisabledExternalProvider": "",
+        "back": "Zurück zu den Benutzern",
+        "fieldsDisabledExternalProvider": "Bestimmte Felder sind deaktiviert, da sie von einem externen Authentifizierungsanbieter verwaltet werden.",
         "setting": {
           "general": {
             "title": "Allgemein",
             "item": {
-              "language": "",
+              "language": "Sprache und Region",
               "board": {
-                "title": "",
+                "title": "Home Board",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Allgemein",
+                  "mobile": "Mobil"
                 }
               },
-              "search": "",
+              "search": "Suchen",
               "firstDayOfWeek": "Erster Tag der Woche",
               "accessibility": "Barrierefreiheit"
             }
@@ -2331,7 +2395,7 @@
             "title": "Sicherheit"
           },
           "board": {
-            "title": ""
+            "title": "Boards"
           }
         },
         "list": {
@@ -2339,25 +2403,25 @@
           "title": "Benutzer"
         },
         "edit": {
-          "metaTitle": ""
+          "metaTitle": "Benutzer bearbeiten: {username}"
         },
         "create": {
           "metaTitle": "Benutzer erstellen",
-          "title": "",
+          "title": "Neuen Benutzer erstellen",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "Persönliche Information"
             },
             "security": {
               "label": "Sicherheit"
             },
             "groups": {
               "label": "Gruppen",
-              "title": "",
-              "description": ""
+              "title": "Wählen Sie alle Gruppen aus, wessen Benutzer Mitglieder sein sollen",
+              "description": "Die {everyoneGroup} Gruppe ist allen Benutzern zugewiesen und kann nicht entfernt werden."
             },
             "review": {
-              "label": ""
+              "label": "Überprüfen"
             },
             "completed": {
               "title": "Benutzer erstellt"
@@ -2367,22 +2431,22 @@
             }
           },
           "action": {
-            "createAnother": "",
-            "back": ""
+            "createAnother": "Weiteren Benutzer erstellen",
+            "back": "Zurück zur Benutzerliste"
           }
         },
         "invite": {
           "title": "Verwalten von Benutzereinladungen",
           "action": {
             "new": {
-              "title": "",
+              "title": "Neue Einladung",
               "description": "Nach Ablauf der Frist ist die Einladung nicht mehr gültig und der Empfänger der Einladung kann kein Konto mehr erstellen."
             },
             "copy": {
-              "title": "",
-              "description": "",
+              "title": "Einladung kopieren",
+              "description": "Ihre Einladung wurde angelegt. Nach dem dieses Dialogfenster geschlossen wurde <b> ist es nicht mehr möglich diesen Link zu kopieren.</b> Falls Sie nicht mehr wünschen die entsprechende Person einzuladen können sie diese Einladung jederzeit löschen.",
               "link": "Link zur Einladung",
-              "button": ""
+              "button": "Kopieren und schließen"
             },
             "delete": {
               "title": "Einladung löschen",
@@ -2391,7 +2455,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Ersteller"
@@ -2400,29 +2464,36 @@
               "label": "Ablaufdatum"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
       },
       "group": {
-        "back": "",
+        "back": "Zurück zu den Gruppen",
         "setting": {
           "general": {
             "title": "Allgemein",
             "owner": "Eigentümer",
-            "ownerOfGroup": "",
-            "ownerOfGroupDeleted": ""
+            "ownerOfGroup": "Eigentümer dieser Gruppe",
+            "ownerOfGroupDeleted": "Der Eigentümer dieser Gruppe wurde gelöscht. Derzeit hat sie keinen Besitzer."
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "Mitglieder",
-            "search": "",
-            "notFound": ""
+            "search": "Mitglied suchen",
+            "notFound": "Keine Mitglieder gefunden"
           },
           "permissions": {
-            "title": "",
+            "title": "Berechtigungen",
             "form": {
-              "unsavedChanges": ""
+              "unsavedChanges": "Du hast noch ungespeicherte Änderungen!"
             }
           }
         }
@@ -2431,18 +2502,18 @@
         "title": "Einstellungen",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Einstellungen gespeichert"
           },
           "error": {
-            "message": ""
+            "message": "Einstellungen konnten nicht gespeichert werden"
           }
         },
         "section": {
           "analytics": {
-            "title": "",
+            "title": "Nutzungsdaten",
             "general": {
-              "title": "",
-              "text": ""
+              "title": "Anonymisierte Nutzungsdaten senden",
+              "text": "Homarr schickt anonymisierte Nutzungsdaten mit der Open-Source-Software Umami. Es sammelt zu keinem Zeitpunkt personenbezogene Daten und ist daher vollständig DPR & CCPA konform. Wir empfehlen diese Nutzungsdaten zu aktivieren, da es unserem Open-Source-Team hilft Probleme zu identifizieren und unserem Backlog ermöglicht Priorität einzuräumen."
             },
             "widgetData": {
               "title": "Widget Daten",
@@ -2485,14 +2556,14 @@
               "description": "Nur öffentliche Boards stehen zur Auswahl"
             },
             "status": {
-              "title": "",
+              "title": "App Status",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "Status standardmäßig aktivieren",
+                "description": "Beim Hinzufügen eines App-Elements wird der Status standardmäßig aktiviert"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "Status deaktivieren erzwingen",
+                "description": "Status für Apps wird für alle Benutzer deaktiviert und kann nicht aktiviert werden"
               }
             }
           },
@@ -2604,15 +2675,15 @@
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "API Token löschen",
+                  "text": "Dies wird den API Token permanent löschen. API-Clients mit diesem Token können sich nicht mehr authentifizieren und API Anfragen durchführen. Diese Aktion kann nicht rückgängig gemacht werden."
                 }
               },
               "table": {
                 "header": {
                   "id": "ID",
                   "createdBy": "Erstellt von",
-                  "actions": ""
+                  "actions": "Aktionen"
                 }
               }
             }
@@ -2910,99 +2981,99 @@
         }
       },
       "command": {
-        "help": "",
+        "help": "Befehlsmodus aktivieren",
         "group": {
           "localCommand": {
-            "title": ""
+            "title": "Lokale Befehle"
           },
           "globalCommand": {
-            "title": "",
+            "title": "Globale Befehle",
             "option": {
               "colorScheme": {
                 "light": "Zum hellen Design wechseln",
                 "dark": "Zum dunklen Design wechseln"
               },
               "language": {
-                "label": "",
+                "label": "Sprache ändern",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Bitte wählen Sie Ihre Sprache aus"
                   }
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "Erstellen Sie ein neues Board"
               },
               "importBoard": {
-                "label": ""
+                "label": "Ein Board importieren"
               },
               "newApp": {
-                "label": ""
+                "label": "Neue App erstellen"
               },
               "newIntegration": {
-                "label": "",
+                "label": "Neue Integration erstellen",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Wählen Sie den Integrationstyp aus, den Sie erstellen möchten"
                   }
                 }
               },
               "newUser": {
-                "label": ""
+                "label": "Neuen Benutzer erstellen"
               },
               "newInvite": {
-                "label": ""
+                "label": "Neue Einladung erstellen"
               },
               "newGroup": {
-                "label": ""
+                "label": "Neue Gruppe erstellen"
               }
             }
           }
         }
       },
       "media": {
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": ""
+        "requestMovie": "Einen Film anfordern",
+        "requestSeries": "Eine Serie anfordern",
+        "openIn": "In {kind} öffnen"
       },
       "external": {
-        "help": "",
+        "help": "Externe Suchmaschine verwenden",
         "group": {
           "searchEngine": {
             "title": "Suchmaschinen",
             "children": {
               "action": {
                 "search": {
-                  "label": ""
+                  "label": "Suche mit {name}"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Eine Aktion für die Suchmaschine auswählen"
               },
               "searchResults": {
-                "title": ""
+                "title": "Wählen Sie ein Suchergebnis für weitere Aktionen"
               }
             },
             "option": {
               "google": {
-                "name": "",
-                "description": ""
+                "name": "Google",
+                "description": "Das Web mit Google durchsuchen"
               },
               "bing": {
-                "name": "",
-                "description": ""
+                "name": "Bing",
+                "description": "Das Web mit Bing durchsuchen"
               },
               "duckduckgo": {
-                "name": "",
-                "description": ""
+                "name": "DuckDuckGo",
+                "description": "Das Web mit DuckDuckGo durchsuchen"
               },
               "torrent": {
-                "name": "",
-                "description": ""
+                "name": "Torrents",
+                "description": "Suche nach Torrents auf torrentdownloads.pro"
               },
               "youTube": {
-                "name": "",
-                "description": ""
+                "name": "YouTube",
+                "description": "Suche nach Videos auf YouTube"
               }
             }
           }
@@ -3011,7 +3082,7 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "Modi"
           },
           "help": {
             "title": "Hilfe",
@@ -3020,10 +3091,10 @@
                 "label": "Dokumentation"
               },
               "submitIssue": {
-                "label": ""
+                "label": "Ein Problem melden"
               },
               "discord": {
-                "label": ""
+                "label": "Community Discord"
               }
             }
           }
@@ -3032,81 +3103,81 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Suchen",
             "option": {
               "other": {
-                "label": ""
+                "label": "Mit einer anderen Suchmaschine suchen"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "Keine Standard Suchmaschine festgelegt",
+                "description": "Eine Standard Suchmaschine in den Einstellungen festlegen"
               },
               "search": {
-                "label": ""
+                "label": "Suche nach \"{query}\" mit {name}"
               },
               "from-integration": {
-                "description": ""
+                "description": "Tippen um zu Suchen"
               }
             }
           },
           "local": {
-            "title": ""
+            "title": "Lokale Ergebnisse"
           }
         }
       },
       "page": {
-        "help": "",
+        "help": "Nach Seiten suchen",
         "group": {
           "page": {
-            "title": "",
+            "title": "Seiten",
             "option": {
               "manageHome": {
-                "label": ""
+                "label": "Home Board verwalten"
               },
               "manageBoard": {
-                "label": ""
+                "label": "Boards verwalten"
               },
               "manageApp": {
-                "label": ""
+                "label": "Apps verwalten"
               },
               "manageIntegration": {
-                "label": ""
+                "label": "Integrationen verwalten"
               },
               "manageSearchEngine": {
-                "label": ""
+                "label": "Suchmaschinen verwalten"
               },
               "manageMedia": {
-                "label": ""
+                "label": "Medien verwalten"
               },
               "manageUser": {
                 "label": "Verwaltung von Benutzern"
               },
               "manageInvite": {
-                "label": ""
+                "label": "Einladungen verwalten"
               },
               "manageGroup": {
-                "label": ""
+                "label": "Gruppen verwalten"
               },
               "manageDocker": {
-                "label": ""
+                "label": "Docker verwalten"
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API"
               },
               "manageLog": {
                 "label": "Logs anzeigen"
               },
               "manageTask": {
-                "label": ""
+                "label": "Aufgaben verwalten"
               },
               "manageSettings": {
-                "label": ""
+                "label": "Allgemeine Einstellungen"
               },
               "about": {
                 "label": "Über"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Home Board"
               },
               "preferences": {
                 "label": "Ihre Einstellungen"
@@ -3116,18 +3187,18 @@
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "Nach Benutzer oder Gruppe suchen",
         "group": {
           "user": {
             "title": "Benutzer",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Benutzerdetails anzeigen"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Eine Aktion für den Benutzer auswählen"
               }
             }
           },
@@ -3136,17 +3207,17 @@
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Gruppendetails anzeigen"
                 },
                 "manageMember": {
-                  "label": ""
+                  "label": "Mitglieder verwalten"
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "Berechtigungen verwalten"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Wählen Sie eine Aktion für diese Gruppe"
               }
             }
           }
@@ -3154,16 +3225,16 @@
       }
     },
     "engine": {
-      "search": "",
+      "search": "Nach einer Suchmaschine suchen",
       "field": {
         "name": {
-          "label": ""
+          "label": "Name"
         },
         "short": {
-          "label": ""
+          "label": "Kurz"
         },
         "urlTemplate": {
-          "label": ""
+          "label": "URL Suchvorlage"
         },
         "description": {
           "label": "Beschreibung"
@@ -3173,53 +3244,53 @@
         "list": {
           "title": "Suchmaschinen",
           "noResults": {
-            "title": "",
-            "action": ""
+            "title": "Noch keine Suchmaschinen vorhanden",
+            "action": "Erstelle deine erste Suchmaschine"
           },
-          "interactive": ""
+          "interactive": "Interaktiv, verwendet eine Integration"
         },
         "create": {
-          "title": "",
+          "title": "Neue Suchmaschine",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Suchmaschine angelegt",
+              "message": "Die Suchmaschine wurde erfolgreich angelegt"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Die Suchmaschine wurde nicht angelegt",
+              "message": "Die Suchmaschine konnte nicht erstellt werden"
             }
           }
         },
         "edit": {
-          "title": "",
+          "title": "Suchmaschine bearbeiten",
           "notification": {
             "success": {
               "title": "Änderungen erfolgreich angewendet",
-              "message": ""
+              "message": "Suchmaschine wurde erfolgreich gespeichert"
             },
             "error": {
               "title": "Änderungen konnten nicht angewendet werden",
-              "message": ""
+              "message": "Die Suchmaschine konnte nicht gespeichert werden"
             }
           },
-          "configControl": "",
+          "configControl": "Konfiguration",
           "searchEngineType": {
-            "generic": "",
-            "fromIntegration": ""
+            "generic": "Allgemein",
+            "fromIntegration": "Aus den Integration"
           }
         },
         "delete": {
-          "title": "",
-          "message": "",
+          "title": "Suchmaschine löschen",
+          "message": "Sind Sie sicher, dass Sie die Suchmaschine '{name} ' löschen möchten?",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Suchmaschine gelöscht",
+              "message": "Die Suchmaschine wurde erfolgreich gelöscht"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Die Suchmaschine wurde nicht gelöscht",
+              "message": "Die Suchmaschine konnte nicht gelöscht werden"
             }
           }
         }
@@ -3227,15 +3298,15 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "\"{name} \" anfordern",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "Staffel",
+                "episodes": "Episoden"
               }
             },
             "button": {
-              "send": ""
+              "send": "Anfrage senden"
             }
           }
         }
@@ -3245,30 +3316,30 @@
   "certificate": {
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "Vertrauenswürdige Zertifikate",
+        "description": "Wird von Homarr verwendet, um Daten von Integrationen anzufordern.",
         "noResults": {
-          "title": ""
+          "title": "Es gibt noch keine Zertifikate"
         },
-        "expires": ""
+        "expires": "Gültig bis {when}"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Zertifikat hinzufügen",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Zertifikat hinzugefügt",
+            "message": "Das Zertifikat wurde erfolgreich hinzugefügt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Ein Fehler ist beim hinzufügen des Zertifikats aufgetreten",
+            "message": "Das Zertifikat konnte nicht hinzugefügt werden"
           }
         }
       },
       "remove": {
-        "label": "",
+        "label": "Zertifikat entfernen",
         "confirm": "Sind Sie sicher, dass Sie das Zertifikat entfernen möchten?",
         "notification": {
           "success": {

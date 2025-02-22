@@ -13,6 +13,11 @@ import { commonItemSchema, sectionSchema } from "./shared";
 
 const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 
+const hexColorNullableSchema = hexColorSchema
+  .or(z.literal(""))
+  .nullable()
+  .transform((value) => (value?.trim().length === 0 ? null : value));
+
 const boardNameSchema = z
   .string()
   .min(1)
@@ -57,6 +62,8 @@ const savePartialSettingsSchema = z
     secondaryColor: hexColorSchema,
     opacity: z.number().min(0).max(100),
     customCss: z.string().max(16384),
+    iconColor: hexColorNullableSchema,
+    itemRadius: z.union([z.literal("xs"), z.literal("sm"), z.literal("md"), z.literal("lg"), z.literal("xl")]),
     disableStatus: z.boolean(),
   })
   .partial();

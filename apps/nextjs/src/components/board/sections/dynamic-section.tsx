@@ -26,6 +26,7 @@ export const BoardDynamicSection = ({ section }: Props) => {
             overflow: "hidden",
           },
         }}
+        radius={board.itemRadius}
         p={0}
       >
         <GridStack section={section} className="min-row" />

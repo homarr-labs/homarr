@@ -305,7 +305,15 @@
     "search": "מצא קבוצה",
     "field": {
       "name": "שם",
-      "members": "חברים"
+      "members": "חברים",
+      "homeBoard": {
+        "label": "לוח בית",
+        "description": "ניתן לבחור רק לוחות נגישים לקבוצה"
+      },
+      "mobileBoard": {
+        "label": "לוח למכשירים ניידים",
+        "description": "ניתן לבחור רק לוחות נגישים לקבוצה"
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "בחר קבוצה",
         "notFound": "לא נמצאה קבוצה"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "ההגדרות נשמרו",
+              "message": "הגדרות הלוח נשמרו בהצלחה"
+            },
+            "error": {
+              "title": "נכשל בשמירת הגדרות",
+              "message": "לא ניתן לשמור הגדרות לוח"
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": "המיקום השתנה בהצלחה"
+          },
+          "error": {
+            "message": "לא ניתן לשנות מיקום"
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "קבוצת ברירת מחדל",
+      "description": "{name} - כולם מחוברים"
     }
   },
   "app": {
@@ -564,6 +600,12 @@
       },
       "url": {
         "label": "כתובת אתר"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -888,6 +930,7 @@
     },
     "dangerZone": "אזור מסוכן",
     "noResults": "לא נמצאו תוצאות",
+    "unsavedChanges": "ישנם שינויים שלא נשמרו!",
     "preview": {
       "show": "הצג תצוגה מקדימה",
       "hide": "הסתר תצוגה המקדימה"
@@ -1048,7 +1091,7 @@
           "label": "הצג תיאור"
         },
         "pingEnabled": {
-          "label": "אפשר פינג פשוט"
+          "label": "אפשר בדיקת מצב"
         }
       },
       "error": {
@@ -1571,7 +1614,8 @@
       },
       "app": {
         "noData": "לא נמצאה אפליקציה",
-        "description": "לחץ על <here></here> כדי ליצור אפליקציה חדשה"
+        "description": "לחץ על <here></here> כדי ליצור אפליקציה חדשה",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "לא נבחרה אינטגרציה",
@@ -1970,6 +2014,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2044,6 +2094,9 @@
       "opacity": {
         "label": "אטימות"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "עיצוב מותאם אישית עבור הלוח הזה",
         "description": "יתר על כן, התאם את לוח המחוונים שלך באמצעות CSS, מומלץ רק למשתמשים מנוסים",
@@ -2053,11 +2106,22 @@
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "ביטול סטטוס אפליקציה",
+        "description": "ביטול סטטוס לכל האפליקציות בלוח זה"
       },
       "columnCount": {
         "label": "ספירת עמודות"
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "שם"
@@ -2083,14 +2147,14 @@
         "background": {
           "title": "רקע"
         },
-        "color": {
-          "title": "צבעים"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "עיצוב מותאם אישית"
         },
         "behavior": {
-          "title": ""
+          "title": "אופן הפעולה"
         },
         "access": {
           "title": "בקרת גישה",
@@ -2414,6 +2478,13 @@
             "ownerOfGroup": "בעלים של קבוצה זו",
             "ownerOfGroupDeleted": "הבעלים של קבוצה זו נמחק. כרגע אין בעלים."
           },
+          "setting": {
+            "title": "הגדרות",
+            "alert": "הגדרות קבוצה מסודרות לפי סדר הקבוצות ברשימה. ההגדרות העליונות מחליפות את ההגדרות התחתונות.",
+            "board": {
+              "title": "לוחות"
+            }
+          },
           "members": {
             "title": "חברים",
             "search": "חיפוש חבר בקבוצה",
@@ -2485,14 +2556,14 @@
               "description": "רק לוחות ציבוריים זמינים לבחירה"
             },
             "status": {
-              "title": "",
+              "title": "סטטוס אפליקציה",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "אפשר סטטוס כברירת מחדל",
+                "description": "בעת הוספת פריט אפליקציה, הסטטוס יופעל כברירת מחדל"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "כפה על סטטוס השבתה",
+                "description": "סטטוס אפליקציות יושבת עבור כל המשתמשים ולא ניתן להפעיל אותו"
               }
             }
           },

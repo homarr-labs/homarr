@@ -305,7 +305,15 @@
     "search": "Find en gruppe",
     "field": {
       "name": "Navn",
-      "members": "Medlemmer"
+      "members": "Medlemmer",
+      "homeBoard": {
+        "label": "Hjemme tavle",
+        "description": "Kun tavler tilgængelige for gruppen kan vælges"
+      },
+      "mobileBoard": {
+        "label": "Mobil tavle",
+        "description": "Kun tavler tilgængelige for gruppen kan vælges"
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Vælg gruppe",
         "notFound": "Ingen gruppe fundet"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "Indstillinger gemt",
+              "message": "Indstillingerne for tavlen er gemt"
+            },
+            "error": {
+              "title": "Kunne ikke gemme indstillinger",
+              "message": "Kan ikke gemme indstillinger for tavlen"
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": "Position ændret med succes"
+          },
+          "error": {
+            "message": "Kan ikke ændre position"
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "Standardgruppe",
+      "description": "{name} - Alle brugere der er logget ind"
     }
   },
   "app": {
@@ -564,6 +600,12 @@
       },
       "url": {
         "label": "Url"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -888,6 +930,7 @@
     },
     "dangerZone": "Farezone",
     "noResults": "Ingen resultater fundet",
+    "unsavedChanges": "Du har ikke gemte ændringer!",
     "preview": {
       "show": "Vis forhåndsvisning",
       "hide": "Skjul forhåndsvisning"
@@ -1048,7 +1091,7 @@
           "label": "Vis beskrivelsesværktøjstip"
         },
         "pingEnabled": {
-          "label": "Aktivér simpel ping"
+          "label": "Aktiver statustjek"
         }
       },
       "error": {
@@ -1571,7 +1614,8 @@
       },
       "app": {
         "noData": "Ingen app fundet",
-        "description": "Klik på <here></here> for at oprette en ny app"
+        "description": "Klik på <here></here> for at oprette en ny app",
+        "quickCreate": "Opret app i farten"
       },
       "error": {
         "noIntegration": "Ingen integration valgt",
@@ -1970,6 +2014,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "Opret app i farten",
+          "createAndUse": "Opret og brug"
+        }
       }
     },
     "field": {
@@ -2044,6 +2094,9 @@
       "opacity": {
         "label": "Gennemsigtighed"
       },
+      "iconColor": {
+        "label": "Ikonfarve"
+      },
       "customCss": {
         "label": "Brugerdefineret css for denne tavle",
         "description": "Tilpas din tavle ved hjælp af CSS, anbefales kun til erfarne brugere",
@@ -2053,11 +2106,22 @@
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "Deaktiver app status",
+        "description": "Deaktiverer statustjek for alle apps på denne tavle"
       },
       "columnCount": {
         "label": "Kolonne antal"
+      },
+      "itemRadius": {
+        "label": "Element radius",
+        "description": "Ændrer rundheden af fliser på din tavle",
+        "option": {
+          "xs": "Meget lille",
+          "sm": "Lille",
+          "md": "Medium",
+          "lg": "Stor",
+          "xl": "Meget stor"
+        }
       },
       "name": {
         "label": "Navn"
@@ -2083,14 +2147,14 @@
         "background": {
           "title": "Baggrund"
         },
-        "color": {
-          "title": "Farver"
+        "appearance": {
+          "title": "Udseende"
         },
         "customCss": {
           "title": "Brugerdefineret CSS"
         },
         "behavior": {
-          "title": ""
+          "title": "Virkemåde"
         },
         "access": {
           "title": "Adgangskontrol",
@@ -2414,6 +2478,13 @@
             "ownerOfGroup": "Ejer af denne gruppe",
             "ownerOfGroupDeleted": "Ejeren af denne gruppe blev slettet. Den har i øjeblikket ingen ejer."
           },
+          "setting": {
+            "title": "Indstillinger",
+            "alert": "Gruppeindstillinger prioriteres efter rækkefølgen af grupper i listen. De øverste indstillinger overskriver de nederste indstillinger.",
+            "board": {
+              "title": "Tavler"
+            }
+          },
           "members": {
             "title": "Medlemmer",
             "search": "Find et medlem",
@@ -2485,14 +2556,14 @@
               "description": "Kun offentlige tavler er tilgængelige til udvælgelse"
             },
             "status": {
-              "title": "",
+              "title": "App status",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "Aktiver status som standard",
+                "description": "Når du tilføjer et app element, vil status blive aktiveret som standard"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "Gennemtving status deaktivering",
+                "description": "Status for apps vil blive deaktiveret for alle brugere og kan ikke blive aktiveret"
               }
             }
           },

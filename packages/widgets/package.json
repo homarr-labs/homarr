@@ -35,6 +35,7 @@
     "@homarr/form": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/modals": "workspace:^0.1.0",
+    "@homarr/modals-collection": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
@@ -43,8 +44,8 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^7.16.2",
-    "@mantine/hooks": "^7.16.2",
+    "@mantine/core": "^7.17.0",
+    "@mantine/hooks": "^7.17.0",
     "@tabler/icons-react": "^3.30.0",
     "@tiptap/extension-color": "2.11.5",
     "@tiptap/extension-highlight": "2.11.5",
@@ -63,19 +64,19 @@
     "@tiptap/starter-kit": "^2.11.5",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
-    "mantine-react-table": "2.0.0-beta.8",
-    "next": "15.1.6",
+    "mantine-react-table": "2.0.0-beta.9",
+    "next": "15.1.7",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "video.js": "^8.21.0",
-    "zod": "^3.24.1"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/video.js": "^7.3.58",
-    "eslint": "^9.20.0",
+    "eslint": "^9.21.0",
     "typescript": "^5.7.3"
   }
 }

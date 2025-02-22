@@ -1,5 +1,5 @@
 <!-- Project Title -->
-![Banner](./banner.png)
+[![Banner](./banner.png)](https://homarr.dev/)
 
 <!-- Badges -->
 <p align="center">
@@ -36,7 +36,7 @@
 </p>
 
 
-![Features Section](./section-features.png)
+[![Features Section](./section-features.png)](https://homarr.dev/)
 
 - 🖌️ Highly customizable with an extensive drag and drop grid system
 - ✨ Integrates seamlessly with your favorite self-hosted applications
@@ -53,7 +53,7 @@
 <br/>
 <br/>
 
-![Widgets & Integrations Section](./section-widgets-and-integrations.png)
+[![Widgets & Integrations Section](./section-widgets-and-integrations.png)](https://homarr.dev/docs/category/widgets)
 
 Homarr has a [built-in collection of widgets and integrations](https://homarr.dev/docs/category/integrations), that connect to your applications and enable you to control them directly from the dashboard.
 
@@ -88,7 +88,7 @@ Homarr has a [built-in collection of widgets and integrations](https://homarr.de
 <br/>
 <br/>
 
-![Installation Section](./section-installation.png)
+[![Installation Section](./section-installation.png)](https://homarr.dev/docs/category/installation-1)
 
 Since we are updating Homarr very frequently, we recommend reading our official installation guides:
 
@@ -101,7 +101,7 @@ Since we are updating Homarr very frequently, we recommend reading our official 
 <br/>
 <br/>
 
-![Contribute Section](./section-contribute.png)
+[![Contribute Section](./section-contribute.png)](https://opencollective.com/homarr)
 
 <br/>
 

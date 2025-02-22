@@ -41,6 +41,7 @@ export const createUserInsertCollection = (
   insertCollection.groups.push({
     id: adminGroupId,
     name: credentialsAdminGroup,
+    position: 1,
   });
 
   insertCollection.groupPermissions.push({

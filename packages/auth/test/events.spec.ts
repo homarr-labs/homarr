@@ -259,4 +259,5 @@ const createGroupAsync = async (db: Database, name = "test") =>
   await db.insert(groups).values({
     id: "1",
     name,
+    position: 1,
   });

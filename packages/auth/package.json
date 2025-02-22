@@ -28,18 +28,18 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/env": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@t3-oss/env-nextjs": "^0.12.0",
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
     "ldapts": "7.3.1",
-    "next": "15.1.6",
+    "next": "15.1.7",
     "next-auth": "5.0.0-beta.25",
     "pretty-print-error": "^1.1.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "zod": "^3.24.1"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -47,8 +47,8 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/bcrypt": "5.0.2",
     "@types/cookies": "0.9.0",
-    "eslint": "^9.20.0",
-    "prettier": "^3.4.2",
+    "eslint": "^9.21.0",
+    "prettier": "^3.5.2",
     "typescript": "^5.7.3"
   }
 }

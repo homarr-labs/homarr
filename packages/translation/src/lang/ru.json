@@ -305,7 +305,15 @@
     "search": "Поиск группы",
     "field": {
       "name": "Название",
-      "members": "Участники"
+      "members": "Участники",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Выбрать группу",
         "notFound": "Группы не найдены"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -564,6 +600,12 @@
       },
       "url": {
         "label": "URL-адрес"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -888,6 +930,7 @@
     },
     "dangerZone": "Опасная зона",
     "noResults": "Ничего не найдено",
+    "unsavedChanges": "",
     "preview": {
       "show": "Показать предпросмотр",
       "hide": "Скрыть предпросмотр"
@@ -1571,7 +1614,8 @@
       },
       "app": {
         "noData": "Приложения не найдены",
-        "description": "Нажмите <here></here>, чтобы создать новое приложение"
+        "description": "Нажмите <here></here>, чтобы создать новое приложение",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Интеграция не выбрана",
@@ -1970,6 +2014,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2044,6 +2094,9 @@
       "opacity": {
         "label": "Прозрачность"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "Пользовательский CSS для этой панели",
         "description": "Дополнительная настройка вашей панели с помощью CSS, рекомендуется только опытным пользователям",
@@ -2058,6 +2111,17 @@
       },
       "columnCount": {
         "label": "Количество столбцов"
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "Название"
@@ -2083,8 +2147,8 @@
         "background": {
           "title": "Фон"
         },
-        "color": {
-          "title": "Цвета"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "Пользовательский CSS"
@@ -2413,6 +2477,13 @@
             "owner": "Владелец",
             "ownerOfGroup": "Владелец этой группы",
             "ownerOfGroupDeleted": "Владелец этой группы был удалён. В данный момент у группы нет владельца."
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "Участники",

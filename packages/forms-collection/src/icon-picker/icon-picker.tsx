@@ -24,7 +24,7 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { UploadMedia } from "~/app/[locale]/manage/medias/_actions/upload-media";
+import { UploadMedia } from "../upload-media/upload-media";
 import classes from "./icon-picker.module.css";
 
 interface IconPickerProps {
@@ -124,12 +124,7 @@ export const IconPicker = ({ value: propsValue, onChange, error, onFocus, onBlur
           <InputBase
             flex={1}
             rightSection={<Combobox.Chevron />}
-            leftSection={
-              previewUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={previewUrl} alt="" style={{ width: 20, height: 20 }} />
-              ) : null
-            }
+            leftSection={previewUrl ? <img src={previewUrl} alt="" style={{ width: 20, height: 20 }} /> : null}
             value={search}
             onChange={(event) => {
               combobox.openDropdown();

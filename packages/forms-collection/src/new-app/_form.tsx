@@ -1,19 +1,22 @@
 "use client";
 
+import type { ChangeEventHandler } from "react";
 import { useRef } from "react";
 import Link from "next/link";
-import { Button, Group, Stack, Textarea, TextInput } from "@mantine/core";
+import { Button, Checkbox, Collapse, Group, Stack, Textarea, TextInput } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import type { z } from "zod";
 
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
-import { IconPicker } from "~/components/icons/picker/icon-picker";
+import { IconPicker } from "../icon-picker/icon-picker";
 
 type FormType = z.infer<typeof validation.app.manage>;
 
 interface AppFormProps {
+  showBackToOverview: boolean;
   buttonLabels: {
     submit: string;
     submitAndCreateAnother?: string;
@@ -25,6 +28,7 @@ interface AppFormProps {
 
 export const AppForm = ({
   buttonLabels,
+  showBackToOverview,
   handleSubmit: originalHandleSubmit,
   initialValues,
   isPending,
@@ -37,6 +41,7 @@ export const AppForm = ({
       description: initialValues?.description ?? "",
       iconUrl: initialValues?.iconUrl ?? "",
       href: initialValues?.href ?? "",
+      pingUrl: initialValues?.pingUrl ?? "",
     },
   });
 
@@ -52,6 +57,17 @@ export const AppForm = ({
     originalHandleSubmit(values, redirect, afterSuccess);
   };
 
+  const [opened, { open, close }] = useDisclosure((initialValues?.pingUrl?.length ?? 0) > 0);
+
+  const handleClickDifferentUrlPing: ChangeEventHandler<HTMLInputElement> = () => {
+    if (!opened) {
+      open();
+    } else {
+      close();
+      form.setFieldValue("pingUrl", "");
+    }
+  };
+
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
@@ -60,10 +76,24 @@ export const AppForm = ({
         <Textarea {...form.getInputProps("description")} label={t("app.field.description.label")} />
         <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
 
+        <Checkbox
+          checked={opened}
+          onChange={handleClickDifferentUrlPing}
+          label={t("app.field.useDifferentUrlForPing.checkbox.label")}
+          description={t("app.field.useDifferentUrlForPing.checkbox.description")}
+          mt="md"
+        />
+
+        <Collapse in={opened}>
+          <TextInput {...form.getInputProps("pingUrl")} />
+        </Collapse>
+
         <Group justify="end">
-          <Button variant="default" component={Link} href="/manage/apps">
-            {t("common.action.backToOverview")}
-          </Button>
+          {showBackToOverview && (
+            <Button variant="default" component={Link} href="/manage/apps">
+              {t("common.action.backToOverview")}
+            </Button>
+          )}
           {buttonLabels.submitAndCreateAnother && (
             <Button
               type="submit"

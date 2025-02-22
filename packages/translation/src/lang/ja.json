@@ -305,7 +305,15 @@
     "search": "",
     "field": {
       "name": "名称",
-      "members": ""
+      "members": "",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "",
         "notFound": ""
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -564,6 +600,12 @@
       },
       "url": {
         "label": ""
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -888,6 +930,7 @@
     },
     "dangerZone": "危険な操作",
     "noResults": "結果が見つかりません",
+    "unsavedChanges": "",
     "preview": {
       "show": "",
       "hide": ""
@@ -1571,7 +1614,8 @@
       },
       "app": {
         "noData": "",
-        "description": ""
+        "description": "",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "",
@@ -1970,6 +2014,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2044,6 +2094,9 @@
       "opacity": {
         "label": ""
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "",
         "description": "さらに、CSS を使用してダッシュボードをカスタマイズします。経験豊富なユーザーにのみお勧めします。",
@@ -2058,6 +2111,17 @@
       },
       "columnCount": {
         "label": ""
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "名称"
@@ -2083,7 +2147,7 @@
         "background": {
           "title": "背景"
         },
-        "color": {
+        "appearance": {
           "title": ""
         },
         "customCss": {
@@ -2413,6 +2477,13 @@
             "owner": "所有者",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "",

@@ -1,4 +1,5 @@
 import type { AdapterAccount } from "@auth/core/adapters";
+import type { MantineSize } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import { relations } from "drizzle-orm";
 import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
@@ -151,6 +152,13 @@ export const groups = mysqlTable("group", {
   ownerId: varchar({ length: 64 }).references(() => users.id, {
     onDelete: "set null",
   }),
+  homeBoardId: varchar({ length: 64 }).references(() => boards.id, {
+    onDelete: "set null",
+  }),
+  mobileHomeBoardId: varchar({ length: 64 }).references(() => boards.id, {
+    onDelete: "set null",
+  }),
+  position: smallint().notNull(),
 });
 
 export const groupPermissions = mysqlTable("groupPermission", {
@@ -272,6 +280,8 @@ export const boards = mysqlTable("board", {
   secondaryColor: text().default("#fd7e14").notNull(),
   opacity: int().default(100).notNull(),
   customCss: text(),
+  iconColor: text(),
+  itemRadius: text().$type<MantineSize>().default("lg").notNull(),
   disableStatus: boolean().default(false).notNull(),
 });
 
@@ -414,6 +424,7 @@ export const apps = mysqlTable("app", {
   description: text(),
   iconUrl: text().notNull(),
   href: text(),
+  pingUrl: text(),
 });
 
 export const integrationItems = mysqlTable(
@@ -548,6 +559,16 @@ export const groupRelations = relations(groups, ({ one, many }) => ({
     fields: [groups.ownerId],
     references: [users.id],
   }),
+  homeBoard: one(boards, {
+    fields: [groups.homeBoardId],
+    references: [boards.id],
+    relationName: "groupRelations__board__homeBoardId",
+  }),
+  mobileHomeBoard: one(boards, {
+    fields: [groups.mobileHomeBoardId],
+    references: [boards.id],
+    relationName: "groupRelations__board__mobileHomeBoardId",
+  }),
 }));
 
 export const groupPermissionRelations = relations(groupPermissions, ({ one }) => ({
@@ -625,6 +646,12 @@ export const boardRelations = relations(boards, ({ many, one }) => ({
   userPermissions: many(boardUserPermissions),
   groupPermissions: many(boardGroupPermissions),
   layouts: many(layouts),
+  groupHomes: many(groups, {
+    relationName: "groupRelations__board__homeBoardId",
+  }),
+  mobileHomeBoard: many(groups, {
+    relationName: "groupRelations__board__mobileHomeBoardId",
+  }),
 }));
 
 export const sectionRelations = relations(sections, ({ many, one }) => ({

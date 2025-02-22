@@ -153,10 +153,10 @@
         "label": "Użyj ikon dla pingów"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Domyślna wyszukiwarka"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Otwórz wyniki wyszukiwania w nowej karcie"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ustawienia wyszukiwania zostały zmienione"
           },
           "error": {
-            "message": ""
+            "message": "Nie można zmienić preferencji wyszukiwania"
           }
         }
       },
@@ -305,7 +305,15 @@
     "search": "Znajdź grupę",
     "field": {
       "name": "Nazwa",
-      "members": "Członkowie"
+      "members": "Członkowie",
+      "homeBoard": {
+        "label": "",
+        "description": ""
+      },
+      "mobileBoard": {
+        "label": "",
+        "description": ""
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Wybierz grupę",
         "notFound": "Nie znaleziono grupy"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "",
+              "message": ""
+            },
+            "error": {
+              "title": "",
+              "message": ""
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": ""
+          },
+          "error": {
+            "message": ""
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "",
+      "description": ""
     }
   },
   "app": {
@@ -564,6 +600,12 @@
       },
       "url": {
         "label": "Adres URL"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -741,8 +783,8 @@
           "newLabel": "Nowe hasło"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Token ID",
+          "newLabel": "Nowy token ID"
         },
         "realm": {
           "label": "",
@@ -888,6 +930,7 @@
     },
     "dangerZone": "Strefa zagrożenia",
     "noResults": "Nie znaleziono żadnych wyników",
+    "unsavedChanges": "",
     "preview": {
       "show": "Pokaż podgląd",
       "hide": "Ukryj podgląd"
@@ -915,7 +958,7 @@
           "passwordRequirements": "Twoje hasło nie spełnia wymagań.",
           "boardAlreadyExists": "Tablica o tej nazwie już istnieje",
           "invalidFileType": "Nieprawidłowy typ pliku, oczekiwany {expected}",
-          "invalidFileName": "",
+          "invalidFileName": "Nieprawidłowa nazwa pliku",
           "fileTooLarge": "Plik jest zbyt duży, maksymalny rozmiar to {maxSize}",
           "invalidConfiguration": "Nieprawidłowa konfiguracja",
           "groupNameTaken": "Nazwa użytkownika jest już zajęta"
@@ -948,7 +991,7 @@
         "moveDown": "Przenieś w dół",
         "createAbove": "Nowa kategoria powyżej",
         "createBelow": "Nowa kategoria poniżej",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "Otwórz wszystkie w kartach"
       },
       "create": {
         "title": "Nowa kategoria",
@@ -969,7 +1012,7 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
+        "title": "Otwórz wszystkie w kartach",
         "text": ""
       }
     }
@@ -1080,13 +1123,13 @@
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "Ukryj ikony"
         },
         "hideHostname": {
           "label": ""
         },
         "openNewTab": {
-          "label": ""
+          "label": "Otwórz w nowej karcie"
         },
         "items": {
           "label": "Zakładki",
@@ -1200,8 +1243,8 @@
           "description": "Jak powinna wyglądać data"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Własny format czasu",
+          "description": "Użyj ISO 8601 do formatu czasu (spowoduje nadpisanie innych opcji)"
         },
         "customDateFormat": {
           "label": "",
@@ -1414,8 +1457,8 @@
       },
       "currentWindSpeed": "",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
+        "sunrise": "Wschód słońca",
+        "sunset": "Zachód słońca",
         "maxWindSpeed": "",
         "maxWindGusts": ""
       },
@@ -1454,7 +1497,7 @@
       "name": "Monitorowanie zdrowia  systemu",
       "description": "Wyświetla informacje o stanie Twojego systemu(ów).",
       "tab": {
-        "system": "",
+        "system": "System",
         "cluster": ""
       },
       "option": {
@@ -1497,8 +1540,8 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
@@ -1518,16 +1561,16 @@
           "rightSection": {
             "node": "",
             "vmId": "",
-            "plugin": ""
+            "plugin": "Wtyczka"
           },
           "detail": {
             "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "memory": "Pamięć",
+            "storage": "Magazyn",
+            "uptime": "Czas pracy",
+            "haState": "Stan HA",
             "storageType": {
-              "local": "",
+              "local": "Magazyn lokalny",
               "shared": ""
             }
           }
@@ -1571,7 +1614,8 @@
       },
       "app": {
         "noData": "Nie znaleziono aplikacji",
-        "description": "Kliknij <here></here> aby utworzyć nową aplikację"
+        "description": "Kliknij <here></here> aby utworzyć nową aplikację",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Nie wybrano integracji",
@@ -1970,6 +2014,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2044,6 +2094,9 @@
       "opacity": {
         "label": ""
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "",
         "description": "Jeszcze bardziej dostosuj swój pulpit za pomocą CSS, zalecane tylko dla doświadczonych użytkowników",
@@ -2058,6 +2111,17 @@
       },
       "columnCount": {
         "label": ""
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "Nazwa"
@@ -2083,7 +2147,7 @@
         "background": {
           "title": "Tło"
         },
-        "color": {
+        "appearance": {
           "title": ""
         },
         "customCss": {
@@ -2413,6 +2477,13 @@
             "owner": "Właściciel",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
+          },
+          "setting": {
+            "title": "",
+            "alert": "",
+            "board": {
+              "title": ""
+            }
           },
           "members": {
             "title": "",

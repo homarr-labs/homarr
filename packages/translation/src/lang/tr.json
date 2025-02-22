@@ -305,7 +305,15 @@
     "search": "Grup bul",
     "field": {
       "name": "İsim",
-      "members": "Üyeler"
+      "members": "Üyeler",
+      "homeBoard": {
+        "label": "Ana Panel",
+        "description": "Yalnızca grubun erişebildiği paneller seçilebilir"
+      },
+      "mobileBoard": {
+        "label": "Mobil panel",
+        "description": "Yalnızca grubun erişebildiği paneller seçilebilir"
+      }
     },
     "permission": {
       "admin": {
@@ -501,7 +509,35 @@
       "select": {
         "label": "Grup Seç",
         "notFound": "Grup bulunamadı"
+      },
+      "settings": {
+        "board": {
+          "notification": {
+            "success": {
+              "title": "Ayarlar kaydedildi",
+              "message": "Panel ayarları başarıyla kaydedildi"
+            },
+            "error": {
+              "title": "Ayarlar kaydedilemedi",
+              "message": "Panel ayarları kaydedilemiyor"
+            }
+          }
+        }
+      },
+      "changePosition": {
+        "notification": {
+          "success": {
+            "message": "Konum başarıyla değiştirildi"
+          },
+          "error": {
+            "message": "Konum değiştirilemiyor"
+          }
+        }
       }
+    },
+    "defaultGroup": {
+      "name": "Varsayılan grup",
+      "description": "Tüm oturum açmış kullanıcılar - {name}"
     }
   },
   "app": {
@@ -564,6 +600,12 @@
       },
       "url": {
         "label": "Url"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -888,6 +930,7 @@
     },
     "dangerZone": "Tehlikeli Bölge",
     "noResults": "Sonuç bulunamadı",
+    "unsavedChanges": "Kaydedilmemiş değişiklikleriniz var!",
     "preview": {
       "show": "Ara Renkleri Göster",
       "hide": "Ara Renkleri Gizle"
@@ -1048,7 +1091,7 @@
           "label": "Açıklama ipucunu göster"
         },
         "pingEnabled": {
-          "label": "Basit ping'i etkinleştir"
+          "label": "Durum denetimini etkinleştir"
         }
       },
       "error": {
@@ -1571,7 +1614,8 @@
       },
       "app": {
         "noData": "Uygulama bulunamadı",
-        "description": "Yeni bir uygulama oluşturmak için <here></here> tıklayın"
+        "description": "Yeni bir uygulama oluşturmak için <here></here> tıklayın",
+        "quickCreate": "Anında uygulama oluştur"
       },
       "error": {
         "noIntegration": "Hiçbir entegrasyon seçilmedi",
@@ -1970,6 +2014,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "Anında uygulama oluştur",
+          "createAndUse": "Oluştur ve kullan"
+        }
       }
     },
     "field": {
@@ -2044,6 +2094,9 @@
       "opacity": {
         "label": "Opaklık"
       },
+      "iconColor": {
+        "label": "Simge rengi"
+      },
       "customCss": {
         "label": "Bu panel için özel css",
         "description": "CSS kullanarak panelizi özelleştirin, sadece tecrübeli kullanıcılar için tavsiye edilir",
@@ -2053,11 +2106,22 @@
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "Uygulama durumunu devre dışı bırak",
+        "description": "Bu paneldeki tüm uygulamaların durum denetimini devre dışı bırakır"
       },
       "columnCount": {
         "label": "Sütun Sayısı"
+      },
+      "itemRadius": {
+        "label": "Öğe yarıçapı",
+        "description": "Panelinizdeki yuvaların yuvarlaklığını değiştirir",
+        "option": {
+          "xs": "Çok küçük",
+          "sm": "Küçük",
+          "md": "Orta",
+          "lg": "Büyük",
+          "xl": "Çok büyük"
+        }
       },
       "name": {
         "label": "İsim"
@@ -2083,14 +2147,14 @@
         "background": {
           "title": "Arkaplan"
         },
-        "color": {
-          "title": "Renkler"
+        "appearance": {
+          "title": "Görünüş"
         },
         "customCss": {
           "title": "Özel Css"
         },
         "behavior": {
-          "title": ""
+          "title": "Davranış"
         },
         "access": {
           "title": "Erişim Kontrolü",
@@ -2171,7 +2235,7 @@
         "admin": {
           "description": "Sunucu için henüz öntanımlı panel belirlemediniz.",
           "link": "Sunucu geneli için öntanımlı panel atayın",
-          "notice": "Bu sayfayı tüm kullanıcılardan gizlemek için sunucu için bir ana panel ayarlayın"
+          "notice": "Bu sayfayı tüm kullanıcılardan gizlemek için sunucuya öntanımlı panel atayın"
         },
         "user": {
           "description": "Henüz bir ev paneli belirlemediniz.",
@@ -2414,6 +2478,13 @@
             "ownerOfGroup": "Bu grubun sahibi",
             "ownerOfGroupDeleted": "Bu grubun sahibi silindi. Şu anda bir sahibi yok."
           },
+          "setting": {
+            "title": "Ayarlar",
+            "alert": "Grup ayarları, listedeki grupların sırasına göre önceliklendirilir. En üstteki ayarlar en alttaki ayarları geçersiz kılar.",
+            "board": {
+              "title": "Paneller"
+            }
+          },
           "members": {
             "title": "Üyeler",
             "search": "Bir üye bul",
@@ -2485,14 +2556,14 @@
               "description": "Seçim yalnızca herkese açık paneller için kullanılabilir"
             },
             "status": {
-              "title": "",
+              "title": "Uygulama durumu",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "Varsayılan olarak durumu etkinleştir",
+                "description": "Bir uygulama öğesi eklerken, durum varsayılan olarak etkinleştirilecektir"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "Durumu zorla devre dışı bırak",
+                "description": "Uygulamalar için durum tüm kullanıcılar için devre dışı bırakılacak ve etkinleştirilemeyecek"
               }
             }
           },

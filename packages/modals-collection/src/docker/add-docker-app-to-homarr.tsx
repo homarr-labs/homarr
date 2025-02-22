@@ -52,6 +52,7 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
         iconUrl: container.iconUrl,
         description: null,
         href: form.values.containerUrls[index] ?? null,
+        pingUrl: null,
       })),
     );
   };
