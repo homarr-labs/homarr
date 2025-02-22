@@ -27,7 +27,6 @@ export const mapApp = (
   }
 
   const itemId = createId();
-  // @ts-expect-error this will be resolved once the item position props are removed in db
   return {
     id: itemId,
     boardId,
@@ -84,7 +83,6 @@ export const mapWidget = (
   }
 
   const itemId = createId();
-  // @ts-expect-error this will be resolved once the item position props are removed in db
   return {
     id: itemId,
     boardId,
