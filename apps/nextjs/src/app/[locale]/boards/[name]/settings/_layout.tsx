@@ -82,6 +82,24 @@ export const LayoutSettingsContent = ({ board }: Props) => {
                   />
                 </Grid.Col>
               </Grid>
+              {form.values.layouts.length >= 2 && (
+                <Group justify="end">
+                  <Button
+                    variant="subtle"
+                    onClick={() => {
+                      form.setValues((previous) =>
+                        previous.layouts !== undefined && previous.layouts.length >= 2
+                          ? {
+                              layouts: form.values.layouts.filter((filteredLayout) => filteredLayout.id !== layout.id),
+                            }
+                          : previous,
+                      );
+                    }}
+                  >
+                    {t("common.action.remove")}
+                  </Button>
+                </Group>
+              )}
             </Fieldset>
           ))}
         </Stack>
