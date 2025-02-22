@@ -17,11 +17,11 @@ import {
   integrationGroupPermissions,
   integrationItems,
   integrationUserPermissions,
+  itemLayouts,
   items,
-  layoutItemSections,
   layouts,
-  layoutSections,
   sectionCollapseStates,
+  sectionLayouts,
   sections,
   users,
 } from "@homarr/db/schema";
@@ -292,9 +292,9 @@ export const boardRouter = createTRPCRouter({
         }),
       );
 
-      const layoutSectionsToInsert: InferInsertModel<typeof layoutSections>[] = boardSections.flatMap((section) =>
+      const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = boardSections.flatMap((section) =>
         section.layouts.map(
-          (layoutSection): InferInsertModel<typeof layoutSections> => ({
+          (layoutSection): InferInsertModel<typeof sectionLayouts> => ({
             ...layoutSection,
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             layoutId: layoutsMap.get(layoutSection.layoutId)!,
@@ -328,9 +328,9 @@ export const boardRouter = createTRPCRouter({
         }),
       );
 
-      const layoutItemSectionsToInsert: InferInsertModel<typeof layoutItemSections>[] = boardItems.flatMap((item) =>
+      const itemLayoutsToInsert: InferInsertModel<typeof itemLayouts>[] = boardItems.flatMap((item) =>
         item.layouts.map(
-          (layoutSection): InferInsertModel<typeof layoutItemSections> => ({
+          (layoutSection): InferInsertModel<typeof itemLayouts> => ({
             ...layoutSection,
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             sectionId: sectionMap.get(layoutSection.sectionId)!,
@@ -390,8 +390,8 @@ export const boardRouter = createTRPCRouter({
               await transaction.insert(schema.sections).values(sectionsToInsert);
             }
 
-            if (layoutSectionsToInsert.length > 0) {
-              await transaction.insert(schema.layoutSections).values(layoutSectionsToInsert);
+            if (sectionLayoutsToInsert.length > 0) {
+              await transaction.insert(schema.sectionLayouts).values(sectionLayoutsToInsert);
             }
 
             if (sectionCollapseStatesToInsert.length > 0) {
@@ -402,8 +402,8 @@ export const boardRouter = createTRPCRouter({
               await transaction.insert(schema.items).values(itemsToInsert);
             }
 
-            if (layoutItemSectionsToInsert.length > 0) {
-              await transaction.insert(schema.layoutItemSections).values(layoutItemSectionsToInsert);
+            if (itemLayoutsToInsert.length > 0) {
+              await transaction.insert(schema.itemLayouts).values(itemLayoutsToInsert);
             }
 
             if (itemIntegrationsToInsert.length > 0) {
@@ -431,8 +431,8 @@ export const boardRouter = createTRPCRouter({
               transaction.insert(sections).values(sectionsToInsert).run();
             }
 
-            if (layoutSectionsToInsert.length > 0) {
-              transaction.insert(layoutSections).values(layoutSectionsToInsert).run();
+            if (sectionLayoutsToInsert.length > 0) {
+              transaction.insert(sectionLayouts).values(sectionLayoutsToInsert).run();
             }
 
             if (sectionCollapseStatesToInsert.length > 0) {
@@ -443,8 +443,8 @@ export const boardRouter = createTRPCRouter({
               transaction.insert(items).values(itemsToInsert).run();
             }
 
-            if (layoutItemSectionsToInsert.length > 0) {
-              transaction.insert(layoutItemSections).values(layoutItemSectionsToInsert).run();
+            if (itemLayoutsToInsert.length > 0) {
+              transaction.insert(itemLayouts).values(itemLayoutsToInsert).run();
             }
 
             if (itemIntegrationsToInsert.length > 0) {
@@ -534,8 +534,8 @@ export const boardRouter = createTRPCRouter({
     const addedLayouts = filterAddedItems(input.layouts, board.layouts);
 
     const layoutsToInsert: InferInsertModel<typeof layouts>[] = [];
-    const itemSectionLayoutsToInsert: InferInsertModel<typeof layoutItemSections>[] = [];
-    const sectionLayoutsToInsert: InferInsertModel<typeof layoutSections>[] = [];
+    const itemSectionLayoutsToInsert: InferInsertModel<typeof itemLayouts>[] = [];
+    const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = [];
 
     for (const addedLayout of addedLayouts) {
       const layoutId = createId();
@@ -574,11 +574,11 @@ export const boardRouter = createTRPCRouter({
     }
 
     if (itemSectionLayoutsToInsert.length > 0) {
-      await ctx.db.insert(layoutItemSections).values(itemSectionLayoutsToInsert);
+      await ctx.db.insert(itemLayouts).values(itemSectionLayoutsToInsert);
     }
 
     if (sectionLayoutsToInsert.length > 0) {
-      await ctx.db.insert(layoutSections).values(sectionLayoutsToInsert);
+      await ctx.db.insert(sectionLayouts).values(sectionLayoutsToInsert);
     }
 
     const updatedLayouts = filterUpdatedItems(input.layouts, board.layouts);
@@ -600,7 +600,7 @@ export const boardRouter = createTRPCRouter({
 
         for (const itemSectionLayout of updatedBoardLayout.itemSectionLayouts) {
           await ctx.db
-            .update(layoutItemSections)
+            .update(itemLayouts)
             .set({
               height: itemSectionLayout.height,
               width: itemSectionLayout.width,
@@ -610,15 +610,15 @@ export const boardRouter = createTRPCRouter({
             })
             .where(
               and(
-                eq(layoutItemSections.itemId, itemSectionLayout.itemId),
-                eq(layoutItemSections.layoutId, itemSectionLayout.layoutId),
+                eq(itemLayouts.itemId, itemSectionLayout.itemId),
+                eq(itemLayouts.layoutId, itemSectionLayout.layoutId),
               ),
             );
         }
 
         for (const sectionLayout of updatedBoardLayout.sectionLayouts) {
           await ctx.db
-            .update(layoutSections)
+            .update(sectionLayouts)
             .set({
               height: sectionLayout.height,
               width: sectionLayout.width,
@@ -628,8 +628,8 @@ export const boardRouter = createTRPCRouter({
             })
             .where(
               and(
-                eq(layoutSections.sectionId, sectionLayout.sectionId),
-                eq(layoutSections.layoutId, sectionLayout.layoutId),
+                eq(sectionLayouts.sectionId, sectionLayout.sectionId),
+                eq(sectionLayouts.layoutId, sectionLayout.layoutId),
               ),
             );
         }
@@ -707,12 +707,12 @@ export const boardRouter = createTRPCRouter({
             );
 
             if (addedSections.some((section) => section.kind === "dynamic")) {
-              await transaction.insert(schema.layoutSections).values(
+              await transaction.insert(schema.sectionLayouts).values(
                 addedSections
                   .filter((section) => section.kind === "dynamic")
                   .flatMap((section) =>
                     section.layouts.map(
-                      (sectionLayout): InferInsertModel<typeof schema.layoutSections> => ({
+                      (sectionLayout): InferInsertModel<typeof schema.sectionLayouts> => ({
                         layoutId: sectionLayout.layoutId,
                         sectionId: section.id,
                         parentSectionId: sectionLayout.parentSectionId,
@@ -739,10 +739,10 @@ export const boardRouter = createTRPCRouter({
                 boardId: dbBoard.id,
               })),
             );
-            await transaction.insert(schema.layoutItemSections).values(
+            await transaction.insert(schema.itemLayouts).values(
               addedItems.flatMap((item) =>
                 item.layouts.map(
-                  (layoutSection): InferInsertModel<typeof schema.layoutItemSections> => ({
+                  (layoutSection): InferInsertModel<typeof schema.itemLayouts> => ({
                     layoutId: layoutSection.layoutId,
                     sectionId: layoutSection.sectionId,
                     itemId: item.id,
@@ -800,7 +800,7 @@ export const boardRouter = createTRPCRouter({
 
             for (const itemSectionLayout of item.layouts) {
               await transaction
-                .update(schema.layoutItemSections)
+                .update(schema.itemLayouts)
                 .set({
                   height: itemSectionLayout.height,
                   width: itemSectionLayout.width,
@@ -810,8 +810,8 @@ export const boardRouter = createTRPCRouter({
                 })
                 .where(
                   and(
-                    eq(schema.layoutItemSections.itemId, item.id),
-                    eq(schema.layoutItemSections.layoutId, itemSectionLayout.layoutId),
+                    eq(schema.itemLayouts.itemId, item.id),
+                    eq(schema.itemLayouts.layoutId, itemSectionLayout.layoutId),
                   ),
                 );
             }
@@ -834,7 +834,7 @@ export const boardRouter = createTRPCRouter({
 
             for (const sectionLayout of section.layouts) {
               await transaction
-                .update(schema.layoutSections)
+                .update(schema.sectionLayouts)
                 .set({
                   height: sectionLayout.height,
                   width: sectionLayout.width,
@@ -844,8 +844,8 @@ export const boardRouter = createTRPCRouter({
                 })
                 .where(
                   and(
-                    eq(schema.layoutSections.sectionId, section.id),
-                    eq(schema.layoutSections.layoutId, sectionLayout.layoutId),
+                    eq(schema.sectionLayouts.sectionId, section.id),
+                    eq(schema.sectionLayouts.layoutId, sectionLayout.layoutId),
                   ),
                 );
             }
@@ -907,13 +907,13 @@ export const boardRouter = createTRPCRouter({
 
             if (addedSections.some((section) => section.kind === "dynamic")) {
               transaction
-                .insert(layoutSections)
+                .insert(sectionLayouts)
                 .values(
                   addedSections
                     .filter((section) => section.kind === "dynamic")
                     .flatMap((section) =>
                       section.layouts.map(
-                        (sectionLayout): InferInsertModel<typeof layoutSections> => ({
+                        (sectionLayout): InferInsertModel<typeof sectionLayouts> => ({
                           layoutId: sectionLayout.layoutId,
                           sectionId: section.id,
                           parentSectionId: sectionLayout.parentSectionId,
@@ -945,11 +945,11 @@ export const boardRouter = createTRPCRouter({
               )
               .run();
             transaction
-              .insert(layoutItemSections)
+              .insert(itemLayouts)
               .values(
                 addedItems.flatMap((item) =>
                   item.layouts.map(
-                    (layoutSection): InferInsertModel<typeof layoutItemSections> => ({
+                    (layoutSection): InferInsertModel<typeof itemLayouts> => ({
                       layoutId: layoutSection.layoutId,
                       sectionId: layoutSection.sectionId,
                       itemId: item.id,
@@ -1012,7 +1012,7 @@ export const boardRouter = createTRPCRouter({
 
             for (const itemSectionLayout of item.layouts) {
               transaction
-                .update(layoutItemSections)
+                .update(itemLayouts)
                 .set({
                   height: itemSectionLayout.height,
                   width: itemSectionLayout.width,
@@ -1020,12 +1020,7 @@ export const boardRouter = createTRPCRouter({
                   yOffset: itemSectionLayout.yOffset,
                   sectionId: itemSectionLayout.sectionId,
                 })
-                .where(
-                  and(
-                    eq(layoutItemSections.itemId, item.id),
-                    eq(layoutItemSections.layoutId, itemSectionLayout.layoutId),
-                  ),
-                )
+                .where(and(eq(itemLayouts.itemId, item.id), eq(itemLayouts.layoutId, itemSectionLayout.layoutId)))
                 .run();
             }
           }
@@ -1048,7 +1043,7 @@ export const boardRouter = createTRPCRouter({
 
             for (const sectionLayout of section.layouts) {
               transaction
-                .update(layoutSections)
+                .update(sectionLayouts)
                 .set({
                   height: sectionLayout.height,
                   width: sectionLayout.width,
@@ -1057,7 +1052,7 @@ export const boardRouter = createTRPCRouter({
                   parentSectionId: sectionLayout.parentSectionId,
                 })
                 .where(
-                  and(eq(layoutSections.sectionId, section.id), eq(layoutSections.layoutId, sectionLayout.layoutId)),
+                  and(eq(sectionLayouts.sectionId, section.id), eq(sectionLayouts.layoutId, sectionLayout.layoutId)),
                 )
                 .run();
             }
@@ -1325,8 +1320,8 @@ const getUpdatedBoardLayout = (
     };
   },
 ) => {
-  const itemSectionLayoutsCollection: InferInsertModel<typeof layoutItemSections>[] = [];
-  const sectionLayoutsCollection: InferInsertModel<typeof layoutSections>[] = [];
+  const itemSectionLayoutsCollection: InferInsertModel<typeof itemLayouts>[] = [];
+  const sectionLayoutsCollection: InferInsertModel<typeof sectionLayouts>[] = [];
 
   const elements = getElementsForLayout(board, options.previous.layoutId);
   const rootSections = board.sections.filter((section) => section.kind !== "dynamic");
@@ -1341,7 +1336,7 @@ const getUpdatedBoardLayout = (
 
     itemSectionLayoutsCollection.push(
       ...board.items
-        .map((item): InferInsertModel<typeof layoutItemSections> | null => {
+        .map((item): InferInsertModel<typeof itemLayouts> | null => {
           const currentElement = result.items.find((element) => element.type === "item" && element.id === item.id);
 
           if (!currentElement) {
@@ -1364,7 +1359,7 @@ const getUpdatedBoardLayout = (
     sectionLayoutsCollection.push(
       ...board.sections
         .filter((section) => section.kind === "dynamic")
-        .map((section): InferInsertModel<typeof layoutSections> | null => {
+        .map((section): InferInsertModel<typeof sectionLayouts> | null => {
           const currentElement = result.items.find(
             (element) => element.type === "section" && element.id === section.id,
           );

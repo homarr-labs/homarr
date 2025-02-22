@@ -2,7 +2,7 @@ import SuperJSON from "superjson";
 
 import type { InferInsertModel } from "@homarr/db";
 import { createId } from "@homarr/db";
-import type { items, layoutItemSections } from "@homarr/db/schema";
+import type { itemLayouts, items } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 import type { BoardSize, OldmarrApp, OldmarrWidget } from "@homarr/old-schema";
 import { boardSizes } from "@homarr/old-schema";
@@ -17,7 +17,7 @@ export const mapApp = (
   sectionMap: Map<string, { id: string }>,
   layoutMap: Record<BoardSize, string>,
   boardId: string,
-): (InferInsertModel<typeof items> & { layouts: InferInsertModel<typeof layoutItemSections>[] }) | null => {
+): (InferInsertModel<typeof items> & { layouts: InferInsertModel<typeof itemLayouts>[] }) | null => {
   if (app.area.type === "sidebar") throw new Error("Mapping app in sidebar is not supported");
 
   const sectionId = sectionMap.get(app.area.properties.id)?.id;
@@ -65,7 +65,7 @@ export const mapWidget = (
   sectionMap: Map<string, { id: string }>,
   layoutMap: Record<BoardSize, string>,
   boardId: string,
-): (InferInsertModel<typeof items> & { layouts: InferInsertModel<typeof layoutItemSections>[] }) | null => {
+): (InferInsertModel<typeof items> & { layouts: InferInsertModel<typeof itemLayouts>[] }) | null => {
   if (widget.area.type === "sidebar") throw new Error("Mapping widget in sidebar is not supported");
 
   const kind = mapKind(widget.type);

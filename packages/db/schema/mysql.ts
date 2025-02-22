@@ -321,8 +321,8 @@ export const layouts = mysqlTable("layout", {
   breakpoint: smallint().notNull().default(0),
 });
 
-export const layoutItemSections = mysqlTable(
-  "layout_item_section",
+export const itemLayouts = mysqlTable(
+  "item_layout",
   {
     itemId: varchar({ length: 64 })
       .notNull()
@@ -345,8 +345,8 @@ export const layoutItemSections = mysqlTable(
   }),
 );
 
-export const layoutSections = mysqlTable(
-  "layout_section",
+export const sectionLayouts = mysqlTable(
+  "section_layout",
   {
     sectionId: varchar({ length: 64 })
       .notNull()
@@ -377,11 +377,7 @@ export const sections = mysqlTable("section", {
   kind: text().$type<SectionKind>().notNull(),
   xOffset: int(),
   yOffset: int(),
-
   name: text(),
-  parentSectionId: varchar({ length: 64 }).references((): AnyMySqlColumn => sections.id, {
-    onDelete: "cascade",
-  }),
 });
 
 export const sectionCollapseStates = mysqlTable(
@@ -637,11 +633,11 @@ export const sectionRelations = relations(sections, ({ many, one }) => ({
     references: [boards.id],
   }),
   collapseStates: many(sectionCollapseStates),
-  layouts: many(layoutSections, {
-    relationName: "layoutSectionRelations__section__sectionId",
+  layouts: many(sectionLayouts, {
+    relationName: "sectionLayoutRelations__section__sectionId",
   }),
-  children: many(layoutSections, {
-    relationName: "layoutSectionRelations__section__parentSectionId",
+  children: many(sectionLayouts, {
+    relationName: "sectionLayoutRelations__section__parentSectionId",
   }),
 }));
 
@@ -658,7 +654,7 @@ export const sectionCollapseStateRelations = relations(sectionCollapseStates, ({
 
 export const itemRelations = relations(items, ({ one, many }) => ({
   integrations: many(integrationItems),
-  layouts: many(layoutItemSections),
+  layouts: many(itemLayouts),
   board: one(boards, {
     fields: [items.boardId],
     references: [boards.id],
@@ -684,41 +680,41 @@ export const searchEngineRelations = relations(searchEngines, ({ one, many }) =>
   usersWithDefault: many(users),
 }));
 
-export const layoutItemSectionRelations = relations(layoutItemSections, ({ one }) => ({
+export const itemLayoutRelations = relations(itemLayouts, ({ one }) => ({
   item: one(items, {
-    fields: [layoutItemSections.itemId],
+    fields: [itemLayouts.itemId],
     references: [items.id],
   }),
   section: one(sections, {
-    fields: [layoutItemSections.sectionId],
+    fields: [itemLayouts.sectionId],
     references: [sections.id],
   }),
   layout: one(layouts, {
-    fields: [layoutItemSections.layoutId],
+    fields: [itemLayouts.layoutId],
     references: [layouts.id],
   }),
 }));
 
-export const layoutSectionRelations = relations(layoutSections, ({ one }) => ({
+export const sectionLayoutRelations = relations(sectionLayouts, ({ one }) => ({
   section: one(sections, {
-    fields: [layoutSections.sectionId],
+    fields: [sectionLayouts.sectionId],
     references: [sections.id],
-    relationName: "layoutSectionRelations__section__sectionId",
+    relationName: "sectionLayoutRelations__section__sectionId",
   }),
   layout: one(layouts, {
-    fields: [layoutSections.layoutId],
+    fields: [sectionLayouts.layoutId],
     references: [layouts.id],
   }),
   parentSection: one(sections, {
-    fields: [layoutSections.parentSectionId],
+    fields: [sectionLayouts.parentSectionId],
     references: [sections.id],
-    relationName: "layoutSectionRelations__section__parentSectionId",
+    relationName: "sectionLayoutRelations__section__parentSectionId",
   }),
 }));
 
 export const layoutRelations = relations(layouts, ({ one, many }) => ({
-  items: many(layoutItemSections),
-  sections: many(layoutSections),
+  items: many(itemLayouts),
+  sections: many(sectionLayouts),
   board: one(boards, {
     fields: [layouts.boardId],
     references: [boards.id],

@@ -13,10 +13,10 @@ import {
   groups,
   integrationItems,
   integrations,
+  itemLayouts,
   items,
-  layoutItemSections,
   layouts,
-  layoutSections,
+  sectionLayouts,
   sections,
   serverSettings,
   users,
@@ -1538,7 +1538,7 @@ const createFullBoardAsync = async (db: Database, name: string) => {
     options: SuperJSON.stringify({ is24HourFormat: true }),
   });
 
-  await db.insert(layoutItemSections).values({
+  await db.insert(itemLayouts).values({
     height: 1,
     width: 1,
     xOffset: 0,
@@ -1572,7 +1572,7 @@ const createFullBoardAsync = async (db: Database, name: string) => {
 
 const addItemAsync = async (
   db: Database,
-  item: Partial<Pick<InferInsertModel<typeof layoutItemSections>, "height" | "width" | "xOffset" | "yOffset">> & {
+  item: Partial<Pick<InferInsertModel<typeof itemLayouts>, "height" | "width" | "xOffset" | "yOffset">> & {
     sectionId: string;
     layoutId: string;
     boardId: string;
@@ -1585,7 +1585,7 @@ const addItemAsync = async (
     boardId: item.boardId,
     options: SuperJSON.stringify({ is24HourFormat: true }),
   });
-  await db.insert(layoutItemSections).values({
+  await db.insert(itemLayouts).values({
     itemId,
     layoutId: item.layoutId,
     sectionId: item.sectionId,
@@ -1599,7 +1599,7 @@ const addItemAsync = async (
 
 const addDynamicSectionAsync = async (
   db: Database,
-  section: Partial<Pick<InferInsertModel<typeof layoutSections>, "xOffset" | "yOffset" | "width" | "height">> & {
+  section: Partial<Pick<InferInsertModel<typeof sectionLayouts>, "xOffset" | "yOffset" | "width" | "height">> & {
     parentSectionId: string;
     boardId: string;
     layoutId: string;
@@ -1611,7 +1611,7 @@ const addDynamicSectionAsync = async (
     kind: "dynamic",
     boardId: section.boardId,
   });
-  await db.insert(layoutSections).values({
+  await db.insert(sectionLayouts).values({
     parentSectionId: section.parentSectionId,
     layoutId: section.layoutId,
     sectionId,
@@ -1753,11 +1753,11 @@ const expectLayoutInSectionAsync = async (
   layout: string,
   assignments: Record<string, string>,
 ) => {
-  const itemsInSection = await db.query.layoutItemSections.findMany({
-    where: and(eq(layoutItemSections.sectionId, sectionId), eq(layoutItemSections.layoutId, layoutId)),
+  const itemsInSection = await db.query.itemLayouts.findMany({
+    where: and(eq(itemLayouts.sectionId, sectionId), eq(itemLayouts.layoutId, layoutId)),
   });
-  const sectionsInSection = await db.query.layoutSections.findMany({
-    where: and(eq(layoutSections.parentSectionId, sectionId), eq(layoutSections.layoutId, layoutId)),
+  const sectionsInSection = await db.query.sectionLayouts.findMany({
+    where: and(eq(sectionLayouts.parentSectionId, sectionId), eq(sectionLayouts.layoutId, layoutId)),
   });
   const entries = [...itemsInSection, ...sectionsInSection];
 

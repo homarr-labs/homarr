@@ -24,7 +24,7 @@ export const createBoardInsertCollection = (
     "layouts",
     "sections",
     "items",
-    "layoutItemSections",
+    "itemLayouts",
   ]);
   logger.info("Preparing boards for insert collection");
 
@@ -97,7 +97,7 @@ export const createBoardInsertCollection = (
     const preparedItems = prepareItems({ apps, widgets }, appsMap, preparedSections, layoutMapping, mappedBoard.id);
     preparedItems.forEach(({ layouts, ...item }) => {
       insertCollection.items.push(item);
-      insertCollection.layoutItemSections.push(...layouts);
+      insertCollection.itemLayouts.push(...layouts);
     });
     logger.debug(`Added items to board insert collection count=${insertCollection.items.length}`);
   });
