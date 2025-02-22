@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "網址"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
