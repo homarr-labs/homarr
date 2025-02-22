@@ -1,12 +1,18 @@
+import type { InferInsertModel } from "drizzle-orm";
+
 import { objectEntries } from "@homarr/common";
-import type { Database, HomarrDatabaseMysql, InferInsertModel } from "@homarr/db";
-import * as schema from "@homarr/db/schema";
+
+import type { HomarrDatabase, HomarrDatabaseMysql } from "./driver";
+import { env } from "./env";
+import * as schema from "./schema";
 
 type TableKey = {
   [K in keyof typeof schema]: (typeof schema)[K] extends { _: { brand: "Table" } } ? K : never;
 }[keyof typeof schema];
 
-export const createDbInsertCollection = <TTableKey extends TableKey>(tablesInInsertOrder: TTableKey[]) => {
+export const createDbInsertCollectionForTransaction = <TTableKey extends TableKey>(
+  tablesInInsertOrder: TTableKey[],
+) => {
   const context = tablesInInsertOrder.reduce(
     (acc, key) => {
       acc[key] = [];
@@ -17,7 +23,7 @@ export const createDbInsertCollection = <TTableKey extends TableKey>(tablesInIns
 
   return {
     ...context,
-    insertAll: (db: Database) => {
+    insertAll: (db: HomarrDatabase) => {
       db.transaction((transaction) => {
         for (const [key, values] of objectEntries(context)) {
           if (values.length >= 1) {
@@ -38,6 +44,24 @@ export const createDbInsertCollection = <TTableKey extends TableKey>(tablesInIns
           }
         }
       });
+    },
+  };
+};
+
+export const createDbInsertCollectionWithoutTransaction = <TTableKey extends TableKey>(
+  tablesInInsertOrder: TTableKey[],
+) => {
+  const { insertAll, insertAllAsync, ...collection } = createDbInsertCollectionForTransaction(tablesInInsertOrder);
+
+  return {
+    ...collection,
+    insertAllAsync: async (db: HomarrDatabase) => {
+      if (env.DB_DRIVER !== "mysql2") {
+        insertAll(db);
+        return;
+      }
+
+      await insertAllAsync(db as unknown as HomarrDatabaseMysql);
     },
   };
 };

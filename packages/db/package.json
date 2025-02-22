@@ -7,6 +7,7 @@
   "exports": {
     ".": "./index.ts",
     "./client": "./client.ts",
+    "./collection": "./collection.ts",
     "./schema": "./schema/index.ts",
     "./test": "./test/index.ts",
     "./queries": "./queries/index.ts",

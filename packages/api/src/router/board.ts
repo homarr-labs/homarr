@@ -6,6 +6,7 @@ import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { DeviceType } from "@homarr/common/server";
 import type { Database, InferInsertModel, InferSelectModel, SQL } from "@homarr/db";
 import { and, createId, eq, handleTransactionsAsync, inArray, like, or } from "@homarr/db";
+import { createDbInsertCollectionWithoutTransaction } from "@homarr/db/collection";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
   boardGroupPermissions,
@@ -210,49 +211,31 @@ export const boardRouter = createTRPCRouter({
     .input(validation.board.create)
     .mutation(async ({ ctx, input }) => {
       const boardId = createId();
-      await handleTransactionsAsync(ctx.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            await transaction.insert(schema.boards).values({
-              id: boardId,
-              name: input.name,
-              isPublic: input.isPublic,
-              creatorId: ctx.session.user.id,
-            });
-            await transaction.insert(schema.sections).values({
-              id: createId(),
-              kind: "empty",
-              xOffset: 0,
-              yOffset: 0,
-              boardId,
-            });
-          });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            transaction
-              .insert(boards)
-              .values({
-                id: boardId,
-                name: input.name,
-                isPublic: input.isPublic,
-                creatorId: ctx.session.user.id,
-              })
-              .run();
-            // TODO: Add layouts
-            transaction
-              .insert(sections)
-              .values({
-                id: createId(),
-                kind: "empty",
-                xOffset: 0,
-                yOffset: 0,
-                boardId,
-              })
-              .run();
-          });
-        },
+
+      const createBoardCollection = createDbInsertCollectionWithoutTransaction(["boards", "sections", "layouts"]);
+
+      createBoardCollection.boards.push({
+        id: boardId,
+        name: input.name,
+        isPublic: input.isPublic,
+        creatorId: ctx.session.user.id,
       });
+      createBoardCollection.sections.push({
+        id: createId(),
+        kind: "empty",
+        xOffset: 0,
+        yOffset: 0,
+        boardId,
+      });
+      createBoardCollection.layouts.push({
+        id: createId(),
+        name: "Base",
+        columnCount: input.columnCount,
+        breakpoint: 0,
+        boardId,
+      });
+
+      await createBoardCollection.insertAllAsync(ctx.db);
     }),
   duplicateBoard: permissionRequiredProcedure
     .requiresPermission("board-create")

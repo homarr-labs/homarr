@@ -1,4 +1,5 @@
 import { createId } from "@homarr/db";
+import { createDbInsertCollectionForTransaction } from "@homarr/db/collection";
 import { logger } from "@homarr/log";
 import type { BoardSize } from "@homarr/old-schema";
 import { boardSizes, getBoardSizeName } from "@homarr/old-schema";
@@ -12,13 +13,12 @@ import { prepareItems } from "../../prepare/prepare-items";
 import type { prepareMultipleImports } from "../../prepare/prepare-multiple";
 import { prepareSections } from "../../prepare/prepare-sections";
 import type { InitialOldmarrImportSettings } from "../../settings";
-import { createDbInsertCollection } from "./common";
 
 export const createBoardInsertCollection = (
   { preparedApps, preparedBoards }: Omit<ReturnType<typeof prepareMultipleImports>, "preparedIntegrations">,
   settings: InitialOldmarrImportSettings,
 ) => {
-  const insertCollection = createDbInsertCollection([
+  const insertCollection = createDbInsertCollectionForTransaction([
     "apps",
     "boards",
     "layouts",
