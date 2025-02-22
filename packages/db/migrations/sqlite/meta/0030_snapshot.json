@@ -88,9 +88,7 @@
       "indexes": {
         "userId_idx": {
           "name": "userId_idx",
-          "columns": [
-            "user_id"
-          ],
+          "columns": ["user_id"],
           "isUnique": false
         }
       },
@@ -98,23 +96,16 @@
         "account_user_id_user_id_fk": {
           "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
         "account_provider_provider_account_id_pk": {
-          "columns": [
-            "provider",
-            "provider_account_id"
-          ],
+          "columns": ["provider", "provider_account_id"],
           "name": "account_provider_provider_account_id_pk"
         }
       },
@@ -158,13 +149,9 @@
         "apiKey_user_id_user_id_fk": {
           "name": "apiKey_user_id_user_id_fk",
           "tableFrom": "apiKey",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -255,37 +242,25 @@
         "boardGroupPermission_board_id_board_id_fk": {
           "name": "boardGroupPermission_board_id_board_id_fk",
           "tableFrom": "boardGroupPermission",
-          "columnsFrom": [
-            "board_id"
-          ],
+          "columnsFrom": ["board_id"],
           "tableTo": "board",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "boardGroupPermission_group_id_group_id_fk": {
           "name": "boardGroupPermission_group_id_group_id_fk",
           "tableFrom": "boardGroupPermission",
-          "columnsFrom": [
-            "group_id"
-          ],
+          "columnsFrom": ["group_id"],
           "tableTo": "group",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
         "boardGroupPermission_board_id_group_id_permission_pk": {
-          "columns": [
-            "board_id",
-            "group_id",
-            "permission"
-          ],
+          "columns": ["board_id", "group_id", "permission"],
           "name": "boardGroupPermission_board_id_group_id_permission_pk"
         }
       },
@@ -322,37 +297,25 @@
         "boardUserPermission_board_id_board_id_fk": {
           "name": "boardUserPermission_board_id_board_id_fk",
           "tableFrom": "boardUserPermission",
-          "columnsFrom": [
-            "board_id"
-          ],
+          "columnsFrom": ["board_id"],
           "tableTo": "board",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "boardUserPermission_user_id_user_id_fk": {
           "name": "boardUserPermission_user_id_user_id_fk",
           "tableFrom": "boardUserPermission",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
         "boardUserPermission_board_id_user_id_permission_pk": {
-          "columns": [
-            "board_id",
-            "user_id",
-            "permission"
-          ],
+          "columns": ["board_id", "user_id", "permission"],
           "name": "boardUserPermission_board_id_user_id_permission_pk"
         }
       },
@@ -508,9 +471,7 @@
       "indexes": {
         "board_name_unique": {
           "name": "board_name_unique",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "isUnique": true
         }
       },
@@ -518,13 +479,9 @@
         "board_creator_id_user_id_fk": {
           "name": "board_creator_id_user_id_fk",
           "tableFrom": "board",
-          "columnsFrom": [
-            "creator_id"
-          ],
+          "columnsFrom": ["creator_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         }
@@ -556,36 +513,25 @@
         "groupMember_group_id_group_id_fk": {
           "name": "groupMember_group_id_group_id_fk",
           "tableFrom": "groupMember",
-          "columnsFrom": [
-            "group_id"
-          ],
+          "columnsFrom": ["group_id"],
           "tableTo": "group",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "groupMember_user_id_user_id_fk": {
           "name": "groupMember_user_id_user_id_fk",
           "tableFrom": "groupMember",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
         "groupMember_group_id_user_id_pk": {
-          "columns": [
-            "group_id",
-            "user_id"
-          ],
+          "columns": ["group_id", "user_id"],
           "name": "groupMember_group_id_user_id_pk"
         }
       },
@@ -615,13 +561,9 @@
         "groupPermission_group_id_group_id_fk": {
           "name": "groupPermission_group_id_group_id_fk",
           "tableFrom": "groupPermission",
-          "columnsFrom": [
-            "group_id"
-          ],
+          "columnsFrom": ["group_id"],
           "tableTo": "group",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -679,9 +621,7 @@
       "indexes": {
         "group_name_unique": {
           "name": "group_name_unique",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "isUnique": true
         }
       },
@@ -689,39 +629,27 @@
         "group_owner_id_user_id_fk": {
           "name": "group_owner_id_user_id_fk",
           "tableFrom": "group",
-          "columnsFrom": [
-            "owner_id"
-          ],
+          "columnsFrom": ["owner_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         },
         "group_home_board_id_board_id_fk": {
           "name": "group_home_board_id_board_id_fk",
           "tableFrom": "group",
-          "columnsFrom": [
-            "home_board_id"
-          ],
+          "columnsFrom": ["home_board_id"],
           "tableTo": "board",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         },
         "group_mobile_home_board_id_board_id_fk": {
           "name": "group_mobile_home_board_id_board_id_fk",
           "tableFrom": "group",
-          "columnsFrom": [
-            "mobile_home_board_id"
-          ],
+          "columnsFrom": ["mobile_home_board_id"],
           "tableTo": "board",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         }
@@ -798,13 +726,9 @@
         "icon_icon_repository_id_iconRepository_id_fk": {
           "name": "icon_icon_repository_id_iconRepository_id_fk",
           "tableFrom": "icon",
-          "columnsFrom": [
-            "icon_repository_id"
-          ],
+          "columnsFrom": ["icon_repository_id"],
           "tableTo": "iconRepository",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -843,37 +767,25 @@
         "integrationGroupPermissions_integration_id_integration_id_fk": {
           "name": "integrationGroupPermissions_integration_id_integration_id_fk",
           "tableFrom": "integrationGroupPermissions",
-          "columnsFrom": [
-            "integration_id"
-          ],
+          "columnsFrom": ["integration_id"],
           "tableTo": "integration",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "integrationGroupPermissions_group_id_group_id_fk": {
           "name": "integrationGroupPermissions_group_id_group_id_fk",
           "tableFrom": "integrationGroupPermissions",
-          "columnsFrom": [
-            "group_id"
-          ],
+          "columnsFrom": ["group_id"],
           "tableTo": "group",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
         "integrationGroupPermissions_integration_id_group_id_permission_pk": {
-          "columns": [
-            "integration_id",
-            "group_id",
-            "permission"
-          ],
+          "columns": ["integration_id", "group_id", "permission"],
           "name": "integrationGroupPermissions_integration_id_group_id_permission_pk"
         }
       },
@@ -903,36 +815,25 @@
         "integration_item_item_id_item_id_fk": {
           "name": "integration_item_item_id_item_id_fk",
           "tableFrom": "integration_item",
-          "columnsFrom": [
-            "item_id"
-          ],
+          "columnsFrom": ["item_id"],
           "tableTo": "item",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "integration_item_integration_id_integration_id_fk": {
           "name": "integration_item_integration_id_integration_id_fk",
           "tableFrom": "integration_item",
-          "columnsFrom": [
-            "integration_id"
-          ],
+          "columnsFrom": ["integration_id"],
           "tableTo": "integration",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
         "integration_item_item_id_integration_id_pk": {
-          "columns": [
-            "item_id",
-            "integration_id"
-          ],
+          "columns": ["item_id", "integration_id"],
           "name": "integration_item_item_id_integration_id_pk"
         }
       },
@@ -974,16 +875,12 @@
       "indexes": {
         "integration_secret__kind_idx": {
           "name": "integration_secret__kind_idx",
-          "columns": [
-            "kind"
-          ],
+          "columns": ["kind"],
           "isUnique": false
         },
         "integration_secret__updated_at_idx": {
           "name": "integration_secret__updated_at_idx",
-          "columns": [
-            "updated_at"
-          ],
+          "columns": ["updated_at"],
           "isUnique": false
         }
       },
@@ -991,23 +888,16 @@
         "integrationSecret_integration_id_integration_id_fk": {
           "name": "integrationSecret_integration_id_integration_id_fk",
           "tableFrom": "integrationSecret",
-          "columnsFrom": [
-            "integration_id"
-          ],
+          "columnsFrom": ["integration_id"],
           "tableTo": "integration",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
         "integrationSecret_integration_id_kind_pk": {
-          "columns": [
-            "integration_id",
-            "kind"
-          ],
+          "columns": ["integration_id", "kind"],
           "name": "integrationSecret_integration_id_kind_pk"
         }
       },
@@ -1044,37 +934,25 @@
         "integrationUserPermission_integration_id_integration_id_fk": {
           "name": "integrationUserPermission_integration_id_integration_id_fk",
           "tableFrom": "integrationUserPermission",
-          "columnsFrom": [
-            "integration_id"
-          ],
+          "columnsFrom": ["integration_id"],
           "tableTo": "integration",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "integrationUserPermission_user_id_user_id_fk": {
           "name": "integrationUserPermission_user_id_user_id_fk",
           "tableFrom": "integrationUserPermission",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
         "integrationUserPermission_integration_id_user_id_permission_pk": {
-          "columns": [
-            "integration_id",
-            "user_id",
-            "permission"
-          ],
+          "columns": ["integration_id", "user_id", "permission"],
           "name": "integrationUserPermission_integration_id_user_id_permission_pk"
         }
       },
@@ -1116,9 +994,7 @@
       "indexes": {
         "integration__kind_idx": {
           "name": "integration__kind_idx",
-          "columns": [
-            "kind"
-          ],
+          "columns": ["kind"],
           "isUnique": false
         }
       },
@@ -1162,9 +1038,7 @@
       "indexes": {
         "invite_token_unique": {
           "name": "invite_token_unique",
-          "columns": [
-            "token"
-          ],
+          "columns": ["token"],
           "isUnique": true
         }
       },
@@ -1172,13 +1046,9 @@
         "invite_creator_id_user_id_fk": {
           "name": "invite_creator_id_user_id_fk",
           "tableFrom": "invite",
-          "columnsFrom": [
-            "creator_id"
-          ],
+          "columnsFrom": ["creator_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -1245,50 +1115,34 @@
         "item_layout_item_id_item_id_fk": {
           "name": "item_layout_item_id_item_id_fk",
           "tableFrom": "item_layout",
-          "columnsFrom": [
-            "item_id"
-          ],
+          "columnsFrom": ["item_id"],
           "tableTo": "item",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "item_layout_section_id_section_id_fk": {
           "name": "item_layout_section_id_section_id_fk",
           "tableFrom": "item_layout",
-          "columnsFrom": [
-            "section_id"
-          ],
+          "columnsFrom": ["section_id"],
           "tableTo": "section",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "item_layout_layout_id_layout_id_fk": {
           "name": "item_layout_layout_id_layout_id_fk",
           "tableFrom": "item_layout",
-          "columnsFrom": [
-            "layout_id"
-          ],
+          "columnsFrom": ["layout_id"],
           "tableTo": "layout",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
         "item_layout_item_id_section_id_layout_id_pk": {
-          "columns": [
-            "item_id",
-            "section_id",
-            "layout_id"
-          ],
+          "columns": ["item_id", "section_id", "layout_id"],
           "name": "item_layout_item_id_section_id_layout_id_pk"
         }
       },
@@ -1341,13 +1195,9 @@
         "item_board_id_board_id_fk": {
           "name": "item_board_id_board_id_fk",
           "tableFrom": "item",
-          "columnsFrom": [
-            "board_id"
-          ],
+          "columnsFrom": ["board_id"],
           "tableTo": "board",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -1401,13 +1251,9 @@
         "layout_board_id_board_id_fk": {
           "name": "layout_board_id_board_id_fk",
           "tableFrom": "layout",
-          "columnsFrom": [
-            "board_id"
-          ],
+          "columnsFrom": ["board_id"],
           "tableTo": "board",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -1475,13 +1321,9 @@
         "media_creator_id_user_id_fk": {
           "name": "media_creator_id_user_id_fk",
           "tableFrom": "media",
-          "columnsFrom": [
-            "creator_id"
-          ],
+          "columnsFrom": ["creator_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         }
@@ -1585,9 +1427,7 @@
       "indexes": {
         "search_engine_short_unique": {
           "name": "search_engine_short_unique",
-          "columns": [
-            "short"
-          ],
+          "columns": ["short"],
           "isUnique": true
         }
       },
@@ -1595,13 +1435,9 @@
         "search_engine_integration_id_integration_id_fk": {
           "name": "search_engine_integration_id_integration_id_fk",
           "tableFrom": "search_engine",
-          "columnsFrom": [
-            "integration_id"
-          ],
+          "columnsFrom": ["integration_id"],
           "tableTo": "integration",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -1641,36 +1477,25 @@
         "section_collapse_state_user_id_user_id_fk": {
           "name": "section_collapse_state_user_id_user_id_fk",
           "tableFrom": "section_collapse_state",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "section_collapse_state_section_id_section_id_fk": {
           "name": "section_collapse_state_section_id_section_id_fk",
           "tableFrom": "section_collapse_state",
-          "columnsFrom": [
-            "section_id"
-          ],
+          "columnsFrom": ["section_id"],
           "tableTo": "section",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
         "section_collapse_state_user_id_section_id_pk": {
-          "columns": [
-            "user_id",
-            "section_id"
-          ],
+          "columns": ["user_id", "section_id"],
           "name": "section_collapse_state_user_id_section_id_pk"
         }
       },
@@ -1735,49 +1560,34 @@
         "section_layout_section_id_section_id_fk": {
           "name": "section_layout_section_id_section_id_fk",
           "tableFrom": "section_layout",
-          "columnsFrom": [
-            "section_id"
-          ],
+          "columnsFrom": ["section_id"],
           "tableTo": "section",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "section_layout_layout_id_layout_id_fk": {
           "name": "section_layout_layout_id_layout_id_fk",
           "tableFrom": "section_layout",
-          "columnsFrom": [
-            "layout_id"
-          ],
+          "columnsFrom": ["layout_id"],
           "tableTo": "layout",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         },
         "section_layout_parent_section_id_section_id_fk": {
           "name": "section_layout_parent_section_id_section_id_fk",
           "tableFrom": "section_layout",
-          "columnsFrom": [
-            "parent_section_id"
-          ],
+          "columnsFrom": ["parent_section_id"],
           "tableTo": "section",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
         "section_layout_section_id_layout_id_pk": {
-          "columns": [
-            "section_id",
-            "layout_id"
-          ],
+          "columns": ["section_id", "layout_id"],
           "name": "section_layout_section_id_layout_id_pk"
         }
       },
@@ -1835,13 +1645,9 @@
         "section_board_id_board_id_fk": {
           "name": "section_board_id_board_id_fk",
           "tableFrom": "section",
-          "columnsFrom": [
-            "board_id"
-          ],
+          "columnsFrom": ["board_id"],
           "tableTo": "board",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -1872,9 +1678,7 @@
       "indexes": {
         "serverSetting_settingKey_unique": {
           "name": "serverSetting_settingKey_unique",
-          "columns": [
-            "setting_key"
-          ],
+          "columns": ["setting_key"],
           "isUnique": true
         }
       },
@@ -1911,9 +1715,7 @@
       "indexes": {
         "user_id_idx": {
           "name": "user_id_idx",
-          "columns": [
-            "user_id"
-          ],
+          "columns": ["user_id"],
           "isUnique": false
         }
       },
@@ -1921,13 +1723,9 @@
         "session_user_id_user_id_fk": {
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "user",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "cascade"
         }
@@ -2055,39 +1853,27 @@
         "user_home_board_id_board_id_fk": {
           "name": "user_home_board_id_board_id_fk",
           "tableFrom": "user",
-          "columnsFrom": [
-            "home_board_id"
-          ],
+          "columnsFrom": ["home_board_id"],
           "tableTo": "board",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         },
         "user_mobile_home_board_id_board_id_fk": {
           "name": "user_mobile_home_board_id_board_id_fk",
           "tableFrom": "user",
-          "columnsFrom": [
-            "mobile_home_board_id"
-          ],
+          "columnsFrom": ["mobile_home_board_id"],
           "tableTo": "board",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         },
         "user_default_search_engine_id_search_engine_id_fk": {
           "name": "user_default_search_engine_id_search_engine_id_fk",
           "tableFrom": "user",
-          "columnsFrom": [
-            "default_search_engine_id"
-          ],
+          "columnsFrom": ["default_search_engine_id"],
           "tableTo": "search_engine",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "set null"
         }
@@ -2125,10 +1911,7 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {
         "verificationToken_identifier_token_pk": {
-          "columns": [
-            "identifier",
-            "token"
-          ],
+          "columns": ["identifier", "token"],
           "name": "verificationToken_identifier_token_pk"
         }
       },
