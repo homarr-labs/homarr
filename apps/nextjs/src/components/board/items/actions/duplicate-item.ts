@@ -47,13 +47,13 @@ const getNextPosition = (board: Board, layout: ItemLayout): { xOffset: number; y
     .at(0);
 
   if (!firstSection) {
-    throw new Error("Your board is full");
+    throw new Error("Your board is full. reason='no first section'");
   }
 
   const emptySectionPosition = getEmptySectionPosition(board, layout, firstSection);
 
   if (!emptySectionPosition) {
-    throw new Error("Your board is full");
+    throw new Error("Your board is full. reason='no empty positions'");
   }
 
   return {
@@ -72,7 +72,7 @@ const getEmptySectionPosition = (
 
   const sectionElements = getSectionElements(board, { sectionId: layout.sectionId, layoutId: layout.layoutId });
   if (section.kind !== "dynamic") {
-    return getFirstEmptyPosition(sectionElements, board.columnCount, undefined, {
+    return getFirstEmptyPosition(sectionElements, boardLayout.columnCount, undefined, {
       width: layout.width,
       height: layout.height,
     });
