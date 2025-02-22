@@ -14,6 +14,8 @@ export class BoardMockBuilder {
       backgroundImageUrl: null,
       primaryColor: "#ffffff",
       secondaryColor: "#000000",
+      iconColor: null,
+      itemRadius: "lg",
       pageTitle: "Board",
       metaTitle: "Board",
       logoImageUrl: null,
@@ -31,7 +33,6 @@ export class BoardMockBuilder {
       },
       groupPermissions: [],
       userPermissions: [],
-      columnCount: 12,
       sections: [],
       items: [],
       layouts: [
