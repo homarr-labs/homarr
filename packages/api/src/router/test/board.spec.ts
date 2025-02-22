@@ -2,8 +2,8 @@ import SuperJSON from "superjson";
 import { describe, expect, it, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
-import type { Database } from "@homarr/db";
-import { createId, eq } from "@homarr/db";
+import type { Database, InferInsertModel } from "@homarr/db";
+import { and, createId, eq, not } from "@homarr/db";
 import {
   boardGroupPermissions,
   boards,
@@ -16,6 +16,7 @@ import {
   items,
   layoutItemSections,
   layouts,
+  layoutSections,
   sections,
   serverSettings,
   users,
@@ -1319,6 +1320,165 @@ describe("saveGroupBoardPermissions should save group board permissions", () => 
   );
 });
 
+const createExistingLayout = (id: string) => ({
+  id,
+  name: "Base",
+  columnCount: 10,
+  breakpoint: 0,
+});
+const createNewLayout = (columnCount: number) => ({
+  id: createId(),
+  name: "New layout",
+  columnCount,
+  breakpoint: 1400,
+});
+describe("saveLayouts should save layout changes", () => {
+  test("should add layout when not present in database", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const newLayout = createNewLayout(12);
+
+    // Act
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [createExistingLayout(layoutId), newLayout],
+    });
+
+    // Assert
+    const layout = await db.query.layouts.findFirst({
+      where: not(eq(layouts.id, layoutId)),
+    });
+
+    const definedLayout = expectToBeDefined(layout);
+    expect(definedLayout.name).toBe(newLayout.name);
+    expect(definedLayout.columnCount).toBe(newLayout.columnCount);
+    expect(definedLayout.breakpoint).toBe(newLayout.breakpoint);
+  });
+  test("should add items and dynamic sections generated from grid-algorithm when new layout is added", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
+    const assignments = await createItemsAndSectionsAsync(db, {
+      boardId,
+      layoutId,
+      sectionId,
+    });
+    const newLayout = createNewLayout(3);
+
+    // Act
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [createExistingLayout(layoutId), newLayout],
+    });
+
+    // Assert
+    const layout = await db.query.layouts.findFirst({
+      where: not(eq(layouts.id, layoutId)),
+    });
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await expectLayoutForRootLayoutAsync(db, sectionId, layout!.id, {
+      ...assignments.inRoot,
+      a: itemId,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await expectLayoutForDynamicSectionAsync(db, assignments.inRoot.f, layout!.id, assignments.inDynamicSection);
+  });
+  test("should update layout when present in input", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const updatedLayout = createExistingLayout(layoutId);
+    updatedLayout.breakpoint = 1400;
+    updatedLayout.name = "Updated layout";
+
+    // Act
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [updatedLayout],
+    });
+
+    // Assert
+    const layout = await db.query.layouts.findFirst({
+      where: eq(layouts.id, layoutId),
+    });
+
+    const definedLayout = expectToBeDefined(layout);
+    expect(definedLayout.name).toBe(updatedLayout.name);
+    expect(definedLayout.columnCount).toBe(updatedLayout.columnCount);
+    expect(definedLayout.breakpoint).toBe(updatedLayout.breakpoint);
+  });
+  test("should update position of items when column count changes", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
+    const assignments = await createItemsAndSectionsAsync(db, {
+      boardId,
+      layoutId,
+      sectionId,
+    });
+    const updatedLayout = createExistingLayout(layoutId);
+    updatedLayout.columnCount = 3;
+
+    // Act
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [updatedLayout],
+    });
+
+    // Assert
+    await expectLayoutForRootLayoutAsync(db, sectionId, layoutId, {
+      ...assignments.inRoot,
+      a: itemId,
+    });
+    await expectLayoutForDynamicSectionAsync(db, assignments.inRoot.f, layoutId, assignments.inDynamicSection);
+  });
+  test("should remove layout when not present in input", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+
+    // Act
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [createNewLayout(12)],
+    });
+
+    // Assert
+    const layout = await db.query.layouts.findFirst({
+      where: eq(layouts.id, layoutId),
+    });
+    expect(layout).toBeUndefined();
+  });
+  test("should fail when board not found", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const { layoutId } = await createFullBoardAsync(db, "default");
+
+    // Act
+    const actAsync = async () =>
+      await caller.saveLayouts({
+        id: createId(),
+        layouts: [createExistingLayout(layoutId)],
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrowError("Board not found");
+  });
+});
+
 const expectInputToBeFullBoardWithName = (
   input: RouterOutputs["board"]["getHomeBoard"],
   props: { name: string } & Awaited<ReturnType<typeof createFullBoardAsync>>,
@@ -1408,4 +1568,222 @@ const createFullBoardAsync = async (db: Database, name: string) => {
     itemId,
     integrationId,
   };
+};
+
+const addItemAsync = async (
+  db: Database,
+  item: Partial<Pick<InferInsertModel<typeof layoutItemSections>, "height" | "width" | "xOffset" | "yOffset">> & {
+    sectionId: string;
+    layoutId: string;
+    boardId: string;
+  },
+) => {
+  const itemId = createId();
+  await db.insert(items).values({
+    id: itemId,
+    kind: "clock",
+    boardId: item.boardId,
+    options: SuperJSON.stringify({ is24HourFormat: true }),
+  });
+  await db.insert(layoutItemSections).values({
+    itemId,
+    layoutId: item.layoutId,
+    sectionId: item.sectionId,
+    height: item.height ?? 1,
+    width: item.width ?? 1,
+    xOffset: item.xOffset ?? 0,
+    yOffset: item.yOffset ?? 0,
+  });
+  return itemId;
+};
+
+const addDynamicSectionAsync = async (
+  db: Database,
+  section: Partial<Pick<InferInsertModel<typeof layoutSections>, "xOffset" | "yOffset" | "width" | "height">> & {
+    parentSectionId: string;
+    boardId: string;
+    layoutId: string;
+  },
+) => {
+  const sectionId = createId();
+  await db.insert(sections).values({
+    id: sectionId,
+    kind: "dynamic",
+    boardId: section.boardId,
+  });
+  await db.insert(layoutSections).values({
+    parentSectionId: section.parentSectionId,
+    layoutId: section.layoutId,
+    sectionId,
+    xOffset: section.xOffset ?? 0,
+    yOffset: section.yOffset ?? 0,
+    width: section.width ?? 1,
+    height: section.height ?? 1,
+  });
+  return sectionId;
+};
+
+const createItemsAndSectionsAsync = async (
+  db: Database,
+  options: { boardId: string; sectionId: string; layoutId: string },
+) => {
+  const { boardId, layoutId, sectionId } = options;
+  // From:
+  // abbbbbccdd
+  // efffffccdd
+  // efffffggdd
+  // efffffgg
+  // To:
+  // a
+  // bbb
+  // cce
+  // cce
+  // dde
+  // dd
+  // dd
+  // fff
+  // fff
+  // fff
+  // fff
+  // gg
+  // gg
+  const itemB = await addItemAsync(db, { boardId, layoutId, sectionId, xOffset: 1, width: 5 });
+  const itemC = await addItemAsync(db, { boardId, layoutId, sectionId, xOffset: 6, width: 2, height: 2 });
+  const itemD = await addItemAsync(db, { boardId, layoutId, sectionId, xOffset: 8, width: 2, height: 3 });
+  const itemE = await addItemAsync(db, { boardId, layoutId, sectionId, yOffset: 1, height: 3 });
+  const sectionF = await addDynamicSectionAsync(db, {
+    yOffset: 1,
+    xOffset: 1,
+    width: 5,
+    height: 3,
+    parentSectionId: sectionId,
+    boardId,
+    layoutId,
+  });
+  const sectionG = await addDynamicSectionAsync(db, {
+    yOffset: 2,
+    xOffset: 6,
+    width: 2,
+    height: 2,
+    parentSectionId: sectionId,
+    boardId,
+    layoutId,
+  });
+  // From:
+  // hhhhh
+  // iiijj
+  // iii
+  // To:
+  // hhh
+  // iii
+  // iii
+  // jj
+  const itemH = await addItemAsync(db, { boardId, layoutId, sectionId: sectionF, width: 5 });
+  const itemI = await addItemAsync(db, { boardId, layoutId, sectionId: sectionF, width: 3, height: 2, yOffset: 1 });
+  const itemJ = await addItemAsync(db, { boardId, layoutId, sectionId: sectionF, width: 2, yOffset: 1, xOffset: 2 });
+
+  return {
+    inRoot: {
+      b: itemB,
+      c: itemC,
+      d: itemD,
+      e: itemE,
+      f: sectionF,
+      g: sectionG,
+    },
+    inDynamicSection: {
+      h: itemH,
+      i: itemI,
+      j: itemJ,
+    },
+  };
+};
+
+const expectLayoutForRootLayoutAsync = async (
+  db: Database,
+  sectionId: string,
+  layoutId: string,
+  assignments: Record<string, string>,
+) => {
+  await expectLayoutInSectionAsync(
+    db,
+    sectionId,
+    layoutId,
+    `
+a
+bbb
+cce
+cce
+dde
+dd
+dd
+fff
+fff
+fff
+fff
+gg
+gg`,
+    assignments,
+  );
+};
+
+const expectLayoutForDynamicSectionAsync = async (
+  db: Database,
+  sectionId: string,
+  layoutId: string,
+  assignments: Record<string, string>,
+) => {
+  await expectLayoutInSectionAsync(
+    db,
+    sectionId,
+    layoutId,
+    `
+hhh
+iii
+iii
+jj`,
+    assignments,
+  );
+};
+
+const expectLayoutInSectionAsync = async (
+  db: Database,
+  sectionId: string,
+  layoutId: string,
+  layout: string,
+  assignments: Record<string, string>,
+) => {
+  const itemsInSection = await db.query.layoutItemSections.findMany({
+    where: and(eq(layoutItemSections.sectionId, sectionId), eq(layoutItemSections.layoutId, layoutId)),
+  });
+  const sectionsInSection = await db.query.layoutSections.findMany({
+    where: and(eq(layoutSections.parentSectionId, sectionId), eq(layoutSections.layoutId, layoutId)),
+  });
+  const entries = [...itemsInSection, ...sectionsInSection];
+
+  const lines = layout.split("\n").slice(1);
+  const keys = Object.keys(assignments);
+  const positions: Record<string, { x: number; y: number; w: number; h: number }> = {};
+  for (let yOffset = 0; yOffset < lines.length; yOffset++) {
+    const line = lines[yOffset];
+    if (!line) continue;
+    for (let xOffset = 0; xOffset < line.length; xOffset++) {
+      const char = line[xOffset];
+      if (!char) continue;
+      if (!keys.includes(char)) continue;
+      if (char in positions) continue;
+      const width = line.split("").filter((lineChar) => lineChar === char).length;
+      const height = lines.slice(yOffset).filter((line) => line.substring(xOffset).startsWith(char)).length;
+      positions[char] = { x: xOffset, y: yOffset, w: width, h: height };
+    }
+  }
+
+  for (const [key, { x, y, w, h }] of Object.entries(positions)) {
+    const entry = entries.find((entry) => ("itemId" in entry ? entry.itemId : entry.sectionId) === assignments[key]);
+    expect(entry, `Expect entry for ${key} to be defined in assignments=${JSON.stringify(assignments)}`).toBeDefined();
+    expect(entry?.xOffset, `Expect xOffset of entry for ${key} to be ${x} for entry=${JSON.stringify(entry)}`).toBe(x);
+    expect(entry?.yOffset, `Expect yOffset of entry for ${key} to be ${y} for entry=${JSON.stringify(entry)}`).toBe(y);
+    expect(entry?.width, `Expect width of entry for ${key} to be ${w} for entry=${JSON.stringify(entry)}`).toBe(w);
+    expect(entry?.height, `Expect height of entry for ${key} to be ${h} for entry=${JSON.stringify(entry)}`).toBe(h);
+  }
 };
