@@ -59,6 +59,6 @@ describe("moveItemToSectionCallback should move item in section", () => {
 
     // Assert
     expect(updatedBoard.items).toHaveLength(2);
-    expect(updatedBoard.items.find((item) => item.layouts.at(0)?.yOffset == newPosition.yOffset)).toBeUndefined();
+    expect(updatedBoard.items.find((item) => item.layouts.at(0)?.yOffset === newPosition.yOffset)).toBeUndefined();
   });
 });

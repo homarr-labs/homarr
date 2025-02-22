@@ -61,11 +61,12 @@ export type BoardSize = (typeof boardSizes)[number];
 
 export const getBoardSizeName = (size: BoardSize) => {
   switch (size) {
-    case "lg":
-      return "large";
     case "md":
       return "medium";
     case "sm":
       return "small";
+    case "lg":
+    default:
+      return "large";
   }
 };

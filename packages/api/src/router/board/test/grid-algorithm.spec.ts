@@ -102,7 +102,7 @@ xyz           äö`;
 // Just add two empty columns to the right
 const eighteenColumns = sixteenColumns
   .split("\n")
-  .map((line, index) => (index === 0 ? line : line + "  "))
+  .map((line, index) => (index === 0 ? line : `${line}  `))
   .join("\n");
 
 const tenColumns = `
@@ -308,8 +308,8 @@ const generateInputFromText = (text: string) => {
         type: "item",
         width: getWidth(line, xOffset, char),
         height: getHeight(lines, { x: xOffset, y: yOffset }, char),
-        xOffset: xOffset,
-        yOffset: yOffset,
+        xOffset,
+        yOffset,
         sectionId: ROOT_SECTION_ID,
       });
     }
@@ -324,7 +324,7 @@ const generateOutputText = (items: GridAlgoItem[], columnCount: number) => {
     addItemToOccupied(occupied2d, item, { x: item.xOffset, y: item.yOffset }, columnCount);
   }
 
-  return "\n" + occupied2d.map((row) => row.join("")).join("\n");
+  return `\n${occupied2d.map((row) => row.join("")).join("\n")}`;
 };
 
 const getWidth = (line: string, offset: number, char: string) => {
