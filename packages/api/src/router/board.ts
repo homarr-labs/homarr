@@ -705,23 +705,26 @@ export const boardRouter = createTRPCRouter({
                 boardId: dbBoard.id,
               })),
             );
-            await transaction.insert(schema.layoutSections).values(
-              addedSections
-                .filter((section) => section.kind === "dynamic")
-                .flatMap((section) =>
-                  section.layouts.map(
-                    (sectionLayout): InferInsertModel<typeof schema.layoutSections> => ({
-                      layoutId: sectionLayout.layoutId,
-                      sectionId: section.id,
-                      parentSectionId: sectionLayout.parentSectionId,
-                      height: sectionLayout.height,
-                      width: sectionLayout.width,
-                      xOffset: sectionLayout.xOffset,
-                      yOffset: sectionLayout.yOffset,
-                    }),
+
+            if (addedSections.some((section) => section.kind === "dynamic")) {
+              await transaction.insert(schema.layoutSections).values(
+                addedSections
+                  .filter((section) => section.kind === "dynamic")
+                  .flatMap((section) =>
+                    section.layouts.map(
+                      (sectionLayout): InferInsertModel<typeof schema.layoutSections> => ({
+                        layoutId: sectionLayout.layoutId,
+                        sectionId: section.id,
+                        parentSectionId: sectionLayout.parentSectionId,
+                        height: sectionLayout.height,
+                        width: sectionLayout.width,
+                        xOffset: sectionLayout.xOffset,
+                        yOffset: sectionLayout.yOffset,
+                      }),
+                    ),
                   ),
-                ),
-            );
+              );
+            }
           }
 
           const addedItems = filterAddedItems(input.items, dbBoard.items);
@@ -901,26 +904,29 @@ export const boardRouter = createTRPCRouter({
                 })),
               )
               .run();
-            transaction
-              .insert(layoutSections)
-              .values(
-                addedSections
-                  .filter((section) => section.kind === "dynamic")
-                  .flatMap((section) =>
-                    section.layouts.map(
-                      (sectionLayout): InferInsertModel<typeof layoutSections> => ({
-                        layoutId: sectionLayout.layoutId,
-                        sectionId: section.id,
-                        parentSectionId: sectionLayout.parentSectionId,
-                        height: sectionLayout.height,
-                        width: sectionLayout.width,
-                        xOffset: sectionLayout.xOffset,
-                        yOffset: sectionLayout.yOffset,
-                      }),
+
+            if (addedSections.some((section) => section.kind === "dynamic")) {
+              transaction
+                .insert(layoutSections)
+                .values(
+                  addedSections
+                    .filter((section) => section.kind === "dynamic")
+                    .flatMap((section) =>
+                      section.layouts.map(
+                        (sectionLayout): InferInsertModel<typeof layoutSections> => ({
+                          layoutId: sectionLayout.layoutId,
+                          sectionId: section.id,
+                          parentSectionId: sectionLayout.parentSectionId,
+                          height: sectionLayout.height,
+                          width: sectionLayout.width,
+                          xOffset: sectionLayout.xOffset,
+                          yOffset: sectionLayout.yOffset,
+                        }),
+                      ),
                     ),
-                  ),
-              )
-              .run();
+                )
+                .run();
+            }
           }
 
           const addedItems = filterAddedItems(input.items, dbBoard.items);
