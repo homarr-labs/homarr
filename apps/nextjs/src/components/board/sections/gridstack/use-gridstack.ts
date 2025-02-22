@@ -2,7 +2,7 @@ import type { RefObject } from "react";
 import { createRef, useCallback, useEffect, useRef } from "react";
 import { useElementSize } from "@mantine/hooks";
 
-import { getCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import type { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode } from "@homarr/gridstack";
 
@@ -68,7 +68,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
 
   const board = useRequiredBoard();
 
-  const currentLayoutId = getCurrentLayout(board);
+  const currentLayoutId = useCurrentLayout();
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId)!;
   const columnCount =

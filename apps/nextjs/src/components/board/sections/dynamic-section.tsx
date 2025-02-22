@@ -1,6 +1,6 @@
 import { Box, Card } from "@mantine/core";
 
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 
 import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
 import { BoardDynamicSectionMenu } from "./dynamic/dynamic-menu";
@@ -13,6 +13,7 @@ interface Props {
 
 export const BoardDynamicSection = ({ section }: Props) => {
   const board = useRequiredBoard();
+  const currentLayoutId = useCurrentLayout();
   return (
     <Box className="grid-stack-item-content">
       <Card
@@ -29,7 +30,8 @@ export const BoardDynamicSection = ({ section }: Props) => {
         radius={board.itemRadius}
         p={0}
       >
-        <GridStack section={section} className="min-row" />
+        {/* Use unique key by layout to reinitialize gridstack */}
+        <GridStack key={`${currentLayoutId}-${section.id}`} section={section} className="min-row" />
       </Card>
       <BoardDynamicSectionMenu section={section} />
     </Box>

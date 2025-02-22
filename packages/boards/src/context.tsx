@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -78,6 +78,26 @@ export const getCurrentLayout = (board: RouterOutputs["board"]["getBoardByName"]
   // Fallback to smallest if none exists with breakpoint smaller than window width
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return sortedLayouts.find((layout) => layout.breakpoint <= window.innerWidth)?.id ?? sortedLayouts.at(0)!.id;
+};
+
+export const useCurrentLayout = () => {
+  const board = useRequiredBoard();
+  const [currentLayout, setCurrentLayout] = useState(getCurrentLayout(board));
+
+  const onResize = useCallback(() => {
+    setCurrentLayout(getCurrentLayout(board));
+  }, [board]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
+  }, [onResize]);
+
+  return currentLayout;
 };
 
 export const getBoardLayouts = (board: RouterOutputs["board"]["getBoardByName"]) =>

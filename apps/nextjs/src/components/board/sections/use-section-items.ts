@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 
-import { getCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 
 import type { DynamicSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 
 export const useSectionItems = (sectionId: string): { innerSections: DynamicSectionItem[]; items: SectionItem[] } => {
   const board = useRequiredBoard();
-  const currentLayoutId = getCurrentLayout(board);
+  const currentLayoutId = useCurrentLayout();
 
   const innerSections = useMemo(
     () =>
