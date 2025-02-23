@@ -40,7 +40,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
       <Stack>
         <Stack gap="sm">
           <Group justify="space-between" align="center">
-            <Text fw={500}>Responsive layouts</Text>
+            <Text fw={500}>{t("board.setting.section.layout.responsive.title")}</Text>
             <Button
               variant="subtle"
               onClick={() => {
@@ -57,7 +57,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
                 });
               }}
             >
-              Add layout
+              {t("board.setting.section.layout.responsive.action.add")}
             </Button>
           </Group>
 

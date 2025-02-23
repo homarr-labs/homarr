@@ -3,7 +3,8 @@ import { describe, expect, test, vi } from "vitest";
 import * as boardContext from "@homarr/boards/context";
 
 import { moveItemToSectionCallback } from "../move-item-to-section";
-import { BoardMockBuilder, ItemMockBuilder } from "./shared";
+import { BoardMockBuilder } from "./mocks/board-mock";
+import { ItemMockBuilder } from "./mocks/item-mock";
 
 describe("moveItemToSectionCallback should move item to section", () => {
   test("should move item to section", () => {

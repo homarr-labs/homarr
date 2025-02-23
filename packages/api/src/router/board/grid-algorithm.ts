@@ -1,4 +1,4 @@
-export interface GridAlgoItem {
+export interface GridAlgorithmItem {
   id: string;
   type: "item" | "section";
   width: number;
@@ -9,7 +9,7 @@ export interface GridAlgoItem {
 }
 
 interface GridAlgorithmInput {
-  items: GridAlgoItem[];
+  items: GridAlgorithmItem[];
   width: number;
   previousWidth: number;
   sectionId: string;
@@ -17,7 +17,7 @@ interface GridAlgorithmInput {
 
 interface GridAlgorithmOutput {
   height: number;
-  items: GridAlgoItem[];
+  items: GridAlgorithmItem[];
 }
 
 export const generateResponsiveGridFor = ({
@@ -40,7 +40,7 @@ export const generateResponsiveGridFor = ({
     };
   }
 
-  const newItems: GridAlgoItem[] = [];
+  const newItems: GridAlgorithmItem[] = [];
 
   // Fix height of dynamic sections
   const dynamicSectionHeightMap = new Map<string, number>();
@@ -93,7 +93,7 @@ export const generateResponsiveGridFor = ({
  * @param items items to normalize
  * @param columnCount new column count
  */
-const normalizeItems = (items: GridAlgoItem[], columnCount: number) => {
+const normalizeItems = (items: GridAlgorithmItem[], columnCount: number) => {
   return items.map((item) => ({ ...item, previousWidth: item.width, width: Math.min(columnCount, item.width) }));
 };
 
@@ -105,7 +105,7 @@ const normalizeItems = (items: GridAlgoItem[], columnCount: number) => {
  */
 const addItemToOccupied = (
   occupied2d: boolean[][],
-  item: GridAlgoItem,
+  item: GridAlgorithmItem,
   position: { x: number; y: number },
   columnCount: number,
 ) => {
@@ -140,7 +140,7 @@ const addRow = (occupied2d: boolean[][], columnCount: number) => {
  * @param columnCount column count of section
  * @returns the position of the next free spot or null if no spot is available
  */
-const nextFreeSpot = (occupied2d: boolean[][], item: GridAlgoItem, columnCount: number) => {
+const nextFreeSpot = (occupied2d: boolean[][], item: GridAlgorithmItem, columnCount: number) => {
   for (let offsetY = 0; offsetY < 99999; offsetY++) {
     for (let offsetX = 0; offsetX < columnCount; offsetX++) {
       if (hasHorizontalSpace(columnCount, item, offsetX) && isFree(occupied2d, item, { x: offsetX, y: offsetY })) {
@@ -159,7 +159,7 @@ const nextFreeSpot = (occupied2d: boolean[][], item: GridAlgoItem, columnCount: 
  * @param offsetX current x position
  * @returns true if the item fits horizontally
  */
-const hasHorizontalSpace = (columnCount: number, item: GridAlgoItem, offsetX: number) => {
+const hasHorizontalSpace = (columnCount: number, item: GridAlgorithmItem, offsetX: number) => {
   return offsetX + item.width <= columnCount;
 };
 
@@ -170,7 +170,7 @@ const hasHorizontalSpace = (columnCount: number, item: GridAlgoItem, offsetX: nu
  * @param position position to check
  * @returns true if the spot is free
  */
-const isFree = (occupied2d: boolean[][], item: GridAlgoItem, position: { x: number; y: number }) => {
+const isFree = (occupied2d: boolean[][], item: GridAlgorithmItem, position: { x: number; y: number }) => {
   for (let yOffset = 0; yOffset < item.height; yOffset++) {
     const row = occupied2d[position.y + yOffset];
     if (!row) return true; // Empty row is free

@@ -2142,7 +2142,13 @@
           "unrecognizedLink": "The provided link is not recognized and won't preview, it might still work."
         },
         "layout": {
-          "title": "Layout"
+          "title": "Layout",
+          "responsive": {
+            "title": "Responsive layouts",
+            "action": {
+              "add": "Add layout"
+            }
+          }
         },
         "background": {
           "title": "Background"

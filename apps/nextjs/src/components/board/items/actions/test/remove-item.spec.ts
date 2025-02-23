@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { removeItemCallback } from "../remove-item";
-import { BoardMockBuilder } from "./shared";
+import { BoardMockBuilder } from "./mocks/board-mock";
 
 describe("removeItemCallback should remove item from board", () => {
   test("should remove correct item from board", () => {

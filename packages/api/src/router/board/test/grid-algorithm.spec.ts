@@ -1,7 +1,7 @@
 import { createId } from "@paralleldrive/cuid2";
 import { describe, expect, test } from "vitest";
 
-import type { GridAlgoItem } from "../grid-algorithm";
+import type { GridAlgorithmItem } from "../grid-algorithm";
 import { generateResponsiveGridFor } from "../grid-algorithm";
 
 const ROOT_SECTION_ID = "section";
@@ -80,7 +80,7 @@ describe("Grid Algorithm", () => {
   );
 });
 
-const algoItem = (item: Partial<GridAlgoItem>): GridAlgoItem => ({
+const algoItem = (item: Partial<GridAlgorithmItem>): GridAlgorithmItem => ({
   id: createId(),
   type: "item",
   width: 1,
@@ -294,7 +294,7 @@ ddd`,
 
 const generateInputFromText = (text: string) => {
   const lines = text.split("\n").slice(1); // Remove first empty row
-  const items: GridAlgoItem[] = [];
+  const items: GridAlgorithmItem[] = [];
   for (let yOffset = 0; yOffset < lines.length; yOffset++) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const line = lines[yOffset]!;
@@ -318,7 +318,7 @@ const generateInputFromText = (text: string) => {
   return items;
 };
 
-const generateOutputText = (items: GridAlgoItem[], columnCount: number) => {
+const generateOutputText = (items: GridAlgorithmItem[], columnCount: number) => {
   const occupied2d: string[][] = [];
   for (const item of items) {
     addItemToOccupied(occupied2d, item, { x: item.xOffset, y: item.yOffset }, columnCount);
@@ -354,7 +354,7 @@ const getHeight = (lines: string[], position: { x: number; y: number }, char: st
 
 const addItemToOccupied = (
   occupied2d: string[][],
-  item: GridAlgoItem,
+  item: GridAlgorithmItem,
   position: { x: number; y: number },
   columnCount: number,
 ) => {

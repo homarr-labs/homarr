@@ -2,7 +2,9 @@ import { describe, expect, test, vi } from "vitest";
 
 import { duplicateItemCallback } from "../duplicate-item";
 import * as emptyPositionModule from "../empty-position";
-import { BoardMockBuilder, ItemMockBuilder, LayoutMockBuilder } from "./shared";
+import { BoardMockBuilder } from "./mocks/board-mock";
+import { ItemMockBuilder } from "./mocks/item-mock";
+import { LayoutMockBuilder } from "./mocks/layout-mock";
 
 describe("item actions duplicate-item", () => {
   test("should copy it in the same section", () => {

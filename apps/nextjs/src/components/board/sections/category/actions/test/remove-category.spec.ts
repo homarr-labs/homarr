@@ -4,13 +4,11 @@ import { describe, expect, test, vi } from "vitest";
 import * as boardContext from "@homarr/boards/context";
 
 import type { DynamicSection, Section } from "~/app/[locale]/boards/_types";
-import {
-  BoardMockBuilder,
-  CategorySectionMockBuilder,
-  DynamicSectionMockBuilder,
-  EmptySectionMockBuilder,
-  ItemMockBuilder,
-} from "~/components/board/items/actions/test/shared";
+import { BoardMockBuilder } from "~/components/board/items/actions/test/mocks/board-mock";
+import { CategorySectionMockBuilder } from "~/components/board/items/actions/test/mocks/category-section-mock";
+import { DynamicSectionMockBuilder } from "~/components/board/items/actions/test/mocks/dynamic-section-mock";
+import { EmptySectionMockBuilder } from "~/components/board/items/actions/test/mocks/empty-section-mock";
+import { ItemMockBuilder } from "~/components/board/items/actions/test/mocks/item-mock";
 import { removeCategoryCallback } from "../remove-category";
 
 describe("Remove Category", () => {

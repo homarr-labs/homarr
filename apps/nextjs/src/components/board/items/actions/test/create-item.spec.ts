@@ -4,7 +4,10 @@ import * as boardContext from "@homarr/boards/context";
 
 import { createItemCallback } from "../create-item";
 import * as emptyPositionModule from "../empty-position";
-import { BoardMockBuilder, DynamicSectionMockBuilder, ItemMockBuilder, LayoutMockBuilder } from "./shared";
+import { BoardMockBuilder } from "./mocks/board-mock";
+import { DynamicSectionMockBuilder } from "./mocks/dynamic-section-mock";
+import { ItemMockBuilder } from "./mocks/item-mock";
+import { LayoutMockBuilder } from "./mocks/layout-mock";
 
 describe("item actions create-item", () => {
   test("should add it to first section", () => {
