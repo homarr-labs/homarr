@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 
 import { fetchApi } from "@homarr/api/client";
+import { getCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { createId } from "@homarr/db/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
@@ -16,6 +17,7 @@ export const useCategoryMenuActions = (category: CategorySection) => {
   const { openConfirmModal } = useConfirmModal();
   const { addCategory, moveCategory, removeCategory, renameCategory } = useCategoryActions();
   const t = useI18n();
+  const board = useRequiredBoard();
 
   const createCategoryAtYOffset = useCallback(
     (position: number) => {
@@ -102,7 +104,14 @@ export const useCategoryMenuActions = (category: CategorySection) => {
 
   const settings = useSettings();
   const openAllInNewTabs = useCallback(async () => {
-    const appIds = filterByItemKind(category.items, settings, "app").map((item) => {
+    const currentLayoutId = getCurrentLayout(board);
+    const appIds = filterByItemKind(
+      board.items.filter(
+        (item) => item.layouts.find((layout) => layout.layoutId === currentLayoutId)?.sectionId === category.id,
+      ),
+      settings,
+      "app",
+    ).map((item) => {
       return item.options.appId;
     });
 
@@ -121,7 +130,7 @@ export const useCategoryMenuActions = (category: CategorySection) => {
       });
       break;
     }
-  }, [category, t, openConfirmModal, settings]);
+  }, [category, board, t, openConfirmModal, settings]);
 
   return {
     addCategoryAbove,

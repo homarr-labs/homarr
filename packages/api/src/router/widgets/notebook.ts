@@ -19,16 +19,9 @@ export const notebookRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const item = await ctx.db.query.items.findFirst({
         where: eq(items.id, input.itemId),
-        with: {
-          section: {
-            columns: {
-              boardId: true,
-            },
-          },
-        },
       });
 
-      if (!item || item.section.boardId !== input.boardId) {
+      if (!item || item.boardId !== input.boardId) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Specified item was not found",

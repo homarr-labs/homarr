@@ -2,8 +2,8 @@ import SuperJSON from "superjson";
 import { describe, expect, it, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
-import type { Database } from "@homarr/db";
-import { createId, eq } from "@homarr/db";
+import type { Database, InferInsertModel } from "@homarr/db";
+import { and, createId, eq, not } from "@homarr/db";
 import {
   boardGroupPermissions,
   boards,
@@ -13,7 +13,10 @@ import {
   groups,
   integrationItems,
   integrations,
+  itemLayouts,
   items,
+  layouts,
+  sectionLayouts,
   sections,
   serverSettings,
   users,
@@ -304,17 +307,27 @@ describe("createBoard should create a new board", () => {
     await caller.createBoard({ name: "newBoard", columnCount: 24, isPublic: true });
 
     // Assert
-    const dbBoard = await db.query.boards.findFirst();
+    const dbBoard = await db.query.boards.findFirst({
+      with: {
+        sections: true,
+        layouts: true,
+      },
+    });
     expect(dbBoard).toBeDefined();
     expect(dbBoard?.name).toBe("newBoard");
-    expect(dbBoard?.columnCount).toBe(24);
     expect(dbBoard?.isPublic).toBe(true);
     expect(dbBoard?.creatorId).toBe(defaultCreatorId);
 
-    const dbSection = await db.query.sections.findFirst();
-    expect(dbSection).toBeDefined();
-    expect(dbSection?.boardId).toBe(dbBoard?.id);
-    expect(dbSection?.kind).toBe("empty");
+    expect(dbBoard?.sections.length).toBe(1);
+    const firstSection = dbBoard?.sections.at(0);
+    expect(firstSection?.kind).toBe("empty");
+    expect(firstSection?.xOffset).toBe(0);
+    expect(firstSection?.yOffset).toBe(0);
+
+    expect(dbBoard?.layouts.length).toBe(1);
+    const firstLayout = dbBoard?.layouts.at(0);
+    expect(firstLayout?.columnCount).toBe(24);
+    expect(firstLayout?.breakpoint).toBe(0);
   });
 
   test("should throw error when user has no board-create permission", async () => {
@@ -587,7 +600,6 @@ describe("savePartialBoardSettings should save general settings", () => {
     const newBackgroundImageSize = "cover";
     const newBackgroundImageRepeat = "repeat";
     const newBackgroundImageUrl = "http://background.image/url.png";
-    const newColumnCount = 2;
     const newCustomCss = "body { background-color: blue; }";
     const newOpacity = 0.8;
     const newPrimaryColor = "#0000ff";
@@ -605,7 +617,6 @@ describe("savePartialBoardSettings should save general settings", () => {
       backgroundImageRepeat: newBackgroundImageRepeat,
       backgroundImageSize: newBackgroundImageSize,
       backgroundImageUrl: newBackgroundImageUrl,
-      columnCount: newColumnCount,
       customCss: newCustomCss,
       opacity: newOpacity,
       primaryColor: newPrimaryColor,
@@ -626,7 +637,6 @@ describe("savePartialBoardSettings should save general settings", () => {
     expect(dbBoard?.backgroundImageRepeat).toBe(newBackgroundImageRepeat);
     expect(dbBoard?.backgroundImageSize).toBe(newBackgroundImageSize);
     expect(dbBoard?.backgroundImageUrl).toBe(newBackgroundImageUrl);
-    expect(dbBoard?.columnCount).toBe(newColumnCount);
     expect(dbBoard?.customCss).toBe(newCustomCss);
     expect(dbBoard?.opacity).toBe(newOpacity);
     expect(dbBoard?.primaryColor).toBe(newPrimaryColor);
@@ -668,9 +678,9 @@ describe("saveBoard should save full board", () => {
           kind: "empty",
           yOffset: 0,
           xOffset: 0,
-          items: [],
         },
       ],
+      items: [],
     });
 
     const board = await db.query.boards.findFirst({
@@ -695,7 +705,7 @@ describe("saveBoard should save full board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
-    const { boardId, itemId, sectionId } = await createFullBoardAsync(db, "default");
+    const { boardId, itemId, sectionId, layoutId } = await createFullBoardAsync(db, "default");
 
     await caller.saveBoard({
       id: boardId,
@@ -705,19 +715,25 @@ describe("saveBoard should save full board", () => {
           kind: "empty",
           yOffset: 0,
           xOffset: 0,
-          items: [
+        },
+      ],
+      items: [
+        {
+          id: createId(),
+          kind: "clock",
+          options: { is24HourFormat: true },
+          integrationIds: [],
+          layouts: [
             {
-              id: createId(),
-              kind: "clock",
-              options: { is24HourFormat: true },
-              integrationIds: [],
+              layoutId,
+              sectionId,
               height: 1,
               width: 1,
               xOffset: 0,
               yOffset: 0,
-              advancedOptions: {},
             },
           ],
+          advancedOptions: {},
         },
       ],
     });
@@ -725,11 +741,8 @@ describe("saveBoard should save full board", () => {
     const board = await db.query.boards.findFirst({
       where: eq(boards.id, boardId),
       with: {
-        sections: {
-          with: {
-            items: true,
-          },
-        },
+        sections: true,
+        items: true,
       },
     });
 
@@ -739,9 +752,8 @@ describe("saveBoard should save full board", () => {
 
     const definedBoard = expectToBeDefined(board);
     expect(definedBoard.sections.length).toBe(1);
-    const firstSection = expectToBeDefined(definedBoard.sections[0]);
-    expect(firstSection.items.length).toBe(1);
-    expect(firstSection.items[0]?.id).not.toBe(itemId);
+    expect(definedBoard.items.length).toBe(1);
+    expect(definedBoard.items[0]?.id).not.toBe(itemId);
     expect(item).toBeUndefined();
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
@@ -756,7 +768,7 @@ describe("saveBoard should save full board", () => {
       url: "http://localhost:3000",
     } as const;
 
-    const { boardId, itemId, integrationId, sectionId } = await createFullBoardAsync(db, "default");
+    const { boardId, itemId, integrationId, sectionId, layoutId } = await createFullBoardAsync(db, "default");
     await db.insert(integrations).values(anotherIntegration);
 
     await caller.saveBoard({
@@ -767,19 +779,25 @@ describe("saveBoard should save full board", () => {
           kind: "empty",
           xOffset: 0,
           yOffset: 0,
-          items: [
+        },
+      ],
+      items: [
+        {
+          id: itemId,
+          kind: "clock",
+          options: { is24HourFormat: true },
+          integrationIds: [anotherIntegration.id],
+          layouts: [
             {
-              id: itemId,
-              kind: "clock",
-              options: { is24HourFormat: true },
-              integrationIds: [anotherIntegration.id],
+              layoutId,
+              sectionId,
               height: 1,
               width: 1,
               xOffset: 0,
               yOffset: 0,
-              advancedOptions: {},
             },
           ],
+          advancedOptions: {},
         },
       ],
     });
@@ -787,13 +805,10 @@ describe("saveBoard should save full board", () => {
     const board = await db.query.boards.findFirst({
       where: eq(boards.id, boardId),
       with: {
-        sections: {
+        sections: true,
+        items: {
           with: {
-            items: {
-              with: {
-                integrations: true,
-              },
-            },
+            integrations: true,
           },
         },
       },
@@ -805,9 +820,8 @@ describe("saveBoard should save full board", () => {
 
     const definedBoard = expectToBeDefined(board);
     expect(definedBoard.sections.length).toBe(1);
-    const firstSection = expectToBeDefined(definedBoard.sections[0]);
-    expect(firstSection.items.length).toBe(1);
-    const firstItem = expectToBeDefined(firstSection.items[0]);
+    expect(definedBoard.items.length).toBe(1);
+    const firstItem = expectToBeDefined(definedBoard.items[0]);
     expect(firstItem.integrations.length).toBe(1);
     expect(firstItem.integrations[0]?.integrationId).not.toBe(integrationId);
     expect(integration).toBeUndefined();
@@ -830,7 +844,6 @@ describe("saveBoard should save full board", () => {
             id: newSectionId,
             xOffset: 0,
             yOffset: 1,
-            items: [],
             ...partialSection,
           },
           {
@@ -838,9 +851,9 @@ describe("saveBoard should save full board", () => {
             kind: "empty",
             xOffset: 0,
             yOffset: 0,
-            items: [],
           },
         ],
+        items: [],
       });
 
       const board = await db.query.boards.findFirst({
@@ -873,7 +886,7 @@ describe("saveBoard should save full board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
-    const { boardId, sectionId } = await createFullBoardAsync(db, "default");
+    const { boardId, sectionId, layoutId } = await createFullBoardAsync(db, "default");
 
     const newItemId = createId();
     await caller.saveBoard({
@@ -884,19 +897,25 @@ describe("saveBoard should save full board", () => {
           kind: "empty",
           yOffset: 0,
           xOffset: 0,
-          items: [
+        },
+      ],
+      items: [
+        {
+          id: newItemId,
+          kind: "clock",
+          options: { is24HourFormat: true },
+          integrationIds: [],
+          layouts: [
             {
-              id: newItemId,
-              kind: "clock",
-              options: { is24HourFormat: true },
-              integrationIds: [],
+              layoutId,
+              sectionId,
               height: 1,
               width: 1,
               xOffset: 3,
               yOffset: 2,
-              advancedOptions: {},
             },
           ],
+          advancedOptions: {},
         },
       ],
     });
@@ -904,9 +923,10 @@ describe("saveBoard should save full board", () => {
     const board = await db.query.boards.findFirst({
       where: eq(boards.id, boardId),
       with: {
-        sections: {
+        sections: true,
+        items: {
           with: {
-            items: true,
+            layouts: true,
           },
         },
       },
@@ -918,17 +938,18 @@ describe("saveBoard should save full board", () => {
 
     const definedBoard = expectToBeDefined(board);
     expect(definedBoard.sections.length).toBe(1);
-    const firstSection = expectToBeDefined(definedBoard.sections[0]);
-    expect(firstSection.items.length).toBe(1);
-    const addedItem = expectToBeDefined(firstSection.items.find((item) => item.id === newItemId));
+    expect(definedBoard.items.length).toBe(1);
+    const addedItem = expectToBeDefined(definedBoard.items.find((item) => item.id === newItemId));
     expect(addedItem).toBeDefined();
     expect(addedItem.id).toBe(newItemId);
     expect(addedItem.kind).toBe("clock");
     expect(addedItem.options).toBe(SuperJSON.stringify({ is24HourFormat: true }));
-    expect(addedItem.height).toBe(1);
-    expect(addedItem.width).toBe(1);
-    expect(addedItem.xOffset).toBe(3);
-    expect(addedItem.yOffset).toBe(2);
+    const firstLayout = expectToBeDefined(addedItem.layouts[0]);
+    expect(firstLayout.sectionId).toBe(sectionId);
+    expect(firstLayout.height).toBe(1);
+    expect(firstLayout.width).toBe(1);
+    expect(firstLayout.xOffset).toBe(3);
+    expect(firstLayout.yOffset).toBe(2);
     expect(item).toBeDefined();
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
@@ -943,7 +964,7 @@ describe("saveBoard should save full board", () => {
       url: "http://plex.local",
     } as const;
 
-    const { boardId, itemId, sectionId } = await createFullBoardAsync(db, "default");
+    const { boardId, itemId, sectionId, layoutId } = await createFullBoardAsync(db, "default");
     await db.insert(integrations).values(integration);
 
     await caller.saveBoard({
@@ -954,19 +975,25 @@ describe("saveBoard should save full board", () => {
           kind: "empty",
           xOffset: 0,
           yOffset: 0,
-          items: [
+        },
+      ],
+      items: [
+        {
+          id: itemId,
+          kind: "clock",
+          options: { is24HourFormat: true },
+          integrationIds: [integration.id],
+          layouts: [
             {
-              id: itemId,
-              kind: "clock",
-              options: { is24HourFormat: true },
-              integrationIds: [integration.id],
+              sectionId,
+              layoutId,
               height: 1,
               width: 1,
               xOffset: 0,
               yOffset: 0,
-              advancedOptions: {},
             },
           ],
+          advancedOptions: {},
         },
       ],
     });
@@ -974,13 +1001,10 @@ describe("saveBoard should save full board", () => {
     const board = await db.query.boards.findFirst({
       where: eq(boards.id, boardId),
       with: {
-        sections: {
+        sections: true,
+        items: {
           with: {
-            items: {
-              with: {
-                integrations: true,
-              },
-            },
+            integrations: true,
           },
         },
       },
@@ -992,9 +1016,7 @@ describe("saveBoard should save full board", () => {
 
     const definedBoard = expectToBeDefined(board);
     expect(definedBoard.sections.length).toBe(1);
-    const firstSection = expectToBeDefined(definedBoard.sections[0]);
-    expect(firstSection.items.length).toBe(1);
-    const firstItem = expectToBeDefined(firstSection.items.find((item) => item.id === itemId));
+    const firstItem = expectToBeDefined(definedBoard.items.find((item) => item.id === itemId));
     expect(firstItem.integrations.length).toBe(1);
     expect(firstItem.integrations[0]?.integrationId).toBe(integration.id);
     expect(integrationItem).toBeDefined();
@@ -1025,7 +1047,6 @@ describe("saveBoard should save full board", () => {
           xOffset: 0,
           name: "Test",
           collapsed: true,
-          items: [],
         },
         {
           id: newSectionId,
@@ -1034,9 +1055,9 @@ describe("saveBoard should save full board", () => {
           yOffset: 0,
           xOffset: 0,
           collapsed: false,
-          items: [],
         },
       ],
+      items: [],
     });
 
     const board = await db.query.boards.findFirst({
@@ -1064,7 +1085,7 @@ describe("saveBoard should save full board", () => {
     const db = createDb();
     const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
-    const { boardId, itemId, sectionId } = await createFullBoardAsync(db, "default");
+    const { boardId, itemId, sectionId, layoutId } = await createFullBoardAsync(db, "default");
 
     await caller.saveBoard({
       id: boardId,
@@ -1074,19 +1095,25 @@ describe("saveBoard should save full board", () => {
           kind: "empty",
           yOffset: 0,
           xOffset: 0,
-          items: [
+        },
+      ],
+      items: [
+        {
+          id: itemId,
+          kind: "clock",
+          options: { is24HourFormat: false },
+          integrationIds: [],
+          layouts: [
             {
-              id: itemId,
-              kind: "clock",
-              options: { is24HourFormat: false },
-              integrationIds: [],
+              layoutId,
+              sectionId,
               height: 3,
               width: 2,
               xOffset: 7,
               yOffset: 5,
-              advancedOptions: {},
             },
           ],
+          advancedOptions: {},
         },
       ],
     });
@@ -1094,9 +1121,10 @@ describe("saveBoard should save full board", () => {
     const board = await db.query.boards.findFirst({
       where: eq(boards.id, boardId),
       with: {
-        sections: {
+        sections: true,
+        items: {
           with: {
-            items: true,
+            layouts: true,
           },
         },
       },
@@ -1104,16 +1132,17 @@ describe("saveBoard should save full board", () => {
 
     const definedBoard = expectToBeDefined(board);
     expect(definedBoard.sections.length).toBe(1);
-    const firstSection = expectToBeDefined(definedBoard.sections[0]);
-    expect(firstSection.items.length).toBe(1);
-    const firstItem = expectToBeDefined(firstSection.items.find((item) => item.id === itemId));
+    expect(definedBoard.items.length).toBe(1);
+    const firstItem = expectToBeDefined(definedBoard.items.find((item) => item.id === itemId));
     expect(firstItem.id).toBe(itemId);
     expect(firstItem.kind).toBe("clock");
     expect(SuperJSON.parse<{ is24HourFormat: boolean }>(firstItem.options).is24HourFormat).toBe(false);
-    expect(firstItem.height).toBe(3);
-    expect(firstItem.width).toBe(2);
-    expect(firstItem.xOffset).toBe(7);
-    expect(firstItem.yOffset).toBe(5);
+    const firstLayout = expectToBeDefined(firstItem.layouts[0]);
+    expect(firstLayout.sectionId).toBe(sectionId);
+    expect(firstLayout.height).toBe(3);
+    expect(firstLayout.width).toBe(2);
+    expect(firstLayout.xOffset).toBe(7);
+    expect(firstLayout.yOffset).toBe(5);
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
   it("should fail when board not found", async () => {
@@ -1124,6 +1153,7 @@ describe("saveBoard should save full board", () => {
       await caller.saveBoard({
         id: "nonExistentBoardId",
         sections: [],
+        items: [],
       });
 
     await expect(actAsync()).rejects.toThrowError("Board not found");
@@ -1293,6 +1323,165 @@ describe("saveGroupBoardPermissions should save group board permissions", () => 
   );
 });
 
+const createExistingLayout = (id: string) => ({
+  id,
+  name: "Base",
+  columnCount: 10,
+  breakpoint: 0,
+});
+const createNewLayout = (columnCount: number) => ({
+  id: createId(),
+  name: "New layout",
+  columnCount,
+  breakpoint: 1400,
+});
+describe("saveLayouts should save layout changes", () => {
+  test("should add layout when not present in database", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const newLayout = createNewLayout(12);
+
+    // Act
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [createExistingLayout(layoutId), newLayout],
+    });
+
+    // Assert
+    const layout = await db.query.layouts.findFirst({
+      where: not(eq(layouts.id, layoutId)),
+    });
+
+    const definedLayout = expectToBeDefined(layout);
+    expect(definedLayout.name).toBe(newLayout.name);
+    expect(definedLayout.columnCount).toBe(newLayout.columnCount);
+    expect(definedLayout.breakpoint).toBe(newLayout.breakpoint);
+  });
+  test("should add items and dynamic sections generated from grid-algorithm when new layout is added", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
+    const assignments = await createItemsAndSectionsAsync(db, {
+      boardId,
+      layoutId,
+      sectionId,
+    });
+    const newLayout = createNewLayout(3);
+
+    // Act
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [createExistingLayout(layoutId), newLayout],
+    });
+
+    // Assert
+    const layout = await db.query.layouts.findFirst({
+      where: not(eq(layouts.id, layoutId)),
+    });
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await expectLayoutForRootLayoutAsync(db, sectionId, layout!.id, {
+      ...assignments.inRoot,
+      a: itemId,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await expectLayoutForDynamicSectionAsync(db, assignments.inRoot.f, layout!.id, assignments.inDynamicSection);
+  });
+  test("should update layout when present in input", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+    const updatedLayout = createExistingLayout(layoutId);
+    updatedLayout.breakpoint = 1400;
+    updatedLayout.name = "Updated layout";
+
+    // Act
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [updatedLayout],
+    });
+
+    // Assert
+    const layout = await db.query.layouts.findFirst({
+      where: eq(layouts.id, layoutId),
+    });
+
+    const definedLayout = expectToBeDefined(layout);
+    expect(definedLayout.name).toBe(updatedLayout.name);
+    expect(definedLayout.columnCount).toBe(updatedLayout.columnCount);
+    expect(definedLayout.breakpoint).toBe(updatedLayout.breakpoint);
+  });
+  test("should update position of items when column count changes", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const { boardId, layoutId, sectionId, itemId } = await createFullBoardAsync(db, "default");
+    const assignments = await createItemsAndSectionsAsync(db, {
+      boardId,
+      layoutId,
+      sectionId,
+    });
+    const updatedLayout = createExistingLayout(layoutId);
+    updatedLayout.columnCount = 3;
+
+    // Act
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [updatedLayout],
+    });
+
+    // Assert
+    await expectLayoutForRootLayoutAsync(db, sectionId, layoutId, {
+      ...assignments.inRoot,
+      a: itemId,
+    });
+    await expectLayoutForDynamicSectionAsync(db, assignments.inRoot.f, layoutId, assignments.inDynamicSection);
+  });
+  test("should remove layout when not present in input", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const { boardId, layoutId } = await createFullBoardAsync(db, "default");
+
+    // Act
+    await caller.saveLayouts({
+      id: boardId,
+      layouts: [createNewLayout(12)],
+    });
+
+    // Assert
+    const layout = await db.query.layouts.findFirst({
+      where: eq(layouts.id, layoutId),
+    });
+    expect(layout).toBeUndefined();
+  });
+  test("should fail when board not found", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+
+    const { layoutId } = await createFullBoardAsync(db, "default");
+
+    // Act
+    const actAsync = async () =>
+      await caller.saveLayouts({
+        id: createId(),
+        layouts: [createExistingLayout(layoutId)],
+      });
+
+    // Assert
+    await expect(actAsync()).rejects.toThrowError("Board not found");
+  });
+});
+
 const expectInputToBeFullBoardWithName = (
   input: RouterOutputs["board"]["getHomeBoard"],
   props: { name: string } & Awaited<ReturnType<typeof createFullBoardAsync>>,
@@ -1302,8 +1491,8 @@ const expectInputToBeFullBoardWithName = (
   expect(input.sections.length).toBe(1);
   const firstSection = expectToBeDefined(input.sections[0]);
   expect(firstSection.id).toBe(props.sectionId);
-  expect(firstSection.items.length).toBe(1);
-  const firstItem = expectToBeDefined(firstSection.items[0]);
+  expect(input.items.length).toBe(1);
+  const firstItem = expectToBeDefined(input.items[0]);
   expect(firstItem.id).toBe(props.itemId);
   expect(firstItem.kind).toBe("clock");
   if (firstItem.kind === "clock") {
@@ -1326,6 +1515,15 @@ const createFullBoardAsync = async (db: Database, name: string) => {
     creatorId: defaultCreatorId,
   });
 
+  const layoutId = createId();
+  await db.insert(layouts).values({
+    id: layoutId,
+    name: "Base",
+    columnCount: 10,
+    breakpoint: 0,
+    boardId,
+  });
+
   const sectionId = createId();
   await db.insert(sections).values({
     id: sectionId,
@@ -1339,12 +1537,18 @@ const createFullBoardAsync = async (db: Database, name: string) => {
   await db.insert(items).values({
     id: itemId,
     kind: "clock",
+    boardId,
+    options: SuperJSON.stringify({ is24HourFormat: true }),
+  });
+
+  await db.insert(itemLayouts).values({
     height: 1,
     width: 1,
     xOffset: 0,
     yOffset: 0,
     sectionId,
-    options: SuperJSON.stringify({ is24HourFormat: true }),
+    itemId,
+    layoutId,
   });
 
   const integrationId = createId();
@@ -1363,7 +1567,226 @@ const createFullBoardAsync = async (db: Database, name: string) => {
   return {
     boardId,
     sectionId,
+    layoutId,
     itemId,
     integrationId,
   };
+};
+
+const addItemAsync = async (
+  db: Database,
+  item: Partial<Pick<InferInsertModel<typeof itemLayouts>, "height" | "width" | "xOffset" | "yOffset">> & {
+    sectionId: string;
+    layoutId: string;
+    boardId: string;
+  },
+) => {
+  const itemId = createId();
+  await db.insert(items).values({
+    id: itemId,
+    kind: "clock",
+    boardId: item.boardId,
+    options: SuperJSON.stringify({ is24HourFormat: true }),
+  });
+  await db.insert(itemLayouts).values({
+    itemId,
+    layoutId: item.layoutId,
+    sectionId: item.sectionId,
+    height: item.height ?? 1,
+    width: item.width ?? 1,
+    xOffset: item.xOffset ?? 0,
+    yOffset: item.yOffset ?? 0,
+  });
+  return itemId;
+};
+
+const addDynamicSectionAsync = async (
+  db: Database,
+  section: Partial<Pick<InferInsertModel<typeof sectionLayouts>, "xOffset" | "yOffset" | "width" | "height">> & {
+    parentSectionId: string;
+    boardId: string;
+    layoutId: string;
+  },
+) => {
+  const sectionId = createId();
+  await db.insert(sections).values({
+    id: sectionId,
+    kind: "dynamic",
+    boardId: section.boardId,
+  });
+  await db.insert(sectionLayouts).values({
+    parentSectionId: section.parentSectionId,
+    layoutId: section.layoutId,
+    sectionId,
+    xOffset: section.xOffset ?? 0,
+    yOffset: section.yOffset ?? 0,
+    width: section.width ?? 1,
+    height: section.height ?? 1,
+  });
+  return sectionId;
+};
+
+const createItemsAndSectionsAsync = async (
+  db: Database,
+  options: { boardId: string; sectionId: string; layoutId: string },
+) => {
+  const { boardId, layoutId, sectionId } = options;
+  // From:
+  // abbbbbccdd
+  // efffffccdd
+  // efffffggdd
+  // efffffgg
+  // To:
+  // a
+  // bbb
+  // cce
+  // cce
+  // dde
+  // dd
+  // dd
+  // fff
+  // fff
+  // fff
+  // fff
+  // gg
+  // gg
+  const itemB = await addItemAsync(db, { boardId, layoutId, sectionId, xOffset: 1, width: 5 });
+  const itemC = await addItemAsync(db, { boardId, layoutId, sectionId, xOffset: 6, width: 2, height: 2 });
+  const itemD = await addItemAsync(db, { boardId, layoutId, sectionId, xOffset: 8, width: 2, height: 3 });
+  const itemE = await addItemAsync(db, { boardId, layoutId, sectionId, yOffset: 1, height: 3 });
+  const sectionF = await addDynamicSectionAsync(db, {
+    yOffset: 1,
+    xOffset: 1,
+    width: 5,
+    height: 3,
+    parentSectionId: sectionId,
+    boardId,
+    layoutId,
+  });
+  const sectionG = await addDynamicSectionAsync(db, {
+    yOffset: 2,
+    xOffset: 6,
+    width: 2,
+    height: 2,
+    parentSectionId: sectionId,
+    boardId,
+    layoutId,
+  });
+  // From:
+  // hhhhh
+  // iiijj
+  // iii
+  // To:
+  // hhh
+  // iii
+  // iii
+  // jj
+  const itemH = await addItemAsync(db, { boardId, layoutId, sectionId: sectionF, width: 5 });
+  const itemI = await addItemAsync(db, { boardId, layoutId, sectionId: sectionF, width: 3, height: 2, yOffset: 1 });
+  const itemJ = await addItemAsync(db, { boardId, layoutId, sectionId: sectionF, width: 2, yOffset: 1, xOffset: 2 });
+
+  return {
+    inRoot: {
+      b: itemB,
+      c: itemC,
+      d: itemD,
+      e: itemE,
+      f: sectionF,
+      g: sectionG,
+    },
+    inDynamicSection: {
+      h: itemH,
+      i: itemI,
+      j: itemJ,
+    },
+  };
+};
+
+const expectLayoutForRootLayoutAsync = async (
+  db: Database,
+  sectionId: string,
+  layoutId: string,
+  assignments: Record<string, string>,
+) => {
+  await expectLayoutInSectionAsync(
+    db,
+    sectionId,
+    layoutId,
+    `
+a
+bbb
+cce
+cce
+dde
+dd
+dd
+fff
+fff
+fff
+fff
+gg
+gg`,
+    assignments,
+  );
+};
+
+const expectLayoutForDynamicSectionAsync = async (
+  db: Database,
+  sectionId: string,
+  layoutId: string,
+  assignments: Record<string, string>,
+) => {
+  await expectLayoutInSectionAsync(
+    db,
+    sectionId,
+    layoutId,
+    `
+hhh
+iii
+iii
+jj`,
+    assignments,
+  );
+};
+
+const expectLayoutInSectionAsync = async (
+  db: Database,
+  sectionId: string,
+  layoutId: string,
+  layout: string,
+  assignments: Record<string, string>,
+) => {
+  const itemsInSection = await db.query.itemLayouts.findMany({
+    where: and(eq(itemLayouts.sectionId, sectionId), eq(itemLayouts.layoutId, layoutId)),
+  });
+  const sectionsInSection = await db.query.sectionLayouts.findMany({
+    where: and(eq(sectionLayouts.parentSectionId, sectionId), eq(sectionLayouts.layoutId, layoutId)),
+  });
+  const entries = [...itemsInSection, ...sectionsInSection];
+
+  const lines = layout.split("\n").slice(1);
+  const keys = Object.keys(assignments);
+  const positions: Record<string, { x: number; y: number; w: number; h: number }> = {};
+  for (let yOffset = 0; yOffset < lines.length; yOffset++) {
+    const line = lines[yOffset];
+    if (!line) continue;
+    for (let xOffset = 0; xOffset < line.length; xOffset++) {
+      const char = line[xOffset];
+      if (!char) continue;
+      if (!keys.includes(char)) continue;
+      if (char in positions) continue;
+      const width = line.split("").filter((lineChar) => lineChar === char).length;
+      const height = lines.slice(yOffset).filter((line) => line.substring(xOffset).startsWith(char)).length;
+      positions[char] = { x: xOffset, y: yOffset, w: width, h: height };
+    }
+  }
+
+  for (const [key, { x, y, w, h }] of Object.entries(positions)) {
+    const entry = entries.find((entry) => ("itemId" in entry ? entry.itemId : entry.sectionId) === assignments[key]);
+    expect(entry, `Expect entry for ${key} to be defined in assignments=${JSON.stringify(assignments)}`).toBeDefined();
+    expect(entry?.xOffset, `Expect xOffset of entry for ${key} to be ${x} for entry=${JSON.stringify(entry)}`).toBe(x);
+    expect(entry?.yOffset, `Expect yOffset of entry for ${key} to be ${y} for entry=${JSON.stringify(entry)}`).toBe(y);
+    expect(entry?.width, `Expect width of entry for ${key} to be ${w} for entry=${JSON.stringify(entry)}`).toBe(w);
+    expect(entry?.height, `Expect height of entry for ${key} to be ${h} for entry=${JSON.stringify(entry)}`).toBe(h);
+  }
 };

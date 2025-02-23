@@ -11,9 +11,7 @@ interface Integration {
   id: string;
   items: {
     item: {
-      section: {
-        boardId: string;
-      };
+      boardId: string;
     };
   }[];
   userPermissions: {
@@ -56,7 +54,7 @@ export const hasQueryAccessToIntegrationsAsync = async (
 
   const integrationsWithBoardIds = integrationsWithoutUseAccessAndWithoutBoardViewAllAccess.map((integration) => ({
     id: integration.id,
-    anyOfBoardIds: integration.items.map(({ item }) => item.section.boardId),
+    anyOfBoardIds: integration.items.map(({ item }) => item.boardId),
   }));
 
   const permissionsOfCurrentUserWhenPresent = await db.query.boardUserPermissions.findMany({

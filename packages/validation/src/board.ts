@@ -9,7 +9,7 @@ import {
 
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
-import { commonItemSchema, createSectionSchema } from "./shared";
+import { commonItemSchema, sectionSchema } from "./shared";
 
 const hexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
 
@@ -62,16 +62,28 @@ const savePartialSettingsSchema = z
     secondaryColor: hexColorSchema,
     opacity: z.number().min(0).max(100),
     customCss: z.string().max(16384),
-    columnCount: z.number().min(1).max(24),
     iconColor: hexColorNullableSchema,
     itemRadius: z.union([z.literal("xs"), z.literal("sm"), z.literal("md"), z.literal("lg"), z.literal("xl")]),
     disableStatus: z.boolean(),
   })
   .partial();
 
+const saveLayoutsSchema = z.object({
+  id: z.string(),
+  layouts: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string().trim().nonempty().max(32),
+      columnCount: z.number().min(1).max(24),
+      breakpoint: z.number().min(0).max(32767),
+    }),
+  ),
+});
+
 const saveSchema = z.object({
   id: z.string(),
-  sections: z.array(createSectionSchema(commonItemSchema)),
+  sections: z.array(sectionSchema),
+  items: z.array(commonItemSchema),
 });
 
 const createSchema = z.object({ name: boardNameSchema, columnCount: z.number().min(1).max(24), isPublic: z.boolean() });
@@ -96,6 +108,7 @@ export const boardSchemas = {
   name: boardNameSchema,
   byName: byNameSchema,
   savePartialSettings: savePartialSettingsSchema,
+  saveLayouts: saveLayoutsSchema,
   save: saveSchema,
   create: createSchema,
   duplicate: duplicateSchema,

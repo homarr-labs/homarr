@@ -1,7 +1,7 @@
-import type { Item } from "~/app/[locale]/boards/_types";
+import type { SectionItem } from "~/app/[locale]/boards/_types";
 
 export const getFirstEmptyPosition = (
-  elements: Pick<Item, "yOffset" | "xOffset" | "width" | "height">[],
+  elements: Pick<SectionItem, "yOffset" | "xOffset" | "width" | "height">[],
   columnCount: number,
   rowCount = 9999,
   size: { width: number; height: number } = { width: 1, height: 1 },
