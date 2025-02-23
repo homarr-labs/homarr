@@ -98,7 +98,7 @@ jobs:
         run: |
           git config user.name "Releases Homarr"
           git config user.email "175486441+homarr-releases[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git remote set-url origin https://x-access-token:${{ steps.obtainToken.outputs.token }}@github.com/${{ github.repository }}.git
           git fetch origin dev
           git checkout dev
           git pull origin dev

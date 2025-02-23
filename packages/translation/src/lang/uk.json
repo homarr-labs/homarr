@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "URL-адреса"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {

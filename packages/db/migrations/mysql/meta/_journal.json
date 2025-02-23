@@ -197,6 +197,13 @@
       "when": 1739915526818,
       "tag": "0027_acoustic_karma",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "5",
+      "when": 1740086765989,
+      "tag": "0028_add_app_ping_url",
+      "breakpoints": true
     }
   ]
 }

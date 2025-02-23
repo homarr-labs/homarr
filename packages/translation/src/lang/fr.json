@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "Url"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
