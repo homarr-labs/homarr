@@ -6,7 +6,6 @@ on:
       - main
       - beta
       - dev
-      - ci-arm64-docker-build
   workflow_dispatch:
     inputs:
       send-notifications:
