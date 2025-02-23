@@ -17,7 +17,6 @@ on:
 permissions:
   contents: write # Required to update package.json version
   packages: write # Required for pushing to GHCR
-  actions: write # Required for uploading/downloading artifacts
 
 env:
   SKIP_ENV_VALIDATION: true
