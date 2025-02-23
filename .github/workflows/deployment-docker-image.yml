@@ -218,12 +218,6 @@ jobs:
             ${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }} \
             ${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}
 
-      - name: Publish version temp
-        run: |
-          docker buildx imagetools create -t ${{ env.GHCR_REPO }}:ci-arm64-docker-build-temp \
-            ${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }} \
-            ${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}
-
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
