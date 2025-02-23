@@ -202,27 +202,27 @@ jobs:
         if: env.DEPLOY_BETA == 'true'
         run: |
           docker buildx imagetools create -t ${{ env.GHCR_REPO }}:beta \
-            ${{ env.GHCR_REPO }}@sha256:${{ needs.build-amd64.outputs.digest }} \
-            ${{ env.GHCR_REPO }}@sha256:${{ needs.build-arm64.outputs.digest }}
+            ${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }} \
+            ${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}
 
       - name: Publish latest
         if: env.DEPLOY_LATEST == 'true'
         run: |
           docker buildx imagetools create -t ${{ env.GHCR_REPO }}:latest \
-            ${{ env.GHCR_REPO }}@sha256:${{ needs.build-amd64.outputs.digest }} \
-            ${{ env.GHCR_REPO }}@sha256:${{ needs.build-arm64.outputs.digest }}
+            ${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }} \
+            ${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}
 
       - name: Publish version
         run: |
           docker buildx imagetools create -t ${{ env.GHCR_REPO }}:${{ env.NEXT_VERSION }} \
-            ${{ env.GHCR_REPO }}@sha256:${{ needs.build-amd64.outputs.digest }} \
-            ${{ env.GHCR_REPO }}@sha256:${{ needs.build-arm64.outputs.digest }}
+            ${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }} \
+            ${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}
 
       - name: Publish version temp
         run: |
           docker buildx imagetools create -t ${{ env.GHCR_REPO }}:ci-arm64-docker-build-temp \
-            ${{ env.GHCR_REPO }}@sha256:${{ needs.build-amd64.outputs.digest }} \
-            ${{ env.GHCR_REPO }}@sha256:${{ needs.build-arm64.outputs.digest }}
+            ${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }} \
+            ${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}
 
       - name: Discord notification
         env:
