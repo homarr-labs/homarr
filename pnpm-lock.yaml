@@ -743,6 +743,12 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/log':
+        specifier: workspace:^0.1.0
+        version: link:../log
+      cacheable-lookup:
+        specifier: ^7.0.0
+        version: 7.0.0
       undici:
         specifier: 7.3.0
         version: 7.3.0
@@ -5285,6 +5291,10 @@ packages:
   cac@6.7.14:
     resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
     engines: {node: '>=8'}
+
+  cacheable-lookup@7.0.0:
+    resolution: {integrity: sha512-+qJyx4xiKra8mZrcwhjMRMUhD5NR1R8esPkzIYxX96JiecFoxAXFuz/GpR3+ev4PE1WamHip78wV0vcmPQtp8w==}
+    engines: {node: '>=14.16'}
 
   call-bind-apply-helpers@1.0.1:
     resolution: {integrity: sha512-BhYE+WDaywFg2TBWYNXAE+8B1ATnThNBqXHP5nQu0jWJdVvY2hvkpyB3qOmtmDePiS5/BDQ8wASEWGMWRG148g==}
@@ -13457,6 +13467,8 @@ snapshots:
   bytes@3.1.2: {}
 
   cac@6.7.14: {}
+
+  cacheable-lookup@7.0.0: {}
 
   call-bind-apply-helpers@1.0.1:
     dependencies:

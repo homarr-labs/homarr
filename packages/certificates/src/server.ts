@@ -8,6 +8,15 @@ import { fetch } from "undici";
 
 import { env } from "@homarr/common/env";
 import { LoggingAgent } from "@homarr/common/server";
+import CacheableLookup from "cacheable-lookup";
+import type { LookupOptions } from "node:dns";
+import { logger } from "@homarr/log";
+
+const cacheableLookup = new CacheableLookup({
+  maxTtl: 6_00,
+  errorTtl: 60,
+  fallbackDuration: 3600
+});
 
 const getCertificateFolder = () => {
   return env.NODE_ENV === "production"
@@ -66,15 +75,50 @@ export const createCertificateAgentAsync = async () => {
   return new LoggingAgent({
     connect: {
       ca: rootCertificates.concat(customCertificates.map((cert) => cert.content)),
+      // Override the DNS lookup with the https://www.npmjs.com/package/cacheable-lookup library lookup (see https://github.com/nodejs/undici/issues/2440#issuecomment-2181215481)
+      lookup(hostname, lookupOptions, callback) {
+        logger.info(`looking up ${hostname} with cacheable lookup`);
+        cacheableLookup.lookup(hostname, { all: lookupOptions.all, hints: lookupOptions.hints, family: convertToNodeJsIPFamily(lookupOptions.family) },  (err, address, family) => {
+          if (err) {
+            logger.error(`DNS Lookup failed for ${hostname}: ${err}`);
+          } else {
+            logger.info(`Cacheable Lookup for ${hostname}: ${JSON.stringify(address)}, family: ${family}`);
+          }
+          callback(err, address, family);
+        });
+      }
     },
+    keepAliveTimeout: 10_000, // Keep connection open for 10s
+    keepAliveMaxTimeout: 30_000,
+    pipelining: 0
   });
 };
+
+/**
+ * Converts the family
+ * @see https://nodejs.org/api/dns.html#dns_dns_lookup_hostname_options_callback
+ * @param lookupOptionsFamily the family that should be converted
+ */
+const convertToNodeJsIPFamily = (lookupOptionsFamily: LookupOptions['family']) => {
+  switch (lookupOptionsFamily) {
+    case 'IPv4': {
+      return 4;
+    }
+    case 'IPv6': {
+      return 6;
+    }
+    default: {
+      return undefined;
+    }
+  }
+}
 
 export const createAxiosCertificateInstanceAsync = async () => {
   const customCertificates = await loadCustomRootCertificatesAsync();
   return axios.create({
     httpsAgent: new Agent({
       ca: rootCertificates.concat(customCertificates.map((cert) => cert.content)),
+      keepAlive: true
     }),
   });
 };
