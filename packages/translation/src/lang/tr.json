@@ -603,8 +603,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Ping için farklı URL kullan",
+          "description": "Homarr, İSS'nın bant genişliği kullanımını önlemek için dahili ana bilgisayar adı veya ağ kullanarak doğrudan erişebiliyorsa yararlıdır"
         }
       }
     },
