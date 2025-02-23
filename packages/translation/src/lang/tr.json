@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "Url"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "Ping için farklı URL kullan",
+          "description": "Homarr, İSS'nın bant genişliği kullanımını önlemek için dahili ana bilgisayar adı veya ağ kullanarak doğrudan erişebiliyorsa yararlıdır"
+        }
       }
     },
     "action": {
@@ -1609,7 +1615,7 @@
       "app": {
         "noData": "Uygulama bulunamadı",
         "description": "Yeni bir uygulama oluşturmak için <here></here> tıklayın",
-        "quickCreate": ""
+        "quickCreate": "Anında uygulama oluştur"
       },
       "error": {
         "noIntegration": "Hiçbir entegrasyon seçilmedi",
@@ -2011,8 +2017,8 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "Anında uygulama oluştur",
+          "createAndUse": "Oluştur ve kullan"
         }
       }
     },
@@ -2089,7 +2095,7 @@
         "label": "Opaklık"
       },
       "iconColor": {
-        "label": ""
+        "label": "Simge rengi"
       },
       "customCss": {
         "label": "Bu panel için özel css",
@@ -2107,14 +2113,14 @@
         "label": "Sütun Sayısı"
       },
       "itemRadius": {
-        "label": "",
-        "description": "",
+        "label": "Öğe yarıçapı",
+        "description": "Panelinizdeki yuvaların yuvarlaklığını değiştirir",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "Çok küçük",
+          "sm": "Küçük",
+          "md": "Orta",
+          "lg": "Büyük",
+          "xl": "Çok büyük"
         }
       },
       "name": {
@@ -2142,7 +2148,7 @@
           "title": "Arkaplan"
         },
         "appearance": {
-          "title": ""
+          "title": "Görünüş"
         },
         "customCss": {
           "title": "Özel Css"

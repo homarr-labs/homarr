@@ -64,12 +64,11 @@ export const SystemHealthMonitoring = ({ options, integrationIds }: WidgetCompon
           if (!prevData) {
             return undefined;
           }
-          const newData = prevData.map((item) =>
+          return prevData.map((item) =>
             item.integrationId === data.integrationId
               ? { ...item, healthInfo: data.healthInfo, updatedAt: data.timestamp }
               : item,
           );
-          return newData;
         });
       },
     },
@@ -294,7 +293,7 @@ interface FileSystem {
 
 interface SmartData {
   deviceName: string;
-  temperature: number;
+  temperature: number | null;
   overallStatus: string;
 }
 

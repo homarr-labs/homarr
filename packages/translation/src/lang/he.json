@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "כתובת אתר"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
