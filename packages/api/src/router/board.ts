@@ -27,7 +27,13 @@ import {
   users,
 } from "@homarr/db/schema";
 import type { WidgetKind } from "@homarr/definitions";
-import { everyoneGroup, getPermissionsWithChildren, getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
+import {
+  emptySuperJSON,
+  everyoneGroup,
+  getPermissionsWithChildren,
+  getPermissionsWithParents,
+  widgetKinds,
+} from "@homarr/definitions";
 import { importOldmarrAsync } from "@homarr/old-import";
 import { importJsonFileSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
@@ -736,7 +742,7 @@ export const boardRouter = createTRPCRouter({
                 kind: section.kind,
                 yOffset: section.kind !== "dynamic" ? section.yOffset : null,
                 xOffset: section.kind === "dynamic" ? null : 0,
-                options: section.kind === "dynamic" ? section.options : "{}",
+                options: section.kind === "dynamic" ? section.options : emptySuperJSON,
                 name: "name" in section ? section.name : null,
                 boardId: dbBoard.id,
               })),
@@ -862,7 +868,7 @@ export const boardRouter = createTRPCRouter({
               .set({
                 yOffset: prev?.kind !== "dynamic" && "yOffset" in section ? section.yOffset : null,
                 xOffset: prev?.kind !== "dynamic" && "yOffset" in section ? 0 : null,
-                options: prev?.kind === "dynamic" && "options" in section ? section.options : "{}",
+                options: prev?.kind === "dynamic" && "options" in section ? section.options : emptySuperJSON,
                 name: prev?.kind === "category" && "name" in section ? section.name : null,
               })
               .where(eq(schema.sections.id, section.id));
@@ -1071,7 +1077,7 @@ export const boardRouter = createTRPCRouter({
               .set({
                 yOffset: prev?.kind !== "dynamic" && "yOffset" in section ? section.yOffset : null,
                 xOffset: prev?.kind !== "dynamic" && "yOffset" in section ? 0 : null,
-                options: prev?.kind === "dynamic" && "options" in section ? section.options : "{}",
+                options: prev?.kind === "dynamic" && "options" in section ? section.options : emptySuperJSON,
                 name: prev?.kind === "category" && "name" in section ? section.name : null,
               })
               .where(eq(sections.id, section.id))

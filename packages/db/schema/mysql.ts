@@ -17,6 +17,12 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
+import {
+  backgroundImageAttachments,
+  backgroundImageRepeats,
+  backgroundImageSizes,
+  emptySuperJSON,
+} from "@homarr/definitions";
 import type {
   BackgroundImageAttachment,
   BackgroundImageRepeat,
@@ -33,7 +39,6 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
-import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
@@ -388,7 +393,7 @@ export const sections = mysqlTable("section", {
   xOffset: int(),
   yOffset: int(),
   name: text(),
-  options: text().default('{"json": {}}').notNull(), // empty superjson object
+  options: text().default(emptySuperJSON),
 });
 
 export const sectionCollapseStates = mysqlTable(
@@ -462,7 +467,7 @@ export const iconRepositories = mysqlTable("iconRepository", {
 
 export const serverSettings = mysqlTable("serverSetting", {
   settingKey: varchar({ length: 64 }).notNull().unique().primaryKey(),
-  value: text().default('{"json": {}}').notNull(), // empty superjson object
+  value: text().default(emptySuperJSON).notNull(),
 });
 
 export const apiKeyRelations = relations(apiKeys, ({ one }) => ({

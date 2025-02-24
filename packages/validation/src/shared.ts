@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { integrationKinds, widgetKinds } from "@homarr/definitions";
+import { emptySuperJSON, integrationKinds, widgetKinds } from "@homarr/definitions";
 
 import { zodEnumFromArray } from "./enums";
 
@@ -61,7 +61,7 @@ const emptySectionSchema = z.object({
 const dynamicSectionSchema = z.object({
   id: z.string(),
   kind: z.literal("dynamic"),
-  options: z.string().default('{"json": {}}'),
+  options: z.string().default(emptySuperJSON),
   layouts: z.array(
     z.object({
       layoutId: z.string(),

@@ -5,7 +5,7 @@ import superjson from "superjson";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { DynamicEditModal } from "@homarr/widgets/modals";
+import { DynamicSectionEditModal } from "@homarr/widgets/modals";
 
 import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
 import { useDynamicSectionActions } from "./dynamic-actions";
@@ -14,7 +14,7 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionIt
   const t = useI18n();
   const tDynamic = useScopedI18n("section.dynamic");
   const tItem = useScopedI18n("item");
-  const { openModal } = useModalAction(DynamicEditModal);
+  const { openModal } = useModalAction(DynamicSectionEditModal);
   const { updateDynamicSection, removeDynamicSection } = useDynamicSectionActions();
   const { openConfirmModal } = useConfirmModal();
   const [isEditMode] = useEditMode();
