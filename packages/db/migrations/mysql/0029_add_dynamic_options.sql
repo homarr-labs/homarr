@@ -1,1 +1,0 @@
-ALTER TABLE `section` ADD `options` text DEFAULT ('{"json": {}}') NOT NULL;
