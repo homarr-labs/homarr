@@ -27,8 +27,6 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
   const form = useZodForm(z.object({ options: dynamicSectionOptionsSchema }), {
     mode: "controlled",
     initialValues: innerProps.value,
-    validateInputOnBlur: true,
-    validateInputOnChange: true,
   });
 
   console.log(innerProps.value);

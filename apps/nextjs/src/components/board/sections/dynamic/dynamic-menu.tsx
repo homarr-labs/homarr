@@ -5,7 +5,7 @@ import superjson from "superjson";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { DynamicSectionEditModal } from "@homarr/widgets/modals";
+import { DynamicSectionEditModal } from "./dynamic-edit-modal";
 
 import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
 import { useDynamicSectionActions } from "./dynamic-actions";
