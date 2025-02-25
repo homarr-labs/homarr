@@ -81,7 +81,7 @@
     "react-dom": "19.0.0",
     "react-error-boundary": "^5.0.0",
     "react-simple-code-editor": "^0.14.1",
-    "sass": "^1.85.0",
+    "sass": "^1.85.1",
     "superjson": "2.2.2",
     "swagger-ui-react": "^5.19.0",
     "use-deep-compare-effect": "^1.8.1",
