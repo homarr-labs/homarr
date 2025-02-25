@@ -2142,7 +2142,13 @@
           "unrecognizedLink": "Den angitte koblingen ble ikke gjenkjent og vil ikke forhåndsvise, den kan likevel fungere."
         },
         "layout": {
-          "title": "Oppsett"
+          "title": "Oppsett",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Bakgrunn"
@@ -2247,6 +2253,20 @@
           "link": "Se offentlige tavler",
           "notice": "For at denne siden skal forsvinne for alle brukere, be server administratoren sette en hjem-tavle for serveren"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },

@@ -2142,7 +2142,13 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Raspored"
+          "title": "Raspored",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Pozadina"
@@ -2247,6 +2253,20 @@
           "link": "",
           "notice": ""
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },

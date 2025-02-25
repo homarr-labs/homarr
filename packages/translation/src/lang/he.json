@@ -2142,7 +2142,13 @@
           "unrecognizedLink": "הקישור שסופק אינו מזוהה ולא יוצג בתצוגה מקדימה, ייתכן שהוא עדיין יעבוד."
         },
         "layout": {
-          "title": "פריסה"
+          "title": "פריסה",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "רקע"
@@ -2247,6 +2253,20 @@
           "link": "הצגת לוחות ציבוריים",
           "notice": "על מנת לגרום לדף זה להיעלם, בקש ממנהל השרת להגדיר לוח בית עבור השרת"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },
