@@ -2142,7 +2142,13 @@
           "unrecognizedLink": "Sağlanan bağlantı tanınmıyor ve önizleme yapılmıyor, yine de çalışabilir."
         },
         "layout": {
-          "title": "Düzen"
+          "title": "Düzen",
+          "responsive": {
+            "title": "Duyarlı yerleşimler",
+            "action": {
+              "add": "Yerleşim Ekle"
+            }
+          }
         },
         "background": {
           "title": "Arkaplan"
@@ -2247,6 +2253,20 @@
           "link": "Herkese açık panelleri görüntüle",
           "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel ayarlamasını isteyin"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "İsim"
+      },
+      "columnCount": {
+        "label": "Sütun Sayısı"
+      },
+      "breakpoint": {
+        "label": "Kesme Noktası",
+        "description": "Bu kesme noktasından daha büyük tüm ekranlarda, bir sonraki büyük kesme noktasına kadar bu yerleşim kullanılacaktır."
       }
     }
   },

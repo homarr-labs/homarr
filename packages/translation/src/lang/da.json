@@ -2142,7 +2142,13 @@
           "unrecognizedLink": "Det angivne link er ikke genkendt og vil ikke forhåndsvise, det kan stadig fungere."
         },
         "layout": {
-          "title": "Layout"
+          "title": "Layout",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Baggrund"
@@ -2247,6 +2253,20 @@
           "link": "Vis offentlige tavler",
           "notice": "For at få denne side til at forsvinde, skal du bede serveradministratoren om at indstille en hjemmetavle til serveren"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },
