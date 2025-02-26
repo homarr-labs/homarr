@@ -40,7 +40,7 @@
     "@mantine/core": "^7.17.0",
     "@mantine/hooks": "^7.17.0",
     "adm-zip": "0.5.16",
-    "next": "15.1.7",
+    "next": "15.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "superjson": "2.2.2",
