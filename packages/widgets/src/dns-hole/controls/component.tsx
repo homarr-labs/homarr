@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ActionIcon, Badge, Button, Card, Flex, ScrollArea, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCircleFilled, IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
+import combineClasses from "clsx";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -19,6 +20,7 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps } from "../../definition";
+import classes from "./component.module.css";
 import TimerModal from "./TimerModal";
 
 const dnsLightStatus = (enabled: boolean | undefined) =>
@@ -198,10 +200,7 @@ export default function DnsHoleControlsWidget({
               radius={board.itemRadius}
               flex={1}
             >
-              <IconPlayerPlay
-                className="dns-hole-controls-enable-all-icon"
-                size={24}
-              />
+              <IconPlayerPlay className="dns-hole-controls-enable-all-icon" size={24} />
             </Button>
           </Tooltip>
 
@@ -221,10 +220,7 @@ export default function DnsHoleControlsWidget({
               radius={board.itemRadius}
               flex={1}
             >
-              <IconClockPause
-                className="dns-hole-controls-timer-all-icon"
-                size={24}
-              />
+              <IconClockPause className="dns-hole-controls-timer-all-icon" size={24} />
             </Button>
           </Tooltip>
 
@@ -241,10 +237,7 @@ export default function DnsHoleControlsWidget({
               radius={board.itemRadius}
               flex={1}
             >
-              <IconPlayerStop
-                className="dns-hole-controls-disable-all-icon"
-                size={24}
-              />
+              <IconPlayerStop className="dns-hole-controls-disable-all-icon" size={24} />
             </Button>
           </Tooltip>
         </Flex>
@@ -312,9 +305,13 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
 
   return (
     <Card
-      className={`dns-hole-controls-integration-item-outer-shell dns-hole-controls-integration-item-${data.integration.id} dns-hole-controls-integration-item-${data.integration.name}`}
+      className={combineClasses(
+        "dns-hole-controls-integration-item-outer-shell",
+        `dns-hole-controls-integration-item-${data.integration.id}`,
+        `dns-hole-controls-integration-item-${data.integration.name}`,
+        classes.card,
+      )}
       key={data.integration.id}
-      bg={"dark.7"}
       p="sm"
       py={8}
       radius={board.itemRadius}
@@ -391,10 +388,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
             open();
           }}
         >
-          <IconClockPause
-            className="dns-hole-controls-item-timer-icon"
-            size={20}
-          />
+          <IconClockPause className="dns-hole-controls-item-timer-icon" size={20} />
         </ActionIcon>
       </Flex>
     </Card>

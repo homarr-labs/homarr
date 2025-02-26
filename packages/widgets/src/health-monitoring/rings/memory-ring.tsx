@@ -1,7 +1,8 @@
-import { useElementSize } from "@mantine/hooks";
-import { progressColor } from "../system-health";
 import { Box, Center, RingProgress, Text } from "@mantine/core";
+import { useElementSize } from "@mantine/hooks";
 import { IconBrain } from "@tabler/icons-react";
+
+import { progressColor } from "../system-health";
 
 export const MemoryRing = ({ available, used }: { available: string; used: string }) => {
   const { width, ref } = useElementSize();
@@ -20,7 +21,7 @@ export const MemoryRing = ({ available, used }: { available: string; used: strin
             <Text className="health-monitoring-memory-value" size="sm">
               {memoryUsage.memUsed.GB}GiB
             </Text>
-            <IconBrain className="health-monitoring-memory-icon" size={30}/>
+            <IconBrain className="health-monitoring-memory-icon" size={30} />
           </Center>
         }
         sections={[

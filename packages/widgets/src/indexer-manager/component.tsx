@@ -2,12 +2,14 @@
 
 import { Anchor, Button, Card, Container, Flex, Group, ScrollArea, Text } from "@mantine/core";
 import { IconCircleCheck, IconCircleX, IconReportSearch, IconTestPipe } from "@tabler/icons-react";
+import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { useRequiredBoard } from "@homarr/boards/context";
+import classes from "./component.module.css";
 
 export default function IndexerManagerWidget({ options, integrationIds }: WidgetComponentProps<"indexerManager">) {
   const t = useI18n();
@@ -41,12 +43,18 @@ export default function IndexerManagerWidget({ options, integrationIds }: Widget
   return (
     <Flex className="indexer-manager-container" h="100%" direction="column" gap="sm" p="sm" align="center">
       <Flex className="indexer-manager-title" align={"center"} gap={"xs"}>
-        <IconReportSearch className="indexer-manager-title-icon" size={30}/>
+        <IconReportSearch className="indexer-manager-title-icon" size={30} />
         <Text size="md" fw={"bold"}>
           {t("widget.indexerManager.title")}
         </Text>
       </Flex>
-      <Card className="indexer-manager-list-container" w="100%" p="sm" radius={board.itemRadius} flex={1} bg={"dark.7"}>
+      <Card
+        className={combineClasses("indexer-manager-list-container", classes.card)}
+        w="100%"
+        p="sm"
+        radius={board.itemRadius}
+        flex={1}
+      >
         <ScrollArea className="indexer-manager-list-scroll-area" h="100%">
           {indexersData.map(({ integrationId, indexers }) => (
             <Container className={`indexer-manager-${integrationId}-list-container`} p={0} key={integrationId}>
@@ -90,7 +98,7 @@ export default function IndexerManagerWidget({ options, integrationIds }: Widget
         w="100%"
         radius={board.itemRadius}
         variant="light"
-        leftSection={<IconTestPipe size={"1rem"}/>}
+        leftSection={<IconTestPipe size={"1rem"} />}
         loading={isPending}
         loaderProps={{ type: "dots" }}
         onClick={() => {

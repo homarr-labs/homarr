@@ -17,17 +17,18 @@ import {
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import type { RequestStats } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
-import { useRequiredBoard } from "@homarr/boards/context";
+import classes from "./component.module.css";
 
 export default function MediaServerWidget({
-                                            integrationIds,
-                                            isEditMode,
-                                          }: WidgetComponentProps<"mediaRequests-requestStats">) {
+  integrationIds,
+  isEditMode,
+}: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const [requestStats] = clientApi.widget.mediaRequests.getStats.useSuspenseQuery(
     {
@@ -105,17 +106,14 @@ export default function MediaServerWidget({
       <Grid className="mediaRequests-stats-stats-grid" gutter={10} w="100%">
         {data.map((stat) => (
           <Grid.Col
-            className={combineClasses(
-              "mediaRequests-stats-stat-wrapper",
-              `mediaRequests-stats-stat-${stat.name}`,
-            )}
+            className={combineClasses("mediaRequests-stats-stat-wrapper", `mediaRequests-stats-stat-${stat.name}`)}
             key={stat.name}
             span={3}
           >
             <Tooltip label={t(`titles.stats.${stat.name}`)}>
-              <Card p={0} radius={board.itemRadius} bg={"dark.7"}>
+              <Card p={0} radius={board.itemRadius} className={classes.card}>
                 <Stack className="mediaRequests-stats-stat-stack" align="center" gap={0} p="xs">
-                  <stat.icon className="mediaRequests-stats-stat-icon" size={30}/>
+                  <stat.icon className="mediaRequests-stats-stat-icon" size={30} />
                   <Text className="mediaRequests-stats-stat-value" size="md">
                     {stat.number}
                   </Text>
@@ -136,16 +134,15 @@ export default function MediaServerWidget({
         display="flex"
         gap="sm"
         style={{ overflow: "hidden", justifyContent: "end" }}
-
       >
         {requestStats.users.slice(0, Math.max(Math.floor((height / width) * 5), 1)).map((user) => (
           <Card
             className={combineClasses(
               "mediaRequests-stats-users-user-wrapper",
               `mediaRequests-stats-users-user-${user.id}`,
+              classes.card,
             )}
             key={user.id}
-            bg={"dark.7"}
             p="sm"
             radius={board.itemRadius}
           >
@@ -166,7 +163,7 @@ export default function MediaServerWidget({
                   {`${t("titles.users.requests")}: ${user.requestCount}`}
                 </Text>
               </Stack>
-              <Space flex={1}/>
+              <Space flex={1} />
               <ActionIcon
                 className="mediaRequests-stats-users-user-link-button"
                 variant="light"
@@ -176,7 +173,7 @@ export default function MediaServerWidget({
                 radius={board.itemRadius}
                 href={user.link}
               >
-                <IconExternalLink className="mediaRequests-stats-users-user-link-icon" size={25}/>
+                <IconExternalLink className="mediaRequests-stats-users-user-link-icon" size={25} />
               </ActionIcon>
             </Group>
           </Card>

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Container, Popover, Text, useMantineTheme } from "@mantine/core";
+import { Box, Container, Flex, Popover, Text, useMantineTheme } from "@mantine/core";
 
+import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
 
 import { CalendarEventList } from "./calendar-event-list";
-import { useRequiredBoard } from "@homarr/boards/context";
 
 interface CalendarDayProps {
   date: Date;
@@ -46,7 +46,6 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
           m={0}
           bd={`3px solid ${opened && !disabled ? primaryColor : "transparent"}`}
           pos={"relative"}
-
           style={{
             alignContent: "center",
             borderRadius: actualItemRadius,
@@ -61,13 +60,11 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
           <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
             {date.getDate()}
           </Text>
-          {rootHeight >= 350 && (
-            <NotificationIndicator events={events}/>
-          )}
+          {rootHeight >= 350 && <NotificationIndicator events={events} />}
         </Container>
       </Popover.Target>
       <Popover.Dropdown>
-        <CalendarEventList events={events}/>
+        <CalendarEventList events={events} />
       </Popover.Dropdown>
     </Popover>
   );
@@ -80,19 +77,27 @@ interface NotificationIndicatorProps {
 const NotificationIndicator = ({ events }: NotificationIndicatorProps) => {
   const notificationEvents = [...new Set(events.map((event) => event.links[0]?.notificationColor))].filter(String);
   return (
-    <Container h="xs" w="75%" display="flex" pos={"absolute"} bottom={0} left={"12.5%"} p={0}
-               style={{ flexDirection: "row", justifyContent: "center" }}>
+    <Flex
+      h="xs"
+      w="75%"
+      pos={"absolute"}
+      bottom={0}
+      left={"12.5%"}
+      p={0}
+      direction={"row"}
+      justify={"center"}
+    >
       {notificationEvents.map((notificationEvent) => {
         return (
-          <Container
+          <Box
             key={notificationEvent}
             bg={notificationEvent}
             h={4}
             p={0}
-            style={{ flex: 1, borderRadius: "1000px" }}
+            style={{ flex: 1, borderRadius: 5 }}
           />
         );
       })}
-    </Container>
+    </Flex>
   );
 };

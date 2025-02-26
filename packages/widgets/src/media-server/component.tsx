@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import type { MantineStyleProp } from "@mantine/core";
 import { Avatar, Box, Flex, Group, Stack, Text, Title } from "@mantine/core";
 import { IconDeviceAudioTape, IconDeviceTv, IconMovie, IconVideo } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -72,9 +71,7 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
           if (row.original.currentlyPlaying) {
             return (
               <Box>
-                <Text lineClamp={1}>
-                  {row.original.currentlyPlaying.name}
-                </Text>
+                <Text lineClamp={1}>{row.original.currentlyPlaying.name}</Text>
               </Box>
             );
           }

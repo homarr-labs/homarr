@@ -2,11 +2,12 @@
 
 import { useMemo } from "react";
 import type { BoxProps } from "@mantine/core";
-import { Avatar, AvatarGroup, Box, Card, Flex, SimpleGrid, Stack, Text, Tooltip, TooltipFloating } from "@mantine/core";
+import { Avatar, AvatarGroup, Card, Flex, SimpleGrid, Stack, Text, Tooltip, TooltipFloating } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { formatNumber } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
@@ -17,7 +18,6 @@ import type { TablerIcon } from "@homarr/ui";
 
 import type { widgetKind } from ".";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
-import { useRequiredBoard } from "@homarr/boards/context";
 
 export default function DnsHoleSummaryWidget({ options, integrationIds }: WidgetComponentProps<typeof widgetKind>) {
   const [summaries] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
@@ -188,13 +188,7 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
             w="100%"
             gap={0}
           >
-            <Text
-              key={item.value(data)}
-              className="summary-card-value text-flash"
-              ta="center"
-              size="lg"
-              fw="bold"
-            >
+            <Text key={item.value(data)} className="summary-card-value text-flash" ta="center" size="lg" fw="bold">
               {item.value(data)}
             </Text>
             {item.label && (

@@ -1,7 +1,8 @@
+import { Box, Center, RingProgress, Text } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { progressColor } from "../system-health";
-import { Box, RingProgress, Center, Text } from "@mantine/core";
 import { IconCpu } from "@tabler/icons-react";
+
+import { progressColor } from "../system-health";
 
 export const CpuTempRing = ({ fahrenheit, cpuTemp }: { fahrenheit: boolean; cpuTemp: number | undefined }) => {
   const { width, ref } = useElementSize();
@@ -23,7 +24,7 @@ export const CpuTempRing = ({ fahrenheit, cpuTemp }: { fahrenheit: boolean; cpuT
             <Text className="health-monitoring-cpu-temp-value" size="sm">
               {fahrenheit ? `${(cpuTemp * 1.8 + 32).toFixed(1)}°F` : `${cpuTemp.toFixed(1)}°C`}
             </Text>
-            <IconCpu className="health-monitoring-cpu-temp-icon" size={30}/>
+            <IconCpu className="health-monitoring-cpu-temp-icon" size={30} />
           </Center>
         }
         sections={[

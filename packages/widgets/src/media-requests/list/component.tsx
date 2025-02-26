@@ -4,13 +4,13 @@ import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stac
 import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { MediaAvailability, MediaRequestStatus } from "@homarr/integrations/types";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
-import { useRequiredBoard } from "@homarr/boards/context";
 
 export default function MediaServerWidget({
   integrationIds,

@@ -1,6 +1,7 @@
 "use client";
 
 import { Box, Group, HoverCard, Space, Stack, Text } from "@mantine/core";
+import { useElementSize } from "@mantine/hooks";
 import { IconArrowDownRight, IconArrowUpRight, IconMapPin, IconWind } from "@tabler/icons-react";
 import combineClasses from "clsx";
 import dayjs from "dayjs";
@@ -11,7 +12,6 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { WeatherDescription, WeatherIcon } from "./icon";
-import { useElementSize } from "@mantine/hooks";
 
 export default function WeatherWidget({ isEditMode, options }: WidgetComponentProps<"weather">) {
   const [weather] = clientApi.widget.weather.atLocation.useSuspenseQuery(
@@ -54,7 +54,7 @@ interface WeatherProps extends Pick<WidgetComponentProps<"weather">, "options"> 
   weather: RouterOutputs["widget"]["weather"]["atLocation"];
   sizing: {
     fontSize: number;
-  }
+  };
 }
 
 const DailyWeather = ({ options, weather, sizing }: WeatherProps) => {

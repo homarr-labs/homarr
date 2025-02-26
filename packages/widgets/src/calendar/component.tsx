@@ -2,20 +2,20 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
+import { useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
+import { useElementSize } from "@mantine/hooks";
 import dayjs from "dayjs";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { useSettings } from "@homarr/settings";
 
 import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
 import classes from "./component.module.css";
-import { useRequiredBoard } from "@homarr/boards/context";
-import { useMantineTheme } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
 
 export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
   const [month, setMonth] = useState(new Date());
@@ -101,12 +101,12 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
           marginBottom: 0,
         },
         monthCell: {
-          textAlign: "center"
+          textAlign: "center",
         },
         day: {
           borderRadius: actualItemRadius,
           width: width < 350 ? 20 : 50,
-          height: height < 350 ? 20 : 50
+          height: height < 350 ? 20 : 50,
         },
         month: {
           height: "100%",
@@ -125,7 +125,13 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
           }))
           .filter((event): event is CalendarEvent => Boolean(event.date));
         return (
-          <CalendarDay date={tileDate} events={eventsForDate} disabled={isEditMode || eventsForDate.length === 0} rootWidth={width} rootHeight={height} />
+          <CalendarDay
+            date={tileDate}
+            events={eventsForDate}
+            disabled={isEditMode || eventsForDate.length === 0}
+            rootWidth={width}
+            rootHeight={height}
+          />
         );
       }}
     />

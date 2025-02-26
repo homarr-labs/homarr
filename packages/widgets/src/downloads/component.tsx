@@ -86,11 +86,11 @@ const standardIconStyle: IconProps["style"] = {
 };
 
 export default function DownloadClientsWidget({
-                                                isEditMode,
-                                                integrationIds,
-                                                options,
-                                                setOptions,
-                                              }: WidgetComponentProps<"downloads">) {
+  isEditMode,
+  integrationIds,
+  options,
+  setOptions,
+}: WidgetComponentProps<"downloads">) {
   const integrationsWithInteractions = useIntegrationsWithInteractAccess().flatMap(({ id }) =>
     integrationIds.includes(id) ? [id] : [],
   );
@@ -179,8 +179,8 @@ export default function DownloadClientsWidget({
               ({ type, progress, upSpeed }) =>
                 (type === "torrent" &&
                   ((progress === 1 &&
-                      options.showCompletedTorrent &&
-                      (upSpeed ?? 0) >= Number(options.activeTorrentThreshold) * 1024) ||
+                    options.showCompletedTorrent &&
+                    (upSpeed ?? 0) >= Number(options.activeTorrentThreshold) * 1024) ||
                     progress !== 1)) ||
                 (type === "usenet" && ((progress === 1 && options.showCompletedUsenet) || progress !== 1)),
             )
@@ -204,10 +204,10 @@ export default function DownloadClientsWidget({
                 //Only add if permission to use mutations
                 actions: integrationsWithInteractions.includes(pair.integration.id)
                   ? {
-                    resume: () => mutateResumeItem({ integrationIds, item }),
-                    pause: () => mutatePauseItem({ integrationIds, item }),
-                    delete: ({ fromDisk }) => mutateDeleteItem({ integrationIds, item, fromDisk }),
-                  }
+                      resume: () => mutateResumeItem({ integrationIds, item }),
+                      pause: () => mutatePauseItem({ integrationIds, item }),
+                      delete: ({ fromDisk }) => mutateDeleteItem({ integrationIds, item, fromDisk }),
+                    }
                   : undefined,
               };
             }),
@@ -245,9 +245,9 @@ export default function DownloadClientsWidget({
                 !options.applyFilterToRatio ||
                 data.status.type !== "torrent" ||
                 options.filterIsWhitelist ===
-                options.categoryFilter.some((filter) =>
-                  (Array.isArray(category) ? category : [category]).includes(filter),
-                ),
+                  options.categoryFilter.some((filter) =>
+                    (Array.isArray(category) ? category : [category]).includes(filter),
+                  ),
             )
             .reduce(
               ({ totalUp, totalDown }, { sent, size, progress }) => ({
@@ -335,10 +335,10 @@ export default function DownloadClientsWidget({
   //Base element in common with all columns
   const columnsDefBase = useCallback(
     ({
-       key,
-       showHeader,
-       align,
-     }: {
+      key,
+      showHeader,
+      align,
+    }: {
       key: keyof ExtendedDownloadClientItem;
       showHeader: boolean;
       align?: "center" | "left" | "right" | "justify" | "char";
@@ -384,15 +384,15 @@ export default function DownloadClientsWidget({
               <Tooltip label={t(`actions.item.${pausedAction}`)}>
                 <ActionIcon variant="light" radius={999} onClick={actions[pausedAction]} size="var(--button-size)">
                   {pausedAction === "resume" ? (
-                    <IconPlayerPlay style={actionIconIconStyle}/>
+                    <IconPlayerPlay style={actionIconIconStyle} />
                   ) : (
-                    <IconPlayerPause style={actionIconIconStyle}/>
+                    <IconPlayerPause style={actionIconIconStyle} />
                   )}
                 </ActionIcon>
               </Tooltip>
               <Tooltip label={t("actions.item.delete.title")}>
                 <ActionIcon color="red" radius={999} onClick={open} size="var(--button-size)">
-                  <IconTrash style={actionIconIconStyle}/>
+                  <IconTrash style={actionIconIconStyle} />
                 </ActionIcon>
               </Tooltip>
               <Modal opened={opened} onClose={close} title={t("actions.item.delete.modalTitle")} size="auto" centered>
@@ -412,7 +412,7 @@ export default function DownloadClientsWidget({
                       close();
                       actions.delete({ fromDisk: true });
                     }}
-                    leftSection={<IconAlertTriangle/>}
+                    leftSection={<IconAlertTriangle />}
                   >
                     {t("actions.item.delete.entryAndFiles")}
                   </Button>
@@ -424,7 +424,7 @@ export default function DownloadClientsWidget({
             </Group>
           ) : (
             <ActionIcon radius={999} disabled size="var(--button-size)">
-              <IconX style={actionIconIconStyle}/>
+              <IconX style={actionIconIconStyle} />
             </ActionIcon>
           );
         },
@@ -445,7 +445,7 @@ export default function DownloadClientsWidget({
           return (
             category !== undefined && (
               <Tooltip label={category}>
-                <IconInfoCircle style={standardIconStyle}/>
+                <IconInfoCircle style={standardIconStyle} />
               </Tooltip>
             )
           );
@@ -466,7 +466,7 @@ export default function DownloadClientsWidget({
           const id = cell.getValue<ExtendedDownloadClientItem["id"]>();
           return (
             <Tooltip label={id}>
-              <IconCirclesRelation style={standardIconStyle}/>
+              <IconCirclesRelation style={standardIconStyle} />
             </Tooltip>
           );
         },
@@ -484,7 +484,7 @@ export default function DownloadClientsWidget({
           const integration = cell.getValue<ExtendedDownloadClientItem["integration"]>();
           return (
             <Tooltip label={integration.name}>
-              <Avatar size="var(--image-size)" radius={0} src={getIconUrl(integration.kind)}/>
+              <Avatar size="var(--image-size)" radius={0} src={getIconUrl(integration.kind)} />
             </Tooltip>
           );
         },
@@ -564,7 +564,7 @@ export default function DownloadClientsWidget({
         ...columnsDefBase({ key: "time", showHeader: true, align: "center" }),
         Cell: ({ cell }) => {
           const time = cell.getValue<ExtendedDownloadClientItem["time"]>();
-          return time === 0 ? <IconInfinity style={standardIconStyle}/> : <Text>{dayjs().add(time).fromNow()}</Text>;
+          return time === 0 ? <IconInfinity style={standardIconStyle} /> : <Text>{dayjs().add(time).fromNow()}</Text>;
         },
       },
       {
@@ -673,7 +673,7 @@ export default function DownloadClientsWidget({
   //The actual widget
   return (
     <Stack gap={0} h="100%" display="flex" style={baseStyle}>
-      <MantineReactTable table={table}/>
+      <MantineReactTable table={table} />
       <Group
         h={40}
         px="var(--space-size)"
@@ -690,13 +690,12 @@ export default function DownloadClientsWidget({
         )}
         <ClientsControl
           clients={clients}
-          style={editStyle}
           filters={quickFilters}
           setFilters={setQuickFilters}
           availableStatuses={availableStatuses}
         />
       </Group>
-      <ItemInfoModal items={data} currentIndex={clickedIndex} opened={opened} onClose={close}/>
+      <ItemInfoModal items={data} currentIndex={clickedIndex} opened={opened} onClose={close} />
     </Stack>
   );
 }
@@ -720,12 +719,12 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
         <Stack align="center">
           <Title>{item.name}</Title>
           <Group>
-            <Avatar src={getIconUrl(item.integration.kind)}/>
+            <Avatar src={getIconUrl(item.integration.kind)} />
             <Text>{`${item.integration.name} (${item.integration.kind})`}</Text>
           </Group>
-          <NormalizedLine itemKey="index" values={item.index}/>
-          <NormalizedLine itemKey="type" values={item.type}/>
-          <NormalizedLine itemKey="state" values={t(item.state)}/>
+          <NormalizedLine itemKey="index" values={item.index} />
+          <NormalizedLine itemKey="type" values={item.type} />
+          <NormalizedLine itemKey="state" values={t(item.state)} />
           <NormalizedLine
             itemKey="upSpeed"
             values={item.upSpeed === undefined ? undefined : humanFileSize(item.upSpeed, "/s")}
@@ -734,9 +733,9 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
             itemKey="downSpeed"
             values={item.downSpeed === undefined ? undefined : humanFileSize(item.downSpeed, "/s")}
           />
-          <NormalizedLine itemKey="sent" values={item.sent === undefined ? undefined : humanFileSize(item.sent)}/>
-          <NormalizedLine itemKey="received" values={humanFileSize(item.received)}/>
-          <NormalizedLine itemKey="size" values={humanFileSize(item.size)}/>
+          <NormalizedLine itemKey="sent" values={item.sent === undefined ? undefined : humanFileSize(item.sent)} />
+          <NormalizedLine itemKey="received" values={humanFileSize(item.received)} />
+          <NormalizedLine itemKey="size" values={humanFileSize(item.size)} />
           <NormalizedLine
             itemKey="progress"
             values={new Intl.NumberFormat("en", {
@@ -745,10 +744,10 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
               unitDisplay: "narrow",
             }).format(item.progress)}
           />
-          <NormalizedLine itemKey="ratio" values={item.ratio}/>
-          <NormalizedLine itemKey="added" values={item.added === undefined ? "unknown" : dayjs(item.added).format()}/>
-          <NormalizedLine itemKey="time" values={item.time !== 0 ? dayjs().add(item.time).format() : "∞"}/>
-          <NormalizedLine itemKey="category" values={item.category}/>
+          <NormalizedLine itemKey="ratio" values={item.ratio} />
+          <NormalizedLine itemKey="added" values={item.added === undefined ? "unknown" : dayjs(item.added).format()} />
+          <NormalizedLine itemKey="time" values={item.time !== 0 ? dayjs().add(item.time).format() : "∞"} />
+          <NormalizedLine itemKey="category" values={item.category} />
         </Stack>
       )}
     </Modal>
@@ -756,9 +755,9 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
 };
 
 const NormalizedLine = ({
-                          itemKey,
-                          values,
-                        }: {
+  itemKey,
+  values,
+}: {
   itemKey: Exclude<keyof ExtendedDownloadClientItem, "integration" | "actions" | "name" | "id">;
   values?: number | string | string[];
 }) => {
@@ -785,10 +784,9 @@ interface ClientsControlProps {
   filters: QuickFilter;
   setFilters: (filters: QuickFilter) => void;
   availableStatuses: QuickFilter["statuses"];
-  style?: MantineStyleProp;
 }
 
-const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style }: ClientsControlProps) => {
+const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: ClientsControlProps) => {
   const integrationsStatuses = clients.reduce(
     (acc, { status, integration: { id }, interact }) =>
       status && interact ? (acc[status.paused ? "paused" : "active"].push(id), acc) : acc,
@@ -809,7 +807,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style
       <Popover withinPortal={false} offset={0}>
         <Popover.Target>
           <ActionIcon size={30} radius={999} variant="light">
-            <IconFilter style={actionIconIconStyle}/>
+            <IconFilter style={actionIconIconStyle} />
           </ActionIcon>
         </Popover.Target>
         <Popover.Dropdown>
@@ -843,7 +841,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style
       </Popover>
       <AvatarGroup mx="calc(var(--space-size)*2)" spacing="calc(var(--space-size)*2)">
         {clients.map((client) => (
-          <ClientAvatar key={client.integration.id} client={client}/>
+          <ClientAvatar key={client.integration.id} client={client} />
         ))}
       </AvatarGroup>
       {someInteract && (
@@ -855,7 +853,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style
             variant="light"
             onClick={() => mutateResumeQueue({ integrationIds: integrationsStatuses.paused })}
           >
-            <IconPlayerPlay style={actionIconIconStyle}/>
+            <IconPlayerPlay style={actionIconIconStyle} />
           </ActionIcon>
         </Tooltip>
       )}
@@ -879,7 +877,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style
             variant="light"
             onClick={() => mutatePauseQueue({ integrationIds: integrationsStatuses.active })}
           >
-            <IconPlayerPause style={actionIconIconStyle}/>
+            <IconPlayerPause style={actionIconIconStyle} />
           </ActionIcon>
         </Tooltip>
       )}
@@ -887,11 +885,11 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style
         <Stack gap="10px">
           {clients.map((client) => (
             <Stack key={client.integration.id} gap="10px">
-              <Divider/>
+              <Divider />
               <Group wrap="nowrap" w="100%">
                 <Paper withBorder radius={999}>
                   <Group gap={5} pl={10} pr={15} fz={16} w={275} justify="space-between" wrap="nowrap">
-                    <Avatar radius={0} src={getIconUrl(client.integration.kind)}/>
+                    <Avatar radius={0} src={getIconUrl(client.integration.kind)} />
                     {client.status ? (
                       <Tooltip disabled={client.status.ratio === undefined} label={client.status.ratio?.toFixed(2)}>
                         <Stack gap={0} pt={5} h={60} justify="center" flex={1}>
@@ -927,7 +925,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style
                 <Text lineClamp={1} fz={22}>
                   {client.integration.name}
                 </Text>
-                <Space flex={1}/>
+                <Space flex={1} />
                 {client.status && client.interact ? (
                   <Tooltip label={t(`actions.client.${client.status.paused ? "resume" : "pause"}`)}>
                     <ActionIcon
@@ -940,12 +938,12 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style
                         });
                       }}
                     >
-                      {client.status.paused ? <IconPlayerPlay/> : <IconPlayerPause/>}
+                      {client.status.paused ? <IconPlayerPlay /> : <IconPlayerPause />}
                     </ActionIcon>
                   </Tooltip>
                 ) : (
                   <ActionIcon radius={999} variant="light" size="lg" disabled>
-                    <IconX/>
+                    <IconX />
                   </ActionIcon>
                 )}
               </Group>

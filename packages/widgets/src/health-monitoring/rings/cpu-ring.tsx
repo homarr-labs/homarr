@@ -1,7 +1,8 @@
+import { Box, Center, RingProgress, Text } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { progressColor } from "../system-health";
-import { Box, RingProgress, Center, Text } from "@mantine/core";
 import { IconCpu } from "@tabler/icons-react";
+
+import { progressColor } from "../system-health";
 
 export const CpuRing = ({ cpuUtilization }: { cpuUtilization: number }) => {
   const { width, ref } = useElementSize();
@@ -16,11 +17,8 @@ export const CpuRing = ({ cpuUtilization }: { cpuUtilization: number }) => {
         thickness={fallbackWidth / 10}
         label={
           <Center style={{ flexDirection: "column" }}>
-            <Text
-              className="health-monitoring-cpu-utilization-value"
-              size="sm"
-            >{`${cpuUtilization.toFixed(2)}%`}</Text>
-            <IconCpu className="health-monitoring-cpu-utilization-icon" size={30}/>
+            <Text className="health-monitoring-cpu-utilization-value" size="sm">{`${cpuUtilization.toFixed(2)}%`}</Text>
+            <IconCpu className="health-monitoring-cpu-utilization-icon" size={30} />
           </Center>
         }
         sections={[

@@ -5,10 +5,10 @@ import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
-import { useRequiredBoard } from "@homarr/boards/context";
 
 export default function RssFeed({ options }: WidgetComponentProps<"rssFeed">) {
   const [feedEntries] = clientApi.widget.rssFeed.getFeeds.useSuspenseQuery(
