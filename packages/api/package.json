@@ -44,7 +44,7 @@
     "@trpc/react-query": "next",
     "@trpc/server": "next",
     "lodash.clonedeep": "^4.5.0",
-    "next": "15.1.7",
+    "next": "15.2.0",
     "pretty-print-error": "^1.1.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
