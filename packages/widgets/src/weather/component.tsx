@@ -11,6 +11,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { WeatherDescription, WeatherIcon } from "./icon";
+import { useElementSize } from "@mantine/hooks";
 
 export default function WeatherWidget({ isEditMode, options }: WidgetComponentProps<"weather">) {
   const [weather] = clientApi.widget.weather.atLocation.useSuspenseQuery(
@@ -24,20 +25,26 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
       refetchOnReconnect: false,
     },
   );
+  const { ref, width } = useElementSize();
+
+  const fontSize = width < 350 ? 16 : 30;
+
+  const sizing = { fontSize };
 
   return (
     <Stack
       align="center"
       justify="center"
-      gap="0"
+      gap={width < 350 ? 0 : "sm"}
       w="100%"
       h="100%"
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
+      ref={ref}
     >
       {options.hasForecast ? (
-        <WeeklyForecast weather={weather} options={options} />
+        <WeeklyForecast weather={weather} options={options} sizing={sizing} />
       ) : (
-        <DailyWeather weather={weather} options={options} />
+        <DailyWeather weather={weather} options={options} sizing={sizing} />
       )}
     </Stack>
   );
@@ -45,10 +52,14 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
 
 interface WeatherProps extends Pick<WidgetComponentProps<"weather">, "options"> {
   weather: RouterOutputs["widget"]["weather"]["atLocation"];
+  sizing: {
+    fontSize: number;
+  }
 }
 
-const DailyWeather = ({ options, weather }: WeatherProps) => {
+const DailyWeather = ({ options, weather, sizing }: WeatherProps) => {
   const t = useScopedI18n("widget.weather");
+
   return (
     <>
       <Group className="weather-day-group" gap="sm">
@@ -73,18 +84,18 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
       <Space h="sm" />
       {options.showCurrentWindSpeed && (
         <Group className="weather-current-wind-speed-group" wrap="nowrap" gap="sm">
-          <IconWind size={30} />
-          <Text fz={30}>{t("currentWindSpeed", { currentWindSpeed: weather.current.windspeed })}</Text>
+          <IconWind size={sizing.fontSize} />
+          <Text fz={sizing.fontSize}>{t("currentWindSpeed", { currentWindSpeed: weather.current.windspeed })}</Text>
         </Group>
       )}
       <Group className="weather-max-min-temp-group" wrap="nowrap" gap="sm">
-        <IconArrowUpRight size={30} />
-        <Text fz={30}>
+        <IconArrowUpRight size={sizing.fontSize} />
+        <Text fz={sizing.fontSize}>
           {getPreferredUnit(weather.daily[0]?.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
         </Text>
         <Space w="sm" />
-        <IconArrowDownRight size={30} />
-        <Text fz={30}>
+        <IconArrowDownRight size={sizing.fontSize} />
+        <Text fz={sizing.fontSize}>
           {getPreferredUnit(weather.daily[0]?.minTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
         </Text>
       </Group>
@@ -92,8 +103,8 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
         <>
           <Space h="sm" />
           <Group className="weather-city-group" wrap="nowrap" gap="xs">
-            <IconMapPin size={30} />
-            <Text size={30} style={{ whiteSpace: "nowrap" }}>
+            <IconMapPin size={sizing.fontSize} />
+            <Text fz={sizing.fontSize} style={{ whiteSpace: "nowrap" }}>
               {options.location.name}
             </Text>
           </Group>
@@ -103,14 +114,14 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
   );
 };
 
-const WeeklyForecast = ({ options, weather }: WeatherProps) => {
+const WeeklyForecast = ({ options, weather, sizing }: WeatherProps) => {
   return (
     <>
       <Group className="weather-forecast-city-temp-group" wrap="nowrap" gap="md">
         {options.showCity && (
           <>
             <IconMapPin size={30} />
-            <Text size={30} style={{ whiteSpace: "nowrap" }}>
+            <Text fz={30} style={{ whiteSpace: "nowrap" }}>
               {options.location.name}
             </Text>
             <Space w="xl" />
@@ -135,12 +146,12 @@ const WeeklyForecast = ({ options, weather }: WeatherProps) => {
         </Text>
       </Group>
       <Space h="sm" />
-      <Forecast weather={weather} options={options} />
+      <Forecast weather={weather} options={options} sizing={sizing} />
     </>
   );
 };
 
-function Forecast({ weather, options }: WeatherProps) {
+function Forecast({ weather, options, sizing }: WeatherProps) {
   const dateFormat = options.dateFormat;
   return (
     <Group className="weather-forecast-days-group" w="100%" justify="space-evenly" wrap="nowrap" pb="sm">
@@ -157,8 +168,8 @@ function Forecast({ weather, options }: WeatherProps) {
               align="center"
             >
               <Text fz="xl">{dayjs(dayWeather.time).format("dd")}</Text>
-              <WeatherIcon size="xl" code={dayWeather.weatherCode} />
-              <Text fz="xl">
+              <WeatherIcon size={sizing.fontSize} code={dayWeather.weatherCode} />
+              <Text fz={sizing.fontSize}>
                 {getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
               </Text>
             </Stack>
