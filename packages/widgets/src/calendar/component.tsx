@@ -15,6 +15,7 @@ import { CalendarDay } from "./calender-day";
 import classes from "./component.module.css";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useMantineTheme } from "@mantine/core";
+import { useElementSize } from "@mantine/hooks";
 
 export default function CalendarWidget(props: WidgetComponentProps<"calendar">) {
   const [month, setMonth] = useState(new Date());
@@ -65,6 +66,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
   const board = useRequiredBoard();
   const mantineTheme = useMantineTheme();
   const actualItemRadius = mantineTheme.radius[board.itemRadius];
+  const { ref, width, height } = useElementSize();
 
   return (
     <Calendar
@@ -81,6 +83,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
       className={classes.calendar}
       w={"100%"}
       h={"100%"}
+      ref={ref}
       styles={{
         calendarHeaderControl: {
           pointerEvents: isEditMode ? "none" : undefined,
@@ -102,8 +105,8 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
         },
         day: {
           borderRadius: actualItemRadius,
-          width: 50,
-          height: 50
+          width: width < 350 ? 20 : 50,
+          height: height < 350 ? 20 : 50
         },
         month: {
           height: "100%",
@@ -122,7 +125,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
           }))
           .filter((event): event is CalendarEvent => Boolean(event.date));
         return (
-          <CalendarDay date={tileDate} events={eventsForDate} disabled={isEditMode || eventsForDate.length === 0} />
+          <CalendarDay date={tileDate} events={eventsForDate} disabled={isEditMode || eventsForDate.length === 0} rootWidth={width} rootHeight={height} />
         );
       }}
     />

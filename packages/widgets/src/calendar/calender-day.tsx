@@ -10,14 +10,19 @@ interface CalendarDayProps {
   date: Date;
   events: CalendarEvent[];
   disabled: boolean;
+  rootWidth: number;
+  rootHeight: number;
 }
 
-export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
+export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: CalendarDayProps) => {
   const [opened, setOpened] = useState(false);
   const { primaryColor } = useMantineTheme();
   const board = useRequiredBoard();
   const mantineTheme = useMantineTheme();
   const actualItemRadius = mantineTheme.radius[board.itemRadius];
+
+  const minAxisSize = Math.min(rootWidth, rootHeight);
+  const shouldScaleDown = minAxisSize < 350;
 
   return (
     <Popover
@@ -53,10 +58,12 @@ export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
             setOpened((prev) => !prev);
           }}
         >
-          <Text ta={"center"}>
+          <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
             {date.getDate()}
           </Text>
-          <NotificationIndicator events={events}/>
+          {rootHeight >= 350 && (
+            <NotificationIndicator events={events}/>
+          )}
         </Container>
       </Popover.Target>
       <Popover.Dropdown>
