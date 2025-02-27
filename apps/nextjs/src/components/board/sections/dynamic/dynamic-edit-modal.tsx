@@ -11,10 +11,6 @@ export const dynamicSectionOptionsSchema = z.object({
   borderColor: z.string().nullable().default(null),
 });
 
-export interface DynamicEditModalState {
-  options: object;
-}
-
 interface ModalProps {
   value: z.infer<typeof dynamicSectionOptionsSchema>;
   onSuccessfulEdit: (value: z.infer<typeof dynamicSectionOptionsSchema>) => void;
@@ -24,16 +20,18 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
   const t = useI18n();
   const theme = useMantineTheme();
 
-  const form = useZodForm(z.object({ options: dynamicSectionOptionsSchema }), {
+  const form = useZodForm(dynamicSectionOptionsSchema, {
     mode: "controlled",
-    initialValues: innerProps.value,
+    initialValues: { ...innerProps.value },
   });
 
-  console.log(innerProps.value);
+  console.log("innerprops", innerProps.value);
+  console.log("form.inputprops", form.getInputProps("borderColor"));
 
   return (
     <form
       onSubmit={form.onSubmit((values) => {
+        console.log("form values", values);
         innerProps.onSuccessfulEdit(values);
         actions.closeModal();
       })}
@@ -43,7 +41,7 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
           label={t("section.dynamic.option.borderColor.label")}
           format="hex"
           swatches={Object.values(theme.colors).map((color) => color[6])}
-          {...form.getInputProps("options.borderColor")}
+          {...form.getInputProps("borderColor")}
         />
         <Group justify="space-between">
           <Group justify="end" w={{ base: "100%", xs: "auto" }}>

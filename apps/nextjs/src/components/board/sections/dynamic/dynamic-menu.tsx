@@ -5,10 +5,10 @@ import superjson from "superjson";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { DynamicSectionEditModal } from "./dynamic-edit-modal";
 
 import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
 import { useDynamicSectionActions } from "./dynamic-actions";
+import { DynamicSectionEditModal } from "./dynamic-edit-modal";
 
 export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionItem }) => {
   const t = useI18n();
@@ -21,21 +21,16 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionIt
 
   if (!isEditMode) return null;
 
+  console.log("section.options", section.options);
+
   const openEditModal = () => {
     openModal({
-      kind: ["dynamic"],
-      value: {
-        options:
-          typeof section.options === "string"
-            ? superjson.parse(section.options)
-            : (section.options as Record<string, unknown>),
-      },
-      onSuccessfulEdit: ({ options }) => {
+      value: section.options,
+      onSuccessfulEdit: (options) => {
+        console.log("options", options);
         updateDynamicSection({
           itemId: section.id,
-          newOptions: {
-            ...options,
-          },
+          newOptions: options,
         });
       },
     });

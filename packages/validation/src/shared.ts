@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { emptySuperJSON, integrationKinds, widgetKinds } from "@homarr/definitions";
+import { integrationKinds, widgetKinds } from "@homarr/definitions";
 
 import { zodEnumFromArray } from "./enums";
 
@@ -58,10 +58,14 @@ const emptySectionSchema = z.object({
   xOffset: z.number(),
 });
 
+const dynamicSectionOptionsSchema = z.object({
+  borderColor: z.string().nullable().default(""),
+});
+
 const dynamicSectionSchema = z.object({
   id: z.string(),
   kind: z.literal("dynamic"),
-  options: z.string().default(emptySuperJSON),
+  options: dynamicSectionOptionsSchema,
   layouts: z.array(
     z.object({
       layoutId: z.string(),

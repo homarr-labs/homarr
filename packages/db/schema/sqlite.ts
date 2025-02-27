@@ -378,7 +378,7 @@ export const sections = sqliteTable("section", {
   xOffset: int(),
   yOffset: int(),
   name: text(),
-  options: text().default(emptySuperJSON),
+  options: text().default('{"json": {}}'),
 });
 
 export const sectionCollapseStates = sqliteTable(

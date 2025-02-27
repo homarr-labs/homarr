@@ -25,4 +25,4 @@ INSERT INTO `__new_serverSetting`("setting_key", "value") SELECT "setting_key", 
 DROP TABLE `serverSetting`;--> statement-breakpoint
 ALTER TABLE `__new_serverSetting` RENAME TO `serverSetting`;--> statement-breakpoint
 CREATE UNIQUE INDEX `serverSetting_settingKey_unique` ON `serverSetting` (`setting_key`);--> statement-breakpoint
-ALTER TABLE `section` ADD `options` text DEFAULT '{"json":{}}';
+ALTER TABLE `section` ADD `options` text DEFAULT '{"json": {}}';
