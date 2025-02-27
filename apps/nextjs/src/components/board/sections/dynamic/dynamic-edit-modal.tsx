@@ -25,13 +25,9 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
     initialValues: { ...innerProps.value },
   });
 
-  console.log("innerprops", innerProps.value);
-  console.log("form.inputprops", form.getInputProps("borderColor"));
-
   return (
     <form
       onSubmit={form.onSubmit((values) => {
-        console.log("form values", values);
         innerProps.onSuccessfulEdit(values);
         actions.closeModal();
       })}

@@ -1,6 +1,5 @@
 import { ActionIcon, Menu } from "@mantine/core";
 import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
-import superjson from "superjson";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -21,13 +20,10 @@ export const BoardDynamicSectionMenu = ({ section }: { section: DynamicSectionIt
 
   if (!isEditMode) return null;
 
-  console.log("section.options", section.options);
-
   const openEditModal = () => {
     openModal({
       value: section.options,
       onSuccessfulEdit: (options) => {
-        console.log("options", options);
         updateDynamicSection({
           itemId: section.id,
           newOptions: options,
