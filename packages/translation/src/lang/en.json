@@ -1916,6 +1916,45 @@
           "label": "Amount posts limit"
         }
       }
+    },
+    "repositories": {
+      "name": "Repositories",
+      "description": "Displays a list of the current version of the given repositories with the given version regex.",
+      "option": {
+        "repositories": {
+          "label": "Repositories"
+        },
+        "addRepository": {
+          "label": "Add repository"
+        },
+        "provider": {
+          "label": "Provider"
+        },
+        "identifier": {
+          "label": "Identifier"
+        },
+        "versionRegex": {
+          "label": "Version Regex"
+        },
+        "sortBy": {
+          "label": "Sort By"
+        },
+        "showOnlyNewReleases": {
+          "label": "Show Only New Releases"
+        },
+        "edit": {
+          "label": "Edit"
+        }
+      },
+      "editForm": {
+        "title": "Edit Repository",
+        "cancel": {
+          "label": "Cancel"
+        },
+        "confirm": {
+          "label": "Confirm"
+        }
+      }
     }
   },
   "widgetPreview": {

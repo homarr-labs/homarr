@@ -31,6 +31,7 @@ import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as video from "./video";
 import * as weather from "./weather";
+import * as repositories from "./repositories";
 
 export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
 export type { WidgetComponentProps };
@@ -57,6 +58,7 @@ export const widgetImports = {
   healthMonitoring,
   mediaTranscoding,
   minecraftServerStatus,
+  repositories,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
