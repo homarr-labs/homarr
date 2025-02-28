@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "fd54f15f-4441-4782-8ac5-5df0f2bb7539",
-  "prevId": "49edf955-6b9c-4cf2-aa99-f6c1aa6309b4",
+  "id": "10f541df-4585-4507-86d5-da7bd1e77de6",
+  "prevId": "6bf7393b-6752-4c0a-9eb9-94e55312fd12",
   "tables": {
     "account": {
       "name": "account",
@@ -443,6 +443,14 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "column_count": {
+          "name": "column_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 10
         },
         "icon_color": {
           "name": "icon_color",
@@ -1057,13 +1065,13 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "item_layout": {
-      "name": "item_layout",
+    "item": {
+      "name": "item",
       "columns": {
-        "item_id": {
-          "name": "item_id",
+        "id": {
+          "name": "id",
           "type": "text",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
@@ -1074,8 +1082,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "layout_id": {
-          "name": "layout_id",
+        "kind": {
+          "name": "kind",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -1108,70 +1116,6 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "item_layout_item_id_item_id_fk": {
-          "name": "item_layout_item_id_item_id_fk",
-          "tableFrom": "item_layout",
-          "tableTo": "item",
-          "columnsFrom": ["item_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "item_layout_section_id_section_id_fk": {
-          "name": "item_layout_section_id_section_id_fk",
-          "tableFrom": "item_layout",
-          "tableTo": "section",
-          "columnsFrom": ["section_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "item_layout_layout_id_layout_id_fk": {
-          "name": "item_layout_layout_id_layout_id_fk",
-          "tableFrom": "item_layout",
-          "tableTo": "layout",
-          "columnsFrom": ["layout_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "item_layout_item_id_section_id_layout_id_pk": {
-          "columns": ["item_id", "section_id", "layout_id"],
-          "name": "item_layout_item_id_section_id_layout_id_pk"
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "item": {
-      "name": "item",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "board_id": {
-          "name": "board_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "kind": {
-          "name": "kind",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
         },
         "options": {
           "name": "options",
@@ -1192,67 +1136,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "item_board_id_board_id_fk": {
-          "name": "item_board_id_board_id_fk",
+        "item_section_id_section_id_fk": {
+          "name": "item_section_id_section_id_fk",
           "tableFrom": "item",
-          "tableTo": "board",
-          "columnsFrom": ["board_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "layout": {
-      "name": "layout",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "board_id": {
-          "name": "board_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "column_count": {
-          "name": "column_count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "breakpoint": {
-          "name": "breakpoint",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "layout_board_id_board_id_fk": {
-          "name": "layout_board_id_board_id_fk",
-          "tableFrom": "layout",
-          "tableTo": "board",
-          "columnsFrom": ["board_id"],
+          "tableTo": "section",
+          "columnsFrom": ["section_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -1502,98 +1390,6 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "section_layout": {
-      "name": "section_layout",
-      "columns": {
-        "section_id": {
-          "name": "section_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "layout_id": {
-          "name": "layout_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "parent_section_id": {
-          "name": "parent_section_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "x_offset": {
-          "name": "x_offset",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "y_offset": {
-          "name": "y_offset",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "width": {
-          "name": "width",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "height": {
-          "name": "height",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "section_layout_section_id_section_id_fk": {
-          "name": "section_layout_section_id_section_id_fk",
-          "tableFrom": "section_layout",
-          "tableTo": "section",
-          "columnsFrom": ["section_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "section_layout_layout_id_layout_id_fk": {
-          "name": "section_layout_layout_id_layout_id_fk",
-          "tableFrom": "section_layout",
-          "tableTo": "layout",
-          "columnsFrom": ["layout_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "section_layout_parent_section_id_section_id_fk": {
-          "name": "section_layout_parent_section_id_section_id_fk",
-          "tableFrom": "section_layout",
-          "tableTo": "section",
-          "columnsFrom": ["parent_section_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "section_layout_section_id_layout_id_pk": {
-          "columns": ["section_id", "layout_id"],
-          "name": "section_layout_section_id_layout_id_pk"
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
     "section": {
       "name": "section",
       "columns": {
@@ -1622,11 +1418,25 @@
           "name": "x_offset",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "y_offset": {
           "name": "y_offset",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "width": {
+          "name": "width",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "height": {
+          "name": "height",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -1639,13 +1449,12 @@
           "notNull": false,
           "autoincrement": false
         },
-        "options": {
-          "name": "options",
+        "parent_section_id": {
+          "name": "parent_section_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": "'{\"json\": {}}'"
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -1655,6 +1464,15 @@
           "tableFrom": "section",
           "tableTo": "board",
           "columnsFrom": ["board_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "section_parent_section_id_section_id_fk": {
+          "name": "section_parent_section_id_section_id_fk",
+          "tableFrom": "section",
+          "tableTo": "section",
+          "columnsFrom": ["parent_section_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -1680,7 +1498,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'{\"json\":{}}'"
+          "default": "'{\"json\": {}}'"
         }
       },
       "indexes": {

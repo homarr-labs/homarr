@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "fd54f15f-4441-4782-8ac5-5df0f2bb7539",
-  "prevId": "49edf955-6b9c-4cf2-aa99-f6c1aa6309b4",
+  "id": "b5807e12-890a-4aa3-aa72-7eadbe1b86da",
+  "prevId": "10f541df-4585-4507-86d5-da7bd1e77de6",
   "tables": {
     "account": {
       "name": "account",
@@ -1638,14 +1638,6 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
-        },
-        "options": {
-          "name": "options",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "'{\"json\": {}}'"
         }
       },
       "indexes": {},
@@ -1680,7 +1672,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'{\"json\":{}}'"
+          "default": "'{\"json\": {}}'"
         }
       },
       "indexes": {

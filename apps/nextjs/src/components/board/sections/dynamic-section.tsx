@@ -16,8 +16,6 @@ export const BoardDynamicSection = ({ section }: Props) => {
   const currentLayoutId = useCurrentLayout();
   const options = section.options;
 
-  console.log(options.borderColor)
-    
   return (
     <Box className="grid-stack-item-content">
       <Card
