@@ -33,6 +33,6 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/dockerode": "^3.3.35",
     "eslint": "^9.21.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }
