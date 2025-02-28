@@ -2,7 +2,7 @@ import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { integrationCreator, MediaRequestStatus } from "@homarr/integrations";
+import { createIntegrationAsync, MediaRequestStatus } from "@homarr/integrations";
 import type { MediaRequest } from "@homarr/integrations/types";
 import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
@@ -96,7 +96,7 @@ export const mediaRequestsRouter = createTRPCRouter({
     .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("mediaRequest")))
     .input(z.object({ requestId: z.number(), answer: z.enum(["approve", "decline"]) }))
     .mutation(async ({ ctx: { integration }, input }) => {
-      const integrationInstance = integrationCreator(integration);
+      const integrationInstance = await createIntegrationAsync(integration);
       const innerHandler = mediaRequestListRequestHandler.handler(integration, {});
 
       if (input.answer === "approve") {

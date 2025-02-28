@@ -6,7 +6,7 @@ import type { DnsHoleSummaryIntegration } from "../interfaces/dns-hole-summary/d
 import type { DnsHoleSummary } from "../interfaces/dns-hole-summary/dns-hole-summary-types";
 import { summaryResponseSchema } from "./pi-hole-types";
 
-export class PiHoleIntegration extends Integration implements DnsHoleSummaryIntegration {
+export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIntegration {
   public async getSummaryAsync(): Promise<DnsHoleSummary> {
     const apiKey = super.getSecretValue("apiKey");
     const response = await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?summaryRaw", { auth: apiKey }));

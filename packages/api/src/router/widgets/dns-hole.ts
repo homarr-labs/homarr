@@ -4,7 +4,7 @@ import type { Modify } from "@homarr/common/types";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { integrationCreator } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
 import { controlsInputSchema } from "@homarr/integrations/types";
 import { dnsHoleRequestHandler } from "@homarr/request-handler/dns-hole";
@@ -65,7 +65,7 @@ export const dnsHoleRouter = createTRPCRouter({
   enable: protectedProcedure
     .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
     .mutation(async ({ ctx: { integration } }) => {
-      const client = integrationCreator(integration);
+      const client = await createIntegrationAsync(integration);
       await client.enableAsync();
 
       const innerHandler = dnsHoleRequestHandler.handler(integration, {});
@@ -79,7 +79,7 @@ export const dnsHoleRouter = createTRPCRouter({
     .input(controlsInputSchema)
     .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
     .mutation(async ({ ctx: { integration }, input }) => {
-      const client = integrationCreator(integration);
+      const client = await createIntegrationAsync(integration);
       await client.disableAsync(input.duration);
 
       const innerHandler = dnsHoleRequestHandler.handler(integration, {});
