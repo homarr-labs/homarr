@@ -15,6 +15,8 @@ export const BoardDynamicSection = ({ section }: Props) => {
   const board = useRequiredBoard();
   const currentLayoutId = useCurrentLayout();
   const options = section.options;
+
+  console.log(options.borderColor)
     
   return (
     <Box className="grid-stack-item-content">
@@ -27,7 +29,7 @@ export const BoardDynamicSection = ({ section }: Props) => {
           root: {
             "--opacity": board.opacity / 100,
             overflow: "hidden",
-            borderColor: options.borderColor ? `${options.borderColor} !important` : undefined,
+            "--border-color": options.borderColor ?? undefined,
           },
         }}
         radius={board.itemRadius}

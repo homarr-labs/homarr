@@ -1,5 +1,6 @@
 import { getBoardLayouts } from "@homarr/boards/context";
 import { createId } from "@homarr/db/client";
+import { dynamicSectionOptionsSchema } from "@homarr/validation";
 
 import type { Board, DynamicSection, DynamicSectionLayout, EmptySection } from "~/app/[locale]/boards/_types";
 import { getFirstEmptyPosition } from "~/components/board/items/actions/empty-position";
@@ -16,6 +17,7 @@ export const addDynamicSectionCallback = () => (board: Board) => {
   const newSection = {
     id: createId(),
     kind: "dynamic",
+    options: dynamicSectionOptionsSchema,
     layouts: createDynamicSectionLayouts(board, firstSection),
   } satisfies DynamicSection;
 

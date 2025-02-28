@@ -58,7 +58,7 @@ const emptySectionSchema = z.object({
   xOffset: z.number(),
 });
 
-const dynamicSectionOptionsSchema = z.object({
+export const dynamicSectionOptionsSchema = z.object({
   borderColor: z.string().nullable().default(""),
 });
 

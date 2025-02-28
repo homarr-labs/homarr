@@ -32,6 +32,7 @@ export {
   sectionSchema,
   itemAdvancedOptionsSchema,
   sharedItemSchema,
+  dynamicSectionOptionsSchema,
   type BoardItemAdvancedOptions,
   type BoardItemIntegration,
 } from "./shared";
