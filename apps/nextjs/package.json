@@ -74,7 +74,7 @@
     "glob": "^11.0.1",
     "jotai": "^2.12.1",
     "mantine-react-table": "2.0.0-beta.9",
-    "next": "15.2.0",
+    "next": "15.1.7",
     "postcss-preset-mantine": "^1.17.0",
     "prismjs": "^1.29.0",
     "react": "19.0.0",
@@ -83,7 +83,7 @@
     "react-simple-code-editor": "^0.14.1",
     "sass": "^1.85.1",
     "superjson": "2.2.2",
-    "swagger-ui-react": "^5.19.0",
+    "swagger-ui-react": "^5.20.0",
     "use-deep-compare-effect": "^1.8.1",
     "zod": "^3.24.2"
   },
