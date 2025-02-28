@@ -71,7 +71,7 @@
     ],
     "allowNonAppliedPatches": true,
     "overrides": {
-      "proxmox-api>undici": "7.3.0"
+      "proxmox-api>undici": "7.4.0"
     },
     "patchedDependencies": {
       "pretty-print-error": "patches/pretty-print-error.patch"
