@@ -1,7 +1,7 @@
 import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
-import { customFetch } from "@auth/core";
 import type { OIDCConfig } from "@auth/core/providers";
 import type { Profile } from "@auth/core/types";
+import { customFetch } from "next-auth";
 
 import { fetchWithTrustedCertificatesAsync } from "../../../certificates/src/server";
 import { env } from "../../env";
