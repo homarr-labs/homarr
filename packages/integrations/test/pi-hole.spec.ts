@@ -1,8 +1,9 @@
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, Wait } from "testcontainers";
-import { afterEach, describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 import { PiHoleIntegrationV5, PiHoleIntegrationV6 } from "../src";
+import type { SessionStore } from "../src/base/session-store";
 
 const DEFAULT_PASSWORD = "12341234";
 const DEFAULT_API_KEY = "3b1434980677dcf53fa8c4a611db3b1f0f88478790097515c0abb539102778b9"; // Some hash generated from password
@@ -57,11 +58,22 @@ describe("Pi-hole v5 integration", () => {
   }, 20_000); // Timeout of 20 seconds
 });
 
-describe("Pi-hole v6 integration", () => {
-  afterEach(() => {
-    PiHoleIntegrationV6.clearActiveSessionIds();
-  });
+vi.mock("../src/base/session-store", () => ({
+  createSessionStore: () =>
+    ({
+      async getAsync() {
+        return await Promise.resolve(null);
+      },
+      async setAsync() {
+        return await Promise.resolve();
+      },
+      async clearAsync() {
+        return await Promise.resolve();
+      },
+    }) satisfies SessionStore,
+}));
 
+describe("Pi-hole v6 integration", () => {
   test("getSummaryAsync should return summary from pi-hole", async () => {
     // Arrange
     const piholeContainer = await createPiHoleV6Container(DEFAULT_PASSWORD).start();
