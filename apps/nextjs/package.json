@@ -101,6 +101,6 @@
     "eslint": "^9.21.0",
     "node-loader": "^2.1.0",
     "prettier": "^3.5.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }
