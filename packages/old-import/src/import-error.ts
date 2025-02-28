@@ -1,6 +1,4 @@
-import type { OldmarrConfig } from "@homarr/old-schema";
-
-import type { OldmarrImportConfiguration } from "./settings";
+import type { BoardSize, OldmarrConfig } from "@homarr/old-schema";
 
 export class OldHomarrImportError extends Error {
   constructor(oldConfig: OldmarrConfig, cause: unknown) {
@@ -11,7 +9,7 @@ export class OldHomarrImportError extends Error {
 }
 
 export class OldHomarrScreenSizeError extends Error {
-  constructor(type: "app" | "widget", id: string, screenSize: OldmarrImportConfiguration["screenSize"]) {
+  constructor(type: "app" | "widget", id: string, screenSize: BoardSize) {
     super(`Screen size not found for type=${type} id=${id} screenSize=${screenSize}`);
   }
 }

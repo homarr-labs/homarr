@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "URL-адреса"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -2136,7 +2142,13 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Макет"
+          "title": "Макет",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Фон"
@@ -2241,6 +2253,20 @@
           "link": "Переглянути публічні дошки",
           "notice": "Щоб ця сторінка зникла, попросіть адміністратора сервера встановити домашню дошку для сервера"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },

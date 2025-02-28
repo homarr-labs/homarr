@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { createId } from "@homarr/db/client";
 
-import type { CategorySection, EmptySection } from "~/app/[locale]/boards/_types";
+import type { CategorySection, EmptySection, Section } from "~/app/[locale]/boards/_types";
 import type { MoveCategoryInput } from "./actions/move-category";
 import { moveCategoryCallback } from "./actions/move-category";
 import type { RemoveCategoryInput } from "./actions/remove-category";
@@ -41,14 +41,12 @@ export const useCategoryActions = () => {
             yOffset,
             xOffset: 0,
             collapsed: false,
-            items: [],
           },
           {
             id: createId(),
             kind: "empty",
             yOffset: yOffset + 1,
             xOffset: 0,
-            items: [],
           },
           // Place sections after the new category
           ...previous.sections
@@ -60,7 +58,7 @@ export const useCategoryActions = () => {
               ...section,
               yOffset: section.yOffset + 2,
             })),
-        ],
+        ] satisfies Section[],
       }));
     },
     [updateBoard],
@@ -91,16 +89,14 @@ export const useCategoryActions = () => {
               yOffset: lastYOffset + 1,
               xOffset: 0,
               collapsed: false,
-              items: [],
             },
             {
               id: createId(),
               kind: "empty",
               yOffset: lastYOffset + 2,
               xOffset: 0,
-              items: [],
             },
-          ],
+          ] satisfies Section[],
         };
       });
     },

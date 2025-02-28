@@ -135,6 +135,7 @@ export type HomarrDocumentationPath =
   | "/docs/tags/variables"
   | "/docs/tags/widgets"
   | "/docs/advanced/command-line"
+  | "/docs/advanced/command-line/fix-usernames"
   | "/docs/advanced/command-line/password-recovery"
   | "/docs/advanced/development/getting-started"
   | "/docs/advanced/environment-variables"

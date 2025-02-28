@@ -58,3 +58,15 @@ export const tileBaseSchema = z.object({
 
 export const boardSizes = objectKeys(shapeSchema._def.shape());
 export type BoardSize = (typeof boardSizes)[number];
+
+export const getBoardSizeName = (size: BoardSize) => {
+  switch (size) {
+    case "md":
+      return "medium";
+    case "sm":
+      return "small";
+    case "lg":
+    default:
+      return "large";
+  }
+};

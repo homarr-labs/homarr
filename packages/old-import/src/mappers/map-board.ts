@@ -4,7 +4,6 @@ import type { boards } from "@homarr/db/schema";
 
 import type { prepareMultipleImports } from "../prepare/prepare-multiple";
 import { mapColor } from "./map-colors";
-import { mapColumnCount } from "./map-column-count";
 
 type PreparedBoard = ReturnType<typeof prepareMultipleImports>["preparedBoards"][number];
 
@@ -15,7 +14,6 @@ export const mapBoard = (preparedBoard: PreparedBoard): InferInsertModel<typeof 
   backgroundImageUrl: preparedBoard.config.settings.customization.backgroundImageUrl,
   backgroundImageRepeat: preparedBoard.config.settings.customization.backgroundImageRepeat,
   backgroundImageSize: preparedBoard.config.settings.customization.backgroundImageSize,
-  columnCount: mapColumnCount(preparedBoard.config, preparedBoard.size),
   faviconImageUrl: preparedBoard.config.settings.customization.faviconUrl,
   isPublic: preparedBoard.config.settings.access.allowGuests,
   logoImageUrl: preparedBoard.config.settings.customization.logoImageUrl,

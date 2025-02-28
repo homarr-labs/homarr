@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "URL-адрес"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -2136,7 +2142,13 @@
           "unrecognizedLink": "Указанная ссылка не распознана и не будет показана в предпросмотре, но может всё ещё работать."
         },
         "layout": {
-          "title": "Компоновка"
+          "title": "Компоновка",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Фон"
@@ -2241,6 +2253,20 @@
           "link": "Просмотр публичных панелей",
           "notice": "Чтобы убрать эту страницу, попросите администратора сервера установить домашнюю панель"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },

@@ -73,5 +73,7 @@ const createSections = (categoryCount: number) => {
 };
 
 const sortSections = (sections: Section[]) => {
-  return sections.sort((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset);
+  return sections
+    .filter((section) => section.kind !== "dynamic")
+    .sort((sectionA, sectionB) => sectionA.yOffset - sectionB.yOffset);
 };

@@ -153,10 +153,10 @@
         "label": "Gebruik iconen voor pings"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Standaard zoekmachine"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Zoekresultaten openen in nieuw tabblad"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Zoekvoorkeuren succesvol gewijzigd"
           },
           "error": {
-            "message": ""
+            "message": "Kan zoekvoorkeuren niet wijzigen"
           }
         }
       },
@@ -307,12 +307,12 @@
       "name": "Naam",
       "members": "Leden",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Home-bord",
+        "description": "Alleen borden die toegankelijk zijn voor de groep kunnen worden geselecteerd"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Mobiel bord",
+        "description": "Alleen borden die toegankelijk zijn voor de groep kunnen worden geselecteerd"
       }
     },
     "permission": {
@@ -514,12 +514,12 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Instellingen zijn opgeslagen",
+              "message": "Bord instellingen succesvol opgeslagen"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Instellingen opslaan mislukt",
+              "message": "Kan bordinstellingen niet opslaan"
             }
           }
         }
@@ -527,17 +527,17 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Positie succesvol gewijzigd"
           },
           "error": {
-            "message": ""
+            "message": "Kan positie niet veranderen"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "Standaard groep",
+      "description": "{name} - Alle ingelogde gebruikers"
     }
   },
   "app": {
@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "URL"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "Gebruik andere URL voor ping",
+          "description": "Handig als Homarr direct toegang kan krijgen via een interne hostnaam of netwerk om bandbreedtegebruik van ISP te vermijden"
+        }
       }
     },
     "action": {
@@ -841,7 +847,7 @@
       "apply": "Toepassen",
       "backToOverview": "Terug naar overzicht",
       "create": "Aanmaken",
-      "createAnother": "",
+      "createAnother": "Aanmaken en opnieuw beginnen",
       "edit": "Bewerken",
       "import": "Importeren",
       "insert": "Invoegen",
@@ -924,7 +930,7 @@
     },
     "dangerZone": "Gevarenzone",
     "noResults": "Geen resultaten gevonden",
-    "unsavedChanges": "",
+    "unsavedChanges": "Er zijn niet-opgeslagen wijzigingen!",
     "preview": {
       "show": "Voorbeeld weergeven",
       "hide": "Voorbeeld verbergen"
@@ -985,7 +991,7 @@
         "moveDown": "Omlaag",
         "createAbove": "Nieuwe categorie hierboven",
         "createBelow": "Nieuwe categorie hieronder",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "Alles openen in tabbladen"
       },
       "create": {
         "title": "Nieuwe categorie",
@@ -1006,8 +1012,8 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "Alles openen in tabbladen",
+        "text": "Sommige browsers blokkeren om veiligheidsredenen het bulk openen van tabbladen. Homarr kon niet alle vensters openen, omdat je browser deze actie blokkeerde. Sta \"Pop-upvensters openen\" toe en probeer het opnieuw."
       }
     }
   },
@@ -1117,13 +1123,13 @@
           }
         },
         "hideIcon": {
-          "label": ""
+          "label": "Iconen verbergen"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Hostnamen verbergen"
         },
         "openNewTab": {
-          "label": ""
+          "label": "In nieuw tabblad openen"
         },
         "items": {
           "label": "Bladwijzers",
@@ -1237,12 +1243,12 @@
           "description": "Hoe de datum eruit moet zien"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Aangepast tijdformaat",
+          "description": "Gebruik ISO 8601 om de tijd op te maken (dit overschrijft andere opties)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Aangepast datumformaat",
+          "description": "Gebruik ISO 8601 om datum op te maken (dit overschrijft andere opties)"
         }
       }
     },
@@ -1425,11 +1431,11 @@
           "label": "Temperatuur in fahrenheit"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Temperatuur-decimalen uitschakelen"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "Toon huidige windsnelheid",
+          "description": "Alleen op het huidige weer"
         },
         "location": {
           "label": "Weerlocatie"
@@ -1451,10 +1457,10 @@
       },
       "currentWindSpeed": "",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "Zonsopgang",
+        "sunset": "Zonsondergang",
+        "maxWindSpeed": "Max. windsnelheid: {maxWindSpeed} km/u",
+        "maxWindGusts": "Max. windvlagen: {maxWindGusts} km/u"
       },
       "kind": {
         "clear": "Wissen",
@@ -1491,7 +1497,7 @@
       "name": "Systeem gezondheidsmonitoring",
       "description": "Toont informatie over de gezondheid en status van je systeem(en).",
       "tab": {
-        "system": "",
+        "system": "Systeem",
         "cluster": ""
       },
       "option": {
@@ -1609,7 +1615,7 @@
       "app": {
         "noData": "Geen app gevonden",
         "description": "Klik <here></here> om een nieuwe app aan te maken",
-        "quickCreate": ""
+        "quickCreate": "App onmiddellijk maken"
       },
       "error": {
         "noIntegration": "Geen integratie geselecteerd",
@@ -2011,8 +2017,8 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "App onmiddellijk maken",
+          "createAndUse": "Aanmaken en gebruiken"
         }
       }
     },
@@ -2089,7 +2095,7 @@
         "label": "Dekking"
       },
       "iconColor": {
-        "label": ""
+        "label": "Icoon kleur"
       },
       "customCss": {
         "label": "Aangepaste CSS voor dit bord",
@@ -2100,21 +2106,21 @@
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "App-status uitschakelen",
+        "description": "Schakelt de statuscontrole uit voor alle apps op dit bord"
       },
       "columnCount": {
         "label": "Kolom aantal"
       },
       "itemRadius": {
         "label": "",
-        "description": "",
+        "description": "Verandert de rondheid van tegels op je bord",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "Zeer klein",
+          "sm": "Klein",
+          "md": "Gemiddeld",
+          "lg": "Groot",
+          "xl": "Zeer groot"
         }
       },
       "name": {
@@ -2136,19 +2142,25 @@
           "unrecognizedLink": "De opgegeven link wordt niet herkend en geeft geen voorbeeld, maar werkt misschien nog wel."
         },
         "layout": {
-          "title": "Lay-out"
+          "title": "Lay-out",
+          "responsive": {
+            "title": "Responsive lay-outs",
+            "action": {
+              "add": "Lay-out toevoegen"
+            }
+          }
         },
         "background": {
           "title": "Achtergrond"
         },
         "appearance": {
-          "title": ""
+          "title": "Weergave"
         },
         "customCss": {
           "title": "Aangepaste CSS"
         },
         "behavior": {
-          "title": ""
+          "title": "Gedrag"
         },
         "access": {
           "title": "Toegangsbeheer",
@@ -2241,6 +2253,20 @@
           "link": "Openbare borden bekijken",
           "notice": "Om deze pagina te laten verdwijnen, vraag je de serverbeheerder om een home-bord in te stellen voor de server"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "Naam"
+      },
+      "columnCount": {
+        "label": "Kolom aantal"
+      },
+      "breakpoint": {
+        "label": "",
+        "description": "Lay-out wordt gebruikt op alle schermen die groter zijn dan deze breakpoint tot de volgende grotere breakpoint."
       }
     }
   },
@@ -2380,7 +2406,7 @@
                   "mobile": "Mobiel"
                 }
               },
-              "search": "",
+              "search": "Zoeken",
               "firstDayOfWeek": "Eerste dag van de week",
               "accessibility": "Toegankelijkheid"
             }
@@ -2473,10 +2499,10 @@
             "ownerOfGroupDeleted": "De eigenaar van deze groep is verwijderd. Het heeft momenteel geen eigenaar."
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "Instellingen",
+            "alert": "Groepsinstellingen krijgen voorrang op basis van de volgorde van de groepen in de lijst. De bovenste instellingen overschrijven de onderste.",
             "board": {
-              "title": ""
+              "title": "Borden"
             }
           },
           "members": {
@@ -2552,12 +2578,12 @@
             "status": {
               "title": "",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "Status standaard inschakelen",
+                "description": "Bij het toevoegen van een app-item wordt de status standaard ingeschakeld"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "Status geforceerd uitschakelen",
+                "description": "Status voor apps wordt uitgeschakeld voor alle gebruikers en kan niet worden ingeschakeld"
               }
             }
           },
@@ -2669,15 +2695,15 @@
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "API-token verwijderen",
+                  "text": "Hierdoor wordt het API-token permanent verwijderd. API-clients die dit token gebruiken, kunnen zich niet langer authenticeren en API-verzoeken uitvoeren. Deze actie kan niet ongedaan worden gemaakt."
                 }
               },
               "table": {
                 "header": {
                   "id": "ID",
                   "createdBy": "Aangemaakt door",
-                  "actions": ""
+                  "actions": "Acties"
                 }
               }
             }

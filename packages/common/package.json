@@ -33,14 +33,14 @@
     "next": "15.1.7",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "undici": "7.3.0",
+    "undici": "7.4.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.20.1",
-    "typescript": "^5.7.3"
+    "eslint": "^9.21.0",
+    "typescript": "^5.8.2"
   }
 }

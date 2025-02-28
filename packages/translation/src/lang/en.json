@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "Url"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "Use different URL for ping",
+          "description": "Useful if Homarr can directly access using an internal hostname or network to avoid bandwidth usage of ISP"
+        }
       }
     },
     "action": {
@@ -2136,7 +2142,13 @@
           "unrecognizedLink": "The provided link is not recognized and won't preview, it might still work."
         },
         "layout": {
-          "title": "Layout"
+          "title": "Layout",
+          "responsive": {
+            "title": "Responsive layouts",
+            "action": {
+              "add": "Add layout"
+            }
+          }
         },
         "background": {
           "title": "Background"
@@ -2241,6 +2253,20 @@
           "link": "View public boards",
           "notice": "To make this page disappear, ask the server administrator to set a home board for the server"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "Name"
+      },
+      "columnCount": {
+        "label": "Column count"
+      },
+      "breakpoint": {
+        "label": "Breakpoint",
+        "description": "Layout will be used on all screens larger than this breakpoint until the next bigger breakpoint."
       }
     }
   },

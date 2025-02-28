@@ -5,7 +5,7 @@ import { Box, LoadingOverlay, Stack } from "@mantine/core";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
+import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 
 import { BoardCategorySection } from "~/components/board/sections/category-section";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
@@ -43,6 +43,7 @@ export const useUpdateBoard = () => {
 
 export const ClientBoard = () => {
   const board = useRequiredBoard();
+  const currentLayoutId = useCurrentLayout();
   const isReady = useIsBoardReady();
 
   const fullWidthSortedSections = board.sections
@@ -63,9 +64,10 @@ export const ClientBoard = () => {
       <Stack ref={ref} h="100%" style={{ visibility: isReady ? "visible" : "hidden" }}>
         {fullWidthSortedSections.map((section) =>
           section.kind === "empty" ? (
-            <BoardEmptySection key={section.id} section={section} />
+            // Unique keys per layout to always reinitialize the gridstack
+            <BoardEmptySection key={`${currentLayoutId}-${section.id}`} section={section} />
           ) : (
-            <BoardCategorySection key={section.id} section={section} />
+            <BoardCategorySection key={`${currentLayoutId}-${section.id}`} section={section} />
           ),
         )}
       </Stack>

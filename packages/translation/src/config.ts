@@ -314,7 +314,7 @@ export const localeConfigurations = {
       return import("dayjs/locale/tr").then((module) => module.default);
     },
   },
-  tw: {
+  zh: {
     name: "中文",
     translatedName: "Chinese (Traditional)",
     flagIcon: "tw",

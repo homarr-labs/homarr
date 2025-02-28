@@ -7,11 +7,11 @@ import type { GridStack } from "@homarr/gridstack";
 import { createModal } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-import type { Item } from "~/app/[locale]/boards/_types";
+import type { Item, SectionItem } from "~/app/[locale]/boards/_types";
 
 interface InnerProps {
   gridStack: GridStack;
-  item: Pick<Item, "id" | "xOffset" | "yOffset" | "width" | "height">;
+  item: Pick<SectionItem, "id" | "width" | "height" | "xOffset" | "yOffset">;
   columnCount: number;
 }
 
@@ -47,7 +47,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
   );
 
   const handleSubmit = useCallback(
-    (values: Omit<InnerProps["item"], "id">) => {
+    (values: Pick<Item["layouts"][number], "height" | "width" | "xOffset" | "yOffset">) => {
       const gridItem = innerProps.gridStack
         .getGridItems()
         .find((item) => item.getAttribute("data-id") === innerProps.item.id);

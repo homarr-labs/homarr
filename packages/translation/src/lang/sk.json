@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "Url"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -2136,7 +2142,13 @@
           "unrecognizedLink": "Poskytnutý odkaz nie je rozpoznaný a nezobrazí sa ukážka, môže stále fungovať."
         },
         "layout": {
-          "title": "Rozloženie"
+          "title": "Rozloženie",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Pozadie"
@@ -2241,6 +2253,20 @@
           "link": "Pozrite si verejné nástenky",
           "notice": "Ak chcete, aby táto stránka zmizla, požiadajte správcu servera o nastavenie domovskej dosky pre server"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },
