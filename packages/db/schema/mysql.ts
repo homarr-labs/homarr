@@ -393,7 +393,7 @@ export const sections = mysqlTable("section", {
   xOffset: int(),
   yOffset: int(),
   name: text(),
-  options: text().default('{"json": {}}'),
+  options: text().default(emptySuperJSON),
 });
 
 export const sectionCollapseStates = mysqlTable(
@@ -420,8 +420,8 @@ export const items = mysqlTable("item", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   kind: text().$type<WidgetKind>().notNull(),
-  options: text().default('{"json": {}}').notNull(), // empty superjson object
-  advancedOptions: text().default('{"json": {}}').notNull(), // empty superjson object
+  options: text().default(emptySuperJSON).notNull(),
+  advancedOptions: text().default(emptySuperJSON).notNull(),
 });
 
 export const apps = mysqlTable("app", {

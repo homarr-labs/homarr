@@ -6,10 +6,7 @@ import { z } from "zod";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-
-export const dynamicSectionOptionsSchema = z.object({
-  borderColor: z.string().nullable().default(null),
-});
+import { dynamicSectionOptionsSchema } from "@homarr/validation";
 
 interface ModalProps {
   value: z.infer<typeof dynamicSectionOptionsSchema>;

@@ -1,13 +1,14 @@
 import { useCallback } from "react";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
+import type { EmptySuperJSON } from "@homarr/definitions";
 
 import { addDynamicSectionCallback } from "./actions/add-dynamic-section";
 import type { RemoveDynamicSectionInput } from "./actions/remove-dynamic-section";
 import { removeDynamicSectionCallback } from "./actions/remove-dynamic-section";
 
 interface UpdateDynamicOptions {
-  newOptions: Record<string, unknown>;
+  newOptions: EmptySuperJSON;
 }
 
 export const useDynamicSectionActions = () => {
@@ -19,7 +20,6 @@ export const useDynamicSectionActions = () => {
 
   const updateDynamicSection = useCallback(
     ({ itemId, newOptions }: UpdateDynamicOptions) => {
-      console.log("newOptions", newOptions);
       updateBoard((previous) => ({
         ...previous,
         sections: previous.sections.map((item) => (item.id !== itemId ? item : { ...item, options: newOptions })),

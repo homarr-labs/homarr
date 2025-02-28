@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "68ac66b5-ed5f-46f4-9efc-512652568f19",
+  "id": "177bc66f-d1ec-404c-9ce8-d23e3538e5fd",
   "prevId": "8ddad056-e26e-43fe-a075-d24d5bc03463",
   "tables": {
     "account": {
@@ -1746,7 +1746,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "('{\"json\":{}}')"
+          "default": "('{\"json\": {}}')"
         }
       },
       "indexes": {},

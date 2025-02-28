@@ -1570,7 +1570,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
         ...section,
         xOffset: section.xOffset,
         yOffset: section.yOffset,
-        options: superjson.parse(section.options ?? '{"json": {}}'),
+        options: superjson.parse(section.options ?? emptySuperJSON),
         layouts: section.layouts.map((layout) => ({
           xOffset: layout.xOffset,
           yOffset: layout.yOffset,

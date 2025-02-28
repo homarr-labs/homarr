@@ -1,4 +1,2 @@
-import superjson from "superjson";
-
-export const emptySuperJSON = superjson.stringify({});
+export const emptySuperJSON = '{"json": {}}';
 export type EmptySuperJSON = typeof emptySuperJSON;
