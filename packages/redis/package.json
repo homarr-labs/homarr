@@ -2,7 +2,7 @@
   "name": "@homarr/redis",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./index.ts"

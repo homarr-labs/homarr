@@ -2,7 +2,7 @@
   "name": "@homarr/certificates",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     "./server": "./src/server.ts"
