@@ -41,14 +41,12 @@ export default function MediaServerWidget({
           const newData = filteredData.concat(
             data.requests.map((request) => ({ ...request, integrationId: data.integrationId })),
           );
-          return newData.sort(({ status: statusA }, { status: statusB }) => {
-            if (statusA === MediaRequestStatus.PendingApproval) {
-              return -1;
+          return newData.sort((dataA, dataB) => {
+            if (dataA.status === dataB.status) {
+              return dataB.createdAt.getTime() - dataA.createdAt.getTime();
             }
-            if (statusB === MediaRequestStatus.PendingApproval) {
-              return 1;
-            }
-            return 0;
+
+            return dataA.status - dataB.status;
           });
         });
       },
@@ -69,7 +67,7 @@ export default function MediaServerWidget({
         {mediaRequests.map((mediaRequest) => (
           <Card
             className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${mediaRequest.type} mediaRequests-list-item-${mediaRequest.status}`}
-            key={mediaRequest.id}
+            key={`${mediaRequest.integrationId}-${mediaRequest.id}`}
             h="20cqmin"
             radius="2cqmin"
             p="2cqmin"
