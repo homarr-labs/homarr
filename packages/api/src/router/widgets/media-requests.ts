@@ -2,7 +2,7 @@ import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { integrationCreator, MediaRequestStatus } from "@homarr/integrations";
+import { integrationCreator } from "@homarr/integrations";
 import type { MediaRequest } from "@homarr/integrations/types";
 import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
 import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
@@ -30,14 +30,12 @@ export const mediaRequestsRouter = createTRPCRouter({
       );
       return results
         .flatMap(({ data, integration }) => data.map((request) => ({ ...request, integrationId: integration.id })))
-        .sort(({ status: statusA }, { status: statusB }) => {
-          if (statusA === MediaRequestStatus.PendingApproval) {
-            return -1;
+        .sort((dataA, dataB) => {
+          if (dataA.status === dataB.status) {
+            return dataB.createdAt.getTime() - dataA.createdAt.getTime();
           }
-          if (statusB === MediaRequestStatus.PendingApproval) {
-            return 1;
-          }
-          return 0;
+
+          return dataA.status - dataB.status;
         });
     }),
   subscribeToLatestRequests: publicProcedure
