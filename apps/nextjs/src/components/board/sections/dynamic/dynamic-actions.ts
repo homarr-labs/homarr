@@ -1,14 +1,17 @@
 import { useCallback } from "react";
 
+import type { z } from "zod";
+
 import { useUpdateBoard } from "@homarr/boards/updater";
-import type { EmptySuperJSON } from "@homarr/definitions";
+import type { dynamicSectionOptionsSchema } from "@homarr/validation";
 
 import { addDynamicSectionCallback } from "./actions/add-dynamic-section";
 import type { RemoveDynamicSectionInput } from "./actions/remove-dynamic-section";
 import { removeDynamicSectionCallback } from "./actions/remove-dynamic-section";
 
 interface UpdateDynamicOptions {
-  newOptions: EmptySuperJSON;
+  itemId: string;
+  newOptions: z.infer<typeof dynamicSectionOptionsSchema>;
 }
 
 export const useDynamicSectionActions = () => {
