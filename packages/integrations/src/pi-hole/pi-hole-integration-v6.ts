@@ -44,7 +44,7 @@ const statsSummaryGetSchema = z.object({
 });
 
 export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIntegration {
-  private readonly sessionStore: SessionStore;
+  private readonly sessionStore: SessionStore<string>;
 
   constructor(integration: IntegrationInput) {
     super(integration);
