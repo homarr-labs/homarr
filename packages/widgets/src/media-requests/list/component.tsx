@@ -150,7 +150,7 @@ export default function MediaServerWidget({
                     {(mediaRequest.requestedBy?.displayName ?? "") || "unknown"}
                   </Anchor>
                 </Group>
-                {mediaRequest.status === MediaRequestStatus.PendingApproval && (
+                {mediaRequest.status === MediaRequestStatus.PendingApproval ? (
                   <Group className="mediaRequests-list-item-pending-buttons" gap="2cqmin">
                     <Tooltip label={t("pending.approve")}>
                       <ActionIcon
@@ -187,6 +187,8 @@ export default function MediaServerWidget({
                       </ActionIcon>
                     </Tooltip>
                   </Group>
+                ) : (
+                  <StatusBadge status={mediaRequest.status} />
                 )}
               </Stack>
             </Group>
@@ -197,6 +199,34 @@ export default function MediaServerWidget({
   );
 }
 
+const statusMapping = {
+  [MediaRequestStatus.PendingApproval]: { color: "blue", label: (t) => t("pending") },
+  [MediaRequestStatus.Approved]: { color: "green", label: (t) => t("approved") },
+  [MediaRequestStatus.Declined]: { color: "red", label: (t) => t("declined") },
+  [MediaRequestStatus.Failed]: { color: "red", label: (t) => t("failed") },
+} satisfies Record<
+  MediaRequestStatus,
+  {
+    color: string;
+    label: (t: ScopedTranslationFunction<"widget.mediaRequests-requestList.status">) => string;
+  }
+>;
+
+interface StatusBadgeProps {
+  status: MediaRequestStatus;
+}
+
+const StatusBadge = ({ status }: StatusBadgeProps) => {
+  const { color, label } = statusMapping[status];
+  const tStatus = useScopedI18n("widget.mediaRequests-requestList.status");
+
+  return (
+    <Badge size="xs" color={color} variant="light">
+      {label(tStatus)}
+    </Badge>
+  );
+};
+
 function getAvailabilityProperties(
   mediaRequestAvailability: MediaAvailability,
   t: ScopedTranslationFunction<"widget.mediaRequests-requestList">,
@@ -206,10 +236,10 @@ function getAvailabilityProperties(
       return { color: "green", label: t("availability.available") };
     case MediaAvailability.PartiallyAvailable:
       return { color: "yellow", label: t("availability.partiallyAvailable") };
-    case MediaAvailability.Pending:
-      return { color: "violet", label: t("availability.pending") };
     case MediaAvailability.Processing:
       return { color: "blue", label: t("availability.processing") };
+    case MediaAvailability.Pending:
+      return { color: "violet", label: t("availability.pending") };
     default:
       return { color: "red", label: t("availability.unknown") };
   }
