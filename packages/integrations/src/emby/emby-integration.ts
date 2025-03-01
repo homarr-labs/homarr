@@ -91,7 +91,7 @@ export class EmbyIntegration extends Integration {
             userId: sessionInfo.UserId ?? "",
             username: sessionInfo.UserName ?? "",
           },
-          currentlyPlaying: currentlyPlaying,
+          currentlyPlaying,
         };
       });
   }

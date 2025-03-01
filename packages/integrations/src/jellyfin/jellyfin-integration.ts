@@ -60,7 +60,7 @@ export class JellyfinIntegration extends Integration {
             userId: sessionInfo.UserId ?? "",
             username: sessionInfo.UserName ?? "",
           },
-          currentlyPlaying: currentlyPlaying,
+          currentlyPlaying,
         };
       });
   }
