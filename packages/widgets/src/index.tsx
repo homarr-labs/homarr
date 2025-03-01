@@ -58,7 +58,7 @@ export const widgetImports = {
   healthMonitoring,
   mediaTranscoding,
   minecraftServerStatus,
-  docker,
+  dockerContainers: docker,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

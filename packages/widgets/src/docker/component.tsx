@@ -298,7 +298,7 @@ export default function DockerWidget() {
       >
         <Group gap={1}>
           <IconBrandDocker size="8cqmin" />
-          <Text size="6cqmin">{t("widget.docker.footer.total", { count: totalContainers })}</Text>
+          <Text size="6cqmin">{t("widget.dockerContainers.footer.total", { count: totalContainers })}</Text>
         </Group>
         <Group gap="2cqmin">
           {containerStateCounts &&

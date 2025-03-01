@@ -1579,7 +1579,7 @@
         }
       }
     },
-    "docker": {
+    "dockerContainers": {
       "name": "Docker stats",
       "description": "Stats of your containers",
       "option": {},
