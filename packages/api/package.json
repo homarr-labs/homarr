@@ -2,7 +2,7 @@
   "name": "@homarr/api",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
@@ -58,6 +58,6 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^9.21.0",
     "prettier": "^3.5.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }

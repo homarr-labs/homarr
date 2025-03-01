@@ -5,7 +5,7 @@ import { z } from "zod";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { DeviceType } from "@homarr/common/server";
 import type { Database, InferInsertModel, InferSelectModel, SQL } from "@homarr/db";
-import { and, asc, createId, eq, handleTransactionsAsync, inArray, isNull, like, not, or } from "@homarr/db";
+import { and, asc, createId, eq, handleTransactionsAsync, inArray, isNull, like, not, or, sql } from "@homarr/db";
 import { createDbInsertCollectionWithoutTransaction } from "@homarr/db/collection";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
@@ -554,7 +554,7 @@ export const boardRouter = createTRPCRouter({
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
   }),
   getBoardByName: publicProcedure.input(validation.board.byName).query(async ({ input, ctx }) => {
-    const boardWhere = eq(boards.name, input.name);
+    const boardWhere = eq(sql`UPPER(${boards.name})`, input.name.toUpperCase());
     await throwIfActionForbiddenAsync(ctx, boardWhere, "view");
 
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);

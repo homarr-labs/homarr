@@ -6,9 +6,9 @@
       matchPackagePatterns: ["^@homarr/"],
       enabled: false,
     },
-    // Disable Dockerode updates see https://github.com/apocas/dockerode/issues/787
+    // 15.2.0 crashes with turbopack error (panic)
     {
-      matchPackagePatterns: ["^dockerode$"],
+      matchPackagePatterns: ["^next$", "^@next/eslint-plugin-next$"],
       enabled: false,
     },
     {

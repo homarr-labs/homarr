@@ -1816,6 +1816,12 @@
         "partiallyAvailable": "Partial",
         "available": "Available"
       },
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "declined": "Declined",
+        "failed": "Failed"
+      },
       "toBeDetermined": "TBD"
     },
     "mediaRequests-requestStats": {

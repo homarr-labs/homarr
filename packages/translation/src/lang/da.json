@@ -603,8 +603,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Brug anden URL til ping",
+          "description": "Nyttigt, hvis Homarr kan få direkte adgang ved hjælp af et internt værtsnavn eller netværk for at undgå båndbredde brug af ISP"
         }
       }
     },
@@ -2144,9 +2144,9 @@
         "layout": {
           "title": "Layout",
           "responsive": {
-            "title": "",
+            "title": "Responsive layouts",
             "action": {
-              "add": ""
+              "add": "Tilføj Layout"
             }
           }
         },
@@ -2259,14 +2259,14 @@
   "layout": {
     "field": {
       "name": {
-        "label": ""
+        "label": "Navn"
       },
       "columnCount": {
-        "label": ""
+        "label": "Kolonne antal"
       },
       "breakpoint": {
-        "label": "",
-        "description": ""
+        "label": "Brydningspunkt",
+        "description": "Layout vil blive brugt på alle skærme, der er større end dette breakpoint indtil det næste større breakpoint."
       }
     }
   },

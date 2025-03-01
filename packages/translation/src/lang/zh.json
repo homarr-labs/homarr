@@ -2144,9 +2144,9 @@
         "layout": {
           "title": "顯示布局",
           "responsive": {
-            "title": "",
+            "title": "響應式佈局",
             "action": {
-              "add": ""
+              "add": "新增佈局"
             }
           }
         },
@@ -2259,14 +2259,14 @@
   "layout": {
     "field": {
       "name": {
-        "label": ""
+        "label": "名稱"
       },
       "columnCount": {
-        "label": ""
+        "label": "欄數"
       },
       "breakpoint": {
-        "label": "",
-        "description": ""
+        "label": "斷點",
+        "description": "此佈局將用於所有大於此斷點的螢幕，直到達到下一個更大的斷點為止"
       }
     }
   },
