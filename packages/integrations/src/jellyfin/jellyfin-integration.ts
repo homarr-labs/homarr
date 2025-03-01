@@ -1,4 +1,5 @@
 import { Jellyfin } from "@jellyfin/sdk";
+import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
 import { getSessionApi } from "@jellyfin/sdk/lib/utils/api/session-api";
 import { getSystemApi } from "@jellyfin/sdk/lib/utils/api/system-api";
 
@@ -34,31 +35,34 @@ export class JellyfinIntegration extends Integration {
       throw new Error(`Jellyfin server ${this.url("/")} returned a non successful status code: ${sessions.status}`);
     }
 
-    return sessions.data.map((sessionInfo): StreamSession => {
-      let nowPlaying: StreamSession["currentlyPlaying"] | null = null;
+    return sessions.data
+      .filter((sessionInfo) => sessionInfo.UserId !== undefined)
+      .filter((sessionInfo) => sessionInfo.DeviceId !== "homarr")
+      .map((sessionInfo): StreamSession => {
+        let currentlyPlaying: StreamSession["currentlyPlaying"] | null = null;
 
-      if (sessionInfo.NowPlayingItem) {
-        nowPlaying = {
-          type: "tv",
-          name: sessionInfo.NowPlayingItem.Name ?? "",
-          seasonName: sessionInfo.NowPlayingItem.SeasonName ?? "",
-          episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
-          albumName: sessionInfo.NowPlayingItem.Album ?? "",
-          episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
+        if (sessionInfo.NowPlayingItem) {
+          currentlyPlaying = {
+            type: convertJellyfinType(sessionInfo.NowPlayingItem.Type),
+            name: sessionInfo.NowPlayingItem.SeriesName ?? sessionInfo.NowPlayingItem.Name ?? "",
+            seasonName: sessionInfo.NowPlayingItem.SeasonName ?? "",
+            episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
+            albumName: sessionInfo.NowPlayingItem.Album ?? "",
+            episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
+          };
+        }
+
+        return {
+          sessionId: `${sessionInfo.Id}`,
+          sessionName: `${sessionInfo.Client} (${sessionInfo.DeviceName})`,
+          user: {
+            profilePictureUrl: this.url(`/Users/${sessionInfo.UserId}/Images/Primary`).toString(),
+            userId: sessionInfo.UserId ?? "",
+            username: sessionInfo.UserName ?? "",
+          },
+          currentlyPlaying: currentlyPlaying,
         };
-      }
-
-      return {
-        sessionId: `${sessionInfo.Id}`,
-        sessionName: `${sessionInfo.Client} (${sessionInfo.DeviceName})`,
-        user: {
-          profilePictureUrl: this.url(`/Users/${sessionInfo.UserId}/Images/Primary`).toString(),
-          userId: sessionInfo.UserId ?? "",
-          username: sessionInfo.UserName ?? "",
-        },
-        currentlyPlaying: nowPlaying,
-      };
-    });
+      });
   }
 
   /**
@@ -81,3 +85,24 @@ export class JellyfinIntegration extends Integration {
     return apiClient;
   }
 }
+
+export const convertJellyfinType = (
+  kind: BaseItemKind | undefined,
+): Exclude<StreamSession["currentlyPlaying"], null>["type"] => {
+  switch (kind) {
+    case BaseItemKind.Audio:
+    case BaseItemKind.MusicVideo:
+      return "audio";
+    case BaseItemKind.Episode:
+    case BaseItemKind.Video:
+      return "video";
+    case BaseItemKind.Movie:
+      return "movie";
+    case BaseItemKind.TvChannel:
+    case BaseItemKind.TvProgram:
+    case BaseItemKind.LiveTvChannel:
+    case BaseItemKind.LiveTvProgram:
+    default:
+      return "tv";
+  }
+};
