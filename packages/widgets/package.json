@@ -44,8 +44,8 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^7.17.0",
-    "@mantine/hooks": "^7.17.0",
+    "@mantine/core": "^7.17.1",
+    "@mantine/hooks": "^7.17.1",
     "@tabler/icons-react": "^3.30.0",
     "@tiptap/extension-color": "2.11.5",
     "@tiptap/extension-highlight": "2.11.5",
@@ -77,6 +77,6 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/video.js": "^7.3.58",
     "eslint": "^9.21.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }
