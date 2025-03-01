@@ -44,7 +44,7 @@
     "@homarr/env": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/core": "^7.17.0",
+    "@mantine/core": "^7.17.1",
     "@paralleldrive/cuid2": "^2.2.2",
     "@testcontainers/mysql": "^10.18.0",
     "better-sqlite3": "^11.8.1",
