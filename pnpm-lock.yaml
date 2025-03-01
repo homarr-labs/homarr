@@ -9,7 +9,7 @@ overrides:
 
 patchedDependencies:
   pretty-print-error:
-    hash: d1432e02330bdaf8359eb0e54528a74ed6b7e5cce6bb65c13310c82e34fd1e4d
+    hash: 4arrfgbz7em6s4gqywse7esg4u
     path: patches/pretty-print-error.patch
 
 importers:
@@ -595,7 +595,7 @@ importers:
         version: 15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.1)
       pretty-print-error:
         specifier: ^1.1.2
-        version: 1.1.2(patch_hash=d1432e02330bdaf8359eb0e54528a74ed6b7e5cce6bb65c13310c82e34fd1e4d)
+        version: 1.1.2(patch_hash=4arrfgbz7em6s4gqywse7esg4u)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -674,7 +674,7 @@ importers:
         version: 5.0.0-beta.25(next@15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.1))(react@19.0.0)
       pretty-print-error:
         specifier: ^1.1.2
-        version: 1.1.2(patch_hash=d1432e02330bdaf8359eb0e54528a74ed6b7e5cce6bb65c13310c82e34fd1e4d)
+        version: 1.1.2(patch_hash=4arrfgbz7em6s4gqywse7esg4u)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -1612,7 +1612,7 @@ importers:
         version: link:../log
       pretty-print-error:
         specifier: ^1.1.2
-        version: 1.1.2(patch_hash=d1432e02330bdaf8359eb0e54528a74ed6b7e5cce6bb65c13310c82e34fd1e4d)
+        version: 1.1.2(patch_hash=4arrfgbz7em6s4gqywse7esg4u)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1698,7 +1698,7 @@ importers:
         version: 4.1.2
       pretty-print-error:
         specifier: ^1.1.2
-        version: 1.1.2(patch_hash=d1432e02330bdaf8359eb0e54528a74ed6b7e5cce6bb65c13310c82e34fd1e4d)
+        version: 1.1.2(patch_hash=4arrfgbz7em6s4gqywse7esg4u)
       superjson:
         specifier: 2.2.2
         version: 2.2.2
@@ -16824,7 +16824,7 @@ snapshots:
     dependencies:
       parse-ms: 4.0.0
 
-  pretty-print-error@1.1.2(patch_hash=d1432e02330bdaf8359eb0e54528a74ed6b7e5cce6bb65c13310c82e34fd1e4d):
+  pretty-print-error@1.1.2(patch_hash=4arrfgbz7em6s4gqywse7esg4u):
     dependencies:
       kleur: 4.1.5
 
