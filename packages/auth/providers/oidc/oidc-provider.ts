@@ -3,7 +3,8 @@ import type { OIDCConfig } from "@auth/core/providers";
 import type { Profile } from "@auth/core/types";
 import { customFetch } from "next-auth";
 
-import { fetchWithTrustedCertificatesAsync } from "../../../certificates/src/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+
 import { env } from "../../env";
 import { createRedirectUri } from "../../redirect";
 

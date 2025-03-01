@@ -25,6 +25,7 @@
   "dependencies": {
     "@auth/core": "^0.37.4",
     "@auth/drizzle-adapter": "^1.7.4",
+    "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
