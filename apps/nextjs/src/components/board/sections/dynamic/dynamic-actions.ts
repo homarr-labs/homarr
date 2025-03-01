@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-
 import type { z } from "zod";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
