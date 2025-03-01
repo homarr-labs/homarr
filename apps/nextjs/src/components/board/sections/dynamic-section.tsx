@@ -27,7 +27,7 @@ export const BoardDynamicSection = ({ section }: Props) => {
           root: {
             "--opacity": board.opacity / 100,
             overflow: "hidden",
-            "--border-color": options.borderColor ?? undefined,
+            "--border-color": options.borderColor !== "" ? options.borderColor : undefined,
           },
         }}
         radius={board.itemRadius}
