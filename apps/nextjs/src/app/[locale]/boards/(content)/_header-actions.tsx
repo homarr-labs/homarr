@@ -4,7 +4,7 @@ import type { MouseEvent } from "react";
 import { useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Group, Menu } from "@mantine/core";
+import { Group, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import {
   IconBox,
@@ -23,6 +23,7 @@ import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import { env } from "@homarr/common/env";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
@@ -33,7 +34,6 @@ import { useCategoryActions } from "~/components/board/sections/category/categor
 import { CategoryEditModal } from "~/components/board/sections/category/category-edit-modal";
 import { useDynamicSectionActions } from "~/components/board/sections/dynamic/dynamic-actions";
 import { HeaderButton } from "~/components/layout/header/button";
-import { env } from "~/env";
 
 export const BoardContentHeaderActions = () => {
   const [isEditMode] = useEditMode();
@@ -168,16 +168,18 @@ const SelectBoardsMenu = () => {
         </HeaderButton>
       </Menu.Target>
       <Menu.Dropdown style={{ transform: "translate(-7px, 0)" }}>
-        {boards.map((board) => (
-          <Menu.Item
-            key={board.id}
-            component={Link}
-            href={`/boards/${board.name}`}
-            leftSection={<IconLayoutBoard size={20} />}
-          >
-            {board.name}
-          </Menu.Item>
-        ))}
+        <ScrollArea.Autosize mah={300}>
+          {boards.map((board) => (
+            <Menu.Item
+              key={board.id}
+              component={Link}
+              href={`/boards/${board.name}`}
+              leftSection={<IconLayoutBoard size={20} />}
+            >
+              {board.name}
+            </Menu.Item>
+          ))}
+        </ScrollArea.Autosize>
       </Menu.Dropdown>
     </Menu>
   );

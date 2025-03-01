@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "Url"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "Ping için farklı URL kullan",
+          "description": "Homarr, İSS'nın bant genişliği kullanımını önlemek için dahili ana bilgisayar adı veya ağ kullanarak doğrudan erişebiliyorsa yararlıdır"
+        }
       }
     },
     "action": {
@@ -1608,7 +1614,8 @@
       },
       "app": {
         "noData": "Uygulama bulunamadı",
-        "description": "Yeni bir uygulama oluşturmak için <here></here> tıklayın"
+        "description": "Yeni bir uygulama oluşturmak için <here></here> tıklayın",
+        "quickCreate": "Anında uygulama oluştur"
       },
       "error": {
         "noIntegration": "Hiçbir entegrasyon seçilmedi",
@@ -2007,6 +2014,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "Anında uygulama oluştur",
+          "createAndUse": "Oluştur ve kullan"
+        }
       }
     },
     "field": {
@@ -2081,6 +2094,9 @@
       "opacity": {
         "label": "Opaklık"
       },
+      "iconColor": {
+        "label": "Simge rengi"
+      },
       "customCss": {
         "label": "Bu panel için özel css",
         "description": "CSS kullanarak panelizi özelleştirin, sadece tecrübeli kullanıcılar için tavsiye edilir",
@@ -2095,6 +2111,17 @@
       },
       "columnCount": {
         "label": "Sütun Sayısı"
+      },
+      "itemRadius": {
+        "label": "Öğe yarıçapı",
+        "description": "Panelinizdeki yuvaların yuvarlaklığını değiştirir",
+        "option": {
+          "xs": "Çok küçük",
+          "sm": "Küçük",
+          "md": "Orta",
+          "lg": "Büyük",
+          "xl": "Çok büyük"
+        }
       },
       "name": {
         "label": "İsim"
@@ -2115,13 +2142,19 @@
           "unrecognizedLink": "Sağlanan bağlantı tanınmıyor ve önizleme yapılmıyor, yine de çalışabilir."
         },
         "layout": {
-          "title": "Düzen"
+          "title": "Düzen",
+          "responsive": {
+            "title": "Duyarlı yerleşimler",
+            "action": {
+              "add": "Yerleşim Ekle"
+            }
+          }
         },
         "background": {
           "title": "Arkaplan"
         },
-        "color": {
-          "title": "Renkler"
+        "appearance": {
+          "title": "Görünüş"
         },
         "customCss": {
           "title": "Özel Css"
@@ -2220,6 +2253,20 @@
           "link": "Herkese açık panelleri görüntüle",
           "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel ayarlamasını isteyin"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "İsim"
+      },
+      "columnCount": {
+        "label": "Sütun Sayısı"
+      },
+      "breakpoint": {
+        "label": "Kesme Noktası",
+        "description": "Bu kesme noktasından daha büyük tüm ekranlarda, bir sonraki büyük kesme noktasına kadar bu yerleşim kullanılacaktır."
       }
     }
   },

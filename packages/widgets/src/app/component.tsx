@@ -11,6 +11,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
+import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
@@ -69,7 +70,7 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
         styles={{ tooltip: { maxWidth: 300 } }}
       >
         <Flex
-          className={combineClasses("app-flex-wrapper", app.name, app.id)}
+          className={combineClasses("app-flex-wrapper", app.name, app.id, app.href && classes.appWithUrl)}
           h="100%"
           w="100%"
           direction="column"
@@ -82,12 +83,21 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
               {app.name}
             </Text>
           )}
-          <img src={app.iconUrl} alt={app.name} className={combineClasses(classes.appIcon, "app-icon")} />
+          <MaskedOrNormalImage
+            imageUrl={app.iconUrl}
+            hasColor={board.iconColor !== null}
+            alt={app.name}
+            className={combineClasses(classes.appIcon, "app-icon")}
+            style={{
+              height: "100%",
+              width: "100%",
+            }}
+          />
         </Flex>
       </Tooltip.Floating>
       {options.pingEnabled && !settings.forceDisableStatus && !board.disableStatus && app.href ? (
         <Suspense fallback={<PingDot icon={IconLoader} color="blue" tooltip={`${t("common.action.loading")}…`} />}>
-          <PingIndicator href={app.href} />
+          <PingIndicator href={app.pingUrl ?? app.href} />
         </Suspense>
       ) : null}
     </AppLink>

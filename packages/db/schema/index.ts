@@ -36,6 +36,9 @@ export const {
   users,
   verificationTokens,
   sectionCollapseStates,
+  layouts,
+  itemLayouts,
+  sectionLayouts,
 } = schema;
 
 export type User = InferSelectModel<typeof schema.users>;

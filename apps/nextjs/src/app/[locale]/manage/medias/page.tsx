@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   ActionIcon,
   Anchor,
   Group,
+  Image,
   Stack,
   Table,
   TableTbody,
@@ -113,11 +113,12 @@ const Row = async ({ media }: RowProps) => {
     <TableTr>
       <TableTd w={64}>
         <Image
+          // Switched to mantine image because next/image doesn't support svgs
           src={createLocalImageUrl(media.id)}
           alt={media.name}
-          width={64}
-          height={64}
-          style={{ objectFit: "contain" }}
+          w={64}
+          h={64}
+          fit="contain"
         />
       </TableTd>
       <TableTd>{media.name}</TableTd>

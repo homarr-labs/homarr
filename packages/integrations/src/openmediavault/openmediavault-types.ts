@@ -25,7 +25,7 @@ export const fileSystemSchema = z.object({
     z.object({
       devicename: z.string(),
       used: z.string(),
-      available: z.string(),
+      available: z.string().or(z.number()),
       percentage: z.number(),
     }),
   ),
@@ -40,7 +40,7 @@ export const smartSchema = z.object({
         // Convert string to number if necessary
         const temp = typeof val === "string" ? parseFloat(val) : val;
         if (isNaN(temp)) {
-          throw new Error("Invalid temperature value");
+          return null;
         }
         return temp;
       }),

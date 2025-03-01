@@ -1,3 +1,7 @@
 .card:hover {
   background-color: var(--mantine-color-primaryColor-light-hover);
 }
+
+.card:hover > div > div.bookmarkIcon {
+  background-color: var(--mantine-color-iconColor-filled-hover);
+}

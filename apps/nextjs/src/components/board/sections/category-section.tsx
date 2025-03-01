@@ -27,7 +27,13 @@ export const BoardCategorySection = ({ section }: Props) => {
   });
 
   return (
-    <Card style={{ "--opacity": board.opacity / 100 }} withBorder p={0} className={classes.itemCard}>
+    <Card
+      style={{ "--opacity": board.opacity / 100 }}
+      radius={board.itemRadius}
+      withBorder
+      p={0}
+      className={classes.itemCard}
+    >
       <Stack>
         <Group wrap="nowrap" gap="sm">
           <UnstyledButton w="100%" p="sm" onClick={toggle}>

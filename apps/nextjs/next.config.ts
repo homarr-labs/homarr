@@ -2,13 +2,12 @@
 import "@homarr/auth/env";
 import "@homarr/db/env";
 import "@homarr/common/env";
+import "@homarr/log/env";
 import "@homarr/docker/env";
 
 import type { NextConfig } from "next";
 import MillionLint from "@million/lint";
 import createNextIntlPlugin from "next-intl/plugin";
-
-import "./src/env.ts";
 
 // Package path does not work... so we need to use relative path
 const withNextIntl = createNextIntlPlugin("../../packages/translation/src/request.ts");

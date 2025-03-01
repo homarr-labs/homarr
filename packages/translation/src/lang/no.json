@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "Url"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -1608,7 +1614,8 @@
       },
       "app": {
         "noData": "Ingen app funnet",
-        "description": "Klikk <here></here> for å opprette en ny app"
+        "description": "Klikk <here></here> for å opprette en ny app",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Ingen integrasjon valgt",
@@ -2007,6 +2014,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2081,6 +2094,9 @@
       "opacity": {
         "label": "Gjennomsiktighet"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "Tilpasset css for denne tavlen",
         "description": "Videre kan du tilpasse dashbordet ved hjelp av CSS, dette er bare anbefalt for erfarne brukere",
@@ -2095,6 +2111,17 @@
       },
       "columnCount": {
         "label": "Antall kolonner"
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "Navn"
@@ -2115,13 +2142,19 @@
           "unrecognizedLink": "Den angitte koblingen ble ikke gjenkjent og vil ikke forhåndsvise, den kan likevel fungere."
         },
         "layout": {
-          "title": "Oppsett"
+          "title": "Oppsett",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Bakgrunn"
         },
-        "color": {
-          "title": "Farger"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "Egendefinert css"
@@ -2220,6 +2253,20 @@
           "link": "Se offentlige tavler",
           "notice": "For at denne siden skal forsvinne for alle brukere, be server administratoren sette en hjem-tavle for serveren"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },

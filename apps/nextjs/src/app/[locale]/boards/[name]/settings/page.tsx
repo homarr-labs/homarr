@@ -23,10 +23,10 @@ import type { TablerIcon } from "@homarr/ui";
 
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { ActiveTabAccordion } from "../../../../../components/active-tab-accordion";
+import { ColorSettingsContent } from "./_appereance";
 import { BackgroundSettingsContent } from "./_background";
 import { BehaviorSettingsContent } from "./_behavior";
 import { BoardAccessSettings } from "./_board-access";
-import { ColorSettingsContent } from "./_colors";
 import { CustomCssSettingsContent } from "./_customCss";
 import { DangerZoneSettingsContent } from "./_danger";
 import { GeneralSettingsContent } from "./_general";
@@ -91,7 +91,7 @@ export default async function BoardSettingsPage(props: Props) {
           <AccordionItemFor value="background" icon={IconPhoto}>
             <BackgroundSettingsContent board={board} />
           </AccordionItemFor>
-          <AccordionItemFor value="color" icon={IconBrush}>
+          <AccordionItemFor value="appearance" icon={IconBrush}>
             <ColorSettingsContent board={board} />
           </AccordionItemFor>
           <AccordionItemFor value="customCss" icon={IconFileTypeCss}>

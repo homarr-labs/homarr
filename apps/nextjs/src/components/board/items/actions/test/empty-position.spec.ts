@@ -109,7 +109,7 @@ describe("get first empty position", () => {
 });
 
 const createElementsFromLayout = (layout: string[][]) => {
-  const elements: (Pick<Item, "xOffset" | "yOffset" | "width" | "height"> & { char: string })[] = [];
+  const elements: (Pick<Item["layouts"][number], "xOffset" | "yOffset" | "width" | "height"> & { char: string })[] = [];
   for (let yOffset = 0; yOffset < layout.length; yOffset++) {
     const row = layout[yOffset];
     if (!row) continue;

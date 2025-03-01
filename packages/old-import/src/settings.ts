@@ -1,8 +1,7 @@
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
-import { boardSizes } from "@homarr/old-schema";
-import { validation, zodEnumFromArray } from "@homarr/validation";
+import { validation } from "@homarr/validation";
 import { createCustomErrorParams } from "@homarr/validation/form";
 
 export const sidebarBehaviours = ["remove-items", "last-section"] as const;
@@ -12,7 +11,6 @@ export type SidebarBehaviour = (typeof sidebarBehaviours)[number];
 export const oldmarrImportConfigurationSchema = z.object({
   name: validation.board.name,
   onlyImportApps: z.boolean().default(false),
-  screenSize: zodEnumFromArray(boardSizes).default("lg"),
   sidebarBehaviour: z.enum(sidebarBehaviours).default(defaultSidebarBehaviour),
 });
 

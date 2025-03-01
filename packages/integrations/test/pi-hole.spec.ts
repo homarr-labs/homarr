@@ -58,7 +58,7 @@ describe("Pi-hole integration", () => {
 });
 
 const createPiHoleContainer = (password: string) => {
-  return new GenericContainer("pihole/pihole:latest")
+  return new GenericContainer("pihole/pihole:2024.07.0") // v5
     .withEnvironment({
       WEBPASSWORD: password,
     })

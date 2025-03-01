@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "URL-адрес"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -1608,7 +1614,8 @@
       },
       "app": {
         "noData": "Приложения не найдены",
-        "description": "Нажмите <here></here>, чтобы создать новое приложение"
+        "description": "Нажмите <here></here>, чтобы создать новое приложение",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Интеграция не выбрана",
@@ -2007,6 +2014,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2081,6 +2094,9 @@
       "opacity": {
         "label": "Прозрачность"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "Пользовательский CSS для этой панели",
         "description": "Дополнительная настройка вашей панели с помощью CSS, рекомендуется только опытным пользователям",
@@ -2095,6 +2111,17 @@
       },
       "columnCount": {
         "label": "Количество столбцов"
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "Название"
@@ -2115,13 +2142,19 @@
           "unrecognizedLink": "Указанная ссылка не распознана и не будет показана в предпросмотре, но может всё ещё работать."
         },
         "layout": {
-          "title": "Компоновка"
+          "title": "Компоновка",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Фон"
         },
-        "color": {
-          "title": "Цвета"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "Пользовательский CSS"
@@ -2220,6 +2253,20 @@
           "link": "Просмотр публичных панелей",
           "notice": "Чтобы убрать эту страницу, попросите администратора сервера установить домашнюю панель"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },

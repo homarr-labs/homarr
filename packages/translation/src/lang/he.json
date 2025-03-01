@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "כתובת אתר"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -1608,7 +1614,8 @@
       },
       "app": {
         "noData": "לא נמצאה אפליקציה",
-        "description": "לחץ על <here></here> כדי ליצור אפליקציה חדשה"
+        "description": "לחץ על <here></here> כדי ליצור אפליקציה חדשה",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "לא נבחרה אינטגרציה",
@@ -2007,6 +2014,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2081,6 +2094,9 @@
       "opacity": {
         "label": "אטימות"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "עיצוב מותאם אישית עבור הלוח הזה",
         "description": "יתר על כן, התאם את לוח המחוונים שלך באמצעות CSS, מומלץ רק למשתמשים מנוסים",
@@ -2095,6 +2111,17 @@
       },
       "columnCount": {
         "label": "ספירת עמודות"
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "שם"
@@ -2115,13 +2142,19 @@
           "unrecognizedLink": "הקישור שסופק אינו מזוהה ולא יוצג בתצוגה מקדימה, ייתכן שהוא עדיין יעבוד."
         },
         "layout": {
-          "title": "פריסה"
+          "title": "פריסה",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "רקע"
         },
-        "color": {
-          "title": "צבעים"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "עיצוב מותאם אישית"
@@ -2220,6 +2253,20 @@
           "link": "הצגת לוחות ציבוריים",
           "notice": "על מנת לגרום לדף זה להיעלם, בקש ממנהל השרת להגדיר לוח בית עבור השרת"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },

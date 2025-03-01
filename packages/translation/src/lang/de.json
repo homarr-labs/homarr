@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "URL"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "",
+          "description": ""
+        }
       }
     },
     "action": {
@@ -1608,7 +1614,8 @@
       },
       "app": {
         "noData": "Keine App gefunden",
-        "description": "Klicken Sie <here></here> um eine neue App zu erstellen"
+        "description": "Klicken Sie <here></here> um eine neue App zu erstellen",
+        "quickCreate": ""
       },
       "error": {
         "noIntegration": "Keine Integration ausgewählt",
@@ -2007,6 +2014,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "",
+          "createAndUse": ""
+        }
       }
     },
     "field": {
@@ -2081,6 +2094,9 @@
       "opacity": {
         "label": "Transparenz"
       },
+      "iconColor": {
+        "label": ""
+      },
       "customCss": {
         "label": "Benutzerdefinierte css für dieses Board",
         "description": "Außerdem können Sie Ihr Dashboard mittels CSS anpassen, dies wird nur für erfahrene Benutzer empfohlen",
@@ -2095,6 +2111,17 @@
       },
       "columnCount": {
         "label": "Anzahl der Spalten"
+      },
+      "itemRadius": {
+        "label": "",
+        "description": "",
+        "option": {
+          "xs": "",
+          "sm": "",
+          "md": "",
+          "lg": "",
+          "xl": ""
+        }
       },
       "name": {
         "label": "Name"
@@ -2115,13 +2142,19 @@
           "unrecognizedLink": "Der angegebene Link wird nicht erkannt und wird nicht in der Vorschau angezeigt, er könnte jedoch trotzdem funktionieren."
         },
         "layout": {
-          "title": "Ansicht"
+          "title": "Ansicht",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Hintergrund"
         },
-        "color": {
-          "title": "Farben"
+        "appearance": {
+          "title": ""
         },
         "customCss": {
           "title": "Benutzerdefiniertes CSS"
@@ -2220,6 +2253,20 @@
           "link": "Öffentliche Boards anzeigen",
           "notice": "Um diese Seite verschwinden zu lassen, bitten sie den Server Administrator, ein Home Board für den Server festzulegen"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },

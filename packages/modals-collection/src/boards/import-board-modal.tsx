@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, FileInput, Group, Radio, Stack, TextInput } from "@mantine/core";
+import { Button, FileInput, Group, Stack, TextInput } from "@mantine/core";
 import { IconFileUpload } from "@tabler/icons-react";
 import { z } from "zod";
 
@@ -12,13 +12,12 @@ import { OldmarrImportAppsSettings, SidebarBehaviourSelect } from "@homarr/old-i
 import type { OldmarrImportConfiguration } from "@homarr/old-import/shared";
 import { oldmarrImportConfigurationSchema, superRefineJsonImportFile } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import { useBoardNameStatus } from "./add-board-modal";
 
 export const ImportBoardModal = createModal(({ actions }) => {
   const tOldImport = useScopedI18n("board.action.oldImport");
-  const t = useI18n();
   const tCommon = useScopedI18n("common");
   const [fileValid, setFileValid] = useState(true);
   const form = useZodForm(
@@ -33,7 +32,6 @@ export const ImportBoardModal = createModal(({ actions }) => {
         file: null!,
         configuration: {
           onlyImportApps: false,
-          screenSize: "lg",
           sidebarBehaviour: "last-section",
           name: "",
         },
@@ -135,19 +133,6 @@ export const ImportBoardModal = createModal(({ actions }) => {
           }
           {...form.getInputProps("configuration.name")}
         />
-
-        <Radio.Group
-          withAsterisk
-          label={tOldImport("form.screenSize.label")}
-          description={t("board.action.oldImport.form.screenSize.description")}
-          {...form.getInputProps("configuration.screenSize")}
-        >
-          <Group mt="xs">
-            <Radio value="sm" label={t("board.action.oldImport.form.screenSize.option.sm")} />
-            <Radio value="md" label={t("board.action.oldImport.form.screenSize.option.md")} />
-            <Radio value="lg" label={t("board.action.oldImport.form.screenSize.option.lg")} />
-          </Group>
-        </Radio.Group>
 
         <SidebarBehaviourSelect {...form.getInputProps("configuration.sidebarBehaviour")} />
 

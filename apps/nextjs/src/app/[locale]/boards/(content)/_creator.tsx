@@ -13,7 +13,7 @@ import { getI18n } from "@homarr/translation/server";
 import { createMetaTitle } from "~/metadata";
 import { createBoardLayout } from "../_layout-creator";
 import type { Board } from "../_types";
-import { ClientBoard } from "./_client";
+import { DynamicClientBoard } from "./_dynamic-client";
 import { BoardContentHeaderActions } from "./_header-actions";
 
 export type Params = Record<string, unknown>;
@@ -37,13 +37,13 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
 
       return (
         <IntegrationProvider integrations={integrations}>
-          <ClientBoard />
+          <DynamicClientBoard />
         </IntegrationProvider>
       );
     },
-    generateMetadataAsync: async ({ params }: { params: TParams }): Promise<Metadata> => {
+    generateMetadataAsync: async ({ params }: { params: Promise<TParams> }): Promise<Metadata> => {
       try {
-        const board = await getInitialBoard(params);
+        const board = await getInitialBoard(await params);
         const t = await getI18n();
 
         return {

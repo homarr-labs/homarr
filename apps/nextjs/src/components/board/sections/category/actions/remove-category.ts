@@ -1,4 +1,6 @@
-import type { Board, CategorySection, DynamicSection, EmptySection, Section } from "~/app/[locale]/boards/_types";
+import { getBoardLayouts } from "@homarr/boards/context";
+
+import type { Board, CategorySection, EmptySection, Section } from "~/app/[locale]/boards/_types";
 
 export interface RemoveCategoryInput {
   id: string;
@@ -28,84 +30,121 @@ export const removeCategoryCallback =
       return previous;
     }
 
-    // Calculate the yOffset for the items in the currentCategory and removedWrapper to add them with the same offset to the aboveWrapper
-    const aboveYOffset = Math.max(
-      calculateYHeightWithOffsetForItems(aboveSection),
-      calculateYHeightWithOffsetForDynamicSections(previous.sections, aboveSection.id),
-    );
-    const categoryYOffset = Math.max(
-      calculateYHeightWithOffsetForItems(currentCategory),
-      calculateYHeightWithOffsetForDynamicSections(previous.sections, currentCategory.id),
-    );
+    const aboveYOffsets = getBoardLayouts(previous).map((layoutId) => {
+      return {
+        layoutId,
+        yOffset: Math.max(
+          calculateYHeightWithOffsetForItemLayouts(previous, { sectionId: aboveSection.id, layoutId }),
+          calculateYHeightWithOffsetForDynamicSectionLayouts(previous.sections, {
+            sectionId: aboveSection.id,
+            layoutId,
+          }),
+        ),
+      };
+    });
 
-    const previousCategoryItems = currentCategory.items.map((item) => ({
-      ...item,
-      yOffset: item.yOffset + aboveYOffset,
-    }));
-    const previousBelowWrapperItems = removedSection.items.map((item) => ({
-      ...item,
-      yOffset: item.yOffset + aboveYOffset + categoryYOffset,
-    }));
+    const categoryYOffsets = getBoardLayouts(previous).map((layoutId) => {
+      return {
+        layoutId,
+        yOffset: Math.max(
+          calculateYHeightWithOffsetForItemLayouts(previous, { sectionId: currentCategory.id, layoutId }),
+          calculateYHeightWithOffsetForDynamicSectionLayouts(previous.sections, {
+            sectionId: currentCategory.id,
+            layoutId,
+          }),
+        ),
+      };
+    });
 
     return {
       ...previous,
-      sections: [
-        ...previous.sections.filter((section) => section.yOffset < aboveSection.yOffset && section.kind !== "dynamic"),
-        {
-          ...aboveSection,
-          items: [...aboveSection.items, ...previousCategoryItems, ...previousBelowWrapperItems],
-        },
-        ...previous.sections
-          .filter(
-            (section): section is CategorySection | EmptySection =>
-              section.yOffset > removedSection.yOffset && section.kind !== "dynamic",
-          )
-          .map((section) => ({
-            ...section,
-            position: section.yOffset - 2,
-          })),
-        ...previous.sections
-          .filter((section): section is DynamicSection => section.kind === "dynamic")
-          .map((dynamicSection) => {
-            // Move dynamic sections from removed section to above section with required yOffset
-            if (dynamicSection.parentSectionId === removedSection.id) {
-              return {
-                ...dynamicSection,
-                yOffset: dynamicSection.yOffset + aboveYOffset + categoryYOffset,
-                parentSectionId: aboveSection.id,
-              };
-            }
+      sections: previous.sections
+        .filter((section) => section.id !== currentCategory.id && section.id !== removedSection.id)
+        .map((section) =>
+          section.kind === "dynamic"
+            ? {
+                ...section,
+                layouts: section.layouts.map((layout) => {
+                  const aboveYOffset = aboveYOffsets.find(({ layoutId }) => layout.layoutId === layoutId)?.yOffset ?? 0;
+                  const categoryYOffset =
+                    categoryYOffsets.find(({ layoutId }) => layout.layoutId === layoutId)?.yOffset ?? 0;
 
-            // Move dynamic sections from category to above section with required yOffset
-            if (dynamicSection.parentSectionId === currentCategory.id) {
-              return {
-                ...dynamicSection,
-                yOffset: dynamicSection.yOffset + aboveYOffset,
-                parentSectionId: aboveSection.id,
-              };
-            }
+                  if (layout.parentSectionId === currentCategory.id) {
+                    return {
+                      ...layout,
+                      yOffset: layout.yOffset + aboveYOffset,
+                      parentSectionId: aboveSection.id,
+                    };
+                  }
 
-            return dynamicSection;
-          }),
-      ],
+                  if (layout.parentSectionId === removedSection.id) {
+                    return {
+                      ...layout,
+                      yOffset: layout.yOffset + aboveYOffset + categoryYOffset,
+                      parentSectionId: aboveSection.id,
+                    };
+                  }
+
+                  return layout;
+                }),
+              }
+            : section,
+        ),
+
+      items: previous.items.map((item) => ({
+        ...item,
+        layouts: item.layouts.map((layout) => {
+          const aboveYOffset = aboveYOffsets.find(({ layoutId }) => layout.layoutId === layoutId)?.yOffset ?? 0;
+          const categoryYOffset = categoryYOffsets.find(({ layoutId }) => layout.layoutId === layoutId)?.yOffset ?? 0;
+
+          if (layout.sectionId === currentCategory.id) {
+            return {
+              ...layout,
+              yOffset: layout.yOffset + aboveYOffset,
+              sectionId: aboveSection.id,
+            };
+          }
+
+          if (layout.sectionId === removedSection.id) {
+            return {
+              ...layout,
+              yOffset: layout.yOffset + aboveYOffset + categoryYOffset,
+              sectionId: aboveSection.id,
+            };
+          }
+
+          return layout;
+        }),
+      })),
     };
   };
 
-const calculateYHeightWithOffsetForDynamicSections = (sections: Section[], sectionId: string) => {
-  return sections.reduce((acc, section) => {
-    if (section.kind !== "dynamic" || section.parentSectionId !== sectionId) {
+const calculateYHeightWithOffsetForDynamicSectionLayouts = (
+  sections: Section[],
+  { sectionId, layoutId }: { sectionId: string; layoutId: string },
+) => {
+  return sections
+    .filter((section) => section.kind === "dynamic")
+    .map((section) => section.layouts.find((layout) => layout.layoutId === layoutId))
+    .filter((layout) => layout !== undefined)
+    .filter((layout) => layout.parentSectionId === sectionId)
+    .reduce((acc, layout) => {
+      const yHeightWithOffset = layout.yOffset + layout.height;
+      if (yHeightWithOffset > acc) return yHeightWithOffset;
       return acc;
-    }
-
-    const yHeightWithOffset = section.yOffset + section.height;
-    if (yHeightWithOffset > acc) return yHeightWithOffset;
-    return acc;
-  }, 0);
+    }, 0);
 };
 
-const calculateYHeightWithOffsetForItems = (section: Section) =>
-  section.items.reduce((acc, item) => {
-    const yHeightWithOffset = item.yOffset + item.height;
-    if (yHeightWithOffset > acc) return yHeightWithOffset;
-    return acc;
-  }, 0);
+const calculateYHeightWithOffsetForItemLayouts = (
+  board: Board,
+  { sectionId, layoutId }: { sectionId: string; layoutId: string },
+) =>
+  board.items
+    .map((item) => item.layouts.find((layout) => layout.layoutId === layoutId))
+    .filter((layout) => layout !== undefined)
+    .filter((layout) => layout.sectionId === sectionId)
+    .reduce((acc, layout) => {
+      const yHeightWithOffset = layout.yOffset + layout.height;
+      if (yHeightWithOffset > acc) return yHeightWithOffset;
+      return acc;
+    }, 0);

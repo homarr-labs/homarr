@@ -600,6 +600,12 @@
       },
       "url": {
         "label": "Url"
+      },
+      "useDifferentUrlForPing": {
+        "checkbox": {
+          "label": "Use different URL for ping",
+          "description": "Useful if Homarr can directly access using an internal hostname or network to avoid bandwidth usage of ISP"
+        }
       }
     },
     "action": {
@@ -1619,7 +1625,8 @@
       },
       "app": {
         "noData": "No app found",
-        "description": "Click <here></here> to create a new app"
+        "description": "Click <here></here> to create a new app",
+        "quickCreate": "Create app on the fly"
       },
       "error": {
         "noIntegration": "No integration selected",
@@ -2018,6 +2025,12 @@
             }
           }
         }
+      },
+      "quickCreateApp": {
+        "modal": {
+          "title": "Create app on the fly",
+          "createAndUse": "Create and use"
+        }
       }
     },
     "field": {
@@ -2092,6 +2105,9 @@
       "opacity": {
         "label": "Opacity"
       },
+      "iconColor": {
+        "label": "Icon color"
+      },
       "customCss": {
         "label": "Custom css for this board",
         "description": "Further, customize your dashboard using CSS, only recommended for experienced users",
@@ -2106,6 +2122,17 @@
       },
       "columnCount": {
         "label": "Column count"
+      },
+      "itemRadius": {
+        "label": "Item radius",
+        "description": "Changes the roundness of tiles on your board",
+        "option": {
+          "xs": "Very small",
+          "sm": "Small",
+          "md": "Medium",
+          "lg": "Large",
+          "xl": "Very large"
+        }
       },
       "name": {
         "label": "Name"
@@ -2126,13 +2153,19 @@
           "unrecognizedLink": "The provided link is not recognized and won't preview, it might still work."
         },
         "layout": {
-          "title": "Layout"
+          "title": "Layout",
+          "responsive": {
+            "title": "Responsive layouts",
+            "action": {
+              "add": "Add layout"
+            }
+          }
         },
         "background": {
           "title": "Background"
         },
-        "color": {
-          "title": "Colors"
+        "appearance": {
+          "title": "Appearance"
         },
         "customCss": {
           "title": "Custom css"
@@ -2231,6 +2264,20 @@
           "link": "View public boards",
           "notice": "To make this page disappear, ask the server administrator to set a home board for the server"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "Name"
+      },
+      "columnCount": {
+        "label": "Column count"
+      },
+      "breakpoint": {
+        "label": "Breakpoint",
+        "description": "Layout will be used on all screens larger than this breakpoint until the next bigger breakpoint."
       }
     }
   },
