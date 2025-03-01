@@ -77,26 +77,9 @@ interface NotificationIndicatorProps {
 const NotificationIndicator = ({ events }: NotificationIndicatorProps) => {
   const notificationEvents = [...new Set(events.map((event) => event.links[0]?.notificationColor))].filter(String);
   return (
-    <Flex
-      h="xs"
-      w="75%"
-      pos={"absolute"}
-      bottom={0}
-      left={"12.5%"}
-      p={0}
-      direction={"row"}
-      justify={"center"}
-    >
+    <Flex h="xs" w="75%" pos={"absolute"} bottom={0} left={"12.5%"} p={0} direction={"row"} justify={"center"}>
       {notificationEvents.map((notificationEvent) => {
-        return (
-          <Box
-            key={notificationEvent}
-            bg={notificationEvent}
-            h={4}
-            p={0}
-            style={{ flex: 1, borderRadius: 5 }}
-          />
-        );
+        return <Box key={notificationEvent} bg={notificationEvent} h={4} p={0} style={{ flex: 1, borderRadius: 5 }} />;
       })}
     </Flex>
   );
