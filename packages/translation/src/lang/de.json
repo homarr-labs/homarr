@@ -2142,7 +2142,13 @@
           "unrecognizedLink": "Der angegebene Link wird nicht erkannt und wird nicht in der Vorschau angezeigt, er könnte jedoch trotzdem funktionieren."
         },
         "layout": {
-          "title": "Ansicht"
+          "title": "Ansicht",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Hintergrund"
@@ -2247,6 +2253,20 @@
           "link": "Öffentliche Boards anzeigen",
           "notice": "Um diese Seite verschwinden zu lassen, bitten sie den Server Administrator, ein Home Board für den Server festzulegen"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },

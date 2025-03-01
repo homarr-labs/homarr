@@ -307,12 +307,12 @@
       "name": "名称",
       "members": "成员",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "首页",
+        "description": "只能选择可以访问的面板"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "移动端面板",
+        "description": "只能选择可以访问的面板"
       }
     },
     "permission": {
@@ -514,12 +514,12 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "设置已保存",
+              "message": "面板设置保存成功"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "无法保存设置",
+              "message": "无法保存面板设置"
             }
           }
         }
@@ -527,17 +527,17 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "位置更改成功！"
           },
           "error": {
-            "message": ""
+            "message": "无法更改位置"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "默认组",
+      "description": "{name} - 所有已登录用户"
     }
   },
   "app": {
@@ -603,8 +603,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "为ping使用不同的 URL",
+          "description": "Homarr 可以使用内部主机名或网络直接访问以避免ISP的带宽使用"
         }
       }
     },
@@ -930,7 +930,7 @@
     },
     "dangerZone": "危险",
     "noResults": "未找到结果",
-    "unsavedChanges": "",
+    "unsavedChanges": "你有未保存的更改 ！",
     "preview": {
       "show": "显示预览",
       "hide": "隐藏预览"
@@ -1615,7 +1615,7 @@
       "app": {
         "noData": "未找到应用",
         "description": "点击 <here></here> 创建一个新的应用",
-        "quickCreate": ""
+        "quickCreate": "在运行时创建应用"
       },
       "error": {
         "noIntegration": "未选择集成",
@@ -2017,8 +2017,8 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "在运行时创建应用",
+          "createAndUse": "创建并使用"
         }
       }
     },
@@ -2095,7 +2095,7 @@
         "label": "不透明度"
       },
       "iconColor": {
-        "label": ""
+        "label": "图标颜色"
       },
       "customCss": {
         "label": "自定义此面板的 css",
@@ -2113,14 +2113,14 @@
         "label": "列数"
       },
       "itemRadius": {
-        "label": "",
-        "description": "",
+        "label": "项目圆角",
+        "description": "更改面板上磁贴的圆角",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "极小",
+          "sm": "小号",
+          "md": "中号",
+          "lg": "大号",
+          "xl": "极大"
         }
       },
       "name": {
@@ -2142,13 +2142,19 @@
           "unrecognizedLink": "提供的链接未被识别，无法预览，但它可能仍然有效。"
         },
         "layout": {
-          "title": "布局"
+          "title": "布局",
+          "responsive": {
+            "title": "响应式布局",
+            "action": {
+              "add": "添加布局"
+            }
+          }
         },
         "background": {
           "title": "背景"
         },
         "appearance": {
-          "title": ""
+          "title": "外观"
         },
         "customCss": {
           "title": "自定义 css"
@@ -2247,6 +2253,20 @@
           "link": "查看公共面板",
           "notice": "要使这个页面消失，请服务器管理员为服务器设置一个主面板"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "名称"
+      },
+      "columnCount": {
+        "label": "列数"
+      },
+      "breakpoint": {
+        "label": "断点",
+        "description": "布局将在大于此断点的所有屏幕上使用，直到下一个较大的断点。"
       }
     }
   },
@@ -2479,10 +2499,10 @@
             "ownerOfGroupDeleted": "此用户组的所有者已被删除。它目前没有所有者。"
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "设置",
+            "alert": "分组设置按列表中组的顺序排列。顶部设置覆盖底部设置。",
             "board": {
-              "title": ""
+              "title": "面板"
             }
           },
           "members": {

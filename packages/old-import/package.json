@@ -37,8 +37,8 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^7.17.0",
-    "@mantine/hooks": "^7.17.0",
+    "@mantine/core": "^7.17.1",
+    "@mantine/hooks": "^7.17.1",
     "adm-zip": "0.5.16",
     "next": "15.1.7",
     "react": "19.0.0",
@@ -53,6 +53,6 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/adm-zip": "0.5.7",
     "eslint": "^9.21.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }

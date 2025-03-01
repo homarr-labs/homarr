@@ -603,8 +603,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Brug anden URL til ping",
+          "description": "Nyttigt, hvis Homarr kan få direkte adgang ved hjælp af et internt værtsnavn eller netværk for at undgå båndbredde brug af ISP"
         }
       }
     },
@@ -2142,7 +2142,13 @@
           "unrecognizedLink": "Det angivne link er ikke genkendt og vil ikke forhåndsvise, det kan stadig fungere."
         },
         "layout": {
-          "title": "Layout"
+          "title": "Layout",
+          "responsive": {
+            "title": "Responsive layouts",
+            "action": {
+              "add": "Tilføj Layout"
+            }
+          }
         },
         "background": {
           "title": "Baggrund"
@@ -2247,6 +2253,20 @@
           "link": "Vis offentlige tavler",
           "notice": "For at få denne side til at forsvinde, skal du bede serveradministratoren om at indstille en hjemmetavle til serveren"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "Navn"
+      },
+      "columnCount": {
+        "label": "Kolonne antal"
+      },
+      "breakpoint": {
+        "label": "Brydningspunkt",
+        "description": "Layout vil blive brugt på alle skærme, der er større end dette breakpoint indtil det næste større breakpoint."
       }
     }
   },

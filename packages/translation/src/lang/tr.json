@@ -12,7 +12,7 @@
       },
       "import": {
         "title": "Verileri İçe Aktar",
-        "subtitle": "Mevcut Homarr Örneğinden Alınan Verileri İçe Aktarabilirsiniz.",
+        "subtitle": "Mevcut bir Homarr örneğinden veri içe aktarabilirsiniz.",
         "dropzone": {
           "title": "Zip dosyasını buraya sürükleyin veya göz atmak için tıklayın",
           "description": "Seçtiğiniz zip işlenecek ve içe aktarmak istediğiniz verileri seçebileceksiniz"
@@ -24,7 +24,7 @@
         },
         "importSettings": {
           "title": "İçe Aktarma Ayarları",
-          "description": "İçe Aktarma İşlevlerini Yapılandırın"
+          "description": "İçe Aktarma İşlevlerini Yapılandır"
         },
         "boardSelection": {
           "title": "{count} Panel Bulundu",
@@ -48,17 +48,17 @@
           }
         },
         "tokenModal": {
-          "title": "İçe Aktarma Token'ını Girin",
+          "title": "İçe Aktarma Anahtarını Girin",
           "field": {
             "token": {
-              "label": "Token",
-              "description": "Önceki Homarr Örneğinizden Aldığınız İçe Aktarma Token'ını girin"
+              "label": "Token Anahtarı",
+              "description": "Önceki Homarr Örneğinizden Aldığınız İçe Aktarma Anahtarı girin"
             }
           },
           "notification": {
             "error": {
-              "title": "Token",
-              "message": "Girdiğiniz Token Geçersiz"
+              "title": "Geçersiz Anahtar",
+              "message": "Girdiğiniz Token Anahtarı Geçersiz"
             }
           }
         }
@@ -783,8 +783,8 @@
           "newLabel": "Yeni Şifre"
         },
         "tokenId": {
-          "label": "Token Kimliği",
-          "newLabel": "Yeni Token Kimliği"
+          "label": "Token Anahtar Kimliği",
+          "newLabel": "Yeni Anahtar Kimliği"
         },
         "realm": {
           "label": "Realm",
@@ -2142,7 +2142,13 @@
           "unrecognizedLink": "Sağlanan bağlantı tanınmıyor ve önizleme yapılmıyor, yine de çalışabilir."
         },
         "layout": {
-          "title": "Düzen"
+          "title": "Düzen",
+          "responsive": {
+            "title": "Duyarlı yerleşimler",
+            "action": {
+              "add": "Yerleşim Ekle"
+            }
+          }
         },
         "background": {
           "title": "Arkaplan"
@@ -2247,6 +2253,20 @@
           "link": "Herkese açık panelleri görüntüle",
           "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel ayarlamasını isteyin"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "İsim"
+      },
+      "columnCount": {
+        "label": "Sütun Sayısı"
+      },
+      "breakpoint": {
+        "label": "Kesme Noktası",
+        "description": "Bu kesme noktasından daha büyük tüm ekranlarda, bir sonraki büyük kesme noktasına kadar bu yerleşim kullanılacaktır."
       }
     }
   },
@@ -2464,7 +2484,7 @@
               "label": "Son geçerlilik tarihi"
             },
             "token": {
-              "label": "Token"
+              "label": "Token Anahtarı"
             }
           }
         }
@@ -2658,7 +2678,7 @@
           "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "API token'ı oluşturuldu",
+              "title": "API anahtarı oluşturuldu",
               "description": "API anahtarı oluşturuldu. Dikkatli olun, bu anahtar veritabanında şifrelenmiştir ve size bir daha asla aktarılmayacaktır. Bu anaharı kaybederseniz, bir daha erişmeniz mümkün değildir.",
               "button": "Kopyala ve kapat"
             }
@@ -2671,12 +2691,12 @@
               "label": "Kimlik doğrulama",
               "title": "API Anahtarları",
               "button": {
-                "createApiToken": "API token'ı oluştur"
+                "createApiToken": "API anahtarı oluştur"
               },
               "modal": {
                 "delete": {
-                  "title": "API belirtecini sil",
-                  "text": "Bu, API belirtecini kalıcı olarak silecektir. Bu belirteci kullanan API istemcileri artık kimlik doğrulaması yapamaz ve API istekleri gerçekleştiremez. Bu eylem geri alınamaz."
+                  "title": "API anahtarını sil",
+                  "text": "Bu, API anahtarı kalıcı olarak silecektir. Bu anahtarı kullanan API istemcileri artık kimlik doğrulaması yapamaz ve API istekleri gerçekleştiremez. Bu eylem geri alınamaz."
                 }
               },
               "table": {
