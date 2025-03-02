@@ -9,6 +9,7 @@ export {
   createChannelWithLatestAndEvents,
   handshakeAsync,
   createSubPubChannel,
+  createGetSetChannel,
 } from "./lib/channel";
 
 export const exampleChannel = createSubPubChannel<{ message: string }>("example");

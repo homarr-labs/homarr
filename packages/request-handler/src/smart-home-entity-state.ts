@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
 import type { IntegrationKindByCategory } from "@homarr/definitions";
-import { integrationCreator } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations";
 
 import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
@@ -11,7 +11,7 @@ export const smartHomeEntityStateRequestHandler = createCachedIntegrationRequest
   { entityId: string }
 >({
   async requestAsync(integration, input) {
-    const integrationInstance = integrationCreator(integration);
+    const integrationInstance = await createIntegrationAsync(integration);
     const result = await integrationInstance.getEntityStateAsync(input.entityId);
 
     if (!result.success) {

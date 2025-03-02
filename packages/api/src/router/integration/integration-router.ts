@@ -23,7 +23,7 @@ import {
   integrationKinds,
   integrationSecretKindObject,
 } from "@homarr/definitions";
-import { integrationCreator } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations";
 import { validation } from "@homarr/validation";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
@@ -465,7 +465,7 @@ export const integrationRouter = createTRPCRouter({
     .unstable_concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("search")))
     .input(z.object({ integrationId: z.string(), query: z.string() }))
     .query(async ({ ctx, input }) => {
-      const integrationInstance = integrationCreator(ctx.integration);
+      const integrationInstance = await createIntegrationAsync(ctx.integration);
       return await integrationInstance.searchAsync(encodeURI(input.query));
     }),
 });

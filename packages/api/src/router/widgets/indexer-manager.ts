@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { integrationCreator } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations";
 import type { Indexer } from "@homarr/integrations/types";
 import { logger } from "@homarr/log";
 import { indexerManagerRequestHandler } from "@homarr/request-handler/indexer-manager";
@@ -59,7 +59,7 @@ export const indexerManagerRouter = createTRPCRouter({
     .mutation(async ({ ctx }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const client = integrationCreator(integration);
+          const client = await createIntegrationAsync(integration);
           await client.testAllAsync().catch((err) => {
             logger.error("indexer-manager router - ", err);
             throw new TRPCError({
