@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, ColorInput, Group, Stack, useMantineTheme } from "@mantine/core";
-import { z } from "zod";
+import { Button, CloseButton, ColorInput, Group, Stack, useMantineTheme } from "@mantine/core";
+import type { z } from "zod";
 
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
@@ -34,9 +34,16 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
           label={t("section.dynamic.option.borderColor.label")}
           format="hex"
           swatches={Object.values(theme.colors).map((color) => color[6])}
+          rightSection={
+            <CloseButton
+              aria-label="Clear input"
+              onClick={() => form.setFieldValue("borderColor", "")}
+              style={{ display: form.getInputProps("borderColor").value ? undefined : "none" }}
+            />
+          }
           {...form.getInputProps("borderColor")}
         />
-        <Group justify="space-between">
+        <Group justify="end">
           <Group justify="end" w={{ base: "100%", xs: "auto" }}>
             <Button onClick={actions.closeModal} variant="subtle" color="gray">
               {t("common.action.cancel")}
