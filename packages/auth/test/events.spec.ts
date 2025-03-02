@@ -11,6 +11,7 @@ import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 
 import { createSignInEventHandler } from "../events";
 
+vi.mock("next-auth", () => ({}));
 vi.mock("../env", () => {
   return {
     env: {

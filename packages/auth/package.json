@@ -2,7 +2,7 @@
   "name": "@homarr/auth",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./index.ts",
@@ -25,6 +25,7 @@
   "dependencies": {
     "@auth/core": "^0.38.0",
     "@auth/drizzle-adapter": "^1.8.0",
+    "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",

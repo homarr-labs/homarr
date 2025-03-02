@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { asc, createId, eq, like, sql } from "@homarr/db";
+import { asc, createId, eq, like } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import { searchEngines, users } from "@homarr/db/schema";
 import { integrationCreator } from "@homarr/integrations";
@@ -13,12 +13,7 @@ import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publ
 export const searchEngineRouter = createTRPCRouter({
   getPaginated: protectedProcedure.input(validation.common.paginated).query(async ({ input, ctx }) => {
     const whereQuery = input.search ? like(searchEngines.name, `%${input.search.trim()}%`) : undefined;
-    const searchEngineCount = await ctx.db
-      .select({
-        count: sql<number>`count(*)`,
-      })
-      .from(searchEngines)
-      .where(whereQuery);
+    const searchEngineCount = await ctx.db.$count(searchEngines, whereQuery);
 
     const dbSearachEngines = await ctx.db.query.searchEngines.findMany({
       limit: input.pageSize,
@@ -28,7 +23,7 @@ export const searchEngineRouter = createTRPCRouter({
 
     return {
       items: dbSearachEngines,
-      totalCount: searchEngineCount[0]?.count ?? 0,
+      totalCount: searchEngineCount,
     };
   }),
   getSelectable: protectedProcedure

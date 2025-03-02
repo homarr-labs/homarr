@@ -1816,6 +1816,12 @@
         "partiallyAvailable": "Delvis",
         "available": "Tilgængelig"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": "TBD"
     },
     "mediaRequests-requestStats": {
