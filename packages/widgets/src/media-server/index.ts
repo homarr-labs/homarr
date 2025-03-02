@@ -7,5 +7,5 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaServ
   createOptions() {
     return {};
   },
-  supportedIntegrations: ["jellyfin", "plex"],
+  supportedIntegrations: ["jellyfin", "plex", "emby"],
 }).withDynamicImport(() => import("./component"));
