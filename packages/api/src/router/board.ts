@@ -942,6 +942,7 @@ export const boardRouter = createTRPCRouter({
                   kind: section.kind,
                   yOffset: section.kind !== "dynamic" ? section.yOffset : null,
                   xOffset: section.kind === "dynamic" ? null : 0,
+                  options: section.kind === "dynamic" ? superjson.stringify(section.options) : emptySuperJSON,
                   name: "name" in section ? section.name : null,
                   boardId: dbBoard.id,
                 })),
