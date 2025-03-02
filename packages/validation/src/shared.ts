@@ -15,6 +15,8 @@ export type BoardItemIntegration = z.infer<typeof integrationSchema>;
 
 export const itemAdvancedOptionsSchema = z.object({
   customCssClasses: z.array(z.string()).default([]),
+  customTextSize: z.number().min(0).max(10).default(1),
+  customSpacing: z.number().min(0).max(10).default(1),
 });
 
 export type BoardItemAdvancedOptions = z.infer<typeof itemAdvancedOptionsSchema>;
