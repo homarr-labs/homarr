@@ -675,7 +675,7 @@ export default function DownloadClientsWidget({
     <Stack gap={0} h="100%" display="flex" style={baseStyle}>
       <MantineReactTable table={table} />
       <Group
-        h="var(--ratio-width)"
+        h={40}
         px="var(--space-size)"
         justify={integrationTypes.includes("torrent") ? "space-between" : "end"}
         style={{
@@ -690,7 +690,6 @@ export default function DownloadClientsWidget({
         )}
         <ClientsControl
           clients={clients}
-          style={editStyle}
           filters={quickFilters}
           setFilters={setQuickFilters}
           availableStatuses={availableStatuses}
@@ -785,10 +784,9 @@ interface ClientsControlProps {
   filters: QuickFilter;
   setFilters: (filters: QuickFilter) => void;
   availableStatuses: QuickFilter["statuses"];
-  style?: MantineStyleProp;
 }
 
-const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style }: ClientsControlProps) => {
+const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: ClientsControlProps) => {
   const integrationsStatuses = clients.reduce(
     (acc, { status, integration: { id }, interact }) =>
       status && interact ? (acc[status.paused ? "paused" : "active"].push(id), acc) : acc,
@@ -799,33 +797,21 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style
     clients.reduce((count, { status }) => count + (status?.rates.down ?? 0), 0),
     "/s",
   );
-  const chipStyle = {
-    "--chip-fz": "var(--button-fz)",
-    "--chip-size": "calc(var(--ratio-width) * 0.9)",
-    "--chip-icon-size": "calc(var(--chip-fz)*2/3)",
-    "--chip-padding": "var(--chip-fz)",
-    "--chip-checked-padding": "var(--chip-icon-size)",
-    "--chip-spacing": "var(--space-size)",
-  };
+
   const { mutate: mutateResumeQueue } = clientApi.widget.downloads.resume.useMutation();
   const { mutate: mutatePauseQueue } = clientApi.widget.downloads.pause.useMutation();
   const [opened, { open, close }] = useDisclosure(false);
   const t = useScopedI18n("widget.downloads");
   return (
-    <Group gap="var(--space-size)" style={style}>
+    <Group gap={5}>
       <Popover withinPortal={false} offset={0}>
         <Popover.Target>
-          <ActionIcon size="var(--button-size)" radius={999} variant="light">
+          <ActionIcon size={30} radius={999} variant="light">
             <IconFilter style={actionIconIconStyle} />
           </ActionIcon>
         </Popover.Target>
-        <Popover.Dropdown
-          w="calc(var(--ratio-width)*4)"
-          p="var(--space-size)"
-          bg="var(--background-color)"
-          style={{ "--popover-border-color": "var(--border-color)" }}
-        >
-          <Stack gap="var(--space-size)" align="center" pb="var(--space-size)">
+        <Popover.Dropdown>
+          <Stack gap="md" align="center" pb="var(--space-size)">
             <Text fw="700">{t("items.integration.columnTitle")}</Text>
             <Chip.Group
               multiple
@@ -833,7 +819,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style
               onChange={(names) => setFilters({ ...filters, integrationKinds: names })}
             >
               {clients.map(({ integration }) => (
-                <Chip style={chipStyle} key={integration.id} value={integration.name}>
+                <Chip key={integration.id} value={integration.name}>
                   {integration.name}
                 </Chip>
               ))}
@@ -845,7 +831,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style
               onChange={(statuses) => setFilters({ ...filters, statuses: statuses as typeof filters.statuses })}
             >
               {availableStatuses.map((status) => (
-                <Chip style={chipStyle} key={status} value={status}>
+                <Chip key={status} value={status}>
                   {t(`states.${status}`)}
                 </Chip>
               ))}
@@ -861,7 +847,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style
       {someInteract && (
         <Tooltip label={t("actions.clients.resume")}>
           <ActionIcon
-            size="var(--button-size)"
+            size={30}
             radius={999}
             disabled={integrationsStatuses.paused.length === 0}
             variant="light"
@@ -885,7 +871,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses, style
       {someInteract && (
         <Tooltip label={t("actions.clients.pause")}>
           <ActionIcon
-            size="var(--button-size)"
+            size={30}
             radius={999}
             disabled={integrationsStatuses.active.length === 0}
             variant="light"
@@ -981,8 +967,8 @@ const ClientAvatar = ({ client }: ClientAvatarProps) => {
       key={client.integration.id}
       src={getIconUrl(client.integration.kind)}
       style={{ filter: !isConnected ? "grayscale(100%)" : undefined }}
-      size="var(--image-size)"
-      p="calc(var(--space-size)*0.5)"
+      size={30}
+      p={5}
       bd={`calc(var(--space-size)*0.5) solid ${client.status ? "transparent" : "var(--mantine-color-red-filled)"}`}
     />
   );
