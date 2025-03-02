@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import cron from "node-cron";
 
 import { Stopwatch } from "@homarr/common";
@@ -48,8 +49,15 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
         }
         await creatorOptions.onCallbackSuccess?.(name);
       } catch (error) {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        creatorOptions.logger.logError(`Failed to run job '${name}': ${error}`);
+        // Log AxiosError in a less detailed way to prevent very long output
+        if (error instanceof AxiosError) {
+          creatorOptions.logger.logError(
+            `Failed to run job '${name}': [AxiosError] ${error.message} ${error.response?.status} ${error.response?.config.url}\n${error.stack}`,
+          );
+        } else {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          creatorOptions.logger.logError(`Failed to run job '${name}': ${error}`);
+        }
         await creatorOptions.onCallbackError?.(name, error);
       }
     };

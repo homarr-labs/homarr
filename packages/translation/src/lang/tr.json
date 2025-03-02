@@ -72,12 +72,12 @@
             "message": "Kullanıcı başarıyla oluşturuldu"
           },
           "error": {
-            "title": "Kullanıcı oluşturma başarısız oldu"
+            "title": "Kullanıcı oluşturma başarısız"
           }
         }
       },
       "group": {
-        "title": "Dış grup",
+        "title": "Harici grup",
         "subtitle": "Harici kullanıcılar için kullanılacak grubu belirtin.",
         "form": {
           "name": {
@@ -119,7 +119,7 @@
       },
       "init": {
         "title": "Yeni Homarr Kurulumu",
-        "subtitle": "Lütfen yönetici kullanıcısını oluşturun"
+        "subtitle": "Lütfen yönetici için kullanıcı oluşturun"
       }
     },
     "field": {
@@ -150,7 +150,7 @@
         "label": "Ana panel"
       },
       "pingIconsEnabled": {
-        "label": "Pingler İçin Simgeler Kullanın"
+        "label": "Pingler İçin Simge Kullanın"
       },
       "defaultSearchEngine": {
         "label": "Öntanımlı arama motoru"
@@ -363,7 +363,7 @@
           },
           "full-all": {
             "label": "Tam panel erişimi",
-            "description": "Üyelerin tüm panelleri görüntülemesine, değiştirmesine ve silmesine izin verin (Erişim kontrolü ve tehlikeli alan dahil)"
+            "description": "Üyelerin tüm panelleri görüntülemesine, değiştirmesine ve silmesine izin ver (Erişim kontrolü ve tehlikeli alan dahil)"
           }
         }
       },
@@ -371,16 +371,16 @@
         "title": "Entegrasyonlar",
         "item": {
           "create": {
-            "label": "Entegrasyonlar oluştur",
-            "description": "Üyelerin entegrasyonlar oluşturmasına izin ver"
+            "label": "Entegrasyon oluştur",
+            "description": "Üyelerin entegrasyon oluşturmasına izin ver"
           },
           "use-all": {
             "label": "Tüm entegrasyonları kullan",
-            "description": "Üyelerin panellere herhangi bir entegrasyonu eklemelerine olanak tanır"
+            "description": "Üyelerin panellere herhangi bir entegrasyon eklemelerine olanak tanır"
           },
           "interact-all": {
             "label": "Herhangi bir entegrasyonla etkileşim kurun",
-            "description": "Üyelerin herhangi bir entegrasyonla etkileşime girmesine izin verin"
+            "description": "Üyelerin herhangi bir entegrasyonla etkileşime girmesine izin ver"
           },
           "full-all": {
             "label": "Tam entegrasyon erişimi",
@@ -418,8 +418,8 @@
         "title": "Arama Motorları",
         "item": {
           "create": {
-            "label": "Arama motorları oluşturun",
-            "description": "Üyelerin arama motorları oluşturmasına izin ver"
+            "label": "Arama motoru oluştur",
+            "description": "Üyelerin arama motoru oluşturmasına izin ver"
           },
           "modify-all": {
             "label": "Tüm arama motorlarını değiştir",
@@ -433,8 +433,8 @@
       }
     },
     "memberNotice": {
-      "mixed": "Bazı üyeler harici sağlayıcılardandır ve burada yönetilemezler",
-      "external": "Tüm üyeler harici sağlayıcılardandır ve burada yönetilemezler"
+      "mixed": "Bazı üyeler harici sağlayıcılardandır ve buradan yönetilemezler",
+      "external": "Tüm üyeler harici sağlayıcılardandır ve buradan yönetilemezler"
     },
     "reservedNotice": {
       "message": "Bu grup sistem kullanımı için ayrılmıştır ve bazı eylemleri kısıtlar. <checkoutDocs></checkoutDocs>"
@@ -621,7 +621,7 @@
         "title": "Entegrasyonlar",
         "search": "Entegrasyon ara",
         "noResults": {
-          "title": "Henüz entegrasyon yok"
+          "title": "Henüz entegrasyon oluşturulmadı"
         }
       },
       "create": {
@@ -685,7 +685,7 @@
         "create": "Bağlantıyı test et ve oluştur",
         "edit": "Bağlantıyı test et ve kaydet"
       },
-      "alertNotice": "Bağlantı kurulumu başaralı olduğunda Kaydet düğmesi etkinleştirilir",
+      "alertNotice": "Bağlantı başarılı olduğunda Kaydet butonu etkinleştirilir",
       "notification": {
         "success": {
           "title": "Bağlantı başarılı",
@@ -861,7 +861,7 @@
       "continue": "Devam Et",
       "previous": "Önceki",
       "next": "İleri",
-      "checkoutDocs": "Dökümanlara göz atın",
+      "checkoutDocs": "Dökümanlara göz at",
       "checkLogs": "Daha fazla ayrıntı için günlükleri kontrol edin",
       "tryAgain": "Tekrar Deneyin",
       "loading": "Yükleniyor"
@@ -1815,6 +1815,12 @@
         "processing": "İşlemde",
         "partiallyAvailable": "Kısmi",
         "available": "Mevcut"
+      },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
       },
       "toBeDetermined": "-Yapım Aşamasında-"
     },

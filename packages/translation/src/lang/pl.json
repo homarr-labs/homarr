@@ -1816,6 +1816,12 @@
         "partiallyAvailable": "",
         "available": "Dostępne"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {

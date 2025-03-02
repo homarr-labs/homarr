@@ -1816,6 +1816,12 @@
         "partiallyAvailable": "部分",
         "available": "可用"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": "待定"
     },
     "mediaRequests-requestStats": {

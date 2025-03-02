@@ -1816,6 +1816,12 @@
         "partiallyAvailable": "Một phần",
         "available": "Khả dụng"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {

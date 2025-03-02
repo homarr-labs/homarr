@@ -1816,6 +1816,12 @@
         "partiallyAvailable": "Čiastočný",
         "available": "K dispozícii"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": "TBD"
     },
     "mediaRequests-requestStats": {
