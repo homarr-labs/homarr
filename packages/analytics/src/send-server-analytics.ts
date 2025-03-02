@@ -36,7 +36,7 @@ const sendWidgetDataAsync = async (umamiInstance: Umami, analyticsSettings: type
   if (!analyticsSettings.enableWidgetData) {
     return;
   }
-  const widgetCount = (await db.select({ count: count(items.id) }).from(items))[0]?.count ?? 0;
+  const widgetCount = await db.$count(items);
 
   const response = await umamiInstance.track("server-widget-data", {
     countWidgets: widgetCount,
@@ -52,7 +52,7 @@ const sendUserDataAsync = async (umamiInstance: Umami, analyticsSettings: typeof
   if (!analyticsSettings.enableUserData) {
     return;
   }
-  const userCount = (await db.select({ count: count(users.id) }).from(users))[0]?.count ?? 0;
+  const userCount = await db.$count(users);
 
   const response = await umamiInstance.track("server-user-data", {
     countUsers: userCount,
