@@ -1,1 +1,2 @@
-docker run -p 7575:7575 homarr:latest
+:: Please do not run this command in production. It is only for local testing.
+docker run -p 7575:7575 -e SECRET_ENCRYPTION_KEY=0000000000000000000000000000000000000000000000000000000000000000 homarr:latest
