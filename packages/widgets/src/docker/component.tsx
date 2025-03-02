@@ -11,15 +11,13 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import type { TranslationFunction } from "@homarr/translation";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { ContainerState } from "../../../docker/src";
 
 export default function DockerWidget() {
-  const t = useI18n();
-  const tDocker = useScopedI18n("docker");
+  const t = useScopedI18n("docker");
   const containerStates = {
     created: "cyan",
     running: "green",
@@ -33,7 +31,7 @@ export default function DockerWidget() {
   const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
     return (
       <Badge size="10cqmin" radius="sm" variant="transparent" color={containerStates[state]}>
-        <Text size="6cqmin">{tDocker(`field.state.option.${state}`)}</Text>
+        <Text size="6cqmin">{t(`field.state.option.${state}`)}</Text>
       </Badge>
     );
   };
@@ -53,12 +51,10 @@ export default function DockerWidget() {
     width: "var(--ai-icon-size)",
   };
 
-  const columns = (
-    t: TranslationFunction,
-  ): MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["containers"][number]>[] => [
+  const columns = (): MRT_ColumnDef<RouterOutputs["docker"]["getContainersWidget"]["data"]["containers"][number]>[] => [
     {
       accessorKey: "name",
-      header: t("docker.field.name.label"),
+      header: t("field.name.label"),
       mantineTableHeadCellProps: {
         style: {
           fontSize: "7cqmin",
@@ -66,14 +62,14 @@ export default function DockerWidget() {
           width: "25%",
         },
       },
-      Cell({ row }) {
+      Cell({ renderedCellValue, row }) {
         return (
           <Group gap="xs">
             <Avatar variant="outline" radius="md" size="10cqmin" src={row.original.iconUrl}>
               {row.original.name.at(0)?.toUpperCase()}
             </Avatar>
             <Text p="0.5" size="6cqmin" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-              {row.original.name.charAt(0).toUpperCase() + row.original.name.slice(1).toLowerCase()}
+              {renderedCellValue}
             </Text>
           </Group>
         );
@@ -81,7 +77,7 @@ export default function DockerWidget() {
     },
     {
       accessorKey: "state",
-      header: t("docker.field.state.label"),
+      header: t("field.state.label"),
       mantineTableHeadCellProps: {
         style: {
           fontSize: "7cqmin",
@@ -90,12 +86,12 @@ export default function DockerWidget() {
         },
       },
       Cell({ row }) {
-        return <ContainerStateBadge state={row.original.state} />;
+        return <ContainerStateBadge state={row.original.state as ContainerState} />;
       },
     },
     {
       accessorKey: "cpuUsage",
-      header: t("docker.field.stats.cpu.label"),
+      header: t("field.stats.cpu.label"),
       mantineTableHeadCellProps: {
         style: {
           fontSize: "7cqmin",
@@ -111,14 +107,14 @@ export default function DockerWidget() {
             variant="transparent"
             color={badgeColor(safeValue(row.original.cpuUsage), row.original.state)}
           >
-            <Text size="6cqmin">{`${row.original.cpuUsage}%`}</Text>
+            <Text size="6cqmin">{`${row.original.cpuUsage.toFixed(2)}%`}</Text>
           </Badge>
         );
       },
     },
     {
       accessorKey: "memoryUsage",
-      header: t("docker.field.stats.memory.label"),
+      header: t("field.stats.memory.label"),
       mantineTableHeadCellProps: {
         style: {
           fontSize: "7cqmin",
@@ -141,7 +137,7 @@ export default function DockerWidget() {
     },
     {
       accessorKey: "actions",
-      header: t("docker.action.title"),
+      header: t("action.title"),
       mantineTableHeadCellProps: {
         style: {
           fontSize: "7cqmin",
@@ -166,14 +162,14 @@ export default function DockerWidget() {
               },
               onSuccess() {
                 showSuccessNotification({
-                  title: tDocker(`action.${action}.notification.success.title`),
-                  message: tDocker(`action.${action}.notification.success.message`),
+                  title: t(`action.${action}.notification.success.title`),
+                  message: t(`action.${action}.notification.success.message`),
                 });
               },
               onError() {
                 showErrorNotification({
-                  title: tDocker(`action.${action}.notification.error.title`),
-                  message: tDocker(`action.${action}.notification.error.message`),
+                  title: t(`action.${action}.notification.error.title`),
+                  message: t(`action.${action}.notification.error.message`),
                 });
               },
             },
@@ -182,9 +178,7 @@ export default function DockerWidget() {
 
         return (
           <Group wrap="nowrap" gap="xs">
-            <Tooltip
-              label={row.original.state === "running" ? t("docker.action.stop.label") : t("docker.action.start.label")}
-            >
+            <Tooltip label={row.original.state === "running" ? t("action.stop.label") : t("action.start.label")}>
               <ActionIcon
                 variant="transparent"
                 radius={999}
@@ -198,7 +192,7 @@ export default function DockerWidget() {
                 )}
               </ActionIcon>
             </Tooltip>
-            <Tooltip label={t("docker.action.restart.label")}>
+            <Tooltip label={t("action.restart.label")}>
               <ActionIcon
                 variant="transparent"
                 radius={999}
@@ -214,15 +208,13 @@ export default function DockerWidget() {
     },
   ];
 
-  const { data } = clientApi.docker.getContainers.useQuery(undefined, {
-    refetchInterval: 5000,
-  });
+  const { data } = clientApi.docker.getContainersWidget.useQuery();
   const relativeTime = useTimeAgo(data?.timestamp ? new Date(data.timestamp) : new Date());
 
-  const totalContainers = data?.containers.length ?? 0;
-  const containerStateCounts = data?.containers.reduce<Record<ContainerState, number>>(
+  const totalContainers = data?.data.containers.length ?? 0;
+  const containerStateCounts = data?.data.containers.reduce<Record<ContainerState, number>>(
     (acc, container) => {
-      acc[container.state] = (acc[container.state] || 0) + 1;
+      acc[container.state as ContainerState] = (acc[container.state as ContainerState] || 0) + 1;
       return acc;
     },
     {
@@ -246,8 +238,8 @@ export default function DockerWidget() {
   };
 
   const table = useTranslatedMantineReactTable({
-    columns: columns(t),
-    data: data?.containers ?? [],
+    columns: columns(),
+    data: data?.data.containers ?? [],
     enablePagination: false,
     enableTopToolbar: false,
     enableBottomToolbar: false,
@@ -298,20 +290,20 @@ export default function DockerWidget() {
       >
         <Group gap={1}>
           <IconBrandDocker size="8cqmin" />
-          <Text size="6cqmin">{t("widget.dockerContainers.footer.total", { count: totalContainers })}</Text>
+          <Text size="6cqmin">{t("table.footer", { count: totalContainers })}</Text>
         </Group>
         <Group gap="2cqmin">
           {containerStateCounts &&
             Object.entries(containerStateCounts).map(([state, count]) =>
               count > 0 ? (
                 <Text key={state} size="6cqmin" variant="light">
-                  {tDocker(`field.state.option.${state as keyof typeof containerStates}`)}:{count}
+                  {t(`field.state.option.${state as keyof typeof containerStates}`)}:{count}
                 </Text>
               ) : null,
             )}
         </Group>
         <Text size="6cqmin" p="2cqmin">
-          {tDocker("table.updated", { when: relativeTime })}
+          {t("table.updated", { when: relativeTime })}
         </Text>
       </Group>
     </Stack>

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 
+import type { ContainerState } from "../../docker/src";
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
 interface ContainerInfo {
@@ -29,11 +30,10 @@ export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
 const responseSchema = z.object({
   containers: z.array(
     z.object({
-      Id: z.string(),
-      Names: z.array(z.string()),
-      State: z.string(),
-      Status: z.string(),
-      instance: z.string(),
+      id: z.string(),
+      name: z.string(),
+      state: z.string(),
+      status: z.string(),
       iconUrl: z.string().nullable(),
       cpuUsage: z.number(),
       memoryUsage: z.number(),
@@ -62,19 +62,18 @@ async function getContainersWithStats() {
   const containerStatsPromises = containers.map(async (container) => {
     const stats = await docker.getContainer(container.Id).stats({ stream: false });
     return {
-      Id: container.Id,
-      Names: container.Names,
-      State: container.State,
-      Status: container.Status,
-      instance: container.Image,
+      id: container.Id,
+      name: container.Names[0]?.split("/")[1] ?? "Unknown",
+      state: container.State as ContainerState,
+      status: container.Status,
       iconUrl:
         dbIcons.find((icon) => {
           const extractedImage = extractImage(container);
           if (!extractedImage) return false;
           return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
         })?.url ?? null,
-      cpuUsage: calculateCpuUsage(stats),
-      memoryUsage: stats.memory_stats.usage,
+      cpuUsage: calculateCpuUsage(stats) || 0,
+      memoryUsage: stats.memory_stats.usage || 0,
     };
   });
 
