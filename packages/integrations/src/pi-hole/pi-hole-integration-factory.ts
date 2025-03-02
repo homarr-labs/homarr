@@ -1,8 +1,8 @@
 import { removeTrailingSlash } from "@homarr/common";
 
 import type { IntegrationInput } from "../base/integration";
-import { PiHoleIntegrationV6 } from "./pi-hole-integration-v6";
 import { PiHoleIntegrationV5 } from "./v5/pi-hole-integration-v5";
+import { PiHoleIntegrationV6 } from "./v6/pi-hole-integration-v6";
 
 export const createPiHoleIntegrationAsync = async (input: IntegrationInput) => {
   const baseUrl = removeTrailingSlash(input.url);
