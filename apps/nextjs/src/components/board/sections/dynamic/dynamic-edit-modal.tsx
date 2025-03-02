@@ -36,7 +36,6 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
           swatches={Object.values(theme.colors).map((color) => color[6])}
           rightSection={
             <CloseButton
-              aria-label="Clear input"
               onClick={() => form.setFieldValue("borderColor", "")}
               style={{ display: form.getInputProps("borderColor").value ? undefined : "none" }}
             />
