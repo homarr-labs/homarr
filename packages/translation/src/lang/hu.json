@@ -1816,6 +1816,12 @@
         "partiallyAvailable": "Részleges",
         "available": "Elérhető"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {

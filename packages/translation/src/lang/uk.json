@@ -307,11 +307,11 @@
       "name": "Ім’я",
       "members": "Учасники",
       "homeBoard": {
-        "label": "",
+        "label": "Домашня дошка",
         "description": ""
       },
       "mobileBoard": {
-        "label": "",
+        "label": "Мобільна дошка",
         "description": ""
       }
     },
@@ -518,8 +518,8 @@
               "message": ""
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Не вдалося зберегти налаштування",
+              "message": "Не вдалося зберегти налаштування дошки"
             }
           }
         }
@@ -536,7 +536,7 @@
       }
     },
     "defaultGroup": {
-      "name": "",
+      "name": "Група за замовчуванням",
       "description": ""
     }
   },
@@ -1815,6 +1815,12 @@
         "processing": "В обробці",
         "partiallyAvailable": "Частково доступно",
         "available": "Доступно"
+      },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
       },
       "toBeDetermined": ""
     },

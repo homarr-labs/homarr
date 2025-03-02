@@ -1816,6 +1816,12 @@
         "partiallyAvailable": "Parțial",
         "available": "Disponibil"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
