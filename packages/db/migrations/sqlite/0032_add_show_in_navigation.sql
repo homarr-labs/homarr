@@ -1,0 +1,1 @@
+ALTER TABLE `board` ADD `show_in_navigation` integer DEFAULT 0 NOT NULL; 

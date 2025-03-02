@@ -134,6 +134,7 @@ export const boardRouter = createTRPCRouter({
         name: true,
         logoImageUrl: true,
         isPublic: true,
+        showInNavigation: true,
       },
       with: {
         creator: {
@@ -722,6 +723,7 @@ export const boardRouter = createTRPCRouter({
 
           // Behavior settings
           disableStatus: input.disableStatus,
+          showInNavigation: input.showInNavigation,
         })
         .where(eq(boards.id, input.id));
     }),
@@ -1097,7 +1099,9 @@ export const boardRouter = createTRPCRouter({
                   parentSectionId: sectionLayout.parentSectionId,
                 })
                 .where(
-                  and(eq(sectionLayouts.sectionId, section.id), eq(sectionLayouts.layoutId, sectionLayout.layoutId)),
+                  and(
+                    eq(sectionLayouts.sectionId, section.id),
+                    eq(sectionLayouts.layoutId, sectionLayout.layoutId)),
                 )
                 .run();
             }
