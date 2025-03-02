@@ -31,6 +31,11 @@ export abstract class Integration {
     return secret.value;
   }
 
+  protected getSecretValueOrDefault(kind: IntegrationSecretKind) {
+    const secret = this.integration.decryptedSecrets.find((secret) => secret.kind === kind);
+    return secret?.value;
+  }
+
   protected hasSecretValue(kind: IntegrationSecretKind) {
     return this.integration.decryptedSecrets.some((secret) => secret.kind === kind);
   }

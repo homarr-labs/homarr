@@ -25,6 +25,7 @@ import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import type { Integration, IntegrationInput } from "./integration";
+import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 
 export const integrationCreator = <TKind extends keyof typeof integrationCreators>(
   integration: IntegrationInput & { kind: TKind },
@@ -74,4 +75,5 @@ export const integrationCreators = {
   dashDot: DashDotIntegration,
   tdarr: TdarrIntegration,
   proxmox: ProxmoxIntegration,
+  nextcloud: NextcloudIntegration
 } satisfies Record<IntegrationKind, new (integration: IntegrationInput) => Integration>;
