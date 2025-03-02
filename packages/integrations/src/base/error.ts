@@ -28,7 +28,7 @@ export class ResponseError extends Error {
     try {
       this.content = JSON.stringify(content);
     } catch {
-      // ignore
+      this.content = content as string;
     }
   }
 }

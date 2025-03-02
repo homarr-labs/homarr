@@ -1,10 +1,10 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
-import { Integration } from "../base/integration";
-import { IntegrationTestConnectionError } from "../base/test-connection-error";
-import type { DnsHoleSummaryIntegration } from "../interfaces/dns-hole-summary/dns-hole-summary-integration";
-import type { DnsHoleSummary } from "../interfaces/dns-hole-summary/dns-hole-summary-types";
-import { summaryResponseSchema } from "./pi-hole-types";
+import { Integration } from "../../base/integration";
+import { IntegrationTestConnectionError } from "../../base/test-connection-error";
+import type { DnsHoleSummaryIntegration } from "../../interfaces/dns-hole-summary/dns-hole-summary-integration";
+import type { DnsHoleSummary } from "../../interfaces/dns-hole-summary/dns-hole-summary-types";
+import { summaryResponseSchema } from "./pi-hole-schemas-v5";
 
 export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIntegration {
   public async getSummaryAsync(): Promise<DnsHoleSummary> {

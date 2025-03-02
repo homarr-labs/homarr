@@ -37,6 +37,7 @@ export const createIntegrationAsync = async <TKind extends keyof typeof integrat
 
   const creator = integrationCreators[integration.kind];
 
+  // factories are an array, to differentiate in js between class constructors and functions
   if (Array.isArray(creator)) {
     return (await creator[0](integration)) as IntegrationInstanceOfKind<TKind>;
   }
