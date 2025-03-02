@@ -19,7 +19,7 @@ if [ "${PUID}" != "0" ] || [ "${PGID}" != "0" ]; then
 fi
 
 if [ "${PUID}" != "0" ]; then
-    su-exec $PUID:$PGID "$@"
+    exec su-exec $PUID:$PGID "$@"
 else
     exec "$@"
 fi
