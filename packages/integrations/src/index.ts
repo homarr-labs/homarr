@@ -14,7 +14,7 @@ export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
 export { OpenMediaVaultIntegration } from "./openmediavault/openmediavault-integration";
 export { OverseerrIntegration } from "./overseerr/overseerr-integration";
 export { PiHoleIntegrationV5 } from "./pi-hole/v5/pi-hole-integration-v5";
-export { PiHoleIntegrationV6 } from "./pi-hole/pi-hole-integration-v6";
+export { PiHoleIntegrationV6 } from "./pi-hole/v6/pi-hole-integration-v6";
 export { PlexIntegration } from "./plex/plex-integration";
 export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
 export { LidarrIntegration } from "./media-organizer/lidarr/lidarr-integration";
