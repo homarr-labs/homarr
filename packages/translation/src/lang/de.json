@@ -1816,6 +1816,12 @@
         "partiallyAvailable": "Teilweise",
         "available": "Verfügbar"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": "Noch Festzulegen"
     },
     "mediaRequests-requestStats": {
