@@ -45,7 +45,7 @@
     "conventional-changelog-conventionalcommits": "^8.0.0",
     "cross-env": "^7.0.3",
     "jsdom": "^26.0.0",
-    "prettier": "^3.5.2",
+    "prettier": "^3.5.3",
     "semantic-release": "^24.2.3",
     "testcontainers": "^10.18.0",
     "turbo": "^2.4.4",
