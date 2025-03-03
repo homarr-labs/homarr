@@ -5,6 +5,7 @@ import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
@@ -22,29 +23,30 @@ export default function RssFeed({ options }: WidgetComponentProps<"rssFeed">) {
       retry: false,
     },
   );
+  const board = useRequiredBoard();
 
   const languageDir = options.enableRtl ? "RTL" : "LTR";
 
   return (
-    <ScrollArea className="scroll-area-w100" w="100%" p="4cqmin">
-      <Stack w={"100%"} gap="4cqmin">
+    <ScrollArea className="scroll-area-w100" w="100%" p="sm">
+      <Stack w={"100%"} gap="sm">
         {feedEntries.map((feedEntry) => (
           <Card
             key={feedEntry.id}
             withBorder
             component={"a"}
             href={feedEntry.link}
-            radius="2.5cqmin"
+            radius={board.itemRadius}
             target="_blank"
             w="100%"
-            p="2.5cqmin"
+            p="sm"
           >
             {feedEntry.enclosure && (
               <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" />
             )}
 
-            <Flex gap="2.5cqmin" direction="column" w="100%">
-              <Text dir={languageDir} fz="4cqmin" lh="5cqmin" lineClamp={2}>
+            <Flex gap="sm" direction="column" w="100%">
+              <Text dir={languageDir} fz="sm" lh="sm" lineClamp={2}>
                 {feedEntry.title}
               </Text>
               {feedEntry.description && (
@@ -52,7 +54,7 @@ export default function RssFeed({ options }: WidgetComponentProps<"rssFeed">) {
                   className={feedEntry.description}
                   dir={languageDir}
                   c="dimmed"
-                  size="3.5cqmin"
+                  size="sm"
                   lineClamp={options.textLinesClamp as number}
                   dangerouslySetInnerHTML={{ __html: feedEntry.description }}
                 />
@@ -68,9 +70,9 @@ export default function RssFeed({ options }: WidgetComponentProps<"rssFeed">) {
 }
 
 const InfoDisplay = ({ date }: { date: string }) => (
-  <Group gap="2.5cqmin">
-    <IconClock size="2.5cqmin" />
-    <Text size="2.5cqmin" c="dimmed" pt="1cqmin">
+  <Group gap={5} align={"center"}>
+    <IconClock size={"1rem"} color={"var(--mantine-color-dimmed)"} />
+    <Text size="sm" c="dimmed">
       {date}
     </Text>
   </Group>

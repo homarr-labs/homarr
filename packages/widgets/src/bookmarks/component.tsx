@@ -152,7 +152,7 @@ const GridLayout = ({ data, width, height, hideIcon, hideHostname, openNewTab, h
           key={app.id}
           h="100%"
         >
-          <Card withBorder style={{ containerType: "size" }} h="100%" className={classes.card} p="5cqmin">
+          <Card withBorder style={{ containerType: "size" }} h="100%" className={classes.card} p="sm">
             <VerticalItem app={app} hideIcon={hideIcon} hideHostname={hideHostname} hasIconColor={hasIconColor} />
           </Card>
         </UnstyledButton>
@@ -173,8 +173,8 @@ const VerticalItem = ({
   hasIconColor: boolean;
 }) => {
   return (
-    <Stack h="100%" gap="5cqmin">
-      <Text fw={700} ta="center" size="20cqmin">
+    <Stack h="100%" gap="sm">
+      <Text fw={700} ta="center" size="lg">
         {app.name}
       </Text>
       {!hideIcon && (
@@ -193,7 +193,7 @@ const VerticalItem = ({
         />
       )}
       {!hideHostname && (
-        <Anchor ta="center" component="span" size="12cqmin">
+        <Anchor ta="center" component="span" size="lg">
           {app.href ? new URL(app.href).hostname : undefined}
         </Anchor>
       )}

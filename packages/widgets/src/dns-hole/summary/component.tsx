@@ -2,11 +2,12 @@
 
 import { useMemo } from "react";
 import type { BoxProps } from "@mantine/core";
-import { Avatar, AvatarGroup, Box, Card, Flex, Stack, Text, Tooltip, TooltipFloating } from "@mantine/core";
+import { Avatar, AvatarGroup, Card, Flex, SimpleGrid, Stack, Text, Tooltip, TooltipFloating } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { formatNumber } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
@@ -62,26 +63,26 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
   const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
 
   return (
-    <Box h="100%" {...boxPropsByLayout(options.layout)} p="2cqmin">
+    <SimpleGrid cols={2} h="100%" p={"xs"} {...boxPropsByLayout(options.layout)}>
       {data.length > 0 ? (
         stats.map((item) => (
           <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={data} t={t} />
         ))
       ) : (
-        <Stack h="100%" w="100%" justify="center" align="center" gap="2.5cqmin" p="2.5cqmin">
-          <AvatarGroup spacing="10cqmin">
+        <Stack h="100%" w="100%" justify="center" align="center" gap="sm" p="sm">
+          <AvatarGroup spacing="md">
             {summaries.map(({ integration }) => (
               <Tooltip key={integration.id} label={integration.name}>
-                <Avatar h="35cqmin" w="35cqmin" src={integrationDefs[integration.kind].iconUrl} />
+                <Avatar h={30} w={30} src={integrationDefs[integration.kind].iconUrl} />
               </Tooltip>
             ))}
           </AvatarGroup>
-          <Text fz="10cqmin" ta="center">
+          <Text fz="md" ta="center">
             {t("widget.dnsHoleSummary.error.integrationsDisconnected")}
           </Text>
         </Stack>
       )}
-    </Box>
+    </SimpleGrid>
   );
 }
 
@@ -152,30 +153,30 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
   const { ref, height, width } = useElementSize();
   const isLong = width > height + 20;
   const tooltip = item.tooltip?.(data, t);
+  const board = useRequiredBoard();
 
   return (
     <TooltipFloating label={tooltip} disabled={!tooltip} w={250} multiline>
       <Card
         ref={ref}
         className="summary-card"
-        m="2cqmin"
-        p="2.5cqmin"
+        p="sm"
+        radius={board.itemRadius}
         bg={usePiHoleColors ? item.color : "rgba(96, 96, 96, 0.1)"}
         style={{
           flex: 1,
         }}
-        withBorder
       >
         <Flex
           className="summary-card-elements"
           h="100%"
           w="100%"
           align="center"
-          justify="space-evenly"
+          justify="center"
           direction={isLong ? "row" : "column"}
           style={{ containerType: "size" }}
         >
-          <item.icon className="summary-card-icon" size="40cqmin" style={{ margin: "2.5cqmin" }} />
+          <item.icon className="summary-card-icon" size={50} />
           <Flex
             className="summary-card-texts"
             justify="center"
@@ -183,22 +184,15 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
             style={{
               flex: isLong ? 1 : undefined,
             }}
+            mt={"xs"}
             w="100%"
-            h="100%"
-            gap="1cqmin"
+            gap={0}
           >
-            <Text
-              key={item.value(data)}
-              className="summary-card-value text-flash"
-              ta="center"
-              size="20cqmin"
-              fw="bold"
-              style={{ "--glow-size": "2.5cqmin" }}
-            >
+            <Text key={item.value(data)} className="summary-card-value text-flash" ta="center" size="lg" fw="bold">
               {item.value(data)}
             </Text>
             {item.label && (
-              <Text className="summary-card-label" ta="center" size="15cqmin">
+              <Text className="summary-card-label" ta="center" size="md">
                 {translateIfNecessary(t, item.label)}
               </Text>
             )}

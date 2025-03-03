@@ -29,15 +29,15 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
       h="100%"
       w="100%"
       direction="column"
-      p="7.5cqmin"
+      p="sm"
       justify="center"
       align="center"
     >
-      <Group gap="5cqmin" wrap="nowrap" align="center">
+      <Group gap="xs" wrap="nowrap" align="center">
         <Tooltip label={data.online ? tStatus("online") : tStatus("offline")}>
-          <Box w="8cqmin" h="8cqmin" bg={data.online ? "teal" : "red"} style={{ borderRadius: "100%" }}></Box>
+          <Box w="lg" h="lg" bg={data.online ? "teal" : "red"} style={{ borderRadius: "100%" }}></Box>
         </Tooltip>
-        <Text size="10cqmin" fw="bold">
+        <Text size="lg" fw="bold">
           {title}
         </Text>
       </Group>
@@ -48,10 +48,10 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
             alt={`minecraft icon ${options.domain}`}
             src={data.icon}
           />
-          <Group gap="2cqmin" c="gray.6" align="center">
-            <IconUsersGroup style={{ width: "10cqmin", height: "10cqmin" }} />
-            <Text size="10cqmin">
-              {data.players.online}/{data.players.max}
+          <Group gap={5} c="gray.6" align="center">
+            <IconUsersGroup size="1rem" />
+            <Text size="lg">
+              {data.players.online} / {data.players.max}
             </Text>
           </Group>
         </>
