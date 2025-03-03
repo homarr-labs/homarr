@@ -972,6 +972,11 @@
         "create": "Nová dynamická sekce",
         "remove": "Odstranit dynamickou sekci"
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "Odstranit dynamickou sekci",
         "message": "Jste si jisti, že chcete odstranit tuto dynamickou sekci? Položky budou přesunuty na stejné místo v nadřazené sekci."

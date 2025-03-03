@@ -972,6 +972,11 @@
         "create": "",
         "remove": ""
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "",
         "message": ""

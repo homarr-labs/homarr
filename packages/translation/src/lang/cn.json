@@ -972,6 +972,11 @@
         "create": "新建动态部分",
         "remove": "删除动态部分"
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "删除动态部分",
         "message": "你确定你要删除这个动态部分？项目将被移动到父节的相同位置。"
