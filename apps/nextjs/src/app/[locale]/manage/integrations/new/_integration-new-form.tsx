@@ -1,16 +1,27 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Alert, Button, Checkbox, Fieldset, Group, SegmentedControl, Stack, Text, TextInput } from "@mantine/core";
+import {
+  Alert,
+  Button,
+  Checkbox,
+  Collapse,
+  Fieldset,
+  Group,
+  SegmentedControl,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
-import type { z } from "zod";
+import { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
-import { getAllSecretKindOptions, getIntegrationName, integrationDefs } from "@homarr/definitions";
+import { getAllSecretKindOptions, getIconUrl, getIntegrationName, integrationDefs } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { convertIntegrationTestConnectionError } from "@homarr/integrations/client";
@@ -26,11 +37,19 @@ interface NewIntegrationFormProps {
   };
 }
 
+const formSchema = validation.integration.create.omit({ kind: true }).and(
+  z.object({
+    createApp: z.boolean(),
+    appHref: validation.app.manage.shape.href,
+  }),
+);
+
 export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) => {
   const t = useI18n();
   const secretKinds = getAllSecretKindOptions(searchParams.kind);
   const router = useRouter();
-  const form = useZodForm(validation.integration.create.omit({ kind: true }), {
+  const [opened, setOpened] = useState(false);
+  const form = useZodForm(formSchema, {
     initialValues: {
       name: searchParams.name ?? getIntegrationName(searchParams.kind),
       url: searchParams.url ?? "",
@@ -39,23 +58,60 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
         value: "",
       })),
       attemptSearchEngineCreation: true,
+      createApp: false,
+      appHref: "",
+    },
+    onValuesChange(values, previous) {
+      if (values.createApp !== previous.createApp) {
+        setOpened(values.createApp);
+      }
     },
   });
-  const { mutateAsync, isPending } = clientApi.integration.create.useMutation();
+
+  const { mutateAsync: createIntegrationAsync, isPending: isPendingIntegration } =
+    clientApi.integration.create.useMutation();
+  const { mutateAsync: createAppAsync, isPending: isPendingApp } = clientApi.app.create.useMutation();
+  const isPending = isPendingIntegration || isPendingApp;
 
   const handleSubmitAsync = async (values: FormType) => {
-    await mutateAsync(
+    await createIntegrationAsync(
       {
         kind: searchParams.kind,
         ...values,
       },
       {
-        onSuccess: () => {
+        async onSuccess() {
           showSuccessNotification({
             title: t("integration.page.create.notification.success.title"),
             message: t("integration.page.create.notification.success.message"),
           });
-          void revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
+
+          if (!values.createApp) {
+            await revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
+            return;
+          }
+
+          const hasCustomHref = values.appHref !== null && values.appHref.trim().length >= 1;
+          await createAppAsync(
+            {
+              name: values.name,
+              href: hasCustomHref ? values.appHref : values.url,
+              iconUrl: getIconUrl(searchParams.kind),
+              description: null,
+              pingUrl: values.url,
+            },
+            {
+              async onSettled() {
+                await revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
+              },
+              onError() {
+                showErrorNotification({
+                  title: t("app.page.create.notification.error.title"),
+                  message: t("app.page.create.notification.error.message"),
+                });
+              },
+            },
+          );
         },
         onError: (error) => {
           const testConnectionError = convertIntegrationTestConnectionError(error.data?.error);
@@ -117,6 +173,16 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
           />
         )}
 
+        <Checkbox
+          {...form.getInputProps("createApp", { type: "checkbox" })}
+          label={t("integration.field.createApp.label")}
+          description={t("integration.field.createApp.description")}
+        />
+
+        <Collapse in={opened}>
+          <TextInput placeholder={t("integration.field.appHref.placeholder")} {...form.getInputProps("appHref")} />
+        </Collapse>
+
         <Group justify="end" align="center">
           <Button variant="default" component={Link} href="/manage/integrations">
             {t("common.action.backToOverview")}
@@ -166,4 +232,4 @@ const SecretKindsSegmentedControl = ({ secretKinds, form }: SecretKindsSegmented
   return <SegmentedControl fullWidth data={secretKindGroups} onChange={onChange}></SegmentedControl>;
 };
 
-type FormType = Omit<z.infer<typeof validation.integration.create>, "kind">;
+type FormType = z.infer<typeof formSchema>;
