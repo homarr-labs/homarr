@@ -972,6 +972,11 @@
         "create": "Neuer dynamischer Abschnitt",
         "remove": "Dynamischen Abschnitt entfernen"
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "Dynamischen Abschnitt entfernen",
         "message": "Möchten Sie diesen dynamischen Abschnitt wirklich entfernen? Die Elemente werden an die gleiche Position im übergeordneten Abschnitt verschoben."

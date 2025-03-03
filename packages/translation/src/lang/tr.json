@@ -291,7 +291,7 @@
         "confirm": "{username} kullanıcısını tercihleriyle birlikte silmek istediğinizden emin misiniz?"
       },
       "select": {
-        "label": "Kullanıcıyı seç",
+        "label": "Kullanıcı seç",
         "notFound": "Kullanıcı bulunmadı"
       },
       "transfer": {
@@ -716,7 +716,7 @@
           "message": "Muhtemelen yanlış kimlik bilgileri"
         },
         "forbidden": {
-          "title": "Yasaklı",
+          "title": "Yetkisiz Erişim",
           "message": "Muhtemelen izinler eksik"
         },
         "notFound": {
@@ -748,7 +748,7 @@
           "message": "Yanıt geçerli bir JSON değildi"
         },
         "wrongPath": {
-          "title": "Yanlış yol",
+          "title": " Yol hatalı",
           "message": "Yol muhtemelen doğru değil"
         }
       }
@@ -787,8 +787,8 @@
           "newLabel": "Yeni Anahtar Kimliği"
         },
         "realm": {
-          "label": "Realm",
-          "newLabel": "Yeni realm"
+          "label": "Erişim Alanı",
+          "newLabel": "Yeni erişim alanı"
         }
       }
     },
@@ -971,6 +971,11 @@
       "action": {
         "create": "Yeni Dinamik Bölüm",
         "remove": "Dinamik bölümü kaldır"
+      },
+      "option": {
+        "borderColor": {
+          "label": "Kenarlık rengi"
+        }
       },
       "remove": {
         "title": "Dinamik bölümü kaldır",
@@ -1817,16 +1822,16 @@
         "available": "Mevcut"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "Bekleyen",
+        "approved": "Onaylandı",
+        "declined": "Reddedildi",
+        "failed": "Başarısız"
       },
       "toBeDetermined": "-Yapım Aşamasında-"
     },
     "mediaRequests-requestStats": {
       "name": "Medya Talep İstatistikleri",
-      "description": "Medya taleplerinizle ilgili istatistikler",
+      "description": "Medya talepleriyle ilgili istatistikler",
       "option": {},
       "titles": {
         "stats": {
@@ -2069,11 +2074,11 @@
             "description": "Görsel tekrarlanmaz ve tüm alanı doldurmayabilir."
           },
           "repeat-x": {
-            "label": "Y tekrarla",
+            "label": "Y eksende tekrarla",
             "description": "'Tekrarla' ile aynı, ancak yalnızca yatay eksende."
           },
           "repeat-y": {
-            "label": "D tekrarla",
+            "label": "D eksende tekrarla",
             "description": "'Tekrarla' ile aynı ancak sadece dikey eksende."
           }
         }
@@ -2250,14 +2255,14 @@
           "notice": "Bu sayfayı tüm kullanıcılardan gizlemek için sunucuya öntanımlı panel atayın"
         },
         "user": {
-          "description": "Henüz bir ev paneli belirlemediniz.",
+          "description": "Henüz öntanımlı panel belirlemediniz.",
           "link": "Öntanımlı paneli yapılandır",
           "notice": "Bu sayfanın kaybolmasını sağlamak için tercihlerden öntanımlı panel seçin"
         },
         "anonymous": {
-          "description": "Sunucu yöneticiniz henüz bir öntanımlı panel belirlemedi.",
+          "description": "Sunucu yöneticiniz henüz öntanımlı panel belirlemedi.",
           "link": "Herkese açık panelleri görüntüle",
-          "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel ayarlamasını isteyin"
+          "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel atamasını isteyin"
         }
       }
     }
@@ -2539,11 +2544,11 @@
             "title": "Analiz",
             "general": {
               "title": "Anonim analizler gönder",
-              "text": "Homarr, açık kaynaklı yazılım Umami'yi kullanarak anonimleştirilmiş analizler gönderecektir. Hiçbir zaman kişisel bilgi toplamaz ve bu nedenle tamamen GDPR ve CCPA uyumludur. Analizleri etkinleştirmenizi öneririz çünkü, açık kaynak yazılım ekibimizin sorunları daha hızlı belirlemesine ve işlerimizi önceliklendirmesine yardımcı olmaktadır."
+              "text": "Homarr, açık kaynaklı yazılım Umami'yi kullanarak anonimleştirilmiş analizler gönderecektir. Hiçbir zaman kişisel bilgi toplamaz ve bu nedenle tamamen GDPR ve CCPA uyumludur. Analizleri etkinleştirmenizi öneririz çünkü, açık kaynak yazılım ekibimizin sorunları daha hızlı belirlemesine ve birikmiş işlerimizi önceliklendirmesine yardımcı olmaktadır."
             },
             "widgetData": {
-              "title": "Widget verileri",
-              "text": "Araç (ve sayılarını) yapılandırma verilerini gönder. URL'leri, alan adlarını veya başka herhangi bir veriyi içermez."
+              "title": "Araç verileri",
+              "text": "Hangi araçları (ve miktarlarını) yapılandırdığınızı gönderin. URL'leri, adları veya başka herhangi bir veri içermez."
             },
             "integrationData": {
               "title": "Entegrasyon verileri",
