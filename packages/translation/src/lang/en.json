@@ -1651,6 +1651,24 @@
         }
       }
     },
+    "customApi": {
+      "name": "Custom API",
+      "description": "Display data from an external API",
+      "option": {
+        "title": {
+          "label": "Title"
+        },
+        "icon": {
+          "label": "Icon"
+        },
+        "url": {
+          "label": "URL"
+        },
+        "filter": {
+          "label": "Filter"
+        }
+      }
+    },
     "calendar": {
       "name": "Calendar",
       "description": "Display events from your integrations in a calendar view within a certain relative time period",
