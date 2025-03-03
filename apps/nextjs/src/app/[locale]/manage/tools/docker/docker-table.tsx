@@ -35,7 +35,13 @@ const createColumns = (
     Cell({ renderedCellValue, row }) {
       return (
         <Group gap="xs">
-          <Avatar variant="outline" radius="lg" size="md" src={row.original.iconUrl}>
+          <Avatar
+            variant="outline"
+            radius="lg"
+            size="md"
+            styles={{ image: { objectFit: "contain" } }}
+            src={row.original.iconUrl}
+          >
             {row.original.name.at(0)?.toUpperCase()}
           </Avatar>
           <Text>{renderedCellValue}</Text>
