@@ -28,6 +28,7 @@ import {
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { createDocumentationLink } from "@homarr/definitions";
+import { env } from "@homarr/docker/env";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { MainHeader } from "~/components/layout/header";
@@ -113,7 +114,13 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           label: t("items.tools.items.docker"),
           icon: IconBrandDocker,
           href: "/manage/tools/docker",
-          hidden: !session?.user.permissions.includes("admin"),
+          hidden: !(session?.user.permissions.includes("admin") && env.ENABLE_DOCKER),
+        },
+        {
+          label: t("items.tools.items.kubernetes"),
+          icon: IconBox,
+          href: "/manage/tools/kubernetes",
+          hidden: !(session?.user.permissions.includes("admin") && env.ENABLE_KUBERNETES),
         },
         {
           label: t("items.tools.items.api"),
