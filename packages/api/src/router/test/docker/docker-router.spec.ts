@@ -4,8 +4,8 @@ import { describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { objectKeys } from "@homarr/common";
 import type { Database } from "@homarr/db";
-import { getPermissionsWithChildren } from "@homarr/definitions";
 import type { GroupPermissionKey } from "@homarr/definitions";
+import { getPermissionsWithChildren } from "@homarr/definitions";
 
 import type { RouterInputs } from "../../..";
 import { dockerRouter } from "../../docker/docker-router";
@@ -40,6 +40,7 @@ const validInputs: {
   [key in (typeof procedureKeys)[number]]: RouterInputs["docker"][key];
 } = {
   getContainers: undefined,
+  getContainersWidget: undefined,
   startAll: { ids: ["1"] },
   stopAll: { ids: ["1"] },
   restartAll: { ids: ["1"] },
