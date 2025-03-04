@@ -70,7 +70,7 @@ vi.mock("../src/base/session-store", () => ({
       async clearAsync() {
         return await Promise.resolve();
       },
-    }) satisfies SessionStore,
+    }) satisfies SessionStore<string>,
 }));
 
 describe("Pi-hole v6 integration", () => {

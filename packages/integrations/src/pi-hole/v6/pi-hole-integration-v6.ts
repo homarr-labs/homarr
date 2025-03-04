@@ -18,7 +18,7 @@ import { dnsBlockingGetSchema, sessionResponseSchema, statsSummaryGetSchema } fr
 const localLogger = logger.child({ module: "PiHoleIntegrationV6" });
 
 export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIntegration {
-  private readonly sessionStore: SessionStore;
+  private readonly sessionStore: SessionStore<string>;
 
   constructor(integration: IntegrationInput) {
     super(integration);
