@@ -1,6 +1,7 @@
 "use client";
 
 import { Anchor, Box, Card, Divider, Flex, Group, Stack, Text, Title, UnstyledButton } from "@mantine/core";
+import combineClasses from "clsx";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -42,9 +43,11 @@ export default function BookmarksWidget({ options, width, height, itemId }: Widg
 
   return (
     <Stack h="100%" gap="sm" p="sm">
-      <Title order={4} px="0.25rem">
-        {options.title}
-      </Title>
+      {options.title.length > 0 && (
+        <Title order={4} px="0.25rem">
+          {options.title}
+        </Title>
+      )}
       {options.layout === "grid" && (
         <GridLayout
           data={data}
@@ -80,8 +83,9 @@ interface FlexLayoutProps {
 }
 
 const FlexLayout = ({ data, direction, hideIcon, hideHostname, openNewTab, hasIconColor }: FlexLayoutProps) => {
+  const board = useRequiredBoard();
   return (
-    <Flex direction={direction} gap="0" h="100%" w="100%">
+    <Flex direction={direction} gap="0" w="100%">
       {data.map((app, index) => (
         <div key={app.id} style={{ display: "flex", flex: "1", flexDirection: direction }}>
           <Divider
@@ -95,18 +99,9 @@ const FlexLayout = ({ data, direction, hideIcon, hideHostname, openNewTab, hasIc
             target={openNewTab ? "_blank" : "_self"}
             rel="noopener noreferrer"
             key={app.id}
-            h="100%"
             w="100%"
           >
-            <Card
-              radius="md"
-              style={{ containerType: "size" }}
-              className={classes.card}
-              h="100%"
-              w="100%"
-              display="flex"
-              p={0}
-            >
+            <Card radius={board.itemRadius} className={classes.card} w="100%" display="flex" p={"xs"} h={"100%"}>
               {direction === "row" ? (
                 <VerticalItem app={app} hideIcon={hideIcon} hideHostname={hideHostname} hasIconColor={hasIconColor} />
               ) : (
@@ -134,12 +129,14 @@ const GridLayout = ({ data, width, height, hideIcon, hideHostname, openNewTab, h
   // Calculates the perfect number of columns for the grid layout based on the width and height in pixels and the number of items
   const columns = Math.ceil(Math.sqrt(data.length * (width / height)));
 
+  const board = useRequiredBoard();
+
   return (
     <Box
       display="grid"
       h="100%"
       style={{
-        gridTemplateColumns: `repeat(${columns}, auto)`,
+        gridTemplateColumns: `repeat(${columns}, 1fr)`,
         gap: 10,
       }}
     >
@@ -152,8 +149,19 @@ const GridLayout = ({ data, width, height, hideIcon, hideHostname, openNewTab, h
           key={app.id}
           h="100%"
         >
-          <Card withBorder style={{ containerType: "size" }} h="100%" className={classes.card} p="5cqmin">
-            <VerticalItem app={app} hideIcon={hideIcon} hideHostname={hideHostname} hasIconColor={hasIconColor} />
+          <Card
+            h="100%"
+            className={combineClasses(classes.card, classes["card-grid"])}
+            radius={board.itemRadius}
+            p="sm"
+          >
+            <VerticalItem
+              app={app}
+              hideIcon={hideIcon}
+              hideHostname={hideHostname}
+              hasIconColor={hasIconColor}
+              size={50}
+            />
           </Card>
         </UnstyledButton>
       ))}
@@ -166,15 +174,17 @@ const VerticalItem = ({
   hideIcon,
   hideHostname,
   hasIconColor,
+  size = 30,
 }: {
   app: RouterOutputs["app"]["byIds"][number];
   hideIcon: boolean;
   hideHostname: boolean;
   hasIconColor: boolean;
+  size?: number;
 }) => {
   return (
-    <Stack h="100%" gap="5cqmin">
-      <Text fw={700} ta="center" size="20cqmin">
+    <Stack h="100%" gap="sm">
+      <Text fw={700} ta="center" size="lg">
         {app.name}
       </Text>
       {!hideIcon && (
@@ -184,16 +194,18 @@ const VerticalItem = ({
           alt={app.name}
           className={classes.bookmarkIcon}
           style={{
-            maxHeight: "100%",
-            maxWidth: "100%",
+            width: size,
+            height: size,
             overflow: "auto",
             flex: 1,
             scale: 0.8,
+            marginLeft: "auto",
+            marginRight: "auto",
           }}
         />
       )}
       {!hideHostname && (
-        <Anchor ta="center" component="span" size="12cqmin">
+        <Anchor ta="center" component="span" size="lg">
           {app.href ? new URL(app.href).hostname : undefined}
         </Anchor>
       )}
@@ -213,7 +225,7 @@ const HorizontalItem = ({
   hasIconColor: boolean;
 }) => {
   return (
-    <Group wrap="nowrap">
+    <Group wrap="nowrap" gap={"xs"}>
       {!hideIcon && (
         <MaskedOrNormalImage
           imageUrl={app.iconUrl}
@@ -223,20 +235,19 @@ const HorizontalItem = ({
           style={{
             overflow: "auto",
             scale: 0.8,
-            minHeight: "100cqh",
-            maxHeight: "100cqh",
-            minWidth: "100cqh",
-            maxWidth: "100cqh",
+            width: 30,
+            height: 30,
+            flex: "unset",
           }}
         />
       )}
       <Stack justify="space-between" gap={0}>
-        <Text fw={700} size="45cqh" lineClamp={1}>
+        <Text fw={700} size="md" lineClamp={1}>
           {app.name}
         </Text>
 
         {!hideHostname && (
-          <Anchor component="span" size="30cqh">
+          <Anchor component="span" size="xs">
             {app.href ? new URL(app.href).hostname : undefined}
           </Anchor>
         )}
