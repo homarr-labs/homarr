@@ -972,6 +972,11 @@
         "create": "Nová dynamická sekcia",
         "remove": "Nová dynamická sekcia"
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "Nová dynamická sekcia",
         "message": "Naozaj chcete odstrániť túto dynamickú sekciu? Položky sa presunú na rovnaké miesto v nadradenej sekcii."
@@ -1815,6 +1820,12 @@
         "processing": "Spracovanie",
         "partiallyAvailable": "Čiastočný",
         "available": "K dispozícii"
+      },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
       },
       "toBeDetermined": "TBD"
     },

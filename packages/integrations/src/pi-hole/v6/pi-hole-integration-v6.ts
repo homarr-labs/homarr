@@ -1,47 +1,21 @@
 import type { Response as UndiciResponse } from "undici";
-import { z } from "zod";
+import type { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { extractErrorMessage } from "@homarr/common";
 import { logger } from "@homarr/log";
 
-import { IntegrationResponseError, ParseError, ResponseError } from "../base/error";
-import type { IntegrationInput } from "../base/integration";
-import { Integration } from "../base/integration";
-import type { SessionStore } from "../base/session-store";
-import { createSessionStore } from "../base/session-store";
-import { IntegrationTestConnectionError } from "../base/test-connection-error";
-import type { DnsHoleSummaryIntegration } from "../interfaces/dns-hole-summary/dns-hole-summary-integration";
-import type { DnsHoleSummary } from "../types";
+import { IntegrationResponseError, ParseError, ResponseError } from "../../base/error";
+import type { IntegrationInput } from "../../base/integration";
+import { Integration } from "../../base/integration";
+import type { SessionStore } from "../../base/session-store";
+import { createSessionStore } from "../../base/session-store";
+import { IntegrationTestConnectionError } from "../../base/test-connection-error";
+import type { DnsHoleSummaryIntegration } from "../../interfaces/dns-hole-summary/dns-hole-summary-integration";
+import type { DnsHoleSummary } from "../../types";
+import { dnsBlockingGetSchema, sessionResponseSchema, statsSummaryGetSchema } from "./pi-hole-schemas-v6";
 
 const localLogger = logger.child({ module: "PiHoleIntegrationV6" });
-
-const sessionResponseSchema = z.object({
-  session: z.object({
-    sid: z.string().nullable(),
-    message: z.string().nullable(),
-  }),
-});
-
-const dnsBlockingGetSchema = z.object({
-  blocking: z.enum(["enabled", "disabled", "failed", "unknown"]).transform((value) => {
-    if (value === "failed") return undefined;
-    if (value === "unknown") return undefined;
-    return value;
-  }),
-  timer: z.number().nullable(),
-});
-
-const statsSummaryGetSchema = z.object({
-  queries: z.object({
-    total: z.number(),
-    blocked: z.number(),
-    percent_blocked: z.number(),
-  }),
-  gravity: z.object({
-    domains_being_blocked: z.number(),
-  }),
-});
 
 export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIntegration {
   private readonly sessionStore: SessionStore<string>;
@@ -67,7 +41,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     const result = dnsBlockingGetSchema.safeParse(await response.json());
 
     if (!result.success) {
-      throw new ParseError("dns blocking status", result.error, await response.json());
+      throw new ParseError("DNS blocking status", result.error, await response.json());
     }
 
     return result.data;

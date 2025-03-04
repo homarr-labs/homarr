@@ -5,7 +5,12 @@ import { relations, sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 import { blob, index, int, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
+import {
+  backgroundImageAttachments,
+  backgroundImageRepeats,
+  backgroundImageSizes,
+  emptySuperJSON,
+} from "@homarr/definitions";
 import type {
   BackgroundImageAttachment,
   BackgroundImageRepeat,
@@ -373,6 +378,7 @@ export const sections = sqliteTable("section", {
   xOffset: int(),
   yOffset: int(),
   name: text(),
+  options: text().default(emptySuperJSON),
 });
 
 export const sectionCollapseStates = sqliteTable(
@@ -399,8 +405,8 @@ export const items = sqliteTable("item", {
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   kind: text().$type<WidgetKind>().notNull(),
-  options: text().default('{"json": {}}').notNull(), // empty superjson object
-  advancedOptions: text().default('{"json": {}}').notNull(), // empty superjson object
+  options: text().default(emptySuperJSON).notNull(),
+  advancedOptions: text().default(emptySuperJSON).notNull(),
 });
 
 export const apps = sqliteTable("app", {
@@ -446,7 +452,7 @@ export const iconRepositories = sqliteTable("iconRepository", {
 
 export const serverSettings = sqliteTable("serverSetting", {
   settingKey: text().notNull().unique().primaryKey(),
-  value: text().default('{"json": {}}').notNull(), // empty superjson object
+  value: text().default(emptySuperJSON).notNull(),
 });
 
 export const apiKeyRelations = relations(apiKeys, ({ one }) => ({

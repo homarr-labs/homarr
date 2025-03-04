@@ -10,6 +10,7 @@ import { NzbGetIntegration } from "../download-client/nzbget/nzbget-integration"
 import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorrent-integration";
 import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
+import { EmbyIntegration } from "../emby/emby-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
@@ -37,6 +38,7 @@ export const createIntegrationAsync = async <TKind extends keyof typeof integrat
 
   const creator = integrationCreators[integration.kind];
 
+  // factories are an array, to differentiate in js between class constructors and functions
   if (Array.isArray(creator)) {
     return (await creator[0](integration)) as IntegrationInstanceOfKind<TKind>;
   }
@@ -83,6 +85,7 @@ export const integrationCreators = {
   dashDot: DashDotIntegration,
   tdarr: TdarrIntegration,
   proxmox: ProxmoxIntegration,
+  emby: EmbyIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

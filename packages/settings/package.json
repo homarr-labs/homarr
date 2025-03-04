@@ -2,7 +2,7 @@
   "name": "@homarr/settings",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./index.ts"
@@ -25,7 +25,7 @@
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/dates": "^7.17.0",
+    "@mantine/dates": "^7.17.1",
     "next": "15.1.7",
     "react": "19.0.0",
     "react-dom": "19.0.0"
@@ -35,6 +35,6 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^9.21.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }

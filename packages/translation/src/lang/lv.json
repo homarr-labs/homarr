@@ -972,6 +972,11 @@
         "create": "",
         "remove": ""
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "",
         "message": ""
@@ -1815,6 +1820,12 @@
         "processing": "",
         "partiallyAvailable": "Daļējs",
         "available": "Pieejams"
+      },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
       },
       "toBeDetermined": ""
     },

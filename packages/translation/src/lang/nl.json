@@ -972,6 +972,11 @@
         "create": "Nieuwe dynamische sectie",
         "remove": "Dynamische sectie verwijderen"
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "Dynamische sectie verwijderen",
         "message": "Weet je zeker dat je deze dynamische sectie wilt verwijderen? Items worden verplaatst naar dezelfde locatie in de bovenliggende sectie."
@@ -1815,6 +1820,12 @@
         "processing": "Verwerken",
         "partiallyAvailable": "Gedeeltelijk",
         "available": "Beschikbaar"
+      },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
       },
       "toBeDetermined": "TBD"
     },

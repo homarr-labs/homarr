@@ -972,6 +972,11 @@
         "create": "Nowa sekcja dynamiczna",
         "remove": "Usuń sekcję dynamiczną"
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "Usuń sekcję dynamiczną",
         "message": "Czy na pewno chcesz usunąć tę sekcję dynamiczną? Elementy zostaną przeniesione w tej samej lokalizacji w sekcji nadrzędnej."
@@ -1815,6 +1820,12 @@
         "processing": "Przetwarzanie",
         "partiallyAvailable": "",
         "available": "Dostępne"
+      },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
       },
       "toBeDetermined": ""
     },
