@@ -152,8 +152,7 @@ export class OpenMediaVaultIntegration extends Integration {
 
     const session = await this.getSessionAsync();
     await this.sessionStore.setAsync(session);
-    const response = await callback(session);
-    return response;
+    return await callback(session);
   }
 
   /**
