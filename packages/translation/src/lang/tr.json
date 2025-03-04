@@ -57,7 +57,7 @@
           },
           "notification": {
             "error": {
-              "title": "Geçersiz Anahtar",
+              "title": "Token",
               "message": "Girdiğiniz Token Anahtarı Geçersiz"
             }
           }
@@ -1705,8 +1705,8 @@
           "columnTitle": "Kontroller"
         },
         "added": {
-          "columnTitle": "Ekleme",
-          "detailsTitle": "Ekleme Tarihi"
+          "columnTitle": "Eklenme",
+          "detailsTitle": "Eklenme Tarihi"
         },
         "category": {
           "columnTitle": "Ekstralar",
@@ -1863,7 +1863,7 @@
         }
       },
       "tab": {
-        "workers": "İşçiler",
+        "workers": "İşler",
         "queue": "Kuyruk",
         "statistics": "İstatistik"
       },
@@ -2690,7 +2690,7 @@
           "modal": {
             "createApiToken": {
               "title": "API anahtarı oluşturuldu",
-              "description": "API anahtarı oluşturuldu. Dikkatli olun, bu anahtar veritabanında şifrelenmiştir ve size bir daha asla aktarılmayacaktır. Bu anaharı kaybederseniz, bir daha erişmeniz mümkün değildir.",
+              "description": "API anahtarı oluşturuldu. Dikkatli olun, bu anahtar veritabanında şifrelenmiştir ve size bir daha asla aktarılmayacaktır. Bu anahtarı kaybederseniz, bir daha erişmeniz mümkün değildir.",
               "button": "Kopyala ve kapat"
             }
           },
