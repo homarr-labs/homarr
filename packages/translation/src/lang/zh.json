@@ -972,6 +972,11 @@
         "create": "創建動態區段",
         "remove": "移除動態區段"
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "移除動態區段",
         "message": "確認要移除此動態區段嗎？項目將移動到父區段的相同位置"
@@ -1816,6 +1821,12 @@
         "partiallyAvailable": "部分",
         "available": "待定"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": "多媒體請求狀態"
     },
     "mediaRequests-requestStats": {
@@ -2142,7 +2153,13 @@
           "unrecognizedLink": "提供的鏈結未被識別，無法預覽，但可能仍然有效"
         },
         "layout": {
-          "title": "顯示布局"
+          "title": "顯示布局",
+          "responsive": {
+            "title": "響應式佈局",
+            "action": {
+              "add": "新增佈局"
+            }
+          }
         },
         "background": {
           "title": "背景"
@@ -2247,6 +2264,20 @@
           "link": "查看公開面板",
           "notice": "要讓這個頁面消失，請伺服器管理員為伺服器設定一個主面板"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "名稱"
+      },
+      "columnCount": {
+        "label": "欄數"
+      },
+      "breakpoint": {
+        "label": "斷點",
+        "description": "此佈局將用於所有大於此斷點的螢幕，直到達到下一個更大的斷點為止"
       }
     }
   },

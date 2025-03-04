@@ -2,7 +2,7 @@
   "name": "@homarr/eslint-config",
   "version": "0.2.0",
   "private": true,
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     "./base": "./base.js",
@@ -17,19 +17,19 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@next/eslint-plugin-next": "^15.1.7",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-config-turbo": "^2.4.2",
+    "@next/eslint-plugin-next": "15.1.7",
+    "eslint-config-prettier": "^10.0.2",
+    "eslint-config-turbo": "^2.4.4",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-hooks": "^5.1.0",
-    "typescript-eslint": "^8.24.1"
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "typescript-eslint": "^8.26.0"
   },
   "devDependencies": {
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^9.21.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }

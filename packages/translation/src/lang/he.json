@@ -603,8 +603,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "השתמש בקישור שונה עבור פינג",
+          "description": "שימושי אם Homarr יכול לגשת ישירות באמצעות שם מארח פנימי או רשת כדי למנוע שימוש ברוחב פס של ספק שירותי האינטרנט"
         }
       }
     },
@@ -971,6 +971,11 @@
       "action": {
         "create": "מדור דינמי חדש",
         "remove": "הסר קטע דינמי"
+      },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
       },
       "remove": {
         "title": "הסר קטע דינמי",
@@ -1615,7 +1620,7 @@
       "app": {
         "noData": "לא נמצאה אפליקציה",
         "description": "לחץ על <here></here> כדי ליצור אפליקציה חדשה",
-        "quickCreate": ""
+        "quickCreate": "צור אפליקציה תוך כדי תנועה"
       },
       "error": {
         "noIntegration": "לא נבחרה אינטגרציה",
@@ -1815,6 +1820,12 @@
         "processing": "מעבד",
         "partiallyAvailable": "חלקי",
         "available": "זמין"
+      },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
       },
       "toBeDetermined": "ייקבע בהמשך"
     },
@@ -2017,8 +2028,8 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "צור אפליקציה תוך כדי תנועה",
+          "createAndUse": "צור והשתמש"
         }
       }
     },
@@ -2095,7 +2106,7 @@
         "label": "אטימות"
       },
       "iconColor": {
-        "label": ""
+        "label": "צבע סמל"
       },
       "customCss": {
         "label": "עיצוב מותאם אישית עבור הלוח הזה",
@@ -2113,14 +2124,14 @@
         "label": "ספירת עמודות"
       },
       "itemRadius": {
-        "label": "",
-        "description": "",
+        "label": "רדיוס פריט",
+        "description": "משנה את העגלגלות של האריחים על הלוח שלך",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "קטן מאוד",
+          "sm": "קטן",
+          "md": "בינוני",
+          "lg": "גדול",
+          "xl": "גדול מאוד"
         }
       },
       "name": {
@@ -2142,13 +2153,19 @@
           "unrecognizedLink": "הקישור שסופק אינו מזוהה ולא יוצג בתצוגה מקדימה, ייתכן שהוא עדיין יעבוד."
         },
         "layout": {
-          "title": "פריסה"
+          "title": "פריסה",
+          "responsive": {
+            "title": "פריסות רספונסיביות",
+            "action": {
+              "add": "הוסף פריסה"
+            }
+          }
         },
         "background": {
           "title": "רקע"
         },
         "appearance": {
-          "title": ""
+          "title": "מראה"
         },
         "customCss": {
           "title": "עיצוב מותאם אישית"
@@ -2247,6 +2264,20 @@
           "link": "הצגת לוחות ציבוריים",
           "notice": "על מנת לגרום לדף זה להיעלם, בקש ממנהל השרת להגדיר לוח בית עבור השרת"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "שם"
+      },
+      "columnCount": {
+        "label": "ספירת עמודות"
+      },
+      "breakpoint": {
+        "label": "נקודת עצירה",
+        "description": "הפריסה תשמש בכל המסכים הגדולים מנקודת העצירה הזו עד לנקודת העצירה הגדולה הבאה."
       }
     }
   },

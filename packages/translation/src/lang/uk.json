@@ -307,11 +307,11 @@
       "name": "Ім’я",
       "members": "Учасники",
       "homeBoard": {
-        "label": "",
+        "label": "Домашня дошка",
         "description": ""
       },
       "mobileBoard": {
-        "label": "",
+        "label": "Мобільна дошка",
         "description": ""
       }
     },
@@ -518,8 +518,8 @@
               "message": ""
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Не вдалося зберегти налаштування",
+              "message": "Не вдалося зберегти налаштування дошки"
             }
           }
         }
@@ -536,7 +536,7 @@
       }
     },
     "defaultGroup": {
-      "name": "",
+      "name": "Група за замовчуванням",
       "description": ""
     }
   },
@@ -971,6 +971,11 @@
       "action": {
         "create": "",
         "remove": ""
+      },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
       },
       "remove": {
         "title": "",
@@ -1816,6 +1821,12 @@
         "partiallyAvailable": "Частково доступно",
         "available": "Доступно"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
@@ -2142,7 +2153,13 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Макет"
+          "title": "Макет",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Фон"
@@ -2247,6 +2264,20 @@
           "link": "Переглянути публічні дошки",
           "notice": "Щоб ця сторінка зникла, попросіть адміністратора сервера встановити домашню дошку для сервера"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },
