@@ -972,6 +972,11 @@
         "create": "Ny dynamisk sektion",
         "remove": "Fjern dynamisk sektion"
       },
+      "option": {
+        "borderColor": {
+          "label": "Kantfarve"
+        }
+      },
       "remove": {
         "title": "Fjern dynamisk sektion",
         "message": "Er du sikker på at du vil fjerne dette dynamiske afsnit? Elementer vil blive flyttet på samme sted i det overordnede afsnit."
@@ -1817,10 +1822,10 @@
         "available": "Tilgængelig"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "Afventende",
+        "approved": "Godkendt",
+        "declined": "Afvist",
+        "failed": "Mislykket"
       },
       "toBeDetermined": "TBD"
     },

@@ -19,17 +19,37 @@ export AUTH_SECRET=$(openssl rand -base64 32)
 # 2. Create the nginx configuration file from the template
 # 3. Start the nginx server
 envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+# Start services in the background and store their PIDs
 nginx -g 'daemon off;' &
+NGINX_PID=$!
 
-# Start Redis
 redis-server /app/redis.conf &
+REDIS_PID=$!
 
-# Run the tasks backend
 node apps/tasks/tasks.cjs &
+TASKS_PID=$!
 
 node apps/websocket/wssServer.cjs &
+WSS_PID=$!
 
-# Run the nextjs server
-node apps/nextjs/server.js & PID=$!
+node apps/nextjs/server.js &
+NEXTJS_PID=$!
 
-wait $PID
+# Function to handle SIGTERM and shut down services
+terminate() {
+    echo "Received SIGTERM. Shutting down..."
+    kill -TERM $NGINX_PID $TASKS_PID $WSS_PID $NEXTJS_PID 2>/dev/null
+    wait
+    # kill redis-server last because of logging of other services
+    kill -TERM $REDIS_PID 2>/dev/null
+    wait
+    echo "Shutdown complete."
+    exit 0
+}
+
+# When SIGTERM (docker stop <container>) / SIGINT (ctrl+c) is received, run the terminate function
+trap terminate TERM INT
+
+# Wait for all processes
+wait $NEXTJS_PID
+terminate

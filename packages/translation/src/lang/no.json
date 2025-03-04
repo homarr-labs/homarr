@@ -972,6 +972,11 @@
         "create": "Ny dynamisk seksjon",
         "remove": "Fjern dynamisk seksjon"
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "Fjern dynamisk seksjon",
         "message": "Er du sikker på at du vil fjerne denne dynamiske delen? Elementer vil bli flyttet til samme sted i overordnet seksjon."
