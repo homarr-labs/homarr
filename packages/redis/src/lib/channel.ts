@@ -95,6 +95,36 @@ export const createListChannel = <TItem>(name: string) => {
 };
 
 /**
+ * Creates a new redis channel for getting and setting data
+ * @param name name of channel
+ */
+export const createGetSetChannel = <TData>(name: string) => {
+  return {
+    /**
+     * Get data from the channel
+     * @returns data or null if not found
+     */
+    getAsync: async () => {
+      const data = await getSetClient.get(name);
+      return data ? superjson.parse<TData>(data) : null;
+    },
+    /**
+     * Set data in the channel
+     * @param data data to be stored in the channel
+     */
+    setAsync: async (data: TData) => {
+      await getSetClient.set(name, superjson.stringify(data));
+    },
+    /**
+     * Remove data from the channel
+     */
+    removeAsync: async () => {
+      await getSetClient.del(name);
+    },
+  };
+};
+
+/**
  * Creates a new cache channel.
  * @param name name of the channel
  * @param cacheDurationMs duration in milliseconds to cache
