@@ -974,7 +974,7 @@
       },
       "option": {
         "borderColor": {
-          "label": ""
+          "label": "Kantfarve"
         }
       },
       "remove": {
@@ -1822,10 +1822,10 @@
         "available": "Tilgængelig"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "Afventende",
+        "approved": "Godkendt",
+        "declined": "Afvist",
+        "failed": "Mislykket"
       },
       "toBeDetermined": "TBD"
     },
