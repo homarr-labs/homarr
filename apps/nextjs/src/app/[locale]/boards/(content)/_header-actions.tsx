@@ -4,7 +4,7 @@ import type { MouseEvent } from "react";
 import { useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Group, Menu } from "@mantine/core";
+import { Group, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import {
   IconBox,
@@ -168,16 +168,18 @@ const SelectBoardsMenu = () => {
         </HeaderButton>
       </Menu.Target>
       <Menu.Dropdown style={{ transform: "translate(-7px, 0)" }}>
-        {boards.map((board) => (
-          <Menu.Item
-            key={board.id}
-            component={Link}
-            href={`/boards/${board.name}`}
-            leftSection={<IconLayoutBoard size={20} />}
-          >
-            {board.name}
-          </Menu.Item>
-        ))}
+        <ScrollArea.Autosize mah={300}>
+          {boards.map((board) => (
+            <Menu.Item
+              key={board.id}
+              component={Link}
+              href={`/boards/${board.name}`}
+              leftSection={<IconLayoutBoard size={20} />}
+            >
+              {board.name}
+            </Menu.Item>
+          ))}
+        </ScrollArea.Autosize>
       </Menu.Dropdown>
     </Menu>
   );

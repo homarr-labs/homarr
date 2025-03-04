@@ -2,7 +2,7 @@
   "name": "@homarr/forms-collection",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./index.ts"
@@ -29,7 +29,7 @@
     "@homarr/notifications": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^7.17.0",
+    "@mantine/core": "^7.17.1",
     "react": "19.0.0",
     "zod": "^3.24.2"
   },
@@ -38,6 +38,6 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^9.21.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }

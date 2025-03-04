@@ -12,7 +12,7 @@
       },
       "import": {
         "title": "Verileri İçe Aktar",
-        "subtitle": "Mevcut Homarr Örneğinden Alınan Verileri İçe Aktarabilirsiniz.",
+        "subtitle": "Mevcut bir Homarr örneğinden veri içe aktarabilirsiniz.",
         "dropzone": {
           "title": "Zip dosyasını buraya sürükleyin veya göz atmak için tıklayın",
           "description": "Seçtiğiniz zip işlenecek ve içe aktarmak istediğiniz verileri seçebileceksiniz"
@@ -24,7 +24,7 @@
         },
         "importSettings": {
           "title": "İçe Aktarma Ayarları",
-          "description": "İçe Aktarma İşlevlerini Yapılandırın"
+          "description": "İçe Aktarma İşlevlerini Yapılandır"
         },
         "boardSelection": {
           "title": "{count} Panel Bulundu",
@@ -48,17 +48,17 @@
           }
         },
         "tokenModal": {
-          "title": "İçe Aktarma Token'ını Girin",
+          "title": "İçe Aktarma Anahtarını Girin",
           "field": {
             "token": {
-              "label": "Token",
-              "description": "Önceki Homarr Örneğinizden Aldığınız İçe Aktarma Token'ını girin"
+              "label": "Token Anahtarı",
+              "description": "Önceki Homarr Örneğinizden Aldığınız İçe Aktarma Anahtarı girin"
             }
           },
           "notification": {
             "error": {
               "title": "Token",
-              "message": "Girdiğiniz Token Geçersiz"
+              "message": "Girdiğiniz Token Anahtarı Geçersiz"
             }
           }
         }
@@ -72,12 +72,12 @@
             "message": "Kullanıcı başarıyla oluşturuldu"
           },
           "error": {
-            "title": "Kullanıcı oluşturma başarısız oldu"
+            "title": "Kullanıcı oluşturma başarısız"
           }
         }
       },
       "group": {
-        "title": "Dış grup",
+        "title": "Harici grup",
         "subtitle": "Harici kullanıcılar için kullanılacak grubu belirtin.",
         "form": {
           "name": {
@@ -119,7 +119,7 @@
       },
       "init": {
         "title": "Yeni Homarr Kurulumu",
-        "subtitle": "Lütfen yönetici kullanıcısını oluşturun"
+        "subtitle": "Lütfen yönetici için kullanıcı oluşturun"
       }
     },
     "field": {
@@ -150,7 +150,7 @@
         "label": "Ana panel"
       },
       "pingIconsEnabled": {
-        "label": "Pingler İçin Simgeler Kullanın"
+        "label": "Pingler İçin Simge Kullanın"
       },
       "defaultSearchEngine": {
         "label": "Öntanımlı arama motoru"
@@ -291,7 +291,7 @@
         "confirm": "{username} kullanıcısını tercihleriyle birlikte silmek istediğinizden emin misiniz?"
       },
       "select": {
-        "label": "Kullanıcıyı seç",
+        "label": "Kullanıcı seç",
         "notFound": "Kullanıcı bulunmadı"
       },
       "transfer": {
@@ -363,7 +363,7 @@
           },
           "full-all": {
             "label": "Tam panel erişimi",
-            "description": "Üyelerin tüm panelleri görüntülemesine, değiştirmesine ve silmesine izin verin (Erişim kontrolü ve tehlikeli alan dahil)"
+            "description": "Üyelerin tüm panelleri görüntülemesine, değiştirmesine ve silmesine izin ver (Erişim kontrolü ve tehlikeli alan dahil)"
           }
         }
       },
@@ -371,16 +371,16 @@
         "title": "Entegrasyonlar",
         "item": {
           "create": {
-            "label": "Entegrasyonlar oluştur",
-            "description": "Üyelerin entegrasyonlar oluşturmasına izin ver"
+            "label": "Entegrasyon oluştur",
+            "description": "Üyelerin entegrasyon oluşturmasına izin ver"
           },
           "use-all": {
             "label": "Tüm entegrasyonları kullan",
-            "description": "Üyelerin panellere herhangi bir entegrasyonu eklemelerine olanak tanır"
+            "description": "Üyelerin panellere herhangi bir entegrasyon eklemelerine olanak tanır"
           },
           "interact-all": {
             "label": "Herhangi bir entegrasyonla etkileşim kurun",
-            "description": "Üyelerin herhangi bir entegrasyonla etkileşime girmesine izin verin"
+            "description": "Üyelerin herhangi bir entegrasyonla etkileşime girmesine izin ver"
           },
           "full-all": {
             "label": "Tam entegrasyon erişimi",
@@ -418,8 +418,8 @@
         "title": "Arama Motorları",
         "item": {
           "create": {
-            "label": "Arama motorları oluşturun",
-            "description": "Üyelerin arama motorları oluşturmasına izin ver"
+            "label": "Arama motoru oluştur",
+            "description": "Üyelerin arama motoru oluşturmasına izin ver"
           },
           "modify-all": {
             "label": "Tüm arama motorlarını değiştir",
@@ -433,8 +433,8 @@
       }
     },
     "memberNotice": {
-      "mixed": "Bazı üyeler harici sağlayıcılardandır ve burada yönetilemezler",
-      "external": "Tüm üyeler harici sağlayıcılardandır ve burada yönetilemezler"
+      "mixed": "Bazı üyeler harici sağlayıcılardandır ve buradan yönetilemezler",
+      "external": "Tüm üyeler harici sağlayıcılardandır ve buradan yönetilemezler"
     },
     "reservedNotice": {
       "message": "Bu grup sistem kullanımı için ayrılmıştır ve bazı eylemleri kısıtlar. <checkoutDocs></checkoutDocs>"
@@ -621,7 +621,7 @@
         "title": "Entegrasyonlar",
         "search": "Entegrasyon ara",
         "noResults": {
-          "title": "Henüz entegrasyon yok"
+          "title": "Henüz entegrasyon oluşturulmadı"
         }
       },
       "create": {
@@ -685,7 +685,7 @@
         "create": "Bağlantıyı test et ve oluştur",
         "edit": "Bağlantıyı test et ve kaydet"
       },
-      "alertNotice": "Bağlantı kurulumu başaralı olduğunda Kaydet düğmesi etkinleştirilir",
+      "alertNotice": "Bağlantı başarılı olduğunda Kaydet butonu etkinleştirilir",
       "notification": {
         "success": {
           "title": "Bağlantı başarılı",
@@ -716,7 +716,7 @@
           "message": "Muhtemelen yanlış kimlik bilgileri"
         },
         "forbidden": {
-          "title": "Yasaklı",
+          "title": "Yetkisiz Erişim",
           "message": "Muhtemelen izinler eksik"
         },
         "notFound": {
@@ -748,7 +748,7 @@
           "message": "Yanıt geçerli bir JSON değildi"
         },
         "wrongPath": {
-          "title": "Yanlış yol",
+          "title": " Yol hatalı",
           "message": "Yol muhtemelen doğru değil"
         }
       }
@@ -783,12 +783,12 @@
           "newLabel": "Yeni Şifre"
         },
         "tokenId": {
-          "label": "Token Kimliği",
-          "newLabel": "Yeni Token Kimliği"
+          "label": "Token Anahtar Kimliği",
+          "newLabel": "Yeni Anahtar Kimliği"
         },
         "realm": {
-          "label": "Realm",
-          "newLabel": "Yeni realm"
+          "label": "Erişim Alanı",
+          "newLabel": "Yeni erişim alanı"
         }
       }
     },
@@ -861,7 +861,7 @@
       "continue": "Devam Et",
       "previous": "Önceki",
       "next": "İleri",
-      "checkoutDocs": "Dökümanlara göz atın",
+      "checkoutDocs": "Dökümanlara göz at",
       "checkLogs": "Daha fazla ayrıntı için günlükleri kontrol edin",
       "tryAgain": "Tekrar Deneyin",
       "loading": "Yükleniyor"
@@ -971,6 +971,11 @@
       "action": {
         "create": "Yeni Dinamik Bölüm",
         "remove": "Dinamik bölümü kaldır"
+      },
+      "option": {
+        "borderColor": {
+          "label": "Kenarlık rengi"
+        }
       },
       "remove": {
         "title": "Dinamik bölümü kaldır",
@@ -1700,8 +1705,8 @@
           "columnTitle": "Kontroller"
         },
         "added": {
-          "columnTitle": "Ekleme",
-          "detailsTitle": "Ekleme Tarihi"
+          "columnTitle": "Eklenme",
+          "detailsTitle": "Eklenme Tarihi"
         },
         "category": {
           "columnTitle": "Ekstralar",
@@ -1816,11 +1821,17 @@
         "partiallyAvailable": "Kısmi",
         "available": "Mevcut"
       },
+      "status": {
+        "pending": "Bekleyen",
+        "approved": "Onaylandı",
+        "declined": "Reddedildi",
+        "failed": "Başarısız"
+      },
       "toBeDetermined": "-Yapım Aşamasında-"
     },
     "mediaRequests-requestStats": {
       "name": "Medya Talep İstatistikleri",
-      "description": "Medya taleplerinizle ilgili istatistikler",
+      "description": "Medya talepleriyle ilgili istatistikler",
       "option": {},
       "titles": {
         "stats": {
@@ -1852,7 +1863,7 @@
         }
       },
       "tab": {
-        "workers": "İşçiler",
+        "workers": "İşler",
         "queue": "Kuyruk",
         "statistics": "İstatistik"
       },
@@ -2063,11 +2074,11 @@
             "description": "Görsel tekrarlanmaz ve tüm alanı doldurmayabilir."
           },
           "repeat-x": {
-            "label": "Y tekrarla",
+            "label": "Y eksende tekrarla",
             "description": "'Tekrarla' ile aynı, ancak yalnızca yatay eksende."
           },
           "repeat-y": {
-            "label": "D tekrarla",
+            "label": "D eksende tekrarla",
             "description": "'Tekrarla' ile aynı ancak sadece dikey eksende."
           }
         }
@@ -2142,7 +2153,13 @@
           "unrecognizedLink": "Sağlanan bağlantı tanınmıyor ve önizleme yapılmıyor, yine de çalışabilir."
         },
         "layout": {
-          "title": "Düzen"
+          "title": "Düzen",
+          "responsive": {
+            "title": "Duyarlı yerleşimler",
+            "action": {
+              "add": "Yerleşim Ekle"
+            }
+          }
         },
         "background": {
           "title": "Arkaplan"
@@ -2238,15 +2255,29 @@
           "notice": "Bu sayfayı tüm kullanıcılardan gizlemek için sunucuya öntanımlı panel atayın"
         },
         "user": {
-          "description": "Henüz bir ev paneli belirlemediniz.",
+          "description": "Henüz öntanımlı panel belirlemediniz.",
           "link": "Öntanımlı paneli yapılandır",
           "notice": "Bu sayfanın kaybolmasını sağlamak için tercihlerden öntanımlı panel seçin"
         },
         "anonymous": {
-          "description": "Sunucu yöneticiniz henüz bir öntanımlı panel belirlemedi.",
+          "description": "Sunucu yöneticiniz henüz öntanımlı panel belirlemedi.",
           "link": "Herkese açık panelleri görüntüle",
-          "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel ayarlamasını isteyin"
+          "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel atamasını isteyin"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": "İsim"
+      },
+      "columnCount": {
+        "label": "Sütun Sayısı"
+      },
+      "breakpoint": {
+        "label": "Kesme Noktası",
+        "description": "Bu kesme noktasından daha büyük tüm ekranlarda, bir sonraki büyük kesme noktasına kadar bu yerleşim kullanılacaktır."
       }
     }
   },
@@ -2464,7 +2495,7 @@
               "label": "Son geçerlilik tarihi"
             },
             "token": {
-              "label": "Token"
+              "label": "Token Anahtarı"
             }
           }
         }
@@ -2513,11 +2544,11 @@
             "title": "Analiz",
             "general": {
               "title": "Anonim analizler gönder",
-              "text": "Homarr, açık kaynaklı yazılım Umami'yi kullanarak anonimleştirilmiş analizler gönderecektir. Hiçbir zaman kişisel bilgi toplamaz ve bu nedenle tamamen GDPR ve CCPA uyumludur. Analizleri etkinleştirmenizi öneririz çünkü, açık kaynak yazılım ekibimizin sorunları daha hızlı belirlemesine ve işlerimizi önceliklendirmesine yardımcı olmaktadır."
+              "text": "Homarr, açık kaynaklı yazılım Umami'yi kullanarak anonimleştirilmiş analizler gönderecektir. Hiçbir zaman kişisel bilgi toplamaz ve bu nedenle tamamen GDPR ve CCPA uyumludur. Analizleri etkinleştirmenizi öneririz çünkü, açık kaynak yazılım ekibimizin sorunları daha hızlı belirlemesine ve birikmiş işlerimizi önceliklendirmesine yardımcı olmaktadır."
             },
             "widgetData": {
-              "title": "Widget verileri",
-              "text": "Araç (ve sayılarını) yapılandırma verilerini gönder. URL'leri, alan adlarını veya başka herhangi bir veriyi içermez."
+              "title": "Araç verileri",
+              "text": "Hangi araçları (ve miktarlarını) yapılandırdığınızı gönderin. URL'leri, adları veya başka herhangi bir veri içermez."
             },
             "integrationData": {
               "title": "Entegrasyon verileri",
@@ -2658,8 +2689,8 @@
           "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "API token'ı oluşturuldu",
-              "description": "API anahtarı oluşturuldu. Dikkatli olun, bu anahtar veritabanında şifrelenmiştir ve size bir daha asla aktarılmayacaktır. Bu anaharı kaybederseniz, bir daha erişmeniz mümkün değildir.",
+              "title": "API anahtarı oluşturuldu",
+              "description": "API anahtarı oluşturuldu. Dikkatli olun, bu anahtar veritabanında şifrelenmiştir ve size bir daha asla aktarılmayacaktır. Bu anahtarı kaybederseniz, bir daha erişmeniz mümkün değildir.",
               "button": "Kopyala ve kapat"
             }
           },
@@ -2671,12 +2702,12 @@
               "label": "Kimlik doğrulama",
               "title": "API Anahtarları",
               "button": {
-                "createApiToken": "API token'ı oluştur"
+                "createApiToken": "API anahtarı oluştur"
               },
               "modal": {
                 "delete": {
-                  "title": "API belirtecini sil",
-                  "text": "Bu, API belirtecini kalıcı olarak silecektir. Bu belirteci kullanan API istemcileri artık kimlik doğrulaması yapamaz ve API istekleri gerçekleştiremez. Bu eylem geri alınamaz."
+                  "title": "API anahtarını sil",
+                  "text": "Bu, API anahtarı kalıcı olarak silecektir. Bu anahtarı kullanan API istemcileri artık kimlik doğrulaması yapamaz ve API istekleri gerçekleştiremez. Bu eylem geri alınamaz."
                 }
               },
               "table": {

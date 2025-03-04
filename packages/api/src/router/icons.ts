@@ -1,4 +1,4 @@
-import { and, count, like } from "@homarr/db";
+import { and, like } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import { validation } from "@homarr/validation";
 
@@ -24,7 +24,7 @@ export const iconsRouter = createTRPCRouter({
           },
         },
       }),
-      countIcons: (await ctx.db.select({ count: count() }).from(icons))[0]?.count ?? 0,
+      countIcons: await ctx.db.$count(icons),
     };
   }),
 });

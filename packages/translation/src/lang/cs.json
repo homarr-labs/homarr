@@ -972,6 +972,11 @@
         "create": "Nová dynamická sekce",
         "remove": "Odstranit dynamickou sekci"
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "Odstranit dynamickou sekci",
         "message": "Jste si jisti, že chcete odstranit tuto dynamickou sekci? Položky budou přesunuty na stejné místo v nadřazené sekci."
@@ -1816,6 +1821,12 @@
         "partiallyAvailable": "Částečně dostupné",
         "available": "K dispozici"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
@@ -2142,7 +2153,13 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Rozložení"
+          "title": "Rozložení",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Pozadí"
@@ -2247,6 +2264,20 @@
           "link": "",
           "notice": ""
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },

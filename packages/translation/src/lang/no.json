@@ -972,6 +972,11 @@
         "create": "Ny dynamisk seksjon",
         "remove": "Fjern dynamisk seksjon"
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "Fjern dynamisk seksjon",
         "message": "Er du sikker på at du vil fjerne denne dynamiske delen? Elementer vil bli flyttet til samme sted i overordnet seksjon."
@@ -1816,6 +1821,12 @@
         "partiallyAvailable": "Delvis",
         "available": "Tilgjengelig"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": "Uavklart"
     },
     "mediaRequests-requestStats": {
@@ -2142,7 +2153,13 @@
           "unrecognizedLink": "Den angitte koblingen ble ikke gjenkjent og vil ikke forhåndsvise, den kan likevel fungere."
         },
         "layout": {
-          "title": "Oppsett"
+          "title": "Oppsett",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Bakgrunn"
@@ -2247,6 +2264,20 @@
           "link": "Se offentlige tavler",
           "notice": "For at denne siden skal forsvinne for alle brukere, be server administratoren sette en hjem-tavle for serveren"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },

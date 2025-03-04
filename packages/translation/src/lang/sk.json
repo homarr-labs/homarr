@@ -972,6 +972,11 @@
         "create": "Nová dynamická sekcia",
         "remove": "Nová dynamická sekcia"
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "Nová dynamická sekcia",
         "message": "Naozaj chcete odstrániť túto dynamickú sekciu? Položky sa presunú na rovnaké miesto v nadradenej sekcii."
@@ -1816,6 +1821,12 @@
         "partiallyAvailable": "Čiastočný",
         "available": "K dispozícii"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": "TBD"
     },
     "mediaRequests-requestStats": {
@@ -2142,7 +2153,13 @@
           "unrecognizedLink": "Poskytnutý odkaz nie je rozpoznaný a nezobrazí sa ukážka, môže stále fungovať."
         },
         "layout": {
-          "title": "Rozloženie"
+          "title": "Rozloženie",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Pozadie"
@@ -2247,6 +2264,20 @@
           "link": "Pozrite si verejné nástenky",
           "notice": "Ak chcete, aby táto stránka zmizla, požiadajte správcu servera o nastavenie domovskej dosky pre server"
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },

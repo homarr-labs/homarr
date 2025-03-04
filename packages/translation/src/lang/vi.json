@@ -972,6 +972,11 @@
         "create": "",
         "remove": ""
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "",
         "message": ""
@@ -1816,6 +1821,12 @@
         "partiallyAvailable": "Một phần",
         "available": "Khả dụng"
       },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
+      },
       "toBeDetermined": ""
     },
     "mediaRequests-requestStats": {
@@ -2142,7 +2153,13 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "Bố cục"
+          "title": "Bố cục",
+          "responsive": {
+            "title": "",
+            "action": {
+              "add": ""
+            }
+          }
         },
         "background": {
           "title": "Hình nền"
@@ -2247,6 +2264,20 @@
           "link": "",
           "notice": ""
         }
+      }
+    }
+  },
+  "layout": {
+    "field": {
+      "name": {
+        "label": ""
+      },
+      "columnCount": {
+        "label": ""
+      },
+      "breakpoint": {
+        "label": "",
+        "description": ""
       }
     }
   },
