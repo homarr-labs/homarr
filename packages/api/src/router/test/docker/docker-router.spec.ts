@@ -12,6 +12,16 @@ import { dockerRouter } from "../../docker/docker-router";
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
+vi.mock("@homarr/request-handler/docker", () => ({
+  dockerContainersRequestHandler: {
+    handler: () => ({
+      // eslint-disable-next-line @typescript-eslint/require-await
+      getCachedOrUpdatedDataAsync: async () => ({
+        containers: [],
+      }),
+    }),
+  },
+}));
 vi.mock("@homarr/redis", () => ({
   createCacheChannel: () => ({
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -22,6 +32,7 @@ vi.mock("@homarr/redis", () => ({
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     invalidateAsync: async () => {},
   }),
+  createWidgetOptionsChannel: () => ({}),
 }));
 
 const createSessionWithPermissions = (...permissions: GroupPermissionKey[]) =>
