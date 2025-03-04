@@ -1,7 +1,7 @@
-import type { RepositoryProvider } from "./repository-providers";
+import type { ReleaseProvider } from "./release-providers";
 
-export class Repository {
-  provider: RepositoryProvider;
+export class Release {
+  provider: ReleaseProvider;
   identifier: string;
   versionRegex: string | undefined;
   iconUrl: string | undefined;
@@ -9,7 +9,7 @@ export class Repository {
   latestReleaseDate: Date | undefined;
 
   constructor(
-    provider: RepositoryProvider,
+    provider: ReleaseProvider,
     identifier: string,
     versionRegex: string | undefined = undefined,
     iconUrl: string | undefined = undefined,

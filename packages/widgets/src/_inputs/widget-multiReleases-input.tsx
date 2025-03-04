@@ -10,8 +10,8 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { IconPicker } from "../../../forms-collection/src";
-import { Repository } from "../repositories/repository";
-import { Providers } from "../repositories/repository-providers";
+import { Release } from "../releases/release";
+import { Providers } from "../releases/release-providers";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
@@ -21,19 +21,19 @@ interface FormValidation {
   errors: FormErrors;
 }
 
-export const WidgetMultiRepositoriesInput = ({ property, kind }: CommonWidgetInputProps<"multiRepositories">) => {
+export const WidgetMultiReleasesInput = ({ property, kind }: CommonWidgetInputProps<"multiReleases">) => {
   const t = useWidgetInputTranslation(kind, property);
-  const tRepositories = useScopedI18n("widget.repositories");
+  const tReleases = useScopedI18n("widget.releases");
   const form = useFormContext();
-  const repositories = form.values.options[property] as Repository[];
-  const { openModal } = useModalAction(repositoryEditModal);
+  const releases = form.values.options[property] as Release[];
+  const { openModal } = useModalAction(releaseEditModal);
 
-  const onRepositorySave = useCallback(
-    (repository: Repository, index: number): FormValidation => {
-      form.setFieldValue(`options.${property}.${index}.provider`, repository.provider);
-      form.setFieldValue(`options.${property}.${index}.identifier`, repository.identifier);
-      form.setFieldValue(`options.${property}.${index}.versionRegex`, repository.versionRegex);
-      form.setFieldValue(`options.${property}.${index}.iconUrl`, repository.iconUrl);
+  const onReleaseSave = useCallback(
+    (release: Release, index: number): FormValidation => {
+      form.setFieldValue(`options.${property}.${index}.provider`, release.provider);
+      form.setFieldValue(`options.${property}.${index}.identifier`, release.identifier);
+      form.setFieldValue(`options.${property}.${index}.versionRegex`, release.versionRegex);
+      form.setFieldValue(`options.${property}.${index}.iconUrl`, release.iconUrl);
 
       return form.validate();
     },
@@ -45,10 +45,10 @@ export const WidgetMultiRepositoriesInput = ({ property, kind }: CommonWidgetInp
   }, []);
 
   const addNewItem = () => {
-    const item = new Repository(Providers.Docker, "", "");
+    const item = new Release(Providers.Docker, "");
 
     form.setValues((previous) => {
-      const previousValues = previous.options?.[property] as Repository[];
+      const previousValues = previous.options?.[property] as Release[];
       return {
         ...previous,
         options: {
@@ -59,9 +59,9 @@ export const WidgetMultiRepositoriesInput = ({ property, kind }: CommonWidgetInp
     });
   };
 
-  const onRepositoryRemove = (index: number) => {
+  const onReleaseRemove = (index: number) => {
     form.setValues((previous) => {
-      const previousValues = previous.options?.[property] as Repository[];
+      const previousValues = previous.options?.[property] as Release[];
       return {
         ...previous,
         options: {
@@ -75,17 +75,17 @@ export const WidgetMultiRepositoriesInput = ({ property, kind }: CommonWidgetInp
   return (
     <Fieldset legend={t("label")}>
       <Stack gap="5">
-        <Button onClick={addNewItem}>{tRepositories("option.addRepository.label")}</Button>
+        <Button onClick={addNewItem}>{tReleases("option.addRelease.label")}</Button>
         <Divider my="sm" />
 
-        {repositories.map((repository, index) => {
+        {releases.map((release, index) => {
           return (
-            <Stack key={`${repository.provider.name}.${repository.identifier}`} gap="5">
+            <Stack key={`${release.provider.name}.${release.identifier}`} gap="5">
               <Grid align="center" gutter="xs">
                 <Grid.Col span="content">
                   <MaskedOrNormalImage
                     hasColor={false}
-                    imageUrl={repository.iconUrl ?? repository.provider.iconUrl}
+                    imageUrl={release.iconUrl ?? release.provider.iconUrl}
                     style={{
                       height: "1em",
                       width: "1em",
@@ -94,15 +94,15 @@ export const WidgetMultiRepositoriesInput = ({ property, kind }: CommonWidgetInp
                 </Grid.Col>
                 <Grid.Col span="content">
                   <Text c="dimmed" fw={100} size="xs">
-                    {repository.provider.name}
+                    {release.provider.name}
                   </Text>
                 </Grid.Col>
                 <Grid.Col span="auto">
-                  <Text size="sm">{repository.identifier}</Text>
+                  <Text size="sm">{release.identifier}</Text>
                 </Grid.Col>
                 <Grid.Col span="content">
                   <Text c="dimmed" size="xs">
-                    {repository.versionRegex}
+                    {release.versionRegex}
                   </Text>
                 </Grid.Col>
                 <Grid.Col span="content">
@@ -110,8 +110,8 @@ export const WidgetMultiRepositoriesInput = ({ property, kind }: CommonWidgetInp
                     onClick={() =>
                       openModal({
                         fieldPath: `options.${property}.${index}`,
-                        repository,
-                        onRepositorySave: (savedRepository) => onRepositorySave(savedRepository, index),
+                        release,
+                        onReleaseSave: (saved) => onReleaseSave(saved, index),
                         providers,
                       })
                     }
@@ -119,11 +119,11 @@ export const WidgetMultiRepositoriesInput = ({ property, kind }: CommonWidgetInp
                     leftSection={<IconEdit size={15} />}
                     size="xs"
                   >
-                    {tRepositories("option.edit.label")}
+                    {tReleases("option.edit.label")}
                   </Button>
                 </Grid.Col>
                 <Grid.Col span="content">
-                  <ActionIcon variant="transparent" color="red" onClick={() => onRepositoryRemove(index)}>
+                  <ActionIcon variant="transparent" color="red" onClick={() => onReleaseRemove(index)}>
                     <IconTrash size={15} />
                   </ActionIcon>
                 </Grid.Col>
@@ -137,38 +137,38 @@ export const WidgetMultiRepositoriesInput = ({ property, kind }: CommonWidgetInp
   );
 };
 
-interface RepositoryEditProps {
+interface ReleaseEditProps {
   fieldPath: string;
-  repository: Repository;
-  onRepositorySave: (repository: Repository) => FormValidation;
+  release: Release;
+  onReleaseSave: (release: Release) => FormValidation;
   providers: string[];
 }
 
-const repositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, actions }) => {
-  const tRepositories = useScopedI18n("widget.repositories");
+const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions }) => {
+  const tReleases = useScopedI18n("widget.releases");
   const [loading, setLoading] = useState(false);
-  const [tempRepository, setTempRepository] = useState(innerProps.repository);
+  const [tempRelease, setTempRelease] = useState(innerProps.release);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const handleConfirm = useCallback(() => {
     setLoading(true);
 
-    const validation = innerProps.onRepositorySave(tempRepository);
+    const validation = innerProps.onReleaseSave(tempRelease);
     setFormErrors(validation.errors);
     if (!validation.hasErrors) {
       actions.closeModal();
     }
 
     setLoading(false);
-  }, [innerProps, tempRepository, actions]);
+  }, [innerProps, tempRelease, actions]);
 
   const handleChange = useCallback(
-    (changedValue: Partial<Repository>) => {
-      setTempRepository((prev) => ({ ...prev, ...changedValue }));
-      const validation = innerProps.onRepositorySave({ ...tempRepository, ...changedValue });
+    (changedValue: Partial<Release>) => {
+      setTempRelease((prev) => ({ ...prev, ...changedValue }));
+      const validation = innerProps.onReleaseSave({ ...tempRelease, ...changedValue });
       setFormErrors(validation.errors);
     },
-    [innerProps, tempRepository],
+    [innerProps, tempRelease],
   );
 
   return (
@@ -177,9 +177,9 @@ const repositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
         <Grid.Col span={4}>
           <Select
             withAsterisk
-            label={tRepositories("option.provider.label")}
+            label={tReleases("option.provider.label")}
             data={innerProps.providers}
-            value={tempRepository.provider.name}
+            value={tempRelease.provider.name}
             key={`${innerProps.fieldPath}.provider`}
             error={formErrors[`${innerProps.fieldPath}.provider`]}
             onChange={(value) => {
@@ -195,8 +195,8 @@ const repositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
         <Grid.Col span={7}>
           <TextInput
             withAsterisk
-            label={tRepositories("option.identifier.label")}
-            value={tempRepository.identifier}
+            label={tReleases("option.identifier.label")}
+            value={tempRelease.identifier}
             onChange={(event) => {
               handleChange({ identifier: event.currentTarget.value });
             }}
@@ -206,8 +206,8 @@ const repositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
         </Grid.Col>
         <Grid.Col span={4}>
           <TextInput
-            label={tRepositories("option.versionRegex.label")}
-            value={tempRepository.versionRegex}
+            label={tReleases("option.versionRegex.label")}
+            value={tempRelease.versionRegex ?? ""}
             onChange={(event) => {
               handleChange({ versionRegex: event.currentTarget.value });
             }}
@@ -218,7 +218,7 @@ const repositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
         <Grid.Col span={7}>
           <IconPicker
             withAsterisk={false}
-            value={tempRepository.iconUrl}
+            value={tempRelease.iconUrl}
             onChange={(url) => handleChange({ iconUrl: url })}
             key={`${innerProps.fieldPath}.iconUrl`}
             error={formErrors[`${innerProps.fieldPath}.iconUrl`] as string}
@@ -228,18 +228,18 @@ const repositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
       <Divider my={"sm"} />
       <Group justify="flex-end">
         <Button variant="default" onClick={actions.closeModal}>
-          {tRepositories("editForm.cancel.label")}
+          {tReleases("editForm.cancel.label")}
         </Button>
 
         <Button data-autofocus onClick={handleConfirm} color="red.9" loading={loading}>
-          {tRepositories("editForm.confirm.label")}
+          {tReleases("editForm.confirm.label")}
         </Button>
       </Group>
     </Stack>
   );
 }).withOptions({
   defaultTitle(t) {
-    return t("widget.repositories.editForm.title");
+    return t("widget.releases.editForm.title");
   },
   size: "xl",
 });

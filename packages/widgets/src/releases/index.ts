@@ -4,7 +4,7 @@ import { z } from "zod";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
-export const { definition, componentLoader } = createWidgetDefinition("repositories", {
+export const { definition, componentLoader } = createWidgetDefinition("releases", {
   icon: IconCode,
   createOptions() {
     return optionsBuilder.from((factory) => ({
@@ -19,31 +19,33 @@ export const { definition, componentLoader } = createWidgetDefinition("repositor
       showOnlyNewReleases: factory.switch({
         defaultValue: true,
       }),
-      repositories: factory.multiRepositories({
+      releases: factory.multiReleases({
         defaultValue: [],
         validate: z.array(
           z.object({
             provider: z.object({
               name: z.string().min(1),
-              url: z.string().min(1),
               iconUrl: z.string().url().or(z.literal("")),
             }),
             identifier: z.string().min(1),
-            versionRegex: z.string().refine(
-              (val) => {
-                if (val === "") return true;
+            versionRegex: z
+              .string()
+              .optional()
+              .refine(
+                (val) => {
+                  if (val === undefined) return true;
 
-                try {
-                  new RegExp(val);
-                  return true;
-                } catch {
-                  return false;
-                }
-              },
-              {
-                message: "Invalid regular expression",
-              },
-            ),
+                  try {
+                    new RegExp(val);
+                    return true;
+                  } catch {
+                    return false;
+                  }
+                },
+                {
+                  message: "Invalid regular expression",
+                },
+              ),
             iconUrl: z.string().url().optional(),
           }),
         ),

@@ -4,7 +4,7 @@ import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
-export const rssFeedRouter = createTRPCRouter({
+export const  rssFeedRouter = createTRPCRouter({
   getFeeds: publicProcedure
     .input(
       z.object({

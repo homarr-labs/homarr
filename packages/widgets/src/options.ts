@@ -8,7 +8,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
 
-import type { Repository } from "./repositories/repository";
+import type { Release } from "./releases/release";
 
 interface CommonInput<TType> {
   defaultValue?: TType;
@@ -121,11 +121,11 @@ const optionsFactory = {
     values: [] as string[],
     validate: input?.validate,
   }),
-  multiRepositories: (input?: CommonInput<Repository[]> & { validate?: ZodType }) => ({
-    type: "multiRepositories" as const,
+  multiReleases: (input?: CommonInput<Release[]> & { validate?: ZodType }) => ({
+    type: "multiReleases" as const,
     defaultValue: input?.defaultValue ?? [],
     withDescription: input?.withDescription ?? false,
-    values: [] as Repository[],
+    values: [] as Release[],
     validate: input?.validate,
   }),
   app: () => ({
