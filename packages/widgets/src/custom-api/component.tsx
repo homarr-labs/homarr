@@ -28,7 +28,7 @@ export default function CustomApiWidget({ options }: WidgetComponentProps<"custo
             )
           }
         </Flex>
-        <Text ta="center">{`${value}`}</Text>
+        <Text ta="center">{String(value)}</Text>
       </Stack>
     </Center>
   );
