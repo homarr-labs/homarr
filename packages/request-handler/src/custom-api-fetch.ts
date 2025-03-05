@@ -10,7 +10,7 @@ export const fetchCustomApiRequestHandler = createCachedWidgetRequestHandler({
   widgetKind: "customApi",
   async requestAsync(input: { url: string; }) {
     const response = await fetchWithTimeout(input.url);
-    return responseSchema.parse(await response.json());
+    return responseSchema.parse(await response.json()) as object;
   },
   cacheDuration: dayjs.duration(5, "minutes"),
 });
