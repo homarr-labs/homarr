@@ -2,7 +2,7 @@
   "name": "@homarr/websocket",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./src/main.ts",
   "types": "./src/main.ts",
@@ -33,9 +33,9 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/ws": "^8.5.14",
+    "@types/ws": "^8.18.0",
     "eslint": "^9.21.0",
-    "prettier": "^3.5.2",
+    "prettier": "^3.5.3",
     "typescript": "^5.8.2"
   }
 }

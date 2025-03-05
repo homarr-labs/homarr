@@ -2,7 +2,7 @@
   "name": "@homarr/notifications",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./index.ts",
@@ -24,8 +24,8 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/ui": "workspace:^0.1.0",
-    "@mantine/notifications": "^7.17.0",
-    "@tabler/icons-react": "^3.30.0"
+    "@mantine/notifications": "^7.17.1",
+    "@tabler/icons-react": "^3.31.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

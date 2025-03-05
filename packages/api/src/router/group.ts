@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import type { Database } from "@homarr/db";
-import { and, createId, eq, handleTransactionsAsync, like, not, sql } from "@homarr/db";
+import { and, createId, eq, handleTransactionsAsync, like, not } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
@@ -42,12 +42,7 @@ export const groupRouter = createTRPCRouter({
     .input(validation.common.paginated)
     .query(async ({ input, ctx }) => {
       const whereQuery = input.search ? like(groups.name, `%${input.search.trim()}%`) : undefined;
-      const groupCount = await ctx.db
-        .select({
-          count: sql<number>`count(*)`,
-        })
-        .from(groups)
-        .where(whereQuery);
+      const groupCount = await ctx.db.$count(groups, whereQuery);
 
       const dbGroups = await ctx.db.query.groups.findMany({
         with: {
@@ -74,7 +69,7 @@ export const groupRouter = createTRPCRouter({
           ...group,
           members: group.members.map((member) => member.user),
         })),
-        totalCount: groupCount[0]?.count ?? 0,
+        totalCount: groupCount,
       };
     }),
   getById: permissionRequiredProcedure

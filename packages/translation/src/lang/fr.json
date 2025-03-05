@@ -44,7 +44,7 @@
             "apps": "Applications",
             "boards": "Tableaux de bord",
             "integrations": "Intégrations",
-            "credentialUsers": ""
+            "credentialUsers": "Utilisateurs identifiés"
           }
         },
         "tokenModal": {
@@ -307,12 +307,12 @@
       "name": "Nom",
       "members": "Membres",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Tableau d'accueil",
+        "description": "Seuls les tableaux accessibles au groupe peuvent être sélectionnés"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Tableau mobile",
+        "description": "Seuls les tableaux accessibles au groupe peuvent être sélectionnés"
       }
     },
     "permission": {
@@ -383,8 +383,8 @@
             "description": "Autoriser les membres à interagir avec n'importe quelle intégration"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Accès complet à l'intégration",
+            "description": "Autoriser les membres à gérer, utiliser et interagir avec n'importe quelle intégration"
           }
         }
       },
@@ -422,19 +422,19 @@
             "description": "Autoriser les membres à créer des moteurs de recherche"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modifier tous les moteurs de recherche",
+            "description": "Autoriser les membres à modifier tous les moteurs de recherche"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Accès complet au moteur de recherche",
+            "description": "Autoriser les membres à gérer et supprimer n'importe quel moteur de recherche"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Certains membres proviennent de fournisseurs externes et ne peuvent pas être gérés ici",
+      "external": "Tous les membres proviennent de fournisseurs externes et ne peuvent pas être gérés ici"
     },
     "reservedNotice": {
       "message": "Ce groupe est réservé pour l'utilisation du système et restreint certaines actions. <checkoutDocs></checkoutDocs>"
@@ -499,10 +499,10 @@
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Le groupe {name} a été enregistré avec succès"
           },
           "error": {
-            "message": ""
+            "message": "Impossible d'enregistrer le groupe {name}"
           }
         }
       },
@@ -514,12 +514,12 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Paramètres enregistrés",
+              "message": "Paramètres du tableau enregistrés avec succès"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Échec de l'enregistrement des paramètres",
+              "message": "Impossible d'enregistrer les paramètres du tableau"
             }
           }
         }
@@ -527,21 +527,21 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Position modifiée avec succès"
           },
           "error": {
-            "message": ""
+            "message": "Impossible de modifier la position"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "Groupe par défaut",
+      "description": "{name} - Tous les utilisateurs connectés"
     }
   },
   "app": {
-    "search": "",
+    "search": "Trouver une application",
     "page": {
       "list": {
         "title": "Applications",
@@ -558,21 +558,21 @@
             "message": "L'application a bien été créée"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Échec de la création",
+            "message": "L'application n'a pas pu être créée"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Éditer l'application",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Modifications appliquées avec succès",
+            "message": "L'application a été enregistrée avec succès"
           },
           "error": {
             "title": "Impossible d'appliquer les changements",
-            "message": ""
+            "message": "L'application n'a pas pu être enregistrée"
           }
         }
       },
@@ -582,11 +582,11 @@
         "notification": {
           "success": {
             "title": "Suppression effectuée avec succès",
-            "message": ""
+            "message": "L'application a été supprimée avec succès"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Échec de la suppression",
+            "message": "Impossible de supprimer l'application"
           }
         }
       }
@@ -603,8 +603,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Utiliser une URL différente pour le ping",
+          "description": "Utile si Homarr peut accéder directement à l'aide d'un nom d'hôte ou d'un réseau internes pour éviter l'utilisation de bande passante du FAI"
         }
       }
     },
@@ -619,48 +619,48 @@
     "page": {
       "list": {
         "title": "Intégrations",
-        "search": "",
+        "search": "Rechercher des intégrations",
         "noResults": {
-          "title": ""
+          "title": "Il n'y a pas encore d'intégrations"
         }
       },
       "create": {
-        "title": "",
+        "title": "Nouvelle intégration {name}",
         "notification": {
           "success": {
             "title": "Créé avec succès",
-            "message": ""
+            "message": "L'intégration a été créée avec succès"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Échec de la création",
+            "message": "L'intégration n'a pas pu être créée"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Modifier l'intégration {name}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Modifications appliquées avec succès",
+            "message": "L'intégration a été enregistrée avec succès"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Impossible d'appliquer les modifications",
+            "message": "L'intégration n'a pas pu être enregistrée"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Supprimer l'intégration",
+        "message": "Êtes-vous sûr(e) de vouloir supprimer l'intégration {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Suppression réussie",
+            "message": "L'intégration a été supprimée avec succès"
           },
           "error": {
             "title": "",
-            "message": ""
+            "message": "Impossible de supprimer l'intégration"
           }
         }
       }
@@ -673,8 +673,8 @@
         "label": "Url"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Créer un moteur de recherche",
+        "description": "L'intégration \"{kind}\" peut être utilisée avec les moteurs de recherche. Cochez ceci pour configurer automatiquement le moteur de recherche."
       }
     },
     "action": {
@@ -705,57 +705,57 @@
         },
         "commonError": {
           "title": "Échec de la connexion",
-          "message": ""
+          "message": "La connexion n'a pas pu être établie"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Requête incorrecte",
+          "message": "La requête a été mal formée"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Non autorisé",
+          "message": "Identifiants probablement erronés"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Interdit",
+          "message": "Permissions probablement manquantes"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "Pas trouvé",
+          "message": "URL ou chemin d'accès probablement incorrect"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Erreur interne du serveur",
+          "message": "Le serveur a rencontré une erreur"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Service indisponible",
+          "message": "Le serveur est actuellement indisponible"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Connexion interrompue",
+          "message": "La connexion a été interrompue"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "Domaine introuvable",
+          "message": "Le domaine n'a pas pu être trouvé"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Connexion refusée",
+          "message": "La connexion a été refusée"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "JSON invalide",
+          "message": "La réponse n'était pas un JSON valide"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Mauvais chemin d'accès",
+          "message": "Le chemin d'accès n'est probablement pas correct"
         }
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Secrets",
+      "lastUpdated": "Dernière mise à jour {date}",
       "notSet": {
         "label": "Aucune valeur définie",
         "tooltip": "Le secret requis n'a pas encore été défini"
@@ -783,12 +783,12 @@
           "newLabel": "Nouveau mot de passe"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID du jeton",
+          "newLabel": "Nouvel ID de jeton"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Domaine",
+          "newLabel": "Nouveau domaine"
         }
       }
     },
@@ -930,7 +930,7 @@
     },
     "dangerZone": "Zone de danger",
     "noResults": "Aucun résultat trouvé",
-    "unsavedChanges": "",
+    "unsavedChanges": "Vous avez des modifications non enregistrées !",
     "preview": {
       "show": "Afficher l’aperçu",
       "hide": "Masquer l'aperçu"
@@ -956,12 +956,12 @@
         "custom": {
           "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
           "passwordRequirements": "Le mot de passe ne respecte pas les exigences requises.",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
-          "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "boardAlreadyExists": "Un tableau avec ce nom existe déjà",
+          "invalidFileType": "Type de fichier invalide, {expected} attendu",
+          "invalidFileName": "Nom de fichier invalide",
+          "fileTooLarge": "Le fichier est trop volumineux, la taille maximale est {maxSize}",
+          "invalidConfiguration": "Configuration invalide",
+          "groupNameTaken": "Nom de groupe déjà utilisé"
         }
       }
     }
@@ -969,12 +969,17 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Nouvelle section dynamique",
+        "remove": "Supprimer la section dynamique"
+      },
+      "option": {
+        "borderColor": {
+          "label": "Couleur de la bordure"
+        }
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Supprimer la section dynamique",
+        "message": "Êtes-vous sûr de vouloir supprimer cette section dynamique ? Les éléments seront déplacés au même emplacement dans la section parente."
       }
     },
     "category": {
@@ -984,14 +989,14 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "Nouvelle catégorie",
+        "edit": "Renommer la catégorie",
+        "remove": "Supprimer la catégorie",
         "moveUp": "Monter",
         "moveDown": "Descendre",
-        "createAbove": "",
-        "createBelow": "",
-        "openAllInNewTabs": ""
+        "createAbove": "Nouvelle catégorie au-dessus",
+        "createBelow": "Nouvelle catégorie en dessous",
+        "openAllInNewTabs": "Tout ouvrir dans des onglets"
       },
       "create": {
         "title": "",
@@ -1815,6 +1820,12 @@
         "processing": "",
         "partiallyAvailable": "Partiel",
         "available": "Disponible"
+      },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
       },
       "toBeDetermined": ""
     },

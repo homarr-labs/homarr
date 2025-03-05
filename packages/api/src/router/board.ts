@@ -5,7 +5,7 @@ import { z } from "zod";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { DeviceType } from "@homarr/common/server";
 import type { Database, InferInsertModel, InferSelectModel, SQL } from "@homarr/db";
-import { and, asc, createId, eq, handleTransactionsAsync, inArray, isNull, like, not, or } from "@homarr/db";
+import { and, asc, createId, eq, handleTransactionsAsync, inArray, isNull, like, not, or, sql } from "@homarr/db";
 import { createDbInsertCollectionWithoutTransaction } from "@homarr/db/collection";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import {
@@ -27,7 +27,13 @@ import {
   users,
 } from "@homarr/db/schema";
 import type { WidgetKind } from "@homarr/definitions";
-import { everyoneGroup, getPermissionsWithChildren, getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
+import {
+  emptySuperJSON,
+  everyoneGroup,
+  getPermissionsWithChildren,
+  getPermissionsWithParents,
+  widgetKinds,
+} from "@homarr/definitions";
 import { importOldmarrAsync } from "@homarr/old-import";
 import { importJsonFileSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
@@ -554,7 +560,7 @@ export const boardRouter = createTRPCRouter({
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
   }),
   getBoardByName: publicProcedure.input(validation.board.byName).query(async ({ input, ctx }) => {
-    const boardWhere = eq(boards.name, input.name);
+    const boardWhere = eq(sql`UPPER(${boards.name})`, input.name.toUpperCase());
     await throwIfActionForbiddenAsync(ctx, boardWhere, "view");
 
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
@@ -736,6 +742,7 @@ export const boardRouter = createTRPCRouter({
                 kind: section.kind,
                 yOffset: section.kind !== "dynamic" ? section.yOffset : null,
                 xOffset: section.kind === "dynamic" ? null : 0,
+                options: section.kind === "dynamic" ? superjson.stringify(section.options) : emptySuperJSON,
                 name: "name" in section ? section.name : null,
                 boardId: dbBoard.id,
               })),
@@ -861,6 +868,7 @@ export const boardRouter = createTRPCRouter({
               .set({
                 yOffset: prev?.kind !== "dynamic" && "yOffset" in section ? section.yOffset : null,
                 xOffset: prev?.kind !== "dynamic" && "yOffset" in section ? 0 : null,
+                options: section.kind === "dynamic" ? superjson.stringify(section.options) : emptySuperJSON,
                 name: prev?.kind === "category" && "name" in section ? section.name : null,
               })
               .where(eq(schema.sections.id, section.id));
@@ -934,6 +942,7 @@ export const boardRouter = createTRPCRouter({
                   kind: section.kind,
                   yOffset: section.kind !== "dynamic" ? section.yOffset : null,
                   xOffset: section.kind === "dynamic" ? null : 0,
+                  options: section.kind === "dynamic" ? superjson.stringify(section.options) : emptySuperJSON,
                   name: "name" in section ? section.name : null,
                   boardId: dbBoard.id,
                 })),
@@ -1069,6 +1078,7 @@ export const boardRouter = createTRPCRouter({
               .set({
                 yOffset: prev?.kind !== "dynamic" && "yOffset" in section ? section.yOffset : null,
                 xOffset: prev?.kind !== "dynamic" && "yOffset" in section ? 0 : null,
+                options: section.kind === "dynamic" ? superjson.stringify(section.options) : emptySuperJSON,
                 name: prev?.kind === "category" && "name" in section ? section.name : null,
               })
               .where(eq(sections.id, section.id))
@@ -1561,6 +1571,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
         ...section,
         xOffset: section.xOffset,
         yOffset: section.yOffset,
+        options: superjson.parse(section.options ?? emptySuperJSON),
         layouts: section.layouts.map((layout) => ({
           xOffset: layout.xOffset,
           yOffset: layout.yOffset,

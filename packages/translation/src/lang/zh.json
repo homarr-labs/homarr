@@ -972,6 +972,11 @@
         "create": "創建動態區段",
         "remove": "移除動態區段"
       },
+      "option": {
+        "borderColor": {
+          "label": ""
+        }
+      },
       "remove": {
         "title": "移除動態區段",
         "message": "確認要移除此動態區段嗎？項目將移動到父區段的相同位置"
@@ -1815,6 +1820,12 @@
         "processing": "處理中",
         "partiallyAvailable": "部分",
         "available": "待定"
+      },
+      "status": {
+        "pending": "",
+        "approved": "",
+        "declined": "",
+        "failed": ""
       },
       "toBeDetermined": "多媒體請求狀態"
     },

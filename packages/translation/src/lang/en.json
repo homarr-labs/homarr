@@ -972,6 +972,11 @@
         "create": "New dynamic section",
         "remove": "Remove dynamic section"
       },
+      "option": {
+        "borderColor": {
+          "label": "Border color"
+        }
+      },
       "remove": {
         "title": "Remove dynamic section",
         "message": "Are you sure you want to remove this dynamic section? Items will be moved at the same location in the parent section."
@@ -1815,6 +1820,12 @@
         "processing": "Processing",
         "partiallyAvailable": "Partial",
         "available": "Available"
+      },
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "declined": "Declined",
+        "failed": "Failed"
       },
       "toBeDetermined": "TBD"
     },

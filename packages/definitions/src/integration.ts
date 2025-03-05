@@ -85,6 +85,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg",
     category: ["mediaService"],
   },
+  emby: {
+    name: "Emby",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/emby.svg",
+    category: ["mediaService"],
+  },
   plex: {
     name: "Plex",
     secretKinds: [["apiKey"]],

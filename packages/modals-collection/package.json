@@ -2,7 +2,7 @@
   "name": "@homarr/modals-collection",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./index.ts"
@@ -33,8 +33,8 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^7.17.0",
-    "@tabler/icons-react": "^3.30.0",
+    "@mantine/core": "^7.17.1",
+    "@tabler/icons-react": "^3.31.0",
     "dayjs": "^1.11.13",
     "next": "15.1.7",
     "react": "19.0.0",
