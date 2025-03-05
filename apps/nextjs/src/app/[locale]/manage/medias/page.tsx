@@ -92,7 +92,8 @@ export default async function GroupsListPage(props: MediaListPageProps) {
           </TableTbody>
         </Table>
 
-        <Group justify="end">
+        {/* Added margin to not hide pagination behind affix-button */}
+        <Group justify="end" mb={48}>
           <TablePagination total={Math.ceil(totalCount / searchParams.pageSize)} />
         </Group>
       </Stack>
