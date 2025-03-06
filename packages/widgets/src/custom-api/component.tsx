@@ -8,8 +8,8 @@ import { clientApi } from "@homarr/api/client";
 import type { WidgetComponentProps } from "../definition";
 
 export default function CustomApiWidget({ options }: WidgetComponentProps<"customApi">) {
-  const [{ data }] = clientApi.widget.customApi.fetchURL.useSuspenseQuery({ url: options.url });
-  const value = options.filter ? selectn(options.filter, data) as unknown : "Please enter a filter";
+  const [{ data }] = clientApi.widget.customApi.fetchURL.useSuspenseQuery({ url: options.url, method: options.method,headerName: options.headerName, headerValue: options.headerValue });
+  const value = options.filter ? selectn(options.filter as string, data) as unknown : "Please enter a filter";
 
   return (
     <Center h="100%" w="100%">
@@ -24,7 +24,7 @@ export default function CustomApiWidget({ options }: WidgetComponentProps<"custo
           }
           {
             options.icon && (
-              <Image src={options.icon} w="lg" h="lg" />
+              <Image src={String(options.icon)} w="lg" h="lg" />
             )
           }
         </Flex>
