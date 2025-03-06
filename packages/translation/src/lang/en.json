@@ -1664,6 +1664,23 @@
         "url": {
           "label": "URL"
         },
+        "method": {
+          "label": "Method",
+          "option": {
+            "get": {
+              "label": "GET"
+            },
+            "post": {
+              "label": "POST"
+            }
+          }
+        },
+        "headerName": {
+          "label": "Header name"
+        },
+        "headerValue": {
+          "label": "Header value"
+        },
         "filter": {
           "label": "Filter"
         }
