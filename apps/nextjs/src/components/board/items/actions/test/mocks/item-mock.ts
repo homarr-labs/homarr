@@ -14,6 +14,7 @@ export class ItemMockBuilder {
       integrationIds: [],
       advancedOptions: {
         customCssClasses: [],
+        borderColor: "",
       },
       ...item,
     } satisfies Item;
