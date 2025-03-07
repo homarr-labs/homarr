@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import type { MantineStyleProp } from "@mantine/core";
 import { Avatar, Box, Flex, Group, Stack, Text, Title } from "@mantine/core";
 import { IconDeviceAudioTape, IconDeviceTv, IconMovie, IconVideo } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -36,13 +35,11 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
         header: "Name",
         mantineTableHeadCellProps: {
           style: {
-            fontSize: "7cqmin",
-            padding: "2cqmin",
             width: "30%",
           },
         },
         Cell: ({ row }) => (
-          <Text size="7cqmin" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+          <Text size="md" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
             {row.original.sessionName}
           </Text>
         ),
@@ -52,15 +49,13 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
         header: "User",
         mantineTableHeadCellProps: {
           style: {
-            fontSize: "7cqmin",
-            padding: "2cqmin",
             width: "25%",
           },
         },
         Cell: ({ row }) => (
-          <Group gap={"2cqmin"}>
-            <Avatar src={row.original.user.profilePictureUrl} size={"10cqmin"} />
-            <Text size="7cqmin">{row.original.user.username}</Text>
+          <Group gap={"sm"}>
+            <Avatar src={row.original.user.profilePictureUrl} size={30} />
+            <Text size="md">{row.original.user.username}</Text>
           </Group>
         ),
       },
@@ -69,8 +64,6 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
         header: "Currently playing",
         mantineTableHeadCellProps: {
           style: {
-            fontSize: "7cqmin",
-            padding: "2cqmin",
             width: "45%",
           },
         },
@@ -78,9 +71,7 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
           if (row.original.currentlyPlaying) {
             return (
               <Box>
-                <Text size="7cqmin" style={{ whiteSpace: "normal" }}>
-                  {row.original.currentlyPlaying.name}
-                </Text>
+                <Text lineClamp={1}>{row.original.currentlyPlaying.name}</Text>
               </Box>
             );
           }
@@ -129,14 +120,6 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
     [currentStreams],
   );
 
-  const baseStyle: MantineStyleProp = {
-    "--total-width": "calc(100cqw / var(--total-width))",
-    "--ratio-width": "calc(100cqw / var(--total-width))",
-    "--space-size": "calc(var(--ratio-width) * 0.1)", //Standard gap and spacing value
-    "--text-fz": "calc(var(--ratio-width) * 0.45)", //General Font Size
-    "--icon-size": "calc(var(--ratio-width) * 2 / 3)", //Normal icon size
-    "--mrt-base-background-color": "transparent",
-  };
   const { openModal } = useModalAction(itemInfoModal);
   const table = useTranslatedMantineReactTable({
     columns,
@@ -202,21 +185,21 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
   });
 
   return (
-    <Stack gap={0} h="100%" display="flex" style={baseStyle}>
+    <Stack gap={0} h="100%" display="flex">
       <MantineReactTable table={table} />
       <Group
-        gap="1cqmin"
-        h="var(--ratio-width)"
-        px="var(--space-size)"
-        pr="5cqmin"
+        gap="xs"
+        h={30}
+        px="xs"
+        pr="md"
         justify="flex-end"
         style={{
-          borderTop: "0.0625rem solid var(--border-color)",
+          borderTop: "1px solid var(--border-color)",
         }}
       >
         {uniqueIntegrations.map((integration) => (
-          <Group key={integration.integrationKind} gap="1cqmin" align="center">
-            <Avatar className="media-server-icon" src={integration.integrationIcon} size="xs" />
+          <Group key={integration.integrationKind} gap="xs" align="center">
+            <Avatar className="media-server-icon" src={integration.integrationIcon} radius={"xs"} size="xs" />
             <Text className="media-server-name" size="sm">
               {integration.integrationName}
             </Text>
