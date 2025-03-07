@@ -784,7 +784,7 @@
         },
         "tokenId": {
           "label": "Token Anahtar Kimliği",
-          "newLabel": "Yeni Anahtar Kimliği"
+          "newLabel": "Yeni Token Anahtar Kimliği"
         },
         "realm": {
           "label": "Erişim Alanı",

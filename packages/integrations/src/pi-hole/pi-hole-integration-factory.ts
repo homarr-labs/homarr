@@ -1,3 +1,4 @@
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { removeTrailingSlash } from "@homarr/common";
 
 import type { IntegrationInput } from "../base/integration";
@@ -7,7 +8,7 @@ import { PiHoleIntegrationV6 } from "./v6/pi-hole-integration-v6";
 export const createPiHoleIntegrationAsync = async (input: IntegrationInput) => {
   const baseUrl = removeTrailingSlash(input.url);
   const url = new URL(`${baseUrl}/api/info/version`);
-  const response = await fetch(url);
+  const response = await fetchWithTrustedCertificatesAsync(url);
 
   /**
    * In pi-hole 5 the api was at /admin/api.php, in pi-hole 6 it was moved to /api
