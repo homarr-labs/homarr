@@ -1,7 +1,6 @@
 "use client";
 
-import { Box, Group, HoverCard, Space, Stack, Text } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
+import { Box, Group, HoverCard, Stack, Text } from "@mantine/core";
 import { IconArrowDownRight, IconArrowUpRight, IconMapPin, IconWind } from "@tabler/icons-react";
 import combineClasses from "clsx";
 import dayjs from "dayjs";
@@ -25,26 +24,20 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
       refetchOnReconnect: false,
     },
   );
-  const { ref, width } = useElementSize();
-
-  const fontSize = width < 350 ? 16 : 30;
-
-  const sizing = { fontSize };
 
   return (
     <Stack
       align="center"
+      gap="sm"
       justify="center"
-      gap={width < 350 ? 0 : "sm"}
       w="100%"
       h="100%"
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
-      ref={ref}
     >
       {options.hasForecast ? (
-        <WeeklyForecast weather={weather} options={options} sizing={sizing} />
+        <WeeklyForecast weather={weather} options={options} />
       ) : (
-        <DailyWeather weather={weather} options={options} sizing={sizing} />
+        <DailyWeather weather={weather} options={options} />
       )}
     </Stack>
   );
@@ -52,12 +45,9 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
 
 interface WeatherProps extends Pick<WidgetComponentProps<"weather">, "options"> {
   weather: RouterOutputs["widget"]["weather"]["atLocation"];
-  sizing: {
-    fontSize: number;
-  };
 }
 
-const DailyWeather = ({ options, weather, sizing }: WeatherProps) => {
+const DailyWeather = ({ options, weather }: WeatherProps) => {
   const t = useScopedI18n("widget.weather");
 
   return (
@@ -81,30 +71,41 @@ const DailyWeather = ({ options, weather, sizing }: WeatherProps) => {
           )}
         </Text>
       </Group>
-      <Space h="sm" />
-      {options.showCurrentWindSpeed && (
-        <Group className="weather-current-wind-speed-group" wrap="nowrap" gap="sm">
-          <IconWind size={sizing.fontSize} />
-          <Text fz={sizing.fontSize}>{t("currentWindSpeed", { currentWindSpeed: weather.current.windspeed })}</Text>
+      <Stack gap="xs" align="center">
+        {options.showCurrentWindSpeed && (
+          <Group className="weather-current-wind-speed-group" wrap="nowrap" gap="xs">
+            <IconWind size={16} />
+            <Text fz={16}>{t("currentWindSpeed", { currentWindSpeed: weather.current.windspeed })}</Text>
+          </Group>
+        )}
+        <Group className="weather-max-min-temp-group" wrap="nowrap" gap="sm">
+          <Group gap="xs" wrap="nowrap">
+            <IconArrowUpRight size={16} />
+            <Text fz={16}>
+              {getPreferredUnit(
+                weather.daily[0]?.maxTemp,
+                options.isFormatFahrenheit,
+                options.disableTemperatureDecimals,
+              )}
+            </Text>
+          </Group>
+          <Group gap="xs" wrap="nowrap">
+            <IconArrowDownRight size={16} />
+            <Text fz={16}>
+              {getPreferredUnit(
+                weather.daily[0]?.minTemp,
+                options.isFormatFahrenheit,
+                options.disableTemperatureDecimals,
+              )}
+            </Text>
+          </Group>
         </Group>
-      )}
-      <Group className="weather-max-min-temp-group" wrap="nowrap" gap="sm">
-        <IconArrowUpRight size={sizing.fontSize} />
-        <Text fz={sizing.fontSize}>
-          {getPreferredUnit(weather.daily[0]?.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
-        </Text>
-        <Space w="sm" />
-        <IconArrowDownRight size={sizing.fontSize} />
-        <Text fz={sizing.fontSize}>
-          {getPreferredUnit(weather.daily[0]?.minTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
-        </Text>
-      </Group>
+      </Stack>
       {options.showCity && (
         <>
-          <Space h="sm" />
           <Group className="weather-city-group" wrap="nowrap" gap="xs">
-            <IconMapPin size={sizing.fontSize} />
-            <Text fz={sizing.fontSize} style={{ whiteSpace: "nowrap" }}>
+            <IconMapPin size={16} />
+            <Text fz={16} style={{ whiteSpace: "nowrap" }}>
               {options.location.name}
             </Text>
           </Group>
@@ -114,44 +115,44 @@ const DailyWeather = ({ options, weather, sizing }: WeatherProps) => {
   );
 };
 
-const WeeklyForecast = ({ options, weather, sizing }: WeatherProps) => {
+const WeeklyForecast = ({ options, weather }: WeatherProps) => {
   return (
     <>
       <Group className="weather-forecast-city-temp-group" wrap="nowrap" gap="md">
         {options.showCity && (
-          <>
-            <IconMapPin size={30} />
-            <Text fz={30} style={{ whiteSpace: "nowrap" }}>
+          <Group gap="xs" wrap="nowrap">
+            <IconMapPin size={16} />
+            <Text fz={16} style={{ whiteSpace: "nowrap" }}>
               {options.location.name}
             </Text>
-            <Space w="xl" />
-          </>
+          </Group>
         )}
-        <HoverCard>
-          <HoverCard.Target>
-            <Box>
-              <WeatherIcon size={30} code={weather.current.weathercode} />
-            </Box>
-          </HoverCard.Target>
-          <HoverCard.Dropdown>
-            <WeatherDescription weatherOnly weatherCode={weather.current.weathercode} />
-          </HoverCard.Dropdown>
-        </HoverCard>
-        <Text fz={30}>
-          {getPreferredUnit(
-            weather.current.temperature,
-            options.isFormatFahrenheit,
-            options.disableTemperatureDecimals,
-          )}
-        </Text>
+        <Group gap="xs" wrap="nowrap">
+          <HoverCard>
+            <HoverCard.Target>
+              <Box>
+                <WeatherIcon size={16} code={weather.current.weathercode} />
+              </Box>
+            </HoverCard.Target>
+            <HoverCard.Dropdown>
+              <WeatherDescription weatherOnly weatherCode={weather.current.weathercode} />
+            </HoverCard.Dropdown>
+          </HoverCard>
+          <Text fz={16}>
+            {getPreferredUnit(
+              weather.current.temperature,
+              options.isFormatFahrenheit,
+              options.disableTemperatureDecimals,
+            )}
+          </Text>
+        </Group>
       </Group>
-      <Space h="sm" />
-      <Forecast weather={weather} options={options} sizing={sizing} />
+      <Forecast weather={weather} options={options} />
     </>
   );
 };
 
-function Forecast({ weather, options, sizing }: WeatherProps) {
+function Forecast({ weather, options }: WeatherProps) {
   const dateFormat = options.dateFormat;
   return (
     <Group className="weather-forecast-days-group" w="100%" justify="space-evenly" wrap="nowrap" pb="sm">
@@ -168,8 +169,8 @@ function Forecast({ weather, options, sizing }: WeatherProps) {
               align="center"
             >
               <Text fz="xl">{dayjs(dayWeather.time).format("dd")}</Text>
-              <WeatherIcon size={sizing.fontSize} code={dayWeather.weatherCode} />
-              <Text fz={sizing.fontSize}>
+              <WeatherIcon size={16} code={dayWeather.weatherCode} />
+              <Text fz={16}>
                 {getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
               </Text>
             </Stack>
