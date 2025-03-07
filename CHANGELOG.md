@@ -1,3 +1,17 @@
+## [1.10.0](https://github.com/homarr-labs/homarr/compare/v1.9.0...v1.10.0) (2025-03-07)
+
+### Features
+
+* remove cqmin system ([#2407](https://github.com/homarr-labs/homarr/issues/2407)) ([37d4714](https://github.com/homarr-labs/homarr/commit/37d471457a0a2b10112b67c02923f63de479e617))
+
+### Bug Fixes
+
+* **deps:** update dependency eslint-config-prettier to ^10.1.1 ([#2524](https://github.com/homarr-labs/homarr/issues/2524)) ([4721a97](https://github.com/homarr-labs/homarr/commit/4721a97094ae1181216923c7fef7a29c343f882b))
+* **deps:** update dependency ioredis to v5.6.0 ([#2509](https://github.com/homarr-labs/homarr/issues/2509)) ([e4a3922](https://github.com/homarr-labs/homarr/commit/e4a39223a33d4bfccb1e9b4e2c30de1376879a1d))
+* **deps:** update dependency mysql2 to v3.13.0 ([#2516](https://github.com/homarr-labs/homarr/issues/2516)) ([67c739c](https://github.com/homarr-labs/homarr/commit/67c739c35bcb2d537a349f0ebff080eac67e93b5))
+* **deps:** update tanstack-query monorepo to ^5.67.2 ([#2525](https://github.com/homarr-labs/homarr/issues/2525)) ([a572aae](https://github.com/homarr-labs/homarr/commit/a572aae887142a7e601f70dcc601bf6335e37c17))
+* **pi-hole:** wrong fetch used in factory ([#2527](https://github.com/homarr-labs/homarr/issues/2527)) ([9881577](https://github.com/homarr-labs/homarr/commit/9881577f47fbeacf861dd564d57fc6d7c469d27b))
+
 ## [1.9.0](https://github.com/homarr-labs/homarr/compare/v1.8.0...v1.9.0) (2025-03-05)
 
 ### Features
