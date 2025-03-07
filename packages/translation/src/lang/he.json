@@ -974,7 +974,7 @@
       },
       "option": {
         "borderColor": {
-          "label": ""
+          "label": "צבע מסגרת"
         }
       },
       "remove": {
@@ -1822,10 +1822,10 @@
         "available": "זמין"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "ממתין",
+        "approved": "אושר",
+        "declined": "נדחה",
+        "failed": "נכשל"
       },
       "toBeDetermined": "ייקבע בהמשך"
     },

@@ -974,7 +974,7 @@
       },
       "option": {
         "borderColor": {
-          "label": ""
+          "label": "边界颜色"
         }
       },
       "remove": {
@@ -1822,10 +1822,10 @@
         "available": "可用"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "待处理",
+        "approved": "已批准",
+        "declined": "已拒绝",
+        "failed": "失败"
       },
       "toBeDetermined": "待定"
     },
