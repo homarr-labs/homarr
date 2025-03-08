@@ -18,6 +18,7 @@ export const BehaviorSettingsContent = ({ board }: Props) => {
   const form = useForm({
     initialValues: {
       disableStatus: board.disableStatus,
+      showInNavigation: board.showInNavigation ?? false,
     },
   });
 
@@ -35,6 +36,12 @@ export const BehaviorSettingsContent = ({ board }: Props) => {
           label={t("board.field.disableStatus.label")}
           description={t("board.field.disableStatus.description")}
           {...form.getInputProps("disableStatus", { type: "checkbox" })}
+        />
+
+        <Switch
+          label={t("board.field.showInNavigation.label")}
+          description={t("board.field.showInNavigation.description")}
+          {...form.getInputProps("showInNavigation", { type: "checkbox" })}
         />
 
         <Group justify="end">
