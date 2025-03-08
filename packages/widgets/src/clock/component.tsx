@@ -13,28 +13,31 @@ dayjs.extend(advancedFormat);
 dayjs.extend(utc);
 dayjs.extend(timezones);
 
-export default function ClockWidget({ options }: WidgetComponentProps<"clock">) {
+export default function ClockWidget({ options, width }: WidgetComponentProps<"clock">) {
   const secondsFormat = options.showSeconds ? ":ss" : "";
-  const timeFormat = options.is24HourFormat ? `HH:mm${secondsFormat}` : `h:mm${secondsFormat} A`;
+  const timeFormat = options.is24HourFormat ? `HH:mm${secondsFormat}` : `hh:mm${secondsFormat} A`;
   const dateFormat = options.dateFormat;
   const customTimeFormat = options.customTimeFormat;
   const customDateFormat = options.customDateFormat;
   const timezone = options.useCustomTimezone ? options.timezone : Intl.DateTimeFormat().resolvedOptions().timeZone;
   const time = useCurrentTime(options);
+
+  const sizing = width < 128 ? "xs" : width < 196 ? "sm" : "md";
+
   return (
-    <Stack className="clock-text-stack" h="100%" align="center" justify="center" gap="sm">
+    <Stack className="clock-text-stack" h="100%" align="center" justify="center" gap={sizing}>
       {options.customTitleToggle && (
-        <Text className="clock-customTitle-text" size="md" ta="center">
+        <Text className="clock-customTitle-text" size={sizing} ta="center">
           {options.customTitle}
         </Text>
       )}
-      <Title className="clock-time-text" fw={700} order={1} lh="1">
+      <Title className="clock-time-text" fw={700} order={sizing === "md" ? 2 : sizing === "sm" ? 4 : 6} lh="1">
         {options.customTimeFormat
           ? dayjs(time).tz(timezone).format(customTimeFormat)
           : dayjs(time).tz(timezone).format(timeFormat)}
       </Title>
       {options.showDate && (
-        <Text className="clock-date-text" size="md" p="sm" lineClamp={1}>
+        <Text className="clock-date-text" size={sizing} lineClamp={1}>
           {options.customDateFormat
             ? dayjs(time).tz(timezone).format(customDateFormat)
             : dayjs(time).tz(timezone).format(dateFormat)}
