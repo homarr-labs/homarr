@@ -757,7 +757,8 @@
         "wrongPath": {
           "title": "Wrong path",
           "message": "The path is probably not correct"
-        }
+        },
+        "tooManyRequests": "Too many requests in a given time"
       }
     },
     "secrets": {
@@ -2026,6 +2027,62 @@
           "label": "Amount posts limit"
         }
       }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": "{count} connected"
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "No data available, all integrations disconnected",
+        "unknownContentOption": "Unknown content option for network controller summary widget: "
+      },
+      "name": "Network Controller Summary",
+      "description": "Displays the summary of a Network Controller (like Unifi Controller)"
+    },
+    "networkControllerNetworkStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": "Wired"
+          },
+          "wifi": {
+            "name": "Wi-Fi"
+          }
+        },
+        "users": {
+          "label": "Users"
+        },
+        "guests": {
+          "label": "Guests"
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": "Wi-Fi"
+            },
+            "wired": {
+              "label": "Wired"
+            }
+          },
+          "label": "Widget Content (select in order of appearence)"
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "No data available, all integrations disconnected",
+        "unknownContentOption": "Unknown content option for network status widget: "
+      },
+      "name": "Network Status",
+      "description": "Display connected devices on a network"
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": "Failed to fetch Network Controller Summary"
+      }
     }
   },
   "widgetPreview": {
@@ -2782,6 +2839,9 @@
             },
             "mediaTranscoding": {
               "label": "Media transcoding"
+            },
+            "networkController": {
+              "label": "Network Controller"
             }
           }
         },
