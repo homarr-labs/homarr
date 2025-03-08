@@ -24,6 +24,8 @@ import * as mediaRequestsStats from "./media-requests/stats";
 import * as mediaServer from "./media-server";
 import * as mediaTranscoding from "./media-transcoding";
 import * as minecraftServerStatus from "./minecraft/server-status";
+import * as networkControllerStatus from "./network-controller/network-status";
+import * as networkControllerSummary from "./network-controller/summary";
 import * as notebook from "./notebook";
 import type { WidgetOptionDefinition } from "./options";
 import * as rssFeed from "./rssFeed";
@@ -53,6 +55,8 @@ export const widgetImports = {
   downloads,
   "mediaRequests-requestList": mediaRequestsList,
   "mediaRequests-requestStats": mediaRequestsStats,
+  networkControllerSummary,
+  networkControllerNetworkStatus: networkControllerStatus,
   rssFeed,
   bookmarks,
   indexerManager,

@@ -157,6 +157,12 @@ export const integrationDefs = {
     category: ["calendar"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nextcloud.svg",
   },
+  unifiController: {
+    name: "Unifi Controller",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
+    category: ["networkController"],
+  },
 } as const satisfies Record<string, integrationDefinition>;
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
@@ -209,4 +215,5 @@ export type IntegrationCategory =
   | "indexerManager"
   | "healthMonitoring"
   | "search"
-  | "mediaTranscoding";
+  | "mediaTranscoding"
+  | "networkController";
