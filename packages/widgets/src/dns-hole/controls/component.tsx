@@ -203,8 +203,8 @@ export default function DnsHoleControlsWidget({
         <Flex className="dns-hole-controls-buttons" gap="sm">
           <Tooltip label={t("widget.dnsHoleControls.controls.enableAll")}>
             <Button
-              size="sm"
-              p="xs"
+              size="xs"
+              p={0}
               className="dns-hole-controls-enable-all-button"
               onClick={() => integrationsSummaries.disabled.forEach((integrationId) => toggleDns(integrationId))}
               disabled={integrationsSummaries.disabled.length === 0}
@@ -220,8 +220,8 @@ export default function DnsHoleControlsWidget({
 
           <Tooltip label={t("widget.dnsHoleControls.controls.setTimer")}>
             <Button
-              size="sm"
-              p="xs"
+              size="xs"
+              p={0}
               className="dns-hole-controls-timer-all-button"
               onClick={() => {
                 setSelectedIntegrationIds(integrationsSummaries.enabled);
@@ -240,8 +240,8 @@ export default function DnsHoleControlsWidget({
 
           <Tooltip label={t("widget.dnsHoleControls.controls.disableAll")}>
             <Button
-              size="sm"
-              p="xs"
+              size="xs"
+              p={0}
               className="dns-hole-controls-disable-all-button"
               onClick={() => integrationsSummaries.enabled.forEach((integrationId) => toggleDns(integrationId))}
               disabled={integrationsSummaries.enabled.length === 0}
@@ -319,7 +319,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   const board = useRequiredBoard();
 
   const iconUrl = integrationDefs[data.integration.kind].iconUrl;
-  const layout = rootWidth < 200 ? "sm" : "md";
+  const layout = rootWidth < 256 ? "sm" : "md";
 
   return (
     <Indicator
@@ -376,7 +376,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
             </Group>
             <Flex className="dns-hole-controls-item-controls" direction="row" gap="sm" w="100%">
               {layout === "sm" && (
-                <Group gap="xs" grow w="100%">
+                <Group gap="xs" grow wrap="nowrap" w="100%">
                   {!isEnabled ? (
                     <ActionIcon
                       onClick={() => toggleDns(data.integration.id)}
