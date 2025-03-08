@@ -21,7 +21,79 @@ export default function CalendarWidget(props: WidgetComponentProps<"calendar">) 
   const [month, setMonth] = useState(new Date());
 
   if (props.integrationIds.length === 0) {
-    return <CalendarBase {...props} events={[]} month={month} setMonth={setMonth} />;
+    return (
+      <CalendarBase
+        {...props}
+        events={[
+          {
+            date: new Date(),
+            name: "Touch grass",
+            description: "It's good for you",
+            links: [
+              {
+                color: "red",
+                notificationColor: "yellow",
+                href: "https://www.youtube.com/watch?v=3KquFZYi6L0",
+                name: "Watch video",
+                isDark: false,
+                logo: "https://www.youtube.com/s/desktop/4b8b3b3e/img/favicon_32.png",
+              },
+            ],
+            subName: "Don't forget to touch grass",
+          },
+          {
+            date: new Date(),
+            name: "Touch grass",
+            description: "It's good for you",
+            links: [
+              {
+                color: "red",
+                notificationColor: "indigo",
+                href: "https://www.youtube.com/watch?v=3KquFZYi6L0",
+                name: "Watch video",
+                isDark: false,
+                logo: "https://www.youtube.com/s/desktop/4b8b3b3e/img/favicon_32.png",
+              },
+            ],
+            subName: "Don't forget to touch grass",
+          },
+          {
+            date: new Date(),
+            name: "Touch grass",
+            description: "It's good for you",
+            links: [
+              {
+                color: "red",
+                notificationColor: "teal",
+                href: "https://www.youtube.com/watch?v=3KquFZYi6L0",
+                name: "Watch video",
+                isDark: false,
+                logo: "https://www.youtube.com/s/desktop/4b8b3b3e/img/favicon_32.png",
+              },
+            ],
+            subName: "Don't forget to touch grass",
+          },
+          {
+            date: new Date(),
+            name: "Touch grass",
+            description: "It's good for you",
+            links: [
+              {
+                color: "red",
+                notificationColor: "cyan",
+                href: "https://www.youtube.com/watch?v=3KquFZYi6L0",
+                name: "Watch video",
+                isDark: false,
+                logo: "https://www.youtube.com/s/desktop/4b8b3b3e/img/favicon_32.png",
+              },
+            ],
+            subName: "Don't forget to touch grass",
+          },
+        ]}
+        month={month}
+        setMonth={setMonth}
+      />
+    );
   }
 
   return <FetchCalendar month={month} setMonth={setMonth} {...props} />;
@@ -105,8 +177,8 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
         },
         day: {
           borderRadius: actualItemRadius,
-          width: width < 350 ? 20 : 50,
-          height: height < 350 ? 20 : 50,
+          width: "100%",
+          height: "100%",
         },
         month: {
           height: "100%",

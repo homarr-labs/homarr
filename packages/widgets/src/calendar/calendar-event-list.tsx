@@ -30,7 +30,7 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
     <ScrollArea
       offsetScrollbars
       pt={5}
-      w={400}
+      w="100%"
       styles={{
         viewport: {
           maxHeight: 450,
