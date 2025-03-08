@@ -974,7 +974,7 @@
       },
       "option": {
         "borderColor": {
-          "label": ""
+          "label": "Цвет границы"
         }
       },
       "remove": {
@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "Пользовательские CSS классы"
+        },
+        "borderColor": {
+          "label": ""
         }
       }
     },
@@ -1822,10 +1825,10 @@
         "available": "Доступно"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "В ожидании",
+        "approved": "Одобрено",
+        "declined": "Отклонено",
+        "failed": "Ошибка"
       },
       "toBeDetermined": "Будет определено позже"
     },
