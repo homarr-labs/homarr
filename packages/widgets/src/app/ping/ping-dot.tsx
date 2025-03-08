@@ -15,17 +15,17 @@ export const PingDot = ({ color, tooltip, ...props }: PingDotProps) => {
 
   return (
     <Box bottom={10} right={10} pos="absolute" display={"flex"}>
-      <Tooltip label={tooltip}>
+      <Tooltip multiline label={tooltip} maw={350}>
         {pingIconsEnabled ? (
-          <props.icon style={{ width: 20, height: 20 }} strokeWidth={5} color={color} />
+          <props.icon style={{ width: 12, height: 12 }} strokeWidth={4} color={color} />
         ) : (
           <Box
             bg={color}
             style={{
               borderRadius: "100%",
             }}
-            w={16}
-            h={16}
+            w={10}
+            h={10}
           ></Box>
         )}
       </Tooltip>
