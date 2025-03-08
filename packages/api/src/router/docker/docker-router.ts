@@ -3,10 +3,11 @@ import { z } from "zod";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
-import { DockerSingleton } from "@homarr/docker";
 import type { Container, ContainerInfo, ContainerState, Docker, Port } from "@homarr/docker";
+import { DockerSingleton } from "@homarr/docker";
 import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
+import { dockerContainersRequestHandler } from "@homarr/request-handler/docker";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 
@@ -19,6 +20,7 @@ export const dockerRouter = createTRPCRouter({
     const result = await dockerCache
       .consumeAsync(async () => {
         const dockerInstances = DockerSingleton.getInstances();
+
         const containers = await Promise.all(
           // Return all the containers of all the instances into only one item
           dockerInstances.map(({ instance, host: key }) =>
@@ -74,6 +76,14 @@ export const dockerRouter = createTRPCRouter({
       containers: sanitizeContainers(data.containers),
       timestamp,
     };
+  }),
+  getContainersWidget: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
+    const innerHandler = dockerContainersRequestHandler.handler({
+      widjetOptions: {},
+    });
+    return await innerHandler.getCachedOrUpdatedDataAsync({
+      forceUpdate: false,
+    });
   }),
   invalidate: permissionRequiredProcedure.requiresPermission("admin").mutation(async () => {
     await dockerCache.invalidateAsync();
@@ -169,6 +179,8 @@ interface DockerContainer {
   image: string;
   ports: Port[];
   iconUrl: string | null;
+  cpuUsage?: number;
+  memoryUsage?: number;
 }
 
 function sanitizeContainers(
