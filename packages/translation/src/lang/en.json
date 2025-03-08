@@ -1127,8 +1127,14 @@
             },
             "grid": {
               "label": "Grid"
+            },
+            "gridHorizontal": {
+              "label": "Grid horizontal"
             }
           }
+        },
+        "hideTitle": {
+          "label": "Hide title"
         },
         "hideIcon": {
           "label": "Hide icons"
