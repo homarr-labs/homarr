@@ -44,7 +44,7 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
           w="100%"
           p={0}
           m={0}
-          bd={`3px solid ${opened && !disabled ? primaryColor : "transparent"}`}
+          bd={`2px solid ${opened && !disabled ? primaryColor : "transparent"}`}
           pos={"relative"}
           style={{
             alignContent: "center",
@@ -60,10 +60,11 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
           <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
             {date.getDate()}
           </Text>
-          {rootHeight >= 350 && <NotificationIndicator events={events} />}
+          <NotificationIndicator events={events} rootHeight={rootHeight} />
         </Container>
       </Popover.Target>
-      <Popover.Dropdown>
+      {/* Popover has some offset on the left side, padding is removed because of scrollarea paddings */}
+      <Popover.Dropdown maw="calc(100vw - 10px)" pe={4} pb={0} style={{ overflow: "hidden" }}>
         <CalendarEventList events={events} />
       </Popover.Dropdown>
     </Popover>
@@ -72,14 +73,17 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
 
 interface NotificationIndicatorProps {
   events: CalendarEvent[];
+  rootHeight: number;
 }
 
-const NotificationIndicator = ({ events }: NotificationIndicatorProps) => {
+const NotificationIndicator = ({ events, rootHeight }: NotificationIndicatorProps) => {
+  const isSmall = rootHeight < 256;
   const notificationEvents = [...new Set(events.map((event) => event.links[0]?.notificationColor))].filter(String);
+  /* position bottom is lower when small to not be on top of number*/
   return (
-    <Flex h="xs" w="75%" pos={"absolute"} bottom={0} left={"12.5%"} p={0} direction={"row"} justify={"center"}>
+    <Flex w="75%" pos={"absolute"} bottom={isSmall ? -2 : 4} left={"12.5%"} p={0} direction={"row"} justify={"center"}>
       {notificationEvents.map((notificationEvent) => {
-        return <Box key={notificationEvent} bg={notificationEvent} h={4} p={0} style={{ flex: 1, borderRadius: 5 }} />;
+        return <Box key={notificationEvent} bg={notificationEvent} h={2} p={0} style={{ flex: 1, borderRadius: 5 }} />;
       })}
     </Flex>
   );

@@ -105,8 +105,8 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
         },
         day: {
           borderRadius: actualItemRadius,
-          width: width < 350 ? 20 : 50,
-          height: height < 350 ? 20 : 50,
+          width: "100%",
+          height: "100%",
         },
         month: {
           height: "100%",
