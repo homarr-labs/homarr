@@ -83,11 +83,7 @@ const NotificationIndicator = ({ events, rootHeight }: NotificationIndicatorProp
   return (
     <Flex w="75%" pos={"absolute"} bottom={isSmall ? -2 : 4} left={"12.5%"} p={0} direction={"row"} justify={"center"}>
       {notificationEvents.map((notificationEvent) => {
-        return (
-          <>
-            <Box key={notificationEvent} bg={notificationEvent} h={2} p={0} style={{ flex: 1, borderRadius: 5 }} />
-          </>
-        );
+        return <Box key={notificationEvent} bg={notificationEvent} h={2} p={0} style={{ flex: 1, borderRadius: 5 }} />;
       })}
     </Flex>
   );
