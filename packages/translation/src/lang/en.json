@@ -1930,6 +1930,47 @@
           "label": "Amount posts limit"
         }
       }
+    },
+    "releases": {
+      "name": "Releases",
+      "description": "Displays a list of the current version of the given repositories with the given version regex.",
+      "option": {
+        "releases": {
+          "label": "Releases"
+        },
+        "addRelease": {
+          "label": "Add release"
+        },
+        "provider": {
+          "label": "Provider"
+        },
+        "identifier": {
+          "label": "Identifier",
+          "placeholder": "Name or Owner/Name"
+        },
+        "versionRegex": {
+          "label": "Version Regex"
+        },
+        "sortBy": {
+          "label": "Sort By"
+        },
+        "showOnlyNewReleases": {
+          "label": "Show Only New Releases"
+        },
+        "edit": {
+          "label": "Edit"
+        }
+      },
+      "editForm": {
+        "title": "Edit Release",
+        "cancel": {
+          "label": "Cancel"
+        },
+        "confirm": {
+          "label": "Confirm"
+        }
+      },
+      "not-found": "Not Found"
     }
   },
   "widgetPreview": {
