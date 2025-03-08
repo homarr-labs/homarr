@@ -1,6 +1,6 @@
 "use client";
 
-import { Anchor, Box, Card, Divider, Flex, Group, Stack, Text, Title, UnstyledButton } from "@mantine/core";
+import { Anchor, Card, Flex, Group, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 import combineClasses from "clsx";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -12,7 +12,7 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./bookmark.module.css";
 
-export default function BookmarksWidget({ options, width, height, itemId }: WidgetComponentProps<"bookmarks">) {
+export default function BookmarksWidget({ options, itemId }: WidgetComponentProps<"bookmarks">) {
   const board = useRequiredBoard();
   const [data] = clientApi.app.byIds.useSuspenseQuery(options.items, {
     select(data) {
@@ -48,21 +48,22 @@ export default function BookmarksWidget({ options, width, height, itemId }: Widg
           {options.title}
         </Title>
       )}
-      {options.layout === "grid" && (
+      {(options.layout === "grid" || options.layout === "gridHorizontal") && (
         <GridLayout
           data={data}
-          width={width}
-          height={height}
+          itemDirection={options.layout === "gridHorizontal" ? "horizontal" : "vertical"}
+          hideTitle={options.hideTitle}
           hideIcon={options.hideIcon}
           hideHostname={options.hideHostname}
           openNewTab={options.openNewTab}
           hasIconColor={board.iconColor !== null}
         />
       )}
-      {options.layout !== "grid" && (
+      {options.layout !== "grid" && options.layout !== "gridHorizontal" && (
         <FlexLayout
           data={data}
           direction={options.layout}
+          hideTitle={options.hideTitle}
           hideIcon={options.hideIcon}
           hideHostname={options.hideHostname}
           openNewTab={options.openNewTab}
@@ -76,23 +77,27 @@ export default function BookmarksWidget({ options, width, height, itemId }: Widg
 interface FlexLayoutProps {
   data: RouterOutputs["app"]["byIds"];
   direction: "row" | "column";
+  hideTitle: boolean;
   hideIcon: boolean;
   hideHostname: boolean;
   openNewTab: boolean;
   hasIconColor: boolean;
 }
 
-const FlexLayout = ({ data, direction, hideIcon, hideHostname, openNewTab, hasIconColor }: FlexLayoutProps) => {
+const FlexLayout = ({
+  data,
+  direction,
+  hideTitle,
+  hideIcon,
+  hideHostname,
+  openNewTab,
+  hasIconColor,
+}: FlexLayoutProps) => {
   const board = useRequiredBoard();
   return (
     <Flex direction={direction} gap="0" w="100%">
-      {data.map((app, index) => (
+      {data.map((app) => (
         <div key={app.id} style={{ display: "flex", flex: "1", flexDirection: direction }}>
-          <Divider
-            m="3px"
-            orientation={direction !== "column" ? "vertical" : "horizontal"}
-            color={index === 0 ? "transparent" : undefined}
-          />
           <UnstyledButton
             component="a"
             href={app.href ?? undefined}
@@ -101,11 +106,23 @@ const FlexLayout = ({ data, direction, hideIcon, hideHostname, openNewTab, hasIc
             key={app.id}
             w="100%"
           >
-            <Card radius={board.itemRadius} className={classes.card} w="100%" display="flex" p={"xs"} h={"100%"}>
+            <Card radius={board.itemRadius} className={classes.card} w="100%" display="flex" p={4} h="100%">
               {direction === "row" ? (
-                <VerticalItem app={app} hideIcon={hideIcon} hideHostname={hideHostname} hasIconColor={hasIconColor} />
+                <VerticalItem
+                  app={app}
+                  hideTitle={hideTitle}
+                  hideIcon={hideIcon}
+                  hideHostname={hideHostname}
+                  hasIconColor={hasIconColor}
+                />
               ) : (
-                <HorizontalItem app={app} hideIcon={hideIcon} hideHostname={hideHostname} hasIconColor={hasIconColor} />
+                <HorizontalItem
+                  app={app}
+                  hideTitle={hideTitle}
+                  hideIcon={hideIcon}
+                  hideHostname={hideHostname}
+                  hasIconColor={hasIconColor}
+                />
               )}
             </Card>
           </UnstyledButton>
@@ -117,29 +134,27 @@ const FlexLayout = ({ data, direction, hideIcon, hideHostname, openNewTab, hasIc
 
 interface GridLayoutProps {
   data: RouterOutputs["app"]["byIds"];
-  width: number;
-  height: number;
+  hideTitle: boolean;
   hideIcon: boolean;
   hideHostname: boolean;
   openNewTab: boolean;
+  itemDirection: "horizontal" | "vertical";
   hasIconColor: boolean;
 }
 
-const GridLayout = ({ data, width, height, hideIcon, hideHostname, openNewTab, hasIconColor }: GridLayoutProps) => {
-  // Calculates the perfect number of columns for the grid layout based on the width and height in pixels and the number of items
-  const columns = Math.ceil(Math.sqrt(data.length * (width / height)));
-
+const GridLayout = ({
+  data,
+  hideTitle,
+  hideIcon,
+  hideHostname,
+  openNewTab,
+  itemDirection,
+  hasIconColor,
+}: GridLayoutProps) => {
   const board = useRequiredBoard();
 
   return (
-    <Box
-      display="grid"
-      h="100%"
-      style={{
-        gridTemplateColumns: `repeat(${columns}, 1fr)`,
-        gap: 10,
-      }}
-    >
+    <Flex mih="100%" miw="100%" gap={4} wrap="wrap">
       {data.map((app) => (
         <UnstyledButton
           component="a"
@@ -147,46 +162,58 @@ const GridLayout = ({ data, width, height, hideIcon, hideHostname, openNewTab, h
           target={openNewTab ? "_blank" : "_self"}
           rel="noopener noreferrer"
           key={app.id}
-          h="100%"
+          flex="1"
         >
           <Card
             h="100%"
             className={combineClasses(classes.card, classes["card-grid"])}
             radius={board.itemRadius}
-            p="sm"
+            p="xs"
           >
-            <VerticalItem
-              app={app}
-              hideIcon={hideIcon}
-              hideHostname={hideHostname}
-              hasIconColor={hasIconColor}
-              size={50}
-            />
+            {itemDirection === "horizontal" ? (
+              <HorizontalItem
+                app={app}
+                hideTitle={hideTitle}
+                hideIcon={hideIcon}
+                hideHostname={hideHostname}
+                hasIconColor={hasIconColor}
+              />
+            ) : (
+              <VerticalItem
+                app={app}
+                hideTitle={hideTitle}
+                hideIcon={hideIcon}
+                hideHostname={hideHostname}
+                hasIconColor={hasIconColor}
+              />
+            )}
           </Card>
         </UnstyledButton>
       ))}
-    </Box>
+    </Flex>
   );
 };
 
 const VerticalItem = ({
   app,
+  hideTitle,
   hideIcon,
   hideHostname,
   hasIconColor,
-  size = 30,
 }: {
   app: RouterOutputs["app"]["byIds"][number];
+  hideTitle: boolean;
   hideIcon: boolean;
   hideHostname: boolean;
   hasIconColor: boolean;
-  size?: number;
 }) => {
   return (
     <Stack h="100%" gap="sm">
-      <Text fw={700} ta="center" size="lg">
-        {app.name}
-      </Text>
+      {!hideTitle && (
+        <Text fw={700} ta="center" size="xs">
+          {app.name}
+        </Text>
+      )}
       {!hideIcon && (
         <MaskedOrNormalImage
           imageUrl={app.iconUrl}
@@ -194,18 +221,17 @@ const VerticalItem = ({
           alt={app.name}
           className={classes.bookmarkIcon}
           style={{
-            width: size,
-            height: size,
+            width: hideHostname && hideTitle ? 16 : 24,
+            height: hideHostname && hideTitle ? 16 : 24,
             overflow: "auto",
             flex: 1,
-            scale: 0.8,
             marginLeft: "auto",
             marginRight: "auto",
           }}
         />
       )}
       {!hideHostname && (
-        <Anchor ta="center" component="span" size="lg">
+        <Anchor ta="center" component="span" size="xs">
           {app.href ? new URL(app.href).hostname : undefined}
         </Anchor>
       )}
@@ -215,17 +241,19 @@ const VerticalItem = ({
 
 const HorizontalItem = ({
   app,
+  hideTitle,
   hideIcon,
   hideHostname,
   hasIconColor,
 }: {
   app: RouterOutputs["app"]["byIds"][number];
+  hideTitle: boolean;
   hideIcon: boolean;
   hideHostname: boolean;
   hasIconColor: boolean;
 }) => {
   return (
-    <Group wrap="nowrap" gap={"xs"}>
+    <Group wrap="nowrap" gap="xs" h="100%" justify="center">
       {!hideIcon && (
         <MaskedOrNormalImage
           imageUrl={app.iconUrl}
@@ -234,24 +262,29 @@ const HorizontalItem = ({
           className={classes.bookmarkIcon}
           style={{
             overflow: "auto",
-            scale: 0.8,
-            width: 30,
-            height: 30,
+            width: hideHostname ? 16 : 24,
+            height: hideHostname ? 16 : 24,
             flex: "unset",
           }}
         />
       )}
-      <Stack justify="space-between" gap={0}>
-        <Text fw={700} size="md" lineClamp={1}>
-          {app.name}
-        </Text>
+      {!(hideTitle && hideHostname) && (
+        <>
+          <Stack justify="space-between" gap={0}>
+            {!hideTitle && (
+              <Text fw={700} size="xs" lineClamp={hideHostname ? 2 : 1}>
+                {app.name}
+              </Text>
+            )}
 
-        {!hideHostname && (
-          <Anchor component="span" size="xs">
-            {app.href ? new URL(app.href).hostname : undefined}
-          </Anchor>
-        )}
-      </Stack>
+            {!hideHostname && (
+              <Anchor component="span" size="xs">
+                {app.href ? new URL(app.href).hostname : undefined}
+              </Anchor>
+            )}
+          </Stack>
+        </>
+      )}
     </Group>
   );
 };

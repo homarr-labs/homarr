@@ -14,12 +14,13 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
     return optionsBuilder.from((factory) => ({
       title: factory.text(),
       layout: factory.select({
-        options: (["grid", "row", "column"] as const).map((value) => ({
+        options: (["grid", "gridHorizontal", "row", "column"] as const).map((value) => ({
           value,
           label: (t) => t(`widget.bookmarks.option.layout.option.${value}.label`),
         })),
         defaultValue: "column",
       }),
+      hideTitle: factory.switch({ defaultValue: false }),
       hideIcon: factory.switch({ defaultValue: false }),
       hideHostname: factory.switch({ defaultValue: false }),
       openNewTab: factory.switch({ defaultValue: true }),
