@@ -1,11 +1,9 @@
 "use client";
 
-import { ActionIcon, Avatar, Card, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
+import { Avatar, Card, Grid, Group, Stack, Text, Tooltip } from "@mantine/core";
 import type { Icon } from "@tabler/icons-react";
 import {
   IconDeviceTv,
-  IconExternalLink,
   IconHourglass,
   IconLoaderQuarter,
   IconMovie,
@@ -28,6 +26,7 @@ import classes from "./component.module.css";
 export default function MediaServerWidget({
   integrationIds,
   isEditMode,
+  width,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const [requestStats] = clientApi.widget.mediaRequests.getStats.useSuspenseQuery(
@@ -40,8 +39,6 @@ export default function MediaServerWidget({
       refetchOnReconnect: false,
     },
   );
-
-  const { width, height, ref } = useElementSize();
 
   const board = useRequiredBoard();
 
@@ -90,94 +87,84 @@ export default function MediaServerWidget({
     },
   ] satisfies { name: keyof RequestStats; icon: Icon; number: number }[];
 
+  const isTiny = width < 256;
+
   return (
     <Stack
       className="mediaRequests-stats-layout"
-      display="flex"
       h="100%"
-      gap="sm"
+      gap="xs"
       p="sm"
       align="center"
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
     >
-      <Text className="mediaRequests-stats-stats-title" fw={"bold"} size="md">
-        {t("titles.stats.main")}
-      </Text>
-      <Grid className="mediaRequests-stats-stats-grid" gutter={10} w="100%">
-        {data.map((stat) => (
-          <Grid.Col
-            className={combineClasses("mediaRequests-stats-stat-wrapper", `mediaRequests-stats-stat-${stat.name}`)}
-            key={stat.name}
-            span={3}
-          >
-            <Tooltip label={t(`titles.stats.${stat.name}`)}>
-              <Card p={0} radius={board.itemRadius} className={classes.card}>
-                <Stack className="mediaRequests-stats-stat-stack" align="center" gap={0} p="xs">
-                  <stat.icon className="mediaRequests-stats-stat-icon" size={30} />
-                  <Text className="mediaRequests-stats-stat-value" size="md">
-                    {stat.number}
-                  </Text>
-                </Stack>
-              </Card>
-            </Tooltip>
-          </Grid.Col>
-        ))}
-      </Grid>
-      <Text className="mediaRequests-stats-users-title" fw={"bold"} size="md">
-        {t("titles.users.main")}
-      </Text>
-      <Stack
-        className="mediaRequests-stats-users-wrapper"
-        flex={1}
-        w="100%"
-        ref={ref}
-        display="flex"
-        gap="sm"
-        style={{ overflow: "hidden", justifyContent: "end" }}
-      >
-        {requestStats.users.slice(0, Math.max(Math.floor((height / width) * 5), 1)).map((user) => (
-          <Card
-            className={combineClasses(
-              "mediaRequests-stats-users-user-wrapper",
-              `mediaRequests-stats-users-user-${user.id}`,
-              classes.card,
-            )}
-            key={user.id}
-            p="sm"
-            radius={board.itemRadius}
-          >
-            <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="sm" display="flex">
-              <Tooltip label={user.integration.name}>
-                <Avatar
-                  className="mediaRequests-stats-users-user-avatar"
-                  size="md"
-                  src={user.avatar}
-                  bd={`2px solid ${user.integration.kind === "overseerr" ? "#ECB000" : "#6677CC"}`}
-                />
+      <Stack gap={4} w="100%">
+        <Text className="mediaRequests-stats-stats-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
+          {t("titles.stats.main")}
+        </Text>
+        <Grid className="mediaRequests-stats-stats-grid" gutter={4} w="100%">
+          {data.map((stat) => (
+            <Grid.Col
+              className={combineClasses("mediaRequests-stats-stat-wrapper", `mediaRequests-stats-stat-${stat.name}`)}
+              key={stat.name}
+              span={isTiny ? 6 : 3}
+            >
+              <Tooltip label={t(`titles.stats.${stat.name}`)}>
+                <Card p={0} radius={board.itemRadius} className={classes.card}>
+                  <Group className="mediaRequests-stats-stat-stack" justify="center" align="center" gap="xs" w="100%">
+                    <stat.icon className="mediaRequests-stats-stat-icon" size={16} />
+                    <Text className="mediaRequests-stats-stat-value" size="md">
+                      {stat.number}
+                    </Text>
+                  </Group>
+                </Card>
               </Tooltip>
-              <Stack className="mediaRequests-stats-users-user-infos" gap={0}>
-                <Text className="mediaRequests-stats-users-user-userName" fw={"bold"} size="md">
-                  {user.displayName}
+            </Grid.Col>
+          ))}
+        </Grid>
+      </Stack>
+      <Stack gap={4} w="100%" h="100%">
+        <Text className="mediaRequests-stats-users-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
+          {t("titles.users.main")} ({t("titles.users.requests")})
+        </Text>
+        <Stack className="mediaRequests-stats-users-wrapper" flex={1} w="100%" gap={4} style={{ overflow: "hidden" }}>
+          {requestStats.users.slice(0, 10).map((user) => (
+            <Card
+              component="a"
+              href={user.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={combineClasses(
+                "mediaRequests-stats-users-user-wrapper",
+                `mediaRequests-stats-users-user-${user.id}`,
+                classes.card,
+              )}
+              key={user.id}
+              p="xs"
+              radius={board.itemRadius}
+            >
+              <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="sm" justify="space-between">
+                <Text className="mediaRequests-stats-users-user-request-count" size="md" fw={500}>
+                  {user.requestCount}
                 </Text>
-                <Text className="mediaRequests-stats-users-user-request-count" size="md">
-                  {`${t("titles.users.requests")}: ${user.requestCount}`}
-                </Text>
-              </Stack>
-              <Space flex={1} />
-              <ActionIcon
-                className="mediaRequests-stats-users-user-link-button"
-                variant="light"
-                color="var(--mantine-color-text)"
-                size={40}
-                component="a"
-                radius={board.itemRadius}
-                href={user.link}
-              >
-                <IconExternalLink className="mediaRequests-stats-users-user-link-icon" size={25} />
-              </ActionIcon>
-            </Group>
-          </Card>
-        ))}
+
+                <Group gap={4}>
+                  <Tooltip label={user.integration.name}>
+                    <Avatar
+                      className="mediaRequests-stats-users-user-avatar"
+                      size="xs"
+                      src={user.avatar}
+                      bd={`2px solid ${user.integration.kind === "overseerr" ? "#ECB000" : "#6677CC"}`}
+                    />
+                  </Tooltip>
+                  <Text className="mediaRequests-stats-users-user-userName" size="xs">
+                    {user.displayName}
+                  </Text>
+                </Group>
+              </Group>
+            </Card>
+          ))}
+        </Stack>
       </Stack>
     </Stack>
   );
