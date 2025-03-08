@@ -62,14 +62,3 @@
 .text-flash {
   animation: glow 1s ease-in-out;
 }
-
-/*To apply to any ScrollArea that we want to flex. Same weird workaround as before*/
-.flexed-scroll-area {
-  height: 100%;
-  .mantine-ScrollArea-viewport {
-    & div[style="min-width: 100%; display: table;"] {
-      display: flex !important;
-      height: 100%;
-    }
-  }
-}
