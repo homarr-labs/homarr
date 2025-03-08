@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "自定義 CSS html"
+        },
+        "borderColor": {
+          "label": ""
         }
       }
     },

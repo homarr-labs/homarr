@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "Özel CSS Alanı"
+        },
+        "borderColor": {
+          "label": ""
         }
       }
     },

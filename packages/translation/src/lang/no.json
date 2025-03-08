@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "Egendefinerte css-klasser"
+        },
+        "borderColor": {
+          "label": ""
         }
       }
     },
