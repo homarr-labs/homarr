@@ -47,6 +47,7 @@ const optionMapping: OptionMapping = {
     releaseType: (oldOptions) => [oldOptions.radarrReleaseType],
     filterFutureMonths: () => undefined,
     filterPastMonths: () => undefined,
+    showUnmonitored: ({ showUnmonitored }) => showUnmonitored,
   },
   clock: {
     customTitle: (oldOptions) => oldOptions.customTitle,

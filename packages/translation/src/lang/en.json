@@ -1434,6 +1434,9 @@
         },
         "filterFutureMonths": {
           "label": "End at"
+        },
+        "showUnmonitored": {
+          "label": "Show unmonitored"
         }
       }
     },
