@@ -226,7 +226,7 @@ export default function DockerWidget() {
 
   const totalContainers = data.containers.length;
   const containerStateCounts = data.containers.reduce<Record<string, number>>((acc, container) => {
-    acc[container.state] = (acc[container.state] || 0) + 1;
+    acc[container.state] = (acc[container.state] ?? 0) + 1;
     return acc;
   }, {});
 
