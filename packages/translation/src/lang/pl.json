@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "Niestandardowe klasy CSS"
+        },
+        "borderColor": {
+          "label": ""
         }
       }
     },
@@ -1124,8 +1127,14 @@
             },
             "grid": {
               "label": "Siatka"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "Ukryj ikony"

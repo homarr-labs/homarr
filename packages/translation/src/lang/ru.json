@@ -974,7 +974,7 @@
       },
       "option": {
         "borderColor": {
-          "label": ""
+          "label": "Цвет границы"
         }
       },
       "remove": {
@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "Пользовательские CSS классы"
+        },
+        "borderColor": {
+          "label": ""
         }
       }
     },
@@ -1124,8 +1127,14 @@
             },
             "grid": {
               "label": "Сетка"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "Скрывать иконки"
@@ -1822,10 +1831,10 @@
         "available": "Доступно"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "В ожидании",
+        "approved": "Одобрено",
+        "declined": "Отклонено",
+        "failed": "Ошибка"
       },
       "toBeDetermined": "Будет определено позже"
     },

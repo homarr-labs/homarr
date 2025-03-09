@@ -784,7 +784,7 @@
         },
         "tokenId": {
           "label": "Token Anahtar Kimliği",
-          "newLabel": "Yeni Anahtar Kimliği"
+          "newLabel": "Yeni Token Anahtar Kimliği"
         },
         "realm": {
           "label": "Erişim Alanı",
@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "Özel CSS Alanı"
+        },
+        "borderColor": {
+          "label": "Kenarlık rengi"
         }
       }
     },
@@ -1124,8 +1127,14 @@
             },
             "grid": {
               "label": "Izgara"
+            },
+            "gridHorizontal": {
+              "label": "Yatay ızgara"
             }
           }
+        },
+        "hideTitle": {
+          "label": "Başlığı gizle"
         },
         "hideIcon": {
           "label": "Simgeleri gizle"
@@ -2165,7 +2174,7 @@
           "title": "Arkaplan"
         },
         "appearance": {
-          "title": "Görünüş"
+          "title": "Görünüm"
         },
         "customCss": {
           "title": "Özel Css"
@@ -2606,7 +2615,7 @@
             }
           },
           "appearance": {
-            "title": "Görünüş",
+            "title": "Görünüm",
             "defaultColorScheme": {
               "label": "Öntanımlı Renk Düzeni",
               "options": {

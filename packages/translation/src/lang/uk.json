@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "Користувацькі css класи"
+        },
+        "borderColor": {
+          "label": ""
         }
       }
     },
@@ -1124,8 +1127,14 @@
             },
             "grid": {
               "label": "Сітка"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": ""

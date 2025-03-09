@@ -49,6 +49,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
     integrationIds: [],
     advancedOptions: {
       customCssClasses: [],
+      borderColor: "",
     },
   });
 

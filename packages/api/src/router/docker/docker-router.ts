@@ -9,6 +9,7 @@ import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
 import { dockerContainersRequestHandler } from "@homarr/request-handler/docker";
 
+import { dockerMiddleware } from "../../middlewares/docker";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 
 const dockerCache = createCacheChannel<{
@@ -91,6 +92,7 @@ export const dockerRouter = createTRPCRouter({
   }),
   startAll: permissionRequiredProcedure
     .requiresPermission("admin")
+    .unstable_concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await Promise.allSettled(
@@ -104,6 +106,7 @@ export const dockerRouter = createTRPCRouter({
     }),
   stopAll: permissionRequiredProcedure
     .requiresPermission("admin")
+    .unstable_concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await Promise.allSettled(
@@ -117,6 +120,7 @@ export const dockerRouter = createTRPCRouter({
     }),
   restartAll: permissionRequiredProcedure
     .requiresPermission("admin")
+    .unstable_concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await Promise.allSettled(
@@ -130,6 +134,7 @@ export const dockerRouter = createTRPCRouter({
     }),
   removeAll: permissionRequiredProcedure
     .requiresPermission("admin")
+    .unstable_concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await Promise.allSettled(

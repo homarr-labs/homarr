@@ -30,7 +30,7 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
     <ScrollArea
       offsetScrollbars
       pt={5}
-      w={400}
+      w="100%"
       styles={{
         viewport: {
           maxHeight: 450,
@@ -41,7 +41,13 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
         {events.map((event, eventIndex) => (
           <Group key={`event-${eventIndex}`} align={"stretch"} wrap="nowrap">
             <Box pos={"relative"} w={70} h={120}>
-              <Image src={event.thumbnail} w={70} h={120} radius={"sm"} />
+              <Image
+                src={event.thumbnail}
+                w={70}
+                h={120}
+                radius={"sm"}
+                fallbackSrc={"https://placehold.co/400x600?text=No%20image"}
+              />
               {event.mediaInformation?.type === "tv" && (
                 <Badge
                   pos={"absolute"}
