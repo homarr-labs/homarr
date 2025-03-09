@@ -36,7 +36,7 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
     >
       <Group gap="xs" wrap="nowrap" align="center">
         <Tooltip label={data.online ? tStatus("online") : tStatus("offline")}>
-          <Box w="md" h="md" bg={data.online ? "teal" : "red"} style={{ borderRadius: "100%" }}></Box>
+          <Box miw="md" h="md" bg={data.online ? "teal" : "red"} style={{ borderRadius: "100%" }}></Box>
         </Tooltip>
         <Text size="md" fw="bold">
           {title}
@@ -44,11 +44,13 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
       </Group>
       {data.online && (
         <>
-          <img
-            style={{ flex: 1, transform: "scale(0.8)", objectFit: "contain" }}
-            alt={`minecraft icon ${options.domain}`}
-            src={data.icon}
-          />
+          {!options.isBedrockServer && (
+            <img
+              style={{ flex: 1, transform: "scale(0.8)", objectFit: "contain" }}
+              alt={`minecraft icon ${options.domain}`}
+              src={data.icon}
+            />
+          )}
           <Group gap={5} c="gray.6" align="center">
             <IconUsersGroup size="1rem" />
             <Text size="md">
