@@ -2325,6 +2325,7 @@
           "label": "Tools",
           "items": {
             "docker": "Docker",
+            "kubernetes": "Kubernetes",
             "logs": "Logs",
             "api": "API",
             "certificates": "Certificates",
@@ -2758,7 +2759,7 @@
     "title": "Containers",
     "table": {
       "updated": "Updated {when}",
-      "search": "Seach {count} containers",
+      "search": "Search {count} containers",
       "selected": "{selectCount} of {totalCount} containers selected"
     },
     "field": {
@@ -2871,6 +2872,246 @@
       "internalServerError": "Failed to fetch Docker containers"
     }
   },
+  "kubernetes": {
+    "cluster": {
+      "title": "Cluster Dashboard",
+      "label": "Cluster",
+      "providers": "Providers",
+      "version": "Version",
+      "architecture": "Architecture",
+      "capacity": {
+        "title": "Capacity",
+        "resource": {
+          "reserved": "Reserved",
+          "used": "Used"
+        }
+      },
+      "resources": {
+        "title": "Resources",
+        "nodes": "Nodes",
+        "namespaces": "Namespaces",
+        "ingresses": "Ingresses",
+        "services": "Services",
+        "pods": "Pods",
+        "configmaps": "ConfigMaps",
+        "secrets": "Secrets",
+        "volumes": "Volumes"
+      }
+    },
+    "nodes": {
+      "label": "Nodes",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "state": {
+          "label": "State",
+          "option": {
+            "ready": "Ready",
+            "NotReady": "Not Ready"
+          }
+        },
+        "cpu": {
+          "label": "CPU"
+        },
+        "memory": {
+          "label": "RAM"
+        },
+        "pods": {
+          "label": "Pods"
+        },
+        "operatingSystem": {
+          "label": "OS"
+        },
+        "architecture": {
+          "label": "Architecture"
+        },
+        "kubernetesVersion": {
+          "label": "Kubernetes version"
+        },
+        "creationTimestamp": {
+          "label": "Created"
+        }
+      },
+      "table": {
+        "search": "Search {count} nodes"
+      }
+    },
+    "namespaces": {
+      "label": "Namespaces",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "state": {
+          "label": "State",
+          "option": {
+            "active": "Active",
+            "terminating": "Terminating"
+          }
+        },
+        "creationTimestamp": {
+          "label": "Created"
+        }
+      },
+      "table": {
+        "search": "Search {count} namespaces"
+      }
+    },
+    "ingresses": {
+      "label": "Ingresses",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "namespace": {
+          "label": "Namespace"
+        },
+        "className": {
+          "label": "Class name"
+        },
+        "rulesAndPaths": {
+          "label": "Rules & paths"
+        },
+        "creationTimestamp": {
+          "label": "Created"
+        }
+      },
+      "table": {
+        "search": "Search {count} ingresses"
+      }
+    },
+    "services": {
+      "label": "Services",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "namespace": {
+          "label": "Namespace"
+        },
+        "type": {
+          "label": "Type"
+        },
+        "ports": {
+          "label": "Ports"
+        },
+        "targetPorts": {
+          "label": "Target ports"
+        },
+        "clusterIP": {
+          "label": "Cluster IP"
+        },
+        "creationTimestamp": {
+          "label": "Created"
+        }
+      },
+      "table": {
+        "search": "Search {count} services"
+      }
+    },
+    "pods": {
+      "label": "Pods",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "namespace": {
+          "label": "Namespace"
+        },
+        "image": {
+          "label": "Image"
+        },
+        "applicationType": {
+          "label": "Application type"
+        },
+        "status": {
+          "label": "Status"
+        },
+        "creationTimestamp": {
+          "label": "Created"
+        }
+      },
+      "table": {
+        "search": "Search {count} pods"
+      }
+    },
+    "secrets": {
+      "label": "Secrets",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "namespace": {
+          "label": "namespace"
+        },
+        "type": {
+          "label": "type"
+        },
+        "creationTimestamp": {
+          "label": "Created"
+        }
+      },
+      "table": {
+        "search": "Search {count} secrets"
+      }
+    },
+    "configmaps": {
+      "label": "ConfigMaps",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "namespace": {
+          "label": "namespace"
+        },
+        "creationTimestamp": {
+          "label": "Created"
+        }
+      },
+      "table": {
+        "search": "Search {count} configMaps"
+      }
+    },
+    "volumes": {
+      "label": "Volumes",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "namespace": {
+          "label": "Namespace"
+        },
+        "accessModes": {
+          "label": "Access Modes"
+        },
+        "storage": {
+          "label": "Storage"
+        },
+        "storageClassName": {
+          "label": "Storage Class Name"
+        },
+        "volumeMode": {
+          "label": "Volume Mode"
+        },
+        "volumeName": {
+          "label": "Volume Name"
+        },
+        "status": {
+          "label": "Status"
+        },
+        "creationTimestamp": {
+          "label": "Created"
+        }
+      },
+      "table": {
+        "search": "Search {count} volumes"
+      }
+    },
+    "error": {
+      "internalServerError": "Failed to fetch Kubernetes data"
+    }
+  },
   "permission": {
     "title": "Permissions",
     "userSelect": {
@@ -2955,6 +3196,33 @@
         "label": "Tools",
         "docker": {
           "label": "Docker"
+        },
+        "kubernetes": {
+          "label": "Kubernetes",
+          "nodes": {
+            "label": "Nodes"
+          },
+          "namespaces": {
+            "label": "Namespaces"
+          },
+          "ingresses": {
+            "label": "Ingresses"
+          },
+          "services": {
+            "label": "Services"
+          },
+          "pods": {
+            "label": "pods"
+          },
+          "configmaps": {
+            "label": "ConfigMaps"
+          },
+          "secrets": {
+            "label": "Secrets"
+          },
+          "volumes": {
+            "label": "Volumes"
+          }
         },
         "logs": {
           "label": "Logs"
