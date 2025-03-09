@@ -14,7 +14,7 @@ import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
 import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
-import * as docker from "./docker";
+import * as dockerContainers from "./docker";
 import * as downloads from "./downloads";
 import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
@@ -58,7 +58,7 @@ export const widgetImports = {
   healthMonitoring,
   mediaTranscoding,
   minecraftServerStatus,
-  dockerContainers: docker,
+  dockerContainers,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

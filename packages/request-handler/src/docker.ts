@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
-import Docker from "dockerode";
 import { z } from "zod";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 
 import type { ContainerState } from "../../docker/src";
+import { DockerSingleton } from "../../docker/src";
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
 interface ContainerInfo {
@@ -24,7 +24,7 @@ export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
 
     return responseSchema.parse({ containers });
   },
-  cacheDuration: dayjs.duration(5, "seconds"),
+  cacheDuration: dayjs.duration(20, "seconds"),
 });
 
 const responseSchema = z.object({
@@ -37,30 +37,42 @@ const responseSchema = z.object({
       iconUrl: z.string().nullable(),
       cpuUsage: z.number(),
       memoryUsage: z.number(),
+      instance: z.string(),
     }),
   ),
 });
 
 export type DockerContainersStatus = z.infer<typeof responseSchema>;
-const docker = new Docker();
+const dockerInstances = DockerSingleton.getInstances();
+
+const containers = await Promise.all(
+  dockerInstances.map(async ({ instance, host }) => {
+    const instanceContainers = await instance.listContainers({ all: true });
+    return instanceContainers.map((container) => ({
+      ...container,
+      instance: host,
+    }));
+  }),
+).then((res) => res.flat());
+
+// Extract image name from container
+const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
+// Prepare LIKE queries for fetching matching icons
+const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
+// Fetch matching icons from the database
+const dbIcons =
+  likeQueries.length > 0
+    ? await db.query.icons.findMany({
+        where: or(...likeQueries),
+      })
+    : [];
 
 async function getContainersWithStats() {
-  const containers = await docker.listContainers({ all: true });
-
-  // Extract image name from container
-  const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
-  // Prepare LIKE queries for fetching matching icons
-  const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
-  // Fetch matching icons from the database
-  const dbIcons =
-    likeQueries.length > 0
-      ? await db.query.icons.findMany({
-          where: or(...likeQueries),
-        })
-      : [];
-
   const containerStatsPromises = containers.map(async (container) => {
-    const stats = await docker.getContainer(container.Id).stats({ stream: false });
+    const instance = dockerInstances.find(({ host }) => host === container.instance)?.instance;
+    if (!instance) return null;
+
+    const stats = await instance.getContainer(container.Id).stats({ stream: false });
     return {
       id: container.Id,
       name: container.Names[0]?.split("/")[1] ?? "Unknown",
@@ -74,10 +86,11 @@ async function getContainersWithStats() {
         })?.url ?? null,
       cpuUsage: calculateCpuUsage(stats) || 0,
       memoryUsage: stats.memory_stats.usage || 0,
+      instance: container.instance,
     };
   });
 
-  return Promise.all(containerStatsPromises);
+  return (await Promise.all(containerStatsPromises)).filter(Boolean);
 }
 
 interface CpuStats {

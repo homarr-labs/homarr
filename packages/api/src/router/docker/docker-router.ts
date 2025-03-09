@@ -77,7 +77,7 @@ export const dockerRouter = createTRPCRouter({
       timestamp,
     };
   }),
-  getContainersWidget: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
+  getContainersStats: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
     const innerHandler = dockerContainersRequestHandler.handler({
       widjetOptions: {},
     });
