@@ -39,6 +39,7 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }:
       month: month.getMonth(),
       year: month.getFullYear(),
       releaseType: options.releaseType,
+      showUnmonitored: options.showUnmonitored,
     },
     {
       refetchOnMount: false,
