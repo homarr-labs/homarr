@@ -1127,8 +1127,14 @@
             },
             "grid": {
               "label": "Rács"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": ""

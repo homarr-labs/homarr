@@ -43,7 +43,7 @@
           "entities": {
             "apps": "アプリ",
             "boards": "ボード",
-            "integrations": "",
+            "integrations": "インテグレーション",
             "credentialUsers": ""
           }
         },
@@ -1127,8 +1127,14 @@
             },
             "grid": {
               "label": ""
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": ""

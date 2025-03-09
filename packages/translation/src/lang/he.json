@@ -1127,8 +1127,14 @@
             },
             "grid": {
               "label": "רשת"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "הסתרת אייקונים"

@@ -1127,8 +1127,14 @@
             },
             "grid": {
               "label": "Raster"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "Symbole verbergen"

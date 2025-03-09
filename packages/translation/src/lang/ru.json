@@ -1127,8 +1127,14 @@
             },
             "grid": {
               "label": "Сетка"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "Скрывать иконки"
