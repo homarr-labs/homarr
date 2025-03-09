@@ -1127,8 +1127,14 @@
             },
             "grid": {
               "label": "Gitter"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "Skjul ikoner"

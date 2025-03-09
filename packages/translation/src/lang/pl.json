@@ -1127,8 +1127,14 @@
             },
             "grid": {
               "label": "Siatka"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "Ukryj ikony"

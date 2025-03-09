@@ -1127,8 +1127,14 @@
             },
             "grid": {
               "label": "Mriežka"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "Skryť ikony"

@@ -1072,7 +1072,7 @@
           "label": "Özel CSS Alanı"
         },
         "borderColor": {
-          "label": ""
+          "label": "Kenarlık rengi"
         }
       }
     },
@@ -1127,8 +1127,14 @@
             },
             "grid": {
               "label": "Izgara"
+            },
+            "gridHorizontal": {
+              "label": "Yatay ızgara"
             }
           }
+        },
+        "hideTitle": {
+          "label": "Başlığı gizle"
         },
         "hideIcon": {
           "label": "Simgeleri gizle"
@@ -2168,7 +2174,7 @@
           "title": "Arkaplan"
         },
         "appearance": {
-          "title": "Görünüş"
+          "title": "Görünüm"
         },
         "customCss": {
           "title": "Özel Css"
@@ -2609,7 +2615,7 @@
             }
           },
           "appearance": {
-            "title": "Görünüş",
+            "title": "Görünüm",
             "defaultColorScheme": {
               "label": "Öntanımlı Renk Düzeni",
               "options": {

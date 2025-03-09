@@ -1127,8 +1127,14 @@
             },
             "grid": {
               "label": "網格"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "隱藏 icons"
