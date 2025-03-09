@@ -30,11 +30,12 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
   );
   const utils = clientApi.useUtils();
 
+  const t = useScopedI18n("widget.mediaServer");
   const columns = useMemo<MRT_ColumnDef<StreamSession>[]>(
     () => [
       {
         accessorKey: "sessionName",
-        header: "Name",
+        header: t("items.name"),
 
         Cell: ({ row }) => (
           <Text size="xs" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -44,7 +45,7 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
       },
       {
         accessorKey: "user.username",
-        header: "User",
+        header: t("items.user"),
 
         Cell: ({ row }) => (
           <Group gap="xs">
@@ -55,7 +56,7 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
       },
       {
         accessorKey: "currentlyPlaying", // currentlyPlaying.name can be undefined which results in a warning. This is why we use currentlyPlaying instead of currentlyPlaying.name
-        header: "Currently playing",
+        header: t("items.currentlyPlaying"),
 
         Cell: ({ row }) => {
           if (!row.original.currentlyPlaying) return null;
@@ -73,7 +74,7 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
         },
       },
     ],
-    [],
+    [t],
   );
 
   clientApi.widget.mediaServer.subscribeToCurrentStreams.useSubscription(

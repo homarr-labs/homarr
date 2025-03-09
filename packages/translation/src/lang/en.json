@@ -1665,6 +1665,7 @@
       "description": "Show the current streams on your media servers",
       "option": {},
       "items": {
+        "currentlyPlaying": "Currently playing",
         "user": "User",
         "name": "Name",
         "id": "Id"
