@@ -1,8 +1,9 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useMemo } from "react";
-import { Avatar, Box, Flex, Group, Stack, Text, Title } from "@mantine/core";
-import { IconDeviceAudioTape, IconDeviceTv, IconMovie, IconVideo } from "@tabler/icons-react";
+import { Avatar, Flex, Group, Stack, Text, Title } from "@mantine/core";
+import { IconDeviceTv, IconHeadphones, IconMovie, IconVideo } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
@@ -11,6 +12,7 @@ import { getIconUrl, integrationDefs } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
@@ -28,59 +30,51 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
   );
   const utils = clientApi.useUtils();
 
+  const t = useScopedI18n("widget.mediaServer");
   const columns = useMemo<MRT_ColumnDef<StreamSession>[]>(
     () => [
       {
         accessorKey: "sessionName",
-        header: "Name",
-        mantineTableHeadCellProps: {
-          style: {
-            width: "30%",
-          },
-        },
+        header: t("items.name"),
+
         Cell: ({ row }) => (
-          <Text size="md" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+          <Text size="xs" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
             {row.original.sessionName}
           </Text>
         ),
       },
       {
         accessorKey: "user.username",
-        header: "User",
-        mantineTableHeadCellProps: {
-          style: {
-            width: "25%",
-          },
-        },
+        header: t("items.user"),
+
         Cell: ({ row }) => (
-          <Group gap={"sm"}>
-            <Avatar src={row.original.user.profilePictureUrl} size={30} />
-            <Text size="md">{row.original.user.username}</Text>
+          <Group gap="xs">
+            <Avatar size={20} src={row.original.user.profilePictureUrl} />
+            <Text size="xs">{row.original.user.username}</Text>
           </Group>
         ),
       },
       {
         accessorKey: "currentlyPlaying", // currentlyPlaying.name can be undefined which results in a warning. This is why we use currentlyPlaying instead of currentlyPlaying.name
-        header: "Currently playing",
-        mantineTableHeadCellProps: {
-          style: {
-            width: "45%",
-          },
-        },
-        Cell: ({ row }) => {
-          if (row.original.currentlyPlaying) {
-            return (
-              <Box>
-                <Text lineClamp={1}>{row.original.currentlyPlaying.name}</Text>
-              </Box>
-            );
-          }
+        header: t("items.currentlyPlaying"),
 
-          return null;
+        Cell: ({ row }) => {
+          if (!row.original.currentlyPlaying) return null;
+
+          const Icon = mediaTypeIconMap[row.original.currentlyPlaying.type];
+
+          return (
+            <Group gap="xs" align="center">
+              <Icon size={16} />
+              <Text size="xs" lineClamp={1}>
+                {row.original.currentlyPlaying.name}
+              </Text>
+            </Group>
+          );
         },
       },
     ],
-    [],
+    [t],
   );
 
   clientApi.widget.mediaServer.subscribeToCurrentStreams.useSubscription(
@@ -137,8 +131,18 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
     enableDensityToggle: false,
     enableFilters: false,
     enableHiding: false,
+    enableColumnPinning: true,
     initialState: {
       density: "xs",
+      columnPinning: {
+        right: ["currentlyPlaying"],
+      },
+    },
+    mantineTableHeadProps: {
+      fz: "xs",
+    },
+    mantineTableHeadCellProps: {
+      py: 4,
     },
     mantinePaperProps: {
       flex: 1,
@@ -158,20 +162,16 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
     },
     mantineTableBodyCellProps: ({ row }) => ({
       onClick: () => {
-        openModal({
-          item: row.original,
-          title:
-            row.original.currentlyPlaying?.type === "movie" ? (
-              <IconMovie size={36} />
-            ) : row.original.currentlyPlaying?.type === "tv" ? (
-              <IconDeviceTv size={36} />
-            ) : row.original.currentlyPlaying?.type === "video" ? (
-              <IconVideo size={36} />
-            ) : (
-              <IconDeviceAudioTape size={36} />
-            ),
-        });
+        openModal(
+          {
+            item: row.original,
+          },
+          {
+            title: row.original.sessionName,
+          },
+        );
       },
+      py: 4,
     }),
   });
 
@@ -210,42 +210,64 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
   );
 }
 
-const itemInfoModal = createModal<{ item: StreamSession; title: React.ReactNode }>(({ innerProps }) => {
+const itemInfoModal = createModal<{ item: StreamSession }>(({ innerProps }) => {
   const t = useScopedI18n("widget.mediaServer.items");
+  const Icon = innerProps.item.currentlyPlaying ? mediaTypeIconMap[innerProps.item.currentlyPlaying.type] : null;
 
   return (
     <Stack align="center">
       <Flex direction="column" gap="xs" align="center">
-        <Title>{innerProps.title}</Title>
-        <Title>{innerProps.item.currentlyPlaying?.name}</Title>
-        <Group display="flex">
-          <Title order={3}>{innerProps.item.currentlyPlaying?.episodeName}</Title>
-          {innerProps.item.currentlyPlaying?.seasonName && (
-            <>
-              {" - "}
-              <Title order={3}>{innerProps.item.currentlyPlaying.seasonName}</Title>
-            </>
-          )}
-        </Group>
+        {Icon && innerProps.item.currentlyPlaying !== null && (
+          <Group gap="sm" align="center">
+            <Icon size={24} />
+            <Title order={2}>{innerProps.item.currentlyPlaying.name}</Title>
+          </Group>
+        )}
+        {innerProps.item.currentlyPlaying?.episodeName && (
+          <Group>
+            <Title order={4}>{innerProps.item.currentlyPlaying.episodeName}</Title>
+            {innerProps.item.currentlyPlaying.seasonName && (
+              <>
+                {" - "}
+                <Title order={4}>{innerProps.item.currentlyPlaying.seasonName}</Title>
+              </>
+            )}
+          </Group>
+        )}
       </Flex>
-      <NormalizedLine itemKey={t("user")} value={innerProps.item.user.username} />
-      <NormalizedLine itemKey={t("name")} value={innerProps.item.sessionName} />
-      <NormalizedLine itemKey={t("id")} value={innerProps.item.sessionId} />
+      <NormalizedLine
+        itemKey={t("user")}
+        value={
+          <Group gap="sm" align="center">
+            <Avatar size="sm" src={innerProps.item.user.profilePictureUrl} />{" "}
+            <Text>{innerProps.item.user.username}</Text>
+          </Group>
+        }
+      />
+      <NormalizedLine itemKey={t("name")} value={<Text>{innerProps.item.sessionName}</Text>} />
+      <NormalizedLine itemKey={t("id")} value={<Text>{innerProps.item.sessionId}</Text>} />
     </Stack>
   );
 }).withOptions({
   defaultTitle() {
     return "";
   },
-  size: "auto",
+  size: "lg",
   centered: true,
 });
 
-const NormalizedLine = ({ itemKey, value }: { itemKey: string; value: string }) => {
+const NormalizedLine = ({ itemKey, value }: { itemKey: string; value: ReactNode }) => {
   return (
     <Group w="100%" align="top" justify="space-between">
       <Text>{itemKey}:</Text>
-      <Text>{value}</Text>
+      {value}
     </Group>
   );
 };
+
+const mediaTypeIconMap = {
+  movie: IconMovie,
+  tv: IconDeviceTv,
+  video: IconVideo,
+  audio: IconHeadphones,
+} satisfies Record<Exclude<StreamSession["currentlyPlaying"], null>["type"], TablerIcon>;
