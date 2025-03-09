@@ -4,7 +4,7 @@ export interface TdarrWorker {
   fps: number;
   percentage: number;
   ETA: string;
-  jobType: "transcode" | "health-check";
+  jobType: string;
   status: string;
   step: string;
   originalSize: number;
