@@ -15,10 +15,9 @@ vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 vi.mock("@homarr/request-handler/docker", () => ({
   dockerContainersRequestHandler: {
     handler: () => ({
-      // eslint-disable-next-line @typescript-eslint/require-await
-      getCachedOrUpdatedDataAsync: async () => ({
-        containers: [],
-      }),
+      getCachedOrUpdatedDataAsync: async () => {
+        return await Promise.resolve({ containers: [] });
+      },
     }),
   },
 }));
