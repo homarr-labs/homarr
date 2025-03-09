@@ -144,23 +144,23 @@ export default function MediaServerWidget({
               radius={board.itemRadius}
             >
               <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="sm" justify="space-between">
-                <Text className="mediaRequests-stats-users-user-request-count" size="md" fw={500}>
-                  {user.requestCount}
-                </Text>
-
                 <Group gap={4}>
                   <Tooltip label={user.integration.name}>
                     <Avatar
                       className="mediaRequests-stats-users-user-avatar"
-                      size="xs"
+                      size={20}
                       src={user.avatar}
                       bd={`2px solid ${user.integration.kind === "overseerr" ? "#ECB000" : "#6677CC"}`}
                     />
                   </Tooltip>
-                  <Text className="mediaRequests-stats-users-user-userName" size="xs">
+                  <Text className="mediaRequests-stats-users-user-userName" size="sm">
                     {user.displayName}
                   </Text>
                 </Group>
+
+                <Text className="mediaRequests-stats-users-user-request-count" size="md" fw={500}>
+                  {user.requestCount}
+                </Text>
               </Group>
             </Card>
           ))}
