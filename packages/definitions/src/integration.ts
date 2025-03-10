@@ -151,6 +151,12 @@ export const integrationDefs = {
     category: ["healthMonitoring"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/proxmox.svg",
   },
+  nextcloud: {
+    name: "Nextcloud",
+    secretKinds: [["username", "password"]],
+    category: ["calendar"],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nextcloud.svg",
+  },
 } as const satisfies Record<string, integrationDefinition>;
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;

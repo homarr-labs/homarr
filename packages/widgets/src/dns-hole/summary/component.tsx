@@ -2,11 +2,12 @@
 
 import { useMemo } from "react";
 import type { BoxProps } from "@mantine/core";
-import { Avatar, AvatarGroup, Box, Card, Flex, Stack, Text, Tooltip, TooltipFloating } from "@mantine/core";
+import { Avatar, AvatarGroup, Card, Flex, SimpleGrid, Stack, Text, Tooltip, TooltipFloating } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { formatNumber } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import type { DnsHoleSummary } from "@homarr/integrations/types";
@@ -62,69 +63,69 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
   const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
 
   return (
-    <Box h="100%" {...boxPropsByLayout(options.layout)} p="2cqmin">
+    <SimpleGrid cols={2} spacing="xs" h="100%" p={"xs"} {...boxPropsByLayout(options.layout)}>
       {data.length > 0 ? (
         stats.map((item) => (
           <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={data} t={t} />
         ))
       ) : (
-        <Stack h="100%" w="100%" justify="center" align="center" gap="2.5cqmin" p="2.5cqmin">
-          <AvatarGroup spacing="10cqmin">
+        <Stack h="100%" w="100%" justify="center" align="center" gap="sm" p="sm">
+          <AvatarGroup spacing="md">
             {summaries.map(({ integration }) => (
               <Tooltip key={integration.id} label={integration.name}>
-                <Avatar h="35cqmin" w="35cqmin" src={integrationDefs[integration.kind].iconUrl} />
+                <Avatar h={30} w={30} src={integrationDefs[integration.kind].iconUrl} />
               </Tooltip>
             ))}
           </AvatarGroup>
-          <Text fz="10cqmin" ta="center">
+          <Text fz="md" ta="center">
             {t("widget.dnsHoleSummary.error.integrationsDisconnected")}
           </Text>
         </Stack>
       )}
-    </Box>
+    </SimpleGrid>
   );
 }
 
 const stats = [
   {
     icon: IconBarrierBlock,
-    value: (data) =>
+    value: (data, size) =>
       formatNumber(
         data.reduce((count, { adsBlockedToday }) => count + adsBlockedToday, 0),
-        2,
+        size === "sm" ? 0 : 2,
       ),
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedToday"),
     color: "rgba(240, 82, 60, 0.4)", // RED
   },
   {
     icon: IconPercentage,
-    value: (data) => {
+    value: (data, size) => {
       const totalCount = data.reduce((count, { dnsQueriesToday }) => count + dnsQueriesToday, 0);
       const blocked = data.reduce((count, { adsBlockedToday }) => count + adsBlockedToday, 0);
-      return `${formatNumber(totalCount === 0 ? 0 : (blocked / totalCount) * 100, 2)}%`;
+      return `${formatNumber(totalCount === 0 ? 0 : (blocked / totalCount) * 100, size === "sm" ? 0 : 2)}%`;
     },
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedTodayPercentage"),
     color: "rgba(255, 165, 20, 0.4)", // YELLOW
   },
   {
     icon: IconSearch,
-    value: (data) =>
+    value: (data, size) =>
       formatNumber(
         data.reduce((count, { dnsQueriesToday }) => count + dnsQueriesToday, 0),
-        2,
+        size === "sm" ? 0 : 2,
       ),
     label: (t) => t("widget.dnsHoleSummary.data.dnsQueriesToday"),
     color: "rgba(0, 175, 218, 0.4)", // BLUE
   },
   {
     icon: IconWorldWww,
-    value: (data) => {
+    value: (data, size) => {
       // We use a suffix to indicate that there might be more domains in the at least two lists.
       const suffix = data.length >= 2 ? "+" : "";
       return (
         formatNumber(
           data.reduce((count, { domainsBeingBlocked }) => count + domainsBeingBlocked, 0),
-          2,
+          size === "sm" ? 0 : 2,
         ) + suffix
       );
     },
@@ -136,7 +137,7 @@ const stats = [
 
 interface StatItem {
   icon: TablerIcon;
-  value: (summaries: DnsHoleSummary[]) => string;
+  value: (summaries: DnsHoleSummary[], size: "sm" | "md") => string;
   tooltip?: (summaries: DnsHoleSummary[], t: TranslationFunction) => string | undefined;
   label: stringOrTranslation;
   color: string;
@@ -151,54 +152,49 @@ interface StatCardProps {
 const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
   const { ref, height, width } = useElementSize();
   const isLong = width > height + 20;
+  const hideLabel = (height <= 32 && width <= 256) || (height <= 64 && width <= 92);
   const tooltip = item.tooltip?.(data, t);
+  const board = useRequiredBoard();
 
   return (
     <TooltipFloating label={tooltip} disabled={!tooltip} w={250} multiline>
       <Card
         ref={ref}
         className="summary-card"
-        m="2cqmin"
-        p="2.5cqmin"
+        p="sm"
+        radius={board.itemRadius}
         bg={usePiHoleColors ? item.color : "rgba(96, 96, 96, 0.1)"}
         style={{
           flex: 1,
         }}
-        withBorder
       >
         <Flex
           className="summary-card-elements"
           h="100%"
           w="100%"
           align="center"
-          justify="space-evenly"
+          justify="center"
           direction={isLong ? "row" : "column"}
-          style={{ containerType: "size" }}
+          gap={0}
         >
-          <item.icon className="summary-card-icon" size="40cqmin" style={{ margin: "2.5cqmin" }} />
+          <item.icon className="summary-card-icon" size={24} style={{ minWidth: 24, minHeight: 24 }} />
           <Flex
             className="summary-card-texts"
             justify="center"
-            direction="column"
+            align="center"
+            direction={isLong ? "row" : "column"}
             style={{
               flex: isLong ? 1 : undefined,
             }}
             w="100%"
-            h="100%"
-            gap="1cqmin"
+            gap={isLong ? 4 : 0}
+            wrap="wrap"
           >
-            <Text
-              key={item.value(data)}
-              className="summary-card-value text-flash"
-              ta="center"
-              size="20cqmin"
-              fw="bold"
-              style={{ "--glow-size": "2.5cqmin" }}
-            >
-              {item.value(data)}
+            <Text className="summary-card-value text-flash" ta="center" size="lg" fw="bold" maw="100%">
+              {item.value(data, width <= 64 ? "sm" : "md")}
             </Text>
-            {item.label && (
-              <Text className="summary-card-label" ta="center" size="15cqmin">
+            {!hideLabel && (
+              <Text className="summary-card-label" ta="center" size="xs" maw="100%">
                 {translateIfNecessary(t, item.label)}
               </Text>
             )}

@@ -1,3 +1,44 @@
+## [1.10.0](https://github.com/homarr-labs/homarr/compare/v1.9.0...v1.10.0) (2025-03-07)
+
+### Features
+
+* remove cqmin system ([#2407](https://github.com/homarr-labs/homarr/issues/2407)) ([37d4714](https://github.com/homarr-labs/homarr/commit/37d471457a0a2b10112b67c02923f63de479e617))
+
+### Bug Fixes
+
+* **deps:** update dependency eslint-config-prettier to ^10.1.1 ([#2524](https://github.com/homarr-labs/homarr/issues/2524)) ([4721a97](https://github.com/homarr-labs/homarr/commit/4721a97094ae1181216923c7fef7a29c343f882b))
+* **deps:** update dependency ioredis to v5.6.0 ([#2509](https://github.com/homarr-labs/homarr/issues/2509)) ([e4a3922](https://github.com/homarr-labs/homarr/commit/e4a39223a33d4bfccb1e9b4e2c30de1376879a1d))
+* **deps:** update dependency mysql2 to v3.13.0 ([#2516](https://github.com/homarr-labs/homarr/issues/2516)) ([67c739c](https://github.com/homarr-labs/homarr/commit/67c739c35bcb2d537a349f0ebff080eac67e93b5))
+* **deps:** update tanstack-query monorepo to ^5.67.2 ([#2525](https://github.com/homarr-labs/homarr/issues/2525)) ([a572aae](https://github.com/homarr-labs/homarr/commit/a572aae887142a7e601f70dcc601bf6335e37c17))
+* **pi-hole:** wrong fetch used in factory ([#2527](https://github.com/homarr-labs/homarr/issues/2527)) ([9881577](https://github.com/homarr-labs/homarr/commit/9881577f47fbeacf861dd564d57fc6d7c469d27b))
+
+## [1.9.0](https://github.com/homarr-labs/homarr/compare/v1.8.0...v1.9.0) (2025-03-05)
+
+### Features
+
+* add sigterm support ([#2472](https://github.com/homarr-labs/homarr/issues/2472)) ([a5e0e8c](https://github.com/homarr-labs/homarr/commit/a5e0e8c1296ebfbe46c88fbb152b5d0049db349d))
+* added bordercolor option for dynamic section ([#2334](https://github.com/homarr-labs/homarr/issues/2334)) ([7dfb108](https://github.com/homarr-labs/homarr/commit/7dfb108a56e38c32e712b82d1e1bd65a5c15722b))
+* **integration:** add emby integration ([#2466](https://github.com/homarr-labs/homarr/issues/2466)) ([7dfc364](https://github.com/homarr-labs/homarr/commit/7dfc3646b709e6bb1fc7ec11336024c7eff1f342))
+* **media-request:** show request status ([#2465](https://github.com/homarr-labs/homarr/issues/2465)) ([80c2040](https://github.com/homarr-labs/homarr/commit/80c2040b1345b0a60030aa8879442b937863216f))
+* **pihole:** add support for v6 ([#2448](https://github.com/homarr-labs/homarr/issues/2448)) ([3804d53](https://github.com/homarr-labs/homarr/commit/3804d530ec28c90b6ab1fa0f709468e2075afa28))
+* use fetch with trusted certificates for oidc ([#2412](https://github.com/homarr-labs/homarr/issues/2412)) ([6fad48f](https://github.com/homarr-labs/homarr/commit/6fad48f65ad7cbb927fd80de49930a8256110331))
+
+### Bug Fixes
+
+* affix hides pagination on mobile ([#2491](https://github.com/homarr-labs/homarr/issues/2491)) ([604a05f](https://github.com/homarr-labs/homarr/commit/604a05f9d528b7d89b09f4f7982921963ba0fb90))
+* **boards:** case-sensitive board names in url ([#2454](https://github.com/homarr-labs/homarr/issues/2454)) ([c0e3544](https://github.com/homarr-labs/homarr/commit/c0e354428af2c69bf7638911320888f049ec0659))
+* **deps:** update dependency @tabler/icons-react to ^3.31.0 ([#2502](https://github.com/homarr-labs/homarr/issues/2502)) ([478aae6](https://github.com/homarr-labs/homarr/commit/478aae6cd496ef81e3036d8f2a5b6959b7fea12e))
+* **deps:** update dependency prettier to ^3.5.3 ([#2485](https://github.com/homarr-labs/homarr/issues/2485)) ([49b0f96](https://github.com/homarr-labs/homarr/commit/49b0f962e0b316bbed599d77d97be927aac252da))
+* **deps:** update dependency typescript-eslint to ^8.26.0 ([#2488](https://github.com/homarr-labs/homarr/issues/2488)) ([21f3a5a](https://github.com/homarr-labs/homarr/commit/21f3a5a408ab45dbf7d92162703e74b9e60aff10))
+* **deps:** update mantine monorepo to ^7.17.1 ([#2462](https://github.com/homarr-labs/homarr/issues/2462)) ([d9ef1b0](https://github.com/homarr-labs/homarr/commit/d9ef1b04706a3435d4500db2f2966a28db900d9d))
+* **deps:** update tanstack-query monorepo to ^5.67.0 ([#2486](https://github.com/homarr-labs/homarr/issues/2486)) ([bad07cb](https://github.com/homarr-labs/homarr/commit/bad07cbf251ab64afe99390bcb687d2f58e8fdc7))
+* **deps:** update tanstack-query monorepo to ^5.67.1 ([#2487](https://github.com/homarr-labs/homarr/issues/2487)) ([6135b59](https://github.com/homarr-labs/homarr/commit/6135b59b7d24029eaf24ae2a2b94b5cbc822242a))
+* docker add to homarr layout overflow ([#2441](https://github.com/homarr-labs/homarr/issues/2441)) ([a3999bc](https://github.com/homarr-labs/homarr/commit/a3999bcf521d4d339282701b4734b6cd352c9582))
+* **integration:** store omv session in redis ([#2467](https://github.com/homarr-labs/homarr/issues/2467)) ([b3e4f30](https://github.com/homarr-labs/homarr/commit/b3e4f3031296ffc69d914f542f95895a449ce2c7))
+* **logs:** add special case for axios error to prevent huge error messages ([#2468](https://github.com/homarr-labs/homarr/issues/2468)) ([9eb7663](https://github.com/homarr-labs/homarr/commit/9eb76634d07b7bf5ff28062714c44e150591d75d))
+* **media-request:** inconsistent sorting and reordering ([#2464](https://github.com/homarr-labs/homarr/issues/2464)) ([43619e0](https://github.com/homarr-labs/homarr/commit/43619e0cc0311ca8f26a4fdbc0ccb7fae79c3514))
+* **old-import:** default logo and favicon not replaced ([#2456](https://github.com/homarr-labs/homarr/issues/2456)) ([788304a](https://github.com/homarr-labs/homarr/commit/788304adfbe3c6c9696758e9ad42bca9d9b86290))
+
 ## [1.8.0](https://github.com/homarr-labs/homarr/compare/v1.7.0...v1.8.0) (2025-02-28)
 
 ### Features

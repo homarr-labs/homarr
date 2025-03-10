@@ -974,7 +974,7 @@
       },
       "option": {
         "borderColor": {
-          "label": ""
+          "label": "边界颜色"
         }
       },
       "remove": {
@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "自定义 CSS 类"
+        },
+        "borderColor": {
+          "label": ""
         }
       }
     },
@@ -1124,8 +1127,14 @@
             },
             "grid": {
               "label": "网格"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "隐藏图标"
@@ -1822,10 +1831,10 @@
         "available": "可用"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "待处理",
+        "approved": "已批准",
+        "declined": "已拒绝",
+        "failed": "失败"
       },
       "toBeDetermined": "待定"
     },

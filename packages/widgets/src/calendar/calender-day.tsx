@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Container, Popover, useMantineTheme } from "@mantine/core";
+import { Box, Container, Flex, Popover, Text, useMantineTheme } from "@mantine/core";
 
+import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
 
 import { CalendarEventList } from "./calendar-event-list";
@@ -9,11 +10,19 @@ interface CalendarDayProps {
   date: Date;
   events: CalendarEvent[];
   disabled: boolean;
+  rootWidth: number;
+  rootHeight: number;
 }
 
-export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
-  const [opened, setOpend] = useState(false);
+export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: CalendarDayProps) => {
+  const [opened, setOpened] = useState(false);
   const { primaryColor } = useMantineTheme();
+  const board = useRequiredBoard();
+  const mantineTheme = useMantineTheme();
+  const actualItemRadius = mantineTheme.radius[board.itemRadius];
+
+  const minAxisSize = Math.min(rootWidth, rootHeight);
+  const shouldScaleDown = minAxisSize < 350;
 
   return (
     <Popover
@@ -25,7 +34,7 @@ export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
       transitionProps={{
         transition: "pop",
       }}
-      onChange={setOpend}
+      onChange={setOpened}
       opened={opened}
       disabled={disabled}
     >
@@ -35,33 +44,27 @@ export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
           w="100%"
           p={0}
           m={0}
-          bd={`1cqmin solid ${opened && !disabled ? primaryColor : "transparent"}`}
+          bd={`2px solid ${opened && !disabled ? primaryColor : "transparent"}`}
+          pos={"relative"}
           style={{
             alignContent: "center",
-            borderRadius: "3.5cqmin",
+            borderRadius: actualItemRadius,
             cursor: disabled ? "default" : "pointer",
           }}
           onClick={() => {
             if (disabled) return;
 
-            setOpend((prev) => !prev);
+            setOpened((prev) => !prev);
           }}
         >
-          <div
-            style={{
-              textAlign: "center",
-              whiteSpace: "nowrap",
-              fontSize: "5cqmin",
-              lineHeight: "5cqmin",
-              paddingTop: "1.25cqmin",
-            }}
-          >
+          <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
             {date.getDate()}
-          </div>
-          <NotificationIndicator events={events} />
+          </Text>
+          <NotificationIndicator events={events} rootHeight={rootHeight} />
         </Container>
       </Popover.Target>
-      <Popover.Dropdown>
+      {/* Popover has some offset on the left side, padding is removed because of scrollarea paddings */}
+      <Popover.Dropdown maw="calc(100vw - 10px)" pe={4} pb={0} style={{ overflow: "hidden" }}>
         <CalendarEventList events={events} />
       </Popover.Dropdown>
     </Popover>
@@ -70,24 +73,18 @@ export const CalendarDay = ({ date, events, disabled }: CalendarDayProps) => {
 
 interface NotificationIndicatorProps {
   events: CalendarEvent[];
+  rootHeight: number;
 }
 
-const NotificationIndicator = ({ events }: NotificationIndicatorProps) => {
+const NotificationIndicator = ({ events, rootHeight }: NotificationIndicatorProps) => {
+  const isSmall = rootHeight < 256;
   const notificationEvents = [...new Set(events.map((event) => event.links[0]?.notificationColor))].filter(String);
+  /* position bottom is lower when small to not be on top of number*/
   return (
-    <Container h="0.7cqmin" w="80%" display="flex" p={0} style={{ flexDirection: "row", justifyContent: "center" }}>
+    <Flex w="75%" pos={"absolute"} bottom={isSmall ? -2 : 4} left={"12.5%"} p={0} direction={"row"} justify={"center"}>
       {notificationEvents.map((notificationEvent) => {
-        return (
-          <Container
-            key={notificationEvent}
-            bg={notificationEvent}
-            h="100%"
-            mx="0.25cqmin"
-            p={0}
-            style={{ flex: 1, borderRadius: "1000px" }}
-          />
-        );
+        return <Box key={notificationEvent} bg={notificationEvent} h={2} p={0} style={{ flex: 1, borderRadius: 5 }} />;
       })}
-    </Container>
+    </Flex>
   );
 };

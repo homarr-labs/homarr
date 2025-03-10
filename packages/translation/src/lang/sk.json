@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "Vlastné css triedy"
+        },
+        "borderColor": {
+          "label": ""
         }
       }
     },
@@ -1124,8 +1127,14 @@
             },
             "grid": {
               "label": "Mriežka"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "Skryť ikony"

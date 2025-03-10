@@ -36,7 +36,7 @@
     "@mantine/core": "^7.17.1",
     "@mantine/hooks": "^7.17.1",
     "@mantine/spotlight": "^7.17.1",
-    "@tabler/icons-react": "^3.30.0",
+    "@tabler/icons-react": "^3.31.0",
     "jotai": "^2.12.1",
     "next": "15.1.7",
     "react": "19.0.0",
@@ -47,7 +47,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.21.0",
+    "eslint": "^9.22.0",
     "typescript": "^5.8.2"
   }
 }
