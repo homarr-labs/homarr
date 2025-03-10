@@ -2704,6 +2704,9 @@
             },
             "mediaTranscoding": {
               "label": "Media transcoding"
+            },
+            "dockerContainers": {
+              "label": "Docker Containers"
             }
           }
         },
