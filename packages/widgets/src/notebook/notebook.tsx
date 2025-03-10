@@ -66,12 +66,12 @@ import type { TablerIcon } from "@homarr/ui";
 import type { WidgetComponentProps } from "../definition";
 
 const iconProps = {
-  size: "5cqmin",
+  size: 30,
   stroke: 1.5,
 };
 
 const controlIconProps = {
-  size: "5cqmin",
+  size: 20,
   stroke: 1.5,
 };
 

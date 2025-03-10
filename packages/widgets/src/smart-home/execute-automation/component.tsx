@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ActionIcon, Center, LoadingOverlay, Overlay, Stack, Text, UnstyledButton } from "@mantine/core";
+import { Center, LoadingOverlay, Overlay, Stack, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
 import { useDisclosure, useTimeout } from "@mantine/hooks";
 import { IconAutomation, IconCheck } from "@tabler/icons-react";
 
@@ -15,6 +15,7 @@ export default function SmartHomeTriggerAutomationWidget({
   options,
   integrationIds,
   isEditMode,
+  width,
 }: WidgetComponentProps<"smartHome-executeAutomation">) {
   const [isShowSuccess, { open: showSuccess, close: closeSuccess }] = useDisclosure();
   const { start } = useTimeout(() => {
@@ -59,6 +60,8 @@ export default function SmartHomeTriggerAutomationWidget({
     [handleClick, options.automationId, options.displayName],
   );
 
+  const isTiny = width < 128;
+
   return (
     <UnstyledButton
       onClick={handleClick}
@@ -69,17 +72,19 @@ export default function SmartHomeTriggerAutomationWidget({
       {isShowSuccess && (
         <Overlay>
           <Center w="100%" h="100%">
-            <ActionIcon variant="filled" color="green" size="xl" radius="xl">
+            <ThemeIcon variant="filled" color="green" size="xl" radius="xl">
               <IconCheck style={{ width: "70%", height: "70%" }} stroke={1.5} />
-            </ActionIcon>
+            </ThemeIcon>
           </Center>
         </Overlay>
       )}
       <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
       <Center w="100%" h="100%">
         <Stack align="center" gap="md">
-          <IconAutomation />
-          <Text fw="bold">{options.displayName}</Text>
+          <IconAutomation size={isTiny ? 16 : undefined} />
+          <Text ta="center" fw="bold" fz={isTiny ? "xs" : undefined}>
+            {options.displayName}
+          </Text>
         </Stack>
       </Center>
     </UnstyledButton>

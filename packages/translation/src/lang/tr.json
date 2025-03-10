@@ -363,7 +363,7 @@
           },
           "full-all": {
             "label": "Tam panel erişimi",
-            "description": "Üyelerin tüm panelleri görüntülemesine, değiştirmesine ve silmesine izin ver (Erişim kontrolü ve tehlikeli alan dahil)"
+            "description": "Üyelerin tüm panelleri görüntülemesine, değiştirmesine ve silmesine izin ver (Erişim kontrolü ve Tehlikeli alan dahil)"
           }
         }
       },
@@ -784,7 +784,7 @@
         },
         "tokenId": {
           "label": "Token Anahtar Kimliği",
-          "newLabel": "Yeni Anahtar Kimliği"
+          "newLabel": "Yeni Token Anahtar Kimliği"
         },
         "realm": {
           "label": "Erişim Alanı",
@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "Özel CSS Alanı"
+        },
+        "borderColor": {
+          "label": "Kenarlık rengi"
         }
       }
     },
@@ -1124,8 +1127,14 @@
             },
             "grid": {
               "label": "Izgara"
+            },
+            "gridHorizontal": {
+              "label": "Yatay ızgara"
             }
           }
+        },
+        "hideTitle": {
+          "label": "Başlığı gizle"
         },
         "hideIcon": {
           "label": "Simgeleri gizle"
@@ -2165,7 +2174,7 @@
           "title": "Arkaplan"
         },
         "appearance": {
-          "title": "Görünüş"
+          "title": "Görünüm"
         },
         "customCss": {
           "title": "Özel Css"
@@ -2561,7 +2570,7 @@
           },
           "crawlingAndIndexing": {
             "title": "Arama ve İndeksleme",
-            "warning": "Buradaki ayarların etkinleştirilmesi veya devre dışı bırakılması, arama motorlarının sayfanızı arama ve indekleme şeklini ciddi şekilde etkileyecektir. Her ayar bir istek başlatır ve bu ayarları almak tarayıcının görevidir. Değişiklikler birkaç gün veya hafta sürebilir. Bazı ayarlar arama motoruna özel olabilir.",
+            "warning": "Buradaki ayarların etkinleştirilmesi veya devre dışı bırakılması, arama motorlarının sayfanızı arama ve indekleme şeklini ciddi şekilde etkileyecektir. Her ayar bir istek başlatır ve bu ayarları uygulamak tarayıcının görevidir. Değişiklikler birkaç gün veya hafta sürebilir. Bazı ayarlar arama motoruna özel olabilir.",
             "noIndex": {
               "title": "İndeksleme Yapma",
               "text": "Web sitesini arama motorlarında indekslemeyin veya herhangi bir arama sonucunda görüntülemeyin"
@@ -2606,7 +2615,7 @@
             }
           },
           "appearance": {
-            "title": "Görünüş",
+            "title": "Görünüm",
             "defaultColorScheme": {
               "label": "Öntanımlı Renk Düzeni",
               "options": {
@@ -2776,7 +2785,7 @@
         "label": "Başlat",
         "notification": {
           "success": {
-            "title": "Konteynerler başladı",
+            "title": "Konteynerler başlatıldı",
             "message": "Konteynerler başarıyla başlatıldı"
           },
           "error": {

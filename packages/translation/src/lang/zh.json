@@ -974,7 +974,7 @@
       },
       "option": {
         "borderColor": {
-          "label": ""
+          "label": "邊框顏色"
         }
       },
       "remove": {
@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "自定義 CSS html"
+        },
+        "borderColor": {
+          "label": ""
         }
       }
     },
@@ -1124,8 +1127,14 @@
             },
             "grid": {
               "label": "網格"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "隱藏 icons"
@@ -1822,10 +1831,10 @@
         "available": "待定"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "待處理",
+        "approved": "已批准",
+        "declined": "已拒絕",
+        "failed": "失敗"
       },
       "toBeDetermined": "多媒體請求狀態"
     },

@@ -974,7 +974,7 @@
       },
       "option": {
         "borderColor": {
-          "label": ""
+          "label": "צבע מסגרת"
         }
       },
       "remove": {
@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "מחלקות עיצוב מותאמות אישית"
+        },
+        "borderColor": {
+          "label": ""
         }
       }
     },
@@ -1124,8 +1127,14 @@
             },
             "grid": {
               "label": "רשת"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "הסתרת אייקונים"
@@ -1822,10 +1831,10 @@
         "available": "זמין"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "ממתין",
+        "approved": "אושר",
+        "declined": "נדחה",
+        "failed": "נכשל"
       },
       "toBeDetermined": "ייקבע בהמשך"
     },

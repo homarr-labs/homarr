@@ -4,7 +4,7 @@ import { z } from "zod";
 import { asc, createId, eq, like } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import { searchEngines, users } from "@homarr/db/schema";
-import { integrationCreator } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations";
 import { validation } from "@homarr/validation";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
@@ -134,14 +134,14 @@ export const searchEngineRouter = createTRPCRouter({
     .unstable_concat(createOneIntegrationMiddleware("query", "jellyseerr", "overseerr"))
     .input(validation.common.mediaRequestOptions)
     .query(async ({ ctx, input }) => {
-      const integration = integrationCreator(ctx.integration);
+      const integration = await createIntegrationAsync(ctx.integration);
       return await integration.getSeriesInformationAsync(input.mediaType, input.mediaId);
     }),
   requestMedia: protectedProcedure
     .unstable_concat(createOneIntegrationMiddleware("interact", "jellyseerr", "overseerr"))
     .input(validation.common.requestMedia)
     .mutation(async ({ ctx, input }) => {
-      const integration = integrationCreator(ctx.integration);
+      const integration = await createIntegrationAsync(ctx.integration);
       return await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
     }),
   create: permissionRequiredProcedure

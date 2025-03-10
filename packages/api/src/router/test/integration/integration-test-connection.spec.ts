@@ -18,11 +18,13 @@ vi.mock("@homarr/common/server", async (importActual) => {
 describe("testConnectionAsync should run test connection of integration", () => {
   test("with input of only form secrets matching api key kind it should use form apiKey", async () => {
     // Arrange
-    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreator");
+    const factorySpy = vi.spyOn(homarrIntegrations, "createIntegrationAsync");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
-    factorySpy.mockReturnValue({
-      testConnectionAsync: async () => await Promise.resolve(),
-    } as homarrIntegrations.PiHoleIntegration);
+    factorySpy.mockReturnValue(
+      Promise.resolve({
+        testConnectionAsync: async () => await Promise.resolve(),
+      } as homarrIntegrations.PiHoleIntegrationV6),
+    );
     optionsSpy.mockReturnValue([["apiKey"]]);
 
     const integration = {
@@ -58,11 +60,13 @@ describe("testConnectionAsync should run test connection of integration", () => 
 
   test("with input of only null form secrets and the required db secrets matching api key kind it should use db apiKey", async () => {
     // Arrange
-    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreator");
+    const factorySpy = vi.spyOn(homarrIntegrations, "createIntegrationAsync");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
-    factorySpy.mockReturnValue({
-      testConnectionAsync: async () => await Promise.resolve(),
-    } as homarrIntegrations.PiHoleIntegration);
+    factorySpy.mockReturnValue(
+      Promise.resolve({
+        testConnectionAsync: async () => await Promise.resolve(),
+      } as homarrIntegrations.PiHoleIntegrationV6),
+    );
     optionsSpy.mockReturnValue([["apiKey"]]);
 
     const integration = {
@@ -105,11 +109,13 @@ describe("testConnectionAsync should run test connection of integration", () => 
 
   test("with input of form and db secrets matching api key kind it should use form apiKey", async () => {
     // Arrange
-    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreator");
+    const factorySpy = vi.spyOn(homarrIntegrations, "createIntegrationAsync");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
-    factorySpy.mockReturnValue({
-      testConnectionAsync: async () => await Promise.resolve(),
-    } as homarrIntegrations.PiHoleIntegration);
+    factorySpy.mockReturnValue(
+      Promise.resolve({
+        testConnectionAsync: async () => await Promise.resolve(),
+      } as homarrIntegrations.PiHoleIntegrationV6),
+    );
     optionsSpy.mockReturnValue([["apiKey"]]);
 
     const integration = {
@@ -152,11 +158,13 @@ describe("testConnectionAsync should run test connection of integration", () => 
 
   test("with input of form apiKey and db secrets for username and password it should use form apiKey when both is allowed", async () => {
     // Arrange
-    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreator");
+    const factorySpy = vi.spyOn(homarrIntegrations, "createIntegrationAsync");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
-    factorySpy.mockReturnValue({
-      testConnectionAsync: async () => await Promise.resolve(),
-    } as homarrIntegrations.PiHoleIntegration);
+    factorySpy.mockReturnValue(
+      Promise.resolve({
+        testConnectionAsync: async () => await Promise.resolve(),
+      } as homarrIntegrations.PiHoleIntegrationV6),
+    );
     optionsSpy.mockReturnValue([["username", "password"], ["apiKey"]]);
 
     const integration = {
@@ -203,11 +211,13 @@ describe("testConnectionAsync should run test connection of integration", () => 
 
   test("with input of null form apiKey and db secrets for username and password it should use db username and password when both is allowed", async () => {
     // Arrange
-    const factorySpy = vi.spyOn(homarrIntegrations, "integrationCreator");
+    const factorySpy = vi.spyOn(homarrIntegrations, "createIntegrationAsync");
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
-    factorySpy.mockReturnValue({
-      testConnectionAsync: async () => await Promise.resolve(),
-    } as homarrIntegrations.PiHoleIntegration);
+    factorySpy.mockReturnValue(
+      Promise.resolve({
+        testConnectionAsync: async () => await Promise.resolve(),
+      } as homarrIntegrations.PiHoleIntegrationV6),
+    );
     optionsSpy.mockReturnValue([["username", "password"], ["apiKey"]]);
 
     const integration = {

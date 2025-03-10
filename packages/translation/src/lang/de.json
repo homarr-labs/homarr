@@ -1070,6 +1070,9 @@
         },
         "customCssClasses": {
           "label": "Benutzerdefinierte CSS Klassen"
+        },
+        "borderColor": {
+          "label": ""
         }
       }
     },
@@ -1124,8 +1127,14 @@
             },
             "grid": {
               "label": "Raster"
+            },
+            "gridHorizontal": {
+              "label": ""
             }
           }
+        },
+        "hideTitle": {
+          "label": ""
         },
         "hideIcon": {
           "label": "Symbole verbergen"

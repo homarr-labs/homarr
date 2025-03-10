@@ -19,15 +19,16 @@ import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration"
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
+import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
-import { PiHoleIntegration } from "../pi-hole/pi-hole-integration";
+import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
-export const integrationCreator = <TKind extends keyof typeof integrationCreators>(
+export const createIntegrationAsync = async <TKind extends keyof typeof integrationCreators>(
   integration: IntegrationInput & { kind: TKind },
 ) => {
   if (!(integration.kind in integrationCreators)) {
@@ -36,15 +37,22 @@ export const integrationCreator = <TKind extends keyof typeof integrationCreator
     );
   }
 
-  return new integrationCreators[integration.kind](integration) as InstanceType<(typeof integrationCreators)[TKind]>;
+  const creator = integrationCreators[integration.kind];
+
+  // factories are an array, to differentiate in js between class constructors and functions
+  if (Array.isArray(creator)) {
+    return (await creator[0](integration)) as IntegrationInstanceOfKind<TKind>;
+  }
+
+  return new creator(integration) as IntegrationInstanceOfKind<TKind>;
 };
 
-export const integrationCreatorFromSecrets = <TKind extends keyof typeof integrationCreators>(
+export const createIntegrationAsyncFromSecrets = <TKind extends keyof typeof integrationCreators>(
   integration: Modify<DbIntegration, { kind: TKind }> & {
     secrets: { kind: IntegrationSecretKind; value: `${string}.${string}` }[];
   },
 ) => {
-  return integrationCreator({
+  return createIntegrationAsync({
     ...integration,
     decryptedSecrets: integration.secrets.map((secret) => ({
       ...secret,
@@ -53,8 +61,11 @@ export const integrationCreatorFromSecrets = <TKind extends keyof typeof integra
   });
 };
 
+type IntegrationInstance = new (integration: IntegrationInput) => Integration;
+
+// factories are an array, to differentiate in js between class constructors and functions
 export const integrationCreators = {
-  piHole: PiHoleIntegration,
+  piHole: [createPiHoleIntegrationAsync],
   adGuardHome: AdGuardHomeIntegration,
   homeAssistant: HomeAssistantIntegration,
   jellyfin: JellyfinIntegration,
@@ -76,4 +87,13 @@ export const integrationCreators = {
   tdarr: TdarrIntegration,
   proxmox: ProxmoxIntegration,
   emby: EmbyIntegration,
-} satisfies Record<IntegrationKind, new (integration: IntegrationInput) => Integration>;
+  nextcloud: NextcloudIntegration,
+} satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
+
+type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {
+  [kind in TKind]: (typeof integrationCreators)[kind] extends [(input: IntegrationInput) => Promise<Integration>]
+    ? Awaited<ReturnType<(typeof integrationCreators)[kind][0]>>
+    : (typeof integrationCreators)[kind] extends IntegrationInstance
+      ? InstanceType<(typeof integrationCreators)[kind]>
+      : never;
+}[TKind];
