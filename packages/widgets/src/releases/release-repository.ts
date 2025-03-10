@@ -1,12 +1,13 @@
 import type { ReleaseProvider } from "./release-providers";
 
-export class Release {
+export class ReleaseRepository {
   provider: ReleaseProvider;
   identifier: string;
   versionRegex: string | undefined;
   iconUrl: string | undefined;
   latestRelease: string | undefined;
   latestReleaseDate: Date | undefined;
+  shouldHighlight: boolean;
 
   constructor(
     provider: ReleaseProvider,
@@ -18,5 +19,6 @@ export class Release {
     this.identifier = identifier;
     this.versionRegex = versionRegex;
     this.iconUrl = iconUrl;
+    this.shouldHighlight = false;
   }
 }

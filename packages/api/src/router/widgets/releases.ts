@@ -8,7 +8,7 @@ export const releasesRouter = createTRPCRouter({
   getLatest: publicProcedure
     .input(
       z.object({
-        releases: z.array(
+        repositories: z.array(
           z.object({
             providerName: z.string(),
             identifier: z.string(),
@@ -19,11 +19,11 @@ export const releasesRouter = createTRPCRouter({
     )
     .query(async ({ input }) => {
       const result = await Promise.all(
-        input.releases.map(async (release) => {
+        input.repositories.map(async (repository) => {
           const innerHandler = releasesRequestHandler.handler({
-            providerName: release.providerName,
-            identifier: release.identifier,
-            versionRegex: release.versionRegex,
+            providerName: repository.providerName,
+            identifier: repository.identifier,
+            versionRegex: repository.versionRegex,
           });
           return await innerHandler.getCachedOrUpdatedDataAsync({
             forceUpdate: false,

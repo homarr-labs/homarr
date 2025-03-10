@@ -8,6 +8,11 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
   icon: IconCode,
   createOptions() {
     return optionsBuilder.from((factory) => ({
+      highlightWithin: factory.text({
+        defaultValue: "1w",
+        withDescription: true,
+        validate: z.string().regex(/^\d+[hdwmy]$/).or(z.literal("")),
+      }),
       sortBy: factory.select({
         defaultValue: "releaseDate",
         options: [
@@ -19,7 +24,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       showOnlyNewReleases: factory.switch({
         defaultValue: true,
       }),
-      releases: factory.multiReleases({
+      repositories: factory.multiReleaseRepositories({
         defaultValue: [],
         validate: z.array(
           z.object({

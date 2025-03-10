@@ -1945,21 +1945,9 @@
       "name": "Releases",
       "description": "Displays a list of the current version of the given repositories with the given version regex.",
       "option": {
-        "releases": {
-          "label": "Releases"
-        },
-        "addRelease": {
-          "label": "Add release"
-        },
-        "provider": {
-          "label": "Provider"
-        },
-        "identifier": {
-          "label": "Identifier",
-          "placeholder": "Name or Owner/Name"
-        },
-        "versionRegex": {
-          "label": "Version Regex"
+        "highlightWithin": {
+          "label": "Highlight Within",
+          "description": "Usage example: 1w (1 week), 10m (10 months). Accepted unit types h (hours), d (days), w (weeks), m (months), y (years)"
         },
         "sortBy": {
           "label": "Sort By"
@@ -1967,17 +1955,33 @@
         "showOnlyNewReleases": {
           "label": "Show Only New Releases"
         },
-        "edit": {
-          "label": "Edit"
-        }
-      },
-      "editForm": {
-        "title": "Edit Release",
-        "cancel": {
-          "label": "Cancel"
-        },
-        "confirm": {
-          "label": "Confirm"
+        "repositories": {
+          "label": "Repositories",
+          "addRRepository": {
+            "label": "Add repository"
+          },
+          "provider": {
+            "label": "Provider"
+          },
+          "identifier": {
+            "label": "Identifier",
+            "placeholder": "Name or Owner/Name"
+          },
+          "versionRegex": {
+            "label": "Version Regex"
+          },
+          "edit": {
+            "label": "Edit"
+          },
+          "editForm": {
+            "title": "Edit Repository",
+            "cancel": {
+              "label": "Cancel"
+            },
+            "confirm": {
+              "label": "Confirm"
+            }
+          }
         }
       },
       "not-found": "Not Found"

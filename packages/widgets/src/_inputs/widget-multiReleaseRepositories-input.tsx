@@ -10,7 +10,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { IconPicker } from "../../../forms-collection/src";
-import { Release } from "../releases/release";
+import { ReleaseRepository } from "../releases/release-repository";
 import { Providers } from "../releases/release-providers";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -21,19 +21,19 @@ interface FormValidation {
   errors: FormErrors;
 }
 
-export const WidgetMultiReleasesInput = ({ property, kind }: CommonWidgetInputProps<"multiReleases">) => {
+export const WidgetMultiReleaseRepositoriesInput = ({ property, kind }: CommonWidgetInputProps<"multiReleaseRepositories">) => {
   const t = useWidgetInputTranslation(kind, property);
-  const tReleases = useScopedI18n("widget.releases");
+  const tRepository = useScopedI18n(`widget.releases.option.repositories`);
   const form = useFormContext();
-  const releases = form.values.options[property] as Release[];
+  const repositories = form.values.options[property] as ReleaseRepository[];
   const { openModal } = useModalAction(releaseEditModal);
 
   const onReleaseSave = useCallback(
-    (release: Release, index: number): FormValidation => {
-      form.setFieldValue(`options.${property}.${index}.provider`, release.provider);
-      form.setFieldValue(`options.${property}.${index}.identifier`, release.identifier);
-      form.setFieldValue(`options.${property}.${index}.versionRegex`, release.versionRegex);
-      form.setFieldValue(`options.${property}.${index}.iconUrl`, release.iconUrl);
+    (repository: ReleaseRepository, index: number): FormValidation => {
+      form.setFieldValue(`options.${property}.${index}.provider`, repository.provider);
+      form.setFieldValue(`options.${property}.${index}.identifier`, repository.identifier);
+      form.setFieldValue(`options.${property}.${index}.versionRegex`, repository.versionRegex);
+      form.setFieldValue(`options.${property}.${index}.iconUrl`, repository.iconUrl);
 
       return form.validate();
     },
@@ -45,10 +45,10 @@ export const WidgetMultiReleasesInput = ({ property, kind }: CommonWidgetInputPr
   }, []);
 
   const addNewItem = () => {
-    const item = new Release(Providers.Docker, "");
+    const item = new ReleaseRepository(Providers.Docker, "");
 
     form.setValues((previous) => {
-      const previousValues = previous.options?.[property] as Release[];
+      const previousValues = previous.options?.[property] as ReleaseRepository[];
       return {
         ...previous,
         options: {
@@ -61,7 +61,7 @@ export const WidgetMultiReleasesInput = ({ property, kind }: CommonWidgetInputPr
 
   const onReleaseRemove = (index: number) => {
     form.setValues((previous) => {
-      const previousValues = previous.options?.[property] as Release[];
+      const previousValues = previous.options?.[property] as ReleaseRepository[];
       return {
         ...previous,
         options: {
@@ -75,17 +75,17 @@ export const WidgetMultiReleasesInput = ({ property, kind }: CommonWidgetInputPr
   return (
     <Fieldset legend={t("label")}>
       <Stack gap="5">
-        <Button onClick={addNewItem}>{tReleases("option.addRelease.label")}</Button>
+        <Button onClick={addNewItem}>{tRepository("addRRepository.label")}</Button>
         <Divider my="sm" />
 
-        {releases.map((release, index) => {
+        {repositories.map((repository, index) => {
           return (
-            <Stack key={`${release.provider.name}.${release.identifier}`} gap="5">
+            <Stack key={`${repository.provider.name}.${repository.identifier}`} gap="5">
               <Grid align="center" gutter="xs">
                 <Grid.Col span="content">
                   <MaskedOrNormalImage
                     hasColor={false}
-                    imageUrl={release.iconUrl ?? release.provider.iconUrl}
+                    imageUrl={repository.iconUrl ?? repository.provider.iconUrl}
                     style={{
                       height: "1em",
                       width: "1em",
@@ -94,15 +94,15 @@ export const WidgetMultiReleasesInput = ({ property, kind }: CommonWidgetInputPr
                 </Grid.Col>
                 <Grid.Col span="content">
                   <Text c="dimmed" fw={100} size="xs">
-                    {release.provider.name}
+                    {repository.provider.name}
                   </Text>
                 </Grid.Col>
                 <Grid.Col span="auto">
-                  <Text size="sm">{release.identifier}</Text>
+                  <Text size="sm">{repository.identifier}</Text>
                 </Grid.Col>
                 <Grid.Col span="content">
                   <Text c="dimmed" size="xs">
-                    {release.versionRegex}
+                    {repository.versionRegex}
                   </Text>
                 </Grid.Col>
                 <Grid.Col span="content">
@@ -110,7 +110,7 @@ export const WidgetMultiReleasesInput = ({ property, kind }: CommonWidgetInputPr
                     onClick={() =>
                       openModal({
                         fieldPath: `options.${property}.${index}`,
-                        release,
+                        repository,
                         onReleaseSave: (saved) => onReleaseSave(saved, index),
                         providers,
                       })
@@ -119,7 +119,7 @@ export const WidgetMultiReleasesInput = ({ property, kind }: CommonWidgetInputPr
                     leftSection={<IconEdit size={15} />}
                     size="xs"
                   >
-                    {tReleases("option.edit.label")}
+                    {tRepository("edit.label")}
                   </Button>
                 </Grid.Col>
                 <Grid.Col span="content">
@@ -139,36 +139,36 @@ export const WidgetMultiReleasesInput = ({ property, kind }: CommonWidgetInputPr
 
 interface ReleaseEditProps {
   fieldPath: string;
-  release: Release;
-  onReleaseSave: (release: Release) => FormValidation;
+  repository: ReleaseRepository;
+  onReleaseSave: (repository: ReleaseRepository) => FormValidation;
   providers: string[];
 }
 
 const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions }) => {
-  const tReleases = useScopedI18n("widget.releases");
+  const tRepository = useScopedI18n(`widget.releases.option.repositories`);
   const [loading, setLoading] = useState(false);
-  const [tempRelease, setTempRelease] = useState(innerProps.release);
+  const [tempRepository, setTempRepository] = useState(innerProps.repository);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const handleConfirm = useCallback(() => {
     setLoading(true);
 
-    const validation = innerProps.onReleaseSave(tempRelease);
+    const validation = innerProps.onReleaseSave(tempRepository);
     setFormErrors(validation.errors);
     if (!validation.hasErrors) {
       actions.closeModal();
     }
 
     setLoading(false);
-  }, [innerProps, tempRelease, actions]);
+  }, [innerProps, tempRepository, actions]);
 
   const handleChange = useCallback(
-    (changedValue: Partial<Release>) => {
-      setTempRelease((prev) => ({ ...prev, ...changedValue }));
-      const validation = innerProps.onReleaseSave({ ...tempRelease, ...changedValue });
+    (changedValue: Partial<ReleaseRepository>) => {
+      setTempRepository((prev) => ({ ...prev, ...changedValue }));
+      const validation = innerProps.onReleaseSave({ ...tempRepository, ...changedValue });
       setFormErrors(validation.errors);
     },
-    [innerProps, tempRelease],
+    [innerProps, tempRepository],
   );
 
   return (
@@ -177,9 +177,9 @@ const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
         <Grid.Col span={4}>
           <Select
             withAsterisk
-            label={tReleases("option.provider.label")}
+            label={tRepository("provider.label")}
             data={innerProps.providers}
-            value={tempRelease.provider.name}
+            value={tempRepository.provider.name}
             key={`${innerProps.fieldPath}.provider`}
             error={formErrors[`${innerProps.fieldPath}.provider`]}
             onChange={(value) => {
@@ -195,8 +195,8 @@ const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
         <Grid.Col span={7}>
           <TextInput
             withAsterisk
-            label={tReleases("option.identifier.label")}
-            value={tempRelease.identifier}
+            label={tRepository("identifier.label")}
+            value={tempRepository.identifier}
             onChange={(event) => {
               handleChange({ identifier: event.currentTarget.value });
             }}
@@ -206,8 +206,8 @@ const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
         </Grid.Col>
         <Grid.Col span={4}>
           <TextInput
-            label={tReleases("option.versionRegex.label")}
-            value={tempRelease.versionRegex ?? ""}
+            label={tRepository("versionRegex.label")}
+            value={tempRepository.versionRegex ?? ""}
             onChange={(event) => {
               handleChange({ versionRegex: event.currentTarget.value });
             }}
@@ -218,7 +218,7 @@ const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
         <Grid.Col span={7}>
           <IconPicker
             withAsterisk={false}
-            value={tempRelease.iconUrl}
+            value={tempRepository.iconUrl}
             onChange={(url) => handleChange({ iconUrl: url })}
             key={`${innerProps.fieldPath}.iconUrl`}
             error={formErrors[`${innerProps.fieldPath}.iconUrl`] as string}
@@ -228,18 +228,18 @@ const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
       <Divider my={"sm"} />
       <Group justify="flex-end">
         <Button variant="default" onClick={actions.closeModal}>
-          {tReleases("editForm.cancel.label")}
+          {tRepository("editForm.cancel.label")}
         </Button>
 
         <Button data-autofocus onClick={handleConfirm} color="red.9" loading={loading}>
-          {tReleases("editForm.confirm.label")}
+          {tRepository("editForm.confirm.label")}
         </Button>
       </Group>
     </Stack>
   );
 }).withOptions({
   defaultTitle(t) {
-    return t("widget.releases.editForm.title");
+    return t("widget.releases.option.repositories.editForm.title");
   },
   size: "xl",
 });

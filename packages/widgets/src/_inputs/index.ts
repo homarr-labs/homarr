@@ -9,7 +9,7 @@ import { WidgetSliderInput } from "./widget-slider-input";
 import { WidgetSortedItemListInput } from "./widget-sortable-item-list-input";
 import { WidgetSwitchInput } from "./widget-switch-input";
 import { WidgetTextInput } from "./widget-text-input";
-import { WidgetMultiReleasesInput } from "./widget-multiReleases-input";
+import { WidgetMultiReleaseRepositoriesInput } from "./widget-multiReleaseRepositories-input";
 
 const mapping = {
   text: WidgetTextInput,
@@ -22,7 +22,7 @@ const mapping = {
   switch: WidgetSwitchInput,
   app: WidgetAppInput,
   sortableItemList: WidgetSortedItemListInput,
-  multiReleases: WidgetMultiReleasesInput
+  multiReleaseRepositories: WidgetMultiReleaseRepositoriesInput
 } satisfies Record<WidgetOptionType, unknown>;
 
 export const getInputForType = <TType extends WidgetOptionType>(type: TType) => {

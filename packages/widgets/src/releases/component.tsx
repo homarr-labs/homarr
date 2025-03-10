@@ -10,6 +10,37 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
+import type { ReleaseRepository } from "./release-repository";
+
+function isDateWithin(date: Date, relativeDate: string): boolean {
+  const amount = parseInt(relativeDate.slice(0, -1), 10);
+  const unit = relativeDate.slice(-1);
+
+  const startTime = new Date().getTime();
+  const endTime = new Date(date).getTime();
+  const diffTime = Math.abs(endTime - startTime);
+  const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
+
+  switch (unit) {
+    case "h":
+      return diffHours < amount;
+
+    case "d":
+      return diffHours / 24 < amount;
+
+    case "w":
+      return diffHours / (24 * 7) < amount;
+
+    case "m":
+      return diffHours / (24 * 30) < amount;
+
+    case "y":
+      return diffHours / (24 * 365) < amount;
+
+    default:
+      throw new Error("Invalid unit");
+  }
+}
 
 export default function ReleasesWidget({ options }: WidgetComponentProps<"releases">) {
   const t = useScopedI18n("widget.releases");
@@ -18,10 +49,10 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 
   const [results] = clientApi.widget.releases.getLatest.useSuspenseQuery(
     {
-      releases: options.releases.map((release) => ({
-        providerName: release.provider.name,
-        identifier: release.identifier,
-        versionRegex: release.versionRegex,
+      repositories: options.repositories.map((repository) => ({
+        providerName: repository.provider.name,
+        identifier: repository.identifier,
+        versionRegex: repository.versionRegex,
       })),
     },
     {
@@ -35,23 +66,31 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   for (const { data } of results) {
     if (data === undefined) continue;
 
-    const release = options.releases.find((release) => release.identifier === data.identifier);
+    const repository = options.repositories.find(
+      (repository: ReleaseRepository) => repository.identifier === data.identifier,
+    );
 
-    if (release === undefined) continue;
+    if (repository === undefined) continue;
 
-    release.latestRelease = data.tag;
-    release.latestReleaseDate = data.lastUpdated;
+    repository.latestRelease = data.tag;
+    repository.latestReleaseDate = data.lastUpdated;
+    repository.shouldHighlight =
+      options.highlightWithin !== "" ? isDateWithin(repository.latestReleaseDate, options.highlightWithin) : false;
   }
+
+  const repositories = options.showOnlyNewReleases
+    ? options.repositories.filter((repository) => repository.shouldHighlight)
+    : options.repositories;
 
   return (
     <Stack>
       <Stack gap={2}>
-        {options.releases.map((release) => (
-          <Stack key={`${release.provider.name}.${release.identifier}`} gap={5}>
+        {repositories.map((repository: ReleaseRepository) => (
+          <Stack key={`${repository.provider.name}.${repository.identifier}`} gap={5}>
             <Grid columns={2} p="xs" gutter="xs" align="center">
               <Grid.Col span="content">
                 <MaskedOrNormalImage
-                  imageUrl={release.iconUrl ?? release.provider.iconUrl}
+                  imageUrl={repository.iconUrl ?? repository.provider.iconUrl}
                   hasColor={board.iconColor !== null}
                   style={{
                     height: "1.7em",
@@ -63,7 +102,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 <Grid className={classes.card} p={0} gutter="xs">
                   <Grid.Col span={8} p={0}>
                     <Text truncate="end" size="sm">
-                      {release.identifier}
+                      {repository.identifier}
                     </Text>
                   </Grid.Col>
                   <Grid.Col span={4} p={0}>
@@ -75,13 +114,13 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                         textAlign: "right",
                       }}
                     >
-                      {release.latestRelease ?? t("not-found")}
+                      {repository.latestRelease ?? t("not-found")}
                     </Text>
                   </Grid.Col>
                   <Grid.Col span={8} p={0}>
                     <Group gap={5}>
                       <MaskedOrNormalImage
-                        imageUrl={release.provider.iconUrl}
+                        imageUrl={repository.provider.iconUrl}
                         color="dimmed"
                         hasColor={true}
                         style={{
@@ -90,22 +129,29 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                         }}
                       />
                       <Text c="dimmed" size="xs">
-                        {release.provider.name}
+                        {repository.provider.name}
                       </Text>
                     </Group>
                   </Grid.Col>
                   <Grid.Col span={4} p={0}>
-                    <Text
-                      size="sm"
-                      style={{
-                        textAlign: "right",
-                      }}
-                    >
-                      {release.latestReleaseDate &&
-                        formatter.relativeTime(release.latestReleaseDate, {
-                          style: "narrow",
-                        })}
-                    </Text>
+                    <Group justify="end" gap={5}>
+                      <Text
+                        size="sm"
+                        style={{
+                          textAlign: "right",
+                        }}
+                      >
+                        {repository.latestReleaseDate &&
+                          formatter.relativeTime(repository.latestReleaseDate, {
+                            style: "narrow",
+                          })}
+                      </Text>
+                      {repository.shouldHighlight && (
+                        <Text c="dimmed" fw={600}>
+                          !
+                        </Text>
+                      )}
+                    </Group>
                   </Grid.Col>
                 </Grid>
               </Grid.Col>
