@@ -2325,7 +2325,7 @@
           "label": "Araçlar",
           "items": {
             "docker": "Docker",
-            "kubernetes": "",
+            "kubernetes": "Kubernetes",
             "logs": "Günlükler",
             "api": "API",
             "certificates": "Sertifikalar",
@@ -2874,242 +2874,242 @@
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
-      "label": "",
-      "providers": "",
-      "version": "",
-      "architecture": "",
+      "title": "Küme Panosu",
+      "label": "Küme",
+      "providers": "Sağlayıcılar",
+      "version": "Sürüm",
+      "architecture": "Mimari",
       "capacity": {
-        "title": "",
+        "title": "Kapasite",
         "resource": {
-          "reserved": "",
-          "used": ""
+          "reserved": "Rezerve",
+          "used": "Kullanılan"
         }
       },
       "resources": {
-        "title": "",
-        "nodes": "",
-        "namespaces": "",
-        "ingresses": "",
-        "services": "",
-        "pods": "",
-        "configmaps": "",
-        "secrets": "",
-        "volumes": ""
+        "title": "Kaynaklar",
+        "nodes": "Nodes",
+        "namespaces": "İsim Alanları",
+        "ingresses": "Ingress'ler",
+        "services": "Hizmetler",
+        "pods": "Pod'lar",
+        "configmaps": "ConfigMap'ler",
+        "secrets": "Gizli anahtarlar",
+        "volumes": "Birimler"
       }
     },
     "nodes": {
-      "label": "",
+      "label": "Node'lar",
       "field": {
         "name": {
-          "label": ""
+          "label": "İsim"
         },
         "state": {
-          "label": "",
+          "label": "Durum",
           "option": {
-            "ready": "",
-            "NotReady": ""
+            "ready": "Hazır",
+            "NotReady": "Hazır Değil"
           }
         },
         "cpu": {
-          "label": ""
+          "label": "İşlemci"
         },
         "memory": {
-          "label": ""
+          "label": "BELLEK"
         },
         "pods": {
-          "label": ""
+          "label": "Pod'lar"
         },
         "operatingSystem": {
-          "label": ""
+          "label": "İşletim Sistemi"
         },
         "architecture": {
-          "label": ""
+          "label": "Mimari"
         },
         "kubernetesVersion": {
-          "label": ""
+          "label": "Kubernetes Sürümü"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oluşturuldu"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} node içinde ara"
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "İsim Alanları",
       "field": {
         "name": {
-          "label": ""
+          "label": "İsim"
         },
         "state": {
-          "label": "",
+          "label": "Durum",
           "option": {
-            "active": "",
-            "terminating": ""
+            "active": "Aktif",
+            "terminating": "Sonlandırma"
           }
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oluşturuldu"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} isim alanı içinde ara"
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "Ingress'ler",
       "field": {
         "name": {
-          "label": ""
+          "label": "İsim"
         },
         "namespace": {
-          "label": ""
+          "label": "İsim Alanı"
         },
         "className": {
-          "label": ""
+          "label": "Sınıf ismi"
         },
         "rulesAndPaths": {
-          "label": ""
+          "label": "Kurallar & yollar"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oluşturuldu"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} ingress içinde ara"
       }
     },
     "services": {
-      "label": "",
+      "label": "Hizmetler",
       "field": {
         "name": {
-          "label": ""
+          "label": "İsim"
         },
         "namespace": {
-          "label": ""
+          "label": "İsim Alanı"
         },
         "type": {
-          "label": ""
+          "label": "Tip"
         },
         "ports": {
-          "label": ""
+          "label": "Bağlantı noktaları"
         },
         "targetPorts": {
-          "label": ""
+          "label": "Hedef bağlantı noktası"
         },
         "clusterIP": {
-          "label": ""
+          "label": "Küme IP'si"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oluşturuldu"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} hizmet içerisinde ara"
       }
     },
     "pods": {
-      "label": "",
+      "label": "Pod'lar",
       "field": {
         "name": {
-          "label": ""
+          "label": "İsim"
         },
         "namespace": {
-          "label": ""
+          "label": "İsim Alanı"
         },
         "image": {
-          "label": ""
+          "label": "İmaj"
         },
         "applicationType": {
-          "label": ""
+          "label": "Uygulama Türü"
         },
         "status": {
-          "label": ""
+          "label": "Durum"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oluşturuldu"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} pod içerisinde ara"
       }
     },
     "secrets": {
-      "label": "",
+      "label": "Gizli anahtarlar",
       "field": {
         "name": {
-          "label": ""
+          "label": "İsim"
         },
         "namespace": {
-          "label": ""
+          "label": "i̇sim Alanı"
         },
         "type": {
-          "label": ""
+          "label": "tür"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oluşturuldu"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} gizli anahtar içerisinde ara"
       }
     },
     "configmaps": {
-      "label": "",
+      "label": "ConfigMap'ler",
       "field": {
         "name": {
-          "label": ""
+          "label": "İsim"
         },
         "namespace": {
-          "label": ""
+          "label": "İsim Alanı"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oluşturuldu"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} configMap içinde ara"
       }
     },
     "volumes": {
-      "label": "",
+      "label": "Birimler",
       "field": {
         "name": {
-          "label": ""
+          "label": "İsim"
         },
         "namespace": {
-          "label": ""
+          "label": "İsim Alanı"
         },
         "accessModes": {
-          "label": ""
+          "label": "Erişim Modları"
         },
         "storage": {
-          "label": ""
+          "label": "Depolama"
         },
         "storageClassName": {
-          "label": ""
+          "label": "Depolama Sınıfı Adı"
         },
         "volumeMode": {
-          "label": ""
+          "label": "Birim Modu"
         },
         "volumeName": {
-          "label": ""
+          "label": "Birim Adı"
         },
         "status": {
-          "label": ""
+          "label": "Durum"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oluşturuldu"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} birim içerisinde ara"
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Kubernetes verileri alınamadı"
     }
   },
   "permission": {
@@ -3198,30 +3198,30 @@
           "label": "Docker"
         },
         "kubernetes": {
-          "label": "",
+          "label": "Kubernetes",
           "nodes": {
-            "label": ""
+            "label": "Node'lar"
           },
           "namespaces": {
-            "label": ""
+            "label": "İsim Alanları"
           },
           "ingresses": {
-            "label": ""
+            "label": "Ingress'ler"
           },
           "services": {
-            "label": ""
+            "label": "Hizmetler"
           },
           "pods": {
-            "label": ""
+            "label": "pod'lar"
           },
           "configmaps": {
-            "label": ""
+            "label": "ConfigMap'ler"
           },
           "secrets": {
-            "label": ""
+            "label": "Gizli anahtarlar"
           },
           "volumes": {
-            "label": ""
+            "label": "Birimler"
           }
         },
         "logs": {
