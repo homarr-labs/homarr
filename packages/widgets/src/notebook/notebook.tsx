@@ -65,6 +65,8 @@ import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 
+import "./notebook.css";
+
 const iconProps = {
   size: 30,
   stroke: 1.5,
