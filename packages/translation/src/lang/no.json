@@ -307,12 +307,12 @@
       "name": "Navn",
       "members": "Medlemmer",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Hjem tavle",
+        "description": "Bare tavler som er tilgjengelige for gruppen kan velges"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Mobiltavle",
+        "description": "Bare tavler som er tilgjengelige for gruppen kan velges"
       }
     },
     "permission": {
@@ -514,12 +514,12 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Innstillinger lagret",
+              "message": "Innstillinger for tavle er lagret"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Kunne ikke lagre innstillinger",
+              "message": "Kan ikke lagre tavleinnstillinger"
             }
           }
         }
@@ -527,17 +527,17 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Posisjonen ble endret"
           },
           "error": {
-            "message": ""
+            "message": "Kan ikke endre posisjon"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "Standard gruppe",
+      "description": "{name} – Alle påloggede brukere"
     }
   },
   "app": {
@@ -603,8 +603,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Bruk annen URL for ping",
+          "description": "Nyttig hvis Homarr kan få direkte tilgang med et internt vertsnavn eller nettverk for å unngå båndbreddebruk av ISP"
         }
       }
     },
@@ -930,7 +930,7 @@
     },
     "dangerZone": "Faresonen",
     "noResults": "Ingen resultater funnet",
-    "unsavedChanges": "",
+    "unsavedChanges": "Du har ulagrede endringer!",
     "preview": {
       "show": "Vis forhåndsvisning",
       "hide": "Skjul forhåndsvisning"
@@ -974,7 +974,7 @@
       },
       "option": {
         "borderColor": {
-          "label": ""
+          "label": "Grensefarge"
         }
       },
       "remove": {
@@ -1072,7 +1072,7 @@
           "label": "Egendefinerte css-klasser"
         },
         "borderColor": {
-          "label": ""
+          "label": "Grensefarge"
         }
       }
     },
@@ -1129,12 +1129,12 @@
               "label": "Rutenettet"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "Rutenett horisontalt"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "Skjul tittel"
         },
         "hideIcon": {
           "label": "Skjul ikoner"
@@ -1436,7 +1436,7 @@
           "label": "Slutt på"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "Vis ikke monitorert"
         }
       }
     },
@@ -1632,7 +1632,7 @@
       "app": {
         "noData": "Ingen app funnet",
         "description": "Klikk <here></here> for å opprette en ny app",
-        "quickCreate": ""
+        "quickCreate": "Opprett app direkte"
       },
       "error": {
         "noIntegration": "Ingen integrasjon valgt",
@@ -1668,7 +1668,7 @@
       "description": "Vis pågående strømmer på dine media-servere",
       "option": {},
       "items": {
-        "currentlyPlaying": "",
+        "currentlyPlaying": "Spilles nå",
         "user": "Bruker",
         "name": "Navn",
         "id": "Id"
@@ -1835,10 +1835,10 @@
         "available": "Tilgjengelig"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "Venter",
+        "approved": "Godkjent",
+        "declined": "Avslått",
+        "failed": "Feilet"
       },
       "toBeDetermined": "Uavklart"
     },
@@ -1893,10 +1893,10 @@
         "statistics": {
           "empty": "Tøm",
           "transcodes": "Transkoder",
-          "transcodesCount": "Transkoder: {value}",
-          "healthChecksCount": "Helsesjekker: {value}",
-          "filesCount": "Filer: {value}",
-          "savedSpace": "Diskplass spart: {value}",
+          "transcodesCount": "Transkoder",
+          "healthChecksCount": "Helsesjekker",
+          "filesCount": "Filer",
+          "savedSpace": "Diskplass spart",
           "healthChecks": "Helsesjekker",
           "videoCodecs": "Kodeker",
           "videoContainers": "Containere",
@@ -2041,8 +2041,8 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "Opprett app direkte",
+          "createAndUse": "Opprett og bruk"
         }
       }
     },
@@ -2119,7 +2119,7 @@
         "label": "Gjennomsiktighet"
       },
       "iconColor": {
-        "label": ""
+        "label": "Ikonfarge"
       },
       "customCss": {
         "label": "Tilpasset css for denne tavlen",
@@ -2137,14 +2137,14 @@
         "label": "Antall kolonner"
       },
       "itemRadius": {
-        "label": "",
-        "description": "",
+        "label": "Objekt radius",
+        "description": "Endrer flisenes rundhet på tavlen",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "Veldig liten",
+          "sm": "Liten",
+          "md": "Medium",
+          "lg": "Stor",
+          "xl": "Veldig stor"
         }
       },
       "name": {
@@ -2168,9 +2168,9 @@
         "layout": {
           "title": "Oppsett",
           "responsive": {
-            "title": "",
+            "title": "Responsivt oppsett",
             "action": {
-              "add": ""
+              "add": "Legg til oppsett"
             }
           }
         },
@@ -2178,7 +2178,7 @@
           "title": "Bakgrunn"
         },
         "appearance": {
-          "title": ""
+          "title": "Utseende"
         },
         "customCss": {
           "title": "Egendefinert css"
@@ -2283,14 +2283,14 @@
   "layout": {
     "field": {
       "name": {
-        "label": ""
+        "label": "Navn"
       },
       "columnCount": {
-        "label": ""
+        "label": "Antall kolonner"
       },
       "breakpoint": {
-        "label": "",
-        "description": ""
+        "label": "Stoppunkt",
+        "description": "Oppsett vil bli brukt på alle skjermer som er større enn dette bruddpunktet til neste større bruddpunkt."
       }
     }
   },
@@ -2325,7 +2325,7 @@
           "label": "Verktøy",
           "items": {
             "docker": "Docker",
-            "kubernetes": "",
+            "kubernetes": "Kubernetes",
             "logs": "Logger",
             "api": "API",
             "certificates": "Sertifikater",
@@ -2524,10 +2524,10 @@
             "ownerOfGroupDeleted": "Eieren av gruppen ble slettet. Den har for øyeblikket ingen eier."
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "Innstillinger",
+            "alert": "Gruppeinnstillinger er prioritert etter rekkefølgen på gruppene i listen. Øverste innstillinger overskriver bunninnstillingene.",
             "board": {
-              "title": ""
+              "title": "Tavler"
             }
           },
           "members": {
@@ -2874,242 +2874,242 @@
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
-      "label": "",
-      "providers": "",
-      "version": "",
-      "architecture": "",
+      "title": "Klynge dashbord",
+      "label": "Klynge",
+      "providers": "Leverandør",
+      "version": "Versjon",
+      "architecture": "Arkitektur",
       "capacity": {
-        "title": "",
+        "title": "Kapasitet",
         "resource": {
-          "reserved": "",
-          "used": ""
+          "reserved": "Reservert",
+          "used": "Brukt"
         }
       },
       "resources": {
-        "title": "",
-        "nodes": "",
-        "namespaces": "",
-        "ingresses": "",
-        "services": "",
-        "pods": "",
-        "configmaps": "",
-        "secrets": "",
-        "volumes": ""
+        "title": "Ressurser",
+        "nodes": "Noder",
+        "namespaces": "Navnerom",
+        "ingresses": "Ingress",
+        "services": "Tjenester",
+        "pods": "Pods",
+        "configmaps": "ConfigMaps",
+        "secrets": "Hemmeligheter",
+        "volumes": "Volumer"
       }
     },
     "nodes": {
-      "label": "",
+      "label": "Noder",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "state": {
-          "label": "",
+          "label": "Status",
           "option": {
-            "ready": "",
-            "NotReady": ""
+            "ready": "Klar",
+            "NotReady": "Ikke klar"
           }
         },
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "RAM"
         },
         "pods": {
-          "label": ""
+          "label": "Pods"
         },
         "operatingSystem": {
-          "label": ""
+          "label": "OS"
         },
         "architecture": {
-          "label": ""
+          "label": "Arkitektur"
         },
         "kubernetesVersion": {
-          "label": ""
+          "label": "Kubernetes versjon"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Opprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søk i {count} noder"
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "Navnerom",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "state": {
-          "label": "",
+          "label": "Status",
           "option": {
-            "active": "",
-            "terminating": ""
+            "active": "Aktiv",
+            "terminating": "Avslutter"
           }
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Opprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søk i {count} navnerom"
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "Ingress",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "namespace": {
-          "label": ""
+          "label": "Navnerom"
         },
         "className": {
-          "label": ""
+          "label": "Klassenavn"
         },
         "rulesAndPaths": {
-          "label": ""
+          "label": "Regler & stier"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Opprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søk i {count} ingress"
       }
     },
     "services": {
-      "label": "",
+      "label": "Tjenester",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "namespace": {
-          "label": ""
+          "label": "Navnerom"
         },
         "type": {
-          "label": ""
+          "label": "Type"
         },
         "ports": {
-          "label": ""
+          "label": "Porter"
         },
         "targetPorts": {
-          "label": ""
+          "label": "Målporter"
         },
         "clusterIP": {
-          "label": ""
+          "label": "Klynge IP"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Opprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søk i {count} tjenester"
       }
     },
     "pods": {
-      "label": "",
+      "label": "Pods",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "namespace": {
-          "label": ""
+          "label": "Navnerom"
         },
         "image": {
-          "label": ""
+          "label": "Image"
         },
         "applicationType": {
-          "label": ""
+          "label": "Applikasjonstype"
         },
         "status": {
-          "label": ""
+          "label": "Status"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Opprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søk i {count} pods"
       }
     },
     "secrets": {
-      "label": "",
+      "label": "Hemmeligheter",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "namespace": {
-          "label": ""
+          "label": "navnerom"
         },
         "type": {
-          "label": ""
+          "label": "type"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Opprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søk i {count} hemmeligheter"
       }
     },
     "configmaps": {
-      "label": "",
+      "label": "ConfigMaps",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "namespace": {
-          "label": ""
+          "label": "navnerom"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Opprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søk i {count} configMaps"
       }
     },
     "volumes": {
-      "label": "",
+      "label": "Volumer",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "namespace": {
-          "label": ""
+          "label": "Navnerom"
         },
         "accessModes": {
-          "label": ""
+          "label": "Tilgang moduser"
         },
         "storage": {
-          "label": ""
+          "label": "Lagring"
         },
         "storageClassName": {
-          "label": ""
+          "label": "Lagerklasse navn"
         },
         "volumeMode": {
-          "label": ""
+          "label": "Volum modus"
         },
         "volumeName": {
-          "label": ""
+          "label": "Volum navn"
         },
         "status": {
-          "label": ""
+          "label": "Status"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Opprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søk i {count} volumer"
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Kan ikke hente data fra Kubernetes"
     }
   },
   "permission": {
@@ -3198,30 +3198,30 @@
           "label": "Docker"
         },
         "kubernetes": {
-          "label": "",
+          "label": "Kubernetes",
           "nodes": {
-            "label": ""
+            "label": "Noder"
           },
           "namespaces": {
-            "label": ""
+            "label": "Navnerom"
           },
           "ingresses": {
-            "label": ""
+            "label": "Ingress"
           },
           "services": {
-            "label": ""
+            "label": "Tjenester"
           },
           "pods": {
-            "label": ""
+            "label": "pods"
           },
           "configmaps": {
-            "label": ""
+            "label": "ConfigMaps"
           },
           "secrets": {
-            "label": ""
+            "label": "Hemmeligheter"
           },
           "volumes": {
-            "label": ""
+            "label": "Volumer"
           }
         },
         "logs": {
