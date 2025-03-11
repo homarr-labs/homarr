@@ -1564,8 +1564,8 @@ importers:
         specifier: ^3.24.2
         version: 3.24.2
       zod-form-data:
-        specifier: ^2.0.5
-        version: 2.0.5(zod@3.24.2)
+        specifier: ^2.0.6
+        version: 2.0.6(zod@3.24.2)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1991,8 +1991,8 @@ importers:
         specifier: ^3.24.2
         version: 3.24.2
       zod-form-data:
-        specifier: ^2.0.5
-        version: 2.0.5(zod@3.24.2)
+        specifier: ^2.0.6
+        version: 2.0.6(zod@3.24.2)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -10392,8 +10392,8 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
-  zod-form-data@2.0.5:
-    resolution: {integrity: sha512-T7dV6lTBCwkd8PyvJVCnjXKpgXomU8gEm/TcvEZY7qNdRhIo9T17HrdlHIK68PzTAYaV2HxR9rgwpTSWv0L+QQ==}
+  zod-form-data@2.0.6:
+    resolution: {integrity: sha512-D+4A2q/w7BEO3h4o7uB8FFrAjnmAlNjqh3vIwVadGqFg3jHUIFsr/kxP+iSVp2/fIEtbLVec+2yDDHw2xSWyQA==}
     peerDependencies:
       zod: '>= 3.11.0'
 
@@ -19372,7 +19372,7 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-form-data@2.0.5(zod@3.24.2):
+  zod-form-data@2.0.6(zod@3.24.2):
     dependencies:
       zod: 3.24.2
 
