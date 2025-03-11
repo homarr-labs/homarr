@@ -1564,8 +1564,8 @@ importers:
         specifier: ^3.24.2
         version: 3.24.2
       zod-form-data:
-        specifier: ^2.0.6
-        version: 2.0.6(zod@3.24.2)
+        specifier: ^2.0.7
+        version: 2.0.7(zod@3.24.2)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1991,8 +1991,8 @@ importers:
         specifier: ^3.24.2
         version: 3.24.2
       zod-form-data:
-        specifier: ^2.0.6
-        version: 2.0.6(zod@3.24.2)
+        specifier: ^2.0.7
+        version: 2.0.7(zod@3.24.2)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -4074,6 +4074,9 @@ packages:
 
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
+
+  '@rvf/set-get@7.0.1':
+    resolution: {integrity: sha512-GkTSn9K1GrTYoTUqlUs36k6nJnzjQaFBTTEIqUYmzBcsGsoJM8xG7EAx2WLHWAA4QzFjcwWUSHQ3vM3Fbw50Tg==}
 
   '@scarf/scarf@1.4.0':
     resolution: {integrity: sha512-xxeapPiUXdZAE3che6f3xogoJPeZgig6omHEy1rIY5WVsB3H2BHNnZH+gHG6x91SCWyQCzWGsuL2Hh3ClO5/qQ==}
@@ -10392,8 +10395,8 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
-  zod-form-data@2.0.6:
-    resolution: {integrity: sha512-D+4A2q/w7BEO3h4o7uB8FFrAjnmAlNjqh3vIwVadGqFg3jHUIFsr/kxP+iSVp2/fIEtbLVec+2yDDHw2xSWyQA==}
+  zod-form-data@2.0.7:
+    resolution: {integrity: sha512-O27uzKMx7qc7z51KXER326Fp966jqHGvZX3i18CbvElF/QqVsQQN6Q7BnzepkzeBzTJnU3golibVSagf4dp7RQ==}
     peerDependencies:
       zod: '>= 3.11.0'
 
@@ -11987,6 +11990,8 @@ snapshots:
       rrweb-snapshot: 2.0.0-alpha.17
 
   '@rtsao/scc@1.1.0': {}
+
+  '@rvf/set-get@7.0.1': {}
 
   '@scarf/scarf@1.4.0': {}
 
@@ -19372,8 +19377,9 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-form-data@2.0.6(zod@3.24.2):
+  zod-form-data@2.0.7(zod@3.24.2):
     dependencies:
+      '@rvf/set-get': 7.0.1
       zod: 3.24.2
 
   zod-openapi@2.19.0(zod@3.24.2):
