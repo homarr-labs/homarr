@@ -12,7 +12,7 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
     const response = await fetchWithTimeout(
       `https://query1.finance.yahoo.com/v8/finance/chart/${input.stock}?range=${input.timeRange}&interval=${input.timeInterval}`,
     );
-    return responseSchema.parse(await response.json()) as object;
+    return responseSchema.parse(await response.json());
   },
   cacheDuration: dayjs.duration(5, "minutes"),
 });

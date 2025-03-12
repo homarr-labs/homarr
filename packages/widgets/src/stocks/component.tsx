@@ -20,7 +20,7 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
   const stockValuesChange = (
     100 *
     ((stockValues[stockValues.length - 1] - stockValues[0]) / stockValues[stockValues.length - 1])
-  ).toFixed(2) as int;
+  ).toFixed(2);
 
   const stockValuesMin = Math.min(...stockValues);
   const stockGraphValues = stockValues.map((value) => value - stockValuesMin + 50);
@@ -61,7 +61,7 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
             <IconTrendingUp size="1.5rem" color={theme.colors.green[7]} />
           ) : (
             <IconTrendingDown size="1.5rem" color={theme.colors.red[7]} />
-          )}{" "}
+          )}
           {stockData.meta.symbol}
         </Text>
         {width > 280 && height > 280 && (
