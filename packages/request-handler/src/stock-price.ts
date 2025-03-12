@@ -17,4 +17,33 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
   cacheDuration: dayjs.duration(5, "minutes"),
 });
 
-const responseSchema = z.any();
+const responseSchema = z
+  .object({
+    chart: z.object({
+      error: z.object({
+        code: z.number(),
+        description: z.string(),
+      }),
+    }),
+  })
+  .or(
+    z.object({
+      chart: z.object({
+        result: z.array(
+          z.object({
+            indicators: z.object({
+              quote: z.array(
+                z.object({
+                  close: z.array(z.number()),
+                }),
+              ),
+            }),
+            meta: z.object({
+              symbol: z.string(),
+              shortName: z.string(),
+            }),
+          }),
+        ),
+      }),
+    }),
+  );

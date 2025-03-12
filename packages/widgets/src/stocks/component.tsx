@@ -9,6 +9,14 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 
+function round(value: number) {
+  return Math.round(value * 100) / 100;
+}
+
+function calculateChange(valueA: number, valueB: number) {
+  return 100 * ((valueA - valueB) / valueA);
+}
+
 export default function StockPriceWidget({ options, width, height }: WidgetComponentProps<"stockPrice">) {
   const t = useScopedI18n("widget.stockPrice");
   const theme = useMantineTheme();
@@ -17,10 +25,7 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
   const stockData = data.chart.result[0];
 
   const stockValues = Object.values(stockData.indicators.quote[0].close);
-  const stockValuesChange = (
-    100 *
-    ((stockValues[stockValues.length - 1] - stockValues[0]) / stockValues[stockValues.length - 1])
-  ).toFixed(2);
+  const stockValuesChange = round(calculateChange(stockValues[stockValues.length - 1], stockValues[0]));
 
   const stockValuesMin = Math.min(...stockValues);
   const stockGraphValues = stockValues.map((value) => value - stockValuesMin + 50);
@@ -52,7 +57,7 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
       )}
 
       <Title pos="absolute" bottom={10} right={10} order={width > 280 ? 1 : 2} fw={700}>
-        {stockValues[stockValues.length - 1].toFixed(2)}
+        {round(stockValues[stockValues.length - 1])}
       </Title>
 
       <Stack pos="absolute" top={10} left={10}>
