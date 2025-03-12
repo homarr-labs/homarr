@@ -3594,7 +3594,7 @@
         },
         "delete": {
           "title": "Delete search engine",
-          "message": "Are you sure you want to delete the search engine '{name}'?",
+          "message": "Are you sure you want to delete the search engine {name}?",
           "notification": {
             "success": {
               "title": "Search engine deleted",

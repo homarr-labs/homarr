@@ -79,7 +79,7 @@ export function NamespacesTable(initialData: NamespacesTableComponentProps) {
     positionGlobalFilter: "right",
     initialState: { density: "xs", showGlobalFilter: true },
     mantineSearchTextInputProps: {
-      placeholder: tNamespaces("table.search", { count: data.length }),
+      placeholder: tNamespaces("table.search", { count: String(data.length) }),
       style: { minWidth: 300 },
       autoFocus: true,
     },
