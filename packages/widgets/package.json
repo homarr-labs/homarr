@@ -70,7 +70,7 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "recharts": "2",
-    "video.js": "^8.21.0",
+    "video.js": "^8.22.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

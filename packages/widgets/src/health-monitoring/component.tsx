@@ -31,30 +31,20 @@ export default function HealthMonitoringWidget(props: WidgetComponentProps<"heal
   }
 
   return (
-    <ScrollArea
-      h="100%"
-      styles={{
-        viewport: {
-          '& div[style="min-width: 100%"]': {
-            display: "flex !important",
-            height: "100%",
-          },
-        },
-      }}
-    >
+    <ScrollArea h="100%">
       <Tabs defaultValue={props.options.defaultTab} variant="outline">
         <Tabs.List grow>
-          <Tabs.Tab value="system">
+          <Tabs.Tab value="system" fz="xs">
             <b>{t("widget.healthMonitoring.tab.system")}</b>
           </Tabs.Tab>
-          <Tabs.Tab value="cluster">
+          <Tabs.Tab value="cluster" fz="xs">
             <b>{t("widget.healthMonitoring.tab.cluster")}</b>
           </Tabs.Tab>
         </Tabs.List>
-        <Tabs.Panel mt="lg" value="system">
+        <Tabs.Panel value="system">
           <SystemHealthMonitoring {...props} integrationIds={otherIntegrationIds} />
         </Tabs.Panel>
-        <Tabs.Panel mt="lg" value="cluster">
+        <Tabs.Panel value="cluster">
           <ClusterHealthMonitoring integrationId={proxmoxIntegrationId} {...props} />
         </Tabs.Panel>
       </Tabs>
