@@ -1893,8 +1893,8 @@ importers:
         specifier: 15.1.7
         version: 15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.1)
       next-intl:
-        specifier: 4.0.0
-        version: 4.0.0(next@15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.1))(react@19.0.0)(typescript@5.8.2)
+        specifier: 4.0.1
+        version: 4.0.1(next@15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.1))(react@19.0.0)(typescript@5.8.2)
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -7853,8 +7853,8 @@ packages:
       nodemailer:
         optional: true
 
-  next-intl@4.0.0:
-    resolution: {integrity: sha512-l+I1PLAFrjzYzrc340n1vssDJ7pP1gtYT1jOWlRWIHkyrPdyosEIHPC+LiqJP4vWvWtCZzzqTn9AaBF+x5Ja8g==}
+  next-intl@4.0.1:
+    resolution: {integrity: sha512-6lqw8vv3GsjQ13lxEfgjBj7GW6kdmotiqRzDH4gQ18CGhvCwbJoj1kc5szViZH0iQZ0g8GJUque2xt7WOwqT9Q==}
     peerDependencies:
       next: ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc <19.0.0 || ^19.0.0
@@ -9872,10 +9872,6 @@ packages:
     resolution: {integrity: sha512-zICwjrDrcrUE0pyyJc1I2QzBkLM8FINsgOrt6WjA+BgajVq9Nxu2PbFFXUrAggLfDXlZGZBVZYw7WNV5KiBiBA==}
     engines: {node: '>=14.0'}
 
-  undici@7.4.0:
-    resolution: {integrity: sha512-PUQM3/es3noM24oUn10u3kNNap0AbxESOmnssmW+dOi9yGwlUSi5nTNYl3bNbTkWOF8YZDkx2tCmj9OtQ3iGGw==}
-    engines: {node: '>=20.18.1'}
-
   undici@7.5.0:
     resolution: {integrity: sha512-NFQG741e8mJ0fLQk90xKxFdaSM7z4+IQpAgsFI36bCDY9Z2+aXXZjVy2uUksMouWfMI9+w5ejOq5zYYTBCQJDQ==}
     engines: {node: '>=20.18.1'}
@@ -9988,8 +9984,8 @@ packages:
     peerDependencies:
       react: '>=16.13'
 
-  use-intl@4.0.0:
-    resolution: {integrity: sha512-/fmC7haEMVNa0isXGRGUir56fD4I9LRnOgbeBmji+bow6U8pE7WD+2X2sjqh+0h3yJ0T36PA6JXZ6PlVeRyt8w==}
+  use-intl@4.0.1:
+    resolution: {integrity: sha512-UdwGqRI6M0asJK3E0+GtwJI8zrwr2yRQLtcHALMlDwUUTlGZNSCLtr2G/E4aoDfXiODbSBQwQFNco0iItp1mIA==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || >=19.0.0-rc <19.0.0 || ^19.0.0
 
@@ -16514,13 +16510,13 @@ snapshots:
       next: 15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.1)
       react: 19.0.0
 
-  next-intl@4.0.0(next@15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.1))(react@19.0.0)(typescript@5.8.2):
+  next-intl@4.0.1(next@15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.1))(react@19.0.0)(typescript@5.8.2):
     dependencies:
       '@formatjs/intl-localematcher': 0.5.5
       negotiator: 1.0.0
       next: 15.1.7(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.85.1)
       react: 19.0.0
-      use-intl: 4.0.0(react@19.0.0)
+      use-intl: 4.0.1(react@19.0.0)
     optionalDependencies:
       typescript: 5.8.2
 
@@ -18834,8 +18830,6 @@ snapshots:
     dependencies:
       '@fastify/busboy': 2.1.1
 
-  undici@7.4.0: {}
-
   undici@7.5.0: {}
 
   unenv@1.10.0:
@@ -18951,7 +18945,7 @@ snapshots:
       dequal: 2.0.3
       react: 19.0.0
 
-  use-intl@4.0.0(react@19.0.0):
+  use-intl@4.0.1(react@19.0.0):
     dependencies:
       '@formatjs/fast-memoize': 2.2.1
       '@schummar/icu-type-parser': 1.21.5
