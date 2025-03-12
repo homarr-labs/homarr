@@ -25,8 +25,6 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
   const stockValuesMin = Math.min(...stockValues);
   const stockGraphValues = stockValues.map((value) => value - stockValuesMin + 50);
 
-  console.log(options.stock, width, height);
-
   return (
     <Flex h="100%" w="100%">
       <Sparkline
