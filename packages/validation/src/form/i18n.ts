@@ -12,16 +12,8 @@ export const zodErrorMap = <TFunction extends TranslationFunction>(t: TFunction)
       };
     }
     return {
-      message: t(error.key ? `common.zod.${error.key}` : "common.zod.errors.default", {
-        endsWith: "",
-        expected: "",
-        includes: "",
-        startsWith: "",
-        maxSize: "0",
-        ...error.params,
-        maximum: error.params !== undefined && "maximum" in error.params ? String(error.params.maximum) : "0",
-        minimum: error.params !== undefined && "minimum" in error.params ? String(error.params.minimum) : "0",
-      }),
+      // use never to make ts happy
+      message: t(error.key ? `common.zod.${error.key}` : "common.zod.errors.default", (error.params ?? {}) as never),
     };
   };
 };
