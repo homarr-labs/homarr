@@ -65,7 +65,7 @@ export function SecretsTable(initialData: SecretsTableComponentProps) {
     positionGlobalFilter: "right",
     initialState: { density: "xs", showGlobalFilter: true },
     mantineSearchTextInputProps: {
-      placeholder: tSecrets("table.search", { count: data.length }),
+      placeholder: tSecrets("table.search", { count: String(data.length) }),
       style: { minWidth: 300 },
       autoFocus: true,
     },

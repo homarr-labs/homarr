@@ -140,7 +140,7 @@ export const SystemHealthMonitoring = ({
                     <List.Item className="health-monitoring-information-memory" icon={<IconBrain size={30} />}>
                       {t("widget.healthMonitoring.popover.memoryAvailable", {
                         memoryAvailable: memoryUsage.memFree.GB,
-                        percent: memoryUsage.memFree.percent,
+                        percent: String(memoryUsage.memFree.percent),
                       })}
                     </List.Item>
                     <List.Item className="health-monitoring-information-version" icon={<IconVersions size={30} />}>
@@ -159,10 +159,11 @@ export const SystemHealthMonitoring = ({
                         {t("widget.healthMonitoring.popover.minute")} {healthInfo.loadAverage["1min"]}%
                       </List.Item>
                       <List.Item className="health-monitoring-information-load-average-5min">
-                        {t("widget.healthMonitoring.popover.minutes", { count: 5 })} {healthInfo.loadAverage["5min"]}%
+                        {t("widget.healthMonitoring.popover.minutes", { count: "5" })} {healthInfo.loadAverage["5min"]}%
                       </List.Item>
                       <List.Item className="health-monitoring-information-load-average-15min">
-                        {t("widget.healthMonitoring.popover.minutes", { count: 15 })} {healthInfo.loadAverage["15min"]}%
+                        {t("widget.healthMonitoring.popover.minutes", { count: "15" })}{" "}
+                        {healthInfo.loadAverage["15min"]}%
                       </List.Item>
                     </List>
                   </List>
@@ -274,7 +275,12 @@ export const formatUptime = (uptimeInSeconds: number, t: TranslationFunction) =>
   const hours = uptimeDuration.hours();
   const minutes = uptimeDuration.minutes();
 
-  return t("widget.healthMonitoring.popover.uptime", { months, days, hours, minutes });
+  return t("widget.healthMonitoring.popover.uptime", {
+    months: String(months),
+    days: String(days),
+    hours: String(hours),
+    minutes: String(minutes),
+  });
 };
 
 export const progressColor = (percentage: number) => {

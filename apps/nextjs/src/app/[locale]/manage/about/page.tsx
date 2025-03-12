@@ -80,7 +80,7 @@ export default async function AboutPage() {
               <Text>{t("accordion.contributors.title")}</Text>
               <Text size="sm" c="dimmed">
                 {t("accordion.contributors.subtitle", {
-                  count: githubContributors.length,
+                  count: String(githubContributors.length),
                 })}
               </Text>
             </Stack>
@@ -104,7 +104,7 @@ export default async function AboutPage() {
               <Text>{t("accordion.translators.title")}</Text>
               <Text size="sm" c="dimmed">
                 {t("accordion.translators.subtitle", {
-                  count: crowdinContributors.length,
+                  count: String(crowdinContributors.length),
                 })}
               </Text>
             </Stack>
@@ -128,7 +128,7 @@ export default async function AboutPage() {
               <Text>{t("accordion.libraries.title")}</Text>
               <Text size="sm" c="dimmed">
                 {t("accordion.libraries.subtitle", {
-                  count: Object.keys(attributes.dependencies).length,
+                  count: String(Object.keys(attributes.dependencies).length),
                 })}
               </Text>
             </Stack>

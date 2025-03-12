@@ -105,7 +105,7 @@ export function NodesTable(initialData: NodesListComponentProps) {
     positionGlobalFilter: "right",
     initialState: { density: "xs", showGlobalFilter: true },
     mantineSearchTextInputProps: {
-      placeholder: tNodes("table.search", { count: data.length }),
+      placeholder: tNodes("table.search", { count: String(data.length) }),
       style: { minWidth: 300 },
       autoFocus: true,
     },
