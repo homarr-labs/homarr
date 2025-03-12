@@ -94,8 +94,12 @@ export const WeatherDescription = ({
         <List.Item icon={<IconTemperatureMinus size={15} />}>{`${tCommon("information.min")}: ${minTemp}`}</List.Item>
         <List.Item icon={<IconSun size={15} />}>{`${t("dailyForecast.sunrise")}: ${sunrise}`}</List.Item>
         <List.Item icon={<IconMoon size={15} />}>{`${t("dailyForecast.sunset")}: ${sunset}`}</List.Item>
-        <List.Item icon={<IconWind size={15} />}>{t("dailyForecast.maxWindSpeed", { maxWindSpeed })}</List.Item>
-        <List.Item icon={<IconWind size={15} />}>{t("dailyForecast.maxWindGusts", { maxWindGusts })}</List.Item>
+        {maxWindSpeed !== undefined && (
+          <List.Item icon={<IconWind size={15} />}>{t("dailyForecast.maxWindSpeed", { maxWindSpeed })}</List.Item>
+        )}
+        {maxWindGusts !== undefined && (
+          <List.Item icon={<IconWind size={15} />}>{t("dailyForecast.maxWindGusts", { maxWindGusts })}</List.Item>
+        )}
       </List>
     </Stack>
   );
