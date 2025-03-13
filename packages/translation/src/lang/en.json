@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Create Search Engine",
         "description": "Integration \"{kind}\" can be used with the search engines. Check this to automatically configure the search engine."
+      },
+      "createApp": {
+        "label": "Create app",
+        "description": "Create an app with the same name and icon as the integration. Leave the input field below empty to create the app with the integration URL."
+      },
+      "appHref": {
+        "placeholder": "Custom app URL"
       }
     },
     "action": {
