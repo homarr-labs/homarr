@@ -1462,11 +1462,8 @@
             "1m": {
               "label": "1 Minute"
             },
-            "2m": {
-              "label": "2 Minutes"
-            },
             "5m": {
-              "label": "5 Minutes"
+              "label": "2 Minutes"
             },
             "15m": {
               "label": "15 Minutes"
@@ -1474,8 +1471,11 @@
             "30m": {
               "label": "30 Minutes"
             },
-            "60m": {
+            "1h": {
               "label": "1 Hour"
+            },
+            "6h": {
+              "label": "6 Hours"
             },
             "1d": {
               "label": "1 Day"

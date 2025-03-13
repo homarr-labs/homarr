@@ -14,6 +14,10 @@ function round(value: number) {
 }
 
 function calculateChange(valueA: number, valueB: number) {
+  return valueA - valueB;
+}
+
+function calculateChangePercentage(valueA: number, valueB: number) {
   return 100 * ((valueA - valueB) / valueA);
 }
 
@@ -25,7 +29,11 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
   const stockData = data.chart.result[0];
 
   const stockValues = Object.values(stockData.indicators.quote[0].close);
+
   const stockValuesChange = round(calculateChange(stockValues[stockValues.length - 1], stockValues[0]));
+  const stockValuesChangePercentage = round(
+    calculateChangePercentage(stockValues[stockValues.length - 1], stockValues[0]),
+  );
 
   const stockValuesMin = Math.min(...stockValues);
   const stockGraphValues = stockValues.map((value) => value - stockValuesMin + 50);
@@ -44,10 +52,30 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
         strokeWidth={2.5}
       />
 
-      {width > 280 && (
-        <Text pos="absolute" top={10} right={10} size="xl" fw={700}>
-          {stockValuesChange}%
+      <Stack pos="absolute" top={10} left={10}>
+        <Text size="xl" fw={700} lh="0.715">
+          {stockValuesChange > 0 ? (
+            <IconTrendingUp size="1.5rem" color={theme.colors.green[7]} />
+          ) : (
+            <IconTrendingDown size="1.5rem" color={theme.colors.red[7]} />
+          )}
+          {stockData.meta.symbol}
         </Text>
+        {width > 280 && height > 280 && (
+          <Text size="md" lh="1">
+            {stockData.meta.shortName}
+          </Text>
+        )}
+      </Stack>
+
+      <Title pos="absolute" bottom={10} right={10} order={width > 280 ? 1 : 2} fw={700}>
+        {round(stockValues[stockValues.length - 1])}
+      </Title>
+
+      {width > 280 && (
+          <Text pos="absolute" top={10} right={10} size="xl" fw={700}>
+            {stockValuesChange} ({stockValuesChangePercentage}%)
+          </Text>
       )}
 
       {width > 280 && (
@@ -55,10 +83,6 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
           {t(`option.timeRange.option.${options.timeRange}.label`)}
         </Text>
       )}
-
-      <Title pos="absolute" bottom={10} right={10} order={width > 280 ? 1 : 2} fw={700}>
-        {round(stockValues[stockValues.length - 1])}
-      </Title>
 
       <Stack pos="absolute" top={10} left={10}>
         <Text size="xl" fw={700} lh="0.715">
