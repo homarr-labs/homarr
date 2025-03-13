@@ -579,8 +579,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../validation
       '@kubernetes/client-node':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.1.0
+        version: 1.1.0
       '@trpc/client':
         specifier: next
         version: 11.0.0-rc.828(@trpc/server@11.0.0-rc.828(typescript@5.8.2))(typescript@5.8.2)
@@ -3503,8 +3503,8 @@ packages:
     peerDependencies:
       jsep: ^0.4.0||^1.0.0
 
-  '@kubernetes/client-node@1.0.0':
-    resolution: {integrity: sha512-a8NSvFDSHKFZ0sR1hbPSf8IDFNJwctEU5RodSCNiq/moRXWmrdmqhb1RRQzF+l+TSBaDgHw3YsYNxxE92STBzw==}
+  '@kubernetes/client-node@1.1.0':
+    resolution: {integrity: sha512-6Sp7ekNfMmDH2HvEQLb8vuPu+mX0xNkPElQLX5N/mjxeMimFWfecZeiFfIaG+Q9S1v+snZfTNJjvpOwNUVO7RA==}
 
   '@libsql/client-wasm@0.14.0':
     resolution: {integrity: sha512-gB/jtz0xuwrqAHApBv9e9JSew2030Fhj2edyZ83InZ4yPj/Q2LTUlEhaspEYT0T0xsAGqPy38uGrmq/OGS+DdQ==}
@@ -6865,6 +6865,10 @@ packages:
   hosted-git-info@8.0.2:
     resolution: {integrity: sha512-sYKnA7eGln5ov8T8gnYlkSOxFJvywzEx9BueN6xo/GKO8PGiI6uK6xx+DIGe45T3bdVjLAQDQW1aicT8z8JwQg==}
     engines: {node: ^18.17.0 || >=20.5.0}
+
+  hpagent@1.2.0:
+    resolution: {integrity: sha512-A91dYTeIB6NoXG+PxTQpCCDDnfHsW9kc06Lvpu1TEe9gnd6ZFeiBoRO9JvzEv6xK7EX97/dUE8g/vBMTqTS3CA==}
+    engines: {node: '>=14'}
 
   html-encoding-sniffer@4.0.0:
     resolution: {integrity: sha512-Y22oTqIU4uuPgEemfz7NDJz6OeKf12Lsu+QC+s3BVpda64lTiMYCyGwg5ki4vFxkMwQdeZDl2adZoqUgdFuTgQ==}
@@ -11378,7 +11382,7 @@ snapshots:
     dependencies:
       jsep: 1.4.0
 
-  '@kubernetes/client-node@1.0.0':
+  '@kubernetes/client-node@1.1.0':
     dependencies:
       '@types/js-yaml': 4.0.9
       '@types/node': 22.13.10
@@ -11387,20 +11391,22 @@ snapshots:
       '@types/tar': 6.1.13
       '@types/ws': 8.18.0
       form-data: 4.0.1
+      hpagent: 1.2.0
       isomorphic-ws: 5.0.0(ws@8.18.1)
       js-yaml: 4.1.0
       jsonpath-plus: 10.3.0
       node-fetch: 2.7.0
       openid-client: 6.3.3
       rfc4648: 1.5.3
+      socks-proxy-agent: 8.0.4
       stream-buffers: 3.0.3
       tar: 7.4.3
       tmp-promise: 3.0.3
-      tslib: 2.8.1
       ws: 8.18.1
     transitivePeerDependencies:
       - bufferutil
       - encoding
+      - supports-color
       - utf-8-validate
 
   '@libsql/client-wasm@0.14.0':
@@ -15549,6 +15555,8 @@ snapshots:
   hosted-git-info@8.0.2:
     dependencies:
       lru-cache: 10.4.3
+
+  hpagent@1.2.0: {}
 
   html-encoding-sniffer@4.0.0:
     dependencies:
