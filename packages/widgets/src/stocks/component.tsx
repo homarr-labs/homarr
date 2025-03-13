@@ -71,9 +71,9 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
       </Title>
 
       {width > 280 && (
-          <Text pos="absolute" top={10} right={10} size="xl" fw={700}>
-            {stockValuesChange} ({stockValuesChangePercentage}%)
-          </Text>
+        <Text pos="absolute" top={10} right={10} size="xl" fw={700}>
+          {stockValuesChange} ({stockValuesChangePercentage}%)
+        </Text>
       )}
 
       {width > 280 && (

@@ -17,7 +17,7 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
     if (data.error) {
       throw new Error(data.error.description);
     }
-    
+
     return data.chart.result[0];
   },
   cacheDuration: dayjs.duration(5, "minutes"),
