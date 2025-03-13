@@ -40,7 +40,7 @@
     "@homarr/request-handler": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@kubernetes/client-node": "^1.0.0",
+    "@kubernetes/client-node": "^1.1.0",
     "@trpc/client": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
