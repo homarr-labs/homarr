@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import { z } from "zod";
 
 import { fetchWithTimeout } from "@homarr/common";
 
