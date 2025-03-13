@@ -208,8 +208,8 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                   <Stack gap={0}>
                     <Group justify="space-between" align="center" wrap="nowrap">
                       <Text>{integration.name}</Text>
-                      {hasFullAccess ||
-                        (integration.permissions.hasFullAccess && (
+                      {(hasFullAccess ||
+                        integration.permissions.hasFullAccess) && (
                           <ActionIconGroup>
                             <ActionIcon
                               component={Link}
@@ -222,7 +222,7 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                             </ActionIcon>
                             <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
                           </ActionIconGroup>
-                        ))}
+                        )}
                     </Group>
                     <Anchor href={integration.url} target="_blank" rel="noreferrer" size="sm">
                       {integration.url}
