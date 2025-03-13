@@ -2,9 +2,8 @@ import { z } from "zod";
 
 import { fetchStockPriceHandler } from "@homarr/request-handler/stock-price";
 
-import { createTRPCRouter, publicProcedure } from "../../trpc";
-
 import { stockPriceTimeFrames } from "../../../../widgets/src/stocks";
+import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const stockPriceInputSchema = z.object({
   stock: z.string().nonempty(),
