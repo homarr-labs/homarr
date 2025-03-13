@@ -3,8 +3,13 @@ import { IconBuildingBank } from "@tabler/icons-react";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
-const timeRangeOptions = ["1d", "5d", "1mo", "6mo", "ytd", "1y", "5y", "10y", "max"] as const;
-const timeIntervalOptions = ["1m", "5m", "15m", "30m", "1h", "6h", "1d", "5d", "1wk", "1mo"] as const;
+export const stockPriceTimeFrames = {
+  range: ["1d", "5d", "1mo", "6mo", "ytd", "1y", "5y", "10y", "max"] as const,
+  interval: ["1m", "5m", "15m", "30m", "1h", "6h", "1d", "5d", "1wk", "1mo"] as const
+}
+
+const timeRangeOptions = stockPriceTimeFrames.range;
+const timeIntervalOptions = stockPriceTimeFrames.interval;
 
 export const { definition, componentLoader } = createWidgetDefinition("stockPrice", {
   icon: IconBuildingBank,

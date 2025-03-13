@@ -72,7 +72,7 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
 
       {width > 280 && (
         <Text pos="absolute" top={10} right={10} size="xl" fw={700}>
-          {stockValuesChange} ({stockValuesChangePercentage}%)
+          {Math.abs(stockValuesChange)} ({Math.abs(stockValuesChangePercentage)}%)
         </Text>
       )}
 
