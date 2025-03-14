@@ -28,7 +28,8 @@ export const DeleteUserButton = ({ user }: DeleteUserButtonProps) => {
     () =>
       openConfirmModal({
         title: t("user.action.delete.label"),
-        children: t("user.action.delete.confirm", { username: user.name }),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        children: t("user.action.delete.confirm", { username: user.name! }),
         // eslint-disable-next-line no-restricted-syntax
         async onConfirm() {
           await mutateUserDeletionAsync({

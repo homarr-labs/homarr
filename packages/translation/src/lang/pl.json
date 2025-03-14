@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Utwórz wyszukiwarkę",
         "description": "Integracja \"{kind}\" może być używana z wyszukiwarkami. Zaznacz to, aby automatycznie skonfigurować wyszukiwarkę."
+      },
+      "createApp": {
+        "label": "",
+        "description": ""
+      },
+      "appHref": {
+        "placeholder": ""
       }
     },
     "action": {

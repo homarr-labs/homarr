@@ -75,7 +75,7 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
         {options.showCurrentWindSpeed && (
           <Group className="weather-current-wind-speed-group" wrap="nowrap" gap="xs">
             <IconWind size={16} />
-            <Text fz={16}>{t("currentWindSpeed", { currentWindSpeed: weather.current.windspeed })}</Text>
+            <Text fz={16}>{t("currentWindSpeed", { currentWindSpeed: String(weather.current.windspeed) })}</Text>
           </Group>
         )}
         <Group className="weather-max-min-temp-group" wrap="nowrap" gap="sm">

@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "創建搜尋引擎",
         "description": "集成 {kind} 可以與搜尋引擎共同使用，勾選此選項可自動設定搜尋引擎"
+      },
+      "createApp": {
+        "label": "",
+        "description": ""
+      },
+      "appHref": {
+        "placeholder": ""
       }
     },
     "action": {
@@ -1072,7 +1079,7 @@
           "label": "自定義 CSS html"
         },
         "borderColor": {
-          "label": ""
+          "label": "邊框顏色"
         }
       }
     },
@@ -1129,12 +1136,12 @@
               "label": "網格"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "網格水平間距"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "隱藏標題"
         },
         "hideIcon": {
           "label": "隱藏 icons"
@@ -1436,7 +1443,7 @@
           "label": "終止於"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "顯示未監控項目"
         }
       }
     },
@@ -1668,7 +1675,7 @@
       "description": "顯示當前多媒體伺服器的串流",
       "option": {},
       "items": {
-        "currentlyPlaying": "",
+        "currentlyPlaying": "目前播放中",
         "user": "使用者",
         "name": "名稱",
         "id": "ID"
@@ -2325,7 +2332,7 @@
           "label": "工具",
           "items": {
             "docker": "Docker",
-            "kubernetes": "",
+            "kubernetes": "Kubernetes",
             "logs": "Logs",
             "api": "API",
             "certificates": "憑證",
@@ -2874,242 +2881,242 @@
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
-      "label": "",
-      "providers": "",
-      "version": "",
-      "architecture": "",
+      "title": "叢集儀表板",
+      "label": "叢集",
+      "providers": "提供者",
+      "version": "版本",
+      "architecture": "架構",
       "capacity": {
-        "title": "",
+        "title": "容量",
         "resource": {
-          "reserved": "",
-          "used": ""
+          "reserved": "已保留",
+          "used": "已使用"
         }
       },
       "resources": {
-        "title": "",
-        "nodes": "",
-        "namespaces": "",
-        "ingresses": "",
-        "services": "",
-        "pods": "",
-        "configmaps": "",
-        "secrets": "",
-        "volumes": ""
+        "title": "資源",
+        "nodes": "節點",
+        "namespaces": "命名空間",
+        "ingresses": "進入點",
+        "services": "服務",
+        "pods": "容器組",
+        "configmaps": "配置映射",
+        "secrets": "密鑰",
+        "volumes": "卷"
       }
     },
     "nodes": {
-      "label": "",
+      "label": "節點",
       "field": {
         "name": {
-          "label": ""
+          "label": "名稱"
         },
         "state": {
-          "label": "",
+          "label": "狀態",
           "option": {
-            "ready": "",
-            "NotReady": ""
+            "ready": "準備",
+            "NotReady": "未準備"
           }
         },
         "cpu": {
-          "label": ""
+          "label": "處理器"
         },
         "memory": {
-          "label": ""
+          "label": "記憶體"
         },
         "pods": {
-          "label": ""
+          "label": "容器組"
         },
         "operatingSystem": {
-          "label": ""
+          "label": "系統"
         },
         "architecture": {
-          "label": ""
+          "label": "架構"
         },
         "kubernetesVersion": {
-          "label": ""
+          "label": "Kubernetes 版本"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "已創建"
         }
       },
       "table": {
-        "search": ""
+        "search": "搜尋 {count} 節點"
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "命名空間",
       "field": {
         "name": {
-          "label": ""
+          "label": "名稱"
         },
         "state": {
-          "label": "",
+          "label": "狀態",
           "option": {
-            "active": "",
-            "terminating": ""
+            "active": "活動中",
+            "terminating": "終止中"
           }
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "已創建"
         }
       },
       "table": {
-        "search": ""
+        "search": "搜尋 {count} 命名空間"
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "進入點",
       "field": {
         "name": {
-          "label": ""
+          "label": "名稱"
         },
         "namespace": {
-          "label": ""
+          "label": "命名空間"
         },
         "className": {
-          "label": ""
+          "label": "類別名稱"
         },
         "rulesAndPaths": {
-          "label": ""
+          "label": "規則與路徑"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "已創建"
         }
       },
       "table": {
-        "search": ""
+        "search": "搜尋 {count} 進入點"
       }
     },
     "services": {
-      "label": "",
+      "label": "服務",
       "field": {
         "name": {
-          "label": ""
+          "label": "名稱"
         },
         "namespace": {
-          "label": ""
+          "label": "命名空間"
         },
         "type": {
-          "label": ""
+          "label": "類別"
         },
         "ports": {
-          "label": ""
+          "label": "Ports"
         },
         "targetPorts": {
-          "label": ""
+          "label": "目標 Ports"
         },
         "clusterIP": {
-          "label": ""
+          "label": "叢集 IP"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "已創建"
         }
       },
       "table": {
-        "search": ""
+        "search": "搜尋 {count} 服務"
       }
     },
     "pods": {
-      "label": "",
+      "label": "容器組",
       "field": {
         "name": {
-          "label": ""
+          "label": "名稱"
         },
         "namespace": {
-          "label": ""
+          "label": "命名空間"
         },
         "image": {
-          "label": ""
+          "label": "Image"
         },
         "applicationType": {
-          "label": ""
+          "label": "應用程式類別"
         },
         "status": {
-          "label": ""
+          "label": "狀態"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "已創建"
         }
       },
       "table": {
-        "search": ""
+        "search": "搜尋 {count} 容器組"
       }
     },
     "secrets": {
-      "label": "",
+      "label": "密鑰",
       "field": {
         "name": {
-          "label": ""
+          "label": "名稱"
         },
         "namespace": {
-          "label": ""
+          "label": "命名空間"
         },
         "type": {
-          "label": ""
+          "label": "類別"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "已創建"
         }
       },
       "table": {
-        "search": ""
+        "search": "搜尋 {count} 密鑰"
       }
     },
     "configmaps": {
-      "label": "",
+      "label": "配置映射",
       "field": {
         "name": {
-          "label": ""
+          "label": "名稱"
         },
         "namespace": {
-          "label": ""
+          "label": "命名空間"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "已創建"
         }
       },
       "table": {
-        "search": ""
+        "search": "搜尋 {count} 配置映射"
       }
     },
     "volumes": {
-      "label": "",
+      "label": "卷",
       "field": {
         "name": {
-          "label": ""
+          "label": "名稱"
         },
         "namespace": {
-          "label": ""
+          "label": "命名空間"
         },
         "accessModes": {
-          "label": ""
+          "label": "存取模式"
         },
         "storage": {
-          "label": ""
+          "label": "儲存容量"
         },
         "storageClassName": {
-          "label": ""
+          "label": "儲存類別名稱"
         },
         "volumeMode": {
-          "label": ""
+          "label": "卷模式"
         },
         "volumeName": {
-          "label": ""
+          "label": "卷名稱"
         },
         "status": {
-          "label": ""
+          "label": "狀態"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "已創建"
         }
       },
       "table": {
-        "search": ""
+        "search": "搜尋 {count} 卷"
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "無法擷取 Kubernetes 資料"
     }
   },
   "permission": {
@@ -3198,30 +3205,30 @@
           "label": "Docker"
         },
         "kubernetes": {
-          "label": "",
+          "label": "Kubernetes",
           "nodes": {
-            "label": ""
+            "label": "節點"
           },
           "namespaces": {
-            "label": ""
+            "label": "命名空間"
           },
           "ingresses": {
-            "label": ""
+            "label": "進入點"
           },
           "services": {
-            "label": ""
+            "label": "服務"
           },
           "pods": {
-            "label": ""
+            "label": "容器組"
           },
           "configmaps": {
-            "label": ""
+            "label": "配置映射"
           },
           "secrets": {
-            "label": ""
+            "label": "密鑰"
           },
           "volumes": {
-            "label": ""
+            "label": "卷"
           }
         },
         "logs": {
