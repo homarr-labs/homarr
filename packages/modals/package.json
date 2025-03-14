@@ -24,8 +24,8 @@
   "dependencies": {
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
-    "@mantine/core": "^7.17.1",
-    "@mantine/hooks": "^7.17.1",
+    "@mantine/core": "^7.17.2",
+    "@mantine/hooks": "^7.17.2",
     "react": "19.0.0"
   },
   "devDependencies": {
