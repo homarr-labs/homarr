@@ -60,7 +60,7 @@ const baseStyle: MantineStyleProp = {
 };
 
 const columns = (
-  t: ReturnType<typeof useScopedI18n>,
+  t: ReturnType<typeof useScopedI18n<"docker">>,
 ): MRT_ColumnDef<RouterOutputs["docker"]["getContainersStats"]["data"]["containers"][number]>[] => [
   {
     accessorKey: "name",
