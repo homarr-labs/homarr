@@ -12,9 +12,9 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
     const response = await fetchWithTimeout(
       `https://query1.finance.yahoo.com/v8/finance/chart/${input.stock}?range=${input.timeRange}&interval=${input.timeInterval}`,
     );
-    const data = (await response.json()) as object;
+    const data = dataSchema.parse(await response.json());
 
-    if (data.error) {
+    if ("error" in data) {
       throw new Error(data.error.description);
     }
 
@@ -36,3 +36,17 @@ const responseSchema = z.object({
     shortName: z.string(),
   }),
 });
+
+const dataSchema = z
+  .object({
+    error: z.object({
+      description: z.string(),
+    }),
+  })
+  .or(
+    z.object({
+      chart: z.object({
+        result: z.array(responseSchema),
+      }),
+    }),
+  );
