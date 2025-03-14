@@ -1431,7 +1431,7 @@
               "label": "1 Day"
             },
             "5d": {
-              "label": "1 Day"
+              "label": "5 Day"
             },
             "1mo": {
               "label": "1 Month"
@@ -1459,11 +1459,8 @@
         "timeInterval": {
           "label": "Time Interval",
           "option": {
-            "1m": {
-              "label": "1 Minute"
-            },
             "5m": {
-              "label": "2 Minutes"
+              "label": "5 Minutes"
             },
             "15m": {
               "label": "15 Minutes"
@@ -1473,9 +1470,6 @@
             },
             "1h": {
               "label": "1 Hour"
-            },
-            "6h": {
-              "label": "6 Hours"
             },
             "1d": {
               "label": "1 Day"

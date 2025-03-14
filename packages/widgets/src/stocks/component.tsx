@@ -24,7 +24,7 @@ function calculateChangePercentage(valueA: number, valueB: number) {
 export default function StockPriceWidget({ options, width, height }: WidgetComponentProps<"stockPrice">) {
   const t = useScopedI18n("widget.stockPrice");
   const theme = useMantineTheme();
-  const [{ data }] = clientApi.widget.stockPrice.getPrices.useSuspenseQuery(options);
+  const [{ data }] = clientApi.widget.stockPrice.getPriceHistory.useSuspenseQuery(options);
 
   const stockValues = Object.values(data.indicators.quote[0].close);
 

@@ -7,17 +7,17 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const stockPriceInputSchema = z.object({
   stock: z.string().nonempty(),
-  timeRange: z.enum([...stockPriceTimeFrames.range]),
-  timeInterval: z.enum([...stockPriceTimeFrames.interval]),
+  timeRange: z.enum(stockPriceTimeFrames.range),
+  timeInterval: z.enum(stockPriceTimeFrames.interval),
 });
 
 export const stockPriceRouter = createTRPCRouter({
-  getPrices: publicProcedure.input(stockPriceInputSchema).query(async ({ input }) => {
+  getPriceHistory: publicProcedure.input(stockPriceInputSchema).query(async ({ input }) => {
     const innerHandler = fetchStockPriceHandler.handler({
       stock: input.stock,
       timeRange: input.timeRange,
       timeInterval: input.timeInterval,
     });
-    return await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: true });
+    return await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
   }),
 });
