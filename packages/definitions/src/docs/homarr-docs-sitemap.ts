@@ -169,6 +169,7 @@ export type HomarrDocumentationPath =
   | "/docs/next/getting-started/installation/helm"
   | "/docs/next/getting-started/installation/home-assistant"
   | "/docs/next/getting-started/installation/portainer"
+  | "/docs/next/getting-started/installation/proxmox"
   | "/docs/next/getting-started/installation/qnap"
   | "/docs/next/getting-started/installation/railway"
   | "/docs/next/getting-started/installation/saltbox"
