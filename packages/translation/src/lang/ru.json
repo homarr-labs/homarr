@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Создать поисковую систему",
         "description": "Интеграцию \"{kind}\" можно использовать с поисковыми системами. Включите эту опцию для автоматической настройки поисковой системы."
+      },
+      "createApp": {
+        "label": "",
+        "description": ""
+      },
+      "appHref": {
+        "placeholder": ""
       }
     },
     "action": {

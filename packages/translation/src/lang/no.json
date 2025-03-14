@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Opprett søkemotor",
         "description": "Integrasjon \"{kind}\" kan brukes med søkemotorene. Huk av her for å automatisk konfigurere søkemotor."
+      },
+      "createApp": {
+        "label": "",
+        "description": ""
+      },
+      "appHref": {
+        "placeholder": ""
       }
     },
     "action": {
