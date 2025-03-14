@@ -12,7 +12,7 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
     const response = await fetchWithTimeout(
       `https://query1.finance.yahoo.com/v8/finance/chart/${input.stock}?range=${input.timeRange}&interval=${input.timeInterval}`,
     );
-    const data = await response.json() as object;
+    const data = (await response.json()) as object;
 
     if (data.error) {
       throw new Error(data.error.description);
