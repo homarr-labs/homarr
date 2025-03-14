@@ -70,7 +70,7 @@ export function PodsTable(initialData: PodsTableComponentProps) {
     positionGlobalFilter: "right",
     initialState: { density: "xs", showGlobalFilter: true, expanded: true },
     mantineSearchTextInputProps: {
-      placeholder: tPods("table.search", { count: data.length }),
+      placeholder: tPods("table.search", { count: String(data.length) }),
       style: { minWidth: 300 },
       autoFocus: true,
     },

@@ -152,6 +152,7 @@ interface StatCardProps {
 const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
   const { ref, height, width } = useElementSize();
   const isLong = width > height + 20;
+  const canStackText = height > 32;
   const hideLabel = (height <= 32 && width <= 256) || (height <= 64 && width <= 92);
   const tooltip = item.tooltip?.(data, t);
   const board = useRequiredBoard();
@@ -182,7 +183,7 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
             className="summary-card-texts"
             justify="center"
             align="center"
-            direction={isLong ? "row" : "column"}
+            direction={isLong && !canStackText ? "row" : "column"}
             style={{
               flex: isLong ? 1 : undefined,
             }}

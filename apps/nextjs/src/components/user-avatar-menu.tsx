@@ -74,7 +74,10 @@ export const UserAvatarMenu = ({ children, availableUpdates }: UserAvatarMenuPro
               leftSection={<IconBellRinging size="1rem" />}
             >
               <Text fw="bold" size="sm">
-                {t("updateAvailable", { countUpdates: availableUpdates.length, tag: availableUpdates[0].tagName })}
+                {t("updateAvailable", {
+                  countUpdates: String(availableUpdates.length),
+                  tag: availableUpdates[0].tagName,
+                })}
               </Text>
             </Menu.Item>
             <Menu.Divider />
