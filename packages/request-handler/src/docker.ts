@@ -45,29 +45,29 @@ const responseSchema = z.object({
 export type DockerContainersStatus = z.infer<typeof responseSchema>;
 const dockerInstances = DockerSingleton.getInstances();
 
-const containers = await Promise.all(
-  dockerInstances.map(async ({ instance, host }) => {
-    const instanceContainers = await instance.listContainers({ all: true });
-    return instanceContainers.map((container) => ({
-      ...container,
-      instance: host,
-    }));
-  }),
-).then((res) => res.flat());
-
 // Extract image name from container
 const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
-// Prepare LIKE queries for fetching matching icons
-const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
-// Fetch matching icons from the database
-const dbIcons =
-  likeQueries.length > 0
-    ? await db.query.icons.findMany({
-        where: or(...likeQueries),
-      })
-    : [];
 
 async function getContainersWithStats() {
+  const containers = await Promise.all(
+    dockerInstances.map(async ({ instance, host }) => {
+      const instanceContainers = await instance.listContainers({ all: true });
+      return instanceContainers.map((container) => ({
+        ...container,
+        instance: host,
+      }));
+    }),
+  ).then((res) => res.flat());
+
+  const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
+
+  const dbIcons =
+    likeQueries.length > 0
+      ? await db.query.icons.findMany({
+          where: or(...likeQueries),
+        })
+      : [];
+
   const containerStatsPromises = containers.map(async (container) => {
     const instance = dockerInstances.find(({ host }) => host === container.instance)?.instance;
     if (!instance) return null;
