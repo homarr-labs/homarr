@@ -23,8 +23,8 @@ export function HealthCheckStatus(props: HealthCheckStatusProps) {
   return (
     <HoverCard position="bottom" width={250} shadow="sm">
       <HoverCard.Target>
-        <Indicator color={textColor(indicatorColor, colorScheme)} size={8} display="flex">
-          <IconHeartbeat size={20} />
+        <Indicator color={textColor(indicatorColor, colorScheme)} size={6} display="flex">
+          <IconHeartbeat size={16} />
         </Indicator>
       </HoverCard.Target>
       <HoverCard.Dropdown bg={colorScheme === "light" ? "gray.2" : "dark.8"}>

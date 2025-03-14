@@ -23,7 +23,9 @@ export const AppDeleteButton = ({ app }: AppDeleteButtonProps) => {
   const onClick = useCallback(() => {
     openConfirmModal({
       title: t("title"),
-      children: t("message", app),
+      children: t("message", {
+        name: app.name,
+      }),
       onConfirm: () => {
         mutate(
           { id: app.id },

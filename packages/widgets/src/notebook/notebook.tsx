@@ -65,6 +65,8 @@ import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 
+import "./notebook.css";
+
 const iconProps = {
   size: 30,
   stroke: 1.5,
@@ -278,10 +280,10 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
           </RichTextEditor.ControlsGroup>
 
           <RichTextEditor.ControlsGroup>
-            <RichTextEditor.H1 title={tControls("heading", { level: 1 })} />
-            <RichTextEditor.H2 title={tControls("heading", { level: 2 })} />
-            <RichTextEditor.H3 title={tControls("heading", { level: 3 })} />
-            <RichTextEditor.H4 title={tControls("heading", { level: 4 })} />
+            <RichTextEditor.H1 title={tControls("heading", { level: "1" })} />
+            <RichTextEditor.H2 title={tControls("heading", { level: "2" })} />
+            <RichTextEditor.H3 title={tControls("heading", { level: "3" })} />
+            <RichTextEditor.H4 title={tControls("heading", { level: "4" })} />
           </RichTextEditor.ControlsGroup>
 
           <RichTextEditor.ControlsGroup>

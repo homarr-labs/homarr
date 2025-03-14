@@ -1,40 +1,3 @@
-.downloads-widget-table {
-  /*Set Header static and overflow body instead*/
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  .mantine-Table-tbody {
-    overflow-y: auto;
-    flex: 1;
-    scrollbar-width: 0;
-  }
-  /*Hide scrollbar until I can apply an overlay scrollbar instead*/
-  .mantine-Table-tbody::-webkit-scrollbar {
-    width: 0;
-  }
-  /*Properly size header*/
-  .mrt-table-head-cell-labels {
-    min-height: var(--ratioWidth);
-    gap: 0;
-    padding: 0;
-  }
-  /*Properly size controls*/
-  .mrt-grab-handle-button {
-    margin: unset;
-    width: var(--dragButtonSize);
-    min-width: var(--dragButtonSize);
-    height: var(--dragButtonSize);
-    min-height: var(--dragButtonSize);
-  }
-  .mrt-table-head-sort-button {
-    margin: unset;
-    width: var(--sortButtonSize);
-    min-width: var(--sortButtonSize);
-    height: var(--sortButtonSize);
-    min-height: var(--sortButtonSize);
-  }
-}
-
 /*Make background of component different on hover, depending on base var*/
 .hoverable-component {
   &:hover {
@@ -61,15 +24,4 @@
 
 .text-flash {
   animation: glow 1s ease-in-out;
-}
-
-/*To apply to any ScrollArea that we want to flex. Same weird workaround as before*/
-.flexed-scroll-area {
-  height: 100%;
-  .mantine-ScrollArea-viewport {
-    & div[style="min-width: 100%; display: table;"] {
-      display: flex !important;
-      height: 100%;
-    }
-  }
 }

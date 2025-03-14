@@ -10,7 +10,12 @@ import MillionLint from "@million/lint";
 import createNextIntlPlugin from "next-intl/plugin";
 
 // Package path does not work... so we need to use relative path
-const withNextIntl = createNextIntlPlugin("../../packages/translation/src/request.ts");
+const withNextIntl = createNextIntlPlugin({
+  experimental: {
+    createMessagesDeclaration: "../../packages/translation/src/lang/en.json",
+  },
+  requestConfig: "../../packages/translation/src/request.ts",
+});
 
 interface WebpackConfig {
   module: {

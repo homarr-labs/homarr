@@ -24,6 +24,12 @@ vi.mock("@homarr/redis", () => ({
   }),
 }));
 
+vi.mock("@homarr/docker/env", () => ({
+  env: {
+    ENABLE_DOCKER: true,
+  },
+}));
+
 const createSessionWithPermissions = (...permissions: GroupPermissionKey[]) =>
   ({
     user: {

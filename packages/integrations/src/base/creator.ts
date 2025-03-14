@@ -19,6 +19,7 @@ import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration"
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
+import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
@@ -86,6 +87,7 @@ export const integrationCreators = {
   tdarr: TdarrIntegration,
   proxmox: ProxmoxIntegration,
   emby: EmbyIntegration,
+  nextcloud: NextcloudIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

@@ -63,7 +63,7 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
   const data = useMemo(() => summaries.flatMap(({ summary }) => summary), [summaries]);
 
   return (
-    <SimpleGrid cols={2} h="100%" p={"xs"} {...boxPropsByLayout(options.layout)}>
+    <SimpleGrid cols={2} spacing="xs" h="100%" p={"xs"} {...boxPropsByLayout(options.layout)}>
       {data.length > 0 ? (
         stats.map((item) => (
           <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={data} t={t} />
@@ -89,43 +89,43 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
 const stats = [
   {
     icon: IconBarrierBlock,
-    value: (data) =>
+    value: (data, size) =>
       formatNumber(
         data.reduce((count, { adsBlockedToday }) => count + adsBlockedToday, 0),
-        2,
+        size === "sm" ? 0 : 2,
       ),
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedToday"),
     color: "rgba(240, 82, 60, 0.4)", // RED
   },
   {
     icon: IconPercentage,
-    value: (data) => {
+    value: (data, size) => {
       const totalCount = data.reduce((count, { dnsQueriesToday }) => count + dnsQueriesToday, 0);
       const blocked = data.reduce((count, { adsBlockedToday }) => count + adsBlockedToday, 0);
-      return `${formatNumber(totalCount === 0 ? 0 : (blocked / totalCount) * 100, 2)}%`;
+      return `${formatNumber(totalCount === 0 ? 0 : (blocked / totalCount) * 100, size === "sm" ? 0 : 2)}%`;
     },
     label: (t) => t("widget.dnsHoleSummary.data.adsBlockedTodayPercentage"),
     color: "rgba(255, 165, 20, 0.4)", // YELLOW
   },
   {
     icon: IconSearch,
-    value: (data) =>
+    value: (data, size) =>
       formatNumber(
         data.reduce((count, { dnsQueriesToday }) => count + dnsQueriesToday, 0),
-        2,
+        size === "sm" ? 0 : 2,
       ),
     label: (t) => t("widget.dnsHoleSummary.data.dnsQueriesToday"),
     color: "rgba(0, 175, 218, 0.4)", // BLUE
   },
   {
     icon: IconWorldWww,
-    value: (data) => {
+    value: (data, size) => {
       // We use a suffix to indicate that there might be more domains in the at least two lists.
       const suffix = data.length >= 2 ? "+" : "";
       return (
         formatNumber(
           data.reduce((count, { domainsBeingBlocked }) => count + domainsBeingBlocked, 0),
-          2,
+          size === "sm" ? 0 : 2,
         ) + suffix
       );
     },
@@ -137,7 +137,7 @@ const stats = [
 
 interface StatItem {
   icon: TablerIcon;
-  value: (summaries: DnsHoleSummary[]) => string;
+  value: (summaries: DnsHoleSummary[], size: "sm" | "md") => string;
   tooltip?: (summaries: DnsHoleSummary[], t: TranslationFunction) => string | undefined;
   label: stringOrTranslation;
   color: string;
@@ -152,6 +152,8 @@ interface StatCardProps {
 const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
   const { ref, height, width } = useElementSize();
   const isLong = width > height + 20;
+  const canStackText = height > 32;
+  const hideLabel = (height <= 32 && width <= 256) || (height <= 64 && width <= 92);
   const tooltip = item.tooltip?.(data, t);
   const board = useRequiredBoard();
 
@@ -174,25 +176,26 @@ const StatCard = ({ item, data, usePiHoleColors, t }: StatCardProps) => {
           align="center"
           justify="center"
           direction={isLong ? "row" : "column"}
-          style={{ containerType: "size" }}
+          gap={0}
         >
-          <item.icon className="summary-card-icon" size={50} />
+          <item.icon className="summary-card-icon" size={24} style={{ minWidth: 24, minHeight: 24 }} />
           <Flex
             className="summary-card-texts"
             justify="center"
-            direction="column"
+            align="center"
+            direction={isLong && !canStackText ? "row" : "column"}
             style={{
               flex: isLong ? 1 : undefined,
             }}
-            mt={"xs"}
             w="100%"
-            gap={0}
+            gap={isLong ? 4 : 0}
+            wrap="wrap"
           >
-            <Text key={item.value(data)} className="summary-card-value text-flash" ta="center" size="lg" fw="bold">
-              {item.value(data)}
+            <Text className="summary-card-value text-flash" ta="center" size="lg" fw="bold" maw="100%">
+              {item.value(data, width <= 64 ? "sm" : "md")}
             </Text>
-            {item.label && (
-              <Text className="summary-card-label" ta="center" size="md">
+            {!hideLabel && (
+              <Text className="summary-card-label" ta="center" size="xs" maw="100%">
                 {translateIfNecessary(t, item.label)}
               </Text>
             )}

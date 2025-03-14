@@ -26,6 +26,9 @@ export const { definition, componentLoader } = createWidgetDefinition("calendar"
         validate: z.number().min(2).max(9999),
         defaultValue: 2,
       }),
+      showUnmonitored: factory.switch({
+        defaultValue: false,
+      }),
     }));
   },
   supportedIntegrations: getIntegrationKindsByCategory("calendar"),
