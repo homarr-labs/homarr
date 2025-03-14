@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Створення пошукових систем",
         "description": ""
+      },
+      "createApp": {
+        "label": "",
+        "description": ""
+      },
+      "appHref": {
+        "placeholder": ""
       }
     },
     "action": {

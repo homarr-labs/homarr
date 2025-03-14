@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "創建搜尋引擎",
         "description": "集成 {kind} 可以與搜尋引擎共同使用，勾選此選項可自動設定搜尋引擎"
+      },
+      "createApp": {
+        "label": "",
+        "description": ""
+      },
+      "appHref": {
+        "placeholder": ""
       }
     },
     "action": {

@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Zoekmachine aanmaken",
         "description": "Integratie \"{kind}\" kan worden gebruikt met de zoekmachines. Controleer dit om automatisch de zoekmachine te configureren."
+      },
+      "createApp": {
+        "label": "",
+        "description": ""
+      },
+      "appHref": {
+        "placeholder": ""
       }
     },
     "action": {
