@@ -208,21 +208,20 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
                   <Stack gap={0}>
                     <Group justify="space-between" align="center" wrap="nowrap">
                       <Text>{integration.name}</Text>
-                      {(hasFullAccess ||
-                        integration.permissions.hasFullAccess) && (
-                          <ActionIconGroup>
-                            <ActionIcon
-                              component={Link}
-                              href={`/manage/integrations/edit/${integration.id}`}
-                              variant="subtle"
-                              color="gray"
-                              aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
-                            >
-                              <IconPencil size={16} stroke={1.5} />
-                            </ActionIcon>
-                            <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
-                          </ActionIconGroup>
-                        )}
+                      {(hasFullAccess || integration.permissions.hasFullAccess) && (
+                        <ActionIconGroup>
+                          <ActionIcon
+                            component={Link}
+                            href={`/manage/integrations/edit/${integration.id}`}
+                            variant="subtle"
+                            color="gray"
+                            aria-label={t("page.edit.title", { name: getIntegrationName(integration.kind) })}
+                          >
+                            <IconPencil size={16} stroke={1.5} />
+                          </ActionIcon>
+                          <DeleteIntegrationActionButton integration={integration} count={integrations.length} />
+                        </ActionIconGroup>
+                      )}
                     </Group>
                     <Anchor href={integration.url} target="_blank" rel="noreferrer" size="sm">
                       {integration.url}
