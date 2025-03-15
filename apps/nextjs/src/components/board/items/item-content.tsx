@@ -40,6 +40,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
           "--opacity": board.opacity / 100,
           containerType: "size",
           overflow: item.kind === "iframe" ? "hidden" : undefined,
+          "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
         },
       }}
       p={0}

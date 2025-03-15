@@ -42,7 +42,7 @@ export const BoardSelectionCard = ({ selections, updateSelections }: BoardSelect
       <Stack gap="sm">
         <Stack gap={0}>
           <Group justify="space-between" align="center">
-            <Text fw={500}>{tBoardSelection("title", { count: selections.size })}</Text>
+            <Text fw={500}>{tBoardSelection("title", { count: String(selections.size) })}</Text>
             <Anchor component="button" onClick={handleToggleAll}>
               {areAllChecked ? tBoardSelection("action.unselectAll") : tBoardSelection("action.selectAll")}
             </Anchor>

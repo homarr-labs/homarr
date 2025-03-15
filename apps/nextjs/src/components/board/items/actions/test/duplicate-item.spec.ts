@@ -20,7 +20,7 @@ describe("item actions duplicate-item", () => {
       kind: itemKind,
       integrationIds: ["1"],
       options: { address: "localhost" },
-      advancedOptions: { customCssClasses: ["test"] },
+      advancedOptions: { customCssClasses: ["test"], borderColor: "#ff0000" },
     })
       .addLayout({ layoutId, sectionId: currentSectionId, ...currentItemSize })
       .build();

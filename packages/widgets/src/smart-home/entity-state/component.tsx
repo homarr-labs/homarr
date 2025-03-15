@@ -13,6 +13,7 @@ export default function SmartHomeEntityStateWidget({
   options,
   integrationIds,
   isEditMode,
+  width,
 }: WidgetComponentProps<"smartHome-entityState">) {
   // It will always have at least one integration as otherwise the NoIntegrationSelectedError would be thrown in item-content.tsx
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -71,6 +72,7 @@ export default function SmartHomeEntityStateWidget({
     ],
     [handleClick, options.clickable, options.displayName, options.entityId],
   );
+  const isTiny = width < 128;
 
   return (
     <UnstyledButton
@@ -86,10 +88,10 @@ export default function SmartHomeEntityStateWidget({
     >
       <Center h="100%" w="100%">
         <Stack align="center" gap="md">
-          <Text ta="center" fw="bold" size="lg">
+          <Text ta="center" fw="bold" size={isTiny ? "sm" : "lg"}>
             {options.displayName}
           </Text>
-          <Text ta="center">
+          <Text ta="center" size={isTiny ? "xs" : "lg"}>
             {entityState}
             {attribute}
           </Text>

@@ -11,6 +11,8 @@ export const createRouting = (defaultLocale: SupportedLanguage) =>
     defaultLocale,
     localeCookie: {
       name: localeCookieKey,
+      // 1 year
+      maxAge: 60 * 60 * 24 * 365,
     },
     localePrefix: {
       mode: "never", // Rewrite the URL with locale parameter but without shown in url

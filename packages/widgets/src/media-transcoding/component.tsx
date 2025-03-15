@@ -2,20 +2,32 @@
 
 import { useState } from "react";
 import { Center, Divider, Group, Pagination, SegmentedControl, Stack, Text } from "@mantine/core";
+import type { TablerIcon } from "@tabler/icons-react";
 import { IconClipboardList, IconCpu2, IconReportAnalytics } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 
+import { views } from ".";
 import type { WidgetComponentProps } from "../definition";
 import { HealthCheckStatus } from "./health-check-status";
 import { QueuePanel } from "./panels/queue.panel";
 import { StatisticsPanel } from "./panels/statistics.panel";
 import { WorkersPanel } from "./panels/workers.panel";
 
-type Views = "workers" | "queue" | "statistics";
+type View = (typeof views)[number];
 
-export default function MediaTranscodingWidget({ integrationIds, options }: WidgetComponentProps<"mediaTranscoding">) {
+const viewIcons = {
+  workers: IconCpu2,
+  queue: IconClipboardList,
+  statistics: IconReportAnalytics,
+} satisfies Record<View, TablerIcon>;
+
+export default function MediaTranscodingWidget({
+  integrationIds,
+  options,
+  width,
+}: WidgetComponentProps<"mediaTranscoding">) {
   const [queuePage, setQueuePage] = useState(1);
   const queuePageSize = 10;
   const [transcodingData] = clientApi.widget.mediaTranscoding.getDataAsync.useSuspenseQuery(
@@ -31,15 +43,16 @@ export default function MediaTranscodingWidget({ integrationIds, options }: Widg
     },
   );
 
-  const [view, setView] = useState<Views>(options.defaultView);
+  const [view, setView] = useState<View>(options.defaultView);
   const totalQueuePages = Math.ceil((transcodingData.data.queue.totalCount || 1) / queuePageSize);
 
   const t = useI18n("widget.mediaTranscoding");
+  const isTiny = width < 256;
 
   return (
     <Stack gap={4} h="100%">
       {view === "workers" ? (
-        <WorkersPanel workers={transcodingData.data.workers} />
+        <WorkersPanel workers={transcodingData.data.workers} isTiny={isTiny} />
       ) : view === "queue" ? (
         <QueuePanel queue={transcodingData.data.queue} />
       ) : (
@@ -48,65 +61,48 @@ export default function MediaTranscodingWidget({ integrationIds, options }: Widg
       <Divider />
       <Group gap="xs" mb={4} ms={4} me={8}>
         <SegmentedControl
-          data={[
-            {
+          data={views.map((value) => {
+            const Icon = viewIcons[value];
+            return {
               label: (
-                <Center>
-                  <IconCpu2 size={18} />
-                  <Text size="xs" ml={8}>
-                    {t("tab.workers")}
-                  </Text>
+                <Center style={{ gap: 4 }}>
+                  <Icon size={12} />
+                  {!isTiny && (
+                    <Text span size="xs">
+                      {t(`tab.${value}`)}
+                    </Text>
+                  )}
                 </Center>
               ),
-              value: "workers",
-            },
-            {
-              label: (
-                <Center>
-                  <IconClipboardList size={18} />
-                  <Text size="xs" ml={8}>
-                    {t("tab.queue")}
-                  </Text>
-                </Center>
-              ),
-              value: "queue",
-            },
-            {
-              label: (
-                <Center>
-                  <IconReportAnalytics size={18} />
-                  <Text size="xs" ml={8}>
-                    {t("tab.statistics")}
-                  </Text>
-                </Center>
-              ),
-              value: "statistics",
-            },
-          ]}
+              value,
+            };
+          })}
           value={view}
-          onChange={(value) => setView(value as Views)}
+          onChange={(value) => setView(value as View)}
           size="xs"
         />
-        {view === "queue" && (
-          <>
-            <Pagination.Root total={totalQueuePages} value={queuePage} onChange={setQueuePage} size="sm">
-              <Group gap={5} justify="center">
-                <Pagination.First disabled={transcodingData.data.queue.startIndex === 1} />
-                <Pagination.Previous disabled={transcodingData.data.queue.startIndex === 1} />
-                <Pagination.Next disabled={transcodingData.data.queue.startIndex === totalQueuePages} />
-                <Pagination.Last disabled={transcodingData.data.queue.startIndex === totalQueuePages} />
-              </Group>
-            </Pagination.Root>
-            <Text size="xs">
-              {t("currentIndex", {
-                start: transcodingData.data.queue.startIndex + 1,
-                end: transcodingData.data.queue.endIndex + 1,
-                total: transcodingData.data.queue.totalCount,
-              })}
-            </Text>
-          </>
-        )}
+
         <Group gap="xs" ml="auto">
+          {view === "queue" && (
+            <>
+              <Pagination.Root total={totalQueuePages} value={queuePage} onChange={setQueuePage} size="xs">
+                <Group gap={2} justify="center">
+                  {!isTiny && <Pagination.First disabled={transcodingData.data.queue.startIndex === 1} />}
+                  <Pagination.Previous disabled={transcodingData.data.queue.startIndex === 1} />
+                  <Pagination.Next disabled={transcodingData.data.queue.startIndex === totalQueuePages} />
+                  {!isTiny && <Pagination.Last disabled={transcodingData.data.queue.startIndex === totalQueuePages} />}
+                </Group>
+              </Pagination.Root>
+              <Text size="xs">
+                {t("currentIndex", {
+                  start: String(transcodingData.data.queue.startIndex + 1),
+                  end: String(transcodingData.data.queue.endIndex + 1),
+                  total: String(transcodingData.data.queue.totalCount),
+                })}
+              </Text>
+            </>
+          )}
+
           <HealthCheckStatus statistics={transcodingData.data.statistics} />
         </Group>
       </Group>

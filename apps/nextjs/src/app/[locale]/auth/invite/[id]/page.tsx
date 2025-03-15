@@ -63,7 +63,8 @@ export default async function InviteUsagePage(props: InviteUsagePageProps) {
           <RegistrationForm invite={invite} />
         </Card>
         <Text size="xs" c="gray.5" ta="center">
-          {t("description", { username: invite.creator.name })}
+          {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
+          {t("description", { username: invite.creator.name! })}
         </Text>
       </Stack>
     </Center>

@@ -3,6 +3,7 @@ import { Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
+import { env } from "@homarr/docker/env";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -10,7 +11,7 @@ import { DockerTable } from "./docker-table";
 
 export default async function DockerPage() {
   const session = await auth();
-  if (!session?.user || !session.user.permissions.includes("admin")) {
+  if (!(session?.user.permissions.includes("admin") && env.ENABLE_DOCKER)) {
     notFound();
   }
 

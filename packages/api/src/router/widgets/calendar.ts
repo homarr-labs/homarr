@@ -9,7 +9,14 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const calendarRouter = createTRPCRouter({
   findAllEvents: publicProcedure
-    .input(z.object({ year: z.number(), month: z.number(), releaseType: z.array(z.enum(radarrReleaseTypes)) }))
+    .input(
+      z.object({
+        year: z.number(),
+        month: z.number(),
+        releaseType: z.array(z.enum(radarrReleaseTypes)),
+        showUnmonitored: z.boolean(),
+      }),
+    )
     .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("calendar")))
     .query(async ({ ctx, input }) => {
       const results = await Promise.all(

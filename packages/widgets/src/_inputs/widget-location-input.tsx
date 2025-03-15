@@ -224,7 +224,7 @@ const LocationSelectTableRow = ({ city, onLocationSelect, closeModal }: Location
         <Tooltip
           label={t("action.select", {
             city: city.name,
-            countryCode: city.country_code,
+            countryCode: city.country_code ?? "??",
           })}
         >
           <ActionIcon color="red" variant="subtle" onClick={onSelect}>

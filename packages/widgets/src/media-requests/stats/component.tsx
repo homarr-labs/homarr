@@ -1,11 +1,9 @@
 "use client";
 
-import { ActionIcon, Avatar, Card, Grid, Group, Space, Stack, Text, Tooltip } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
+import { Avatar, Card, Grid, Group, Stack, Text, Tooltip } from "@mantine/core";
 import type { Icon } from "@tabler/icons-react";
 import {
   IconDeviceTv,
-  IconExternalLink,
   IconHourglass,
   IconLoaderQuarter,
   IconMovie,
@@ -17,6 +15,7 @@ import {
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import type { RequestStats } from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -27,6 +26,7 @@ import classes from "./component.module.css";
 export default function MediaServerWidget({
   integrationIds,
   isEditMode,
+  width,
 }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const [requestStats] = clientApi.widget.mediaRequests.getStats.useSuspenseQuery(
@@ -40,11 +40,10 @@ export default function MediaServerWidget({
     },
   );
 
-  const { width, height, ref } = useElementSize();
+  const board = useRequiredBoard();
 
   if (requestStats.users.length === 0 && requestStats.stats.length === 0) throw new NoIntegrationDataError();
 
-  //Add processing and available
   const data = [
     {
       name: "approved",
@@ -88,97 +87,84 @@ export default function MediaServerWidget({
     },
   ] satisfies { name: keyof RequestStats; icon: Icon; number: number }[];
 
+  const isTiny = width < 256;
+
   return (
     <Stack
       className="mediaRequests-stats-layout"
-      display="flex"
       h="100%"
-      gap="2cqmin"
-      p="2cqmin"
+      gap="xs"
+      p="sm"
       align="center"
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
     >
-      <Text className="mediaRequests-stats-stats-title" size="6.5cqmin">
-        {t("titles.stats.main")}
-      </Text>
-      <Grid className="mediaRequests-stats-stats-grid" gutter={0} w="100%">
-        {data.map((stat) => (
-          <Grid.Col
-            className={combineClasses(
-              classes.gridElement,
-              "mediaRequests-stats-stat-wrapper",
-              `mediaRequests-stats-stat-${stat.name}`,
-            )}
-            key={stat.name}
-            span={3}
-          >
-            <Tooltip label={t(`titles.stats.${stat.name}`)}>
-              <Stack className="mediaRequests-stats-stat-stack" align="center" gap="2cqmin" p="2cqmin">
-                <stat.icon className="mediaRequests-stats-stat-icon" size="7.5cqmin" />
-                <Text className="mediaRequests-stats-stat-value" size="5cqmin">
-                  {stat.number}
-                </Text>
-              </Stack>
-            </Tooltip>
-          </Grid.Col>
-        ))}
-      </Grid>
-      <Text className="mediaRequests-stats-users-title" size="6.5cqmin">
-        {t("titles.users.main")}
-      </Text>
-      <Stack
-        className="mediaRequests-stats-users-wrapper"
-        flex={1}
-        w="100%"
-        ref={ref}
-        display="flex"
-        gap="2cqmin"
-        style={{ overflow: "hidden" }}
-      >
-        {requestStats.users.slice(0, Math.max(Math.floor((height / width) * 5), 1)).map((user) => (
-          <Card
-            className={combineClasses(
-              "mediaRequests-stats-users-user-wrapper",
-              `mediaRequests-stats-users-user-${user.id}`,
-            )}
-            key={user.id}
-            withBorder
-            p="2cqmin"
-            flex={1}
-            mah="38.5cqmin"
-            radius="2.5cqmin"
-          >
-            <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="2cqmin" display="flex">
-              <Tooltip label={user.integration.name}>
-                <Avatar
-                  className="mediaRequests-stats-users-user-avatar"
-                  size="12.5cqmin"
-                  src={user.avatar}
-                  bd={`0.5cqmin solid ${user.integration.kind === "overseerr" ? "#ECB000" : "#6677CC"}`}
-                />
+      <Stack gap={4} w="100%">
+        <Text className="mediaRequests-stats-stats-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
+          {t("titles.stats.main")}
+        </Text>
+        <Grid className="mediaRequests-stats-stats-grid" gutter={4} w="100%">
+          {data.map((stat) => (
+            <Grid.Col
+              className={combineClasses("mediaRequests-stats-stat-wrapper", `mediaRequests-stats-stat-${stat.name}`)}
+              key={stat.name}
+              span={isTiny ? 6 : 3}
+            >
+              <Tooltip label={t(`titles.stats.${stat.name}`)}>
+                <Card p={0} radius={board.itemRadius} className={classes.card}>
+                  <Group className="mediaRequests-stats-stat-stack" justify="center" align="center" gap="xs" w="100%">
+                    <stat.icon className="mediaRequests-stats-stat-icon" size={16} />
+                    <Text className="mediaRequests-stats-stat-value" size="md">
+                      {stat.number}
+                    </Text>
+                  </Group>
+                </Card>
               </Tooltip>
-              <Stack className="mediaRequests-stats-users-user-infos" gap="2cqmin">
-                <Text className="mediaRequests-stats-users-user-userName" size="6cqmin">
-                  {user.displayName}
+            </Grid.Col>
+          ))}
+        </Grid>
+      </Stack>
+      <Stack gap={4} w="100%" h="100%">
+        <Text className="mediaRequests-stats-users-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
+          {t("titles.users.main")} ({t("titles.users.requests")})
+        </Text>
+        <Stack className="mediaRequests-stats-users-wrapper" flex={1} w="100%" gap={4} style={{ overflow: "hidden" }}>
+          {requestStats.users.slice(0, 10).map((user) => (
+            <Card
+              component="a"
+              href={user.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={combineClasses(
+                "mediaRequests-stats-users-user-wrapper",
+                `mediaRequests-stats-users-user-${user.id}`,
+                classes.card,
+              )}
+              key={user.id}
+              p="xs"
+              radius={board.itemRadius}
+            >
+              <Group className="mediaRequests-stats-users-user-group" h="100%" p={0} gap="sm" justify="space-between">
+                <Group gap={4}>
+                  <Tooltip label={user.integration.name}>
+                    <Avatar
+                      className="mediaRequests-stats-users-user-avatar"
+                      size={20}
+                      src={user.avatar}
+                      bd={`2px solid ${user.integration.kind === "overseerr" ? "#ECB000" : "#6677CC"}`}
+                    />
+                  </Tooltip>
+                  <Text className="mediaRequests-stats-users-user-userName" size="sm">
+                    {user.displayName}
+                  </Text>
+                </Group>
+
+                <Text className="mediaRequests-stats-users-user-request-count" size="md" fw={500}>
+                  {user.requestCount}
                 </Text>
-                <Text className="mediaRequests-stats-users-user-request-count" size="4cqmin">
-                  {`${t("titles.users.requests")}: ${user.requestCount}`}
-                </Text>
-              </Stack>
-              <Space flex={1} />
-              <ActionIcon
-                className="mediaRequests-stats-users-user-link-button"
-                variant="light"
-                color="var(--mantine-color-text)"
-                size="10cqmin"
-                component="a"
-                href={user.link}
-              >
-                <IconExternalLink className="mediaRequests-stats-users-user-link-icon" size="7.5cqmin" />
-              </ActionIcon>
-            </Group>
-          </Card>
-        ))}
+              </Group>
+            </Card>
+          ))}
+        </Stack>
       </Stack>
     </Stack>
   );

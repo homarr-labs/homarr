@@ -10,6 +10,7 @@ import { iconsRouter } from "./router/icons";
 import { importRouter } from "./router/import/import-router";
 import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
+import { kubernetesRouter } from "./router/kubernetes/router/kubernetes-router";
 import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
 import { mediaRouter } from "./router/medias/media-router";
@@ -39,6 +40,7 @@ export const appRouter = createTRPCRouter({
   onboard: onboardRouter,
   home: homeRouter,
   docker: dockerRouter,
+  kubernetes: kubernetesRouter,
   serverSettings: serverSettingsRouter,
   cronJobs: cronJobsRouter,
   apiKeys: apiKeysRouter,

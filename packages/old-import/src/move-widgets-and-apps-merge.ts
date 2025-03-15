@@ -135,7 +135,7 @@ const moveWidgetsAndAppsInLeftSidebar = (
   offset: number,
   screenSize: BoardSize,
 ) => {
-  const columnCount = mapColumnCount(old, screenSize);
+  const columnCount = mapColumnCount(old.settings.customization.gridstack, screenSize);
   let requiredHeight = updateItems({
     // This should work as the reference of the items did not change, only the array reference did
     items: [...old.widgets, ...old.apps],
@@ -211,7 +211,7 @@ const moveWidgetsAndAppsInRightSidebar = (
   offset: number,
   screenSize: BoardSize,
 ) => {
-  const columnCount = mapColumnCount(old, screenSize);
+  const columnCount = mapColumnCount(old.settings.customization.gridstack, screenSize);
   const xOffsetDelta = Math.max(columnCount - 2, 0);
   const requiredHeight = updateItems({
     // This should work as the reference of the items did not change, only the array reference did

@@ -4,6 +4,7 @@ import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stac
 import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { MediaAvailability, MediaRequestStatus } from "@homarr/integrations/types";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -15,6 +16,7 @@ export default function MediaServerWidget({
   integrationIds,
   isEditMode,
   options,
+  width,
 }: WidgetComponentProps<"mediaRequests-requestList">) {
   const t = useScopedI18n("widget.mediaRequests-requestList");
   const [mediaRequests] = clientApi.widget.mediaRequests.getLatestRequests.useSuspenseQuery(
@@ -54,23 +56,25 @@ export default function MediaServerWidget({
   );
 
   const { mutate: mutateRequestAnswer } = clientApi.widget.mediaRequests.answerRequest.useMutation();
+  const board = useRequiredBoard();
 
   if (mediaRequests.length === 0) throw new NoIntegrationDataError();
+
+  const isTiny = width < 256;
 
   return (
     <ScrollArea
       className="mediaRequests-list-scrollArea"
-      scrollbarSize="2cqmin"
+      scrollbarSize="md"
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
     >
-      <Stack className="mediaRequests-list-list" gap="2cqmin" p="2cqmin">
+      <Stack className="mediaRequests-list-list" gap="xs" p="sm">
         {mediaRequests.map((mediaRequest) => (
           <Card
             className={`mediaRequests-list-item-wrapper mediaRequests-list-item-${mediaRequest.type} mediaRequests-list-item-${mediaRequest.status}`}
             key={`${mediaRequest.integrationId}-${mediaRequest.id}`}
-            h="20cqmin"
-            radius="2cqmin"
-            p="2cqmin"
+            radius={board.itemRadius}
+            p="xs"
             withBorder
           >
             <Image
@@ -93,104 +97,111 @@ export default function MediaServerWidget({
               wrap="nowrap"
               gap={0}
             >
-              <Group className="mediaRequests-list-item-left-side" h="100%" gap="4cqmin" wrap="nowrap" flex={1}>
-                <Image
-                  className="mediaRequests-list-item-poster"
-                  src={mediaRequest.posterImagePath}
-                  h="100%"
-                  w="10cqmin"
-                  radius="1cqmin"
-                />
-                <Stack className="mediaRequests-list-item-media-infos" gap="1cqmin">
-                  <Group className="mediaRequests-list-item-info-first-line" gap="2cqmin" wrap="nowrap">
-                    <Text className="mediaRequests-list-item-media-year" size="3.5cqmin" pt="0.75cqmin">
-                      {mediaRequest.airDate?.getFullYear() ?? t("toBeDetermined")}
-                    </Text>
-                    <Badge
-                      className="mediaRequests-list-item-media-status"
-                      color={getAvailabilityProperties(mediaRequest.availability, t).color}
-                      variant="light"
-                      fz="3.5cqmin"
-                      lh="4cqmin"
-                      size="5cqmin"
-                      pt="0.75cqmin"
-                      px="2cqmin"
-                    >
-                      {getAvailabilityProperties(mediaRequest.availability, t).label}
-                    </Badge>
+              <Group className="mediaRequests-list-item-left-side" h="100%" gap="md" wrap="nowrap" flex={1}>
+                {!isTiny && (
+                  <Image
+                    className="mediaRequests-list-item-poster"
+                    src={mediaRequest.posterImagePath}
+                    h={40}
+                    w="auto"
+                    radius={"md"}
+                  />
+                )}
+
+                <Stack gap={0} w="100%">
+                  <Group justify="space-between" gap="xs" className="mediaRequests-list-item-top-group">
+                    <Group gap="xs">
+                      <Text className="mediaRequests-list-item-media-year" size="xs">
+                        {mediaRequest.airDate?.getFullYear() ?? t("toBeDetermined")}
+                      </Text>
+                      {!isTiny && (
+                        <Badge
+                          className="mediaRequests-list-item-media-status"
+                          color={getAvailabilityProperties(mediaRequest.availability, t).color}
+                          variant="light"
+                          size="xs"
+                        >
+                          {getAvailabilityProperties(mediaRequest.availability, t).label}
+                        </Badge>
+                      )}
+                    </Group>
+                    <Group className="mediaRequests-list-item-request-user" gap={4} wrap="nowrap">
+                      <Avatar
+                        className="mediaRequests-list-item-request-user-avatar"
+                        src={mediaRequest.requestedBy?.avatar}
+                        size="xs"
+                      />
+                      <Anchor
+                        className="mediaRequests-list-item-request-user-name"
+                        href={mediaRequest.requestedBy?.link}
+                        c="var(--mantine-color-text)"
+                        target={options.linksTargetNewTab ? "_blank" : "_self"}
+                        fz="xs"
+                        lineClamp={1}
+                        style={{ wordBreak: "break-all" }}
+                      >
+                        {(mediaRequest.requestedBy?.displayName ?? "") || "unknown"}
+                      </Anchor>
+                    </Group>
                   </Group>
-                  <Anchor
-                    className="mediaRequests-list-item-info-second-line mediaRequests-list-item-media-title"
-                    href={mediaRequest.href}
-                    c="var(--mantine-color-text)"
-                    target={options.linksTargetNewTab ? "_blank" : "_self"}
-                    fz="5cqmin"
-                    lineClamp={1}
-                  >
-                    {mediaRequest.name || "unknown"}
-                  </Anchor>
+                  <Group gap="xs" justify="space-between" className="mediaRequests-list-item-bottom-group">
+                    <Anchor
+                      className="mediaRequests-list-item-info-second-line mediaRequests-list-item-media-title"
+                      href={mediaRequest.href}
+                      c="var(--mantine-color-text)"
+                      target={options.linksTargetNewTab ? "_blank" : "_self"}
+                      fz={isTiny ? "xs" : "sm"}
+                      fw={"bold"}
+                      title={mediaRequest.name}
+                      lineClamp={1}
+                    >
+                      {mediaRequest.name || "unknown"}
+                    </Anchor>
+                    {mediaRequest.status === MediaRequestStatus.PendingApproval ? (
+                      <Group className="mediaRequests-list-item-pending-buttons" gap="sm">
+                        <Tooltip label={t("pending.approve")}>
+                          <ActionIcon
+                            className="mediaRequests-list-item-pending-button-approve"
+                            variant="light"
+                            color="green"
+                            size="xs"
+                            radius="md"
+                            onClick={() => {
+                              mutateRequestAnswer({
+                                integrationId: mediaRequest.integrationId,
+                                requestId: mediaRequest.id,
+                                answer: "approve",
+                              });
+                            }}
+                          >
+                            <IconThumbUp size={16} />
+                          </ActionIcon>
+                        </Tooltip>
+                        <Tooltip label={t("pending.decline")}>
+                          <ActionIcon
+                            className="mediaRequests-list-item-pending-button-decline"
+                            variant="light"
+                            color="red"
+                            size="xs"
+                            radius="md"
+                            onClick={() => {
+                              mutateRequestAnswer({
+                                integrationId: mediaRequest.integrationId,
+                                requestId: mediaRequest.id,
+                                answer: "decline",
+                              });
+                            }}
+                          >
+                            <IconThumbDown size={16} />
+                          </ActionIcon>
+                        </Tooltip>
+                      </Group>
+                    ) : (
+                      <StatusBadge status={mediaRequest.status} />
+                    )}
+                  </Group>
                 </Stack>
               </Group>
-              <Stack className="mediaRequests-list-item-right-side" gap="1cqmin" align="end">
-                <Group className="mediaRequests-list-item-request-user" gap="2cqmin" wrap="nowrap">
-                  <Avatar
-                    className="mediaRequests-list-item-request-user-avatar"
-                    src={mediaRequest.requestedBy?.avatar}
-                    size="6cqmin"
-                  />
-                  <Anchor
-                    className="mediaRequests-list-item-request-user-name"
-                    href={mediaRequest.requestedBy?.link}
-                    c="var(--mantine-color-text)"
-                    target={options.linksTargetNewTab ? "_blank" : "_self"}
-                    fz="5cqmin"
-                    lineClamp={1}
-                    style={{ wordBreak: "break-all" }}
-                  >
-                    {(mediaRequest.requestedBy?.displayName ?? "") || "unknown"}
-                  </Anchor>
-                </Group>
-                {mediaRequest.status === MediaRequestStatus.PendingApproval ? (
-                  <Group className="mediaRequests-list-item-pending-buttons" gap="2cqmin">
-                    <Tooltip label={t("pending.approve")}>
-                      <ActionIcon
-                        className="mediaRequests-list-item-pending-button-approve"
-                        variant="light"
-                        color="green"
-                        size="5cqmin"
-                        onClick={() => {
-                          mutateRequestAnswer({
-                            integrationId: mediaRequest.integrationId,
-                            requestId: mediaRequest.id,
-                            answer: "approve",
-                          });
-                        }}
-                      >
-                        <IconThumbUp size="4cqmin" />
-                      </ActionIcon>
-                    </Tooltip>
-                    <Tooltip label={t("pending.decline")}>
-                      <ActionIcon
-                        className="mediaRequests-list-item-pending-button-decline"
-                        variant="light"
-                        color="red"
-                        size="5cqmin"
-                        onClick={() => {
-                          mutateRequestAnswer({
-                            integrationId: mediaRequest.integrationId,
-                            requestId: mediaRequest.id,
-                            answer: "decline",
-                          });
-                        }}
-                      >
-                        <IconThumbDown size="4cqmin" />
-                      </ActionIcon>
-                    </Tooltip>
-                  </Group>
-                ) : (
-                  <StatusBadge status={mediaRequest.status} />
-                )}
-              </Stack>
             </Group>
           </Card>
         ))}

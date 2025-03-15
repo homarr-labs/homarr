@@ -29,6 +29,7 @@ export const createItemCallback =
       integrationIds: [],
       advancedOptions: {
         customCssClasses: [],
+        borderColor: "",
       },
     } satisfies Modify<
       Item,

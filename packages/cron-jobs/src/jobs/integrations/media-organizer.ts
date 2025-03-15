@@ -25,6 +25,7 @@ export const mediaOrganizerJob = createCronJob("mediaOrganizer", EVERY_MINUTE).w
             year,
             month,
             releaseType: options.releaseType,
+            showUnmonitored: options.showUnmonitored,
           });
         }
 

@@ -1,4 +1,4 @@
-import { Button, Group, Image, List, LoadingOverlay, Stack, Text, TextInput } from "@mantine/core";
+import { Avatar, Button, Group, List, LoadingOverlay, Stack, Text, TextInput } from "@mantine/core";
 import { z } from "zod";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -60,25 +60,35 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
       <Stack>
-        <List>
+        <List spacing={"xs"}>
           {innerProps.selectedContainers.map((container, index) => (
             <List.Item
               styles={{ itemWrapper: { width: "100%" }, itemLabel: { flex: 1 } }}
-              icon={<Image src={container.iconUrl} alt="container image" w={30} h={30} />}
+              icon={
+                <Avatar
+                  variant="outline"
+                  radius={container.iconUrl ? "sm" : "md"}
+                  size={30}
+                  styles={{ image: { objectFit: "contain" } }}
+                  src={container.iconUrl}
+                >
+                  {container.name.at(0)?.toUpperCase()}
+                </Avatar>
+              }
               key={container.id}
             >
-              <Group justify="space-between">
-                <Text>{container.name}</Text>
+              <Group justify="space-between" wrap={"nowrap"}>
+                <Text lineClamp={1}>{container.name}</Text>
                 <TextInput {...form.getInputProps(`containerUrls.${index}`)} />
               </Group>
             </List.Item>
           ))}
         </List>
         <Group justify="end">
-          <Button onClick={actions.closeModal} variant="light">
+          <Button onClick={actions.closeModal} variant="light" px={"xl"}>
             {t("common.action.cancel")}
           </Button>
-          <Button disabled={!form.isValid()} type="submit">
+          <Button type="submit" px={"xl"}>
             {t("common.action.add")}
           </Button>
         </Group>
@@ -89,4 +99,5 @@ export const AddDockerAppToHomarrModal = createModal<AddDockerAppToHomarrProps>(
   defaultTitle(t) {
     return t("docker.action.addToHomarr.modal.title");
   },
+  size: "lg",
 });

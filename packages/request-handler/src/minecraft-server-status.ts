@@ -9,7 +9,7 @@ export const minecraftServerStatusRequestHandler = createCachedWidgetRequestHand
   queryKey: "minecraftServerStatusApiResult",
   widgetKind: "minecraftServerStatus",
   async requestAsync(input: { domain: string; isBedrockServer: boolean }) {
-    const path = `/3/${input.isBedrockServer ? "bedrock/" : ""}${input.domain}`;
+    const path = `${input.isBedrockServer ? "/bedrock" : ""}/3/${input.domain}`;
 
     const response = await fetchWithTimeout(`https://api.mcsrvstat.us${path}`);
     return responseSchema.parse(await response.json());

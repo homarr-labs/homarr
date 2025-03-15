@@ -1,13 +1,16 @@
 import type { BoardSize, OldmarrConfig } from "@homarr/old-schema";
 
-export const mapColumnCount = (old: OldmarrConfig, screenSize: BoardSize) => {
+export const mapColumnCount = (
+  gridstackSettings: OldmarrConfig["settings"]["customization"]["gridstack"],
+  screenSize: BoardSize,
+) => {
   switch (screenSize) {
     case "lg":
-      return old.settings.customization.gridstack.columnCountLarge;
+      return gridstackSettings.columnCountLarge;
     case "md":
-      return old.settings.customization.gridstack.columnCountMedium;
+      return gridstackSettings.columnCountMedium;
     case "sm":
-      return old.settings.customization.gridstack.columnCountSmall;
+      return gridstackSettings.columnCountSmall;
     default:
       return 10;
   }

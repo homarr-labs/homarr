@@ -148,7 +148,7 @@ export const IconPicker = ({ value: propsValue, onChange, error, onFocus, onBlur
             withAsterisk
             error={error}
             label={tCommon("iconPicker.label")}
-            placeholder={tCommon("iconPicker.header", { countIcons: data?.countIcons ?? 0 })}
+            placeholder={tCommon("iconPicker.header", { countIcons: String(data?.countIcons ?? 0) })}
           />
           {session?.user.permissions.includes("media-upload") && (
             <UploadMedia

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Group, Stack } from "@mantine/core";
+import { Button, CloseButton, ColorInput, Group, Stack, useMantineTheme } from "@mantine/core";
 
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
@@ -15,6 +15,7 @@ interface InnerProps {
 
 export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, innerProps }) => {
   const t = useI18n();
+  const theme = useMantineTheme();
   const form = useForm({
     initialValues: innerProps.advancedOptions,
   });
@@ -29,6 +30,18 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, in
         <TextMultiSelect
           label={t("item.edit.field.customCssClasses.label")}
           {...form.getInputProps("customCssClasses")}
+        />
+        <ColorInput
+          label={t("item.edit.field.borderColor.label")}
+          format="hex"
+          swatches={Object.values(theme.colors).map((color) => color[6])}
+          rightSection={
+            <CloseButton
+              onClick={() => form.setFieldValue("borderColor", "")}
+              style={{ display: form.getInputProps("borderColor").value ? undefined : "none" }}
+            />
+          }
+          {...form.getInputProps("borderColor")}
         />
         <Group justify="end">
           <Button onClick={actions.closeModal} variant="subtle" color="gray">

@@ -2,7 +2,7 @@ import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { integrationCreator } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations";
 import { smartHomeEntityStateRequestHandler } from "@homarr/request-handler/smart-home-entity-state";
 
 import type { IntegrationAction } from "../../middlewares/integration";
@@ -45,7 +45,7 @@ export const smartHomeRouter = createTRPCRouter({
     .unstable_concat(createSmartHomeIntegrationMiddleware("interact"))
     .input(z.object({ entityId: z.string() }))
     .mutation(async ({ ctx: { integration }, input }) => {
-      const client = integrationCreator(integration);
+      const client = await createIntegrationAsync(integration);
       const success = await client.triggerToggleAsync(input.entityId);
 
       const innerHandler = smartHomeEntityStateRequestHandler.handler(integration, { entityId: input.entityId });
@@ -57,7 +57,7 @@ export const smartHomeRouter = createTRPCRouter({
     .unstable_concat(createSmartHomeIntegrationMiddleware("interact"))
     .input(z.object({ automationId: z.string() }))
     .mutation(async ({ ctx: { integration }, input }) => {
-      const client = integrationCreator(integration);
+      const client = await createIntegrationAsync(integration);
       await client.triggerAutomationAsync(input.automationId);
     }),
 });

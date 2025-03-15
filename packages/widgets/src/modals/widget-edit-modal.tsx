@@ -65,6 +65,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
         integrationIds: z.array(z.string()),
         advancedOptions: z.object({
           customCssClasses: z.array(z.string()),
+          borderColor: z.string(),
         }),
       }),
     ),

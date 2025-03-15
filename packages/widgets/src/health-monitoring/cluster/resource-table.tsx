@@ -1,4 +1,4 @@
-import { Group, Indicator, Popover, Table, Text } from "@mantine/core";
+import { Group, Indicator, Popover, Table, TableTbody, TableThead, TableTr, Text } from "@mantine/core";
 
 import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
@@ -8,36 +8,47 @@ import { ResourcePopover } from "./resource-popover";
 interface ResourceTableProps {
   type: Resource["type"];
   data: Resource[];
+  isTiny: boolean;
 }
 
-export const ResourceTable = ({ type, data }: ResourceTableProps) => {
+export const ResourceTable = ({ type, data, isTiny }: ResourceTableProps) => {
   const t = useI18n();
   return (
     <Table highlightOnHover>
-      <thead>
-        <tr>
-          <Table.Th ta="start">{t("widget.healthMonitoring.cluster.table.header.name")}</Table.Th>
+      <TableThead>
+        <TableTr fz={isTiny ? "8px" : "xs"}>
+          <Table.Th ta="start" p={0}>
+            {t("widget.healthMonitoring.cluster.table.header.name")}
+          </Table.Th>
           {type !== "storage" ? (
-            <Table.Th ta="start">{t("widget.healthMonitoring.cluster.table.header.cpu")}</Table.Th>
+            <Table.Th ta="start" p={0}>
+              {t("widget.healthMonitoring.cluster.table.header.cpu")}
+            </Table.Th>
           ) : null}
           {type !== "storage" ? (
-            <Table.Th ta="start">{t("widget.healthMonitoring.cluster.table.header.memory")}</Table.Th>
+            <Table.Th ta="start" p={0}>
+              {t("widget.healthMonitoring.cluster.table.header.memory")}
+            </Table.Th>
           ) : null}
           {type === "storage" ? (
-            <Table.Th ta="start">{t("widget.healthMonitoring.cluster.table.header.node")}</Table.Th>
+            <Table.Th ta="start" p={0}>
+              {t("widget.healthMonitoring.cluster.table.header.node")}
+            </Table.Th>
           ) : null}
-        </tr>
-      </thead>
-      <tbody>
+        </TableTr>
+      </TableThead>
+      <TableTbody>
         {data.map((item) => {
           return (
             <ResourcePopover key={item.name} item={item}>
               <Popover.Target>
-                <tr>
+                <TableTr fz={isTiny ? "8px" : "xs"}>
                   <td>
-                    <Group wrap="nowrap">
-                      <Indicator size={14} children={null} color={item.isRunning ? "green" : "yellow"} />
-                      <Text lineClamp={1}>{item.name}</Text>
+                    <Group wrap="nowrap" gap={isTiny ? 8 : "xs"}>
+                      <Indicator size={isTiny ? 4 : 8} children={null} color={item.isRunning ? "green" : "yellow"} />
+                      <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
+                        {item.name}
+                      </Text>
                     </Group>
                   </td>
                   {item.type === "storage" ? (
@@ -50,12 +61,12 @@ export const ResourceTable = ({ type, data }: ResourceTableProps) => {
                       </td>
                     </>
                   )}
-                </tr>
+                </TableTr>
               </Popover.Target>
             </ResourcePopover>
           );
         })}
-      </tbody>
+      </TableTbody>
     </Table>
   );
 };

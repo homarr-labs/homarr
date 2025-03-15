@@ -4,4 +4,4 @@ export type { OldmarrApp, OldmarrIntegrationType } from "./app";
 export type { OldmarrWidget, OldmarrWidgetKind } from "./widget";
 export { oldmarrWidgetKinds } from "./widget";
 export { boardSizes, getBoardSizeName } from "./tile";
-export type { BoardSize } from "./tile";
+export type { BoardSize, SizedShape } from "./tile";

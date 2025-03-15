@@ -1,53 +1,40 @@
-import type { Response } from "undici";
+import type { Headers, HeadersInit, Response as UndiciResponse } from "undici";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { logger } from "@homarr/log";
 
+import { ResponseError } from "../base/error";
+import type { IntegrationInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import type { SessionStore } from "../base/session-store";
+import { createSessionStore } from "../base/session-store";
 import { IntegrationTestConnectionError } from "../base/test-connection-error";
 import type { HealthMonitoring } from "../types";
 import { cpuTempSchema, fileSystemSchema, smartSchema, systemInformationSchema } from "./openmediavault-types";
 
+const localLogger = logger.child({ module: "OpenMediaVaultIntegration" });
+
+type SessionStoreValue =
+  | { type: "header"; sessionId: string }
+  | { type: "cookie"; loginToken: string; sessionId: string };
+
 export class OpenMediaVaultIntegration extends Integration {
-  static extractSessionIdFromCookies(headers: Headers): string {
-    const cookies = headers.get("set-cookie") ?? "";
-    const sessionId = cookies
-      .split(";")
-      .find((cookie) => cookie.includes("X-OPENMEDIAVAULT-SESSIONID") || cookie.includes("OPENMEDIAVAULT-SESSIONID"));
+  private readonly sessionStore: SessionStore<SessionStoreValue>;
 
-    if (sessionId) {
-      return sessionId;
-    } else {
-      throw new Error("Session ID not found in cookies");
-    }
-  }
-
-  static extractLoginTokenFromCookies(headers: Headers): string {
-    const cookies = headers.get("set-cookie") ?? "";
-    const loginToken = cookies
-      .split(";")
-      .find((cookie) => cookie.includes("X-OPENMEDIAVAULT-LOGIN") || cookie.includes("OPENMEDIAVAULT-LOGIN"));
-
-    if (loginToken) {
-      return loginToken;
-    } else {
-      throw new Error("Login token not found in cookies");
-    }
+  constructor(integration: IntegrationInput) {
+    super(integration);
+    this.sessionStore = createSessionStore(integration);
   }
 
   public async getSystemInfoAsync(): Promise<HealthMonitoring> {
-    if (!this.headers) {
-      await this.authenticateAndConstructSessionInHeaderAsync();
-    }
-
-    const systemResponses = await this.makeOpenMediaVaultRPCCallAsync("system", "getInformation", {}, this.headers);
-    const fileSystemResponse = await this.makeOpenMediaVaultRPCCallAsync(
+    const systemResponses = await this.makeAuthenticatedRpcCallAsync("system", "getInformation");
+    const fileSystemResponse = await this.makeAuthenticatedRpcCallAsync(
       "filesystemmgmt",
       "enumerateMountedFilesystems",
       { includeroot: true },
-      this.headers,
     );
-    const smartResponse = await this.makeOpenMediaVaultRPCCallAsync("smart", "enumerateDevices", {}, this.headers);
-    const cpuTempResponse = await this.makeOpenMediaVaultRPCCallAsync("cputemp", "get", {}, this.headers);
+    const smartResponse = await this.makeAuthenticatedRpcCallAsync("smart", "enumerateDevices");
+    const cpuTempResponse = await this.makeAuthenticatedRpcCallAsync("cputemp", "get");
 
     const systemResult = systemInformationSchema.safeParse(await systemResponses.json());
     const fileSystemResult = fileSystemSchema.safeParse(await fileSystemResponse.json());
@@ -98,30 +85,43 @@ export class OpenMediaVaultIntegration extends Integration {
   }
 
   public async testConnectionAsync(): Promise<void> {
-    const response = await this.makeOpenMediaVaultRPCCallAsync("session", "login", {
-      username: this.getSecretValue("username"),
-      password: this.getSecretValue("password"),
+    await this.getSessionAsync().catch((error) => {
+      if (error instanceof ResponseError) {
+        throw new IntegrationTestConnectionError("invalidCredentials");
+      }
     });
-
-    if (!response.ok) {
-      throw new IntegrationTestConnectionError("invalidCredentials");
-    }
-    const result = await response.json();
-    if (typeof result !== "object" || result === null || !("response" in result)) {
-      throw new IntegrationTestConnectionError("invalidJson");
-    }
   }
 
-  private async makeOpenMediaVaultRPCCallAsync(
+  private async makeAuthenticatedRpcCallAsync(
     serviceName: string,
     method: string,
-    params: Record<string, unknown>,
-    headers: Record<string, string> = {},
-  ): Promise<Response> {
+    params: Record<string, unknown> = {},
+  ): Promise<UndiciResponse> {
+    return await this.withAuthAsync(async (session) => {
+      const headers: HeadersInit =
+        session.type === "cookie"
+          ? {
+              Cookie: `${session.loginToken};${session.sessionId}`,
+            }
+          : {
+              "X-OPENMEDIAVAULT-SESSIONID": session.sessionId,
+            };
+
+      return await this.makeRpcCallAsync(serviceName, method, params, headers);
+    });
+  }
+
+  private async makeRpcCallAsync(
+    serviceName: string,
+    method: string,
+    params: Record<string, unknown> = {},
+    headers: HeadersInit = {},
+  ): Promise<UndiciResponse> {
     return await fetchWithTrustedCertificatesAsync(this.url("/rpc.php"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "User-Agent": "Homarr",
         ...headers,
       },
       body: JSON.stringify({
@@ -132,25 +132,79 @@ export class OpenMediaVaultIntegration extends Integration {
     });
   }
 
-  private headers: Record<string, string> | undefined = undefined;
+  /**
+   * Run the callback with the current session id
+   * @param callback
+   * @returns
+   */
+  private async withAuthAsync(callback: (session: SessionStoreValue) => Promise<UndiciResponse>) {
+    const storedSession = await this.sessionStore.getAsync();
 
-  private async authenticateAndConstructSessionInHeaderAsync() {
-    const authResponse = await this.makeOpenMediaVaultRPCCallAsync("session", "login", {
+    if (storedSession) {
+      localLogger.debug("Using stored session for request", { integrationId: this.integration.id });
+      const response = await callback(storedSession);
+      if (response.status !== 401) {
+        return response;
+      }
+
+      localLogger.info("Session expired, getting new session", { integrationId: this.integration.id });
+    }
+
+    const session = await this.getSessionAsync();
+    await this.sessionStore.setAsync(session);
+    return await callback(session);
+  }
+
+  /**
+   * Get a session id from the openmediavault server
+   * @returns The session details
+   */
+  private async getSessionAsync(): Promise<SessionStoreValue> {
+    const response = await this.makeRpcCallAsync("session", "login", {
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
     });
-    const authResult = (await authResponse.json()) as Response;
-    const response = (authResult as { response?: { sessionid?: string } }).response;
-    let sessionId;
-    const headers: Record<string, string> = {};
-    if (response?.sessionid) {
-      sessionId = response.sessionid;
-      headers["X-OPENMEDIAVAULT-SESSIONID"] = sessionId;
+
+    const data = (await response.json()) as { response?: { sessionid?: string } };
+    if (data.response?.sessionid) {
+      return {
+        type: "header",
+        sessionId: data.response.sessionid,
+      };
     } else {
-      sessionId = OpenMediaVaultIntegration.extractSessionIdFromCookies(authResponse.headers);
-      const loginToken = OpenMediaVaultIntegration.extractLoginTokenFromCookies(authResponse.headers);
-      headers.Cookie = `${loginToken};${sessionId}`;
+      const sessionId = OpenMediaVaultIntegration.extractSessionIdFromCookies(response.headers);
+      const loginToken = OpenMediaVaultIntegration.extractLoginTokenFromCookies(response.headers);
+
+      if (!sessionId || !loginToken) {
+        throw new ResponseError(
+          response,
+          `${JSON.stringify(data)} - sessionId=${"*".repeat(sessionId?.length ?? 0)} loginToken=${"*".repeat(loginToken?.length ?? 0)}`,
+        );
+      }
+
+      return {
+        type: "cookie",
+        loginToken,
+        sessionId,
+      };
     }
-    this.headers = headers;
+  }
+
+  private static extractSessionIdFromCookies(headers: Headers): string | null {
+    const cookies = headers.getSetCookie();
+    const sessionId = cookies.find(
+      (cookie) => cookie.includes("X-OPENMEDIAVAULT-SESSIONID") || cookie.includes("OPENMEDIAVAULT-SESSIONID"),
+    );
+
+    return sessionId ?? null;
+  }
+
+  private static extractLoginTokenFromCookies(headers: Headers): string | null {
+    const cookies = headers.getSetCookie();
+    const loginToken = cookies.find(
+      (cookie) => cookie.includes("X-OPENMEDIAVAULT-LOGIN") || cookie.includes("OPENMEDIAVAULT-LOGIN"),
+    );
+
+    return loginToken ?? null;
   }
 }

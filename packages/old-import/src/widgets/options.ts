@@ -38,6 +38,7 @@ const optionMapping: OptionMapping = {
 
       return mappedLayouts[oldOptions.layout];
     },
+    hideTitle: () => undefined,
     hideIcon: (oldOptions) => oldOptions.items.some((item) => item.hideIcon),
     hideHostname: (oldOptions) => oldOptions.items.some((item) => item.hideHostname),
     openNewTab: (oldOptions) => oldOptions.items.some((item) => item.openNewTab),
@@ -46,6 +47,7 @@ const optionMapping: OptionMapping = {
     releaseType: (oldOptions) => [oldOptions.radarrReleaseType],
     filterFutureMonths: () => undefined,
     filterPastMonths: () => undefined,
+    showUnmonitored: ({ showUnmonitored }) => showUnmonitored,
   },
   clock: {
     customTitle: (oldOptions) => oldOptions.customTitle,

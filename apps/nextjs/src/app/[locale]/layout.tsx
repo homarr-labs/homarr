@@ -20,7 +20,6 @@ import { SettingsProvider } from "@homarr/settings";
 import { SpotlightProvider } from "@homarr/spotlight";
 import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
-import { getI18nMessages } from "@homarr/translation/server";
 
 import { Analytics } from "~/components/layout/analytics";
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
@@ -81,7 +80,6 @@ export default async function Layout(props: {
   const serverSettings = await getServerSettingsAsync(db);
   const colorScheme = await getCurrentColorSchemeAsync();
   const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";
-  const i18nMessages = await getI18nMessages();
 
   const StackedProvider = composeWrappers([
     (innerProps) => {
@@ -105,7 +103,7 @@ export default async function Layout(props: {
     (innerProps) => <JotaiProvider {...innerProps} />,
     (innerProps) => <TRPCReactProvider {...innerProps} />,
     (innerProps) => <DayJsLoader {...innerProps} />,
-    (innerProps) => <NextIntlClientProvider {...innerProps} messages={i18nMessages} />,
+    (innerProps) => <NextIntlClientProvider {...innerProps} />,
     (innerProps) => <CustomMantineProvider {...innerProps} defaultColorScheme={colorScheme} />,
     (innerProps) => <ModalProvider {...innerProps} />,
     (innerProps) => <SpotlightProvider {...innerProps} />,

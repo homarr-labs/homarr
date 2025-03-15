@@ -12,7 +12,8 @@ export const zodErrorMap = <TFunction extends TranslationFunction>(t: TFunction)
       };
     }
     return {
-      message: t(error.key ? `common.zod.${error.key}` : "common.zod.errors.default", error.params ?? {}),
+      // use never to make ts happy
+      message: t(error.key ? `common.zod.${error.key}` : "common.zod.errors.default", (error.params ?? {}) as never),
     };
   };
 };

@@ -1,4 +1,4 @@
-import { Center, Group, ScrollArea, Table, Text, Title, Tooltip } from "@mantine/core";
+import { Center, Group, ScrollArea, Table, TableTd, TableTh, TableTr, Text, Title, Tooltip } from "@mantine/core";
 import { IconHeartbeat, IconTransform } from "@tabler/icons-react";
 
 import { humanFileSize } from "@homarr/common";
@@ -17,7 +17,7 @@ export function QueuePanel(props: QueuePanelProps) {
   if (queue.array.length === 0) {
     return (
       <Center style={{ flex: "1" }}>
-        <Title order={3}>{t("empty")}</Title>
+        <Title order={6}>{t("empty")}</Title>
       </Center>
     );
   }
@@ -26,36 +26,42 @@ export function QueuePanel(props: QueuePanelProps) {
     <ScrollArea style={{ flex: "1" }}>
       <Table style={{ tableLayout: "fixed" }}>
         <Table.Thead>
-          <tr>
-            <th>{t("table.file")}</th>
-            <th style={{ width: 80 }}>{t("table.size")}</th>
-          </tr>
+          <TableTr>
+            <TableTh ta="start" py={4}>
+              <Text size="xs" fw="bold">
+                {t("table.file")}
+              </Text>
+            </TableTh>
+            <TableTh ta="start" py={4}>
+              <Text size="xs" fw="bold">
+                {t("table.size")}
+              </Text>
+            </TableTh>
+          </TableTr>
         </Table.Thead>
         <Table.Tbody>
           {queue.array.map((item) => (
-            <tr key={item.id}>
-              <td>
-                <Group gap="xs" wrap="nowrap">
-                  <div>
-                    {item.type === "transcode" ? (
-                      <Tooltip label={t("table.transcode")}>
-                        <IconTransform size={14} />
-                      </Tooltip>
-                    ) : (
-                      <Tooltip label={t("table.healthCheck")}>
-                        <IconHeartbeat size={14} />
-                      </Tooltip>
-                    )}
-                  </div>
+            <TableTr key={item.id}>
+              <TableTd py={2}>
+                <Group gap={4} wrap="nowrap">
+                  {item.type === "transcode" ? (
+                    <Tooltip label={t("table.transcode")}>
+                      <IconTransform size={12} />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip label={t("table.healthCheck")}>
+                      <IconHeartbeat size={12} />
+                    </Tooltip>
+                  )}
                   <Text lineClamp={1} size="xs">
                     {item.filePath.split("\\").pop()?.split("/").pop() ?? item.filePath}
                   </Text>
                 </Group>
-              </td>
-              <td>
+              </TableTd>
+              <TableTd py={2}>
                 <Text size="xs">{humanFileSize(item.fileSize)}</Text>
-              </td>
-            </tr>
+              </TableTd>
+            </TableTr>
           ))}
         </Table.Tbody>
       </Table>

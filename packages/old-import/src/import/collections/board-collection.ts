@@ -81,7 +81,7 @@ export const createBoardInsertCollection = (
       ...boardSizes.map((size) => ({
         id: layoutMapping[size],
         boardId: mappedBoard.id,
-        columnCount: mapColumnCount(board.config, size),
+        columnCount: mapColumnCount(board.config.settings.customization.gridstack, size),
         breakpoint: mapBreakpoint(size),
         name: getBoardSizeName(size),
       })),
@@ -94,7 +94,17 @@ export const createBoardInsertCollection = (
     }
     logger.debug(`Added sections to board insert collection count=${insertCollection.sections.length}`);
 
-    const preparedItems = prepareItems({ apps, widgets }, appsMap, preparedSections, layoutMapping, mappedBoard.id);
+    const preparedItems = prepareItems(
+      {
+        apps,
+        widgets,
+        settings: board.config.settings,
+      },
+      appsMap,
+      preparedSections,
+      layoutMapping,
+      mappedBoard.id,
+    );
     preparedItems.forEach(({ layouts, ...item }) => {
       insertCollection.items.push(item);
       insertCollection.itemLayouts.push(...layouts);
