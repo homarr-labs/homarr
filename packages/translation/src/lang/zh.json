@@ -677,11 +677,11 @@
         "description": "集成 {kind} 可以與搜尋引擎共同使用，勾選此選項可自動設定搜尋引擎"
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "創建應用程式",
+        "description": "建立一個與集成相同名稱和圖示的應用程式，將下方輸入欄位留空，以使用集成網址創建應用程式"
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "自訂應用程式網址"
       }
     },
     "action": {
