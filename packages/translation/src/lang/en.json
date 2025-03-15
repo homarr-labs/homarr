@@ -1611,7 +1611,7 @@
     },
     "dockerContainers": {
       "name": "Docker stats",
-      "description": "Stats of your containers",
+      "description": "Stats of your containers (This widget can only be added with administrator privileges)",
       "option": {},
       "error": {
         "internalServerError": "Failed to fetch containers stats"

@@ -30,7 +30,7 @@ const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useScopedI18n("docker");
   return (
     <Badge radius="sm" variant="transparent" color={containerStates[state]}>
-      <Text>{t(`field.state.option.${state}`)}</Text>
+      <Text size="sm">{t(`field.state.option.${state}`)}</Text>
     </Badge>
   );
 };
@@ -65,18 +65,11 @@ const columns = (
   {
     accessorKey: "name",
     header: t("field.name.label"),
-    mantineTableHeadCellProps: {
-      style: {
-        width: "25%",
-      },
-    },
     Cell({ renderedCellValue, row }) {
       return (
         <Group gap="xs">
-          <Avatar variant="outline" radius="md" size="10cqmin" src={row.original.iconUrl}>
-            {row.original.name.at(0)?.toUpperCase()}
-          </Avatar>
-          <Text p="0.5" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+          <Avatar variant="outline" radius="md" size={20} src={row.original.iconUrl} />
+          <Text p="0.5" size="sm" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
             {renderedCellValue}
           </Text>
         </Group>
@@ -86,11 +79,6 @@ const columns = (
   {
     accessorKey: "state",
     header: t("field.state.label"),
-    mantineTableHeadCellProps: {
-      style: {
-        width: "25%",
-      },
-    },
     Cell({ row }) {
       return <ContainerStateBadge state={row.original.state as ContainerState} />;
     },
@@ -98,11 +86,6 @@ const columns = (
   {
     accessorKey: "cpuUsage",
     header: t("field.stats.cpu.label"),
-    mantineTableHeadCellProps: {
-      style: {
-        width: "20%",
-      },
-    },
     Cell({ row }) {
       return (
         <Badge
@@ -110,7 +93,7 @@ const columns = (
           variant="transparent"
           color={badgeColor(safeValue(row.original.cpuUsage), row.original.state)}
         >
-          <Text>{`${row.original.cpuUsage.toFixed(2)}%`}</Text>
+          <Text size="sm">{`${row.original.cpuUsage.toFixed(2)}%`}</Text>
         </Badge>
       );
     },
@@ -118,11 +101,6 @@ const columns = (
   {
     accessorKey: "memoryUsage",
     header: t("field.stats.memory.label"),
-    mantineTableHeadCellProps: {
-      style: {
-        width: "20%",
-      },
-    },
     Cell({ row }) {
       return (
         <Badge
@@ -130,7 +108,7 @@ const columns = (
           variant="transparent"
           color={badgeColor(safeValue(row.original.memoryUsage), row.original.state)}
         >
-          <Text>{(safeValue(row.original.memoryUsage) / (1024 * 1024)).toFixed(2)} MiB</Text>
+          <Text size="sm">{(safeValue(row.original.memoryUsage) / (1024 * 1024)).toFixed(2)} MiB</Text>
         </Badge>
       );
     },
@@ -138,11 +116,6 @@ const columns = (
   {
     accessorKey: "actions",
     header: t("action.title"),
-    mantineTableHeadCellProps: {
-      style: {
-        width: "10%",
-      },
-    },
     Cell({ row }) {
       const utils = clientApi.useUtils();
       const { mutateAsync: startContainer } = clientApi.docker.startAll.useMutation();
@@ -180,7 +153,7 @@ const columns = (
             <ActionIcon
               variant="transparent"
               radius={999}
-              size="var(--button-size)"
+              size={20}
               onClick={() => handleActionAsync(row.original.state === "running" ? "stop" : "start")}
             >
               {row.original.state === "running" ? (
@@ -191,12 +164,7 @@ const columns = (
             </ActionIcon>
           </Tooltip>
           <Tooltip label={t("action.restart.label")}>
-            <ActionIcon
-              variant="transparent"
-              radius={999}
-              size="var(--button-size)"
-              onClick={() => handleActionAsync("restart")}
-            >
+            <ActionIcon variant="transparent" radius={999} size={20} onClick={() => handleActionAsync("restart")}>
               <IconRotateClockwise style={actionIconIconStyle} />
             </ActionIcon>
           </Tooltip>
@@ -248,6 +216,12 @@ export default function DockerWidget() {
         tableLayout: "fixed",
       },
     },
+    mantineTableHeadProps: {
+      fz: "xs",
+    },
+    mantineTableHeadCellProps: {
+      py: 4,
+    },
     mantineTableContainerProps: {
       style: {
         height: "100%",
@@ -270,19 +244,21 @@ export default function DockerWidget() {
         }}
       >
         <Group gap={1}>
-          <IconBrandDocker />
-          <Text>{t("table.footer", { count: totalContainers })}</Text>
+          <IconBrandDocker size={20} />
+          <Text size="sm">{t("table.footer", { count: totalContainers.toString() })}</Text>
         </Group>
         <Group gap="2cqmin">
           {Object.entries(containerStateCounts).map(([state, count]) =>
             count > 0 ? (
-              <Text key={state} variant="light">
+              <Text key={state} variant="light" size="sm">
                 {t(`field.state.option.${state as keyof typeof containerStates}`)}:{count}
               </Text>
             ) : null,
           )}
         </Group>
-        <Text p="2cqmin">{t("table.updated", { when: relativeTime })}</Text>
+        <Text p="2cqmin" size="sm">
+          {t("table.updated", { when: relativeTime })}
+        </Text>
       </Group>
     </Stack>
   );
