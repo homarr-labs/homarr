@@ -23,4 +23,4 @@ export const fetchCustomApiRequestHandler = createCachedWidgetRequestHandler({
   cacheDuration: dayjs.duration(5, "minutes"),
 });
 
-const responseSchema = z.any();
+const responseSchema = z.unknown();
