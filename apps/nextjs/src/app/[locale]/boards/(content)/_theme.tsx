@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import type { MantineColorsTuple } from "@mantine/core";
-import { colorsTuple, createTheme, darken, lighten, MantineProvider } from "@mantine/core";
+import { colorsTuple, createTheme, darken, lighten, MantineProvider, rem } from "@mantine/core";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { ColorScheme } from "@homarr/definitions";
@@ -24,6 +24,11 @@ export const BoardMantineProvider = ({
     },
     primaryColor: "primaryColor",
     autoContrast: true,
+    fontSizes: {
+      xl2: rem(24),
+      xl3: rem(28),
+      xl4: rem(36),
+    },
   });
 
   return (
