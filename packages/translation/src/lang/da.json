@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Opret Søgemaskine",
         "description": "Integration \"{kind}\" kan bruges med søgemaskinerne. Markér dette for automatisk at konfigurere søgemaskinen."
+      },
+      "createApp": {
+        "label": "Opret app",
+        "description": "Opret en app med samme navn og ikon som integrationen. Lad input-feltet være tomt for at oprette app'en med integrations-URL'en."
+      },
+      "appHref": {
+        "placeholder": "Brugerdefineret app URL"
       }
     },
     "action": {
@@ -1072,7 +1079,7 @@
           "label": "Brugerdefinerede CSS-klasser"
         },
         "borderColor": {
-          "label": ""
+          "label": "Kantfarve"
         }
       }
     },
@@ -1129,12 +1136,12 @@
               "label": "Gitter"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "Vandret gitter"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "Skjul titel"
         },
         "hideIcon": {
           "label": "Skjul ikoner"
@@ -1434,6 +1441,9 @@
         },
         "filterFutureMonths": {
           "label": "Slut kl"
+        },
+        "showUnmonitored": {
+          "label": "Vis uovervåget"
         }
       }
     },
@@ -1665,6 +1675,7 @@
       "description": "Vis de aktuelle streams på dine medieservere",
       "option": {},
       "items": {
+        "currentlyPlaying": "Afspiller lige nu",
         "user": "Bruger",
         "name": "Navn",
         "id": "Id"
@@ -1889,10 +1900,10 @@
         "statistics": {
           "empty": "Tom",
           "transcodes": "Transkoder",
-          "transcodesCount": "Transkodninger: {value}",
-          "healthChecksCount": "Sundhedstjek: {value}",
-          "filesCount": "Filer: {value}",
-          "savedSpace": "Gemt plads: {value}",
+          "transcodesCount": "Transkodninger",
+          "healthChecksCount": "Sundhedstjek",
+          "filesCount": "Filer",
+          "savedSpace": "Gemt plads",
           "healthChecks": "Sundhedstjek",
           "videoCodecs": "Kodeks",
           "videoContainers": "Containere",
@@ -2321,6 +2332,7 @@
           "label": "Værktøjer",
           "items": {
             "docker": "Docker",
+            "kubernetes": "Kubernetes",
             "logs": "Logfiler",
             "api": "API",
             "certificates": "Certifikater",
@@ -2867,6 +2879,246 @@
       "internalServerError": "Kunne ikke hente Docker-containere"
     }
   },
+  "kubernetes": {
+    "cluster": {
+      "title": "Cluster Kontrolpanel",
+      "label": "Cluster",
+      "providers": "Udbydere",
+      "version": "Version",
+      "architecture": "Arkitektur",
+      "capacity": {
+        "title": "Kapacitet",
+        "resource": {
+          "reserved": "Reserveret",
+          "used": "Brugt"
+        }
+      },
+      "resources": {
+        "title": "Ressourcer",
+        "nodes": "Noder",
+        "namespaces": "Navnerum",
+        "ingresses": "Ingresses",
+        "services": "Tjenester",
+        "pods": "Pods",
+        "configmaps": "ConfigMaps",
+        "secrets": "Hemmeligheder",
+        "volumes": "Volumer"
+      }
+    },
+    "nodes": {
+      "label": "Noder",
+      "field": {
+        "name": {
+          "label": "Navn"
+        },
+        "state": {
+          "label": "Tilstand",
+          "option": {
+            "ready": "Klar",
+            "NotReady": "Ikke Klar"
+          }
+        },
+        "cpu": {
+          "label": "CPU"
+        },
+        "memory": {
+          "label": "RAM"
+        },
+        "pods": {
+          "label": "Pods"
+        },
+        "operatingSystem": {
+          "label": "OS"
+        },
+        "architecture": {
+          "label": "Arkitektur"
+        },
+        "kubernetesVersion": {
+          "label": "Kubernetes version"
+        },
+        "creationTimestamp": {
+          "label": "Oprettet"
+        }
+      },
+      "table": {
+        "search": "Søg i {count} noder"
+      }
+    },
+    "namespaces": {
+      "label": "Navnerum",
+      "field": {
+        "name": {
+          "label": "Navn"
+        },
+        "state": {
+          "label": "Tilstand",
+          "option": {
+            "active": "Aktiv",
+            "terminating": "Afslutter"
+          }
+        },
+        "creationTimestamp": {
+          "label": "Oprettet"
+        }
+      },
+      "table": {
+        "search": "Søg i {count} navneområder"
+      }
+    },
+    "ingresses": {
+      "label": "Ingresses",
+      "field": {
+        "name": {
+          "label": "Navn"
+        },
+        "namespace": {
+          "label": "Navnerum"
+        },
+        "className": {
+          "label": "Klassens navn"
+        },
+        "rulesAndPaths": {
+          "label": "Regler & stier"
+        },
+        "creationTimestamp": {
+          "label": "Oprettet"
+        }
+      },
+      "table": {
+        "search": "Søg i {count} ingresses"
+      }
+    },
+    "services": {
+      "label": "Tjenester",
+      "field": {
+        "name": {
+          "label": "Navn"
+        },
+        "namespace": {
+          "label": "Navnerum"
+        },
+        "type": {
+          "label": "Type"
+        },
+        "ports": {
+          "label": "Porte"
+        },
+        "targetPorts": {
+          "label": "Målporte"
+        },
+        "clusterIP": {
+          "label": "Cluster IP"
+        },
+        "creationTimestamp": {
+          "label": "Oprettet"
+        }
+      },
+      "table": {
+        "search": "Søg i {count} tjenester"
+      }
+    },
+    "pods": {
+      "label": "Pods",
+      "field": {
+        "name": {
+          "label": "Navn"
+        },
+        "namespace": {
+          "label": "Navnerum"
+        },
+        "image": {
+          "label": "Billede"
+        },
+        "applicationType": {
+          "label": "Applikationstype"
+        },
+        "status": {
+          "label": "Status"
+        },
+        "creationTimestamp": {
+          "label": "Oprettet"
+        }
+      },
+      "table": {
+        "search": "Søg i {count} pods"
+      }
+    },
+    "secrets": {
+      "label": "Hemmeligheder",
+      "field": {
+        "name": {
+          "label": "Navn"
+        },
+        "namespace": {
+          "label": "navnerum"
+        },
+        "type": {
+          "label": "type"
+        },
+        "creationTimestamp": {
+          "label": "Oprettet"
+        }
+      },
+      "table": {
+        "search": "Søg i {count} hemmeligheder"
+      }
+    },
+    "configmaps": {
+      "label": "ConfigMaps",
+      "field": {
+        "name": {
+          "label": "Navn"
+        },
+        "namespace": {
+          "label": "navnerum"
+        },
+        "creationTimestamp": {
+          "label": "Oprettet"
+        }
+      },
+      "table": {
+        "search": "Søg i {count} configMaps"
+      }
+    },
+    "volumes": {
+      "label": "Volumer",
+      "field": {
+        "name": {
+          "label": "Navn"
+        },
+        "namespace": {
+          "label": "Navnerum"
+        },
+        "accessModes": {
+          "label": "Adgangstilstande"
+        },
+        "storage": {
+          "label": "Lager"
+        },
+        "storageClassName": {
+          "label": "Lagerklasse Navn"
+        },
+        "volumeMode": {
+          "label": "Volume Mode"
+        },
+        "volumeName": {
+          "label": "Volumens Navn"
+        },
+        "status": {
+          "label": "Status"
+        },
+        "creationTimestamp": {
+          "label": "Oprettet"
+        }
+      },
+      "table": {
+        "search": "Søg i {count} volumes"
+      }
+    },
+    "error": {
+      "internalServerError": "Kunne ikke hente Kubernetes-data"
+    }
+  },
   "permission": {
     "title": "Tilladelser",
     "userSelect": {
@@ -2951,6 +3203,33 @@
         "label": "Værktøjer",
         "docker": {
           "label": "Docker"
+        },
+        "kubernetes": {
+          "label": "Kubernetes",
+          "nodes": {
+            "label": "Noder"
+          },
+          "namespaces": {
+            "label": "Navnerum"
+          },
+          "ingresses": {
+            "label": "Ingresses"
+          },
+          "services": {
+            "label": "Tjenester"
+          },
+          "pods": {
+            "label": "pods"
+          },
+          "configmaps": {
+            "label": "ConfigMaps"
+          },
+          "secrets": {
+            "label": "Hemmeligheder"
+          },
+          "volumes": {
+            "label": "Volumer"
+          }
         },
         "logs": {
           "label": "Logs"

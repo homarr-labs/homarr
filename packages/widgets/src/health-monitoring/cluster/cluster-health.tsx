@@ -31,6 +31,7 @@ const running = (total: number, current: Resource) => {
 export const ClusterHealthMonitoring = ({
   integrationId,
   options,
+  width,
 }: WidgetComponentProps<"healthMonitoring"> & { integrationId: string }) => {
   const t = useI18n();
   const [healthData] = clientApi.widget.healthMonitoring.getClusterHealthStatus.useSuspenseQuery(
@@ -72,14 +73,15 @@ export const ClusterHealthMonitoring = ({
   const cpuPercent = maxCpu ? (usedCpu / maxCpu) * 100 : 0;
   const memPercent = maxMem ? (usedMem / maxMem) * 100 : 0;
 
+  const isTiny = width < 256;
   return (
-    <Stack h="100%">
-      <Group justify="center" wrap="nowrap" pt="md">
-        <Text fz="md" tt="uppercase" fw={700} c="dimmed" ta="center">
+    <Stack h="100%" p="xs" gap={isTiny ? "xs" : "md"}>
+      <Group justify="center" wrap="nowrap">
+        <Text fz={isTiny ? 8 : "xs"} tt="uppercase" fw={700} c="dimmed" ta="center">
           {formatUptime(uptime, t)}
         </Text>
       </Group>
-      <SummaryHeader cpu={cpuPercent} memory={memPercent} />
+      <SummaryHeader cpu={cpuPercent} memory={memPercent} isTiny={isTiny} />
       <Accordion variant="contained" chevronPosition="right" multiple defaultValue={["node"]}>
         <ResourceAccordionItem
           value="node"
@@ -90,8 +92,9 @@ export const ClusterHealthMonitoring = ({
             totalCount: healthData.nodes.length,
             sectionIndicatorRequirement: options.sectionIndicatorRequirement,
           })}
+          isTiny={isTiny}
         >
-          <ResourceTable type="node" data={healthData.nodes} />
+          <ResourceTable type="node" data={healthData.nodes} isTiny={isTiny} />
         </ResourceAccordionItem>
 
         <ResourceAccordionItem
@@ -103,8 +106,9 @@ export const ClusterHealthMonitoring = ({
             totalCount: healthData.vms.length,
             sectionIndicatorRequirement: options.sectionIndicatorRequirement,
           })}
+          isTiny={isTiny}
         >
-          <ResourceTable type="qemu" data={healthData.vms} />
+          <ResourceTable type="qemu" data={healthData.vms} isTiny={isTiny} />
         </ResourceAccordionItem>
 
         <ResourceAccordionItem
@@ -116,8 +120,9 @@ export const ClusterHealthMonitoring = ({
             totalCount: healthData.lxcs.length,
             sectionIndicatorRequirement: options.sectionIndicatorRequirement,
           })}
+          isTiny={isTiny}
         >
-          <ResourceTable type="lxc" data={healthData.lxcs} />
+          <ResourceTable type="lxc" data={healthData.lxcs} isTiny={isTiny} />
         </ResourceAccordionItem>
 
         <ResourceAccordionItem
@@ -129,8 +134,9 @@ export const ClusterHealthMonitoring = ({
             totalCount: healthData.storages.length,
             sectionIndicatorRequirement: options.sectionIndicatorRequirement,
           })}
+          isTiny={isTiny}
         >
-          <ResourceTable type="storage" data={healthData.storages} />
+          <ResourceTable type="storage" data={healthData.storages} isTiny={isTiny} />
         </ResourceAccordionItem>
       </Accordion>
     </Stack>
@@ -140,45 +146,50 @@ export const ClusterHealthMonitoring = ({
 interface SummaryHeaderProps {
   cpu: number;
   memory: number;
+  isTiny: boolean;
 }
 
-const SummaryHeader = ({ cpu, memory }: SummaryHeaderProps) => {
+const SummaryHeader = ({ cpu, memory, isTiny }: SummaryHeaderProps) => {
   const t = useI18n();
   return (
     <Center>
-      <Group wrap="nowrap">
+      <Group wrap="wrap" justify="center" gap="xs">
         <Flex direction="row">
           <RingProgress
             roundCaps
-            size={60}
-            thickness={6}
+            size={isTiny ? 32 : 48}
+            thickness={isTiny ? 2 : 4}
             label={
               <Center>
-                <IconCpu />
+                <IconCpu size={isTiny ? 12 : 20} />
               </Center>
             }
             sections={[{ value: cpu, color: cpu > 75 ? "orange" : "green" }]}
           />
           <Stack align="center" justify="center" gap={0}>
-            <Text fw={500}>{t("widget.healthMonitoring.cluster.summary.cpu")}</Text>
-            <Text>{cpu.toFixed(1)}%</Text>
+            <Text fw={500} size={isTiny ? "xs" : "sm"}>
+              {t("widget.healthMonitoring.cluster.summary.cpu")}
+            </Text>
+            <Text size={isTiny ? "8px" : "xs"}>{cpu.toFixed(1)}%</Text>
           </Stack>
         </Flex>
         <Flex>
           <RingProgress
             roundCaps
-            size={60}
-            thickness={6}
+            size={isTiny ? 32 : 48}
+            thickness={isTiny ? 2 : 4}
             label={
               <Center>
-                <IconBrain />
+                <IconBrain size={isTiny ? 12 : 20} />
               </Center>
             }
             sections={[{ value: memory, color: memory > 75 ? "orange" : "green" }]}
           />
           <Stack align="center" justify="center" gap={0}>
-            <Text fw={500}>{t("widget.healthMonitoring.cluster.summary.memory")}</Text>
-            <Text>{memory.toFixed(1)}%</Text>
+            <Text size={isTiny ? "xs" : "sm"} fw={500}>
+              {t("widget.healthMonitoring.cluster.summary.memory")}
+            </Text>
+            <Text size={isTiny ? "8px" : "xs"}>{memory.toFixed(1)}%</Text>
           </Stack>
         </Flex>
       </Group>

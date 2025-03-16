@@ -13,6 +13,7 @@ interface ResourceAccordionItemProps {
     activeCount: number;
     totalCount: number;
   };
+  isTiny: boolean;
 }
 
 export const ResourceAccordionItem = ({
@@ -21,13 +22,14 @@ export const ResourceAccordionItem = ({
   icon: Icon,
   badge,
   children,
+  isTiny,
 }: PropsWithChildren<ResourceAccordionItemProps>) => {
   return (
     <Accordion.Item value={value}>
-      <Accordion.Control icon={<Icon />}>
-        <Group style={{ rowGap: "0" }}>
-          <Text>{title}</Text>
-          <Badge variant="dot" color={badge.color} size="lg">
+      <Accordion.Control icon={isTiny ? null : <Icon size={16} />}>
+        <Group style={{ rowGap: "0" }} gap="xs">
+          <Text size="xs">{title}</Text>
+          <Badge variant="dot" color={badge.color} size="xs">
             {badge.activeCount} / {badge.totalCount}
           </Badge>
         </Group>

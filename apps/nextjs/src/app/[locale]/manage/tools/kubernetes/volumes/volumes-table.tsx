@@ -89,7 +89,7 @@ export function VolumesTable(initialData: VolumesTableComponentProps) {
     positionGlobalFilter: "right",
     initialState: { density: "xs", showGlobalFilter: true },
     mantineSearchTextInputProps: {
-      placeholder: tVolumes("table.search", { count: data.length }),
+      placeholder: tVolumes("table.search", { count: String(data.length) }),
       style: { minWidth: 300 },
       autoFocus: true,
     },

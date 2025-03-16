@@ -95,7 +95,7 @@ export function IngressesTable(initialData: IngressesTableComponentProps) {
     positionGlobalFilter: "right",
     initialState: { density: "xs", showGlobalFilter: true },
     mantineSearchTextInputProps: {
-      placeholder: tIngresses("table.search", { count: data.length }),
+      placeholder: tIngresses("table.search", { count: String(data.length) }),
       style: { minWidth: 300 },
       autoFocus: true,
     },

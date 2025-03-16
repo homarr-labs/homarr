@@ -64,7 +64,7 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
         </Container>
       </Popover.Target>
       {/* Popover has some offset on the left side, padding is removed because of scrollarea paddings */}
-      <Popover.Dropdown maw="calc(100vw - 10px)" pe={4} pb={0} style={{ overflow: "hidden" }}>
+      <Popover.Dropdown maw="calc(100vw - 24px)" w={512} pe={4} pb={0} style={{ overflow: "hidden" }}>
         <CalendarEventList events={events} />
       </Popover.Dropdown>
     </Popover>

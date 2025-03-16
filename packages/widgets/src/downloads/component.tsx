@@ -24,7 +24,6 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import type { IconProps } from "@tabler/icons-react";
 import {
   IconAlertTriangle,
   IconCirclesRelation,
@@ -73,16 +72,6 @@ const columnsRatios: Record<keyof ExtendedDownloadClientItem, number> = {
   time: 4,
   type: 2,
   upSpeed: 3,
-};
-
-const actionIconIconStyle: IconProps["style"] = {
-  height: "var(--ai-icon-size)",
-  width: "var(--ai-icon-size)",
-};
-
-const standardIconStyle: IconProps["style"] = {
-  height: "var(--icon-size)",
-  width: "var(--icon-size)",
 };
 
 export default function DownloadClientsWidget({
@@ -307,29 +296,9 @@ export default function DownloadClientsWidget({
     upSpeed: options.columns.includes("upSpeed") && integrationTypes.includes("torrent"),
   } satisfies Record<keyof ExtendedDownloadClientItem, boolean>;
 
-  //Set a relative width using ratio table
-  const totalWidth = options.columns.reduce(
-    (count: number, column) => (columnVisibility[column] ? count + columnsRatios[column] : count),
-    0,
-  );
-
   //Default styling behavior for stopping interaction when editing. (Applied everywhere except the table header)
   const editStyle: MantineStyleProp = {
     pointerEvents: isEditMode ? "none" : undefined,
-  };
-
-  //General style sizing as vars that should apply or be applied to all elements
-  const baseStyle: MantineStyleProp = {
-    "--total-width": totalWidth,
-    "--ratio-width": "calc(100cqw / var(--total-width))",
-    "--space-size": "calc(var(--ratio-width) * 0.1)", //Standard gap and spacing value
-    "--text-fz": "calc(var(--ratio-width) * 0.45)", //General Font Size
-    "--button-fz": "var(--text-fz)",
-    "--icon-size": "calc(var(--ratio-width) * 2 / 3)", //Normal icon size
-    "--ai-icon-size": "calc(var(--ratio-width) * 0.5)", //Icon inside action icons size
-    "--button-size": "calc(var(--ratio-width) * 0.75)", //Action Icon, button and avatar size
-    "--image-size": "var(--button-size)",
-    "--mrt-base-background-color": "transparent",
   };
 
   //Base element in common with all columns
@@ -337,42 +306,31 @@ export default function DownloadClientsWidget({
     ({
       key,
       showHeader,
-      align,
     }: {
       key: keyof ExtendedDownloadClientItem;
       showHeader: boolean;
-      align?: "center" | "left" | "right" | "justify" | "char";
     }): MRT_ColumnDef<ExtendedDownloadClientItem> => {
-      const style: MantineStyleProp = {
-        minWidth: 0,
-        width: "var(--column-width)",
-        height: "var(--ratio-width)",
-        padding: "var(--space-size)",
-        transition: "unset",
-        "--key-width": columnsRatios[key],
-        "--column-width": "calc((var(--key-width)/var(--total-width) * 100cqw))",
-      };
       return {
         id: key,
         accessorKey: key,
         header: key,
         size: columnsRatios[key],
-        mantineTableBodyCellProps: { style, align },
-        mantineTableHeadCellProps: {
-          style,
-          align: isEditMode ? "center" : align,
-        },
-        Header: () => (showHeader && !isEditMode ? <Text fw={700}>{t(`items.${key}.columnTitle`)}</Text> : ""),
+        Header: () =>
+          showHeader ? (
+            <Text fz="xs" fw={700}>
+              {t(`items.${key}.columnTitle`)}
+            </Text>
+          ) : null,
       };
     },
-    [isEditMode, t],
+    [t],
   );
 
   //Make columns and cell elements, Memoized to data with deps on data and EditMode
   const columns = useMemo<MRT_ColumnDef<ExtendedDownloadClientItem>[]>(
     () => [
       {
-        ...columnsDefBase({ key: "actions", showHeader: false, align: "center" }),
+        ...columnsDefBase({ key: "actions", showHeader: false }),
         enableSorting: false,
         Cell: ({ cell, row }) => {
           const actions = cell.getValue<ExtendedDownloadClientItem["actions"]>();
@@ -380,19 +338,15 @@ export default function DownloadClientsWidget({
           const [opened, { open, close }] = useDisclosure(false);
 
           return actions ? (
-            <Group wrap="nowrap" gap="var(--space-size)">
+            <Group wrap="nowrap" gap="xs">
               <Tooltip label={t(`actions.item.${pausedAction}`)}>
-                <ActionIcon variant="light" radius={999} onClick={actions[pausedAction]} size="var(--button-size)">
-                  {pausedAction === "resume" ? (
-                    <IconPlayerPlay style={actionIconIconStyle} />
-                  ) : (
-                    <IconPlayerPause style={actionIconIconStyle} />
-                  )}
+                <ActionIcon size="xs" variant="light" radius="100%" onClick={actions[pausedAction]}>
+                  {pausedAction === "resume" ? <IconPlayerPlay /> : <IconPlayerPause />}
                 </ActionIcon>
               </Tooltip>
               <Tooltip label={t("actions.item.delete.title")}>
-                <ActionIcon color="red" radius={999} onClick={open} size="var(--button-size)">
-                  <IconTrash style={actionIconIconStyle} />
+                <ActionIcon size="xs" color="red" radius="100%" onClick={open}>
+                  <IconTrash />
                 </ActionIcon>
               </Tooltip>
               <Modal opened={opened} onClose={close} title={t("actions.item.delete.modalTitle")} size="auto" centered>
@@ -423,68 +377,68 @@ export default function DownloadClientsWidget({
               </Modal>
             </Group>
           ) : (
-            <ActionIcon radius={999} disabled size="var(--button-size)">
-              <IconX style={actionIconIconStyle} />
+            <ActionIcon size="xs" radius="100%" disabled>
+              <IconX />
             </ActionIcon>
           );
         },
       },
       {
-        ...columnsDefBase({ key: "added", showHeader: true, align: "center" }),
+        ...columnsDefBase({ key: "added", showHeader: true }),
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const added = cell.getValue<ExtendedDownloadClientItem["added"]>();
-          return <Text>{added !== undefined ? dayjs(added).fromNow() : "unknown"}</Text>;
+          return <Text size="xs">{added !== undefined ? dayjs(added).fromNow() : "unknown"}</Text>;
         },
       },
       {
-        ...columnsDefBase({ key: "category", showHeader: false, align: "center" }),
+        ...columnsDefBase({ key: "category", showHeader: false }),
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const category = cell.getValue<ExtendedDownloadClientItem["category"]>();
           return (
             category !== undefined && (
               <Tooltip label={category}>
-                <IconInfoCircle style={standardIconStyle} />
+                <IconInfoCircle size={16} />
               </Tooltip>
             )
           );
         },
       },
       {
-        ...columnsDefBase({ key: "downSpeed", showHeader: true, align: "right" }),
+        ...columnsDefBase({ key: "downSpeed", showHeader: true }),
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const downSpeed = cell.getValue<ExtendedDownloadClientItem["downSpeed"]>();
-          return downSpeed && <Text>{humanFileSize(downSpeed, "/s")}</Text>;
+          return downSpeed ? <Text size="xs">{humanFileSize(downSpeed, "/s")}</Text> : null;
         },
       },
       {
-        ...columnsDefBase({ key: "id", showHeader: false, align: "center" }),
+        ...columnsDefBase({ key: "id", showHeader: false }),
         enableSorting: false,
         Cell: ({ cell }) => {
           const id = cell.getValue<ExtendedDownloadClientItem["id"]>();
           return (
             <Tooltip label={id}>
-              <IconCirclesRelation style={standardIconStyle} />
+              <IconCirclesRelation size={16} />
             </Tooltip>
           );
         },
       },
       {
-        ...columnsDefBase({ key: "index", showHeader: true, align: "center" }),
+        ...columnsDefBase({ key: "index", showHeader: true }),
         Cell: ({ cell }) => {
           const index = cell.getValue<ExtendedDownloadClientItem["index"]>();
-          return <Text>{index}</Text>;
+          return <Text size="xs">{index}</Text>;
         },
       },
       {
-        ...columnsDefBase({ key: "integration", showHeader: false, align: "center" }),
+        ...columnsDefBase({ key: "integration", showHeader: false }),
         Cell: ({ cell }) => {
           const integration = cell.getValue<ExtendedDownloadClientItem["integration"]>();
           return (
             <Tooltip label={integration.name}>
-              <Avatar size="var(--image-size)" radius={0} src={getIconUrl(integration.kind)} />
+              <Avatar size="xs" radius={0} src={getIconUrl(integration.kind)} />
             </Tooltip>
           );
         },
@@ -494,62 +448,61 @@ export default function DownloadClientsWidget({
         Cell: ({ cell }) => {
           const name = cell.getValue<ExtendedDownloadClientItem["name"]>();
           return (
-            <Text lineClamp={1} style={{ wordBreak: "break-all" }}>
+            <Text size="xs" lineClamp={1} style={{ wordBreak: "break-all" }}>
               {name}
             </Text>
           );
         },
       },
       {
-        ...columnsDefBase({ key: "progress", showHeader: true, align: "center" }),
+        ...columnsDefBase({ key: "progress", showHeader: true }),
         Cell: ({ cell, row }) => {
           const progress = cell.getValue<ExtendedDownloadClientItem["progress"]>();
           return (
-            <Stack w="100%" align="center" gap="var(--space-size)">
-              <Text lh="var(--text-fz)">
+            <Group align="center" gap="xs" wrap="nowrap" w="100%">
+              <Text size="xs">
                 {new Intl.NumberFormat("en", { style: "percent", notation: "compact", unitDisplay: "narrow" }).format(
                   progress,
                 )}
               </Text>
               <Progress
-                h="calc(var(--ratio-width)*0.25)"
                 w="100%"
                 value={progress * 100}
                 color={row.original.state === "paused" ? "yellow" : progress === 1 ? "green" : "blue"}
-                radius={999}
+                radius="lg"
               />
-            </Stack>
+            </Group>
           );
         },
       },
       {
-        ...columnsDefBase({ key: "ratio", showHeader: true, align: "center" }),
+        ...columnsDefBase({ key: "ratio", showHeader: true }),
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const ratio = cell.getValue<ExtendedDownloadClientItem["ratio"]>();
-          return ratio !== undefined && <Text>{ratio.toFixed(ratio >= 100 ? 0 : ratio >= 10 ? 1 : 2)}</Text>;
+          return ratio !== undefined && <Text size="xs">{ratio.toFixed(ratio >= 100 ? 0 : ratio >= 10 ? 1 : 2)}</Text>;
         },
       },
       {
-        ...columnsDefBase({ key: "received", showHeader: true, align: "right" }),
+        ...columnsDefBase({ key: "received", showHeader: true }),
         Cell: ({ cell }) => {
           const received = cell.getValue<ExtendedDownloadClientItem["received"]>();
-          return <Text>{humanFileSize(received)}</Text>;
+          return <Text size="xs">{humanFileSize(received)}</Text>;
         },
       },
       {
-        ...columnsDefBase({ key: "sent", showHeader: true, align: "right" }),
+        ...columnsDefBase({ key: "sent", showHeader: true }),
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const sent = cell.getValue<ExtendedDownloadClientItem["sent"]>();
-          return sent && <Text>{humanFileSize(sent)}</Text>;
+          return sent && <Text size="xs">{humanFileSize(sent)}</Text>;
         },
       },
       {
-        ...columnsDefBase({ key: "size", showHeader: true, align: "right" }),
+        ...columnsDefBase({ key: "size", showHeader: true }),
         Cell: ({ cell }) => {
           const size = cell.getValue<ExtendedDownloadClientItem["size"]>();
-          return <Text>{humanFileSize(size)}</Text>;
+          return <Text size="xs">{humanFileSize(size)}</Text>;
         },
       },
       {
@@ -557,25 +510,25 @@ export default function DownloadClientsWidget({
         enableSorting: false,
         Cell: ({ cell }) => {
           const state = cell.getValue<ExtendedDownloadClientItem["state"]>();
-          return <Text>{t(`states.${state}`)}</Text>;
+          return <Text size="xs">{t(`states.${state}`)}</Text>;
         },
       },
       {
-        ...columnsDefBase({ key: "time", showHeader: true, align: "center" }),
+        ...columnsDefBase({ key: "time", showHeader: true }),
         Cell: ({ cell }) => {
           const time = cell.getValue<ExtendedDownloadClientItem["time"]>();
-          return time === 0 ? <IconInfinity style={standardIconStyle} /> : <Text>{dayjs().add(time).fromNow()}</Text>;
+          return time === 0 ? <IconInfinity size={16} /> : <Text size="xs">{dayjs().add(time).fromNow()}</Text>;
         },
       },
       {
         ...columnsDefBase({ key: "type", showHeader: true }),
         Cell: ({ cell }) => {
           const type = cell.getValue<ExtendedDownloadClientItem["type"]>();
-          return <Text>{type}</Text>;
+          return <Text size="xs">{type}</Text>;
         },
       },
       {
-        ...columnsDefBase({ key: "upSpeed", showHeader: true, align: "right" }),
+        ...columnsDefBase({ key: "upSpeed", showHeader: true }),
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const upSpeed = cell.getValue<ExtendedDownloadClientItem["upSpeed"]>();
@@ -604,17 +557,17 @@ export default function DownloadClientsWidget({
     mantineTableContainerProps: { style: { height: "100%" } },
     mantineTableProps: {
       className: "downloads-widget-table",
-      style: {
-        "--sortButtonSize": "var(--button-size)",
-        "--dragButtonSize": "var(--button-size)",
-      },
     },
     mantineTableBodyProps: { style: editStyle },
+    mantineTableHeadCellProps: {
+      p: 4,
+    },
     mantineTableBodyCellProps: ({ cell, row }) => ({
       onClick: () => {
         setClickedIndex(row.index);
         if (cell.column.id !== "actions") open();
       },
+      p: 4,
     }),
     onColumnOrderChange: (order) => {
       //Order has a tendency to add the disabled column at the end of the the real ordered array
@@ -666,26 +619,25 @@ export default function DownloadClientsWidget({
   if (options.columns.length === 0)
     return (
       <Center h="100%">
-        <Text fz="7.5cqw">{t("errors.noColumns")}</Text>
+        <Text>{t("errors.noColumns")}</Text>
       </Center>
     );
 
   //The actual widget
   return (
-    <Stack gap={0} h="100%" display="flex" style={baseStyle}>
+    <Stack gap={0} h="100%" display="flex">
       <MantineReactTable table={table} />
       <Group
-        h={40}
-        px="var(--space-size)"
+        p={4}
         justify={integrationTypes.includes("torrent") ? "space-between" : "end"}
         style={{
           borderTop: "0.0625rem solid var(--border-color)",
         }}
       >
         {integrationTypes.includes("torrent") && (
-          <Group pt="var(--space-size)">
-            <Text>{`${t("globalRatio")}:`}</Text>
-            <Text>{(globalTraffic.up / globalTraffic.down).toFixed(2)}</Text>
+          <Group>
+            <Text size="xs" fw="bold">{`${t("globalRatio")}:`}</Text>
+            <Text size="xs">{(globalTraffic.up / globalTraffic.down).toFixed(2)}</Text>
           </Group>
         )}
         <ClientsControl
@@ -806,12 +758,12 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
     <Group gap={5}>
       <Popover withinPortal={false} offset={0}>
         <Popover.Target>
-          <ActionIcon size={30} radius={999} variant="light">
-            <IconFilter style={actionIconIconStyle} />
+          <ActionIcon size="xs" radius="lg" variant="light">
+            <IconFilter />
           </ActionIcon>
         </Popover.Target>
         <Popover.Dropdown>
-          <Stack gap="md" align="center" pb="var(--space-size)">
+          <Stack gap="md" align="center">
             <Text fw="700">{t("items.integration.columnTitle")}</Text>
             <Chip.Group
               multiple
@@ -839,7 +791,7 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
           </Stack>
         </Popover.Dropdown>
       </Popover>
-      <AvatarGroup mx="calc(var(--space-size)*2)" spacing="calc(var(--space-size)*2)">
+      <AvatarGroup>
         {clients.map((client) => (
           <ClientAvatar key={client.integration.id} client={client} />
         ))}
@@ -847,37 +799,37 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
       {someInteract && (
         <Tooltip label={t("actions.clients.resume")}>
           <ActionIcon
-            size={30}
-            radius={999}
+            size="xs"
+            radius="lg"
             disabled={integrationsStatuses.paused.length === 0}
             variant="light"
             onClick={() => mutateResumeQueue({ integrationIds: integrationsStatuses.paused })}
           >
-            <IconPlayerPlay style={actionIconIconStyle} />
+            <IconPlayerPlay />
           </ActionIcon>
         </Tooltip>
       )}
       <Button
+        h={20}
+        size="xs"
         variant="light"
-        radius={999}
-        h="var(--button-size)"
-        px="calc(var(--space-size)*2)"
+        radius="lg"
         fw="500"
         onClick={open}
-        styles={{ label: { height: "fit-content", paddingBottom: "calc(var(--space-size)*0.75)" } }}
+        styles={{ label: { height: "fit-content" } }}
       >
         {totalSpeed}
       </Button>
       {someInteract && (
         <Tooltip label={t("actions.clients.pause")}>
           <ActionIcon
-            size={30}
-            radius={999}
+            size="xs"
+            radius="xl"
             disabled={integrationsStatuses.active.length === 0}
             variant="light"
             onClick={() => mutatePauseQueue({ integrationIds: integrationsStatuses.active })}
           >
-            <IconPlayerPause style={actionIconIconStyle} />
+            <IconPlayerPause />
           </ActionIcon>
         </Tooltip>
       )}
@@ -967,9 +919,8 @@ const ClientAvatar = ({ client }: ClientAvatarProps) => {
       key={client.integration.id}
       src={getIconUrl(client.integration.kind)}
       style={{ filter: !isConnected ? "grayscale(100%)" : undefined }}
-      size={30}
+      size="sm"
       p={5}
-      bd={`calc(var(--space-size)*0.5) solid ${client.status ? "transparent" : "var(--mantine-color-red-filled)"}`}
     />
   );
 };

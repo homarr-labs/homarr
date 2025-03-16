@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Arama Motoru Oluştur",
         "description": "\"{kind}\" entegrasyonu arama motorlarıyla kullanılabilir. Arama motorunu otomatik olarak yapılandırmak için bunu işaretleyin."
+      },
+      "createApp": {
+        "label": "Uygulama oluştur",
+        "description": "Entegrasyon ile aynı adı ve simgeyi taşıyan bir uygulama oluşturun. Uygulamayı entegrasyon URL'si ile oluşturmak için aşağıdaki alanını boş bırakın."
+      },
+      "appHref": {
+        "placeholder": "Özel Uygulama URL'si"
       }
     },
     "action": {
@@ -1434,6 +1441,9 @@
         },
         "filterFutureMonths": {
           "label": "Bitiş"
+        },
+        "showUnmonitored": {
+          "label": "Takip edilmeyenleri göster"
         }
       }
     },
@@ -1665,6 +1675,7 @@
       "description": "Medya sunucularınızdaki mevcut akışları gösterin",
       "option": {},
       "items": {
+        "currentlyPlaying": "Şuan Oynatılan",
         "user": "Kullanıcı",
         "name": "İsim",
         "id": "Kimlik"
@@ -1889,10 +1900,10 @@
         "statistics": {
           "empty": "Boş",
           "transcodes": "Kod dönüştürmeler",
-          "transcodesCount": "Kod dönüştürmeler: {value}",
-          "healthChecksCount": "Sağlık kontrolleri: {value}",
-          "filesCount": "Dosyalar: {value}",
-          "savedSpace": "Kaydedilen alan: {value}",
+          "transcodesCount": "Kod dönüştürmeler",
+          "healthChecksCount": "Sağlık kontrolleri",
+          "filesCount": "Dosyalar",
+          "savedSpace": "Kaydedilen alan",
           "healthChecks": "Sağlık kontrolleri",
           "videoCodecs": "Kodek'ler",
           "videoContainers": "Konteyner",
@@ -2321,6 +2332,7 @@
           "label": "Araçlar",
           "items": {
             "docker": "Docker",
+            "kubernetes": "Kubernetes",
             "logs": "Günlükler",
             "api": "API",
             "certificates": "Sertifikalar",
@@ -2867,6 +2879,246 @@
       "internalServerError": "Docker konteynerlerları getirilemedi"
     }
   },
+  "kubernetes": {
+    "cluster": {
+      "title": "Küme Panosu",
+      "label": "Küme",
+      "providers": "Sağlayıcılar",
+      "version": "Sürüm",
+      "architecture": "Mimari",
+      "capacity": {
+        "title": "Kapasite",
+        "resource": {
+          "reserved": "Rezerve",
+          "used": "Kullanılan"
+        }
+      },
+      "resources": {
+        "title": "Kaynaklar",
+        "nodes": "Nodes",
+        "namespaces": "İsim Alanları",
+        "ingresses": "Ingress'ler",
+        "services": "Hizmetler",
+        "pods": "Pod'lar",
+        "configmaps": "ConfigMap'ler",
+        "secrets": "Gizli anahtarlar",
+        "volumes": "Birimler"
+      }
+    },
+    "nodes": {
+      "label": "Node'lar",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "state": {
+          "label": "Durum",
+          "option": {
+            "ready": "Hazır",
+            "NotReady": "Hazır Değil"
+          }
+        },
+        "cpu": {
+          "label": "İşlemci"
+        },
+        "memory": {
+          "label": "BELLEK"
+        },
+        "pods": {
+          "label": "Pod'lar"
+        },
+        "operatingSystem": {
+          "label": "İşletim Sistemi"
+        },
+        "architecture": {
+          "label": "Mimari"
+        },
+        "kubernetesVersion": {
+          "label": "Kubernetes Sürümü"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} node içinde ara"
+      }
+    },
+    "namespaces": {
+      "label": "İsim Alanları",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "state": {
+          "label": "Durum",
+          "option": {
+            "active": "Aktif",
+            "terminating": "Sonlandırma"
+          }
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} isim alanı içinde ara"
+      }
+    },
+    "ingresses": {
+      "label": "Ingress'ler",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "namespace": {
+          "label": "İsim Alanı"
+        },
+        "className": {
+          "label": "Sınıf ismi"
+        },
+        "rulesAndPaths": {
+          "label": "Kurallar & yollar"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} ingress içinde ara"
+      }
+    },
+    "services": {
+      "label": "Hizmetler",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "namespace": {
+          "label": "İsim Alanı"
+        },
+        "type": {
+          "label": "Tip"
+        },
+        "ports": {
+          "label": "Bağlantı noktaları"
+        },
+        "targetPorts": {
+          "label": "Hedef bağlantı noktası"
+        },
+        "clusterIP": {
+          "label": "Küme IP'si"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} hizmet içerisinde ara"
+      }
+    },
+    "pods": {
+      "label": "Pod'lar",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "namespace": {
+          "label": "İsim Alanı"
+        },
+        "image": {
+          "label": "İmaj"
+        },
+        "applicationType": {
+          "label": "Uygulama Türü"
+        },
+        "status": {
+          "label": "Durum"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} pod içerisinde ara"
+      }
+    },
+    "secrets": {
+      "label": "Gizli anahtarlar",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "namespace": {
+          "label": "i̇sim Alanı"
+        },
+        "type": {
+          "label": "tür"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} gizli anahtar içerisinde ara"
+      }
+    },
+    "configmaps": {
+      "label": "ConfigMap'ler",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "namespace": {
+          "label": "İsim Alanı"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} configMap içinde ara"
+      }
+    },
+    "volumes": {
+      "label": "Birimler",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "namespace": {
+          "label": "İsim Alanı"
+        },
+        "accessModes": {
+          "label": "Erişim Modları"
+        },
+        "storage": {
+          "label": "Depolama"
+        },
+        "storageClassName": {
+          "label": "Depolama Sınıfı Adı"
+        },
+        "volumeMode": {
+          "label": "Birim Modu"
+        },
+        "volumeName": {
+          "label": "Birim Adı"
+        },
+        "status": {
+          "label": "Durum"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} birim içerisinde ara"
+      }
+    },
+    "error": {
+      "internalServerError": "Kubernetes verileri alınamadı"
+    }
+  },
   "permission": {
     "title": "İzinler",
     "userSelect": {
@@ -2951,6 +3203,33 @@
         "label": "Araçlar",
         "docker": {
           "label": "Docker"
+        },
+        "kubernetes": {
+          "label": "Kubernetes",
+          "nodes": {
+            "label": "Node'lar"
+          },
+          "namespaces": {
+            "label": "İsim Alanları"
+          },
+          "ingresses": {
+            "label": "Ingress'ler"
+          },
+          "services": {
+            "label": "Hizmetler"
+          },
+          "pods": {
+            "label": "pod'lar"
+          },
+          "configmaps": {
+            "label": "ConfigMap'ler"
+          },
+          "secrets": {
+            "label": "Gizli anahtarlar"
+          },
+          "volumes": {
+            "label": "Birimler"
+          }
         },
         "logs": {
           "label": "Günlükler"
