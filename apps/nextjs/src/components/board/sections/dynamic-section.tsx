@@ -1,4 +1,4 @@
-import { Box, Card } from "@mantine/core";
+import { Box, Card, Title } from "@mantine/core";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 
@@ -33,6 +33,9 @@ export const BoardDynamicSection = ({ section }: Props) => {
         radius={board.itemRadius}
         p={0}
       >
+        <Title order={3} style={{ padding: "6px 12px 0px" }}>
+          {options.title}
+         </Title>
         {/* Use unique key by layout to reinitialize gridstack */}
         <GridStack key={`${currentLayoutId}-${section.id}`} section={section} className="min-row" />
       </Card>
