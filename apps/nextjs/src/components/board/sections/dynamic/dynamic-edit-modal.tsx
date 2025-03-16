@@ -30,10 +30,7 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
       })}
     >
       <Stack>
-        <TextInput
-          label={t("section.dynamic.option.title.label")}
-          {...form.getInputProps("title")}
-        />
+        <TextInput label={t("section.dynamic.option.title.label")} {...form.getInputProps("title")} />
         <ColorInput
           label={t("section.dynamic.option.borderColor.label")}
           format="hex"
