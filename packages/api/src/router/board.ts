@@ -1475,8 +1475,13 @@ const getElementsForLayout = (board: Awaited<ReturnType<typeof getFullBoardWithW
   const sectionElements = board.sections
     .filter((section) => section.kind === "dynamic")
     .map((section) => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const clonedLayout = section.layouts.find((sectionLayout) => sectionLayout.layoutId === layoutId)!;
+      const clonedLayout = section.layouts.find((sectionLayout) => sectionLayout.layoutId === layoutId);
+
+      if (!clonedLayout) {
+        throw new Error(
+          `Unable to find layout type="section" layoutId="${layoutId}" sectionId="${section.id}" count="${section.layouts.length}" availableLayouts="${section.layouts.map((layout) => layout.layoutId).join(",")}"`,
+        );
+      }
 
       return {
         id: section.id,
@@ -1490,8 +1495,13 @@ const getElementsForLayout = (board: Awaited<ReturnType<typeof getFullBoardWithW
     });
 
   const itemElements = board.items.map((item) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const clonedLayout = item.layouts.find((itemLayout) => itemLayout.layoutId === layoutId)!;
+    const clonedLayout = item.layouts.find((itemLayout) => itemLayout.layoutId === layoutId);
+
+    if (!clonedLayout) {
+      throw new Error(
+        `Unable to find layout type="item" layoutId="${layoutId}" itemId="${item.id}" count="${item.layouts.length}" availableLayouts="${item.layouts.map((layout) => layout.layoutId).join(",")}"`,
+      );
+    }
 
     return {
       id: item.id,
