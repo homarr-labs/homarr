@@ -10,6 +10,7 @@ import {
   IconBox,
   IconBoxAlignTop,
   IconChevronDown,
+  IconDownload,
   IconLayoutBoard,
   IconPencil,
   IconPencilOff,
@@ -55,6 +56,8 @@ export const BoardContentHeaderActions = () => {
       </HeaderButton>
 
       <SelectBoardsMenu />
+
+      <DownloadBoardStateButton />
     </>
   );
 };
@@ -153,6 +156,26 @@ const EditModeMenu = () => {
   return (
     <HeaderButton onClick={toggle} loading={isPending}>
       {isEditMode ? <IconPencilOff stroke={1.5} /> : <IconPencil stroke={1.5} />}
+    </HeaderButton>
+  );
+};
+
+const DownloadBoardStateButton = () => {
+  const board = useRequiredBoard();
+  const contentToDownload = JSON.stringify(board, null, 2);
+
+  const handleDownload = () => {
+    const blob = new Blob([contentToDownload], { type: "text/json" });
+    const url = URL.createObjectURL(blob);
+    const anchorElement = document.createElement("a");
+    anchorElement.href = url;
+    anchorElement.download = `${board.name}-debug.json`;
+    anchorElement.click();
+  };
+
+  return (
+    <HeaderButton onClick={handleDownload}>
+      <IconDownload stroke={1.5} />
     </HeaderButton>
   );
 };
