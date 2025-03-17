@@ -730,6 +730,8 @@ export const boardRouter = createTRPCRouter({
 
     const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
 
+    throwIfMissingLayout(input, dbBoard);
+
     await handleTransactionsAsync(ctx.db, {
       async handleAsync(db, schema) {
         await db.transaction(async (transaction) => {
@@ -1646,3 +1648,43 @@ const filterRemovedItems = <TInput extends { id: string }>(inputArray: TInput[],
 
 const filterUpdatedItems = <TInput extends { id: string }>(inputArray: TInput[], dbArray: TInput[]) =>
   inputArray.filter((inputItem) => dbArray.some((dbItem) => dbItem.id === inputItem.id));
+
+/**
+ * Throws an error if any of the provided items / sections does not contain a layout that is currently present in the database
+ * @param input sections and items to check
+ * @param dbBoard board from the database
+ */
+const throwIfMissingLayout = (
+  input: z.infer<typeof validation.board.save>,
+  dbBoard: Awaited<ReturnType<typeof getFullBoardWithWhereAsync>>,
+) => {
+  const expectedLayouts = dbBoard.layouts.map((layout) => layout.id);
+
+  const missingLayoutItems = input.items.filter(
+    (item) =>
+      !(
+        item.layouts.every((layout) => expectedLayouts.includes(layout.layoutId)) &&
+        expectedLayouts.length === item.layouts.length
+      ),
+  );
+  if (missingLayoutItems.length >= 1) {
+    throw new Error(
+      `Unable to find layouts for items count="${missingLayoutItems.length}" firstItem="${JSON.stringify(missingLayoutItems.at(0))}" extectedLayouts="${JSON.stringify(expectedLayouts)}"\nPlease report this issue to the developers and mention what you did before saving.`,
+    );
+  }
+
+  const missingLayoutSections = input.sections
+    .filter((section) => section.kind === "dynamic")
+    .filter(
+      (section) =>
+        !(
+          section.layouts.every((layout) => expectedLayouts.includes(layout.layoutId)) &&
+          expectedLayouts.length === section.layouts.length
+        ),
+    );
+  if (missingLayoutSections.length >= 1) {
+    throw new Error(
+      `Unable to find layouts for items count="${missingLayoutItems.length}" firstItem="${JSON.stringify(missingLayoutItems.at(0))}" extectedLayouts="${JSON.stringify(expectedLayouts)}"\nPlease report this issue to the developers and mention what you did before saving.`,
+    );
+  }
+};
