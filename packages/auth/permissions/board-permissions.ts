@@ -25,11 +25,15 @@ export const constructBoardPermissions = (board: BoardPermissionsProps, session:
   const creatorId = "creator" in board ? board.creator?.id : board.creatorId;
 
   return {
-    hasFullAccess: session?.user.id === creatorId || (session?.user.permissions.includes("board-full-all") ?? false),
+    hasFullAccess:
+      session?.user.id === creatorId ||
+      board.userPermissions.some(({ permission }) => permission === "full") ||
+      board.groupPermissions.some(({ permission }) => permission === "full") ||
+      (session?.user.permissions.includes("board-full-all") ?? false),
     hasChangeAccess:
       session?.user.id === creatorId ||
-      board.userPermissions.some(({ permission }) => permission === "modify") ||
-      board.groupPermissions.some(({ permission }) => permission === "modify") ||
+      board.userPermissions.some(({ permission }) => permission === "modify" || permission === "full") ||
+      board.groupPermissions.some(({ permission }) => permission === "modify" || permission === "full") ||
       (session?.user.permissions.includes("board-modify-all") ?? false) ||
       (session?.user.permissions.includes("board-full-all") ?? false),
     hasViewAccess:
