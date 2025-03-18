@@ -677,11 +677,11 @@
         "description": "\"{kind}\" entegrasyonu arama motorlarıyla kullanılabilir. Arama motorunu otomatik olarak yapılandırmak için bunu işaretleyin."
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "Uygulama oluştur",
+        "description": "Entegrasyon ile aynı adı ve simgeyi taşıyan bir uygulama oluşturun. Uygulamayı entegrasyon URL'si ile oluşturmak için aşağıdaki alanını boş bırakın."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "Özel Uygulama URL'si"
       }
     },
     "action": {

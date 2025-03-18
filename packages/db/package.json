@@ -47,10 +47,10 @@
     "@mantine/core": "^7.17.2",
     "@paralleldrive/cuid2": "^2.2.2",
     "@testcontainers/mysql": "^10.20.0",
-    "better-sqlite3": "^11.9.0",
+    "better-sqlite3": "^11.9.1",
     "dotenv": "^16.4.7",
     "drizzle-kit": "^0.30.5",
-    "drizzle-orm": "^0.40.0",
+    "drizzle-orm": "^0.40.1",
     "drizzle-zod": "^0.7.0",
     "mysql2": "3.13.0"
   },
