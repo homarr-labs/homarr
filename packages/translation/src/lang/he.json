@@ -677,11 +677,11 @@
         "description": "אינטגרציה {kind} יכולה לשמש עם מנועי חיפוש. סמן עבור הגדרה אוטומטית של מנוע חיפוש."
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "יצירת אפליקציה",
+        "description": "יצירת אפליקציה עם אותו שם וסמל כמו האינטגרציה. יש להשאיר את שדה הקלט למטה ריק כדי ליצור את האפליקציה עם כתובת האתר לאינטגרציה."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "כתובת אתר מותאמת אישית של אפליקציה"
       }
     },
     "action": {
@@ -1079,7 +1079,7 @@
           "label": "מחלקות עיצוב מותאמות אישית"
         },
         "borderColor": {
-          "label": ""
+          "label": "צבע מסגרת"
         }
       }
     },
@@ -1136,12 +1136,12 @@
               "label": "רשת"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "רשת אופקית"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "הסתר כותרת"
         },
         "hideIcon": {
           "label": "הסתרת אייקונים"
@@ -1443,7 +1443,7 @@
           "label": "סיים ב"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "הצג ללא פיקוח"
         }
       }
     },
@@ -1675,7 +1675,7 @@
       "description": "הצג את הזרמים הנוכחיים בשרתי המדיה שלך",
       "option": {},
       "items": {
-        "currentlyPlaying": "",
+        "currentlyPlaying": "מתנגן כרגע",
         "user": "משתמש",
         "name": "שם",
         "id": "מזהה"
@@ -2332,7 +2332,7 @@
           "label": "כלים",
           "items": {
             "docker": "דוקר",
-            "kubernetes": "",
+            "kubernetes": "Kubernetes",
             "logs": "קובצי לוג",
             "api": "ממשק API",
             "certificates": "אישורי אבטחה",
@@ -2881,101 +2881,101 @@
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
-      "label": "",
-      "providers": "",
-      "version": "",
-      "architecture": "",
+      "title": "לוח המחוונים של אשכול",
+      "label": "אשכול",
+      "providers": "ספקים",
+      "version": "גרסה",
+      "architecture": "ארכיטקטורה",
       "capacity": {
-        "title": "",
+        "title": "קיבולת",
         "resource": {
-          "reserved": "",
-          "used": ""
+          "reserved": "שמור",
+          "used": "בשימוש"
         }
       },
       "resources": {
-        "title": "",
-        "nodes": "",
-        "namespaces": "",
-        "ingresses": "",
-        "services": "",
-        "pods": "",
-        "configmaps": "",
-        "secrets": "",
-        "volumes": ""
+        "title": "מקורות",
+        "nodes": "קונטיינרים",
+        "namespaces": "מרחב שמות",
+        "ingresses": "כרטיסים",
+        "services": "שירותים",
+        "pods": "תרמילים",
+        "configmaps": "ConfigMaps",
+        "secrets": "נתוני גישה",
+        "volumes": "כוננים"
       }
     },
     "nodes": {
-      "label": "",
+      "label": "קונטיינרים",
       "field": {
         "name": {
-          "label": ""
+          "label": "שם"
         },
         "state": {
-          "label": "",
+          "label": "מצב",
           "option": {
-            "ready": "",
-            "NotReady": ""
+            "ready": "מוכן",
+            "NotReady": "לא מוכן"
           }
         },
         "cpu": {
-          "label": ""
+          "label": "מעבד"
         },
         "memory": {
-          "label": ""
+          "label": "זכרון פנימי"
         },
         "pods": {
-          "label": ""
+          "label": "תרמילים"
         },
         "operatingSystem": {
-          "label": ""
+          "label": "מערכת הפעלה"
         },
         "architecture": {
-          "label": ""
+          "label": "ארכיטקטורה"
         },
         "kubernetesVersion": {
-          "label": ""
+          "label": "גרסת Kubernetes"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "נוצר"
         }
       },
       "table": {
-        "search": ""
+        "search": "חפש {count} קונטיינרים"
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "מרחב שמות",
       "field": {
         "name": {
-          "label": ""
+          "label": "שם"
         },
         "state": {
-          "label": "",
+          "label": "מצב",
           "option": {
-            "active": "",
+            "active": "פעיל",
             "terminating": ""
           }
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "נוצר"
         }
       },
       "table": {
-        "search": ""
+        "search": "חפש ב-{count} מרחבי שמות"
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "כרטיסים",
       "field": {
         "name": {
-          "label": ""
+          "label": "שם"
         },
         "namespace": {
-          "label": ""
+          "label": "מרחב שמות"
         },
         "className": {
-          "label": ""
+          "label": "שם קלאס"
         },
         "rulesAndPaths": {
           "label": ""
@@ -3216,19 +3216,19 @@
             "label": ""
           },
           "services": {
-            "label": ""
+            "label": "שירותים"
           },
           "pods": {
-            "label": ""
+            "label": "תרמילים"
           },
           "configmaps": {
-            "label": ""
+            "label": "ConfigMaps"
           },
           "secrets": {
-            "label": ""
+            "label": "נתוני גישה"
           },
           "volumes": {
-            "label": ""
+            "label": "כוננים"
           }
         },
         "logs": {
