@@ -1024,8 +1024,8 @@ importers:
         specifier: ^10.20.0
         version: 10.20.0
       better-sqlite3:
-        specifier: ^11.9.0
-        version: 11.9.0
+        specifier: ^11.9.1
+        version: 11.9.1
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
@@ -1034,10 +1034,10 @@ importers:
         version: 0.30.5
       drizzle-orm:
         specifier: ^0.40.1
-        version: 0.40.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.0)(gel@2.0.0)(mysql2@3.13.0)
+        version: 0.40.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.1)(gel@2.0.0)(mysql2@3.13.0)
       drizzle-zod:
         specifier: ^0.7.0
-        version: 0.7.0(drizzle-orm@0.40.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.0)(gel@2.0.0)(mysql2@3.13.0))(zod@3.24.2)
+        version: 0.7.0(drizzle-orm@0.40.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.1)(gel@2.0.0)(mysql2@3.13.0))(zod@3.24.2)
       mysql2:
         specifier: 3.13.0
         version: 3.13.0
@@ -5305,8 +5305,8 @@ packages:
     resolution: {integrity: sha512-Wjss+Bc674ZABPr+SCKWTqA4V1pyYFhzDTjNBJy4jdmgOv0oGIGXeKBRJyINwP5tIy+iIZD9SfgZpztduzQ5QA==}
     engines: {node: '>= 18.4'}
 
-  better-sqlite3@11.9.0:
-    resolution: {integrity: sha512-4b9xYnoaskj8eIkke9ZCB42p5bOPabptSku8Rl4Yww70Jf+aHeLvrIjXDJrKQxUEjdppsFb+fdJSjoH4TklROA==}
+  better-sqlite3@11.9.1:
+    resolution: {integrity: sha512-Ba0KR+Fzxh2jDRhdg6TSH0SJGzb8C0aBY4hR8w8madIdIzzC6Y1+kx5qR6eS1Z+Gy20h6ZU28aeyg0z1VIrShQ==}
 
   big.js@5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
@@ -13705,7 +13705,7 @@ snapshots:
 
   bellajs@11.2.0: {}
 
-  better-sqlite3@11.9.0:
+  better-sqlite3@11.9.1:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.2
@@ -14427,17 +14427,17 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.40.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.0)(gel@2.0.0)(mysql2@3.13.0):
+  drizzle-orm@0.40.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.1)(gel@2.0.0)(mysql2@3.13.0):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
       '@types/better-sqlite3': 7.6.12
-      better-sqlite3: 11.9.0
+      better-sqlite3: 11.9.1
       gel: 2.0.0
       mysql2: 3.13.0
 
-  drizzle-zod@0.7.0(drizzle-orm@0.40.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.0)(gel@2.0.0)(mysql2@3.13.0))(zod@3.24.2):
+  drizzle-zod@0.7.0(drizzle-orm@0.40.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.1)(gel@2.0.0)(mysql2@3.13.0))(zod@3.24.2):
     dependencies:
-      drizzle-orm: 0.40.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.0)(gel@2.0.0)(mysql2@3.13.0)
+      drizzle-orm: 0.40.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.1)(gel@2.0.0)(mysql2@3.13.0)
       zod: 3.24.2
 
   dunder-proto@1.0.1:
