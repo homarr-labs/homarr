@@ -17,24 +17,13 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
     if ("error" in data) {
       throw new Error(data.error.description);
     }
+    if (data.chart.result.length > 1) {
+      throw new Error("Received multiple results");
+    }
 
-    return responseSchema.parse(data.chart.result[0]);
+    return data.chart.result[0];
   },
   cacheDuration: dayjs.duration(5, "minutes"),
-});
-
-const responseSchema = z.object({
-  indicators: z.object({
-    quote: z.array(
-      z.object({
-        close: z.array(z.number()),
-      }),
-    ),
-  }),
-  meta: z.object({
-    symbol: z.string(),
-    shortName: z.string(),
-  }),
 });
 
 const dataSchema = z
@@ -46,7 +35,21 @@ const dataSchema = z
   .or(
     z.object({
       chart: z.object({
-        result: z.array(responseSchema),
+        result: z.array(
+          z.object({
+            indicators: z.object({
+              quote: z.array(
+                z.object({
+                  close: z.array(z.number()),
+                }),
+              ),
+            }),
+            meta: z.object({
+              symbol: z.string(),
+              shortName: z.string(),
+            }),
+          }),
+        ),
       }),
     }),
   );
