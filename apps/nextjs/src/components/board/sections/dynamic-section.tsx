@@ -44,7 +44,7 @@ export const BoardDynamicSection = ({ section }: Props) => {
             top={-15}
             left={10}
             size="md"
-            radius="sm"
+            radius={board.itemRadius}
             color="var(--background-color)"
             c="var(--mantine-color-text)"
             bd="1px solid var(--border-color)"
