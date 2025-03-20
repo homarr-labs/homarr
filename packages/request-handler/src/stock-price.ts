@@ -17,8 +17,11 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
     if ("error" in data) {
       throw new Error(data.error.description);
     }
-    if (data.chart.result.length > 1) {
+    if (data.chart.result.length !== 1) {
       throw new Error("Received multiple results");
+    }
+    if (!data.chart.result[0]) {
+      throw new Error("Received invalid data");
     }
 
     return data.chart.result[0];

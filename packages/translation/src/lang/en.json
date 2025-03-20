@@ -1443,6 +1443,9 @@
             "1mo": {
               "label": "1 Month"
             },
+            "3mo": {
+              "label": "3 Months"
+            },
             "6mo": {
               "label": "6 Months"
             },
@@ -1451,6 +1454,9 @@
             },
             "1y": {
               "label": "1 Year"
+            },
+            "2y": {
+              "label": "2 Years"
             },
             "5y": {
               "label": "5 Years"

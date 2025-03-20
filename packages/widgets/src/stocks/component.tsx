@@ -26,11 +26,13 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
   const theme = useMantineTheme();
   const [{ data }] = clientApi.widget.stockPrice.getPriceHistory.useSuspenseQuery(options);
 
-  const stockValues = Object.values(data.indicators.quote[0].close);
+  const stockValues = data.indicators.quote[0]?.close ?? [];
 
-  const stockValuesChange = round(calculateChange(stockValues[stockValues.length - 1], stockValues[0]));
+  const stockValuesChange = round(
+    calculateChange(stockValues[stockValues.length - 1] ?? 0, stockValues[0] ?? 0)
+  );
   const stockValuesChangePercentage = round(
-    calculateChangePercentage(stockValues[stockValues.length - 1], stockValues[0]),
+    calculateChangePercentage(stockValues[stockValues.length - 1] ?? 0, stockValues[0] ?? 0),
   );
 
   const stockValuesMin = Math.min(...stockValues);
@@ -67,7 +69,7 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
       </Stack>
 
       <Title pos="absolute" bottom={10} right={10} order={width > 280 ? 1 : 2} fw={700}>
-        {round(stockValues[stockValues.length - 1])}
+        {round(stockValues[stockValues.length - 1] ?? 0)}
       </Title>
 
       {width > 280 && (
