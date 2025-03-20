@@ -19,7 +19,7 @@
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Pakeisti failą"
           }
         },
         "importSettings": {
@@ -113,7 +113,7 @@
         "subtitle": ""
       },
       "invite": {
-        "title": "",
+        "title": "Prisijungti prie Homarr",
         "subtitle": "",
         "description": ""
       },
