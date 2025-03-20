@@ -1506,6 +1506,9 @@ importers:
 
   packages/old-import:
     dependencies:
+      '@homarr/auth':
+        specifier: workspace:^0.1.0
+        version: link:../auth
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
