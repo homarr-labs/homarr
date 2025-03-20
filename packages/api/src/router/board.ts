@@ -1222,7 +1222,7 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const content = await input.file.text();
       const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
-      await importOldmarrAsync(ctx.db, oldmarr, input.configuration);
+      await importOldmarrAsync(ctx.db, oldmarr, input.configuration, ctx.session);
     }),
 });
 
