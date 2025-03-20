@@ -28,9 +28,7 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
 
   const stockValues = data.indicators.quote[0]?.close ?? [];
 
-  const stockValuesChange = round(
-    calculateChange(stockValues[stockValues.length - 1] ?? 0, stockValues[0] ?? 0)
-  );
+  const stockValuesChange = round(calculateChange(stockValues[stockValues.length - 1] ?? 0, stockValues[0] ?? 0));
   const stockValuesChangePercentage = round(
     calculateChangePercentage(stockValues[stockValues.length - 1] ?? 0, stockValues[0] ?? 0),
   );
