@@ -1,5 +1,6 @@
 "use client";
 
+import { signIn } from "@homarr/auth/client";
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 import type { z } from "zod";
 
@@ -30,6 +31,13 @@ export const InitUserForm = () => {
           title: tUser("notification.success.title"),
           message: tUser("notification.success.message"),
         });
+        
+        await signIn("credentials", {
+          name: values.username,
+          password: values.password,
+          redirect: false,
+        });
+        
         await revalidatePathActionAsync("/init");
       },
       onError: (error) => {
