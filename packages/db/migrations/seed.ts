@@ -4,7 +4,11 @@ import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server
 
 import type { Database } from "..";
 import { createId, eq } from "..";
-import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "../queries/server-setting";
+import {
+  getServerSettingByKeyAsync,
+  insertServerSettingByKeyAsync,
+  updateServerSettingByKeyAsync,
+} from "../queries/server-setting";
 import { onboarding, searchEngines } from "../schema";
 import { groups } from "../schema/mysql";
 
@@ -49,9 +53,9 @@ const seedOnboardingAsync = async (db: Database) => {
 };
 
 const seedDefaultSearchEnginesAsync = async (db: Database) => {
-  const existingSearchEngines = await db.query.searchEngines.findMany();
-  
-  if (existingSearchEngines.length > 0) {
+  const existingSearchEngines = await db.$count(searchEngines);
+
+  if (existingSearchEngines > 0) {
     console.log("Skipping seeding of default search engines as some already exists");
     return;
   }
@@ -92,21 +96,21 @@ const seedDefaultSearchEnginesAsync = async (db: Database) => {
 
   await db.insert(searchEngines).values(defaultSearchEngines);
   console.log(`Created ${defaultSearchEngines.length} default search engines through seeding process`);
-  
+
   // Set Homarr docs as the default search engine in server settings
   const searchSettings = await getServerSettingByKeyAsync(db, "search");
-  
+
   if (searchSettings) {
     if (!searchSettings.defaultSearchEngineId) {
       await updateServerSettingByKeyAsync(db, "search", {
         ...searchSettings,
-        defaultSearchEngineId: homarrId
+        defaultSearchEngineId: homarrId,
       });
       console.log("Set Homarr docs as the default search engine");
     }
   } else {
-    await updateServerSettingByKeyAsync(db, "search", { 
-      defaultSearchEngineId: homarrId 
+    await updateServerSettingByKeyAsync(db, "search", {
+      defaultSearchEngineId: homarrId,
     });
     console.log("Created search settings with Homarr docs as the default search engine");
   }
@@ -118,7 +122,7 @@ const seedServerSettingsAsync = async (db: Database) => {
   for (const settingsKey of defaultServerSettingsKeys) {
     const currentDbEntry = serverSettingsData.find((setting) => setting.settingKey === settingsKey);
     if (!currentDbEntry) {
-      await updateServerSettingByKeyAsync(db, settingsKey, defaultServerSettings[settingsKey]);
+      await insertServerSettingByKeyAsync(db, settingsKey, defaultServerSettings[settingsKey]);
       console.log(`Created serverSetting through seed key=${settingsKey}`);
       continue;
     }
