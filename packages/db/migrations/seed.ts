@@ -1,12 +1,11 @@
-import SuperJSON from "superjson";
-
 import { objectKeys } from "@homarr/common";
 import { everyoneGroup } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database } from "..";
 import { createId, eq } from "..";
-import { onboarding, searchEngines, serverSettings } from "../schema";
+import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "../queries/server-setting";
+import { onboarding, searchEngines } from "../schema";
 import { groups } from "../schema/mysql";
 
 export const seedDataAsync = async (db: Database) => {
@@ -95,26 +94,19 @@ const seedDefaultSearchEnginesAsync = async (db: Database) => {
   console.log(`Created ${defaultSearchEngines.length} default search engines through seeding process`);
   
   // Set Homarr docs as the default search engine in server settings
-  const searchSettings = await db.query.serverSettings.findFirst({
-    where: eq(serverSettings.settingKey, "search"),
-  });
-
+  const searchSettings = await getServerSettingByKeyAsync(db, "search");
+  
   if (searchSettings) {
-    const currentSettings = SuperJSON.parse<Record<string, unknown>>(searchSettings.value);
-    
-    if (!currentSettings.defaultSearchEngineId) {
-      await db
-        .update(serverSettings)
-        .set({
-          value: SuperJSON.stringify({ ...currentSettings, defaultSearchEngineId: homarrId }),
-        })
-        .where(eq(serverSettings.settingKey, "search"));
+    if (!searchSettings.defaultSearchEngineId) {
+      await updateServerSettingByKeyAsync(db, "search", {
+        ...searchSettings,
+        defaultSearchEngineId: homarrId
+      });
       console.log("Set Homarr docs as the default search engine");
     }
   } else {
-    await db.insert(serverSettings).values({
-      settingKey: "search",
-      value: SuperJSON.stringify({ defaultSearchEngineId: homarrId }),
+    await updateServerSettingByKeyAsync(db, "search", { 
+      defaultSearchEngineId: homarrId 
     });
     console.log("Created search settings with Homarr docs as the default search engine");
   }
@@ -126,15 +118,12 @@ const seedServerSettingsAsync = async (db: Database) => {
   for (const settingsKey of defaultServerSettingsKeys) {
     const currentDbEntry = serverSettingsData.find((setting) => setting.settingKey === settingsKey);
     if (!currentDbEntry) {
-      await db.insert(serverSettings).values({
-        settingKey: settingsKey,
-        value: SuperJSON.stringify(defaultServerSettings[settingsKey]),
-      });
+      await updateServerSettingByKeyAsync(db, settingsKey, defaultServerSettings[settingsKey]);
       console.log(`Created serverSetting through seed key=${settingsKey}`);
       continue;
     }
 
-    const currentSettings = SuperJSON.parse<Record<string, unknown>>(currentDbEntry.value);
+    const currentSettings = await getServerSettingByKeyAsync(db, settingsKey);
     const defaultSettings = defaultServerSettings[settingsKey];
     const missingKeys = objectKeys(defaultSettings).filter((key) => !(key in currentSettings));
 
@@ -143,12 +132,7 @@ const seedServerSettingsAsync = async (db: Database) => {
       continue;
     }
 
-    await db
-      .update(serverSettings)
-      .set({
-        value: SuperJSON.stringify({ ...defaultSettings, ...currentSettings }), // Add missing keys
-      })
-      .where(eq(serverSettings.settingKey, settingsKey));
+    await updateServerSettingByKeyAsync(db, settingsKey, { ...defaultSettings, ...currentSettings });
     console.log(`Updated serverSetting through seed key=${settingsKey}`);
   }
 };
