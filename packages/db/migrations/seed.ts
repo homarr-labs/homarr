@@ -4,15 +4,16 @@ import { objectKeys } from "@homarr/common";
 import { everyoneGroup } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
-import { createId, eq } from "..";
 import type { Database } from "..";
-import { onboarding, serverSettings } from "../schema";
+import { createId, eq } from "..";
+import { onboarding, searchEngines, serverSettings } from "../schema";
 import { groups } from "../schema/mysql";
 
 export const seedDataAsync = async (db: Database) => {
   await seedEveryoneGroupAsync(db);
   await seedOnboardingAsync(db);
   await seedServerSettingsAsync(db);
+  await seedDefaultSearchEnginesAsync(db);
 };
 
 const seedEveryoneGroupAsync = async (db: Database) => {
@@ -46,6 +47,51 @@ const seedOnboardingAsync = async (db: Database) => {
     step: "start",
   });
   console.log("Created onboarding step through seed");
+};
+
+const seedDefaultSearchEnginesAsync = async (db: Database) => {
+  const existingSearchEngines = await db.query.searchEngines.findMany();
+  
+  if (existingSearchEngines.length > 0) {
+    console.log("Skipping seeding of default search engines as some already exists");
+    return;
+  }
+
+  const defaultSearchEngines = [
+    {
+      id: createId(),
+      name: "Google",
+      iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/google.svg",
+      short: "g",
+      description: "Search the web with Google",
+      urlTemplate: "https://www.google.com/search?q=%s",
+      type: "generic" as const,
+      integrationId: null,
+    },
+    {
+      id: createId(),
+      name: "YouTube",
+      iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/youtube.svg",
+      short: "yt",
+      description: "Search for videos on YouTube",
+      urlTemplate: "https://www.youtube.com/results?search_query=%s",
+      type: "generic" as const,
+      integrationId: null,
+    },
+    {
+      id: createId(),
+      name: "Homarr Docs",
+      iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
+      short: "docs",
+      description: "Search the Homarr documentation",
+      urlTemplate: "https://homarr.dev/search?q=%s",
+      type: "generic" as const,
+      integrationId: null,
+    },
+  ];
+
+  await db.insert(searchEngines).values(defaultSearchEngines);
+  console.log(`Created ${defaultSearchEngines.length} default search engines through seeding process`);
 };
 
 const seedServerSettingsAsync = async (db: Database) => {
