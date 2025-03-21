@@ -57,6 +57,7 @@ const seedDefaultSearchEnginesAsync = async (db: Database) => {
     return;
   }
 
+  const homarrId = createId();
   const defaultSearchEngines = [
     {
       id: createId(),
@@ -79,7 +80,7 @@ const seedDefaultSearchEnginesAsync = async (db: Database) => {
       integrationId: null,
     },
     {
-      id: createId(),
+      id: homarrId,
       name: "Homarr Docs",
       iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
       short: "docs",
@@ -92,6 +93,31 @@ const seedDefaultSearchEnginesAsync = async (db: Database) => {
 
   await db.insert(searchEngines).values(defaultSearchEngines);
   console.log(`Created ${defaultSearchEngines.length} default search engines through seeding process`);
+  
+  // Set Homarr docs as the default search engine in server settings
+  const searchSettings = await db.query.serverSettings.findFirst({
+    where: eq(serverSettings.settingKey, "search"),
+  });
+
+  if (searchSettings) {
+    const currentSettings = SuperJSON.parse<Record<string, unknown>>(searchSettings.value);
+    
+    if (!currentSettings.defaultSearchEngineId) {
+      await db
+        .update(serverSettings)
+        .set({
+          value: SuperJSON.stringify({ ...currentSettings, defaultSearchEngineId: homarrId }),
+        })
+        .where(eq(serverSettings.settingKey, "search"));
+      console.log("Set Homarr docs as the default search engine");
+    }
+  } else {
+    await db.insert(serverSettings).values({
+      settingKey: "search",
+      value: SuperJSON.stringify({ defaultSearchEngineId: homarrId }),
+    });
+    console.log("Created search settings with Homarr docs as the default search engine");
+  }
 };
 
 const seedServerSettingsAsync = async (db: Database) => {
