@@ -47,7 +47,7 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
             <Button onClick={actions.closeModal} variant="subtle" color="gray">
               {t("common.action.cancel")}
             </Button>
-            <Button type="submit" color="teal">
+            <Button type="submit">
               {t("common.action.saveChanges")}
             </Button>
           </Group>

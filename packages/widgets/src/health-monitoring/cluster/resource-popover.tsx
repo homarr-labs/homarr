@@ -1,20 +1,20 @@
-import type { PropsWithChildren } from "react";
 import { Badge, Center, Divider, Flex, Group, List, Popover, RingProgress, Stack, Text } from "@mantine/core";
 import {
-  IconArrowNarrowDown,
-  IconArrowNarrowUp,
-  IconBrain,
-  IconClockHour3,
-  IconCpu,
-  IconDatabase,
-  IconDeviceLaptop,
-  IconHeartBolt,
-  IconNetwork,
-  IconQuestionMark,
-  IconServer,
+    IconArrowNarrowDown,
+    IconArrowNarrowUp,
+    IconBrain,
+    IconClockHour3,
+    IconCpu,
+    IconDatabase,
+    IconDeviceLaptop,
+    IconHeartBolt,
+    IconNetwork,
+    IconQuestionMark,
+    IconServer,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
+import type { PropsWithChildren } from "react";
 
 import { capitalize, humanFileSize } from "@homarr/common";
 import type { ComputeResource, Resource, StorageResource } from "@homarr/integrations/types";
@@ -189,7 +189,7 @@ const StorageType = ({ item }: { item: StorageResource }) => {
   if (item.isShared) {
     return <Badge color="blue">{t("shared")}</Badge>;
   } else {
-    return <Badge color="teal">{t("local")}</Badge>;
+    return <Badge>{t("local")}</Badge>;
   }
 };
 

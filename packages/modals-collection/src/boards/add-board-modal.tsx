@@ -82,7 +82,7 @@ export const AddBoardModal = createModal(({ actions }) => {
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
             {t("common.action.cancel")}
           </Button>
-          <Button type="submit" color="teal" loading={isPending}>
+          <Button type="submit" loading={isPending}>
             {t("common.action.create")}
           </Button>
         </Group>

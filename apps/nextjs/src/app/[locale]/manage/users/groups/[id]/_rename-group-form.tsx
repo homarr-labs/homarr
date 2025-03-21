@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback } from "react";
 import { Button, Group, Stack, TextInput } from "@mantine/core";
+import { useCallback } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -68,7 +68,7 @@ export const RenameGroupForm = ({ group, disabled }: RenameGroupFormProps) => {
 
         {!disabled && (
           <Group justify="end">
-            <Button type="submit" color="teal" loading={isPending}>
+            <Button type="submit" loading={isPending}>
               {t("common.action.saveChanges")}
             </Button>
           </Group>

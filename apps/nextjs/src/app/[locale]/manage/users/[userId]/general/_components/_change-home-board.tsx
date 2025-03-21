@@ -73,7 +73,7 @@ export const ChangeHomeBoardForm = ({ user, boardsData }: ChangeHomeBoardFormPro
         />
 
         <Group justify="end">
-          <Button type="submit" color="teal" loading={isPending}>
+          <Button type="submit" loading={isPending}>
             {t("common.action.save")}
           </Button>
         </Group>

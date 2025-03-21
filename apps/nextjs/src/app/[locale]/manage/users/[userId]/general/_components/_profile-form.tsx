@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback } from "react";
 import { Button, Group, Stack, TextInput } from "@mantine/core";
+import { useCallback } from "react";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -81,7 +81,7 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
 
         {isProviderCredentials && (
           <Group justify="end">
-            <Button type="submit" color="teal" disabled={!form.isDirty()} loading={isPending}>
+            <Button type="submit" disabled={!form.isDirty()} loading={isPending}>
               {t("common.action.saveChanges")}
             </Button>
           </Group>
