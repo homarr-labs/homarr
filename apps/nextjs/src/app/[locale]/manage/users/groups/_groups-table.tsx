@@ -1,40 +1,40 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
-import Link from "next/link";
-import type { DragEndEvent, DraggableAttributes, DragStartEvent } from "@dnd-kit/core";
+import type { DragEndEvent, DragStartEvent, DraggableAttributes } from "@dnd-kit/core";
 import {
-  closestCenter,
-  DndContext,
-  DragOverlay,
-  KeyboardSensor,
-  MouseSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
+    DndContext,
+    DragOverlay,
+    KeyboardSensor,
+    MouseSensor,
+    TouchSensor,
+    closestCenter,
+    useSensor,
+    useSensors,
 } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
-  Anchor,
-  Box,
-  Button,
-  Card,
-  Flex,
-  Group,
-  Table,
-  TableTbody,
-  TableTd,
-  TableTh,
-  TableThead,
-  TableTr,
-  Text,
-  Transition,
+    Anchor,
+    Box,
+    Button,
+    Card,
+    Flex,
+    Group,
+    Table,
+    TableTbody,
+    TableTd,
+    TableTh,
+    TableThead,
+    TableTr,
+    Text,
+    Transition,
 } from "@mantine/core";
 import { IconGripVertical } from "@tabler/icons-react";
+import Link from "next/link";
+import type { ReactNode } from "react";
+import { useMemo, useState } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -264,7 +264,7 @@ const SaveAffix = ({ visible, isPending, onDiscard, onSave }: SaveAffixProps) =>
                 <Button disabled={isPending} onClick={onDiscard}>
                   {t("common.action.discard")}
                 </Button>
-                <Button color="teal" loading={isPending} onClick={onSave}>
+                <Button loading={isPending} onClick={onSave}>
                   {t("common.action.saveChanges")}
                 </Button>
               </Group>

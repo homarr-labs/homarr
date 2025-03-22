@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { Button, Grid, Group, Loader, Stack, TextInput, Tooltip } from "@mantine/core";
 import { useDebouncedValue, useDocumentTitle, useFavicon } from "@mantine/hooks";
 import { IconAlertTriangle } from "@tabler/icons-react";
+import { useEffect, useRef } from "react";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { useZodForm } from "@homarr/form";
@@ -116,7 +116,7 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           </Grid.Col>
         </Grid>
         <Group justify="end">
-          <Button type="submit" loading={isPending} color="teal">
+          <Button type="submit" loading={isPending}>
             {t("common.action.saveChanges")}
           </Button>
         </Group>

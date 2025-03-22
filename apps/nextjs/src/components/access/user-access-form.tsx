@@ -1,7 +1,7 @@
-import { useState } from "react";
-import Link from "next/link";
 import { Anchor, Box, Button, Group, Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
+import Link from "next/link";
+import { useState } from "react";
 
 import { useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
@@ -104,7 +104,7 @@ export const UsersAccessForm = <TPermission extends string>({
             <Button rightSection={<IconPlus size="1rem" />} variant="light" onClick={handleAddUser}>
               {t("common.action.add")}
             </Button>
-            <Button type="submit" loading={isPending} color="teal">
+            <Button type="submit" loading={isPending}>
               {t("permission.action.saveUser")}
             </Button>
           </Group>

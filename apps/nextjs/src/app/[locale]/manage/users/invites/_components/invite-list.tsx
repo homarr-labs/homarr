@@ -1,12 +1,12 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
 import { ActionIcon, Button, Title } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { MRT_ColumnDef, MRT_Row } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
+import { useCallback, useMemo } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -90,7 +90,7 @@ const RenderTopToolbarCustomActions = () => {
   }, [openModal]);
 
   return (
-    <Button color="teal" onClick={handleNewInvite}>
+    <Button onClick={handleNewInvite}>
       {t("action.new.title")}
     </Button>
   );
