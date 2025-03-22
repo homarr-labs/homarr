@@ -9,6 +9,7 @@ import { mediaOrganizerJob } from "./jobs/integrations/media-organizer";
 import { mediaRequestListJob, mediaRequestStatsJob } from "./jobs/integrations/media-requests";
 import { mediaServerJob } from "./jobs/integrations/media-server";
 import { mediaTranscodingJob } from "./jobs/integrations/media-transcoding";
+import { networkControllerJob } from "./jobs/integrations/network-controller";
 import { minecraftServerStatusJob } from "./jobs/minecraft-server-status";
 import { pingJob } from "./jobs/ping";
 import { rssFeedsJob } from "./jobs/rss-feeds";
@@ -34,6 +35,7 @@ export const jobGroup = createCronJobGroup({
   updateChecker: updateCheckerJob,
   mediaTranscoding: mediaTranscodingJob,
   minecraftServerStatus: minecraftServerStatusJob,
+  networkController: networkControllerJob,
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];
