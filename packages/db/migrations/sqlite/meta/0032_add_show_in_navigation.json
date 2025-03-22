@@ -1,0 +1,24 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "0032_add_show_in_navigation",
+  "name": "add_show_in_navigation",
+  "statements": [
+    {
+      "type": "alter_table",
+      "name": "board",
+      "operation": {
+        "type": "add_column",
+        "column": {
+          "name": "show_in_navigation",
+          "type": "integer",
+          "default": {
+            "type": "literal",
+            "value": 0
+          },
+          "not_null": true
+        }
+      }
+    }
+  ]
+} 
