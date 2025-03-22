@@ -60,7 +60,7 @@ const emptySectionSchema = z.object({
 });
 
 export const dynamicSectionOptionsSchema = z.object({
-  title: z.string().default(""),
+  title: z.string().max(20).default(""),
   borderColor: z.string().default(""),
 });
 
