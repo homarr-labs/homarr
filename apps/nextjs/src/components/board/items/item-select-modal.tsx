@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
+import { useSession } from "@homarr/auth/client";
+import { isWidgetRestricted } from "@homarr/auth/shared";
 import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal } from "@homarr/modals";
@@ -15,10 +17,18 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
   const [search, setSearch] = useState("");
   const t = useI18n();
   const { createItem } = useItemActions();
+  const { data: session } = useSession();
 
   const items = useMemo(
     () =>
       objectEntries(widgetImports)
+        .filter(([, value]) => {
+          return !isWidgetRestricted({
+            definition: value.definition,
+            user: session?.user ?? null,
+            check: (level) => level !== "none",
+          });
+        })
         .map(([kind, value]) => ({
           kind,
           icon: value.definition.icon,
@@ -26,7 +36,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
           description: t(`widget.${kind}.description`),
         }))
         .sort((itemA, itemB) => itemA.name.localeCompare(itemB.name)),
-    [t],
+    [t, session?.user],
   );
 
   const filteredItems = useMemo(

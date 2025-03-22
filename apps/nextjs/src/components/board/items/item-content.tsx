@@ -5,6 +5,8 @@ import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "node_modules/@homarr/widgets/src/errors";
 import { ErrorBoundary } from "react-error-boundary";
 
+import { useSession } from "@homarr/auth/client";
+import { isWidgetRestricted } from "@homarr/auth/shared";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useSettings } from "@homarr/settings";
@@ -15,6 +17,7 @@ import type { SectionItem } from "~/app/[locale]/boards/_types";
 import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
 import { BoardItemMenu } from "./item-menu";
+import { RestrictedWidgetContent } from "./restricted";
 
 interface BoardItemContentProps {
   item: SectionItem;
@@ -59,6 +62,7 @@ interface InnerContentProps {
 const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
   const settings = useSettings();
   const board = useRequiredBoard();
+  const { data: session } = useSession();
   const [isEditMode] = useEditMode();
   const Comp = loadWidgetDynamic(item.kind);
   const { definition } = widgetImports[item.kind];
@@ -69,6 +73,16 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
     updateItemOptions({ itemId: item.id, newOptions });
   const widgetSupportsIntegrations =
     "supportedIntegrations" in definition && definition.supportedIntegrations.length >= 1;
+
+  if (
+    isWidgetRestricted({
+      definition,
+      user: session?.user ?? null,
+      check: (level) => level === "all",
+    })
+  ) {
+    return <RestrictedWidgetContent kind={item.kind} />;
+  }
 
   return (
     <QueryErrorResetBoundary>

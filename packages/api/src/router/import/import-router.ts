@@ -37,7 +37,7 @@ export const importRouter = createTRPCRouter({
     .requiresStep("import")
     .input(importInitialOldmarrInputSchema)
     .mutation(async ({ ctx, input }) => {
-      await importInitialOldmarrAsync(ctx.db, input);
+      await importInitialOldmarrAsync(ctx.db, input, ctx.session);
       await nextOnboardingStepAsync(ctx.db, undefined);
     }),
 });
