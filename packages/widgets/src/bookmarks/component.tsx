@@ -57,10 +57,12 @@ export default function BookmarksWidget({ options, itemId }: WidgetComponentProp
           hideHostname={options.hideHostname}
           openNewTab={options.openNewTab}
           hasIconColor={board.iconColor !== null}
+          options={options}
         />
       )}
       {options.layout !== "grid" && options.layout !== "gridHorizontal" && (
         <FlexLayout
+          options={options}
           data={data}
           direction={options.layout}
           hideTitle={options.hideTitle}
@@ -75,6 +77,7 @@ export default function BookmarksWidget({ options, itemId }: WidgetComponentProp
 }
 
 interface FlexLayoutProps {
+  options: WidgetComponentProps<"bookmarks">["options"];
   data: RouterOutputs["app"]["byIds"];
   direction: "row" | "column";
   hideTitle: boolean;
@@ -85,6 +88,7 @@ interface FlexLayoutProps {
 }
 
 const FlexLayout = ({
+  options,
   data,
   direction,
   hideTitle,
@@ -114,6 +118,7 @@ const FlexLayout = ({
                   hideIcon={hideIcon}
                   hideHostname={hideHostname}
                   hasIconColor={hasIconColor}
+                  options={options}
                 />
               ) : (
                 <HorizontalItem
@@ -133,6 +138,7 @@ const FlexLayout = ({
 };
 
 interface GridLayoutProps {
+  options: WidgetComponentProps<"bookmarks">["options"];
   data: RouterOutputs["app"]["byIds"];
   hideTitle: boolean;
   hideIcon: boolean;
@@ -143,6 +149,7 @@ interface GridLayoutProps {
 }
 
 const GridLayout = ({
+  options,
   data,
   hideTitle,
   hideIcon,
@@ -154,7 +161,7 @@ const GridLayout = ({
   const board = useRequiredBoard();
 
   return (
-    <Flex mih="100%" miw="100%" gap={4} wrap="wrap">
+    <Flex miw="100%" gap={4} wrap="wrap" style={{ flex: 1 }}>
       {data.map((app) => (
         <UnstyledButton
           component="a"
@@ -185,6 +192,7 @@ const GridLayout = ({
                 hideIcon={hideIcon}
                 hideHostname={hideHostname}
                 hasIconColor={hasIconColor}
+                options={options}
               />
             )}
           </Card>
@@ -195,12 +203,14 @@ const GridLayout = ({
 };
 
 const VerticalItem = ({
+  options,
   app,
   hideTitle,
   hideIcon,
   hideHostname,
   hasIconColor,
 }: {
+  options: WidgetComponentProps<"bookmarks">["options"];
   app: RouterOutputs["app"]["byIds"][number];
   hideTitle: boolean;
   hideIcon: boolean;
@@ -208,7 +218,7 @@ const VerticalItem = ({
   hasIconColor: boolean;
 }) => {
   return (
-    <Stack h="100%" gap="sm">
+    <Stack h="100%" gap="sm" justify={"center"}>
       {!hideTitle && (
         <Text fw={700} ta="center" size="xs">
           {app.name}
@@ -221,10 +231,11 @@ const VerticalItem = ({
           alt={app.name}
           className={classes.bookmarkIcon}
           style={{
-            width: hideHostname && hideTitle ? 16 : 24,
-            height: hideHostname && hideTitle ? 16 : 24,
+            width: hideHostname && hideTitle ? 16 : 40,
+            height: hideHostname && hideTitle ? 16 : 40,
             overflow: "auto",
-            flex: 1,
+            backgroundColor: options.layout === "gridHorizontal" ? "blue" : undefined,
+            flex: "unset",
             marginLeft: "auto",
             marginRight: "auto",
           }}
@@ -253,7 +264,7 @@ const HorizontalItem = ({
   hasIconColor: boolean;
 }) => {
   return (
-    <Group wrap="nowrap" gap="xs" h="100%" justify="center">
+    <Group wrap="nowrap" gap="xs" h="100%" justify="start">
       {!hideIcon && (
         <MaskedOrNormalImage
           imageUrl={app.iconUrl}
