@@ -30,6 +30,7 @@ import type { WidgetOptionDefinition } from "./options";
 import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
+import * as stockPrice from "./stocks";
 import * as video from "./video";
 import * as weather from "./weather";
 
@@ -48,6 +49,7 @@ export const widgetImports = {
   "smartHome-entityState": smartHomeEntityState,
   "smartHome-executeAutomation": smartHomeExecuteAutomation,
   customApi,
+  stockPrice,
   mediaServer,
   calendar,
   downloads,

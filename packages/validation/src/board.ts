@@ -22,7 +22,7 @@ const boardNameSchema = z
   .string()
   .min(1)
   .max(255)
-  .regex(/^[A-Za-z0-9-\\._]*$/);
+  .regex(/^[A-Za-z0-9-\\_]*$/);
 
 const byNameSchema = z.object({
   name: boardNameSchema,
