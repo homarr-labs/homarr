@@ -49,7 +49,7 @@ export const BoardDynamicSection = ({ section }: Props) => {
             c="var(--mantine-color-text)"
             bd="1px solid var(--border-color)"
           >
-            {options.title.substring(0, 20)}
+            {options.title}
           </Badge>
         )}
         {/* Use unique key by layout to reinitialize gridstack */}
