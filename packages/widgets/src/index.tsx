@@ -32,6 +32,7 @@ import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as stockPrice from "./stocks";
 import * as video from "./video";
 import * as weather from "./weather";
+import * as releases from "./releases";
 
 export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
 export type { WidgetComponentProps };
@@ -59,6 +60,7 @@ export const widgetImports = {
   healthMonitoring,
   mediaTranscoding,
   minecraftServerStatus,
+  releases,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
