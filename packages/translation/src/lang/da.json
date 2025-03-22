@@ -1425,76 +1425,76 @@
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Aktiepris",
+      "description": "Viser den aktuelle aktiepris for en virksomhed",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Aktiesymbol"
         },
         "timeRange": {
-          "label": "",
+          "label": "Tidsinterval",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 dag"
             },
             "5d": {
-              "label": ""
+              "label": "5 Dage"
             },
             "1mo": {
-              "label": ""
+              "label": "1 Måned"
             },
             "3mo": {
-              "label": ""
+              "label": "3 Måneder"
             },
             "6mo": {
-              "label": ""
+              "label": "6 Måneder"
             },
             "ytd": {
-              "label": ""
+              "label": "Året indtil nu"
             },
             "1y": {
-              "label": ""
+              "label": "1 År"
             },
             "2y": {
-              "label": ""
+              "label": "2 År"
             },
             "5y": {
-              "label": ""
+              "label": "5 År"
             },
             "10y": {
-              "label": ""
+              "label": "10 År"
             },
             "max": {
-              "label": ""
+              "label": "Maks"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Tidsinterval",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 Minutter"
             },
             "15m": {
-              "label": ""
+              "label": "15 Minutter"
             },
             "30m": {
-              "label": ""
+              "label": "30 Minutter"
             },
             "1h": {
-              "label": ""
+              "label": "1 Time"
             },
             "1d": {
-              "label": ""
+              "label": "1 Dag"
             },
             "5d": {
-              "label": ""
+              "label": "5 Dage"
             },
             "1wk": {
-              "label": ""
+              "label": "1 Uge"
             },
             "1mo": {
-              "label": ""
+              "label": "1 Måned"
             }
           }
         }

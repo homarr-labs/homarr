@@ -1425,76 +1425,76 @@
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Hisse Senedi Fiyatı",
+      "description": "Bir şirketin güncel hisse senedi fiyatını görüntüler",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Hisse senedi sembolü"
         },
         "timeRange": {
-          "label": "",
+          "label": "Zaman Aralığı",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 Gün"
             },
             "5d": {
-              "label": ""
+              "label": "5 Gün"
             },
             "1mo": {
-              "label": ""
+              "label": "1 Ay"
             },
             "3mo": {
-              "label": ""
+              "label": "3 Ay"
             },
             "6mo": {
-              "label": ""
+              "label": "6 Ay"
             },
             "ytd": {
-              "label": ""
+              "label": "Yıl Başından Bugüne"
             },
             "1y": {
-              "label": ""
+              "label": "1 Yıl"
             },
             "2y": {
-              "label": ""
+              "label": "2 Yıl"
             },
             "5y": {
-              "label": ""
+              "label": "5 Yıl"
             },
             "10y": {
-              "label": ""
+              "label": "10 Yıl"
             },
             "max": {
-              "label": ""
+              "label": "Maksimum"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Zaman Aralığı",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 Dakika"
             },
             "15m": {
-              "label": ""
+              "label": "15 Dakika"
             },
             "30m": {
-              "label": ""
+              "label": "30 Dakika"
             },
             "1h": {
-              "label": ""
+              "label": "1 Saat"
             },
             "1d": {
-              "label": ""
+              "label": "1 Gün"
             },
             "5d": {
-              "label": ""
+              "label": "5 Gün"
             },
             "1wk": {
-              "label": ""
+              "label": "1 Hafta"
             },
             "1mo": {
-              "label": ""
+              "label": "1 Ay"
             }
           }
         }
