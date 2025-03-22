@@ -9,6 +9,7 @@ export const widgetKinds = [
   "dnsHoleControls",
   "smartHome-entityState",
   "smartHome-executeAutomation",
+  "stockPrice",
   "mediaServer",
   "calendar",
   "downloads",

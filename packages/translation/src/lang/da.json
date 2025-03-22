@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Opret Søgemaskine",
         "description": "Integration \"{kind}\" kan bruges med søgemaskinerne. Markér dette for automatisk at konfigurere søgemaskinen."
+      },
+      "createApp": {
+        "label": "Opret app",
+        "description": "Opret en app med samme navn og ikon som integrationen. Lad input-feltet være tomt for at oprette app'en med integrations-URL'en."
+      },
+      "appHref": {
+        "placeholder": "Brugerdefineret app URL"
       }
     },
     "action": {
@@ -1072,7 +1079,7 @@
           "label": "Brugerdefinerede CSS-klasser"
         },
         "borderColor": {
-          "label": ""
+          "label": "Kantfarve"
         }
       }
     },
@@ -1129,12 +1136,12 @@
               "label": "Gitter"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "Vandret gitter"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "Skjul titel"
         },
         "hideIcon": {
           "label": "Skjul ikoner"
@@ -1417,6 +1424,82 @@
         "run": "Kør {name}"
       }
     },
+    "stockPrice": {
+      "name": "Aktiepris",
+      "description": "Viser den aktuelle aktiepris for en virksomhed",
+      "option": {
+        "stock": {
+          "label": "Aktiesymbol"
+        },
+        "timeRange": {
+          "label": "Tidsinterval",
+          "option": {
+            "1d": {
+              "label": "1 dag"
+            },
+            "5d": {
+              "label": "5 Dage"
+            },
+            "1mo": {
+              "label": "1 Måned"
+            },
+            "3mo": {
+              "label": "3 Måneder"
+            },
+            "6mo": {
+              "label": "6 Måneder"
+            },
+            "ytd": {
+              "label": "Året indtil nu"
+            },
+            "1y": {
+              "label": "1 År"
+            },
+            "2y": {
+              "label": "2 År"
+            },
+            "5y": {
+              "label": "5 År"
+            },
+            "10y": {
+              "label": "10 År"
+            },
+            "max": {
+              "label": "Maks"
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "Tidsinterval",
+          "option": {
+            "5m": {
+              "label": "5 Minutter"
+            },
+            "15m": {
+              "label": "15 Minutter"
+            },
+            "30m": {
+              "label": "30 Minutter"
+            },
+            "1h": {
+              "label": "1 Time"
+            },
+            "1d": {
+              "label": "1 Dag"
+            },
+            "5d": {
+              "label": "5 Dage"
+            },
+            "1wk": {
+              "label": "1 Uge"
+            },
+            "1mo": {
+              "label": "1 Måned"
+            }
+          }
+        }
+      }
+    },
     "calendar": {
       "name": "Kalender",
       "description": "Vis begivenheder fra dine integrationer i en kalendervisning inden for en vis relativ tidsperiode",
@@ -1436,7 +1519,7 @@
           "label": "Slut kl"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "Vis uovervåget"
         }
       }
     },
@@ -1668,7 +1751,7 @@
       "description": "Vis de aktuelle streams på dine medieservere",
       "option": {},
       "items": {
-        "currentlyPlaying": "",
+        "currentlyPlaying": "Afspiller lige nu",
         "user": "Bruger",
         "name": "Navn",
         "id": "Id"
@@ -1893,10 +1976,10 @@
         "statistics": {
           "empty": "Tom",
           "transcodes": "Transkoder",
-          "transcodesCount": "Transkodninger: {value}",
-          "healthChecksCount": "Sundhedstjek: {value}",
-          "filesCount": "Filer: {value}",
-          "savedSpace": "Gemt plads: {value}",
+          "transcodesCount": "Transkodninger",
+          "healthChecksCount": "Sundhedstjek",
+          "filesCount": "Filer",
+          "savedSpace": "Gemt plads",
           "healthChecks": "Sundhedstjek",
           "videoCodecs": "Kodeks",
           "videoContainers": "Containere",
@@ -2325,7 +2408,7 @@
           "label": "Værktøjer",
           "items": {
             "docker": "Docker",
-            "kubernetes": "",
+            "kubernetes": "Kubernetes",
             "logs": "Logfiler",
             "api": "API",
             "certificates": "Certifikater",
@@ -2874,242 +2957,242 @@
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
-      "label": "",
-      "providers": "",
-      "version": "",
-      "architecture": "",
+      "title": "Cluster Kontrolpanel",
+      "label": "Cluster",
+      "providers": "Udbydere",
+      "version": "Version",
+      "architecture": "Arkitektur",
       "capacity": {
-        "title": "",
+        "title": "Kapacitet",
         "resource": {
-          "reserved": "",
-          "used": ""
+          "reserved": "Reserveret",
+          "used": "Brugt"
         }
       },
       "resources": {
-        "title": "",
-        "nodes": "",
-        "namespaces": "",
-        "ingresses": "",
-        "services": "",
-        "pods": "",
-        "configmaps": "",
-        "secrets": "",
-        "volumes": ""
+        "title": "Ressourcer",
+        "nodes": "Noder",
+        "namespaces": "Navnerum",
+        "ingresses": "Ingresses",
+        "services": "Tjenester",
+        "pods": "Pods",
+        "configmaps": "ConfigMaps",
+        "secrets": "Hemmeligheder",
+        "volumes": "Volumer"
       }
     },
     "nodes": {
-      "label": "",
+      "label": "Noder",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "state": {
-          "label": "",
+          "label": "Tilstand",
           "option": {
-            "ready": "",
-            "NotReady": ""
+            "ready": "Klar",
+            "NotReady": "Ikke Klar"
           }
         },
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "RAM"
         },
         "pods": {
-          "label": ""
+          "label": "Pods"
         },
         "operatingSystem": {
-          "label": ""
+          "label": "OS"
         },
         "architecture": {
-          "label": ""
+          "label": "Arkitektur"
         },
         "kubernetesVersion": {
-          "label": ""
+          "label": "Kubernetes version"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søg i {count} noder"
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "Navnerum",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "state": {
-          "label": "",
+          "label": "Tilstand",
           "option": {
-            "active": "",
-            "terminating": ""
+            "active": "Aktiv",
+            "terminating": "Afslutter"
           }
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søg i {count} navneområder"
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "Ingresses",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "namespace": {
-          "label": ""
+          "label": "Navnerum"
         },
         "className": {
-          "label": ""
+          "label": "Klassens navn"
         },
         "rulesAndPaths": {
-          "label": ""
+          "label": "Regler & stier"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søg i {count} ingresses"
       }
     },
     "services": {
-      "label": "",
+      "label": "Tjenester",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "namespace": {
-          "label": ""
+          "label": "Navnerum"
         },
         "type": {
-          "label": ""
+          "label": "Type"
         },
         "ports": {
-          "label": ""
+          "label": "Porte"
         },
         "targetPorts": {
-          "label": ""
+          "label": "Målporte"
         },
         "clusterIP": {
-          "label": ""
+          "label": "Cluster IP"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søg i {count} tjenester"
       }
     },
     "pods": {
-      "label": "",
+      "label": "Pods",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "namespace": {
-          "label": ""
+          "label": "Navnerum"
         },
         "image": {
-          "label": ""
+          "label": "Billede"
         },
         "applicationType": {
-          "label": ""
+          "label": "Applikationstype"
         },
         "status": {
-          "label": ""
+          "label": "Status"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søg i {count} pods"
       }
     },
     "secrets": {
-      "label": "",
+      "label": "Hemmeligheder",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "namespace": {
-          "label": ""
+          "label": "navnerum"
         },
         "type": {
-          "label": ""
+          "label": "type"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søg i {count} hemmeligheder"
       }
     },
     "configmaps": {
-      "label": "",
+      "label": "ConfigMaps",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "namespace": {
-          "label": ""
+          "label": "navnerum"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søg i {count} configMaps"
       }
     },
     "volumes": {
-      "label": "",
+      "label": "Volumer",
       "field": {
         "name": {
-          "label": ""
+          "label": "Navn"
         },
         "namespace": {
-          "label": ""
+          "label": "Navnerum"
         },
         "accessModes": {
-          "label": ""
+          "label": "Adgangstilstande"
         },
         "storage": {
-          "label": ""
+          "label": "Lager"
         },
         "storageClassName": {
-          "label": ""
+          "label": "Lagerklasse Navn"
         },
         "volumeMode": {
-          "label": ""
+          "label": "Volume Mode"
         },
         "volumeName": {
-          "label": ""
+          "label": "Volumens Navn"
         },
         "status": {
-          "label": ""
+          "label": "Status"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Oprettet"
         }
       },
       "table": {
-        "search": ""
+        "search": "Søg i {count} volumes"
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Kunne ikke hente Kubernetes-data"
     }
   },
   "permission": {
@@ -3198,30 +3281,30 @@
           "label": "Docker"
         },
         "kubernetes": {
-          "label": "",
+          "label": "Kubernetes",
           "nodes": {
-            "label": ""
+            "label": "Noder"
           },
           "namespaces": {
-            "label": ""
+            "label": "Navnerum"
           },
           "ingresses": {
-            "label": ""
+            "label": "Ingresses"
           },
           "services": {
-            "label": ""
+            "label": "Tjenester"
           },
           "pods": {
-            "label": ""
+            "label": "pods"
           },
           "configmaps": {
-            "label": ""
+            "label": "ConfigMaps"
           },
           "secrets": {
-            "label": ""
+            "label": "Hemmeligheder"
           },
           "volumes": {
-            "label": ""
+            "label": "Volumer"
           }
         },
         "logs": {

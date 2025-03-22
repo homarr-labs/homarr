@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Arama Motoru Oluştur",
         "description": "\"{kind}\" entegrasyonu arama motorlarıyla kullanılabilir. Arama motorunu otomatik olarak yapılandırmak için bunu işaretleyin."
+      },
+      "createApp": {
+        "label": "Uygulama oluştur",
+        "description": "Entegrasyon ile aynı adı ve simgeyi taşıyan bir uygulama oluşturun. Uygulamayı entegrasyon URL'si ile oluşturmak için aşağıdaki alanını boş bırakın."
+      },
+      "appHref": {
+        "placeholder": "Özel Uygulama URL'si"
       }
     },
     "action": {
@@ -1415,6 +1422,82 @@
       },
       "spotlightAction": {
         "run": "Çalıştır {name}"
+      }
+    },
+    "stockPrice": {
+      "name": "Hisse Senedi Fiyatı",
+      "description": "Bir şirketin güncel hisse senedi fiyatını görüntüler",
+      "option": {
+        "stock": {
+          "label": "Hisse senedi sembolü"
+        },
+        "timeRange": {
+          "label": "Zaman Aralığı",
+          "option": {
+            "1d": {
+              "label": "1 Gün"
+            },
+            "5d": {
+              "label": "5 Gün"
+            },
+            "1mo": {
+              "label": "1 Ay"
+            },
+            "3mo": {
+              "label": "3 Ay"
+            },
+            "6mo": {
+              "label": "6 Ay"
+            },
+            "ytd": {
+              "label": "Yıl Başından Bugüne"
+            },
+            "1y": {
+              "label": "1 Yıl"
+            },
+            "2y": {
+              "label": "2 Yıl"
+            },
+            "5y": {
+              "label": "5 Yıl"
+            },
+            "10y": {
+              "label": "10 Yıl"
+            },
+            "max": {
+              "label": "Maksimum"
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "Zaman Aralığı",
+          "option": {
+            "5m": {
+              "label": "5 Dakika"
+            },
+            "15m": {
+              "label": "15 Dakika"
+            },
+            "30m": {
+              "label": "30 Dakika"
+            },
+            "1h": {
+              "label": "1 Saat"
+            },
+            "1d": {
+              "label": "1 Gün"
+            },
+            "5d": {
+              "label": "5 Gün"
+            },
+            "1wk": {
+              "label": "1 Hafta"
+            },
+            "1mo": {
+              "label": "1 Ay"
+            }
+          }
+        }
       }
     },
     "calendar": {

@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "創建搜尋引擎",
         "description": "集成 {kind} 可以與搜尋引擎共同使用，勾選此選項可自動設定搜尋引擎"
+      },
+      "createApp": {
+        "label": "創建應用程式",
+        "description": "建立一個與集成相同名稱和圖示的應用程式，將下方輸入欄位留空，以使用集成網址創建應用程式"
+      },
+      "appHref": {
+        "placeholder": "自訂應用程式網址"
       }
     },
     "action": {
@@ -1415,6 +1422,82 @@
       },
       "spotlightAction": {
         "run": "執行 {name}"
+      }
+    },
+    "stockPrice": {
+      "name": "",
+      "description": "",
+      "option": {
+        "stock": {
+          "label": ""
+        },
+        "timeRange": {
+          "label": "",
+          "option": {
+            "1d": {
+              "label": ""
+            },
+            "5d": {
+              "label": ""
+            },
+            "1mo": {
+              "label": ""
+            },
+            "3mo": {
+              "label": ""
+            },
+            "6mo": {
+              "label": ""
+            },
+            "ytd": {
+              "label": ""
+            },
+            "1y": {
+              "label": ""
+            },
+            "2y": {
+              "label": ""
+            },
+            "5y": {
+              "label": ""
+            },
+            "10y": {
+              "label": ""
+            },
+            "max": {
+              "label": ""
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "",
+          "option": {
+            "5m": {
+              "label": ""
+            },
+            "15m": {
+              "label": ""
+            },
+            "30m": {
+              "label": ""
+            },
+            "1h": {
+              "label": ""
+            },
+            "1d": {
+              "label": ""
+            },
+            "5d": {
+              "label": ""
+            },
+            "1wk": {
+              "label": ""
+            },
+            "1mo": {
+              "label": ""
+            }
+          }
+        }
       }
     },
     "calendar": {

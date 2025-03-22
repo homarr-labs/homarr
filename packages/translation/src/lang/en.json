@@ -1427,6 +1427,82 @@
         "run": "Run {name}"
       }
     },
+    "stockPrice": {
+      "name": "Stock Price",
+      "description": "Displays the current stock price of a company",
+      "option": {
+        "stock": {
+          "label": "Stock symbol"
+        },
+        "timeRange": {
+          "label": "Time Range",
+          "option": {
+            "1d": {
+              "label": "1 Day"
+            },
+            "5d": {
+              "label": "5 Day"
+            },
+            "1mo": {
+              "label": "1 Month"
+            },
+            "3mo": {
+              "label": "3 Months"
+            },
+            "6mo": {
+              "label": "6 Months"
+            },
+            "ytd": {
+              "label": "Year to Date"
+            },
+            "1y": {
+              "label": "1 Year"
+            },
+            "2y": {
+              "label": "2 Years"
+            },
+            "5y": {
+              "label": "5 Years"
+            },
+            "10y": {
+              "label": "10 Years"
+            },
+            "max": {
+              "label": "Max"
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "Time Interval",
+          "option": {
+            "5m": {
+              "label": "5 Minutes"
+            },
+            "15m": {
+              "label": "15 Minutes"
+            },
+            "30m": {
+              "label": "30 Minutes"
+            },
+            "1h": {
+              "label": "1 Hour"
+            },
+            "1d": {
+              "label": "1 Day"
+            },
+            "5d": {
+              "label": "5 Days"
+            },
+            "1wk": {
+              "label": "1 Week"
+            },
+            "1mo": {
+              "label": "1 Month"
+            }
+          }
+        }
+      }
+    },
     "calendar": {
       "name": "Calendar",
       "description": "Display events from your integrations in a calendar view within a certain relative time period",
