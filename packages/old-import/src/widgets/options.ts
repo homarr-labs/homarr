@@ -76,6 +76,7 @@ const optionMapping: OptionMapping = {
     defaultSort: () => "type",
     descendingDefaultSort: () => false,
     showCompletedUsenet: () => true,
+    showCompletedHttp: () => true,
   },
   weather: {
     forecastDayCount: (oldOptions) => oldOptions.forecastDays,
