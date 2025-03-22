@@ -10,6 +10,7 @@ export class DynamicSectionMockBuilder {
       id: createId(),
       kind: "dynamic",
       options: {
+        title: "",
         borderColor: "",
       },
       layouts: [],
