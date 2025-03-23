@@ -1,8 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { Button, Group, Rating, Stack, Textarea, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
 
 import { createModal } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
