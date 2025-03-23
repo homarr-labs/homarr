@@ -12,17 +12,17 @@ languageIds:
 # You should unescape RegEx strings in order to fit in the YAML file
 # To help with this, you can use https://www.freeformatter.com/json-escape.html
 usageMatchRegex:
-  # The following example shows how to detect `t("your.i18n.keys")`
-  # the `{key}` will be placed by a proper keypath matching regex,
-  # you can ignore it and use your own matching rules as well
+  # For direct t("your.i18n.keys") usage
   - "[^\\w\\d]t\\(['\"`]({key})['\"`]"
+  # For variable t assigned from getScopedI18n or useScopedI18n
+  - "\\bt\\(['\"`]({key})['\"`]\\)"
 
 # A RegEx to set a custom scope range. This scope will be used as a prefix when detecting keys
 # and works like how the i18next framework identifies the namespace scope from the
 # useTranslation() hook.
 # You should unescape RegEx strings in order to fit in the YAML file
 # To help with this, you can use https://www.freeformatter.com/json-escape.html
-scopeRangeRegex: "(getScopedI18n|useScopedI18n)\\(\\s*['\"](.*?)['\"]\\)"
+scopeRangeRegex: "(?:const|let|var)\\s+t\\s*=\\s*(?:await\\s+)?(?:getScopedI18n|useScopedI18n)\\(\\s*['\"](.*?)['\"]\\)"
 
 # An array of strings containing refactor templates.
 # The "$1" will be replaced by the keypath specified.
