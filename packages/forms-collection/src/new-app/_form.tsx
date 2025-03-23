@@ -1,12 +1,13 @@
 "use client";
 
 import type { ChangeEventHandler } from "react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button, Checkbox, Collapse, Group, Stack, Textarea, TextInput } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import type { z } from "zod";
 
+import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
@@ -45,6 +46,9 @@ export const AppForm = ({
     },
   });
 
+  // Debounce the name value with 200ms delay
+  const [debouncedName] = useDebouncedValue(form.values.name, 200);
+
   const shouldCreateAnother = useRef(false);
   const handleSubmit = (values: FormType) => {
     const redirect = !shouldCreateAnother.current;
@@ -67,6 +71,65 @@ export const AppForm = ({
       form.setFieldValue("pingUrl", "");
     }
   };
+
+  // Auto-select icon based on app name with debounced search
+  const { data: iconsData } = clientApi.icon.findIcons.useQuery(
+    {
+      searchText: debouncedName,
+    },
+    {
+      enabled: debouncedName.length > 3,
+    },
+  );
+
+  useEffect(() => {
+    if (debouncedName && !form.values.iconUrl && iconsData?.icons) {
+      // Find exact matches first, then partial matches
+      let exactSvgMatch = null;
+      let exactNonSvgMatch = null;
+      let partialSvgMatch = null;
+      let partialNonSvgMatch = null;
+
+      const nameLower = debouncedName.toLowerCase();
+
+      for (const group of iconsData.icons) {
+        for (const icon of group.icons) {
+          const iconNameLower = icon.url.toLowerCase();
+          const fileNameParts = iconNameLower.split("/");
+          const fileName = fileNameParts[fileNameParts.length - 1]?.split(".")[0];
+
+          // Check for exact match first (the file name equals the search term)
+          if (fileName === nameLower) {
+            if (icon.url.endsWith(".svg")) {
+              exactSvgMatch = icon.url;
+            } else if (!exactNonSvgMatch) {
+              exactNonSvgMatch = icon.url;
+            }
+          }
+          // Then check for partial match
+          else if (fileName?.includes(nameLower)) {
+            if (icon.url.endsWith(".svg") && !partialSvgMatch) {
+              partialSvgMatch = icon.url;
+            } else if (!partialNonSvgMatch) {
+              partialNonSvgMatch = icon.url;
+            }
+          }
+        }
+        if (exactSvgMatch) break;
+      }
+
+      // Set the icon URL with priority: exact SVG > exact non-SVG > partial SVG > partial non-SVG
+      if (exactSvgMatch) {
+        form.setFieldValue("iconUrl", exactSvgMatch);
+      } else if (exactNonSvgMatch) {
+        form.setFieldValue("iconUrl", exactNonSvgMatch);
+      } else if (partialSvgMatch) {
+        form.setFieldValue("iconUrl", partialSvgMatch);
+      } else if (partialNonSvgMatch) {
+        form.setFieldValue("iconUrl", partialNonSvgMatch);
+      }
+    }
+  }, [debouncedName, iconsData]);
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
