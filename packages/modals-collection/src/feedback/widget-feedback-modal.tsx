@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Button, Group, Rating, Stack, Textarea, TextInput } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { useState } from "react";
 
 import { createModal } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
@@ -20,12 +21,12 @@ export const WidgetFeedbackModal = createModal<WidgetFeedbackModalProps>(({ acti
   const [overallRating, setOverallRating] = useState(0);
   const [discordUsername, setDiscordUsername] = useState("");
   const [feedbackText, setFeedbackText] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitting, handle] = useDisclosure(false);
 
   const isFormValid = usabilityRating > 0 && featuresRating > 0 && overallRating > 0;
 
   const handleSubmit = async () => {
-    setIsSubmitting(true);
+    handle.open();
 
     try {
       if (typeof window !== "undefined" && window.umami) {
@@ -49,7 +50,7 @@ export const WidgetFeedbackModal = createModal<WidgetFeedbackModalProps>(({ acti
     } catch (error) {
       console.error("Error sending feedback:", error);
     } finally {
-      setIsSubmitting(false);
+      handle.close();
     }
   };
 
@@ -98,7 +99,7 @@ export const WidgetFeedbackModal = createModal<WidgetFeedbackModalProps>(({ acti
         <Button variant="default" onClick={() => actions.closeModal()}>
           {t("common.action.cancel")}
         </Button>
-        <Button loading={isSubmitting} onClick={handleSubmit} disabled={!isFormValid}>
+        <Button loading={submitting} onClick={handleSubmit} disabled={!isFormValid}>
           {tFeedback("button.submit")}
         </Button>
       </Group>
