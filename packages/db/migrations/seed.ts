@@ -88,6 +88,7 @@ const seedDefaultSearchEnginesAsync = async (db: Database) => {
       iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
       short: "docs",
       description: "Search the Homarr documentation",
+      // eslint-disable-next-line no-restricted-syntax
       urlTemplate: "https://homarr.dev/search?q=%s",
       type: "generic" as const,
       integrationId: null,
