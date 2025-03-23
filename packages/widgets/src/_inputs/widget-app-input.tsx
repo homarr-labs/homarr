@@ -66,9 +66,8 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
         variant="default"
         onClick={() =>
           openModal({
-            // eslint-disable-next-line no-restricted-syntax
-            async onClose(createdAppId) {
-              await refetch();
+            onClose(createdAppId) {
+              void refetch();
               form.setFieldValue(`options.${property}`, createdAppId);
             },
           })
