@@ -101,20 +101,11 @@ const seedDefaultSearchEnginesAsync = async (db: Database) => {
   // Set Homarr docs as the default search engine in server settings
   const searchSettings = await getServerSettingByKeyAsync(db, "search");
 
-  if (searchSettings) {
-    if (!searchSettings.defaultSearchEngineId) {
-      await updateServerSettingByKeyAsync(db, "search", {
-        ...searchSettings,
-        defaultSearchEngineId: homarrId,
-      });
-      console.log("Set Homarr docs as the default search engine");
-    }
-  } else {
-    await updateServerSettingByKeyAsync(db, "search", {
-      defaultSearchEngineId: homarrId,
-    });
-    console.log("Created search settings with Homarr docs as the default search engine");
-  }
+  await updateServerSettingByKeyAsync(db, "search", {
+    ...searchSettings,
+    defaultSearchEngineId: homarrId,
+  });
+  console.log("Set Homarr docs as the default search engine");
 };
 
 const seedServerSettingsAsync = async (db: Database) => {
