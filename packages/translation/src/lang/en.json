@@ -615,6 +615,40 @@
       }
     }
   },
+  "feedback": {
+    "modal": {
+      "title": "Give feedback on this widget"
+    },
+    "rating": {
+      "usability": {
+        "label": "How would you rate the usability of this widget?"
+      },
+      "features": {
+        "label": "How would you rate the features of this widget?"
+      },
+      "overall": {
+        "label": "Overall satisfaction with this widget"
+      }
+    },
+    "discord": {
+      "label": "Discord Username (optional)",
+      "placeholder": "username#1234 or username",
+      "description": "Leave your Discord username if you'd like us to contact you about your feedback. You must be on the Homarr server."
+    },
+    "comments": {
+      "label": "Wishlist or comments",
+      "placeholder": "Share your thoughts, what you like or what you don't like..."
+    },
+    "button": {
+      "submit": "Submit Feedback"
+    },
+    "notification": {
+      "success": {
+        "title": "Feedback Sent",
+        "message": "Thank you for your feedback! It helps us improve Homarr."
+      }
+    }
+  },
   "integration": {
     "page": {
       "list": {
@@ -1036,7 +1070,8 @@
       "edit": "Edit item",
       "moveResize": "Move / resize item",
       "duplicate": "Duplicate item",
-      "remove": "Remove item"
+      "remove": "Remove item",
+      "feedback": "Give feedback"
     },
     "menu": {
       "label": {
