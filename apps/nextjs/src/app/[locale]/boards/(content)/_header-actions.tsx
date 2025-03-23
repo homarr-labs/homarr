@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Group, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import {
+  IconApps,
   IconBox,
   IconBoxAlignTop,
   IconChevronDown,
@@ -25,9 +26,11 @@ import { useEditMode } from "@homarr/boards/edit-mode";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { AppSelectModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
+import { useItemActions } from "~/components/board/items/item-actions";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
 import { useBoardPermissions } from "~/components/board/permissions/client";
 import { useCategoryActions } from "~/components/board/sections/category/category-actions";
@@ -62,8 +65,10 @@ export const BoardContentHeaderActions = () => {
 const AddMenu = () => {
   const { openModal: openCategoryEditModal } = useModalAction(CategoryEditModal);
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
+  const { openModal: openAppSelectModal } = useModalAction(AppSelectModal);
   const { addCategoryToEnd } = useCategoryActions();
   const { addDynamicSection } = useDynamicSectionActions();
+  const { createItem } = useItemActions();
   const t = useI18n();
 
   const handleAddCategory = useCallback(
@@ -90,6 +95,17 @@ const AddMenu = () => {
     openItemSelectModal();
   }, [openItemSelectModal]);
 
+  const handleSelectApp = useCallback(() => {
+    openAppSelectModal({
+      onSelect: (appId) => {
+        createItem({
+          kind: "app",
+          options: { appId },
+        });
+      },
+    });
+  }, [openAppSelectModal, createItem]);
+
   return (
     <Menu position="bottom-end" withArrow>
       <Menu.Target>
@@ -103,6 +119,10 @@ const AddMenu = () => {
       <Menu.Dropdown style={{ transform: "translate(-3px, 0)" }}>
         <Menu.Item leftSection={<IconBox size={20} />} onClick={handleSelectItem}>
           {t("item.action.create")}
+        </Menu.Item>
+
+        <Menu.Item leftSection={<IconApps size={20} />} onClick={handleSelectApp}>
+          {t("app.action.add")}
         </Menu.Item>
 
         <Menu.Divider />
