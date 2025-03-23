@@ -4,13 +4,18 @@ import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import type { MaybePromise } from "@homarr/common/types";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
-export const AddBoardModal = createModal(({ actions }) => {
+interface AddBoardModalProps {
+  onSuccess?: (boardId: string) => MaybePromise<void>;
+}
+
+export const AddBoardModal = createModal<AddBoardModalProps>(({ actions, innerProps }) => {
   const t = useI18n();
   const form = useZodForm(validation.board.create, {
     mode: "controlled",
@@ -38,12 +43,16 @@ export const AddBoardModal = createModal(({ actions }) => {
         // Prevent submit before name availability check
         if (!boardNameStatus.canSubmit) return;
         mutate(values, {
-          onSuccess: () => {
+          onSuccess: (data) => {
             actions.closeModal();
             showSuccessNotification({
               title: "Board created",
               message: `Board ${values.name} has been created`,
             });
+
+            if (innerProps.onSuccess && typeof data.boardId === "string") {
+              void innerProps.onSuccess(data.boardId);
+            }
           },
           onError() {
             showErrorNotification({
