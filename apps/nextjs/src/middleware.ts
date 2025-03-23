@@ -1,11 +1,14 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { createTRPCClient, httpLink } from "@trpc/client";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from "@homarr/api";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
+
+// Simple in-memory cache for onboarding status (makes it only request once and keep result in memory)
+let onboardingStatusCache: string | null = null;
 
 export async function middleware(request: NextRequest) {
   // fetch api does not work because window is not defined and we need to construct the url from the headers
@@ -15,8 +18,21 @@ export async function middleware(request: NextRequest) {
   // Redirect to onboarding if it's not finished yet
   const pathname = request.nextUrl.pathname;
   if (!pathname.endsWith("/init")) {
-    const currentOnboardingStep = await serverFetchApi.onboard.currentStep.query();
-    if (currentOnboardingStep.current !== "finish") {
+    let currentStep;
+
+    if (onboardingStatusCache !== null) {
+      // Use cached value if available
+      currentStep = { current: onboardingStatusCache };
+    } else {
+      // Cache miss, fetch from API
+      const currentOnboardingStep = await serverFetchApi.onboard.currentStep.query();
+
+      // Store in cache
+      onboardingStatusCache = currentOnboardingStep.current;
+      currentStep = currentOnboardingStep;
+    }
+
+    if (currentStep.current !== "finish") {
       return NextResponse.redirect(new URL("/init", request.url));
     }
   }
