@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
 import { IconPlus, IconSearch } from "@tabler/icons-react";
 
@@ -82,14 +83,13 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
           </Card>
         </Grid.Col>
 
-        {/* Existing apps */}
         {filteredApps.map((app) => (
           <Grid.Col key={app.id} span={{ xs: 12, sm: 4, md: 3 }}>
             <Card h="100%">
               <Stack justify="space-between" h="100%">
                 <Stack gap="xs">
                   <Center>
-                    <img src={app.iconUrl || ""} alt={app.name} width={24} height={24} />
+                    <Image src={app.iconUrl || ""} alt={app.name} width={24} height={24} />
                   </Center>
                   <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center">
                     {app.name}
