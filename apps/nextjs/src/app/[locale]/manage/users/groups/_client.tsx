@@ -1,8 +1,8 @@
 "use client";
 
+import { useCallback, useMemo, useState } from "react";
 import { Group, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
-import { useCallback, useMemo, useState } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useModalAction } from "@homarr/modals";
@@ -57,9 +57,5 @@ const AddGroup = () => {
     openModal();
   }, [openModal]);
 
-  return (
-    <MobileAffixButton onClick={handleAddGroup}>
-      {t("group.action.create.label")}
-    </MobileAffixButton>
-  );
+  return <MobileAffixButton onClick={handleAddGroup}>{t("group.action.create.label")}</MobileAffixButton>;
 };

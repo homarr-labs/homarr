@@ -40,9 +40,7 @@ export const CategoryEditModal = createModal<InnerProps>(({ actions, innerProps 
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
             {t("common.action.cancel")}
           </Button>
-          <Button type="submit">
-            {innerProps.submitLabel}
-          </Button>
+          <Button type="submit">{innerProps.submitLabel}</Button>
         </Group>
       </Stack>
     </form>

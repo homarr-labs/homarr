@@ -1,40 +1,40 @@
 "use client";
 
-import type { DragEndEvent, DragStartEvent, DraggableAttributes } from "@dnd-kit/core";
+import type { ReactNode } from "react";
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import type { DragEndEvent, DraggableAttributes, DragStartEvent } from "@dnd-kit/core";
 import {
-    DndContext,
-    DragOverlay,
-    KeyboardSensor,
-    MouseSensor,
-    TouchSensor,
-    closestCenter,
-    useSensor,
-    useSensors,
+  closestCenter,
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
-    Anchor,
-    Box,
-    Button,
-    Card,
-    Flex,
-    Group,
-    Table,
-    TableTbody,
-    TableTd,
-    TableTh,
-    TableThead,
-    TableTr,
-    Text,
-    Transition,
+  Anchor,
+  Box,
+  Button,
+  Card,
+  Flex,
+  Group,
+  Table,
+  TableTbody,
+  TableTd,
+  TableTh,
+  TableThead,
+  TableTr,
+  Text,
+  Transition,
 } from "@mantine/core";
 import { IconGripVertical } from "@tabler/icons-react";
-import Link from "next/link";
-import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

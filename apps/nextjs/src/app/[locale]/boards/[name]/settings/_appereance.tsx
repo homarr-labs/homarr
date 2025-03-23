@@ -9,11 +9,11 @@ import {
   Grid,
   Group,
   InputWrapper,
+  isLightColor,
   Select,
   Slider,
   Stack,
   Text,
-  isLightColor,
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -22,8 +22,8 @@ import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
-import { generateColors } from "../../(content)/_theme";
 import type { Board } from "../../_types";
+import { generateColors } from "../../(content)/_theme";
 import { useSavePartialSettingsMutation } from "./_shared";
 
 interface Props {

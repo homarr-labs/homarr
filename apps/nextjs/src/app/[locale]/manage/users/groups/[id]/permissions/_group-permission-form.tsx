@@ -1,8 +1,8 @@
 "use client";
 
-import { Button, Card, Group, Switch, Text, Transition } from "@mantine/core";
 import type { PropsWithChildren } from "react";
 import { useCallback } from "react";
+import { Button, Card, Group, Switch, Text, Transition } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { objectEntries } from "@homarr/common";

@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, Group, Stack } from "@mantine/core";
 import { useState } from "react";
+import { Button, Group, Stack } from "@mantine/core";
 import { z } from "zod";
 
 import { objectEntries } from "@homarr/common";
@@ -13,9 +13,9 @@ import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form";
 
 import { widgetImports } from "..";
-import type { BoardItemAdvancedOptions } from "../../../validation/src/shared";
 import { getInputForType } from "../_inputs";
 import { FormProvider, useForm } from "../_inputs/form";
+import type { BoardItemAdvancedOptions } from "../../../validation/src/shared";
 import type { OptionsBuilderResult } from "../options";
 import type { IntegrationSelectOption } from "../widget-integration-select";
 import { WidgetIntegrationSelect } from "../widget-integration-select";
@@ -142,9 +142,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
               <Button onClick={actions.closeModal} variant="subtle" color="gray">
                 {t("common.action.cancel")}
               </Button>
-              <Button type="submit">
-                {t("common.action.saveChanges")}
-              </Button>
+              <Button type="submit">{t("common.action.saveChanges")}</Button>
             </Group>
           </Group>
         </Stack>

@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, Group, Stack, TextInput } from "@mantine/core";
 import { useCallback } from "react";
+import { Button, Group, Stack, TextInput } from "@mantine/core";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
