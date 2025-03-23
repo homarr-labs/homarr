@@ -1,10 +1,10 @@
 "use client";
 
-import { signIn } from "@homarr/auth/client";
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 import type { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
+import { signIn } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -31,13 +31,13 @@ export const InitUserForm = () => {
           title: tUser("notification.success.title"),
           message: tUser("notification.success.message"),
         });
-        
+
         await signIn("credentials", {
           name: values.username,
           password: values.password,
           redirect: false,
         });
-        
+
         await revalidatePathActionAsync("/init");
       },
       onError: (error) => {
