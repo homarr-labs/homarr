@@ -10,7 +10,7 @@ export class ReleaseProvider {
 
 interface ProvidersProps {
   [key: string]: ReleaseProvider;
-  Docker: ReleaseProvider;
+  DockerHub: ReleaseProvider;
   Github: ReleaseProvider;
   Gitlab: ReleaseProvider;
   Npm: ReleaseProvider;
@@ -18,7 +18,7 @@ interface ProvidersProps {
 }
 
 export const Providers: ProvidersProps = {
-  Docker: new ReleaseProvider("Docker", "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/docker.svg"),
+  DockerHub: new ReleaseProvider("Docker Hub", "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/docker.svg"),
   Github: new ReleaseProvider("Github", "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/github-dark.svg"),
   Gitlab: new ReleaseProvider("Gitlab", "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/gitlab.svg"),
   Npm: new ReleaseProvider("Npm", "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets//assets/npm.svg"),

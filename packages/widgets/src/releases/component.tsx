@@ -73,10 +73,11 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 
     if (repository === undefined) continue;
 
-    repository.latestRelease = data.tag;
-    repository.latestReleaseDate = data.lastUpdated;
-    repository.shouldHighlight =
-      options.highlightWithin !== "" ? isDateWithin(repository.latestReleaseDate, options.highlightWithin) : false;
+    repository.updateDetails({
+      ...data,
+      shouldHighlight:
+        options.highlightWithin !== "" ? isDateWithin(data.latestReleaseAt, options.highlightWithin) : false,
+    });
   }
 
   const repositories = options.showOnlyNewReleases
@@ -84,10 +85,10 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     : options.repositories;
 
   if (options.sortBy === "releaseDate") {
-    repositories.sort((a, b) => {
-      if (a.latestReleaseDate === undefined) return 1;
-      if (b.latestReleaseDate === undefined) return -1;
-      return a.latestReleaseDate > b.latestReleaseDate ? -1 : 1;
+    repositories.sort((repoA, repoB) => {
+      if (repoA.latestReleaseAt === undefined) return 1;
+      if (repoB.latestReleaseAt === undefined) return -1;
+      return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
     });
 
     return (
@@ -109,6 +110,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 <Grid.Col span={6} p={0}>
                   <Text truncate="end" size="xs">
                     {repository.identifier}
+                    {repository.isPreRelease && "(pre-release)"}
+                    {repository.starsCount}
                   </Text>
                 </Grid.Col>
                 <Grid.Col span={5.8} p={0}>
@@ -131,8 +134,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 </Grid.Col>
                 <Grid.Col span={3} p={0}>
                   <Text size="xs" c="dimmed">
-                    {repository.latestReleaseDate &&
-                      formatter.relativeTime(repository.latestReleaseDate, {
+                    {repository.latestReleaseAt &&
+                      formatter.relativeTime(repository.latestReleaseAt, {
                         now,
                         style: "narrow",
                       })}

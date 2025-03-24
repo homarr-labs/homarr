@@ -45,7 +45,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({ property, kind }: CommonWi
   }, []);
 
   const addNewItem = () => {
-    const item = new ReleaseRepository(Providers.Docker, "");
+    const item = new ReleaseRepository(Providers.DockerHub, "");
 
     form.setValues((previous) => {
       const previousValues = previous.options?.[property] as ReleaseRepository[];
@@ -164,8 +164,8 @@ const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
   const handleChange = useCallback(
     (changedValue: Partial<ReleaseRepository>) => {
-      setTempRepository((prev) => ({ ...prev, ...changedValue }));
-      const validation = innerProps.onReleaseSave({ ...tempRepository, ...changedValue });
+      setTempRepository((prev) => prev.with(changedValue));
+      const validation = innerProps.onReleaseSave(tempRepository.with(changedValue));
       setFormErrors(validation.errors);
     },
     [innerProps, tempRepository],
