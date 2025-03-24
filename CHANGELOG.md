@@ -1,3 +1,23 @@
+## [1.12.0](https://github.com/homarr-labs/homarr/compare/v1.11.0...v1.12.0) (2025-03-21)
+
+### Features
+
+* stock price widget ([#2579](https://github.com/homarr-labs/homarr/issues/2579)) ([91a69c1](https://github.com/homarr-labs/homarr/commit/91a69c162a51cff8899eaa7d5a113f6ec8feafba))
+
+### Bug Fixes
+
+* **cli:** fix-usernames command only fixes lowercase usernames ([#2650](https://github.com/homarr-labs/homarr/issues/2650)) ([b0381cb](https://github.com/homarr-labs/homarr/commit/b0381cb8836b8477d0990c264aa399cb06b85237))
+* **deps:** update dependency better-sqlite3 to ^11.9.1 ([#2632](https://github.com/homarr-labs/homarr/issues/2632)) ([289c7f1](https://github.com/homarr-labs/homarr/commit/289c7f1a60477024207261d486c2a88718320df7))
+* **deps:** update dependency drizzle-orm to ^0.40.1 ([#2624](https://github.com/homarr-labs/homarr/issues/2624)) ([7ba2067](https://github.com/homarr-labs/homarr/commit/7ba2067689ed7fd3ab78e75a6ba385483a97b0a3))
+* **deps:** update dependency drizzle-orm to ^0.41.0 ([#2666](https://github.com/homarr-labs/homarr/issues/2666)) ([8dee8f8](https://github.com/homarr-labs/homarr/commit/8dee8f8680f2282d76f6e727123220a60e2b596d))
+* **deps:** update dependency mysql2 to v3.14.0 ([#2652](https://github.com/homarr-labs/homarr/issues/2652)) ([3e4d24b](https://github.com/homarr-labs/homarr/commit/3e4d24b28e998af80c00c8ad141660d4bfe5ef33))
+* **deps:** update dependency sass to ^1.86.0 ([#2629](https://github.com/homarr-labs/homarr/issues/2629)) ([c9fecaa](https://github.com/homarr-labs/homarr/commit/c9fecaabb6416db5c55d9066ed782712cc96faa0))
+* **deps:** update dependency typescript-eslint to ^8.27.0 ([#2653](https://github.com/homarr-labs/homarr/issues/2653)) ([e3fcfbe](https://github.com/homarr-labs/homarr/commit/e3fcfbe9166834e9443c5ead21c2f67b2d01ad2e))
+* **deps:** update tanstack-query monorepo to ^5.69.0 ([#2634](https://github.com/homarr-labs/homarr/issues/2634)) ([2d2ae5a](https://github.com/homarr-labs/homarr/commit/2d2ae5a4191085404f8f7f790a4f0f62b86b408d))
+* **deps:** update testcontainers-node monorepo to ^10.21.0 ([#2633](https://github.com/homarr-labs/homarr/issues/2633)) ([1519789](https://github.com/homarr-labs/homarr/commit/15197897ac3e2f3ed1dcc24c5f64748eaa52f98f))
+* **permissions:** unable to edit board with full board permissions ([#2625](https://github.com/homarr-labs/homarr/issues/2625)) ([4cc3739](https://github.com/homarr-labs/homarr/commit/4cc37397c2e56a97e6b1173735da78824c7b15e5))
+* prohibit dot in board name ([#2643](https://github.com/homarr-labs/homarr/issues/2643)) ([bb8cb6d](https://github.com/homarr-labs/homarr/commit/bb8cb6ddeda6906b3c43270ec9dd8ec66d27f0cd))
+
 ## [1.11.0](https://github.com/homarr-labs/homarr/compare/v1.10.0...v1.11.0) (2025-03-14)
 
 ### Features
