@@ -1,34 +1,48 @@
+import { createTRPCClient, httpLink } from "@trpc/client";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { createTRPCClient, httpLink } from "@trpc/client";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from "@homarr/api";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
+import { SupportedLanguage } from "@homarr/translation";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
 
 // Simple in-memory cache for onboarding status (makes it only request once and keep result in memory)
-let onboardingStatusCache: string | null = null;
+const onboardingStatusCache = new Map<string, string>();
+const cultureCache = new Map<string, { defaultLocale: string }>();
 
 export async function middleware(request: NextRequest) {
+  const csrfToken = request.cookies.get('authjs.csrf-token')?.value;
+  
   // fetch api does not work because window is not defined and we need to construct the url from the headers
   // In next 15 we will be able to use node apis and such the db directly
-  const culture = await serverFetchApi.serverSettings.getCulture.query();
+  let culture;
+  if (csrfToken && cultureCache.has(csrfToken)) {
+    culture = cultureCache.get(csrfToken);
+  } else {
+    culture = await serverFetchApi.serverSettings.getCulture.query();
+    if (csrfToken) {
+      cultureCache.set(csrfToken, culture);
+    }
+  }
 
   // Redirect to onboarding if it's not finished yet
   const pathname = request.nextUrl.pathname;
   if (!pathname.endsWith("/init")) {
     let currentStep;
 
-    if (onboardingStatusCache !== null) {
+    if (csrfToken && onboardingStatusCache.has(csrfToken)) {
       // Use cached value if available
-      currentStep = { current: onboardingStatusCache };
+      currentStep = { current: onboardingStatusCache.get(csrfToken) };
     } else {
       // Cache miss, fetch from API
       const currentOnboardingStep = await serverFetchApi.onboard.currentStep.query();
 
       // Store in cache
-      onboardingStatusCache = currentOnboardingStep.current;
+      if (csrfToken) {
+        onboardingStatusCache.set(csrfToken, currentOnboardingStep.current);
+      }
       currentStep = currentOnboardingStep;
     }
 
@@ -39,7 +53,7 @@ export async function middleware(request: NextRequest) {
 
   // We don't want to fallback to accept-language header so we clear it
   request.headers.set("accept-language", "");
-  const next = createI18nMiddleware(culture.defaultLocale);
+  const next = createI18nMiddleware(culture?.defaultLocale as SupportedLanguage);
   return next(request);
 }
 
