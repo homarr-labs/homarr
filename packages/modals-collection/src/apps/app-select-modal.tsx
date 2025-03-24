@@ -61,7 +61,6 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
       />
 
       <Grid>
-        {/* New App option */}
         <Grid.Col span={{ xs: 12, sm: 4, md: 3 }}>
           <Card h="100%">
             <Stack justify="space-between" h="100%">
