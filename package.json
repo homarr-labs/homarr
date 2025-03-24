@@ -47,7 +47,7 @@
     "jsdom": "^26.0.0",
     "prettier": "^3.5.3",
     "semantic-release": "^24.2.3",
-    "testcontainers": "^10.21.0",
+    "testcontainers": "^10.22.0",
     "turbo": "^2.4.4",
     "typescript": "^5.8.2",
     "vite-tsconfig-paths": "^5.1.4",
