@@ -280,7 +280,7 @@ const mediaInformationSchema = z.union([
     seasons: z.array(
       z.object({
         id: z.number(),
-        seasonNumber:z.number(),
+        seasonNumber: z.number(),
         name: z.string().min(0),
         episodeCount: z.number().min(0),
       }),
