@@ -25,9 +25,9 @@ export const BoardMantineProvider = ({
     primaryColor: "primaryColor",
     autoContrast: true,
     fontSizes: {
-      xl2: rem(24),
-      xl3: rem(28),
-      xl4: rem(36),
+      "2xl": rem(24),
+      "3xl": rem(28),
+      "4xl": rem(36),
     },
   });
 
