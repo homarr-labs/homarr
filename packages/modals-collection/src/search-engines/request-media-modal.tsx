@@ -72,7 +72,7 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
   const anySelected = Object.keys(table.getState().rowSelection).length > 0;
 
   const handleMutate = () => {
-    const selectedSeasons = table.getSelectedRowModel().rows.flatMap((row) => row.original.id);
+    const selectedSeasons = table.getSelectedRowModel().rows.flatMap((row) => row.original.seasonNumber);
     mutate({
       integrationId: innerProps.integrationId,
       mediaId: innerProps.mediaId,
@@ -114,6 +114,7 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
 
 interface Season {
   id: number;
+  seasonNumber: number;
   name: string;
   episodeCount: number;
 }
