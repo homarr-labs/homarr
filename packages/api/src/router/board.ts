@@ -1094,7 +1094,8 @@ export const boardRouter = createTRPCRouter({
                 options: section.kind === "dynamic" ? superjson.stringify(section.options) : emptySuperJSON,
                 name: prev?.kind === "category" && "name" in section ? section.name : null,
               })
-              .where(eq(sections.id, section.id));
+              .where(eq(sections.id, section.id))
+              .run();
 
             if (section.kind !== "dynamic") continue;
 
@@ -1110,7 +1111,8 @@ export const boardRouter = createTRPCRouter({
                 })
                 .where(
                   and(eq(sectionLayouts.sectionId, section.id), eq(sectionLayouts.layoutId, sectionLayout.layoutId)),
-                );
+                )
+                .run();
             }
           }
 
