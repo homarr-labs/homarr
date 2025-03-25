@@ -1,6 +1,6 @@
-import { createTRPCClient, httpLink } from "@trpc/client";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { createTRPCClient, httpLink } from "@trpc/client";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from "@homarr/api";
@@ -13,8 +13,8 @@ const onboardingStatusCache = new Map<string, string>();
 const cultureCache = new Map<string, { defaultLocale: string }>();
 
 export async function middleware(request: NextRequest) {
-  const csrfToken = request.cookies.get('authjs.csrf-token')?.value;
-  
+  const csrfToken = request.cookies.get("authjs.csrf-token")?.value;
+
   // fetch api does not work because window is not defined and we need to construct the url from the headers
   // In next 15 we will be able to use node apis and such the db directly
   let culture;
