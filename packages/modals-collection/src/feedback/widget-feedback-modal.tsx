@@ -14,8 +14,8 @@ interface WidgetFeedbackModalProps {
 }
 
 export const WidgetFeedbackModal = createModal<WidgetFeedbackModalProps>(({ actions, innerProps }) => {
-  const t = useI18n();
-  const tFeedback = useScopedI18n("feedback");
+  const tCommon = useI18n();
+  const t = useScopedI18n("feedback");
   const [usabilityRating, setUsabilityRating] = useState(0);
   const [featuresRating, setFeaturesRating] = useState(0);
   const [overallRating, setOverallRating] = useState(0);
@@ -25,11 +25,11 @@ export const WidgetFeedbackModal = createModal<WidgetFeedbackModalProps>(({ acti
 
   const isFormValid = usabilityRating > 0 && featuresRating > 0 && overallRating > 0;
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     handle.open();
 
     try {
-      if (typeof window !== "undefined" && window.umami) {
+      if (typeof window !== "undefined") {
         window.umami.track("widget-feedback", {
           itemId: innerProps.itemId,
           widgetKind: innerProps.widgetKind,
@@ -42,8 +42,8 @@ export const WidgetFeedbackModal = createModal<WidgetFeedbackModalProps>(({ acti
       }
 
       showSuccessNotification({
-        title: tFeedback("notification.success.title"),
-        message: tFeedback("notification.success.message"),
+        title: t("notification.success.title"),
+        message: t("notification.success.message"),
       });
 
       actions.closeModal();
@@ -59,52 +59,52 @@ export const WidgetFeedbackModal = createModal<WidgetFeedbackModalProps>(({ acti
       <Stack gap="xs">
         <Group>
           <Stack gap={5} style={{ flex: 1 }}>
-            <label htmlFor="usability-rating">{tFeedback("rating.usability.label")}</label>
+            <label htmlFor="usability-rating">{t("rating.usability.label")}</label>
             <Rating id="usability-rating" value={usabilityRating} onChange={setUsabilityRating} size="lg" />
           </Stack>
         </Group>
 
         <Group>
           <Stack gap={5} style={{ flex: 1 }}>
-            <label htmlFor="features-rating">{tFeedback("rating.features.label")}</label>
+            <label htmlFor="features-rating">{t("rating.features.label")}</label>
             <Rating id="features-rating" value={featuresRating} onChange={setFeaturesRating} size="lg" />
           </Stack>
         </Group>
 
         <Group>
           <Stack gap={5} style={{ flex: 1 }}>
-            <label htmlFor="overall-rating">{tFeedback("rating.overall.label")}</label>
+            <label htmlFor="overall-rating">{t("rating.overall.label")}</label>
             <Rating id="overall-rating" value={overallRating} onChange={setOverallRating} size="lg" />
           </Stack>
         </Group>
       </Stack>
 
       <TextInput
-        label={tFeedback("discord.label")}
-        placeholder={tFeedback("discord.placeholder")}
-        description={tFeedback("discord.description")}
+        label={t("discord.label")}
+        placeholder={t("discord.placeholder")}
+        description={t("discord.description")}
         value={discordUsername}
-        onChange={(e) => setDiscordUsername(e.currentTarget.value)}
+        onChange={(event) => setDiscordUsername(event.currentTarget.value)}
       />
 
       <Textarea
-        label={tFeedback("comments.label")}
-        placeholder={tFeedback("comments.placeholder")}
+        label={t("comments.label")}
+        placeholder={t("comments.placeholder")}
         minRows={4}
         value={feedbackText}
-        onChange={(e) => setFeedbackText(e.currentTarget.value)}
+        onChange={(event) => setFeedbackText(event.currentTarget.value)}
       />
 
       <Group justify="flex-end">
         <Button variant="default" onClick={() => actions.closeModal()}>
-          {t("common.action.cancel")}
+          {tCommon("common.action.cancel")}
         </Button>
         <Button loading={submitting} onClick={handleSubmit} disabled={!isFormValid}>
-          {tFeedback("button.submit")}
+          {t("button.submit")}
         </Button>
       </Group>
     </Stack>
   );
 }).withOptions({
-  defaultTitle: (t) => t("feedback.modal.title"),
+  defaultTitle: (t) => t("modal.title"),
 });
