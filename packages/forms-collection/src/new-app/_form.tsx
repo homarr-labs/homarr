@@ -13,6 +13,7 @@ import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
 import { IconPicker } from "../icon-picker/icon-picker";
+import { findBestIconMatch } from "./icon-matcher";
 
 type FormType = z.infer<typeof validation.app.manage>;
 
@@ -84,49 +85,9 @@ export const AppForm = ({
 
   useEffect(() => {
     if (debouncedName && !form.values.iconUrl && iconsData?.icons) {
-      // Find exact matches first, then partial matches
-      let exactSvgMatch = null;
-      let exactNonSvgMatch = null;
-      let partialSvgMatch = null;
-      let partialNonSvgMatch = null;
-
-      const nameLower = debouncedName.toLowerCase();
-
-      for (const group of iconsData.icons) {
-        for (const icon of group.icons) {
-          const iconNameLower = icon.url.toLowerCase();
-          const fileNameParts = iconNameLower.split("/");
-          const fileName = fileNameParts[fileNameParts.length - 1]?.split(".")[0];
-
-          // Check for exact match first (the file name equals the search term)
-          if (fileName === nameLower) {
-            if (icon.url.endsWith(".svg")) {
-              exactSvgMatch = icon.url;
-            } else if (!exactNonSvgMatch) {
-              exactNonSvgMatch = icon.url;
-            }
-          }
-          // Then check for partial match
-          else if (fileName?.includes(nameLower)) {
-            if (icon.url.endsWith(".svg") && !partialSvgMatch) {
-              partialSvgMatch = icon.url;
-            } else if (!partialNonSvgMatch) {
-              partialNonSvgMatch = icon.url;
-            }
-          }
-        }
-        if (exactSvgMatch) break;
-      }
-
-      // Set the icon URL with priority: exact SVG > exact non-SVG > partial SVG > partial non-SVG
-      if (exactSvgMatch) {
-        form.setFieldValue("iconUrl", exactSvgMatch);
-      } else if (exactNonSvgMatch) {
-        form.setFieldValue("iconUrl", exactNonSvgMatch);
-      } else if (partialSvgMatch) {
-        form.setFieldValue("iconUrl", partialSvgMatch);
-      } else if (partialNonSvgMatch) {
-        form.setFieldValue("iconUrl", partialNonSvgMatch);
+      const bestMatch = findBestIconMatch(debouncedName, iconsData.icons);
+      if (bestMatch) {
+        form.setFieldValue("iconUrl", bestMatch);
       }
     }
   }, [debouncedName, iconsData]);
