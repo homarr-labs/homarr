@@ -30,7 +30,7 @@ export const WidgetFeedbackModal = createModal<WidgetFeedbackModalProps>(({ acti
 
     try {
       if (typeof window !== "undefined") {
-        umami.track("widget-feedback", {
+        void umami.track("widget-feedback", {
           itemId: innerProps.itemId,
           widgetKind: innerProps.widgetKind,
           usabilityRating,
