@@ -6,7 +6,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { StatRow } from "./stat-row";
 
 export const WiredVariant = ({ countGuests, countUsers }: { countUsers: number; countGuests: number }) => {
-  const t = useScopedI18n("widget.networkControllerNetworkStatus.card");
+  const t = useScopedI18n("widget.networkControllerStatus.card");
   return (
     <>
       <Group gap={"xs"} wrap={"nowrap"} mb={"md"}>

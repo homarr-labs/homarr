@@ -3,12 +3,12 @@ import type z from "zod";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
-import { Integration } from "../base/integration";
+import { Integration, throwErrorByStatusCode } from "../base/integration";
 import { IntegrationTestConnectionError } from "../base/test-connection-error";
 import type { NetworkControllerSummaryIntegration } from "../interfaces/network-controller-summary/network-controller-summary-integration";
 import type { NetworkControllerSummary } from "../interfaces/network-controller-summary/network-controller-summary-types";
-import { throwByUnifiControllerResponseStatusCode } from "./error-by-status-code";
 import { unifiSummaryResponseSchema } from "./unifi-controller-types";
+import { ParseError } from "../base/error";
 
 const udmpPrefix = "proxy/network";
 type Subsystem = "www" | "wan" | "wlan" | "lan" | "vpn";
@@ -42,21 +42,23 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     });
 
     if (!statsResponse.ok) {
-      throwByUnifiControllerResponseStatusCode(statsResponse.status);
+      throwErrorByStatusCode(statsResponse.status);
     }
 
     const result = unifiSummaryResponseSchema.safeParse(await statsResponse.json());
 
     if (!result.success) {
-      throw new Error("Error parsing response from unifi controller.", result.error);
+      throw new ParseError('Unifi controller', result.error);
     }
 
     return {
       wanStatus: this.getStatusValueOverAllSites(result.data, "wan", (site) => site.status === "ok"),
-      wwwStatus: this.getStatusValueOverAllSites(result.data, "wan", (site) => site.status === "ok"),
-      wwwLatency: this.getNumericValueOverAllSites(result.data, "www", (site) => site.latency, "max"),
-      wwwPing: this.getNumericValueOverAllSites(result.data, "www", (site) => site.speedtest_ping, "max"),
-      wwwUptime: this.getNumericValueOverAllSites(result.data, "www", (site) => site.uptime, "max"),
+      www: {
+        status: this.getStatusValueOverAllSites(result.data, "wan", (site) => site.status === "ok"),
+        latency: this.getNumericValueOverAllSites(result.data, "www", (site) => site.latency, "max"),
+        ping: this.getNumericValueOverAllSites(result.data, "www", (site) => site.speedtest_ping, "max"),
+        uptime: this.getNumericValueOverAllSites(result.data, "www", (site) => site.uptime, "max"),
+      },
       wifiStatus: this.getStatusValueOverAllSites(result.data, "wlan", (site) => site.status === "ok"),
       wifiUsers: this.getNumericValueOverAllSites(result.data, "wlan", (site) => site.num_user, "sum"),
       wifiGuests: this.getNumericValueOverAllSites(result.data, "wlan", (site) => site.num_guest, "sum"),
@@ -65,7 +67,7 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
       lanGuests: this.getNumericValueOverAllSites(result.data, "lan", (site) => site.num_guest, "sum"),
       vpnStatus: this.getStatusValueOverAllSites(result.data, "vpn", (site) => site.status === "ok"),
       vpnUsers: this.getNumericValueOverAllSites(result.data, "vpn", (site) => site.remote_user_num_active, "sum"),
-    } as NetworkControllerSummary;
+    } satisfies NetworkControllerSummary;
   }
 
   public async testConnectionAsync(): Promise<void> {
@@ -162,7 +164,7 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     });
 
     if (!loginResponse.ok) {
-      throwByUnifiControllerResponseStatusCode(loginResponse.status);
+      throwErrorByStatusCode(loginResponse.status);
     }
 
     const responseHeaders = loginResponse.headers;

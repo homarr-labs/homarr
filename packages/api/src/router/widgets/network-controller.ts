@@ -24,9 +24,9 @@ export const networkControllerRouter = createTRPCRouter({
               id: integration.id,
               name: integration.name,
               kind: integration.kind,
-              updatedAt: timestamp,
             },
             summary: data,
+            updatedAt: timestamp,
           };
         }),
       );
