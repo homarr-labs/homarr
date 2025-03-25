@@ -980,6 +980,9 @@
         "remove": "הסר קטע דינמי"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "צבע מסגרת"
         }

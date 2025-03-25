@@ -980,6 +980,9 @@
         "remove": "删除动态部分"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "边界颜色"
         }
