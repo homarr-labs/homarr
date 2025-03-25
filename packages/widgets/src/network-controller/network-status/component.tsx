@@ -50,7 +50,7 @@ export default function NetworkControllerNetworkStatusWidget({
             }
 
             return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
+              item.integration.id === data.integration.id ? { ...item, summary: data.summary, updatedAt: new Date() } : item,
             );
           },
         );
