@@ -30,7 +30,7 @@ export const WidgetFeedbackModal = createModal<WidgetFeedbackModalProps>(({ acti
 
     try {
       if (typeof window !== "undefined") {
-        window.umami.track("widget-feedback", {
+        umami.track("widget-feedback", {
           itemId: innerProps.itemId,
           widgetKind: innerProps.widgetKind,
           usabilityRating,
@@ -106,5 +106,5 @@ export const WidgetFeedbackModal = createModal<WidgetFeedbackModalProps>(({ acti
     </Stack>
   );
 }).withOptions({
-  defaultTitle: (t) => t("modal.title"),
+  defaultTitle: (t) => t("feedback.modal.title"),
 });

@@ -97,6 +97,7 @@
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
     "@types/swagger-ui-react": "^5.18.0",
+    "@types/umami": "^2.10.0",
     "concurrently": "^9.1.2",
     "eslint": "^9.23.0",
     "node-loader": "^2.1.0",

@@ -323,6 +323,9 @@ importers:
       '@types/swagger-ui-react':
         specifier: ^5.18.0
         version: 5.18.0
+      '@types/umami':
+        specifier: ^2.10.0
+        version: 2.10.0
       concurrently:
         specifier: ^9.1.2
         version: 9.1.2
@@ -4835,6 +4838,9 @@ packages:
 
   '@types/umami@0.1.5':
     resolution: {integrity: sha512-9MG8FuWArG85OOppjTU41AXF0ifAysjqqUgs68J1LOqOZKOHXLKv3G1NOYRKMAacYeL4f8rYR/spVAa+RfmDDA==}
+
+  '@types/umami@2.10.0':
+    resolution: {integrity: sha512-iWcs1KkcO3ooIi2rR9M5drmpQzlsT+sFiyWElIGmVwjdGlp+vQmy/VYIChYnF5ETqx7KrL80JfSkroS6dm37Hg==}
 
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
@@ -13218,6 +13224,8 @@ snapshots:
     optional: true
 
   '@types/umami@0.1.5': {}
+
+  '@types/umami@2.10.0': {}
 
   '@types/unist@2.0.11': {}
 

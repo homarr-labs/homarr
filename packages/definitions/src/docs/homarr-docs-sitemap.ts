@@ -522,6 +522,7 @@ export type HomarrDocumentationPath =
   | "/docs/next/getting-started/installation/source"
   | "/docs/next/getting-started/installation/synology"
   | "/docs/next/getting-started/installation/unraid"
+  | "/docs/next/integrations/cloud"
   | "/docs/next/integrations/containers"
   | "/docs/next/integrations/dns"
   | "/docs/next/integrations/hardware"
