@@ -56,7 +56,7 @@ export const widgetImports = {
   "mediaRequests-requestList": mediaRequestsList,
   "mediaRequests-requestStats": mediaRequestsStats,
   networkControllerSummary,
-  networkControllerNetworkStatus: networkControllerStatus,
+  networkControllerStatus,
   rssFeed,
   bookmarks,
   indexerManager,

@@ -2040,9 +2040,9 @@
         "unknownContentOption": "Unknown content option for network controller summary widget: "
       },
       "name": "Network Controller Summary",
-      "description": "Displays the summary of a Network Controller (like Unifi Controller)"
+      "description": "Displays the summary of a Network Controller (like UniFi Controller)"
     },
-    "networkControllerNetworkStatus": {
+    "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
@@ -2069,7 +2069,7 @@
               "label": "Wired"
             }
           },
-          "label": "Widget Content (select in order of appearence)"
+          "label": "Widget Content"
         }
       },
       "error": {

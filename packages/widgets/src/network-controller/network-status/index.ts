@@ -5,14 +5,14 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createWidgetDefinition } from "../../definition";
 import { optionsBuilder } from "../../options";
 
-export const { definition, componentLoader } = createWidgetDefinition("networkControllerNetworkStatus", {
+export const { definition, componentLoader } = createWidgetDefinition("networkControllerStatus", {
   icon: IconTopologyFull,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       content: factory.select({
         options: (["wifi", "wired"] as const).map((value) => ({
           value,
-          label: (t) => t(`widget.networkControllerNetworkStatus.option.content.option.${value}.label`),
+          label: (t) => t(`widget.networkControllerStatus.option.content.option.${value}.label`),
         })),
         defaultValue: "wifi",
       }),

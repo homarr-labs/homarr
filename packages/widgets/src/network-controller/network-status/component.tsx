@@ -20,7 +20,7 @@ dayjs.extend(duration);
 export default function NetworkControllerNetworkStatusWidget({
   options,
   integrationIds,
-}: WidgetComponentProps<"networkControllerNetworkStatus">) {
+}: WidgetComponentProps<"networkControllerStatus">) {
   const [summaries] = clientApi.widget.networkController.summary.useSuspenseQuery(
     {
       integrationIds,
