@@ -66,11 +66,11 @@ export default function NetworkControllerSummaryWidget({
       <Center h={"100%"}>
         <List spacing={"xs"} center>
           <List.Item icon={<StatusIcon status={data[0]?.wanStatus} />}>WAN</List.Item>
-          <List.Item icon={<StatusIcon status={data[0]?.wwwStatus} />}>
+          <List.Item icon={<StatusIcon status={data[0]?.www?.status} />}>
             <Text>
               WWW
               <Text c={"dimmed"} size={"md"} ms={"xs"} span>
-                {data[0]?.wwwLatency}ms
+                {data[0]?.www.latency}ms
               </Text>
             </Text>
           </List.Item>
@@ -79,7 +79,7 @@ export default function NetworkControllerSummaryWidget({
             <Text>
               VPN
               <Text c={"dimmed"} size={"md"} ms={"xs"} span>
-                {t("widget.networkControllerSummary.card.vpn.countConnected", { count: data[0]?.vpnUsers })}
+                {t("widget.networkControllerSummary.card.vpn.countConnected", { count: data[0]?.vpnUsers ?? 0 })}
               </Text>
             </Text>
           </List.Item>

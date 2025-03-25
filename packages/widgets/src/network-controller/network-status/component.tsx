@@ -18,9 +18,9 @@ dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
 export default function NetworkControllerNetworkStatusWidget({
-  options,
-  integrationIds,
-}: WidgetComponentProps<"networkControllerStatus">) {
+                                                               options,
+                                                               integrationIds,
+                                                             }: WidgetComponentProps<"networkControllerStatus">) {
   const [summaries] = clientApi.widget.networkController.summary.useSuspenseQuery(
     {
       integrationIds,
@@ -50,7 +50,11 @@ export default function NetworkControllerNetworkStatusWidget({
             }
 
             return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary, updatedAt: new Date() } : item,
+              item.integration.id === data.integration.id ? {
+                ...item,
+                summary: data.summary,
+                updatedAt: new Date()
+              } : item,
             );
           },
         );
@@ -63,9 +67,11 @@ export default function NetworkControllerNetworkStatusWidget({
   return (
     <Box p={"sm"}>
       {options.content === "wifi" ? (
-        <WifiVariant countGuests={data[0]?.wifiGuests ?? 0} countUsers={data[0]?.wifiUsers ?? 0} />
+        <WifiVariant countGuests={data.reduce((sum, summary) => sum + summary.wifiGuests, 0)}
+                     countUsers={data.reduce((sum, summary) => sum + summary.wifiUsers, 0)}/>
       ) : (
-        <WiredVariant countGuests={data[0]?.lanGuests ?? 0} countUsers={data[0]?.lanUsers ?? 0} />
+        <WiredVariant countGuests={data.reduce((sum, summary) => sum + summary.lanGuests, 0)}
+                      countUsers={data.reduce((sum, summary) => sum + summary.lanUsers, 0)}/>
       )}
     </Box>
   );
