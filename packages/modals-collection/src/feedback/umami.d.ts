@@ -1,6 +1,4 @@
-interface UmamiEventData {
-  [key: string]: string | number | boolean;
-}
+type UmamiEventData = Record<string, string | number | boolean>;
 
 declare global {
   interface Window {
