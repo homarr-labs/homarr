@@ -980,6 +980,9 @@
         "remove": "Supprimer la section dynamique"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "Couleur de la bordure"
         }

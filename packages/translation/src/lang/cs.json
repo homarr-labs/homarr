@@ -980,6 +980,9 @@
         "remove": "Odstranit dynamickou sekci"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": ""
         }
