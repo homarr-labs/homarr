@@ -74,7 +74,7 @@
     "glob": "^11.0.1",
     "jotai": "^2.12.2",
     "mantine-react-table": "2.0.0-beta.9",
-    "next": "15.1.7",
+    "next": "15.2.3",
     "postcss-preset-mantine": "^1.17.0",
     "prismjs": "^1.30.0",
     "react": "19.0.0",

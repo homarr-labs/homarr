@@ -35,7 +35,7 @@
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
     "ldapts": "7.3.3",
-    "next": "15.1.7",
+    "next": "15.2.3",
     "next-auth": "5.0.0-beta.25",
     "pretty-print-error": "^1.1.2",
     "react": "19.0.0",
