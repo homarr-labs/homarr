@@ -66,15 +66,17 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
               {job.status && <TimeAgo timestamp={job.status.lastExecutionTimestamp} />}
             </Stack>
 
-            <ActionIcon
-              onClick={() => handleJobTrigger(job)}
-              disabled={job.status?.status === "running"}
-              variant={"default"}
-              size={"xl"}
-              radius={"xl"}
-            >
-              <IconPlayerPlay stroke={1.5} />
-            </ActionIcon>
+            {!job.job.disabled && (
+              <ActionIcon
+                onClick={() => handleJobTrigger(job)}
+                disabled={job.status?.status === "running"}
+                variant={"default"}
+                size={"xl"}
+                radius={"xl"}
+              >
+                <IconPlayerPlay stroke={1.5} />
+              </ActionIcon>
+            )}
           </Group>
         </Card>
       ))}

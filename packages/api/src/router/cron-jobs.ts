@@ -1,9 +1,9 @@
 import { observable } from "@trpc/server/observable";
 
-import { jobNameSchema, triggerCronJobAsync } from "@homarr/cron-job-runner";
+import { objectEntries } from "@homarr/common";
+import { cronJobNames, cronJobs, jobNameSchema, triggerCronJobAsync } from "@homarr/cron-job-runner";
 import type { TaskStatus } from "@homarr/cron-job-status";
 import { createCronJobStatusChannel } from "@homarr/cron-job-status";
-import { jobGroup } from "@homarr/cron-jobs";
 import { logger } from "@homarr/log";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
@@ -16,18 +16,17 @@ export const cronJobsRouter = createTRPCRouter({
       await triggerCronJobAsync(input);
     }),
   getJobs: permissionRequiredProcedure.requiresPermission("admin").query(() => {
-    const registry = jobGroup.getJobRegistry();
-    return [...registry.values()].map((job) => ({
-      name: job.name,
-      expression: job.cronExpression,
+    return objectEntries(cronJobs).map(([name, options]) => ({
+      name,
+      disabled: options.disabled,
     }));
   }),
   subscribeToStatusUpdates: permissionRequiredProcedure.requiresPermission("admin").subscription(() => {
     return observable<TaskStatus>((emit) => {
       const unsubscribes: (() => void)[] = [];
 
-      for (const job of jobGroup.getJobRegistry().values()) {
-        const channel = createCronJobStatusChannel(job.name);
+      for (const name of cronJobNames) {
+        const channel = createCronJobStatusChannel(name);
         const unsubscribe = channel.subscribe((data) => {
           emit.next(data);
         });
