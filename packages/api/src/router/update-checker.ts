@@ -1,5 +1,3 @@
-import { formatError } from "pretty-print-error";
-
 import { logger } from "@homarr/log";
 import { updateCheckerRequestHandler } from "@homarr/request-handler/update-checker";
 
@@ -12,7 +10,7 @@ export const updateCheckerRouter = createTRPCRouter({
       const data = await handler.getCachedOrUpdatedDataAsync({});
       return data.data.availableUpdates;
     } catch (error) {
-      logger.error(`Failed to get available updates\n${formatError(error)}`);
+      logger.error(new Error(`Failed to get available updates`, { cause: error }));
       return undefined; // We return undefined to not show the indicator in the UI
     }
   }),
