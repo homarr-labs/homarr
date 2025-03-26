@@ -43,7 +43,7 @@
     "SECRET_ENCRYPTION_KEY",
     "SKIP_ENV_VALIDATION"
   ],
-  "ui": "stream",
+  "ui": "tui",
   "tasks": {
     "topo": {
       "dependsOn": ["^topo"]

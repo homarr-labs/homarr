@@ -1,0 +1,10 @@
+{
+  "name": "@homarr/dev-db",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "docker compose -f development.docker-compose.yml up"
+  }
+}
