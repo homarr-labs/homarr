@@ -24,7 +24,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
     const status: DownloadClientStatus = {
       paused: queue.paused,
       rates: { down: Math.floor(Number(queue.kbpersec) * 1024) }, //Actually rounded kiBps ()
-      type,
+      types: [type],
     };
     const items = queue.slots
       .map((slot): DownloadClientItem => {
