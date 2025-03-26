@@ -980,6 +980,9 @@
         "remove": "Dynamische sectie verwijderen"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "Randkleur"
         }

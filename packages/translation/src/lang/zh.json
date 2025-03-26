@@ -980,6 +980,9 @@
         "remove": "移除動態區段"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "邊框顏色"
         }
