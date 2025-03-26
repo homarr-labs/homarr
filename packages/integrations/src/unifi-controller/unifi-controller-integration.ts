@@ -3,12 +3,12 @@ import type z from "zod";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
+import { ParseError } from "../base/error";
 import { Integration, throwErrorByStatusCode } from "../base/integration";
 import { IntegrationTestConnectionError } from "../base/test-connection-error";
 import type { NetworkControllerSummaryIntegration } from "../interfaces/network-controller-summary/network-controller-summary-integration";
 import type { NetworkControllerSummary } from "../interfaces/network-controller-summary/network-controller-summary-types";
 import { unifiSummaryResponseSchema } from "./unifi-controller-types";
-import { ParseError } from "../base/error";
 
 const udmpPrefix = "proxy/network";
 type Subsystem = "www" | "wan" | "wlan" | "lan" | "vpn";
@@ -48,7 +48,7 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     const result = unifiSummaryResponseSchema.safeParse(await statsResponse.json());
 
     if (!result.success) {
-      throw new ParseError('Unifi controller', result.error);
+      throw new ParseError("Unifi controller", result.error);
     }
 
     return {
