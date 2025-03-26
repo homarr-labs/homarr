@@ -8,12 +8,9 @@ export const extractBaseUrlFromHeaders = (
   headers: ReadonlyHeaders,
   fallbackProtocol: "http" | "https" = "http",
 ): `${string}://${string}` => {
-  let protocol = headers.get("x-forwarded-proto");
-
-  // If the protocol is not set or an empty string
-  if (!protocol) {
-    protocol = fallbackProtocol;
-  }
+  // For empty string we also use the fallback protocol
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  let protocol = headers.get("x-forwarded-proto") || fallbackProtocol;
 
   // @see https://support.glitch.com/t/x-forwarded-proto-contains-multiple-protocols/17219
   if (protocol.includes(",")) {
