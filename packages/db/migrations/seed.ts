@@ -1,5 +1,5 @@
 import { objectKeys } from "@homarr/common";
-import { everyoneGroup } from "@homarr/definitions";
+import { createDocumentationLink, everyoneGroup } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database } from "..";
@@ -88,8 +88,7 @@ const seedDefaultSearchEnginesAsync = async (db: Database) => {
       iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
       short: "docs",
       description: "Search the Homarr documentation",
-      // eslint-disable-next-line no-restricted-syntax
-      urlTemplate: "https://homarr.dev/search?q=%s",
+      urlTemplate: createDocumentationLink("search", undefined, { q: "%s" }),
       type: "generic" as const,
       integrationId: null,
     },
