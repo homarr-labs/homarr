@@ -220,7 +220,11 @@ function getDockerHubUrl(identifier: string): string {
 }
 
 function getGithubUrl(identifier: string): string {
-  return `https://api.github.com/repos/${encodeURIComponent(identifier)}`;
+  const [owner, name] = identifier.split("/");
+  if (!owner || !name) {
+    return "";
+  }
+  return `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`;
 }
 
 function getGitlabUrl(identifier: string): string {
@@ -307,7 +311,7 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
     if (!releasesResult.success) return undefined;
 
     const latest: ReleaseResponse = releasesResult.data
-      .filter((result) => (input.versionRegex ? new RegExp(input.versionRegex).test(result.latestRelease) : false))
+      .filter((result) => (input.versionRegex ? new RegExp(input.versionRegex).test(result.latestRelease) : true))
       .reduce(
         (latest, result) => {
           return {

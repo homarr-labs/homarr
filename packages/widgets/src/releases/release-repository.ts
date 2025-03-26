@@ -35,12 +35,4 @@ export class ReleaseRepository {
     this.iconUrl = iconUrl;
     this.shouldHighlight = false;
   }
-
-  with(details: Partial<ReleaseRepository>): ReleaseRepository {
-    return Object.assign(new ReleaseRepository(this.provider, this.identifier, this.versionRegex, this.iconUrl), this, details);
-  }
-
-  updateDetails(details: Partial<ReleaseRepository>): void {
-    Object.assign(this, details);
-  }
 }

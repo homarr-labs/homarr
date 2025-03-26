@@ -24,6 +24,9 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       showOnlyNewReleases: factory.switch({
         defaultValue: true,
       }),
+      showDetails: factory.switch({
+        defaultValue: true,
+      }),
       repositories: factory.multiReleaseRepositories({
         defaultValue: [],
         validate: z.array(

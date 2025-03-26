@@ -1,0 +1,36 @@
+.releasesRepository {
+  border-left: 2px solid transparent;
+
+  &:has(.releasesRepositoryHeader:hover),
+  &:has(.releasesRepositoryHeader.active),
+  &:has(.releasesRepositoryDetails:hover) {
+    border-left-color: var(--mantine-color-secondaryColor-text);
+  }
+}
+
+.releasesRepositoryHeader {
+  user-select: none;
+
+  &:hover,
+  &.active,
+  &:has(+ .releasesRepositoryDetails:hover) {
+    background-color: var(--mantine-color-secondaryColor-light);
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.releasesRepositoryDetails {
+  background-color: var(--mantine-color-default-hover);
+  user-select: none;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.releasesRepositoryExpanded {
+  background-color: var(--mantine-color-default-hover);
+}

@@ -10,8 +10,8 @@ import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { IconPicker } from "../../../forms-collection/src";
-import { ReleaseRepository } from "../releases/release-repository";
 import { Providers } from "../releases/release-providers";
+import { ReleaseRepository } from "../releases/release-repository";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
@@ -21,14 +21,17 @@ interface FormValidation {
   errors: FormErrors;
 }
 
-export const WidgetMultiReleaseRepositoriesInput = ({ property, kind }: CommonWidgetInputProps<"multiReleaseRepositories">) => {
+export const WidgetMultiReleaseRepositoriesInput = ({
+  property,
+  kind,
+}: CommonWidgetInputProps<"multiReleaseRepositories">) => {
   const t = useWidgetInputTranslation(kind, property);
   const tRepository = useScopedI18n(`widget.releases.option.repositories`);
   const form = useFormContext();
   const repositories = form.values.options[property] as ReleaseRepository[];
   const { openModal } = useModalAction(releaseEditModal);
 
-  const onReleaseSave = useCallback(
+  const onRepositorySave = useCallback(
     (repository: ReleaseRepository, index: number): FormValidation => {
       form.setFieldValue(`options.${property}.${index}.provider`, repository.provider);
       form.setFieldValue(`options.${property}.${index}.identifier`, repository.identifier);
@@ -111,7 +114,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({ property, kind }: CommonWi
                       openModal({
                         fieldPath: `options.${property}.${index}`,
                         repository,
-                        onReleaseSave: (saved) => onReleaseSave(saved, index),
+                        onRepositorySave: (saved) => onRepositorySave(saved, index),
                         providers,
                       })
                     }
@@ -140,7 +143,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({ property, kind }: CommonWi
 interface ReleaseEditProps {
   fieldPath: string;
   repository: ReleaseRepository;
-  onReleaseSave: (repository: ReleaseRepository) => FormValidation;
+  onRepositorySave: (repository: ReleaseRepository) => FormValidation;
   providers: string[];
 }
 
@@ -153,7 +156,7 @@ const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
   const handleConfirm = useCallback(() => {
     setLoading(true);
 
-    const validation = innerProps.onReleaseSave(tempRepository);
+    const validation = innerProps.onRepositorySave(tempRepository);
     setFormErrors(validation.errors);
     if (!validation.hasErrors) {
       actions.closeModal();
@@ -164,8 +167,8 @@ const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
   const handleChange = useCallback(
     (changedValue: Partial<ReleaseRepository>) => {
-      setTempRepository((prev) => prev.with(changedValue));
-      const validation = innerProps.onReleaseSave(tempRepository.with(changedValue));
+      setTempRepository((prev) => ({ ...prev, ...changedValue }));
+      const validation = innerProps.onRepositorySave(tempRepository);
       setFormErrors(validation.errors);
     },
     [innerProps, tempRepository],
@@ -209,7 +212,7 @@ const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
             label={tRepository("versionRegex.label")}
             value={tempRepository.versionRegex ?? ""}
             onChange={(event) => {
-              handleChange({ versionRegex: event.currentTarget.value });
+              handleChange({ versionRegex: event.currentTarget.value === "" ? undefined : event.currentTarget.value });
             }}
             key={`${innerProps.fieldPath}.versionRegex`}
             error={formErrors[`${innerProps.fieldPath}.versionRegex`]}
