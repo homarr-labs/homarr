@@ -2035,9 +2035,6 @@
           "label": "Highlight Within",
           "description": "Usage example: 1w (1 week), 10m (10 months). Accepted unit types h (hours), d (days), w (weeks), m (months), y (years)"
         },
-        "sortBy": {
-          "label": "Sort By"
-        },
         "showOnlyNewReleases": {
           "label": "Show Only New Releases"
         },
@@ -2073,16 +2070,18 @@
           }
         }
       },
-      "not-found": "Not Found",
-      "pre-release": "Pre-Release",
-      "archived": "Archived",
-      "forked": "Forked",
-      "starsCount": "Nr. Stars",
-      "forksCount": "Nr. Forks",
-      "issuesCount": "Nr. Open Issues",
-      "openProjectPage": "Open Project Page",
-      "releaseDescription": "Release Description",
-      "created": "Created"
+      "repository":{
+        "not-found": "Not Found",
+        "pre-release": "Pre-Release",
+        "archived": "Archived",
+        "forked": "Forked",
+        "starsCount": "Nr. Stars",
+        "forksCount": "Nr. Forks",
+        "issuesCount": "Nr. Open Issues",
+        "openProjectPage": "Open Project Page",
+        "releaseDescription": "Release Description",
+        "created": "Created"
+      }
     }
   },
   "widgetPreview": {

@@ -13,14 +13,6 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
         withDescription: true,
         validate: z.string().regex(/^\d+[hdwmy]$/).or(z.literal("")),
       }),
-      sortBy: factory.select({
-        defaultValue: "releaseDate",
-        options: [
-          { value: "releaseDate", label: "Release Date" },
-          { value: "name", label: "Name" },
-          { value: "provider", label: "Provider" },
-        ],
-      }),
       showOnlyNewReleases: factory.switch({
         defaultValue: true,
       }),
