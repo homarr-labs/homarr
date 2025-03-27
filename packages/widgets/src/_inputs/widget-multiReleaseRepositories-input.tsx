@@ -1,7 +1,20 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import { ActionIcon, Button, Divider, Fieldset, Grid, Group, Select, Stack, Text, TextInput } from "@mantine/core";
+import {
+  ActionIcon,
+  Autocomplete,
+  AutocompleteProps,
+  Button,
+  Divider,
+  Fieldset,
+  Grid,
+  Group,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 
@@ -174,6 +187,22 @@ const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
     [innerProps, tempRepository],
   );
 
+  const versionRegexData: Record<string, string> = {
+    "^v[0-9]+\\.[0-9]+\\.[0-9]+$": "v1.2.3",
+    "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$": "1.2.3.4",
+    "^[0-9]+\\.[0-9]+\\.[0-9]+$": "1.2.3",
+    "^[0-9]+\\.[0-9]+$": "1.2",
+  };
+
+  const renderVersionRegexOption: AutocompleteProps["renderOption"] = ({ option }) => (
+    <Stack gap={0}>
+      <Text size="sm">{option.value}</Text>
+      <Text size="xs" opacity={0.5}>
+        {tRepository("example.label")}: {versionRegexData[option.value]}
+      </Text>
+    </Stack>
+  );
+
   return (
     <Stack>
       <Grid gutter="xs">
@@ -208,14 +237,21 @@ const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
           />
         </Grid.Col>
         <Grid.Col span={4}>
-          <TextInput
+          <Autocomplete
             label={tRepository("versionRegex.label")}
             value={tempRepository.versionRegex ?? ""}
-            onChange={(event) => {
-              handleChange({ versionRegex: event.currentTarget.value === "" ? undefined : event.currentTarget.value });
+            onChange={(value) => {
+              handleChange({ versionRegex: value === "" ? undefined : value });
             }}
             key={`${innerProps.fieldPath}.versionRegex`}
             error={formErrors[`${innerProps.fieldPath}.versionRegex`]}
+            data={[
+              "^v[0-9]+\\.[0-9]+\\.[0-9]+$",
+              "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$",
+              "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+              "^[0-9]+\\.[0-9]+$",
+            ]}
+            renderOption={renderVersionRegexOption}
           />
         </Grid.Col>
         <Grid.Col span={7}>

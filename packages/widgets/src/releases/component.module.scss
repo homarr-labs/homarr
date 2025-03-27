@@ -13,7 +13,7 @@
 
   &:hover,
   &.active,
-  &:has(+ .releasesRepositoryDetails:hover) {
+  &:has(~ .releasesRepositoryDetails:hover) {
     background-color: var(--mantine-color-secondaryColor-light);
   }
 

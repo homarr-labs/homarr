@@ -8,7 +8,8 @@ export class ReleaseRepository {
 
   latestRelease: string | undefined;
   latestReleaseAt: Date | undefined;
-  shouldHighlight: boolean;
+  isNewRelease: boolean;
+  isStaleRelease: boolean;
 
   releaseUrl: string | undefined;
   releaseDescription: string | undefined;
@@ -33,6 +34,7 @@ export class ReleaseRepository {
     this.identifier = identifier;
     this.versionRegex = versionRegex;
     this.iconUrl = iconUrl;
-    this.shouldHighlight = false;
+    this.isNewRelease = false;
+    this.isStaleRelease = false;
   }
 }

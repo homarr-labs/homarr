@@ -8,12 +8,18 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
   icon: IconCode,
   createOptions() {
     return optionsBuilder.from((factory) => ({
-      highlightWithin: factory.text({
+      newReleaseWithin: factory.text({
         defaultValue: "1w",
         withDescription: true,
         validate: z.string().regex(/^\d+[hdwmy]$/).or(z.literal("")),
       }),
-      showOnlyNewReleases: factory.switch({
+      staleReleaseWithin: factory.text({
+        defaultValue: "6m",
+        withDescription: true,
+        validate: z.string().regex(/^\d+[hdwmy]$/).or(z.literal("")),
+      }),
+      showOnlyHighlighted: factory.switch({
+        withDescription: true,
         defaultValue: true,
       }),
       showDetails: factory.switch({

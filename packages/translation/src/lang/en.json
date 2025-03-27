@@ -2031,12 +2031,17 @@
       "name": "Releases",
       "description": "Displays a list of the current version of the given repositories with the given version regex.",
       "option": {
-        "highlightWithin": {
-          "label": "Highlight Within",
-          "description": "Usage example: 1w (1 week), 10m (10 months). Accepted unit types h (hours), d (days), w (weeks), m (months), y (years)"
+        "newReleaseWithin": {
+          "label": "New Release Within",
+          "description": "Usage example: 1w (1 week), 10m (10 months). Accepted unit types h (hours), d (days), w (weeks), m (months), y (years). Leave empty for no highlighting as a new release."
         },
-        "showOnlyNewReleases": {
-          "label": "Show Only New Releases"
+        "staleReleaseWithin": {
+          "label": "Stale Release Within",
+          "description": "Usage example: 1w (1 week), 10m (10 months). Accepted unit types h (hours), d (days), w (weeks), m (months), y (years). Leave empty for no highlighting as a stale release."
+        },
+        "showOnlyHighlighted": {
+          "label": "Show Only Highlighted",
+          "description": "Show only new or stale releases. As per the above."
         },
         "showDetails": {
           "label": "Show Details"
@@ -2067,21 +2072,22 @@
             "confirm": {
               "label": "Confirm"
             }
+          },
+          "example": {
+            "label": "Example"
           }
         }
       },
-      "repository":{
-        "not-found": "Not Found",
-        "pre-release": "Pre-Release",
-        "archived": "Archived",
-        "forked": "Forked",
-        "starsCount": "Nr. Stars",
-        "forksCount": "Nr. Forks",
-        "issuesCount": "Nr. Open Issues",
-        "openProjectPage": "Open Project Page",
-        "releaseDescription": "Release Description",
-        "created": "Created"
-      }
+      "not-found": "Not Found",
+      "pre-release": "Pre-Release",
+      "archived": "Archived",
+      "forked": "Forked",
+      "starsCount": "Nr. Stars",
+      "forksCount": "Nr. Forks",
+      "issuesCount": "Nr. Open Issues",
+      "openProjectPage": "Open Project Page",
+      "releaseDescription": "Release Description",
+      "created": "Created"
     }
   },
   "widgetPreview": {
