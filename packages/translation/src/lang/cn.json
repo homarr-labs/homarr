@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "创建搜索引擎",
         "description": "集成“{kind}”可以与搜索引擎一起使用。勾选此项可自动配置搜索引擎。"
+      },
+      "createApp": {
+        "label": "",
+        "description": ""
+      },
+      "appHref": {
+        "placeholder": ""
       }
     },
     "action": {
@@ -973,6 +980,9 @@
         "remove": "删除动态部分"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "边界颜色"
         }
@@ -1072,7 +1082,7 @@
           "label": "自定义 CSS 类"
         },
         "borderColor": {
-          "label": ""
+          "label": "边框颜色"
         }
       }
     },
@@ -1129,12 +1139,12 @@
               "label": "网格"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "水平网格"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "隐藏标题"
         },
         "hideIcon": {
           "label": "隐藏图标"
@@ -1417,6 +1427,82 @@
         "run": "运行 {name}"
       }
     },
+    "stockPrice": {
+      "name": "",
+      "description": "",
+      "option": {
+        "stock": {
+          "label": ""
+        },
+        "timeRange": {
+          "label": "",
+          "option": {
+            "1d": {
+              "label": ""
+            },
+            "5d": {
+              "label": ""
+            },
+            "1mo": {
+              "label": ""
+            },
+            "3mo": {
+              "label": ""
+            },
+            "6mo": {
+              "label": ""
+            },
+            "ytd": {
+              "label": ""
+            },
+            "1y": {
+              "label": ""
+            },
+            "2y": {
+              "label": ""
+            },
+            "5y": {
+              "label": ""
+            },
+            "10y": {
+              "label": ""
+            },
+            "max": {
+              "label": ""
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "",
+          "option": {
+            "5m": {
+              "label": ""
+            },
+            "15m": {
+              "label": ""
+            },
+            "30m": {
+              "label": ""
+            },
+            "1h": {
+              "label": ""
+            },
+            "1d": {
+              "label": ""
+            },
+            "5d": {
+              "label": ""
+            },
+            "1wk": {
+              "label": ""
+            },
+            "1mo": {
+              "label": ""
+            }
+          }
+        }
+      }
+    },
     "calendar": {
       "name": "日历",
       "description": "在日历视图中显示某个相对时间段内的集成事件",
@@ -1434,6 +1520,9 @@
         },
         "filterFutureMonths": {
           "label": "结束于"
+        },
+        "showUnmonitored": {
+          "label": "显示未监视的"
         }
       }
     },
@@ -1665,6 +1754,7 @@
       "description": "显示媒体服务器上的当前流",
       "option": {},
       "items": {
+        "currentlyPlaying": "正在播放",
         "user": "用户",
         "name": "名称",
         "id": "ID"
@@ -1889,10 +1979,10 @@
         "statistics": {
           "empty": "空",
           "transcodes": "转码",
-          "transcodesCount": "转码：{value}",
-          "healthChecksCount": "健康检查：{value}",
-          "filesCount": "文件数：{value}",
-          "savedSpace": "节省空间：{value}",
+          "transcodesCount": "转码",
+          "healthChecksCount": "健康检查",
+          "filesCount": "文件",
+          "savedSpace": "节省空间",
           "healthChecks": "健康检查",
           "videoCodecs": "编码",
           "videoContainers": "容器",
@@ -2321,6 +2411,7 @@
           "label": "工具",
           "items": {
             "docker": "Docker",
+            "kubernetes": "Kubernetes",
             "logs": "日志",
             "api": "API",
             "certificates": "证书",
@@ -2732,19 +2823,19 @@
       },
       "about": {
         "version": "版本 {version}",
-        "text": "Homarr 是个由社区推动的开源项目，是志愿者们在维护。多亏了这些人，从 2021 年起，Homarr 这个项目一直在发展壮大。我们的团队来自许多不同的国家，完全远程工作，在空闲时间无偿搞 Homarr 这个项目。",
+        "text": "Homarr 是一个由社区驱动的开源项目，由志愿者们维护。多亏了这些人，自2021年以来，Homarr 一直是一个不断发展的项目。我们的团队完全远程工作，来自许多不同的国家，在闲暇时间无偿地为 Homarr 贡献力量。",
         "accordion": {
           "contributors": {
             "title": "贡献人员",
-            "subtitle": "{count} 人在维护代码和 Homarr"
+            "subtitle": "{count} 维护代码和 Homarr"
           },
           "translators": {
             "title": "翻译人员",
-            "subtitle": "{count} 名人员翻译了许多语言"
+            "subtitle": "在许多语言中，有{count}人贡献了翻译"
           },
           "libraries": {
             "title": "相关的库",
-            "subtitle": "{count} 个相关的库在 Homarr 代码中被使用"
+            "subtitle": "{count} 用于 Homarr 代码中"
           }
         }
       }
@@ -2867,6 +2958,246 @@
       "internalServerError": "获取 Docker 容器失败"
     }
   },
+  "kubernetes": {
+    "cluster": {
+      "title": "集群面板",
+      "label": "集群",
+      "providers": "提供者",
+      "version": "版本",
+      "architecture": "架构",
+      "capacity": {
+        "title": "容量",
+        "resource": {
+          "reserved": "已预留",
+          "used": "已用"
+        }
+      },
+      "resources": {
+        "title": "资源",
+        "nodes": "节点",
+        "namespaces": "命名空间",
+        "ingresses": "入口",
+        "services": "服务",
+        "pods": "Pods",
+        "configmaps": "配置映射",
+        "secrets": "秘钥",
+        "volumes": "卷"
+      }
+    },
+    "nodes": {
+      "label": "节点",
+      "field": {
+        "name": {
+          "label": "名称"
+        },
+        "state": {
+          "label": "状态",
+          "option": {
+            "ready": "就绪",
+            "NotReady": "尚未就绪"
+          }
+        },
+        "cpu": {
+          "label": "处理器"
+        },
+        "memory": {
+          "label": "内存"
+        },
+        "pods": {
+          "label": "Pods"
+        },
+        "operatingSystem": {
+          "label": "系统"
+        },
+        "architecture": {
+          "label": "架构"
+        },
+        "kubernetesVersion": {
+          "label": "Kubernetes 版本"
+        },
+        "creationTimestamp": {
+          "label": "已创建"
+        }
+      },
+      "table": {
+        "search": "搜索 {count} 节点"
+      }
+    },
+    "namespaces": {
+      "label": "命名空间",
+      "field": {
+        "name": {
+          "label": "名称"
+        },
+        "state": {
+          "label": "状态",
+          "option": {
+            "active": "活动",
+            "terminating": "中止"
+          }
+        },
+        "creationTimestamp": {
+          "label": "已创建"
+        }
+      },
+      "table": {
+        "search": "搜索 {count} 命名空间"
+      }
+    },
+    "ingresses": {
+      "label": "入口",
+      "field": {
+        "name": {
+          "label": "名称"
+        },
+        "namespace": {
+          "label": "命名空间"
+        },
+        "className": {
+          "label": "类名"
+        },
+        "rulesAndPaths": {
+          "label": "规则和路径"
+        },
+        "creationTimestamp": {
+          "label": "已创建"
+        }
+      },
+      "table": {
+        "search": "搜索 {count} 入口"
+      }
+    },
+    "services": {
+      "label": "服务",
+      "field": {
+        "name": {
+          "label": "名称"
+        },
+        "namespace": {
+          "label": "命名空间"
+        },
+        "type": {
+          "label": "类型"
+        },
+        "ports": {
+          "label": "端口"
+        },
+        "targetPorts": {
+          "label": "目标端口"
+        },
+        "clusterIP": {
+          "label": "集群IP"
+        },
+        "creationTimestamp": {
+          "label": "已创建"
+        }
+      },
+      "table": {
+        "search": "搜索 {count} 服务"
+      }
+    },
+    "pods": {
+      "label": "Pods",
+      "field": {
+        "name": {
+          "label": "名称"
+        },
+        "namespace": {
+          "label": "命名空间"
+        },
+        "image": {
+          "label": "镜像"
+        },
+        "applicationType": {
+          "label": "应用类型"
+        },
+        "status": {
+          "label": "状态"
+        },
+        "creationTimestamp": {
+          "label": "已创建"
+        }
+      },
+      "table": {
+        "search": "搜索 {count} pods"
+      }
+    },
+    "secrets": {
+      "label": "秘钥",
+      "field": {
+        "name": {
+          "label": "名称"
+        },
+        "namespace": {
+          "label": "命名空间"
+        },
+        "type": {
+          "label": "类型"
+        },
+        "creationTimestamp": {
+          "label": "已创建"
+        }
+      },
+      "table": {
+        "search": "搜索 {count} 秘钥"
+      }
+    },
+    "configmaps": {
+      "label": "配置映射",
+      "field": {
+        "name": {
+          "label": "名称"
+        },
+        "namespace": {
+          "label": "命名空间"
+        },
+        "creationTimestamp": {
+          "label": "已创建"
+        }
+      },
+      "table": {
+        "search": "搜索 {count} 配置映射"
+      }
+    },
+    "volumes": {
+      "label": "卷",
+      "field": {
+        "name": {
+          "label": "名称"
+        },
+        "namespace": {
+          "label": "命名空间"
+        },
+        "accessModes": {
+          "label": "访问模式"
+        },
+        "storage": {
+          "label": "存储"
+        },
+        "storageClassName": {
+          "label": "存储类名称"
+        },
+        "volumeMode": {
+          "label": "卷模式"
+        },
+        "volumeName": {
+          "label": "卷名称"
+        },
+        "status": {
+          "label": "状态"
+        },
+        "creationTimestamp": {
+          "label": "已创建"
+        }
+      },
+      "table": {
+        "search": "搜索 {count} 卷"
+      }
+    },
+    "error": {
+      "internalServerError": "获取 Kubernetes 数据失败"
+    }
+  },
   "permission": {
     "title": "权限",
     "userSelect": {
@@ -2951,6 +3282,33 @@
         "label": "工具",
         "docker": {
           "label": "Docker"
+        },
+        "kubernetes": {
+          "label": "Kubernetes",
+          "nodes": {
+            "label": "节点"
+          },
+          "namespaces": {
+            "label": "命名空间"
+          },
+          "ingresses": {
+            "label": "入口"
+          },
+          "services": {
+            "label": "服务"
+          },
+          "pods": {
+            "label": "pods"
+          },
+          "configmaps": {
+            "label": "配置映射"
+          },
+          "secrets": {
+            "label": "秘钥"
+          },
+          "volumes": {
+            "label": "卷"
+          }
         },
         "logs": {
           "label": "日志"
@@ -3322,7 +3680,7 @@
         },
         "delete": {
           "title": "删除搜索引擎",
-          "message": "确认删除搜索引擎 {name} 吗'?",
+          "message": "您确定要删除搜索引擎 {name} 吗？",
           "notification": {
             "success": {
               "title": "搜索引擎已删除",

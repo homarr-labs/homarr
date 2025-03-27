@@ -95,9 +95,9 @@ export default function MediaTranscodingWidget({
               </Pagination.Root>
               <Text size="xs">
                 {t("currentIndex", {
-                  start: transcodingData.data.queue.startIndex + 1,
-                  end: transcodingData.data.queue.endIndex + 1,
-                  total: transcodingData.data.queue.totalCount,
+                  start: String(transcodingData.data.queue.startIndex + 1),
+                  end: String(transcodingData.data.queue.endIndex + 1),
+                  total: String(transcodingData.data.queue.totalCount),
                 })}
               </Text>
             </>

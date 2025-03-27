@@ -22,7 +22,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
   if (currentLocale !== fallbackLocale) {
     const fallbackMessages = (await languageMap[fallbackLocale]()).default;
     return {
-      locale: currentLocale,
+      locale: typedLocale,
       messages: deepmerge(fallbackMessages, currentMessages),
     };
   }

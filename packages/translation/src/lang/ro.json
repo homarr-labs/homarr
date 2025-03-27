@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "",
         "description": ""
+      },
+      "createApp": {
+        "label": "",
+        "description": ""
+      },
+      "appHref": {
+        "placeholder": ""
       }
     },
     "action": {
@@ -973,6 +980,9 @@
         "remove": ""
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": ""
         }
@@ -1417,6 +1427,82 @@
         "run": ""
       }
     },
+    "stockPrice": {
+      "name": "",
+      "description": "",
+      "option": {
+        "stock": {
+          "label": ""
+        },
+        "timeRange": {
+          "label": "",
+          "option": {
+            "1d": {
+              "label": ""
+            },
+            "5d": {
+              "label": ""
+            },
+            "1mo": {
+              "label": ""
+            },
+            "3mo": {
+              "label": ""
+            },
+            "6mo": {
+              "label": ""
+            },
+            "ytd": {
+              "label": ""
+            },
+            "1y": {
+              "label": ""
+            },
+            "2y": {
+              "label": ""
+            },
+            "5y": {
+              "label": ""
+            },
+            "10y": {
+              "label": ""
+            },
+            "max": {
+              "label": ""
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "",
+          "option": {
+            "5m": {
+              "label": ""
+            },
+            "15m": {
+              "label": ""
+            },
+            "30m": {
+              "label": ""
+            },
+            "1h": {
+              "label": ""
+            },
+            "1d": {
+              "label": ""
+            },
+            "5d": {
+              "label": ""
+            },
+            "1wk": {
+              "label": ""
+            },
+            "1mo": {
+              "label": ""
+            }
+          }
+        }
+      }
+    },
     "calendar": {
       "name": "",
       "description": "",
@@ -1433,6 +1519,9 @@
           "label": ""
         },
         "filterFutureMonths": {
+          "label": ""
+        },
+        "showUnmonitored": {
           "label": ""
         }
       }
@@ -1665,6 +1754,7 @@
       "description": "",
       "option": {},
       "items": {
+        "currentlyPlaying": "",
         "user": "",
         "name": "",
         "id": ""
@@ -2321,6 +2411,7 @@
           "label": "Unelte",
           "items": {
             "docker": "",
+            "kubernetes": "",
             "logs": "",
             "api": "",
             "certificates": "",
@@ -2867,6 +2958,246 @@
       "internalServerError": ""
     }
   },
+  "kubernetes": {
+    "cluster": {
+      "title": "",
+      "label": "",
+      "providers": "",
+      "version": "",
+      "architecture": "",
+      "capacity": {
+        "title": "",
+        "resource": {
+          "reserved": "",
+          "used": ""
+        }
+      },
+      "resources": {
+        "title": "",
+        "nodes": "",
+        "namespaces": "",
+        "ingresses": "",
+        "services": "",
+        "pods": "",
+        "configmaps": "",
+        "secrets": "",
+        "volumes": ""
+      }
+    },
+    "nodes": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "state": {
+          "label": "",
+          "option": {
+            "ready": "",
+            "NotReady": ""
+          }
+        },
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        },
+        "pods": {
+          "label": ""
+        },
+        "operatingSystem": {
+          "label": ""
+        },
+        "architecture": {
+          "label": ""
+        },
+        "kubernetesVersion": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "namespaces": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "state": {
+          "label": "",
+          "option": {
+            "active": "",
+            "terminating": ""
+          }
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "ingresses": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "namespace": {
+          "label": ""
+        },
+        "className": {
+          "label": ""
+        },
+        "rulesAndPaths": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "services": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "namespace": {
+          "label": ""
+        },
+        "type": {
+          "label": ""
+        },
+        "ports": {
+          "label": ""
+        },
+        "targetPorts": {
+          "label": ""
+        },
+        "clusterIP": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "pods": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "namespace": {
+          "label": ""
+        },
+        "image": {
+          "label": ""
+        },
+        "applicationType": {
+          "label": ""
+        },
+        "status": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "secrets": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "namespace": {
+          "label": ""
+        },
+        "type": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "configmaps": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "namespace": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "volumes": {
+      "label": "",
+      "field": {
+        "name": {
+          "label": ""
+        },
+        "namespace": {
+          "label": ""
+        },
+        "accessModes": {
+          "label": ""
+        },
+        "storage": {
+          "label": ""
+        },
+        "storageClassName": {
+          "label": ""
+        },
+        "volumeMode": {
+          "label": ""
+        },
+        "volumeName": {
+          "label": ""
+        },
+        "status": {
+          "label": ""
+        },
+        "creationTimestamp": {
+          "label": ""
+        }
+      },
+      "table": {
+        "search": ""
+      }
+    },
+    "error": {
+      "internalServerError": ""
+    }
+  },
   "permission": {
     "title": "",
     "userSelect": {
@@ -2951,6 +3282,33 @@
         "label": "Unelte",
         "docker": {
           "label": ""
+        },
+        "kubernetes": {
+          "label": "",
+          "nodes": {
+            "label": ""
+          },
+          "namespaces": {
+            "label": ""
+          },
+          "ingresses": {
+            "label": ""
+          },
+          "services": {
+            "label": ""
+          },
+          "pods": {
+            "label": ""
+          },
+          "configmaps": {
+            "label": ""
+          },
+          "secrets": {
+            "label": ""
+          },
+          "volumes": {
+            "label": ""
+          }
         },
         "logs": {
           "label": ""

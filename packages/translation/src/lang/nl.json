@@ -376,7 +376,7 @@
           },
           "use-all": {
             "label": "Alle integraties gebruiken",
-            "description": "Geeft leden de mogelijkheid om integraties toe te voegen aan hun borden"
+            "description": "Laat leden integraties toevoegen aan hun borden"
           },
           "interact-all": {
             "label": "Interactie met elke integratie",
@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Zoekmachine aanmaken",
         "description": "Integratie \"{kind}\" kan worden gebruikt met de zoekmachines. Controleer dit om automatisch de zoekmachine te configureren."
+      },
+      "createApp": {
+        "label": "App aanmaken",
+        "description": "Maak een app n met dezelfde naam en icoon als de integratie. Laat het invoerveld hieronder leeg om de app te maken met de integratie-URL."
+      },
+      "appHref": {
+        "placeholder": "Aangepaste app-URL"
       }
     },
     "action": {
@@ -973,8 +980,11 @@
         "remove": "Dynamische sectie verwijderen"
       },
       "option": {
-        "borderColor": {
+        "title": {
           "label": ""
+        },
+        "borderColor": {
+          "label": "Randkleur"
         }
       },
       "remove": {
@@ -1072,7 +1082,7 @@
           "label": "Aangepaste CSS-classes"
         },
         "borderColor": {
-          "label": ""
+          "label": "Randkleur"
         }
       }
     },
@@ -1129,12 +1139,12 @@
               "label": "Raster"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "Raster horizontaal"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "Titel verbergen"
         },
         "hideIcon": {
           "label": "Iconen verbergen"
@@ -1417,6 +1427,82 @@
         "run": "{name} uitvoeren"
       }
     },
+    "stockPrice": {
+      "name": "Aandelen prijs",
+      "description": "Toont de huidige aandelenprijs van een bedrijf",
+      "option": {
+        "stock": {
+          "label": "Aandelen symbool"
+        },
+        "timeRange": {
+          "label": "Tijdsbereik",
+          "option": {
+            "1d": {
+              "label": "1 dag"
+            },
+            "5d": {
+              "label": "5 dagen"
+            },
+            "1mo": {
+              "label": "1 maand"
+            },
+            "3mo": {
+              "label": "3 maanden"
+            },
+            "6mo": {
+              "label": "6 maanden"
+            },
+            "ytd": {
+              "label": "Jaar tot nu toe"
+            },
+            "1y": {
+              "label": "1 jaar"
+            },
+            "2y": {
+              "label": "2 jaar"
+            },
+            "5y": {
+              "label": "5 jaar"
+            },
+            "10y": {
+              "label": "10 jaar"
+            },
+            "max": {
+              "label": "Max."
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "Tijdsinterval",
+          "option": {
+            "5m": {
+              "label": "5 minuten"
+            },
+            "15m": {
+              "label": "15 minuten"
+            },
+            "30m": {
+              "label": "30 minuten"
+            },
+            "1h": {
+              "label": "1 uur"
+            },
+            "1d": {
+              "label": "1 dag"
+            },
+            "5d": {
+              "label": "5 dagen"
+            },
+            "1wk": {
+              "label": "1 week"
+            },
+            "1mo": {
+              "label": "1 maand"
+            }
+          }
+        }
+      }
+    },
     "calendar": {
       "name": "Kalender",
       "description": "Gebeurtenissen van je integraties weergeven in een kalenderweergave binnen een bepaalde relatieve tijdsperiode",
@@ -1430,10 +1516,13 @@
           }
         },
         "filterPastMonths": {
-          "label": "Start vanaf"
+          "label": "Starten vanaf"
         },
         "filterFutureMonths": {
           "label": "Eindig bij"
+        },
+        "showUnmonitored": {
+          "label": "Niet-bewaakte items weergeven"
         }
       }
     },
@@ -1469,7 +1558,7 @@
           "description": "Hoe de datum eruit moet zien"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} km/u",
       "dailyForecast": {
         "sunrise": "Zonsopgang",
         "sunset": "Zonsondergang",
@@ -1512,7 +1601,7 @@
       "description": "Toont informatie over de gezondheid en status van je systeem(en).",
       "tab": {
         "system": "Systeem",
-        "cluster": ""
+        "cluster": "Cluster"
       },
       "option": {
         "fahrenheit": {
@@ -1665,6 +1754,7 @@
       "description": "De huidige streams op je mediaservers weergeven",
       "option": {},
       "items": {
+        "currentlyPlaying": "Momenteel aan het afspelen",
         "user": "Gebruiker",
         "name": "Naam",
         "id": "Id"
@@ -1831,10 +1921,10 @@
         "available": "Beschikbaar"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "In afwachting",
+        "approved": "Goedgekeurd",
+        "declined": "Afgewezen",
+        "failed": "Mislukt"
       },
       "toBeDetermined": "TBD"
     },
@@ -2133,7 +2223,7 @@
         "label": "Kolom aantal"
       },
       "itemRadius": {
-        "label": "",
+        "label": "Item radius",
         "description": "Verandert de rondheid van tegels op je bord",
         "option": {
           "xs": "Zeer klein",
@@ -2285,7 +2375,7 @@
         "label": "Kolom aantal"
       },
       "breakpoint": {
-        "label": "",
+        "label": "Breakpoint",
         "description": "Lay-out wordt gebruikt op alle schermen die groter zijn dan deze breakpoint tot de volgende grotere breakpoint."
       }
     }
@@ -2321,6 +2411,7 @@
           "label": "Gereedschappen",
           "items": {
             "docker": "Docker",
+            "kubernetes": "Kubernetes",
             "logs": "Logs",
             "api": "API",
             "certificates": "Certificaten",
@@ -2596,7 +2687,7 @@
               "description": "Alleen openbare borden zijn beschikbaar voor selectie"
             },
             "status": {
-              "title": "",
+              "title": "App status",
               "enableStatusByDefault": {
                 "label": "Status standaard inschakelen",
                 "description": "Bij het toevoegen van een app-item wordt de status standaard ingeschakeld"
@@ -2753,7 +2844,7 @@
   "docker": {
     "title": "Containers",
     "table": {
-      "updated": "Bijgewerkt {when}",
+      "updated": "{when} bijgewerkt",
       "search": "Zoek {count} containers",
       "selected": "{selectCount} van {totalCount} containers geselecteerd"
     },
@@ -2768,13 +2859,13 @@
           "running": "Actief",
           "paused": "Gepauzeerd",
           "restarting": "Herstarten",
-          "exited": "Verlaten",
+          "exited": "Beëindigd",
           "removing": "Verwijderen",
           "dead": "Dood"
         }
       },
       "containerImage": {
-        "label": "Afbeelding"
+        "label": "Image"
       },
       "ports": {
         "label": "Poorten"
@@ -2782,7 +2873,7 @@
     },
     "action": {
       "start": {
-        "label": "Start",
+        "label": "Starten",
         "notification": {
           "success": {
             "title": "Containers gestart",
@@ -2865,6 +2956,246 @@
     },
     "error": {
       "internalServerError": "Docker-containers zijn niet opgehaald"
+    }
+  },
+  "kubernetes": {
+    "cluster": {
+      "title": "Cluster dashboard",
+      "label": "Cluster",
+      "providers": "Aanbieders",
+      "version": "Versie",
+      "architecture": "Architectuur",
+      "capacity": {
+        "title": "Capaciteit",
+        "resource": {
+          "reserved": "Gereserveerd",
+          "used": "Gebruikt"
+        }
+      },
+      "resources": {
+        "title": "Bronnen",
+        "nodes": "Nodes",
+        "namespaces": "Namespaces",
+        "ingresses": "Ingresses",
+        "services": "Diensten",
+        "pods": "Pods",
+        "configmaps": "ConfigMaps",
+        "secrets": "Geheimen",
+        "volumes": "Volumes"
+      }
+    },
+    "nodes": {
+      "label": "Nodes",
+      "field": {
+        "name": {
+          "label": "Naam"
+        },
+        "state": {
+          "label": "Status",
+          "option": {
+            "ready": "Gereed",
+            "NotReady": "Niet gereed"
+          }
+        },
+        "cpu": {
+          "label": "CPU"
+        },
+        "memory": {
+          "label": "RAM"
+        },
+        "pods": {
+          "label": "Pods"
+        },
+        "operatingSystem": {
+          "label": "OS"
+        },
+        "architecture": {
+          "label": "Architectuur"
+        },
+        "kubernetesVersion": {
+          "label": "Kubernetes versie"
+        },
+        "creationTimestamp": {
+          "label": "Aangemaakt"
+        }
+      },
+      "table": {
+        "search": "{count} nodes zoeken"
+      }
+    },
+    "namespaces": {
+      "label": "Namespaces",
+      "field": {
+        "name": {
+          "label": "Naam"
+        },
+        "state": {
+          "label": "Status",
+          "option": {
+            "active": "Actief",
+            "terminating": "Beëindigen"
+          }
+        },
+        "creationTimestamp": {
+          "label": "Aangemaakt"
+        }
+      },
+      "table": {
+        "search": "{count} namespaces zoeken"
+      }
+    },
+    "ingresses": {
+      "label": "Ingresses",
+      "field": {
+        "name": {
+          "label": "Naam"
+        },
+        "namespace": {
+          "label": "Namespace"
+        },
+        "className": {
+          "label": "Class naam"
+        },
+        "rulesAndPaths": {
+          "label": "Regels & paden"
+        },
+        "creationTimestamp": {
+          "label": "Aangemaakt"
+        }
+      },
+      "table": {
+        "search": "{count} ingresses zoeken"
+      }
+    },
+    "services": {
+      "label": "Diensten",
+      "field": {
+        "name": {
+          "label": "Naam"
+        },
+        "namespace": {
+          "label": "Namespace"
+        },
+        "type": {
+          "label": "Type"
+        },
+        "ports": {
+          "label": "Poorten"
+        },
+        "targetPorts": {
+          "label": "Doel poorten"
+        },
+        "clusterIP": {
+          "label": "Cluster IP"
+        },
+        "creationTimestamp": {
+          "label": "Aangemaakt"
+        }
+      },
+      "table": {
+        "search": "{count} diensten zoeken"
+      }
+    },
+    "pods": {
+      "label": "Pods",
+      "field": {
+        "name": {
+          "label": "Naam"
+        },
+        "namespace": {
+          "label": "Namespace"
+        },
+        "image": {
+          "label": "Afbeelding"
+        },
+        "applicationType": {
+          "label": "Applicatietype"
+        },
+        "status": {
+          "label": "Status"
+        },
+        "creationTimestamp": {
+          "label": "Aangemaakt"
+        }
+      },
+      "table": {
+        "search": "{count} pods zoeken"
+      }
+    },
+    "secrets": {
+      "label": "Geheimen",
+      "field": {
+        "name": {
+          "label": "Naam"
+        },
+        "namespace": {
+          "label": "namespace"
+        },
+        "type": {
+          "label": "type"
+        },
+        "creationTimestamp": {
+          "label": "Aangemaakt"
+        }
+      },
+      "table": {
+        "search": "{count} geheimen zoeken"
+      }
+    },
+    "configmaps": {
+      "label": "ConfigMaps",
+      "field": {
+        "name": {
+          "label": "Naam"
+        },
+        "namespace": {
+          "label": "namespace"
+        },
+        "creationTimestamp": {
+          "label": "Aangemaakt"
+        }
+      },
+      "table": {
+        "search": "{count} configMaps zoeken"
+      }
+    },
+    "volumes": {
+      "label": "Volumes",
+      "field": {
+        "name": {
+          "label": "Naam"
+        },
+        "namespace": {
+          "label": "Namespace"
+        },
+        "accessModes": {
+          "label": "Toegangsmodi"
+        },
+        "storage": {
+          "label": "Opslag"
+        },
+        "storageClassName": {
+          "label": "Opslag class naam"
+        },
+        "volumeMode": {
+          "label": "Volume modus"
+        },
+        "volumeName": {
+          "label": "Volume naam"
+        },
+        "status": {
+          "label": "Status"
+        },
+        "creationTimestamp": {
+          "label": "Aangemaakt"
+        }
+      },
+      "table": {
+        "search": "{count} volumes zoeken"
+      }
+    },
+    "error": {
+      "internalServerError": "Kubernetes gegevens ophalen mislukt"
     }
   },
   "permission": {
@@ -2951,6 +3282,33 @@
         "label": "Gereedschappen",
         "docker": {
           "label": "Docker"
+        },
+        "kubernetes": {
+          "label": "Kubernetes",
+          "nodes": {
+            "label": "Nodes"
+          },
+          "namespaces": {
+            "label": "Namespaces"
+          },
+          "ingresses": {
+            "label": "Ingresses"
+          },
+          "services": {
+            "label": "Diensten"
+          },
+          "pods": {
+            "label": "pods"
+          },
+          "configmaps": {
+            "label": "ConfigMaps"
+          },
+          "secrets": {
+            "label": "Geheimen"
+          },
+          "volumes": {
+            "label": "Volumes"
+          }
         },
         "logs": {
           "label": "Logs"

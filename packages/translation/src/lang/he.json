@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "יצירת מנוע חיפוש",
         "description": "אינטגרציה {kind} יכולה לשמש עם מנועי חיפוש. סמן עבור הגדרה אוטומטית של מנוע חיפוש."
+      },
+      "createApp": {
+        "label": "יצירת אפליקציה",
+        "description": "יצירת אפליקציה עם אותו שם וסמל כמו האינטגרציה. יש להשאיר את שדה הקלט למטה ריק כדי ליצור את האפליקציה עם כתובת האתר לאינטגרציה."
+      },
+      "appHref": {
+        "placeholder": "כתובת אתר מותאמת אישית של אפליקציה"
       }
     },
     "action": {
@@ -973,6 +980,9 @@
         "remove": "הסר קטע דינמי"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "צבע מסגרת"
         }
@@ -1072,7 +1082,7 @@
           "label": "מחלקות עיצוב מותאמות אישית"
         },
         "borderColor": {
-          "label": ""
+          "label": "צבע מסגרת"
         }
       }
     },
@@ -1129,12 +1139,12 @@
               "label": "רשת"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "רשת אופקית"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "הסתר כותרת"
         },
         "hideIcon": {
           "label": "הסתרת אייקונים"
@@ -1417,6 +1427,82 @@
         "run": "הפעל {name}"
       }
     },
+    "stockPrice": {
+      "name": "מחיר המניה",
+      "description": "מציג את מחיר המניה הנוכחי של חברה",
+      "option": {
+        "stock": {
+          "label": "סמל מניה"
+        },
+        "timeRange": {
+          "label": "טווח זמן",
+          "option": {
+            "1d": {
+              "label": "יום אחד"
+            },
+            "5d": {
+              "label": "חמישה ימים"
+            },
+            "1mo": {
+              "label": "חודש אחד"
+            },
+            "3mo": {
+              "label": "שלושה חודשים"
+            },
+            "6mo": {
+              "label": "שישה חודשים"
+            },
+            "ytd": {
+              "label": "שנה עד היום"
+            },
+            "1y": {
+              "label": "שנה אחת"
+            },
+            "2y": {
+              "label": "שנתיים"
+            },
+            "5y": {
+              "label": "חמש שנים"
+            },
+            "10y": {
+              "label": "עשר שנים"
+            },
+            "max": {
+              "label": "מקסימום"
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "מרווח זמן",
+          "option": {
+            "5m": {
+              "label": "5 דקות"
+            },
+            "15m": {
+              "label": "15 דקות"
+            },
+            "30m": {
+              "label": "30 דקות"
+            },
+            "1h": {
+              "label": "שעה אחת"
+            },
+            "1d": {
+              "label": "יום אחד"
+            },
+            "5d": {
+              "label": "חמישה ימים"
+            },
+            "1wk": {
+              "label": "שבוע אחד"
+            },
+            "1mo": {
+              "label": "חודש אחד"
+            }
+          }
+        }
+      }
+    },
     "calendar": {
       "name": "לוח שנה",
       "description": "הצג אירועים מהאינטגרציות שלך בתצוגת לוח שנה בתוך פרק זמן יחסי מסוים",
@@ -1434,6 +1520,9 @@
         },
         "filterFutureMonths": {
           "label": "סיים ב"
+        },
+        "showUnmonitored": {
+          "label": "הצג ללא פיקוח"
         }
       }
     },
@@ -1665,6 +1754,7 @@
       "description": "הצג את הזרמים הנוכחיים בשרתי המדיה שלך",
       "option": {},
       "items": {
+        "currentlyPlaying": "מתנגן כרגע",
         "user": "משתמש",
         "name": "שם",
         "id": "מזהה"
@@ -1889,10 +1979,10 @@
         "statistics": {
           "empty": "ריק",
           "transcodes": "קידודים",
-          "transcodesCount": "קידודים: {value}",
-          "healthChecksCount": "בדיקות בריאות: {value}",
-          "filesCount": "קבצים: {value}",
-          "savedSpace": "שטח שמור: {value}",
+          "transcodesCount": "קידודים",
+          "healthChecksCount": "בדיקות בריאות",
+          "filesCount": "קבצים",
+          "savedSpace": "שטח שמור",
           "healthChecks": "בדיקות בריאות",
           "videoCodecs": "קודקים",
           "videoContainers": "מיכלים",
@@ -2321,6 +2411,7 @@
           "label": "כלים",
           "items": {
             "docker": "דוקר",
+            "kubernetes": "Kubernetes",
             "logs": "קובצי לוג",
             "api": "ממשק API",
             "certificates": "אישורי אבטחה",
@@ -2867,6 +2958,246 @@
       "internalServerError": "נכשל בקבלת קונטיינרי דוקר"
     }
   },
+  "kubernetes": {
+    "cluster": {
+      "title": "לוח המחוונים של אשכול",
+      "label": "אשכול",
+      "providers": "ספקים",
+      "version": "גרסה",
+      "architecture": "ארכיטקטורה",
+      "capacity": {
+        "title": "קיבולת",
+        "resource": {
+          "reserved": "שמור",
+          "used": "בשימוש"
+        }
+      },
+      "resources": {
+        "title": "מקורות",
+        "nodes": "קונטיינרים",
+        "namespaces": "מרחב שמות",
+        "ingresses": "כרטיסים",
+        "services": "שירותים",
+        "pods": "תרמילים",
+        "configmaps": "ConfigMaps",
+        "secrets": "נתוני גישה",
+        "volumes": "כוננים"
+      }
+    },
+    "nodes": {
+      "label": "קונטיינרים",
+      "field": {
+        "name": {
+          "label": "שם"
+        },
+        "state": {
+          "label": "מצב",
+          "option": {
+            "ready": "מוכן",
+            "NotReady": "לא מוכן"
+          }
+        },
+        "cpu": {
+          "label": "מעבד"
+        },
+        "memory": {
+          "label": "זכרון פנימי"
+        },
+        "pods": {
+          "label": "תרמילים"
+        },
+        "operatingSystem": {
+          "label": "מערכת הפעלה"
+        },
+        "architecture": {
+          "label": "ארכיטקטורה"
+        },
+        "kubernetesVersion": {
+          "label": "גרסת Kubernetes"
+        },
+        "creationTimestamp": {
+          "label": "נוצר"
+        }
+      },
+      "table": {
+        "search": "חפש {count} קונטיינרים"
+      }
+    },
+    "namespaces": {
+      "label": "מרחב שמות",
+      "field": {
+        "name": {
+          "label": "שם"
+        },
+        "state": {
+          "label": "מצב",
+          "option": {
+            "active": "פעיל",
+            "terminating": "מסתיים"
+          }
+        },
+        "creationTimestamp": {
+          "label": "נוצר"
+        }
+      },
+      "table": {
+        "search": "חפש ב-{count} מרחבי שמות"
+      }
+    },
+    "ingresses": {
+      "label": "כרטיסים",
+      "field": {
+        "name": {
+          "label": "שם"
+        },
+        "namespace": {
+          "label": "מרחב שמות"
+        },
+        "className": {
+          "label": "שם קלאס"
+        },
+        "rulesAndPaths": {
+          "label": "כללים ונתיבים"
+        },
+        "creationTimestamp": {
+          "label": "נוצר"
+        }
+      },
+      "table": {
+        "search": "חפש {count} כניסות"
+      }
+    },
+    "services": {
+      "label": "שירותים",
+      "field": {
+        "name": {
+          "label": "שם"
+        },
+        "namespace": {
+          "label": "מרחב שמות"
+        },
+        "type": {
+          "label": "סוג"
+        },
+        "ports": {
+          "label": "יציאות"
+        },
+        "targetPorts": {
+          "label": "יציאות יעד"
+        },
+        "clusterIP": {
+          "label": "כתובת אשכול"
+        },
+        "creationTimestamp": {
+          "label": "נוצר"
+        }
+      },
+      "table": {
+        "search": "חפש {count} שירותים"
+      }
+    },
+    "pods": {
+      "label": "תרמילים",
+      "field": {
+        "name": {
+          "label": "שם"
+        },
+        "namespace": {
+          "label": "מרחב שמות"
+        },
+        "image": {
+          "label": "תמונה"
+        },
+        "applicationType": {
+          "label": "סוג יישום"
+        },
+        "status": {
+          "label": "מצב"
+        },
+        "creationTimestamp": {
+          "label": "נוצר"
+        }
+      },
+      "table": {
+        "search": "חפש {count} תרמילים"
+      }
+    },
+    "secrets": {
+      "label": "נתוני גישה",
+      "field": {
+        "name": {
+          "label": "שם"
+        },
+        "namespace": {
+          "label": "מרחב שמות"
+        },
+        "type": {
+          "label": "סוג"
+        },
+        "creationTimestamp": {
+          "label": "נוצר"
+        }
+      },
+      "table": {
+        "search": "חפש {count} נתוני גישה"
+      }
+    },
+    "configmaps": {
+      "label": "configMaps",
+      "field": {
+        "name": {
+          "label": "שם"
+        },
+        "namespace": {
+          "label": "מרחב שמות"
+        },
+        "creationTimestamp": {
+          "label": "נוצר"
+        }
+      },
+      "table": {
+        "search": "חפש {count} configMaps"
+      }
+    },
+    "volumes": {
+      "label": "כרכים",
+      "field": {
+        "name": {
+          "label": "שם"
+        },
+        "namespace": {
+          "label": "מרחב שמות"
+        },
+        "accessModes": {
+          "label": "מצבי גישה"
+        },
+        "storage": {
+          "label": "אחסון"
+        },
+        "storageClassName": {
+          "label": "שם מחלקת אחסון"
+        },
+        "volumeMode": {
+          "label": "מצב כרך"
+        },
+        "volumeName": {
+          "label": "שם כרך"
+        },
+        "status": {
+          "label": "מצב"
+        },
+        "creationTimestamp": {
+          "label": "נוצר"
+        }
+      },
+      "table": {
+        "search": "חפש {count} כרכים"
+      }
+    },
+    "error": {
+      "internalServerError": "אחזור נתוני Kubernetes נכשל"
+    }
+  },
   "permission": {
     "title": "הרשאות",
     "userSelect": {
@@ -2951,6 +3282,33 @@
         "label": "כלים",
         "docker": {
           "label": "דוקר"
+        },
+        "kubernetes": {
+          "label": "Kubernetes",
+          "nodes": {
+            "label": "צמתים"
+          },
+          "namespaces": {
+            "label": "מרחב שמות"
+          },
+          "ingresses": {
+            "label": "כרטיסים"
+          },
+          "services": {
+            "label": "שירותים"
+          },
+          "pods": {
+            "label": "תרמילים"
+          },
+          "configmaps": {
+            "label": "ConfigMaps"
+          },
+          "secrets": {
+            "label": "נתוני גישה"
+          },
+          "volumes": {
+            "label": "כוננים"
+          }
         },
         "logs": {
           "label": "קבצי לוג"

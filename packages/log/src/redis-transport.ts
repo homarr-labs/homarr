@@ -17,10 +17,8 @@ export class RedisTransport extends Transport {
       this.emit("logged", info);
     });
 
-    if (!this.redis) {
-      // Is only initialized here because it did not work when initialized in the constructor or outside the class
-      this.redis = new Redis();
-    }
+    // Is only initialized here because it did not work when initialized in the constructor or outside the class
+    this.redis ??= new Redis();
 
     this.redis
       .publish(

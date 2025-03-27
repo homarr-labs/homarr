@@ -23,7 +23,9 @@ export const SearchEngineDeleteButton = ({ searchEngine }: SearchEngineDeleteBut
   const onClick = useCallback(() => {
     openConfirmModal({
       title: t("title"),
-      children: t("message", searchEngine),
+      children: t("message", {
+        name: searchEngine.name,
+      }),
       onConfirm: () => {
         mutate(
           { id: searchEngine.id },
