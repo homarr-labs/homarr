@@ -251,6 +251,13 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const boardId = createId();
 
+      const user = await ctx.db.query.users.findFirst({
+        where: eq(users.id, ctx.session.user.id),
+        columns: {
+          homeBoardId: true,
+        },
+      });
+
       const createBoardCollection = createDbInsertCollectionWithoutTransaction(["boards", "sections", "layouts"]);
 
       createBoardCollection.boards.push({
@@ -275,6 +282,12 @@ export const boardRouter = createTRPCRouter({
       });
 
       await createBoardCollection.insertAllAsync(ctx.db);
+
+      if (!user?.homeBoardId) {
+        await ctx.db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, ctx.session.user.id));
+      }
+
+      return { boardId };
     }),
   duplicateBoard: permissionRequiredProcedure
     .requiresPermission("board-create")

@@ -2,7 +2,6 @@ import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapte
 import { cookies } from "next/headers";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { formatError } from "pretty-print-error";
 
 import { db } from "@homarr/db";
 import type { SupportedAuthProvider } from "@homarr/definitions";
@@ -36,8 +35,7 @@ export const createConfiguration = (
           return;
         }
 
-        logger.error(formatError(error));
-        logger.error(formatError(error.cause));
+        logger.error(error);
       },
     },
     trustHost: true,
