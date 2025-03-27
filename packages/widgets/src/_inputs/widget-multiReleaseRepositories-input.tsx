@@ -39,7 +39,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
   kind,
 }: CommonWidgetInputProps<"multiReleaseRepositories">) => {
   const t = useWidgetInputTranslation(kind, property);
-  const tRepository = useScopedI18n(`widget.releases.option.repositories`);
+  const tRepository = useScopedI18n("widget.releases.option.repositories");
   const form = useFormContext();
   const repositories = form.values.options[property] as ReleaseRepository[];
   const { openModal } = useModalAction(releaseEditModal);
@@ -161,7 +161,7 @@ interface ReleaseEditProps {
 }
 
 const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions }) => {
-  const tRepository = useScopedI18n(`widget.releases.option.repositories`);
+  const tRepository = useScopedI18n("widget.releases.option.repositories");
   const [loading, setLoading] = useState(false);
   const [tempRepository, setTempRepository] = useState(innerProps.repository);
   const [formErrors, setFormErrors] = useState<FormErrors>({});

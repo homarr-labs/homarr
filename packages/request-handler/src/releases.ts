@@ -247,44 +247,49 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
   queryKey: "releasesApiResult",
   widgetKind: "releases",
   async requestAsync(input: { providerName: string; identifier: string; versionRegex: string | undefined }) {
-    let detailsUrl = "";
+    let detailsUrl;
     let detailsSchema;
-    let releasesurl = "";
+    let releasesUrl;
     let releasesSchema;
     switch (input.providerName) {
       case Providers.DockerHub.name:
         detailsUrl = getDockerHubUrl(input.identifier);
         detailsSchema = dockerHubDetailsSchema;
-        releasesurl = `${detailsUrl}/tags?page_size=50`;
+        releasesUrl = `${detailsUrl}/tags?page_size=50`;
         releasesSchema = dockerHubReleasesSchema;
         break;
       case Providers.Github.name:
         detailsUrl = getGithubUrl(input.identifier);
         detailsSchema = githubDetailsSchema;
-        releasesurl = `${detailsUrl}/releases`;
+        releasesUrl = `${detailsUrl}/releases`;
         releasesSchema = githubReleasesSchema;
         break;
       case Providers.Gitlab.name:
         detailsUrl = getGitlabUrl(input.identifier);
         detailsSchema = gitlabDetailsSchema;
-        releasesurl = `${detailsUrl}/releases`;
+        releasesUrl = `${detailsUrl}/releases`;
         releasesSchema = gitlabReleasesSchema;
         break;
       case Providers.Npm.name:
         detailsUrl = getNpmUrl(input.identifier);
         detailsSchema = undefined;
-        releasesurl = detailsUrl;
+        releasesUrl = detailsUrl;
         releasesSchema = npmReleasesSchema;
         break;
       case Providers.Codeberg.name:
         detailsUrl = getCodebergUrl(input.identifier);
         detailsSchema = codebergDetailsSchema;
-        releasesurl = `${detailsUrl}/releases`;
+        releasesUrl = `${detailsUrl}/releases`;
         releasesSchema = codebergReleasesSchema;
         break;
+      default:
+        detailsUrl = "";
+        detailsSchema = undefined;
+        releasesUrl = "";
+        releasesSchema = undefined;
     }
 
-    if (releasesurl === "" || releasesSchema === undefined) return undefined;
+    if (releasesUrl === "" || releasesSchema === undefined) return undefined;
 
     let detailsResult = {
       projectUrl: "",
@@ -296,7 +301,7 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
       openIssues: 0,
       forksCount: 0,
     };
-    if (detailsUrl !== releasesurl && detailsSchema !== undefined) {
+    if (detailsUrl !== releasesUrl && detailsSchema !== undefined) {
       const detailsResponse = await fetchWithTimeout(detailsUrl);
       const parsedDetails = detailsSchema.safeParse(await detailsResponse.json());
 
@@ -305,7 +310,7 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
       }
     }
 
-    const releasesResponse = await fetchWithTimeout(releasesurl);
+    const releasesResponse = await fetchWithTimeout(releasesUrl);
     const releasesResult = releasesSchema.safeParse(await releasesResponse.json());
 
     if (!releasesResult.success) return undefined;

@@ -178,176 +178,9 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
               </Grid.Col>
             </Grid>
             {options.showDetails && (
-              <>
-                <Divider />
-                <Grid
-                  className={classes.releasesRepositoryDetails}
-                  gutter="xs"
-                  align="center"
-                  py={5}
-                  px={10}
-                  onClick={() => toggleExpandedRepository(repository.identifier)}
-                >
-                  <Grid.Col span={4.5}>
-                    <Group gap={5}>
-                      <Tooltip label={t("pre-release")}>
-                        <IconRocket
-                          size={13}
-                          color={
-                            repository.isPreRelease
-                              ? "var(--mantine-color-secondaryColor-text)"
-                              : "var(--mantine-color-dimmed)"
-                          }
-                        />
-                      </Tooltip>
-                      <Tooltip label={t("archived")}>
-                        <IconArchive
-                          size={13}
-                          color={
-                            repository.isArchived
-                              ? "var(--mantine-color-secondaryColor-text)"
-                              : "var(--mantine-color-dimmed)"
-                          }
-                        />
-                      </Tooltip>
-                      <Tooltip label={t("forked")}>
-                        <IconGitFork
-                          size={13}
-                          color={
-                            repository.isFork
-                              ? "var(--mantine-color-secondaryColor-text)"
-                              : "var(--mantine-color-dimmed)"
-                          }
-                        />
-                      </Tooltip>
-                    </Group>
-                  </Grid.Col>
-                  <Grid.Col span={2.5}>
-                    <Tooltip label={t("starsCount")}>
-                      <Group gap={5}>
-                        <IconStar
-                          size={12}
-                          color={
-                            repository.starsCount === 0 ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"
-                          }
-                        />
-                        <Text size="xs" c={repository.starsCount === 0 ? "dimmed" : ""}>
-                          {repository.starsCount === 0
-                            ? "-"
-                            : formatter.number(repository.starsCount ?? 0, {
-                                notation: "compact",
-                                maximumFractionDigits: 1,
-                              })}
-                        </Text>
-                      </Group>
-                    </Tooltip>
-                  </Grid.Col>
-                  <Grid.Col span={2.5}>
-                    <Tooltip label={t("forksCount")}>
-                      <Group gap={5}>
-                        <IconGitFork
-                          size={12}
-                          color={
-                            repository.forksCount === 0 ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"
-                          }
-                        />
-                        <Text size="xs" c={repository.forksCount === 0 ? "dimmed" : ""}>
-                          {repository.forksCount === 0
-                            ? "-"
-                            : formatter.number(repository.forksCount ?? 0, {
-                                notation: "compact",
-                                maximumFractionDigits: 1,
-                              })}
-                        </Text>
-                      </Group>
-                    </Tooltip>
-                  </Grid.Col>
-                  <Grid.Col span={2.5}>
-                    <Tooltip label={t("issuesCount")}>
-                      <Group gap={5}>
-                        <IconCircleDot
-                          size={12}
-                          color={
-                            repository.openIssues === 0 ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"
-                          }
-                        />
-                        <Text size="xs" c={repository.openIssues === 0 ? "dimmed" : ""}>
-                          {repository.openIssues === 0
-                            ? "-"
-                            : formatter.number(repository.openIssues ?? 0, {
-                                notation: "compact",
-                                maximumFractionDigits: 1,
-                              })}
-                        </Text>
-                      </Group>
-                    </Tooltip>
-                  </Grid.Col>
-                </Grid>
-              </>
+              <DetailsDisplay repository={repository} toggleExpandedRepository={toggleExpandedRepository} />
             )}
-            {isActive && (
-              <>
-                <Divider mx={5} />
-                <Stack className={classes.releasesRepositoryExpanded} gap={0} p={10}>
-                  <Group justify="space-between" align="center">
-                    <Group gap={5} align="center">
-                      <MaskedOrNormalImage
-                        imageUrl={repository.provider.iconUrl}
-                        hasColor={hasIconColor}
-                        style={{
-                          width: "1em",
-                          aspectRatio: "1/1",
-                        }}
-                      />
-                      <Text size="xs" c="iconColor" ff="monospace">
-                        {repository.provider.name}
-                      </Text>
-                    </Group>
-                    {repository.createdAt && (
-                      <Text size="xs" c="dimmed" ff="monospace">
-                        <Text span>{t("created")}</Text>
-                        <Text span> | </Text>
-                        <Text span fw={700}>
-                          {formatter.relativeTime(repository.createdAt, {
-                            now,
-                            style: "narrow",
-                          })}
-                        </Text>
-                      </Text>
-                    )}
-                  </Group>
-                  <Divider my={10} mx="30%" />
-                  <Button
-                    variant="light"
-                    component="a"
-                    href={repository.releaseUrl ?? repository.projectUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <IconExternalLink />
-                    {t("openProjectPage")}
-                  </Button>
-                  {repository.releaseDescription && (
-                    <>
-                      <Divider my={10} mx="30%" />
-                      <Title order={4} ta="center">
-                        {t("releaseDescription")}
-                      </Title>
-                      <Text component="div" size="xs" ff="monospace">
-                        <ReactMarkdown
-                          skipHtml={true}
-                          components={{
-                            a: ({ ...props }) => <span>{props.children}</span>,
-                          }}
-                        >
-                          {repository.releaseDescription}
-                        </ReactMarkdown>
-                      </Text>
-                    </>
-                  )}
-                </Stack>
-              </>
-            )}
+            {isActive && <ExpandedDisplay repository={repository} hasIconColor={hasIconColor} />}
             <Divider />
           </Stack>
         );
@@ -355,3 +188,183 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     </Stack>
   );
 }
+
+interface DetailsDisplayProps {
+  repository: ReleaseRepository;
+  toggleExpandedRepository: (identifier: string) => void;
+}
+
+const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplayProps) => {
+  const t = useScopedI18n("widget.releases");
+  const formatter = useFormatter();
+
+  return (
+    <>
+      <Divider />
+      <Grid
+        className={classes.releasesRepositoryDetails}
+        gutter="xs"
+        align="center"
+        py={5}
+        px={10}
+        onClick={() => toggleExpandedRepository(repository.identifier)}
+      >
+        <Grid.Col span={4.5}>
+          <Group gap={5}>
+            <Tooltip label={t("pre-release")}>
+              <IconRocket
+                size={13}
+                color={
+                  repository.isPreRelease ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"
+                }
+              />
+            </Tooltip>
+            <Tooltip label={t("archived")}>
+              <IconArchive
+                size={13}
+                color={
+                  repository.isArchived ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"
+                }
+              />
+            </Tooltip>
+            <Tooltip label={t("forked")}>
+              <IconGitFork
+                size={13}
+                color={repository.isFork ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"}
+              />
+            </Tooltip>
+          </Group>
+        </Grid.Col>
+        <Grid.Col span={2.5}>
+          <Tooltip label={t("starsCount")}>
+            <Group gap={5}>
+              <IconStar
+                size={12}
+                color={repository.starsCount === 0 ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+              />
+              <Text size="xs" c={repository.starsCount === 0 ? "dimmed" : ""}>
+                {repository.starsCount === 0
+                  ? "-"
+                  : formatter.number(repository.starsCount ?? 0, {
+                      notation: "compact",
+                      maximumFractionDigits: 1,
+                    })}
+              </Text>
+            </Group>
+          </Tooltip>
+        </Grid.Col>
+        <Grid.Col span={2.5}>
+          <Tooltip label={t("forksCount")}>
+            <Group gap={5}>
+              <IconGitFork
+                size={12}
+                color={repository.forksCount === 0 ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+              />
+              <Text size="xs" c={repository.forksCount === 0 ? "dimmed" : ""}>
+                {repository.forksCount === 0
+                  ? "-"
+                  : formatter.number(repository.forksCount ?? 0, {
+                      notation: "compact",
+                      maximumFractionDigits: 1,
+                    })}
+              </Text>
+            </Group>
+          </Tooltip>
+        </Grid.Col>
+        <Grid.Col span={2.5}>
+          <Tooltip label={t("issuesCount")}>
+            <Group gap={5}>
+              <IconCircleDot
+                size={12}
+                color={repository.openIssues === 0 ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+              />
+              <Text size="xs" c={repository.openIssues === 0 ? "dimmed" : ""}>
+                {repository.openIssues === 0
+                  ? "-"
+                  : formatter.number(repository.openIssues ?? 0, {
+                      notation: "compact",
+                      maximumFractionDigits: 1,
+                    })}
+              </Text>
+            </Group>
+          </Tooltip>
+        </Grid.Col>
+      </Grid>
+    </>
+  );
+};
+
+interface ExtendedDisplayProps {
+  repository: ReleaseRepository;
+  hasIconColor: boolean;
+}
+
+const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => {
+  const t = useScopedI18n("widget.releases");
+  const now = useNow();
+  const formatter = useFormatter();
+
+  return (
+    <>
+      <Divider mx={5} />
+      <Stack className={classes.releasesRepositoryExpanded} gap={0} p={10}>
+        <Group justify="space-between" align="center">
+          <Group gap={5} align="center">
+            <MaskedOrNormalImage
+              imageUrl={repository.provider.iconUrl}
+              hasColor={hasIconColor}
+              style={{
+                width: "1em",
+                aspectRatio: "1/1",
+              }}
+            />
+            <Text size="xs" c="iconColor" ff="monospace">
+              {repository.provider.name}
+            </Text>
+          </Group>
+          {repository.createdAt && (
+            <Text size="xs" c="dimmed" ff="monospace">
+              <Text span>{t("created")}</Text>
+              <Text span> | </Text>
+              <Text span fw={700}>
+                {formatter.relativeTime(repository.createdAt, {
+                  now,
+                  style: "narrow",
+                })}
+              </Text>
+            </Text>
+          )}
+        </Group>
+        <Divider my={10} mx="30%" />
+        <Button
+          variant="light"
+          component="a"
+          href={repository.releaseUrl ?? repository.projectUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <IconExternalLink />
+          {t("openProjectPage")}
+        </Button>
+        {repository.releaseDescription && (
+          <>
+            <Divider my={10} mx="30%" />
+            <Title order={4} ta="center">
+              {t("releaseDescription")}
+            </Title>
+            <Text component="div" size="xs" ff="monospace">
+              <ReactMarkdown
+                skipHtml
+                components={{
+                  a: ({ ...props }) => <span>{props.children}</span>,
+                }}
+              >
+                {repository.releaseDescription}
+              </ReactMarkdown>
+            </Text>
+          </>
+        )}
+      </Stack>
+    </>
+  );
+};

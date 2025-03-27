@@ -48,7 +48,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
                   if (val === undefined) return true;
 
                   try {
-                    new RegExp(val);
+                    const _ = new RegExp(val);
                     return true;
                   } catch {
                     return false;
