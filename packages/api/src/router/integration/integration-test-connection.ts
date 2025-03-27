@@ -1,5 +1,3 @@
-import { formatError } from "pretty-print-error";
-
 import { decryptSecret } from "@homarr/common/server";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
@@ -41,7 +39,10 @@ export const testConnectionAsync = async (
         };
       } catch (error) {
         logger.warn(
-          `Failed to decrypt secret from database integration="${integration.name}" secretKind="${secret.kind}"\n${formatError(error)}`,
+          new Error(
+            `Failed to decrypt secret from database integration="${integration.name}" secretKind="${secret.kind}"`,
+            { cause: error },
+          ),
         );
         return null;
       }

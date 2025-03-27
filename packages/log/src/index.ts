@@ -2,43 +2,22 @@ import type { transport as Transport } from "winston";
 import winston, { format, transports } from "winston";
 
 import { env } from "./env";
+import { formatErrorCause, formatErrorStack } from "./error";
+import { formatMetadata } from "./metadata";
 import { RedisTransport } from "./redis-transport";
 
-/**
- * Formats the cause of an error in the format
- * @example caused by Error: {message}
- * {stack-trace}
- * @param cause next cause in the chain
- * @param iteration current iteration of the function
- * @returns formatted and stacked causes
- */
-const formatCause = (cause: unknown, iteration = 0): string => {
-  // Prevent infinite recursion
-  if (iteration > 5) {
-    return "";
-  }
-
-  if (cause instanceof Error) {
-    if (!cause.cause) {
-      return `\ncaused by ${cause.stack}`;
-    }
-
-    return `\ncaused by ${cause.stack}${formatCause(cause.cause, iteration + 1)}`;
-  }
-
-  return `\ncaused by ${cause as string}`;
-};
-
-const logMessageFormat = format.printf(({ level, message, timestamp, cause, stack }) => {
+const logMessageFormat = format.printf(({ level, message, timestamp, cause, stack, ...metadata }) => {
   if (!cause && !stack) {
     return `${timestamp as string} ${level}: ${message as string}`;
   }
 
+  const formatedStack = formatErrorStack(stack as string | undefined);
+
   if (!cause) {
-    return `${timestamp as string} ${level}: ${message as string}\n${stack as string}`;
+    return `${timestamp as string} ${level}: ${message as string} ${formatMetadata(metadata)}\n${formatedStack}`;
   }
 
-  return `${timestamp as string} ${level}: ${message as string}\n${stack as string}${formatCause(cause)}`;
+  return `${timestamp as string} ${level}: ${message as string} ${formatMetadata(metadata)}\n${formatedStack}${formatErrorCause(cause)}`;
 });
 
 const logTransports: Transport[] = [new transports.Console()];
