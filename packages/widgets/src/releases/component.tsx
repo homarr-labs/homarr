@@ -232,7 +232,12 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                           }
                         />
                         <Text size="xs" c={repository.starsCount === 0 ? "dimmed" : ""}>
-                          {repository.starsCount === 0 ? "-" : repository.starsCount}
+                          {repository.starsCount === 0
+                            ? "-"
+                            : formatter.number(repository.starsCount ?? 0, {
+                                notation: "compact",
+                                maximumFractionDigits: 1,
+                              })}
                         </Text>
                       </Group>
                     </Tooltip>
@@ -247,7 +252,10 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                           }
                         />
                         <Text size="xs" c={repository.forksCount === 0 ? "dimmed" : ""}>
-                          {repository.forksCount === 0 ? "-" : repository.forksCount}
+                          {repository.forksCount === 0 ? "-" : formatter.number(repository.forksCount ?? 0, {
+                                notation: "compact",
+                                maximumFractionDigits: 1,
+                              })}
                         </Text>
                       </Group>
                     </Tooltip>
@@ -262,7 +270,10 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                           }
                         />
                         <Text size="xs" c={repository.openIssues === 0 ? "dimmed" : ""}>
-                          {repository.openIssues === 0 ? "-" : repository.openIssues}
+                          {repository.openIssues === 0 ? "-" : formatter.number(repository.openIssues ?? 0, {
+                                notation: "compact",
+                                maximumFractionDigits: 1,
+                              })}
                         </Text>
                       </Group>
                     </Tooltip>

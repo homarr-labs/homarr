@@ -4,7 +4,6 @@ import React, { useCallback, useMemo, useState } from "react";
 import {
   ActionIcon,
   Autocomplete,
-  AutocompleteProps,
   Button,
   Divider,
   Fieldset,
@@ -15,6 +14,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
+import type { AutocompleteProps } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 
