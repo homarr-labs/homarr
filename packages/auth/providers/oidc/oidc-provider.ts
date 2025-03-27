@@ -22,6 +22,10 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
       redirect_uri: createRedirectUri(headers, "/api/auth/callback/oidc", "https"),
     },
   },
+  // idToken false forces the use of the userinfo endpoint
+  // Userinfo endpoint is required for authelia since v4.39
+  // See https://github.com/homarr-labs/homarr/issues/2635
+  idToken: !env.AUTH_OIDC_FORCE_USERINFO,
   profile(profile) {
     if (!profile.sub) {
       throw new Error(`OIDC provider did not return a sub property='${Object.keys(profile).join(",")}'`);
