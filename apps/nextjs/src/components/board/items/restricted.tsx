@@ -17,9 +17,11 @@ export const RestrictedWidgetContent = ({ kind }: RestrictedWidgetProps) => {
       <Stack ta="center" gap="xs" align="center">
         <Group gap="sm">
           <IconShield size={16} />
-          <Text fw="bold">{tCommonWidget("restricted.title")}</Text>
+          <Text size="sm" fw="bold">
+            {tCommonWidget("restricted.title")}
+          </Text>
         </Group>
-        <Text>{tCommonWidget("restricted.description", { name: tCurrentWidget("name") })}</Text>
+        <Text size="sm">{tCommonWidget("restricted.description", { name: tCurrentWidget("name") })}</Text>
       </Stack>
     </Center>
   );
