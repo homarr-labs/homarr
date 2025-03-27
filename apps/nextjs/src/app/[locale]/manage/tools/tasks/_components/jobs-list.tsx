@@ -66,7 +66,7 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
               {job.status && <TimeAgo timestamp={job.status.lastExecutionTimestamp} />}
             </Stack>
 
-            {!job.job.disabled && (
+            {!job.job.preventManualExecution && (
               <ActionIcon
                 onClick={() => handleJobTrigger(job)}
                 disabled={job.status?.status === "running"}

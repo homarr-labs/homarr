@@ -6,24 +6,24 @@ import { zodEnumFromArray } from "@homarr/validation";
 export const cronJobRunnerChannel = createSubPubChannel<JobGroupKeys>("cron-job-runner", { persist: false });
 
 export const cronJobs = {
-  analytics: { disabled: true },
-  iconsUpdater: { disabled: false },
-  ping: { disabled: false },
-  smartHomeEntityState: { disabled: false },
-  mediaServer: { disabled: false },
-  mediaOrganizer: { disabled: false },
-  downloads: { disabled: false },
-  dnsHole: { disabled: false },
-  mediaRequestStats: { disabled: false },
-  mediaRequestList: { disabled: false },
-  rssFeeds: { disabled: false },
-  indexerManager: { disabled: false },
-  healthMonitoring: { disabled: false },
-  sessionCleanup: { disabled: false },
-  updateChecker: { disabled: false },
-  mediaTranscoding: { disabled: false },
-  minecraftServerStatus: { disabled: false },
-} satisfies Record<JobGroupKeys, { disabled?: boolean }>;
+  analytics: { preventManualExecution: true },
+  iconsUpdater: { preventManualExecution: false },
+  ping: { preventManualExecution: false },
+  smartHomeEntityState: { preventManualExecution: false },
+  mediaServer: { preventManualExecution: false },
+  mediaOrganizer: { preventManualExecution: false },
+  downloads: { preventManualExecution: false },
+  dnsHole: { preventManualExecution: false },
+  mediaRequestStats: { preventManualExecution: false },
+  mediaRequestList: { preventManualExecution: false },
+  rssFeeds: { preventManualExecution: false },
+  indexerManager: { preventManualExecution: false },
+  healthMonitoring: { preventManualExecution: false },
+  sessionCleanup: { preventManualExecution: false },
+  updateChecker: { preventManualExecution: false },
+  mediaTranscoding: { preventManualExecution: false },
+  minecraftServerStatus: { preventManualExecution: false },
+} satisfies Record<JobGroupKeys, { preventManualExecution?: boolean }>;
 
 /**
  * Triggers a cron job to run immediately.
@@ -31,8 +31,8 @@ export const cronJobs = {
  * @param jobName name of the job to be triggered
  */
 export const triggerCronJobAsync = async (jobName: JobGroupKeys) => {
-  if (cronJobs[jobName].disabled) {
-    throw new Error(`The job "${jobName}" is disabled`);
+  if (cronJobs[jobName].preventManualExecution) {
+    throw new Error(`The job "${jobName}" can not be executed manually`);
   }
   await cronJobRunnerChannel.publishAsync(jobName);
 };

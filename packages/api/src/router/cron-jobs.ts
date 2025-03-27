@@ -18,7 +18,7 @@ export const cronJobsRouter = createTRPCRouter({
   getJobs: permissionRequiredProcedure.requiresPermission("admin").query(() => {
     return objectEntries(cronJobs).map(([name, options]) => ({
       name,
-      disabled: options.disabled,
+      preventManualExecution: options.preventManualExecution,
     }));
   }),
   subscribeToStatusUpdates: permissionRequiredProcedure.requiresPermission("admin").subscription(() => {
