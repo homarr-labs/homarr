@@ -252,7 +252,9 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                           }
                         />
                         <Text size="xs" c={repository.forksCount === 0 ? "dimmed" : ""}>
-                          {repository.forksCount === 0 ? "-" : formatter.number(repository.forksCount ?? 0, {
+                          {repository.forksCount === 0
+                            ? "-"
+                            : formatter.number(repository.forksCount ?? 0, {
                                 notation: "compact",
                                 maximumFractionDigits: 1,
                               })}
@@ -270,7 +272,9 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                           }
                         />
                         <Text size="xs" c={repository.openIssues === 0 ? "dimmed" : ""}>
-                          {repository.openIssues === 0 ? "-" : formatter.number(repository.openIssues ?? 0, {
+                          {repository.openIssues === 0
+                            ? "-"
+                            : formatter.number(repository.openIssues ?? 0, {
                                 notation: "compact",
                                 maximumFractionDigits: 1,
                               })}

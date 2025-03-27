@@ -26,13 +26,13 @@ import * as mediaTranscoding from "./media-transcoding";
 import * as minecraftServerStatus from "./minecraft/server-status";
 import * as notebook from "./notebook";
 import type { WidgetOptionDefinition } from "./options";
+import * as releases from "./releases";
 import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as stockPrice from "./stocks";
 import * as video from "./video";
 import * as weather from "./weather";
-import * as releases from "./releases";
 
 export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
 export type { WidgetComponentProps };

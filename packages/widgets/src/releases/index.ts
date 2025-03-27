@@ -11,12 +11,18 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       newReleaseWithin: factory.text({
         defaultValue: "1w",
         withDescription: true,
-        validate: z.string().regex(/^\d+[hdwmy]$/).or(z.literal("")),
+        validate: z
+          .string()
+          .regex(/^\d+[hdwmy]$/)
+          .or(z.literal("")),
       }),
       staleReleaseWithin: factory.text({
         defaultValue: "6m",
         withDescription: true,
-        validate: z.string().regex(/^\d+[hdwmy]$/).or(z.literal("")),
+        validate: z
+          .string()
+          .regex(/^\d+[hdwmy]$/)
+          .or(z.literal("")),
       }),
       showOnlyHighlighted: factory.switch({
         withDescription: true,
