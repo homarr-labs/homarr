@@ -69,13 +69,13 @@
       "tree-sitter",
       "tree-sitter-json"
     ],
-    "allowNonAppliedPatches": true,
     "overrides": {
-      "proxmox-api>undici": "7.5.0"
+      "proxmox-api>undici": "7.6.0"
     },
     "patchedDependencies": {
       "pretty-print-error": "patches/pretty-print-error.patch"
     },
+    "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [
       "@scarf/scarf",
       "core-js-pure",
