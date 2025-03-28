@@ -60,6 +60,17 @@ export const localeConfigurations = {
       return import("dayjs/locale/de").then((module) => module.default);
     },
   },
+  "de-CH": {
+    name: "Deutsch (Schweiz)",
+    translatedName: "German (Swiss)",
+    flagIcon: "ch",
+    importMrtLocalization() {
+      return import("mantine-react-table/locales/de/index.esm.mjs").then((module) => module.MRT_Localization_DE);
+    },
+    importDayJsLocale() {
+      return import("dayjs/locale/de-ch").then((module) => module.default);
+    },
+  },
   en: {
     name: "English",
     translatedName: "English",
