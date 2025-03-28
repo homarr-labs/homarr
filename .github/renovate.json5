@@ -6,11 +6,6 @@
       matchPackagePatterns: ["^@homarr/"],
       enabled: false,
     },
-    // 15.2.0 crashes with turbopack error (panic)
-    {
-      matchPackagePatterns: ["^next$", "^@next/eslint-plugin-next$"],
-      enabled: false,
-    },
     {
       matchUpdateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,
