@@ -8,6 +8,7 @@ import type { Container, ContainerInfo, ContainerState, Docker, Port } from "@ho
 import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
 
+import { dockerMiddleware } from "../../middlewares/docker";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 
 const dockerCache = createCacheChannel<{
@@ -15,72 +16,79 @@ const dockerCache = createCacheChannel<{
 }>("docker-containers", 5 * 60 * 1000);
 
 export const dockerRouter = createTRPCRouter({
-  getContainers: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
-    const result = await dockerCache
-      .consumeAsync(async () => {
-        const dockerInstances = DockerSingleton.getInstances();
-        const containers = await Promise.all(
-          // Return all the containers of all the instances into only one item
-          dockerInstances.map(({ instance, host: key }) =>
-            instance.listContainers({ all: true }).then((containers) =>
-              containers.map((container) => ({
-                ...container,
-                instance: key,
-              })),
+  getContainers: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .unstable_concat(dockerMiddleware())
+    .query(async () => {
+      const result = await dockerCache
+        .consumeAsync(async () => {
+          const dockerInstances = DockerSingleton.getInstances();
+          const containers = await Promise.all(
+            // Return all the containers of all the instances into only one item
+            dockerInstances.map(({ instance, host: key }) =>
+              instance.listContainers({ all: true }).then((containers) =>
+                containers.map((container) => ({
+                  ...container,
+                  instance: key,
+                })),
+              ),
             ),
-          ),
-        ).then((containers) => containers.flat());
+          ).then((containers) => containers.flat());
 
-        const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
-        const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
-        const dbIcons =
-          likeQueries.length >= 1
-            ? await db.query.icons.findMany({
-                where: or(...likeQueries),
-              })
-            : [];
+          const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
+          const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
+          const dbIcons =
+            likeQueries.length >= 1
+              ? await db.query.icons.findMany({
+                  where: or(...likeQueries),
+                })
+              : [];
 
-        return {
-          containers: containers.map((container) => ({
-            ...container,
-            iconUrl:
-              dbIcons.find((icon) => {
-                const extractedImage = extractImage(container);
-                if (!extractedImage) return false;
-                return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
-              })?.url ?? null,
-          })),
-        };
-      })
-      .catch((error) => {
-        logger.error(error);
-        return {
-          isError: true,
-          error: error as unknown,
-        };
-      });
+          return {
+            containers: containers.map((container) => ({
+              ...container,
+              iconUrl:
+                dbIcons.find((icon) => {
+                  const extractedImage = extractImage(container);
+                  if (!extractedImage) return false;
+                  return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
+                })?.url ?? null,
+            })),
+          };
+        })
+        .catch((error) => {
+          logger.error(error);
+          return {
+            isError: true,
+            error: error as unknown,
+          };
+        });
 
-    if ("isError" in result) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "An error occurred while fetching the containers",
-        cause: result.error,
-      });
-    }
+      if ("isError" in result) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An error occurred while fetching the containers",
+          cause: result.error,
+        });
+      }
 
-    const { data, timestamp } = result;
+      const { data, timestamp } = result;
 
-    return {
-      containers: sanitizeContainers(data.containers),
-      timestamp,
-    };
-  }),
-  invalidate: permissionRequiredProcedure.requiresPermission("admin").mutation(async () => {
-    await dockerCache.invalidateAsync();
-    return;
-  }),
+      return {
+        containers: sanitizeContainers(data.containers),
+        timestamp,
+      };
+    }),
+  invalidate: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .unstable_concat(dockerMiddleware())
+    .mutation(async () => {
+      await dockerCache.invalidateAsync();
+      return;
+    }),
   startAll: permissionRequiredProcedure
     .requiresPermission("admin")
+    .unstable_concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await Promise.allSettled(
@@ -94,6 +102,7 @@ export const dockerRouter = createTRPCRouter({
     }),
   stopAll: permissionRequiredProcedure
     .requiresPermission("admin")
+    .unstable_concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await Promise.allSettled(
@@ -107,6 +116,7 @@ export const dockerRouter = createTRPCRouter({
     }),
   restartAll: permissionRequiredProcedure
     .requiresPermission("admin")
+    .unstable_concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await Promise.allSettled(
@@ -120,6 +130,7 @@ export const dockerRouter = createTRPCRouter({
     }),
   removeAll: permissionRequiredProcedure
     .requiresPermission("admin")
+    .unstable_concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await Promise.allSettled(

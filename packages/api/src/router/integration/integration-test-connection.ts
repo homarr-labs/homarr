@@ -1,10 +1,8 @@
-import { formatError } from "pretty-print-error";
-
 import { decryptSecret } from "@homarr/common/server";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
-import { integrationCreator, IntegrationTestConnectionError } from "@homarr/integrations";
+import { createIntegrationAsync, IntegrationTestConnectionError } from "@homarr/integrations";
 import { logger } from "@homarr/log";
 
 type FormIntegration = Integration & {
@@ -41,7 +39,10 @@ export const testConnectionAsync = async (
         };
       } catch (error) {
         logger.warn(
-          `Failed to decrypt secret from database integration="${integration.name}" secretKind="${secret.kind}"\n${formatError(error)}`,
+          new Error(
+            `Failed to decrypt secret from database integration="${integration.name}" secretKind="${secret.kind}"`,
+            { cause: error },
+          ),
         );
         return null;
       }
@@ -66,7 +67,7 @@ export const testConnectionAsync = async (
 
   const { secrets: _, ...baseIntegration } = integration;
 
-  const integrationInstance = integrationCreator({
+  const integrationInstance = await createIntegrationAsync({
     ...baseIntegration,
     decryptedSecrets,
   });

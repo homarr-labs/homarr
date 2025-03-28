@@ -41,7 +41,8 @@ export async function generateMetadata(props: Props) {
   const t = await getScopedI18n("management.page.user.edit");
 
   return {
-    title: createMetaTitle(t("metaTitle", { username: user.name })),
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    title: createMetaTitle(t("metaTitle", { username: user.name! })),
   };
 }
 
@@ -117,15 +118,13 @@ export default async function EditUserPage(props: Props) {
         <PingIconsEnabled user={user} />
       </Stack>
 
-      {isCredentialsUser && (
-        <DangerZoneRoot>
-          <DangerZoneItem
-            label={t("user.action.delete.label")}
-            description={t("user.action.delete.description")}
-            action={<DeleteUserButton user={user} />}
-          />
-        </DangerZoneRoot>
-      )}
+      <DangerZoneRoot>
+        <DangerZoneItem
+          label={t("user.action.delete.label")}
+          description={t("user.action.delete.description")}
+          action={<DeleteUserButton user={user} />}
+        />
+      </DangerZoneRoot>
     </Stack>
   );
 }

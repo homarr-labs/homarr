@@ -11,11 +11,11 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
-    "prettier": "^3.5.2"
+    "prettier": "^3.5.3"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "prettier-plugin-packagejson": "^2.5.9",
+    "prettier-plugin-packagejson": "^2.5.10",
     "typescript": "^5.8.2"
   }
 }

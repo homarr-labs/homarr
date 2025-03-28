@@ -1,11 +1,12 @@
-import type react from "react";
 import type { MantineColor, RingProgressProps } from "@mantine/core";
-import { Box, Center, Grid, Group, RingProgress, Stack, Text, Title, useMantineColorScheme } from "@mantine/core";
+import { Card, Center, Group, RingProgress, ScrollArea, Stack, Text, Title, Tooltip } from "@mantine/core";
 import { IconDatabaseHeart, IconFileDescription, IconHeartbeat, IconTransform } from "@tabler/icons-react";
 
+import { useRequiredBoard } from "@homarr/boards/context";
 import { humanFileSize } from "@homarr/common";
 import type { TdarrPieSegment, TdarrStatistics } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 
 const PIE_COLORS: MantineColor[] = ["cyan", "grape", "gray", "orange", "pink"];
 
@@ -21,89 +22,53 @@ export function StatisticsPanel(props: StatisticsPanelProps) {
   if (!allLibs) {
     return (
       <Center style={{ flex: "1" }}>
-        <Title order={3}>{t("empty")}</Title>
+        <Title order={6}>{t("empty")}</Title>
       </Center>
     );
   }
 
   return (
-    <Stack style={{ flex: "1" }} gap="xs">
-      <Group
-        style={{
-          flex: 1,
-        }}
-        justify="apart"
-        align="center"
-        wrap="nowrap"
-      >
-        <Stack align="center" gap={0}>
-          <RingProgress size={120} sections={toRingProgressSections(allLibs.transcodeStatus)} />
-          <Text size="xs">{t("transcodes")}</Text>
-        </Stack>
-        <Grid gutter="xs">
-          <Grid.Col span={6}>
-            <StatBox
-              icon={<IconTransform size={18} />}
-              label={t("transcodesCount", {
-                value: props.statistics.totalTranscodeCount,
-              })}
-            />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <StatBox
-              icon={<IconHeartbeat size={18} />}
-              label={t("healthChecksCount", {
-                value: props.statistics.totalHealthCheckCount,
-              })}
-            />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <StatBox
-              icon={<IconFileDescription size={18} />}
-              label={t("filesCount", {
-                value: props.statistics.totalFileCount,
-              })}
-            />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <StatBox
-              icon={<IconDatabaseHeart size={18} />}
-              label={t("savedSpace", {
-                value: humanFileSize(Math.floor(allLibs.savedSpace)),
-              })}
-            />
-          </Grid.Col>
-        </Grid>
-        <Stack align="center" gap={0}>
-          <RingProgress size={120} sections={toRingProgressSections(allLibs.healthCheckStatus)} />
-          <Text size="xs">{t("healthChecks")}</Text>
-        </Stack>
+    <ScrollArea h="100%">
+      <Group wrap="wrap" justify="center" p={4} w="100%" gap="xs">
+        <StatisticItem icon={IconTransform} label={t("transcodesCount")} value={props.statistics.totalTranscodeCount} />
+        <StatisticItem
+          icon={IconHeartbeat}
+          label={t("healthChecksCount")}
+          value={props.statistics.totalHealthCheckCount}
+        />
+        <StatisticItem icon={IconFileDescription} label={t("filesCount")} value={props.statistics.totalFileCount} />
+        <StatisticItem
+          icon={IconDatabaseHeart}
+          label={t("savedSpace")}
+          value={humanFileSize(Math.floor(allLibs.savedSpace))}
+        />
       </Group>
-      <Group
-        style={{
-          flex: 1,
-        }}
-        justify="space-between"
-        align="center"
-        wrap="nowrap"
-        w="100%"
-      >
-        <Stack align="center" gap={0}>
-          <RingProgress size={120} sections={toRingProgressSections(allLibs.videoCodecs)} />
-          <Text size="xs">{t("videoCodecs")}</Text>
-        </Stack>
-        <Stack align="center" gap={0}>
-          <RingProgress size={120} sections={toRingProgressSections(allLibs.videoContainers)} />
-          <Text size="xs">{t("videoContainers")}</Text>
-        </Stack>
-        <Stack align="center" gap={0}>
-          <RingProgress size={120} sections={toRingProgressSections(allLibs.videoResolutions)} />
-          <Text size="xs">{t("videoResolutions")}</Text>
-        </Stack>
+      <Group justify="center" wrap="wrap" grow>
+        <StatisticRingProgress items={allLibs.transcodeStatus} label={t("transcodes")} />
+        <StatisticRingProgress items={allLibs.healthCheckStatus} label={t("healthChecks")} />
+        <StatisticRingProgress items={allLibs.videoCodecs} label={t("videoCodecs")} />
+        <StatisticRingProgress items={allLibs.videoContainers} label={t("videoContainers")} />
+        <StatisticRingProgress items={allLibs.videoResolutions} label={t("videoResolutions")} />
       </Group>
-    </Stack>
+    </ScrollArea>
   );
 }
+
+interface StatisticRingProgressProps {
+  items: TdarrPieSegment[];
+  label: string;
+}
+
+const StatisticRingProgress = ({ items, label }: StatisticRingProgressProps) => {
+  return (
+    <Stack align="center" gap={0} miw={60}>
+      <Text size="10px" ta="center" style={{ whiteSpace: "nowrap" }}>
+        {label}
+      </Text>
+      <RingProgress size={60} thickness={6} sections={toRingProgressSections(items)} />
+    </Stack>
+  );
+};
 
 function toRingProgressSections(segments: TdarrPieSegment[]): RingProgressProps["sections"] {
   const total = segments.reduce((prev, curr) => prev + curr.value, 0);
@@ -115,26 +80,22 @@ function toRingProgressSections(segments: TdarrPieSegment[]): RingProgressProps[
   }));
 }
 
-interface StatBoxProps {
-  icon: react.ReactNode;
+interface StatisticItemProps {
+  icon: TablerIcon;
+  value: string | number;
   label: string;
 }
 
-function StatBox(props: StatBoxProps) {
-  const { colorScheme } = useMantineColorScheme();
+function StatisticItem(props: StatisticItemProps) {
+  const board = useRequiredBoard();
   return (
-    <Box
-      style={(theme) => ({
-        padding: theme.spacing.xs,
-        border: "1px solid",
-        borderRadius: theme.radius.md,
-        borderColor: colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[1],
-      })}
-    >
-      <Stack gap="xs" align="center">
-        {props.icon}
-        <Text size="xs">{props.label}</Text>
-      </Stack>
-    </Box>
+    <Tooltip label={props.label}>
+      <Card p={0} withBorder radius={board.itemRadius} miw={48} flex={1}>
+        <Group justify="center" align="center" gap="xs" w="100%" wrap="nowrap">
+          <props.icon size={16} style={{ minWidth: 16 }} />
+          <Text size="md">{props.value}</Text>
+        </Group>
+      </Card>
+    </Tooltip>
   );
 }

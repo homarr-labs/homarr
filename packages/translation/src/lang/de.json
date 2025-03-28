@@ -307,12 +307,12 @@
       "name": "Name",
       "members": "Mitglieder",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Home Board",
+        "description": "Nur Boards welche für die Gruppe zugänglich sind, können ausgewählt werden"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Mobiles Board",
+        "description": "Nur Boards welche für die Gruppe zugänglich sind, können ausgewählt werden"
       }
     },
     "permission": {
@@ -514,12 +514,12 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Einstellungen gespeichert",
+              "message": "Board Einstellungen erfolgreich gespeichert"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Einstellungen konnten nicht gespeichert werden",
+              "message": "Board Einstellungen konnten nicht gespeichert werden"
             }
           }
         }
@@ -527,17 +527,17 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Position erfolgreich geändert"
           },
           "error": {
-            "message": ""
+            "message": "Position konnte nicht geändert werden"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "Standardgruppe",
+      "description": "{name} - Alle angemeldeten Benutzer"
     }
   },
   "app": {
@@ -603,8 +603,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Eine andere URL für Ping verwenden",
+          "description": "Nützlich, wenn Homarr direkt auf einen internen Hostnamen oder Netzwerk zugreifen kann, um die Bandbreitennutzung des ISP zu minimieren"
         }
       }
     },
@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Suchmaschinen anlegen",
         "description": "Integration \"{kind}\" kann mit den Suchmaschinen verwendet werden. Wählen Sie dies, um die Suchmaschine automatisch zu konfigurieren."
+      },
+      "createApp": {
+        "label": "Anwendung erstellen",
+        "description": "Erstelle eine App mit dem gleichen Namen und Symbol wie die Integration. Lassen Sie das Eingabefeld unter leer, um die App mit der Integrations URL zu erstellen."
+      },
+      "appHref": {
+        "placeholder": "Benutzerdefinierte App URL"
       }
     },
     "action": {
@@ -930,7 +937,7 @@
     },
     "dangerZone": "Gefahrenbereich",
     "noResults": "Die Suche ergab keine Treffer",
-    "unsavedChanges": "",
+    "unsavedChanges": "Sie haben ungespeicherte Änderungen!",
     "preview": {
       "show": "Vorschau ansehen",
       "hide": "Vorschau ausblenden"
@@ -971,6 +978,14 @@
       "action": {
         "create": "Neuer dynamischer Abschnitt",
         "remove": "Dynamischen Abschnitt entfernen"
+      },
+      "option": {
+        "title": {
+          "label": ""
+        },
+        "borderColor": {
+          "label": "Rahmenfarbe"
+        }
       },
       "remove": {
         "title": "Dynamischen Abschnitt entfernen",
@@ -1065,6 +1080,9 @@
         },
         "customCssClasses": {
           "label": "Benutzerdefinierte CSS Klassen"
+        },
+        "borderColor": {
+          "label": "Rahmenfarbe"
         }
       }
     },
@@ -1119,8 +1137,14 @@
             },
             "grid": {
               "label": "Raster"
+            },
+            "gridHorizontal": {
+              "label": "Gitter horizontal"
             }
           }
+        },
+        "hideTitle": {
+          "label": "Titel ausblenden"
         },
         "hideIcon": {
           "label": "Symbole verbergen"
@@ -1403,6 +1427,82 @@
         "run": "{name} ausführen"
       }
     },
+    "stockPrice": {
+      "name": "",
+      "description": "",
+      "option": {
+        "stock": {
+          "label": ""
+        },
+        "timeRange": {
+          "label": "",
+          "option": {
+            "1d": {
+              "label": ""
+            },
+            "5d": {
+              "label": ""
+            },
+            "1mo": {
+              "label": ""
+            },
+            "3mo": {
+              "label": ""
+            },
+            "6mo": {
+              "label": ""
+            },
+            "ytd": {
+              "label": ""
+            },
+            "1y": {
+              "label": ""
+            },
+            "2y": {
+              "label": ""
+            },
+            "5y": {
+              "label": ""
+            },
+            "10y": {
+              "label": ""
+            },
+            "max": {
+              "label": ""
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "",
+          "option": {
+            "5m": {
+              "label": ""
+            },
+            "15m": {
+              "label": ""
+            },
+            "30m": {
+              "label": ""
+            },
+            "1h": {
+              "label": ""
+            },
+            "1d": {
+              "label": ""
+            },
+            "5d": {
+              "label": ""
+            },
+            "1wk": {
+              "label": ""
+            },
+            "1mo": {
+              "label": ""
+            }
+          }
+        }
+      }
+    },
     "calendar": {
       "name": "Kalender",
       "description": "Zeigt Ereignisse aus Ihren Integrationen in einer Kalenderansicht innerhalb eines bestimmten Zeitraums an",
@@ -1420,6 +1520,9 @@
         },
         "filterFutureMonths": {
           "label": "Endet am"
+        },
+        "showUnmonitored": {
+          "label": "Nicht überwachte anzeigen"
         }
       }
     },
@@ -1615,13 +1718,17 @@
       "app": {
         "noData": "Keine App gefunden",
         "description": "Klicken Sie <here></here> um eine neue App zu erstellen",
-        "quickCreate": ""
+        "quickCreate": "Jetzt eine App erstellen"
       },
       "error": {
         "noIntegration": "Keine Integration ausgewählt",
         "noData": "Keine Integrationsdaten verfügbar"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Videostream",
@@ -1651,6 +1758,7 @@
       "description": "Zeige die aktuellen Streams auf deinen Medienservern an",
       "option": {},
       "items": {
+        "currentlyPlaying": "Aktuelle Wiedergabe",
         "user": "Benutzer",
         "name": "Name",
         "id": "Id"
@@ -1817,10 +1925,10 @@
         "available": "Verfügbar"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "Ausstehend",
+        "approved": "Bestätigt",
+        "declined": "Abgelehnt",
+        "failed": "Fehlgeschlagen"
       },
       "toBeDetermined": "Noch Festzulegen"
     },
@@ -1875,10 +1983,10 @@
         "statistics": {
           "empty": "Leer",
           "transcodes": "Transkodieren",
-          "transcodesCount": "Transkodierung: {value}",
-          "healthChecksCount": "Gesundheitscheck: {value}",
-          "filesCount": "Dateien: {value}",
-          "savedSpace": "Gespeicherter Speicherplatz: {value}",
+          "transcodesCount": "Transkodierungen",
+          "healthChecksCount": "Health Check",
+          "filesCount": "Dateien",
+          "savedSpace": "Belegter Speicherplatz",
           "healthChecks": "Gesundheitscheck",
           "videoCodecs": "Codecs",
           "videoContainers": "Container",
@@ -2023,8 +2131,8 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "Jetzt eine App erstellen",
+          "createAndUse": "Erstellen und verwenden"
         }
       }
     },
@@ -2101,7 +2209,7 @@
         "label": "Transparenz"
       },
       "iconColor": {
-        "label": ""
+        "label": "Symbolfarbe"
       },
       "customCss": {
         "label": "Benutzerdefinierte css für dieses Board",
@@ -2119,14 +2227,14 @@
         "label": "Anzahl der Spalten"
       },
       "itemRadius": {
-        "label": "",
-        "description": "",
+        "label": "Elementradius",
+        "description": "Ändert den Grad der Rundung ihrer Kacheln auf dem Board",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "Sehr klein",
+          "sm": "Klein",
+          "md": "Mittel",
+          "lg": "Groß",
+          "xl": "Sehr groß"
         }
       },
       "name": {
@@ -2150,9 +2258,9 @@
         "layout": {
           "title": "Ansicht",
           "responsive": {
-            "title": "",
+            "title": "Reaktive Layouts",
             "action": {
-              "add": ""
+              "add": "Layout hinzufügen"
             }
           }
         },
@@ -2160,7 +2268,7 @@
           "title": "Hintergrund"
         },
         "appearance": {
-          "title": ""
+          "title": "Aussehen"
         },
         "customCss": {
           "title": "Benutzerdefiniertes CSS"
@@ -2265,14 +2373,14 @@
   "layout": {
     "field": {
       "name": {
-        "label": ""
+        "label": "Name"
       },
       "columnCount": {
-        "label": ""
+        "label": "Anzahl der Spalten"
       },
       "breakpoint": {
-        "label": "",
-        "description": ""
+        "label": "Breakpoint",
+        "description": "Das Layout wird auf allen Bildschirmen, die größer als dieser breakpoint sind, bis zum nächsten größeren breakpoint verwendet."
       }
     }
   },
@@ -2307,6 +2415,7 @@
           "label": "Werkzeuge",
           "items": {
             "docker": "Docker",
+            "kubernetes": "Kubernetes",
             "logs": "Logs",
             "api": "API",
             "certificates": "Zertifikate",
@@ -2505,10 +2614,10 @@
             "ownerOfGroupDeleted": "Der Eigentümer dieser Gruppe wurde gelöscht. Derzeit hat sie keinen Besitzer."
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "Einstellungen",
+            "alert": "Gruppeneinstellungen werden nach der Reihenfolge der Gruppen in der Liste priorisiert. Die oberen Einstellungen überschreiben die unteren Einstellungen.",
             "board": {
-              "title": ""
+              "title": "Boards"
             }
           },
           "members": {
@@ -2740,7 +2849,7 @@
     "title": "Container",
     "table": {
       "updated": "Aktualisiert {when}",
-      "search": "Seach {count} Container",
+      "search": "{count} Container durchsuchen",
       "selected": "{selectCount} von {totalCount} ausgewählten Containern"
     },
     "field": {
@@ -2853,6 +2962,246 @@
       "internalServerError": "Fehler beim Abrufen der Docker Container"
     }
   },
+  "kubernetes": {
+    "cluster": {
+      "title": "Cluster Dashboard",
+      "label": "Cluster",
+      "providers": "Anbieter",
+      "version": "Version",
+      "architecture": "Architektur",
+      "capacity": {
+        "title": "Kapazität",
+        "resource": {
+          "reserved": "Reserviert",
+          "used": "Benutzt"
+        }
+      },
+      "resources": {
+        "title": "Ressourcen",
+        "nodes": "Nodes",
+        "namespaces": "Namensräume",
+        "ingresses": "Ingresse",
+        "services": "Dienste",
+        "pods": "Pods",
+        "configmaps": "ConfigMaps",
+        "secrets": "Secrets",
+        "volumes": "Laufwerke"
+      }
+    },
+    "nodes": {
+      "label": "Nodes",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "state": {
+          "label": "Zustand",
+          "option": {
+            "ready": "Bereit",
+            "NotReady": "Nicht Bereit"
+          }
+        },
+        "cpu": {
+          "label": "CPU"
+        },
+        "memory": {
+          "label": "RAM"
+        },
+        "pods": {
+          "label": "Pods"
+        },
+        "operatingSystem": {
+          "label": "OS"
+        },
+        "architecture": {
+          "label": "Architektur"
+        },
+        "kubernetesVersion": {
+          "label": "Kubernetes Version"
+        },
+        "creationTimestamp": {
+          "label": "Erstellt"
+        }
+      },
+      "table": {
+        "search": "{count} Nodes durchsuchen"
+      }
+    },
+    "namespaces": {
+      "label": "Namensräume",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "state": {
+          "label": "Zustand",
+          "option": {
+            "active": "Aktiv",
+            "terminating": "Beendet"
+          }
+        },
+        "creationTimestamp": {
+          "label": "Erstellt"
+        }
+      },
+      "table": {
+        "search": "{count} Namensräume durchsuchen"
+      }
+    },
+    "ingresses": {
+      "label": "Ingresse",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "namespace": {
+          "label": "Namensraum"
+        },
+        "className": {
+          "label": "Klassenname"
+        },
+        "rulesAndPaths": {
+          "label": "Regeln & Pfade"
+        },
+        "creationTimestamp": {
+          "label": "Erstellt"
+        }
+      },
+      "table": {
+        "search": "{count} Ingresse durchsuchen"
+      }
+    },
+    "services": {
+      "label": "Dienste",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "namespace": {
+          "label": "Namensraum"
+        },
+        "type": {
+          "label": "Typ"
+        },
+        "ports": {
+          "label": "Ports"
+        },
+        "targetPorts": {
+          "label": "Zielports"
+        },
+        "clusterIP": {
+          "label": "Cluster IP"
+        },
+        "creationTimestamp": {
+          "label": "Erstellt"
+        }
+      },
+      "table": {
+        "search": "{count} Services durchsuchen"
+      }
+    },
+    "pods": {
+      "label": "Pods",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "namespace": {
+          "label": "Namensraum"
+        },
+        "image": {
+          "label": "Image"
+        },
+        "applicationType": {
+          "label": "Typ der Anwendung"
+        },
+        "status": {
+          "label": "Status"
+        },
+        "creationTimestamp": {
+          "label": "Erstellt"
+        }
+      },
+      "table": {
+        "search": "{count} Pods durchsuchen"
+      }
+    },
+    "secrets": {
+      "label": "Secrets",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "namespace": {
+          "label": "namensraum"
+        },
+        "type": {
+          "label": "typ"
+        },
+        "creationTimestamp": {
+          "label": "Erstellt"
+        }
+      },
+      "table": {
+        "search": "{count} Secrets durchsuchen"
+      }
+    },
+    "configmaps": {
+      "label": "ConfigMaps",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "namespace": {
+          "label": "namensraum"
+        },
+        "creationTimestamp": {
+          "label": "Erstellt"
+        }
+      },
+      "table": {
+        "search": "{count} configMaps durchsuchen"
+      }
+    },
+    "volumes": {
+      "label": "Laufwerke",
+      "field": {
+        "name": {
+          "label": "Name"
+        },
+        "namespace": {
+          "label": "Namensraum"
+        },
+        "accessModes": {
+          "label": "Zugriffsmodi"
+        },
+        "storage": {
+          "label": "Speicher"
+        },
+        "storageClassName": {
+          "label": "Name der Speicherklasse"
+        },
+        "volumeMode": {
+          "label": "Laufwerksmodus"
+        },
+        "volumeName": {
+          "label": "Laufwerkname"
+        },
+        "status": {
+          "label": "Status"
+        },
+        "creationTimestamp": {
+          "label": "Erstellt"
+        }
+      },
+      "table": {
+        "search": "{count} Laufwerke durchsuchen"
+      }
+    },
+    "error": {
+      "internalServerError": "Fehler beim Abrufen der Kubernetes Daten"
+    }
+  },
   "permission": {
     "title": "Berechtigungen",
     "userSelect": {
@@ -2937,6 +3286,33 @@
         "label": "Werkzeuge",
         "docker": {
           "label": "Docker"
+        },
+        "kubernetes": {
+          "label": "Kubernetes",
+          "nodes": {
+            "label": "Nodes"
+          },
+          "namespaces": {
+            "label": "Namensräume"
+          },
+          "ingresses": {
+            "label": "Ingresse"
+          },
+          "services": {
+            "label": "Dienste"
+          },
+          "pods": {
+            "label": "pods"
+          },
+          "configmaps": {
+            "label": "ConfigMaps"
+          },
+          "secrets": {
+            "label": "Secrets"
+          },
+          "volumes": {
+            "label": "Laufwerke"
+          }
         },
         "logs": {
           "label": "Logs"
@@ -3308,7 +3684,7 @@
         },
         "delete": {
           "title": "Suchmaschine löschen",
-          "message": "Sind Sie sicher, dass Sie die Suchmaschine '{name} ' löschen möchten?",
+          "message": "Sind Sie sicher, dass Sie die Suchmaschine {name} löschen möchten?",
           "notification": {
             "success": {
               "title": "Suchmaschine gelöscht",

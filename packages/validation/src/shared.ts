@@ -15,6 +15,7 @@ export type BoardItemIntegration = z.infer<typeof integrationSchema>;
 
 export const itemAdvancedOptionsSchema = z.object({
   customCssClasses: z.array(z.string()).default([]),
+  borderColor: z.string().default(""),
 });
 
 export type BoardItemAdvancedOptions = z.infer<typeof itemAdvancedOptionsSchema>;
@@ -59,6 +60,7 @@ const emptySectionSchema = z.object({
 });
 
 export const dynamicSectionOptionsSchema = z.object({
+  title: z.string().max(20).default(""),
   borderColor: z.string().default(""),
 });
 

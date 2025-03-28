@@ -18,7 +18,7 @@ import classes from "./app.module.css";
 import { PingDot } from "./ping/ping-dot";
 import { PingIndicator } from "./ping/ping-indicator";
 
-export default function AppWidget({ options, isEditMode }: WidgetComponentProps<"app">) {
+export default function AppWidget({ options, isEditMode, height, width }: WidgetComponentProps<"app">) {
   const t = useI18n();
   const settings = useSettings();
   const board = useRequiredBoard();
@@ -56,6 +56,8 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
     [app, options.openInNewTab],
   );
 
+  const tinyText = height < 100 || width < 100;
+
   return (
     <AppLink
       href={app.href ?? undefined}
@@ -74,12 +76,11 @@ export default function AppWidget({ options, isEditMode }: WidgetComponentProps<
           h="100%"
           w="100%"
           direction="column"
-          p="7.5cqmin"
           justify="center"
           align="center"
         >
           {options.showTitle && (
-            <Text className="app-title" fw={700} ta="center" size="12.5cqmin">
+            <Text className="app-title" fw={700} size={tinyText ? "8px" : "sm"} ta="center">
               {app.name}
             </Text>
           )}

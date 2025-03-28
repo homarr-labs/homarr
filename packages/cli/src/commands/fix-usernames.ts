@@ -19,7 +19,7 @@ export const fixUsernames = command({
 
     for (const user of credentialUsers) {
       if (!user.name) continue;
-      if (user.name !== user.name.toLowerCase()) continue;
+      if (user.name === user.name.toLowerCase()) continue;
 
       await db
         .update(users)

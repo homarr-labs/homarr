@@ -57,7 +57,7 @@
           },
           "notification": {
             "error": {
-              "title": "Geçersiz Anahtar",
+              "title": "Token",
               "message": "Girdiğiniz Token Anahtarı Geçersiz"
             }
           }
@@ -291,7 +291,7 @@
         "confirm": "{username} kullanıcısını tercihleriyle birlikte silmek istediğinizden emin misiniz?"
       },
       "select": {
-        "label": "Kullanıcıyı seç",
+        "label": "Kullanıcı seç",
         "notFound": "Kullanıcı bulunmadı"
       },
       "transfer": {
@@ -363,7 +363,7 @@
           },
           "full-all": {
             "label": "Tam panel erişimi",
-            "description": "Üyelerin tüm panelleri görüntülemesine, değiştirmesine ve silmesine izin ver (Erişim kontrolü ve tehlikeli alan dahil)"
+            "description": "Üyelerin tüm panelleri görüntülemesine, değiştirmesine ve silmesine izin ver (Erişim kontrolü ve Tehlikeli alan dahil)"
           }
         }
       },
@@ -675,6 +675,13 @@
       "attemptSearchEngineCreation": {
         "label": "Arama Motoru Oluştur",
         "description": "\"{kind}\" entegrasyonu arama motorlarıyla kullanılabilir. Arama motorunu otomatik olarak yapılandırmak için bunu işaretleyin."
+      },
+      "createApp": {
+        "label": "Uygulama oluştur",
+        "description": "Entegrasyon ile aynı adı ve simgeyi taşıyan bir uygulama oluşturun. Uygulamayı entegrasyon URL'si ile oluşturmak için aşağıdaki alanını boş bırakın."
+      },
+      "appHref": {
+        "placeholder": "Özel Uygulama URL'si"
       }
     },
     "action": {
@@ -716,7 +723,7 @@
           "message": "Muhtemelen yanlış kimlik bilgileri"
         },
         "forbidden": {
-          "title": "Yasaklı",
+          "title": "Yetkisiz Erişim",
           "message": "Muhtemelen izinler eksik"
         },
         "notFound": {
@@ -748,7 +755,7 @@
           "message": "Yanıt geçerli bir JSON değildi"
         },
         "wrongPath": {
-          "title": "Yanlış yol",
+          "title": " Yol hatalı",
           "message": "Yol muhtemelen doğru değil"
         }
       }
@@ -784,11 +791,11 @@
         },
         "tokenId": {
           "label": "Token Anahtar Kimliği",
-          "newLabel": "Yeni Anahtar Kimliği"
+          "newLabel": "Yeni Token Anahtar Kimliği"
         },
         "realm": {
-          "label": "Realm",
-          "newLabel": "Yeni realm"
+          "label": "Erişim Alanı",
+          "newLabel": "Yeni erişim alanı"
         }
       }
     },
@@ -972,6 +979,14 @@
         "create": "Yeni Dinamik Bölüm",
         "remove": "Dinamik bölümü kaldır"
       },
+      "option": {
+        "title": {
+          "label": "Başlık"
+        },
+        "borderColor": {
+          "label": "Kenarlık rengi"
+        }
+      },
       "remove": {
         "title": "Dinamik bölümü kaldır",
         "message": "Bu dinamik bölümü kaldırmak istediğinizden emin misiniz? Öğeler üst bölümdeki aynı konuma taşınacaktır."
@@ -1065,6 +1080,9 @@
         },
         "customCssClasses": {
           "label": "Özel CSS Alanı"
+        },
+        "borderColor": {
+          "label": "Kenarlık rengi"
         }
       }
     },
@@ -1119,8 +1137,14 @@
             },
             "grid": {
               "label": "Izgara"
+            },
+            "gridHorizontal": {
+              "label": "Yatay ızgara"
             }
           }
+        },
+        "hideTitle": {
+          "label": "Başlığı gizle"
         },
         "hideIcon": {
           "label": "Simgeleri gizle"
@@ -1403,6 +1427,82 @@
         "run": "Çalıştır {name}"
       }
     },
+    "stockPrice": {
+      "name": "Hisse Senedi Fiyatı",
+      "description": "Bir şirketin güncel hisse senedi fiyatını görüntüler",
+      "option": {
+        "stock": {
+          "label": "Hisse senedi sembolü"
+        },
+        "timeRange": {
+          "label": "Zaman Aralığı",
+          "option": {
+            "1d": {
+              "label": "1 Gün"
+            },
+            "5d": {
+              "label": "5 Gün"
+            },
+            "1mo": {
+              "label": "1 Ay"
+            },
+            "3mo": {
+              "label": "3 Ay"
+            },
+            "6mo": {
+              "label": "6 Ay"
+            },
+            "ytd": {
+              "label": "Yıl Başından Bugüne"
+            },
+            "1y": {
+              "label": "1 Yıl"
+            },
+            "2y": {
+              "label": "2 Yıl"
+            },
+            "5y": {
+              "label": "5 Yıl"
+            },
+            "10y": {
+              "label": "10 Yıl"
+            },
+            "max": {
+              "label": "Maksimum"
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "Zaman Aralığı",
+          "option": {
+            "5m": {
+              "label": "5 Dakika"
+            },
+            "15m": {
+              "label": "15 Dakika"
+            },
+            "30m": {
+              "label": "30 Dakika"
+            },
+            "1h": {
+              "label": "1 Saat"
+            },
+            "1d": {
+              "label": "1 Gün"
+            },
+            "5d": {
+              "label": "5 Gün"
+            },
+            "1wk": {
+              "label": "1 Hafta"
+            },
+            "1mo": {
+              "label": "1 Ay"
+            }
+          }
+        }
+      }
+    },
     "calendar": {
       "name": "Takvim",
       "description": "Entegrasyonlarınızdaki etkinlikleri belirli bir göreli zaman dilimi içinde bir takvim görünümünde görüntüleyin",
@@ -1420,6 +1520,9 @@
         },
         "filterFutureMonths": {
           "label": "Bitiş"
+        },
+        "showUnmonitored": {
+          "label": "Takip edilmeyenleri göster"
         }
       }
     },
@@ -1621,7 +1724,11 @@
         "noIntegration": "Hiçbir entegrasyon seçilmedi",
         "noData": "Entegrasyon verisi mevcut değil"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Video Akışı",
@@ -1651,6 +1758,7 @@
       "description": "Medya sunucularınızdaki mevcut akışları gösterin",
       "option": {},
       "items": {
+        "currentlyPlaying": "Şuan Oynatılan",
         "user": "Kullanıcı",
         "name": "İsim",
         "id": "Kimlik"
@@ -1700,8 +1808,8 @@
           "columnTitle": "Kontroller"
         },
         "added": {
-          "columnTitle": "Ekleme",
-          "detailsTitle": "Ekleme Tarihi"
+          "columnTitle": "Eklenme",
+          "detailsTitle": "Eklenme Tarihi"
         },
         "category": {
           "columnTitle": "Ekstralar",
@@ -1817,16 +1925,16 @@
         "available": "Mevcut"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": ""
+        "pending": "Bekleyen",
+        "approved": "Onaylandı",
+        "declined": "Reddedildi",
+        "failed": "Başarısız"
       },
       "toBeDetermined": "-Yapım Aşamasında-"
     },
     "mediaRequests-requestStats": {
       "name": "Medya Talep İstatistikleri",
-      "description": "Medya taleplerinizle ilgili istatistikler",
+      "description": "Medya talepleriyle ilgili istatistikler",
       "option": {},
       "titles": {
         "stats": {
@@ -1858,7 +1966,7 @@
         }
       },
       "tab": {
-        "workers": "İşçiler",
+        "workers": "İşler",
         "queue": "Kuyruk",
         "statistics": "İstatistik"
       },
@@ -1875,10 +1983,10 @@
         "statistics": {
           "empty": "Boş",
           "transcodes": "Kod dönüştürmeler",
-          "transcodesCount": "Kod dönüştürmeler: {value}",
-          "healthChecksCount": "Sağlık kontrolleri: {value}",
-          "filesCount": "Dosyalar: {value}",
-          "savedSpace": "Kaydedilen alan: {value}",
+          "transcodesCount": "Kod dönüştürmeler",
+          "healthChecksCount": "Sağlık kontrolleri",
+          "filesCount": "Dosyalar",
+          "savedSpace": "Kaydedilen alan",
           "healthChecks": "Sağlık kontrolleri",
           "videoCodecs": "Kodek'ler",
           "videoContainers": "Konteyner",
@@ -2069,11 +2177,11 @@
             "description": "Görsel tekrarlanmaz ve tüm alanı doldurmayabilir."
           },
           "repeat-x": {
-            "label": "Y tekrarla",
+            "label": "Y eksende tekrarla",
             "description": "'Tekrarla' ile aynı, ancak yalnızca yatay eksende."
           },
           "repeat-y": {
-            "label": "D tekrarla",
+            "label": "D eksende tekrarla",
             "description": "'Tekrarla' ile aynı ancak sadece dikey eksende."
           }
         }
@@ -2160,7 +2268,7 @@
           "title": "Arkaplan"
         },
         "appearance": {
-          "title": "Görünüş"
+          "title": "Görünüm"
         },
         "customCss": {
           "title": "Özel Css"
@@ -2250,14 +2358,14 @@
           "notice": "Bu sayfayı tüm kullanıcılardan gizlemek için sunucuya öntanımlı panel atayın"
         },
         "user": {
-          "description": "Henüz bir ev paneli belirlemediniz.",
+          "description": "Henüz öntanımlı panel belirlemediniz.",
           "link": "Öntanımlı paneli yapılandır",
           "notice": "Bu sayfanın kaybolmasını sağlamak için tercihlerden öntanımlı panel seçin"
         },
         "anonymous": {
-          "description": "Sunucu yöneticiniz henüz bir öntanımlı panel belirlemedi.",
+          "description": "Sunucu yöneticiniz henüz öntanımlı panel belirlemedi.",
           "link": "Herkese açık panelleri görüntüle",
-          "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel ayarlamasını isteyin"
+          "notice": "Bu sayfanın kaybolmasını sağlamak için sunucu yöneticisinden öntanımlı panel atamasını isteyin"
         }
       }
     }
@@ -2307,6 +2415,7 @@
           "label": "Araçlar",
           "items": {
             "docker": "Docker",
+            "kubernetes": "Kubernetes",
             "logs": "Günlükler",
             "api": "API",
             "certificates": "Sertifikalar",
@@ -2539,11 +2648,11 @@
             "title": "Analiz",
             "general": {
               "title": "Anonim analizler gönder",
-              "text": "Homarr, açık kaynaklı yazılım Umami'yi kullanarak anonimleştirilmiş analizler gönderecektir. Hiçbir zaman kişisel bilgi toplamaz ve bu nedenle tamamen GDPR ve CCPA uyumludur. Analizleri etkinleştirmenizi öneririz çünkü, açık kaynak yazılım ekibimizin sorunları daha hızlı belirlemesine ve işlerimizi önceliklendirmesine yardımcı olmaktadır."
+              "text": "Homarr, açık kaynaklı yazılım Umami'yi kullanarak anonimleştirilmiş analizler gönderecektir. Hiçbir zaman kişisel bilgi toplamaz ve bu nedenle tamamen GDPR ve CCPA uyumludur. Analizleri etkinleştirmenizi öneririz çünkü, açık kaynak yazılım ekibimizin sorunları daha hızlı belirlemesine ve birikmiş işlerimizi önceliklendirmesine yardımcı olmaktadır."
             },
             "widgetData": {
-              "title": "Widget verileri",
-              "text": "Araç (ve sayılarını) yapılandırma verilerini gönder. URL'leri, alan adlarını veya başka herhangi bir veriyi içermez."
+              "title": "Araç verileri",
+              "text": "Hangi araçları (ve miktarlarını) yapılandırdığınızı gönderin. URL'leri, adları veya başka herhangi bir veri içermez."
             },
             "integrationData": {
               "title": "Entegrasyon verileri",
@@ -2556,7 +2665,7 @@
           },
           "crawlingAndIndexing": {
             "title": "Arama ve İndeksleme",
-            "warning": "Buradaki ayarların etkinleştirilmesi veya devre dışı bırakılması, arama motorlarının sayfanızı arama ve indekleme şeklini ciddi şekilde etkileyecektir. Her ayar bir istek başlatır ve bu ayarları almak tarayıcının görevidir. Değişiklikler birkaç gün veya hafta sürebilir. Bazı ayarlar arama motoruna özel olabilir.",
+            "warning": "Buradaki ayarların etkinleştirilmesi veya devre dışı bırakılması, arama motorlarının sayfanızı arama ve indekleme şeklini ciddi şekilde etkileyecektir. Her ayar bir istek başlatır ve bu ayarları uygulamak tarayıcının görevidir. Değişiklikler birkaç gün veya hafta sürebilir. Bazı ayarlar arama motoruna özel olabilir.",
             "noIndex": {
               "title": "İndeksleme Yapma",
               "text": "Web sitesini arama motorlarında indekslemeyin veya herhangi bir arama sonucunda görüntülemeyin"
@@ -2601,7 +2710,7 @@
             }
           },
           "appearance": {
-            "title": "Görünüş",
+            "title": "Görünüm",
             "defaultColorScheme": {
               "label": "Öntanımlı Renk Düzeni",
               "options": {
@@ -2685,7 +2794,7 @@
           "modal": {
             "createApiToken": {
               "title": "API anahtarı oluşturuldu",
-              "description": "API anahtarı oluşturuldu. Dikkatli olun, bu anahtar veritabanında şifrelenmiştir ve size bir daha asla aktarılmayacaktır. Bu anaharı kaybederseniz, bir daha erişmeniz mümkün değildir.",
+              "description": "API anahtarı oluşturuldu. Dikkatli olun, bu anahtar veritabanında şifrelenmiştir ve size bir daha asla aktarılmayacaktır. Bu anahtarı kaybederseniz, bir daha erişmeniz mümkün değildir.",
               "button": "Kopyala ve kapat"
             }
           },
@@ -2771,7 +2880,7 @@
         "label": "Başlat",
         "notification": {
           "success": {
-            "title": "Konteynerler başladı",
+            "title": "Konteynerler başlatıldı",
             "message": "Konteynerler başarıyla başlatıldı"
           },
           "error": {
@@ -2851,6 +2960,246 @@
     },
     "error": {
       "internalServerError": "Docker konteynerlerları getirilemedi"
+    }
+  },
+  "kubernetes": {
+    "cluster": {
+      "title": "Küme Panosu",
+      "label": "Küme",
+      "providers": "Sağlayıcılar",
+      "version": "Sürüm",
+      "architecture": "Mimari",
+      "capacity": {
+        "title": "Kapasite",
+        "resource": {
+          "reserved": "Rezerve",
+          "used": "Kullanılan"
+        }
+      },
+      "resources": {
+        "title": "Kaynaklar",
+        "nodes": "Nodes",
+        "namespaces": "İsim Alanları",
+        "ingresses": "Ingress'ler",
+        "services": "Hizmetler",
+        "pods": "Pod'lar",
+        "configmaps": "ConfigMap'ler",
+        "secrets": "Gizli anahtarlar",
+        "volumes": "Birimler"
+      }
+    },
+    "nodes": {
+      "label": "Node'lar",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "state": {
+          "label": "Durum",
+          "option": {
+            "ready": "Hazır",
+            "NotReady": "Hazır Değil"
+          }
+        },
+        "cpu": {
+          "label": "İşlemci"
+        },
+        "memory": {
+          "label": "BELLEK"
+        },
+        "pods": {
+          "label": "Pod'lar"
+        },
+        "operatingSystem": {
+          "label": "İşletim Sistemi"
+        },
+        "architecture": {
+          "label": "Mimari"
+        },
+        "kubernetesVersion": {
+          "label": "Kubernetes Sürümü"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} node içinde ara"
+      }
+    },
+    "namespaces": {
+      "label": "İsim Alanları",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "state": {
+          "label": "Durum",
+          "option": {
+            "active": "Aktif",
+            "terminating": "Sonlandırma"
+          }
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} isim alanı içinde ara"
+      }
+    },
+    "ingresses": {
+      "label": "Ingress'ler",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "namespace": {
+          "label": "İsim Alanı"
+        },
+        "className": {
+          "label": "Sınıf ismi"
+        },
+        "rulesAndPaths": {
+          "label": "Kurallar & yollar"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} ingress içinde ara"
+      }
+    },
+    "services": {
+      "label": "Hizmetler",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "namespace": {
+          "label": "İsim Alanı"
+        },
+        "type": {
+          "label": "Tip"
+        },
+        "ports": {
+          "label": "Bağlantı noktaları"
+        },
+        "targetPorts": {
+          "label": "Hedef bağlantı noktası"
+        },
+        "clusterIP": {
+          "label": "Küme IP'si"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} hizmet içerisinde ara"
+      }
+    },
+    "pods": {
+      "label": "Pod'lar",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "namespace": {
+          "label": "İsim Alanı"
+        },
+        "image": {
+          "label": "İmaj"
+        },
+        "applicationType": {
+          "label": "Uygulama Türü"
+        },
+        "status": {
+          "label": "Durum"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} pod içerisinde ara"
+      }
+    },
+    "secrets": {
+      "label": "Gizli anahtarlar",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "namespace": {
+          "label": "i̇sim Alanı"
+        },
+        "type": {
+          "label": "tür"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} gizli anahtar içerisinde ara"
+      }
+    },
+    "configmaps": {
+      "label": "ConfigMap'ler",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "namespace": {
+          "label": "İsim Alanı"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} configMap içinde ara"
+      }
+    },
+    "volumes": {
+      "label": "Birimler",
+      "field": {
+        "name": {
+          "label": "İsim"
+        },
+        "namespace": {
+          "label": "İsim Alanı"
+        },
+        "accessModes": {
+          "label": "Erişim Modları"
+        },
+        "storage": {
+          "label": "Depolama"
+        },
+        "storageClassName": {
+          "label": "Depolama Sınıfı Adı"
+        },
+        "volumeMode": {
+          "label": "Birim Modu"
+        },
+        "volumeName": {
+          "label": "Birim Adı"
+        },
+        "status": {
+          "label": "Durum"
+        },
+        "creationTimestamp": {
+          "label": "Oluşturuldu"
+        }
+      },
+      "table": {
+        "search": "{count} birim içerisinde ara"
+      }
+    },
+    "error": {
+      "internalServerError": "Kubernetes verileri alınamadı"
     }
   },
   "permission": {
@@ -2937,6 +3286,33 @@
         "label": "Araçlar",
         "docker": {
           "label": "Docker"
+        },
+        "kubernetes": {
+          "label": "Kubernetes",
+          "nodes": {
+            "label": "Node'lar"
+          },
+          "namespaces": {
+            "label": "İsim Alanları"
+          },
+          "ingresses": {
+            "label": "Ingress'ler"
+          },
+          "services": {
+            "label": "Hizmetler"
+          },
+          "pods": {
+            "label": "pod'lar"
+          },
+          "configmaps": {
+            "label": "ConfigMap'ler"
+          },
+          "secrets": {
+            "label": "Gizli anahtarlar"
+          },
+          "volumes": {
+            "label": "Birimler"
+          }
         },
         "logs": {
           "label": "Günlükler"

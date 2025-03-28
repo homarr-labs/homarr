@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
+import { useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
+import { useElementSize } from "@mantine/hooks";
 import dayjs from "dayjs";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { useSettings } from "@homarr/settings";
 
@@ -36,6 +39,7 @@ const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }:
       month: month.getMonth(),
       year: month.getFullYear(),
       releaseType: options.releaseType,
+      showUnmonitored: options.showUnmonitored,
     },
     {
       refetchOnMount: false,
@@ -60,6 +64,10 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
   const params = useParams();
   const locale = params.locale as string;
   const { firstDayOfWeek } = useSettings();
+  const board = useRequiredBoard();
+  const mantineTheme = useMantineTheme();
+  const actualItemRadius = mantineTheme.radius[board.itemRadius];
+  const { ref, width, height } = useElementSize();
 
   return (
     <Calendar
@@ -72,43 +80,38 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
       date={month}
       maxLevel="month"
       firstDayOfWeek={firstDayOfWeek}
-      w="100%"
-      h="100%"
       static={isEditMode}
       className={classes.calendar}
+      w={"100%"}
+      h={"100%"}
+      ref={ref}
       styles={{
         calendarHeaderControl: {
           pointerEvents: isEditMode ? "none" : undefined,
-          height: "12cqmin",
-          width: "12cqmin",
-          borderRadius: "3.5cqmin",
+          borderRadius: "md",
         },
         calendarHeaderLevel: {
-          height: "12cqmin",
-          fontSize: "6cqmin",
           pointerEvents: "none",
         },
         levelsGroup: {
           height: "100%",
-          padding: "2.5cqmin",
+          padding: "md",
         },
         calendarHeader: {
           maxWidth: "unset",
           marginBottom: 0,
         },
-        day: {
-          width: "12cqmin",
-          height: "12cqmin",
-          borderRadius: "3.5cqmin",
-        },
         monthCell: {
           textAlign: "center",
         },
-        month: {
-          height: "100%",
+        day: {
+          borderRadius: actualItemRadius,
+          width: "100%",
+          height: "auto",
+          position: "relative",
         },
+        month: {},
         weekday: {
-          fontSize: "5.5cqmin",
           padding: 0,
         },
       }}
@@ -122,7 +125,13 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
           }))
           .filter((event): event is CalendarEvent => Boolean(event.date));
         return (
-          <CalendarDay date={tileDate} events={eventsForDate} disabled={isEditMode || eventsForDate.length === 0} />
+          <CalendarDay
+            date={tileDate}
+            events={eventsForDate}
+            disabled={isEditMode || eventsForDate.length === 0}
+            rootWidth={width}
+            rootHeight={height}
+          />
         );
       }}
     />

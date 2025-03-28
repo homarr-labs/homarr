@@ -35,7 +35,13 @@ const createColumns = (
     Cell({ renderedCellValue, row }) {
       return (
         <Group gap="xs">
-          <Avatar variant="outline" radius="lg" size="md" src={row.original.iconUrl}>
+          <Avatar
+            variant="outline"
+            radius="lg"
+            size="md"
+            styles={{ image: { objectFit: "contain" } }}
+            src={row.original.iconUrl}
+          >
             {row.original.name.at(0)?.toUpperCase()}
           </Avatar>
           <Text>{renderedCellValue}</Text>
@@ -98,7 +104,7 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
     enableBottomToolbar: false,
     positionGlobalFilter: "right",
     mantineSearchTextInputProps: {
-      placeholder: tDocker("table.search", { count: data.containers.length }),
+      placeholder: tDocker("table.search", { count: String(data.containers.length) }),
       style: { minWidth: 300 },
       autoFocus: true,
     },
@@ -140,8 +146,8 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
           {groupedAlert}
           <Text fw={500}>
             {tDocker("table.selected", {
-              selectCount: table.getSelectedRowModel().rows.length,
-              totalCount: table.getRowCount(),
+              selectCount: String(table.getSelectedRowModel().rows.length),
+              totalCount: String(table.getRowCount()),
             })}
           </Text>
           <ContainerActionBar selectedContainers={dockerContainers} />
