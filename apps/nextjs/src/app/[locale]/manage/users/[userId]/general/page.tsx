@@ -118,15 +118,13 @@ export default async function EditUserPage(props: Props) {
         <PingIconsEnabled user={user} />
       </Stack>
 
-      {isCredentialsUser && (
-        <DangerZoneRoot>
-          <DangerZoneItem
-            label={t("user.action.delete.label")}
-            description={t("user.action.delete.description")}
-            action={<DeleteUserButton user={user} />}
-          />
-        </DangerZoneRoot>
-      )}
+      <DangerZoneRoot>
+        <DangerZoneItem
+          label={t("user.action.delete.label")}
+          description={t("user.action.delete.description")}
+          action={<DeleteUserButton user={user} />}
+        />
+      </DangerZoneRoot>
     </Stack>
   );
 }
