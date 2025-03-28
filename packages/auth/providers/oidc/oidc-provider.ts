@@ -22,6 +22,27 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
       redirect_uri: createRedirectUri(headers, "/api/auth/callback/oidc", "https"),
     },
   },
+  token: {
+    // Providers like fusionauth may return www-authenticate which results in an error
+    // https://github.com/nextauthjs/next-auth/issues/8745
+    // https://github.com/homarr-labs/homarr/issues/2690
+    conform: (response: Response) => {
+      if (response.status === 401) return response;
+
+      const newHeaders = Array.from(response.headers.entries())
+        .filter(([key]) => key.toLowerCase() !== "www-authenticate")
+        .reduce((headers, [key, value]) => {
+          headers.append(key, value);
+          return headers;
+        }, new Headers());
+
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: newHeaders,
+      });
+    },
+  },
   // idToken false forces the use of the userinfo endpoint
   // Userinfo endpoint is required for authelia since v4.39
   // See https://github.com/homarr-labs/homarr/issues/2635

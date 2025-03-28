@@ -1,0 +1,22 @@
+{
+  "init": {},
+  "user": {},
+  "group": {},
+  "app": {},
+  "integration": {},
+  "media": {},
+  "common": {},
+  "section": {},
+  "item": {},
+  "widget": {},
+  "widgetPreview": {},
+  "board": {},
+  "layout": {},
+  "management": {},
+  "docker": {},
+  "kubernetes": {},
+  "permission": {},
+  "navigationStructure": {},
+  "search": {},
+  "certificate": {}
+}
