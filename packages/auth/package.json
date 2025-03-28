@@ -38,8 +38,8 @@
     "next": "15.2.4",
     "next-auth": "5.0.0-beta.25",
     "pretty-print-error": "^1.1.2",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

@@ -26,7 +26,7 @@
     "@homarr/ui": "workspace:^0.1.0",
     "@mantine/core": "^7.17.3",
     "@mantine/hooks": "^7.17.3",
-    "react": "19.0.0"
+    "react": "19.1.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
