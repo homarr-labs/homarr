@@ -21,6 +21,13 @@ import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { env } from "@homarr/common/env";
+import { atom, useSetAtom } from "jotai";
+
+interface WebSocketConnection {
+  state: 'connecting' | 'connected' | 'error' | 'closed'
+}
+
+export const webSocketConnectionAtom = atom<WebSocketConnection>({ state: 'connecting' });
 
 const getWebSocketProtocol = () => {
   // window is not defined on server side
@@ -44,9 +51,27 @@ const constructWebsocketUrl = () => {
   return `${getWebSocketProtocol()}://${window.location.hostname}:${window.location.port}/websockets`;
 };
 
-const wsClient = createWSClient({
-  url: constructWebsocketUrl(),
-});
+let wsClient: WsClient | null;
+
+const createWsClientOrDefault = (setState: (connection: WebSocketConnection) => void) => {
+  if (wsClient) {
+    return wsClient;
+  }
+
+  wsClient = createWSClient({
+    url: constructWebsocketUrl(),
+    onOpen() {
+      setState({ state: "connected" });
+    },
+    onClose() {
+      setState({ state: "closed" });
+    },
+    onError() {
+      setState({ state: "error" });
+    }
+  });
+  return wsClient;
+}
 
 export function TRPCReactProvider(props: PropsWithChildren) {
   const [queryClient] = useState(
@@ -60,6 +85,8 @@ export function TRPCReactProvider(props: PropsWithChildren) {
       }),
   );
 
+  const setWebSocketConnection = useSetAtom(webSocketConnectionAtom);
+
   const [trpcClient] = useState(() => {
     return clientApi.createClient({
       links: [
@@ -70,7 +97,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
         splitLink({
           condition: ({ type }) => type === "subscription",
           true: wsLink<AppRouter>({
-            client: wsClient,
+            client: createWsClientOrDefault((state) => setWebSocketConnection(state)),
             transformer: superjson,
           }),
           false: splitLink({
@@ -106,7 +133,7 @@ export function TRPCReactProvider(props: PropsWithChildren) {
     <clientApi.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <ReactQueryStreamedHydration transformer={superjson}>{props.children}</ReactQueryStreamedHydration>
-        <ReactQueryDevtools initialIsOpen={false} />
+        <ReactQueryDevtools initialIsOpen={false}/>
       </QueryClientProvider>
     </clientApi.Provider>
   );

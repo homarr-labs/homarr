@@ -6,6 +6,7 @@ import { useAtomValue } from "jotai";
 
 import { useOptionalBackgroundProps } from "./background";
 import { navigationCollapsedAtom } from "./header/burger";
+import { webSocketConnectionAtom } from "~/app/[locale]/_client-providers/trpc";
 
 interface ClientShellProps {
   hasHeader?: boolean;
@@ -18,12 +19,14 @@ export const ClientShell = ({
   children,
 }: PropsWithChildren<ClientShellProps>) => {
   const collapsed = useAtomValue(navigationCollapsedAtom);
-  const backgroundProps = useOptionalBackgroundProps();
+  const backgroundProps = useOptionalBackgroundProps()
+
+  const value = useAtomValue(webSocketConnectionAtom);
 
   return (
     <AppShell
       {...backgroundProps}
-      header={hasHeader ? { height: 60 } : undefined}
+      header={hasHeader ? { height: 60 + (value === 'closed' ? 20 : 0) } : undefined}
       navbar={
         hasNavigation
           ? {
