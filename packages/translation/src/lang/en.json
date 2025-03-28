@@ -1724,7 +1724,11 @@
         "noIntegration": "No integration selected",
         "noData": "No integration data available"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "Restricted",
+        "description": "You don't have access to the {name} widget."
+      }
     },
     "video": {
       "name": "Video Stream",
