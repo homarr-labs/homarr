@@ -33,9 +33,17 @@ interface IconPickerProps {
   error?: string | null;
   onFocus?: FocusEventHandler;
   onBlur?: FocusEventHandler;
+  withAsterisk?: boolean;
 }
 
-export const IconPicker = ({ value: propsValue, onChange, error, onFocus, onBlur }: IconPickerProps) => {
+export const IconPicker = ({
+  value: propsValue,
+  onChange,
+  error,
+  onFocus,
+  onBlur,
+  withAsterisk = true,
+}: IconPickerProps) => {
   const [value, setValue] = useUncontrolled({
     value: propsValue,
     onChange,
@@ -145,7 +153,7 @@ export const IconPicker = ({ value: propsValue, onChange, error, onFocus, onBlur
               setSearch(value || "");
             }}
             rightSectionPointerEvents="none"
-            withAsterisk
+            withAsterisk={withAsterisk}
             error={error}
             label={tCommon("iconPicker.label")}
             placeholder={tCommon("iconPicker.header", { countIcons: String(data?.countIcons ?? 0) })}
