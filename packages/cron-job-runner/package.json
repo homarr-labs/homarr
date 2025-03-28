@@ -5,7 +5,8 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./register": "./src/register.ts"
   },
   "typesVersions": {
     "*": {
@@ -22,9 +23,11 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
+    "@homarr/common": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
-    "@homarr/redis": "workspace:^0.1.0"
+    "@homarr/redis": "workspace:^0.1.0",
+    "@homarr/validation": "workspace:^0.1.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
