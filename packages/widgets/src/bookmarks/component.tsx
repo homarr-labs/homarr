@@ -208,7 +208,7 @@ const VerticalItem = ({
   hasIconColor: boolean;
 }) => {
   return (
-    <Stack h="100%" gap="sm" justify={"center"}>
+    <Stack h="100%" miw={16} gap="sm" justify={"center"}>
       {!hideTitle && (
         <Text fw={700} ta="center" size="xs">
           {app.name}
@@ -221,8 +221,8 @@ const VerticalItem = ({
           alt={app.name}
           className={classes.bookmarkIcon}
           style={{
-            width: hideHostname && hideTitle ? 16 : 40,
-            height: hideHostname && hideTitle ? 16 : 40,
+            width: hideHostname && hideTitle ? "min(max(100%, 16px), 40px)" : 40,
+            height: hideHostname && hideTitle ? "min(max(100%, 16px), 40px)" : 40,
             overflow: "auto",
             flex: "unset",
             marginLeft: "auto",
