@@ -980,6 +980,9 @@
         "remove": "Supprimer la section dynamique"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "Couleur de la bordure"
         }
@@ -1721,7 +1724,11 @@
         "noIntegration": "Aucune intégration sélectionnée",
         "noData": "Aucune donnée d’interaction disponible"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Flux vidéo",

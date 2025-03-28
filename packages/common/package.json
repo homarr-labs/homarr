@@ -30,17 +30,17 @@
     "@homarr/env": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
-    "next": "15.1.7",
+    "next": "15.2.4",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "undici": "7.5.0",
+    "undici": "7.6.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.22.0",
+    "eslint": "^9.23.0",
     "typescript": "^5.8.2"
   }
 }

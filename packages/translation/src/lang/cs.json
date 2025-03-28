@@ -980,6 +980,9 @@
         "remove": "Odstranit dynamickou sekci"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": ""
         }
@@ -1721,7 +1724,11 @@
         "noIntegration": "Nebyla vybrána žádná integrace",
         "noData": "Nejsou k dispozici žádná data o integraci"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Streamování videa",

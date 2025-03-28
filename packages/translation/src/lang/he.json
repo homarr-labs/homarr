@@ -980,6 +980,9 @@
         "remove": "הסר קטע דינמי"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "צבע מסגרת"
         }
@@ -1721,7 +1724,11 @@
         "noIntegration": "לא נבחרה אינטגרציה",
         "noData": "אין נתוני אינטגרציה זמינים"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "זרם וידאו",

@@ -980,6 +980,9 @@
         "remove": "删除动态部分"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "边界颜色"
         }
@@ -1721,7 +1724,11 @@
         "noIntegration": "未选择集成",
         "noData": "没有可用的集成数据"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "视频流",

@@ -23,6 +23,7 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
 
   const minAxisSize = Math.min(rootWidth, rootHeight);
   const shouldScaleDown = minAxisSize < 350;
+  const isSmall = rootHeight < 256;
 
   return (
     <Popover
@@ -43,9 +44,10 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
           h="100%"
           w="100%"
           p={0}
+          pt={isSmall ? 5 : 20}
+          pb={isSmall ? 5 : 20}
           m={0}
           bd={`2px solid ${opened && !disabled ? primaryColor : "transparent"}`}
-          pos={"relative"}
           style={{
             alignContent: "center",
             borderRadius: actualItemRadius,
@@ -60,7 +62,7 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
           <Text ta={"center"} size={shouldScaleDown ? "xs" : "md"} lh={1}>
             {date.getDate()}
           </Text>
-          <NotificationIndicator events={events} rootHeight={rootHeight} />
+          <NotificationIndicator events={events} isSmall={isSmall} />
         </Container>
       </Popover.Target>
       {/* Popover has some offset on the left side, padding is removed because of scrollarea paddings */}
@@ -73,15 +75,14 @@ export const CalendarDay = ({ date, events, disabled, rootHeight, rootWidth }: C
 
 interface NotificationIndicatorProps {
   events: CalendarEvent[];
-  rootHeight: number;
+  isSmall: boolean;
 }
 
-const NotificationIndicator = ({ events, rootHeight }: NotificationIndicatorProps) => {
-  const isSmall = rootHeight < 256;
+const NotificationIndicator = ({ events, isSmall }: NotificationIndicatorProps) => {
   const notificationEvents = [...new Set(events.map((event) => event.links[0]?.notificationColor))].filter(String);
   /* position bottom is lower when small to not be on top of number*/
   return (
-    <Flex w="75%" pos={"absolute"} bottom={isSmall ? -2 : 4} left={"12.5%"} p={0} direction={"row"} justify={"center"}>
+    <Flex w="75%" pos={"absolute"} bottom={isSmall ? 4 : 10} left={"12.5%"} p={0} direction={"row"} justify={"center"}>
       {notificationEvents.map((notificationEvent) => {
         return <Box key={notificationEvent} bg={notificationEvent} h={2} p={0} style={{ flex: 1, borderRadius: 5 }} />;
       })}

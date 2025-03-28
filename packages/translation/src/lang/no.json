@@ -980,6 +980,9 @@
         "remove": "Fjern dynamisk seksjon"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "Grensefarge"
         }
@@ -1721,7 +1724,11 @@
         "noIntegration": "Ingen integrasjon valgt",
         "noData": "Ingen integrasjonsdata er tilgjengelig"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Videostrømming",

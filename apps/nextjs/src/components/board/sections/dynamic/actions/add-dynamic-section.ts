@@ -17,6 +17,7 @@ export const addDynamicSectionCallback = () => (board: Board) => {
     id: createId(),
     kind: "dynamic",
     options: {
+      title: "",
       borderColor: "",
     },
     layouts: createDynamicSectionLayouts(board, firstSection),

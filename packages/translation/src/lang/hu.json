@@ -980,6 +980,9 @@
         "remove": ""
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": ""
         }
@@ -1721,7 +1724,11 @@
         "noIntegration": "",
         "noData": ""
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Videófolyam",

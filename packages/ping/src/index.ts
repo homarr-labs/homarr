@@ -1,16 +1,16 @@
-import { formatError } from "pretty-print-error";
 import type { fetch } from "undici";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { extractErrorMessage } from "@homarr/common";
 import { logger } from "@homarr/log";
 
 export const sendPingRequestAsync = async (url: string) => {
   try {
     return await fetchWithTimeoutAndCertificates(url).then((response) => ({ statusCode: response.status }));
   } catch (error) {
-    logger.error("packages/ping/src/index.ts:", formatError(error));
+    logger.error(new Error(`Failed to send ping request to "${url}"`, { cause: error }));
     return {
-      error: formatError(error),
+      error: extractErrorMessage(error),
     };
   }
 };

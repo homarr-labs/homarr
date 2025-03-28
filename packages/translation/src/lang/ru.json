@@ -980,6 +980,9 @@
         "remove": "Удалить динамический элемент"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "Цвет границы"
         }
@@ -1721,7 +1724,11 @@
         "noIntegration": "Интеграция не выбрана",
         "noData": "Данные интеграции недоступны"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Видеотрансляция",

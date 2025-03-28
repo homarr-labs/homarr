@@ -980,6 +980,9 @@
         "remove": "Usuń sekcję dynamiczną"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": ""
         }
@@ -1721,7 +1724,11 @@
         "noIntegration": "Nie wybrano integracji",
         "noData": "Brak danych dotyczących integracji"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Strumień wideo",
