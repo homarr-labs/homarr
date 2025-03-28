@@ -1038,8 +1038,8 @@ importers:
         specifier: ^0.41.0
         version: 0.41.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.1)(gel@2.0.0)(mysql2@3.14.0)
       drizzle-zod:
-        specifier: ^0.7.0
-        version: 0.7.0(drizzle-orm@0.41.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.1)(gel@2.0.0)(mysql2@3.14.0))(zod@3.24.2)
+        specifier: ^0.7.1
+        version: 0.7.1(drizzle-orm@0.41.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.1)(gel@2.0.0)(mysql2@3.14.0))(zod@3.24.2)
       mysql2:
         specifier: 3.14.0
         version: 3.14.0
@@ -6195,8 +6195,8 @@ packages:
       sqlite3:
         optional: true
 
-  drizzle-zod@0.7.0:
-    resolution: {integrity: sha512-xgCRYYVEzRkeXTS33GSMgoowe3vKsMNBjSI+cwG1oLQVEhAWWbqtb/AAMlm7tkmV4fG/uJjEmWzdzlEmTgWOoQ==}
+  drizzle-zod@0.7.1:
+    resolution: {integrity: sha512-nZzALOdz44/AL2U005UlmMqaQ1qe5JfanvLujiTHiiT8+vZJTBFhj3pY4Vk+L6UWyKFfNmLhk602Hn4kCTynKQ==}
     peerDependencies:
       drizzle-orm: '>=0.36.0'
       zod: '>=3.0.0'
@@ -14743,7 +14743,7 @@ snapshots:
       gel: 2.0.0
       mysql2: 3.14.0
 
-  drizzle-zod@0.7.0(drizzle-orm@0.41.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.1)(gel@2.0.0)(mysql2@3.14.0))(zod@3.24.2):
+  drizzle-zod@0.7.1(drizzle-orm@0.41.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.1)(gel@2.0.0)(mysql2@3.14.0))(zod@3.24.2):
     dependencies:
       drizzle-orm: 0.41.0(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.12)(better-sqlite3@11.9.1)(gel@2.0.0)(mysql2@3.14.0)
       zod: 3.24.2
