@@ -57,12 +57,10 @@ export default function BookmarksWidget({ options, itemId }: WidgetComponentProp
           hideHostname={options.hideHostname}
           openNewTab={options.openNewTab}
           hasIconColor={board.iconColor !== null}
-          options={options}
         />
       )}
       {options.layout !== "grid" && options.layout !== "gridHorizontal" && (
         <FlexLayout
-          options={options}
           data={data}
           direction={options.layout}
           hideTitle={options.hideTitle}
@@ -77,7 +75,6 @@ export default function BookmarksWidget({ options, itemId }: WidgetComponentProp
 }
 
 interface FlexLayoutProps {
-  options: WidgetComponentProps<"bookmarks">["options"];
   data: RouterOutputs["app"]["byIds"];
   direction: "row" | "column";
   hideTitle: boolean;
@@ -88,7 +85,6 @@ interface FlexLayoutProps {
 }
 
 const FlexLayout = ({
-  options,
   data,
   direction,
   hideTitle,
@@ -118,7 +114,6 @@ const FlexLayout = ({
                   hideIcon={hideIcon}
                   hideHostname={hideHostname}
                   hasIconColor={hasIconColor}
-                  options={options}
                 />
               ) : (
                 <HorizontalItem
@@ -138,7 +133,6 @@ const FlexLayout = ({
 };
 
 interface GridLayoutProps {
-  options: WidgetComponentProps<"bookmarks">["options"];
   data: RouterOutputs["app"]["byIds"];
   hideTitle: boolean;
   hideIcon: boolean;
@@ -149,7 +143,6 @@ interface GridLayoutProps {
 }
 
 const GridLayout = ({
-  options,
   data,
   hideTitle,
   hideIcon,
@@ -192,7 +185,6 @@ const GridLayout = ({
                 hideIcon={hideIcon}
                 hideHostname={hideHostname}
                 hasIconColor={hasIconColor}
-                options={options}
               />
             )}
           </Card>
@@ -203,14 +195,12 @@ const GridLayout = ({
 };
 
 const VerticalItem = ({
-  options,
   app,
   hideTitle,
   hideIcon,
   hideHostname,
   hasIconColor,
 }: {
-  options: WidgetComponentProps<"bookmarks">["options"];
   app: RouterOutputs["app"]["byIds"][number];
   hideTitle: boolean;
   hideIcon: boolean;
@@ -234,7 +224,6 @@ const VerticalItem = ({
             width: hideHostname && hideTitle ? 16 : 40,
             height: hideHostname && hideTitle ? 16 : 40,
             overflow: "auto",
-            backgroundColor: options.layout === "gridHorizontal" ? "blue" : undefined,
             flex: "unset",
             marginLeft: "auto",
             marginRight: "auto",
