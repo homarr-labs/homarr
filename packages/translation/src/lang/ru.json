@@ -1724,7 +1724,11 @@
         "noIntegration": "Интеграция не выбрана",
         "noData": "Данные интеграции недоступны"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Видеотрансляция",

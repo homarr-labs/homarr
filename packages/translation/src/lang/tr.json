@@ -1724,7 +1724,11 @@
         "noIntegration": "Hiçbir entegrasyon seçilmedi",
         "noData": "Entegrasyon verisi mevcut değil"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Video Akışı",
