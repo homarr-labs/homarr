@@ -35,8 +35,8 @@
     "@tabler/icons-react": "^3.31.0",
     "mantine-react-table": "2.0.0-beta.9",
     "next": "15.2.4",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
