@@ -19,7 +19,7 @@
         },
         "fileInfo": {
           "action": {
-            "change": "Pakeisti failą"
+            "change": ""
           }
         },
         "importSettings": {
@@ -41,8 +41,8 @@
             "import": ""
           },
           "entities": {
-            "apps": "Programėlės",
-            "boards": "Lentos",
+            "apps": "",
+            "boards": "",
             "integrations": "",
             "credentialUsers": ""
           }
@@ -51,7 +51,7 @@
           "title": "",
           "field": {
             "token": {
-              "label": "Žetonas",
+              "label": "",
               "description": ""
             }
           },
@@ -87,7 +87,7 @@
         }
       },
       "settings": {
-        "title": "Nustatymai",
+        "title": "",
         "subtitle": ""
       },
       "finish": {
@@ -105,15 +105,15 @@
     "backToStart": ""
   },
   "user": {
-    "title": "Vartotojai",
-    "name": "Vartotojas",
+    "title": "",
+    "name": "",
     "page": {
       "login": {
         "title": "",
         "subtitle": ""
       },
       "invite": {
-        "title": "Prisijungti prie Homarr",
+        "title": "",
         "subtitle": "",
         "description": ""
       },
@@ -124,14 +124,14 @@
     },
     "field": {
       "email": {
-        "label": "El. paštas",
+        "label": "",
         "verified": ""
       },
       "username": {
         "label": ""
       },
       "password": {
-        "label": "Slaptažodis",
+        "label": "",
         "requirement": {
           "length": "",
           "lowercase": "",
@@ -141,7 +141,7 @@
         }
       },
       "passwordConfirm": {
-        "label": "Patvirtinti slaptažodį"
+        "label": ""
       },
       "previousPassword": {
         "label": ""
@@ -164,7 +164,7 @@
     },
     "action": {
       "login": {
-        "label": "Prisijungti",
+        "label": "",
         "labelWith": "",
         "notification": {
           "success": {
@@ -182,10 +182,10 @@
         }
       },
       "register": {
-        "label": "Sukurti paskyrą",
+        "label": "",
         "notification": {
           "success": {
-            "title": "Paskyra sukurta",
+            "title": "",
             "message": ""
           },
           "error": {
@@ -194,7 +194,7 @@
           }
         }
       },
-      "create": "Sukurti vartotoją",
+      "create": "",
       "changePassword": {
         "label": "",
         "notification": {
@@ -304,7 +304,7 @@
     "name": "",
     "search": "",
     "field": {
-      "name": "Pavadinimas",
+      "name": "",
       "members": "",
       "homeBoard": {
         "label": "",
@@ -317,7 +317,7 @@
     },
     "permission": {
       "admin": {
-        "title": "Administratorius",
+        "title": "",
         "item": {
           "admin": {
             "label": "",
@@ -326,7 +326,7 @@
         }
       },
       "app": {
-        "title": "Programėlės",
+        "title": "",
         "item": {
           "create": {
             "label": "",
@@ -347,7 +347,7 @@
         }
       },
       "board": {
-        "title": "Lentos",
+        "title": "",
         "item": {
           "create": {
             "label": "",
@@ -544,7 +544,7 @@
     "search": "",
     "page": {
       "list": {
-        "title": "Programėlės",
+        "title": "",
         "noResults": {
           "title": "",
           "action": ""
@@ -593,7 +593,7 @@
     },
     "field": {
       "name": {
-        "label": "Pavadinimas"
+        "label": ""
       },
       "description": {
         "label": ""
@@ -667,7 +667,7 @@
     },
     "field": {
       "name": {
-        "label": "Pavadinimas"
+        "label": ""
       },
       "url": {
         "label": ""
@@ -699,7 +699,7 @@
           "message": ""
         },
         "invalidUrl": {
-          "title": "Klaidingas URL",
+          "title": "",
           "message": ""
         },
         "secretNotDefined": {
@@ -786,8 +786,8 @@
           "newLabel": ""
         },
         "password": {
-          "label": "Slaptažodis",
-          "newLabel": "Naujas slaptažodis"
+          "label": "",
+          "newLabel": ""
         },
         "tokenId": {
           "label": "",
@@ -809,9 +809,9 @@
     "plural": "",
     "search": "",
     "field": {
-      "name": "Pavadinimas",
+      "name": "",
       "size": "",
-      "creator": "Kūrėjas"
+      "creator": ""
     },
     "action": {
       "upload": {
@@ -853,15 +853,15 @@
       "add": "",
       "apply": "",
       "backToOverview": "",
-      "create": "Sukurti",
+      "create": "",
       "createAnother": "",
       "edit": "",
       "import": "",
       "insert": "",
-      "remove": "Pašalinti",
+      "remove": "",
       "save": "",
-      "saveChanges": "Išsaugoti pakeitimus",
-      "cancel": "Atšaukti",
+      "saveChanges": "",
+      "cancel": "",
       "delete": "",
       "discard": "",
       "confirm": "",
@@ -929,14 +929,14 @@
         "management": "",
         "preferences": "",
         "logout": "",
-        "login": "Prisijungti",
+        "login": "",
         "homeBoard": "",
         "loggedOut": "",
         "updateAvailable": ""
       }
     },
     "dangerZone": "",
-    "noResults": "Rezultatų nerasta",
+    "noResults": "",
     "unsavedChanges": "",
     "preview": {
       "show": "",
@@ -945,7 +945,7 @@
     "zod": {
       "errors": {
         "default": "",
-        "required": "Šis laukelis yra privalomas",
+        "required": "",
         "string": {
           "startsWith": "",
           "endsWith": "",
@@ -995,15 +995,15 @@
     "category": {
       "field": {
         "name": {
-          "label": "Pavadinimas"
+          "label": ""
         }
       },
       "action": {
         "create": "",
         "edit": "",
         "remove": "",
-        "moveUp": "Pakelti aukštyn",
-        "moveDown": "Perkelti žemyn",
+        "moveUp": "",
+        "moveDown": "",
         "createAbove": "",
         "createBelow": "",
         "openAllInNewTabs": ""
@@ -1043,7 +1043,7 @@
     },
     "menu": {
       "label": {
-        "settings": "Nustatymai"
+        "settings": ""
       }
     },
     "create": {
@@ -1055,10 +1055,10 @@
       "title": "",
       "field": {
         "width": {
-          "label": "Plotis"
+          "label": ""
         },
         "height": {
-          "label": "Aukštis"
+          "label": ""
         },
         "xOffset": {
           "label": ""
@@ -1100,7 +1100,7 @@
           "label": ""
         },
         "openInNewTab": {
-          "label": "Atidaryti naujame skirtuke"
+          "label": ""
         },
         "showTitle": {
           "label": ""
@@ -1130,10 +1130,10 @@
           "label": "",
           "option": {
             "row": {
-              "label": "Horizontalus"
+              "label": ""
             },
             "column": {
-              "label": "Vertikalus"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -1169,10 +1169,10 @@
           "label": "",
           "option": {
             "row": {
-              "label": "Horizontalus"
+              "label": ""
             },
             "column": {
-              "label": "Vertikalus"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -1188,25 +1188,25 @@
         "integrationsDisconnected": ""
       },
       "data": {
-        "adsBlockedToday": "Šiandien užblokuota",
-        "adsBlockedTodayPercentage": "Šiandien užblokuota",
-        "dnsQueriesToday": "Užklausos šiandien",
+        "adsBlockedToday": "",
+        "adsBlockedTodayPercentage": "",
+        "dnsQueriesToday": "",
         "domainsBeingBlocked": ""
       },
       "domainsTooltip": ""
     },
     "dnsHoleControls": {
       "name": "",
-      "description": "Valdykite PiHole arba AdGuard iš savo prietaisų skydelio",
+      "description": "",
       "option": {
         "layout": {
           "label": "",
           "option": {
             "row": {
-              "label": "Horizontalus"
+              "label": ""
             },
             "column": {
-              "label": "Vertikalus"
+              "label": ""
             },
             "grid": {
               "label": ""
@@ -1236,7 +1236,7 @@
     },
     "clock": {
       "name": "",
-      "description": "Rodo dabartinę datą ir laiką.",
+      "description": "",
       "option": {
         "customTitleToggle": {
           "label": "",
@@ -1256,7 +1256,7 @@
           "label": ""
         },
         "timezone": {
-          "label": "Laiko juosta",
+          "label": "",
           "description": ""
         },
         "showDate": {
@@ -1296,102 +1296,102 @@
       }
     },
     "notebook": {
-      "name": "Užrašai",
+      "name": "",
       "description": "",
       "option": {
         "showToolbar": {
-          "label": "Rodyti įrankių juostą, padedančią rašyti žymėjimą"
+          "label": ""
         },
         "allowReadOnlyCheck": {
-          "label": "Leidimas tikrinti tik skaitymo režimu"
+          "label": ""
         },
         "content": {
-          "label": "Užrašų knygelės turinys"
+          "label": ""
         }
       },
       "controls": {
-        "bold": "Paryškintas",
-        "italic": "Pasviręs",
-        "strikethrough": "Perbrauktas",
-        "underline": "Pabrauktas",
-        "colorText": "Spalvotas tekstas",
-        "colorHighlight": "Spalvotas paryškintas tekstas",
-        "code": "Kodas",
-        "clear": "Išvalyti formatavimą",
-        "heading": "Antraštė {level}",
-        "align": "Teksto lygiavimas: {position}",
-        "blockquote": "Kabutės",
-        "horizontalLine": "Horizontali linija",
-        "bulletList": "Suženklintasis sąrašas",
-        "orderedList": "Surikiuotas sąrašas",
-        "checkList": "Sąrašas",
-        "increaseIndent": "Padidinti įtrauką",
-        "decreaseIndent": "Sumažinti įtrauką",
-        "link": "Nuoroda",
-        "unlink": "Pašalinti nuorodą",
-        "image": "Įterpti paveikslėlį",
-        "addTable": "Pridėti lentelę",
-        "deleteTable": "Ištrinti lentelę",
-        "colorCell": "Spalva",
-        "mergeCell": "Perjungti cell sujungimą",
-        "addColumnLeft": "Pridėti stulpelį prieš",
-        "addColumnRight": "Pridėti stulpelį po",
-        "deleteColumn": "Naikinti stulpelį",
-        "addRowTop": "Pridėti eilutę prieš",
-        "addRowBelow": "Pridėti eilutę po",
-        "deleteRow": "Naikinti eilutę"
+        "bold": "",
+        "italic": "",
+        "strikethrough": "",
+        "underline": "",
+        "colorText": "",
+        "colorHighlight": "",
+        "code": "",
+        "clear": "",
+        "heading": "",
+        "align": "",
+        "blockquote": "",
+        "horizontalLine": "",
+        "bulletList": "",
+        "orderedList": "",
+        "checkList": "",
+        "increaseIndent": "",
+        "decreaseIndent": "",
+        "link": "",
+        "unlink": "",
+        "image": "",
+        "addTable": "",
+        "deleteTable": "",
+        "colorCell": "",
+        "mergeCell": "",
+        "addColumnLeft": "",
+        "addColumnRight": "",
+        "deleteColumn": "",
+        "addRowTop": "",
+        "addRowBelow": "",
+        "deleteRow": ""
       },
       "align": {
-        "left": "Kairėje",
+        "left": "",
         "center": "",
-        "right": "Dešinėje"
+        "right": ""
       },
       "popover": {
-        "clearColor": "Pašalinti spalvą",
-        "source": "Šaltinis",
-        "widthPlaceholder": "Vertė % arba pikseliais",
-        "columns": "Stulpeliai",
-        "rows": "Eilutės",
-        "width": "Plotis",
-        "height": "Aukštis"
+        "clearColor": "",
+        "source": "",
+        "widthPlaceholder": "",
+        "columns": "",
+        "rows": "",
+        "width": "",
+        "height": ""
       }
     },
     "iframe": {
       "name": "",
-      "description": "Įterpkite bet kokį turinį iš interneto. Kai kuriose svetainėse prieiga gali būti ribojama.",
+      "description": "",
       "option": {
         "embedUrl": {
-          "label": "Įterpimo URL"
+          "label": ""
         },
         "allowFullScreen": {
-          "label": "Leisti per visą ekraną"
+          "label": ""
         },
         "allowTransparency": {
-          "label": "Suteikti skaidrumo"
+          "label": ""
         },
         "allowScrolling": {
-          "label": "Leisti slinkti"
+          "label": ""
         },
         "allowPayment": {
-          "label": "Leisti mokėti"
+          "label": ""
         },
         "allowAutoPlay": {
-          "label": "Leisti automatinį paleidimą"
+          "label": ""
         },
         "allowMicrophone": {
-          "label": "Įgalinti mikrofoną"
+          "label": ""
         },
         "allowCamera": {
-          "label": "Leisti kamerą"
+          "label": ""
         },
         "allowGeolocation": {
-          "label": "Leisti nustatyti geografinę buvimo vietą"
+          "label": ""
         }
       },
       "error": {
         "noUrl": "",
         "unsupportedProtocol": "",
-        "noBrowerSupport": "Jūsų naršyklė nepalaiko iframe. Atnaujinkite savo naršyklę."
+        "noBrowerSupport": ""
       }
     },
     "smartHome-entityState": {
@@ -1399,7 +1399,7 @@
       "description": "",
       "option": {
         "entityId": {
-          "label": "Subjekto ID"
+          "label": ""
         },
         "displayName": {
           "label": ""
@@ -1417,10 +1417,10 @@
       "description": "",
       "option": {
         "displayName": {
-          "label": "Rodomas vardas"
+          "label": ""
         },
         "automationId": {
-          "label": "Automatizavimo ID"
+          "label": ""
         }
       },
       "spotlightAction": {
@@ -1504,11 +1504,11 @@
       }
     },
     "calendar": {
-      "name": "Kalendorius",
+      "name": "",
       "description": "",
       "option": {
         "releaseType": {
-          "label": "\"Radarr\" išleidimo tipas",
+          "label": "",
           "options": {
             "inCinemas": "",
             "digitalRelease": "",
@@ -1579,25 +1579,25 @@
         "snowShowers": "",
         "thunderstorm": "",
         "thunderstormWithHail": "",
-        "unknown": "Nežinoma"
+        "unknown": ""
       }
     },
     "indexerManager": {
-      "name": "Indeksavimo tvarkytuvo būsena",
+      "name": "",
       "description": "",
       "option": {
         "openIndexerSiteInNewTab": {
           "label": ""
         }
       },
-      "title": "Indeksavimo tvarkyklė",
-      "testAll": "Išbandyk viską",
+      "title": "",
+      "testAll": "",
       "error": {
         "internalServerError": ""
       }
     },
     "healthMonitoring": {
-      "name": "Sistemos būklės stebėjimas",
+      "name": "",
       "description": "",
       "tab": {
         "system": "",
@@ -1634,7 +1634,7 @@
         "minute": "",
         "minutes": "",
         "used": "",
-        "available": "Galima",
+        "available": "",
         "lastSeen": ""
       },
       "memory": {},
@@ -1695,7 +1695,7 @@
         "longitude": "",
         "disabledTooltip": "",
         "unknownLocation": "",
-        "search": "Ieškoti",
+        "search": "",
         "table": {
           "header": {
             "city": "",
@@ -1707,7 +1707,7 @@
             "select": ""
           },
           "population": {
-            "fallback": "Nežinoma"
+            "fallback": ""
           }
         }
       },
@@ -1816,8 +1816,8 @@
           "detailsTitle": ""
         },
         "downSpeed": {
-          "columnTitle": "Žemyn",
-          "detailsTitle": "Atsisiuntimo greitis"
+          "columnTitle": "",
+          "detailsTitle": ""
         },
         "index": {
           "columnTitle": "",
@@ -1827,7 +1827,7 @@
           "columnTitle": ""
         },
         "integration": {
-          "columnTitle": "Integracija"
+          "columnTitle": ""
         },
         "name": {
           "columnTitle": ""
@@ -1853,7 +1853,7 @@
           "detailsTitle": ""
         },
         "state": {
-          "columnTitle": "Būsena",
+          "columnTitle": "",
           "detailsTitle": ""
         },
         "time": {
@@ -1865,7 +1865,7 @@
           "detailsTitle": ""
         },
         "upSpeed": {
-          "columnTitle": "Aukštyn",
+          "columnTitle": "",
           "detailsTitle": ""
         }
       },
@@ -1878,7 +1878,7 @@
         "processing": "",
         "leeching": "",
         "stalled": "",
-        "unknown": "Nežinoma",
+        "unknown": "",
         "seeding": ""
       },
       "actions": {
@@ -1906,10 +1906,10 @@
     },
     "mediaRequests-requestList": {
       "name": "",
-      "description": "Peržiūrėkite visų medijų užklausų iš \"Overseerr\" arba \"Jellyseerr\" sąrašą",
+      "description": "",
       "option": {
         "linksTargetNewTab": {
-          "label": "Atidaryti naujame skirtuke"
+          "label": ""
         }
       },
       "pending": {
@@ -1918,11 +1918,11 @@
         "decline": ""
       },
       "availability": {
-        "unknown": "Nežinoma",
+        "unknown": "",
         "pending": "",
         "processing": "",
-        "partiallyAvailable": "Dalis",
-        "available": "Galima"
+        "partiallyAvailable": "",
+        "available": ""
       },
       "status": {
         "pending": "",
@@ -1934,22 +1934,22 @@
     },
     "mediaRequests-requestStats": {
       "name": "",
-      "description": "Statistikos apie jūsų medijų užklausas",
+      "description": "",
       "option": {},
       "titles": {
         "stats": {
-          "main": "Medijų statistikos",
-          "approved": "Jau patvirtinta",
-          "pending": "Laukia patvirtinimo",
+          "main": "",
+          "approved": "",
+          "pending": "",
           "processing": "",
           "declined": "",
           "available": "",
-          "tv": "TV užklausos",
-          "movie": "Filmų užklausos",
-          "total": "Iš viso"
+          "tv": "",
+          "movie": "",
+          "total": ""
         },
         "users": {
-          "main": "Top vartotojai",
+          "main": "",
           "requests": ""
         }
       }
@@ -2091,7 +2091,7 @@
             "invalidError": ""
           },
           "apps": {
-            "label": "Programėlės",
+            "label": "",
             "avoidDuplicates": {
               "label": "",
               "description": ""
@@ -2108,9 +2108,9 @@
             "label": "",
             "description": "",
             "option": {
-              "sm": "Mažas",
-              "md": "Vidutinis",
-              "lg": "Didelis"
+              "sm": "",
+              "md": "",
+              "lg": ""
             }
           },
           "sidebarBehavior": {
@@ -2200,10 +2200,10 @@
         }
       },
       "primaryColor": {
-        "label": "Pagrindinė spalva"
+        "label": ""
       },
       "secondaryColor": {
-        "label": "Antrinė spalva"
+        "label": ""
       },
       "opacity": {
         "label": ""
@@ -2238,10 +2238,10 @@
         }
       },
       "name": {
-        "label": "Pavadinimas"
+        "label": ""
       },
       "isPublic": {
-        "label": "Vieša",
+        "label": "",
         "description": ""
       }
     },
@@ -2252,7 +2252,7 @@
       "title": "",
       "section": {
         "general": {
-          "title": "Bendras",
+          "title": "",
           "unrecognizedLink": ""
         },
         "layout": {
@@ -2281,7 +2281,7 @@
           "permission": {
             "item": {
               "view": {
-                "label": "Žiūrėti lentą"
+                "label": ""
               },
               "modify": {
                 "label": ""
@@ -2329,7 +2329,7 @@
               "description": "",
               "button": "",
               "confirm": {
-                "title": "Ištrinti lentą",
+                "title": "",
                 "description": ""
               }
             }
@@ -2397,22 +2397,22 @@
     },
     "navbar": {
       "items": {
-        "home": "Pagrindinis",
-        "boards": "Lentos",
-        "apps": "Programėlės",
+        "home": "",
+        "boards": "",
+        "apps": "",
         "integrations": "",
         "searchEngies": "",
         "medias": "",
         "users": {
-          "label": "Vartotojai",
+          "label": "",
           "items": {
-            "manage": "Valdyti",
-            "invites": "Pakvietimai",
+            "manage": "",
+            "invites": "",
             "groups": ""
           }
         },
         "tools": {
-          "label": "Įrankiai",
+          "label": "",
           "items": {
             "docker": "",
             "kubernetes": "",
@@ -2422,13 +2422,13 @@
             "tasks": ""
           }
         },
-        "settings": "Nustatymai",
+        "settings": "",
         "help": {
-          "label": "Pagalba",
+          "label": "",
           "items": {
-            "documentation": "Dokumentacija",
+            "documentation": "",
             "submitIssue": "",
-            "discord": "Bendruomenės Discord",
+            "discord": "",
             "sourceCode": ""
           }
         },
@@ -2438,22 +2438,22 @@
     "page": {
       "home": {
         "statistic": {
-          "board": "Lentos",
-          "user": "Vartotojai",
-          "invite": "Pakvietimai",
+          "board": "",
+          "user": "",
+          "invite": "",
           "integration": "",
-          "app": "Programėlės",
+          "app": "",
           "group": ""
         },
         "statisticLabel": {
-          "boards": "Lentos",
+          "boards": "",
           "resources": "",
           "authentication": "",
           "authorization": ""
         }
       },
       "board": {
-        "title": "Jūsų lentos",
+        "title": "",
         "action": {
           "new": {
             "label": ""
@@ -2462,12 +2462,12 @@
             "label": ""
           },
           "settings": {
-            "label": "Nustatymai"
+            "label": ""
           },
           "setHomeBoard": {
             "label": "",
             "badge": {
-              "label": "Pagrindinis",
+              "label": "",
               "tooltip": ""
             }
           },
@@ -2482,9 +2482,9 @@
             "label": ""
           },
           "delete": {
-            "label": "Ištrinti visam laikui",
+            "label": "",
             "confirm": {
-              "title": "Ištrinti lentą",
+              "title": "",
               "description": ""
             }
           }
@@ -2497,7 +2497,7 @@
           "createBoard": {
             "field": {
               "name": {
-                "label": "Pavadinimas"
+                "label": ""
               }
             }
           }
@@ -2511,7 +2511,7 @@
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
-            "title": "Bendras",
+            "title": "",
             "item": {
               "language": "",
               "board": {
@@ -2527,28 +2527,28 @@
             }
           },
           "security": {
-            "title": "Apsauga"
+            "title": ""
           },
           "board": {
-            "title": "Lentos"
+            "title": ""
           }
         },
         "list": {
-          "metaTitle": "Tvarkyti vartotojus",
-          "title": "Vartotojai"
+          "metaTitle": "",
+          "title": ""
         },
         "edit": {
           "metaTitle": ""
         },
         "create": {
-          "metaTitle": "Sukurti vartotoją",
+          "metaTitle": "",
           "title": "",
           "step": {
             "personalInformation": {
               "label": ""
             },
             "security": {
-              "label": "Apsauga"
+              "label": ""
             },
             "groups": {
               "label": "",
@@ -2571,21 +2571,21 @@
           }
         },
         "invite": {
-          "title": "Tvarkyti naudotojų kvietimus",
+          "title": "",
           "action": {
             "new": {
               "title": "",
-              "description": "Pasibaigus galiojimo laikui, kvietimas nebegalios ir kvietimo gavėjas negalės sukurti paskyros."
+              "description": ""
             },
             "copy": {
               "title": "",
               "description": "",
-              "link": "Kvietimo nuoroda",
+              "link": "",
               "button": ""
             },
             "delete": {
-              "title": "Ištrinti kvietimą",
-              "description": "Ar tikrai norite ištrinti šį kvietimą? Naudotojai, turintys šią nuorodą, nebegalės sukurti paskyros naudodamiesi šia nuoroda."
+              "title": "",
+              "description": ""
             }
           },
           "field": {
@@ -2593,13 +2593,13 @@
               "label": ""
             },
             "creator": {
-              "label": "Kūrėjas"
+              "label": ""
             },
             "expirationDate": {
-              "label": "Galiojimo pasibaigimo data"
+              "label": ""
             },
             "token": {
-              "label": "Žetonas"
+              "label": ""
             }
           }
         }
@@ -2608,8 +2608,8 @@
         "back": "",
         "setting": {
           "general": {
-            "title": "Bendras",
-            "owner": "Savininkas",
+            "title": "",
+            "owner": "",
             "ownerOfGroup": "",
             "ownerOfGroupDeleted": ""
           },
@@ -2634,7 +2634,7 @@
         }
       },
       "settings": {
-        "title": "Nustatymai",
+        "title": "",
         "notification": {
           "success": {
             "message": ""
@@ -2684,7 +2684,7 @@
             }
           },
           "board": {
-            "title": "Lentos",
+            "title": "",
             "homeBoard": {
               "label": "",
               "mobileLabel": "",
@@ -2710,7 +2710,7 @@
             }
           },
           "appearance": {
-            "title": "Išvaizda",
+            "title": "",
             "defaultColorScheme": {
               "label": "",
               "options": {
@@ -2732,7 +2732,7 @@
           "title": "",
           "status": {
             "idle": "",
-            "running": "Veikia",
+            "running": "",
             "error": ""
           },
           "job": {
@@ -2752,7 +2752,7 @@
               "label": ""
             },
             "mediaServer": {
-              "label": "Medijų serveris"
+              "label": ""
             },
             "mediaOrganizer": {
               "label": ""
@@ -2800,7 +2800,7 @@
           },
           "tab": {
             "documentation": {
-              "label": "Dokumentacija"
+              "label": ""
             },
             "apiKey": {
               "label": "",
@@ -2854,30 +2854,30 @@
     },
     "field": {
       "name": {
-        "label": "Pavadinimas"
+        "label": ""
       },
       "state": {
-        "label": "Būsena",
+        "label": "",
         "option": {
-          "created": "Sukurta",
-          "running": "Veikia",
+          "created": "",
+          "running": "",
           "paused": "",
-          "restarting": "Paleidžiama iš naujo",
+          "restarting": "",
           "exited": "",
-          "removing": "Trinamas",
+          "removing": "",
           "dead": ""
         }
       },
       "containerImage": {
-        "label": "Nuotrauka"
+        "label": ""
       },
       "ports": {
-        "label": "Prievadai"
+        "label": ""
       }
     },
     "action": {
       "start": {
-        "label": "Paleisti",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2890,7 +2890,7 @@
         }
       },
       "stop": {
-        "label": "Sustabdyti",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2903,7 +2903,7 @@
         }
       },
       "restart": {
-        "label": "Paleisti iš naujo",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -2916,7 +2916,7 @@
         }
       },
       "remove": {
-        "label": "Pašalinti",
+        "label": "",
         "notification": {
           "success": {
             "title": "",
@@ -3211,13 +3211,13 @@
       "title": ""
     },
     "tab": {
-      "user": "Vartotojai",
+      "user": "",
       "group": "",
       "inherited": ""
     },
     "field": {
       "user": {
-        "label": "Vartotojas"
+        "label": ""
       },
       "group": {
         "label": ""
@@ -3233,9 +3233,9 @@
   },
   "navigationStructure": {
     "manage": {
-      "label": "Valdyti",
+      "label": "",
       "boards": {
-        "label": "Lentos"
+        "label": ""
       },
       "integrations": {
         "label": "",
@@ -3259,7 +3259,7 @@
         "label": ""
       },
       "apps": {
-        "label": "Programėlės",
+        "label": "",
         "new": {
           "label": ""
         },
@@ -3268,22 +3268,22 @@
         }
       },
       "users": {
-        "label": "Vartotojai",
+        "label": "",
         "create": {
-          "label": "Sukurti"
+          "label": ""
         },
-        "general": "Bendras",
-        "security": "Apsauga",
-        "board": "Lentos",
+        "general": "",
+        "security": "",
+        "board": "",
         "groups": {
           "label": ""
         },
         "invites": {
-          "label": "Pakvietimai"
+          "label": ""
         }
       },
       "tools": {
-        "label": "Įrankiai",
+        "label": "",
         "docker": {
           "label": ""
         },
@@ -3322,7 +3322,7 @@
         }
       },
       "settings": {
-        "label": "Nustatymai"
+        "label": ""
       },
       "about": {
         "label": ""
@@ -3340,7 +3340,7 @@
         "help": "",
         "group": {
           "app": {
-            "title": "Programėlės",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -3356,7 +3356,7 @@
             }
           },
           "board": {
-            "title": "Lentos",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -3470,7 +3470,7 @@
                 "description": ""
               },
               "torrent": {
-                "name": "Torrentai",
+                "name": "",
                 "description": ""
               },
               "youTube": {
@@ -3487,16 +3487,16 @@
             "title": ""
           },
           "help": {
-            "title": "Pagalba",
+            "title": "",
             "option": {
               "documentation": {
-                "label": "Dokumentacija"
+                "label": ""
               },
               "submitIssue": {
                 "label": ""
               },
               "discord": {
-                "label": "Bendruomenės Discord"
+                "label": ""
               }
             }
           }
@@ -3552,7 +3552,7 @@
                 "label": ""
               },
               "manageUser": {
-                "label": "Tvarkyti vartotojus"
+                "label": ""
               },
               "manageInvite": {
                 "label": ""
@@ -3592,7 +3592,7 @@
         "help": "",
         "group": {
           "user": {
-            "title": "Vartotojai",
+            "title": "",
             "children": {
               "action": {
                 "detail": {
@@ -3630,7 +3630,7 @@
       "search": "",
       "field": {
         "name": {
-          "label": "Pavadinimas"
+          "label": ""
         },
         "short": {
           "label": ""

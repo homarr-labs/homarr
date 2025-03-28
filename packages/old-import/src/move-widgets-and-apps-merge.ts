@@ -3,7 +3,6 @@ import { logger } from "@homarr/log";
 import type { BoardSize, OldmarrApp, OldmarrConfig, OldmarrWidget } from "@homarr/old-schema";
 import { boardSizes } from "@homarr/old-schema";
 
-import { OldHomarrScreenSizeError } from "./import-error";
 import { mapColumnCount } from "./mappers/map-column-count";
 import type { OldmarrImportConfiguration } from "./settings";
 
@@ -60,7 +59,7 @@ export const moveWidgetsAndAppsIfMerge = (
       for (const screenSize of boardSizes) {
         const screenSizeShape = app.shape[screenSize];
         if (!screenSizeShape) {
-          throw new OldHomarrScreenSizeError("app", app.id, screenSize);
+          continue;
         }
 
         // Find the highest widget in the wrapper to increase the offset accordingly
@@ -81,7 +80,7 @@ export const moveWidgetsAndAppsIfMerge = (
       for (const screenSize of boardSizes) {
         const screenSizeShape = widget.shape[screenSize];
         if (!screenSizeShape) {
-          throw new OldHomarrScreenSizeError("widget", widget.id, screenSize);
+          continue;
         }
 
         // Find the highest widget in the wrapper to increase the offset accordingly
@@ -145,21 +144,20 @@ const moveWidgetsAndAppsInLeftSidebar = (
       item.area.properties.location === "left" &&
       (columnCount >= 2 || item.shape[screenSize]?.location.x === 0),
     update: (item) => {
-      const screenSizeShape = item.shape[screenSize];
-      if (!screenSizeShape) {
-        throw new OldHomarrScreenSizeError("kind" in item ? "widget" : "app", item.id, screenSize);
-      }
-      // Reduce width to one if column count is one
-      if (screenSizeShape.size.width > columnCount) {
-        screenSizeShape.size.width = columnCount;
-      }
-
       item.area = {
         type: "wrapper",
         properties: {
           id: firstId,
         },
       };
+
+      const screenSizeShape = item.shape[screenSize];
+      if (!screenSizeShape) return;
+
+      // Reduce width to one if column count is one
+      if (screenSizeShape.size.width > columnCount) {
+        screenSizeShape.size.width = columnCount;
+      }
 
       screenSizeShape.location.y += offset;
     },
@@ -184,17 +182,15 @@ const moveWidgetsAndAppsInLeftSidebar = (
       item.area.properties.location === "left" &&
       item.shape[screenSize]?.location.x === 1,
     update: (item) => {
-      const screenSizeShape = item.shape[screenSize];
-      if (!screenSizeShape) {
-        throw new OldHomarrScreenSizeError("kind" in item ? "widget" : "app", item.id, screenSize);
-      }
-
       item.area = {
         type: "wrapper",
         properties: {
           id: firstId,
         },
       };
+
+      const screenSizeShape = item.shape[screenSize];
+      if (!screenSizeShape) return;
 
       screenSizeShape.location.x = 0;
       screenSizeShape.location.y += offset;
@@ -222,22 +218,20 @@ const moveWidgetsAndAppsInRightSidebar = (
       item.area.properties.location === "right" &&
       (columnCount >= 2 || item.shape[screenSize]?.location.x === 0),
     update: (item) => {
-      const screenSizeShape = item.shape[screenSize];
-      if (!screenSizeShape) {
-        throw new OldHomarrScreenSizeError("kind" in item ? "widget" : "app", item.id, screenSize);
-      }
-
-      // Reduce width to one if column count is one
-      if (screenSizeShape.size.width > columnCount) {
-        screenSizeShape.size.width = columnCount;
-      }
-
       item.area = {
         type: "wrapper",
         properties: {
           id: firstId,
         },
       };
+
+      const screenSizeShape = item.shape[screenSize];
+      if (!screenSizeShape) return;
+
+      // Reduce width to one if column count is one
+      if (screenSizeShape.size.width > columnCount) {
+        screenSizeShape.size.width = columnCount;
+      }
 
       screenSizeShape.location.y += offset;
       screenSizeShape.location.x += xOffsetDelta;
@@ -260,17 +254,15 @@ const moveWidgetsAndAppsInRightSidebar = (
       item.area.properties.location === "left" &&
       item.shape[screenSize]?.location.x === 1,
     update: (item) => {
-      const screenSizeShape = item.shape[screenSize];
-      if (!screenSizeShape) {
-        throw new OldHomarrScreenSizeError("kind" in item ? "widget" : "app", item.id, screenSize);
-      }
-
       item.area = {
         type: "wrapper",
         properties: {
           id: firstId,
         },
       };
+
+      const screenSizeShape = item.shape[screenSize];
+      if (!screenSizeShape) return;
 
       screenSizeShape.location.x = 0;
       screenSizeShape.location.y += offset;
@@ -312,16 +304,15 @@ const updateItems = (options: {
   for (const item of items) {
     const before = createItemSnapshot(item, options.screenSize);
 
+    options.update(item);
+
     const screenSizeShape = item.shape[options.screenSize];
-    if (!screenSizeShape) {
-      throw new OldHomarrScreenSizeError("kind" in item ? "widget" : "app", item.id, options.screenSize);
-    }
+    if (!screenSizeShape) return requiredHeight;
 
     if (screenSizeShape.location.y + screenSizeShape.size.height > requiredHeight) {
       requiredHeight = screenSizeShape.location.y + screenSizeShape.size.height;
     }
 
-    options.update(item);
     const after = createItemSnapshot(item, options.screenSize);
 
     logger.debug(

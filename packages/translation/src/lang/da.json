@@ -1724,7 +1724,11 @@
         "noIntegration": "Ingen integration valgt",
         "noData": "Ingen tilgængelige integrationsdata"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Video Stream",

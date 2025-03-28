@@ -1724,7 +1724,11 @@
         "noIntegration": "Nie je vybraná žiadna integrácia",
         "noData": "Nie sú k dispozícii žiadne údaje o integrácii"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Video stream",

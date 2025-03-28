@@ -60,9 +60,31 @@ export const localeConfigurations = {
       return import("dayjs/locale/de").then((module) => module.default);
     },
   },
+  "de-CH": {
+    name: "Deutsch (Schweiz)",
+    translatedName: "German (Swiss)",
+    flagIcon: "ch",
+    importMrtLocalization() {
+      return import("mantine-react-table/locales/de/index.esm.mjs").then((module) => module.MRT_Localization_DE);
+    },
+    importDayJsLocale() {
+      return import("dayjs/locale/de-ch").then((module) => module.default);
+    },
+  },
+  "en-gb": {
+    name: "English (UK)",
+    translatedName: "English (UK)",
+    flagIcon: "gb",
+    importMrtLocalization() {
+      return import("mantine-react-table/locales/en/index.esm.mjs").then((module) => module.MRT_Localization_EN);
+    },
+    importDayJsLocale() {
+      return import("dayjs/locale/en-gb").then((module) => module.default);
+    },
+  },
   en: {
-    name: "English",
-    translatedName: "English",
+    name: "English (US)",
+    translatedName: "English (US)",
     flagIcon: "us",
     importMrtLocalization() {
       return import("mantine-react-table/locales/en/index.esm.mjs").then((module) => module.MRT_Localization_EN);

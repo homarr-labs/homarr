@@ -31,8 +31,8 @@
     "@homarr/log": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
     "next": "15.2.4",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "undici": "7.6.0",
     "zod": "^3.24.2"
   },

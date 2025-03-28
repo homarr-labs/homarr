@@ -1724,7 +1724,11 @@
         "noIntegration": "",
         "noData": ""
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "",

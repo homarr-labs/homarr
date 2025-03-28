@@ -2,97 +2,97 @@
   "init": {
     "step": {
       "start": {
-        "title": "Willkommen bei Homarr",
+        "title": "Willkomme zu Homarr",
         "subtitle": "Lass uns mit der Einrichtung deiner Homarr-Instanz beginnen.",
         "description": "Um loszulegen, wähle bitte wie du deine Homarr Instanz einrichten möchtest.",
         "action": {
-          "scratch": "Von vorne beginnen",
-          "importOldmarr": "Import von Homarr vor 1.0"
+          "scratch": "Vo vorne starte",
+          "importOldmarr": "Importiärä us Homarr vor 1.0"
         }
       },
       "import": {
-        "title": "Daten importieren",
-        "subtitle": "Sie können Daten aus einer bestehenden Homarr-Instanz importieren.",
+        "title": "Date importiärä",
+        "subtitle": "Du casch date us ere existierende Homarr Instanz importiere.",
         "dropzone": {
-          "title": "Ziehen Sie die Zip-Datei hierher oder klicken Sie zum Durchsuchen",
-          "description": "Die hochgeladene Zip-Datei wird bearbeitet und Sie können wählen, was Sie importieren möchten"
+          "title": "Zieh e ZIP-Datei hiä ane oder klick druf um z durchsueche",
+          "description": "Die uechegladeni ZIP Datei wird verarbeitet und du wirsch chönnä uswähle, was importiere wotsch"
         },
         "fileInfo": {
           "action": {
-            "change": "Datei ändern"
+            "change": "Datei ändere"
           }
         },
         "importSettings": {
-          "title": "Importeinstellungen",
-          "description": "Importverhalten konfigurieren"
+          "title": "Istellige importiere",
+          "description": "Import verhalte konfiguriere"
         },
         "boardSelection": {
-          "title": "{count} Boards gefunden",
-          "description": "Wählen Sie alle Boards mit der Größe aus, die Sie importieren möchten",
+          "title": "{count} boards gfunge",
+          "description": "Wähl alli boards, mit dr grössi wo de wotsch importiere, us",
           "action": {
-            "selectAll": "Alles auswählen",
+            "selectAll": "Alli uswähle",
             "unselectAll": "Gesamte Auswahl aufheben"
           }
         },
         "summary": {
-          "title": "Zusammenfassung des Imports",
-          "description": "In der folgenden Zusammenfassung sehen Sie, was importiert wird",
+          "title": "Import zämäfassig",
+          "description": "Ir zämäfassig unge gsehsch, was importier wird",
           "action": {
-            "import": "Import bestätigen und fortfahren"
+            "import": "Bestätige und witer"
           },
           "entities": {
-            "apps": "Applikationen",
-            "boards": "Boards",
-            "integrations": "Integrationen",
+            "apps": "Apps",
+            "boards": "Boads",
+            "integrations": "Integratione",
             "credentialUsers": "Benutzer mit Zugangsdaten"
           }
         },
         "tokenModal": {
-          "title": "Importschlüssel eingeben",
+          "title": "Import token igäh",
           "field": {
             "token": {
-              "label": "Schlüssel",
-              "description": "Gib den angezeigten Importschlüssel von der vorherigen Homarr-Instanz ein"
+              "label": "Token",
+              "description": "Gib z import token vo dire vorherige Homarr Instanz ah"
             }
           },
           "notification": {
             "error": {
-              "title": "Ungültiger Schlüssel",
-              "message": "Der eingegebene Schlüssel ist ungültig"
+              "title": "Invalids token",
+              "message": "Z token wo de hesch agäh isch invalid"
             }
           }
         }
       },
       "user": {
-        "title": "Administrator",
-        "subtitle": "Geben Sie die Zugangsdaten für Ihren Administrator-Benutzer an.",
+        "title": "Administrator benutzer",
+        "subtitle": "Gib z Zugangsdate für di Administrator benutzer ah.",
         "notification": {
           "success": {
-            "title": "Benutzer erstellt",
-            "message": "Der Benutzer wurde erfolgreich erstellt"
+            "title": "Benutzer ersteut",
+            "message": "Dr Benutzer isch erfougrich ersteut worde"
           },
           "error": {
-            "title": "Erstellung des Benutzers fehlgeschlagen"
+            "title": "Benutzerersteuig isch fehlgschlagge"
           }
         }
       },
       "group": {
-        "title": "Externe Gruppe",
-        "subtitle": "Gebe die Gruppe an, welche für externe Benutzer verwendet werden soll.",
+        "title": "Externi Gruppe",
+        "subtitle": "Gib d gruppe ah wo für externi Benutzer verwendet werde söu",
         "form": {
           "name": {
-            "label": "Gruppenname",
+            "label": "Guppename",
             "description": "Name muss mit der Admin-Gruppe des externen Anbieters übereinstimmen"
           }
         }
       },
       "settings": {
-        "title": "Einstellungen",
-        "subtitle": "Server-Einstellungen konfigurieren."
+        "title": "Istellige",
+        "subtitle": "Serveristellige apasse."
       },
       "finish": {
-        "title": "Einrichtung abschließen",
-        "subtitle": "Es kann losgehen!",
+        "title": "Irichtig abschliesse",
+        "subtitle": "Du bisch startklar!",
         "description": "Du hast die Einrichtung erfolgreich abgeschlossen. Du kannst jetzt mit der Nutzung von Homarr beginnen. Wähle deine nächste Aktion:",
         "action": {
           "goToBoard": "Gehe zu {name} Board",
@@ -124,7 +124,7 @@
     },
     "field": {
       "email": {
-        "label": "E-Mail",
+        "label": "",
         "verified": "Verifiziert"
       },
       "username": {
@@ -202,34 +202,34 @@
             "message": "Passwort erfolgreich geändert"
           },
           "error": {
-            "message": "Passwort konnte nicht geändert werden"
+            "message": "Password het nid chöne gänderet werde"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": "Home Board erfolgreich geändert"
+            "message": "Hauptboard erfougrich gwächselt"
           },
           "error": {
-            "message": "Home Board konnte nicht geändert werden"
+            "message": "Homeboard het nid chönne gwächselt werde"
           }
         }
       },
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Sucheinstellungen erfolgreich geändert"
+            "message": "Suechistellige erfolgrich gwechselt"
           },
           "error": {
-            "message": "Sucheinstellungen konnten nicht geändert werden"
+            "message": "D Suechistellige hei nid chönne gwechselt werde"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": "Erster Wochentag erfolgreich geändert"
+            "message": "Erst Tag vor Wuche erfougrich gändert"
           },
           "error": {
             "message": "Konnte den ersten Wochentag nicht ändern"
@@ -248,29 +248,29 @@
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "Bild ändern",
+          "label": "Biud wächsle",
           "notification": {
             "success": {
-              "message": "Der Name wurde erfolgreich geändert"
+              "message": "Buid erfougrich gwächselt"
             },
             "error": {
               "message": "Bild konnte nicht geändert werden"
             },
             "toLarge": {
-              "title": "Bild ist zu groß",
-              "message": "Maximale Bildgröße ist {size}"
+              "title": "Biud isch zu gross",
+              "message": "Maximali biud grössi isch {size}"
             }
           }
         },
         "removeImage": {
-          "label": "Bild entfernen",
-          "confirm": "Wollen Sie wirklich dieses Bild entfernen?",
+          "label": "Biud entferne",
+          "confirm": "Bisch sicher, dass das buid wotsch entferne?",
           "notification": {
             "success": {
-              "message": "Bild erfolgreich entfernt"
+              "message": "Biud isch erfougrich entfernt worde"
             },
             "error": {
-              "message": "Bild kann nicht entfernt werden"
+              "message": "Biud het nid chönne entfernt wärde"
             }
           }
         }
@@ -278,10 +278,10 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": "Profil wurde aktualisiert"
+            "message": "Profiu erfougrich aktualisiert"
           },
           "error": {
-            "message": "Aktualisierung des Profils fehlgeschlagen"
+            "message": "Profiu het nid chönne aktualisiert werde"
           }
         }
       },
@@ -291,23 +291,23 @@
         "confirm": "Sind Sie sicher, dass Sie den Benutzer {username} mit seinen Einstellungen löschen möchten?"
       },
       "select": {
-        "label": "Benutzer auswählen",
-        "notFound": "Kein Benutzer gefunden"
+        "label": "Benutzer uswähle",
+        "notFound": "Ke Benutzer gfunge"
       },
       "transfer": {
-        "label": "Neuen Eigentümer auswählen"
+        "label": "Nöie Bsitzer uswähle"
       }
     }
   },
   "group": {
-    "title": "Benutzergruppen",
-    "name": "Benutzergruppe",
-    "search": "Finde eine Benutzergruppe",
+    "title": "Gruppe",
+    "name": "Gruppe",
+    "search": "Gruppe sueche",
     "field": {
       "name": "Name",
-      "members": "Mitglieder",
+      "members": "Mitglider",
       "homeBoard": {
-        "label": "Home Board",
+        "label": "Hauptboard",
         "description": "Nur Boards welche für die Gruppe zugänglich sind, können ausgewählt werden"
       },
       "mobileBoard": {
@@ -317,19 +317,19 @@
     },
     "permission": {
       "admin": {
-        "title": "Admin",
+        "title": "",
         "item": {
           "admin": {
-            "label": "Administrator",
+            "label": "",
             "description": "Mitglieder mit dieser Berechtigung haben vollen Zugriff auf alle Funktionen und Einstellungen"
           }
         }
       },
       "app": {
-        "title": "Apps",
+        "title": "",
         "item": {
           "create": {
-            "label": "Apps erstellen",
+            "label": "App erstäue",
             "description": "Mitgliedern das Erstellen von Apps erlauben"
           },
           "use-all": {
@@ -347,7 +347,7 @@
         }
       },
       "board": {
-        "title": "Boards",
+        "title": "",
         "item": {
           "create": {
             "label": "Boards erstellen",
@@ -544,7 +544,7 @@
     "search": "App suchen",
     "page": {
       "list": {
-        "title": "Apps",
+        "title": "",
         "noResults": {
           "title": "Noch keine Apps vorhanden",
           "action": "Erstelle deine erste App"
@@ -593,7 +593,7 @@
     },
     "field": {
       "name": {
-        "label": "Name"
+        "label": ""
       },
       "description": {
         "label": "Beschreibung"
@@ -603,64 +603,64 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "Eine andere URL für Ping verwenden",
-          "description": "Nützlich, wenn Homarr direkt auf einen internen Hostnamen oder Netzwerk zugreifen kann, um die Bandbreitennutzung des ISP zu minimieren"
+          "label": "Verwend de anders URL für Ping",
+          "description": "Nützlich, wenn Homarr direkt über en internen Hostname oder Netzwerk zugreifen cha, um Bandbreite vom ISP z'spare"
         }
       }
     },
     "action": {
       "select": {
-        "label": "App auswählen",
-        "notFound": "Keine App gefunden"
+        "label": "App wähle",
+        "notFound": "Keni app gfunge"
       }
     }
   },
   "integration": {
     "page": {
       "list": {
-        "title": "Integrationen",
-        "search": "Integrationen durchsuchen",
+        "title": "Integratione",
+        "search": "Integratione sueche",
         "noResults": {
-          "title": "Es gibt noch keine Integrationen"
+          "title": "Es git no keni Integratione"
         }
       },
       "create": {
-        "title": "Neue {name} Integration",
+        "title": "Nöi integration {name}",
         "notification": {
           "success": {
-            "title": "Erstellung erfolgreich",
-            "message": "Die Integration wurde erfolgreich erstellt"
+            "title": "Ersteuig erfougrich",
+            "message": "D integration isch erfougrich erstellt worde"
           },
           "error": {
-            "title": "Erstellung fehlgeschlagen",
-            "message": "Die Integration konnte nicht erstellt werden"
+            "title": "Erstellig isch fählgschlage",
+            "message": "D Integration het nid chönne erstäut werde"
           }
         }
       },
       "edit": {
-        "title": "{name} Integration bearbeiten",
+        "title": "Integration {name} bearbeite",
         "notification": {
           "success": {
-            "title": "Änderungen erfolgreich angewendet",
-            "message": "Die Integration wurde erfolgreich gespeichert"
+            "title": "Änderige erfougrich agwendet",
+            "message": "D Integration isch erfougrich gspichert worde"
           },
           "error": {
-            "title": "Änderungen konnten nicht angewendet werden",
-            "message": "Die Integration konnte nicht gespeichert werden"
+            "title": "Änderige chöi nöd aawendet werde",
+            "message": "D Integration het nöd chönne gspichert werde"
           }
         }
       },
       "delete": {
-        "title": "Integration löschen",
-        "message": "Sind Sie sicher, dass Sie die Integration {name} löschen möchten?",
+        "title": "Integration lösche",
+        "message": "Bisch sicher, dass d Integration {name} wotsch lösche?",
         "notification": {
           "success": {
-            "title": "Löschen erfolgreich",
-            "message": "Die Integration wurde erfolgreich erstellt"
+            "title": "Löschig erfougrich",
+            "message": "D Integration isch erfougrich glöscht worde"
           },
           "error": {
-            "title": "Löschen fehlgeschlagen",
-            "message": "Integration konnte nicht gelöscht werden"
+            "title": "Löschig isch fehlgschlage",
+            "message": "Integration het nid chönnä glöscht wärde"
           }
         }
       }
@@ -670,33 +670,33 @@
         "label": "Name"
       },
       "url": {
-        "label": "URL"
+        "label": "Url"
       },
       "attemptSearchEngineCreation": {
-        "label": "Suchmaschinen anlegen",
-        "description": "Integration \"{kind}\" kann mit den Suchmaschinen verwendet werden. Wählen Sie dies, um die Suchmaschine automatisch zu konfigurieren."
+        "label": "Suechmaschine erstelle",
+        "description": "Integration '{kind}' cha als Suechmaschine verwendet werde. Wähl das us, um se outomatisch als Suechmaschine z konfiguriere."
       },
       "createApp": {
-        "label": "Anwendung erstellen",
-        "description": "Erstelle eine App mit dem gleichen Namen und Symbol wie die Integration. Lassen Sie das Eingabefeld unter leer, um die App mit der Integrations URL zu erstellen."
+        "label": "App ersteue",
+        "description": "Mach en App mit de gleiche Name und dem gleiche Icon wie d'Integration. Lass d'Eingabefeld unger im Fall leer, um d'App mit em Integrations-URL z'schaffe."
       },
       "appHref": {
-        "placeholder": "Benutzerdefinierte App URL"
+        "placeholder": "Benutzerdefinierti App URL"
       }
     },
     "action": {
-      "create": "Neue Integration"
+      "create": "Nöi Integration"
     },
     "testConnection": {
       "action": {
-        "create": "Verbindung erstellen und testen",
-        "edit": "Verbindung erstellen und speichern"
+        "create": "Verbindig teste und erstäue",
+        "edit": "Verbinding teste und spichere"
       },
-      "alertNotice": "Der Speichern Button ist verfügbar, sobald eine erfolgreiche Verbindung hergestellt wurde",
+      "alertNotice": "Dr Spicherknopf isch aktiv sobald d Verbindig het chönne hergstellt werde",
       "notification": {
         "success": {
-          "title": "Verbindung hergestellt",
-          "message": "Die Verbindung wurde erfolgreich hergestellt"
+          "title": "Verbindig erfougrich",
+          "message": "D Verbindig het erfougrich chönne härgstellt werde"
         },
         "invalidUrl": {
           "title": "Ungültige URL",
@@ -761,7 +761,7 @@
       }
     },
     "secrets": {
-      "title": "Secrets",
+      "title": "",
       "lastUpdated": "Zuletzt aktualisiert am {date}",
       "notSet": {
         "label": "Kein Wert festgelegt",
@@ -770,28 +770,28 @@
       "secureNotice": "Das Secret kann nicht nach der Erstellung abgerufen werden",
       "reset": {
         "title": "Secret zurücksetzen",
-        "message": "Bist du sicher, dass du dieses Secret zurücksetzen möchtest?"
+        "message": "Bisch sicher, dass du das Gheimnis wotsch lösche?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "Keine Secrets",
-        "text": "Kein Secret für diese Integration erforderlich"
+        "segmentTitle": "Keni Gheimnis",
+        "text": "Für die Integration bruchts keni Gheimniss"
       },
       "kind": {
         "username": {
           "label": "Benutzername",
-          "newLabel": "Neuer Benutzername"
+          "newLabel": "Nöie Benutzername"
         },
         "apiKey": {
-          "label": "API Schlüssel",
-          "newLabel": "neuer API Schlüssel"
+          "label": "API Schlüssu",
+          "newLabel": "Nöie API Schlüssu"
         },
         "password": {
           "label": "Passwort",
-          "newLabel": "Neues Passwort"
+          "newLabel": "Nöis Passwort"
         },
         "tokenId": {
           "label": "Token ID",
-          "newLabel": "Neue Token ID"
+          "newLabel": "Nöie Token ID"
         },
         "realm": {
           "label": "Bereich",
@@ -809,7 +809,7 @@
     "plural": "Medien",
     "search": "Medien suchen",
     "field": {
-      "name": "Name",
+      "name": "",
       "size": "Größe",
       "creator": "Ersteller"
     },
@@ -847,7 +847,7 @@
     }
   },
   "common": {
-    "beta": "Beta",
+    "beta": "",
     "error": "Fehler",
     "action": {
       "add": "Hinzufügen",
@@ -856,7 +856,7 @@
       "create": "Erstellen",
       "createAnother": "Erstellen und neu starten",
       "edit": "Bearbeiten",
-      "import": "Import",
+      "import": "",
       "insert": "Einfügen",
       "remove": "Entfernen",
       "save": "Speichern",
@@ -875,7 +875,7 @@
     },
     "here": "Hier",
     "iconPicker": {
-      "label": "Icon URL",
+      "label": "",
       "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie."
     },
     "colorScheme": {
@@ -885,8 +885,8 @@
       }
     },
     "information": {
-      "min": "Min",
-      "max": "Max",
+      "min": "",
+      "max": "",
       "days": "Tage",
       "hours": "Stunden",
       "minutes": "Minuten"
@@ -995,7 +995,7 @@
     "category": {
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         }
       },
       "action": {
@@ -1093,7 +1093,7 @@
   },
   "widget": {
     "app": {
-      "name": "App",
+      "name": "",
       "description": "Bettet eine App in das Board ein.",
       "option": {
         "appId": {
@@ -1130,7 +1130,7 @@
           "label": "Ansicht",
           "option": {
             "row": {
-              "label": "Horizontal"
+              "label": ""
             },
             "column": {
               "label": "Vertikal"
@@ -1169,7 +1169,7 @@
           "label": "Ansicht",
           "option": {
             "row": {
-              "label": "Horizontal"
+              "label": ""
             },
             "column": {
               "label": "Vertikal"
@@ -1203,7 +1203,7 @@
           "label": "Ansicht",
           "option": {
             "row": {
-              "label": "Horizontal"
+              "label": ""
             },
             "column": {
               "label": "Vertikal"
@@ -1291,8 +1291,8 @@
         }
       },
       "status": {
-        "online": "Online",
-        "offline": "Offline"
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -1316,7 +1316,7 @@
         "underline": "Unterstrichen",
         "colorText": "Farbiger Text",
         "colorHighlight": "Farbig hervorgehobener Text",
-        "code": "Code",
+        "code": "",
         "clear": "Formatierung entfernen",
         "heading": "Überschrift {level}",
         "align": "Text ausrichten: {position}",
@@ -1357,7 +1357,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Einbetten von Inhalten aus dem Internet. Einige Websites können den Zugriff einschränken.",
       "option": {
         "embedUrl": {
@@ -1558,7 +1558,7 @@
           "description": "Wie das Datum aussehen sollte"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "",
       "dailyForecast": {
         "sunrise": "Sonnenaufgang",
         "sunset": "Sonnenuntergang",
@@ -1600,7 +1600,7 @@
       "name": "Überwachung des Systemzustands",
       "description": "Zeigt Informationen zum Zustand und Status Ihres/Ihrer Systeme(s) an.",
       "tab": {
-        "system": "System",
+        "system": "",
         "cluster": "Gruppe"
       },
       "option": {
@@ -1628,7 +1628,7 @@
         "processor": "Prozessor: {cpuModelName}",
         "memory": "Speicher: {memory}GiB",
         "memoryAvailable": "Verfügbar: {memoryAvailable} GiB ({percent}%)",
-        "version": "Version: {version}",
+        "version": "",
         "uptime": "Laufzeit: {months} Monate, {days} Tage, {hours} Stunden, {minutes} Minuten",
         "loadAverage": "Durchschnittliche Last:",
         "minute": "1 Minute",
@@ -1643,18 +1643,18 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "CPU",
-          "memory": "RAM"
+          "cpu": "",
+          "memory": ""
         },
         "resource": {
           "node": {
-            "name": "Nodes"
+            "name": ""
           },
           "qemu": {
-            "name": "VMs"
+            "name": ""
           },
           "lxc": {
-            "name": "LXCs"
+            "name": ""
           },
           "storage": {
             "name": "Speicher"
@@ -1662,9 +1662,9 @@
         },
         "popover": {
           "rightSection": {
-            "node": "Node",
-            "vmId": "VM ID",
-            "plugin": "Plugin"
+            "node": "",
+            "vmId": "",
+            "plugin": ""
           },
           "detail": {
             "cpu": "Kerne",
@@ -1680,10 +1680,10 @@
         },
         "table": {
           "header": {
-            "name": "Name",
-            "cpu": "CPU",
-            "memory": "RAM",
-            "node": "Node"
+            "name": "",
+            "cpu": "",
+            "memory": "",
+            "node": ""
           }
         }
       }
@@ -1735,7 +1735,7 @@
       "description": "Einbetten eines Videostreams oder eines Videos von einer Kamera oder einer Website",
       "option": {
         "feedUrl": {
-          "label": "Feed URL"
+          "label": ""
         },
         "hasAutoPlay": {
           "label": "Automatische Wiedergabe",
@@ -1760,12 +1760,12 @@
       "items": {
         "currentlyPlaying": "Aktuelle Wiedergabe",
         "user": "Benutzer",
-        "name": "Name",
-        "id": "Id"
+        "name": "",
+        "id": ""
       }
     },
     "downloads": {
-      "name": "Download Client",
+      "name": "",
       "description": "Ermöglicht es Ihnen, Ihre Downloads sowohl von Torrent- als auch von Usenet-Clients anzusehen und zu verwalten.",
       "option": {
         "columns": {
@@ -1812,7 +1812,7 @@
           "detailsTitle": "Hinzugefügt am"
         },
         "category": {
-          "columnTitle": "Extras",
+          "columnTitle": "",
           "detailsTitle": "Kategorien (Oder zusätzliche Informationen)"
         },
         "downSpeed": {
@@ -1820,14 +1820,14 @@
           "detailsTitle": "Download Geschwindigkeit"
         },
         "index": {
-          "columnTitle": "#",
+          "columnTitle": "",
           "detailsTitle": "Aktueller Index im Client"
         },
         "id": {
           "columnTitle": "ID"
         },
         "integration": {
-          "columnTitle": "Integration"
+          "columnTitle": ""
         },
         "name": {
           "columnTitle": "Job Name"
@@ -1876,7 +1876,7 @@
         "completed": "Abgeschlossen",
         "failed": "Fehlgeschlagen",
         "processing": "Wird verarbeitet",
-        "leeching": "Leeching",
+        "leeching": "",
         "stalled": "Angehalten",
         "unknown": "Unbekannt",
         "seeding": "Seede"
@@ -1988,7 +1988,7 @@
           "filesCount": "Dateien",
           "savedSpace": "Belegter Speicherplatz",
           "healthChecks": "Gesundheitscheck",
-          "videoCodecs": "Codecs",
+          "videoCodecs": "",
           "videoContainers": "Container",
           "videoResolutions": "Auflösungen"
         },
@@ -2018,7 +2018,7 @@
       "description": "Einen oder mehrere generische RSS, ATOM oder JSON-Feeds überwachen und anzeigen",
       "option": {
         "feedUrls": {
-          "label": "Feed URLs"
+          "label": ""
         },
         "enableRtl": {
           "label": "RTL aktivieren"
@@ -2091,7 +2091,7 @@
             "invalidError": "Ungültige Konfigurationsdatei"
           },
           "apps": {
-            "label": "Apps",
+            "label": "",
             "avoidDuplicates": {
               "label": "Duplikate vermeiden",
               "description": "Ignoriert Apps, bei denen eine App mit dem gleichen href bereits existiert"
@@ -2190,7 +2190,7 @@
         "label": "Hintergrundbild-Größe",
         "option": {
           "cover": {
-            "label": "Cover",
+            "label": "",
             "description": "Skaliert das Bild so klein wie möglich, um das gesamte Fenster zu bedecken, indem der überschüssige Bereich zugeschnitten wird."
           },
           "contain": {
@@ -2238,7 +2238,7 @@
         }
       },
       "name": {
-        "label": "Name"
+        "label": ""
       },
       "isPublic": {
         "label": "Öffentlich",
@@ -2373,13 +2373,13 @@
   "layout": {
     "field": {
       "name": {
-        "label": "Name"
+        "label": ""
       },
       "columnCount": {
         "label": "Anzahl der Spalten"
       },
       "breakpoint": {
-        "label": "Breakpoint",
+        "label": "",
         "description": "Das Layout wird auf allen Bildschirmen, die größer als dieser breakpoint sind, bis zum nächsten größeren breakpoint verwendet."
       }
     }
@@ -2398,8 +2398,8 @@
     "navbar": {
       "items": {
         "home": "Startseite",
-        "boards": "Boards",
-        "apps": "Apps",
+        "boards": "",
+        "apps": "",
         "integrations": "Integrationen",
         "searchEngies": "Suchmaschinen",
         "medias": "Medien",
@@ -2414,10 +2414,10 @@
         "tools": {
           "label": "Werkzeuge",
           "items": {
-            "docker": "Docker",
-            "kubernetes": "Kubernetes",
-            "logs": "Logs",
-            "api": "API",
+            "docker": "",
+            "kubernetes": "",
+            "logs": "",
+            "api": "",
             "certificates": "Zertifikate",
             "tasks": "Aufgaben"
           }
@@ -2428,7 +2428,7 @@
           "items": {
             "documentation": "Dokumentation",
             "submitIssue": "Ein Problem melden",
-            "discord": "Community Discord",
+            "discord": "",
             "sourceCode": "Quellcode"
           }
         },
@@ -2438,15 +2438,15 @@
     "page": {
       "home": {
         "statistic": {
-          "board": "Boards",
+          "board": "",
           "user": "Benutzer",
           "invite": "Einladungen",
           "integration": "Integrationen",
-          "app": "Apps",
+          "app": "",
           "group": "Gruppen"
         },
         "statisticLabel": {
-          "boards": "Boards",
+          "boards": "",
           "resources": "Ressourcen",
           "authentication": "Authentifizierung",
           "authorization": "Autorisierung"
@@ -2497,7 +2497,7 @@
           "createBoard": {
             "field": {
               "name": {
-                "label": "Name"
+                "label": ""
               }
             }
           }
@@ -2530,7 +2530,7 @@
             "title": "Sicherheit"
           },
           "board": {
-            "title": "Boards"
+            "title": ""
           }
         },
         "list": {
@@ -2590,7 +2590,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Ersteller"
@@ -2599,7 +2599,7 @@
               "label": "Ablaufdatum"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2617,7 +2617,7 @@
             "title": "Einstellungen",
             "alert": "Gruppeneinstellungen werden nach der Reihenfolge der Gruppen in der Liste priorisiert. Die oberen Einstellungen überschreiben die unteren Einstellungen.",
             "board": {
-              "title": "Boards"
+              "title": ""
             }
           },
           "members": {
@@ -2684,7 +2684,7 @@
             }
           },
           "board": {
-            "title": "Boards",
+            "title": "",
             "homeBoard": {
               "label": "Globales Home Board",
               "mobileLabel": "Globales Mobil Board",
@@ -2749,7 +2749,7 @@
               "label": "Status der Smart Home Entitäten"
             },
             "ping": {
-              "label": "Pings"
+              "label": ""
             },
             "mediaServer": {
               "label": "Medien Server"
@@ -2758,7 +2758,7 @@
               "label": "Medienorganisatoren"
             },
             "downloads": {
-              "label": "Downloads"
+              "label": ""
             },
             "mediaRequestStats": {
               "label": "Statistik der Medienanfragen"
@@ -2790,7 +2790,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "API Token erstellt",
@@ -2816,7 +2816,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": "Erstellt von",
                   "actions": "Aktionen"
                 }
@@ -2826,7 +2826,7 @@
         }
       },
       "about": {
-        "version": "Version {version}",
+        "version": "",
         "text": "Homarr ist ein gemeinschaftsorientiertes Open-Source Projekt, das von Freiwilligen betreut wird. Dank dieser Menschen ist Homarr seit 2021 ein wachsendes Projekt. Unser Team, sitzhaft mit ihren Migliedern in vielen verschiedenen Ländern, arbeitet in ihrer Freizeit ohne Vergütung.",
         "accordion": {
           "contributors": {
@@ -2854,7 +2854,7 @@
     },
     "field": {
       "name": {
-        "label": "Name"
+        "label": ""
       },
       "state": {
         "label": "Staat",
@@ -2869,10 +2869,10 @@
         }
       },
       "containerImage": {
-        "label": "Image"
+        "label": ""
       },
       "ports": {
-        "label": "Ports"
+        "label": ""
       }
     },
     "action": {
@@ -2964,10 +2964,10 @@
   },
   "kubernetes": {
     "cluster": {
-      "title": "Cluster Dashboard",
-      "label": "Cluster",
+      "title": "",
+      "label": "",
       "providers": "Anbieter",
-      "version": "Version",
+      "version": "",
       "architecture": "Architektur",
       "capacity": {
         "title": "Kapazität",
@@ -2978,21 +2978,21 @@
       },
       "resources": {
         "title": "Ressourcen",
-        "nodes": "Nodes",
+        "nodes": "",
         "namespaces": "Namensräume",
         "ingresses": "Ingresse",
         "services": "Dienste",
-        "pods": "Pods",
-        "configmaps": "ConfigMaps",
-        "secrets": "Secrets",
+        "pods": "",
+        "configmaps": "",
+        "secrets": "",
         "volumes": "Laufwerke"
       }
     },
     "nodes": {
-      "label": "Nodes",
+      "label": "",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "state": {
           "label": "Zustand",
@@ -3002,16 +3002,16 @@
           }
         },
         "cpu": {
-          "label": "CPU"
+          "label": ""
         },
         "memory": {
-          "label": "RAM"
+          "label": ""
         },
         "pods": {
-          "label": "Pods"
+          "label": ""
         },
         "operatingSystem": {
-          "label": "OS"
+          "label": ""
         },
         "architecture": {
           "label": "Architektur"
@@ -3031,7 +3031,7 @@
       "label": "Namensräume",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "state": {
           "label": "Zustand",
@@ -3052,7 +3052,7 @@
       "label": "Ingresse",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "namespace": {
           "label": "Namensraum"
@@ -3075,7 +3075,7 @@
       "label": "Dienste",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "namespace": {
           "label": "Namensraum"
@@ -3084,13 +3084,13 @@
           "label": "Typ"
         },
         "ports": {
-          "label": "Ports"
+          "label": ""
         },
         "targetPorts": {
           "label": "Zielports"
         },
         "clusterIP": {
-          "label": "Cluster IP"
+          "label": ""
         },
         "creationTimestamp": {
           "label": "Erstellt"
@@ -3101,22 +3101,22 @@
       }
     },
     "pods": {
-      "label": "Pods",
+      "label": "",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "namespace": {
           "label": "Namensraum"
         },
         "image": {
-          "label": "Image"
+          "label": ""
         },
         "applicationType": {
           "label": "Typ der Anwendung"
         },
         "status": {
-          "label": "Status"
+          "label": ""
         },
         "creationTimestamp": {
           "label": "Erstellt"
@@ -3127,10 +3127,10 @@
       }
     },
     "secrets": {
-      "label": "Secrets",
+      "label": "",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "namespace": {
           "label": "namensraum"
@@ -3147,10 +3147,10 @@
       }
     },
     "configmaps": {
-      "label": "ConfigMaps",
+      "label": "",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "namespace": {
           "label": "namensraum"
@@ -3167,7 +3167,7 @@
       "label": "Laufwerke",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "namespace": {
           "label": "Namensraum"
@@ -3188,7 +3188,7 @@
           "label": "Laufwerkname"
         },
         "status": {
-          "label": "Status"
+          "label": ""
         },
         "creationTimestamp": {
           "label": "Erstellt"
@@ -3235,7 +3235,7 @@
     "manage": {
       "label": "Verwalten",
       "boards": {
-        "label": "Boards"
+        "label": ""
       },
       "integrations": {
         "label": "Integrationen",
@@ -3259,7 +3259,7 @@
         "label": "Medien"
       },
       "apps": {
-        "label": "Apps",
+        "label": "",
         "new": {
           "label": "Neu"
         },
@@ -3274,7 +3274,7 @@
         },
         "general": "Allgemein",
         "security": "Sicherheit",
-        "board": "Boards",
+        "board": "",
         "groups": {
           "label": "Gruppen"
         },
@@ -3285,12 +3285,12 @@
       "tools": {
         "label": "Werkzeuge",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "kubernetes": {
-          "label": "Kubernetes",
+          "label": "",
           "nodes": {
-            "label": "Nodes"
+            "label": ""
           },
           "namespaces": {
             "label": "Namensräume"
@@ -3302,20 +3302,20 @@
             "label": "Dienste"
           },
           "pods": {
-            "label": "pods"
+            "label": ""
           },
           "configmaps": {
-            "label": "ConfigMaps"
+            "label": ""
           },
           "secrets": {
-            "label": "Secrets"
+            "label": ""
           },
           "volumes": {
             "label": "Laufwerke"
           }
         },
         "logs": {
-          "label": "Logs"
+          "label": ""
         },
         "certificates": {
           "label": "Zertifikate"
@@ -3340,7 +3340,7 @@
         "help": "Nach Apps, Integrationen oder Boards suchen",
         "group": {
           "app": {
-            "title": "Apps",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -3356,7 +3356,7 @@
             }
           },
           "board": {
-            "title": "Boards",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -3458,23 +3458,23 @@
             },
             "option": {
               "google": {
-                "name": "Google",
+                "name": "",
                 "description": "Das Web mit Google durchsuchen"
               },
               "bing": {
-                "name": "Bing",
+                "name": "",
                 "description": "Das Web mit Bing durchsuchen"
               },
               "duckduckgo": {
-                "name": "DuckDuckGo",
+                "name": "",
                 "description": "Das Web mit DuckDuckGo durchsuchen"
               },
               "torrent": {
-                "name": "Torrents",
+                "name": "",
                 "description": "Suche nach Torrents auf torrentdownloads.pro"
               },
               "youTube": {
-                "name": "YouTube",
+                "name": "",
                 "description": "Suche nach Videos auf YouTube"
               }
             }
@@ -3496,7 +3496,7 @@
                 "label": "Ein Problem melden"
               },
               "discord": {
-                "label": "Community Discord"
+                "label": ""
               }
             }
           }
@@ -3564,7 +3564,7 @@
                 "label": "Docker verwalten"
               },
               "manageApi": {
-                "label": "Swagger API"
+                "label": ""
               },
               "manageLog": {
                 "label": "Logs anzeigen"
@@ -3630,7 +3630,7 @@
       "search": "Nach einer Suchmaschine suchen",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "short": {
           "label": "Kurz"
