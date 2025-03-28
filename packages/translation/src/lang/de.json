@@ -42,7 +42,7 @@
           },
           "entities": {
             "apps": "Applikationen",
-            "boards": "Boards",
+            "boards": "Boads",
             "integrations": "Integrationen",
             "credentialUsers": "Benutzer mit Zugangsdaten"
           }
@@ -124,7 +124,7 @@
     },
     "field": {
       "email": {
-        "label": "E-Mail",
+        "label": "",
         "verified": "Verifiziert"
       },
       "username": {
@@ -300,7 +300,7 @@
     }
   },
   "group": {
-    "title": "Benutzergruppen",
+    "title": "Gruppe",
     "name": "Benutzergruppe",
     "search": "Finde eine Benutzergruppe",
     "field": {
@@ -317,16 +317,16 @@
     },
     "permission": {
       "admin": {
-        "title": "Admin",
+        "title": "",
         "item": {
           "admin": {
-            "label": "Administrator",
+            "label": "",
             "description": "Mitglieder mit dieser Berechtigung haben vollen Zugriff auf alle Funktionen und Einstellungen"
           }
         }
       },
       "app": {
-        "title": "Apps",
+        "title": "",
         "item": {
           "create": {
             "label": "Apps erstellen",
@@ -347,7 +347,7 @@
         }
       },
       "board": {
-        "title": "Boards",
+        "title": "",
         "item": {
           "create": {
             "label": "Boards erstellen",
@@ -544,7 +544,7 @@
     "search": "App suchen",
     "page": {
       "list": {
-        "title": "Apps",
+        "title": "",
         "noResults": {
           "title": "Noch keine Apps vorhanden",
           "action": "Erstelle deine erste App"
@@ -593,7 +593,7 @@
     },
     "field": {
       "name": {
-        "label": "Name"
+        "label": ""
       },
       "description": {
         "label": "Beschreibung"
@@ -761,7 +761,7 @@
       }
     },
     "secrets": {
-      "title": "Secrets",
+      "title": "",
       "lastUpdated": "Zuletzt aktualisiert am {date}",
       "notSet": {
         "label": "Kein Wert festgelegt",
@@ -809,7 +809,7 @@
     "plural": "Medien",
     "search": "Medien suchen",
     "field": {
-      "name": "Name",
+      "name": "",
       "size": "Größe",
       "creator": "Ersteller"
     },
@@ -847,7 +847,7 @@
     }
   },
   "common": {
-    "beta": "Beta",
+    "beta": "",
     "error": "Fehler",
     "action": {
       "add": "Hinzufügen",
@@ -856,7 +856,7 @@
       "create": "Erstellen",
       "createAnother": "Erstellen und neu starten",
       "edit": "Bearbeiten",
-      "import": "Import",
+      "import": "",
       "insert": "Einfügen",
       "remove": "Entfernen",
       "save": "Speichern",
@@ -875,7 +875,7 @@
     },
     "here": "Hier",
     "iconPicker": {
-      "label": "Icon URL",
+      "label": "",
       "header": "Geben Sie Namen oder Objekte ein, um nach Symbolen zu filtern... Homarr sucht nach {countIcons} Icons für Sie."
     },
     "colorScheme": {
@@ -885,8 +885,8 @@
       }
     },
     "information": {
-      "min": "Min",
-      "max": "Max",
+      "min": "",
+      "max": "",
       "days": "Tage",
       "hours": "Stunden",
       "minutes": "Minuten"
@@ -995,7 +995,7 @@
     "category": {
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         }
       },
       "action": {
@@ -1093,7 +1093,7 @@
   },
   "widget": {
     "app": {
-      "name": "App",
+      "name": "",
       "description": "Bettet eine App in das Board ein.",
       "option": {
         "appId": {
@@ -1130,7 +1130,7 @@
           "label": "Ansicht",
           "option": {
             "row": {
-              "label": "Horizontal"
+              "label": ""
             },
             "column": {
               "label": "Vertikal"
@@ -1169,7 +1169,7 @@
           "label": "Ansicht",
           "option": {
             "row": {
-              "label": "Horizontal"
+              "label": ""
             },
             "column": {
               "label": "Vertikal"
@@ -1203,7 +1203,7 @@
           "label": "Ansicht",
           "option": {
             "row": {
-              "label": "Horizontal"
+              "label": ""
             },
             "column": {
               "label": "Vertikal"
@@ -1291,8 +1291,8 @@
         }
       },
       "status": {
-        "online": "Online",
-        "offline": "Offline"
+        "online": "",
+        "offline": ""
       }
     },
     "notebook": {
@@ -1316,7 +1316,7 @@
         "underline": "Unterstrichen",
         "colorText": "Farbiger Text",
         "colorHighlight": "Farbig hervorgehobener Text",
-        "code": "Code",
+        "code": "",
         "clear": "Formatierung entfernen",
         "heading": "Überschrift {level}",
         "align": "Text ausrichten: {position}",
@@ -1357,7 +1357,7 @@
       }
     },
     "iframe": {
-      "name": "iFrame",
+      "name": "",
       "description": "Einbetten von Inhalten aus dem Internet. Einige Websites können den Zugriff einschränken.",
       "option": {
         "embedUrl": {
@@ -1558,7 +1558,7 @@
           "description": "Wie das Datum aussehen sollte"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "",
       "dailyForecast": {
         "sunrise": "Sonnenaufgang",
         "sunset": "Sonnenuntergang",
@@ -1600,7 +1600,7 @@
       "name": "Überwachung des Systemzustands",
       "description": "Zeigt Informationen zum Zustand und Status Ihres/Ihrer Systeme(s) an.",
       "tab": {
-        "system": "System",
+        "system": "",
         "cluster": "Gruppe"
       },
       "option": {
@@ -1628,7 +1628,7 @@
         "processor": "Prozessor: {cpuModelName}",
         "memory": "Speicher: {memory}GiB",
         "memoryAvailable": "Verfügbar: {memoryAvailable} GiB ({percent}%)",
-        "version": "Version: {version}",
+        "version": "",
         "uptime": "Laufzeit: {months} Monate, {days} Tage, {hours} Stunden, {minutes} Minuten",
         "loadAverage": "Durchschnittliche Last:",
         "minute": "1 Minute",
@@ -1643,18 +1643,18 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "CPU",
-          "memory": "RAM"
+          "cpu": "",
+          "memory": ""
         },
         "resource": {
           "node": {
-            "name": "Nodes"
+            "name": ""
           },
           "qemu": {
-            "name": "VMs"
+            "name": ""
           },
           "lxc": {
-            "name": "LXCs"
+            "name": ""
           },
           "storage": {
             "name": "Speicher"
@@ -1662,9 +1662,9 @@
         },
         "popover": {
           "rightSection": {
-            "node": "Node",
-            "vmId": "VM ID",
-            "plugin": "Plugin"
+            "node": "",
+            "vmId": "",
+            "plugin": ""
           },
           "detail": {
             "cpu": "Kerne",
@@ -1680,10 +1680,10 @@
         },
         "table": {
           "header": {
-            "name": "Name",
-            "cpu": "CPU",
-            "memory": "RAM",
-            "node": "Node"
+            "name": "",
+            "cpu": "",
+            "memory": "",
+            "node": ""
           }
         }
       }
@@ -1724,14 +1724,18 @@
         "noIntegration": "Keine Integration ausgewählt",
         "noData": "Keine Integrationsdaten verfügbar"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Videostream",
       "description": "Einbetten eines Videostreams oder eines Videos von einer Kamera oder einer Website",
       "option": {
         "feedUrl": {
-          "label": "Feed URL"
+          "label": ""
         },
         "hasAutoPlay": {
           "label": "Automatische Wiedergabe",
@@ -1756,12 +1760,12 @@
       "items": {
         "currentlyPlaying": "Aktuelle Wiedergabe",
         "user": "Benutzer",
-        "name": "Name",
-        "id": "Id"
+        "name": "",
+        "id": ""
       }
     },
     "downloads": {
-      "name": "Download Client",
+      "name": "",
       "description": "Ermöglicht es Ihnen, Ihre Downloads sowohl von Torrent- als auch von Usenet-Clients anzusehen und zu verwalten.",
       "option": {
         "columns": {
@@ -1808,7 +1812,7 @@
           "detailsTitle": "Hinzugefügt am"
         },
         "category": {
-          "columnTitle": "Extras",
+          "columnTitle": "",
           "detailsTitle": "Kategorien (Oder zusätzliche Informationen)"
         },
         "downSpeed": {
@@ -1816,14 +1820,14 @@
           "detailsTitle": "Download Geschwindigkeit"
         },
         "index": {
-          "columnTitle": "#",
+          "columnTitle": "",
           "detailsTitle": "Aktueller Index im Client"
         },
         "id": {
           "columnTitle": "ID"
         },
         "integration": {
-          "columnTitle": "Integration"
+          "columnTitle": ""
         },
         "name": {
           "columnTitle": "Job Name"
@@ -1872,7 +1876,7 @@
         "completed": "Abgeschlossen",
         "failed": "Fehlgeschlagen",
         "processing": "Wird verarbeitet",
-        "leeching": "Leeching",
+        "leeching": "",
         "stalled": "Angehalten",
         "unknown": "Unbekannt",
         "seeding": "Seede"
@@ -1984,7 +1988,7 @@
           "filesCount": "Dateien",
           "savedSpace": "Belegter Speicherplatz",
           "healthChecks": "Gesundheitscheck",
-          "videoCodecs": "Codecs",
+          "videoCodecs": "",
           "videoContainers": "Container",
           "videoResolutions": "Auflösungen"
         },
@@ -2014,7 +2018,7 @@
       "description": "Einen oder mehrere generische RSS, ATOM oder JSON-Feeds überwachen und anzeigen",
       "option": {
         "feedUrls": {
-          "label": "Feed URLs"
+          "label": ""
         },
         "enableRtl": {
           "label": "RTL aktivieren"
@@ -2087,7 +2091,7 @@
             "invalidError": "Ungültige Konfigurationsdatei"
           },
           "apps": {
-            "label": "Apps",
+            "label": "",
             "avoidDuplicates": {
               "label": "Duplikate vermeiden",
               "description": "Ignoriert Apps, bei denen eine App mit dem gleichen href bereits existiert"
@@ -2186,7 +2190,7 @@
         "label": "Hintergrundbild-Größe",
         "option": {
           "cover": {
-            "label": "Cover",
+            "label": "",
             "description": "Skaliert das Bild so klein wie möglich, um das gesamte Fenster zu bedecken, indem der überschüssige Bereich zugeschnitten wird."
           },
           "contain": {
@@ -2234,7 +2238,7 @@
         }
       },
       "name": {
-        "label": "Name"
+        "label": ""
       },
       "isPublic": {
         "label": "Öffentlich",
@@ -2369,13 +2373,13 @@
   "layout": {
     "field": {
       "name": {
-        "label": "Name"
+        "label": ""
       },
       "columnCount": {
         "label": "Anzahl der Spalten"
       },
       "breakpoint": {
-        "label": "Breakpoint",
+        "label": "",
         "description": "Das Layout wird auf allen Bildschirmen, die größer als dieser breakpoint sind, bis zum nächsten größeren breakpoint verwendet."
       }
     }
@@ -2394,8 +2398,8 @@
     "navbar": {
       "items": {
         "home": "Startseite",
-        "boards": "Boards",
-        "apps": "Apps",
+        "boards": "",
+        "apps": "",
         "integrations": "Integrationen",
         "searchEngies": "Suchmaschinen",
         "medias": "Medien",
@@ -2410,10 +2414,10 @@
         "tools": {
           "label": "Werkzeuge",
           "items": {
-            "docker": "Docker",
-            "kubernetes": "Kubernetes",
-            "logs": "Logs",
-            "api": "API",
+            "docker": "",
+            "kubernetes": "",
+            "logs": "",
+            "api": "",
             "certificates": "Zertifikate",
             "tasks": "Aufgaben"
           }
@@ -2424,7 +2428,7 @@
           "items": {
             "documentation": "Dokumentation",
             "submitIssue": "Ein Problem melden",
-            "discord": "Community Discord",
+            "discord": "",
             "sourceCode": "Quellcode"
           }
         },
@@ -2434,15 +2438,15 @@
     "page": {
       "home": {
         "statistic": {
-          "board": "Boards",
+          "board": "",
           "user": "Benutzer",
           "invite": "Einladungen",
           "integration": "Integrationen",
-          "app": "Apps",
+          "app": "",
           "group": "Gruppen"
         },
         "statisticLabel": {
-          "boards": "Boards",
+          "boards": "",
           "resources": "Ressourcen",
           "authentication": "Authentifizierung",
           "authorization": "Autorisierung"
@@ -2493,7 +2497,7 @@
           "createBoard": {
             "field": {
               "name": {
-                "label": "Name"
+                "label": ""
               }
             }
           }
@@ -2526,7 +2530,7 @@
             "title": "Sicherheit"
           },
           "board": {
-            "title": "Boards"
+            "title": ""
           }
         },
         "list": {
@@ -2586,7 +2590,7 @@
           },
           "field": {
             "id": {
-              "label": "ID"
+              "label": ""
             },
             "creator": {
               "label": "Ersteller"
@@ -2595,7 +2599,7 @@
               "label": "Ablaufdatum"
             },
             "token": {
-              "label": "Token"
+              "label": ""
             }
           }
         }
@@ -2613,7 +2617,7 @@
             "title": "Einstellungen",
             "alert": "Gruppeneinstellungen werden nach der Reihenfolge der Gruppen in der Liste priorisiert. Die oberen Einstellungen überschreiben die unteren Einstellungen.",
             "board": {
-              "title": "Boards"
+              "title": ""
             }
           },
           "members": {
@@ -2680,7 +2684,7 @@
             }
           },
           "board": {
-            "title": "Boards",
+            "title": "",
             "homeBoard": {
               "label": "Globales Home Board",
               "mobileLabel": "Globales Mobil Board",
@@ -2745,7 +2749,7 @@
               "label": "Status der Smart Home Entitäten"
             },
             "ping": {
-              "label": "Pings"
+              "label": ""
             },
             "mediaServer": {
               "label": "Medien Server"
@@ -2754,7 +2758,7 @@
               "label": "Medienorganisatoren"
             },
             "downloads": {
-              "label": "Downloads"
+              "label": ""
             },
             "mediaRequestStats": {
               "label": "Statistik der Medienanfragen"
@@ -2786,7 +2790,7 @@
           }
         },
         "api": {
-          "title": "API",
+          "title": "",
           "modal": {
             "createApiToken": {
               "title": "API Token erstellt",
@@ -2812,7 +2816,7 @@
               },
               "table": {
                 "header": {
-                  "id": "ID",
+                  "id": "",
                   "createdBy": "Erstellt von",
                   "actions": "Aktionen"
                 }
@@ -2822,7 +2826,7 @@
         }
       },
       "about": {
-        "version": "Version {version}",
+        "version": "",
         "text": "Homarr ist ein gemeinschaftsorientiertes Open-Source Projekt, das von Freiwilligen betreut wird. Dank dieser Menschen ist Homarr seit 2021 ein wachsendes Projekt. Unser Team, sitzhaft mit ihren Migliedern in vielen verschiedenen Ländern, arbeitet in ihrer Freizeit ohne Vergütung.",
         "accordion": {
           "contributors": {
@@ -2850,7 +2854,7 @@
     },
     "field": {
       "name": {
-        "label": "Name"
+        "label": ""
       },
       "state": {
         "label": "Staat",
@@ -2865,10 +2869,10 @@
         }
       },
       "containerImage": {
-        "label": "Image"
+        "label": ""
       },
       "ports": {
-        "label": "Ports"
+        "label": ""
       }
     },
     "action": {
@@ -2960,10 +2964,10 @@
   },
   "kubernetes": {
     "cluster": {
-      "title": "Cluster Dashboard",
-      "label": "Cluster",
+      "title": "",
+      "label": "",
       "providers": "Anbieter",
-      "version": "Version",
+      "version": "",
       "architecture": "Architektur",
       "capacity": {
         "title": "Kapazität",
@@ -2974,21 +2978,21 @@
       },
       "resources": {
         "title": "Ressourcen",
-        "nodes": "Nodes",
+        "nodes": "",
         "namespaces": "Namensräume",
         "ingresses": "Ingresse",
         "services": "Dienste",
-        "pods": "Pods",
-        "configmaps": "ConfigMaps",
-        "secrets": "Secrets",
+        "pods": "",
+        "configmaps": "",
+        "secrets": "",
         "volumes": "Laufwerke"
       }
     },
     "nodes": {
-      "label": "Nodes",
+      "label": "",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "state": {
           "label": "Zustand",
@@ -2998,16 +3002,16 @@
           }
         },
         "cpu": {
-          "label": "CPU"
+          "label": ""
         },
         "memory": {
-          "label": "RAM"
+          "label": ""
         },
         "pods": {
-          "label": "Pods"
+          "label": ""
         },
         "operatingSystem": {
-          "label": "OS"
+          "label": ""
         },
         "architecture": {
           "label": "Architektur"
@@ -3027,7 +3031,7 @@
       "label": "Namensräume",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "state": {
           "label": "Zustand",
@@ -3048,7 +3052,7 @@
       "label": "Ingresse",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "namespace": {
           "label": "Namensraum"
@@ -3071,7 +3075,7 @@
       "label": "Dienste",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "namespace": {
           "label": "Namensraum"
@@ -3080,13 +3084,13 @@
           "label": "Typ"
         },
         "ports": {
-          "label": "Ports"
+          "label": ""
         },
         "targetPorts": {
           "label": "Zielports"
         },
         "clusterIP": {
-          "label": "Cluster IP"
+          "label": ""
         },
         "creationTimestamp": {
           "label": "Erstellt"
@@ -3097,22 +3101,22 @@
       }
     },
     "pods": {
-      "label": "Pods",
+      "label": "",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "namespace": {
           "label": "Namensraum"
         },
         "image": {
-          "label": "Image"
+          "label": ""
         },
         "applicationType": {
           "label": "Typ der Anwendung"
         },
         "status": {
-          "label": "Status"
+          "label": ""
         },
         "creationTimestamp": {
           "label": "Erstellt"
@@ -3123,10 +3127,10 @@
       }
     },
     "secrets": {
-      "label": "Secrets",
+      "label": "",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "namespace": {
           "label": "namensraum"
@@ -3143,10 +3147,10 @@
       }
     },
     "configmaps": {
-      "label": "ConfigMaps",
+      "label": "",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "namespace": {
           "label": "namensraum"
@@ -3163,7 +3167,7 @@
       "label": "Laufwerke",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "namespace": {
           "label": "Namensraum"
@@ -3184,7 +3188,7 @@
           "label": "Laufwerkname"
         },
         "status": {
-          "label": "Status"
+          "label": ""
         },
         "creationTimestamp": {
           "label": "Erstellt"
@@ -3231,7 +3235,7 @@
     "manage": {
       "label": "Verwalten",
       "boards": {
-        "label": "Boards"
+        "label": ""
       },
       "integrations": {
         "label": "Integrationen",
@@ -3255,7 +3259,7 @@
         "label": "Medien"
       },
       "apps": {
-        "label": "Apps",
+        "label": "",
         "new": {
           "label": "Neu"
         },
@@ -3270,7 +3274,7 @@
         },
         "general": "Allgemein",
         "security": "Sicherheit",
-        "board": "Boards",
+        "board": "",
         "groups": {
           "label": "Gruppen"
         },
@@ -3281,12 +3285,12 @@
       "tools": {
         "label": "Werkzeuge",
         "docker": {
-          "label": "Docker"
+          "label": ""
         },
         "kubernetes": {
-          "label": "Kubernetes",
+          "label": "",
           "nodes": {
-            "label": "Nodes"
+            "label": ""
           },
           "namespaces": {
             "label": "Namensräume"
@@ -3298,20 +3302,20 @@
             "label": "Dienste"
           },
           "pods": {
-            "label": "pods"
+            "label": ""
           },
           "configmaps": {
-            "label": "ConfigMaps"
+            "label": ""
           },
           "secrets": {
-            "label": "Secrets"
+            "label": ""
           },
           "volumes": {
             "label": "Laufwerke"
           }
         },
         "logs": {
-          "label": "Logs"
+          "label": ""
         },
         "certificates": {
           "label": "Zertifikate"
@@ -3336,7 +3340,7 @@
         "help": "Nach Apps, Integrationen oder Boards suchen",
         "group": {
           "app": {
-            "title": "Apps",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -3352,7 +3356,7 @@
             }
           },
           "board": {
-            "title": "Boards",
+            "title": "",
             "children": {
               "action": {
                 "open": {
@@ -3454,23 +3458,23 @@
             },
             "option": {
               "google": {
-                "name": "Google",
+                "name": "",
                 "description": "Das Web mit Google durchsuchen"
               },
               "bing": {
-                "name": "Bing",
+                "name": "",
                 "description": "Das Web mit Bing durchsuchen"
               },
               "duckduckgo": {
-                "name": "DuckDuckGo",
+                "name": "",
                 "description": "Das Web mit DuckDuckGo durchsuchen"
               },
               "torrent": {
-                "name": "Torrents",
+                "name": "",
                 "description": "Suche nach Torrents auf torrentdownloads.pro"
               },
               "youTube": {
-                "name": "YouTube",
+                "name": "",
                 "description": "Suche nach Videos auf YouTube"
               }
             }
@@ -3492,7 +3496,7 @@
                 "label": "Ein Problem melden"
               },
               "discord": {
-                "label": "Community Discord"
+                "label": ""
               }
             }
           }
@@ -3560,7 +3564,7 @@
                 "label": "Docker verwalten"
               },
               "manageApi": {
-                "label": "Swagger API"
+                "label": ""
               },
               "manageLog": {
                 "label": "Logs anzeigen"
@@ -3626,7 +3630,7 @@
       "search": "Nach einer Suchmaschine suchen",
       "field": {
         "name": {
-          "label": "Name"
+          "label": ""
         },
         "short": {
           "label": "Kurz"

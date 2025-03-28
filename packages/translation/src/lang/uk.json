@@ -1724,7 +1724,11 @@
         "noIntegration": "Інтеграція не вибрана",
         "noData": "Немає даних про інтеграцію"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "Потокова трансляція відео",
