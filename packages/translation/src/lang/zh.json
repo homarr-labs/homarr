@@ -1724,7 +1724,11 @@
         "noIntegration": "未選擇集成",
         "noData": "無可用的集成數據"
       },
-      "option": {}
+      "option": {},
+      "restricted": {
+        "title": "",
+        "description": ""
+      }
     },
     "video": {
       "name": "串流影音",
