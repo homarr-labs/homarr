@@ -36,7 +36,14 @@ interface IconPickerProps {
   withAsterisk?: boolean;
 }
 
-export const IconPicker = ({ value: propsValue, onChange, error, onFocus, onBlur, withAsterisk = true }: IconPickerProps) => {
+export const IconPicker = ({
+  value: propsValue,
+  onChange,
+  error,
+  onFocus,
+  onBlur,
+  withAsterisk = true,
+}: IconPickerProps) => {
   const [value, setValue] = useUncontrolled({
     value: propsValue,
     onChange,
