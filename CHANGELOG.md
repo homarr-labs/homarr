@@ -1,3 +1,13 @@
+## [1.13.1](https://github.com/homarr-labs/homarr/compare/v1.13.0...v1.13.1) (2025-03-28)
+
+### Bug Fixes
+
+* **deps:** update react monorepo to v19.1.0 ([#2734](https://github.com/homarr-labs/homarr/issues/2734)) ([94ff401](https://github.com/homarr-labs/homarr/commit/94ff401d7dface924f48affccbc59e3a98ed8dc1))
+
+### Reverts
+
+* ssg integration create ([#2736](https://github.com/homarr-labs/homarr/issues/2736)) ([fef50a5](https://github.com/homarr-labs/homarr/commit/fef50a53b1fb592668dfa9aade6b110e42aec9a8))
+
 ## [1.13.0](https://github.com/homarr-labs/homarr/compare/v1.12.0...v1.13.0) (2025-03-28)
 
 ### Features
