@@ -65,9 +65,7 @@ export class KubernetesClient {
   }
 
   public static getInstance(): KubernetesClient {
-    if (!KubernetesClient.instance) {
-      KubernetesClient.instance = new KubernetesClient();
-    }
+    KubernetesClient.instance ??= new KubernetesClient();
     return KubernetesClient.instance;
   }
 }

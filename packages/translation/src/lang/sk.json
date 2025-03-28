@@ -980,6 +980,9 @@
         "remove": "Nová dynamická sekcia"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": ""
         }

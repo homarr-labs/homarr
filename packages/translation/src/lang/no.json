@@ -980,6 +980,9 @@
         "remove": "Fjern dynamisk seksjon"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "Grensefarge"
         }

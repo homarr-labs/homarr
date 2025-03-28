@@ -1,17 +1,19 @@
 "use client";
 
 import type { ChangeEventHandler } from "react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button, Checkbox, Collapse, Group, Stack, Textarea, TextInput } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import type { z } from "zod";
 
+import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { validation } from "@homarr/validation";
 
 import { IconPicker } from "../icon-picker/icon-picker";
+import { findBestIconMatch } from "./icon-matcher";
 
 type FormType = z.infer<typeof validation.app.manage>;
 
@@ -45,6 +47,9 @@ export const AppForm = ({
     },
   });
 
+  // Debounce the name value with 200ms delay
+  const [debouncedName] = useDebouncedValue(form.values.name, 200);
+
   const shouldCreateAnother = useRef(false);
   const handleSubmit = (values: FormType) => {
     const redirect = !shouldCreateAnother.current;
@@ -67,6 +72,25 @@ export const AppForm = ({
       form.setFieldValue("pingUrl", "");
     }
   };
+
+  // Auto-select icon based on app name with debounced search
+  const { data: iconsData } = clientApi.icon.findIcons.useQuery(
+    {
+      searchText: debouncedName,
+    },
+    {
+      enabled: debouncedName.length > 3,
+    },
+  );
+
+  useEffect(() => {
+    if (debouncedName && !form.values.iconUrl && iconsData?.icons) {
+      const bestMatch = findBestIconMatch(debouncedName, iconsData.icons);
+      if (bestMatch) {
+        form.setFieldValue("iconUrl", bestMatch);
+      }
+    }
+  }, [debouncedName, iconsData]);
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>

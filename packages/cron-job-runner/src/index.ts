@@ -1,19 +1,29 @@
+import { objectKeys } from "@homarr/common";
 import type { JobGroupKeys } from "@homarr/cron-jobs";
-import { jobGroup } from "@homarr/cron-jobs";
+import { createSubPubChannel } from "@homarr/redis";
+import { zodEnumFromArray } from "@homarr/validation";
 
-import { createSubPubChannel } from "../../redis/src/lib/channel";
-import { zodEnumFromArray } from "../../validation/src/enums";
+export const cronJobRunnerChannel = createSubPubChannel<JobGroupKeys>("cron-job-runner", { persist: false });
 
-const cronJobRunnerChannel = createSubPubChannel<JobGroupKeys>("cron-job-runner", { persist: false });
-
-/**
- * Registers the cron job runner to listen to the Redis PubSub channel.
- */
-export const registerCronJobRunner = () => {
-  cronJobRunnerChannel.subscribe((jobName) => {
-    jobGroup.runManually(jobName);
-  });
-};
+export const cronJobs = {
+  analytics: { preventManualExecution: true },
+  iconsUpdater: { preventManualExecution: false },
+  ping: { preventManualExecution: false },
+  smartHomeEntityState: { preventManualExecution: false },
+  mediaServer: { preventManualExecution: false },
+  mediaOrganizer: { preventManualExecution: false },
+  downloads: { preventManualExecution: false },
+  dnsHole: { preventManualExecution: false },
+  mediaRequestStats: { preventManualExecution: false },
+  mediaRequestList: { preventManualExecution: false },
+  rssFeeds: { preventManualExecution: false },
+  indexerManager: { preventManualExecution: false },
+  healthMonitoring: { preventManualExecution: false },
+  sessionCleanup: { preventManualExecution: false },
+  updateChecker: { preventManualExecution: false },
+  mediaTranscoding: { preventManualExecution: false },
+  minecraftServerStatus: { preventManualExecution: false },
+} satisfies Record<JobGroupKeys, { preventManualExecution?: boolean }>;
 
 /**
  * Triggers a cron job to run immediately.
@@ -21,7 +31,12 @@ export const registerCronJobRunner = () => {
  * @param jobName name of the job to be triggered
  */
 export const triggerCronJobAsync = async (jobName: JobGroupKeys) => {
+  if (cronJobs[jobName].preventManualExecution) {
+    throw new Error(`The job "${jobName}" can not be executed manually`);
+  }
   await cronJobRunnerChannel.publishAsync(jobName);
 };
 
-export const jobNameSchema = zodEnumFromArray(jobGroup.getKeys());
+export const cronJobNames = objectKeys(cronJobs);
+
+export const jobNameSchema = zodEnumFromArray(cronJobNames);

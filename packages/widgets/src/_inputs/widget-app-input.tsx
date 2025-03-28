@@ -34,7 +34,6 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
       <Select
         label={tInput("label")}
         searchable
-        limit={10}
         leftSection={<MemoizedLeftSection isPending={isPending} currentApp={currentApp} />}
         nothingFoundMessage={t("widget.common.app.noData")}
         renderOption={renderSelectOption}

@@ -47,13 +47,13 @@
     "jsdom": "^26.0.0",
     "prettier": "^3.5.3",
     "semantic-release": "^24.2.3",
-    "testcontainers": "^10.22.0",
+    "testcontainers": "^10.23.0",
     "turbo": "^2.4.4",
     "typescript": "^5.8.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.0.9"
   },
-  "packageManager": "pnpm@10.6.5",
+  "packageManager": "pnpm@10.7.0",
   "engines": {
     "node": ">=22.14.0"
   },
@@ -69,13 +69,13 @@
       "tree-sitter",
       "tree-sitter-json"
     ],
-    "allowNonAppliedPatches": true,
     "overrides": {
-      "proxmox-api>undici": "7.5.0"
+      "proxmox-api>undici": "7.6.0"
     },
     "patchedDependencies": {
       "pretty-print-error": "patches/pretty-print-error.patch"
     },
+    "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [
       "@scarf/scarf",
       "core-js-pure",

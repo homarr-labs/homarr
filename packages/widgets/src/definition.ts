@@ -1,6 +1,7 @@
 import type { LoaderComponent } from "next/dynamic";
 import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 
+import type { Session } from "@homarr/auth";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { ServerSettings } from "@homarr/server-settings";
 import type { SettingsContextProps } from "@homarr/settings";
@@ -43,7 +44,22 @@ export interface WidgetDefinition {
       }
     >
   >;
+  /**
+   * Callback that returns wheter or not the widget should be available to the user.
+   * The widget will not be available in the widget picker and saving with a new one of this kind will not be possible.
+   *
+   * @param props contain user information
+   * @returns restriction type
+   */
+  restrict?: (props: { user: Session["user"] | null }) => RestrictionLevel;
 }
+
+/**
+ * none: The widget is fully available to the user.
+ * select: The widget is available to the user but not in the widget picker.
+ * all: The widget is not available to the user. As replacement a message will be shown at the widgets position.
+ */
+export type RestrictionLevel = "none" | "select" | "all";
 
 export interface WidgetProps<TKind extends WidgetKind> {
   options: inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>;
