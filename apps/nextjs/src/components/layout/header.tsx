@@ -27,8 +27,8 @@ export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
           </UnstyledButton>
           <NavigationBar />
         </Group>
-        <DesktopSearchInput />
         <Group h="100%" align="center" justify="end" style={{ flex: 1 }} wrap="nowrap">
+          <DesktopSearchInput />
           {actions}
           <MobileSearchButton />
           <UserButton />
