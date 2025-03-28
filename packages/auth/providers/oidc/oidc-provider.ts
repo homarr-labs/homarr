@@ -31,7 +31,10 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
 
       const newHeaders = Array.from(response.headers.entries())
         .filter(([key]) => key.toLowerCase() !== "www-authenticate")
-        .reduce((headers, [key, value]) => (headers.append(key, value), headers), new Headers());
+        .reduce((headers, [key, value]) => {
+          headers.append(key, value);
+          return headers;
+        }, new Headers());
 
       return new Response(response.body, {
         status: response.status,
