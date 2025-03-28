@@ -23,7 +23,7 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
     },
   },
   token: {
-    // Providers like fusionauth may return ww-authenticate which results in an error
+    // Providers like fusionauth may return www-authenticate which results in an error
     // https://github.com/nextauthjs/next-auth/issues/8745
     // https://github.com/homarr-labs/homarr/issues/2690
     conform: (response: Response) => {
