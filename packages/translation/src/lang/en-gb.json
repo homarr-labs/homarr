@@ -2,259 +2,259 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Welcome to Homarr",
+        "subtitle": "Let's start setting your Homarr instance up.",
+        "description": "To get started, please select how you want to continue.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Start from scratch",
+          "importOldmarr": "Import from a Homarr version before v1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Import data",
+        "subtitle": "You can import your data from an existing Homarr instance.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Drag your ZIP file here or click to browse your files",
+          "description": "The ZIP file you uploaded will be processed and you will be able to select what you would like to import"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Change file"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Import settings",
+          "description": "Configure the import behaviour"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "Found {count} boards",
+          "description": "Choose all the boards with the size you want to import",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Select all",
+            "unselectAll": "Deselect all"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Import summary",
+          "description": "In the summary below, you can see what will be imported",
           "action": {
-            "import": ""
+            "import": "Please confirm import and continue"
           },
           "entities": {
-            "apps": "",
-            "boards": "",
-            "integrations": "",
-            "credentialUsers": ""
+            "apps": "Applications",
+            "boards": "Boards",
+            "integrations": "Integrations",
+            "credentialUsers": "Credential users"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Enter import token",
           "field": {
             "token": {
-              "label": "",
-              "description": ""
+              "label": "Token",
+              "description": "Enter the import token shown in your previous Homarr instance"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Invalid Token",
+              "message": "Sorry, but the token you entered is invalid"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Administrative user",
+        "subtitle": "Please specify the credentials for your user.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "User created",
+            "message": "The user has been created successfully"
           },
           "error": {
-            "title": ""
+            "title": "User creation failed"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "External group",
+        "subtitle": "Please specify the group which should be used for external users.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Group name",
+            "description": "The name needs to match the admin group of your external provider"
           }
         }
       },
       "settings": {
-        "title": "",
-        "subtitle": ""
+        "title": "Settings",
+        "subtitle": "Configure server settings"
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Finish set-up",
+        "subtitle": "Congratulations, you are ready to go!",
+        "description": "You have successfully finished the setup process. You can now start using Homarr. Please select your next action:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Go to {name} board",
+          "createBoard": "Create your first board",
+          "inviteUser": "Invite other users",
+          "docs": "Read the documentation"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Go back to the start"
   },
   "user": {
-    "title": "",
-    "name": "",
+    "title": "Users",
+    "name": "User",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Log-in to your account",
+        "subtitle": "Welcome back! Please enter your credentials"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Join Homarr",
+        "subtitle": "Welcome to Homarr! Please create an account",
+        "description": "You were invited by {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "New Homarr installation",
+        "subtitle": "Please create the initial administrator user"
       }
     },
     "field": {
       "email": {
-        "label": "",
-        "verified": ""
+        "label": "Email",
+        "verified": "Verified"
       },
       "username": {
-        "label": ""
+        "label": "User-name"
       },
       "password": {
-        "label": "",
+        "label": "Password",
         "requirement": {
-          "length": "",
-          "lowercase": "",
-          "uppercase": "",
-          "number": "",
-          "special": ""
+          "length": "Includes a minimum of 8 characters",
+          "lowercase": "Includes a lower-case letter",
+          "uppercase": "Includes an upper-case letter",
+          "number": "Includes a number",
+          "special": "Includes a special symbol"
         }
       },
       "passwordConfirm": {
-        "label": ""
+        "label": "Confirm password"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Previous password"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Home board"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Use icons for pings"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Default search engine"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Open the search results in a new tab"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "User-name has already been taken"
     },
     "action": {
       "login": {
-        "label": "",
-        "labelWith": "",
+        "label": "Log-in",
+        "labelWith": "Log-in with {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Log-in is successful",
+            "message": "You are now logged-in"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Log-in failed",
+            "message": "Your log-in attempt failed"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Have you forgotten your password?",
+          "description": "An administrator can use the following command to reset your password:"
         }
       },
       "register": {
-        "label": "",
+        "label": "Create an account",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Account has been created",
+            "message": "Please log-in to continue"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Account creation has failed",
+            "message": "Your account could not be created"
           }
         }
       },
-      "create": "",
+      "create": "Create a user",
       "changePassword": {
-        "label": "",
+        "label": "Change your password",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Your password has been changed successfully"
           },
           "error": {
-            "message": ""
+            "message": "Unable to change your password"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Home board has been changed successfully"
           },
           "error": {
-            "message": ""
+            "message": "Unable to change the home board"
           }
         }
       },
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Search preferences have been changed successfully"
           },
           "error": {
-            "message": ""
+            "message": "Unable to change the search preferences"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "The first day of the week has been changed successfully"
           },
           "error": {
-            "message": ""
+            "message": "Unable to change the first day of the week"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ping icons have been toggled successfully"
           },
           "error": {
-            "message": ""
+            "message": "Unable to toggle the ping icons"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Change image",
           "notification": {
             "success": {
-              "message": ""
+              "message": "The image has been changed successfully"
             },
             "error": {
-              "message": ""
+              "message": "Unable to change the image"
             },
             "toLarge": {
               "title": "",
@@ -984,7 +984,7 @@
           "label": ""
         },
         "borderColor": {
-          "label": ""
+          "label": "Border colour"
         }
       },
       "remove": {
@@ -1082,7 +1082,7 @@
           "label": ""
         },
         "borderColor": {
-          "label": ""
+          "label": "Border colour"
         }
       }
     },
@@ -1180,7 +1180,7 @@
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Use Pi-Hole colours"
         }
       },
       "error": {
@@ -1253,7 +1253,7 @@
           "label": ""
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": " "
         },
         "timezone": {
           "label": "",
@@ -1314,8 +1314,8 @@
         "italic": "",
         "strikethrough": "",
         "underline": "",
-        "colorText": "",
-        "colorHighlight": "",
+        "colorText": "Colour text",
+        "colorHighlight": "Coloured highlight text",
         "code": "",
         "clear": "",
         "heading": "",
@@ -1332,7 +1332,7 @@
         "image": "",
         "addTable": "",
         "deleteTable": "",
-        "colorCell": "",
+        "colorCell": "Colour cell",
         "mergeCell": "",
         "addColumnLeft": "",
         "addColumnRight": "",
@@ -1347,7 +1347,7 @@
         "right": ""
       },
       "popover": {
-        "clearColor": "",
+        "clearColor": "Clear colour",
         "source": "",
         "widthPlaceholder": "",
         "columns": "",
@@ -2200,16 +2200,16 @@
         }
       },
       "primaryColor": {
-        "label": ""
+        "label": "Primary colour"
       },
       "secondaryColor": {
-        "label": ""
+        "label": "Secondary colour"
       },
       "opacity": {
         "label": ""
       },
       "iconColor": {
-        "label": ""
+        "label": "Icon colour"
       },
       "customCss": {
         "label": "",
@@ -2712,7 +2712,7 @@
           "appearance": {
             "title": "",
             "defaultColorScheme": {
-              "label": "",
+              "label": "Default colour scheme",
               "options": {
                 "light": "",
                 "dark": ""
