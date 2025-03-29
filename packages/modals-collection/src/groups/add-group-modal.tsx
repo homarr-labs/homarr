@@ -44,7 +44,7 @@ export const AddGroupModal = createModal<void>(({ actions }) => {
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
             {t("common.action.cancel")}
           </Button>
-          <Button loading={isPending} type="submit" color="teal">
+          <Button loading={isPending} type="submit">
             {t("common.action.create")}
           </Button>
         </Group>
