@@ -8,7 +8,7 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { validation } from "@homarr/validation";
 
 interface QuickAddAppModalProps {
-  onClose: (createdAppId: string) => Promise<void>;
+  onClose: (createdAppId: string) => void;
 }
 
 export const QuickAddAppModal = createModal<QuickAddAppModalProps>(({ actions, innerProps }) => {
@@ -26,13 +26,13 @@ export const QuickAddAppModal = createModal<QuickAddAppModalProps>(({ actions, i
 
   const handleSubmit = (values: z.infer<typeof validation.app.manage>) => {
     mutate(values, {
-      async onSuccess({ appId }) {
+      onSuccess({ appId }) {
         showSuccessNotification({
           title: tScoped("success.title"),
           message: tScoped("success.message"),
         });
 
-        await innerProps.onClose(appId);
+        innerProps.onClose(appId);
         actions.closeModal();
       },
     });
