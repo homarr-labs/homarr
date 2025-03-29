@@ -5,6 +5,7 @@ import { AppShellHeader, Group, UnstyledButton } from "@mantine/core";
 import { Spotlight } from "@homarr/spotlight";
 
 import { ClientBurger } from "./header/burger";
+import { NavigationBar } from "./header/navigation-bar";
 import { DesktopSearchInput, MobileSearchButton } from "./header/search";
 import { UserButton } from "./header/user";
 import { HomarrLogoWithTitle } from "./logo/homarr-logo";
@@ -24,9 +25,10 @@ export const MainHeader = ({ logo, actions, hasNavigation = true }: Props) => {
           <UnstyledButton component={Link} href="/">
             {logo ?? <HomarrLogoWithTitle size="md" />}
           </UnstyledButton>
+          <NavigationBar />
         </Group>
-        <DesktopSearchInput />
         <Group h="100%" align="center" justify="end" style={{ flex: 1 }} wrap="nowrap">
+          <DesktopSearchInput />
           {actions}
           <MobileSearchButton />
           <UserButton />
