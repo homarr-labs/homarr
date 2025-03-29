@@ -3,8 +3,6 @@ import { ActionIcon, Menu } from "@mantine/core";
 import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
-import { isWidgetRestricted } from "@homarr/auth/shared";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
@@ -39,7 +37,6 @@ export const BoardItemMenu = ({
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
   const { gridstack } = useSectionContext().refs;
   const settings = useSettings();
-  const { data: session } = useSession();
 
   // Reset error boundary on next render if item has been edited
   useEffect(() => {
@@ -93,16 +90,6 @@ export const BoardItemMenu = ({
       },
     });
   };
-
-  if (
-    isWidgetRestricted({
-      definition: currentDefinition,
-      user: session?.user ?? null,
-      check: (level) => level !== "none",
-    })
-  ) {
-    return null;
-  }
 
   return (
     <Menu withinPortal withArrow position="right-start" arrowPosition="center">
