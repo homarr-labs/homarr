@@ -1,6 +1,5 @@
 import type { z } from "zod";
 
-import type { Session } from "@homarr/auth";
 import { Stopwatch } from "@homarr/common";
 import { handleTransactionsAsync } from "@homarr/db";
 import type { Database } from "@homarr/db";
@@ -17,7 +16,6 @@ import { ensureValidTokenOrThrow } from "./validate-token";
 export const importInitialOldmarrAsync = async (
   db: Database,
   input: z.infer<typeof importInitialOldmarrInputSchema>,
-  session: Session | null,
 ) => {
   const stopwatch = new Stopwatch();
   const { checksum, configs, users: importUsers } = await analyseOldmarrImportAsync(input.file);
@@ -31,7 +29,7 @@ export const importInitialOldmarrAsync = async (
 
   logger.info("Preparing import data in insert collections for database");
 
-  const boardInsertCollection = createBoardInsertCollection({ preparedApps, preparedBoards }, input.settings, session);
+  const boardInsertCollection = createBoardInsertCollection({ preparedApps, preparedBoards }, input.settings);
   const userInsertCollection = createUserInsertCollection(importUsers, input.token);
   const integrationInsertCollection = createIntegrationInsertCollection(preparedIntegrations, input.token);
 

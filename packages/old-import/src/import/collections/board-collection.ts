@@ -1,12 +1,9 @@
-import type { Session } from "@homarr/auth";
-import { isWidgetRestricted } from "@homarr/auth/shared";
 import { createId } from "@homarr/db";
 import { createDbInsertCollectionForTransaction } from "@homarr/db/collection";
 import { logger } from "@homarr/log";
 import type { BoardSize, OldmarrConfig } from "@homarr/old-schema";
 import { boardSizes, getBoardSizeName } from "@homarr/old-schema";
 
-import { widgetImports } from "../../../../widgets/src";
 import { fixSectionIssues } from "../../fix-section-issues";
 import { OldHomarrImportError } from "../../import-error";
 import { mapBoard } from "../../mappers/map-board";
@@ -21,7 +18,6 @@ import type { InitialOldmarrImportSettings } from "../../settings";
 export const createBoardInsertCollection = (
   { preparedApps, preparedBoards }: Omit<ReturnType<typeof prepareMultipleImports>, "preparedIntegrations">,
   settings: InitialOldmarrImportSettings,
-  session: Session | null,
 ) => {
   const insertCollection = createDbInsertCollectionForTransaction([
     "apps",
@@ -117,18 +113,10 @@ export const createBoardInsertCollection = (
       layoutMapping,
       mappedBoard.id,
     );
-    preparedItems
-      .filter((item) => {
-        return !isWidgetRestricted({
-          definition: widgetImports[item.kind].definition,
-          user: session?.user ?? null,
-          check: (level) => level !== "none",
-        });
-      })
-      .forEach(({ layouts, ...item }) => {
-        insertCollection.items.push(item);
-        insertCollection.itemLayouts.push(...layouts);
-      });
+    preparedItems.forEach(({ layouts, ...item }) => {
+      insertCollection.items.push(item);
+      insertCollection.itemLayouts.push(...layouts);
+    });
     logger.debug(`Added items to board insert collection count=${insertCollection.items.length}`);
   });
 
