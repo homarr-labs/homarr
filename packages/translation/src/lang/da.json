@@ -981,7 +981,7 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "borderColor": {
           "label": "Kantfarve"
@@ -1724,11 +1724,7 @@
         "noIntegration": "Ingen integration valgt",
         "noData": "Ingen tilgængelige integrationsdata"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Video Stream",
