@@ -1724,11 +1724,7 @@
         "noIntegration": "Ingen integrasjon valgt",
         "noData": "Ingen integrasjonsdata er tilgjengelig"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Videostrømming",

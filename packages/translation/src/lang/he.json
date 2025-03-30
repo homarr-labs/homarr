@@ -1724,11 +1724,7 @@
         "noIntegration": "לא נבחרה אינטגרציה",
         "noData": "אין נתוני אינטגרציה זמינים"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "זרם וידאו",

@@ -1724,11 +1724,7 @@
         "noIntegration": "",
         "noData": ""
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Transmissão de vídeo",
