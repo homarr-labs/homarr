@@ -1,6 +1,6 @@
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
-import { Agent } from "node:https";
+import { Agent as HttpsAgent } from "node:https";
 import path from "node:path";
 import { rootCertificates } from "node:tls";
 import axios from "axios";
@@ -70,12 +70,16 @@ export const createCertificateAgentAsync = async () => {
   });
 };
 
-export const createAxiosCertificateInstanceAsync = async () => {
+export const createHttpsAgentAsync = async () => {
   const customCertificates = await loadCustomRootCertificatesAsync();
+  return new HttpsAgent({
+    ca: rootCertificates.concat(customCertificates.map((cert) => cert.content)),
+  });
+};
+
+export const createAxiosCertificateInstanceAsync = async () => {
   return axios.create({
-    httpsAgent: new Agent({
-      ca: rootCertificates.concat(customCertificates.map((cert) => cert.content)),
-    }),
+    httpsAgent: await createHttpsAgentAsync(),
   });
 };
 
