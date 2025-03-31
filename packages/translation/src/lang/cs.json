@@ -1724,11 +1724,7 @@
         "noIntegration": "Nebyla vybrána žádná integrace",
         "noData": "Nejsou k dispozici žádná data o integraci"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Streamování videa",
