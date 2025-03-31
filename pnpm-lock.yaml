@@ -1107,8 +1107,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../env
       dockerode:
-        specifier: ^4.0.4
-        version: 4.0.4
+        specifier: ^4.0.5
+        version: 4.0.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -6056,8 +6056,8 @@ packages:
     resolution: {integrity: sha512-ens7BiayssQz/uAxGzH8zGXCtiV24rRWXdjNha5V4zSOcxmAZsfGVm/PPFbwQdqEkDnhG+SyR9E3zSHUbOKXBQ==}
     engines: {node: '>= 8.0'}
 
-  dockerode@4.0.4:
-    resolution: {integrity: sha512-6GYP/EdzEY50HaOxTVTJ2p+mB5xDHTMJhS+UoGrVyS6VC+iQRh7kZ4FRpUYq6nziby7hPqWhOrFFUFTMUZJJ5w==}
+  dockerode@4.0.5:
+    resolution: {integrity: sha512-ZPmKSr1k1571Mrh7oIBS/j0AqAccoecY2yH420ni5j1KyNMgnoTh4Nu4FWunh0HZIJmRSmSysJjBIpa/zyWUEA==}
     engines: {node: '>= 8.0'}
 
   doctrine@2.1.0:
@@ -9591,11 +9591,11 @@ packages:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
     engines: {node: '>=6'}
 
-  tar-fs@2.0.1:
-    resolution: {integrity: sha512-6tzWDMeroL87uF/+lin46k+Q+46rAJ0SyPGz7OW7wTgblI273hsBqk2C1j0/xNadNLKDTUL9BukSjB7cwgmlPA==}
-
   tar-fs@2.1.1:
     resolution: {integrity: sha512-V0r2Y9scmbDRLCNex/+hYzvp/zyYjvFbHPNgVTKfQvVrb6guiE/fxP+XblDNR011utopbkex2nM4dHNV6GDsng==}
+
+  tar-fs@2.1.2:
+    resolution: {integrity: sha512-EsaAXwxmx8UB7FRKqeozqEPop69DXcmYwTQwXvyAPF352HJsPdkVhvTaDPYqfNgruveJIJy3TA2l+2zj8LJIJA==}
 
   tar-fs@3.0.6:
     resolution: {integrity: sha512-iokBDQQkUyeXhgPYaZxmczGPhnhXZ0CmrqI+MOb/WFGS9DW5wnfrLgtjUJBvz50vQ3qfRwJ62QVoCFu8mPVu5w==}
@@ -14655,14 +14655,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  dockerode@4.0.4:
+  dockerode@4.0.5:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@grpc/grpc-js': 1.12.5
       '@grpc/proto-loader': 0.7.13
       docker-modem: 5.0.6
       protobufjs: 7.4.0
-      tar-fs: 2.0.1
+      tar-fs: 2.1.2
       uuid: 10.0.0
     transitivePeerDependencies:
       - supports-color
@@ -18681,14 +18681,14 @@ snapshots:
 
   tapable@2.2.1: {}
 
-  tar-fs@2.0.1:
+  tar-fs@2.1.1:
     dependencies:
       chownr: 1.1.4
       mkdirp-classic: 0.5.3
       pump: 3.0.2
       tar-stream: 2.2.0
 
-  tar-fs@2.1.1:
+  tar-fs@2.1.2:
     dependencies:
       chownr: 1.1.4
       mkdirp-classic: 0.5.3
@@ -18775,7 +18775,7 @@ snapshots:
       byline: 5.0.0
       debug: 4.4.0
       docker-compose: 0.24.8
-      dockerode: 4.0.4
+      dockerode: 4.0.5
       get-port: 7.1.0
       proper-lockfile: 4.1.2
       properties-reader: 2.3.0
