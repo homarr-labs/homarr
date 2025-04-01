@@ -1724,11 +1724,7 @@
         "noIntegration": "Aucune intégration sélectionnée",
         "noData": "Aucune donnée d’interaction disponible"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Flux vidéo",

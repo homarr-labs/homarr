@@ -1,4 +1,3 @@
-import type { Session } from "@homarr/auth";
 import { handleTransactionsAsync, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
@@ -13,7 +12,6 @@ export const importSingleOldmarrConfigAsync = async (
   db: Database,
   config: OldmarrConfig,
   settings: OldmarrImportConfiguration,
-  session: Session | null,
 ) => {
   const { preparedApps, preparedBoards } = prepareSingleImport(config, settings);
   const existingApps = await db.query.apps.findMany({
@@ -31,7 +29,7 @@ export const importSingleOldmarrConfigAsync = async (
     return app;
   });
 
-  const boardInsertCollection = createBoardInsertCollection({ preparedApps, preparedBoards }, settings, session);
+  const boardInsertCollection = createBoardInsertCollection({ preparedApps, preparedBoards }, settings);
 
   await handleTransactionsAsync(db, {
     async handleAsync(db) {

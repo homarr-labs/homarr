@@ -1724,11 +1724,7 @@
         "noIntegration": "Keine Integration ausgewählt",
         "noData": "Keine Integrationsdaten verfügbar"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Videostream",
