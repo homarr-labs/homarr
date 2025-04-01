@@ -677,11 +677,11 @@
         "description": "集成“{kind}”可以与搜索引擎一起使用。勾选此项可自动配置搜索引擎。"
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "创建应用",
+        "description": "创建一个具有与集成相同名称和图标的应用程序。 留空下面的输入字段使用集成URL创建应用程序。"
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "自定义应用URL"
       }
     },
     "action": {
@@ -981,7 +981,7 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "标题"
         },
         "borderColor": {
           "label": "边界颜色"
@@ -1428,76 +1428,76 @@
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "股票价格",
+      "description": "显示公司的当前股价",
       "option": {
         "stock": {
-          "label": ""
+          "label": "股票代码"
         },
         "timeRange": {
-          "label": "",
+          "label": "时间范围",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1天"
             },
             "5d": {
-              "label": ""
+              "label": "5天"
             },
             "1mo": {
-              "label": ""
+              "label": "1个月"
             },
             "3mo": {
-              "label": ""
+              "label": "3 个月"
             },
             "6mo": {
-              "label": ""
+              "label": "6 个月"
             },
             "ytd": {
-              "label": ""
+              "label": "年初至今"
             },
             "1y": {
-              "label": ""
+              "label": "1 年"
             },
             "2y": {
-              "label": ""
+              "label": "2 年"
             },
             "5y": {
-              "label": ""
+              "label": "5 年"
             },
             "10y": {
-              "label": ""
+              "label": "10 年"
             },
             "max": {
-              "label": ""
+              "label": "最大"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "时间间隔",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 分钟"
             },
             "15m": {
-              "label": ""
+              "label": "15 分钟"
             },
             "30m": {
-              "label": ""
+              "label": "30 分钟"
             },
             "1h": {
-              "label": ""
+              "label": "1 小时"
             },
             "1d": {
-              "label": ""
+              "label": "1 天"
             },
             "5d": {
-              "label": ""
+              "label": "5 天"
             },
             "1wk": {
-              "label": ""
+              "label": "1 周"
             },
             "1mo": {
-              "label": ""
+              "label": "1 个月"
             }
           }
         }
