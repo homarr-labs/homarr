@@ -1,7 +1,10 @@
 "use client";
 
-import { Button, Grid, Group, Stack, TextInput } from "@mantine/core";
+import type { AutocompleteProps } from "@mantine/core";
+import { Autocomplete, Button, Grid, Group, Popover, Stack, Text } from "@mantine/core";
 
+import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import type { TranslationObject } from "@homarr/translation";
@@ -18,6 +21,7 @@ interface Props {
 }
 export const BackgroundSettingsContent = ({ board }: Props) => {
   const t = useI18n();
+  const { data: session } = useSession();
   const { mutate: savePartialSettings, isPending } = useSavePartialSettingsMutation(board);
   const form = useZodForm(validation.board.savePartialSettings, {
     initialValues: {
@@ -27,6 +31,12 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
       backgroundImageSize: board.backgroundImageSize,
     },
   });
+  const medias = clientApi.media.getPaginated.useQuery({
+    page: 1,
+    pageSize: 100,
+    includeFromAllUsers: true,
+  });
+  const images = medias.data?.items.filter((media) => media.contentType.startsWith("image/")) ?? [];
 
   const backgroundImageAttachmentData = useBackgroundOptionData(
     "backgroundImageAttachment",
@@ -47,8 +57,40 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
       <Stack>
         <Grid>
           <Grid.Col span={12}>
-            <TextInput
+            <Autocomplete
+              leftSection={
+                form.values.backgroundImageUrl &&
+                form.values.backgroundImageUrl.trim().length >= 2 && (
+                  <Popover width={300} withArrow>
+                    <Popover.Target>
+                      <img
+                        src={form.values.backgroundImageUrl}
+                        alt="preview image"
+                        style={{ width: 20, height: 20, objectFit: "contain" }}
+                      />
+                    </Popover.Target>
+                    <Popover.Dropdown>
+                      <img src={form.values.backgroundImageUrl} alt="preview image" style={{ width: "100%" }} />
+                    </Popover.Dropdown>
+                  </Popover>
+                )
+              }
               label={t("board.field.backgroundImageUrl.label")}
+              renderOption={renderAutocompleteOption}
+              data={[
+                {
+                  group: t("board.field.backgroundImageUrl.group.your"),
+                  items: images
+                    .filter((media) => media.creatorId === session?.user.id)
+                    .map((media) => `/api/user-medias/${media.id}`),
+                },
+                {
+                  group: t("board.field.backgroundImageUrl.group.other"),
+                  items: images
+                    .filter((media) => media.creatorId !== session?.user.id)
+                    .map((media) => `/api/user-medias/${media.id}`),
+                },
+              ]}
               {...form.getInputProps("backgroundImageUrl")}
             />
           </Grid.Col>
@@ -84,6 +126,13 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
     </form>
   );
 };
+
+const renderAutocompleteOption: AutocompleteProps["renderOption"] = ({ option }) => (
+  <Group gap="sm">
+    <img src={option.value} alt="preview image" style={{ width: 20, height: 20, objectFit: "contain" }} />
+    <Text size="sm">{option.value}</Text>
+  </Group>
+);
 
 type BackgroundImageKey = "backgroundImageAttachment" | "backgroundImageSize" | "backgroundImageRepeat";
 
