@@ -26,6 +26,7 @@ import * as mediaTranscoding from "./media-transcoding";
 import * as minecraftServerStatus from "./minecraft/server-status";
 import * as notebook from "./notebook";
 import type { WidgetOptionDefinition } from "./options";
+import * as releases from "./releases";
 import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
@@ -59,6 +60,7 @@ export const widgetImports = {
   healthMonitoring,
   mediaTranscoding,
   minecraftServerStatus,
+  releases,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
