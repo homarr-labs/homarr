@@ -85,7 +85,7 @@ export const recreateAdmin = command({
     });
 
     console.log(
-      `We created a new admin user for you. Please keep in mind, that the admin group of it has a temporary name. You should change it to something more meaningful.`,
+      "We created a new admin user for you. Please keep in mind, that the admin group of it has a temporary name. You should change it to something more meaningful.",
     );
     console.log(`\tUsername: ${result.data}`);
     console.log(`\tPassword: ${password}`);
