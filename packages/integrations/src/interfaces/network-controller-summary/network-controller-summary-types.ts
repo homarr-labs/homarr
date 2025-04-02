@@ -8,14 +8,20 @@ export interface NetworkControllerSummary {
     uptime: number;
   };
 
-  wifiStatus: "enabled" | "disabled";
-  wifiUsers: number;
-  wifiGuests: number;
+  wifi: {
+    status: "enabled" | "disabled";
+    users: number;
+    guests: number;
+  };
 
-  lanStatus: "enabled" | "disabled";
-  lanUsers: number;
-  lanGuests: number;
+  lan: {
+    status: "enabled" | "disabled";
+    users: number;
+    guests: number;
+  };
 
-  vpnStatus: "enabled" | "disabled";
-  vpnUsers: number;
+  vpn: {
+    status: "enabled" | "disabled";
+    users: number;
+  };
 }

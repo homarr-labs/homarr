@@ -59,14 +59,20 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
         ping: this.getNumericValueOverAllSites(result.data, "www", (site) => site.speedtest_ping, "max"),
         uptime: this.getNumericValueOverAllSites(result.data, "www", (site) => site.uptime, "max"),
       },
-      wifiStatus: this.getStatusValueOverAllSites(result.data, "wlan", (site) => site.status === "ok"),
-      wifiUsers: this.getNumericValueOverAllSites(result.data, "wlan", (site) => site.num_user, "sum"),
-      wifiGuests: this.getNumericValueOverAllSites(result.data, "wlan", (site) => site.num_guest, "sum"),
-      lanStatus: this.getStatusValueOverAllSites(result.data, "lan", (site) => site.status === "ok"),
-      lanUsers: this.getNumericValueOverAllSites(result.data, "lan", (site) => site.num_user, "sum"),
-      lanGuests: this.getNumericValueOverAllSites(result.data, "lan", (site) => site.num_guest, "sum"),
-      vpnStatus: this.getStatusValueOverAllSites(result.data, "vpn", (site) => site.status === "ok"),
-      vpnUsers: this.getNumericValueOverAllSites(result.data, "vpn", (site) => site.remote_user_num_active, "sum"),
+      wifi: {
+        status: this.getStatusValueOverAllSites(result.data, "wlan", (site) => site.status === "ok"),
+        users: this.getNumericValueOverAllSites(result.data, "wlan", (site) => site.num_user, "sum"),
+        guests: this.getNumericValueOverAllSites(result.data, "wlan", (site) => site.num_guest, "sum"),
+      },
+      lan: {
+        status: this.getStatusValueOverAllSites(result.data, "lan", (site) => site.status === "ok"),
+        users: this.getNumericValueOverAllSites(result.data, "lan", (site) => site.num_user, "sum"),
+        guests: this.getNumericValueOverAllSites(result.data, "lan", (site) => site.num_guest, "sum"),
+      },
+      vpn: {
+        status: this.getStatusValueOverAllSites(result.data, "vpn", (site) => site.status === "ok"),
+        users: this.getNumericValueOverAllSites(result.data, "vpn", (site) => site.remote_user_num_active, "sum"),
+      },
     } satisfies NetworkControllerSummary;
   }
 

@@ -66,7 +66,7 @@ export default function NetworkControllerSummaryWidget({
       <Center h={"100%"}>
         <List spacing={"xs"} center>
           <List.Item icon={<StatusIcon status={data[0]?.wanStatus} />}>WAN</List.Item>
-          <List.Item icon={<StatusIcon status={data[0]?.www?.status} />}>
+          <List.Item icon={<StatusIcon status={data[0]?.www.status} />}>
             <Text>
               WWW
               <Text c={"dimmed"} size={"md"} ms={"xs"} span>
@@ -74,12 +74,12 @@ export default function NetworkControllerSummaryWidget({
               </Text>
             </Text>
           </List.Item>
-          <List.Item icon={<StatusIcon status={data[0]?.wifiStatus} />}>Wi-Fi</List.Item>
-          <List.Item icon={<StatusIcon status={data[0]?.vpnStatus} />}>
+          <List.Item icon={<StatusIcon status={data[0]?.wifi.status} />}>Wi-Fi</List.Item>
+          <List.Item icon={<StatusIcon status={data[0]?.vpn.status} />}>
             <Text>
               VPN
               <Text c={"dimmed"} size={"md"} ms={"xs"} span>
-                {t("widget.networkControllerSummary.card.vpn.countConnected", { count: data[0]?.vpnUsers ?? 0 })}
+                {t("widget.networkControllerSummary.card.vpn.countConnected", { count: data[0]?.vpn.users ?? 0 })}
               </Text>
             </Text>
           </List.Item>

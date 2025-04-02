@@ -70,13 +70,13 @@ export default function NetworkControllerNetworkStatusWidget({
     <Box p={"sm"}>
       {options.content === "wifi" ? (
         <WifiVariant
-          countGuests={data.reduce((sum, summary) => sum + summary.wifiGuests, 0)}
-          countUsers={data.reduce((sum, summary) => sum + summary.wifiUsers, 0)}
+          countGuests={data.reduce((sum, summary) => sum + summary.wifi.guests, 0)}
+          countUsers={data.reduce((sum, summary) => sum + summary.wifi.users, 0)}
         />
       ) : (
         <WiredVariant
-          countGuests={data.reduce((sum, summary) => sum + summary.lanGuests, 0)}
-          countUsers={data.reduce((sum, summary) => sum + summary.lanUsers, 0)}
+          countGuests={data.reduce((sum, summary) => sum + summary.lan.guests, 0)}
+          countUsers={data.reduce((sum, summary) => sum + summary.lan.users, 0)}
         />
       )}
     </Box>
