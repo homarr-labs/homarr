@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { Center, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import { useHotkeys, useTimeout } from "@mantine/hooks";
 import {
-  IconBellRinging,
   IconCheck,
   IconHome,
   IconLogin,
@@ -25,13 +24,14 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
 import { CurrentLanguageCombobox } from "./language/current-language-combobox";
+import { AvailableUpdatesMenuItem } from "./layout/header/update";
 
 interface UserAvatarMenuProps {
   children: ReactNode;
-  availableUpdates?: RouterOutputs["updateChecker"]["getAvailableUpdates"];
+  availableUpdatesPromise?: Promise<RouterOutputs["updateChecker"]["getAvailableUpdates"]>;
 }
 
-export const UserAvatarMenu = ({ children, availableUpdates }: UserAvatarMenuProps) => {
+export const UserAvatarMenu = ({ children, availableUpdatesPromise }: UserAvatarMenuProps) => {
   const t = useScopedI18n("common.userAvatar.menu");
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   useHotkeys([["mod+J", toggleColorScheme]]);
@@ -65,24 +65,7 @@ export const UserAvatarMenu = ({ children, availableUpdates }: UserAvatarMenuPro
     // We use keepMounted so we can add event listeners to prevent navigating away without saving the board
     <Menu width={300} withArrow withinPortal keepMounted>
       <Menu.Dropdown>
-        {availableUpdates && availableUpdates.length > 0 && availableUpdates[0] && (
-          <>
-            <Menu.Item
-              component={"a"}
-              href={availableUpdates[0].url}
-              target="_blank"
-              leftSection={<IconBellRinging size="1rem" />}
-            >
-              <Text fw="bold" size="sm">
-                {t("updateAvailable", {
-                  countUpdates: String(availableUpdates.length),
-                  tag: availableUpdates[0].tagName,
-                })}
-              </Text>
-            </Menu.Item>
-            <Menu.Divider />
-          </>
-        )}
+        <AvailableUpdatesMenuItem availableUpdatesPromise={availableUpdatesPromise} />
         <Menu.Item onClick={toggleColorScheme} leftSection={<ColorSchemeIcon size="1rem" />}>
           {colorSchemeText}
         </Menu.Item>
