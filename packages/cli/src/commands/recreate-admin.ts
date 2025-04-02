@@ -5,6 +5,7 @@ import { generateSecureRandomToken } from "@homarr/common/server";
 import { and, count, createId, db, eq } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
+import { usernameSchema } from "@homarr/validation";
 
 export const recreateAdmin = command({
   name: "recreate-admin",
@@ -19,7 +20,13 @@ export const recreateAdmin = command({
       return;
     }
 
-    const username = options.username.toLowerCase();
+    const result = await usernameSchema.safeParseAsync(options.username);
+
+    if (!result.success) {
+      console.error("Invalid username:");
+      console.error(result.error.errors.map((error) => `- ${error.message}`).join("\n"));
+      return;
+    }
 
     const totalCount = await db
       .select({
@@ -37,7 +44,7 @@ export const recreateAdmin = command({
     }
 
     const existingUser = await db.query.users.findFirst({
-      where: eq(users.name, username),
+      where: eq(users.name, result.data),
     });
 
     if (existingUser) {
@@ -66,7 +73,7 @@ export const recreateAdmin = command({
     const userId = createId();
     await db.insert(users).values({
       id: userId,
-      name: username,
+      name: result.data,
       provider: "credentials",
       password: hashedPassword,
       salt,
@@ -80,7 +87,7 @@ export const recreateAdmin = command({
     console.log(
       `We created a new admin user for you. Please keep in mind, that the admin group of it has a temporary name. You should change it to something more meaningful.`,
     );
-    console.log(`\tUsername: ${username}`);
+    console.log(`\tUsername: ${result.data}`);
     console.log(`\tPassword: ${password}`);
     console.log(`\tGroup: ${temporaryGroupId}`);
     console.log(""); // Empty line for better readability

@@ -783,6 +783,9 @@ importers:
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
+      '@homarr/validation':
+        specifier: workspace:^0.1.0
+        version: link:../validation
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
