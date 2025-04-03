@@ -37,6 +37,6 @@ export {
   type BoardItemIntegration,
 } from "./shared";
 export { superRefineCertificateFile } from "./certificates";
-export { passwordRequirements } from "./user";
+export { passwordRequirements, usernameSchema } from "./user";
 export { supportedMediaUploadFormats } from "./media";
 export { zodEnumFromArray, zodUnionFromArray } from "./enums";
