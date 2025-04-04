@@ -5,7 +5,7 @@ import { everyoneGroup, groupPermissionKeys } from "@homarr/definitions";
 import { byIdSchema } from "./common";
 import { zodEnumFromArray } from "./enums";
 
-const createSchema = z.object({
+export const groupCreateSchema = z.object({
   name: z
     .string()
     .trim()
@@ -16,35 +16,25 @@ const createSchema = z.object({
     }),
 });
 
-const updateSchema = createSchema.merge(byIdSchema);
+export const groupUpdateSchema = groupCreateSchema.merge(byIdSchema);
 
-const settingsSchema = z.object({
+export const groupSettingsSchema = z.object({
   homeBoardId: z.string().nullable(),
   mobileHomeBoardId: z.string().nullable(),
 });
 
-const savePartialSettingsSchema = z.object({
+export const groupSavePartialSettingsSchema = z.object({
   id: z.string(),
-  settings: settingsSchema.partial(),
+  settings: groupSettingsSchema.partial(),
 });
 
-const savePermissionsSchema = z.object({
+export const groupSavePermissionsSchema = z.object({
   groupId: z.string(),
   permissions: z.array(zodEnumFromArray(groupPermissionKeys)),
 });
 
-const savePositionsSchema = z.object({
+export const groupSavePositionsSchema = z.object({
   positions: z.array(z.string()),
 });
 
-const groupUserSchema = z.object({ groupId: z.string(), userId: z.string() });
-
-export const groupSchemas = {
-  create: createSchema,
-  update: updateSchema,
-  savePermissions: savePermissionsSchema,
-  groupUser: groupUserSchema,
-  savePartialSettings: savePartialSettingsSchema,
-  settings: settingsSchema,
-  savePositions: savePositionsSchema,
-};
+export const groupUserSchema = z.object({ groupId: z.string(), userId: z.string() });

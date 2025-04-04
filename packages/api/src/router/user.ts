@@ -10,7 +10,20 @@ import { selectUserSchema } from "@homarr/db/validationSchemas";
 import { credentialsAdminGroup } from "@homarr/definitions";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 import { logger } from "@homarr/log";
-import { validation } from "@homarr/validation";
+import { byIdSchema } from "@homarr/validation/common";
+import type { userBaseCreateSchema } from "@homarr/validation/user";
+import {
+  userChangeColorSchemeSchema,
+  userChangeHomeBoardSchema,
+  userChangePasswordApiSchema,
+  userChangeSearchPreferencesSchema,
+  userCreateSchema,
+  userEditProfileSchema,
+  userFirstDayOfWeekSchema,
+  userInitSchema,
+  userPingIconsEnabledSchema,
+  userRegistrationApiSchema,
+} from "@homarr/validation/user";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import {
@@ -28,7 +41,7 @@ import { changeSearchPreferencesAsync, changeSearchPreferencesInputSchema } from
 export const userRouter = createTRPCRouter({
   initUser: onboardingProcedure
     .requiresStep("user")
-    .input(validation.user.init)
+    .input(userInitSchema)
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
 
@@ -52,7 +65,7 @@ export const userRouter = createTRPCRouter({
       await nextOnboardingStepAsync(ctx.db, undefined);
     }),
   register: publicProcedure
-    .input(validation.user.registrationApi)
+    .input(userRegistrationApiSchema)
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
@@ -82,7 +95,7 @@ export const userRouter = createTRPCRouter({
   create: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({ openapi: { method: "POST", path: "/api/users", tags: ["users"], protect: true } })
-    .input(validation.user.create)
+    .input(userCreateSchema)
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
@@ -259,7 +272,7 @@ export const userRouter = createTRPCRouter({
       return user;
     }),
   editProfile: protectedProcedure
-    .input(validation.user.editProfile)
+    .input(userEditProfileSchema)
     .output(z.void())
     .meta({ openapi: { method: "PUT", path: "/api/users/profile", tags: ["users"], protect: true } })
     .mutation(async ({ input, ctx }) => {
@@ -318,7 +331,7 @@ export const userRouter = createTRPCRouter({
       await ctx.db.delete(users).where(eq(users.id, input.userId));
     }),
   changePassword: protectedProcedure
-    .input(validation.user.changePasswordApi)
+    .input(userChangePasswordApiSchema)
     .output(z.void())
     .meta({ openapi: { method: "PATCH", path: "/api/users/{userId}/changePassword", tags: ["users"], protect: true } })
     .mutation(async ({ ctx, input }) => {
@@ -384,7 +397,7 @@ export const userRouter = createTRPCRouter({
         .where(eq(users.id, input.userId));
     }),
   changeHomeBoards: protectedProcedure
-    .input(convertIntersectionToZodObject(validation.user.changeHomeBoards.and(z.object({ userId: z.string() }))))
+    .input(convertIntersectionToZodObject(userChangeHomeBoardSchema.and(z.object({ userId: z.string() }))))
     .output(z.void())
     .meta({ openapi: { method: "PATCH", path: "/api/users/changeHome", tags: ["users"], protect: true } })
     .mutation(async ({ input, ctx }) => {
@@ -430,7 +443,7 @@ export const userRouter = createTRPCRouter({
   changeDefaultSearchEngine: protectedProcedure
     .input(
       convertIntersectionToZodObject(
-        validation.user.changeSearchPreferences.omit({ openInNewTab: true }).and(z.object({ userId: z.string() })),
+        userChangeSearchPreferencesSchema.omit({ openInNewTab: true }).and(z.object({ userId: z.string() })),
       ),
     )
     .output(z.void())
@@ -457,7 +470,7 @@ export const userRouter = createTRPCRouter({
       await changeSearchPreferencesAsync(ctx.db, ctx.session, input);
     }),
   changeColorScheme: protectedProcedure
-    .input(validation.user.changeColorScheme)
+    .input(userChangeColorSchemeSchema)
     .output(z.void())
     .meta({ openapi: { method: "PATCH", path: "/api/users/changeScheme", tags: ["users"], protect: true } })
     .mutation(async ({ input, ctx }) => {
@@ -469,7 +482,7 @@ export const userRouter = createTRPCRouter({
         .where(eq(users.id, ctx.session.user.id));
     }),
   changePingIconsEnabled: protectedProcedure
-    .input(validation.user.pingIconsEnabled.and(validation.common.byId))
+    .input(userPingIconsEnabledSchema.and(byIdSchema))
     .mutation(async ({ input, ctx }) => {
       // Only admins can change other users ping icons enabled
       if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
@@ -487,7 +500,7 @@ export const userRouter = createTRPCRouter({
         .where(eq(users.id, ctx.session.user.id));
     }),
   changeFirstDayOfWeek: protectedProcedure
-    .input(convertIntersectionToZodObject(validation.user.firstDayOfWeek.and(validation.common.byId)))
+    .input(convertIntersectionToZodObject(userFirstDayOfWeekSchema.and(byIdSchema)))
     .output(z.void())
     .meta({ openapi: { method: "PATCH", path: "/api/users/firstDayOfWeek", tags: ["users"], protect: true } })
     .mutation(async ({ input, ctx }) => {
@@ -522,7 +535,7 @@ export const userRouter = createTRPCRouter({
     }),
 });
 
-const createUserAsync = async (db: Database, input: Omit<z.infer<typeof validation.user.baseCreate>, "groupIds">) => {
+const createUserAsync = async (db: Database, input: Omit<z.infer<typeof userBaseCreateSchema>, "groupIds">) => {
   const salt = await createSaltAsync();
   const hashedPassword = await hashPasswordAsync(input.password, salt);
 

@@ -14,7 +14,7 @@ import { convertIntegrationTestConnectionError } from "@homarr/integrations/clie
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { integrationUpdateSchema } from "@homarr/validation/integration";
 
 import { SecretCard } from "../../_components/secrets/integration-secret-card";
 import { IntegrationSecretInput } from "../../_components/secrets/integration-secret-inputs";
@@ -32,7 +32,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
     ) ?? getDefaultSecretKinds(integration.kind);
 
   const router = useRouter();
-  const form = useZodForm(validation.integration.update.omit({ id: true }), {
+  const form = useZodForm(integrationUpdateSchema.omit({ id: true }), {
     initialValues: {
       name: integration.name,
       url: integration.url,
@@ -141,4 +141,4 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   );
 };
 
-type FormType = Omit<z.infer<typeof validation.integration.update>, "id">;
+type FormType = Omit<z.infer<typeof integrationUpdateSchema>, "id">;

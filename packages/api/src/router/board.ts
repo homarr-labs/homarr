@@ -37,8 +37,21 @@ import {
 import { importOldmarrAsync } from "@homarr/old-import";
 import { importJsonFileSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
-import type { BoardItemAdvancedOptions } from "@homarr/validation";
-import { sectionSchema, sharedItemSchema, validation, zodUnionFromArray } from "@homarr/validation";
+import {
+  boardByNameSchema,
+  boardChangeVisibilitySchema,
+  boardCreateSchema,
+  boardDuplicateSchema,
+  boardPermissionsSchema,
+  boardRenameSchema,
+  boardSaveLayoutsSchema,
+  boardSavePartialSettingsSchema,
+  boardSavePermissionsSchema,
+  boardSaveSchema,
+} from "@homarr/validation/board";
+import { zodUnionFromArray } from "@homarr/validation/enums";
+import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
+import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
@@ -247,7 +260,7 @@ export const boardRouter = createTRPCRouter({
     }),
   createBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
-    .input(validation.board.create)
+    .input(boardCreateSchema)
     .mutation(async ({ ctx, input }) => {
       const boardId = createId();
 
@@ -291,7 +304,7 @@ export const boardRouter = createTRPCRouter({
     }),
   duplicateBoard: permissionRequiredProcedure
     .requiresPermission("board-create")
-    .input(validation.board.duplicate)
+    .input(boardDuplicateSchema)
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "view");
       await noBoardWithSimilarNameAsync(ctx.db, input.name);
@@ -506,34 +519,32 @@ export const boardRouter = createTRPCRouter({
         },
       });
     }),
-  renameBoard: protectedProcedure.input(validation.board.rename).mutation(async ({ ctx, input }) => {
+  renameBoard: protectedProcedure.input(boardRenameSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
     await noBoardWithSimilarNameAsync(ctx.db, input.name, [input.id]);
 
     await ctx.db.update(boards).set({ name: input.name }).where(eq(boards.id, input.id));
   }),
-  changeBoardVisibility: protectedProcedure
-    .input(validation.board.changeVisibility)
-    .mutation(async ({ ctx, input }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
-      const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
+  changeBoardVisibility: protectedProcedure.input(boardChangeVisibilitySchema).mutation(async ({ ctx, input }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
+    const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
 
-      if (
-        input.visibility !== "public" &&
-        (boardSettings.homeBoardId === input.id || boardSettings.mobileHomeBoardId === input.id)
-      ) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Cannot make home board private",
-        });
-      }
+    if (
+      input.visibility !== "public" &&
+      (boardSettings.homeBoardId === input.id || boardSettings.mobileHomeBoardId === input.id)
+    ) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Cannot make home board private",
+      });
+    }
 
-      await ctx.db
-        .update(boards)
-        .set({ isPublic: input.visibility === "public" })
-        .where(eq(boards.id, input.id));
-    }),
+    await ctx.db
+      .update(boards)
+      .set({ isPublic: input.visibility === "public" })
+      .where(eq(boards.id, input.id));
+  }),
   deleteBoard: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
@@ -572,13 +583,13 @@ export const boardRouter = createTRPCRouter({
 
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
   }),
-  getBoardByName: publicProcedure.input(validation.board.byName).query(async ({ input, ctx }) => {
+  getBoardByName: publicProcedure.input(boardByNameSchema).query(async ({ input, ctx }) => {
     const boardWhere = eq(sql`UPPER(${boards.name})`, input.name.toUpperCase());
     await throwIfActionForbiddenAsync(ctx, boardWhere, "view");
 
     return await getFullBoardWithWhereAsync(ctx.db, boardWhere, ctx.session?.user.id ?? null);
   }),
-  saveLayouts: protectedProcedure.input(validation.board.saveLayouts).mutation(async ({ ctx, input }) => {
+  saveLayouts: protectedProcedure.input(boardSaveLayoutsSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
     const board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
@@ -704,7 +715,7 @@ export const boardRouter = createTRPCRouter({
     }
   }),
   savePartialBoardSettings: protectedProcedure
-    .input(validation.board.savePartialSettings.and(z.object({ id: z.string() })))
+    .input(boardSavePartialSettingsSchema.and(z.object({ id: z.string() })))
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
@@ -738,7 +749,7 @@ export const boardRouter = createTRPCRouter({
         })
         .where(eq(boards.id, input.id));
     }),
-  saveBoard: protectedProcedure.input(validation.board.save).mutation(async ({ input, ctx }) => {
+  saveBoard: protectedProcedure.input(boardSaveSchema).mutation(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
     const dbBoard = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
@@ -1155,7 +1166,7 @@ export const boardRouter = createTRPCRouter({
     });
   }),
 
-  getBoardPermissions: protectedProcedure.input(validation.board.permissions).query(async ({ input, ctx }) => {
+  getBoardPermissions: protectedProcedure.input(boardPermissionsSchema).query(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
     const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
@@ -1226,92 +1237,86 @@ export const boardRouter = createTRPCRouter({
         }),
     };
   }),
-  saveUserBoardPermissions: protectedProcedure
-    .input(validation.board.savePermissions)
-    .mutation(async ({ input, ctx }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
+  saveUserBoardPermissions: protectedProcedure.input(boardSavePermissionsSchema).mutation(async ({ input, ctx }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
 
-      await handleTransactionsAsync(ctx.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            await transaction
-              .delete(schema.boardUserPermissions)
-              .where(eq(boardUserPermissions.boardId, input.entityId));
-            if (input.permissions.length === 0) {
-              return;
-            }
-            await transaction.insert(schema.boardUserPermissions).values(
+    await handleTransactionsAsync(ctx.db, {
+      async handleAsync(db, schema) {
+        await db.transaction(async (transaction) => {
+          await transaction.delete(schema.boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId));
+          if (input.permissions.length === 0) {
+            return;
+          }
+          await transaction.insert(schema.boardUserPermissions).values(
+            input.permissions.map((permission) => ({
+              userId: permission.principalId,
+              permission: permission.permission,
+              boardId: input.entityId,
+            })),
+          );
+        });
+      },
+      handleSync(db) {
+        db.transaction((transaction) => {
+          transaction.delete(boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId)).run();
+          if (input.permissions.length === 0) {
+            return;
+          }
+          transaction
+            .insert(boardUserPermissions)
+            .values(
               input.permissions.map((permission) => ({
                 userId: permission.principalId,
                 permission: permission.permission,
                 boardId: input.entityId,
               })),
-            );
-          });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            transaction.delete(boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId)).run();
-            if (input.permissions.length === 0) {
-              return;
-            }
-            transaction
-              .insert(boardUserPermissions)
-              .values(
-                input.permissions.map((permission) => ({
-                  userId: permission.principalId,
-                  permission: permission.permission,
-                  boardId: input.entityId,
-                })),
-              )
-              .run();
-          });
-        },
-      });
-    }),
-  saveGroupBoardPermissions: protectedProcedure
-    .input(validation.board.savePermissions)
-    .mutation(async ({ input, ctx }) => {
-      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
+            )
+            .run();
+        });
+      },
+    });
+  }),
+  saveGroupBoardPermissions: protectedProcedure.input(boardSavePermissionsSchema).mutation(async ({ input, ctx }) => {
+    await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.entityId), "full");
 
-      await handleTransactionsAsync(ctx.db, {
-        async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            await transaction
-              .delete(schema.boardGroupPermissions)
-              .where(eq(boardGroupPermissions.boardId, input.entityId));
-            if (input.permissions.length === 0) {
-              return;
-            }
-            await transaction.insert(schema.boardGroupPermissions).values(
+    await handleTransactionsAsync(ctx.db, {
+      async handleAsync(db, schema) {
+        await db.transaction(async (transaction) => {
+          await transaction
+            .delete(schema.boardGroupPermissions)
+            .where(eq(boardGroupPermissions.boardId, input.entityId));
+          if (input.permissions.length === 0) {
+            return;
+          }
+          await transaction.insert(schema.boardGroupPermissions).values(
+            input.permissions.map((permission) => ({
+              groupId: permission.principalId,
+              permission: permission.permission,
+              boardId: input.entityId,
+            })),
+          );
+        });
+      },
+      handleSync(db) {
+        db.transaction((transaction) => {
+          transaction.delete(boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.entityId)).run();
+          if (input.permissions.length === 0) {
+            return;
+          }
+          transaction
+            .insert(boardGroupPermissions)
+            .values(
               input.permissions.map((permission) => ({
                 groupId: permission.principalId,
                 permission: permission.permission,
                 boardId: input.entityId,
               })),
-            );
-          });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            transaction.delete(boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.entityId)).run();
-            if (input.permissions.length === 0) {
-              return;
-            }
-            transaction
-              .insert(boardGroupPermissions)
-              .values(
-                input.permissions.map((permission) => ({
-                  groupId: permission.principalId,
-                  permission: permission.permission,
-                  boardId: input.entityId,
-                })),
-              )
-              .run();
-          });
-        },
-      });
-    }),
+            )
+            .run();
+        });
+      },
+    });
+  }),
   importOldmarrConfig: permissionRequiredProcedure
     .requiresPermission("board-create")
     .input(importJsonFileSchema)

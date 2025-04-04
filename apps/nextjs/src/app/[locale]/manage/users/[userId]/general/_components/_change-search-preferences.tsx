@@ -9,7 +9,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { userChangeSearchPreferencesSchema } from "@homarr/validation/user";
 
 interface ChangeSearchPreferencesFormProps {
   user: RouterOutputs["user"]["getById"];
@@ -37,7 +37,7 @@ export const ChangeSearchPreferencesForm = ({ user, searchEnginesData }: ChangeS
       });
     },
   });
-  const form = useZodForm(validation.user.changeSearchPreferences, {
+  const form = useZodForm(userChangeSearchPreferencesSchema, {
     initialValues: {
       defaultSearchEngineId: user.defaultSearchEngineId,
       openInNewTab: user.openSearchInNewTab,
@@ -75,4 +75,4 @@ export const ChangeSearchPreferencesForm = ({ user, searchEnginesData }: ChangeS
   );
 };
 
-type FormType = z.infer<typeof validation.user.changeSearchPreferences>;
+type FormType = z.infer<typeof userChangeSearchPreferencesSchema>;

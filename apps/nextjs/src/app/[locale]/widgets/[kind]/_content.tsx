@@ -11,7 +11,7 @@ import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
 import { useScopedI18n } from "@homarr/translation/client";
-import type { BoardItemAdvancedOptions } from "@homarr/validation";
+import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
 import { WidgetEditModal } from "@homarr/widgets/modals";

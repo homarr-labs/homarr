@@ -12,13 +12,13 @@ import type { CheckboxProps } from "@homarr/form/types";
 import { defaultServerSettings } from "@homarr/server-settings";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { settingsInitSchema } from "@homarr/validation/settings";
 
 export const InitSettings = () => {
   const tSection = useScopedI18n("management.page.settings.section");
   const t = useI18n();
   const { mutateAsync } = clientApi.serverSettings.initSettings.useMutation();
-  const form = useZodForm(validation.settings.init, { initialValues: defaultServerSettings });
+  const form = useZodForm(settingsInitSchema, { initialValues: defaultServerSettings });
 
   form.watch("analytics.enableGeneral", ({ value }) => {
     if (!value) {
@@ -30,7 +30,7 @@ export const InitSettings = () => {
     }
   });
 
-  const handleSubmitAsync = async (values: z.infer<typeof validation.settings.init>) => {
+  const handleSubmitAsync = async (values: z.infer<typeof settingsInitSchema>) => {
     await mutateAsync(values, {
       async onSuccess() {
         await revalidatePathActionAsync("/init");

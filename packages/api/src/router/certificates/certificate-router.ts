@@ -2,7 +2,7 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 
 import { addCustomRootCertificateAsync, removeCustomRootCertificateAsync } from "@homarr/certificates/server";
-import { superRefineCertificateFile, validation } from "@homarr/validation";
+import { certificateValidFileNameSchema, superRefineCertificateFile } from "@homarr/validation/certificates";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 
@@ -20,7 +20,7 @@ export const certificateRouter = createTRPCRouter({
     }),
   removeCertificate: permissionRequiredProcedure
     .requiresPermission("admin")
-    .input(z.object({ fileName: validation.certificates.validFileNameSchema }))
+    .input(z.object({ fileName: certificateValidFileNameSchema }))
     .mutation(async ({ input }) => {
       await removeCustomRootCertificateAsync(input.fileName);
     }),

@@ -8,7 +8,7 @@ import { IconAlertTriangle } from "@tabler/icons-react";
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
 import { createMetaTitle } from "~/metadata";
 import type { Board } from "../../_types";
@@ -28,7 +28,7 @@ export const GeneralSettingsContent = ({ board }: Props) => {
 
   const { mutate: savePartialSettings, isPending } = useSavePartialSettingsMutation(board);
   const form = useZodForm(
-    validation.board.savePartialSettings
+    boardSavePartialSettingsSchema
       .pick({
         pageTitle: true,
         logoImageUrl: true,

@@ -5,7 +5,7 @@ import { createCustomErrorParams } from "./form/i18n";
 
 export const supportedMediaUploadFormats = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml"];
 
-export const uploadMediaSchema = zfd.formData({
+export const mediaUploadSchema = zfd.formData({
   file: zfd.file().superRefine((value: File | null, context: z.RefinementCtx) => {
     if (!value) {
       return context.addIssue({
@@ -38,7 +38,3 @@ export const uploadMediaSchema = zfd.formData({
     return null;
   }),
 });
-
-export const mediaSchemas = {
-  uploadMedia: uploadMediaSchema,
-};

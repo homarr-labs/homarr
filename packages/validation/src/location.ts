@@ -10,11 +10,11 @@ const citySchema = z.object({
   population: z.number().optional(),
 });
 
-const searchCityInput = z.object({
+export const locationSearchCityInput = z.object({
   query: z.string(),
 });
 
-const searchCityOutput = z
+export const locationSearchCityOutput = z
   .object({
     results: z.array(citySchema),
   })
@@ -26,10 +26,3 @@ const searchCityOutput = z
       .refine((data) => Object.keys(data).length === 1, { message: "Invalid response" })
       .transform(() => ({ results: [] })), // We fallback to empty array if no results
   );
-
-export const locationSchemas = {
-  searchCity: {
-    input: searchCityInput,
-    output: searchCityOutput,
-  },
-};
