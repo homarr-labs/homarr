@@ -23,6 +23,7 @@ export const cronJobs = {
   updateChecker: { preventManualExecution: false },
   mediaTranscoding: { preventManualExecution: false },
   minecraftServerStatus: { preventManualExecution: false },
+  networkController: { preventManualExecution: false },
 } satisfies Record<JobGroupKeys, { preventManualExecution?: boolean }>;
 
 /**
