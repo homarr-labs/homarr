@@ -8,7 +8,7 @@ import { zodEnumFromArray } from "./enums";
 import { createCustomErrorParams } from "./form/i18n";
 
 // We always want the lowercase version of the username to compare it in a case-insensitive way
-const usernameSchema = z.string().trim().toLowerCase().min(3).max(255);
+export const usernameSchema = z.string().trim().toLowerCase().min(3).max(255);
 
 const regexCheck = (regex: RegExp) => (value: string) => regex.test(value);
 export const passwordRequirements = [

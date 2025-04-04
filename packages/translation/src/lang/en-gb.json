@@ -2,275 +2,275 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Welcome to Homarr",
+        "subtitle": "Let's start setting your Homarr instance up.",
+        "description": "To get started, please select how you want to continue.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Start from scratch",
+          "importOldmarr": "Import from a Homarr version before v1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Import data",
+        "subtitle": "You can import your data from an existing Homarr instance.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Drag your ZIP file here or click to browse your files",
+          "description": "The ZIP file you uploaded will be processed and you will be able to select what you would like to import"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Change file"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Import settings",
+          "description": "Configure the import behaviour"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "Found {count} boards",
+          "description": "Choose all the boards with the size you want to import",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Select all",
+            "unselectAll": "Deselect all"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "Import summary",
+          "description": "In the summary below, you can see what will be imported",
           "action": {
-            "import": ""
+            "import": "Please confirm import and continue"
           },
           "entities": {
-            "apps": "",
-            "boards": "",
-            "integrations": "",
-            "credentialUsers": ""
+            "apps": "Applications",
+            "boards": "Boards",
+            "integrations": "Integrations",
+            "credentialUsers": "Credential users"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Enter import token",
           "field": {
             "token": {
-              "label": "",
-              "description": ""
+              "label": "Token",
+              "description": "Enter the import token shown in your previous Homarr instance"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Invalid Token",
+              "message": "Sorry, but the token you entered is invalid"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "Administrative user",
+        "subtitle": "Please specify the credentials for your user.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "User created",
+            "message": "The user has been created successfully"
           },
           "error": {
-            "title": ""
+            "title": "User creation failed"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "External group",
+        "subtitle": "Please specify the group which should be used for external users.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Group name",
+            "description": "The name needs to match the admin group of your external provider"
           }
         }
       },
       "settings": {
-        "title": "",
-        "subtitle": ""
+        "title": "Settings",
+        "subtitle": "Configure server settings"
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Finish set-up",
+        "subtitle": "Congratulations, you are ready to go!",
+        "description": "You have successfully finished the setup process. You can now start using Homarr. Please select your next action:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "Go to {name} board",
+          "createBoard": "Create your first board",
+          "inviteUser": "Invite other users",
+          "docs": "Read the documentation"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Go back to the start"
   },
   "user": {
-    "title": "",
-    "name": "",
+    "title": "Users",
+    "name": "User",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Log-in to your account",
+        "subtitle": "Welcome back! Please enter your credentials"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Join Homarr",
+        "subtitle": "Welcome to Homarr! Please create an account",
+        "description": "You were invited by {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "New Homarr installation",
+        "subtitle": "Please create the initial administrator user"
       }
     },
     "field": {
       "email": {
-        "label": "",
-        "verified": ""
+        "label": "Email",
+        "verified": "Verified"
       },
       "username": {
-        "label": ""
+        "label": "User-name"
       },
       "password": {
-        "label": "",
+        "label": "Password",
         "requirement": {
-          "length": "",
-          "lowercase": "",
-          "uppercase": "",
-          "number": "",
-          "special": ""
+          "length": "Includes a minimum of 8 characters",
+          "lowercase": "Includes a lower-case letter",
+          "uppercase": "Includes an upper-case letter",
+          "number": "Includes a number",
+          "special": "Includes a special symbol"
         }
       },
       "passwordConfirm": {
-        "label": ""
+        "label": "Confirm password"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Previous password"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Home board"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Use icons for pings"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Default search engine"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Open the search results in a new tab"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "User-name has already been taken"
     },
     "action": {
       "login": {
-        "label": "",
-        "labelWith": "",
+        "label": "Log-in",
+        "labelWith": "Log-in with {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Log-in is successful",
+            "message": "You are now logged-in"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Log-in failed",
+            "message": "Your log-in attempt failed"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Have you forgotten your password?",
+          "description": "An administrator can use the following command to reset your password:"
         }
       },
       "register": {
-        "label": "",
+        "label": "Create an account",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Account has been created",
+            "message": "Please log-in to continue"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Account creation has failed",
+            "message": "Your account could not be created"
           }
         }
       },
-      "create": "",
+      "create": "Create a user",
       "changePassword": {
-        "label": "",
+        "label": "Change your password",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Your password has been changed successfully"
           },
           "error": {
-            "message": ""
+            "message": "Unable to change your password"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Home board has been changed successfully"
           },
           "error": {
-            "message": ""
+            "message": "Unable to change the home board"
           }
         }
       },
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Search preferences have been changed successfully"
           },
           "error": {
-            "message": ""
+            "message": "Unable to change the search preferences"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "The first day of the week has been changed successfully"
           },
           "error": {
-            "message": ""
+            "message": "Unable to change the first day of the week"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ping icons have been toggled successfully"
           },
           "error": {
-            "message": ""
+            "message": "Unable to toggle the ping icons"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Change image",
           "notification": {
             "success": {
-              "message": ""
+              "message": "The image has been changed successfully"
             },
             "error": {
-              "message": ""
+              "message": "Unable to change the image"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "The image is too large",
+              "message": "The maximum image size is {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Remove image",
+          "confirm": "Are you certain that you would like to remove the image?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Image has been removed successfully"
             },
             "error": {
-              "message": ""
+              "message": "Unable to remove image"
             }
           }
         }
@@ -278,248 +278,248 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Profile has been updated successfully"
           },
           "error": {
-            "message": ""
+            "message": "Unable to update profile"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Permanently delete user",
+        "description": "This deletes this user, including their preferences. This will not delete any boards. The user will not be notified.",
+        "confirm": "Are you sure that you want to delete the user {username}, as well as their preferences"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Select a user",
+        "notFound": "No user found"
       },
       "transfer": {
-        "label": ""
+        "label": "Select a new owner"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Groups",
+    "name": "Group",
+    "search": "Find a group",
     "field": {
-      "name": "",
-      "members": "",
+      "name": "Name",
+      "members": "Members",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Home board",
+        "description": "Only boards that are accessible to the group can be selected \\"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Mobile board",
+        "description": "Only boards that are accessible to the group can be selected"
       }
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "Administrator",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Administrator",
+            "description": "Members who have this permission will have full access to all features and settings"
           }
         }
       },
       "app": {
-        "title": "",
+        "title": "Applications",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Create applications",
+            "description": "Allow members to create applications"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Use all applications",
+            "description": "Allow members to add any applications to their boards"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modify all applciations",
+            "description": "Allow members to modify applications"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Full application access",
+            "description": "Allow members to use, manage, and delete any application"
           }
         }
       },
       "board": {
-        "title": "",
+        "title": "Boards",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Create boards",
+            "description": "Allow members to create boards"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "View all boards",
+            "description": "Allow members to view all boards"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modify all boards",
+            "description": "Allow members to modify all boards (This does not include access control and danger zones)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Full board access",
+            "description": "Allow members to view, modify, and delete all boards (This includes access control and danger zones)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integratioons",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Create integrations",
+            "description": "Allow members to create integrations"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Use all integrations",
+            "description": "Allow members to add any integrations to their boards"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Interact with any integration",
+            "description": "Allow members to interact with any integration"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Full integration access",
+            "description": "Allow members to use, manage, and interact with any integrations"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Media",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Upload media content",
+            "description": "Allow members to upload media content"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "View all media content",
+            "description": "Allow members to view all media content"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Full media access",
+            "description": "Allow members to manage and delete any media content"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Other",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "View logs",
+            "description": "Allow members to view logs"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Search engines",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Create search engine",
+            "description": "Allow members to create search engines"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modify all existing search engines",
+            "description": "Allow members to modify all existing search engines"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Full search engine access",
+            "description": "Allow members to manage and delete any search engine"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Some members can not be managed because they are from an external provider",
+      "external": "All members can not be managed because they are from an external provider"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "This group is reserved for system use and can restrict some actions. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Create a new group",
         "notification": {
           "success": {
-            "message": ""
+            "message": "The group was created successfully"
           },
           "error": {
-            "message": ""
+            "message": "The group could not be created"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Transfer group ownership",
+        "description": "Transfer ownership of this group to another user.",
+        "confirm": "Are you want to transfer the ownership of the group, {name} to {username}",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Successfully transfered group, {group} to {user}"
           },
           "error": {
-            "message": ""
+            "message": "Unable to transfer the group's ownership"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Add member"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Remove member",
+        "confirm": "Are you sure you want to remove the user, {user} from this group?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Delete group",
+        "description": "Once you delete this group, you can not revert the change. Please be careful",
+        "confirm": "Are you sure you want to delete the group, {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Successfully deleted the group, {name}"
           },
           "error": {
-            "message": ""
+            "message": "Unable to delete the group, {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Permissions have been saved",
+            "message": "Successfully saved permissions"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Permissions have not been saved",
+            "message": "Permissions were not saved"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "The group, {name} was successfully saved"
           },
           "error": {
-            "message": ""
+            "message": "Unable to save the group, {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Select a group",
+        "notFound": "No group was found"
       },
       "settings": {
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Settings have been saved",
+              "message": "The settings have been saved successfully"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Settings have not been saved",
+              "message": "The settings were unable to be saved"
             }
           }
         }
@@ -527,448 +527,448 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "The position has been successfully changed"
           },
           "error": {
-            "message": ""
+            "message": "The position was unable to be changed"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "Default group",
+      "description": "{name} - All users that are signed in"
     }
   },
   "app": {
-    "search": "",
+    "search": "Find an application",
     "page": {
       "list": {
-        "title": "",
+        "title": "Application",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "There are currently no applications",
+          "action": "Create the first application"
         }
       },
       "create": {
-        "title": "",
+        "title": "Create application",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Creation successful",
+            "message": "The application has been successfully created"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Creation Failed",
+            "message": "The application was unable to be created"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Edit application",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Changes have been successfully applied",
+            "message": "The application was successfully saved"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Changes have not been applied",
+            "message": "The application was unable to be saved"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Delete application",
+        "message": "Are you certain that you want to delete the application, {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Deleted successfully",
+            "message": "The application was successfully deleted"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Deletion failed",
+            "message": "The application was unable to be deleted"
           }
         }
       }
     },
     "field": {
       "name": {
-        "label": ""
+        "label": "Name"
       },
       "description": {
-        "label": ""
+        "label": "Description"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Use a different URL for pings",
+          "description": "Useful if it is possible to connect to an internal IP to avoid using up ISP bandwidth"
         }
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Select an application",
+        "notFound": "No application found"
       }
     }
   },
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Integrations",
+        "search": "Search your integrations",
         "noResults": {
-          "title": ""
+          "title": "There are currently no integrations"
         }
       },
       "create": {
-        "title": "",
+        "title": "New {name} integration",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Creation successful",
+            "message": "The integration has been successfully created"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Creation failed",
+            "message": "The integration was unable to be created"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Edit {name} integration",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Changes have been successfully applied",
+            "message": "The integration was successfully saved"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Changes have not been applied",
+            "message": "The integration was unable to be saved"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Delete integration",
+        "message": "Are you certain that you want to delete the integration, {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Deletion successful",
+            "message": "The integration was successfully deleted"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Deletion failed",
+            "message": "The integration was unable to be deleted"
           }
         }
       }
     },
     "field": {
       "name": {
-        "label": ""
+        "label": "Name"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Create a search engine",
+        "description": "Integration, {kind} can be used with the search engine. Please check this to automatically configure the search engine."
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "Create application",
+        "description": "Create an application with the same information as the integration. Please leave the input field below empty to create the application with the integration URL."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "Custom application URL"
       }
     },
     "action": {
-      "create": ""
+      "create": "New integration"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Test the connection and create integration",
+        "edit": "Test the connection and save"
       },
-      "alertNotice": "",
+      "alertNotice": "The save button is enabled once the connection is successfully established",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "Connection successful",
+          "message": "The connection has been successfully established"
         },
         "invalidUrl": {
-          "title": "",
-          "message": ""
+          "title": "Invalid URL",
+          "message": "The URL provided is invalid"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Missing credentials",
+          "message": "Some credentials were not provided"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Invalid credentials",
+          "message": "The credentials you provided are invalid"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Connection failed",
+          "message": "The connection was unable to be established"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Bad request",
+          "message": "The request was malformed"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Unauthorised",
+          "message": "The credentials provided were unauthorized. Please double-check what you entered"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Forbidden",
+          "message": "The server was forbidden to connect. Please double-check the permissions"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "Not found",
+          "message": "The URL provided did not return anything. Please double-check the URL"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Internal server error",
+          "message": "The server encountered an error. Please try again later"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Service unavailable",
+          "message": "The server is currently unavailable. Please try again later"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Connection aborted",
+          "message": "The connection was aborted. Please try again later"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "Domain not found",
+          "message": "The domain was not found. Please try again later"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Connection refused",
+          "message": "The server was refused connection. Please try again later"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "Invalid JSON",
+          "message": "The connection's response provided invalid JSON. Please try again later"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Wrong path",
+          "message": "The path is incorrect. Please double-check the URL"
         }
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Secrets",
+      "lastUpdated": "Last updated on {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "No value is set",
+        "tooltip": "The required secret has not currently been set"
       },
-      "secureNotice": "",
+      "secureNotice": "The secret can not be viewed after creation",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Reset secret",
+        "message": "Are you certain that you want to reset the secret?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "No secrets",
+        "text": "There are no secrets required for this integration to work"
       },
       "kind": {
         "username": {
-          "label": "",
-          "newLabel": ""
+          "label": "Username",
+          "newLabel": "New username"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API key",
+          "newLabel": "New API key"
         },
         "password": {
-          "label": "",
-          "newLabel": ""
+          "label": "Password",
+          "newLabel": "New password"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Token ID",
+          "newLabel": "New token ID"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Realm",
+          "newLabel": "New realm"
         }
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "Select integrations in items",
+      "interact": "Interact with integrations",
+      "full": "Full integration access"
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Media",
+    "search": "Find media",
     "field": {
-      "name": "",
-      "size": "",
-      "creator": ""
+      "name": "Name",
+      "size": "Size",
+      "creator": "Creator"
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Upload media",
+        "file": "Select file",
         "notification": {
           "success": {
-            "message": ""
+            "message": "The media was successfully uploaded"
           },
           "error": {
-            "message": ""
+            "message": "The media was unable to be uploaded"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Delete media",
+        "description": "Are you certain that you want to delete the media, <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "The media was successfully deleted"
           },
           "error": {
-            "message": ""
+            "message": "The media was unable to be deleted"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "Copy URL"
       },
       "open": {
-        "label": ""
+        "label": "Open media"
       }
     }
   },
   "common": {
-    "beta": "",
-    "error": "",
+    "beta": "Beta",
+    "error": "Alpha",
     "action": {
-      "add": "",
-      "apply": "",
-      "backToOverview": "",
-      "create": "",
-      "createAnother": "",
-      "edit": "",
-      "import": "",
-      "insert": "",
-      "remove": "",
-      "save": "",
-      "saveChanges": "",
-      "cancel": "",
-      "delete": "",
-      "discard": "",
-      "confirm": "",
-      "continue": "",
-      "previous": "",
-      "next": "",
-      "checkoutDocs": "",
-      "checkLogs": "",
-      "tryAgain": "",
-      "loading": ""
+      "add": "Add",
+      "apply": "Apply",
+      "backToOverview": "Back to overview",
+      "create": "Create",
+      "createAnother": "Create and start over",
+      "edit": "Edit",
+      "import": "Import",
+      "insert": "Insert",
+      "remove": "Remove",
+      "save": "Save",
+      "saveChanges": "Save your changes",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "discard": "Discard",
+      "confirm": "Confirm",
+      "continue": "Continue",
+      "previous": "Previous",
+      "next": "Next",
+      "checkoutDocs": "Check the documentation",
+      "checkLogs": "Check logs for more information",
+      "tryAgain": "Try again",
+      "loading": "Loading"
     },
-    "here": "",
+    "here": "here",
     "iconPicker": {
-      "label": "",
-      "header": ""
+      "label": "Icon URL",
+      "header": "Please enter a name or object to filter for the icon. Homarr will search throughout {countIcons} different icons to find the right one."
     },
     "colorScheme": {
       "options": {
-        "light": "",
-        "dark": ""
+        "light": "Light",
+        "dark": "Dark"
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
-      "hours": "",
-      "minutes": ""
+      "min": "Minimum",
+      "max": "Maximum",
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Creation successful",
+        "error": "Creation failed"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Deletion successful",
+        "error": "Deletion failed"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Changed were successfully applied",
+        "error": "Changes were unable to be applied"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Transfer successful",
+        "error": "Transfer failed"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Please pick one or more values"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Add more values",
+      "addLabel": "Add {value}"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Pick value",
       "badge": {
-        "recommended": ""
+        "recommended": "Recommended"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
-        "preferences": "",
-        "logout": "",
-        "login": "",
-        "homeBoard": "",
-        "loggedOut": "",
-        "updateAvailable": ""
+        "switchToDarkMode": "Switch to dark mode",
+        "switchToLightMode": "Switch to light mode",
+        "management": "Management",
+        "preferences": "Your preferences",
+        "logout": "Log-out",
+        "login": "Log-in",
+        "homeBoard": "Your home board",
+        "loggedOut": "Logged out",
+        "updateAvailable": "New update available: {tag}"
       }
     },
-    "dangerZone": "",
-    "noResults": "",
-    "unsavedChanges": "",
+    "dangerZone": "Danger zone",
+    "noResults": "No results have been found",
+    "unsavedChanges": "You have unsaved changes!",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Show a preview",
+      "hide": "Hide the preview"
     },
     "zod": {
       "errors": {
-        "default": "",
-        "required": "",
+        "default": "This field contains invalid data",
+        "required": "This field is required",
         "string": {
-          "startsWith": "",
-          "endsWith": "",
-          "includes": "",
-          "invalidEmail": ""
+          "startsWith": "This field must start with \"{startsWith}\"",
+          "endsWith": "This field must end with \"{endsWith}\"",
+          "includes": "This field must include {includes}",
+          "invalidEmail": "This field must contain a valid email address"
         },
         "tooSmall": {
-          "string": "",
-          "number": ""
+          "string": "This field must contain at least {minimum} characters",
+          "number": "This field must be more than or equal to {minimum} characters"
         },
         "tooBig": {
-          "string": "",
-          "number": ""
+          "string": "This field must contain at most {maximum} characters",
+          "number": "This field must be less than or equal to {maximum} characters"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
-          "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "passwordsDoNotMatch": "The passwords do not match",
+          "passwordRequirements": "The password does not meet the recommended requirements",
+          "boardAlreadyExists": "An existing board already has this name",
+          "invalidFileType": "Invalid file type provided, expected {expected}",
+          "invalidFileName": "Invalid file name provided",
+          "fileTooLarge": "The file is too large, the maximum size is {maxSize}",
+          "invalidConfiguration": "Configuration is invalid",
+          "groupNameTaken": "An existing group already has this name"
         }
       }
     }
@@ -976,44 +976,44 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Create a new dynamic section",
+        "remove": "Delete dynamic section"
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Title"
         },
         "borderColor": {
-          "label": ""
+          "label": "Border colour"
         }
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "Remove dynamic section",
+        "message": "Are you certain that you want to remove this dynamic section? All items inside will be moved to the same location inside of the parent section."
       }
     },
     "category": {
       "field": {
         "name": {
-          "label": ""
+          "label": "Name"
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
-        "moveUp": "",
-        "moveDown": "",
-        "createAbove": "",
-        "createBelow": "",
-        "openAllInNewTabs": ""
+        "create": "New category",
+        "edit": "Rename category",
+        "remove": "Remove category",
+        "moveUp": "Move upwards",
+        "moveDown": "Move downwards",
+        "createAbove": "Create new category above",
+        "createBelow": "Create new category below",
+        "openAllInNewTabs": "Open all in new tabs"
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "New category",
+        "submit": "Add category"
       },
       "remove": {
-        "title": "",
+        "title": "Remove category",
         "message": ""
       },
       "edit": {
@@ -1082,7 +1082,7 @@
           "label": ""
         },
         "borderColor": {
-          "label": ""
+          "label": "Border colour"
         }
       }
     },
@@ -1180,7 +1180,7 @@
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Use Pi-Hole colours"
         }
       },
       "error": {
@@ -1253,7 +1253,7 @@
           "label": ""
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": " "
         },
         "timezone": {
           "label": "",
@@ -1314,8 +1314,8 @@
         "italic": "",
         "strikethrough": "",
         "underline": "",
-        "colorText": "",
-        "colorHighlight": "",
+        "colorText": "Colour text",
+        "colorHighlight": "Coloured highlight text",
         "code": "",
         "clear": "",
         "heading": "",
@@ -1332,7 +1332,7 @@
         "image": "",
         "addTable": "",
         "deleteTable": "",
-        "colorCell": "",
+        "colorCell": "Colour cell",
         "mergeCell": "",
         "addColumnLeft": "",
         "addColumnRight": "",
@@ -1347,7 +1347,7 @@
         "right": ""
       },
       "popover": {
-        "clearColor": "",
+        "clearColor": "Clear colour",
         "source": "",
         "widthPlaceholder": "",
         "columns": "",
@@ -1724,11 +1724,7 @@
         "noIntegration": "",
         "noData": ""
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "",
@@ -2200,16 +2196,16 @@
         }
       },
       "primaryColor": {
-        "label": ""
+        "label": "Primary colour"
       },
       "secondaryColor": {
-        "label": ""
+        "label": "Secondary colour"
       },
       "opacity": {
         "label": ""
       },
       "iconColor": {
-        "label": ""
+        "label": "Icon colour"
       },
       "customCss": {
         "label": "",
@@ -2712,7 +2708,7 @@
           "appearance": {
             "title": "",
             "defaultColorScheme": {
-              "label": "",
+              "label": "Default colour scheme",
               "options": {
                 "light": "",
                 "dark": ""
