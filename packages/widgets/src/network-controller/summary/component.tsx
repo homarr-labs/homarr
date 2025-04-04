@@ -79,7 +79,7 @@ export default function NetworkControllerSummaryWidget({
             <Text>
               VPN
               <Text c={"dimmed"} size={"md"} ms={"xs"} span>
-                {t("widget.networkControllerSummary.card.vpn.countConnected", { count: data[0]?.vpn.users ?? 0 })}
+                {t("widget.networkControllerSummary.card.vpn.countConnected", { count: `${data[0]?.vpn.users}` })}
               </Text>
             </Text>
           </List.Item>

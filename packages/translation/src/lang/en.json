@@ -758,7 +758,10 @@
           "title": "Wrong path",
           "message": "The path is probably not correct"
         },
-        "tooManyRequests": "Too many requests in a given time"
+        "tooManyRequests": {
+          "title": "Too many requests in a given time",
+          "message": "There were too many requests. You are likely being rate-limited or rejected by the target system"
+        }
       }
     },
     "secrets": {
