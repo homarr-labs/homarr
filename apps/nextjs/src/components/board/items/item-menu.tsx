@@ -1,10 +1,18 @@
 import { useEffect, useMemo, useRef } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
+import {
+  IconCopy,
+  IconDotsVertical,
+  IconLayoutKanban,
+  IconMessageCircle2,
+  IconPencil,
+  IconTrash,
+} from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { WidgetFeedbackModal } from "@homarr/modals-collection";
 import { useSettings } from "@homarr/settings";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { widgetImports } from "@homarr/widgets";
@@ -29,6 +37,7 @@ export const BoardItemMenu = ({
   const t = useI18n();
   const { openModal } = useModalAction(WidgetEditModal);
   const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
+  const { openModal: openFeedbackModal } = useModalAction(WidgetFeedbackModal);
   const { openConfirmModal } = useConfirmModal();
   const [isEditMode] = useEditMode();
   const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
@@ -91,6 +100,13 @@ export const BoardItemMenu = ({
     });
   };
 
+  const openWidgetFeedbackModal = () => {
+    openFeedbackModal({
+      itemId: item.id,
+      widgetKind: item.kind,
+    });
+  };
+
   return (
     <Menu withinPortal withArrow position="right-start" arrowPosition="center">
       <Menu.Target>
@@ -114,6 +130,9 @@ export const BoardItemMenu = ({
         </Menu.Item>
         <Menu.Item leftSection={<IconCopy size={16} />} onClick={() => duplicateItem({ itemId: item.id })}>
           {tItem("action.duplicate")}
+        </Menu.Item>
+        <Menu.Item leftSection={<IconMessageCircle2 size={16} />} onClick={openWidgetFeedbackModal}>
+          {tItem("action.feedback")}
         </Menu.Item>
         <Menu.Divider />
         <Menu.Label c="red.6">{t("common.dangerZone")}</Menu.Label>
