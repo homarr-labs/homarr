@@ -3,7 +3,9 @@ import objectSupport from "dayjs/plugin/objectSupport";
 import utc from "dayjs/plugin/utc";
 import * as ical from "node-ical";
 import { DAVClient } from "tsdav";
+import type { RequestInit as UndiciFetchRequestInit } from "undici";
 
+import { createCertificateAgentAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
 import { Integration } from "../base/integration";
@@ -14,12 +16,12 @@ dayjs.extend(objectSupport);
 
 export class NextcloudIntegration extends Integration {
   public async testConnectionAsync(): Promise<void> {
-    const client = this.createCalendarClient();
+    const client = await this.createCalendarClientAsync();
     await client.login();
   }
 
   public async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]> {
-    const client = this.createCalendarClient();
+    const client = await this.createCalendarClientAsync();
     await client.login();
 
     const calendars = await client.fetchCalendars();
@@ -83,7 +85,7 @@ export class NextcloudIntegration extends Integration {
     });
   }
 
-  private createCalendarClient() {
+  private async createCalendarClientAsync() {
     return new DAVClient({
       serverUrl: this.integration.url,
       credentials: {
@@ -92,6 +94,10 @@ export class NextcloudIntegration extends Integration {
       },
       authMethod: "Basic",
       defaultAccountType: "caldav",
+      fetchOptions: {
+        // We can use the undici options as the global fetch is used instead of the polyfilled.
+        dispatcher: await createCertificateAgentAsync(),
+      } satisfies UndiciFetchRequestInit as RequestInit,
     });
   }
 }
