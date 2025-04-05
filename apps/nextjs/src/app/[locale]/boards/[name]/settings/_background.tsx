@@ -1,6 +1,6 @@
 "use client";
 
-import { Autocomplete, Button, Grid, Group, Popover, Stack, Text } from "@mantine/core";
+import { Autocomplete, Button, Center, Grid, Group, Popover, Stack, Text } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { IconPhotoOff } from "@tabler/icons-react";
 
@@ -68,7 +68,9 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
                 form.values.backgroundImageUrl.trim().length >= 2 && (
                   <Popover width={300} withArrow>
                     <Popover.Target>
-                      <ImagePreview src={form.values.backgroundImageUrl} w={20} h={20} />
+                      <Center h="100%">
+                        <ImagePreview src={form.values.backgroundImageUrl} w={20} h={20} />
+                      </Center>
                     </Popover.Target>
                     <Popover.Dropdown>
                       <ImagePreview src={form.values.backgroundImageUrl} w="100%" />
