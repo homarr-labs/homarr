@@ -134,6 +134,7 @@ export const boardRouter = createTRPCRouter({
         name: true,
         logoImageUrl: true,
         isPublic: true,
+        showInNavigation: true,
       },
       with: {
         creator: {
@@ -708,9 +709,9 @@ export const boardRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "modify");
 
-      await ctx.db
-        .update(boards)
-        .set({
+      // Only allow admins to change showInNavigation
+      const isAdmin = ctx.session.user.permissions.includes("admin");
+      const settingsToUpdate = {
           // general settings
           pageTitle: input.pageTitle,
           metaTitle: input.metaTitle,
@@ -735,7 +736,16 @@ export const boardRouter = createTRPCRouter({
 
           // Behavior settings
           disableStatus: input.disableStatus,
-        })
+        };
+      
+      // Only include showInNavigation in the update if user is admin
+      if (isAdmin) {
+        settingsToUpdate.showInNavigation = input.showInNavigation;
+      }
+
+      await ctx.db
+        .update(boards)
+        .set(settingsToUpdate)
         .where(eq(boards.id, input.id));
     }),
   saveBoard: protectedProcedure.input(validation.board.save).mutation(async ({ input, ctx }) => {
@@ -1110,7 +1120,9 @@ export const boardRouter = createTRPCRouter({
                   parentSectionId: sectionLayout.parentSectionId,
                 })
                 .where(
-                  and(eq(sectionLayouts.sectionId, section.id), eq(sectionLayouts.layoutId, sectionLayout.layoutId)),
+                  and(
+                    eq(sectionLayouts.sectionId, section.id),
+                    eq(sectionLayouts.layoutId, sectionLayout.layoutId)),
                 )
                 .run();
             }

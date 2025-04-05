@@ -288,6 +288,7 @@ export const boards = mysqlTable("board", {
   iconColor: text(),
   itemRadius: text().$type<MantineSize>().default("lg").notNull(),
   disableStatus: boolean().default(false).notNull(),
+  showInNavigation: boolean().default(false).notNull(),
 });
 
 export const boardUserPermissions = mysqlTable(
