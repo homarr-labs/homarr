@@ -57,9 +57,5 @@ const AddGroup = () => {
     openModal();
   }, [openModal]);
 
-  return (
-    <MobileAffixButton onClick={handleAddGroup} color="teal">
-      {t("group.action.create.label")}
-    </MobileAffixButton>
-  );
+  return <MobileAffixButton onClick={handleAddGroup}>{t("group.action.create.label")}</MobileAffixButton>;
 };
