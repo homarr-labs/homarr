@@ -1,7 +1,8 @@
 "use client";
 
-import type { AutocompleteProps } from "@mantine/core";
 import { Autocomplete, Button, Grid, Group, Popover, Stack, Text } from "@mantine/core";
+import { useDebouncedValue } from "@mantine/hooks";
+import { IconPhotoOff } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -31,12 +32,16 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
       backgroundImageSize: board.backgroundImageSize,
     },
   });
+
+  const [debouncedSearch] = useDebouncedValue(form.values.backgroundImageUrl, 200);
   const medias = clientApi.media.getPaginated.useQuery({
     page: 1,
-    pageSize: 100,
+    pageSize: 10,
     includeFromAllUsers: true,
+    search: debouncedSearch ?? "",
   });
   const images = medias.data?.items.filter((media) => media.contentType.startsWith("image/")) ?? [];
+  const imageMap = new Map(images.map((image) => [`/api/user-medias/${image.id}`, image]));
 
   const backgroundImageAttachmentData = useBackgroundOptionData(
     "backgroundImageAttachment",
@@ -63,20 +68,34 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
                 form.values.backgroundImageUrl.trim().length >= 2 && (
                   <Popover width={300} withArrow>
                     <Popover.Target>
-                      <img
-                        src={form.values.backgroundImageUrl}
-                        alt="preview image"
-                        style={{ width: 20, height: 20, objectFit: "contain" }}
-                      />
+                      <ImagePreview src={form.values.backgroundImageUrl} w={20} h={20} />
                     </Popover.Target>
                     <Popover.Dropdown>
-                      <img src={form.values.backgroundImageUrl} alt="preview image" style={{ width: "100%" }} />
+                      <ImagePreview src={form.values.backgroundImageUrl} w="100%" />
                     </Popover.Dropdown>
                   </Popover>
                 )
               }
+              // We filter it on the server
+              filter={({ options }) => options}
               label={t("board.field.backgroundImageUrl.label")}
-              renderOption={renderAutocompleteOption}
+              placeholder={`${t("board.field.backgroundImageUrl.placeholder")}...`}
+              renderOption={({ option }) => {
+                const current = imageMap.get(option.value);
+                if (!current) return null;
+
+                return (
+                  <Group gap="sm">
+                    <ImagePreview src={option.value} w={20} h={20} />
+                    <Stack gap={0}>
+                      <Text size="sm">{current.name}</Text>
+                      <Text size="xs" c="dimmed">
+                        {option.value}
+                      </Text>
+                    </Stack>
+                  </Group>
+                );
+              }}
               data={[
                 {
                   group: t("board.field.backgroundImageUrl.group.your"),
@@ -127,12 +146,20 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
   );
 };
 
-const renderAutocompleteOption: AutocompleteProps["renderOption"] = ({ option }) => (
-  <Group gap="sm">
-    <img src={option.value} alt="preview image" style={{ width: 20, height: 20, objectFit: "contain" }} />
-    <Text size="sm">{option.value}</Text>
-  </Group>
-);
+interface ImagePreviewProps {
+  src: string;
+  w: string | number;
+  h?: string | number;
+}
+
+const ImagePreview = ({ src, w, h }: ImagePreviewProps) => {
+  if (!["/", "http://", "https://"].some((prefix) => src.startsWith(prefix))) {
+    return <IconPhotoOff size={w} />;
+  }
+
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={src} alt="preview image" style={{ width: w, height: h, objectFit: "contain" }} />;
+};
 
 type BackgroundImageKey = "backgroundImageAttachment" | "backgroundImageSize" | "backgroundImageRepeat";
 

@@ -2147,6 +2147,7 @@
       },
       "backgroundImageUrl": {
         "label": "Background image URL",
+        "placeholder": "Start typing to search local images",
         "group": {
           "your": "Your images",
           "other": "Other images"
