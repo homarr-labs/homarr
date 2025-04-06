@@ -2146,7 +2146,12 @@
         "label": "Favicon bilde URL"
       },
       "backgroundImageUrl": {
-        "label": "URL for bakgrunnsbilde"
+        "label": "URL for bakgrunnsbilde",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Bakgrunnsbildevedlegg",
