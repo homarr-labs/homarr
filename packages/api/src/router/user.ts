@@ -14,7 +14,7 @@ import { byIdSchema } from "@homarr/validation/common";
 import type { userBaseCreateSchema } from "@homarr/validation/user";
 import {
   userChangeColorSchemeSchema,
-  userChangeHomeBoardSchema,
+  userChangeHomeBoardsSchema,
   userChangePasswordApiSchema,
   userChangeSearchPreferencesSchema,
   userCreateSchema,
@@ -397,7 +397,7 @@ export const userRouter = createTRPCRouter({
         .where(eq(users.id, input.userId));
     }),
   changeHomeBoards: protectedProcedure
-    .input(convertIntersectionToZodObject(userChangeHomeBoardSchema.and(z.object({ userId: z.string() }))))
+    .input(convertIntersectionToZodObject(userChangeHomeBoardsSchema.and(z.object({ userId: z.string() }))))
     .output(z.void())
     .meta({ openapi: { method: "PATCH", path: "/api/users/changeHome", tags: ["users"], protect: true } })
     .mutation(async ({ input, ctx }) => {

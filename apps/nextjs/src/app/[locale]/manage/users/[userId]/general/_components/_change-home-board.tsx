@@ -9,7 +9,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { userChangeHomeBoardSchema } from "@homarr/validation/user";
+import { userChangeHomeBoardsSchema } from "@homarr/validation/user";
 
 import type { Board } from "~/app/[locale]/boards/_types";
 import { BoardSelect } from "~/components/board/board-select";
@@ -40,7 +40,7 @@ export const ChangeHomeBoardForm = ({ user, boardsData }: ChangeHomeBoardFormPro
       });
     },
   });
-  const form = useZodForm(userChangeHomeBoardSchema, {
+  const form = useZodForm(userChangeHomeBoardsSchema, {
     initialValues: {
       homeBoardId: user.homeBoardId,
       mobileHomeBoardId: user.mobileHomeBoardId,
@@ -82,4 +82,4 @@ export const ChangeHomeBoardForm = ({ user, boardsData }: ChangeHomeBoardFormPro
   );
 };
 
-type FormType = z.infer<typeof userChangeHomeBoardSchema>;
+type FormType = z.infer<typeof userChangeHomeBoardsSchema>;

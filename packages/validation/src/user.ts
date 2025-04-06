@@ -106,7 +106,7 @@ export const userChangePasswordSchema = addConfirmPasswordRefinement(baseChangeP
 
 export const userChangePasswordApiSchema = addConfirmPasswordRefinement(baseChangePasswordSchema);
 
-export const userChangeHomeBoardSchema = z.object({
+export const userChangeHomeBoardsSchema = z.object({
   homeBoardId: z.string().nullable(),
   mobileHomeBoardId: z.string().nullable(),
 });

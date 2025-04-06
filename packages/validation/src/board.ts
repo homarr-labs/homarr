@@ -93,8 +93,4 @@ export const boardCreateSchema = z.object({
   isPublic: z.boolean(),
 });
 
-export const boardPermissionsSchema = z.object({
-  id: z.string(),
-});
-
 export const boardSavePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));

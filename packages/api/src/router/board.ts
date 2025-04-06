@@ -42,13 +42,13 @@ import {
   boardChangeVisibilitySchema,
   boardCreateSchema,
   boardDuplicateSchema,
-  boardPermissionsSchema,
   boardRenameSchema,
   boardSaveLayoutsSchema,
   boardSavePartialSettingsSchema,
   boardSavePermissionsSchema,
   boardSaveSchema,
 } from "@homarr/validation/board";
+import { byIdSchema } from "@homarr/validation/common";
 import { zodUnionFromArray } from "@homarr/validation/enums";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
@@ -1165,8 +1165,7 @@ export const boardRouter = createTRPCRouter({
       },
     });
   }),
-
-  getBoardPermissions: protectedProcedure.input(boardPermissionsSchema).query(async ({ input, ctx }) => {
+  getBoardPermissions: protectedProcedure.input(byIdSchema).query(async ({ input, ctx }) => {
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
     const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
