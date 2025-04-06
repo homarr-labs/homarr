@@ -8,7 +8,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { groupUpdateSchema } from "@homarr/validation/group";
 
 interface RenameGroupFormProps {
   group: {
@@ -21,7 +21,7 @@ interface RenameGroupFormProps {
 export const RenameGroupForm = ({ group, disabled }: RenameGroupFormProps) => {
   const t = useI18n();
   const { mutate, isPending } = clientApi.group.updateGroup.useMutation();
-  const form = useZodForm(validation.group.update.pick({ name: true }), {
+  const form = useZodForm(groupUpdateSchema.pick({ name: true }), {
     initialValues: {
       name: group.name,
     },

@@ -6,7 +6,7 @@ import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { groupSettingsSchema } from "@homarr/validation/group";
 
 import { BoardSelect } from "~/components/board/board-select";
 
@@ -19,7 +19,7 @@ interface GroupHomeBoardsProps {
 export const GroupHomeBoards = ({ homeBoardId, mobileHomeBoardId, groupId }: GroupHomeBoardsProps) => {
   const t = useI18n();
   const [availableBoards] = clientApi.board.getBoardsForGroup.useSuspenseQuery({ groupId });
-  const form = useZodForm(validation.group.settings.pick({ homeBoardId: true, mobileHomeBoardId: true }), {
+  const form = useZodForm(groupSettingsSchema.pick({ homeBoardId: true, mobileHomeBoardId: true }), {
     initialValues: {
       homeBoardId,
       mobileHomeBoardId,

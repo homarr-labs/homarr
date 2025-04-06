@@ -5,7 +5,8 @@ import { asc, createId, eq, inArray, like } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
 import { getIconForName } from "@homarr/icons";
-import { validation } from "@homarr/validation";
+import { appCreateManySchema, appEditSchema, appManageSchema } from "@homarr/validation/app";
+import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
@@ -15,7 +16,7 @@ const defaultIcon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@mas
 
 export const appRouter = createTRPCRouter({
   getPaginated: protectedProcedure
-    .input(validation.common.paginated)
+    .input(paginatedSchema)
     .output(z.object({ items: z.array(selectAppSchema), totalCount: z.number() }))
     .meta({ openapi: { method: "GET", path: "/api/apps/paginated", tags: ["apps"], protect: true } })
     .query(async ({ input, ctx }) => {
@@ -83,7 +84,7 @@ export const appRouter = createTRPCRouter({
       });
     }),
   byId: publicProcedure
-    .input(validation.common.byId)
+    .input(byIdSchema)
     .output(selectAppSchema)
     .meta({ openapi: { method: "GET", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
     .query(async ({ ctx, input }) => {
@@ -115,7 +116,7 @@ export const appRouter = createTRPCRouter({
   }),
   create: permissionRequiredProcedure
     .requiresPermission("app-create")
-    .input(validation.app.manage)
+    .input(appManageSchema)
     .output(z.object({ appId: z.string() }))
     .meta({ openapi: { method: "POST", path: "/api/apps", tags: ["apps"], protect: true } })
     .mutation(async ({ ctx, input }) => {
@@ -133,7 +134,7 @@ export const appRouter = createTRPCRouter({
     }),
   createMany: permissionRequiredProcedure
     .requiresPermission("app-create")
-    .input(validation.app.createMany)
+    .input(appCreateManySchema)
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(apps).values(
@@ -148,7 +149,7 @@ export const appRouter = createTRPCRouter({
     }),
   update: permissionRequiredProcedure
     .requiresPermission("app-modify-all")
-    .input(convertIntersectionToZodObject(validation.app.edit))
+    .input(convertIntersectionToZodObject(appEditSchema))
     .output(z.void())
     .meta({ openapi: { method: "PATCH", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
     .mutation(async ({ ctx, input }) => {
@@ -178,7 +179,7 @@ export const appRouter = createTRPCRouter({
     .requiresPermission("app-full-all")
     .output(z.void())
     .meta({ openapi: { method: "DELETE", path: "/api/apps/{id}", tags: ["apps"], protect: true } })
-    .input(validation.common.byId)
+    .input(byIdSchema)
     .mutation(async ({ ctx, input }) => {
       await ctx.db.delete(apps).where(eq(apps.id, input.id));
     }),

@@ -12,7 +12,7 @@ import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { SelectItemWithDescriptionBadge } from "@homarr/ui";
 import { SelectWithDescriptionBadge } from "@homarr/ui";
-import { validation } from "@homarr/validation";
+import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";
@@ -24,7 +24,7 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
   const t = useI18n();
   const { data: session } = useSession();
   const { mutate: savePartialSettings, isPending } = useSavePartialSettingsMutation(board);
-  const form = useZodForm(validation.board.savePartialSettings, {
+  const form = useZodForm(boardSavePartialSettingsSchema, {
     initialValues: {
       backgroundImageUrl: board.backgroundImageUrl ?? "",
       backgroundImageAttachment: board.backgroundImageAttachment,

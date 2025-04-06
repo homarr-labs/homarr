@@ -9,7 +9,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { userEditProfileSchema } from "@homarr/validation/user";
 
 interface UserProfileFormProps {
   user: RouterOutputs["user"]["getById"];
@@ -43,7 +43,7 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
       });
     },
   });
-  const form = useZodForm(validation.user.editProfile.omit({ id: true }), {
+  const form = useZodForm(userEditProfileSchema.omit({ id: true }), {
     initialValues: {
       name: user.name ?? "",
       email: user.email ?? "",

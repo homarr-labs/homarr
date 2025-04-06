@@ -7,14 +7,14 @@ import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { IntegrationAvatar } from "@homarr/ui";
-import type { validation } from "@homarr/validation";
+import type { integrationCreateSchema } from "@homarr/validation/integration";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NewIntegrationForm } from "./_integration-new-form";
 
 interface NewIntegrationPageProps {
   searchParams: Promise<
-    Partial<z.infer<typeof validation.integration.create>> & {
+    Partial<z.infer<typeof integrationCreateSchema>> & {
       kind: IntegrationKind;
     }
   >;

@@ -10,7 +10,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { AppForm } from "@homarr/forms-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import type { validation } from "@homarr/validation";
+import type { appManageSchema } from "@homarr/validation/app";
 
 interface AppEditFormProps {
   app: RouterOutputs["app"]["byId"];
@@ -40,7 +40,7 @@ export const AppEditForm = ({ app }: AppEditFormProps) => {
   });
 
   const handleSubmit = useCallback(
-    (values: z.infer<typeof validation.app.manage>) => {
+    (values: z.infer<typeof appManageSchema>) => {
       mutate({
         id: app.id,
         ...values,

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { createCustomErrorParams } from "./form/i18n";
 
-const validFileNameSchema = z.string().regex(/^[\w\-. ]+$/);
+export const certificateValidFileNameSchema = z.string().regex(/^[\w\-. ]+$/);
 
 export const superRefineCertificateFile = (value: File | null, context: z.RefinementCtx) => {
   if (!value) {
@@ -13,7 +13,7 @@ export const superRefineCertificateFile = (value: File | null, context: z.Refine
     });
   }
 
-  const result = validFileNameSchema.safeParse(value.name);
+  const result = certificateValidFileNameSchema.safeParse(value.name);
   if (!result.success) {
     return context.addIssue({
       code: "custom",
@@ -45,8 +45,4 @@ export const superRefineCertificateFile = (value: File | null, context: z.Refine
   }
 
   return null;
-};
-
-export const certificateSchemas = {
-  validFileNameSchema,
 };

@@ -13,7 +13,7 @@ import type { useForm } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { userSignInSchema } from "@homarr/validation/user";
 
 interface LoginFormProps {
   providers: string[];
@@ -22,7 +22,7 @@ interface LoginFormProps {
   callbackUrl: string;
 }
 
-const extendedValidation = validation.user.signIn.extend({ provider: z.enum(["credentials", "ldap"]) });
+const extendedValidation = userSignInSchema.extend({ provider: z.enum(["credentials", "ldap"]) });
 
 export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, callbackUrl }: LoginFormProps) => {
   const t = useScopedI18n("user");

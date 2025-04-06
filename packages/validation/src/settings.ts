@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const initSettingsSchema = z.object({
+export const settingsInitSchema = z.object({
   analytics: z.object({
     enableGeneral: z.boolean(),
     enableWidgetData: z.boolean(),
@@ -14,7 +14,3 @@ const initSettingsSchema = z.object({
     noSiteLinksSearchBox: z.boolean(),
   }),
 });
-
-export const settingsSchemas = {
-  init: initSettingsSchema,
-};

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
-import type { BoardItemAdvancedOptions } from "@homarr/validation";
+import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 
 import type { CreateItemInput } from "./actions/create-item";
 import { createItemCallback } from "./actions/create-item";
