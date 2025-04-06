@@ -1724,11 +1724,7 @@
         "noIntegration": "Ingen integrasjon valgt",
         "noData": "Ingen integrasjonsdata er tilgjengelig"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Videostrømming",
@@ -2150,7 +2146,12 @@
         "label": "Favicon bilde URL"
       },
       "backgroundImageUrl": {
-        "label": "URL for bakgrunnsbilde"
+        "label": "URL for bakgrunnsbilde",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Bakgrunnsbildevedlegg",

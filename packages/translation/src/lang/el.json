@@ -1724,11 +1724,7 @@
         "noIntegration": "",
         "noData": ""
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Ροή Βίντεο",
@@ -2150,7 +2146,12 @@
         "label": ""
       },
       "backgroundImageUrl": {
-        "label": ""
+        "label": "",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Συνημμένη εικόνα φόντου",

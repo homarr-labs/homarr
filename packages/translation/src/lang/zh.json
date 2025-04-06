@@ -981,7 +981,7 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "標題"
         },
         "borderColor": {
           "label": "邊框顏色"
@@ -1428,76 +1428,76 @@
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "股票價格",
+      "description": "顯示公司當前股票價格",
       "option": {
         "stock": {
-          "label": ""
+          "label": "股票代碼"
         },
         "timeRange": {
-          "label": "",
+          "label": "時間範圍",
           "option": {
             "1d": {
-              "label": ""
+              "label": "單日"
             },
             "5d": {
-              "label": ""
+              "label": "五日"
             },
             "1mo": {
-              "label": ""
+              "label": "一月"
             },
             "3mo": {
-              "label": ""
+              "label": "三月"
             },
             "6mo": {
-              "label": ""
+              "label": "六月"
             },
             "ytd": {
-              "label": ""
+              "label": "今年至今"
             },
             "1y": {
-              "label": ""
+              "label": "一年"
             },
             "2y": {
-              "label": ""
+              "label": "兩年"
             },
             "5y": {
-              "label": ""
+              "label": "五年"
             },
             "10y": {
-              "label": ""
+              "label": "十年"
             },
             "max": {
-              "label": ""
+              "label": "最大"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "時間間隔",
           "option": {
             "5m": {
-              "label": ""
+              "label": "五分"
             },
             "15m": {
-              "label": ""
+              "label": "十五分"
             },
             "30m": {
-              "label": ""
+              "label": "三十分"
             },
             "1h": {
-              "label": ""
+              "label": "一小時"
             },
             "1d": {
-              "label": ""
+              "label": "一日"
             },
             "5d": {
-              "label": ""
+              "label": "五日"
             },
             "1wk": {
-              "label": ""
+              "label": "一周"
             },
             "1mo": {
-              "label": ""
+              "label": "一月"
             }
           }
         }
@@ -1724,11 +1724,7 @@
         "noIntegration": "未選擇集成",
         "noData": "無可用的集成數據"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "串流影音",
@@ -2150,7 +2146,12 @@
         "label": "Favicon 圖案網址"
       },
       "backgroundImageUrl": {
-        "label": "背景圖案網址"
+        "label": "背景圖案網址",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "背景圖案附件",

@@ -1724,11 +1724,7 @@
         "noIntegration": "Aucune intégration sélectionnée",
         "noData": "Aucune donnée d’interaction disponible"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Flux vidéo",
@@ -2150,7 +2146,12 @@
         "label": "URL du Favicon"
       },
       "backgroundImageUrl": {
-        "label": "URL de l'arrière-plan"
+        "label": "URL de l'arrière-plan",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Pièce jointe de l'image d'arrière-plan",

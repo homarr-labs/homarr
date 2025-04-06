@@ -1724,11 +1724,7 @@
         "noIntegration": "Інтеграція не вибрана",
         "noData": "Немає даних про інтеграцію"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Потокова трансляція відео",
@@ -2150,7 +2146,12 @@
         "label": ""
       },
       "backgroundImageUrl": {
-        "label": ""
+        "label": "",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Прикріплене фонове зображення",

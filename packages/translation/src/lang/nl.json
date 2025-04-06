@@ -1724,11 +1724,7 @@
         "noIntegration": "Geen integratie geselecteerd",
         "noData": "Geen integratiegegevens beschikbaar"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Video stream",
@@ -2150,7 +2146,12 @@
         "label": "Favicon afbeeldings-URL"
       },
       "backgroundImageUrl": {
-        "label": "Achtergrondafbeelding URL"
+        "label": "Achtergrondafbeelding URL",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Achtergrondafbeelding bijlage",

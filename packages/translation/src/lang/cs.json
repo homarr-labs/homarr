@@ -1724,11 +1724,7 @@
         "noIntegration": "Nebyla vybrána žádná integrace",
         "noData": "Nejsou k dispozici žádná data o integraci"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Streamování videa",
@@ -2150,7 +2146,12 @@
         "label": "URL obrázku Favicon"
       },
       "backgroundImageUrl": {
-        "label": "Adresa URL obrázku na pozadí"
+        "label": "Adresa URL obrázku na pozadí",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Příloha obrázku na pozadí",

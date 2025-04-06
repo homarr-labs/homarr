@@ -1724,11 +1724,7 @@
         "noIntegration": "Hiçbir entegrasyon seçilmedi",
         "noData": "Entegrasyon verisi mevcut değil"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Video Akışı",
@@ -2150,7 +2146,12 @@
         "label": "Favicon Görseli URL'si"
       },
       "backgroundImageUrl": {
-        "label": "Arkaplan Resmi URL'si"
+        "label": "Arkaplan Resmi URL'si",
+        "placeholder": "Aramak istediğiniz yerel görseller için yazmaya başlayın",
+        "group": {
+          "your": "Görselleriniz",
+          "other": "Diğer görseller"
+        }
       },
       "backgroundImageAttachment": {
         "label": "Arka Plan Yerleşimi",

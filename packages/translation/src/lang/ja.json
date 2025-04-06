@@ -3,7 +3,7 @@
     "step": {
       "start": {
         "title": "Homarrへようこそ",
-        "subtitle": "",
+        "subtitle": "Homarr を設定しましょう。",
         "description": "",
         "action": {
           "scratch": "ゼロからスタート",
@@ -92,17 +92,17 @@
       },
       "finish": {
         "title": "",
-        "subtitle": "",
-        "description": "",
+        "subtitle": "準備ができています！",
+        "description": "セットアップが正常に完了しました。使い始めることができます。次のアクションを選択してください：",
         "action": {
           "goToBoard": "",
           "createBoard": "",
-          "inviteUser": "",
+          "inviteUser": "他のユーザーを招待する",
           "docs": ""
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "戻る"
   },
   "user": {
     "title": "ユーザー",
@@ -114,7 +114,7 @@
       },
       "invite": {
         "title": "",
-        "subtitle": "",
+        "subtitle": "Homarr へようこそ！アカウントを作成してください",
         "description": ""
       },
       "init": {
@@ -133,7 +133,7 @@
       "password": {
         "label": "パスワード",
         "requirement": {
-          "length": "",
+          "length": "少なくとも 8 文字以上を含む",
           "lowercase": "小文字を含む",
           "uppercase": "大文字を含む",
           "number": "番号を含む",
@@ -172,13 +172,13 @@
             "message": ""
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "ログイン失敗",
+            "message": "ログイン失敗"
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "パスワードをお忘れですか？",
+          "description": "管理者は、次のコマンドを使用してパスワードをリセットできます："
         }
       },
       "register": {
@@ -865,7 +865,7 @@
       "delete": "削除",
       "discard": "",
       "confirm": "確認",
-      "continue": "",
+      "continue": "次へ",
       "previous": "前へ",
       "next": "次へ",
       "checkoutDocs": "",
@@ -1724,11 +1724,7 @@
         "noIntegration": "",
         "noData": ""
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "ビデオストリーム",
@@ -2150,7 +2146,12 @@
         "label": ""
       },
       "backgroundImageUrl": {
-        "label": ""
+        "label": "",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "背景画像の添付ファイル",
@@ -2655,11 +2656,11 @@
               "text": ""
             },
             "integrationData": {
-              "title": "",
-              "text": ""
+              "title": "インテグレーション情報",
+              "text": "あなたが設定したインテグレーション（およびその数量）を送信します。URL、名前、その他のデータは含まれません。"
             },
             "usersData": {
-              "title": "",
+              "title": "ユーザー情報",
               "text": ""
             }
           },
@@ -2672,15 +2673,15 @@
             },
             "noFollow": {
               "title": "",
-              "text": ""
+              "text": "インデックス登録中はリンクを追跡しない。これを無効にすると、クローラーが、Homarr 上のすべてのリンクを追跡しようとします。"
             },
             "noTranslate": {
               "title": "",
-              "text": ""
+              "text": "サイトの言語がユーザーの読みたい言語ではないとき、Google は検索結果に翻訳のリンクを表示します"
             },
             "noSiteLinksSearchBox": {
               "title": "",
-              "text": ""
+              "text": "Googleはクローラーによるリンクからサイトリンク検索ボックスを構築します。これを有効にすると Google にそのサイトリンク検索ボックスを無効にするよう求められます。"
             }
           },
           "board": {
@@ -2715,7 +2716,7 @@
               "label": "",
               "options": {
                 "light": "",
-                "dark": ""
+                "dark": "ダーク"
               }
             }
           },
@@ -3393,7 +3394,7 @@
             "option": {
               "colorScheme": {
                 "light": "",
-                "dark": ""
+                "dark": "ダークモードに切り替え"
               },
               "language": {
                 "label": "",

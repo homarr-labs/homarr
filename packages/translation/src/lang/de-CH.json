@@ -1724,11 +1724,7 @@
         "noIntegration": "Keine Integration ausgewählt",
         "noData": "Keine Integrationsdaten verfügbar"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Videostream",
@@ -2150,7 +2146,12 @@
         "label": "URL des Favicons"
       },
       "backgroundImageUrl": {
-        "label": "URL des Hintergrundbildes"
+        "label": "URL des Hintergrundbildes",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Anhang des Hintergrundbildes",

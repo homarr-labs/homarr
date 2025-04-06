@@ -981,7 +981,7 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "borderColor": {
           "label": "Kantfarve"
@@ -1724,11 +1724,7 @@
         "noIntegration": "Ingen integration valgt",
         "noData": "Ingen tilgængelige integrationsdata"
       },
-      "option": {},
-      "restricted": {
-        "title": "",
-        "description": ""
-      }
+      "option": {}
     },
     "video": {
       "name": "Video Stream",
@@ -2150,7 +2146,12 @@
         "label": "Favicon billede URL"
       },
       "backgroundImageUrl": {
-        "label": "Baggrundsbillede URL"
+        "label": "Baggrundsbillede URL",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Vedhæftning af baggrundsbillede",
