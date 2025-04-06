@@ -26,6 +26,7 @@ export const mediaUploadSchema = zfd.formData({
     }
 
     if (value.size > 1024 * 1024 * 32) {
+      // Don't forget to update the limit in nginx.conf (client_max_body_size)
       return context.addIssue({
         code: "custom",
         params: createCustomErrorParams({
