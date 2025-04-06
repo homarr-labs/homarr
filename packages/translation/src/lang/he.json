@@ -2146,7 +2146,12 @@
         "label": "כתובת אתר של תמונת Favicon"
       },
       "backgroundImageUrl": {
-        "label": "כתובת אתר של תמונת רקע"
+        "label": "כתובת אתר של תמונת רקע",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "צירוף תמונת רקע",

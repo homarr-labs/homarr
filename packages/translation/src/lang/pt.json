@@ -2146,7 +2146,12 @@
         "label": ""
       },
       "backgroundImageUrl": {
-        "label": ""
+        "label": "",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Anexo de imagem de fundo",

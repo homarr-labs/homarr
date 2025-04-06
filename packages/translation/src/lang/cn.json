@@ -2146,7 +2146,12 @@
         "label": "Favicon 图像 URL"
       },
       "backgroundImageUrl": {
-        "label": "背景图片 URL"
+        "label": "背景图片 URL",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "背景图片附件",
