@@ -2146,7 +2146,12 @@
         "label": "Favicon billede URL"
       },
       "backgroundImageUrl": {
-        "label": "Baggrundsbillede URL"
+        "label": "Baggrundsbillede URL",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Vedhæftning af baggrundsbillede",

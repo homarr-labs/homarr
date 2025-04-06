@@ -6,7 +6,7 @@
   "scripts": {
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
-    "dev": "pnpm with-env next dev --turbopack",
+    "dev": "pnpm with-env next dev",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "start": "pnpm with-env next start",
@@ -56,9 +56,9 @@
     "@mantine/tiptap": "^7.17.3",
     "@million/lint": "1.0.14",
     "@tabler/icons-react": "^3.31.0",
-    "@tanstack/react-query": "^5.71.5",
-    "@tanstack/react-query-devtools": "^5.71.5",
-    "@tanstack/react-query-next-experimental": "^5.71.5",
+    "@tanstack/react-query": "^5.71.10",
+    "@tanstack/react-query-devtools": "^5.71.10",
+    "@tanstack/react-query-next-experimental": "^5.71.10",
     "@trpc/client": "^11.0.2",
     "@trpc/next": "^11.0.2",
     "@trpc/react-query": "^11.0.2",
@@ -83,7 +83,7 @@
     "react-simple-code-editor": "^0.14.1",
     "sass": "^1.86.3",
     "superjson": "2.2.2",
-    "swagger-ui-react": "^5.20.5",
+    "swagger-ui-react": "^5.20.6",
     "use-deep-compare-effect": "^1.8.1",
     "zod": "^3.24.2"
   },
@@ -98,9 +98,9 @@
     "@types/react-dom": "19.1.1",
     "@types/swagger-ui-react": "^5.18.0",
     "concurrently": "^9.1.2",
-    "eslint": "^9.23.0",
+    "eslint": "^9.24.0",
     "node-loader": "^2.1.0",
     "prettier": "^3.5.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   }
 }
