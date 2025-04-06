@@ -114,7 +114,7 @@ export type TestConnectionResult =
       success: true;
     };
 
-const throwErrorByStatusCode = (statusCode: number) => {
+export const throwErrorByStatusCode = (statusCode: number) => {
   switch (statusCode) {
     case 400:
       throw new IntegrationTestConnectionError("badRequest");
@@ -124,6 +124,8 @@ const throwErrorByStatusCode = (statusCode: number) => {
       throw new IntegrationTestConnectionError("forbidden");
     case 404:
       throw new IntegrationTestConnectionError("notFound");
+    case 429:
+      throw new IntegrationTestConnectionError("tooManyRequests");
     case 500:
       throw new IntegrationTestConnectionError("internalServerError");
     case 503:

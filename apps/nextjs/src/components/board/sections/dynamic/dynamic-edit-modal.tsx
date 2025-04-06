@@ -1,12 +1,12 @@
 "use client";
 
-import { Button, CloseButton, ColorInput, Group, Stack, useMantineTheme } from "@mantine/core";
+import { Button, CloseButton, ColorInput, Group, Stack, TextInput, useMantineTheme } from "@mantine/core";
 import type { z } from "zod";
 
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { dynamicSectionOptionsSchema } from "@homarr/validation";
+import { dynamicSectionOptionsSchema } from "@homarr/validation/shared";
 
 interface ModalProps {
   value: z.infer<typeof dynamicSectionOptionsSchema>;
@@ -30,6 +30,7 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
       })}
     >
       <Stack>
+        <TextInput label={t("section.dynamic.option.title.label")} {...form.getInputProps("title")} />
         <ColorInput
           label={t("section.dynamic.option.borderColor.label")}
           format="hex"

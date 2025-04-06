@@ -10,7 +10,7 @@ import { useZodForm } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { superRefineCertificateFile } from "@homarr/validation";
+import { superRefineCertificateFile } from "@homarr/validation/certificates";
 
 export const AddCertificateButton = () => {
   const { openModal } = useModalAction(AddCertificateModal);

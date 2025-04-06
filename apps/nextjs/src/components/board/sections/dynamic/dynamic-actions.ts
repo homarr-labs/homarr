@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import type { z } from "zod";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
-import type { dynamicSectionOptionsSchema } from "@homarr/validation";
+import type { dynamicSectionOptionsSchema } from "@homarr/validation/shared";
 
 import { addDynamicSectionCallback } from "./actions/add-dynamic-section";
 import type { RemoveDynamicSectionInput } from "./actions/remove-dynamic-section";

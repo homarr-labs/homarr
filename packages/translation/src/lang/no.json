@@ -980,6 +980,9 @@
         "remove": "Fjern dynamisk seksjon"
       },
       "option": {
+        "title": {
+          "label": ""
+        },
         "borderColor": {
           "label": "Grensefarge"
         }
@@ -1422,6 +1425,82 @@
       },
       "spotlightAction": {
         "run": "Kjør {name}"
+      }
+    },
+    "stockPrice": {
+      "name": "",
+      "description": "",
+      "option": {
+        "stock": {
+          "label": ""
+        },
+        "timeRange": {
+          "label": "",
+          "option": {
+            "1d": {
+              "label": ""
+            },
+            "5d": {
+              "label": ""
+            },
+            "1mo": {
+              "label": ""
+            },
+            "3mo": {
+              "label": ""
+            },
+            "6mo": {
+              "label": ""
+            },
+            "ytd": {
+              "label": ""
+            },
+            "1y": {
+              "label": ""
+            },
+            "2y": {
+              "label": ""
+            },
+            "5y": {
+              "label": ""
+            },
+            "10y": {
+              "label": ""
+            },
+            "max": {
+              "label": ""
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "",
+          "option": {
+            "5m": {
+              "label": ""
+            },
+            "15m": {
+              "label": ""
+            },
+            "30m": {
+              "label": ""
+            },
+            "1h": {
+              "label": ""
+            },
+            "1d": {
+              "label": ""
+            },
+            "5d": {
+              "label": ""
+            },
+            "1wk": {
+              "label": ""
+            },
+            "1mo": {
+              "label": ""
+            }
+          }
+        }
       }
     },
     "calendar": {
@@ -2067,7 +2146,12 @@
         "label": "Favicon bilde URL"
       },
       "backgroundImageUrl": {
-        "label": "URL for bakgrunnsbilde"
+        "label": "URL for bakgrunnsbilde",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Bakgrunnsbildevedlegg",

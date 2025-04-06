@@ -9,7 +9,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { userPingIconsEnabledSchema } from "@homarr/validation/user";
 
 interface PingIconsEnabledProps {
   user: RouterOutputs["user"]["getById"];
@@ -35,7 +35,7 @@ export const PingIconsEnabled = ({ user }: PingIconsEnabledProps) => {
       });
     },
   });
-  const form = useZodForm(validation.user.pingIconsEnabled, {
+  const form = useZodForm(userPingIconsEnabledSchema, {
     initialValues: {
       pingIconsEnabled: user.pingIconsEnabled,
     },
@@ -66,4 +66,4 @@ export const PingIconsEnabled = ({ user }: PingIconsEnabledProps) => {
   );
 };
 
-type FormType = z.infer<typeof validation.user.pingIconsEnabled>;
+type FormType = z.infer<typeof userPingIconsEnabledSchema>;

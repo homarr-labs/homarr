@@ -25,16 +25,16 @@
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/dates": "^7.17.2",
-    "next": "15.1.7",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "@mantine/dates": "^7.17.3",
+    "next": "15.2.4",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.22.0",
-    "typescript": "^5.8.2"
+    "eslint": "^9.24.0",
+    "typescript": "^5.8.3"
   }
 }

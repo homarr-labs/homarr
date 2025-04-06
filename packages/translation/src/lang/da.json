@@ -980,6 +980,9 @@
         "remove": "Fjern dynamisk sektion"
       },
       "option": {
+        "title": {
+          "label": "Titel"
+        },
         "borderColor": {
           "label": "Kantfarve"
         }
@@ -1422,6 +1425,82 @@
       },
       "spotlightAction": {
         "run": "Kør {name}"
+      }
+    },
+    "stockPrice": {
+      "name": "Aktiepris",
+      "description": "Viser den aktuelle aktiepris for en virksomhed",
+      "option": {
+        "stock": {
+          "label": "Aktiesymbol"
+        },
+        "timeRange": {
+          "label": "Tidsinterval",
+          "option": {
+            "1d": {
+              "label": "1 dag"
+            },
+            "5d": {
+              "label": "5 Dage"
+            },
+            "1mo": {
+              "label": "1 Måned"
+            },
+            "3mo": {
+              "label": "3 Måneder"
+            },
+            "6mo": {
+              "label": "6 Måneder"
+            },
+            "ytd": {
+              "label": "Året indtil nu"
+            },
+            "1y": {
+              "label": "1 År"
+            },
+            "2y": {
+              "label": "2 År"
+            },
+            "5y": {
+              "label": "5 År"
+            },
+            "10y": {
+              "label": "10 År"
+            },
+            "max": {
+              "label": "Maks"
+            }
+          }
+        },
+        "timeInterval": {
+          "label": "Tidsinterval",
+          "option": {
+            "5m": {
+              "label": "5 Minutter"
+            },
+            "15m": {
+              "label": "15 Minutter"
+            },
+            "30m": {
+              "label": "30 Minutter"
+            },
+            "1h": {
+              "label": "1 Time"
+            },
+            "1d": {
+              "label": "1 Dag"
+            },
+            "5d": {
+              "label": "5 Dage"
+            },
+            "1wk": {
+              "label": "1 Uge"
+            },
+            "1mo": {
+              "label": "1 Måned"
+            }
+          }
+        }
       }
     },
     "calendar": {
@@ -2067,7 +2146,12 @@
         "label": "Favicon billede URL"
       },
       "backgroundImageUrl": {
-        "label": "Baggrundsbillede URL"
+        "label": "Baggrundsbillede URL",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Vedhæftning af baggrundsbillede",

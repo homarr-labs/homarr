@@ -5,14 +5,15 @@ import type { InferInsertModel } from "@homarr/db";
 import { and, createId, desc, eq, like } from "@homarr/db";
 import { iconRepositories, icons, medias } from "@homarr/db/schema";
 import { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG, mapMediaToIcon } from "@homarr/icons/local";
-import { validation } from "@homarr/validation";
+import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
+import { mediaUploadSchema } from "@homarr/validation/media";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../../trpc";
 
 export const mediaRouter = createTRPCRouter({
   getPaginated: protectedProcedure
     .input(
-      validation.common.paginated.and(
+      paginatedSchema.and(
         z.object({ includeFromAllUsers: z.boolean().default(false), search: z.string().trim().default("") }),
       ),
     )
@@ -51,7 +52,7 @@ export const mediaRouter = createTRPCRouter({
     }),
   uploadMedia: permissionRequiredProcedure
     .requiresPermission("media-upload")
-    .input(validation.media.uploadMedia)
+    .input(mediaUploadSchema)
     .mutation(async ({ ctx, input }) => {
       const content = Buffer.from(await input.file.arrayBuffer());
       const id = createId();
@@ -82,7 +83,7 @@ export const mediaRouter = createTRPCRouter({
 
       return id;
     }),
-  deleteMedia: protectedProcedure.input(validation.common.byId).mutation(async ({ ctx, input }) => {
+  deleteMedia: protectedProcedure.input(byIdSchema).mutation(async ({ ctx, input }) => {
     const dbMedia = await ctx.db.query.medias.findFirst({
       where: eq(medias.id, input.id),
       columns: {

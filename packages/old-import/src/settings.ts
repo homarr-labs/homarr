@@ -1,15 +1,15 @@
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
-import { validation } from "@homarr/validation";
-import { createCustomErrorParams } from "@homarr/validation/form";
+import { boardNameSchema } from "@homarr/validation/board";
+import { createCustomErrorParams } from "@homarr/validation/form/i18n";
 
 export const sidebarBehaviours = ["remove-items", "last-section"] as const;
 export const defaultSidebarBehaviour = "last-section";
 export type SidebarBehaviour = (typeof sidebarBehaviours)[number];
 
 export const oldmarrImportConfigurationSchema = z.object({
-  name: validation.board.name,
+  name: boardNameSchema,
   onlyImportApps: z.boolean().default(false),
   sidebarBehaviour: z.enum(sidebarBehaviours).default(defaultSidebarBehaviour),
 });

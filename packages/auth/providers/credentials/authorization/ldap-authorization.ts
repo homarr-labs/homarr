@@ -6,14 +6,14 @@ import type { Database, InferInsertModel } from "@homarr/db";
 import { and, createId, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
-import type { validation } from "@homarr/validation";
+import type { userSignInSchema } from "@homarr/validation/user";
 
 import { env } from "../../../env";
 import { LdapClient } from "../ldap-client";
 
 export const authorizeWithLdapCredentialsAsync = async (
   db: Database,
-  credentials: z.infer<typeof validation.user.signIn>,
+  credentials: z.infer<typeof userSignInSchema>,
 ) => {
   logger.info(`user ${credentials.name} is trying to log in using LDAP. Connecting to LDAP server...`);
   const client = new LdapClient();

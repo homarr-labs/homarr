@@ -50,3 +50,14 @@ export const updateServerSettingByKeyAsync = async <TKey extends keyof ServerSet
     })
     .where(eq(serverSettings.settingKey, key));
 };
+
+export const insertServerSettingByKeyAsync = async <TKey extends keyof ServerSettings>(
+  db: Database,
+  key: TKey,
+  value: ServerSettings[TKey],
+) => {
+  await db.insert(serverSettings).values({
+    settingKey: key,
+    value: SuperJSON.stringify(value),
+  });
+};

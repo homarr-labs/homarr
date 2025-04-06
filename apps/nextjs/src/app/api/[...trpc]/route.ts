@@ -26,6 +26,9 @@ const handlerAsync = async (req: NextRequest) => {
     endpoint: "/",
     router: appRouter,
     createContext: () => createTRPCContext({ session, headers: req.headers }),
+    onError({ error, path, type }) {
+      logger.error(new Error(`tRPC Error with ${type} on '${path}'`, { cause: error.cause }));
+    },
   });
 };
 

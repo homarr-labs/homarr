@@ -4,18 +4,19 @@ import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
 import type { z } from "zod";
 
 import { clientApi } from "@homarr/api/client";
+import { signIn } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { CustomPasswordInput } from "@homarr/ui";
-import { validation } from "@homarr/validation";
+import { userInitSchema } from "@homarr/validation/user";
 
 export const InitUserForm = () => {
   const t = useScopedI18n("user");
   const tUser = useScopedI18n("init.step.user");
   const { mutateAsync, isPending } = clientApi.user.initUser.useMutation();
-  const form = useZodForm(validation.user.init, {
+  const form = useZodForm(userInitSchema, {
     initialValues: {
       username: "",
       password: "",
@@ -30,6 +31,13 @@ export const InitUserForm = () => {
           title: tUser("notification.success.title"),
           message: tUser("notification.success.message"),
         });
+
+        await signIn("credentials", {
+          name: values.username,
+          password: values.password,
+          redirect: false,
+        });
+
         await revalidatePathActionAsync("/init");
       },
       onError: (error) => {
@@ -66,4 +74,4 @@ export const InitUserForm = () => {
   );
 };
 
-type FormType = z.infer<typeof validation.user.init>;
+type FormType = z.infer<typeof userInitSchema>;

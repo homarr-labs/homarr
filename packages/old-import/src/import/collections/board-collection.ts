@@ -1,10 +1,11 @@
 import { createId } from "@homarr/db";
 import { createDbInsertCollectionForTransaction } from "@homarr/db/collection";
 import { logger } from "@homarr/log";
-import type { BoardSize } from "@homarr/old-schema";
+import type { BoardSize, OldmarrConfig } from "@homarr/old-schema";
 import { boardSizes, getBoardSizeName } from "@homarr/old-schema";
 
 import { fixSectionIssues } from "../../fix-section-issues";
+import { OldHomarrImportError } from "../../import-error";
 import { mapBoard } from "../../mappers/map-board";
 import { mapBreakpoint } from "../../mappers/map-breakpoint";
 import { mapColumnCount } from "../../mappers/map-column-count";
@@ -57,6 +58,13 @@ export const createBoardInsertCollection = (
   logger.debug(`Added apps to board insert collection count=${insertCollection.apps.length}`);
 
   preparedBoards.forEach((board) => {
+    if (!hasEnoughItemShapes(board.config)) {
+      throw new OldHomarrImportError(
+        board.config,
+        new Error("Your config contains items without shapes for all board sizes."),
+      );
+    }
+
     const { wrappers, categories, wrapperIdsToMerge } = fixSectionIssues(board.config);
     const { apps, widgets } = moveWidgetsAndAppsIfMerge(board.config, wrapperIdsToMerge, {
       ...settings,
@@ -117,4 +125,27 @@ export const createBoardInsertCollection = (
   );
 
   return insertCollection;
+};
+
+export const hasEnoughItemShapes = (config: {
+  apps: Pick<OldmarrConfig["apps"][number], "shape">[];
+  widgets: Pick<OldmarrConfig["widgets"][number], "shape">[];
+}) => {
+  const invalidSizes: BoardSize[] = [];
+
+  for (const size of boardSizes) {
+    if (invalidSizes.includes(size)) continue;
+
+    if (config.apps.some((app) => app.shape[size] === undefined)) {
+      invalidSizes.push(size);
+    }
+
+    if (invalidSizes.includes(size)) continue;
+
+    if (config.widgets.some((widget) => widget.shape[size] === undefined)) {
+      invalidSizes.push(size);
+    }
+  }
+
+  return invalidSizes.length <= 2;
 };

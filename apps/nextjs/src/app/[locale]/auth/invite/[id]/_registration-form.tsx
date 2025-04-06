@@ -9,7 +9,7 @@ import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { CustomPasswordInput } from "@homarr/ui";
-import { validation } from "@homarr/validation";
+import { userRegistrationSchema } from "@homarr/validation/user";
 
 interface RegistrationFormProps {
   invite: {
@@ -22,7 +22,7 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
   const t = useScopedI18n("user");
   const router = useRouter();
   const { mutate, isPending } = clientApi.user.register.useMutation();
-  const form = useZodForm(validation.user.registration, {
+  const form = useZodForm(userRegistrationSchema, {
     initialValues: {
       username: "",
       password: "",
@@ -30,7 +30,7 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof validation.user.registration>) => {
+  const handleSubmit = (values: z.infer<typeof userRegistrationSchema>) => {
     mutate(
       {
         ...values,

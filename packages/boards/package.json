@@ -25,14 +25,14 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/api": "workspace:^0.1.0",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.22.0",
-    "typescript": "^5.8.2"
+    "eslint": "^9.24.0",
+    "typescript": "^5.8.3"
   }
 }

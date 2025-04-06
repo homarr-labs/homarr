@@ -8,11 +8,11 @@ import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { boardColumnCountSchema, boardCreateSchema, boardNameSchema } from "@homarr/validation/board";
 
 export const AddBoardModal = createModal(({ actions }) => {
   const t = useI18n();
-  const form = useZodForm(validation.board.create, {
+  const form = useZodForm(boardCreateSchema, {
     mode: "controlled",
     initialValues: {
       name: "",
@@ -28,7 +28,7 @@ export const AddBoardModal = createModal(({ actions }) => {
 
   const boardNameStatus = useBoardNameStatus(form.values.name);
 
-  const columnCountChecks = validation.board.create.shape.columnCount._def.checks;
+  const columnCountChecks = boardColumnCountSchema._def.checks;
   const minColumnCount = columnCountChecks.find((check) => check.kind === "min")?.value;
   const maxColumnCount = columnCountChecks.find((check) => check.kind === "max")?.value;
 
@@ -97,7 +97,7 @@ export const useBoardNameStatus = (name: string) => {
   const t = useI18n();
   const [debouncedName] = useDebouncedValue(name, 250);
   const { data: boardExists, isLoading } = clientApi.board.exists.useQuery(debouncedName, {
-    enabled: validation.board.create.shape.name.safeParse(debouncedName).success,
+    enabled: boardNameSchema.safeParse(debouncedName).success,
   });
 
   return {

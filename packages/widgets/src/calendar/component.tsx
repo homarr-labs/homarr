@@ -107,11 +107,10 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
         day: {
           borderRadius: actualItemRadius,
           width: "100%",
-          height: "100%",
+          height: "auto",
+          position: "relative",
         },
-        month: {
-          height: "100%",
-        },
+        month: {},
         weekday: {
           padding: 0,
         },

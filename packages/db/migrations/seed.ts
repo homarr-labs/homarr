@@ -1,18 +1,22 @@
-import SuperJSON from "superjson";
-
 import { objectKeys } from "@homarr/common";
-import { everyoneGroup } from "@homarr/definitions";
+import { createDocumentationLink, everyoneGroup } from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
-import { createId, eq } from "..";
 import type { Database } from "..";
-import { onboarding, serverSettings } from "../schema";
+import { createId, eq } from "..";
+import {
+  getServerSettingByKeyAsync,
+  insertServerSettingByKeyAsync,
+  updateServerSettingByKeyAsync,
+} from "../queries/server-setting";
+import { onboarding, searchEngines } from "../schema";
 import { groups } from "../schema/mysql";
 
 export const seedDataAsync = async (db: Database) => {
   await seedEveryoneGroupAsync(db);
   await seedOnboardingAsync(db);
   await seedServerSettingsAsync(db);
+  await seedDefaultSearchEnginesAsync(db);
 };
 
 const seedEveryoneGroupAsync = async (db: Database) => {
@@ -48,21 +52,73 @@ const seedOnboardingAsync = async (db: Database) => {
   console.log("Created onboarding step through seed");
 };
 
+const seedDefaultSearchEnginesAsync = async (db: Database) => {
+  const existingSearchEngines = await db.$count(searchEngines);
+
+  if (existingSearchEngines > 0) {
+    console.log("Skipping seeding of default search engines as some already exists");
+    return;
+  }
+
+  const homarrId = createId();
+  const defaultSearchEngines = [
+    {
+      id: createId(),
+      name: "Google",
+      iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/google.svg",
+      short: "g",
+      description: "Search the web with Google",
+      urlTemplate: "https://www.google.com/search?q=%s",
+      type: "generic" as const,
+      integrationId: null,
+    },
+    {
+      id: createId(),
+      name: "YouTube",
+      iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/youtube.svg",
+      short: "yt",
+      description: "Search for videos on YouTube",
+      urlTemplate: "https://www.youtube.com/results?search_query=%s",
+      type: "generic" as const,
+      integrationId: null,
+    },
+    {
+      id: homarrId,
+      name: "Homarr Docs",
+      iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
+      short: "docs",
+      description: "Search the Homarr documentation",
+      urlTemplate: createDocumentationLink("/search", undefined, { q: "%s" }),
+      type: "generic" as const,
+      integrationId: null,
+    },
+  ];
+
+  await db.insert(searchEngines).values(defaultSearchEngines);
+  console.log(`Created ${defaultSearchEngines.length} default search engines through seeding process`);
+
+  // Set Homarr docs as the default search engine in server settings
+  const searchSettings = await getServerSettingByKeyAsync(db, "search");
+
+  await updateServerSettingByKeyAsync(db, "search", {
+    ...searchSettings,
+    defaultSearchEngineId: homarrId,
+  });
+  console.log("Set Homarr docs as the default search engine");
+};
+
 const seedServerSettingsAsync = async (db: Database) => {
   const serverSettingsData = await db.query.serverSettings.findMany();
 
   for (const settingsKey of defaultServerSettingsKeys) {
     const currentDbEntry = serverSettingsData.find((setting) => setting.settingKey === settingsKey);
     if (!currentDbEntry) {
-      await db.insert(serverSettings).values({
-        settingKey: settingsKey,
-        value: SuperJSON.stringify(defaultServerSettings[settingsKey]),
-      });
+      await insertServerSettingByKeyAsync(db, settingsKey, defaultServerSettings[settingsKey]);
       console.log(`Created serverSetting through seed key=${settingsKey}`);
       continue;
     }
 
-    const currentSettings = SuperJSON.parse<Record<string, unknown>>(currentDbEntry.value);
+    const currentSettings = await getServerSettingByKeyAsync(db, settingsKey);
     const defaultSettings = defaultServerSettings[settingsKey];
     const missingKeys = objectKeys(defaultSettings).filter((key) => !(key in currentSettings));
 
@@ -71,12 +127,7 @@ const seedServerSettingsAsync = async (db: Database) => {
       continue;
     }
 
-    await db
-      .update(serverSettings)
-      .set({
-        value: SuperJSON.stringify({ ...defaultSettings, ...currentSettings }), // Add missing keys
-      })
-      .where(eq(serverSettings.settingKey, settingsKey));
+    await updateServerSettingByKeyAsync(db, settingsKey, { ...defaultSettings, ...currentSettings });
     console.log(`Updated serverSetting through seed key=${settingsKey}`);
   }
 };

@@ -1,4 +1,3 @@
-import { formatError } from "pretty-print-error";
 import SuperJSON from "superjson";
 
 import { hashObjectBase64, Stopwatch } from "@homarr/common";
@@ -107,7 +106,9 @@ export const createRequestIntegrationJobHandler = <
         );
       } catch (error) {
         logger.error(
-          `Failed to run integration job integration=${integrationId} inputHash='${inputHash}' error=${formatError(error)}`,
+          new Error(`Failed to run integration job integration=${integrationId} inputHash='${inputHash}'`, {
+            cause: error,
+          }),
         );
       }
     }
