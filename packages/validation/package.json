@@ -5,8 +5,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts",
-    "./form": "./src/form/i18n.ts"
+    "./*": "./src/*.ts"
   },
   "typesVersions": {
     "*": {
