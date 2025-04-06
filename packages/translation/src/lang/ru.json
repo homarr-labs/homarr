@@ -2146,7 +2146,12 @@
         "label": "URL изображения favicon"
       },
       "backgroundImageUrl": {
-        "label": "URL фонового изображения"
+        "label": "URL фонового изображения",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Поведение фонового изображения",

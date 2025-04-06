@@ -2146,7 +2146,12 @@
         "label": "Adresa URL obrázka Favicon"
       },
       "backgroundImageUrl": {
-        "label": "URL obrázku pozadia"
+        "label": "URL obrázku pozadia",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Pripojenie obrázku na pozadí",
