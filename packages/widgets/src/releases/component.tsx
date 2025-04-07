@@ -53,14 +53,19 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const board = useRequiredBoard();
   const [expandedRepository, setExpandedRepository] = useState("");
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
-
-  const [results] = clientApi.widget.releases.getLatest.useSuspenseQuery(
-    {
-      repositories: options.repositories.map((repository) => ({
+  const requestRepositories = useMemo(
+    () =>
+      options.repositories.map((repository) => ({
         providerName: repository.provider.name,
         identifier: repository.identifier,
         versionRegex: repository.versionRegex,
       })),
+    [options.repositories],
+  );
+
+  const [results] = clientApi.widget.releases.getLatest.useSuspenseQuery(
+    {
+      repositories: requestRepositories,
     },
     {
       refetchOnMount: false,
@@ -74,7 +79,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     if (data === undefined) continue;
 
     const repository = options.repositories.find(
-      (repository: ReleaseRepository) => repository.identifier === data.identifier && repository.provider.name === data.providerName,
+      (repository: ReleaseRepository) =>
+        repository.identifier === data.identifier && repository.provider.name === data.providerName,
     );
 
     if (repository === undefined) continue;
