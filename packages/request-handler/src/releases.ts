@@ -192,6 +192,7 @@ const codebergReleasesSchema = z.array(
 
 const _releasesSchema = z.object({
   identifier: z.string(),
+  providerName: z.string(),
   latestRelease: z.string(),
   latestReleaseAt: z.date(),
   releaseUrl: z.string(),
@@ -323,10 +324,12 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
             ...detailsResult,
             ...(result.latestReleaseAt > latest.latestReleaseAt ? result : latest),
             identifier: input.identifier,
+            providerName: input.providerName,
           };
         },
         {
           identifier: "",
+          providerName: "",
           latestRelease: "",
           latestReleaseAt: new Date(0),
           releaseUrl: "",

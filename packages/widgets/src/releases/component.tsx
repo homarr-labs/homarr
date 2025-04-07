@@ -74,7 +74,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     if (data === undefined) continue;
 
     const repository = options.repositories.find(
-      (repository: ReleaseRepository) => repository.identifier === data.identifier,
+      (repository: ReleaseRepository) => repository.identifier === data.identifier && repository.provider.name === data.providerName,
     );
 
     if (repository === undefined) continue;
