@@ -153,6 +153,13 @@ export const WidgetMultiReleaseRepositoriesInput = ({
   );
 };
 
+const versionRegexData: Record<string, string> = {
+  "^v[0-9]+\\.[0-9]+\\.[0-9]+$": "v1.2.3",
+  "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$": "1.2.3.4",
+  "^[0-9]+\\.[0-9]+\\.[0-9]+$": "1.2.3",
+  "^[0-9]+\\.[0-9]+$": "1.2",
+};
+
 interface ReleaseEditProps {
   fieldPath: string;
   repository: ReleaseRepository;
@@ -186,13 +193,6 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
     },
     [innerProps, tempRepository],
   );
-
-  const versionRegexData: Record<string, string> = {
-    "^v[0-9]+\\.[0-9]+\\.[0-9]+$": "v1.2.3",
-    "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$": "1.2.3.4",
-    "^[0-9]+\\.[0-9]+\\.[0-9]+$": "1.2.3",
-    "^[0-9]+\\.[0-9]+$": "1.2",
-  };
 
   const renderVersionRegexOption: AutocompleteProps["renderOption"] = ({ option }) => (
     <Stack gap={0}>
