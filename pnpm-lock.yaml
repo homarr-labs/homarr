@@ -2158,7 +2158,7 @@ importers:
         version: 19.1.0(react@19.1.0)
       react-markdown:
         specifier: ^10.1.0
-        version: 10.1.0(@types/react@19.0.12)(react@19.1.0)
+        version: 10.1.0(@types/react@19.1.0)(react@19.1.0)
       recharts:
         specifier: ^2.15.2
         version: 2.15.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -10008,7 +10008,7 @@ packages:
 
   trough@2.2.0:
     resolution: {integrity: sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw==}
-    
+
   trpc-to-openapi@2.1.5:
     resolution: {integrity: sha512-cX6AlrIBEK0FJe8XJ0wFCroXFqTRpF3J5v4vU5D0Tq7YI1vj8oOIY50iaJX4Gv1PZTA6Dm9DMF7R1MUtlPZ4dQ==}
     peerDependencies:
@@ -18211,11 +18211,11 @@ snapshots:
 
   react-is@18.3.1: {}
 
-  react-markdown@10.1.0(@types/react@19.0.12)(react@19.1.0):
+  react-markdown@10.1.0(@types/react@19.1.0)(react@19.1.0):
     dependencies:
       '@types/hast': 3.0.4
       '@types/mdast': 4.0.4
-      '@types/react': 19.0.12
+      '@types/react': 19.1.0
       devlop: 1.1.0
       hast-util-to-jsx-runtime: 2.3.6
       html-url-attributes: 3.0.1
@@ -19493,9 +19493,8 @@ snapshots:
   triple-beam@1.4.1: {}
 
   trough@2.2.0: {}
-  
-  trpc-to-openapi@2.1.5(@trpc/server@11.0.2(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.24.2))(zod@3.24.2):
 
+  trpc-to-openapi@2.1.5(@trpc/server@11.0.2(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.24.2))(zod@3.24.2):
     dependencies:
       '@trpc/server': 11.0.2(typescript@5.8.3)
       co-body: 6.2.0
@@ -20034,7 +20033,7 @@ snapshots:
       sass: 1.86.3
       sugarss: 4.0.1(postcss@8.4.47)
       terser: 5.39.0
-      
+
   vitest@3.1.1(@types/debug@4.1.12)(@types/node@22.14.0)(@vitest/ui@3.1.1)(jsdom@26.0.0)(sass@1.86.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0):
     dependencies:
       '@vitest/expect': 3.1.1
