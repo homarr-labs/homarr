@@ -245,12 +245,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
             }}
             key={`${innerProps.fieldPath}.versionRegex`}
             error={formErrors[`${innerProps.fieldPath}.versionRegex`]}
-            data={[
-              "^v[0-9]+\\.[0-9]+\\.[0-9]+$",
-              "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$",
-              "^[0-9]+\\.[0-9]+\\.[0-9]+$",
-              "^[0-9]+\\.[0-9]+$",
-            ]}
+            data={Object.keys(versionRegexData)}
             renderOption={renderVersionRegexOption}
           />
         </Grid.Col>
