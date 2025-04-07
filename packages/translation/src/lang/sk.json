@@ -757,6 +757,10 @@
         "wrongPath": {
           "title": "Nesprávna cesta",
           "message": "Cesta pravdepodobne nie je správna"
+        },
+        "tooManyRequests": {
+          "title": "",
+          "message": ""
         }
       }
     },
@@ -2026,6 +2030,62 @@
           "label": "Limit počtu príspevkov"
         }
       }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": ""
+          },
+          "wifi": {
+            "name": ""
+          }
+        },
+        "users": {
+          "label": ""
+        },
+        "guests": {
+          "label": ""
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": ""
+            },
+            "wired": {
+              "label": ""
+            }
+          },
+          "label": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": ""
+      }
     }
   },
   "widgetPreview": {
@@ -2146,7 +2206,12 @@
         "label": "Adresa URL obrázka Favicon"
       },
       "backgroundImageUrl": {
-        "label": "URL obrázku pozadia"
+        "label": "URL obrázku pozadia",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Pripojenie obrázku na pozadí",
@@ -2782,6 +2847,9 @@
             },
             "mediaTranscoding": {
               "label": "Prekódovanie médií"
+            },
+            "networkController": {
+              "label": ""
             }
           }
         },

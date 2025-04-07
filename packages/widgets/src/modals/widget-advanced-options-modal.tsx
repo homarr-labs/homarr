@@ -6,7 +6,7 @@ import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { TextMultiSelect } from "@homarr/ui";
-import type { BoardItemAdvancedOptions } from "@homarr/validation";
+import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 
 interface InnerProps {
   advancedOptions: BoardItemAdvancedOptions;

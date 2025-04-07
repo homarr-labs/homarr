@@ -757,6 +757,10 @@
         "wrongPath": {
           "title": "Falscher Pfad",
           "message": "Der Pfad ist vermutlich nicht korrekt"
+        },
+        "tooManyRequests": {
+          "title": "",
+          "message": ""
         }
       }
     },
@@ -2026,6 +2030,62 @@
           "label": "Limit für Beiträge"
         }
       }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": ""
+          },
+          "wifi": {
+            "name": ""
+          }
+        },
+        "users": {
+          "label": ""
+        },
+        "guests": {
+          "label": ""
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": ""
+            },
+            "wired": {
+              "label": ""
+            }
+          },
+          "label": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": ""
+      }
     }
   },
   "widgetPreview": {
@@ -2146,7 +2206,12 @@
         "label": "URL des Favicons"
       },
       "backgroundImageUrl": {
-        "label": "URL des Hintergrundbildes"
+        "label": "URL des Hintergrundbildes",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Anhang des Hintergrundbildes",
@@ -2782,6 +2847,9 @@
             },
             "mediaTranscoding": {
               "label": "Medien Transkodierung"
+            },
+            "networkController": {
+              "label": ""
             }
           }
         },

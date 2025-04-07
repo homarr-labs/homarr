@@ -27,8 +27,8 @@ import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { CustomPasswordInput, UserAvatar } from "@homarr/ui";
-import { validation } from "@homarr/validation";
-import { createCustomErrorParams } from "@homarr/validation/form";
+import { createCustomErrorParams } from "@homarr/validation/form/i18n";
+import { userPasswordSchema } from "@homarr/validation/user";
 
 import { GroupSelectModal } from "~/components/access/group-select-modal";
 import { StepperNavigationComponent } from "./stepper-navigation";
@@ -84,7 +84,7 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
   const securityForm = useZodForm(
     z
       .object({
-        password: validation.user.password,
+        password: userPasswordSchema,
         confirmPassword: z.string(),
       })
       .refine((data) => data.password === data.confirmPassword, {

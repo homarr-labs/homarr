@@ -33,6 +33,9 @@ interface IconPickerProps {
   error?: string | null;
   onFocus?: FocusEventHandler;
   onBlur?: FocusEventHandler;
+
+  label?: string;
+  placeholder?: string;
   withAsterisk?: boolean;
 }
 
@@ -43,6 +46,8 @@ export const IconPicker = ({
   onFocus,
   onBlur,
   withAsterisk = true,
+  label,
+  placeholder,
 }: IconPickerProps) => {
   const [value, setValue] = useUncontrolled({
     value: propsValue,
@@ -155,8 +160,8 @@ export const IconPicker = ({
             rightSectionPointerEvents="none"
             withAsterisk={withAsterisk}
             error={error}
-            label={tCommon("iconPicker.label")}
-            placeholder={tCommon("iconPicker.header", { countIcons: String(data?.countIcons ?? 0) })}
+            label={label ?? tCommon("iconPicker.label")}
+            placeholder={placeholder ?? tCommon("iconPicker.header", { countIcons: String(data?.countIcons ?? 0) })}
           />
           {session?.user.permissions.includes("media-upload") && (
             <UploadMedia

@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { AnyZodObject, ZodDiscriminatedUnion, ZodEffects, ZodIntersection } from "zod";
 
 import { useI18n } from "@homarr/translation/client";
-import { zodErrorMap } from "@homarr/validation/form";
+import { zodErrorMap } from "@homarr/validation/form/i18n";
 
 export const useZodForm = <
   TSchema extends

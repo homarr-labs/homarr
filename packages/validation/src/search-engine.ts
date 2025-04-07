@@ -13,7 +13,7 @@ const fromIntegrationSearchEngine = z.object({
   integrationId: z.string().optional(),
 });
 
-const manageSearchEngineSchema = z.object({
+const baseSearchEngineManageSchema = z.object({
   name: z.string().min(1).max(64),
   short: z.string().min(1).max(8),
   iconUrl: z.string().min(1),
@@ -21,21 +21,18 @@ const manageSearchEngineSchema = z.object({
 });
 
 const createManageSearchEngineSchema = <T extends ZodTypeAny>(
-  callback: (schema: typeof manageSearchEngineSchema) => T,
+  callback: (schema: typeof baseSearchEngineManageSchema) => T,
 ) =>
   z
     .discriminatedUnion("type", [genericSearchEngine, fromIntegrationSearchEngine])
-    .and(callback(manageSearchEngineSchema));
+    .and(callback(baseSearchEngineManageSchema));
 
-const editSearchEngineSchema = createManageSearchEngineSchema((schema) =>
+export const searchEngineManageSchema = createManageSearchEngineSchema((schema) => schema);
+
+export const searchEngineEditSchema = createManageSearchEngineSchema((schema) =>
   schema
     .extend({
       id: z.string(),
     })
     .omit({ short: true }),
 );
-
-export const searchEngineSchemas = {
-  manage: createManageSearchEngineSchema((schema) => schema),
-  edit: editSearchEngineSchema,
-};

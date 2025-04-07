@@ -5,11 +5,11 @@ import type { Database } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
-import type { validation } from "@homarr/validation";
+import type { userSignInSchema } from "@homarr/validation/user";
 
 export const authorizeWithBasicCredentialsAsync = async (
   db: Database,
-  credentials: z.infer<typeof validation.user.signIn>,
+  credentials: z.infer<typeof userSignInSchema>,
 ) => {
   const user = await db.query.users.findFirst({
     where: and(eq(users.name, credentials.name.toLowerCase()), eq(users.provider, "credentials")),
