@@ -170,7 +170,7 @@ interface ReleaseEditProps {
 const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions }) => {
   const tRepository = useScopedI18n("widget.releases.option.repositories");
   const [loading, setLoading] = useState(false);
-  const [tempRepository, setTempRepository] = useState(innerProps.repository);
+  const [tempRepository, setTempRepository] = useState(() => ({ ...innerProps.repository }));
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const handleConfirm = useCallback(() => {
@@ -188,10 +188,8 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
   const handleChange = useCallback(
     (changedValue: Partial<ReleaseRepository>) => {
       setTempRepository((prev) => ({ ...prev, ...changedValue }));
-      const validation = innerProps.onRepositorySave(tempRepository);
-      setFormErrors(validation.errors);
     },
-    [innerProps, tempRepository],
+    []
   );
 
   const renderVersionRegexOption: AutocompleteProps["renderOption"] = ({ option }) => (
