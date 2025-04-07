@@ -42,7 +42,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
   const tRepository = useScopedI18n("widget.releases.option.repositories");
   const form = useFormContext();
   const repositories = form.values.options[property] as ReleaseRepository[];
-  const { openModal } = useModalAction(releaseEditModal);
+  const { openModal } = useModalAction(ReleaseEditModal);
 
   const onRepositorySave = useCallback(
     (repository: ReleaseRepository, index: number): FormValidation => {
@@ -160,7 +160,7 @@ interface ReleaseEditProps {
   providers: string[];
 }
 
-const releaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions }) => {
+const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions }) => {
   const tRepository = useScopedI18n("widget.releases.option.repositories");
   const [loading, setLoading] = useState(false);
   const [tempRepository, setTempRepository] = useState(innerProps.repository);
