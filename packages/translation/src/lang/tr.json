@@ -757,6 +757,10 @@
         "wrongPath": {
           "title": " Yol hatalı",
           "message": "Yol muhtemelen doğru değil"
+        },
+        "tooManyRequests": {
+          "title": "Belirli bir sürede çok fazla istek gönderildi",
+          "message": "Çok fazla istek gönderildi. Muhtemelen hedef sistem tarafından rate-limit'e (hız sınırlaması) uğradınız veya engellendiniz."
         }
       }
     },
@@ -2026,6 +2030,62 @@
           "label": "Gönderi sayısı sınırı"
         }
       }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": "{count} bağlantı"
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "Veri bulunamadı, tüm entegrasyonların bağlantısı kesildi",
+        "unknownContentOption": "Ağ denetleyicisi özet widget'ında bilinmeyen içerik ayarı: "
+      },
+      "name": "Ağ Denetleyicisi Özeti",
+      "description": "Bir Ağ Denetleyicisinin (UniFi Denetleyicisi gibi) özetini görüntüler"
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": "Kablolu"
+          },
+          "wifi": {
+            "name": "Kablosuz"
+          }
+        },
+        "users": {
+          "label": "Kullanıcılar"
+        },
+        "guests": {
+          "label": "Misafirler"
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": "Kablosuz"
+            },
+            "wired": {
+              "label": "Kablolu"
+            }
+          },
+          "label": "Widget içeriği"
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "Veri bulunamadı, tüm entegrasyonların bağlantısı kesildi",
+        "unknownContentOption": "Ağ durumu widget'ı için bilinmeyen içerik seçeneği: "
+      },
+      "name": "Ağ Durumu",
+      "description": "Bir ağdaki bağlı cihazları görüntüle"
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": "Ağ Denetleyicisi Özeti alınamadı"
+      }
     }
   },
   "widgetPreview": {
@@ -2787,6 +2847,9 @@
             },
             "mediaTranscoding": {
               "label": "Medya Kod Dönüştürme"
+            },
+            "networkController": {
+              "label": "Ağ Denetleyicisi"
             }
           }
         },
