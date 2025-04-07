@@ -350,7 +350,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
           rel="noreferrer"
         >
           <IconExternalLink />
-          {t("openProjectPage")}
+          {repository.releaseUrl ? t("openReleasePage") : t("openProjectPage")}
         </Button>
         {repository.releaseDescription && (
           <>
