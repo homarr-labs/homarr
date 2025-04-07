@@ -24,7 +24,7 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { IconPicker } from "../../../forms-collection/src";
 import { Providers } from "../releases/release-providers";
-import { ReleaseRepository } from "../releases/release-repository";
+import type { ReleaseRepository } from "../releases/release-repository";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
