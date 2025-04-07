@@ -61,7 +61,9 @@ export const WidgetMultiReleaseRepositoriesInput = ({
   }, []);
 
   const addNewItem = () => {
-    const item = new ReleaseRepository(Providers.DockerHub, "");
+    const item = {
+      provider: Providers.DockerHub
+    };
 
     form.setValues((previous) => {
       const previousValues = previous.options?.[property] as ReleaseRepository[];
