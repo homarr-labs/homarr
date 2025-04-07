@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { Button, Divider, Grid, Group, Stack, Text, Title, Tooltip } from "@mantine/core";
-import { IconArchive, IconCircleDot, IconExternalLink, IconGitFork, IconRocket, IconStar } from "@tabler/icons-react";
+import { IconArchive, IconCircleDot, IconExternalLink, IconGitFork, IconProgressCheck, IconStar } from "@tabler/icons-react";
 import combineClasses from "clsx";
 import { useFormatter, useNow } from "next-intl";
 import ReactMarkdown from "react-markdown";
@@ -218,7 +218,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
         <Grid.Col span={4.5}>
           <Group gap={5}>
             <Tooltip label={t("pre-release")}>
-              <IconRocket
+              <IconProgressCheck
                 size={13}
                 color={
                   repository.isPreRelease ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"
