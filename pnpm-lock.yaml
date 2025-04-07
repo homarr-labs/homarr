@@ -670,8 +670,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       ldapts:
-        specifier: 7.3.3
-        version: 7.3.3
+        specifier: 7.4.0
+        version: 7.4.0
       next:
         specifier: 15.2.4
         version: 15.2.4(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.86.3)
@@ -7588,8 +7588,8 @@ packages:
     resolution: {integrity: sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw==}
     engines: {node: '>= 0.6.3'}
 
-  ldapts@7.3.3:
-    resolution: {integrity: sha512-y70KDgoszK9OP6wmtH4kOzXqKAb5qfjuni9UH0pws2Z8kGbl1q9us0Ldo9j1jSzJg/Gz+rHHJV1t5BOVxmopUA==}
+  ldapts@7.4.0:
+    resolution: {integrity: sha512-QLgx2pLvxMXY1nCc85Fx+cwVJDvC0sQ3l4CJZSl1FJ/iV8Ypfl6m+5xz4lm1lhoXcUlvhPqxEoyIj/8LR6ut+A==}
     engines: {node: '>=18'}
 
   levn@0.4.1:
@@ -14453,7 +14453,7 @@ snapshots:
   data-urls@5.0.0:
     dependencies:
       whatwg-mimetype: 4.0.0
-      whatwg-url: 14.1.0
+      whatwg-url: 14.2.0
 
   data-view-buffer@1.0.1:
     dependencies:
@@ -16418,7 +16418,7 @@ snapshots:
     dependencies:
       readable-stream: 2.3.8
 
-  ldapts@7.3.3:
+  ldapts@7.4.0:
     dependencies:
       '@types/asn1': 0.2.4
       asn1: 0.2.6
