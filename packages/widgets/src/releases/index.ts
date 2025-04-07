@@ -1,11 +1,11 @@
-import { IconCode } from "@tabler/icons-react";
+import { IconRocket } from "@tabler/icons-react";
 import { z } from "zod";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("releases", {
-  icon: IconCode,
+  icon: IconRocket,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       newReleaseWithin: factory.text({
