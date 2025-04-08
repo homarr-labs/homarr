@@ -579,8 +579,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../validation
       '@kubernetes/client-node':
-        specifier: ^1.1.1
-        version: 1.1.1
+        specifier: ^1.1.2
+        version: 1.1.2
       '@trpc/client':
         specifier: ^11.0.3
         version: 11.0.3(@trpc/server@11.0.3(typescript@5.8.3))(typescript@5.8.3)
@@ -3518,8 +3518,8 @@ packages:
     peerDependencies:
       jsep: ^0.4.0||^1.0.0
 
-  '@kubernetes/client-node@1.1.1':
-    resolution: {integrity: sha512-8xD9J8vFhYSZprpp7aEj9UhzqySG0IDH8C26o6e3TuknRcCBMa/fLnRJmJwF+c4CCaFO69Z65VgB4WPsi/P5zw==}
+  '@kubernetes/client-node@1.1.2':
+    resolution: {integrity: sha512-kkE0D8zB5rIQoR6SUwlHUyQtpLvrW0gXOd2MabQsql7I2oPnMA8pb50A1MWB4yH0eX29t45gxs7lOVlS0UPsiw==}
 
   '@libsql/client-wasm@0.14.0':
     resolution: {integrity: sha512-gB/jtz0xuwrqAHApBv9e9JSew2030Fhj2edyZ83InZ4yPj/Q2LTUlEhaspEYT0T0xsAGqPy38uGrmq/OGS+DdQ==}
@@ -11539,7 +11539,7 @@ snapshots:
     dependencies:
       jsep: 1.4.0
 
-  '@kubernetes/client-node@1.1.1':
+  '@kubernetes/client-node@1.1.2':
     dependencies:
       '@types/js-yaml': 4.0.9
       '@types/node': 22.14.0
