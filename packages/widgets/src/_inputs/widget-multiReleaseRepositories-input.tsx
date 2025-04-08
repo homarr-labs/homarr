@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ActionIcon,
   Autocomplete,
@@ -56,13 +56,9 @@ export const WidgetMultiReleaseRepositoriesInput = ({
     [form, property],
   );
 
-  const providers = useMemo(() => {
-    return Object.values(Providers).map((provider) => provider.name);
-  }, []);
-
   const addNewItem = () => {
     const item = {
-      provider: Providers.DockerHub
+      provider: Providers.DockerHub,
     };
 
     form.setValues((previous) => {
@@ -130,7 +126,6 @@ export const WidgetMultiReleaseRepositoriesInput = ({
                         fieldPath: `options.${property}.${index}`,
                         repository,
                         onRepositorySave: (saved) => onRepositorySave(saved, index),
-                        providers,
                       })
                     }
                     variant="light"
@@ -166,7 +161,6 @@ interface ReleaseEditProps {
   fieldPath: string;
   repository: ReleaseRepository;
   onRepositorySave: (repository: ReleaseRepository) => FormValidation;
-  providers: string[];
 }
 
 const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions }) => {
@@ -187,12 +181,9 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
     setLoading(false);
   }, [innerProps, tempRepository, actions]);
 
-  const handleChange = useCallback(
-    (changedValue: Partial<ReleaseRepository>) => {
-      setTempRepository((prev) => ({ ...prev, ...changedValue }));
-    },
-    []
-  );
+  const handleChange = useCallback((changedValue: Partial<ReleaseRepository>) => {
+    setTempRepository((prev) => ({ ...prev, ...changedValue }));
+  }, []);
 
   const renderVersionRegexOption: AutocompleteProps["renderOption"] = ({ option }) => (
     <Stack gap={0}>
@@ -210,16 +201,16 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
           <Select
             withAsterisk
             label={tRepository("provider.label")}
-            data={innerProps.providers}
-            value={tempRepository.provider.name}
+            data={Object.entries(Providers).map(([key, provider]) => ({
+              value: key,
+              label: provider.name,
+            }))}
+            value={Object.keys(Providers).find((key) => Providers[key] === tempRepository.provider) ?? ""}
             key={`${innerProps.fieldPath}.provider`}
             error={formErrors[`${innerProps.fieldPath}.provider`]}
             onChange={(value) => {
-              if (value !== null && value in Providers) {
-                const provider = Providers[value];
-                if (provider) {
-                  handleChange({ provider });
-                }
+              if (value && Providers[value]) {
+                handleChange({ provider: Providers[value] });
               }
             }}
           />
