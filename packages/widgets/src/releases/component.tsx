@@ -2,7 +2,14 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { Button, Divider, Grid, Group, Stack, Text, Title, Tooltip } from "@mantine/core";
-import { IconArchive, IconCircleDot, IconExternalLink, IconGitFork, IconProgressCheck, IconStar } from "@tabler/icons-react";
+import {
+  IconArchive,
+  IconCircleDot,
+  IconExternalLink,
+  IconGitFork,
+  IconProgressCheck,
+  IconStar,
+} from "@tabler/icons-react";
 import combineClasses from "clsx";
 import { useFormatter, useNow } from "next-intl";
 import ReactMarkdown from "react-markdown";
@@ -53,19 +60,14 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const board = useRequiredBoard();
   const [expandedRepository, setExpandedRepository] = useState("");
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
-  const requestRepositories = useMemo(
-    () =>
-      options.repositories.map((repository) => ({
+
+  const [results] = clientApi.widget.releases.getLatest.useSuspenseQuery(
+    {
+      repositories: options.repositories.map((repository) => ({
         providerName: repository.provider.name,
         identifier: repository.identifier,
         versionRegex: repository.versionRegex,
       })),
-    [options.repositories],
-  );
-
-  const [results] = clientApi.widget.releases.getLatest.useSuspenseQuery(
-    {
-      repositories: requestRepositories,
     },
     {
       refetchOnMount: false,
@@ -75,29 +77,44 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     },
   );
 
-  for (const { data } of results) {
-    if (data === undefined) continue;
+  const repositories = useMemo(() => {
+    return results
+      .map(({ data }) => {
+        if (data === undefined) return undefined;
 
-    const repository = options.repositories.find(
-      (repository: ReleaseRepository) =>
-        repository.identifier === data.identifier && repository.provider.name === data.providerName,
-    );
+        const repository = options.repositories.find(
+          (repository: ReleaseRepository) =>
+            repository.identifier === data.identifier && repository.provider.name === data.providerName,
+        );
 
-    if (repository === undefined) continue;
+        if (repository === undefined) return undefined;
 
-    Object.assign(repository, {
-      ...data,
-      isNewRelease:
-        options.newReleaseWithin !== "" ? isDateWithin(data.latestReleaseAt, options.newReleaseWithin) : false,
-      isStaleRelease:
-        options.staleReleaseWithin !== "" ? !isDateWithin(data.latestReleaseAt, options.staleReleaseWithin) : false,
-    });
-  }
-
-  const repositories =
-    options.showOnlyHighlighted && (options.newReleaseWithin !== "" || options.staleReleaseWithin !== "")
-      ? options.repositories.filter((repository) => repository.isNewRelease || repository.isStaleRelease)
-      : options.repositories;
+        return {
+          ...repository,
+          ...data,
+          isNewRelease:
+            options.newReleaseWithin !== "" ? isDateWithin(data.latestReleaseAt, options.newReleaseWithin) : false,
+          isStaleRelease:
+            options.staleReleaseWithin !== "" ? !isDateWithin(data.latestReleaseAt, options.staleReleaseWithin) : false,
+        };
+      })
+      .filter(
+        (repository) =>
+          repository !== undefined &&
+          (!options.showOnlyHighlighted || repository.isNewRelease || repository.isStaleRelease),
+      )
+      .sort((repoA, repoB) => {
+        if (repoA?.latestReleaseAt === undefined) return 1;
+        if (repoB?.latestReleaseAt === undefined) return -1;
+        return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
+      }) as ReleaseRepository[];
+  }, [
+    results,
+    options.repositories,
+    options.showOnlyHighlighted,
+    options.newReleaseWithin,
+    options.staleReleaseWithin,
+  ]);
 
   const toggleExpandedRepository = useCallback(
     (identifier: string) => {
@@ -105,12 +122,6 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     },
     [expandedRepository],
   );
-
-  repositories.sort((repoA, repoB) => {
-    if (repoA.latestReleaseAt === undefined) return 1;
-    if (repoB.latestReleaseAt === undefined) return -1;
-    return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
-  });
 
   return (
     <Stack gap={0}>
