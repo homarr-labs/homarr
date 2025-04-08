@@ -2062,8 +2062,16 @@
             "label": "Identifier",
             "placeholder": "Name or Owner/Name"
           },
-          "versionRegex": {
-            "label": "Version Regex"
+          "versionFilter": {
+            "prefix": {
+              "label": "Prefix"
+            },
+            "precision":{
+              "label": "Precision"
+            },
+            "suffix": {
+              "label": "Suffix"
+            }
           },
           "edit": {
             "label": "Edit"

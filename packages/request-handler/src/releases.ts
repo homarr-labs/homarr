@@ -4,6 +4,8 @@ import { z } from "zod";
 import { fetchWithTimeout } from "@homarr/common";
 
 import { Providers } from "../../widgets/src/releases/release-providers";
+import type { ReleaseVersionFilter } from "../../widgets/src/releases/release-repository";
+
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
 const dockerHubDetailsSchema = z
@@ -247,7 +249,7 @@ function getCodebergUrl(identifier: string): string {
 export const releasesRequestHandler = createCachedWidgetRequestHandler({
   queryKey: "releasesApiResult",
   widgetKind: "releases",
-  async requestAsync(input: { providerName: string; identifier: string; versionRegex: string | undefined }) {
+  async requestAsync(input: { providerName: string; identifier: string; versionFilter: ReleaseVersionFilter | undefined }) {
     let detailsUrl;
     let detailsSchema;
     let releasesUrl;
@@ -317,7 +319,7 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
     if (!releasesResult.success) return undefined;
 
     const latest: ReleaseResponse = releasesResult.data
-      .filter((result) => (input.versionRegex ? new RegExp(input.versionRegex).test(result.latestRelease) : true))
+      // .filter((result) => (input.versionRegex ? new RegExp(input.versionRegex).test(result.latestRelease) : true))
       .reduce(
         (latest, result) => {
           return {

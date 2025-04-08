@@ -1,9 +1,15 @@
 import type { ReleaseProvider } from "./release-providers";
 
+export interface ReleaseVersionFilter {
+  prefix?: string;
+  precision: number;
+  suffix?: string;
+}
+
 export interface ReleaseRepository {
   provider: ReleaseProvider;
   identifier: string;
-  versionRegex?: string;
+  versionFilter?: ReleaseVersionFilter;
   iconUrl?: string;
 
   latestRelease?: string;

@@ -1,20 +1,7 @@
 "use client";
 
 import React, { useCallback, useState } from "react";
-import {
-  ActionIcon,
-  Autocomplete,
-  Button,
-  Divider,
-  Fieldset,
-  Grid,
-  Group,
-  Select,
-  Stack,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import type { AutocompleteProps } from "@mantine/core";
+import { ActionIcon, Button, Divider, Fieldset, Grid, Group, Select, Stack, Text, TextInput } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 
@@ -24,7 +11,7 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 
 import { IconPicker } from "../../../forms-collection/src";
 import { Providers } from "../releases/release-providers";
-import type { ReleaseRepository } from "../releases/release-repository";
+import type { ReleaseRepository, ReleaseVersionFilter } from "../releases/release-repository";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
@@ -48,7 +35,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
     (repository: ReleaseRepository, index: number): FormValidation => {
       form.setFieldValue(`options.${property}.${index}.provider`, repository.provider);
       form.setFieldValue(`options.${property}.${index}.identifier`, repository.identifier);
-      form.setFieldValue(`options.${property}.${index}.versionRegex`, repository.versionRegex);
+      form.setFieldValue(`options.${property}.${index}.versionFilter`, repository.versionFilter);
       form.setFieldValue(`options.${property}.${index}.iconUrl`, repository.iconUrl);
 
       return form.validate();
@@ -116,7 +103,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
                 </Grid.Col>
                 <Grid.Col span="content">
                   <Text c="dimmed" size="xs">
-                    {repository.versionRegex}
+                    {repository.versionFilter?.precision}
                   </Text>
                 </Grid.Col>
                 <Grid.Col span="content">
@@ -150,13 +137,6 @@ export const WidgetMultiReleaseRepositoriesInput = ({
   );
 };
 
-const versionRegexData: Record<string, string> = {
-  "^v[0-9]+\\.[0-9]+\\.[0-9]+$": "v1.2.3",
-  "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$": "1.2.3.4",
-  "^[0-9]+\\.[0-9]+\\.[0-9]+$": "1.2.3",
-  "^[0-9]+\\.[0-9]+$": "1.2",
-};
-
 interface ReleaseEditProps {
   fieldPath: string;
   repository: ReleaseRepository;
@@ -185,71 +165,95 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
     setTempRepository((prev) => ({ ...prev, ...changedValue }));
   }, []);
 
-  const renderVersionRegexOption: AutocompleteProps["renderOption"] = ({ option }) => (
-    <Stack gap={0}>
-      <Text size="sm">{option.value}</Text>
-      <Text size="xs" opacity={0.5}>
-        {tRepository("example.label")}: {versionRegexData[option.value]}
-      </Text>
-    </Stack>
-  );
-
   return (
     <Stack>
-      <Grid gutter="xs">
-        <Grid.Col span={4}>
-          <Select
-            withAsterisk
-            label={tRepository("provider.label")}
-            data={Object.entries(Providers).map(([key, provider]) => ({
-              value: key,
-              label: provider.name,
-            }))}
-            value={Object.keys(Providers).find((key) => Providers[key] === tempRepository.provider) ?? ""}
-            key={`${innerProps.fieldPath}.provider`}
-            error={formErrors[`${innerProps.fieldPath}.provider`]}
-            onChange={(value) => {
-              if (value && Providers[value]) {
-                handleChange({ provider: Providers[value] });
-              }
-            }}
-          />
-        </Grid.Col>
-        <Grid.Col span={7}>
+      <Group>
+        <Select
+          withAsterisk
+          label={tRepository("provider.label")}
+          data={Object.entries(Providers).map(([key, provider]) => ({
+            value: key,
+            label: provider.name,
+          }))}
+          value={Object.keys(Providers).find((key) => Providers[key] === tempRepository.provider) ?? ""}
+          key={`${innerProps.fieldPath}.provider`}
+          error={formErrors[`${innerProps.fieldPath}.provider`]}
+          onChange={(value) => {
+            if (value && Providers[value]) {
+              handleChange({ provider: Providers[value] });
+            }
+          }}
+        />
+
+        <TextInput
+          withAsterisk
+          label={tRepository("identifier.label")}
+          value={tempRepository.identifier}
+          onChange={(event) => {
+            handleChange({ identifier: event.currentTarget.value });
+          }}
+          key={`${innerProps.fieldPath}.identifier`}
+          error={formErrors[`${innerProps.fieldPath}.identifier`]}
+        />
+      </Group>
+      <Group>
+        <Group>
           <TextInput
-            withAsterisk
-            label={tRepository("identifier.label")}
-            value={tempRepository.identifier}
+            label={tRepository("versionFilter.prefix.label")}
+            value={tempRepository.versionFilter?.prefix ?? ""}
             onChange={(event) => {
-              handleChange({ identifier: event.currentTarget.value });
+              handleChange({
+                versionFilter: {
+                  ...(tempRepository.versionFilter ?? {}),
+                  prefix: event.currentTarget.value,
+                } as ReleaseVersionFilter,
+              });
             }}
-            key={`${innerProps.fieldPath}.identifier`}
-            error={formErrors[`${innerProps.fieldPath}.identifier`]}
+            key={`${innerProps.fieldPath}.versionFilter.prefix`}
+            error={formErrors[`${innerProps.fieldPath}.versionFilter.prefix`]}
           />
-        </Grid.Col>
-        <Grid.Col span={4}>
-          <Autocomplete
-            label={tRepository("versionRegex.label")}
-            value={tempRepository.versionRegex ?? ""}
+          <Select
+            label={tRepository("versionFilter.precision.label")}
+            data={["None", "1", "2", "3", "4", "5"]}
+            value={tempRepository.versionFilter?.precision.toString() ?? "None"}
             onChange={(value) => {
-              handleChange({ versionRegex: value === "" ? undefined : value });
+              handleChange({
+                versionFilter:
+                  value === null || value === "None"
+                    ? undefined
+                    : ({
+                        ...(tempRepository.versionFilter ?? {}),
+                        precision: parseInt(value),
+                      } as ReleaseVersionFilter),
+              });
             }}
-            key={`${innerProps.fieldPath}.versionRegex`}
-            error={formErrors[`${innerProps.fieldPath}.versionRegex`]}
-            data={Object.keys(versionRegexData)}
-            renderOption={renderVersionRegexOption}
+            key={`${innerProps.fieldPath}.versionFilter.precision`}
+            error={formErrors[`${innerProps.fieldPath}.versionFilter.precision`]}
           />
-        </Grid.Col>
-        <Grid.Col span={7}>
-          <IconPicker
-            withAsterisk={false}
-            value={tempRepository.iconUrl}
-            onChange={(url) => handleChange({ iconUrl: url })}
-            key={`${innerProps.fieldPath}.iconUrl`}
-            error={formErrors[`${innerProps.fieldPath}.iconUrl`] as string}
+          <TextInput
+            label={tRepository("versionFilter.suffix.label")}
+            value={tempRepository.versionFilter?.suffix ?? ""}
+            onChange={(event) => {
+              handleChange({
+                versionFilter: {
+                  ...(tempRepository.versionFilter ?? {}),
+                  suffix: event.currentTarget.value,
+                } as ReleaseVersionFilter,
+              });
+            }}
+            key={`${innerProps.fieldPath}.versionFilter.suffix`}
+            error={formErrors[`${innerProps.fieldPath}.versionFilter.suffix`]}
           />
-        </Grid.Col>
-      </Grid>
+        </Group>
+
+        <IconPicker
+          withAsterisk={false}
+          value={tempRepository.iconUrl}
+          onChange={(url) => handleChange({ iconUrl: url })}
+          key={`${innerProps.fieldPath}.iconUrl`}
+          error={formErrors[`${innerProps.fieldPath}.iconUrl`] as string}
+        />
+      </Group>
       <Divider my={"sm"} />
       <Group justify="flex-end">
         <Button variant="default" onClick={actions.closeModal}>
