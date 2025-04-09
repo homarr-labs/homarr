@@ -1,7 +1,7 @@
 import { objectKeys } from "@homarr/common";
 import type { JobGroupKeys } from "@homarr/cron-jobs";
 import { createSubPubChannel } from "@homarr/redis";
-import { zodEnumFromArray } from "@homarr/validation";
+import { zodEnumFromArray } from "@homarr/validation/enums";
 
 export const cronJobRunnerChannel = createSubPubChannel<JobGroupKeys>("cron-job-runner", { persist: false });
 
@@ -23,6 +23,7 @@ export const cronJobs = {
   updateChecker: { preventManualExecution: false },
   mediaTranscoding: { preventManualExecution: false },
   minecraftServerStatus: { preventManualExecution: false },
+  networkController: { preventManualExecution: false },
 } satisfies Record<JobGroupKeys, { preventManualExecution?: boolean }>;
 
 /**

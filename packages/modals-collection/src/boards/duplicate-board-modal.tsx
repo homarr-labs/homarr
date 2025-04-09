@@ -5,7 +5,7 @@ import type { MaybePromise } from "@homarr/common/types";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { boardDuplicateSchema } from "@homarr/validation/board";
 
 import { createModal } from "../../../modals/src/creator";
 import { useBoardNameStatus } from "./add-board-modal";
@@ -20,7 +20,7 @@ interface InnerProps {
 
 export const DuplicateBoardModal = createModal<InnerProps>(({ actions, innerProps }) => {
   const t = useI18n();
-  const form = useZodForm(validation.board.duplicate.omit({ id: true }), {
+  const form = useZodForm(boardDuplicateSchema.omit({ id: true }), {
     mode: "controlled",
     initialValues: {
       name: innerProps.board.name,

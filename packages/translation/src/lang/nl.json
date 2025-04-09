@@ -757,6 +757,10 @@
         "wrongPath": {
           "title": "Verkeerde pad",
           "message": "Het pad is waarschijnlijk niet juist"
+        },
+        "tooManyRequests": {
+          "title": "Te veel verzoeken in een bepaalde tijd",
+          "message": "Er waren te veel aanvragen. Je wordt waarschijnlijk beperkt in snelheid of afgewezen door het doelsysteem"
         }
       }
     },
@@ -981,7 +985,7 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "borderColor": {
           "label": "Randkleur"
@@ -2026,6 +2030,62 @@
           "label": "Aantal berichtenlimiet"
         }
       }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": "{count} verbonden"
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "Geen gegevens beschikbaar, alle integraties verbroken",
+        "unknownContentOption": "Onbekende inhoudsoptie voor netwerkcontroller samenvatting widget:"
+      },
+      "name": "Netwerkcontroller samenvatting",
+      "description": "Geeft de samenvatting weer van een netwerkcontroller (zoals UniFi Controller)"
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": "Bedraad"
+          },
+          "wifi": {
+            "name": "Wi-Fi"
+          }
+        },
+        "users": {
+          "label": "Gebruikers"
+        },
+        "guests": {
+          "label": "Gasten"
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": "Wi-Fi"
+            },
+            "wired": {
+              "label": "Bedraad"
+            }
+          },
+          "label": "Widget inhoud"
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "Geen gegevens beschikbaar, alle integraties verbroken",
+        "unknownContentOption": "Onbekende inhoudsoptie voor netwerkstatus widget:"
+      },
+      "name": "Netwerkstatus",
+      "description": "Verbonden apparaten op een netwerk weergeven"
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": "Netwerkcontroller samenvatting ophalen mislukt"
+      }
     }
   },
   "widgetPreview": {
@@ -2146,7 +2206,12 @@
         "label": "Favicon afbeeldings-URL"
       },
       "backgroundImageUrl": {
-        "label": "Achtergrondafbeelding URL"
+        "label": "Achtergrondafbeelding URL",
+        "placeholder": "Begin met typen om lokale afbeeldingen te zoeken",
+        "group": {
+          "your": "Jouw afbeeldingen",
+          "other": "Andere afbeeldingen"
+        }
       },
       "backgroundImageAttachment": {
         "label": "Achtergrondafbeelding bijlage",
@@ -2782,6 +2847,9 @@
             },
             "mediaTranscoding": {
               "label": "Mediatranscodering"
+            },
+            "networkController": {
+              "label": "Netwerkcontroller"
             }
           }
         },

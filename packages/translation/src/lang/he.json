@@ -757,6 +757,10 @@
         "wrongPath": {
           "title": "נתיב שגוי",
           "message": "כנראה שהנתיב שגוי"
+        },
+        "tooManyRequests": {
+          "title": "",
+          "message": ""
         }
       }
     },
@@ -2026,6 +2030,62 @@
           "label": "הגבלת כמות הודעות"
         }
       }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": ""
+          },
+          "wifi": {
+            "name": ""
+          }
+        },
+        "users": {
+          "label": ""
+        },
+        "guests": {
+          "label": ""
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": ""
+            },
+            "wired": {
+              "label": ""
+            }
+          },
+          "label": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": ""
+      }
     }
   },
   "widgetPreview": {
@@ -2146,7 +2206,12 @@
         "label": "כתובת אתר של תמונת Favicon"
       },
       "backgroundImageUrl": {
-        "label": "כתובת אתר של תמונת רקע"
+        "label": "כתובת אתר של תמונת רקע",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "צירוף תמונת רקע",
@@ -2782,6 +2847,9 @@
             },
             "mediaTranscoding": {
               "label": "המרת קידוד מדיה"
+            },
+            "networkController": {
+              "label": ""
             }
           }
         },

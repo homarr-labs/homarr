@@ -757,6 +757,10 @@
         "wrongPath": {
           "title": "Неверный путь",
           "message": "Возможно, указан неверный путь"
+        },
+        "tooManyRequests": {
+          "title": "",
+          "message": ""
         }
       }
     },
@@ -2026,6 +2030,62 @@
           "label": "Максимальное количество записей"
         }
       }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": ""
+          },
+          "wifi": {
+            "name": ""
+          }
+        },
+        "users": {
+          "label": ""
+        },
+        "guests": {
+          "label": ""
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": ""
+            },
+            "wired": {
+              "label": ""
+            }
+          },
+          "label": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": ""
+      }
     }
   },
   "widgetPreview": {
@@ -2146,7 +2206,12 @@
         "label": "URL изображения favicon"
       },
       "backgroundImageUrl": {
-        "label": "URL фонового изображения"
+        "label": "URL фонового изображения",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Поведение фонового изображения",
@@ -2782,6 +2847,9 @@
             },
             "mediaTranscoding": {
               "label": "Перекодирование медиафайлов"
+            },
+            "networkController": {
+              "label": ""
             }
           }
         },

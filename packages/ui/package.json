@@ -29,12 +29,12 @@
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^7.17.3",
-    "@mantine/dates": "^7.17.3",
-    "@mantine/hooks": "^7.17.3",
+    "@mantine/core": "^7.17.4",
+    "@mantine/dates": "^7.17.4",
+    "@mantine/hooks": "^7.17.4",
     "@tabler/icons-react": "^3.31.0",
     "mantine-react-table": "2.0.0-beta.9",
-    "next": "15.2.4",
+    "next": "15.2.5",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
@@ -43,7 +43,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/css-modules": "^1.0.5",
-    "eslint": "^9.23.0",
-    "typescript": "^5.8.2"
+    "eslint": "^9.24.0",
+    "typescript": "^5.8.3"
   }
 }

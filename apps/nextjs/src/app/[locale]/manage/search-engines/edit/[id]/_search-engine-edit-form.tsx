@@ -10,7 +10,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { TranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
-import type { validation } from "@homarr/validation";
+import type { searchEngineManageSchema } from "@homarr/validation/search-engine";
 
 import { SearchEngineForm } from "../../_form";
 
@@ -41,7 +41,7 @@ export const SearchEngineEditForm = ({ searchEngine }: SearchEngineEditFormProps
   });
 
   const handleSubmit = useCallback(
-    (values: z.infer<typeof validation.searchEngine.manage>) => {
+    (values: z.infer<typeof searchEngineManageSchema>) => {
       mutate({
         id: searchEngine.id,
         ...values,

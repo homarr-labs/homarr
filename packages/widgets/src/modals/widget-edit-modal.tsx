@@ -10,7 +10,7 @@ import { zodResolver } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
-import { zodErrorMap } from "@homarr/validation/form";
+import { zodErrorMap } from "@homarr/validation/form/i18n";
 
 import { widgetImports } from "..";
 import { getInputForType } from "../_inputs";

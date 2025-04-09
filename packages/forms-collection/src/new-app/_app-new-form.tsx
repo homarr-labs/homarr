@@ -8,7 +8,7 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import type { validation } from "@homarr/validation";
+import type { appManageSchema } from "@homarr/validation/app";
 
 import { AppForm } from "./_form";
 
@@ -33,7 +33,7 @@ export const AppNewForm = ({
   });
 
   const handleSubmit = useCallback(
-    (values: z.infer<typeof validation.app.manage>, redirect: boolean, afterSuccess?: () => void) => {
+    (values: z.infer<typeof appManageSchema>, redirect: boolean, afterSuccess?: () => void) => {
       mutate(values, {
         onSuccess() {
           showSuccessNotification({

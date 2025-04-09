@@ -18,27 +18,28 @@ const hexColorNullableSchema = hexColorSchema
   .nullable()
   .transform((value) => (value?.trim().length === 0 ? null : value));
 
-const boardNameSchema = z
+export const boardNameSchema = z
   .string()
   .min(1)
   .max(255)
   .regex(/^[A-Za-z0-9-\\_]*$/);
+export const boardColumnCountSchema = z.number().min(1).max(24);
 
-const byNameSchema = z.object({
+export const boardByNameSchema = z.object({
   name: boardNameSchema,
 });
 
-const renameSchema = z.object({
+export const boardRenameSchema = z.object({
   id: z.string(),
   name: boardNameSchema,
 });
 
-const duplicateSchema = z.object({
+export const boardDuplicateSchema = z.object({
   id: z.string(),
   name: boardNameSchema,
 });
 
-const changeVisibilitySchema = z.object({
+export const boardChangeVisibilitySchema = z.object({
   id: z.string(),
   visibility: z.enum(["public", "private"]),
 });
@@ -48,7 +49,7 @@ const trimmedNullableString = z
   .nullable()
   .transform((value) => (value?.trim().length === 0 ? null : value));
 
-const savePartialSettingsSchema = z
+export const boardSavePartialSettingsSchema = z
   .object({
     pageTitle: trimmedNullableString,
     metaTitle: trimmedNullableString,
@@ -68,52 +69,28 @@ const savePartialSettingsSchema = z
   })
   .partial();
 
-const saveLayoutsSchema = z.object({
+export const boardSaveLayoutsSchema = z.object({
   id: z.string(),
   layouts: z.array(
     z.object({
       id: z.string(),
       name: z.string().trim().nonempty().max(32),
-      columnCount: z.number().min(1).max(24),
+      columnCount: boardColumnCountSchema,
       breakpoint: z.number().min(0).max(32767),
     }),
   ),
 });
 
-const saveSchema = z.object({
+export const boardSaveSchema = z.object({
   id: z.string(),
   sections: z.array(sectionSchema),
   items: z.array(commonItemSchema),
 });
 
-const createSchema = z.object({ name: boardNameSchema, columnCount: z.number().min(1).max(24), isPublic: z.boolean() });
-
-const permissionsSchema = z.object({
-  id: z.string(),
-});
-
-const savePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));
-
-z.object({
-  entityId: z.string(),
-  permissions: z.array(
-    z.object({
-      principalId: z.string(),
-      permission: zodEnumFromArray(boardPermissions),
-    }),
-  ),
-});
-
-export const boardSchemas = {
+export const boardCreateSchema = z.object({
   name: boardNameSchema,
-  byName: byNameSchema,
-  savePartialSettings: savePartialSettingsSchema,
-  saveLayouts: saveLayoutsSchema,
-  save: saveSchema,
-  create: createSchema,
-  duplicate: duplicateSchema,
-  rename: renameSchema,
-  changeVisibility: changeVisibilitySchema,
-  permissions: permissionsSchema,
-  savePermissions: savePermissionsSchema,
-};
+  columnCount: boardColumnCountSchema,
+  isPublic: z.boolean(),
+});
+
+export const boardSavePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(boardPermissions));

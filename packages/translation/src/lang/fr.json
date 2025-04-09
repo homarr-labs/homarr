@@ -757,6 +757,10 @@
         "wrongPath": {
           "title": "Mauvais chemin d'accès",
           "message": "Le chemin d'accès n'est probablement pas correct"
+        },
+        "tooManyRequests": {
+          "title": "",
+          "message": ""
         }
       }
     },
@@ -2026,6 +2030,62 @@
           "label": "Nombre maximum de publications"
         }
       }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": ""
+          },
+          "wifi": {
+            "name": ""
+          }
+        },
+        "users": {
+          "label": ""
+        },
+        "guests": {
+          "label": ""
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": ""
+            },
+            "wired": {
+              "label": ""
+            }
+          },
+          "label": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": ""
+      }
     }
   },
   "widgetPreview": {
@@ -2146,7 +2206,12 @@
         "label": "URL du Favicon"
       },
       "backgroundImageUrl": {
-        "label": "URL de l'arrière-plan"
+        "label": "URL de l'arrière-plan",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Pièce jointe de l'image d'arrière-plan",
@@ -2782,6 +2847,9 @@
             },
             "mediaTranscoding": {
               "label": "Transcodage des médias"
+            },
+            "networkController": {
+              "label": ""
             }
           }
         },

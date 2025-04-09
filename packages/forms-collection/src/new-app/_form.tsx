@@ -10,12 +10,12 @@ import type { z } from "zod";
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { appManageSchema } from "@homarr/validation/app";
 
 import { IconPicker } from "../icon-picker/icon-picker";
 import { findBestIconMatch } from "./icon-matcher";
 
-type FormType = z.infer<typeof validation.app.manage>;
+type FormType = z.infer<typeof appManageSchema>;
 
 interface AppFormProps {
   showBackToOverview: boolean;
@@ -37,7 +37,7 @@ export const AppForm = ({
 }: AppFormProps) => {
   const t = useI18n();
 
-  const form = useZodForm(validation.app.manage, {
+  const form = useZodForm(appManageSchema, {
     initialValues: {
       name: initialValues?.name ?? "",
       description: initialValues?.description ?? "",

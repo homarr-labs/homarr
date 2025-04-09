@@ -27,20 +27,21 @@ import { useZodForm } from "@homarr/form";
 import { convertIntegrationTestConnectionError } from "@homarr/integrations/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { appHrefSchema } from "@homarr/validation/app";
+import { integrationCreateSchema } from "@homarr/validation/integration";
 
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
 
 interface NewIntegrationFormProps {
-  searchParams: Partial<z.infer<typeof validation.integration.create>> & {
+  searchParams: Partial<z.infer<typeof integrationCreateSchema>> & {
     kind: IntegrationKind;
   };
 }
 
-const formSchema = validation.integration.create.omit({ kind: true }).and(
+const formSchema = integrationCreateSchema.omit({ kind: true }).and(
   z.object({
     createApp: z.boolean(),
-    appHref: validation.app.manage.shape.href,
+    appHref: appHrefSchema,
   }),
 );
 

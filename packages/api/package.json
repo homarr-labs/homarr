@@ -40,12 +40,12 @@
     "@homarr/request-handler": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@kubernetes/client-node": "^1.1.1",
-    "@trpc/client": "^11.0.2",
-    "@trpc/react-query": "^11.0.2",
-    "@trpc/server": "^11.0.2",
+    "@kubernetes/client-node": "^1.1.2",
+    "@trpc/client": "^11.0.4",
+    "@trpc/react-query": "^11.0.4",
+    "@trpc/server": "^11.0.4",
     "lodash.clonedeep": "^4.5.0",
-    "next": "15.2.4",
+    "next": "15.2.5",
     "pretty-print-error": "^1.1.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -57,8 +57,8 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.23.0",
+    "eslint": "^9.24.0",
     "prettier": "^3.5.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   }
 }

@@ -7,7 +7,7 @@ import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { boardRenameSchema } from "@homarr/validation/board";
 
 interface InnerProps {
   id: string;
@@ -26,7 +26,7 @@ export const BoardRenameModal = createModal<InnerProps>(({ actions, innerProps }
       void utils.board.getHomeBoard.invalidate();
     },
   });
-  const form = useZodForm(validation.board.rename.omit({ id: true }), {
+  const form = useZodForm(boardRenameSchema.omit({ id: true }), {
     initialValues: {
       name: innerProps.previousName,
     },
@@ -66,4 +66,4 @@ export const BoardRenameModal = createModal<InnerProps>(({ actions, innerProps }
   defaultTitle: (t) => t("board.setting.section.dangerZone.action.rename.modal.title"),
 });
 
-type FormType = Omit<z.infer<(typeof validation)["board"]["rename"]>, "id">;
+type FormType = Omit<z.infer<typeof boardRenameSchema>, "id">;
