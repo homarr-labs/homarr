@@ -1,10 +1,11 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Button, Divider, Grid, Group, Stack, Text, Title, Tooltip } from "@mantine/core";
+import { Button, Divider, Group, Stack, Text, Title, Tooltip } from "@mantine/core";
 import {
   IconArchive,
   IconCircleDot,
+  IconCircleFilled,
   IconExternalLink,
   IconGitFork,
   IconProgressCheck,
@@ -134,66 +135,56 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             className={classes.releasesRepository}
             gap={0}
           >
-            <Grid
+            <Group
               className={combineClasses(classes.releasesRepositoryHeader, {
                 [classes.active ?? ""]: isActive,
               })}
-              columns={17}
-              py={8}
-              px={5}
-              gutter="xs"
-              justify="stretch"
-              align="center"
+              p="xs"
+              wrap="nowrap"
               onClick={() => toggleExpandedRepository(repository.identifier)}
             >
-              <Grid.Col span={1.2}>
-                <MaskedOrNormalImage
-                  imageUrl={repository.iconUrl ?? repository.provider.iconUrl}
-                  hasColor={hasIconColor}
-                  style={{
-                    width: "100%",
-                    aspectRatio: "1/1",
-                  }}
-                />
-              </Grid.Col>
-              <Grid.Col span={7.1}>
-                <Text truncate="end" size="xs">
+              <MaskedOrNormalImage
+                imageUrl={repository.iconUrl ?? repository.provider.iconUrl}
+                hasColor={hasIconColor}
+                style={{
+                  width: "1em",
+                  aspectRatio: "1/1",
+                }}
+              />
+              
+              <Group gap={5} style={{ flex: 1 }} wrap="nowrap">
+                <Text truncate="end" size="xs" style={{ flex: 1 }}>
                   {repository.identifier}
                 </Text>
-              </Grid.Col>
-              <Grid.Col span={5.5}>
-                <Text
-                  size="xs"
-                  fw={700}
-                  style={{
-                    textAlign: "right",
-                  }}
-                >
+
+                <Text size="xs" fw={700} ta="end" truncate="end" style={{ flex: 1 }}>
                   {repository.latestRelease ?? t("not-found")}
                 </Text>
-              </Grid.Col>
-              <Grid.Col span={3.2}>
-                <Group justify="space-between" align="center" gap={0} preventGrowOverflow={false} wrap="nowrap">
-                  <Text
-                    size="xs"
-                    c={
-                      repository.isNewRelease ? "primaryColor" : repository.isStaleRelease ? "secondaryColor" : "dimmed"
+              </Group>
+
+              <Group gap={5} wrap="nowrap">
+                <Text
+                  size="xs"
+                  c={repository.isNewRelease ? "primaryColor" : repository.isStaleRelease ? "secondaryColor" : "dimmed"}
+                >
+                  {repository.latestReleaseAt &&
+                    formatter.relativeTime(repository.latestReleaseAt, {
+                      now,
+                      style: "narrow",
+                    })}
+                </Text>
+                {(repository.isNewRelease || repository.isStaleRelease) && (
+                  <IconCircleFilled
+                    size={10}
+                    color={
+                      repository.isNewRelease
+                        ? "var(--mantine-color-primaryColor-filled)"
+                        : "var(--mantine-color-secondaryColor-filled)"
                     }
-                  >
-                    {repository.latestReleaseAt &&
-                      formatter.relativeTime(repository.latestReleaseAt, {
-                        now,
-                        style: "narrow",
-                      })}
-                  </Text>
-                  {(repository.isNewRelease || repository.isStaleRelease) && (
-                    <Text size="xs" fw={700} c={repository.isNewRelease ? "primaryColor" : "secondaryColor"}>
-                      !
-                    </Text>
-                  )}
-                </Group>
-              </Grid.Col>
-            </Grid>
+                  />
+                )}
+              </Group>
+            </Group>
             {options.showDetails && (
               <DetailsDisplay repository={repository} toggleExpandedRepository={toggleExpandedRepository} />
             )}
@@ -217,42 +208,38 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
 
   return (
     <>
-      <Divider />
-      <Grid
+      <Divider onClick={() => toggleExpandedRepository(repository.identifier)} />
+      <Group
         className={classes.releasesRepositoryDetails}
-        gutter="xs"
-        align="center"
-        py={5}
-        px={10}
+        justify="space-between"
+        p={5}
         onClick={() => toggleExpandedRepository(repository.identifier)}
       >
-        <Grid.Col span={4.5}>
-          <Group gap={5}>
-            <Tooltip label={t("pre-release")}>
-              <IconProgressCheck
-                size={13}
-                color={
-                  repository.isPreRelease ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"
-                }
-              />
-            </Tooltip>
-            <Tooltip label={t("archived")}>
-              <IconArchive
-                size={13}
-                color={
-                  repository.isArchived ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"
-                }
-              />
-            </Tooltip>
-            <Tooltip label={t("forked")}>
-              <IconGitFork
-                size={13}
-                color={repository.isFork ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"}
-              />
-            </Tooltip>
-          </Group>
-        </Grid.Col>
-        <Grid.Col span={2.5}>
+        <Group>
+          <Tooltip label={t("pre-release")}>
+            <IconProgressCheck
+              size={13}
+              color={
+                repository.isPreRelease ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"
+              }
+            />
+          </Tooltip>
+
+          <Tooltip label={t("archived")}>
+            <IconArchive
+              size={13}
+              color={repository.isArchived ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"}
+            />
+          </Tooltip>
+
+          <Tooltip label={t("forked")}>
+            <IconGitFork
+              size={13}
+              color={repository.isFork ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"}
+            />
+          </Tooltip>
+        </Group>
+        <Group>
           <Tooltip label={t("starsCount")}>
             <Group gap={5}>
               <IconStar
@@ -269,8 +256,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
               </Text>
             </Group>
           </Tooltip>
-        </Grid.Col>
-        <Grid.Col span={2.5}>
+
           <Tooltip label={t("forksCount")}>
             <Group gap={5}>
               <IconGitFork
@@ -287,8 +273,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
               </Text>
             </Group>
           </Tooltip>
-        </Grid.Col>
-        <Grid.Col span={2.5}>
+
           <Tooltip label={t("issuesCount")}>
             <Group gap={5}>
               <IconCircleDot
@@ -305,8 +290,8 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
               </Text>
             </Group>
           </Tooltip>
-        </Grid.Col>
-      </Grid>
+        </Group>
+      </Group>
     </>
   );
 };
