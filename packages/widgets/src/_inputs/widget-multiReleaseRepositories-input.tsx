@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import { ActionIcon, Button, Divider, Fieldset, Grid, Group, Select, Stack, Text, TextInput } from "@mantine/core";
+import { ActionIcon, Button, Divider, Fieldset, Group, Select, Stack, Text, TextInput } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { escapeForRegEx } from "@tiptap/react";
@@ -86,54 +86,52 @@ export const WidgetMultiReleaseRepositoriesInput = ({
 
         {repositories.map((repository, index) => {
           return (
-            <Stack key={`${repository.provider.name}.${repository.identifier}`} gap="5">
-              <Grid align="center" gutter="xs">
-                <Grid.Col span="content">
-                  <MaskedOrNormalImage
-                    hasColor={false}
-                    imageUrl={repository.iconUrl ?? repository.provider.iconUrl}
-                    style={{
-                      height: "1em",
-                      width: "1em",
-                    }}
-                  />
-                </Grid.Col>
-                <Grid.Col span="content">
-                  <Text c="dimmed" fw={100} size="xs">
-                    {repository.provider.name}
+            <Stack key={`${repository.provider.name}.${repository.identifier}`} gap={5}>
+              <Group align="center" gap="xs">
+                <MaskedOrNormalImage
+                  hasColor={false}
+                  imageUrl={repository.iconUrl ?? repository.provider.iconUrl}
+                  style={{
+                    height: "1em",
+                    width: "1em",
+                  }}
+                />
+
+                <Text c="dimmed" fw={100} size="xs">
+                  {repository.provider.name}
+                </Text>
+
+                <Group justify="space-between" align="center" style={{ flex: 1 }} gap={5}>
+                  <Text size="sm" style={{ flex: 1, whiteSpace: "nowrap" }}>
+                    {repository.identifier}
                   </Text>
-                </Grid.Col>
-                <Grid.Col span="auto">
-                  <Text size="sm">{repository.identifier}</Text>
-                </Grid.Col>
-                <Grid.Col span="content">
-                  <Text c="dimmed" size="xs">
+
+                  <Text c="dimmed" size="xs" ta="end" style={{ flex: 1, whiteSpace: "nowrap" }} >
                     {repository.versionFilter?.regex ?? ""}
                   </Text>
-                </Grid.Col>
-                <Grid.Col span="content">
-                  <Button
-                    onClick={() =>
-                      openModal({
-                        fieldPath: `options.${property}.${index}`,
-                        repository,
-                        onRepositorySave: (saved) => onRepositorySave(saved, index),
-                        versionFilterPrecisionOptions: versionFilterPrecisionOptions,
-                      })
-                    }
-                    variant="light"
-                    leftSection={<IconEdit size={15} />}
-                    size="xs"
-                  >
-                    {tRepository("edit.label")}
-                  </Button>
-                </Grid.Col>
-                <Grid.Col span="content">
-                  <ActionIcon variant="transparent" color="red" onClick={() => onReleaseRemove(index)}>
-                    <IconTrash size={15} />
-                  </ActionIcon>
-                </Grid.Col>
-              </Grid>
+                </Group>
+
+                <Button
+                  onClick={() =>
+                    openModal({
+                      fieldPath: `options.${property}.${index}`,
+                      repository,
+                      onRepositorySave: (saved) => onRepositorySave(saved, index),
+                      versionFilterPrecisionOptions: versionFilterPrecisionOptions,
+                    })
+                  }
+                  variant="light"
+                  leftSection={<IconEdit size={15} />}
+                  size="xs"
+                >
+                  {tRepository("edit.label")}
+                </Button>
+
+                <ActionIcon variant="transparent" color="red" onClick={() => onReleaseRemove(index)}>
+                  <IconTrash size={15} />
+                </ActionIcon>
+              </Group>
+
               <Divider my="sm" size="xs" mt={5} mb={5} />
             </Stack>
           );
