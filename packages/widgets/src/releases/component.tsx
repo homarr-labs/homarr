@@ -151,13 +151,11 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                   aspectRatio: "1/1",
                 }}
               />
-              
-              <Group gap={5} style={{ flex: 1 }} wrap="nowrap">
-                <Text truncate="end" size="xs" style={{ flex: 1 }}>
-                  {repository.identifier}
-                </Text>
 
-                <Text size="xs" fw={700} ta="end" truncate="end" style={{ flex: 1 }}>
+              <Group gap={5} justify="space-between" style={{ flex: 1, minWidth: 0 }} wrap="nowrap">
+                <Text size="xs">{repository.identifier}</Text>
+
+                <Text size="xs" fw={700} truncate="end" style={{ flexShrink: 1 }}>
                   {repository.latestRelease ?? t("not-found")}
                 </Text>
               </Group>
