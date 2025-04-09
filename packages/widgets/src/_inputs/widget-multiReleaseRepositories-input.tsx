@@ -175,7 +175,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
             value: key,
             label: provider.name,
           }))}
-          value={Object.keys(Providers).find((key) => Providers[key] === tempRepository.provider) ?? ""}
+          value={Object.keys(Providers).find((key) => Providers[key]?.name === tempRepository.provider.name) ?? ""}
           key={`${innerProps.fieldPath}.provider`}
           error={formErrors[`${innerProps.fieldPath}.provider`]}
           onChange={(value) => {
