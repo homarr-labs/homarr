@@ -3,9 +3,10 @@ import SuperJSON from "superjson";
 import { z } from "zod";
 
 import { eq } from "@homarr/db";
-import { items } from "@homarr/db/schema";
+import { boards, items } from "@homarr/db/schema";
 
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { throwIfActionForbiddenAsync } from "../board/board-access";
 
 export const notebookRouter = createTRPCRouter({
   updateContent: protectedProcedure
@@ -17,6 +18,8 @@ export const notebookRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "modify");
+
       const item = await ctx.db.query.items.findFirst({
         where: eq(items.id, input.itemId),
       });
