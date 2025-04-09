@@ -57,7 +57,7 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
           ) : (
             <IconTrendingDown size="1.5rem" color={theme.colors.red[7]} />
           )}
-          {data.meta.symbol}
+           {data.meta.symbol}
         </Text>
         {width > 280 && height > 280 && (
           <Text size="md" lh="1">
@@ -67,12 +67,12 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
       </Stack>
 
       <Title pos="absolute" bottom={10} right={10} order={width > 280 ? 1 : 2} fw={700}>
-        {round(stockValues[stockValues.length - 1] ?? 0)}
+        {new Intl.NumberFormat().format(round(stockValues[stockValues.length - 1] ?? 0) )}
       </Title>
 
       {width > 280 && (
         <Text pos="absolute" top={10} right={10} size="xl" fw={700}>
-          {Math.abs(stockValuesChange)} ({Math.abs(stockValuesChangePercentage)}%)
+          {new Intl.NumberFormat().format((stockValuesChange))} ({stockValuesChange > 0 ? '+' : ''}{new Intl.NumberFormat().format((stockValuesChangePercentage))}%)
         </Text>
       )}
 
