@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import { releasesRequestHandler } from "@homarr/request-handler/releases";
-import type { ReleaseVersionFilter } from "../../../../widgets/src/releases/release-repository";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
@@ -13,7 +12,7 @@ export const releasesRouter = createTRPCRouter({
           z.object({
             providerName: z.string(),
             identifier: z.string(),
-            versionFilter: z.custom<ReleaseVersionFilter>().optional(),
+            versionRegex: z.string().optional(),
           }),
         ),
       }),
@@ -24,7 +23,7 @@ export const releasesRouter = createTRPCRouter({
           const innerHandler = releasesRequestHandler.handler({
             providerName: repository.providerName,
             identifier: repository.identifier,
-            versionFilter: repository.versionFilter,
+            versionRegex: repository.versionRegex,
           });
           return await innerHandler.getCachedOrUpdatedDataAsync({
             forceUpdate: false,

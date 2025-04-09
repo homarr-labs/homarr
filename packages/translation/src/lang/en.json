@@ -2063,14 +2063,21 @@
             "placeholder": "Name or Owner/Name"
           },
           "versionFilter": {
+            "label": "Version Filter",
             "prefix": {
               "label": "Prefix"
             },
             "precision":{
-              "label": "Precision"
+              "label": "Precision",
+              "options":{
+                "none": "None"
+              }
             },
             "suffix": {
               "label": "Suffix"
+            },
+            "regex": {
+              "label": "Regular Expression"
             }
           },
           "edit": {

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { ActionIcon, Button, Divider, Fieldset, Grid, Group, Select, Stack, Text, TextInput } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { escapeForRegEx } from "@tiptap/react";
 
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -30,6 +31,10 @@ export const WidgetMultiReleaseRepositoriesInput = ({
   const form = useFormContext();
   const repositories = form.values.options[property] as ReleaseRepository[];
   const { openModal } = useModalAction(ReleaseEditModal);
+  const versionFilterPrecisionOptions = useMemo(
+    () => [tRepository("versionFilter.precision.options.none"), "#", "#.#", "#.#.#", "#.#.#.#", "#.#.#.#.#"],
+    [tRepository],
+  );
 
   const onRepositorySave = useCallback(
     (repository: ReleaseRepository, index: number): FormValidation => {
@@ -103,7 +108,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
                 </Grid.Col>
                 <Grid.Col span="content">
                   <Text c="dimmed" size="xs">
-                    {repository.versionFilter?.precision}
+                    {repository.versionFilter?.regex ?? ""}
                   </Text>
                 </Grid.Col>
                 <Grid.Col span="content">
@@ -113,6 +118,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
                         fieldPath: `options.${property}.${index}`,
                         repository,
                         onRepositorySave: (saved) => onRepositorySave(saved, index),
+                        versionFilterPrecisionOptions: versionFilterPrecisionOptions,
                       })
                     }
                     variant="light"
@@ -137,10 +143,21 @@ export const WidgetMultiReleaseRepositoriesInput = ({
   );
 };
 
+const generateVersionFilterRegex = (versionFilter: ReleaseVersionFilter | undefined) => {
+  if (!versionFilter) return undefined;
+
+  const escapedPrefix = versionFilter.prefix ? escapeForRegEx(versionFilter.prefix) : "";
+  const precision = "[0-9]+\\.".repeat(versionFilter.precision).slice(0, -2);
+  const escapedSuffix = versionFilter.suffix ? escapeForRegEx(versionFilter.suffix) : "";
+
+  return `^${escapedPrefix}${precision}${escapedSuffix}$`;
+};
+
 interface ReleaseEditProps {
   fieldPath: string;
   repository: ReleaseRepository;
   onRepositorySave: (repository: ReleaseRepository) => FormValidation;
+  versionFilterPrecisionOptions: string[];
 }
 
 const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions }) => {
@@ -151,6 +168,11 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
   const handleConfirm = useCallback(() => {
     setLoading(true);
+
+    // Build the version filter regex
+    if (tempRepository.versionFilter) {
+      tempRepository.versionFilter.regex = generateVersionFilterRegex(tempRepository.versionFilter);
+    }
 
     const validation = innerProps.onRepositorySave(tempRepository);
     setFormErrors(validation.errors);
@@ -167,7 +189,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
   return (
     <Stack>
-      <Group>
+      <Group align="center">
         <Select
           withAsterisk
           label={tRepository("provider.label")}
@@ -194,10 +216,12 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
           }}
           key={`${innerProps.fieldPath}.identifier`}
           error={formErrors[`${innerProps.fieldPath}.identifier`]}
+          style={{ flex: 1 }}
         />
       </Group>
-      <Group>
-        <Group>
+
+      <Fieldset legend={tRepository("versionFilter.label")}>
+        <Group justify="stretch" align="center" grow>
           <TextInput
             label={tRepository("versionFilter.prefix.label")}
             value={tempRepository.versionFilter?.prefix ?? ""}
@@ -211,19 +235,24 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
             }}
             key={`${innerProps.fieldPath}.versionFilter.prefix`}
             error={formErrors[`${innerProps.fieldPath}.versionFilter.prefix`]}
+            disabled={!tempRepository.versionFilter}
           />
           <Select
             label={tRepository("versionFilter.precision.label")}
-            data={["None", "1", "2", "3", "4", "5"]}
-            value={tempRepository.versionFilter?.precision.toString() ?? "None"}
+            data={Object.entries(innerProps.versionFilterPrecisionOptions).map(([key, value]) => ({
+              value: key,
+              label: value,
+            }))}
+            value={tempRepository.versionFilter?.precision.toString() ?? "0"}
             onChange={(value) => {
+              const precision = value ? parseInt(value) : 0;
               handleChange({
                 versionFilter:
-                  value === null || value === "None"
+                  isNaN(precision) || precision <= 0
                     ? undefined
                     : ({
                         ...(tempRepository.versionFilter ?? {}),
-                        precision: parseInt(value),
+                        precision,
                       } as ReleaseVersionFilter),
               });
             }}
@@ -243,17 +272,25 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
             }}
             key={`${innerProps.fieldPath}.versionFilter.suffix`}
             error={formErrors[`${innerProps.fieldPath}.versionFilter.suffix`]}
+            disabled={!tempRepository.versionFilter}
           />
         </Group>
 
-        <IconPicker
-          withAsterisk={false}
-          value={tempRepository.iconUrl}
-          onChange={(url) => handleChange({ iconUrl: url })}
-          key={`${innerProps.fieldPath}.iconUrl`}
-          error={formErrors[`${innerProps.fieldPath}.iconUrl`] as string}
-        />
-      </Group>
+        <Text size="xs" c="dimmed">
+          {tRepository("versionFilter.regex.label")}:{" "}
+          {generateVersionFilterRegex(tempRepository.versionFilter) ??
+            tRepository("versionFilter.precision.options.none")}
+        </Text>
+      </Fieldset>
+
+      <IconPicker
+        withAsterisk={false}
+        value={tempRepository.iconUrl}
+        onChange={(url) => handleChange({ iconUrl: url })}
+        key={`${innerProps.fieldPath}.iconUrl`}
+        error={formErrors[`${innerProps.fieldPath}.iconUrl`] as string}
+      />
+
       <Divider my={"sm"} />
       <Group justify="flex-end">
         <Button variant="default" onClick={actions.closeModal}>

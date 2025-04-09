@@ -4,6 +4,7 @@ export interface ReleaseVersionFilter {
   prefix?: string;
   precision: number;
   suffix?: string;
+  regex?: string;
 }
 
 export interface ReleaseRepository {

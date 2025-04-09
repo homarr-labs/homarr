@@ -66,7 +66,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
       repositories: options.repositories.map((repository) => ({
         providerName: repository.provider.name,
         identifier: repository.identifier,
-        versionFilter: repository.versionFilter,
+        versionRegex: repository.versionFilter?.regex,
       })),
     },
     {
