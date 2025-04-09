@@ -117,7 +117,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
                       fieldPath: `options.${property}.${index}`,
                       repository,
                       onRepositorySave: (saved) => onRepositorySave(saved, index),
-                      versionFilterPrecisionOptions: versionFilterPrecisionOptions,
+                      versionFilterPrecisionOptions,
                     })
                   }
                   variant="light"
