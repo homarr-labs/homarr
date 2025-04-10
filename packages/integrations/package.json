@@ -36,6 +36,7 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@jellyfin/sdk": "^0.11.0",
+    "maria2": "^0.4.0",
     "node-ical": "^0.20.1",
     "proxmox-api": "1.1.1",
     "tsdav": "^2.1.3",
