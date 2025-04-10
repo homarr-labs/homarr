@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  proxmox-api>undici: 7.7.0
+  proxmox-api>undici: 7.8.0
 
 patchedDependencies:
   pretty-print-error:
@@ -10032,6 +10032,10 @@ packages:
     resolution: {integrity: sha512-tZ6+5NBq4KH35rr46XJ2JPFKxfcBlYNaqLF/wyWIO9RMHqqU/gx/CLB1Y2qMcgB8lWw/bKHa7qzspqCN7mUHvA==}
     engines: {node: '>=20.18.1'}
 
+  undici@7.8.0:
+    resolution: {integrity: sha512-vFv1GA99b7eKO1HG/4RPu2Is3FBTWBrmzqzO0mz+rLxN3yXkE4mqRcb8g8fHxzX4blEysrNZLqg5RbJLqX5buA==}
+    engines: {node: '>=20.18.1'}
+
   unenv@1.10.0:
     resolution: {integrity: sha512-wY5bskBQFL9n3Eca5XnhH6KbUo/tfvkwm9OpcdCvLaeA7piBNbavbOKJySEwQ1V0RH6HvNlSAFRTpvTqgKRQXQ==}
 
@@ -17532,7 +17536,7 @@ snapshots:
 
   proxmox-api@1.1.1:
     dependencies:
-      undici: 7.7.0
+      undici: 7.8.0
 
   proxy-agent@6.5.0:
     dependencies:
@@ -19119,6 +19123,8 @@ snapshots:
       '@fastify/busboy': 2.1.1
 
   undici@7.7.0: {}
+
+  undici@7.8.0: {}
 
   unenv@1.10.0:
     dependencies:
