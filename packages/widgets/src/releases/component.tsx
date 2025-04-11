@@ -156,9 +156,11 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
               <Group gap={5} justify="space-between" style={{ flex: 1, minWidth: 0 }} wrap="nowrap">
                 <Text size="xs">{repository.identifier}</Text>
 
-                <Text size="xs" fw={700} truncate="end" style={{ flexShrink: 1 }}>
-                  {repository.latestRelease ?? t("not-found")}
-                </Text>
+                <Tooltip label={repository.latestRelease ?? t("not-found")}>
+                  <Text size="xs" fw={700} truncate="end" style={{ flexShrink: 1 }}>
+                    {repository.latestRelease ?? t("not-found")}
+                  </Text>
+                </Tooltip>
               </Group>
 
               <Group gap={5} wrap="nowrap">
