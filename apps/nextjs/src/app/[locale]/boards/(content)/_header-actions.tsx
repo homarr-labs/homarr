@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { Group, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import {
-  IconApps,
   IconBox,
   IconBoxAlignTop,
   IconChevronDown,
@@ -117,11 +116,11 @@ const AddMenu = () => {
         </HeaderButton>
       </Menu.Target>
       <Menu.Dropdown style={{ transform: "translate(-3px, 0)" }}>
-        <Menu.Item leftSection={<IconBox size={20} />} onClick={handleSelectItem}>
+        <Menu.Item leftSection={<IconResize size={20} />} onClick={handleSelectItem}>
           {t("item.action.create")}
         </Menu.Item>
 
-        <Menu.Item leftSection={<IconApps size={20} />} onClick={handleSelectApp}>
+        <Menu.Item leftSection={<IconBox size={20} />} onClick={handleSelectApp}>
           {t("app.action.add")}
         </Menu.Item>
 
