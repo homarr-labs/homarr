@@ -1,6 +1,7 @@
 import { IconHeartRateMonitor, IconServerOff } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { z } from "zod";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -12,30 +13,35 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
       fahrenheit: factory.switch({
         defaultValue: false,
       }),
+      systemInfo: factory.switch({
+        defaultValue: true,
+      }),
       cpu: factory.switch({
         defaultValue: true,
       }),
+      cpuDetailed: factory.switch({
+        defaultValue: true,
+      }),
+      cpuColumns: factory.number({
+        defaultValue: 2,
+        step: 1,
+        validate: z.number().min(1).max(4),
+      }),
       memory: factory.switch({
+        defaultValue: true,
+      }),
+      network: factory.switch({
         defaultValue: true,
       }),
       fileSystem: factory.switch({
         defaultValue: true,
       }),
-      defaultTab: factory.select({
-        defaultValue: "system",
-        options: [
-          { value: "system", label: "System" },
-          { value: "cluster", label: "Cluster" },
-        ] as const,
+      pointDensity: factory.number({
+        defaultValue: 12,
+        step: 1,
+        validate: z.number().min(1).max(60),
       }),
-      sectionIndicatorRequirement: factory.select({
-        defaultValue: "all",
-        options: [
-          { value: "all", label: "All active" },
-          { value: "any", label: "Any active" },
-        ] as const,
-      }),
-    }));
+    }))
   },
   supportedIntegrations: getIntegrationKindsByCategory("healthMonitoring"),
   errors: {
