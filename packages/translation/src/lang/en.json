@@ -2080,9 +2080,9 @@
             "prefix": {
               "label": "Prefix"
             },
-            "precision":{
+            "precision": {
               "label": "Precision",
-              "options":{
+              "options": {
                 "none": "None"
               }
             },
