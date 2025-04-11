@@ -21,7 +21,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     const status: DownloadClientStatus = {
       paused: nzbGetStatus.DownloadPaused,
       rates: { down: nzbGetStatus.DownloadRate },
-      type,
+      types: [type],
     };
     const items = queue
       .map((file): DownloadClientItem => {

@@ -1786,6 +1786,9 @@
         "showCompletedTorrent": {
           "label": "Torrentvermeldingen weergeven die zijn gemarkeerd als voltooid"
         },
+        "showCompletedHttp": {
+          "label": ""
+        },
         "activeTorrentThreshold": {
           "label": "Voltooide torrent verbergen onder deze drempel (in kiB/s)"
         },

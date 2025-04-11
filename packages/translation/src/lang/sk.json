@@ -1786,6 +1786,9 @@
         "showCompletedTorrent": {
           "label": "Zobraziť položky torrentu označené ako dokončené"
         },
+        "showCompletedHttp": {
+          "label": ""
+        },
         "activeTorrentThreshold": {
           "label": "Skryť dokončený torrent pod touto hranicou (v kiB/s)"
         },
