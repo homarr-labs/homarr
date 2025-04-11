@@ -90,7 +90,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
               <Group align="center" gap="xs">
                 <MaskedOrNormalImage
                   hasColor={false}
-                  imageUrl={repository.iconUrl ?? Providers[repository.providerKey]?.iconUrl ?? ""}
+                  imageUrl={repository.iconUrl ?? Providers[repository.providerKey]?.iconUrl}
                   style={{
                     height: "1em",
                     width: "1em",
