@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Select app",
-        "notFound": "No app found"
-      }
+        "notFound": "No app found",
+        "search": "Search for an app",
+        "noResults": "No results",
+        "action": "Select {app}",
+        "title": "Select an app to add to this board"
+      },
+      "create": {
+        "title": "Create new app",
+        "description": "Create a new app ",
+        "action": "Open app creation"
+      },
+      "add": "Add an app"
     }
   },
   "integration": {
