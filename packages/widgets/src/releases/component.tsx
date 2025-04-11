@@ -22,8 +22,8 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
-import type { ReleaseRepository } from "./release-repository";
 import { Providers } from "./release-providers";
+import type { ReleaseRepository } from "./release-repository";
 
 function isDateWithin(date: Date, relativeDate: string): boolean {
   const amount = parseInt(relativeDate.slice(0, -1), 10);
@@ -354,14 +354,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
               {t("releaseDescription")}
             </Title>
             <Text component="div" size="xs" ff="monospace">
-              <ReactMarkdown
-                skipHtml
-                components={{
-                  a: ({ ...props }) => <span>{props.children}</span>,
-                }}
-              >
-                {repository.releaseDescription}
-              </ReactMarkdown>
+              <ReactMarkdown skipHtml>{repository.releaseDescription}</ReactMarkdown>
             </Text>
           </>
         )}
