@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback } from "react";
 import type { PropsWithChildren } from "react";
+import { useCallback } from "react";
 import { Button, Card, Group, Switch, Text, Transition } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
@@ -108,7 +108,7 @@ export const SaveAffix = ({ groupId }: SaveAffixProps) => {
                 <Button disabled={isPending} onClick={form.reset}>
                   {t("common.action.discard")}
                 </Button>
-                <Button color="teal" loading={isPending} onClick={handleSubmit}>
+                <Button loading={isPending} onClick={handleSubmit}>
                   {t("common.action.saveChanges")}
                 </Button>
               </Group>

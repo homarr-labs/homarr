@@ -81,7 +81,7 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
 
         {isProviderCredentials && (
           <Group justify="end">
-            <Button type="submit" color="teal" disabled={!form.isDirty()} loading={isPending}>
+            <Button type="submit" disabled={!form.isDirty()} loading={isPending}>
               {t("common.action.saveChanges")}
             </Button>
           </Group>

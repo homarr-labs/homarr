@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, Group, Stack, Text } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
@@ -63,7 +62,7 @@ export const InviteCreateModal = createModal<void>(({ actions }) => {
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
             {t("common.action.cancel")}
           </Button>
-          <Button type="submit" loading={isPending} color="teal">
+          <Button type="submit" loading={isPending}>
             {t("common.action.create")}
           </Button>
         </Group>

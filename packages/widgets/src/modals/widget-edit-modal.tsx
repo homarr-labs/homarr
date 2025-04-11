@@ -142,9 +142,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
               <Button onClick={actions.closeModal} variant="subtle" color="gray">
                 {t("common.action.cancel")}
               </Button>
-              <Button type="submit" color="teal">
-                {t("common.action.saveChanges")}
-              </Button>
+              <Button type="submit">{t("common.action.saveChanges")}</Button>
             </Group>
           </Group>
         </Stack>
