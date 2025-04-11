@@ -40,24 +40,14 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
               iconUrl: z.string().url().or(z.literal("")),
             }),
             identifier: z.string().min(1),
-            versionRegex: z
-              .string()
-              .optional()
-              .refine(
-                (val) => {
-                  if (val === undefined) return true;
-
-                  try {
-                    const _ = new RegExp(val);
-                    return true;
-                  } catch {
-                    return false;
-                  }
-                },
-                {
-                  message: "Invalid regular expression",
-                },
-              ),
+            versionFilter: z
+              .object({
+                prefix: z.string().optional(),
+                precision: z.number(),
+                suffix: z.string().optional(),
+                regex: z.string().optional(),
+              })
+              .optional(),
             iconUrl: z.string().url().optional(),
           }),
         ),
