@@ -23,6 +23,7 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 import type { ReleaseRepository } from "./release-repository";
+import { Providers } from "./release-providers";
 
 function isDateWithin(date: Date, relativeDate: string): boolean {
   const amount = parseInt(relativeDate.slice(0, -1), 10);
@@ -65,7 +66,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const [results] = clientApi.widget.releases.getLatest.useSuspenseQuery(
     {
       repositories: options.repositories.map((repository) => ({
-        providerName: repository.provider.name,
+        providerKey: repository.providerKey,
         identifier: repository.identifier,
         versionRegex: repository.versionFilter?.regex,
       })),
@@ -85,7 +86,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 
         const repository = options.repositories.find(
           (repository: ReleaseRepository) =>
-            repository.identifier === data.identifier && repository.provider.name === data.providerName,
+            repository.providerKey === data.providerKey && repository.identifier === data.identifier,
         );
 
         if (repository === undefined) return undefined;
@@ -131,7 +132,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 
         return (
           <Stack
-            key={`${repository.provider.name}.${repository.identifier}`}
+            key={`${repository.providerKey}.${repository.identifier}`}
             className={classes.releasesRepository}
             gap={0}
           >
@@ -144,7 +145,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
               onClick={() => toggleExpandedRepository(repository.identifier)}
             >
               <MaskedOrNormalImage
-                imageUrl={repository.iconUrl ?? repository.provider.iconUrl}
+                imageUrl={repository.iconUrl ?? Providers[repository.providerKey]?.iconUrl ?? ""}
                 hasColor={hasIconColor}
                 style={{
                   width: "1em",
@@ -311,7 +312,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
         <Group justify="space-between" align="center">
           <Group gap={5} align="center">
             <MaskedOrNormalImage
-              imageUrl={repository.provider.iconUrl}
+              imageUrl={Providers[repository.providerKey]?.iconUrl ?? ""}
               hasColor={hasIconColor}
               style={{
                 width: "1em",
@@ -319,7 +320,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
               }}
             />
             <Text size="xs" c="iconColor" ff="monospace">
-              {repository.provider.name}
+              {Providers[repository.providerKey]?.name}
             </Text>
           </Group>
           {repository.createdAt && (

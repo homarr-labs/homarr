@@ -193,7 +193,7 @@ const codebergReleasesSchema = z.array(
 
 const _releasesSchema = z.object({
   identifier: z.string(),
-  providerName: z.string(),
+  providerKey: z.string(),
   latestRelease: z.string(),
   latestReleaseAt: z.date(),
   releaseUrl: z.string(),
@@ -248,12 +248,12 @@ function getCodebergUrl(identifier: string): string {
 export const releasesRequestHandler = createCachedWidgetRequestHandler({
   queryKey: "releasesApiResult",
   widgetKind: "releases",
-  async requestAsync(input: { providerName: string; identifier: string; versionRegex: string | undefined }) {
+  async requestAsync(input: { providerKey: string; identifier: string; versionRegex: string | undefined }) {
     let detailsUrl;
     let detailsSchema;
     let releasesUrl;
     let releasesSchema;
-    switch (input.providerName) {
+    switch (input.providerKey) {
       case Providers.DockerHub.name:
         detailsUrl = getDockerHubUrl(input.identifier);
         detailsSchema = dockerHubDetailsSchema;
@@ -325,12 +325,12 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
             ...detailsResult,
             ...(result.latestReleaseAt > latest.latestReleaseAt ? result : latest),
             identifier: input.identifier,
-            providerName: input.providerName,
+            providerKey: input.providerKey,
           };
         },
         {
           identifier: "",
-          providerName: "",
+          providerKey: "",
           latestRelease: "",
           latestReleaseAt: new Date(0),
           releaseUrl: "",

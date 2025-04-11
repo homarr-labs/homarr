@@ -38,7 +38,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
 
   const onRepositorySave = useCallback(
     (repository: ReleaseRepository, index: number): FormValidation => {
-      form.setFieldValue(`options.${property}.${index}.provider`, repository.provider);
+      form.setFieldValue(`options.${property}.${index}.providerKey`, repository.providerKey);
       form.setFieldValue(`options.${property}.${index}.identifier`, repository.identifier);
       form.setFieldValue(`options.${property}.${index}.versionFilter`, repository.versionFilter);
       form.setFieldValue(`options.${property}.${index}.iconUrl`, repository.iconUrl);
@@ -86,11 +86,11 @@ export const WidgetMultiReleaseRepositoriesInput = ({
 
         {repositories.map((repository, index) => {
           return (
-            <Stack key={`${repository.provider.name}.${repository.identifier}`} gap={5}>
+            <Stack key={`${repository.providerKey}.${repository.identifier}`} gap={5}>
               <Group align="center" gap="xs">
                 <MaskedOrNormalImage
                   hasColor={false}
-                  imageUrl={repository.iconUrl ?? repository.provider.iconUrl}
+                  imageUrl={repository.iconUrl ?? Providers[repository.providerKey]?.iconUrl ?? ""}
                   style={{
                     height: "1em",
                     width: "1em",
@@ -98,7 +98,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
                 />
 
                 <Text c="dimmed" fw={100} size="xs">
-                  {repository.provider.name}
+                  {Providers[repository.providerKey]?.name}
                 </Text>
 
                 <Group justify="space-between" align="center" style={{ flex: 1 }} gap={5}>
@@ -195,12 +195,12 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
             value: key,
             label: provider.name,
           }))}
-          value={Object.keys(Providers).find((key) => Providers[key]?.name === tempRepository.provider.name) ?? ""}
-          key={`${innerProps.fieldPath}.provider`}
-          error={formErrors[`${innerProps.fieldPath}.provider`]}
+          value={tempRepository.providerKey}
+          key={`${innerProps.fieldPath}.providerKey`}
+          error={formErrors[`${innerProps.fieldPath}.providerKey`]}
           onChange={(value) => {
             if (value && Providers[value]) {
-              handleChange({ provider: Providers[value] });
+              handleChange({ providerKey: value });
             }
           }}
         />
