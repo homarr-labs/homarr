@@ -67,12 +67,13 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
       </Stack>
 
       <Title pos="absolute" bottom={10} right={10} order={width > 280 ? 1 : 2} fw={700}>
-        {round(stockValues[stockValues.length - 1] ?? 0)}
+        {new Intl.NumberFormat().format(round(stockValues[stockValues.length - 1] ?? 0))}
       </Title>
 
       {width > 280 && (
         <Text pos="absolute" top={10} right={10} size="xl" fw={700}>
-          {Math.abs(stockValuesChange)} ({Math.abs(stockValuesChangePercentage)}%)
+          {new Intl.NumberFormat().format(stockValuesChange)} ({stockValuesChange > 0 ? "+" : ""}
+          {new Intl.NumberFormat().format(stockValuesChangePercentage)}%)
         </Text>
       )}
 
