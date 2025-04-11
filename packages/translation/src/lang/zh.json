@@ -1786,6 +1786,9 @@
         "showCompletedTorrent": {
           "label": "顯示標記為已完成的 Torrent 項目"
         },
+        "showCompletedHttp": {
+          "label": ""
+        },
         "activeTorrentThreshold": {
           "label": "隱藏在此閥值下完成的 Torrent (kiB/s)"
         },
