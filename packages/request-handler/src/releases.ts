@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { z } from "zod";
 
 import { fetchWithTimeout } from "@homarr/common";
+import { logger } from "@homarr/log";
 
 import { Providers } from "../../widgets/src/releases/release-providers";
 import type { DetailsResponse } from "../../widgets/src/releases/release-providers";
@@ -51,6 +52,14 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
 
       if (parsedDetails?.success) {
         detailsResult = parsedDetails.data;
+      } else {
+        logger.warn("Failed to parse details response", {
+          provider: input.providerKey,
+          identifier: input.identifier,
+          detailsUrl,
+          detailsResponse: await detailsResponse.text(),
+          error: parsedDetails?.error,
+        });
       }
     }
 
