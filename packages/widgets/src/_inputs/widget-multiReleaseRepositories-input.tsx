@@ -50,7 +50,8 @@ export const WidgetMultiReleaseRepositoriesInput = ({
 
   const addNewItem = () => {
     const item = {
-      provider: Providers.DockerHub,
+      providerKey: "DockerHub",
+      identifier: "",
     };
 
     form.setValues((previous) => {
