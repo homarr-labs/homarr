@@ -66,6 +66,7 @@ export const boardSavePartialSettingsSchema = z
     iconColor: hexColorNullableSchema,
     itemRadius: z.union([z.literal("xs"), z.literal("sm"), z.literal("md"), z.literal("lg"), z.literal("xl")]),
     disableStatus: z.boolean(),
+    showInNavigation: z.boolean(),
   })
   .partial();
 
