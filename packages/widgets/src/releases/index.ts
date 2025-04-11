@@ -35,10 +35,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
         defaultValue: [],
         validate: z.array(
           z.object({
-            provider: z.object({
-              name: z.string().min(1),
-              iconUrl: z.string().url().or(z.literal("")),
-            }),
+            providerKey: z.string().min(1),
             identifier: z.string().min(1),
             versionFilter: z
               .object({
