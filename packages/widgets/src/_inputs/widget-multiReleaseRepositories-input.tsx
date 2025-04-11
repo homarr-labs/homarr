@@ -106,8 +106,8 @@ export const WidgetMultiReleaseRepositoriesInput = ({
                     {repository.identifier}
                   </Text>
 
-                  <Text c="dimmed" size="xs" ta="end" style={{ flex: 1, whiteSpace: "nowrap" }} >
-                    {repository.versionFilter?.regex ?? ""}
+                  <Text c="dimmed" size="xs" ta="end" style={{ flex: 1, whiteSpace: "nowrap" }}>
+                    {formatVersionFilterRegex(repository.versionFilter) ?? ""}
                   </Text>
                 </Group>
 
@@ -141,7 +141,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
   );
 };
 
-const generateVersionFilterRegex = (versionFilter: ReleaseVersionFilter | undefined) => {
+const formatVersionFilterRegex = (versionFilter: ReleaseVersionFilter | undefined) => {
   if (!versionFilter) return undefined;
 
   const escapedPrefix = versionFilter.prefix ? escapeForRegEx(versionFilter.prefix) : "";
@@ -166,11 +166,6 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
   const handleConfirm = useCallback(() => {
     setLoading(true);
-
-    // Build the version filter regex
-    if (tempRepository.versionFilter) {
-      tempRepository.versionFilter.regex = generateVersionFilterRegex(tempRepository.versionFilter);
-    }
 
     const validation = innerProps.onRepositorySave(tempRepository);
     setFormErrors(validation.errors);
@@ -276,7 +271,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
         <Text size="xs" c="dimmed">
           {tRepository("versionFilter.regex.label")}:{" "}
-          {generateVersionFilterRegex(tempRepository.versionFilter) ??
+          {formatVersionFilterRegex(tempRepository.versionFilter) ??
             tRepository("versionFilter.precision.options.none")}
         </Text>
       </Fieldset>

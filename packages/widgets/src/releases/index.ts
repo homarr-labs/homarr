@@ -42,7 +42,6 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
                 prefix: z.string().optional(),
                 precision: z.number(),
                 suffix: z.string().optional(),
-                regex: z.string().optional(),
               })
               .optional(),
             iconUrl: z.string().url().optional(),
