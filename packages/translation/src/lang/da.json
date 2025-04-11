@@ -1786,6 +1786,9 @@
         "showCompletedTorrent": {
           "label": "Vis torrent poster markeret som fuldførte"
         },
+        "showCompletedHttp": {
+          "label": ""
+        },
         "activeTorrentThreshold": {
           "label": "Skjul afsluttet torrent under denne tærskel (i kiB/s)"
         },

@@ -1786,6 +1786,9 @@
         "showCompletedTorrent": {
           "label": "Tamamlanmış olarak işaretlenen torrent girdilerini göster"
         },
+        "showCompletedHttp": {
+          "label": ""
+        },
         "activeTorrentThreshold": {
           "label": "Tamamlanan torrent'i bu eşik değerinin altına gizle (kiB/s cinsinden)"
         },

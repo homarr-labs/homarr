@@ -1786,6 +1786,9 @@
         "showCompletedTorrent": {
           "label": ""
         },
+        "showCompletedHttp": {
+          "label": ""
+        },
         "activeTorrentThreshold": {
           "label": "Приховувати завершені торенти нижче за цей поріг (у КіБ/с)"
         },
