@@ -1786,6 +1786,9 @@
         "showCompletedTorrent": {
           "label": "Torrent Einträge anzeigen die abgeschlossen wurden"
         },
+        "showCompletedHttp": {
+          "label": ""
+        },
         "activeTorrentThreshold": {
           "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden (in kiB/s)"
         },

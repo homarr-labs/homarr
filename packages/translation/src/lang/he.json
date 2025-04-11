@@ -1786,6 +1786,9 @@
         "showCompletedTorrent": {
           "label": "הצג ערכי טורנט שסומנו כהשלמה"
         },
+        "showCompletedHttp": {
+          "label": ""
+        },
         "activeTorrentThreshold": {
           "label": "הסתר טורנט שהושלם מתחת לסף הזה (בקיB/s)"
         },
