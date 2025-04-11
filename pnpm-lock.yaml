@@ -2051,6 +2051,9 @@ importers:
       '@homarr/form':
         specifier: workspace:^0.1.0
         version: link:../form
+      '@homarr/forms-collection':
+        specifier: workspace:^0.1.0
+        version: link:../forms-collection
       '@homarr/integrations':
         specifier: workspace:^0.1.0
         version: link:../integrations

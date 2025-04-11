@@ -33,6 +33,7 @@
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
+    "@homarr/forms-collection": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/modals": "workspace:^0.1.0",
     "@homarr/modals-collection": "workspace:^0.1.0",

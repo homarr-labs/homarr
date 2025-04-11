@@ -6,11 +6,11 @@ import type { FormErrors } from "@mantine/form";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { escapeForRegEx } from "@tiptap/react";
 
+import { IconPicker } from "@homarr/forms-collection";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
-import { IconPicker } from "../../../forms-collection/src";
 import { Providers } from "../releases/release-providers";
 import type { ReleaseRepository, ReleaseVersionFilter } from "../releases/release-repository";
 import type { CommonWidgetInputProps } from "./common";
