@@ -191,7 +191,6 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
             label: provider.name,
           }))}
           value={tempRepository.providerKey}
-          key={`${innerProps.fieldPath}.providerKey`}
           error={formErrors[`${innerProps.fieldPath}.providerKey`]}
           onChange={(value) => {
             if (value && Providers[value]) {
@@ -207,7 +206,6 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
           onChange={(event) => {
             handleChange({ identifier: event.currentTarget.value });
           }}
-          key={`${innerProps.fieldPath}.identifier`}
           error={formErrors[`${innerProps.fieldPath}.identifier`]}
           style={{ flex: 1 }}
         />
@@ -226,7 +224,6 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
                 } as ReleaseVersionFilter,
               });
             }}
-            key={`${innerProps.fieldPath}.versionFilter.prefix`}
             error={formErrors[`${innerProps.fieldPath}.versionFilter.prefix`]}
             disabled={!tempRepository.versionFilter}
           />
@@ -249,7 +246,6 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
                       } as ReleaseVersionFilter),
               });
             }}
-            key={`${innerProps.fieldPath}.versionFilter.precision`}
             error={formErrors[`${innerProps.fieldPath}.versionFilter.precision`]}
           />
           <TextInput
@@ -263,7 +259,6 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
                 } as ReleaseVersionFilter,
               });
             }}
-            key={`${innerProps.fieldPath}.versionFilter.suffix`}
             error={formErrors[`${innerProps.fieldPath}.versionFilter.suffix`]}
             disabled={!tempRepository.versionFilter}
           />
@@ -280,7 +275,6 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
         withAsterisk={false}
         value={tempRepository.iconUrl}
         onChange={(url) => handleChange({ iconUrl: url })}
-        key={`${innerProps.fieldPath}.iconUrl`}
         error={formErrors[`${innerProps.fieldPath}.iconUrl`] as string}
       />
 
