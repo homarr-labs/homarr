@@ -57,7 +57,6 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
           provider: input.providerKey,
           identifier: input.identifier,
           detailsUrl,
-          detailsResponse: await detailsResponse.text(),
           error: parsedDetails?.error,
         });
       }
