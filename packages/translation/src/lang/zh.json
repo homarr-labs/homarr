@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "選擇應用程式",
-        "notFound": "應用程式不存在"
-      }
+        "notFound": "應用程式不存在",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {

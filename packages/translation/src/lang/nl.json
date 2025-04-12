@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "App selecteren",
-        "notFound": "Geen app gevonden"
-      }
+        "notFound": "Geen app gevonden",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {

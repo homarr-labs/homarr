@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Velg app",
-        "notFound": "Ingen app funnet"
-      }
+        "notFound": "Ingen app funnet",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {

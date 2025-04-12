@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Vælg app",
-        "notFound": "Ingen app fundet"
-      }
+        "notFound": "Ingen app fundet",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {

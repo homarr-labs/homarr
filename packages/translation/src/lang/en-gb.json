@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Select an application",
-        "notFound": "No application found"
-      }
+        "notFound": "No application found",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {
