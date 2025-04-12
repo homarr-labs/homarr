@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "App wähle",
-        "notFound": "Keni app gfunge"
-      }
+        "notFound": "Keni app gfunge",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {

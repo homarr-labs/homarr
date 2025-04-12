@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Uygulama seç",
-        "notFound": "Uygulama bulunamadı"
-      }
+        "notFound": "Uygulama bulunamadı",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {

@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "בחר אפליקציה",
-        "notFound": "לא נמצאה אפליקציה"
-      }
+        "notFound": "לא נמצאה אפליקציה",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {
