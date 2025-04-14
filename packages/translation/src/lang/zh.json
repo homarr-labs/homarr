@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "選擇應用程式",
-        "notFound": "應用程式不存在"
-      }
+        "notFound": "應用程式不存在",
+        "search": "搜尋應用程式",
+        "noResults": "無結果",
+        "action": "選擇 {app}",
+        "title": "選擇應用程式加入進此面板"
+      },
+      "create": {
+        "title": "建立新應用程式",
+        "description": "建立一個新的應用程式",
+        "action": "開啟應用程式創建"
+      },
+      "add": "新增應用程式"
     }
   },
   "integration": {
@@ -759,8 +769,8 @@
           "message": "路徑可能是錯誤"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "於給定時間內的請求過多",
+          "message": "請求過多，您可能被目標系統限制或拒絕"
         }
       }
     },
@@ -1787,7 +1797,7 @@
           "label": "顯示標記為已完成的 Torrent 項目"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "顯示標記為已完成的雜項條目"
         },
         "activeTorrentThreshold": {
           "label": "隱藏在此閥值下完成的 Torrent (kiB/s)"
@@ -2038,56 +2048,56 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "{count} 已連線"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "無可用的數據，所有集成皆已斷開連線",
+        "unknownContentOption": "網路控制總覽小工具出現未知的內容選項："
       },
-      "name": "",
-      "description": ""
+      "name": "網路控制總覽",
+      "description": "顯示網路控制總覽（例如 UniFi 控制）"
     },
     "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
-            "name": ""
+            "name": "有線網路"
           },
           "wifi": {
-            "name": ""
+            "name": "無線網路"
           }
         },
         "users": {
-          "label": ""
+          "label": "使用者"
         },
         "guests": {
-          "label": ""
+          "label": "訪客"
         }
       },
       "option": {
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "無線網路"
             },
             "wired": {
-              "label": ""
+              "label": "有線網路"
             }
           },
-          "label": ""
+          "label": "小工具內容"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "無可用數據，所有集成皆已斷開連線",
+        "unknownContentOption": "網路狀態小工具的未知內容選項："
       },
-      "name": "",
-      "description": ""
+      "name": "網路狀態",
+      "description": "於網路上顯示連接的設備"
     },
     "networkController": {
       "error": {
-        "internalServerError": ""
+        "internalServerError": "無法獲取網路控制總覽"
       }
     }
   },
@@ -2210,10 +2220,10 @@
       },
       "backgroundImageUrl": {
         "label": "背景圖案網址",
-        "placeholder": "",
+        "placeholder": "開始搜尋本機的圖像",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "你的圖像",
+          "other": "其他圖像"
         }
       },
       "backgroundImageAttachment": {
@@ -2852,7 +2862,7 @@
               "label": "多媒體轉碼中"
             },
             "networkController": {
-              "label": ""
+              "label": "網路控制"
             }
           }
         },
