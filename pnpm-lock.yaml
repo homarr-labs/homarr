@@ -254,8 +254,8 @@ importers:
         specifier: ^11.0.1
         version: 11.0.1
       jotai:
-        specifier: ^2.12.2
-        version: 2.12.2(@types/react@19.1.1)(react@19.1.0)
+        specifier: ^2.12.3
+        version: 2.12.3(@types/react@19.1.1)(react@19.1.0)
       mantine-react-table:
         specifier: 2.0.0-beta.9
         version: 2.0.0-beta.9(@mantine/core@7.17.4(@mantine/hooks@7.17.4(react@19.1.0))(@types/react@19.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/dates@7.17.4(@mantine/core@7.17.4(@mantine/hooks@7.17.4(react@19.1.0))(@types/react@19.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@7.17.4(react@19.1.0))(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@7.17.4(react@19.1.0))(@tabler/icons-react@3.31.0(react@19.1.0))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1853,8 +1853,8 @@ importers:
         specifier: ^3.31.0
         version: 3.31.0(react@19.1.0)
       jotai:
-        specifier: ^2.12.2
-        version: 2.12.2(@types/react@19.1.1)(react@19.1.0)
+        specifier: ^2.12.3
+        version: 2.12.3(@types/react@19.1.1)(react@19.1.0)
       next:
         specifier: 15.3.0
         version: 15.3.0(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.86.3)
@@ -7506,8 +7506,8 @@ packages:
   jose@6.0.8:
     resolution: {integrity: sha512-EyUPtOKyTYq+iMOszO42eobQllaIjJnwkZ2U93aJzNyPibCy7CEvT9UQnaCVB51IAd49gbNdCew1c0LcLTCB2g==}
 
-  jotai@2.12.2:
-    resolution: {integrity: sha512-oN8715y7MkjXlSrpyjlR887TOuc/NLZMs9gvgtfWH/JP47ChwO0lR2ijSwBvPMYyXRAPT+liIAhuBavluKGgtA==}
+  jotai@2.12.3:
+    resolution: {integrity: sha512-DpoddSkmPGXMFtdfnoIHfueFeGP643nqYUWC6REjUcME+PG2UkAtYnLbffRDw3OURI9ZUTcRWkRGLsOvxuWMCg==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@types/react': '>=17.0.0'
@@ -16376,7 +16376,7 @@ snapshots:
 
   jose@6.0.8: {}
 
-  jotai@2.12.2(@types/react@19.1.1)(react@19.1.0):
+  jotai@2.12.3(@types/react@19.1.1)(react@19.1.0):
     optionalDependencies:
       '@types/react': 19.1.1
       react: 19.1.0
