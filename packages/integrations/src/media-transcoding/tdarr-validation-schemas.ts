@@ -1,72 +1,60 @@
 import { z } from "zod";
 
 export const getStatisticsSchema = z.object({
-  totalFileCount: z.number(),
-  totalTranscodeCount: z.number(),
-  totalHealthCheckCount: z.number(),
-  table3Count: z.number(),
-  table6Count: z.number(),
-  table1Count: z.number(),
-  table4Count: z.number(),
-  pies: z.array(
-    z.tuple([
-      z.string(), // Library Name
-      z.string(), // Library ID
-      z.number(), // File count
-      z.number(), // Number of transcodes
-      z.number(), // Space saved (in GB)
-      z.number(), // Number of health checks
-      z.array(
+  pieStats: z.object({
+    totalFiles: z.number(),
+    totalTranscodeCount: z.number(),
+    sizeDiff: z.number(),
+    totalHealthCheckCount: z.number(),
+    status: z.object({
+      transcode: z.array(
         z.object({
-          // Transcode Status (Pie segments)
           name: z.string(),
           value: z.number(),
         }),
       ),
-      z.array(
+      healthcheck: z.array(
         z.object({
-          // Health Status (Pie segments)
           name: z.string(),
           value: z.number(),
         }),
       ),
-      z.array(
+    }),
+    video: z.object({
+      codecs: z.array(
         z.object({
-          // Video files - Codecs (Pie segments)
           name: z.string(),
           value: z.number(),
         }),
       ),
-      z.array(
+      containers: z.array(
         z.object({
-          // Video files - Containers (Pie segments)
           name: z.string(),
           value: z.number(),
         }),
       ),
-      z.array(
+      resolutions: z.array(
         z.object({
-          // Video files - Resolutions (Pie segments)
           name: z.string(),
           value: z.number(),
         }),
       ),
-      z.array(
+    }),
+    audio: z.object({
+      codecs: z.array(
         z.object({
-          // Audio files - Codecs (Pie segments)
           name: z.string(),
           value: z.number(),
         }),
       ),
-      z.array(
+      containers: z.array(
         z.object({
-          // Audio files - Containers (Pie segments)
           name: z.string(),
           value: z.number(),
         }),
       ),
-    ]),
-  ),
+    }),
+  }),
 });
 
 export const getNodesResponseSchema = z.record(

@@ -17,9 +17,10 @@ interface StatisticsPanelProps {
 export function StatisticsPanel(props: StatisticsPanelProps) {
   const t = useI18n("widget.mediaTranscoding.panel.statistics");
 
-  const allLibs = props.statistics.pies.find((pie) => pie.libraryName === "All");
+  const allLibs = props.statistics;
 
-  if (!allLibs) {
+  // Check if Tdarr hs any Files
+  if (!(allLibs.totalFileCount > 0)) {
     return (
       <Center style={{ flex: "1" }}>
         <Title order={6}>{t("empty")}</Title>
@@ -40,7 +41,7 @@ export function StatisticsPanel(props: StatisticsPanelProps) {
         <StatisticItem
           icon={IconDatabaseHeart}
           label={t("savedSpace")}
-          value={humanFileSize(Math.floor(allLibs.savedSpace))}
+          value={humanFileSize(Math.floor(allLibs.totalSavedSpace))}
         />
       </Group>
       <Group justify="center" wrap="wrap" grow>
