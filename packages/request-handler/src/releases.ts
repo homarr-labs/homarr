@@ -4,9 +4,9 @@ import { z } from "zod";
 import { fetchWithTimeout } from "@homarr/common";
 import { logger } from "@homarr/log";
 
+import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 import { Providers } from "./releases-providers";
 import type { DetailsResponse } from "./releases-providers";
-import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
 const _reponseSchema = z.object({
   identifier: z.string(),
