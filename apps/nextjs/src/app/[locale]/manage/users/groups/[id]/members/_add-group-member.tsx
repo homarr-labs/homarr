@@ -40,9 +40,5 @@ export const AddGroupMember = ({ groupId, presentUserIds }: AddGroupMemberProps)
     );
   }, [openModal, presentUserIds, groupId, mutateAsync, tMembersAdd]);
 
-  return (
-    <MobileAffixButton color="teal" onClick={handleAddMember}>
-      {tMembersAdd("label")}
-    </MobileAffixButton>
-  );
+  return <MobileAffixButton onClick={handleAddMember}>{tMembersAdd("label")}</MobileAffixButton>;
 };
