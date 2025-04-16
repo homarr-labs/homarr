@@ -22,7 +22,7 @@ interface FormValidation {
   errors: FormErrors;
 }
 
-export const WidgetMultiReleaseRepositoriesInput = ({
+export const WidgetMultiReleasesRepositoriesInput = ({
   property,
   kind,
 }: CommonWidgetInputProps<"multiReleasesRepositories">) => {
