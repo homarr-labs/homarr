@@ -2164,7 +2164,7 @@ importers:
         version: 19.1.0(react@19.1.0)
       react-markdown:
         specifier: ^10.1.0
-        version: 10.1.0(@types/react@19.1.0)(react@19.1.0)
+        version: 10.1.0(@types/react@19.1.2)(react@19.1.0)
       recharts:
         specifier: ^2.15.2
         version: 2.15.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -18448,11 +18448,11 @@ snapshots:
 
   react-is@18.3.1: {}
 
-  react-markdown@10.1.0(@types/react@19.1.0)(react@19.1.0):
+  react-markdown@10.1.0(@types/react@19.1.2)(react@19.1.0):
     dependencies:
       '@types/hast': 3.0.4
       '@types/mdast': 4.0.4
-      '@types/react': 19.1.0
+      '@types/react': 19.1.2
       devlop: 1.1.0
       hast-util-to-jsx-runtime: 2.3.6
       html-url-attributes: 3.0.1
@@ -20269,7 +20269,6 @@ snapshots:
       sass: 1.86.3
       sugarss: 4.0.1(postcss@8.4.47)
       terser: 5.39.0
-
 
   vitest@3.1.1(@types/debug@4.1.12)(@types/node@22.14.1)(@vitest/ui@3.1.1)(jsdom@26.1.0)(sass@1.86.3)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0):
     dependencies:
