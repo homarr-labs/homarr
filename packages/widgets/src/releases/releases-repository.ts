@@ -27,4 +27,6 @@ export interface ReleasesRepository {
   starsCount?: number;
   forksCount?: number;
   openIssues?: number;
+
+  errorMessage?: string;
 }
