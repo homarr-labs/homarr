@@ -89,11 +89,7 @@ const RenderTopToolbarCustomActions = () => {
     openModal();
   }, [openModal]);
 
-  return (
-    <Button color="teal" onClick={handleNewInvite}>
-      {t("action.new.title")}
-    </Button>
-  );
+  return <Button onClick={handleNewInvite}>{t("action.new.title")}</Button>;
 };
 
 const RenderRowActions = ({ row }: { row: MRT_Row<RouterOutputs["invite"]["getAll"][number]> }) => {
