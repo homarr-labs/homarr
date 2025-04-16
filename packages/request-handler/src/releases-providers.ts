@@ -1,8 +1,6 @@
 import { z } from "zod";
 
-export interface ReleaseProvider {
-  name: string;
-  iconUrl: string;
+export interface ReleasesProvider {
   getDetailsUrl: (identifier: string) => string | undefined;
   parseDetailsResponse: (response: unknown) => z.SafeParseReturnType<unknown, DetailsResponse> | undefined;
   getReleasesUrl: (identifier: string) => string;
@@ -10,18 +8,16 @@ export interface ReleaseProvider {
 }
 
 interface ProvidersProps {
-  [key: string]: ReleaseProvider;
-  DockerHub: ReleaseProvider;
-  Github: ReleaseProvider;
-  Gitlab: ReleaseProvider;
-  Npm: ReleaseProvider;
-  Codeberg: ReleaseProvider;
+  [key: string]: ReleasesProvider;
+  DockerHub: ReleasesProvider;
+  Github: ReleasesProvider;
+  Gitlab: ReleasesProvider;
+  Npm: ReleasesProvider;
+  Codeberg: ReleasesProvider;
 }
 
 export const Providers: ProvidersProps = {
   DockerHub: {
-    name: "Docker Hub",
-    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/docker.svg",
     getDetailsUrl(identifier) {
       if (identifier.indexOf("/") > 0) {
         const [owner, name] = identifier.split("/");
@@ -82,8 +78,6 @@ export const Providers: ProvidersProps = {
     },
   },
   Github: {
-    name: "Github",
-    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/github-dark.svg",
     getDetailsUrl(identifier) {
       const [owner, name] = identifier.split("/");
       if (!owner || !name) {
@@ -142,8 +136,6 @@ export const Providers: ProvidersProps = {
     },
   },
   Gitlab: {
-    name: "Gitlab",
-    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/gitlab.svg",
     getDetailsUrl(identifier) {
       return `https://gitlab.com/api/v4/projects/${encodeURIComponent(identifier)}`;
     },
@@ -198,8 +190,6 @@ export const Providers: ProvidersProps = {
     },
   },
   Npm: {
-    name: "Npm",
-    iconUrl: "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets//assets/npm.svg",
     getDetailsUrl(_) {
       return undefined;
     },
@@ -234,8 +224,6 @@ export const Providers: ProvidersProps = {
     },
   },
   Codeberg: {
-    name: "Codeberg",
-    iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/codeberg.svg",
     getDetailsUrl(identifier) {
       const [owner, name] = identifier.split("/");
       if (!owner || !name) {

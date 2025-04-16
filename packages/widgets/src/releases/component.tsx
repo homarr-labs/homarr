@@ -22,8 +22,8 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
-import { Providers } from "./release-providers";
-import type { ReleaseRepository } from "./release-repository";
+import { Providers } from "./releases-providers";
+import type { ReleasesRepository } from "./releases-repository";
 
 function isDateWithin(date: Date, relativeDate: string): boolean {
   const amount = parseInt(relativeDate.slice(0, -1), 10);
@@ -85,7 +85,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         if (data === undefined) return undefined;
 
         const repository = options.repositories.find(
-          (repository: ReleaseRepository) =>
+          (repository: ReleasesRepository) =>
             repository.providerKey === data.providerKey && repository.identifier === data.identifier,
         );
 
@@ -109,7 +109,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         if (repoA?.latestReleaseAt === undefined) return 1;
         if (repoB?.latestReleaseAt === undefined) return -1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
-      }) as ReleaseRepository[];
+      }) as ReleasesRepository[];
   }, [
     results,
     options.repositories,
@@ -127,7 +127,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 
   return (
     <Stack gap={0}>
-      {repositories.map((repository: ReleaseRepository) => {
+      {repositories.map((repository: ReleasesRepository) => {
         const isActive = expandedRepository === repository.identifier;
 
         return (
@@ -199,7 +199,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 }
 
 interface DetailsDisplayProps {
-  repository: ReleaseRepository;
+  repository: ReleasesRepository;
   toggleExpandedRepository: (identifier: string) => void;
 }
 
@@ -298,7 +298,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
 };
 
 interface ExtendedDisplayProps {
-  repository: ReleaseRepository;
+  repository: ReleasesRepository;
   hasIconColor: boolean;
 }
 

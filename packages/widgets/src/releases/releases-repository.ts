@@ -1,13 +1,13 @@
-export interface ReleaseVersionFilter {
+export interface ReleasesVersionFilter {
   prefix?: string;
   precision: number;
   suffix?: string;
 }
 
-export interface ReleaseRepository {
+export interface ReleasesRepository {
   providerKey: string;
   identifier: string;
-  versionFilter?: ReleaseVersionFilter;
+  versionFilter?: ReleasesVersionFilter;
   iconUrl?: string;
 
   latestRelease?: string;

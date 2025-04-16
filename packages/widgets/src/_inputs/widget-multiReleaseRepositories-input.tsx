@@ -11,8 +11,8 @@ import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
-import { Providers } from "../releases/release-providers";
-import type { ReleaseRepository, ReleaseVersionFilter } from "../releases/release-repository";
+import { Providers } from "../releases/releases-providers";
+import type { ReleasesRepository, ReleasesVersionFilter } from "../releases/releases-repository";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
@@ -25,11 +25,11 @@ interface FormValidation {
 export const WidgetMultiReleaseRepositoriesInput = ({
   property,
   kind,
-}: CommonWidgetInputProps<"multiReleaseRepositories">) => {
+}: CommonWidgetInputProps<"multiReleasesRepositories">) => {
   const t = useWidgetInputTranslation(kind, property);
   const tRepository = useScopedI18n("widget.releases.option.repositories");
   const form = useFormContext();
-  const repositories = form.values.options[property] as ReleaseRepository[];
+  const repositories = form.values.options[property] as ReleasesRepository[];
   const { openModal } = useModalAction(ReleaseEditModal);
   const versionFilterPrecisionOptions = useMemo(
     () => [tRepository("versionFilter.precision.options.none"), "#", "#.#", "#.#.#", "#.#.#.#", "#.#.#.#.#"],
@@ -37,7 +37,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
   );
 
   const onRepositorySave = useCallback(
-    (repository: ReleaseRepository, index: number): FormValidation => {
+    (repository: ReleasesRepository, index: number): FormValidation => {
       form.setFieldValue(`options.${property}.${index}.providerKey`, repository.providerKey);
       form.setFieldValue(`options.${property}.${index}.identifier`, repository.identifier);
       form.setFieldValue(`options.${property}.${index}.versionFilter`, repository.versionFilter);
@@ -55,7 +55,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
     };
 
     form.setValues((previous) => {
-      const previousValues = previous.options?.[property] as ReleaseRepository[];
+      const previousValues = previous.options?.[property] as ReleasesRepository[];
       return {
         ...previous,
         options: {
@@ -68,7 +68,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
 
   const onReleaseRemove = (index: number) => {
     form.setValues((previous) => {
-      const previousValues = previous.options?.[property] as ReleaseRepository[];
+      const previousValues = previous.options?.[property] as ReleasesRepository[];
       return {
         ...previous,
         options: {
@@ -142,7 +142,7 @@ export const WidgetMultiReleaseRepositoriesInput = ({
   );
 };
 
-const formatVersionFilterRegex = (versionFilter: ReleaseVersionFilter | undefined) => {
+const formatVersionFilterRegex = (versionFilter: ReleasesVersionFilter | undefined) => {
   if (!versionFilter) return undefined;
 
   const escapedPrefix = versionFilter.prefix ? escapeForRegEx(versionFilter.prefix) : "";
@@ -154,8 +154,8 @@ const formatVersionFilterRegex = (versionFilter: ReleaseVersionFilter | undefine
 
 interface ReleaseEditProps {
   fieldPath: string;
-  repository: ReleaseRepository;
-  onRepositorySave: (repository: ReleaseRepository) => FormValidation;
+  repository: ReleasesRepository;
+  onRepositorySave: (repository: ReleasesRepository) => FormValidation;
   versionFilterPrecisionOptions: string[];
 }
 
@@ -177,7 +177,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
     setLoading(false);
   }, [innerProps, tempRepository, actions]);
 
-  const handleChange = useCallback((changedValue: Partial<ReleaseRepository>) => {
+  const handleChange = useCallback((changedValue: Partial<ReleasesRepository>) => {
     setTempRepository((prev) => ({ ...prev, ...changedValue }));
   }, []);
 
@@ -220,9 +220,9 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
             onChange={(event) => {
               handleChange({
                 versionFilter: {
-                  ...(tempRepository.versionFilter ?? {}),
+                  ...(tempRepository.versionFilter ?? { precision: 0 }),
                   prefix: event.currentTarget.value,
-                } as ReleaseVersionFilter,
+                },
               });
             }}
             error={formErrors[`${innerProps.fieldPath}.versionFilter.prefix`]}
@@ -241,10 +241,10 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
                 versionFilter:
                   isNaN(precision) || precision <= 0
                     ? undefined
-                    : ({
+                    : {
                         ...(tempRepository.versionFilter ?? {}),
                         precision,
-                      } as ReleaseVersionFilter),
+                      },
               });
             }}
             error={formErrors[`${innerProps.fieldPath}.versionFilter.precision`]}
@@ -255,9 +255,9 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
             onChange={(event) => {
               handleChange({
                 versionFilter: {
-                  ...(tempRepository.versionFilter ?? {}),
+                  ...(tempRepository.versionFilter ?? { precision: 0 }),
                   suffix: event.currentTarget.value,
-                } as ReleaseVersionFilter,
+                },
               });
             }}
             error={formErrors[`${innerProps.fieldPath}.versionFilter.suffix`]}

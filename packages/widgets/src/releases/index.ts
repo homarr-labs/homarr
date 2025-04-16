@@ -31,7 +31,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       showDetails: factory.switch({
         defaultValue: true,
       }),
-      repositories: factory.multiReleaseRepositories({
+      repositories: factory.multiReleasesRepositories({
         defaultValue: [],
         validate: z.array(
           z.object({
