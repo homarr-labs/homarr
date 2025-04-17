@@ -361,17 +361,21 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             </Text>
           )}
         </Group>
-        <Divider my={10} mx="30%" />
-        <Button
-          variant="light"
-          component="a"
-          href={repository.releaseUrl ?? repository.projectUrl}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <IconExternalLink />
-          {repository.releaseUrl ? t("openReleasePage") : t("openProjectPage")}
-        </Button>
+        {(repository.releaseUrl ?? repository.projectUrl) && (
+          <>
+            <Divider my={10} mx="30%" />
+            <Button
+              variant="light"
+              component="a"
+              href={repository.releaseUrl ?? repository.projectUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <IconExternalLink />
+              {repository.releaseUrl ? t("openReleasePage") : t("openProjectPage")}
+            </Button>
+          </>
+        )}
         {repository.releaseDescription && (
           <>
             <Divider my={10} mx="30%" />

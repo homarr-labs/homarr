@@ -99,7 +99,7 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
 
       const latest =
         releases.length === 0
-          ? formatErrorRelease(input.identifier, input.providerKey, "Could not find any releases, for version filter")
+          ? formatErrorRelease(input.identifier, input.providerKey, "Could not find any releases for version filter")
           : releases.reduce(
               (latest, result) => {
                 return {
