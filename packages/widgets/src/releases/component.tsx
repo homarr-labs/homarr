@@ -24,7 +24,7 @@ import { MaskedOrNormalImage } from "@homarr/ui";
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 import { Providers } from "./releases-providers";
-import type { ReleasesRepository } from "./releases-repository";
+import type { ReleasesRepositoryResponse } from "./releases-repository";
 
 function isDateWithin(date: Date, relativeDate: string): boolean {
   const amount = parseInt(relativeDate.slice(0, -1), 10);
@@ -61,7 +61,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const now = useNow();
   const formatter = useFormatter();
   const board = useRequiredBoard();
-  const [expandedRepository, setExpandedRepository] = useState("");
+  const [expandedRepository, setExpandedRepository] = useState({ providerKey: "", identifier: "" });
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
 
   const [results] = clientApi.widget.releases.getLatest.useSuspenseQuery(
@@ -86,20 +86,18 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         if (data === undefined) return undefined;
 
         const repository = options.repositories.find(
-          (repository: ReleasesRepository) =>
-            repository.providerKey === data.providerKey && repository.identifier === data.identifier,
+          (repository) => repository.providerKey === data.providerKey && repository.identifier === data.identifier,
         );
 
         if (repository === undefined) return undefined;
 
         return {
-          ...repository,
           ...data,
+          iconUrl: repository.iconUrl,
           isNewRelease:
             options.newReleaseWithin !== "" ? isDateWithin(data.latestReleaseAt, options.newReleaseWithin) : false,
           isStaleRelease:
             options.staleReleaseWithin !== "" ? !isDateWithin(data.latestReleaseAt, options.staleReleaseWithin) : false,
-          errorMessage: data.errorMessage, // Force error message to update even when undefined
         };
       })
       .filter(
@@ -114,7 +112,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         if (repoA?.latestReleaseAt === undefined) return 1;
         if (repoB?.latestReleaseAt === undefined) return -1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
-      }) as ReleasesRepository[];
+      }) as ReleasesRepositoryResponse[];
   }, [
     results,
     options.repositories,
@@ -124,17 +122,27 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   ]);
 
   const toggleExpandedRepository = useCallback(
-    (identifier: string) => {
-      setExpandedRepository(expandedRepository === identifier ? "" : identifier);
+    (repository: ReleasesRepositoryResponse) => {
+      if (
+        expandedRepository.providerKey === repository.providerKey &&
+        expandedRepository.identifier === repository.identifier
+      ) {
+        setExpandedRepository({ providerKey: "", identifier: "" });
+      } else {
+        setExpandedRepository({ providerKey: repository.providerKey, identifier: repository.identifier });
+      }
     },
     [expandedRepository],
   );
 
   return (
     <Stack gap={0}>
-      {repositories.map((repository: ReleasesRepository) => {
-        const isActive = expandedRepository === repository.identifier;
-        console.log(repository.errorMessage);
+      {repositories.map((repository: ReleasesRepositoryResponse) => {
+        const isActive =
+          expandedRepository.providerKey === repository.providerKey &&
+          expandedRepository.identifier === repository.identifier;
+        const hasError = repository.errorMessage !== undefined;
+
         return (
           <Stack
             key={`${repository.providerKey}.${repository.identifier}`}
@@ -147,7 +155,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
               })}
               p="xs"
               wrap="nowrap"
-              onClick={() => toggleExpandedRepository(repository.identifier)}
+              onClick={() => toggleExpandedRepository(repository)}
             >
               <MaskedOrNormalImage
                 imageUrl={repository.iconUrl ?? Providers[repository.providerKey]?.iconUrl}
@@ -162,21 +170,13 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 <Text size="xs">{repository.identifier}</Text>
 
                 <Tooltip
-                  multiline
-                  maw={500}
                   withArrow
                   arrowSize={5}
-                  style={{ whiteSpace: "pre-wrap" }}
-                  label={repository.errorMessage ?? repository.latestRelease ?? t("not-found")}
+                  label={repository.latestRelease}
+                  events={{ hover: repository.latestRelease !== "", focus: false, touch: false }}
                 >
-                  <Text
-                    size="xs"
-                    fw={700}
-                    truncate="end"
-                    c={repository.errorMessage ? "red" : "text"}
-                    style={{ flexShrink: 1 }}
-                  >
-                    {repository.errorMessage ? t("error") : (repository.latestRelease ?? t("not-found"))}
+                  <Text size="xs" fw={700} truncate="end" c={hasError ? "red" : "text"} style={{ flexShrink: 1 }}>
+                    {hasError ? t("error") : (repository.latestRelease ?? t("not-found"))}
                   </Text>
                 </Tooltip>
               </Group>
@@ -187,13 +187,13 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                   c={repository.isNewRelease ? "primaryColor" : repository.isStaleRelease ? "secondaryColor" : "dimmed"}
                 >
                   {repository.latestReleaseAt &&
-                    !repository.errorMessage &&
+                    !hasError &&
                     formatter.relativeTime(repository.latestReleaseAt, {
                       now,
                       style: "narrow",
                     })}
                 </Text>
-                {!repository.errorMessage ? (
+                {!hasError ? (
                   (repository.isNewRelease || repository.isStaleRelease) && (
                     <IconCircleFilled
                       size={10}
@@ -222,8 +222,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 }
 
 interface DetailsDisplayProps {
-  repository: ReleasesRepository;
-  toggleExpandedRepository: (identifier: string) => void;
+  repository: ReleasesRepositoryResponse;
+  toggleExpandedRepository: (repository: ReleasesRepositoryResponse) => void;
 }
 
 const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplayProps) => {
@@ -232,12 +232,12 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
 
   return (
     <>
-      <Divider onClick={() => toggleExpandedRepository(repository.identifier)} />
+      <Divider onClick={() => toggleExpandedRepository(repository)} />
       <Group
         className={classes.releasesRepositoryDetails}
         justify="space-between"
         p={5}
-        onClick={() => toggleExpandedRepository(repository.identifier)}
+        onClick={() => toggleExpandedRepository(repository)}
       >
         <Group>
           <Tooltip label={t("pre-release")} withArrow arrowSize={5}>
@@ -321,7 +321,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
 };
 
 interface ExtendedDisplayProps {
-  repository: ReleasesRepository;
+  repository: ReleasesRepositoryResponse;
   hasIconColor: boolean;
 }
 
@@ -374,6 +374,17 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
               <IconExternalLink />
               {repository.releaseUrl ? t("openReleasePage") : t("openProjectPage")}
             </Button>
+          </>
+        )}
+        {repository.errorMessage && (
+          <>
+            <Divider my={10} mx="30%" />
+            <Title order={4} ta="center">
+              {t("error")}
+            </Title>
+            <Text component="pre" size="xs" ff="monospace" c="red">
+              {repository.errorMessage}
+            </Text>
           </>
         )}
         {repository.releaseDescription && (

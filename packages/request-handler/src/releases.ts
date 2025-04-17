@@ -135,4 +135,4 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
   cacheDuration: dayjs.duration(5, "minutes"),
 });
 
-export type ResponseResponse = z.infer<typeof _reponseSchema>;
+export type ReleaseResponse = z.infer<typeof _reponseSchema>;
