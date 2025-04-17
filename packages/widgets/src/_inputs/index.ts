@@ -2,6 +2,7 @@ import type { WidgetOptionType } from "../options";
 import { WidgetAppInput } from "./widget-app-input";
 import { WidgetLocationInput } from "./widget-location-input";
 import { WidgetMultiTextInput } from "./widget-multi-text-input";
+import { WidgetMultiReleasesRepositoriesInput } from "./widget-multiReleasesRepositories-input";
 import { WidgetMultiSelectInput } from "./widget-multiselect-input";
 import { WidgetNumberInput } from "./widget-number-input";
 import { WidgetSelectInput } from "./widget-select-input";
@@ -21,6 +22,7 @@ const mapping = {
   switch: WidgetSwitchInput,
   app: WidgetAppInput,
   sortableItemList: WidgetSortedItemListInput,
+  multiReleasesRepositories: WidgetMultiReleasesRepositoriesInput,
 } satisfies Record<WidgetOptionType, unknown>;
 
 export const getInputForType = <TType extends WidgetOptionType>(type: TType) => {
