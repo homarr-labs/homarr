@@ -2222,7 +2222,7 @@
         "label": "背景图片 URL",
         "placeholder": "",
         "group": {
-          "your": "",
+          "your": "你的图像",
           "other": ""
         }
       },
@@ -2862,7 +2862,7 @@
               "label": "媒体转码"
             },
             "networkController": {
-              "label": ""
+              "label": "网络控制器"
             }
           }
         },
