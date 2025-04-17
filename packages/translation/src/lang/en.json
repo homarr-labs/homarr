@@ -2120,7 +2120,8 @@
       "openProjectPage": "Open Project Page",
       "openReleasePage": "Open Release Page",
       "releaseDescription": "Release Description",
-      "created": "Created"
+      "created": "Created",
+      "error": "Error"
     },
     "networkControllerSummary": {
       "option": {},

@@ -10,6 +10,7 @@ import {
   IconGitFork,
   IconProgressCheck,
   IconStar,
+  IconTriangleFilled,
 } from "@tabler/icons-react";
 import combineClasses from "clsx";
 import { useFormatter, useNow } from "next-intl";
@@ -90,7 +91,6 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         );
 
         if (repository === undefined) return undefined;
-        console.log(data)
 
         return {
           ...repository,
@@ -99,12 +99,16 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             options.newReleaseWithin !== "" ? isDateWithin(data.latestReleaseAt, options.newReleaseWithin) : false,
           isStaleRelease:
             options.staleReleaseWithin !== "" ? !isDateWithin(data.latestReleaseAt, options.staleReleaseWithin) : false,
+          errorMessage: data.errorMessage, // Force error message to update even when undefined
         };
       })
       .filter(
         (repository) =>
           repository !== undefined &&
-          (!options.showOnlyHighlighted || repository.isNewRelease || repository.isStaleRelease),
+          (repository.errorMessage !== undefined ||
+            !options.showOnlyHighlighted ||
+            repository.isNewRelease ||
+            repository.isStaleRelease),
       )
       .sort((repoA, repoB) => {
         if (repoA?.latestReleaseAt === undefined) return 1;
@@ -130,7 +134,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     <Stack gap={0}>
       {repositories.map((repository: ReleasesRepository) => {
         const isActive = expandedRepository === repository.identifier;
-
+        console.log(repository.errorMessage);
         return (
           <Stack
             key={`${repository.providerKey}.${repository.identifier}`}
@@ -156,10 +160,23 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 
               <Group gap={5} justify="space-between" style={{ flex: 1, minWidth: 0 }} wrap="nowrap">
                 <Text size="xs">{repository.identifier}</Text>
-                  
-                <Tooltip label={repository.errorMessage ?? repository.latestRelease ?? t("not-found")}>
-                  <Text size="xs" fw={700} truncate="end" style={{ flexShrink: 1 }}>
-                    { repository.errorMessage ? "Error" : (repository.latestRelease ?? t("not-found"))}
+
+                <Tooltip
+                  multiline
+                  maw={500}
+                  withArrow
+                  arrowSize={5}
+                  style={{ whiteSpace: "pre-wrap" }}
+                  label={repository.errorMessage ?? repository.latestRelease ?? t("not-found")}
+                >
+                  <Text
+                    size="xs"
+                    fw={700}
+                    truncate="end"
+                    c={repository.errorMessage ? "red" : "text"}
+                    style={{ flexShrink: 1 }}
+                  >
+                    {repository.errorMessage ? t("error") : (repository.latestRelease ?? t("not-found"))}
                   </Text>
                 </Tooltip>
               </Group>
@@ -170,20 +187,25 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                   c={repository.isNewRelease ? "primaryColor" : repository.isStaleRelease ? "secondaryColor" : "dimmed"}
                 >
                   {repository.latestReleaseAt &&
+                    !repository.errorMessage &&
                     formatter.relativeTime(repository.latestReleaseAt, {
                       now,
                       style: "narrow",
                     })}
                 </Text>
-                {(repository.isNewRelease || repository.isStaleRelease) && (
-                  <IconCircleFilled
-                    size={10}
-                    color={
-                      repository.isNewRelease
-                        ? "var(--mantine-color-primaryColor-filled)"
-                        : "var(--mantine-color-secondaryColor-filled)"
-                    }
-                  />
+                {!repository.errorMessage ? (
+                  (repository.isNewRelease || repository.isStaleRelease) && (
+                    <IconCircleFilled
+                      size={10}
+                      color={
+                        repository.isNewRelease
+                          ? "var(--mantine-color-primaryColor-filled)"
+                          : "var(--mantine-color-secondaryColor-filled)"
+                      }
+                    />
+                  )
+                ) : (
+                  <IconTriangleFilled size={10} color={"var(--mantine-color-red-filled)"} />
                 )}
               </Group>
             </Group>
@@ -218,7 +240,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
         onClick={() => toggleExpandedRepository(repository.identifier)}
       >
         <Group>
-          <Tooltip label={t("pre-release")}>
+          <Tooltip label={t("pre-release")} withArrow arrowSize={5}>
             <IconProgressCheck
               size={13}
               color={
@@ -227,14 +249,14 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
             />
           </Tooltip>
 
-          <Tooltip label={t("archived")}>
+          <Tooltip label={t("archived")} withArrow arrowSize={5}>
             <IconArchive
               size={13}
               color={repository.isArchived ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"}
             />
           </Tooltip>
 
-          <Tooltip label={t("forked")}>
+          <Tooltip label={t("forked")} withArrow arrowSize={5}>
             <IconGitFork
               size={13}
               color={repository.isFork ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"}
@@ -242,7 +264,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
           </Tooltip>
         </Group>
         <Group>
-          <Tooltip label={t("starsCount")}>
+          <Tooltip label={t("starsCount")} withArrow arrowSize={5}>
             <Group gap={5}>
               <IconStar
                 size={12}
@@ -259,7 +281,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
             </Group>
           </Tooltip>
 
-          <Tooltip label={t("forksCount")}>
+          <Tooltip label={t("forksCount")} withArrow arrowSize={5}>
             <Group gap={5}>
               <IconGitFork
                 size={12}
@@ -276,7 +298,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
             </Group>
           </Tooltip>
 
-          <Tooltip label={t("issuesCount")}>
+          <Tooltip label={t("issuesCount")} withArrow arrowSize={5}>
             <Group gap={5}>
               <IconCircleDot
                 size={12}

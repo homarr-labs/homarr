@@ -27,6 +27,25 @@ const _reponseSchema = z.object({
   errorMessage: z.string().optional(),
 });
 
+const formatErrorRelease = (identifier: string, providerKey: string, errorMessage: string) => ({
+  identifier,
+  providerKey,
+  latestRelease: "",
+  latestReleaseAt: new Date(0),
+  releaseUrl: "",
+  releaseDescription: "",
+  isPreRelease: false,
+  projectUrl: "",
+  projectDescription: "",
+  isFork: false,
+  isArchived: false,
+  createdAt: new Date(0),
+  starsCount: 0,
+  openIssues: 0,
+  forksCount: 0,
+  errorMessage,
+});
+
 export const releasesRequestHandler = createCachedWidgetRequestHandler({
   queryKey: "releasesApiResult",
   widgetKind: "releases",
@@ -68,55 +87,49 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
     const releasesResult = provider.parseReleasesResponse(releasesResponseJson);
 
     if (!releasesResult.success) {
-      return {
-        identifier: input.identifier,
-        providerKey: input.providerKey,
-        latestRelease: "",
-        latestReleaseAt: new Date(0),
-        releaseUrl: "",
-        releaseDescription: "",
-        isPreRelease: false,
-        projectUrl: "",
-        projectDescription: "",
-        isFork: false,
-        isArchived: false,
-        createdAt: new Date(0),
-        starsCount: 0,
-        openIssues: 0,
-        forksCount: 0,
-        errorMessage: releasesResponseJson ? JSON.stringify(releasesResponseJson) : releasesResult.error.message,
-      };
+      return formatErrorRelease(
+        input.identifier,
+        input.providerKey,
+        releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
+      );
     } else {
-      return releasesResult.data
-        .filter((result) => (input.versionRegex ? new RegExp(input.versionRegex).test(result.latestRelease) : true))
-        .reduce(
-          (latest, result) => {
-            return {
-              ...detailsResult,
-              ...(result.latestReleaseAt > latest.latestReleaseAt ? result : latest),
-              identifier: input.identifier,
-              providerKey: input.providerKey,
-            };
-          },
-          {
-            identifier: "",
-            providerKey: "",
-            latestRelease: "",
-            latestReleaseAt: new Date(0),
-            releaseUrl: "",
-            releaseDescription: "",
-            isPreRelease: false,
-            projectUrl: "",
-            projectDescription: "",
-            isFork: false,
-            isArchived: false,
-            createdAt: new Date(0),
-            starsCount: 0,
-            openIssues: 0,
-            forksCount: 0,
-            errorMessage: "",
-          },
-        );
+      const releases = releasesResult.data.filter((result) =>
+        input.versionRegex ? new RegExp(input.versionRegex).test(result.latestRelease) : true,
+      );
+
+      const latest =
+        releases.length === 0
+          ? formatErrorRelease(input.identifier, input.providerKey, "Could not find any releases, for version filter")
+          : releases.reduce(
+              (latest, result) => {
+                return {
+                  ...detailsResult,
+                  ...(result.latestReleaseAt > latest.latestReleaseAt ? result : latest),
+                  identifier: input.identifier,
+                  providerKey: input.providerKey,
+                };
+              },
+              {
+                identifier: "",
+                providerKey: "",
+                latestRelease: "",
+                latestReleaseAt: new Date(0),
+                releaseUrl: "",
+                releaseDescription: "",
+                isPreRelease: false,
+                projectUrl: "",
+                projectDescription: "",
+                isFork: false,
+                isArchived: false,
+                createdAt: new Date(0),
+                starsCount: 0,
+                openIssues: 0,
+                forksCount: 0,
+                errorMessage: "",
+              },
+            );
+
+      return latest;
     }
   },
   cacheDuration: dayjs.duration(5, "minutes"),
