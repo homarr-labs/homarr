@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
 import { Integration } from "../base/integration";
@@ -10,20 +8,41 @@ import { getNodesResponseSchema, getStatisticsSchema, getStatusTableSchema } fro
 
 export class TdarrIntegration extends Integration {
   public async testConnectionAsync(): Promise<void> {
-    const url = this.url("/api/v2/status");
-    const response = await fetchWithTrustedCertificatesAsync(url);
-    if (response.status !== 200) {
-      throw new Error(`Unexpected status code: ${response.status}`);
-    }
-
-    await z.object({ status: z.string() }).parseAsync(await response.json());
+    await super.handleTestConnectionResponseAsync({
+      queryFunctionAsync: async () => {
+        return await fetchWithTrustedCertificatesAsync(this.url("/api/v2/status"), {
+          headers: {
+            accept: "application/json",
+            "X-Api-Key": super.hasSecretValue("apiKey") ? super.getSecretValue("apiKey") : "",
+          },
+        });
+      },
+    });
+    // await super.handleTestConnectionResponseAsync({
+    //   queryFunctionAsync: async () => {
+    //     return await fetchWithTrustedCertificatesAsync(this.url("/api/v2/is-server-alive"), {
+    //       method: "POST",
+    //       headers: {
+    //         accept: "application/json",
+    //         "X-Api-Key": super.hasSecretValue("apiKey") ? super.getSecretValue("apiKey") : "",
+    //       },
+    //     });
+    //   },
+    // });
   }
 
   public async getStatisticsAsync(): Promise<TdarrStatistics> {
     const url = this.url("/api/v2/stats/get-pies");
+
+    const headerParams = {
+      accept: "application/json",
+      "Content-Type": "application/json",
+      ...(super.hasSecretValue("apiKey") ? { "X-Api-Key": super.getSecretValue("apiKey") } : {}),
+    };
+
     const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",
-      headers: { accept: "application/json", "Content-Type": "application/json" },
+      headers: headerParams,
       body: JSON.stringify({
         data: {
           libraryId: "", // empty string to get all libraries
@@ -62,9 +81,13 @@ export class TdarrIntegration extends Integration {
 
   public async getWorkersAsync(): Promise<TdarrWorker[]> {
     const url = this.url("/api/v2/get-nodes");
+    const headerParams = {
+      "Content-Type": "application/json",
+      ...(super.hasSecretValue("apiKey") ? { "X-Api-Key": super.getSecretValue("apiKey") } : {}),
+    };
     const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "GET",
-      headers: { "content-type": "application/json" },
+      headers: headerParams,
     });
 
     const nodesData = await getNodesResponseSchema.parseAsync(await response.json());
@@ -102,9 +125,13 @@ export class TdarrIntegration extends Integration {
 
   private async getTranscodingQueueAsync(firstItemIndex: number, pageSize: number) {
     const url = this.url("/api/v2/client/status-tables");
+    const headerParams = {
+      "Content-Type": "application/json",
+      ...(super.hasSecretValue("apiKey") ? { "X-Api-Key": super.getSecretValue("apiKey") } : {}),
+    };
     const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: headerParams,
       body: JSON.stringify({
         data: {
           start: firstItemIndex,
@@ -137,9 +164,13 @@ export class TdarrIntegration extends Integration {
 
   private async getHealthCheckDataAsync(firstItemIndex: number, pageSize: number, totalQueueCount: number) {
     const url = this.url("/api/v2/client/status-tables");
+    const headerParams = {
+      "Content-Type": "application/json",
+      ...(super.hasSecretValue("apiKey") ? { "X-Api-Key": super.getSecretValue("apiKey") } : {}),
+    };
     const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: headerParams,
       body: JSON.stringify({
         data: {
           start: Math.max(firstItemIndex - totalQueueCount, 0),
@@ -170,4 +201,6 @@ export class TdarrIntegration extends Integration {
       totalCount: healthCheckData.totalCount,
     };
   }
+
+
 }
