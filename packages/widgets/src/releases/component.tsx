@@ -382,7 +382,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             <Title order={4} ta="center">
               {t("error")}
             </Title>
-            <Text component="pre" size="xs" ff="monospace" c="red">
+            <Text size="xs" ff="monospace" c="red" style={{ whiteSpace: "pre-wrap" }}>
               {repository.errorMessage}
             </Text>
           </>
