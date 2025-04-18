@@ -582,7 +582,7 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       '@tanstack/react-query':
-        specifier: ^5.72.4
+        specifier: ^5.74.4
         version: 5.74.4(react@19.1.0)
       '@trpc/client':
         specifier: ^11.1.0
