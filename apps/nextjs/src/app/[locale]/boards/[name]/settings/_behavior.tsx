@@ -38,7 +38,7 @@ export const BehaviorSettingsContent = ({ board }: Props) => {
         />
 
         <Group justify="end">
-          <Button type="submit" loading={isPending} color="teal">
+          <Button type="submit" loading={isPending}>
             {t("common.action.saveChanges")}
           </Button>
         </Group>
