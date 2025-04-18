@@ -9,11 +9,13 @@ import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-
 export const mediaServerRequestHandler = createCachedIntegrationRequestHandler<
   StreamSession[],
   IntegrationKindByCategory<"mediaService">,
-  Record<string, never>
+  {
+    showOnlyPlaying: boolean;
+  }
 >({
-  async requestAsync(integration, _input) {
+  async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
-    return await integrationInstance.getCurrentSessionsAsync();
+    return await integrationInstance.getCurrentSessionsAsync({ showOnlyPlaying: input.showOnlyPlaying });
   },
   cacheDuration: dayjs.duration(5, "seconds"),
   queryKey: "mediaServerSessions",

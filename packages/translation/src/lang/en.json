@@ -1766,7 +1766,12 @@
     "mediaServer": {
       "name": "Current media server streams",
       "description": "Show the current streams on your media servers",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "Show only currently playing",
+          "description": "Disabling this will not work for plex"
+        }
+      },
       "items": {
         "currentlyPlaying": "Currently playing",
         "user": "User",
