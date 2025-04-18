@@ -7,7 +7,6 @@ import type { TdarrWorker } from "../interfaces/media-transcoding/workers";
 import { getNodesResponseSchema, getStatisticsSchema, getStatusTableSchema } from "./tdarr-validation-schemas";
 
 export class TdarrIntegration extends Integration {
-  // This skips the test connection as no API key is required for the status endpoint
   public async testConnectionAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
