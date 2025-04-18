@@ -12,7 +12,7 @@ export type SettingsContextProps = Pick<
 > &
   Pick<ServerSettings["board"], "enableStatusByDefault" | "forceDisableStatus">;
 
-interface PublicServerSettings {
+export interface PublicServerSettings {
   search: Pick<ServerSettings["search"], "defaultSearchEngineId">;
   board: Pick<
     ServerSettings["board"],

@@ -3,9 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { createContext, useContext } from "react";
 
-import type { ServerSettings } from "@homarr/server-settings";
-
-import type { SettingsContextProps, UserSettings } from "./creator";
+import type { PublicServerSettings, SettingsContextProps, UserSettings } from "./creator";
 import { createSettings } from "./creator";
 
 const SettingsContext = createContext<SettingsContextProps | null>(null);
@@ -14,7 +12,7 @@ export const SettingsProvider = ({
   user,
   serverSettings,
   children,
-}: PropsWithChildren<{ user: UserSettings | null; serverSettings: ServerSettings }>) => {
+}: PropsWithChildren<{ user: UserSettings | null; serverSettings: PublicServerSettings }>) => {
   return (
     <SettingsContext.Provider value={createSettings({ user, serverSettings })}>{children}</SettingsContext.Provider>
   );
