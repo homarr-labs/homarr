@@ -5,7 +5,7 @@ import { Center, Loader as UiLoader } from "@mantine/core";
 
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
-import type { SettingsContextProps } from "@homarr/settings";
+import type { SettingsContextProps } from "@homarr/settings/creator";
 
 import * as app from "./app";
 import * as bookmarks from "./bookmarks";

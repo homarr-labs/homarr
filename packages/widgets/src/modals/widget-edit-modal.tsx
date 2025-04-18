@@ -8,7 +8,7 @@ import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { zodResolver } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
-import type { SettingsContextProps } from "@homarr/settings";
+import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
 
