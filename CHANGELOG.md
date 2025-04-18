@@ -1,3 +1,30 @@
+## [1.17.0](https://github.com/homarr-labs/homarr/compare/v1.16.0...v1.17.0) (2025-04-18)
+
+### Features
+
+* add api-key support for tdarr ([#2890](https://github.com/homarr-labs/homarr/issues/2890)) ([3d68f4d](https://github.com/homarr-labs/homarr/commit/3d68f4d1283b6cb27f9532d1adf52cef78a0fb03))
+* Prefer primary color ([#2665](https://github.com/homarr-labs/homarr/issues/2665)) ([00053bd](https://github.com/homarr-labs/homarr/commit/00053bda7bbcaaf359074c3b35573ee0afc1409d))
+
+### Bug Fixes
+
+* calculate available space correctly and filter unmounted drives ([#2885](https://github.com/homarr-labs/homarr/issues/2885)) ([cfca0ba](https://github.com/homarr-labs/homarr/commit/cfca0ba58323ec09f8f64da2fee251ef14ba914a))
+* **deps:** update dependency drizzle-kit to ^0.31.0 ([#2881](https://github.com/homarr-labs/homarr/issues/2881)) ([97390c6](https://github.com/homarr-labs/homarr/commit/97390c60300f3d16dabf0710fa435c6b3ae86a6f))
+* **deps:** update dependency drizzle-orm to ^0.42.0 ([#2882](https://github.com/homarr-labs/homarr/issues/2882)) ([47d7abc](https://github.com/homarr-labs/homarr/commit/47d7abc0d739b91328834e0eaea033637632f22c))
+* **deps:** update dependency jotai to ^2.12.3 ([#2868](https://github.com/homarr-labs/homarr/issues/2868)) ([c57b63b](https://github.com/homarr-labs/homarr/commit/c57b63b506733459ea0c09776917042fa878829b))
+* **deps:** update dependency recharts to ^2.15.3 ([#2893](https://github.com/homarr-labs/homarr/issues/2893)) ([5fcb7a3](https://github.com/homarr-labs/homarr/commit/5fcb7a3b9c279c1b402e120a4a6f08265e8d5912))
+* **deps:** update dependency swagger-ui-react to ^5.21.0 ([#2866](https://github.com/homarr-labs/homarr/issues/2866)) ([ff1263b](https://github.com/homarr-labs/homarr/commit/ff1263b217e96cbb2bc6b8e98ff117c44ca9f00d))
+* **deps:** update dependency typescript-eslint to ^8.30.0 ([#2873](https://github.com/homarr-labs/homarr/issues/2873)) ([089734b](https://github.com/homarr-labs/homarr/commit/089734b293a21d6eeaa7c5df5ee9930853ed2fcf))
+* **deps:** update dependency typescript-eslint to ^8.30.1 ([#2876](https://github.com/homarr-labs/homarr/issues/2876)) ([fdca513](https://github.com/homarr-labs/homarr/commit/fdca513929e9e594af2d59ad17c915cbc7ac2e08))
+* **deps:** update dependency zod to ^3.24.3 ([#2886](https://github.com/homarr-labs/homarr/issues/2886)) ([1bfe397](https://github.com/homarr-labs/homarr/commit/1bfe397d68a88037e35701aab8a7b4c9027ec1e3))
+* **deps:** update nextjs monorepo to v15.3.1 ([#2889](https://github.com/homarr-labs/homarr/issues/2889)) ([d37cdbd](https://github.com/homarr-labs/homarr/commit/d37cdbd080c2b3a4df536ab7dad4fc4a4b3c915f))
+* **deps:** update tanstack-query monorepo to ^5.73.3 ([#2860](https://github.com/homarr-labs/homarr/issues/2860)) ([4e6ab03](https://github.com/homarr-labs/homarr/commit/4e6ab037c9245103b05afe977e9c288082a2b539))
+* **deps:** update tanstack-query monorepo to ^5.74.0 ([#2864](https://github.com/homarr-labs/homarr/issues/2864)) ([ac78e87](https://github.com/homarr-labs/homarr/commit/ac78e8704287f45d6a8ca26cba9b87146e1c6161))
+* **deps:** update tanstack-query monorepo to ^5.74.2 ([#2869](https://github.com/homarr-labs/homarr/issues/2869)) ([bf4a1cf](https://github.com/homarr-labs/homarr/commit/bf4a1cf1e8c99ada97adf6ee118ddaafc00115e9))
+* **deps:** update tanstack-query monorepo to ^5.74.3 ([#2871](https://github.com/homarr-labs/homarr/issues/2871)) ([02fb1b9](https://github.com/homarr-labs/homarr/commit/02fb1b9dae501e475353e8e2510e4f8938c4e124))
+* **deps:** update tanstack-query monorepo to ^5.74.4 ([#2888](https://github.com/homarr-labs/homarr/issues/2888)) ([17174b6](https://github.com/homarr-labs/homarr/commit/17174b6b96ae16b480e2bc5eb9f8ab7b914bc843))
+* Tdarr widget empty statistics tab ([#2883](https://github.com/homarr-labs/homarr/issues/2883)) ([2d12c1e](https://github.com/homarr-labs/homarr/commit/2d12c1e641398e20a70f8bfb24a48de02498496a))
+* **widget:** format stock values and changes for better readability ([#2836](https://github.com/homarr-labs/homarr/issues/2836)) ([a29556e](https://github.com/homarr-labs/homarr/commit/a29556ee8ec50aa384a9a46f6f5a5fa5dfa4cdac))
+
 ## [1.16.0](https://github.com/homarr-labs/homarr/compare/v1.15.0...v1.16.0) (2025-04-11)
 
 ### Features
