@@ -32,7 +32,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/dockerode": "^3.3.38",
-    "eslint": "^9.24.0",
+    "eslint": "^9.25.0",
     "typescript": "^5.8.3"
   }
 }
