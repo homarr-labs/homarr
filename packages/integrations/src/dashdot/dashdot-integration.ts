@@ -30,13 +30,15 @@ export class DashDotIntegration extends Integration {
       cpuUtilization: cpuLoad.sumLoad,
       memUsed: `${memoryLoad.loadInBytes}`,
       memAvailable: `${info.maxAvailableMemoryBytes - memoryLoad.loadInBytes}`,
-      fileSystem: info.storage.map((storage, index) => ({
-        deviceName: `Storage ${index + 1}: (${storage.disks.map((disk) => disk.device).join(", ")})`,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        used: humanFileSize(storageLoad[index]!),
-        available: `${storage.size}`,
-        percentage: storageLoad[index] ? (storageLoad[index] / storage.size) * 100 : 0,
-      })),
+      fileSystem: info.storage
+        .filter((_, index) => storageLoad[index] !== -1) // filter out undermoutned drives, they display as -1 in the load API
+        .map((storage, index) => ({
+          deviceName: `Storage ${index + 1}: (${storage.disks.map((disk) => disk.device).join(", ")})`,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          used: humanFileSize(storageLoad[index]!),
+          available: storageLoad[index] ? `${storage.size - storageLoad[index]}` : `${storage.size}`,
+          percentage: storageLoad[index] ? (storageLoad[index] / storage.size) * 100 : 0,
+        })),
       cpuModelName: info.cpuModel === "" ? `Unknown Model (${info.cpuBrand})` : `${info.cpuModel} (${info.cpuBrand})`,
       cpuTemp: cpuLoad.averageTemperature,
       availablePkgUpdates: 0,

@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Vælg app",
-        "notFound": "Ingen app fundet"
-      }
+        "notFound": "Ingen app fundet",
+        "search": "Søg efter en app",
+        "noResults": "Ingen resultater",
+        "action": "Vælg {app}",
+        "title": "Vælg en app, der skal tilføjes til denne tavle"
+      },
+      "create": {
+        "title": "Opret ny app",
+        "description": "Opret en ny app ",
+        "action": "Åbn app-oprettelse"
+      },
+      "add": "Tilføj en app"
     }
   },
   "integration": {
@@ -759,8 +769,8 @@
           "message": "Stien er sandsynligvis ikke korrekt"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "For mange anmodninger i et givet tidsrum",
+          "message": "Der var for mange anmodninger. Du bliver sandsynligvis rate-limited eller afvist af målsystemet"
         }
       }
     },
@@ -1787,7 +1797,7 @@
           "label": "Vis torrent poster markeret som fuldførte"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Vis Diverse poster markeret som færdige"
         },
         "activeTorrentThreshold": {
           "label": "Skjul afsluttet torrent under denne tærskel (i kiB/s)"
@@ -2038,56 +2048,56 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "{count} tilsluttet"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Ingen tilgængelige data, alle integrationer afbrudt",
+        "unknownContentOption": "Ukendt indhold indstilling for netværkscontroller resumé widget: "
       },
-      "name": "",
-      "description": ""
+      "name": "Netværkskontroller Oversigt",
+      "description": "Viser resuméet af en netværkskontroller (som UniFi Controller)"
     },
     "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
-            "name": ""
+            "name": "Kablet"
           },
           "wifi": {
-            "name": ""
+            "name": "WiFi"
           }
         },
         "users": {
-          "label": ""
+          "label": "Brugere"
         },
         "guests": {
-          "label": ""
+          "label": "Gæster"
         }
       },
       "option": {
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "WiFi"
             },
             "wired": {
-              "label": ""
+              "label": "Kablet"
             }
           },
-          "label": ""
+          "label": "Widget indhold"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Ingen tilgængelige data, alle integrationer afbrudt",
+        "unknownContentOption": "Ukendt indhold indstilling for netværksstatuswidget: "
       },
-      "name": "",
-      "description": ""
+      "name": "Status for netværk",
+      "description": "Vis tilsluttede enheder på et netværk"
     },
     "networkController": {
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Kunne ikke hente Netværkskontroloversigt"
       }
     }
   },
@@ -2210,10 +2220,10 @@
       },
       "backgroundImageUrl": {
         "label": "Baggrundsbillede URL",
-        "placeholder": "",
+        "placeholder": "Begynd at skrive for at søge efter lokale billeder",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "Dine billeder",
+          "other": "Andre billeder"
         }
       },
       "backgroundImageAttachment": {
@@ -2852,7 +2862,7 @@
               "label": "Omkodning af medier"
             },
             "networkController": {
-              "label": ""
+              "label": "Netværkskontroller"
             }
           }
         },

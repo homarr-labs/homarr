@@ -82,7 +82,7 @@ export const GroupAccessForm = <TPermission extends string>({
             <Button rightSection={<IconPlus size="1rem" />} variant="light" onClick={handleAddUser}>
               {t("common.action.add")}
             </Button>
-            <Button type="submit" loading={isPending} color="teal">
+            <Button type="submit" loading={isPending}>
               {t("permission.action.saveGroup")}
             </Button>
           </Group>

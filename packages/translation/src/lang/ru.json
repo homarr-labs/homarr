@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Выбрать приложение",
-        "notFound": "Приложения не найдены"
-      }
+        "notFound": "Приложения не найдены",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {

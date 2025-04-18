@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Seleccioneu l'aplicació",
-        "notFound": "No s'ha trobat cap aplicació"
-      }
+        "notFound": "No s'ha trobat cap aplicació",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {

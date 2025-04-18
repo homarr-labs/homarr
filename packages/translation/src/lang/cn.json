@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "选择应用",
-        "notFound": "未找到应用"
-      }
+        "notFound": "未找到应用",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {
@@ -2212,7 +2222,7 @@
         "label": "背景图片 URL",
         "placeholder": "",
         "group": {
-          "your": "",
+          "your": "你的图像",
           "other": ""
         }
       },
@@ -2852,7 +2862,7 @@
               "label": "媒体转码"
             },
             "networkController": {
-              "label": ""
+              "label": "网络控制器"
             }
           }
         },

@@ -49,8 +49,8 @@
     "@testcontainers/mysql": "^10.24.2",
     "better-sqlite3": "^11.9.1",
     "dotenv": "^16.5.0",
-    "drizzle-kit": "^0.30.6",
-    "drizzle-orm": "^0.41.0",
+    "drizzle-kit": "^0.31.0",
+    "drizzle-orm": "^0.42.0",
     "drizzle-zod": "^0.7.1",
     "mysql2": "3.14.0"
   },
@@ -60,7 +60,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.13",
     "dotenv-cli": "^8.0.0",
-    "eslint": "^9.24.0",
+    "eslint": "^9.25.0",
     "prettier": "^3.5.3",
     "tsx": "4.19.3",
     "typescript": "^5.8.3"

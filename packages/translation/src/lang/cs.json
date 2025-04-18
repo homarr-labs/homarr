@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Vybrat aplikaci",
-        "notFound": ""
-      }
+        "notFound": "",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {

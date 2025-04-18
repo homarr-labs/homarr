@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Uygulama seç",
-        "notFound": "Uygulama bulunamadı"
-      }
+        "notFound": "Uygulama bulunamadı",
+        "search": "Uygulama bul",
+        "noResults": "Sonuç bulunamadı",
+        "action": "{app} uygulamasını seç",
+        "title": "Bu panele eklemek üzere bir uygulama seçin"
+      },
+      "create": {
+        "title": "Yeni uygulama oluştur",
+        "description": "Yeni bir uygulama oluştur ",
+        "action": "Uygulama oluşturmayı başlat"
+      },
+      "add": "Bir uygulama ekle"
     }
   },
   "integration": {
@@ -1781,13 +1791,13 @@
           "label": "Ters sıralama"
         },
         "showCompletedUsenet": {
-          "label": "Tamamlanmış olarak işaretlenen usenet girdilerini göster"
+          "label": "Tamamlanmış olarak işaretlenmiş usenet girdilerini göster"
         },
         "showCompletedTorrent": {
-          "label": "Tamamlanmış olarak işaretlenen torrent girdilerini göster"
+          "label": "Tamamlanmış olarak işaretlenmiş torrent girdilerini göster"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Tamamlanmış olarak işaretlenmiş çeşitli girişleri göster"
         },
         "activeTorrentThreshold": {
           "label": "Tamamlanan torrent'i bu eşik değerinin altına gizle (kiB/s cinsinden)"

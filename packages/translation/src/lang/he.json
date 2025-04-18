@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "בחר אפליקציה",
-        "notFound": "לא נמצאה אפליקציה"
-      }
+        "notFound": "לא נמצאה אפליקציה",
+        "search": "חפש אפליקציה",
+        "noResults": "אין תוצאות",
+        "action": "בחר {app}",
+        "title": "בחר אפליקציה להוספה ללוח זה"
+      },
+      "create": {
+        "title": "צור אפליקציה חדשה",
+        "description": "צור אפליקציה חדשה",
+        "action": "פתח את יצירת האפליקציה"
+      },
+      "add": "הוסף אפליקציה"
     }
   },
   "integration": {
@@ -759,8 +769,8 @@
           "message": "כנראה שהנתיב שגוי"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "יותר מדי בקשות בזמן נתון",
+          "message": "היו יותר מדי בקשות. סביר להניח שמערכת היעד מגבילה את הבקשות או דחתה אותך"
         }
       }
     },
@@ -985,7 +995,7 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "כותרת"
         },
         "borderColor": {
           "label": "צבע מסגרת"
@@ -1787,7 +1797,7 @@
           "label": "הצג ערכי טורנט שסומנו כהשלמה"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "הצג ערכים שונים שסומנו כהשלמה"
         },
         "activeTorrentThreshold": {
           "label": "הסתר טורנט שהושלם מתחת לסף הזה (בקיB/s)"
@@ -2038,56 +2048,56 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "{count} מחובר"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "אין נתונים זמינים, כל האינטגרציות מנותקות",
+        "unknownContentOption": "אפשרות תוכן לא ידוע עבור ווידג'ט סיכום בקר רשת: "
       },
-      "name": "",
-      "description": ""
+      "name": "סיכום בקר רשת",
+      "description": "מציג את הסיכום של בקר רשת (כמו בקר UniFi)"
     },
     "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
-            "name": ""
+            "name": "חוטי"
           },
           "wifi": {
-            "name": ""
+            "name": "אלחוטי"
           }
         },
         "users": {
-          "label": ""
+          "label": "משתמשים"
         },
         "guests": {
-          "label": ""
+          "label": "אורחים"
         }
       },
       "option": {
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "אלחוטי"
             },
             "wired": {
-              "label": ""
+              "label": "חוטי"
             }
           },
-          "label": ""
+          "label": "תוכן יישומון"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "אין נתונים זמינים, כל האינטגרציות מנותקות",
+        "unknownContentOption": "אפשרות תוכן לא ידוע עבור ווידג'ט סיכום בקר רשת: "
       },
-      "name": "",
-      "description": ""
+      "name": "סטטוס רשת",
+      "description": "הצג מכשירים מחוברים ברשת"
     },
     "networkController": {
       "error": {
-        "internalServerError": ""
+        "internalServerError": "אחזור תקציר בקר הרשת נכשל"
       }
     }
   },
@@ -2210,10 +2220,10 @@
       },
       "backgroundImageUrl": {
         "label": "כתובת אתר של תמונת רקע",
-        "placeholder": "",
+        "placeholder": "התחל להקליד כדי לחפש תמונות מקומיות",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "התמונות שלך",
+          "other": "תמונות אחרות"
         }
       },
       "backgroundImageAttachment": {
@@ -2852,7 +2862,7 @@
               "label": "המרת קידוד מדיה"
             },
             "networkController": {
-              "label": ""
+              "label": "בקר רשת"
             }
           }
         },

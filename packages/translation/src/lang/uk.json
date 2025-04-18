@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Оберіть додаток",
-        "notFound": "Додатків не знайдено"
-      }
+        "notFound": "Додатків не знайдено",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {
