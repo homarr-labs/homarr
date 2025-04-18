@@ -11,7 +11,8 @@ export class TdarrIntegration extends Integration {
   public async testConnectionAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetchWithTrustedCertificatesAsync(this.url("/api/v2/status"), {
+        return await fetchWithTrustedCertificatesAsync(this.url("/api/v2/is-server-alive"), {
+          method: "POST",
           headers: {
             accept: "application/json",
             "X-Api-Key": super.hasSecretValue("apiKey") ? super.getSecretValue("apiKey") : "",
@@ -19,20 +20,6 @@ export class TdarrIntegration extends Integration {
         });
       },
     });
-
-    // This is the correct endpoint to test the connection, but it requires an API key -> value cannot be read
-
-    // await super.handleTestConnectionResponseAsync({
-    //   queryFunctionAsync: async () => {
-    //     return await fetchWithTrustedCertificatesAsync(this.url("/api/v2/is-server-alive"), {
-    //       method: "POST",
-    //       headers: {
-    //         accept: "application/json",
-    //         "X-Api-Key": super.hasSecretValue("apiKey") ? super.getSecretValue("apiKey") : "",
-    //       },
-    //     });
-    //   },
-    // });
   }
 
   public async getStatisticsAsync(): Promise<TdarrStatistics> {
