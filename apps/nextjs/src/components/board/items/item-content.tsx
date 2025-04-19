@@ -1,4 +1,4 @@
-import { Card } from "@mantine/core";
+import { Badge, Card } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import combineClasses from "clsx";
@@ -25,28 +25,46 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const board = useRequiredBoard();
 
   return (
-    <Card
-      ref={ref}
-      className={combineClasses(
-        classes.itemCard,
-        `${item.kind}-wrapper`,
-        "grid-stack-item-content",
-        item.advancedOptions.customCssClasses.join(" "),
+    <>
+      <Card
+        ref={ref}
+        className={combineClasses(
+          classes.itemCard,
+          `${item.kind}-wrapper`,
+          "grid-stack-item-content",
+          item.advancedOptions.customCssClasses.join(" "),
+        )}
+        radius={board.itemRadius}
+        withBorder
+        styles={{
+          root: {
+            "--opacity": board.opacity / 100,
+            containerType: "size",
+            overflow: item.kind === "iframe" ? "hidden" : undefined,
+            "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+          },
+        }}
+        p={0}
+      >
+        <InnerContent item={item} width={width} height={height} />
+      </Card>
+      {item.advancedOptions.title !== null && (
+        <Badge
+          pos="absolute"
+          // It's 4 because of the mantine-react-table that has z-index 3
+          style={{ zIndex: 4 }}
+          top={2}
+          left={16}
+          size="xs"
+          radius={board.itemRadius}
+          color="rgb(from var(--mantine-color-dark-6) r g b / 100%)"
+          c="var(--mantine-color-text)"
+          bd="1px solid rgb(from var(--mantine-color-dark-4) r g b / 100%)"
+        >
+          {item.advancedOptions.title}
+        </Badge>
       )}
-      radius={board.itemRadius}
-      withBorder
-      styles={{
-        root: {
-          "--opacity": board.opacity / 100,
-          containerType: "size",
-          overflow: item.kind === "iframe" ? "hidden" : undefined,
-          "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-        },
-      }}
-      p={0}
-    >
-      <InnerContent item={item} width={width} height={height} />
-    </Card>
+    </>
   );
 };
 
