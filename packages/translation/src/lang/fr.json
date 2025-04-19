@@ -3373,7 +3373,7 @@
             "label": "Espaces de noms"
           },
           "ingresses": {
-            "label": ""
+            "label": "Routes"
           },
           "services": {
             "label": "Services"
