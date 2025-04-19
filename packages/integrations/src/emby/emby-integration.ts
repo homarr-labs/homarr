@@ -4,7 +4,7 @@ import { z } from "zod";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
 import { Integration } from "../base/integration";
-import type { StreamSession } from "../interfaces/media-server/session";
+import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/session";
 import { convertJellyfinType } from "../jellyfin/jellyfin-integration";
 
 const sessionSchema = z.object({
@@ -47,7 +47,7 @@ export class EmbyIntegration extends Integration {
     });
   }
 
-  public async getCurrentSessionsAsync(): Promise<StreamSession[]> {
+  public async getCurrentSessionsAsync(options: CurrentSessionsInput): Promise<StreamSession[]> {
     const apiKey = super.getSecretValue("apiKey");
     const response = await fetchWithTrustedCertificatesAsync(super.url("/emby/Sessions"), {
       headers: {
@@ -69,6 +69,7 @@ export class EmbyIntegration extends Integration {
     return result.data
       .filter((sessionInfo) => sessionInfo.UserId !== undefined)
       .filter((sessionInfo) => sessionInfo.DeviceId !== EmbyIntegration.deviceId)
+      .filter((sessionInfo) => !options.showOnlyPlaying || sessionInfo.NowPlayingItem !== undefined)
       .map((sessionInfo): StreamSession => {
         let currentlyPlaying: StreamSession["currentlyPlaying"] | null = null;
 

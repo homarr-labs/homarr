@@ -5,11 +5,11 @@ import { logger } from "@homarr/log";
 
 import { Integration } from "../base/integration";
 import { IntegrationTestConnectionError } from "../base/test-connection-error";
-import type { StreamSession } from "../interfaces/media-server/session";
+import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/session";
 import type { PlexResponse } from "./interface";
 
 export class PlexIntegration extends Integration {
-  public async getCurrentSessionsAsync(): Promise<StreamSession[]> {
+  public async getCurrentSessionsAsync(options: CurrentSessionsInput): Promise<StreamSession[]> {
     const token = super.getSecretValue("apiKey");
 
     const response = await fetchWithTrustedCertificatesAsync(this.url("/status/sessions"), {
