@@ -29,20 +29,25 @@ export class NTFYIntegration extends NotificationsIntegration {
       topics.map(async (topic) => {
         const url = this.getTopicURL(topic);
         return await ntfyNotificationPollSchema.parseAsync(
-          await fetchWithTrustedCertificatesAsync(url)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(response.statusText);
-              }
-              return response.json();
-            })
-            .catch((error) => {
-              if (error instanceof Error) {
-                throw new Error(error.message);
-              } else {
-                throw new Error("Error communicating with ntfy");
-              }
-            }),
+          (
+            await fetchWithTrustedCertificatesAsync(url)
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error(response.statusText);
+                }
+                return response.text();
+              })
+              .catch((error) => {
+                if (error instanceof Error) {
+                  throw new Error(error.message);
+                } else {
+                  throw new Error("Error communicating with ntfy");
+                }
+              })
+          )
+            // response is provided as individual lines of JSON
+            .split("\n")
+            .map((line) => JSON.parse(line) as unknown),
         );
       }),
     );
