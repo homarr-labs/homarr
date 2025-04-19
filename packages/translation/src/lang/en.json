@@ -2099,6 +2099,16 @@
       "error": {
         "internalServerError": "Failed to fetch Network Controller Summary"
       }
+    },
+    "notifications": {
+      "name": "Notifications",
+      "description": "Display notification history from an integration",
+      "option": {
+        "topics": {
+          "label": "Topics",
+          "description": "Topic names to use. Do not include the full URL."
+        }
+      }
     }
   },
   "widgetPreview": {
@@ -2863,6 +2873,9 @@
             },
             "networkController": {
               "label": "Network Controller"
+            },
+            "refreshNotifications": {
+              "label": "Notification Updater"
             }
           }
         },
