@@ -282,16 +282,18 @@ export const Providers: ProvidersProps = {
   },
 };
 
-const _detailsSchema = z.object({
-  projectUrl: z.string(),
-  projectDescription: z.string(),
-  isFork: z.boolean(),
-  isArchived: z.boolean(),
-  createdAt: z.date(),
-  starsCount: z.number(),
-  openIssues: z.number(),
-  forksCount: z.number(),
-});
+const _detailsSchema = z
+  .object({
+    projectUrl: z.string(),
+    projectDescription: z.string(),
+    isFork: z.boolean(),
+    isArchived: z.boolean(),
+    createdAt: z.date(),
+    starsCount: z.number(),
+    openIssues: z.number(),
+    forksCount: z.number(),
+  })
+  .optional();
 
 const _releasesSchema = z.object({
   latestRelease: z.string(),

@@ -95,9 +95,13 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
           ...data,
           iconUrl: repository.iconUrl,
           isNewRelease:
-            options.newReleaseWithin !== "" ? isDateWithin(data.latestReleaseAt, options.newReleaseWithin) : false,
+            options.newReleaseWithin !== "" && data.latestReleaseAt
+              ? isDateWithin(data.latestReleaseAt, options.newReleaseWithin)
+              : false,
           isStaleRelease:
-            options.staleReleaseWithin !== "" ? !isDateWithin(data.latestReleaseAt, options.staleReleaseWithin) : false,
+            options.staleReleaseWithin !== "" && data.latestReleaseAt
+              ? !isDateWithin(data.latestReleaseAt, options.staleReleaseWithin)
+              : false,
         };
       })
       .filter(
@@ -173,7 +177,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                   withArrow
                   arrowSize={5}
                   label={repository.latestRelease}
-                  events={{ hover: repository.latestRelease !== "", focus: false, touch: false }}
+                  events={{ hover: repository.latestRelease !== undefined, focus: false, touch: false }}
                 >
                   <Text size="xs" fw={700} truncate="end" c={hasError ? "red" : "text"} style={{ flexShrink: 1 }}>
                     {hasError ? t("error") : (repository.latestRelease ?? t("not-found"))}

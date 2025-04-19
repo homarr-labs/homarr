@@ -11,38 +11,38 @@ import type { DetailsResponse } from "./releases-providers";
 const _reponseSchema = z.object({
   identifier: z.string(),
   providerKey: z.string(),
-  latestRelease: z.string(),
-  latestReleaseAt: z.date(),
-  releaseUrl: z.string(),
-  releaseDescription: z.string(),
-  isPreRelease: z.boolean(),
-  projectUrl: z.string(),
-  projectDescription: z.string(),
-  isFork: z.boolean(),
-  isArchived: z.boolean(),
-  createdAt: z.date(),
-  starsCount: z.number(),
-  openIssues: z.number(),
-  forksCount: z.number(),
+  latestRelease: z.string().optional(),
+  latestReleaseAt: z.date().optional(),
+  releaseUrl: z.string().optional(),
+  releaseDescription: z.string().optional(),
+  isPreRelease: z.boolean().optional(),
+  projectUrl: z.string().optional(),
+  projectDescription: z.string().optional(),
+  isFork: z.boolean().optional(),
+  isArchived: z.boolean().optional(),
+  createdAt: z.date().optional(),
+  starsCount: z.number().optional(),
+  openIssues: z.number().optional(),
+  forksCount: z.number().optional(),
   errorMessage: z.string().optional(),
 });
 
 const formatErrorRelease = (identifier: string, providerKey: string, errorMessage: string) => ({
   identifier,
   providerKey,
-  latestRelease: "",
-  latestReleaseAt: new Date(0),
-  releaseUrl: "",
-  releaseDescription: "",
-  isPreRelease: false,
-  projectUrl: "",
-  projectDescription: "",
-  isFork: false,
-  isArchived: false,
-  createdAt: new Date(0),
-  starsCount: 0,
-  openIssues: 0,
-  forksCount: 0,
+  latestRelease: undefined,
+  latestReleaseAt: undefined,
+  releaseUrl: undefined,
+  releaseDescription: undefined,
+  isPreRelease: undefined,
+  projectUrl: undefined,
+  projectDescription: undefined,
+  isFork: undefined,
+  isArchived: undefined,
+  createdAt: undefined,
+  starsCount: undefined,
+  openIssues: undefined,
+  forksCount: undefined,
   errorMessage,
 });
 
@@ -54,16 +54,7 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
 
     if (!provider) return undefined;
 
-    let detailsResult: DetailsResponse = {
-      projectUrl: "",
-      projectDescription: "",
-      isFork: false,
-      isArchived: false,
-      createdAt: new Date(0),
-      starsCount: 0,
-      openIssues: 0,
-      forksCount: 0,
-    };
+    let detailsResult: DetailsResponse = undefined;
 
     const detailsUrl = provider.getDetailsUrl(input.identifier);
     if (detailsUrl !== undefined) {
