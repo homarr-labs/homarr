@@ -4,14 +4,23 @@ import { describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { objectKeys } from "@homarr/common";
 import type { Database } from "@homarr/db";
-import { getPermissionsWithChildren } from "@homarr/definitions";
 import type { GroupPermissionKey } from "@homarr/definitions";
+import { getPermissionsWithChildren } from "@homarr/definitions";
 
 import type { RouterInputs } from "../../..";
 import { dockerRouter } from "../../docker/docker-router";
 
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
+vi.mock("@homarr/request-handler/docker", () => ({
+  dockerContainersRequestHandler: {
+    handler: () => ({
+      getCachedOrUpdatedDataAsync: async () => {
+        return await Promise.resolve({ containers: [] });
+      },
+    }),
+  },
+}));
 vi.mock("@homarr/redis", () => ({
   createCacheChannel: () => ({
     // eslint-disable-next-line @typescript-eslint/require-await
@@ -22,6 +31,7 @@ vi.mock("@homarr/redis", () => ({
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     invalidateAsync: async () => {},
   }),
+  createWidgetOptionsChannel: () => ({}),
 }));
 
 vi.mock("@homarr/docker/env", () => ({
@@ -46,6 +56,7 @@ const validInputs: {
   [key in (typeof procedureKeys)[number]]: RouterInputs["docker"][key];
 } = {
   getContainers: undefined,
+  getContainersStats: undefined,
   startAll: { ids: ["1"] },
   stopAll: { ids: ["1"] },
   restartAll: { ids: ["1"] },
