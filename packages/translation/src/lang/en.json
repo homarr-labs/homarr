@@ -2107,7 +2107,8 @@
           },
           "example": {
             "label": "Example"
-          }
+          },
+          "invalid": "Invalid repository definition, please check the values"
         }
       },
       "not-found": "Not Found",
