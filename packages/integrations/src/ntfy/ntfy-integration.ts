@@ -8,9 +8,14 @@ export class NTFYIntegration extends NotificationsIntegration {
   public async testConnectionAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
-        return await fetchWithTrustedCertificatesAsync(this.url("/v1/account"), {
-          headers: { Authorization: `Bearer ${super.getSecretValue("apiKey")}` },
-        });
+        return await fetchWithTrustedCertificatesAsync(
+          this.url("/v1/account"),
+          this.hasSecretValue("apiKey")
+            ? {
+                headers: { Authorization: `Bearer ${super.getSecretValue("apiKey")}` },
+              }
+            : {},
+        );
       },
     });
   }

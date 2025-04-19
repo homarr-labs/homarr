@@ -171,7 +171,7 @@ export const integrationDefs = {
   },
   ntfy: {
     name: "ntfy",
-    secretKinds: [["apiKey"]],
+    secretKinds: [[], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
     category: ["notifications"],
   },
