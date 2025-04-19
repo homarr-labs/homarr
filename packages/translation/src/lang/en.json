@@ -2108,7 +2108,8 @@
           "label": "Topics",
           "description": "Topic names to use. Do not include the full URL."
         }
-      }
+      },
+      "noItems": "No notifications to display."
     }
   },
   "widgetPreview": {
