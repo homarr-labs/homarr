@@ -13,7 +13,7 @@ export const { componentLoader, definition } = createWidgetDefinition("notificat
       topics: factory.multiText({
         defaultValue: [],
         // https://github.com/binwiederhier/ntfy/blob/630f2957deb670dcacfe0a338091d7561f176b9c/web/src/app/utils.js#L45C22-L45C47
-        validate: z.string().refine((test) => /^([-_a-zA-Z0-9]{1,64})$/.test(test)), // should not contain spaces
+        validate: z.string().refine((test) => /^([-_a-zA-Z0-9]{1,64})$/.test(test)),
       }),
     }));
   },
