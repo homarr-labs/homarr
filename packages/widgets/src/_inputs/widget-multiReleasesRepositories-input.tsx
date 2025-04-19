@@ -63,7 +63,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
     const item = {
       providerKey: "DockerHub",
       identifier: "",
-    };
+    } as ReleasesRepository;
 
     form.setValues((previous) => {
       const previousValues = previous.options?.[property] as ReleasesRepository[];

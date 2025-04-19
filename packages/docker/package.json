@@ -25,14 +25,14 @@
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/env": "workspace:^0.1.0",
-    "dockerode": "^4.0.5"
+    "dockerode": "^4.0.6"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/dockerode": "^3.3.38",
-    "eslint": "^9.24.0",
+    "eslint": "^9.25.0",
     "typescript": "^5.8.3"
   }
 }
