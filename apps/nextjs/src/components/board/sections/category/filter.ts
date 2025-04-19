@@ -1,5 +1,5 @@
 import type { WidgetKind } from "@homarr/definitions";
-import type { SettingsContextProps } from "@homarr/settings";
+import type { SettingsContextProps } from "@homarr/settings/creator";
 import type { WidgetComponentProps } from "@homarr/widgets";
 import { reduceWidgetOptionsWithDefaultValues } from "@homarr/widgets";
 

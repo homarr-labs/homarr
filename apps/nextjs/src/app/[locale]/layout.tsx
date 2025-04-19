@@ -7,6 +7,7 @@ import "@homarr/ui/styles.css";
 import "~/styles/scroll-area.scss";
 
 import { notFound } from "next/navigation";
+import type { DayOfWeek } from "@mantine/dates";
 import { NextIntlClientProvider } from "next-intl";
 
 import { api } from "@homarr/api/server";
@@ -87,7 +88,14 @@ export default async function Layout(props: {
     },
     (innerProps) => (
       <SettingsProvider
-        user={user}
+        user={
+          user
+            ? {
+                ...user,
+                firstDayOfWeek: user.firstDayOfWeek as DayOfWeek,
+              }
+            : null
+        }
         serverSettings={{
           board: {
             homeBoardId: serverSettings.board.homeBoardId,

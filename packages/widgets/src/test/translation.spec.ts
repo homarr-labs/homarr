@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { objectEntries } from "@homarr/common";
-import type { SettingsContextProps } from "@homarr/settings";
+import type { SettingsContextProps } from "@homarr/settings/creator";
 import { createLanguageMapping } from "@homarr/translation";
 
 import { widgetImports } from "..";
