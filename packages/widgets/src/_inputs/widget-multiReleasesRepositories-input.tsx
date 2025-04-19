@@ -43,7 +43,18 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       form.setFieldValue(`options.${property}.${index}.versionFilter`, repository.versionFilter);
       form.setFieldValue(`options.${property}.${index}.iconUrl`, repository.iconUrl);
 
-      return form.validate();
+      const formValidation = form.validate();
+      const fieldErrors: FormErrors = Object.entries(formValidation.errors).reduce((acc, [key, value]) => {
+        if (key.startsWith(`options.${property}.${index}`)) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as FormErrors);
+
+      return {
+        hasErrors: Object.keys(fieldErrors).length > 0,
+        errors: fieldErrors,
+      };
     },
     [form, property],
   );
