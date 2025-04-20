@@ -56,7 +56,7 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
 
       // Redirect to the callback URL if the response is defined and comes from a credentials provider (ldap or credentials). oidc is redirected automatically.
       await revalidatePathActionAsync("/");
-        router.push(callbackUrl);
+      router.push(callbackUrl);
     },
     [t, router, callbackUrl],
   );
