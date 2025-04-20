@@ -14,6 +14,7 @@ import { WidgetError } from "@homarr/widgets/errors";
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
+import itemContentClasses from "./item-content.module.css";
 import { BoardItemMenu } from "./item-menu";
 
 interface BoardItemContentProps {
@@ -57,9 +58,14 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
           left={16}
           size="xs"
           radius={board.itemRadius}
-          color="rgb(from var(--mantine-color-dark-6) r g b / 100%)"
+          styles={{
+            root: {
+              "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+              "--opacity": board.opacity / 100,
+            },
+          }}
+          className={itemContentClasses.badge}
           c="var(--mantine-color-text)"
-          bd="1px solid rgb(from var(--mantine-color-dark-4) r g b / 100%)"
         >
           {item.advancedOptions.title}
         </Badge>
