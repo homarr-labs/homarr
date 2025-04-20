@@ -9,7 +9,7 @@ import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-se
 import type { PlexResponse } from "./interface";
 
 export class PlexIntegration extends Integration {
-  public async getCurrentSessionsAsync(options: CurrentSessionsInput): Promise<StreamSession[]> {
+  public async getCurrentSessionsAsync(_options: CurrentSessionsInput): Promise<StreamSession[]> {
     const token = super.getSecretValue("apiKey");
 
     const response = await fetchWithTrustedCertificatesAsync(this.url("/status/sessions"), {

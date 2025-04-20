@@ -8,7 +8,7 @@ export const mediaServerJob = createCronJob("mediaServer", EVERY_5_SECONDS).with
   createRequestIntegrationJobHandler(mediaServerRequestHandler.handler, {
     widgetKinds: ["mediaServer"],
     getInput: {
-      mediaServer: () => ({}),
+      mediaServer: ({showOnlyPlaying}) => ({showOnlyPlaying}),
     },
   }),
 );
