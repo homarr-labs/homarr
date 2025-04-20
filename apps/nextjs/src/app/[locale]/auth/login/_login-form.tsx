@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Anchor, Button, Card, Code, Collapse, Divider, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { z } from "zod";
@@ -28,6 +28,8 @@ const extendedValidation = userSignInSchema.extend({ provider: z.enum(["credenti
 
 export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, callbackUrl }: LoginFormProps) => {
   const t = useScopedI18n("user");
+  const searchParams = useSearchParams();
+  const isError = searchParams.has("error");
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const form = useZodForm(extendedValidation, {
@@ -47,12 +49,24 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
         throw response.error;
       }
 
+      if (provider === "oidc") {
+        if (!response.url) {
+          showErrorNotification({
+            title: t("action.login.notification.error.title"),
+            message: t("action.login.notification.error.message"),
+            autoClose: 10000,
+          });
+          return;
+        }
+
+        router.push(response.url);
+        return;
+      }
+
       showSuccessNotification({
         title: t("action.login.notification.success.title"),
         message: t("action.login.notification.success.message"),
       });
-
-      if (provider === "oidc") return;
 
       // Redirect to the callback URL if the response is defined and comes from a credentials provider (ldap or credentials). oidc is redirected automatically.
       await revalidatePathActionAsync("/");
@@ -88,11 +102,12 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
   const isLoginInProgress = useRef(false);
 
   useEffect(() => {
+    if (isError) return;
     if (isOidcAutoLoginEnabled && !isPending && !isLoginInProgress.current) {
       isLoginInProgress.current = true;
       void signInAsync("oidc");
     }
-  }, [signInAsync, isOidcAutoLoginEnabled, isPending]);
+  }, [signInAsync, isOidcAutoLoginEnabled, isPending, isError]);
 
   return (
     <Stack gap="xl">
