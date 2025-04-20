@@ -22,6 +22,8 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, in
   const handleSubmit = (values: BoardItemAdvancedOptions) => {
     innerProps.onSuccess({
       ...values,
+      // we want to fallback to null if the title is empty
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       title: values.title?.trim() || null,
     });
     actions.closeModal();

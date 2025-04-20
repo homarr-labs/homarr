@@ -48,7 +48,7 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
       >
         <InnerContent item={item} width={width} height={height} />
       </Card>
-      {item.advancedOptions.title !== null && (
+      {item.advancedOptions.title?.trim() && (
         <Badge
           pos="absolute"
           // It's 4 because of the mantine-react-table that has z-index 3
