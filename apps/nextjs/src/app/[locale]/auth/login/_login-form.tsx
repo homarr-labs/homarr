@@ -15,6 +15,8 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 import { userSignInSchema } from "@homarr/validation/user";
 
+type Provider = "credentials" | "ldap" | "oidc";
+
 interface LoginFormProps {
   providers: string[];
   oidcClientName: string;
@@ -39,8 +41,8 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
   const credentialInputsVisible = providers.includes("credentials") || providers.includes("ldap");
 
   const onSuccess = useCallback(
-    async (response: Awaited<ReturnType<typeof signIn>>) => {
-      if (response && (!response.ok || response.error)) {
+    async (provider: Provider, response: Awaited<ReturnType<typeof signIn>>) => {
+      if (!response.ok || response.error) {
         // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw response.error;
       }
@@ -50,11 +52,11 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
         message: t("action.login.notification.success.message"),
       });
 
+      if (provider === "oidc") return;
+
       // Redirect to the callback URL if the response is defined and comes from a credentials provider (ldap or credentials). oidc is redirected automatically.
-      if (response) {
-        await revalidatePathActionAsync("/");
+      await revalidatePathActionAsync("/");
         router.push(callbackUrl);
-      }
     },
     [t, router, callbackUrl],
   );
@@ -70,14 +72,14 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
   }, [t]);
 
   const signInAsync = useCallback(
-    async (provider: string, options?: Parameters<typeof signIn>[1]) => {
+    async (provider: Provider, options?: Parameters<typeof signIn>[1]) => {
       setIsPending(true);
       await signIn(provider, {
         ...options,
         redirect: false,
         callbackUrl: new URL(callbackUrl, window.location.href).href,
       })
-        .then(onSuccess)
+        .then((response) => onSuccess(provider, response))
         .catch(onError);
     },
     [setIsPending, onSuccess, onError, callbackUrl],
