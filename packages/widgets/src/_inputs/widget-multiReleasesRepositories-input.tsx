@@ -98,7 +98,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       };
     });
   };
-  console.log(form.errors);
+  
   return (
     <Fieldset legend={t("label")}>
       <Stack gap="5">
