@@ -3800,6 +3800,10 @@
         "noResults": {
           "title": "Il n'y a pas encore de certificats"
         },
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
         "expires": "Expire le {when}"
       }
     },

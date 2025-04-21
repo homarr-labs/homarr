@@ -3800,6 +3800,10 @@
         "noResults": {
           "title": "Es gibt noch keine Zertifikate"
         },
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
         "expires": "Gültig bis {when}"
       }
     },

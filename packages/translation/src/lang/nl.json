@@ -3800,6 +3800,10 @@
         "noResults": {
           "title": "Er zijn nog geen certificaten"
         },
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
         "expires": "Verloopt {when}"
       }
     },
