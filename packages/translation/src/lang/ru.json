@@ -3800,6 +3800,10 @@
         "noResults": {
           "title": "Доверенные сертификаты отсутствуют"
         },
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
         "expires": "Истекает {when}"
       }
     },

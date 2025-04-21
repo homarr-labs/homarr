@@ -3800,6 +3800,10 @@
         "noResults": {
           "title": "Det er ingen sertifikater enda"
         },
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
         "expires": "Utløper {when}"
       }
     },
