@@ -1274,8 +1274,8 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0
       '@ctrl/qbittorrent':
-        specifier: ^9.5.2
-        version: 9.5.2
+        specifier: ^9.6.0
+        version: 9.6.0
       '@ctrl/transmission':
         specifier: ^7.2.0
         version: 7.2.0
@@ -2484,8 +2484,8 @@ packages:
     resolution: {integrity: sha512-wENP7LH4BmCjz+gXVq7Nzz20zMjY/huuG7aDk/yu/LhFdC84e/l8222rCIAo0lwhU451lFcJKLcOmtG6TNrBAQ==}
     engines: {node: '>=18'}
 
-  '@ctrl/qbittorrent@9.5.2':
-    resolution: {integrity: sha512-hfArVXAdGmOpCOkSzLBbUpalSniAJkACHk9oH0n/x77WrbF4SlPaRbWtMOzoixoa3hutwBtS5x/zHbOs8Eoj9g==}
+  '@ctrl/qbittorrent@9.6.0':
+    resolution: {integrity: sha512-/8HnjvHEx8tFNhWdtjkPGN+rCpBtNatk0kAFPNe7w4pExKjbpQHsJ3AvItcn1F7j04npn4MzCs5mYP7oBtyYig==}
     engines: {node: '>=18'}
 
   '@ctrl/shared-torrent@6.2.1':
@@ -9979,6 +9979,10 @@ packages:
     resolution: {integrity: sha512-uW9qzd66uyHYxwyVBYiwS4Oi0qZyUqwjU+Oevr6ZogYiXt99EOYtwvzMSLw1c3lYo2HzJsep/NB23iEVEgjG/w==}
     engines: {node: '>=16'}
 
+  type-fest@4.40.0:
+    resolution: {integrity: sha512-ABHZ2/tS2JkvH1PEjxFDTUWC8dB5OsIGZP4IFLhR293GqT5Y5qB1WwL2kMPYhQW9DVgVD8Hd7I8gjwPIf5GFkw==}
+    engines: {node: '>=16'}
+
   type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
@@ -10038,6 +10042,9 @@ packages:
 
   ufo@1.5.4:
     resolution: {integrity: sha512-UsUk3byDzKd04EyoZ7U4DOlxQaD14JUKQl6/P7wiX4FNvUfm3XL246n9W5AmqwW5RSFJ27NAuM0iLscAOYUiGQ==}
+
+  ufo@1.6.1:
+    resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
 
   uglify-js@3.19.3:
     resolution: {integrity: sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ==}
@@ -10918,7 +10925,7 @@ snapshots:
       rfc4648: 1.5.3
       uint8array-extras: 1.4.0
 
-  '@ctrl/qbittorrent@9.5.2':
+  '@ctrl/qbittorrent@9.6.0':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
       '@ctrl/shared-torrent': 6.2.1
@@ -10926,8 +10933,8 @@ snapshots:
       cookie: 1.0.2
       node-fetch-native: 1.6.6
       ofetch: 1.4.1
-      type-fest: 4.39.1
-      ufo: 1.5.4
+      type-fest: 4.40.0
+      ufo: 1.6.1
       uint8array-extras: 1.4.0
 
   '@ctrl/shared-torrent@6.2.1': {}
@@ -19164,6 +19171,8 @@ snapshots:
 
   type-fest@4.39.1: {}
 
+  type-fest@4.40.0: {}
+
   type-is@1.6.18:
     dependencies:
       media-typer: 0.3.0
@@ -19257,6 +19266,8 @@ snapshots:
   uc.micro@2.1.0: {}
 
   ufo@1.5.4: {}
+
+  ufo@1.6.1: {}
 
   uglify-js@3.19.3:
     optional: true
