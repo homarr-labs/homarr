@@ -3800,6 +3800,10 @@
         "noResults": {
           "title": "There are no certificates yet"
         },
+        "invalid": {
+          "title": "Invalid certificate",
+          "description": "Failed to parse certificate"
+        },
         "expires": "Expires {when}"
       }
     },
