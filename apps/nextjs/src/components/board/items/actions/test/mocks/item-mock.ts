@@ -13,6 +13,7 @@ export class ItemMockBuilder {
       layouts: [],
       integrationIds: [],
       advancedOptions: {
+        title: null,
         customCssClasses: [],
         borderColor: "",
       },

@@ -14,6 +14,7 @@ export const integrationSchema = z.object({
 export type BoardItemIntegration = z.infer<typeof integrationSchema>;
 
 export const itemAdvancedOptionsSchema = z.object({
+  title: z.string().max(64).nullable().default(null),
   customCssClasses: z.array(z.string()).default([]),
   borderColor: z.string().default(""),
 });

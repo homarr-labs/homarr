@@ -48,6 +48,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
     options: reduceWidgetOptionsWithDefaultValues(kind, settings, {}),
     integrationIds: [],
     advancedOptions: {
+      title: null,
       customCssClasses: [],
       borderColor: "",
     },

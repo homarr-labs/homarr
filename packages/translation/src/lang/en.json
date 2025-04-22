@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integrations"
         },
+        "title": {
+          "label": "Title"
+        },
         "customCssClasses": {
           "label": "Custom css classes"
         },
