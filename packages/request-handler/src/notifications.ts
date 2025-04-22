@@ -15,6 +15,6 @@ export const notificationsRequestHandler = createCachedIntegrationRequestHandler
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getNotificationsAsync(input.topics);
   },
-  cacheDuration: dayjs.duration(5, "seconds"),
+  cacheDuration: dayjs.duration(30, "seconds"),
   queryKey: "notificationsJobStatus",
 });
