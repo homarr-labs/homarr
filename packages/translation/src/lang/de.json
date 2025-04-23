@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integrationen"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Benutzerdefinierte CSS Klassen"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Aktuelle Media Server Streams",
       "description": "Zeige die aktuellen Streams auf deinen Medienservern an",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Aktuelle Wiedergabe",
         "user": "Benutzer",

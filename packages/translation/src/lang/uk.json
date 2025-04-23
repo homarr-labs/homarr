@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Інтеграції"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Користувацькі css класи"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Поточні потоки медіасервера",
       "description": "Показує поточні потоки з ваших медіасерверів",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "",
         "user": "Користувач",

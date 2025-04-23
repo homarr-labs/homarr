@@ -133,7 +133,9 @@ const optionMapping: OptionMapping = {
     automationId: (oldOptions) => oldOptions.automationId,
     displayName: (oldOptions) => oldOptions.displayName,
   },
-  mediaServer: {},
+  mediaServer: {
+    showOnlyPlaying: () => undefined,
+  },
   indexerManager: {
     openIndexerSiteInNewTab: (oldOptions) => oldOptions.openIndexerSiteInNewTab,
   },

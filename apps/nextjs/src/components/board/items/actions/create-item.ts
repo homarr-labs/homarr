@@ -29,6 +29,7 @@ export const createItemCallback =
       layouts: createItemLayouts(previous, firstSection),
       integrationIds: [],
       advancedOptions: {
+        title: null,
         customCssClasses: [],
         borderColor: "",
       },

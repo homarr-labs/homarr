@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integrations"
         },
+        "title": {
+          "label": "Title"
+        },
         "customCssClasses": {
           "label": "Custom css classes"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Current media server streams",
       "description": "Show the current streams on your media servers",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "Show only currently playing",
+          "description": "Disabling this will not work for plex"
+        }
+      },
       "items": {
         "currentlyPlaying": "Currently playing",
         "user": "User",
@@ -3878,6 +3886,10 @@
         "description": "Used by Homarr to request data from integrations.",
         "noResults": {
           "title": "There are no certificates yet"
+        },
+        "invalid": {
+          "title": "Invalid certificate",
+          "description": "Failed to parse certificate"
         },
         "expires": "Expires {when}"
       }

@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": ""
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": ""
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "",
         "user": "Uživatel",
