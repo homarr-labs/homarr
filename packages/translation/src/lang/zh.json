@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "集成"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "自定義 CSS html"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "當前多媒體伺服器串流",
       "description": "顯示當前多媒體伺服器的串流",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "目前播放中",
         "user": "使用者",

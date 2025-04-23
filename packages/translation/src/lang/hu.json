@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integrációk"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Egyedi css osztályok"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "",
         "user": "",
