@@ -71,7 +71,7 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",
     "flag-icons": "^7.3.2",
-    "glob": "^11.0.1",
+    "glob": "^11.0.2",
     "jotai": "^2.12.3",
     "mantine-react-table": "2.0.0-beta.9",
     "next": "15.3.1",
