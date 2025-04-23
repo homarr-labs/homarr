@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "集成"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "自定义 CSS 类"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "当前媒体服务流",
       "description": "显示媒体服务器上的当前流",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "正在播放",
         "user": "用户",

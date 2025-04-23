@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Intégrations"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Classes CSS personnalisées"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Flux du serveur multimédia actuel",
       "description": "Afficher les flux en cours sur vos serveurs de multimédia",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "En cours de lecture",
         "user": "Utilisateur",

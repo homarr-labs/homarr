@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Entegrasyonlar"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Özel CSS Alanı"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Güncel Medya Sunucusu Akışları",
       "description": "Medya sunucularınızdaki mevcut akışları gösterin",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Şuan Oynatılan",
         "user": "Kullanıcı",
@@ -3801,8 +3809,8 @@
           "title": "Henüz sertifika yok"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Geçersiz sertifika",
+          "description": "Sertifika ayrıştırılamadı"
         },
         "expires": "{when} süresi doluyor"
       }

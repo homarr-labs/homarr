@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Интеграции"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Пользовательские CSS классы"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Активные просмотры",
       "description": "Отображает текущие сеансы воспроизведения на медиасерверах",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "",
         "user": "Пользователь",
