@@ -1,4 +1,4 @@
-import { Card } from "@mantine/core";
+import { Badge, Card } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import combineClasses from "clsx";
@@ -14,6 +14,7 @@ import { WidgetError } from "@homarr/widgets/errors";
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import classes from "../sections/item.module.css";
 import { useItemActions } from "./item-actions";
+import itemContentClasses from "./item-content.module.css";
 import { BoardItemMenu } from "./item-menu";
 
 interface BoardItemContentProps {
@@ -25,28 +26,51 @@ export const BoardItemContent = ({ item }: BoardItemContentProps) => {
   const board = useRequiredBoard();
 
   return (
-    <Card
-      ref={ref}
-      className={combineClasses(
-        classes.itemCard,
-        `${item.kind}-wrapper`,
-        "grid-stack-item-content",
-        item.advancedOptions.customCssClasses.join(" "),
+    <>
+      <Card
+        ref={ref}
+        className={combineClasses(
+          classes.itemCard,
+          `${item.kind}-wrapper`,
+          "grid-stack-item-content",
+          item.advancedOptions.customCssClasses.join(" "),
+        )}
+        radius={board.itemRadius}
+        withBorder
+        styles={{
+          root: {
+            "--opacity": board.opacity / 100,
+            containerType: "size",
+            overflow: item.kind === "iframe" ? "hidden" : undefined,
+            "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+          },
+        }}
+        p={0}
+      >
+        <InnerContent item={item} width={width} height={height} />
+      </Card>
+      {item.advancedOptions.title?.trim() && (
+        <Badge
+          pos="absolute"
+          // It's 4 because of the mantine-react-table that has z-index 3
+          style={{ zIndex: 4 }}
+          top={2}
+          left={16}
+          size="xs"
+          radius={board.itemRadius}
+          styles={{
+            root: {
+              "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
+              "--opacity": board.opacity / 100,
+            },
+          }}
+          className={itemContentClasses.badge}
+          c="var(--mantine-color-text)"
+        >
+          {item.advancedOptions.title}
+        </Badge>
       )}
-      radius={board.itemRadius}
-      withBorder
-      styles={{
-        root: {
-          "--opacity": board.opacity / 100,
-          containerType: "size",
-          overflow: item.kind === "iframe" ? "hidden" : undefined,
-          "--border-color": item.advancedOptions.borderColor !== "" ? item.advancedOptions.borderColor : undefined,
-        },
-      }}
-      p={0}
-    >
-      <InnerContent item={item} width={width} height={height} />
-    </Card>
+    </>
   );
 };
 

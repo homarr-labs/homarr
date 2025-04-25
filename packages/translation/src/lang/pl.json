@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integracje"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Niestandardowe klasy CSS"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Bieżące strumienie serwera multimediów",
       "description": "Pokaż bieżące strumienie na serwerach multimedialnych",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "",
         "user": "Użytkownik",
@@ -3799,6 +3807,10 @@
         "description": "",
         "noResults": {
           "title": ""
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": ""
       }
