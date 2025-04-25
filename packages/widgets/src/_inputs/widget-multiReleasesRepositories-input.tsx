@@ -3,7 +3,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { ActionIcon, Button, Divider, Fieldset, Group, Select, Stack, Text, TextInput } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconTrash, IconTriangleFilled } from "@tabler/icons-react";
 import { escapeForRegEx } from "@tiptap/react";
 
 import { IconPicker } from "@homarr/forms-collection";
@@ -43,7 +43,18 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       form.setFieldValue(`options.${property}.${index}.versionFilter`, repository.versionFilter);
       form.setFieldValue(`options.${property}.${index}.iconUrl`, repository.iconUrl);
 
-      return form.validate();
+      const formValidation = form.validate();
+      const fieldErrors: FormErrors = Object.entries(formValidation.errors).reduce((acc, [key, value]) => {
+        if (key.startsWith(`options.${property}.${index}.`)) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as FormErrors);
+
+      return {
+        hasErrors: Object.keys(fieldErrors).length > 0,
+        errors: fieldErrors,
+      };
     },
     [form, property],
   );
@@ -52,7 +63,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
     const item = {
       providerKey: "DockerHub",
       identifier: "",
-    };
+    } as ReleasesRepository;
 
     form.setValues((previous) => {
       const previousValues = previous.options?.[property] as ReleasesRepository[];
@@ -63,6 +74,15 @@ export const WidgetMultiReleasesRepositoriesInput = ({
           [property]: [...previousValues, item],
         },
       };
+    });
+
+    const index = repositories.length;
+
+    openModal({
+      fieldPath: `options.${property}.${index}`,
+      repository: item,
+      onRepositorySave: (saved) => onRepositorySave(saved, index),
+      versionFilterPrecisionOptions,
     });
   };
 
@@ -132,7 +152,14 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                   <IconTrash size={15} />
                 </ActionIcon>
               </Group>
-
+              {Object.keys(form.errors).filter((key) => key.startsWith(`options.${property}.${index}.`)).length > 0 && (
+                <Group align="center" justify="center" gap="xs" bg="red.1">
+                  <IconTriangleFilled size={15} color="var(--mantine-color-red-filled)" />
+                  <Text size="sm" c="red">
+                    {tRepository("invalid")}
+                  </Text>
+                </Group>
+              )}
               <Divider my="sm" size="xs" mt={5} mb={5} />
             </Stack>
           );
@@ -281,7 +308,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
       <Divider my={"sm"} />
       <Group justify="flex-end">
-        <Button variant="default" onClick={actions.closeModal}>
+        <Button variant="default" onClick={actions.closeModal} color="gray.5">
           {tRepository("editForm.cancel.label")}
         </Button>
 
