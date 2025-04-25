@@ -20649,7 +20649,7 @@ snapshots:
   zod-openapi@2.19.0(zod@3.24.3):
     dependencies:
       zod: 3.24.3
-      
+
   zod@3.24.3: {}
 
   zwitch@2.0.4: {}
