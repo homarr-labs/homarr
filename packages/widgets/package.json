@@ -33,6 +33,7 @@
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
+    "@homarr/forms-collection": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/modals": "workspace:^0.1.0",
     "@homarr/modals-collection": "workspace:^0.1.0",
@@ -69,6 +70,7 @@
     "next": "15.3.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-markdown": "^10.1.0",
     "recharts": "^2.15.3",
     "video.js": "^8.22.0",
     "zod": "^3.24.3"

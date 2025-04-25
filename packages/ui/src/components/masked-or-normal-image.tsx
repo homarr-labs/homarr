@@ -6,7 +6,7 @@ import type { Property } from "csstype";
 import { MaskedImage } from "./masked-image";
 
 interface MaskedOrNormalImageProps {
-  imageUrl: string;
+  imageUrl?: string;
   hasColor?: boolean;
   color?: MantineColor;
   alt?: string;
