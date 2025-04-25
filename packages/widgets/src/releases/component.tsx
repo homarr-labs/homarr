@@ -56,6 +56,14 @@ function isDateWithin(date: Date, relativeDate: string): boolean {
   }
 }
 
+function chunkArray<T>(array: T[], size: number): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size));
+  }
+  return chunks;
+}
+
 export default function ReleasesWidget({ options }: WidgetComponentProps<"releases">) {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
@@ -64,24 +72,22 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const [expandedRepository, setExpandedRepository] = useState({ providerKey: "", identifier: "" });
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
 
-  const [results] = clientApi.widget.releases.getLatest.useSuspenseQuery(
-    {
-      repositories: options.repositories.map((repository) => ({
-        providerKey: repository.providerKey,
-        identifier: repository.identifier,
-        versionFilter: repository.versionFilter,
-      })),
-    },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
+  const batchedRepositories = useMemo(() => chunkArray(options.repositories, 5), [options.repositories]);
+  const [results] = clientApi.useSuspenseQueries((t) =>
+    batchedRepositories.flatMap((chunk) =>
+      t.widget.releases.getLatest({
+        repositories: chunk.map((repository) => ({
+          providerKey: repository.providerKey,
+          identifier: repository.identifier,
+          versionFilter: repository.versionFilter,
+        })),
+      }),
+    ),
   );
 
   const repositories = useMemo(() => {
     return results
+      .flat()
       .map(({ data }) => {
         if (data === undefined) return undefined;
 
@@ -387,7 +393,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
               {t("error.label")}
             </Title>
             <Text size="xs" ff="monospace" c="red" style={{ whiteSpace: "pre-wrap" }}>
-              {repository.error.code  ? t(`error.options.${repository.error.code}` as never) : repository.error.message}
+              {repository.error.code ? t(`error.options.${repository.error.code}` as never) : repository.error.message}
             </Text>
           </>
         )}
