@@ -2130,7 +2130,12 @@
       "openReleasePage": "Open Release Page",
       "releaseDescription": "Release Description",
       "created": "Created",
-      "error": "Error"
+      "error": {
+        "label": "Error",
+        "options": {
+          "noMatchingVersion": "No matching version found"
+        }
+      }
     },
     "networkControllerSummary": {
       "option": {},

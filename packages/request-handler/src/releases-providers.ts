@@ -301,7 +301,12 @@ const _releasesSchema = z.object({
   releaseUrl: z.string(),
   releaseDescription: z.string(),
   isPreRelease: z.boolean(),
-  errorMessage: z.string().optional(),
+  error: z
+    .object({
+      code: z.string().optional(),
+      message: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type DetailsResponse = z.infer<typeof _detailsSchema>;

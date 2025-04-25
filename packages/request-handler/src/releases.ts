@@ -8,6 +8,13 @@ import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-ha
 import { Providers } from "./releases-providers";
 import type { DetailsResponse } from "./releases-providers";
 
+const _errorSchema = z.object({
+  code: z.string().optional(),
+  message: z.string().optional(),
+});
+
+type ReleasesError = z.infer<typeof _errorSchema>;
+
 const _reponseSchema = z.object({
   identifier: z.string(),
   providerKey: z.string(),
@@ -24,10 +31,10 @@ const _reponseSchema = z.object({
   starsCount: z.number().optional(),
   openIssues: z.number().optional(),
   forksCount: z.number().optional(),
-  errorMessage: z.string().optional(),
+  error: _errorSchema.optional(),
 });
 
-const formatErrorRelease = (identifier: string, providerKey: string, errorMessage: string) => ({
+const formatErrorRelease = (identifier: string, providerKey: string, error: ReleasesError) => ({
   identifier,
   providerKey,
   latestRelease: undefined,
@@ -43,7 +50,7 @@ const formatErrorRelease = (identifier: string, providerKey: string, errorMessag
   starsCount: undefined,
   openIssues: undefined,
   forksCount: undefined,
-  errorMessage,
+  error,
 });
 
 export const releasesRequestHandler = createCachedWidgetRequestHandler({
@@ -78,11 +85,9 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
     const releasesResult = provider.parseReleasesResponse(releasesResponseJson);
 
     if (!releasesResult.success) {
-      return formatErrorRelease(
-        input.identifier,
-        input.providerKey,
-        releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
-      );
+      return formatErrorRelease(input.identifier, input.providerKey, {
+        message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
+      });
     } else {
       const releases = releasesResult.data.filter((result) =>
         input.versionRegex ? new RegExp(input.versionRegex).test(result.latestRelease) : true,
@@ -90,7 +95,7 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
 
       const latest =
         releases.length === 0
-          ? formatErrorRelease(input.identifier, input.providerKey, "Could not find any releases for version filter")
+          ? formatErrorRelease(input.identifier, input.providerKey, { code: "noMatchingVersion" })
           : releases.reduce(
               (latest, result) => {
                 return {
@@ -116,7 +121,6 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
                 starsCount: 0,
                 openIssues: 0,
                 forksCount: 0,
-                errorMessage: "",
               },
             );
 

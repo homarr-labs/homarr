@@ -107,7 +107,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
       .filter(
         (repository) =>
           repository !== undefined &&
-          (repository.errorMessage !== undefined ||
+          (repository.error !== undefined ||
             !options.showOnlyHighlighted ||
             repository.isNewRelease ||
             repository.isStaleRelease),
@@ -145,7 +145,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         const isActive =
           expandedRepository.providerKey === repository.providerKey &&
           expandedRepository.identifier === repository.identifier;
-        const hasError = repository.errorMessage !== undefined;
+        const hasError = repository.error !== undefined;
 
         return (
           <Stack
@@ -180,7 +180,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                   events={{ hover: repository.latestRelease !== undefined, focus: false, touch: false }}
                 >
                   <Text size="xs" fw={700} truncate="end" c={hasError ? "red" : "text"} style={{ flexShrink: 1 }}>
-                    {hasError ? t("error") : (repository.latestRelease ?? t("not-found"))}
+                    {hasError ? t("error.label") : (repository.latestRelease ?? t("not-found"))}
                   </Text>
                 </Tooltip>
               </Group>
@@ -380,14 +380,14 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             </Button>
           </>
         )}
-        {repository.errorMessage && (
+        {repository.error && (
           <>
             <Divider my={10} mx="30%" />
             <Title order={4} ta="center">
-              {t("error")}
+              {t("error.label")}
             </Title>
             <Text size="xs" ff="monospace" c="red" style={{ whiteSpace: "pre-wrap" }}>
-              {repository.errorMessage}
+              {repository.error.code  ? t(`error.options.${repository.error.code}` as never) : repository.error.message}
             </Text>
           </>
         )}
