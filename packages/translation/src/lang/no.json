@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integrasjoner"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Egendefinerte css-klasser"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Pågående medieserver-strømmer",
       "description": "Vis pågående strømmer på dine media-servere",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Spilles nå",
         "user": "Bruker",
@@ -3799,6 +3807,10 @@
         "description": "Brukes av Homarr for å be om data fra integrasjoner.",
         "noResults": {
           "title": "Det er ingen sertifikater enda"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "Utløper {when}"
       }

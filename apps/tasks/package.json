@@ -10,7 +10,7 @@
   "main": "./src/main.ts",
   "types": "./src/main.ts",
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --platform=node --loader:.scss=text --external:@opentelemetry/api --outfile=tasks.cjs",
+    "build": "esbuild src/main.ts --bundle --platform=node --loader:.scss=text --external:@opentelemetry/api --external:http-cookie-agent --outfile=tasks.cjs",
     "clean": "rm -rf .turbo node_modules",
     "dev": "pnpm with-env tsx ./src/main.ts",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -44,9 +44,9 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^22.14.1",
+    "@types/node": "^22.15.2",
     "dotenv-cli": "^8.0.0",
-    "eslint": "^9.25.0",
+    "eslint": "^9.25.1",
     "prettier": "^3.5.3",
     "tsx": "4.19.3",
     "typescript": "^5.8.3"

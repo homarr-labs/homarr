@@ -29,7 +29,7 @@ export const loadCustomRootCertificatesAsync = async () => {
   const dirContent = await fs.readdir(folder);
   return await Promise.all(
     dirContent
-      .filter((file) => file.endsWith(".crt"))
+      .filter((file) => file.endsWith(".crt") || file.endsWith(".pem"))
       .map(async (file) => ({
         content: await fs.readFile(path.join(folder, file), "utf8"),
         fileName: file,
