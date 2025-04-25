@@ -13,8 +13,6 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     const client = await this.createControllerClientAsync();
     const stats = await client.getSitesStats();
 
-    logger.warn("Found stats: " + JSON.stringify(stats, null, 2));
-
     return {
       wanStatus: this.getStatusValueOverAllSites(stats, "wan", (site) => site.status === "ok"),
       www: {
@@ -50,8 +48,6 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     const port = Number.isInteger(portString) ? Number(portString) : undefined;
     const hostname = new URL(this.integration.url).hostname;
     const url = port === undefined ? `https://${hostname}/` : `https://${hostname}:${port}/`;
-
-    logger.warn(`Constructed URL: ${url}`);
 
     const client = new Controller({
       host: hostname,
