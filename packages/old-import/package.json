@@ -37,8 +37,8 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^7.17.4",
-    "@mantine/hooks": "^7.17.4",
+    "@mantine/core": "^7.17.5",
+    "@mantine/hooks": "^7.17.5",
     "adm-zip": "0.5.16",
     "next": "15.3.1",
     "react": "19.1.0",
@@ -52,7 +52,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/adm-zip": "0.5.7",
-    "eslint": "^9.25.0",
+    "eslint": "^9.25.1",
     "typescript": "^5.8.3"
   }
 }

@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integrationer"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Brugerdefinerede CSS-klasser"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Aktuelle medieserver streams",
       "description": "Vis de aktuelle streams på dine medieservere",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Afspiller lige nu",
         "user": "Bruger",
@@ -3799,6 +3807,10 @@
         "description": "Brugt af Homarr til at anmode om data fra integrationer.",
         "noResults": {
           "title": "Der er endnu ingen certifikater"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "Udløber {when}"
       }

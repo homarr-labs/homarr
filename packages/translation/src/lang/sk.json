@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integrácie"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Vlastné css triedy"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Aktuálne streamy mediálneho servera",
       "description": "Zobrazte aktuálne streamy na vašich mediálnych serveroch",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "",
         "user": "Používateľ",
@@ -3799,6 +3807,10 @@
         "description": "",
         "noResults": {
           "title": ""
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": ""
       }

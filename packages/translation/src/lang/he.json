@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "אינטגרציות"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "מחלקות עיצוב מותאמות אישית"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "זרמי שרת מדיה נוכחיים",
       "description": "הצג את הזרמים הנוכחיים בשרתי המדיה שלך",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "מתנגן כרגע",
         "user": "משתמש",
@@ -3799,6 +3807,10 @@
         "description": "נעשה שימוש ב-Homarr כדי לבקש נתונים מאינטגרציות.",
         "noResults": {
           "title": "אין עדיין תעודות אבטחה"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "פג ב- {when}"
       }

@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integraties"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Aangepaste CSS-classes"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Huidige mediaserver streams",
       "description": "De huidige streams op je mediaservers weergeven",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Momenteel aan het afspelen",
         "user": "Gebruiker",
@@ -3799,6 +3807,10 @@
         "description": "Gebruikt door Homarr om gegevens op te vragen van integraties.",
         "noResults": {
           "title": "Er zijn nog geen certificaten"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "Verloopt {when}"
       }
