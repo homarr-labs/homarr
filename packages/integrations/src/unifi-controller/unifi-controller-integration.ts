@@ -1,8 +1,6 @@
 import type { SiteStats } from "node-unifi";
 import { Controller } from "node-unifi";
 
-import { logger } from "@homarr/log";
-
 import { Integration } from "../base/integration";
 import type { NetworkControllerSummaryIntegration } from "../interfaces/network-controller-summary/network-controller-summary-integration";
 import type { NetworkControllerSummary } from "../interfaces/network-controller-summary/network-controller-summary-types";
@@ -47,7 +45,6 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     const portString = new URL(this.integration.url).port;
     const port = Number.isInteger(portString) ? Number(portString) : undefined;
     const hostname = new URL(this.integration.url).hostname;
-    const url = port === undefined ? `https://${hostname}/` : `https://${hostname}:${port}/`;
 
     const client = new Controller({
       host: hostname,
