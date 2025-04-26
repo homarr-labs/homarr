@@ -61,8 +61,7 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
 
     if (!provider) return undefined;
 
-    let detailsResult: DetailsResponse = undefined;
-
+    let detailsResult: DetailsResponse;
     const detailsUrl = provider.getDetailsUrl(input.identifier);
     if (detailsUrl !== undefined) {
       const detailsResponse = await fetchWithTimeout(detailsUrl);
@@ -71,6 +70,7 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
       if (parsedDetails?.success) {
         detailsResult = parsedDetails.data;
       } else {
+        detailsResult = undefined;
         logger.warn("Failed to parse details response", {
           provider: input.providerKey,
           identifier: input.identifier,
