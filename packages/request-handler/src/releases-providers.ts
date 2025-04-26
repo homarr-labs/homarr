@@ -80,7 +80,7 @@ export const Providers: ProvidersProps = {
       return z
         .object({
           html_url: z.string(),
-          description: z.string(),
+          description: z.string().nullable(),
           fork: z.boolean(),
           archived: z.boolean(),
           created_at: z.string().transform((value) => new Date(value)),
@@ -90,7 +90,7 @@ export const Providers: ProvidersProps = {
         })
         .transform((resp) => ({
           projectUrl: resp.html_url,
-          projectDescription: resp.description,
+          projectDescription: resp.description ?? undefined,
           isFork: resp.fork,
           isArchived: resp.archived,
           createdAt: resp.created_at,
@@ -111,7 +111,7 @@ export const Providers: ProvidersProps = {
               tag_name: z.string(),
               published_at: z.string().transform((value) => new Date(value)),
               html_url: z.string(),
-              body: z.string(),
+              body: z.string().nullable(),
               prerelease: z.boolean(),
             })
             .transform((tag) => ({
@@ -119,7 +119,7 @@ export const Providers: ProvidersProps = {
               latestRelease: tag.tag_name,
               latestReleaseAt: tag.published_at,
               releaseUrl: tag.html_url,
-              releaseDescription: tag.body,
+              releaseDescription: tag.body ?? undefined,
               isPreRelease: tag.prerelease,
             })),
         )
@@ -135,17 +135,17 @@ export const Providers: ProvidersProps = {
         .object({
           web_url: z.string(),
           description: z.string(),
-          forked_from_project: z.object({ id: z.number() }).nullable(),
-          archived: z.boolean(),
+          forked_from_project: z.object({ id: z.number() }).optional(),
+          archived: z.boolean().optional(),
           created_at: z.string().transform((value) => new Date(value)),
           star_count: z.number(),
-          open_issues_count: z.number(),
+          open_issues_count: z.number().optional(),
           forks_count: z.number(),
         })
         .transform((resp) => ({
           projectUrl: resp.web_url,
           projectDescription: resp.description,
-          isFork: resp.forked_from_project !== null,
+          isFork: resp.forked_from_project !== undefined,
           isArchived: resp.archived,
           createdAt: resp.created_at,
           starsCount: resp.star_count,

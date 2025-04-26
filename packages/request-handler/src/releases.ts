@@ -71,7 +71,7 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
         detailsResult = parsedDetails.data;
       } else {
         detailsResult = undefined;
-        logger.warn("Failed to parse details response", {
+        logger.warn(`Failed to parse details response for ${input.identifier} on ${input.providerKey}`, {
           provider: input.providerKey,
           identifier: input.identifier,
           detailsUrl,
