@@ -90,7 +90,7 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
       });
     } else {
       const releases = releasesResult.data.filter((result) =>
-        input.versionRegex ? new RegExp(input.versionRegex).test(result.latestRelease) : true,
+        input.versionRegex && result.latestRelease ? new RegExp(input.versionRegex).test(result.latestRelease) : true,
       );
 
       const latest =
@@ -110,17 +110,6 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
                 providerKey: "",
                 latestRelease: "",
                 latestReleaseAt: new Date(0),
-                releaseUrl: "",
-                releaseDescription: "",
-                isPreRelease: false,
-                projectUrl: "",
-                projectDescription: "",
-                isFork: false,
-                isArchived: false,
-                createdAt: new Date(0),
-                starsCount: 0,
-                openIssues: 0,
-                forksCount: 0,
               },
             );
 
