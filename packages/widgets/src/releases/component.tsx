@@ -141,7 +141,6 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 [classes.active ?? ""]: isActive,
               })}
               p="xs"
-              wrap="nowrap"
               onClick={() => toggleExpandedRepository(repository.identifier)}
             >
               <MaskedOrNormalImage
@@ -153,7 +152,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 }}
               />
 
-              <Group gap={5} justify="space-between" style={{ flex: 1, minWidth: 0 }} wrap="nowrap">
+              <Group gap={5} justify="space-between" style={{ flex: 1}}>
                 <Text size="xs">{repository.identifier}</Text>
 
                 <Tooltip label={repository.latestRelease ?? t("not-found")}>
@@ -163,7 +162,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 </Tooltip>
               </Group>
 
-              <Group gap={5} wrap="nowrap">
+              <Group gap={5} >
                 <Text
                   size="xs"
                   c={repository.isNewRelease ? "primaryColor" : repository.isStaleRelease ? "secondaryColor" : "dimmed"}
