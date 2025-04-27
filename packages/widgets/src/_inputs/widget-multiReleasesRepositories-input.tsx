@@ -40,6 +40,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
     (repository: ReleasesRepository, index: number): FormValidation => {
       form.setFieldValue(`options.${property}.${index}.providerKey`, repository.providerKey);
       form.setFieldValue(`options.${property}.${index}.identifier`, repository.identifier);
+      form.setFieldValue(`options.${property}.${index}.name`, repository.name);
       form.setFieldValue(`options.${property}.${index}.versionFilter`, repository.versionFilter);
       form.setFieldValue(`options.${property}.${index}.iconUrl`, repository.iconUrl);
 
@@ -123,7 +124,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
 
                 <Group justify="space-between" align="center" style={{ flex: 1 }} gap={5}>
                   <Text size="sm" style={{ flex: 1, whiteSpace: "nowrap" }}>
-                    {repository.identifier}
+                    {repository.name ?? repository.identifier}
                   </Text>
 
                   <Text c="dimmed" size="xs" ta="end" style={{ flex: 1, whiteSpace: "nowrap" }}>
@@ -178,6 +179,11 @@ const formatVersionFilterRegex = (versionFilter: ReleasesVersionFilter | undefin
   return `^${escapedPrefix}${precision}${escapedSuffix}$`;
 };
 
+const formatIdentifierName = (identifier: string) => {
+  const unformattedName = identifier.split("/").pop();
+  return unformattedName?.replace(/[-_]/g, " ").replace(/(?:^\w|[A-Z]|\b\w)/g, (char) => char.toUpperCase()) ?? "";
+};
+
 interface ReleaseEditProps {
   fieldPath: string;
   repository: ReleasesRepository;
@@ -209,7 +215,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
   return (
     <Stack>
-      <Group align="center">
+      <Group align="center" wrap="nowrap">
         <Select
           withAsterisk
           label={tRepository("provider.label")}
@@ -224,6 +230,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
               handleChange({ providerKey: value });
             }
           }}
+          style={{ flex: 1, flexBasis: "40%" }}
         />
 
         <TextInput
@@ -231,10 +238,38 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
           label={tRepository("identifier.label")}
           value={tempRepository.identifier}
           onChange={(event) => {
-            handleChange({ identifier: event.currentTarget.value });
+            const name =
+              tempRepository.name === undefined ||
+              formatIdentifierName(tempRepository.identifier) === tempRepository.name
+                ? formatIdentifierName(event.currentTarget.value)
+                : tempRepository.name;
+
+            handleChange({
+              identifier: event.currentTarget.value,
+              name,
+            });
           }}
           error={formErrors[`${innerProps.fieldPath}.identifier`]}
-          style={{ flex: 1 }}
+          style={{ width: "100%" }}
+        />
+      </Group>
+
+      <Group align="center" wrap="nowrap">
+        <TextInput
+          label={tRepository("name.label")}
+          value={tempRepository.name ?? ""}
+          onChange={(event) => {
+            handleChange({ name: event.currentTarget.value });
+          }}
+          error={formErrors[`${innerProps.fieldPath}.name`]}
+          style={{ flex: 1, flexBasis: "40%" }}
+        />
+
+        <IconPicker
+          withAsterisk={false}
+          value={tempRepository.iconUrl}
+          onChange={(url) => handleChange({ iconUrl: url })}
+          error={formErrors[`${innerProps.fieldPath}.iconUrl`] as string}
         />
       </Group>
 
@@ -297,13 +332,6 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
             tRepository("versionFilter.precision.options.none")}
         </Text>
       </Fieldset>
-
-      <IconPicker
-        withAsterisk={false}
-        value={tempRepository.iconUrl}
-        onChange={(url) => handleChange({ iconUrl: url })}
-        error={formErrors[`${innerProps.fieldPath}.iconUrl`] as string}
-      />
 
       <Divider my={"sm"} />
       <Group justify="flex-end">

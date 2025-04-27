@@ -31,12 +31,18 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       showDetails: factory.switch({
         defaultValue: true,
       }),
+      topReleases: factory.number({
+        withDescription: true,
+        defaultValue: 0,
+        validate: z.number().min(0),
+      }),
       repositories: factory.multiReleasesRepositories({
         defaultValue: [],
         validate: z.array(
           z.object({
             providerKey: z.string().min(1),
             identifier: z.string().min(1),
+            name: z.string().optional(),
             versionFilter: z
               .object({
                 prefix: z.string().optional(),

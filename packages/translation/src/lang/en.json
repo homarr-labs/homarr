@@ -2071,6 +2071,10 @@
         "showDetails": {
           "label": "Show Details"
         },
+        "topReleases": {
+          "label": "Top Releases",
+          "description": "The max number of latest releases to show. Zero means no limit."
+        },
         "repositories": {
           "label": "Repositories",
           "addRRepository": {
@@ -2082,6 +2086,9 @@
           "identifier": {
             "label": "Identifier",
             "placeholder": "Name or Owner/Name"
+          },
+          "name": {
+            "label": "Name"
           },
           "versionFilter": {
             "label": "Version Filter",

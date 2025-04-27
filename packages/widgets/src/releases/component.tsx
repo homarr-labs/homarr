@@ -99,6 +99,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 
         return {
           ...data,
+          name: repository.name,
           iconUrl: repository.iconUrl,
           isNewRelease:
             options.newReleaseWithin !== "" && data.latestReleaseAt
@@ -122,13 +123,18 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         if (repoA?.latestReleaseAt === undefined) return 1;
         if (repoB?.latestReleaseAt === undefined) return -1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
-      }) as ReleasesRepositoryResponse[];
+      })
+      .slice(
+        0,
+        typeof options.topReleases !== "string" && options.topReleases > 0 ? options.topReleases : undefined,
+      ) as ReleasesRepositoryResponse[];
   }, [
     results,
     options.repositories,
     options.showOnlyHighlighted,
     options.newReleaseWithin,
     options.staleReleaseWithin,
+    options.topReleases,
   ]);
 
   const toggleExpandedRepository = useCallback(
@@ -177,7 +183,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
               />
 
               <Group gap={5} justify="space-between" style={{ flex: 1, minWidth: 0 }} wrap="nowrap">
-                <Text size="xs">{repository.identifier}</Text>
+                <Text size="xs">{repository.name ?? repository.identifier}</Text>
 
                 <Tooltip
                   withArrow
@@ -371,6 +377,9 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             </Text>
           )}
         </Group>
+        <Text size="xs" c="iconColor" ff="monospace">
+          {repository.identifier}
+        </Text>
         {(repository.releaseUrl ?? repository.projectUrl) && (
           <>
             <Divider my={10} mx="30%" />
