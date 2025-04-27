@@ -4,7 +4,7 @@
       "start": {
         "title": "Bienvenido a Homarr",
         "subtitle": "",
-        "description": "",
+        "description": "Para empezar, por favor, seleccione cómo desea configurar su instancia de Homarr.",
         "action": {
           "scratch": "Empezar de cero",
           "importOldmarr": "Importar de Homarr antes de 1.0"
@@ -12,14 +12,14 @@
       },
       "import": {
         "title": "Importar datos",
-        "subtitle": "",
+        "subtitle": "Puede importar datos de una instancia de Homarr existente.",
         "dropzone": {
           "title": "Arrastre el archivo zip aquí o haga clic para navegar",
           "description": "El zip subido será procesado y podrás seleccionar lo que quieres importar"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Modificar el archivo"
           }
         },
         "importSettings": {
@@ -35,7 +35,7 @@
           }
         },
         "summary": {
-          "title": "",
+          "title": "Importar resumen",
           "description": "",
           "action": {
             "import": ""
@@ -43,32 +43,32 @@
           "entities": {
             "apps": "Aplicaciones",
             "boards": "Tableros",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "Integraciones",
+            "credentialUsers": "Credenciales de usuarios"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Introducir token de importación",
           "field": {
             "token": {
-              "label": "",
-              "description": ""
+              "label": "Token",
+              "description": "Introduzca el token de importación mostrado de su instancia anterior de homarr"
             }
           },
           "notification": {
             "error": {
-              "title": "",
+              "title": "Token invalido",
               "message": ""
             }
           }
         }
       },
       "user": {
-        "title": "",
+        "title": "Usuario administrador",
         "subtitle": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Usuario creado",
             "message": ""
           },
           "error": {
@@ -102,7 +102,7 @@
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Volver al inicio"
   },
   "user": {
     "title": "Usuarios",
@@ -118,14 +118,14 @@
         "description": ""
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Nueva instalación de Homarr",
+        "subtitle": "Por favor, cree el usuario administrador principal"
       }
     },
     "field": {
       "email": {
         "label": "Correo electrónico",
-        "verified": ""
+        "verified": "Verificado"
       },
       "username": {
         "label": "Nombre de usuario"
@@ -133,7 +133,7 @@
       "password": {
         "label": "Contraseña",
         "requirement": {
-          "length": "",
+          "length": "Incluye al menos 8 caracteres",
           "lowercase": "Incluye letra minúscula",
           "uppercase": "Incluye letra mayúscula",
           "number": "Incluye número",
@@ -144,13 +144,13 @@
         "label": "Confirmar contraseña"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Contraseña anterior"
       },
       "homeBoard": {
         "label": ""
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Usar iconos para pings"
       },
       "defaultSearchEngine": {
         "label": ""
@@ -177,8 +177,8 @@
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "¿Ha olvidado su contraseña?",
+          "description": "Un administrador puede usar el siguiente comando para restablecer su contraseña:"
         }
       },
       "register": {
@@ -186,20 +186,20 @@
         "notification": {
           "success": {
             "title": "Cuenta creada",
-            "message": ""
+            "message": "Por favor, inicia sesión para continuar"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Ocurrió un error al crear la cuenta",
+            "message": "No se ha podido crear la cuenta"
           }
         }
       },
       "create": "Crear usuario",
       "changePassword": {
-        "label": "",
+        "label": "Cambiar contraseña",
         "notification": {
           "success": {
-            "message": ""
+            "message": "La contraseña ha sido cambiada correctamente"
           },
           "error": {
             "message": ""
@@ -254,17 +254,17 @@
               "message": ""
             },
             "error": {
-              "message": ""
+              "message": "No se puede cambiar la imagen"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "La imagen es demasiado grande",
+              "message": "El tamaño máximo de la imagen es {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Eliminar imágen",
+          "confirm": "Por favor, confirma que deseas eliminar esta imagen",
           "notification": {
             "success": {
               "message": ""
