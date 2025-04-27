@@ -1093,7 +1093,7 @@
           "label": "Entegrasyonlar"
         },
         "title": {
-          "label": ""
+          "label": "Başlık"
         },
         "customCssClasses": {
           "label": "Özel CSS Alanı"
@@ -1771,8 +1771,8 @@
       "description": "Medya sunucularınızdaki mevcut akışları gösterin",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Yalnızca şu an oynatılanı göster",
+          "description": "Bunu devre dışı bırakmak plex için işe yaramayacaktır"
         }
       },
       "items": {
@@ -2051,6 +2051,85 @@
           "label": "Gönderi sayısı sınırı"
         }
       }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": ""
     },
     "networkControllerSummary": {
       "option": {},
@@ -3810,7 +3889,7 @@
         },
         "invalid": {
           "title": "Geçersiz sertifika",
-          "description": "Sertifika ayrıştırılamadı"
+          "description": "Sertifika çözümlenemedi"
         },
         "expires": "{when} süresi doluyor"
       }
