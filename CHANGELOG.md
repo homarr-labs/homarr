@@ -1,3 +1,10 @@
+## [1.18.1](https://github.com/homarr-labs/homarr/compare/v1.18.0...v1.18.1) (2025-04-27)
+
+### Bug Fixes
+
+* cannot find module http-cookie-agent/http ([#2972](https://github.com/homarr-labs/homarr/issues/2972)) ([bb92f5b](https://github.com/homarr-labs/homarr/commit/bb92f5bb79e8f236dd149e87d14c1a35955140c7))
+* **deps:** update dependency mysql2 to v3.14.1 ([#2969](https://github.com/homarr-labs/homarr/issues/2969)) ([5f80beb](https://github.com/homarr-labs/homarr/commit/5f80bebef2bd1598ad02dd1e169a1a6c27a4c143))
+
 ## [1.18.0](https://github.com/homarr-labs/homarr/compare/v1.17.0...v1.18.0) (2025-04-25)
 
 ### Features
