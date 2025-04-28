@@ -33,7 +33,7 @@ describe("Pi-hole v5 integration", () => {
     const piHoleIntegration = createPiHoleIntegrationV5(piholeContainer, DEFAULT_API_KEY);
 
     // Act
-    const actAsync = async () => await piHoleIntegration.testConnectionAsync();
+    const actAsync = async () => await piHoleIntegration.testingAsync();
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
@@ -48,7 +48,7 @@ describe("Pi-hole v5 integration", () => {
     const piHoleIntegration = createPiHoleIntegrationV5(piholeContainer, "wrong-api-key");
 
     // Act
-    const actAsync = async () => await piHoleIntegration.testConnectionAsync();
+    const actAsync = async () => await piHoleIntegration.testingAsync();
 
     // Assert
     await expect(actAsync()).rejects.toThrow();
@@ -144,7 +144,7 @@ describe("Pi-hole v6 integration", () => {
     const piHoleIntegration = createPiHoleIntegrationV6(piholeContainer, DEFAULT_PASSWORD);
 
     // Act
-    const actAsync = async () => await piHoleIntegration.testConnectionAsync();
+    const actAsync = async () => await piHoleIntegration.testingAsync();
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
@@ -159,7 +159,7 @@ describe("Pi-hole v6 integration", () => {
     const piHoleIntegration = createPiHoleIntegrationV6(piholeContainer, "wrong-api-key");
 
     // Act
-    const actAsync = async () => await piHoleIntegration.testConnectionAsync();
+    const actAsync = async () => await piHoleIntegration.testingAsync();
 
     // Assert
     await expect(actAsync()).rejects.toThrow();

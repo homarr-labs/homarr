@@ -12,7 +12,7 @@ class BaseIntegrationMock extends Integration {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public async testConnectionAsync(): Promise<void> {}
+  public async testingAsync(): Promise<void> {}
 }
 
 describe("Base integration", () => {

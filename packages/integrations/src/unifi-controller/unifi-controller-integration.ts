@@ -36,7 +36,7 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     } satisfies NetworkControllerSummary;
   }
 
-  public async testConnectionAsync(): Promise<void> {
+  public async testingAsync(): Promise<void> {
     const client = await this.createControllerClientAsync();
     await client.getSitesStats();
   }

@@ -33,7 +33,7 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
     };
   }
 
-  public async testConnectionAsync(): Promise<void> {
+  public async testingAsync(): Promise<void> {
     const apiKey = super.getSecretValue("apiKey");
 
     await super.handleTestConnectionResponseAsync({

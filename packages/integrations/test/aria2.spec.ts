@@ -19,7 +19,7 @@ describe("Aria2 integration", () => {
     const aria2Integration = createAria2Intergration(startedContainer, API_KEY);
 
     // Act
-    const actAsync = async () => await aria2Integration.testConnectionAsync();
+    const actAsync = async () => await aria2Integration.testingAsync();
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();

@@ -21,7 +21,7 @@ describe("Sabnzbd integration", () => {
     const sabnzbdIntegration = createSabnzbdIntegration(startedContainer, DEFAULT_API_KEY);
 
     // Act
-    const actAsync = async () => await sabnzbdIntegration.testConnectionAsync();
+    const actAsync = async () => await sabnzbdIntegration.testingAsync();
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
@@ -36,7 +36,7 @@ describe("Sabnzbd integration", () => {
     const sabnzbdIntegration = createSabnzbdIntegration(startedContainer, "wrong-api-key");
 
     // Act
-    const actAsync = async () => await sabnzbdIntegration.testConnectionAsync();
+    const actAsync = async () => await sabnzbdIntegration.testingAsync();
 
     // Assert
     await expect(actAsync()).rejects.toThrow();

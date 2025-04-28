@@ -84,7 +84,7 @@ export class OpenMediaVaultIntegration extends Integration {
     };
   }
 
-  public async testConnectionAsync(): Promise<void> {
+  public async testingAsync(): Promise<void> {
     await this.getSessionAsync().catch((error) => {
       if (error instanceof ResponseError) {
         throw new IntegrationTestConnectionError("invalidCredentials");

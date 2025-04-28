@@ -15,7 +15,7 @@ dayjs.extend(utc);
 dayjs.extend(objectSupport);
 
 export class NextcloudIntegration extends Integration {
-  public async testConnectionAsync(): Promise<void> {
+  public async testingAsync(): Promise<void> {
     const client = await this.createCalendarClientAsync();
     await client.login();
   }

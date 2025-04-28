@@ -7,7 +7,7 @@ import type { CalendarEvent } from "../../calendar-types";
 import { MediaOrganizerIntegration } from "../media-organizer-integration";
 
 export class ReadarrIntegration extends MediaOrganizerIntegration {
-  public async testConnectionAsync(): Promise<void> {
+  public async testingAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
         return await fetchWithTrustedCertificatesAsync(this.url("/api"), {

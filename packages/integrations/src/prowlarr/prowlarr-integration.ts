@@ -75,7 +75,7 @@ export class ProwlarrIntegration extends Integration {
     }
   }
 
-  public async testConnectionAsync(): Promise<void> {
+  public async testingAsync(): Promise<void> {
     const apiKey = super.getSecretValue("apiKey");
 
     await super.handleTestConnectionResponseAsync({

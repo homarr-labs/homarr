@@ -1,17 +1,26 @@
 import { Transmission } from "@ctrl/transmission";
 import dayjs from "dayjs";
+import type { Dispatcher } from "undici";
 
-import { createCertificateAgentAsync } from "@homarr/certificates/server";
-
+import type { IntegrationTestingInput } from "../../base/integration";
+import { handleOfetchError } from "../../base/test-connection/errors/ofetch";
+import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
 
 export class TransmissionIntegration extends DownloadClientIntegration {
-  public async testConnectionAsync(): Promise<void> {
-    const client = await this.getClientAsync();
-    await client.getSession();
+  public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    try {
+      const client = await this.getClientAsync(input.dispatcher);
+      await client.getSession();
+      return {
+        success: true,
+      };
+    } catch (error) {
+      return handleOfetchError(error);
+    }
   }
 
   public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
@@ -76,12 +85,12 @@ export class TransmissionIntegration extends DownloadClientIntegration {
     await client.removeTorrent(id, fromDisk);
   }
 
-  private async getClientAsync() {
+  private async getClientAsync(dispatcher?: Dispatcher) {
     return new Transmission({
       baseUrl: this.url("/").toString(),
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
-      dispatcher: await createCertificateAgentAsync(),
+      dispatcher: dispatcher ?? (await this.createTrustedDispatcherAsync()),
     });
   }
 

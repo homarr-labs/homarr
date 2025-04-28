@@ -93,7 +93,7 @@ export class RadarrIntegration extends MediaOrganizerIntegration {
     return bestImage.remoteUrl;
   };
 
-  public async testConnectionAsync(): Promise<void> {
+  public async testingAsync(): Promise<void> {
     await super.handleTestConnectionResponseAsync({
       queryFunctionAsync: async () => {
         return await fetchWithTrustedCertificatesAsync(this.url("/api"), {

@@ -21,7 +21,7 @@ describe("Home Assistant integration", () => {
     const homeAssistantIntegration = createHomeAssistantIntegration(startedContainer);
 
     // Act
-    const actAsync = async () => await homeAssistantIntegration.testConnectionAsync();
+    const actAsync = async () => await homeAssistantIntegration.testingAsync();
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
@@ -35,7 +35,7 @@ describe("Home Assistant integration", () => {
     const homeAssistantIntegration = createHomeAssistantIntegration(startedContainer, "wrong-api-key");
 
     // Act
-    const actAsync = async () => await homeAssistantIntegration.testConnectionAsync();
+    const actAsync = async () => await homeAssistantIntegration.testingAsync();
 
     // Assert
     await expect(actAsync()).rejects.toThrow(IntegrationTestConnectionError);

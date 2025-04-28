@@ -5,16 +5,23 @@ import "@homarr/redis";
 import dayjs from "dayjs";
 import { z } from "zod";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-
 import { createChannelEventHistory } from "../../../redis/src/lib/channel";
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
+import { TestConnectionError } from "../base/test-connection/test-connection-service";
 import type { HealthMonitoring } from "../types";
 
 export class DashDotIntegration extends Integration {
-  public async testConnectionAsync(): Promise<void> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/info"));
+  public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const response = await input.fetchAsync(this.url("/info"));
+    if (!response.ok) return TestConnectionError.StatusResult(response);
+
     await response.json();
+
+    return {
+      success: true,
+    };
   }
 
   public async getSystemInfoAsync(): Promise<HealthMonitoring> {
@@ -55,7 +62,7 @@ export class DashDotIntegration extends Integration {
   }
 
   private async getInfoAsync() {
-    const infoResponse = await fetchWithTrustedCertificatesAsync(this.url("/info"));
+    const infoResponse = await this.fetchAsync(this.url("/info"));
     const serverInfo = await internalServerInfoApi.parseAsync(await infoResponse.json());
     return {
       maxAvailableMemoryBytes: serverInfo.ram.size,
@@ -69,7 +76,7 @@ export class DashDotIntegration extends Integration {
 
   private async getCurrentCpuLoadAsync() {
     const channel = this.getChannel();
-    const cpu = await fetchWithTrustedCertificatesAsync(this.url("/load/cpu"));
+    const cpu = await this.fetchAsync(this.url("/load/cpu"));
     const data = await cpuLoadPerCoreApiList.parseAsync(await cpu.json());
     await channel.pushAsync(data);
     return {
@@ -91,12 +98,12 @@ export class DashDotIntegration extends Integration {
   }
 
   private async getCurrentStorageLoadAsync() {
-    const storageLoad = await fetchWithTrustedCertificatesAsync(this.url("/load/storage"));
+    const storageLoad = await this.fetchAsync(this.url("/load/storage"));
     return (await storageLoad.json()) as number[];
   }
 
   private async getCurrentMemoryLoadAsync() {
-    const memoryLoad = await fetchWithTrustedCertificatesAsync(this.url("/load/ram"));
+    const memoryLoad = await this.fetchAsync(this.url("/load/ram"));
     const data = await memoryLoadApi.parseAsync(await memoryLoad.json());
     return {
       loadInBytes: data.load,

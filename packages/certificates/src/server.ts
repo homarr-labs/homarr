@@ -61,19 +61,22 @@ export const addCustomRootCertificateAsync = async (fileName: string, content: s
   await fs.writeFile(path.join(folder, fileName), content);
 };
 
-export const createCertificateAgentAsync = async () => {
+export const getAllTrustedCertificatesAsync = async () => {
   const customCertificates = await loadCustomRootCertificatesAsync();
+  return rootCertificates.concat(customCertificates.map((cert) => cert.content));
+};
+
+export const createCertificateAgentAsync = async () => {
   return new LoggingAgent({
     connect: {
-      ca: rootCertificates.concat(customCertificates.map((cert) => cert.content)),
+      ca: await getAllTrustedCertificatesAsync(),
     },
   });
 };
 
 export const createHttpsAgentAsync = async () => {
-  const customCertificates = await loadCustomRootCertificatesAsync();
   return new HttpsAgent({
-    ca: rootCertificates.concat(customCertificates.map((cert) => cert.content)),
+    ca: await getAllTrustedCertificatesAsync(),
   });
 };
 

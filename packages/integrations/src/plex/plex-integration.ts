@@ -62,7 +62,7 @@ export class PlexIntegration extends Integration {
     return medias;
   }
 
-  public async testConnectionAsync(): Promise<void> {
+  public async testingAsync(): Promise<void> {
     const token = super.getSecretValue("apiKey");
 
     await super.handleTestConnectionResponseAsync({

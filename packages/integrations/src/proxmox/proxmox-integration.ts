@@ -17,7 +17,7 @@ import type {
 } from "./proxmox-types";
 
 export class ProxmoxIntegration extends Integration {
-  public async testConnectionAsync(): Promise<void> {
+  public async testingAsync(): Promise<void> {
     const proxmox = this.getPromoxApi();
     await proxmox.nodes.$get().catch((error) => {
       throw new IntegrationTestConnectionError("internalServerError", extractErrorMessage(error));

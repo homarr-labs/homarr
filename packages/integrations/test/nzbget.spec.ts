@@ -22,7 +22,7 @@ describe("Nzbget integration", () => {
     const nzbGetIntegration = createNzbGetIntegration(startedContainer, username, password);
 
     // Act
-    const actAsync = async () => await nzbGetIntegration.testConnectionAsync();
+    const actAsync = async () => await nzbGetIntegration.testingAsync();
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
@@ -37,7 +37,7 @@ describe("Nzbget integration", () => {
     const nzbGetIntegration = createNzbGetIntegration(startedContainer, "wrong-user", "wrong-password");
 
     // Act
-    const actAsync = async () => await nzbGetIntegration.testConnectionAsync();
+    const actAsync = async () => await nzbGetIntegration.testingAsync();
 
     // Assert
     await expect(actAsync()).rejects.toThrow();

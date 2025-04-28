@@ -81,7 +81,7 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
     }
   }
 
-  public async testConnectionAsync(): Promise<void> {
+  public async testingAsync(): Promise<void> {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/auth/me"), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),

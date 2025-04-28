@@ -8,4 +8,5 @@ export * from "./url";
 export * from "./number";
 export * from "./error";
 export * from "./fetch-with-timeout";
+export * from "./fetch-error";
 export * from "./theme";

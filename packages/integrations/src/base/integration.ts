@@ -1,12 +1,20 @@
-import type { Response } from "undici";
+import { Agent as HttpsAgent } from "node:https";
+import type { AxiosInstance } from "axios";
+import axios from "axios";
+import type { Dispatcher, Response } from "undici";
+import { fetch as undiciFetch } from "undici";
 import { z } from "zod";
 
+import { createCertificateAgentAsync } from "@homarr/certificates/server";
 import { extractErrorMessage, removeTrailingSlash } from "@homarr/common";
+import { LoggingAgent } from "@homarr/common/server";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
-import type { TranslationObject } from "@homarr/translation";
 
+import { ResponseError } from "./error";
 import { IntegrationTestConnectionError } from "./test-connection-error";
+import type { TestingResult } from "./test-connection/test-connection-service";
+import { TestConnectionError, TestConnectionService } from "./test-connection/test-connection-service";
 import type { IntegrationSecret } from "./types";
 
 const causeSchema = z.object({
@@ -18,6 +26,12 @@ export interface IntegrationInput {
   name: string;
   url: string;
   decryptedSecrets: IntegrationSecret[];
+}
+
+export interface IntegrationTestingInput {
+  fetchAsync: typeof undiciFetch;
+  dispatcher: Dispatcher;
+  axiosInstance: AxiosInstance;
 }
 
 export abstract class Integration {
@@ -48,11 +62,61 @@ export abstract class Integration {
     return url;
   }
 
+  protected async fetchAsync(...[input, options]: Parameters<typeof undiciFetch>) {
+    return await undiciFetch(input, {
+      ...options,
+      dispatcher: await this.createTrustedDispatcherAsync(),
+    });
+  }
+
+  protected async createTrustedDispatcherAsync() {
+    return await createCertificateAgentAsync();
+  }
+
+  public async testConnectionAsync(): Promise<TestingResult> {
+    try {
+      const url = new URL(this.integration.url);
+      return await new TestConnectionService(url).handleAsync(async ({ ca }) => {
+        const fetchDispatcher = new LoggingAgent({
+          connect: {
+            ca,
+          },
+        });
+
+        const axiosInstance = axios.create({
+          httpsAgent: new HttpsAgent({
+            ca,
+          }),
+        });
+
+        const callback: typeof this.testingAsync = this.testingAsync.bind(this);
+        return await callback({
+          dispatcher: fetchDispatcher,
+          fetchAsync: async (url, options) => await undiciFetch(url, { ...options, dispatcher: fetchDispatcher }),
+          axiosInstance,
+        });
+      });
+    } catch (error) {
+      if (error instanceof ResponseError) {
+        return TestConnectionError.StatusResult({
+          status: error.statusCode,
+          url: error.url,
+        });
+      }
+
+      if (!(error instanceof TestConnectionError)) {
+        return TestConnectionError.UnknownResult(error);
+      }
+
+      return error.toResult();
+    }
+  }
+
   /**
    * Test the connection to the integration
-   * @throws {IntegrationTestConnectionError} if the connection fails
+   * @returns {Promise<TestingResult>}
    */
-  public abstract testConnectionAsync(): Promise<void>;
+  public abstract testingAsync(input: IntegrationTestingInput): Promise<TestingResult>;
 
   protected async handleTestConnectionResponseAsync({
     queryFunctionAsync,
@@ -100,7 +164,7 @@ export abstract class Integration {
     await handleResponseAsync?.(response);
   }
 }
-
+/*
 export interface TestConnectionError {
   key: Exclude<keyof TranslationObject["integration"]["testConnection"]["notification"], "success">;
   message?: string;
@@ -112,7 +176,7 @@ export type TestConnectionResult =
     }
   | {
       success: true;
-    };
+    };*/
 
 export const throwErrorByStatusCode = (statusCode: number) => {
   switch (statusCode) {
