@@ -49,6 +49,32 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["cdn.jsdelivr.net"],
   },
+  // eslint-disable-next-line @typescript-eslint/require-await,no-restricted-syntax
+  async headers() {
+    return [
+      {
+        source: "/(.*)", // Apply CSP to all routes
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: `
+              default-src 'self';
+              script-src * 'unsafe-inline' 'unsafe-eval';
+              base-uri 'self';
+              connect-src *;
+              style-src 'self' 'unsafe-inline'; 
+              frame-ancestors *;
+              frame-src *;
+              form-action 'self';
+              img-src * data:;
+            `
+              .replace(/\s{2,}/g, " ")
+              .trim(),
+          },
+        ],
+      },
+    ];
+  },
 };
 
 // Skip transform is used because of webpack loader, without it for example 'Tooltip.Floating' will not work and show an error
