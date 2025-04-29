@@ -18,6 +18,7 @@ import ReactMarkdown from "react-markdown";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { isDateWithin, splitToChunksWithNItems } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
@@ -25,44 +26,6 @@ import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 import { Providers } from "./releases-providers";
 import type { ReleasesRepositoryResponse } from "./releases-repository";
-
-function isDateWithin(date: Date, relativeDate: string): boolean {
-  const amount = parseInt(relativeDate.slice(0, -1), 10);
-  const unit = relativeDate.slice(-1);
-
-  const startTime = new Date().getTime();
-  const endTime = new Date(date).getTime();
-  const diffTime = Math.abs(endTime - startTime);
-  const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
-
-  switch (unit) {
-    case "h":
-      return diffHours < amount;
-
-    case "d":
-      return diffHours / 24 < amount;
-
-    case "w":
-      return diffHours / (24 * 7) < amount;
-
-    case "m":
-      return diffHours / (24 * 30) < amount;
-
-    case "y":
-      return diffHours / (24 * 365) < amount;
-
-    default:
-      throw new Error("Invalid unit");
-  }
-}
-
-function chunkArray<T>(array: T[], size: number): T[][] {
-  const chunks: T[][] = [];
-  for (let i = 0; i < array.length; i += size) {
-    chunks.push(array.slice(i, i + size));
-  }
-  return chunks;
-}
 
 export default function ReleasesWidget({ options }: WidgetComponentProps<"releases">) {
   const t = useScopedI18n("widget.releases");
@@ -72,7 +35,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const [expandedRepository, setExpandedRepository] = useState({ providerKey: "", identifier: "" });
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
 
-  const batchedRepositories = useMemo(() => chunkArray(options.repositories, 5), [options.repositories]);
+  const batchedRepositories = useMemo(() => splitToChunksWithNItems(options.repositories, 5), [options.repositories]);
   const [results] = clientApi.useSuspenseQueries((t) =>
     batchedRepositories.flatMap((chunk) =>
       t.widget.releases.getLatest({

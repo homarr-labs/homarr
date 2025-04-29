@@ -5,3 +5,11 @@ export const splitToNChunks = <T>(array: T[], chunks: number): T[][] => {
   }
   return result;
 };
+
+export const splitToChunksWithNItems = <T>(array: T[], items: number): T[][] => {
+  const result: T[][] = [];
+  for (let i = 0; i < array.length; i += items) {
+    result.push(array.slice(i, i + items));
+  }
+  return result;
+};
