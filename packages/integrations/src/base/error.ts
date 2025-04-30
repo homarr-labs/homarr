@@ -19,7 +19,7 @@ export class ResponseError extends Error {
   public readonly url: string;
   public readonly content?: string;
 
-  constructor(response: Response | UndiciResponse, content: unknown) {
+  constructor(response: Response | UndiciResponse | {status: number; url: string}, content: unknown) {
     super("Response failed");
 
     this.statusCode = response.status;
