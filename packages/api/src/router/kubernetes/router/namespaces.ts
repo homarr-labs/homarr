@@ -10,7 +10,7 @@ import { KubernetesClient } from "../kubernetes-client";
 export const namespacesRouter = createTRPCRouter({
   getNamespaces: permissionRequiredProcedure
     .requiresPermission("admin")
-    .unstable_concat(kubernetesMiddleware())
+    .concat(kubernetesMiddleware())
     .query(async (): Promise<KubernetesNamespace[]> => {
       const { coreApi } = KubernetesClient.getInstance();
 
