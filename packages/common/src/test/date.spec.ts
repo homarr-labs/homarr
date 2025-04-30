@@ -23,7 +23,7 @@ describe("isDateWithin", () => {
 
   it("should return false for a date outside the specified days", () => {
     const date = new Date();
-    date.setDate(date.getDate() - 16);
+    date.setDate(date.getDate() - 11);
     expect(isDateWithin(date, "10d")).toBe(false);
   });
 
@@ -42,13 +42,13 @@ describe("isDateWithin", () => {
   it("should return true for a date within the specified months", () => {
     const date = new Date();
     date.setMonth(date.getMonth() - 1);
-    expect(isDateWithin(date, "2m")).toBe(true);
+    expect(isDateWithin(date, "2M")).toBe(true);
   });
 
   it("should return false for a date outside the specified months", () => {
     const date = new Date();
     date.setMonth(date.getMonth() - 3);
-    expect(isDateWithin(date, "2m")).toBe(false);
+    expect(isDateWithin(date, "2M")).toBe(false);
   });
 
   it("should return true for a date within the specified years", () => {
