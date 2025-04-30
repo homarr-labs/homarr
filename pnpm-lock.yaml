@@ -7,11 +7,6 @@ settings:
 overrides:
   proxmox-api>undici: 7.8.0
 
-patchedDependencies:
-  pretty-print-error:
-    hash: d1432e02330bdaf8359eb0e54528a74ed6b7e5cce6bb65c13310c82e34fd1e4d
-    path: patches/pretty-print-error.patch
-
 importers:
 
   .:
@@ -596,9 +591,6 @@ importers:
       next:
         specifier: 15.3.1
         version: 15.3.1(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
-      pretty-print-error:
-        specifier: ^1.1.2
-        version: 1.1.2(patch_hash=d1432e02330bdaf8359eb0e54528a74ed6b7e5cce6bb65c13310c82e34fd1e4d)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -678,9 +670,6 @@ importers:
       next-auth:
         specifier: 5.0.0-beta.27
         version: 5.0.0-beta.27(next@15.3.1(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0))(react@19.1.0)
-      pretty-print-error:
-        specifier: ^1.1.2
-        version: 1.1.2(patch_hash=d1432e02330bdaf8359eb0e54528a74ed6b7e5cce6bb65c13310c82e34fd1e4d)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -1640,9 +1629,6 @@ importers:
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
-      pretty-print-error:
-        specifier: ^1.1.2
-        version: 1.1.2(patch_hash=d1432e02330bdaf8359eb0e54528a74ed6b7e5cce6bb65c13310c82e34fd1e4d)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1726,9 +1712,6 @@ importers:
       octokit:
         specifier: ^4.1.3
         version: 4.1.3
-      pretty-print-error:
-        specifier: ^1.1.2
-        version: 1.1.2(patch_hash=d1432e02330bdaf8359eb0e54528a74ed6b7e5cce6bb65c13310c82e34fd1e4d)
       superjson:
         specifier: 2.2.2
         version: 2.2.2
@@ -8688,9 +8671,6 @@ packages:
   pretty-ms@9.2.0:
     resolution: {integrity: sha512-4yf0QO/sllf/1zbZWYnvWw3NxCQwLXKzIj0G849LSufP15BXKM0rbD2Z3wVnkMfjdn/CB0Dpp444gYAACdsplg==}
     engines: {node: '>=18'}
-
-  pretty-print-error@1.1.2:
-    resolution: {integrity: sha512-XkKN3W8aeRYApO17WpzuaJZmqH3WNSFeqR4Sxt7vu+C7pcWB+3+JDJ2dnnhzSCqvC1IaYR36CVh4VsFZyBicQA==}
 
   prismjs@1.27.0:
     resolution: {integrity: sha512-t13BGPUlFDR7wRB5kQDG4jjl7XeuH6jbJGt11JHPL96qwsEHNX2+68tFXqc1/k+/jALsbSWJKUOT/hcYAZ5LkA==}
@@ -17851,10 +17831,6 @@ snapshots:
   pretty-ms@9.2.0:
     dependencies:
       parse-ms: 4.0.0
-
-  pretty-print-error@1.1.2(patch_hash=d1432e02330bdaf8359eb0e54528a74ed6b7e5cce6bb65c13310c82e34fd1e4d):
-    dependencies:
-      kleur: 4.1.5
 
   prismjs@1.27.0: {}
 
