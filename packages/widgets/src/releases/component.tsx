@@ -27,6 +27,12 @@ import classes from "./component.module.scss";
 import { Providers } from "./releases-providers";
 import type { ReleasesRepositoryResponse } from "./releases-repository";
 
+const formatRelativeDate = (value: string): string => {
+  const isMinutes = /\d+m/g.test(value);
+  const isOtherUnits = /\d+[HDWY]/g.test(value);
+  return isMinutes ? value.toUpperCase() : isOtherUnits ? value.toLowerCase() : value;
+};
+
 export default function ReleasesWidget({ options }: WidgetComponentProps<"releases">) {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
@@ -34,6 +40,13 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const board = useRequiredBoard();
   const [expandedRepository, setExpandedRepository] = useState({ providerKey: "", identifier: "" });
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
+  const relativeDateOptions = useMemo(
+    () => ({
+      newReleaseWithin: formatRelativeDate(options.newReleaseWithin),
+      staleReleaseWithin: formatRelativeDate(options.staleReleaseWithin),
+    }),
+    [options.newReleaseWithin, options.staleReleaseWithin],
+  );
 
   const batchedRepositories = useMemo(() => splitToChunksWithNItems(options.repositories, 5), [options.repositories]);
   const [results] = clientApi.useSuspenseQueries((t) =>
@@ -64,12 +77,12 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
           ...data,
           iconUrl: repository.iconUrl,
           isNewRelease:
-            options.newReleaseWithin !== "" && data.latestReleaseAt
-              ? isDateWithin(data.latestReleaseAt, options.newReleaseWithin)
+            relativeDateOptions.newReleaseWithin !== "" && data.latestReleaseAt
+              ? isDateWithin(data.latestReleaseAt, relativeDateOptions.newReleaseWithin)
               : false,
           isStaleRelease:
-            options.staleReleaseWithin !== "" && data.latestReleaseAt
-              ? !isDateWithin(data.latestReleaseAt, options.staleReleaseWithin)
+            relativeDateOptions.staleReleaseWithin !== "" && data.latestReleaseAt
+              ? !isDateWithin(data.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
               : false,
         };
       })
