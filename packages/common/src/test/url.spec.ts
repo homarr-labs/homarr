@@ -16,7 +16,7 @@ describe("getPortFromUrl", () => {
     // Assert
     expect(port).toBe(expectedPort);
   });
-  test.each([["http"], ["https"], ["anything"]])(`should return the specified port for %s protocol`, (protocol) => {
+  test.each([["http"], ["https"], ["anything"]])("should return the specified port for %s protocol", (protocol) => {
     // Arrange
     const expectedPort = 3000;
     const url = new URL(`${protocol}://example.com:${expectedPort}`);
