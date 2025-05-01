@@ -72,9 +72,6 @@
     "overrides": {
       "proxmox-api>undici": "7.8.0"
     },
-    "patchedDependencies": {
-      "pretty-print-error": "patches/pretty-print-error.patch"
-    },
     "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [
       "@scarf/scarf",
