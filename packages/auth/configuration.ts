@@ -27,8 +27,12 @@ export const createConfiguration = (
   const adapter = createAdapter(db, provider);
   return NextAuth({
     logger: {
-      debug: logger.debug,
-      warn: logger.warn,
+      debug: (message, metadata) => {
+        logger.debug(message, metadata);
+      },
+      warn: (code) => {
+        logger.warn(code);
+      },
       error: (error) => {
         // Remove the big error message for failed login attempts
         // as it is not useful for the user.
