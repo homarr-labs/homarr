@@ -14,7 +14,7 @@ export const formatErrorCause = (cause: unknown, iteration = 0): string => {
     return "";
   }
 
-  if (cause instanceof Error) {
+  if (cause instanceof Error || isErrorObject(cause)) {
     if (!cause.cause) {
       return `\ncaused by ${formatErrorTitle(cause)}\n${formatErrorStack(cause.stack)}`;
     }
@@ -23,6 +23,26 @@ export const formatErrorCause = (cause: unknown, iteration = 0): string => {
   }
 
   return `\ncaused by ${cause as string}`;
+};
+
+/**
+ * Some errors may no longer be an instance of Error
+ * but still have the same properties as an Error
+ * This function checks if the error is an object and has the same properties as an Error
+ * @param error
+ * @returns
+ */
+const isErrorObject = (error: unknown): error is Error => {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof error.message === "string" &&
+    "stack" in error &&
+    typeof error.stack === "string" &&
+    "name" in error &&
+    typeof error.name === "string"
+  );
 };
 
 const ignoredErrorProperties = ["stack", "message", "name", "cause"];
