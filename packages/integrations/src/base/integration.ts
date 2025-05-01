@@ -12,9 +12,13 @@ import type { IntegrationSecretKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
 import { ResponseError } from "./error";
+import { HandleIntegrationErrors } from "./errors/decorator";
+import { integrationFetchHttpErrorHandler } from "./errors/http";
+import { integrationJsonParseErrorHandler, integrationZodParseErrorHandler } from "./errors/parse";
 import { IntegrationTestConnectionError } from "./test-connection-error";
+import { TestConnectionError } from "./test-connection/test-connection-error";
 import type { TestingResult } from "./test-connection/test-connection-service";
-import { TestConnectionError, TestConnectionService } from "./test-connection/test-connection-service";
+import { TestConnectionService } from "./test-connection/test-connection-service";
 import type { IntegrationSecret } from "./types";
 
 const causeSchema = z.object({
@@ -34,8 +38,21 @@ export interface IntegrationTestingInput {
   axiosInstance: AxiosInstance;
 }
 
+@HandleIntegrationErrors([
+  integrationZodParseErrorHandler,
+  integrationJsonParseErrorHandler,
+  integrationFetchHttpErrorHandler,
+])
 export abstract class Integration {
   constructor(protected integration: IntegrationInput) {}
+
+  public get publicIntegration() {
+    return {
+      id: this.integration.id,
+      name: this.integration.name,
+      url: this.integration.url,
+    };
+  }
 
   protected getSecretValue(kind: IntegrationSecretKind) {
     const secret = this.integration.decryptedSecrets.find((secret) => secret.kind === kind);
