@@ -60,8 +60,8 @@ importers:
         specifier: ^24.2.3
         version: 24.2.3(typescript@5.8.3)
       testcontainers:
-        specifier: ^10.24.2
-        version: 10.24.2
+        specifier: ^10.25.0
+        version: 10.25.0
       turbo:
         specifier: ^2.5.2
         version: 2.5.2
@@ -1019,8 +1019,8 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       '@testcontainers/mysql':
-        specifier: ^10.24.2
-        version: 10.24.2
+        specifier: ^10.25.0
+        version: 10.25.0
       better-sqlite3:
         specifier: ^11.9.1
         version: 11.9.1
@@ -4232,8 +4232,8 @@ packages:
   '@tanstack/virtual-core@3.11.2':
     resolution: {integrity: sha512-vTtpNt7mKCiZ1pwU9hfKPhpdVO2sVzFQsxoVBGtOSHxlrRRzYr8iQ2TlwbAcRYCcEiZ9ECAM8kBzH0v2+VzfKw==}
 
-  '@testcontainers/mysql@10.24.2':
-    resolution: {integrity: sha512-wRICcCjzFlAiAsOvM/ValragSrc0RcRyXX2nifOAda/BmCSD44dYaVabbxOvJLFbHKX7HWuRplebGvpplko/wg==}
+  '@testcontainers/mysql@10.25.0':
+    resolution: {integrity: sha512-jUlwvo2P4Ae2jQ4IaInWycbhcsDq5gfLzRUYETjJiiEpig/p2S5+90iVpBoMDALHFVASuJ9Z6HSzphpQ+mOMVw==}
 
   '@tiptap/core@2.11.9':
     resolution: {integrity: sha512-UZSxQLLyJst47xep3jlyKM6y1ebZnmvbGsB7njBVjfxf5H+4yFpRJwwNqrBHM/vyU55LCtPChojqaYC1wXLf6g==}
@@ -9739,8 +9739,8 @@ packages:
     resolution: {integrity: sha512-pFYqmTw68LXVjeWJMST4+borgQP2AyMNbg1BpZh9LbyhUeNkeaPF9gzfPGUAnSMV3qPYdWUwDIjjCLiSDOl7vg==}
     engines: {node: '>=18'}
 
-  testcontainers@10.24.2:
-    resolution: {integrity: sha512-Don3EXEQuSw14+nFG9pj48fL9ck/jXDfR9Rb0K3acOyn/gg97+gsnfZaLzpdejl9GcPJVKxACNRe3SYVC2uWqg==}
+  testcontainers@10.25.0:
+    resolution: {integrity: sha512-X3x6cjorEMgei1vVx3M7dnTMzWoWOTi4krpUf3C2iOvOcwsaMUHbca9J4yzpN65ieiWhcK2dA5dxpZyUonwC2Q==}
 
   text-decoder@1.2.0:
     resolution: {integrity: sha512-n1yg1mOj9DNpk3NeZOx7T6jchTbyJS3i3cucbNN6FcdPriMZx7NsgrGpWWdWZZGxD7ES1XB+3uoqHMgOKaN+fg==}
@@ -12818,9 +12818,9 @@ snapshots:
 
   '@tanstack/virtual-core@3.11.2': {}
 
-  '@testcontainers/mysql@10.24.2':
+  '@testcontainers/mysql@10.25.0':
     dependencies:
-      testcontainers: 10.24.2
+      testcontainers: 10.25.0
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -19246,7 +19246,7 @@ snapshots:
       glob: 10.4.5
       minimatch: 9.0.5
 
-  testcontainers@10.24.2:
+  testcontainers@10.25.0:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.38
