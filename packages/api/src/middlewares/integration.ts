@@ -20,7 +20,7 @@ export type IntegrationAction = "query" | "interact";
  * @param action query for showing data or interact for mutating data
  * @param kinds kinds of integrations that are supported
  * @returns middleware that can be used with trpc
- * @example publicProcedure.unstable_concat(createOneIntegrationMiddleware("query", "piHole", "homeAssistant")).query(...)
+ * @example publicProcedure.concat(createOneIntegrationMiddleware("query", "piHole", "homeAssistant")).query(...)
  * @throws TRPCError NOT_FOUND if the integration was not found
  * @throws TRPCError FORBIDDEN if the user does not have permission to perform the specified action on the specified integration
  */
@@ -82,7 +82,7 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
  * @param action query for showing data or interact for mutating data
  * @param kinds kinds of integrations that are supported
  * @returns middleware that can be used with trpc
- * @example publicProcedure.unstable_concat(createManyIntegrationMiddleware("query", "piHole", "homeAssistant")).query(...)
+ * @example publicProcedure.concat(createManyIntegrationMiddleware("query", "piHole", "homeAssistant")).query(...)
  * @throws TRPCError NOT_FOUND if the integration was not found
  * @throws TRPCError FORBIDDEN if the user does not have permission to perform the specified action on at least one of the specified integrations
  */

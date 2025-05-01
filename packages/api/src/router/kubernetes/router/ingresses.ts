@@ -11,7 +11,7 @@ import { KubernetesClient } from "../kubernetes-client";
 export const ingressesRouter = createTRPCRouter({
   getIngresses: permissionRequiredProcedure
     .requiresPermission("admin")
-    .unstable_concat(kubernetesMiddleware())
+    .concat(kubernetesMiddleware())
     .query(async (): Promise<KubernetesIngress[]> => {
       const { networkingApi } = KubernetesClient.getInstance();
       try {
