@@ -1949,7 +1949,8 @@
         "pending": "Bekleyen",
         "approved": "Onaylandı",
         "declined": "Reddedildi",
-        "failed": "Başarısız"
+        "failed": "Başarısız",
+        "completed": ""
       },
       "toBeDetermined": "-Yapım Aşamasında-"
     },

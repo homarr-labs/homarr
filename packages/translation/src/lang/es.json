@@ -3,7 +3,7 @@
     "step": {
       "start": {
         "title": "Bienvenido a Homarr",
-        "subtitle": "",
+        "subtitle": "Comencemos con la configuración de tu instancia de Homar.",
         "description": "Para empezar, por favor, seleccione cómo desea configurar su instancia de Homarr.",
         "action": {
           "scratch": "Empezar de cero",
@@ -27,18 +27,18 @@
           "description": ""
         },
         "boardSelection": {
-          "title": "",
+          "title": "Se encontraron {count} tableros",
           "description": "",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Seleccionar todo",
+            "unselectAll": "Deseleccionar todo"
           }
         },
         "summary": {
           "title": "Importar resumen",
           "description": "",
           "action": {
-            "import": ""
+            "import": "Confirmar la importación y continuar"
           },
           "entities": {
             "apps": "Aplicaciones",
@@ -78,24 +78,24 @@
       },
       "group": {
         "title": "",
-        "subtitle": "",
+        "subtitle": "Especifique el grupo que debe ser usado para usuarios externos.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Nombre del grupo",
+            "description": "El nombre debe coincidir con el grupo de administración del proveedor externo"
           }
         }
       },
       "settings": {
         "title": "Ajustes",
-        "subtitle": ""
+        "subtitle": "Configurar ajustes del servidor."
       },
       "finish": {
         "title": "",
         "subtitle": "",
         "description": "",
         "action": {
-          "goToBoard": "",
+          "goToBoard": "Ir al tablero {name}",
           "createBoard": "",
           "inviteUser": "",
           "docs": ""
@@ -109,7 +109,7 @@
     "name": "Usuario",
     "page": {
       "login": {
-        "title": "",
+        "title": "Inicia sesión en tu cuenta",
         "subtitle": ""
       },
       "invite": {
@@ -160,12 +160,12 @@
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Nombre de usuario ya está ocupado"
     },
     "action": {
       "login": {
         "label": "Iniciar sesión",
-        "labelWith": "",
+        "labelWith": "Iniciar sesión con {provider}",
         "notification": {
           "success": {
             "title": "",
@@ -229,10 +229,10 @@
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Primer día de la semana cambiado con éxito"
           },
           "error": {
-            "message": ""
+            "message": "No se ha podido cambiar el primer día de la semana"
           }
         }
       },
@@ -251,7 +251,7 @@
           "label": "",
           "notification": {
             "success": {
-              "message": ""
+              "message": "La imagen ha sido cambiada con éxito"
             },
             "error": {
               "message": "No se puede cambiar la imagen"
@@ -267,7 +267,7 @@
           "confirm": "Por favor, confirma que deseas eliminar esta imagen",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Imagen eliminada con éxito"
             },
             "error": {
               "message": ""
@@ -278,7 +278,7 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Perfil actualizado con éxito"
           },
           "error": {
             "message": ""
@@ -288,10 +288,10 @@
       "delete": {
         "label": "",
         "description": "",
-        "confirm": ""
+        "confirm": "¿Estás seguro de que quieres eliminar el usuario {username} con sus preferencias?"
       },
       "select": {
-        "label": "",
+        "label": "Seleccionar usuario",
         "notFound": ""
       },
       "transfer": {
@@ -1949,7 +1949,8 @@
         "pending": "",
         "approved": "",
         "declined": "",
-        "failed": ""
+        "failed": "",
+        "completed": ""
       },
       "toBeDetermined": ""
     },

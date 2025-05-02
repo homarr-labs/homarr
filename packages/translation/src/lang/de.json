@@ -1949,7 +1949,8 @@
         "pending": "Ausstehend",
         "approved": "Bestätigt",
         "declined": "Abgelehnt",
-        "failed": "Fehlgeschlagen"
+        "failed": "Fehlgeschlagen",
+        "completed": ""
       },
       "toBeDetermined": "Noch Festzulegen"
     },
