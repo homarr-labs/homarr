@@ -18,7 +18,7 @@ const dockerCache = createCacheChannel<{
 export const dockerRouter = createTRPCRouter({
   getContainers: permissionRequiredProcedure
     .requiresPermission("admin")
-    .unstable_concat(dockerMiddleware())
+    .concat(dockerMiddleware())
     .query(async () => {
       const result = await dockerCache
         .consumeAsync(async () => {
@@ -81,14 +81,14 @@ export const dockerRouter = createTRPCRouter({
     }),
   invalidate: permissionRequiredProcedure
     .requiresPermission("admin")
-    .unstable_concat(dockerMiddleware())
+    .concat(dockerMiddleware())
     .mutation(async () => {
       await dockerCache.invalidateAsync();
       return;
     }),
   startAll: permissionRequiredProcedure
     .requiresPermission("admin")
-    .unstable_concat(dockerMiddleware())
+    .concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await Promise.allSettled(
@@ -102,7 +102,7 @@ export const dockerRouter = createTRPCRouter({
     }),
   stopAll: permissionRequiredProcedure
     .requiresPermission("admin")
-    .unstable_concat(dockerMiddleware())
+    .concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await Promise.allSettled(
@@ -116,7 +116,7 @@ export const dockerRouter = createTRPCRouter({
     }),
   restartAll: permissionRequiredProcedure
     .requiresPermission("admin")
-    .unstable_concat(dockerMiddleware())
+    .concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await Promise.allSettled(
@@ -130,7 +130,7 @@ export const dockerRouter = createTRPCRouter({
     }),
   removeAll: permissionRequiredProcedure
     .requiresPermission("admin")
-    .unstable_concat(dockerMiddleware())
+    .concat(dockerMiddleware())
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input }) => {
       await Promise.allSettled(

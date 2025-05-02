@@ -7,7 +7,8 @@
   "exports": {
     ".": "./index.ts",
     "./errors": "./src/errors/component.tsx",
-    "./modals": "./src/modals/index.ts"
+    "./modals": "./src/modals/index.ts",
+    "./prefetch": "./src/prefetch.ts"
   },
   "typesVersions": {
     "*": {
@@ -35,6 +36,7 @@
     "@homarr/form": "workspace:^0.1.0",
     "@homarr/forms-collection": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
+    "@homarr/log": "workspace:^0.1.0",
     "@homarr/modals": "workspace:^0.1.0",
     "@homarr/modals-collection": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
@@ -45,9 +47,9 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/charts": "^7.17.5",
-    "@mantine/core": "^7.17.5",
-    "@mantine/hooks": "^7.17.5",
+    "@mantine/charts": "^7.17.7",
+    "@mantine/core": "^7.17.7",
+    "@mantine/hooks": "^7.17.7",
     "@tabler/icons-react": "^3.31.0",
     "@tiptap/extension-color": "2.11.9",
     "@tiptap/extension-highlight": "2.11.9",

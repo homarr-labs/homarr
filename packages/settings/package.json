@@ -5,7 +5,8 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts"
+    ".": "./index.ts",
+    "./creator": "./src/creator.ts"
   },
   "typesVersions": {
     "*": {
@@ -25,7 +26,7 @@
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/dates": "^7.17.5",
+    "@mantine/dates": "^7.17.7",
     "next": "15.3.1",
     "react": "19.1.0",
     "react-dom": "19.1.0"

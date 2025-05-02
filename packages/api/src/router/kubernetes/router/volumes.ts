@@ -10,7 +10,7 @@ import { KubernetesClient } from "../kubernetes-client";
 export const volumesRouter = createTRPCRouter({
   getVolumes: permissionRequiredProcedure
     .requiresPermission("admin")
-    .unstable_concat(kubernetesMiddleware())
+    .concat(kubernetesMiddleware())
     .query(async (): Promise<KubernetesVolume[]> => {
       const { coreApi } = KubernetesClient.getInstance();
 
