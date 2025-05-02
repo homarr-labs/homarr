@@ -23,7 +23,7 @@ export class RequestError<TType extends RequestErrorType> extends Error {
   }
 
   get cause(): Error | undefined {
-    return this.cause;
+    return super.cause as Error | undefined;
   }
 }
 

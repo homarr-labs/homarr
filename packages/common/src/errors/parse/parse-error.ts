@@ -4,6 +4,6 @@ export class ParseError extends Error {
   }
 
   get cause(): Error {
-    return this.cause;
+    return super.cause as Error;
   }
 }

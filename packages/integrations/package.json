@@ -6,6 +6,7 @@
   "type": "module",
   "exports": {
     ".": "./index.ts",
+    "./test-connection": "./src/base/test-connection/index.ts",
     "./client": "./src/client.ts",
     "./types": "./src/types.ts"
   },

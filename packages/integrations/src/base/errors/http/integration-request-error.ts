@@ -13,6 +13,6 @@ export class IntegrationRequestError extends IntegrationError {
   }
 
   get cause(): AnyRequestError {
-    return this.cause;
+    return super.cause as AnyRequestError;
   }
 }

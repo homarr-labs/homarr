@@ -8,29 +8,43 @@ import type { IntegrationError } from "../errors/integration-error";
 import { IntegrationUnknownError } from "../errors/integration-unknown-error";
 import { IntegrationParseError } from "../errors/parse/integration-parse-error";
 
-export type AnyTestConnectionError = TestConnectionError<keyof TestConnectionErrorMap>;
+export type TestConnectionErrorType = keyof TestConnectionErrorMap;
+export type AnyTestConnectionError = {
+  [TType in TestConnectionErrorType]: TestConnectionError<TType>;
+}[TestConnectionErrorType];
+export type TestConnectionErrorDataOfType<TType extends TestConnectionErrorType> = TestConnectionErrorMap[TType];
 
-export class TestConnectionError<TType extends keyof TestConnectionErrorMap> extends Error {
+export class TestConnectionError<TType extends TestConnectionErrorType> extends Error {
   public readonly type: TType;
   public readonly data: TestConnectionErrorMap[TType];
 
-  private constructor(type: TType, data: TestConnectionErrorMap[TType], options?: ErrorOptions) {
+  private constructor(type: TType, data: TestConnectionErrorMap[TType], options?: { cause: Error }) {
     super("Unable to connect to the integration.", options);
     this.type = type;
     this.data = data;
   }
 
+  get cause(): Error | undefined {
+    return super.cause as Error | undefined;
+  }
+
   public toResult() {
     return {
       success: false,
-      error: this as TestConnectionError<keyof TestConnectionErrorMap>,
+      error: this,
     } as const;
   }
 
   private static Unknown(cause: unknown) {
-    return new TestConnectionError("unknown", undefined, {
-      cause: cause instanceof Error ? cause : undefined,
-    });
+    return new TestConnectionError(
+      "unknown",
+      undefined,
+      cause instanceof Error
+        ? {
+            cause,
+          }
+        : undefined,
+    );
   }
 
   public static UnknownResult(cause: unknown) {
@@ -94,13 +108,7 @@ export class TestConnectionError<TType extends keyof TestConnectionErrorMap> ext
   }
 
   private static Parse(cause: ParseError) {
-    return new TestConnectionError(
-      "parse",
-      {
-        parseError: cause,
-      },
-      { cause },
-    );
+    return new TestConnectionError("parse", undefined, { cause });
   }
 
   public static ParseResult(cause: ParseError) {
@@ -143,6 +151,7 @@ const statusCodeMap = {
 
 interface TestConnectionErrorMap {
   unknown: undefined;
+  parse: undefined;
   authorization: {
     statusCode: number;
     reason: "unauthorized" | "forbidden";
@@ -158,8 +167,5 @@ interface TestConnectionErrorMap {
   };
   request: {
     requestError: Exclude<AnyRequestError, RequestError<"certificate">>;
-  };
-  parse: {
-    parseError: ParseError;
   };
 }

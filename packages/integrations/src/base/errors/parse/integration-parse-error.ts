@@ -9,6 +9,6 @@ export class IntegrationParseError extends IntegrationError {
   }
 
   get cause(): ParseError {
-    return this.cause;
+    return super.cause as ParseError;
   }
 }

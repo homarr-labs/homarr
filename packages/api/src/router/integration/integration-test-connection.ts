@@ -72,7 +72,7 @@ export const testConnectionAsync = async (
     decryptedSecrets,
   });
 
-  await integrationInstance.testConnectionAsync();
+  return await integrationInstance.testConnectionAsync();
 };
 
 interface SourcedIntegrationSecret {
@@ -87,7 +87,7 @@ const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedInteg
   );
 
   if (matchingSecretKindOptions.length === 0) {
-    throw new IntegrationTestConnectionError("secretNotDefined");
+    throw new MissingSecretError();
   }
 
   if (matchingSecretKindOptions.length === 1) {
@@ -122,3 +122,9 @@ const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedInteg
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return matchingSecretKindOptions[0]!;
 };
+
+export class MissingSecretError extends Error {
+  constructor() {
+    super("No secret defined for this integration");
+  }
+}

@@ -9,6 +9,6 @@ export class IntegrationResponseError extends IntegrationError {
   }
 
   get cause(): ResponseError {
-    return this.cause;
+    return super.cause as ResponseError;
   }
 }

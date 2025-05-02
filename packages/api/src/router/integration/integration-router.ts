@@ -24,6 +24,7 @@ import {
   integrationSecretKindObject,
 } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
+import { logger } from "@homarr/log";
 import { byIdSchema } from "@homarr/validation/common";
 import {
   integrationCreateSchema,
@@ -34,7 +35,8 @@ import {
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "./integration-access";
-import { testConnectionAsync } from "./integration-test-connection";
+import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
+import { mapTestConnectionError } from "./map-test-connection-error";
 
 export const integrationRouter = createTRPCRouter({
   all: publicProcedure.query(async ({ ctx }) => {
@@ -185,13 +187,27 @@ export const integrationRouter = createTRPCRouter({
     .requiresPermission("integration-create")
     .input(integrationCreateSchema)
     .mutation(async ({ ctx, input }) => {
-      await testConnectionAsync({
+      const result = await testConnectionAsync({
         id: "new",
         name: input.name,
         url: input.url,
         kind: input.kind,
         secrets: input.secrets,
+      }).catch((error) => {
+        if (!(error instanceof MissingSecretError)) throw error;
+
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: error.message,
+        });
       });
+
+      if (!result.success) {
+        logger.error(result.error);
+        return {
+          error: mapTestConnectionError(result.error),
+        };
+      }
 
       const integrationId = createId();
       await ctx.db.insert(integrations).values({
@@ -243,7 +259,7 @@ export const integrationRouter = createTRPCRouter({
       });
     }
 
-    await testConnectionAsync(
+    const testResult = await testConnectionAsync(
       {
         id: input.id,
         name: input.name,
@@ -252,7 +268,21 @@ export const integrationRouter = createTRPCRouter({
         secrets: input.secrets,
       },
       integration.secrets,
-    );
+    ).catch((error) => {
+      if (!(error instanceof MissingSecretError)) throw error;
+
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: error.message,
+      });
+    });
+
+    if (!testResult.success) {
+      logger.error(testResult.error);
+      return {
+        error: mapTestConnectionError(testResult.error),
+      };
+    }
 
     await ctx.db
       .update(integrations)
