@@ -1,3 +1,4 @@
+import { RequestError, ResponseError } from "@homarr/common";
 import type { HttpErrorHandler } from "@homarr/common";
 
 import type { IIntegrationErrorHandler } from "../handler";
@@ -13,6 +14,9 @@ export class IntegrationHttpErrorHandler implements IIntegrationErrorHandler {
   }
 
   handleError(error: unknown, integration: IntegrationErrorData): IntegrationError | undefined {
+    if (error instanceof RequestError) return new IntegrationRequestError(integration, { cause: error });
+    if (error instanceof ResponseError) return new IntegrationResponseError(integration, { cause: error });
+
     const requestError = this.httpErrorHandler.handleRequestError(error);
     if (requestError) return new IntegrationRequestError(integration, { cause: requestError });
     const responseError = this.httpErrorHandler.handleResponseError(error);

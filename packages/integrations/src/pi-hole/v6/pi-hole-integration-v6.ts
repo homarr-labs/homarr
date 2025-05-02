@@ -1,7 +1,6 @@
 import type { Response as UndiciResponse } from "undici";
 import type { z } from "zod";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common";
 import { logger } from "@homarr/log";
 
@@ -26,7 +25,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
 
   public async getDnsBlockingStatusAsync(): Promise<z.infer<typeof dnsBlockingGetSchema>> {
     const response = await this.withAuthAsync(async (sessionId) => {
-      return await fetchWithTrustedCertificatesAsync(this.url("/api/dns/blocking"), {
+      return await super.fetchAsync(this.url("/api/dns/blocking"), {
         headers: {
           sid: sessionId,
         },
@@ -44,7 +43,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
 
   private async getStatsSummaryAsync(): Promise<z.infer<typeof statsSummaryGetSchema>> {
     const response = await this.withAuthAsync(async (sessionId) => {
-      return await fetchWithTrustedCertificatesAsync(this.url("/api/stats/summary"), {
+      return super.fetchAsync(this.url("/api/stats/summary"), {
         headers: {
           sid: sessionId,
         },
@@ -82,7 +81,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
 
   public async enableAsync(): Promise<void> {
     const response = await this.withAuthAsync(async (sessionId) => {
-      return await fetchWithTrustedCertificatesAsync(this.url("/api/dns/blocking"), {
+      return await super.fetchAsync(this.url("/api/dns/blocking"), {
         headers: {
           sid: sessionId,
         },
@@ -98,7 +97,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
 
   public async disableAsync(duration?: number): Promise<void> {
     const response = await this.withAuthAsync(async (sessionId) => {
-      return await fetchWithTrustedCertificatesAsync(this.url("/api/dns/blocking"), {
+      return await super.fetchAsync(this.url("/api/dns/blocking"), {
         headers: {
           sid: sessionId,
         },
@@ -142,7 +141,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
    */
   private async getSessionAsync(): Promise<string> {
     const apiKey = super.getSecretValue("apiKey");
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/auth"), {
+    const response = await super.fetchAsync(this.url("/api/auth"), {
       method: "POST",
       body: JSON.stringify({ password: apiKey }),
       headers: {
@@ -169,7 +168,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
    * @param sessionId The session id to remove
    */
   private async clearSessionAsync(sessionId: string) {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/auth"), {
+    const response = await super.fetchAsync(this.url("/api/auth"), {
       method: "DELETE",
       headers: {
         sid: sessionId,

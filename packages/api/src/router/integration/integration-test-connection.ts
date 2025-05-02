@@ -2,7 +2,7 @@ import { decryptSecret } from "@homarr/common/server";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
-import { createIntegrationAsync, IntegrationTestConnectionError } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations";
 import { logger } from "@homarr/log";
 
 type FormIntegration = Integration & {

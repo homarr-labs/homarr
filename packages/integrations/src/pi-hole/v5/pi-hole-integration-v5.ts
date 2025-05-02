@@ -1,6 +1,5 @@
-import { z } from "zod";
-
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ResponseError } from "@homarr/common";
 
 import { Integration } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
@@ -14,25 +13,17 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
     const apiKey = super.getSecretValue("apiKey");
     const response = await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?summaryRaw", { auth: apiKey }));
     if (!response.ok) {
-      throw new Error(
-        `Failed to fetch summary for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
-      );
+      throw new ResponseError(response);
     }
 
-    const result = summaryResponseSchema.safeParse(await response.json());
-
-    if (!result.success) {
-      throw new Error(
-        `Failed to parse summary for ${this.integration.name} (${this.integration.id}), most likely your api key is wrong: ${result.error.message}`,
-      );
-    }
+    const data = await summaryResponseSchema.parseAsync(await response.json());
 
     return {
-      status: result.data.status,
-      adsBlockedToday: result.data.ads_blocked_today,
-      adsBlockedTodayPercentage: result.data.ads_percentage_today,
-      domainsBeingBlocked: result.data.domains_being_blocked,
-      dnsQueriesToday: result.data.dns_queries_today,
+      status: data.status,
+      adsBlockedToday: data.ads_blocked_today,
+      adsBlockedTodayPercentage: data.ads_percentage_today,
+      domainsBeingBlocked: data.domains_being_blocked,
+      dnsQueriesToday: data.dns_queries_today,
     };
   }
 
@@ -43,12 +34,13 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
 
     if (!response.ok) return TestConnectionError.StatusResult(response);
 
-    // TODO: try out if this still works
-    const responseSchema = z.object({
-      status: z.string(),
-    });
+    const data = await response.json();
 
-    await responseSchema.parseAsync(await response.json());
+    // Pi-hole v5 returned an empty array if the API key is wrong
+    if (typeof data !== "object" || Array.isArray(data)) {
+      return TestConnectionError.UnauthorizedResult();
+    }
+
     return { success: true };
   }
 

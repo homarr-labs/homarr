@@ -2,6 +2,7 @@ import type { X509Certificate } from "node:crypto";
 import tls from "node:tls";
 
 import { getAllTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { getPortFromUrl } from "@homarr/common";
 
 import type { IntegrationRequestErrorOfType } from "../errors/http/integration-request-error";
 import { IntegrationRequestError } from "../errors/http/integration-request-error";
@@ -111,8 +112,7 @@ export class TestConnectionService {
 
   private async fetchCertificateAsync(): Promise<X509Certificate | undefined> {
     const url = this.url;
-    // TODO: use new getUrlPort function from @homarr/common
-    const port = Number(url.port) || (url.protocol === "https:" ? 443 : 80);
+    const port = getPortFromUrl(url);
     const socket = await new Promise<tls.TLSSocket>((resolve, reject) => {
       try {
         const innerSocket = tls.connect(

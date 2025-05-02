@@ -1,3 +1,4 @@
+import { ParseError } from "@homarr/common";
 import type { ParseErrorHandler } from "@homarr/common";
 
 import type { IIntegrationErrorHandler } from "../handler";
@@ -12,6 +13,7 @@ export class IntegrationParseErrorHandler implements IIntegrationErrorHandler {
   }
 
   handleError(error: unknown, integration: IntegrationErrorData): IntegrationError | undefined {
+    if (error instanceof ParseError) return new IntegrationParseError(integration, { cause: error });
     const parseError = this.parseErrorHandler.handleParseError(error);
     if (parseError) return new IntegrationParseError(integration, { cause: parseError });
 
