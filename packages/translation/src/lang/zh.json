@@ -1093,7 +1093,7 @@
           "label": "集成"
         },
         "title": {
-          "label": ""
+          "label": "標題"
         },
         "customCssClasses": {
           "label": "自定義 CSS html"
@@ -1771,8 +1771,8 @@
       "description": "顯示當前多媒體伺服器的串流",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "只顯示目前播放中的項目",
+          "description": "停用此功能將無法在 Plex 上運作"
         }
       },
       "items": {
@@ -1949,7 +1949,8 @@
         "pending": "待處理",
         "approved": "已批准",
         "declined": "已拒絕",
-        "failed": "失敗"
+        "failed": "失敗",
+        "completed": "已完成"
       },
       "toBeDetermined": "多媒體請求狀態"
     },
@@ -2053,83 +2054,83 @@
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "版本發佈",
+      "description": "顯示符合指定版本規則的儲存庫及其目前版本列表",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "新版本發布於",
+          "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示新版本"
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "過時版本範圍內",
+          "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示過時版本"
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "只顯示已標示的項目",
+          "description": "只顯示新版本或過時版本。如上所述"
         },
         "showDetails": {
-          "label": ""
+          "label": "顯示詳情"
         },
         "repositories": {
-          "label": "",
+          "label": "儲存庫",
           "addRRepository": {
-            "label": ""
+            "label": "新增儲存庫"
           },
           "provider": {
-            "label": ""
+            "label": "提供者"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "識別碼",
+            "placeholder": "名稱或擁有者/名稱"
           },
           "versionFilter": {
-            "label": "",
+            "label": "版本篩選",
             "prefix": {
-              "label": ""
+              "label": "前綴"
             },
             "precision": {
-              "label": "",
+              "label": "精確度",
               "options": {
-                "none": ""
+                "none": "無"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "後綴"
             },
             "regex": {
-              "label": ""
+              "label": "正則表達式"
             }
           },
           "edit": {
-            "label": ""
+            "label": "編輯"
           },
           "editForm": {
-            "title": "",
+            "title": "編輯儲存庫",
             "cancel": {
-              "label": ""
+              "label": "取消"
             },
             "confirm": {
-              "label": ""
+              "label": "確認"
             }
           },
           "example": {
-            "label": ""
+            "label": "範例"
           },
-          "invalid": ""
+          "invalid": "無效的儲存庫定義，請檢查值的設定"
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "created": ""
+      "not-found": "未找到",
+      "pre-release": "預發佈",
+      "archived": "已歸檔",
+      "forked": "已分支",
+      "starsCount": "星標",
+      "forksCount": "分支數",
+      "issuesCount": "開放問題",
+      "openProjectPage": "開啟專案頁面",
+      "openReleasePage": "開啟發布葉面",
+      "releaseDescription": "版本描述",
+      "created": "已創建"
     },
     "networkControllerSummary": {
       "option": {},
@@ -3888,8 +3889,8 @@
           "title": "尚無憑證"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "無效的證書",
+          "description": "解析證書失敗"
         },
         "expires": "到期 {when}"
       }

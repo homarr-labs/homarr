@@ -1949,7 +1949,8 @@
         "pending": "Venter",
         "approved": "Godkjent",
         "declined": "Avslått",
-        "failed": "Feilet"
+        "failed": "Feilet",
+        "completed": ""
       },
       "toBeDetermined": "Uavklart"
     },

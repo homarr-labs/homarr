@@ -48,6 +48,7 @@ export enum MediaRequestStatus {
   Approved = 2,
   Declined = 3,
   Failed = 4,
+  Completed = 5,
 }
 
 export enum MediaAvailability {

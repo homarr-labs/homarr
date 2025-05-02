@@ -14,7 +14,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trp
 
 export const dnsHoleRouter = createTRPCRouter({
   summary: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -36,7 +36,7 @@ export const dnsHoleRouter = createTRPCRouter({
     }),
 
   subscribeToSummary: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("dnsHole")))
     .subscription(({ ctx }) => {
       return observable<{
         integration: Modify<Integration, { kind: IntegrationKindByCategory<"dnsHole"> }>;
@@ -63,7 +63,7 @@ export const dnsHoleRouter = createTRPCRouter({
     }),
 
   enable: protectedProcedure
-    .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
+    .concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
     .mutation(async ({ ctx: { integration } }) => {
       const client = await createIntegrationAsync(integration);
       await client.enableAsync();
@@ -81,7 +81,7 @@ export const dnsHoleRouter = createTRPCRouter({
         duration: z.number().optional(),
       }),
     )
-    .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
+    .concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("dnsHole")))
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
       await client.disableAsync(input.duration);

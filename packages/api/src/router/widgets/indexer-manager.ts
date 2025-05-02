@@ -16,7 +16,7 @@ const createIndexerManagerIntegrationMiddleware = (action: IntegrationAction) =>
 
 export const indexerManagerRouter = createTRPCRouter({
   getIndexersStatus: publicProcedure
-    .unstable_concat(createIndexerManagerIntegrationMiddleware("query"))
+    .concat(createIndexerManagerIntegrationMiddleware("query"))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -33,7 +33,7 @@ export const indexerManagerRouter = createTRPCRouter({
     }),
 
   subscribeIndexersStatus: publicProcedure
-    .unstable_concat(createIndexerManagerIntegrationMiddleware("query"))
+    .concat(createIndexerManagerIntegrationMiddleware("query"))
     .subscription(({ ctx }) => {
       return observable<{ integrationId: string; indexers: Indexer[] }>((emit) => {
         const unsubscribes: (() => void)[] = [];
@@ -55,7 +55,7 @@ export const indexerManagerRouter = createTRPCRouter({
       });
     }),
   testAllIndexers: protectedProcedure
-    .unstable_concat(createIndexerManagerIntegrationMiddleware("interact"))
+    .concat(createIndexerManagerIntegrationMiddleware("interact"))
     .mutation(async ({ ctx }) => {
       await Promise.all(
         ctx.integrations.map(async (integration) => {
