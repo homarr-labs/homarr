@@ -24,8 +24,7 @@
   "dependencies": {
     "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
-    "@homarr/log": "workspace:^0.1.0",
-    "pretty-print-error": "^1.1.2"
+    "@homarr/log": "workspace:^0.1.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

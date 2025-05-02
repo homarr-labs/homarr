@@ -1,6 +1,8 @@
 import type { SiteStats } from "node-unifi";
 import { Controller } from "node-unifi";
 
+import { getPortFromUrl } from "@homarr/common";
+
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
 import { Integration } from "../base/integration";
@@ -47,20 +49,16 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
   }
 
   private async createControllerClientAsync() {
-    const portString = new URL(this.integration.url).port;
-    const port = Number.isInteger(portString) ? Number(portString) : undefined;
-    const hostname = new URL(this.integration.url).hostname;
+    const url = new URL(this.integration.url);
 
     const client = new Controller({
-      host: hostname,
-      // @ts-expect-error the URL construction is incorrect and does not append the required / at the end: https://github.com/jens-maus/node-unifi/blob/05665e8f82a900a15a9ea8b1071750b29825b3bc/unifi.js#L56, https://github.com/jens-maus/node-unifi/blob/05665e8f82a900a15a9ea8b1071750b29825b3bc/unifi.js#L95
-      port: port === undefined ? "/" : `${port}/`,
+      host: url.hostname,
+      port: getPortFromUrl(url),
       sslverify: false, // TODO: implement a "ignore certificate toggle", see https://github.com/homarr-labs/homarr/issues/2553
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
     });
 
-    // Object.defineProperty(client, '_baseurl', { value: url });
     await client.login(this.getSecretValue("username"), this.getSecretValue("password"), null);
     return client;
   }

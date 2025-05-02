@@ -31,7 +31,6 @@
     "@homarr/redis": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
     "octokit": "^4.1.3",
-    "pretty-print-error": "^1.1.2",
     "superjson": "2.2.2"
   },
   "devDependencies": {

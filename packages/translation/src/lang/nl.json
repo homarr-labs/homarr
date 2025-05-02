@@ -1949,7 +1949,8 @@
         "pending": "In afwachting",
         "approved": "Goedgekeurd",
         "declined": "Afgewezen",
-        "failed": "Mislukt"
+        "failed": "Mislukt",
+        "completed": ""
       },
       "toBeDetermined": "TBD"
     },
