@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "集成"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "自定义 CSS 类"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "当前媒体服务流",
       "description": "显示媒体服务器上的当前流",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "正在播放",
         "user": "用户",
@@ -1941,7 +1949,8 @@
         "pending": "待处理",
         "approved": "已批准",
         "declined": "已拒绝",
-        "failed": "失败"
+        "failed": "失败",
+        "completed": ""
       },
       "toBeDetermined": "待定"
     },
@@ -2043,6 +2052,85 @@
           "label": "帖子数量限制"
         }
       }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": ""
     },
     "networkControllerSummary": {
       "option": {},
@@ -3799,6 +3887,10 @@
         "description": "Homarr 用于从集成请求数据。",
         "noResults": {
           "title": "还没有证书"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "到期时间 {when}"
       }

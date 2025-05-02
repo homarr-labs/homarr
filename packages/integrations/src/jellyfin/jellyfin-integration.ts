@@ -6,7 +6,7 @@ import { getSystemApi } from "@jellyfin/sdk/lib/utils/api/system-api";
 import { createAxiosCertificateInstanceAsync } from "@homarr/certificates/server";
 
 import { Integration } from "../base/integration";
-import type { StreamSession } from "../interfaces/media-server/session";
+import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/session";
 
 export class JellyfinIntegration extends Integration {
   private readonly jellyfin: Jellyfin = new Jellyfin({
@@ -26,7 +26,7 @@ export class JellyfinIntegration extends Integration {
     await systemApi.getPingSystem();
   }
 
-  public async getCurrentSessionsAsync(): Promise<StreamSession[]> {
+  public async getCurrentSessionsAsync(options: CurrentSessionsInput): Promise<StreamSession[]> {
     const api = await this.getApiAsync();
     const sessionApi = getSessionApi(api);
     const sessions = await sessionApi.getSessions();
@@ -38,6 +38,7 @@ export class JellyfinIntegration extends Integration {
     return sessions.data
       .filter((sessionInfo) => sessionInfo.UserId !== undefined)
       .filter((sessionInfo) => sessionInfo.DeviceId !== "homarr")
+      .filter((sessionInfo) => !options.showOnlyPlaying || sessionInfo.NowPlayingItem !== undefined)
       .map((sessionInfo): StreamSession => {
         let currentlyPlaying: StreamSession["currentlyPlaying"] | null = null;
 

@@ -38,21 +38,21 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@auth/core": "^0.38.0",
+    "@auth/core": "^0.39.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/env": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/core": "^7.17.4",
+    "@mantine/core": "^7.17.7",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@testcontainers/mysql": "^10.24.2",
+    "@testcontainers/mysql": "^10.25.0",
     "better-sqlite3": "^11.9.1",
     "dotenv": "^16.5.0",
     "drizzle-kit": "^0.31.0",
-    "drizzle-orm": "^0.42.0",
+    "drizzle-orm": "^0.43.1",
     "drizzle-zod": "^0.7.1",
-    "mysql2": "3.14.0"
+    "mysql2": "3.14.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -60,9 +60,9 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.13",
     "dotenv-cli": "^8.0.0",
-    "eslint": "^9.24.0",
+    "eslint": "^9.25.1",
     "prettier": "^3.5.3",
-    "tsx": "4.19.3",
+    "tsx": "4.19.4",
     "typescript": "^5.8.3"
   }
 }

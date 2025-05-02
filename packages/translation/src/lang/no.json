@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integrasjoner"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Egendefinerte css-klasser"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Pågående medieserver-strømmer",
       "description": "Vis pågående strømmer på dine media-servere",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Spilles nå",
         "user": "Bruker",
@@ -1941,7 +1949,8 @@
         "pending": "Venter",
         "approved": "Godkjent",
         "declined": "Avslått",
-        "failed": "Feilet"
+        "failed": "Feilet",
+        "completed": ""
       },
       "toBeDetermined": "Uavklart"
     },
@@ -2043,6 +2052,85 @@
           "label": "Antall poster grense"
         }
       }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": ""
     },
     "networkControllerSummary": {
       "option": {},
@@ -3799,6 +3887,10 @@
         "description": "Brukes av Homarr for å be om data fra integrasjoner.",
         "noResults": {
           "title": "Det er ingen sertifikater enda"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "Utløper {when}"
       }

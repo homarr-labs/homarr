@@ -618,11 +618,11 @@
         "title": ""
       },
       "create": {
-        "title": "",
+        "title": "Neue App erstellen",
         "description": "",
         "action": ""
       },
-      "add": ""
+      "add": "App hinzufügen"
     }
   },
   "integration": {
@@ -995,7 +995,7 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "borderColor": {
           "label": "Rahmenfarbe"
@@ -1091,6 +1091,9 @@
       "field": {
         "integrations": {
           "label": "Integrationen"
+        },
+        "title": {
+          "label": ""
         },
         "customCssClasses": {
           "label": "Benutzerdefinierte CSS Klassen"
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Aktuelle Media Server Streams",
       "description": "Zeige die aktuellen Streams auf deinen Medienservern an",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Aktuelle Wiedergabe",
         "user": "Benutzer",
@@ -1941,7 +1949,8 @@
         "pending": "Ausstehend",
         "approved": "Bestätigt",
         "declined": "Abgelehnt",
-        "failed": "Fehlgeschlagen"
+        "failed": "Fehlgeschlagen",
+        "completed": ""
       },
       "toBeDetermined": "Noch Festzulegen"
     },
@@ -2043,6 +2052,85 @@
           "label": "Limit für Beiträge"
         }
       }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": ""
     },
     "networkControllerSummary": {
       "option": {},
@@ -3799,6 +3887,10 @@
         "description": "Wird von Homarr verwendet, um Daten von Integrationen anzufordern.",
         "noResults": {
           "title": "Es gibt noch keine Zertifikate"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "Gültig bis {when}"
       }

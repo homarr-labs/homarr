@@ -612,17 +612,17 @@
       "select": {
         "label": "Sélectionner l'app",
         "notFound": "Aucune app trouvée",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "Rechercher une application",
+        "noResults": "Pas de résultats",
+        "action": "Sélectionner {app}",
+        "title": "Sélectionner une application à ajouter à ce tableau"
       },
       "create": {
-        "title": "",
-        "description": "",
+        "title": "Créer une nouvelle application",
+        "description": "Créer une nouvelle application ",
         "action": ""
       },
-      "add": ""
+      "add": "Ajouter une application"
     }
   },
   "integration": {
@@ -769,7 +769,7 @@
           "message": "Le chemin d'accès n'est probablement pas correct"
         },
         "tooManyRequests": {
-          "title": "",
+          "title": "Trop de requêtes en un temps donné",
           "message": ""
         }
       }
@@ -995,7 +995,7 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Titre"
         },
         "borderColor": {
           "label": "Couleur de la bordure"
@@ -1091,6 +1091,9 @@
       "field": {
         "integrations": {
           "label": "Intégrations"
+        },
+        "title": {
+          "label": "Titre"
         },
         "customCssClasses": {
           "label": "Classes CSS personnalisées"
@@ -1442,8 +1445,8 @@
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Cours des actions",
+      "description": "Affiche le cours des actions d'une entreprise",
       "option": {
         "stock": {
           "label": ""
@@ -1452,66 +1455,66 @@
           "label": "",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 jour"
             },
             "5d": {
-              "label": ""
+              "label": "5 jours"
             },
             "1mo": {
-              "label": ""
+              "label": "1 mois"
             },
             "3mo": {
-              "label": ""
+              "label": "3 mois"
             },
             "6mo": {
-              "label": ""
+              "label": "6 mois"
             },
             "ytd": {
-              "label": ""
+              "label": "Année courante"
             },
             "1y": {
-              "label": ""
+              "label": "1 an"
             },
             "2y": {
-              "label": ""
+              "label": "2 ans"
             },
             "5y": {
-              "label": ""
+              "label": "5 ans"
             },
             "10y": {
-              "label": ""
+              "label": "10 ans"
             },
             "max": {
-              "label": ""
+              "label": "Maximum"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Intervalle de temps",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 minutes"
             },
             "15m": {
-              "label": ""
+              "label": "15 minutes"
             },
             "30m": {
-              "label": ""
+              "label": "30 minutes"
             },
             "1h": {
-              "label": ""
+              "label": "1 heure"
             },
             "1d": {
-              "label": ""
+              "label": "1 jour"
             },
             "5d": {
-              "label": ""
+              "label": "5 jours"
             },
             "1wk": {
-              "label": ""
+              "label": "1 semaine"
             },
             "1mo": {
-              "label": ""
+              "label": "1 mois"
             }
           }
         }
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Flux du serveur multimédia actuel",
       "description": "Afficher les flux en cours sur vos serveurs de multimédia",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "Afficher seulement les médias en cours de lecture",
+          "description": "Désactiver cette option ne fonctionnera pas pour Plex"
+        }
+      },
       "items": {
         "currentlyPlaying": "En cours de lecture",
         "user": "Utilisateur",
@@ -1941,7 +1949,8 @@
         "pending": "En attente",
         "approved": "Approuvé",
         "declined": "Refusé",
-        "failed": "Échec"
+        "failed": "Échec",
+        "completed": ""
       },
       "toBeDetermined": "À déterminer"
     },
@@ -2043,6 +2052,85 @@
           "label": "Nombre maximum de publications"
         }
       }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": ""
     },
     "networkControllerSummary": {
       "option": {},
@@ -3799,6 +3887,10 @@
         "description": "Utilisé par Homarr pour demander les données des intégrations.",
         "noResults": {
           "title": "Il n'y a pas encore de certificats"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "Expire le {when}"
       }

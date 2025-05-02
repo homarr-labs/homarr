@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integraties"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Aangepaste CSS-classes"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Huidige mediaserver streams",
       "description": "De huidige streams op je mediaservers weergeven",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Momenteel aan het afspelen",
         "user": "Gebruiker",
@@ -1941,7 +1949,8 @@
         "pending": "In afwachting",
         "approved": "Goedgekeurd",
         "declined": "Afgewezen",
-        "failed": "Mislukt"
+        "failed": "Mislukt",
+        "completed": ""
       },
       "toBeDetermined": "TBD"
     },
@@ -2043,6 +2052,85 @@
           "label": "Aantal berichtenlimiet"
         }
       }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": ""
     },
     "networkControllerSummary": {
       "option": {},
@@ -3799,6 +3887,10 @@
         "description": "Gebruikt door Homarr om gegevens op te vragen van integraties.",
         "noResults": {
           "title": "Er zijn nog geen certificaten"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "Verloopt {when}"
       }

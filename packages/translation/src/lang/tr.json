@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Entegrasyonlar"
         },
+        "title": {
+          "label": "Başlık"
+        },
         "customCssClasses": {
           "label": "Özel CSS Alanı"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Güncel Medya Sunucusu Akışları",
       "description": "Medya sunucularınızdaki mevcut akışları gösterin",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "Yalnızca şu an oynatılanı göster",
+          "description": "Bunu devre dışı bırakmak plex için işe yaramayacaktır"
+        }
+      },
       "items": {
         "currentlyPlaying": "Şuan Oynatılan",
         "user": "Kullanıcı",
@@ -1941,7 +1949,8 @@
         "pending": "Bekleyen",
         "approved": "Onaylandı",
         "declined": "Reddedildi",
-        "failed": "Başarısız"
+        "failed": "Başarısız",
+        "completed": ""
       },
       "toBeDetermined": "-Yapım Aşamasında-"
     },
@@ -2043,6 +2052,85 @@
           "label": "Gönderi sayısı sınırı"
         }
       }
+    },
+    "releases": {
+      "name": "Sürümler",
+      "description": "Verilen sürüm düzenli ifadesiyle, belirtilen depoların mevcut sürümlerinin bir listesini gösterir.",
+      "option": {
+        "newReleaseWithin": {
+          "label": "Yeni Sürüm Süresi (içinde)",
+          "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri: h (saat), d (gün), w (hafta), m (ay), y (yıl). Yeni sürümleri vurgulamak istemiyorsanız boş bırakın."
+        },
+        "staleReleaseWithin": {
+          "label": "Eski Sürüm Süresi (içinde)",
+          "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri h (saat), d (gün), w (hafta), m (ay), y (yıl). Eski sürümleri vurgulamak istemiyorsanız boş bırakın."
+        },
+        "showOnlyHighlighted": {
+          "label": "Yalnızca Vurgulananları Göster",
+          "description": "Yalnızca yeni veya eski sürümleri göster. Yukarıdaki açıklamaya göre."
+        },
+        "showDetails": {
+          "label": "Ayrıntıları Göster"
+        },
+        "repositories": {
+          "label": "Depolar",
+          "addRRepository": {
+            "label": "Depo Ekle"
+          },
+          "provider": {
+            "label": "Sağlayıcı"
+          },
+          "identifier": {
+            "label": "Tanımlayıcı",
+            "placeholder": "Ad veya Sahip/Ad"
+          },
+          "versionFilter": {
+            "label": "Sürüm Filtresi",
+            "prefix": {
+              "label": "Önek"
+            },
+            "precision": {
+              "label": "Hassasiyet",
+              "options": {
+                "none": "Hiçbiri"
+              }
+            },
+            "suffix": {
+              "label": "Sonek"
+            },
+            "regex": {
+              "label": "Düzenli İfade"
+            }
+          },
+          "edit": {
+            "label": "Düzenle"
+          },
+          "editForm": {
+            "title": "Depoyu Düzenle",
+            "cancel": {
+              "label": "Vazgeç"
+            },
+            "confirm": {
+              "label": "Onayla"
+            }
+          },
+          "example": {
+            "label": "Örnek"
+          },
+          "invalid": "Geçersiz depo tanımı, lütfen değerleri kontrol edin"
+        }
+      },
+      "not-found": "Bulunamadı",
+      "pre-release": "Ön Sürüm",
+      "archived": "Arşivlenmiş",
+      "forked": "Çatallanmış",
+      "starsCount": "Yıldızlar",
+      "forksCount": "Çatallar",
+      "issuesCount": "Sorunları Aç",
+      "openProjectPage": "Proje Sayfasını Aç",
+      "openReleasePage": "Sürüm Sayfasını Aç",
+      "releaseDescription": "Sürüm Açıklaması",
+      "created": "Oluşturuldu"
     },
     "networkControllerSummary": {
       "option": {},
@@ -3799,6 +3887,10 @@
         "description": "Homarr tarafından, Entegrasyonlardan veri çekmek için kullanılır.",
         "noResults": {
           "title": "Henüz sertifika yok"
+        },
+        "invalid": {
+          "title": "Geçersiz sertifika",
+          "description": "Sertifika çözümlenemedi"
         },
         "expires": "{when} süresi doluyor"
       }

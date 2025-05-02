@@ -33,9 +33,9 @@
     "@homarr/settings": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
-    "@mantine/core": "^7.17.4",
-    "@mantine/hooks": "^7.17.4",
-    "@mantine/spotlight": "^7.17.4",
+    "@mantine/core": "^7.17.7",
+    "@mantine/hooks": "^7.17.7",
+    "@mantine/spotlight": "^7.17.7",
     "@tabler/icons-react": "^3.31.0",
     "jotai": "^2.12.3",
     "next": "15.3.1",
@@ -47,7 +47,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.24.0",
+    "eslint": "^9.25.1",
     "typescript": "^5.8.3"
   }
 }

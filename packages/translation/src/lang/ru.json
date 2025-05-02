@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Интеграции"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Пользовательские CSS классы"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Активные просмотры",
       "description": "Отображает текущие сеансы воспроизведения на медиасерверах",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "",
         "user": "Пользователь",
@@ -1941,7 +1949,8 @@
         "pending": "В ожидании",
         "approved": "Одобрено",
         "declined": "Отклонено",
-        "failed": "Ошибка"
+        "failed": "Ошибка",
+        "completed": ""
       },
       "toBeDetermined": "Будет определено позже"
     },
@@ -2043,6 +2052,85 @@
           "label": "Максимальное количество записей"
         }
       }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": ""
     },
     "networkControllerSummary": {
       "option": {},
@@ -3799,6 +3887,10 @@
         "description": "Используются Homarr для запроса данных из интеграций.",
         "noResults": {
           "title": "Доверенные сертификаты отсутствуют"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "Истекает {when}"
       }

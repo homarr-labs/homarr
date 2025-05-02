@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integrationer"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "Brugerdefinerede CSS-klasser"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Aktuelle medieserver streams",
       "description": "Vis de aktuelle streams på dine medieservere",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Afspiller lige nu",
         "user": "Bruger",
@@ -1941,7 +1949,8 @@
         "pending": "Afventende",
         "approved": "Godkendt",
         "declined": "Afvist",
-        "failed": "Mislykket"
+        "failed": "Mislykket",
+        "completed": ""
       },
       "toBeDetermined": "TBD"
     },
@@ -2043,6 +2052,85 @@
           "label": "Grænse for antal indlæg"
         }
       }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": ""
     },
     "networkControllerSummary": {
       "option": {},
@@ -3799,6 +3887,10 @@
         "description": "Brugt af Homarr til at anmode om data fra integrationer.",
         "noResults": {
           "title": "Der er endnu ingen certifikater"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "Udløber {when}"
       }

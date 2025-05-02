@@ -142,26 +142,26 @@ export const integrationDefs = {
   dashDot: {
     name: "Dash.",
     secretKinds: [[]],
-    category: ["healthMonitoring"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/dashdot.png",
+    category: ["healthMonitoring"],
   },
   tdarr: {
     name: "Tdarr",
-    secretKinds: [[]],
-    category: ["mediaTranscoding"],
+    secretKinds: [[], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/tdarr.png",
+    category: ["mediaTranscoding"],
   },
   proxmox: {
     name: "Proxmox",
     secretKinds: [["username", "tokenId", "apiKey", "realm"]],
-    category: ["healthMonitoring"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/proxmox.svg",
+    category: ["healthMonitoring"],
   },
   nextcloud: {
     name: "Nextcloud",
     secretKinds: [["username", "password"]],
-    category: ["calendar"],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nextcloud.svg",
+    category: ["calendar"],
   },
   unifiController: {
     name: "Unifi Controller",

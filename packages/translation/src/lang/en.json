@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "Integrations"
         },
+        "title": {
+          "label": "Title"
+        },
         "customCssClasses": {
           "label": "Custom css classes"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "Current media server streams",
       "description": "Show the current streams on your media servers",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "Show only currently playing",
+          "description": "Disabling this will not work for plex"
+        }
+      },
       "items": {
         "currentlyPlaying": "Currently playing",
         "user": "User",
@@ -1941,7 +1949,8 @@
         "pending": "Pending",
         "approved": "Approved",
         "declined": "Declined",
-        "failed": "Failed"
+        "failed": "Failed",
+        "completed": "Completed"
       },
       "toBeDetermined": "TBD"
     },
@@ -2043,6 +2052,85 @@
           "label": "Amount posts limit"
         }
       }
+    },
+    "releases": {
+      "name": "Releases",
+      "description": "Displays a list of the current version of the given repositories with the given version regex.",
+      "option": {
+        "newReleaseWithin": {
+          "label": "New Release Within",
+          "description": "Usage example: 1w (1 week), 10m (10 months). Accepted unit types h (hours), d (days), w (weeks), m (months), y (years). Leave empty for no highlighting of new releases."
+        },
+        "staleReleaseWithin": {
+          "label": "Stale Release Within",
+          "description": "Usage example: 1w (1 week), 10m (10 months). Accepted unit types h (hours), d (days), w (weeks), m (months), y (years). Leave empty for no highlighting of stale releases."
+        },
+        "showOnlyHighlighted": {
+          "label": "Show Only Highlighted",
+          "description": "Show only new or stale releases. As per the above."
+        },
+        "showDetails": {
+          "label": "Show Details"
+        },
+        "repositories": {
+          "label": "Repositories",
+          "addRRepository": {
+            "label": "Add repository"
+          },
+          "provider": {
+            "label": "Provider"
+          },
+          "identifier": {
+            "label": "Identifier",
+            "placeholder": "Name or Owner/Name"
+          },
+          "versionFilter": {
+            "label": "Version Filter",
+            "prefix": {
+              "label": "Prefix"
+            },
+            "precision": {
+              "label": "Precision",
+              "options": {
+                "none": "None"
+              }
+            },
+            "suffix": {
+              "label": "Suffix"
+            },
+            "regex": {
+              "label": "Regular Expression"
+            }
+          },
+          "edit": {
+            "label": "Edit"
+          },
+          "editForm": {
+            "title": "Edit Repository",
+            "cancel": {
+              "label": "Cancel"
+            },
+            "confirm": {
+              "label": "Confirm"
+            }
+          },
+          "example": {
+            "label": "Example"
+          },
+          "invalid": "Invalid repository definition, please check the values"
+        }
+      },
+      "not-found": "Not Found",
+      "pre-release": "Pre-Release",
+      "archived": "Archived",
+      "forked": "Forked",
+      "starsCount": "Stars",
+      "forksCount": "Forks",
+      "issuesCount": "Open Issues",
+      "openProjectPage": "Open Project Page",
+      "openReleasePage": "Open Release Page",
+      "releaseDescription": "Release Description",
+      "created": "Created"
     },
     "networkControllerSummary": {
       "option": {},
@@ -3799,6 +3887,10 @@
         "description": "Used by Homarr to request data from integrations.",
         "noResults": {
           "title": "There are no certificates yet"
+        },
+        "invalid": {
+          "title": "Invalid certificate",
+          "description": "Failed to parse certificate"
         },
         "expires": "Expires {when}"
       }

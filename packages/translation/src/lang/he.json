@@ -1092,6 +1092,9 @@
         "integrations": {
           "label": "אינטגרציות"
         },
+        "title": {
+          "label": ""
+        },
         "customCssClasses": {
           "label": "מחלקות עיצוב מותאמות אישית"
         },
@@ -1766,7 +1769,12 @@
     "mediaServer": {
       "name": "זרמי שרת מדיה נוכחיים",
       "description": "הצג את הזרמים הנוכחיים בשרתי המדיה שלך",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "מתנגן כרגע",
         "user": "משתמש",
@@ -1941,7 +1949,8 @@
         "pending": "ממתין",
         "approved": "אושר",
         "declined": "נדחה",
-        "failed": "נכשל"
+        "failed": "נכשל",
+        "completed": ""
       },
       "toBeDetermined": "ייקבע בהמשך"
     },
@@ -2043,6 +2052,85 @@
           "label": "הגבלת כמות הודעות"
         }
       }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": ""
     },
     "networkControllerSummary": {
       "option": {},
@@ -3799,6 +3887,10 @@
         "description": "נעשה שימוש ב-Homarr כדי לבקש נתונים מאינטגרציות.",
         "noResults": {
           "title": "אין עדיין תעודות אבטחה"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "פג ב- {when}"
       }
