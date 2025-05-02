@@ -1949,7 +1949,8 @@
         "pending": "ממתין",
         "approved": "אושר",
         "declined": "נדחה",
-        "failed": "נכשל"
+        "failed": "נכשל",
+        "completed": ""
       },
       "toBeDetermined": "ייקבע בהמשך"
     },

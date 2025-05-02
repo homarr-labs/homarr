@@ -1949,7 +1949,8 @@
         "pending": "В ожидании",
         "approved": "Одобрено",
         "declined": "Отклонено",
-        "failed": "Ошибка"
+        "failed": "Ошибка",
+        "completed": ""
       },
       "toBeDetermined": "Будет определено позже"
     },
