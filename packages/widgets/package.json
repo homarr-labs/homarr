@@ -82,7 +82,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/video.js": "^7.3.58",
-    "eslint": "^9.25.1",
+    "eslint": "^9.26.0",
     "typescript": "^5.8.3"
   }
 }
