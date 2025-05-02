@@ -1,29 +1,21 @@
 import { Agent as HttpsAgent } from "node:https";
 import type { AxiosInstance } from "axios";
 import axios from "axios";
-import type { Dispatcher, Response } from "undici";
+import type { Dispatcher } from "undici";
 import { fetch as undiciFetch } from "undici";
-import { z } from "zod";
 
 import { createCertificateAgentAsync } from "@homarr/certificates/server";
-import { extractErrorMessage, removeTrailingSlash } from "@homarr/common";
+import { removeTrailingSlash, ResponseError } from "@homarr/common";
 import { LoggingAgent } from "@homarr/common/server";
 import type { IntegrationSecretKind } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
-import { ResponseError } from "./error";
 import { HandleIntegrationErrors } from "./errors/decorator";
 import { integrationFetchHttpErrorHandler } from "./errors/http";
 import { integrationJsonParseErrorHandler, integrationZodParseErrorHandler } from "./errors/parse";
-import { IntegrationTestConnectionError } from "./test-connection-error";
 import { TestConnectionError } from "./test-connection/test-connection-error";
 import type { TestingResult } from "./test-connection/test-connection-service";
 import { TestConnectionService } from "./test-connection/test-connection-service";
 import type { IntegrationSecret } from "./types";
-
-const causeSchema = z.object({
-  code: z.string(),
-});
 
 export interface IntegrationInput {
   id: string;
@@ -114,10 +106,11 @@ export abstract class Integration {
         });
       });
     } catch (error) {
+      // TODO: This can be removed, correct?
       if (error instanceof ResponseError) {
         return TestConnectionError.StatusResult({
           status: error.statusCode,
-          url: error.url,
+          url: error.url ?? "?",
         });
       }
 
@@ -133,85 +126,5 @@ export abstract class Integration {
    * Test the connection to the integration
    * @returns {Promise<TestingResult>}
    */
-  public abstract testingAsync(input: IntegrationTestingInput): Promise<TestingResult>;
-
-  protected async handleTestConnectionResponseAsync({
-    queryFunctionAsync,
-    handleResponseAsync,
-  }: {
-    queryFunctionAsync: () => Promise<Response>;
-    handleResponseAsync?: (response: Response) => Promise<void>;
-  }): Promise<void> {
-    const response = await queryFunctionAsync().catch((error) => {
-      if (error instanceof Error) {
-        const cause = causeSchema.safeParse(error.cause);
-        if (!cause.success) {
-          logger.error("Failed to test connection", error);
-          throw new IntegrationTestConnectionError("commonError", extractErrorMessage(error));
-        }
-
-        if (cause.data.code === "ENOTFOUND") {
-          logger.error("Failed to test connection: Domain not found");
-          throw new IntegrationTestConnectionError("domainNotFound");
-        }
-
-        if (cause.data.code === "ECONNREFUSED") {
-          logger.error("Failed to test connection: Connection refused");
-          throw new IntegrationTestConnectionError("connectionRefused");
-        }
-
-        if (cause.data.code === "ECONNABORTED") {
-          logger.error("Failed to test connection: Connection aborted");
-          throw new IntegrationTestConnectionError("connectionAborted");
-        }
-      }
-
-      logger.error("Failed to test connection", error);
-
-      throw new IntegrationTestConnectionError("commonError", extractErrorMessage(error));
-    });
-
-    if (response.status >= 400) {
-      const body = await response.text();
-      logger.error(`Failed to test connection with status code ${response.status}. Body: '${body}'`);
-
-      throwErrorByStatusCode(response.status);
-    }
-
-    await handleResponseAsync?.(response);
-  }
+  protected abstract testingAsync(input: IntegrationTestingInput): Promise<TestingResult>;
 }
-/*
-export interface TestConnectionError {
-  key: Exclude<keyof TranslationObject["integration"]["testConnection"]["notification"], "success">;
-  message?: string;
-}
-export type TestConnectionResult =
-  | {
-      success: false;
-      error: TestConnectionError;
-    }
-  | {
-      success: true;
-    };*/
-
-export const throwErrorByStatusCode = (statusCode: number) => {
-  switch (statusCode) {
-    case 400:
-      throw new IntegrationTestConnectionError("badRequest");
-    case 401:
-      throw new IntegrationTestConnectionError("unauthorized");
-    case 403:
-      throw new IntegrationTestConnectionError("forbidden");
-    case 404:
-      throw new IntegrationTestConnectionError("notFound");
-    case 429:
-      throw new IntegrationTestConnectionError("tooManyRequests");
-    case 500:
-      throw new IntegrationTestConnectionError("internalServerError");
-    case 503:
-      throw new IntegrationTestConnectionError("serviceUnavailable");
-    default:
-      throw new IntegrationTestConnectionError("commonError");
-  }
-};

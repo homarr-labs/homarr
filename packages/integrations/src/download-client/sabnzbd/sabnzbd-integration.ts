@@ -2,7 +2,8 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import type { fetch as undiciFetch } from "undici";
 
-import { ResponseError } from "../../base/error";
+import { ResponseError } from "@homarr/common";
+
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
@@ -14,7 +15,7 @@ import { historySchema, queueSchema } from "./sabnzbd-schema";
 dayjs.extend(duration);
 
 export class SabnzbdIntegration extends DownloadClientIntegration {
-  public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     //This is the one call that uses the least amount of data while requiring the api key
     await this.sabNzbApiCallWithCustomFetchAsync(input.fetchAsync, "translate", { value: "ping" });
     return { success: true };
@@ -121,7 +122,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
     return await fetchAsync(url)
       .then((response) => {
         if (!response.ok) {
-          throw new ResponseError(response, undefined);
+          throw new ResponseError(response);
         }
         return response.json();
       })

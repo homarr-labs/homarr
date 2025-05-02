@@ -3,8 +3,8 @@ import { z } from "zod";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import { TestConnectionError } from "../base/test-connection/test-connection-service";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/session";
 import { convertJellyfinType } from "../jellyfin/jellyfin-integration";
 
@@ -33,7 +33,7 @@ export class EmbyIntegration extends Integration {
   private static readonly deviceId = "homarr-emby-integration";
   private static readonly authorizationHeaderValue = `Emby Client="Dashboard", Device="Homarr", DeviceId="${EmbyIntegration.deviceId}", Version="0.0.1"`;
 
-  public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const apiKey = super.getSecretValue("apiKey");
     const response = await input.fetchAsync(super.url("/emby/System/Ping"), {
       headers: {

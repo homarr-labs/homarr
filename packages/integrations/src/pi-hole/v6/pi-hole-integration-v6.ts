@@ -2,15 +2,14 @@ import type { Response as UndiciResponse } from "undici";
 import type { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { extractErrorMessage } from "@homarr/common";
+import { ResponseError } from "@homarr/common";
 import { logger } from "@homarr/log";
 
-import { IntegrationResponseError, ParseError, ResponseError } from "../../base/error";
 import type { IntegrationInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
 import type { SessionStore } from "../../base/session-store";
 import { createSessionStore } from "../../base/session-store";
-import { IntegrationTestConnectionError } from "../../base/test-connection-error";
+import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DnsHoleSummaryIntegration } from "../../interfaces/dns-hole-summary/dns-hole-summary-integration";
 import type { DnsHoleSummary } from "../../types";
 import { dnsBlockingGetSchema, sessionResponseSchema, statsSummaryGetSchema } from "./pi-hole-schemas-v6";
@@ -35,16 +34,12 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     });
 
     if (!response.ok) {
-      throw new IntegrationResponseError(this.integration, response, await response.json());
+      throw new ResponseError(response);
     }
 
-    const result = dnsBlockingGetSchema.safeParse(await response.json());
+    const result = await dnsBlockingGetSchema.parseAsync(await response.json());
 
-    if (!result.success) {
-      throw new ParseError("DNS blocking status", result.error, await response.json());
-    }
-
-    return result.data;
+    return result;
   }
 
   private async getStatsSummaryAsync(): Promise<z.infer<typeof statsSummaryGetSchema>> {
@@ -57,17 +52,13 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     });
 
     if (!response.ok) {
-      throw new IntegrationResponseError(this.integration, response, await response.json());
+      throw new ResponseError(response);
     }
 
     const data = await response.json();
-    const result = statsSummaryGetSchema.safeParse(data);
+    const result = await statsSummaryGetSchema.parseAsync(data);
 
-    if (!result.success) {
-      throw new ParseError("stats summary", result.error, data);
-    }
-
-    return result.data;
+    return result;
   }
 
   public async getSummaryAsync(): Promise<DnsHoleSummary> {
@@ -83,21 +74,10 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     };
   }
 
-  public async testingAsync(): Promise<void> {
-    try {
-      const sessionId = await this.getSessionAsync();
-      await this.clearSessionAsync(sessionId);
-    } catch (error: unknown) {
-      if (error instanceof ParseError) {
-        throw new IntegrationTestConnectionError("invalidJson");
-      }
-
-      if (error instanceof ResponseError && error.statusCode === 401) {
-        throw new IntegrationTestConnectionError("invalidCredentials");
-      }
-
-      throw new IntegrationTestConnectionError("commonError", extractErrorMessage(error));
-    }
+  protected async testingAsync(): Promise<TestingResult> {
+    const sessionId = await this.getSessionAsync();
+    await this.clearSessionAsync(sessionId);
+    return { success: true };
   }
 
   public async enableAsync(): Promise<void> {
@@ -112,7 +92,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     });
 
     if (!response.ok) {
-      throw new IntegrationResponseError(this.integration, response, await response.json());
+      throw new ResponseError(response);
     }
   }
 
@@ -128,7 +108,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     });
 
     if (!response.ok) {
-      throw new IntegrationResponseError(this.integration, response, await response.json());
+      throw new ResponseError(response);
     }
   }
 
@@ -169,18 +149,19 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
         "User-Agent": "Homarr",
       },
     });
+
+    if (!response.ok) throw new ResponseError(response);
+
     const data = await response.json();
-    const result = sessionResponseSchema.safeParse(data);
-    if (!result.success) {
-      throw new ParseError("session response", result.error, data);
-    }
-    if (!result.data.session.sid) {
-      throw new IntegrationResponseError(this.integration, response, data);
+    const result = await sessionResponseSchema.parseAsync(data);
+
+    if (!result.session.sid) {
+      throw new ResponseError({ status: 401, url: response.url });
     }
 
     localLogger.info("Received session id successfully", { integrationId: this.integration.id });
 
-    return result.data.session.sid;
+    return result.session.sid;
   }
 
   /**

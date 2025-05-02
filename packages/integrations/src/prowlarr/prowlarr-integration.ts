@@ -1,7 +1,10 @@
+import { z } from "zod";
+
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
 import { Integration } from "../base/integration";
-import { IntegrationTestConnectionError } from "../base/test-connection-error";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { Indexer } from "../interfaces/indexer-manager/indexer";
 import { indexerResponseSchema, statusResponseSchema } from "./prowlarr-types";
 
@@ -75,27 +78,19 @@ export class ProwlarrIntegration extends Integration {
     }
   }
 
-  public async testingAsync(): Promise<void> {
+  protected async testingAsync(): Promise<TestingResult> {
     const apiKey = super.getSecretValue("apiKey");
-
-    await super.handleTestConnectionResponseAsync({
-      queryFunctionAsync: async () => {
-        return await fetchWithTrustedCertificatesAsync(this.url("/api"), {
-          headers: {
-            "X-Api-Key": apiKey,
-          },
-        });
-      },
-      handleResponseAsync: async (response) => {
-        try {
-          const result = await response.json();
-          if (typeof result === "object" && result !== null) return;
-        } catch {
-          throw new IntegrationTestConnectionError("invalidJson");
-        }
-
-        throw new IntegrationTestConnectionError("invalidCredentials");
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api"), {
+      headers: {
+        "X-Api-Key": apiKey,
       },
     });
+
+    if (!response.ok) return TestConnectionError.StatusResult(response);
+
+    const responseSchema = z.object({});
+
+    await responseSchema.parseAsync(await response.json());
+    return { success: true };
   }
 }

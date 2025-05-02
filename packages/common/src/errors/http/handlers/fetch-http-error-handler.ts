@@ -16,7 +16,7 @@ export class FetchHttpErrorHandler extends HttpErrorHandler {
   }
 
   /**
-   * Request errors do not exist for fetch as it does not throw errors for non successful responses.
+   * Response errors do not exist for fetch as it does not throw errors for non successful responses.
    */
   handleResponseError(_: unknown): ResponseError | undefined {
     return undefined;

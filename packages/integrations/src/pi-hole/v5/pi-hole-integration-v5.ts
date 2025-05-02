@@ -1,7 +1,10 @@
+import { z } from "zod";
+
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
 import { Integration } from "../../base/integration";
-import { IntegrationTestConnectionError } from "../../base/test-connection-error";
+import { TestConnectionError } from "../../base/test-connection/test-connection-error";
+import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DnsHoleSummaryIntegration } from "../../interfaces/dns-hole-summary/dns-hole-summary-integration";
 import type { DnsHoleSummary } from "../../interfaces/dns-hole-summary/dns-hole-summary-types";
 import { summaryResponseSchema } from "./pi-hole-schemas-v5";
@@ -33,24 +36,20 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
     };
   }
 
-  public async testingAsync(): Promise<void> {
+  protected async testingAsync(): Promise<TestingResult> {
     const apiKey = super.getSecretValue("apiKey");
 
-    await super.handleTestConnectionResponseAsync({
-      queryFunctionAsync: async () => {
-        return await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?status", { auth: apiKey }));
-      },
-      handleResponseAsync: async (response) => {
-        try {
-          const result = await response.json();
-          if (typeof result === "object" && result !== null && "status" in result) return;
-        } catch {
-          throw new IntegrationTestConnectionError("invalidJson");
-        }
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?status", { auth: apiKey }));
 
-        throw new IntegrationTestConnectionError("invalidCredentials");
-      },
+    if (!response.ok) return TestConnectionError.StatusResult(response);
+
+    // TODO: try out if this still works
+    const responseSchema = z.object({
+      status: z.string(),
     });
+
+    await responseSchema.parseAsync(await response.json());
+    return { success: true };
   }
 
   public async enableAsync(): Promise<void> {

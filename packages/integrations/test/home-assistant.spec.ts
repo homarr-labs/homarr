@@ -3,7 +3,8 @@ import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
 import { beforeAll, describe, expect, test } from "vitest";
 
-import { HomeAssistantIntegration, IntegrationTestConnectionError } from "../src";
+import { HomeAssistantIntegration } from "../src";
+import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
 
 const DEFAULT_API_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkNjQwY2VjNDFjOGU0NGM5YmRlNWQ4ZmFjMjUzYWViZiIsImlhdCI6MTcxODQ3MTE1MSwiZXhwIjoyMDMzODMxMTUxfQ.uQCZ5FZTokipa6N27DtFhLHkwYEXU1LZr0fsVTryL2Q";
@@ -21,10 +22,10 @@ describe("Home Assistant integration", () => {
     const homeAssistantIntegration = createHomeAssistantIntegration(startedContainer);
 
     // Act
-    const actAsync = async () => await homeAssistantIntegration.testingAsync();
+    const result = await homeAssistantIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).resolves.not.toThrow();
+    expect(result.success).toBe(true);
 
     // Cleanup
     await startedContainer.stop();
@@ -35,10 +36,14 @@ describe("Home Assistant integration", () => {
     const homeAssistantIntegration = createHomeAssistantIntegration(startedContainer, "wrong-api-key");
 
     // Act
-    const actAsync = async () => await homeAssistantIntegration.testingAsync();
+    const result = await homeAssistantIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).rejects.toThrow(IntegrationTestConnectionError);
+    expect(result.success).toBe(false);
+    if (result.success) return;
+
+    expect(result.error).toBeInstanceOf(TestConnectionError);
+    expect(result.error.type).toBe("unauthorized");
 
     // Cleanup
     await startedContainer.stop();

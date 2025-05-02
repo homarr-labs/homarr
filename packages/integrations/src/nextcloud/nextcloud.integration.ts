@@ -8,16 +8,22 @@ import type { RequestInit as UndiciFetchRequestInit } from "undici";
 import { createCertificateAgentAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
+import { HandleIntegrationErrors } from "../base/errors/decorator";
+import { integrationTsdavHttpErrorHandler } from "../base/errors/http";
 import { Integration } from "../base/integration";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { CalendarEvent } from "../calendar-types";
 
 dayjs.extend(utc);
 dayjs.extend(objectSupport);
 
+@HandleIntegrationErrors([integrationTsdavHttpErrorHandler])
 export class NextcloudIntegration extends Integration {
-  public async testingAsync(): Promise<void> {
+  protected async testingAsync(): Promise<TestingResult> {
     const client = await this.createCalendarClientAsync();
     await client.login();
+
+    return { success: true };
   }
 
   public async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]> {

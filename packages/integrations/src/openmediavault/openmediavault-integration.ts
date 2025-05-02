@@ -1,14 +1,14 @@
 import type { Headers, HeadersInit, Response as UndiciResponse } from "undici";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ResponseError } from "@homarr/common";
 import { logger } from "@homarr/log";
 
-import { ResponseError } from "../base/error";
 import type { IntegrationInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { SessionStore } from "../base/session-store";
 import { createSessionStore } from "../base/session-store";
-import { IntegrationTestConnectionError } from "../base/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { HealthMonitoring } from "../types";
 import { cpuTempSchema, fileSystemSchema, smartSchema, systemInformationSchema } from "./openmediavault-types";
 
@@ -84,12 +84,9 @@ export class OpenMediaVaultIntegration extends Integration {
     };
   }
 
-  public async testingAsync(): Promise<void> {
-    await this.getSessionAsync().catch((error) => {
-      if (error instanceof ResponseError) {
-        throw new IntegrationTestConnectionError("invalidCredentials");
-      }
-    });
+  protected async testingAsync(): Promise<TestingResult> {
+    await this.getSessionAsync();
+    return { success: true };
   }
 
   private async makeAuthenticatedRpcCallAsync(
@@ -165,6 +162,10 @@ export class OpenMediaVaultIntegration extends Integration {
       password: this.getSecretValue("password"),
     });
 
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
     const data = (await response.json()) as { response?: { sessionid?: string } };
     if (data.response?.sessionid) {
       return {
@@ -176,10 +177,10 @@ export class OpenMediaVaultIntegration extends Integration {
       const loginToken = OpenMediaVaultIntegration.extractLoginTokenFromCookies(response.headers);
 
       if (!sessionId || !loginToken) {
-        throw new ResponseError(
-          response,
-          `${JSON.stringify(data)} - sessionId=${"*".repeat(sessionId?.length ?? 0)} loginToken=${"*".repeat(loginToken?.length ?? 0)}`,
-        );
+        throw new ResponseError({
+          status: 401,
+          url: response.url,
+        });
       }
 
       return {

@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import type { fetch as undiciFetch } from "undici";
 
-import { ResponseError } from "../../base/error";
+import { ResponseError } from "@homarr/common";
+
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
@@ -11,7 +12,7 @@ import type { DownloadClientStatus } from "../../interfaces/downloads/download-c
 import type { NzbGetClient } from "./nzbget-types";
 
 export class NzbGetIntegration extends DownloadClientIntegration {
-  public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     await this.nzbGetApiCallWithCustomFetchAsync(input.fetchAsync, "version");
     return {
       success: true,
@@ -114,7 +115,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     return await fetchAsync(url, { method: "POST", body })
       .then(async (response) => {
         if (!response.ok) {
-          throw new ResponseError(response, undefined);
+          throw new ResponseError(response);
         }
         return ((await response.json()) as { result: ReturnType<NzbGetClient[CallType]> }).result;
       })

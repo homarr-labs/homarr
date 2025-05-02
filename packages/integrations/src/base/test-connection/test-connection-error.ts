@@ -2,8 +2,8 @@ import type { X509Certificate } from "node:crypto";
 
 import type { AnyRequestError, ParseError, RequestError } from "@homarr/common";
 
-import { IntegrationResponseError } from "../error";
 import { IntegrationRequestError } from "../errors/http/integration-request-error";
+import { IntegrationResponseError } from "../errors/http/integration-response-error";
 import type { IntegrationError } from "../errors/integration-error";
 import { IntegrationUnknownError } from "../errors/integration-unknown-error";
 import { IntegrationParseError } from "../errors/parse/integration-parse-error";
@@ -117,8 +117,8 @@ export class TestConnectionError<TType extends keyof TestConnectionErrorMap> ext
     }
     if (error instanceof IntegrationResponseError) {
       return this.Status({
-        status: error.statusCode,
-        url: error.url,
+        status: error.cause.statusCode,
+        url: error.cause.url ?? "?",
       });
     }
     if (error instanceof IntegrationParseError) {

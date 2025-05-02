@@ -6,12 +6,14 @@ import type { AxiosInstance } from "axios";
 
 import { createAxiosCertificateInstanceAsync } from "@homarr/certificates/server";
 
+import { HandleIntegrationErrors } from "../base/errors/decorator";
+import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
-import { handleAxiosError } from "../base/test-connection/errors/axios";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/session";
 
+@HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class JellyfinIntegration extends Integration {
   private readonly jellyfin: Jellyfin = new Jellyfin({
     clientInfo: {
@@ -24,25 +26,17 @@ export class JellyfinIntegration extends Integration {
     },
   });
 
-  public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    try {
-      const api = await this.getApiAsync(input.axiosInstance);
-      const systemApi = getSystemApi(api);
-      await systemApi.getPingSystem();
-      return { success: true };
-    } catch (error) {
-      return handleAxiosError(error);
-    }
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const api = await this.getApiAsync(input.axiosInstance);
+    const systemApi = getSystemApi(api);
+    await systemApi.getPingSystem();
+    return { success: true };
   }
 
   public async getCurrentSessionsAsync(options: CurrentSessionsInput): Promise<StreamSession[]> {
     const api = await this.getApiAsync();
     const sessionApi = getSessionApi(api);
     const sessions = await sessionApi.getSessions();
-
-    if (sessions.status !== 200) {
-      throw new Error(`Jellyfin server ${this.url("/")} returned a non successful status code: ${sessions.status}`);
-    }
 
     return sessions.data
       .filter((sessionInfo) => sessionInfo.UserId !== undefined)

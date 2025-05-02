@@ -5,6 +5,7 @@ import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "te
 import { beforeAll, describe, expect, test } from "vitest";
 
 import { NzbGetIntegration } from "../src";
+import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
 
 const username = "nzbget";
 const password = "tegbzn6789";
@@ -22,10 +23,10 @@ describe("Nzbget integration", () => {
     const nzbGetIntegration = createNzbGetIntegration(startedContainer, username, password);
 
     // Act
-    const actAsync = async () => await nzbGetIntegration.testingAsync();
+    const result = await nzbGetIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).resolves.not.toThrow();
+    expect(result.success).toBe(true);
 
     // Cleanup
     await startedContainer.stop();
@@ -37,10 +38,14 @@ describe("Nzbget integration", () => {
     const nzbGetIntegration = createNzbGetIntegration(startedContainer, "wrong-user", "wrong-password");
 
     // Act
-    const actAsync = async () => await nzbGetIntegration.testingAsync();
+    const result = await nzbGetIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).rejects.toThrow();
+    expect(result.success).toBe(false);
+    if (result.success) return;
+
+    expect(result.error).toBeInstanceOf(TestConnectionError);
+    expect(result.error.type).toBe("unauthorized");
 
     // Cleanup
     await startedContainer.stop();

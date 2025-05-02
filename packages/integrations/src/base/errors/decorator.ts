@@ -49,8 +49,6 @@ export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[
               }
             };
 
-            wrapped.name = propertyKey;
-
             Object.defineProperty(currentProto, propertyKey, {
               ...descriptor,
               value: wrapped,

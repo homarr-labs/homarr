@@ -3,18 +3,21 @@ import { z } from "zod";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
+import { TestConnectionError } from "../../base/test-connection/test-connection-error";
+import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { CalendarEvent } from "../../calendar-types";
 import { MediaOrganizerIntegration } from "../media-organizer-integration";
 
 export class LidarrIntegration extends MediaOrganizerIntegration {
-  public async testingAsync(): Promise<void> {
-    await super.handleTestConnectionResponseAsync({
-      queryFunctionAsync: async () => {
-        return await fetchWithTrustedCertificatesAsync(this.url("/api"), {
-          headers: { "X-Api-Key": super.getSecretValue("apiKey") },
-        });
-      },
+  protected async testingAsync(): Promise<TestingResult> {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/api"), {
+      headers: { "X-Api-Key": super.getSecretValue("apiKey") },
     });
+
+    if (!response.ok) return TestConnectionError.StatusResult(response);
+
+    await response.json();
+    return { success: true };
   }
 
   /**

@@ -88,7 +88,7 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
     };
   }
 
-  public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/control/status"), {
       headers: {
         Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,

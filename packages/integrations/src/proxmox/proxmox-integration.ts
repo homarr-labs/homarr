@@ -2,11 +2,12 @@ import type { Proxmox } from "proxmox-api";
 import proxmoxApi from "proxmox-api";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { extractErrorMessage } from "@homarr/common";
 import { logger } from "@homarr/log";
 
+import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { Integration } from "../base/integration";
-import { IntegrationTestConnectionError } from "../base/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
+import { ProxmoxApiErrorHandler } from "./proxmox-error-handler";
 import type {
   ComputeResourceBase,
   LxcResource,
@@ -16,12 +17,12 @@ import type {
   StorageResource,
 } from "./proxmox-types";
 
+@HandleIntegrationErrors([new ProxmoxApiErrorHandler()])
 export class ProxmoxIntegration extends Integration {
-  public async testingAsync(): Promise<void> {
+  protected async testingAsync(): Promise<TestingResult> {
     const proxmox = this.getPromoxApi();
-    await proxmox.nodes.$get().catch((error) => {
-      throw new IntegrationTestConnectionError("internalServerError", extractErrorMessage(error));
-    });
+    await proxmox.nodes.$get();
+    return { success: true };
   }
 
   public async getClusterInfoAsync() {

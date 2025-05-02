@@ -4,6 +4,7 @@ import type { StartedTestContainer } from "testcontainers";
 import { beforeAll, describe, expect, test } from "vitest";
 
 import { SabnzbdIntegration } from "../src";
+import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
 import type { DownloadClientItem } from "../src/interfaces/downloads/download-client-items";
 
 const DEFAULT_API_KEY = "8r45mfes43s3iw7x3oecto6dl9ilxnf9";
@@ -21,10 +22,10 @@ describe("Sabnzbd integration", () => {
     const sabnzbdIntegration = createSabnzbdIntegration(startedContainer, DEFAULT_API_KEY);
 
     // Act
-    const actAsync = async () => await sabnzbdIntegration.testingAsync();
+    const result = await sabnzbdIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).resolves.not.toThrow();
+    expect(result.success).toBe(true);
 
     // Cleanup
     await startedContainer.stop();
@@ -36,10 +37,13 @@ describe("Sabnzbd integration", () => {
     const sabnzbdIntegration = createSabnzbdIntegration(startedContainer, "wrong-api-key");
 
     // Act
-    const actAsync = async () => await sabnzbdIntegration.testingAsync();
+    const result = await sabnzbdIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).rejects.toThrow();
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error).toBeInstanceOf(TestConnectionError);
+    expect(result.error.type).toBe("unauthorized");
 
     // Cleanup
     await startedContainer.stop();

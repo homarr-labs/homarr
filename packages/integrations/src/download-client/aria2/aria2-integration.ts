@@ -1,7 +1,8 @@
 import path from "path";
 import type { fetch as undiciFetch } from "undici";
 
-import { ResponseError } from "../../base/error";
+import { ResponseError } from "@homarr/common";
+
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
@@ -93,7 +94,7 @@ export class Aria2Integration extends DownloadClientIntegration {
     }
   }
 
-  public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = this.getClient(input.fetchAsync);
     await client.getVersion();
     return {
@@ -125,7 +126,7 @@ export class Aria2Integration extends DownloadClientIntegration {
                 const responseBody = (await response.json()) as { result: ReturnType<Aria2GetClient[typeof method]> };
 
                 if (!response.ok) {
-                  throw new ResponseError(response, responseBody);
+                  throw new ResponseError(response);
                 }
                 return responseBody.result;
               })

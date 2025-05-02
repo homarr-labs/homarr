@@ -8,12 +8,12 @@ import { z } from "zod";
 import { createChannelEventHistory } from "../../../redis/src/lib/channel";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import { TestConnectionError } from "../base/test-connection/test-connection-service";
 import type { HealthMonitoring } from "../types";
 
 export class DashDotIntegration extends Integration {
-  public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/info"));
     if (!response.ok) return TestConnectionError.StatusResult(response);
 
