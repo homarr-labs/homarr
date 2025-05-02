@@ -92,6 +92,7 @@ export default async function Layout(props: {
           user
             ? {
                 ...user,
+                // Convert type, because output schema is not smart enough to infer $type from drizzle
                 firstDayOfWeek: user.firstDayOfWeek as DayOfWeek,
               }
             : null
