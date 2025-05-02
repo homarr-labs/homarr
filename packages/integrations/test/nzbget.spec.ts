@@ -45,7 +45,7 @@ describe("Nzbget integration", () => {
     if (result.success) return;
 
     expect(result.error).toBeInstanceOf(TestConnectionError);
-    expect(result.error.type).toBe("unauthorized");
+    expect(result.error.type).toBe("authorization");
 
     // Cleanup
     await startedContainer.stop();

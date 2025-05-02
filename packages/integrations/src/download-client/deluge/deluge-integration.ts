@@ -19,7 +19,7 @@ export class DelugeIntegration extends DownloadClientIntegration {
     const isSuccess = await client.login();
 
     if (!isSuccess) {
-      return TestConnectionError.UnauthorizedResult();
+      return TestConnectionError.UnauthorizedResult(401);
     }
 
     return {

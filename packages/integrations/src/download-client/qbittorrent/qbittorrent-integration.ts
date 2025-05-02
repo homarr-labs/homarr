@@ -17,7 +17,7 @@ export class QBitTorrentIntegration extends DownloadClientIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = await this.getClientAsync(input.dispatcher);
     const isSuccess = await client.login();
-    if (!isSuccess) return TestConnectionError.UnauthorizedResult();
+    if (!isSuccess) return TestConnectionError.UnauthorizedResult(401);
 
     return {
       success: true,

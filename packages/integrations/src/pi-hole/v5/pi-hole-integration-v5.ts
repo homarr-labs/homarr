@@ -38,7 +38,7 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
 
     // Pi-hole v5 returned an empty array if the API key is wrong
     if (typeof data !== "object" || Array.isArray(data)) {
-      return TestConnectionError.UnauthorizedResult();
+      return TestConnectionError.UnauthorizedResult(401);
     }
 
     return { success: true };

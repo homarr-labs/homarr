@@ -54,16 +54,19 @@ export class TestConnectionError<TType extends keyof TestConnectionErrorMap> ext
     return this.Certificate(requestError, certificate).toResult();
   }
 
-  private static Unauthorized() {
-    return new TestConnectionError("unauthorized", undefined);
+  private static Authorization(statusCode: number) {
+    return new TestConnectionError("authorization", {
+      statusCode,
+      reason: statusCode === 403 ? "forbidden" : "unauthorized",
+    });
   }
 
-  public static UnauthorizedResult() {
-    return this.Unauthorized().toResult();
+  public static UnauthorizedResult(statusCode: number) {
+    return this.Authorization(statusCode).toResult();
   }
 
   private static Status(input: { status: number; url: string }) {
-    if (input.status === 401) return this.Unauthorized();
+    if (input.status === 401 || input.status === 403) return this.Authorization(input.status);
 
     return new TestConnectionError("statusCode", {
       statusCode: input.status,
@@ -131,7 +134,6 @@ export class TestConnectionError<TType extends keyof TestConnectionErrorMap> ext
 
 const statusCodeMap = {
   400: "badRequest",
-  403: "forbidden",
   404: "notFound",
   429: "toManyRequests",
   500: "internalServerError",
@@ -141,7 +143,10 @@ const statusCodeMap = {
 
 interface TestConnectionErrorMap {
   unknown: undefined;
-  unauthorized: undefined;
+  authorization: {
+    statusCode: number;
+    reason: "unauthorized" | "forbidden";
+  };
   statusCode: {
     statusCode: number;
     reason: (typeof statusCodeMap)[keyof typeof statusCodeMap] | "other";
