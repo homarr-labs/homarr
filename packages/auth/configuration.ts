@@ -28,7 +28,11 @@ export const createConfiguration = (
   return NextAuth({
     logger: {
       debug: (message, metadata) => {
-        logger.debug(message, metadata);
+        if (typeof metadata === "object" && metadata !== null) {
+          logger.debug(`${message} ${JSON.stringify(metadata)}`);
+          return;
+        }
+        logger.debug(message);
       },
       warn: (code) => {
         logger.warn(code);
