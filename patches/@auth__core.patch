@@ -1,0 +1,12 @@
+diff --git a/lib/actions/callback/index.js b/lib/actions/callback/index.js
+index edcb7f9644c3418043eb49e20d8615587aa9617f..7004134e51f5567cf87998e378f22ff9416ba88f 100644
+--- a/lib/actions/callback/index.js
++++ b/lib/actions/callback/index.js
+@@ -383,6 +383,7 @@ export async function callback(request, options, sessionStore, cookies) {
+         throw new InvalidProvider(`Callback for provider type (${provider.type}) is not supported`);
+     }
+     catch (e) {
++        logger.error(e);
+         if (e instanceof AuthError)
+             throw e;
+         const error = new CallbackRouteError(e, { provider: provider.id });

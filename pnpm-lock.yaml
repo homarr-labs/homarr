@@ -7,6 +7,11 @@ settings:
 overrides:
   proxmox-api>undici: 7.8.0
 
+patchedDependencies:
+  '@auth/core':
+    hash: 465f102719360eb7499d070e7227181744ae5c298bc3e80d57160d5006664527
+    path: patches/@auth__core.patch
+
 importers:
 
   .:
@@ -630,7 +635,7 @@ importers:
     dependencies:
       '@auth/core':
         specifier: ^0.39.0
-        version: 0.39.0
+        version: 0.39.0(patch_hash=465f102719360eb7499d070e7227181744ae5c298bc3e80d57160d5006664527)
       '@auth/drizzle-adapter':
         specifier: ^1.9.0
         version: 1.9.0
@@ -996,7 +1001,7 @@ importers:
     dependencies:
       '@auth/core':
         specifier: ^0.39.0
-        version: 0.39.0
+        version: 0.39.0(patch_hash=465f102719360eb7499d070e7227181744ae5c298bc3e80d57160d5006664527)
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -10716,7 +10721,7 @@ snapshots:
       '@csstools/css-tokenizer': 3.0.3
       lru-cache: 11.0.2
 
-  '@auth/core@0.39.0':
+  '@auth/core@0.39.0(patch_hash=465f102719360eb7499d070e7227181744ae5c298bc3e80d57160d5006664527)':
     dependencies:
       '@panva/hkdf': 1.2.1
       jose: 6.0.8
@@ -10726,7 +10731,7 @@ snapshots:
 
   '@auth/drizzle-adapter@1.9.0':
     dependencies:
-      '@auth/core': 0.39.0
+      '@auth/core': 0.39.0(patch_hash=465f102719360eb7499d070e7227181744ae5c298bc3e80d57160d5006664527)
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
       - '@simplewebauthn/server'
@@ -17178,7 +17183,7 @@ snapshots:
 
   next-auth@5.0.0-beta.27(next@15.3.1(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0))(react@19.1.0):
     dependencies:
-      '@auth/core': 0.39.0
+      '@auth/core': 0.39.0(patch_hash=465f102719360eb7499d070e7227181744ae5c298bc3e80d57160d5006664527)
       next: 15.3.1(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
       react: 19.1.0
 
