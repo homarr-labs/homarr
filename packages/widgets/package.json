@@ -7,7 +7,8 @@
   "exports": {
     ".": "./index.ts",
     "./errors": "./src/errors/component.tsx",
-    "./modals": "./src/modals/index.ts"
+    "./modals": "./src/modals/index.ts",
+    "./prefetch": "./src/prefetch.ts"
   },
   "typesVersions": {
     "*": {
@@ -35,6 +36,7 @@
     "@homarr/form": "workspace:^0.1.0",
     "@homarr/forms-collection": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
+    "@homarr/log": "workspace:^0.1.0",
     "@homarr/modals": "workspace:^0.1.0",
     "@homarr/modals-collection": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
