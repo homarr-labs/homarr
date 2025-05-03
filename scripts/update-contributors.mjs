@@ -50,7 +50,7 @@ const fetchCrowdinMembers = async (projectId) => {
 };
 
 const distinctBy = (callback) => (value, index, self) => {
-  return self.findIndex((item) => callback(item) == callback(value)) === index;
+  return self.findIndex((item) => callback(item) === callback(value)) === index;
 };
 
 const githubContributors = [];
