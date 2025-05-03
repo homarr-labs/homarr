@@ -1,10 +1,10 @@
-import type { Response as UndiciResponse } from "undici";
+import type { fetch as undiciFetch, Response as UndiciResponse } from "undici";
 import type { z } from "zod";
 
 import { ResponseError } from "@homarr/common";
 import { logger } from "@homarr/log";
 
-import type { IntegrationInput } from "../../base/integration";
+import type { IntegrationInput, IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
 import type { SessionStore } from "../../base/session-store";
 import { createSessionStore } from "../../base/session-store";
@@ -73,9 +73,9 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     };
   }
 
-  protected async testingAsync(): Promise<TestingResult> {
-    const sessionId = await this.getSessionAsync();
-    await this.clearSessionAsync(sessionId);
+  protected async testingAsync({ fetchAsync }: IntegrationTestingInput): Promise<TestingResult> {
+    const sessionId = await this.getSessionAsync(fetchAsync);
+    await this.clearSessionAsync(sessionId, fetchAsync);
     return { success: true };
   }
 
@@ -139,9 +139,9 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
    * Get a session id from the Pi-hole server
    * @returns The session id
    */
-  private async getSessionAsync(): Promise<string> {
+  private async getSessionAsync(fetchAsync: typeof undiciFetch = super.fetchAsync.bind(this)): Promise<string> {
     const apiKey = super.getSecretValue("apiKey");
-    const response = await super.fetchAsync(this.url("/api/auth"), {
+    const response = await fetchAsync(this.url("/api/auth"), {
       method: "POST",
       body: JSON.stringify({ password: apiKey }),
       headers: {
@@ -167,8 +167,8 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
    * Remove the session from the Pi-hole server
    * @param sessionId The session id to remove
    */
-  private async clearSessionAsync(sessionId: string) {
-    const response = await super.fetchAsync(this.url("/api/auth"), {
+  private async clearSessionAsync(sessionId: string, fetchAsync: typeof undiciFetch = super.fetchAsync.bind(this)) {
+    const response = await fetchAsync(this.url("/api/auth"), {
       method: "DELETE",
       headers: {
         sid: sessionId,

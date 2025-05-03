@@ -6,21 +6,33 @@ import type {
   TestConnectionErrorType,
 } from "@homarr/integrations/test-connection";
 
-interface MappedError {
+export interface MappedError {
   name: string;
   message: string;
+  metadata: { key: string; value: string | number | boolean }[];
   cause?: MappedError;
 }
 
+const ignoredErrorProperties = ["name", "message", "cause", "stack"];
 const mapError = (error: Error): MappedError => {
+  const metadata = Object.entries(error)
+    .filter(([key]) => !ignoredErrorProperties.includes(key))
+    .map(([key, value]) => {
+      if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+        return { key, value };
+      }
+      return null;
+    })
+    .filter((value) => value !== null);
   return {
     name: error.name,
     message: error.message,
+    metadata,
     cause: error.cause && error.cause instanceof Error ? mapError(error.cause) : undefined,
   };
 };
 
-interface MappedCertificate {
+export interface MappedCertificate {
   issuer?: MappedCertificate;
   subject: {
     commonName?: string;

@@ -19,7 +19,8 @@ export class TestConnectionError<TType extends TestConnectionErrorType> extends 
   public readonly data: TestConnectionErrorMap[TType];
 
   private constructor(type: TType, data: TestConnectionErrorMap[TType], options?: { cause: Error }) {
-    super("Unable to connect to the integration.", options);
+    super("Unable to connect to the integration", options);
+    this.name = TestConnectionError.name;
     this.type = type;
     this.data = data;
   }

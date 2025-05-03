@@ -702,6 +702,32 @@
         "create": "Test connection and create",
         "edit": "Test connection and save"
       },
+      "error": {
+        "unknown": {
+          "title": "Unknown error",
+          "description": "An unknown error occurred, open the cause below to see more details"
+        },
+        "parse": {
+          "title": "Parse error",
+          "description": "The response could not be parsed. Please verify that the URL is pointing to the base URL of the service."
+        },
+        "authorization": {
+          "title": "Authorization error",
+          "description": "The request was not authorized. Please verify that the credentials are correct and you have them configured with enough permissions."
+        },
+        "statusCode": {
+          "title": "Response error",
+          "description": "The response returned an unexpected status code. Please verify that the URL is pointing to the base URL of the service."
+        },
+        "certificate": {
+          "title": "Certificate error",
+          "description": "The certificate could not be verified. Please follow the instructions below to add the certificate to the trusted list."
+        },
+        "request": {
+          "title": "Request error",
+          "description": "The request could not be sent. Please verify that the URL is correct and the service is running."
+        }
+      },
       "alertNotice": "The Save button is enabled once a successful connection is established",
       "notification": {
         "success": {

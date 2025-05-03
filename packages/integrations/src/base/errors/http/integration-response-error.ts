@@ -6,6 +6,7 @@ import { IntegrationError } from "../integration-error";
 export class IntegrationResponseError extends IntegrationError {
   constructor(integration: IntegrationErrorData, { cause }: { cause: ResponseError }) {
     super(integration, "Response from integration did not indicate success", { cause });
+    this.name = IntegrationResponseError.name;
   }
 
   get cause(): ResponseError {

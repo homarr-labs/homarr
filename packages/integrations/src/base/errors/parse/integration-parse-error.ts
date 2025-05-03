@@ -6,6 +6,7 @@ import { IntegrationError } from "../integration-error";
 export class IntegrationParseError extends IntegrationError {
   constructor(integration: IntegrationErrorData, { cause }: { cause: ParseError }) {
     super(integration, "Failed to parse integration data", { cause });
+    this.name = IntegrationParseError.name;
   }
 
   get cause(): ParseError {

@@ -10,6 +10,7 @@ export type IntegrationRequestErrorOfType<TType extends RequestErrorType> = Inte
 export class IntegrationRequestError extends IntegrationError {
   constructor(integration: IntegrationErrorData, { cause }: { cause: AnyRequestError }) {
     super(integration, "Request to integration failed", { cause });
+    this.name = IntegrationRequestError.name;
   }
 
   get cause(): AnyRequestError {

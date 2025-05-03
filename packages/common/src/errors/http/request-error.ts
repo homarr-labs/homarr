@@ -17,6 +17,7 @@ export class RequestError<TType extends RequestErrorType> extends Error {
 
   constructor(input: AnyRequestErrorInput, options: { cause?: Error }) {
     super("Request failed", options);
+    this.name = RequestError.name;
 
     this.type = input.type as TType;
     this.reason = input.reason as RequestErrorReason<TType>;
