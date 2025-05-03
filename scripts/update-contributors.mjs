@@ -30,15 +30,7 @@ const fetchGithubContributors = async (slug, repository) => {
   const response = await fetch(url, options);
   const data = await response.json();
 
-  const dataSchema = z.array(
-    z.object({
-      login: z.string(),
-      avatar_url: z.string().url(),
-      contributions: z.number(),
-    }),
-  );
-
-  return dataSchema.parse(data);
+  return data;
 };
 
 const fetchCrowdinMembers = async (projectId) => {
@@ -54,20 +46,7 @@ const fetchCrowdinMembers = async (projectId) => {
   const response = await fetch(url, options);
   const data = await response.json();
 
-  const dataSchema = z.object({
-    data: z.array(
-      z.object({
-        data: z.object({
-          username: z.string(),
-          avatarUrl: z.string().url(),
-        }),
-      }),
-    ),
-  });
-
-  const contributionsData = dataSchema.parse(data);
-
-  return contributionsData.data.flatMap((data) => data.data);
+  return data.data.flatMap((data) => data.data);
 };
 
 const distinctBy = (callback) => (value, index, self) => {
