@@ -12,7 +12,7 @@ import { MemoryResourceParser } from "../resource-parser/memory-resource-parser"
 export const nodesRouter = createTRPCRouter({
   getNodes: permissionRequiredProcedure
     .requiresPermission("admin")
-    .unstable_concat(kubernetesMiddleware())
+    .concat(kubernetesMiddleware())
     .query(async (): Promise<KubernetesNode[]> => {
       const { coreApi, metricsApi } = KubernetesClient.getInstance();
 

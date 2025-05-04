@@ -1949,7 +1949,8 @@
         "pending": "Pending",
         "approved": "Approved",
         "declined": "Declined",
-        "failed": "Failed"
+        "failed": "Failed",
+        "completed": "Completed"
       },
       "toBeDetermined": "TBD"
     },

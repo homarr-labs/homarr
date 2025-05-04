@@ -29,9 +29,9 @@
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^7.17.5",
-    "@mantine/dates": "^7.17.5",
-    "@mantine/hooks": "^7.17.5",
+    "@mantine/core": "^7.17.7",
+    "@mantine/dates": "^7.17.7",
+    "@mantine/hooks": "^7.17.7",
     "@tabler/icons-react": "^3.31.0",
     "mantine-react-table": "2.0.0-beta.9",
     "next": "15.3.1",
@@ -43,7 +43,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/css-modules": "^1.0.5",
-    "eslint": "^9.25.1",
+    "eslint": "^9.26.0",
     "typescript": "^5.8.3"
   }
 }
