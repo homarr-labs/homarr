@@ -8,14 +8,14 @@ import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-ha
 import { Providers } from "./releases-providers";
 import type { DetailsResponse } from "./releases-providers";
 
-const _errorSchema = z.object({
+const errorSchema = z.object({
   code: z.string().optional(),
   message: z.string().optional(),
 });
 
-type ReleasesError = z.infer<typeof _errorSchema>;
+type ReleasesError = z.infer<typeof errorSchema>;
 
-const _reponseSchema = z.object({
+const reponseSchema = z.object({
   identifier: z.string(),
   providerKey: z.string(),
   latestRelease: z.string().optional(),
@@ -31,7 +31,7 @@ const _reponseSchema = z.object({
   starsCount: z.number().optional(),
   openIssues: z.number().optional(),
   forksCount: z.number().optional(),
-  error: _errorSchema.optional(),
+  error: errorSchema.optional(),
 });
 
 const formatErrorRelease = (identifier: string, providerKey: string, error: ReleasesError) => ({
@@ -119,4 +119,4 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
   cacheDuration: dayjs.duration(5, "minutes"),
 });
 
-export type ReleaseResponse = z.infer<typeof _reponseSchema>;
+export type ReleaseResponse = z.infer<typeof reponseSchema>;

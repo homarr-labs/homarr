@@ -272,7 +272,7 @@ export const Providers: ProvidersProps = {
   },
 };
 
-const _detailsSchema = z
+const detailsSchema = z
   .object({
     projectUrl: z.string().optional(),
     projectDescription: z.string().optional(),
@@ -285,7 +285,7 @@ const _detailsSchema = z
   })
   .optional();
 
-const _releasesSchema = z.object({
+const releasesSchema = z.object({
   latestRelease: z.string(),
   latestReleaseAt: z.date(),
   releaseUrl: z.string().optional(),
@@ -299,6 +299,6 @@ const _releasesSchema = z.object({
     .optional(),
 });
 
-export type DetailsResponse = z.infer<typeof _detailsSchema>;
+export type DetailsResponse = z.infer<typeof detailsSchema>;
 
-export type ReleasesResponse = z.infer<typeof _releasesSchema>;
+export type ReleasesResponse = z.infer<typeof releasesSchema>;
