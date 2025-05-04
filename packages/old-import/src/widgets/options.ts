@@ -76,6 +76,7 @@ const optionMapping: OptionMapping = {
     defaultSort: () => "type",
     descendingDefaultSort: () => false,
     showCompletedUsenet: () => true,
+    showCompletedHttp: () => true,
   },
   weather: {
     forecastDayCount: (oldOptions) => oldOptions.forecastDays,
@@ -132,7 +133,9 @@ const optionMapping: OptionMapping = {
     automationId: (oldOptions) => oldOptions.automationId,
     displayName: (oldOptions) => oldOptions.displayName,
   },
-  mediaServer: {},
+  mediaServer: {
+    showOnlyPlaying: () => undefined,
+  },
   indexerManager: {
     openIndexerSiteInNewTab: (oldOptions) => oldOptions.openIndexerSiteInNewTab,
   },

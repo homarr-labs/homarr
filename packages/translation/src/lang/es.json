@@ -3,8 +3,8 @@
     "step": {
       "start": {
         "title": "Bienvenido a Homarr",
-        "subtitle": "",
-        "description": "",
+        "subtitle": "Comencemos con la configuración de tu instancia de Homar.",
+        "description": "Para empezar, por favor, seleccione cómo desea configurar su instancia de Homarr.",
         "action": {
           "scratch": "Empezar de cero",
           "importOldmarr": "Importar de Homarr antes de 1.0"
@@ -12,14 +12,14 @@
       },
       "import": {
         "title": "Importar datos",
-        "subtitle": "",
+        "subtitle": "Puede importar datos de una instancia de Homarr existente.",
         "dropzone": {
           "title": "Arrastre el archivo zip aquí o haga clic para navegar",
           "description": "El zip subido será procesado y podrás seleccionar lo que quieres importar"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Modificar el archivo"
           }
         },
         "importSettings": {
@@ -27,48 +27,48 @@
           "description": ""
         },
         "boardSelection": {
-          "title": "",
+          "title": "Se encontraron {count} tableros",
           "description": "",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Seleccionar todo",
+            "unselectAll": "Deseleccionar todo"
           }
         },
         "summary": {
-          "title": "",
+          "title": "Importar resumen",
           "description": "",
           "action": {
-            "import": ""
+            "import": "Confirmar la importación y continuar"
           },
           "entities": {
             "apps": "Aplicaciones",
             "boards": "Tableros",
-            "integrations": "",
-            "credentialUsers": ""
+            "integrations": "Integraciones",
+            "credentialUsers": "Credenciales de usuarios"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Introducir token de importación",
           "field": {
             "token": {
-              "label": "",
-              "description": ""
+              "label": "Token",
+              "description": "Introduzca el token de importación mostrado de su instancia anterior de homarr"
             }
           },
           "notification": {
             "error": {
-              "title": "",
+              "title": "Token invalido",
               "message": ""
             }
           }
         }
       },
       "user": {
-        "title": "",
+        "title": "Usuario administrador",
         "subtitle": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Usuario creado",
             "message": ""
           },
           "error": {
@@ -78,38 +78,38 @@
       },
       "group": {
         "title": "",
-        "subtitle": "",
+        "subtitle": "Especifique el grupo que debe ser usado para usuarios externos.",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "Nombre del grupo",
+            "description": "El nombre debe coincidir con el grupo de administración del proveedor externo"
           }
         }
       },
       "settings": {
         "title": "Ajustes",
-        "subtitle": ""
+        "subtitle": "Configurar ajustes del servidor."
       },
       "finish": {
         "title": "",
         "subtitle": "",
         "description": "",
         "action": {
-          "goToBoard": "",
+          "goToBoard": "Ir al tablero {name}",
           "createBoard": "",
           "inviteUser": "",
           "docs": ""
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Volver al inicio"
   },
   "user": {
     "title": "Usuarios",
     "name": "Usuario",
     "page": {
       "login": {
-        "title": "",
+        "title": "Inicia sesión en tu cuenta",
         "subtitle": ""
       },
       "invite": {
@@ -118,14 +118,14 @@
         "description": ""
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Nueva instalación de Homarr",
+        "subtitle": "Por favor, cree el usuario administrador principal"
       }
     },
     "field": {
       "email": {
         "label": "Correo electrónico",
-        "verified": ""
+        "verified": "Verificado"
       },
       "username": {
         "label": "Nombre de usuario"
@@ -133,7 +133,7 @@
       "password": {
         "label": "Contraseña",
         "requirement": {
-          "length": "",
+          "length": "Incluye al menos 8 caracteres",
           "lowercase": "Incluye letra minúscula",
           "uppercase": "Incluye letra mayúscula",
           "number": "Incluye número",
@@ -144,13 +144,13 @@
         "label": "Confirmar contraseña"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Contraseña anterior"
       },
       "homeBoard": {
         "label": ""
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Usar iconos para pings"
       },
       "defaultSearchEngine": {
         "label": ""
@@ -160,12 +160,12 @@
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Nombre de usuario ya está ocupado"
     },
     "action": {
       "login": {
         "label": "Iniciar sesión",
-        "labelWith": "",
+        "labelWith": "Iniciar sesión con {provider}",
         "notification": {
           "success": {
             "title": "",
@@ -177,8 +177,8 @@
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "¿Ha olvidado su contraseña?",
+          "description": "Un administrador puede usar el siguiente comando para restablecer su contraseña:"
         }
       },
       "register": {
@@ -186,20 +186,20 @@
         "notification": {
           "success": {
             "title": "Cuenta creada",
-            "message": ""
+            "message": "Por favor, inicia sesión para continuar"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Ocurrió un error al crear la cuenta",
+            "message": "No se ha podido crear la cuenta"
           }
         }
       },
       "create": "Crear usuario",
       "changePassword": {
-        "label": "",
+        "label": "Cambiar contraseña",
         "notification": {
           "success": {
-            "message": ""
+            "message": "La contraseña ha sido cambiada correctamente"
           },
           "error": {
             "message": ""
@@ -229,10 +229,10 @@
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Primer día de la semana cambiado con éxito"
           },
           "error": {
-            "message": ""
+            "message": "No se ha podido cambiar el primer día de la semana"
           }
         }
       },
@@ -251,23 +251,23 @@
           "label": "",
           "notification": {
             "success": {
-              "message": ""
+              "message": "La imagen ha sido cambiada con éxito"
             },
             "error": {
-              "message": ""
+              "message": "No se puede cambiar la imagen"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "La imagen es demasiado grande",
+              "message": "El tamaño máximo de la imagen es {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Eliminar imágen",
+          "confirm": "Por favor, confirma que deseas eliminar esta imagen",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Imagen eliminada con éxito"
             },
             "error": {
               "message": ""
@@ -278,7 +278,7 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Perfil actualizado con éxito"
           },
           "error": {
             "message": ""
@@ -288,10 +288,10 @@
       "delete": {
         "label": "",
         "description": "",
-        "confirm": ""
+        "confirm": "¿Estás seguro de que quieres eliminar el usuario {username} con sus preferencias?"
       },
       "select": {
-        "label": "",
+        "label": "Seleccionar usuario",
         "notFound": ""
       },
       "transfer": {
@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "",
-        "notFound": ""
-      }
+        "notFound": "",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {
@@ -755,6 +765,10 @@
           "message": ""
         },
         "wrongPath": {
+          "title": "",
+          "message": ""
+        },
+        "tooManyRequests": {
           "title": "",
           "message": ""
         }
@@ -1076,6 +1090,9 @@
       },
       "field": {
         "integrations": {
+          "label": ""
+        },
+        "title": {
           "label": ""
         },
         "customCssClasses": {
@@ -1752,7 +1769,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "",
         "user": "",
@@ -1780,6 +1802,9 @@
           "label": ""
         },
         "showCompletedTorrent": {
+          "label": ""
+        },
+        "showCompletedHttp": {
           "label": ""
         },
         "activeTorrentThreshold": {
@@ -1924,7 +1949,8 @@
         "pending": "",
         "approved": "",
         "declined": "",
-        "failed": ""
+        "failed": "",
+        "completed": ""
       },
       "toBeDetermined": ""
     },
@@ -2025,6 +2051,141 @@
         "maximumAmountPosts": {
           "label": ""
         }
+      }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": ""
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": ""
+          },
+          "wifi": {
+            "name": ""
+          }
+        },
+        "users": {
+          "label": ""
+        },
+        "guests": {
+          "label": ""
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": ""
+            },
+            "wired": {
+              "label": ""
+            }
+          },
+          "label": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": ""
       }
     }
   },
@@ -2786,6 +2947,9 @@
               "label": ""
             },
             "mediaTranscoding": {
+              "label": ""
+            },
+            "networkController": {
               "label": ""
             }
           }
@@ -3723,6 +3887,10 @@
         "description": "",
         "noResults": {
           "title": ""
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": ""
       }

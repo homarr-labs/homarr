@@ -189,7 +189,7 @@ const StorageType = ({ item }: { item: StorageResource }) => {
   if (item.isShared) {
     return <Badge color="blue">{t("shared")}</Badge>;
   } else {
-    return <Badge color="teal">{t("local")}</Badge>;
+    return <Badge>{t("local")}</Badge>;
   }
 };
 

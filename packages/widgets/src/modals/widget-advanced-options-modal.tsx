@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, CloseButton, ColorInput, Group, Stack, useMantineTheme } from "@mantine/core";
+import { Button, CloseButton, ColorInput, Group, Input, Stack, TextInput, useMantineTheme } from "@mantine/core";
 
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
@@ -20,13 +20,23 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, in
     initialValues: innerProps.advancedOptions,
   });
   const handleSubmit = (values: BoardItemAdvancedOptions) => {
-    innerProps.onSuccess(values);
+    innerProps.onSuccess({
+      ...values,
+      // we want to fallback to null if the title is empty
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      title: values.title?.trim() || null,
+    });
     actions.closeModal();
   };
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
+        <TextInput
+          label={t("item.edit.field.title.label")}
+          {...form.getInputProps("title")}
+          rightSection={<Input.ClearButton onClick={() => form.setFieldValue("title", "")} />}
+        />
         <TextMultiSelect
           label={t("item.edit.field.customCssClasses.label")}
           {...form.getInputProps("customCssClasses")}
@@ -47,9 +57,7 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, in
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
             {t("common.action.cancel")}
           </Button>
-          <Button type="submit" color="teal">
-            {t("common.action.saveChanges")}
-          </Button>
+          <Button type="submit">{t("common.action.saveChanges")}</Button>
         </Group>
       </Stack>
     </form>

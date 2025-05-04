@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "App wähle",
-        "notFound": "Keni app gfunge"
-      }
+        "notFound": "Keni app gfunge",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {
@@ -757,6 +767,10 @@
         "wrongPath": {
           "title": "Falscher Pfad",
           "message": "Der Pfad ist vermutlich nicht korrekt"
+        },
+        "tooManyRequests": {
+          "title": "",
+          "message": ""
         }
       }
     },
@@ -1077,6 +1091,9 @@
       "field": {
         "integrations": {
           "label": "Integrationen"
+        },
+        "title": {
+          "label": ""
         },
         "customCssClasses": {
           "label": "Benutzerdefinierte CSS Klassen"
@@ -1752,7 +1769,12 @@
     "mediaServer": {
       "name": "Aktuelle Media Server Streams",
       "description": "Zeige die aktuellen Streams auf deinen Medienservern an",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Aktuelle Wiedergabe",
         "user": "Benutzer",
@@ -1781,6 +1803,9 @@
         },
         "showCompletedTorrent": {
           "label": "Torrent Einträge anzeigen die abgeschlossen wurden"
+        },
+        "showCompletedHttp": {
+          "label": ""
         },
         "activeTorrentThreshold": {
           "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden (in kiB/s)"
@@ -1924,7 +1949,8 @@
         "pending": "Ausstehend",
         "approved": "Bestätigt",
         "declined": "Abgelehnt",
-        "failed": "Fehlgeschlagen"
+        "failed": "Fehlgeschlagen",
+        "completed": ""
       },
       "toBeDetermined": "Noch Festzulegen"
     },
@@ -2025,6 +2051,141 @@
         "maximumAmountPosts": {
           "label": "Limit für Beiträge"
         }
+      }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": ""
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": ""
+          },
+          "wifi": {
+            "name": ""
+          }
+        },
+        "users": {
+          "label": ""
+        },
+        "guests": {
+          "label": ""
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": ""
+            },
+            "wired": {
+              "label": ""
+            }
+          },
+          "label": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": ""
       }
     }
   },
@@ -2787,6 +2948,9 @@
             },
             "mediaTranscoding": {
               "label": "Medien Transkodierung"
+            },
+            "networkController": {
+              "label": ""
             }
           }
         },
@@ -3723,6 +3887,10 @@
         "description": "Wird von Homarr verwendet, um Daten von Integrationen anzufordern.",
         "noResults": {
           "title": "Es gibt noch keine Zertifikate"
+        },
+        "invalid": {
+          "title": "",
+          "description": ""
         },
         "expires": "Gültig bis {when}"
       }

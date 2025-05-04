@@ -15,14 +15,14 @@ const createSmartHomeIntegrationMiddleware = (action: IntegrationAction) =>
 export const smartHomeRouter = createTRPCRouter({
   entityState: publicProcedure
     .input(z.object({ entityId: z.string() }))
-    .unstable_concat(createSmartHomeIntegrationMiddleware("query"))
+    .concat(createSmartHomeIntegrationMiddleware("query"))
     .query(async ({ ctx: { integration }, input }) => {
       const innerHandler = smartHomeEntityStateRequestHandler.handler(integration, { entityId: input.entityId });
       const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
       return data;
     }),
   subscribeEntityState: publicProcedure
-    .unstable_concat(createSmartHomeIntegrationMiddleware("query"))
+    .concat(createSmartHomeIntegrationMiddleware("query"))
     .input(z.object({ entityId: z.string() }))
     .subscription(({ input, ctx }) => {
       return observable<{
@@ -42,7 +42,7 @@ export const smartHomeRouter = createTRPCRouter({
       });
     }),
   switchEntity: protectedProcedure
-    .unstable_concat(createSmartHomeIntegrationMiddleware("interact"))
+    .concat(createSmartHomeIntegrationMiddleware("interact"))
     .input(z.object({ entityId: z.string() }))
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);
@@ -54,7 +54,7 @@ export const smartHomeRouter = createTRPCRouter({
       return success;
     }),
   executeAutomation: protectedProcedure
-    .unstable_concat(createSmartHomeIntegrationMiddleware("interact"))
+    .concat(createSmartHomeIntegrationMiddleware("interact"))
     .input(z.object({ automationId: z.string() }))
     .mutation(async ({ ctx: { integration }, input }) => {
       const client = await createIntegrationAsync(integration);

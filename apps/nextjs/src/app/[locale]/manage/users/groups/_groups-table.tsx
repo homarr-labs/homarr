@@ -264,7 +264,7 @@ const SaveAffix = ({ visible, isPending, onDiscard, onSave }: SaveAffixProps) =>
                 <Button disabled={isPending} onClick={onDiscard}>
                   {t("common.action.discard")}
                 </Button>
-                <Button color="teal" loading={isPending} onClick={onSave}>
+                <Button loading={isPending} onClick={onSave}>
                   {t("common.action.saveChanges")}
                 </Button>
               </Group>

@@ -1,13 +1,15 @@
 "use client";
 
-import { Autocomplete, Button, Center, Grid, Group, Popover, Stack, Text } from "@mantine/core";
+import { startTransition } from "react";
+import { ActionIcon, Autocomplete, Button, Center, Grid, Group, Popover, Stack, Text } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
-import { IconPhotoOff } from "@tabler/icons-react";
+import { IconPhotoOff, IconUpload } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
+import { UploadMedia } from "@homarr/forms-collection";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { SelectItemWithDescriptionBadge } from "@homarr/ui";
@@ -62,58 +64,76 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
       <Stack>
         <Grid>
           <Grid.Col span={12}>
-            <Autocomplete
-              leftSection={
-                form.values.backgroundImageUrl &&
-                form.values.backgroundImageUrl.trim().length >= 2 && (
-                  <Popover width={300} withArrow>
-                    <Popover.Target>
-                      <Center h="100%">
-                        <ImagePreview src={form.values.backgroundImageUrl} w={20} h={20} />
-                      </Center>
-                    </Popover.Target>
-                    <Popover.Dropdown>
-                      <ImagePreview src={form.values.backgroundImageUrl} w="100%" />
-                    </Popover.Dropdown>
-                  </Popover>
-                )
-              }
-              // We filter it on the server
-              filter={({ options }) => options}
-              label={t("board.field.backgroundImageUrl.label")}
-              placeholder={`${t("board.field.backgroundImageUrl.placeholder")}...`}
-              renderOption={({ option }) => {
-                const current = imageMap.get(option.value);
-                if (!current) return null;
+            <Group wrap="nowrap" gap="xs" w="100%" align="start">
+              <Autocomplete
+                flex={1}
+                leftSection={
+                  form.values.backgroundImageUrl &&
+                  form.values.backgroundImageUrl.trim().length >= 2 && (
+                    <Popover width={300} withArrow>
+                      <Popover.Target>
+                        <Center h="100%">
+                          <ImagePreview src={form.values.backgroundImageUrl} w={20} h={20} />
+                        </Center>
+                      </Popover.Target>
+                      <Popover.Dropdown>
+                        <ImagePreview src={form.values.backgroundImageUrl} w="100%" />
+                      </Popover.Dropdown>
+                    </Popover>
+                  )
+                }
+                // We filter it on the server
+                filter={({ options }) => options}
+                label={t("board.field.backgroundImageUrl.label")}
+                placeholder={`${t("board.field.backgroundImageUrl.placeholder")}...`}
+                renderOption={({ option }) => {
+                  const current = imageMap.get(option.value);
+                  if (!current) return null;
 
-                return (
-                  <Group gap="sm">
-                    <ImagePreview src={option.value} w={20} h={20} />
-                    <Stack gap={0}>
-                      <Text size="sm">{current.name}</Text>
-                      <Text size="xs" c="dimmed">
-                        {option.value}
-                      </Text>
-                    </Stack>
-                  </Group>
-                );
-              }}
-              data={[
-                {
-                  group: t("board.field.backgroundImageUrl.group.your"),
-                  items: images
-                    .filter((media) => media.creatorId === session?.user.id)
-                    .map((media) => `/api/user-medias/${media.id}`),
-                },
-                {
-                  group: t("board.field.backgroundImageUrl.group.other"),
-                  items: images
-                    .filter((media) => media.creatorId !== session?.user.id)
-                    .map((media) => `/api/user-medias/${media.id}`),
-                },
-              ]}
-              {...form.getInputProps("backgroundImageUrl")}
-            />
+                  return (
+                    <Group gap="sm">
+                      <ImagePreview src={option.value} w={20} h={20} />
+                      <Stack gap={0}>
+                        <Text size="sm">{current.name}</Text>
+                        <Text size="xs" c="dimmed">
+                          {option.value}
+                        </Text>
+                      </Stack>
+                    </Group>
+                  );
+                }}
+                data={[
+                  {
+                    group: t("board.field.backgroundImageUrl.group.your"),
+                    items: images
+                      .filter((media) => media.creatorId === session?.user.id)
+                      .map((media) => `/api/user-medias/${media.id}`),
+                  },
+                  {
+                    group: t("board.field.backgroundImageUrl.group.other"),
+                    items: images
+                      .filter((media) => media.creatorId !== session?.user.id)
+                      .map((media) => `/api/user-medias/${media.id}`),
+                  },
+                ]}
+                {...form.getInputProps("backgroundImageUrl")}
+              />
+              {session?.user.permissions.includes("media-upload") && (
+                <UploadMedia
+                  onSuccess={({ url }) =>
+                    startTransition(() => {
+                      form.setFieldValue("backgroundImageUrl", url);
+                    })
+                  }
+                >
+                  {({ onClick, loading }) => (
+                    <ActionIcon onClick={onClick} loading={loading} mt={24} size={36} variant="default">
+                      <IconUpload size={16} stroke={1.5} />
+                    </ActionIcon>
+                  )}
+                </UploadMedia>
+              )}
+            </Group>
           </Grid.Col>
           <Grid.Col span={12}>
             <SelectWithDescriptionBadge
@@ -139,7 +159,7 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
         </Grid>
 
         <Group justify="end">
-          <Button type="submit" loading={isPending} color="teal">
+          <Button type="submit" loading={isPending}>
             {t("common.action.saveChanges")}
           </Button>
         </Group>

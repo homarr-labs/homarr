@@ -11,7 +11,7 @@ const createIndexerManagerIntegrationMiddleware = (action: IntegrationAction) =>
 
 export const mediaTranscodingRouter = createTRPCRouter({
   getDataAsync: publicProcedure
-    .unstable_concat(createIndexerManagerIntegrationMiddleware("query"))
+    .concat(createIndexerManagerIntegrationMiddleware("query"))
     .input(paginatedSchema.pick({ page: true, pageSize: true }))
     .query(async ({ ctx, input }) => {
       const innerHandler = mediaTranscodingRequestHandler.handler(ctx.integration, {

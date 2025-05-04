@@ -101,6 +101,18 @@ const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedInteg
   );
 
   if (onlyFormSecretsKindOptions.length >= 1) {
+    // If the first option is no secret it would always be selected even if we want to have a secret
+    if (
+      onlyFormSecretsKindOptions.length >= 2 &&
+      onlyFormSecretsKindOptions.some((secretKinds) => secretKinds.length === 0)
+    ) {
+      return (
+        // Will never be undefined because of the check above
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        onlyFormSecretsKindOptions.find((secretKinds) => secretKinds.length >= 1) ?? onlyFormSecretsKindOptions[0]!
+      );
+    }
+
     // Will never be undefined because of the check above
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return onlyFormSecretsKindOptions[0]!;

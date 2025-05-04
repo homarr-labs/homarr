@@ -8,7 +8,7 @@ import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { zodResolver } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
-import type { SettingsContextProps } from "@homarr/settings";
+import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
 
@@ -142,9 +142,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
               <Button onClick={actions.closeModal} variant="subtle" color="gray">
                 {t("common.action.cancel")}
               </Button>
-              <Button type="submit" color="teal">
-                {t("common.action.saveChanges")}
-              </Button>
+              <Button type="submit">{t("common.action.saveChanges")}</Button>
             </Group>
           </Group>
         </Stack>

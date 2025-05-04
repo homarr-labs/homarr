@@ -467,7 +467,7 @@ export const integrationRouter = createTRPCRouter({
       });
     }),
   searchInIntegration: protectedProcedure
-    .unstable_concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("search")))
+    .concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("search")))
     .input(z.object({ integrationId: z.string(), query: z.string() }))
     .query(async ({ ctx, input }) => {
       const integrationInstance = await createIntegrationAsync(ctx.integration);

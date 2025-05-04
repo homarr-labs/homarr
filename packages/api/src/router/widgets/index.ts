@@ -13,6 +13,7 @@ import { minecraftRouter } from "./minecraft";
 import { networkControllerRouter } from "./network-controller";
 import { notebookRouter } from "./notebook";
 import { optionsRouter } from "./options";
+import { releasesRouter } from "./releases";
 import { rssFeedRouter } from "./rssFeed";
 import { smartHomeRouter } from "./smart-home";
 import { stockPriceRouter } from "./stocks";
@@ -36,5 +37,6 @@ export const widgetRouter = createTRPCRouter({
   minecraft: minecraftRouter,
   docker: dockerRouter,
   options: optionsRouter,
+  releases: releasesRouter,
   networkController: networkControllerRouter,
 });
