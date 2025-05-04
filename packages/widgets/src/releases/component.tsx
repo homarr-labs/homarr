@@ -28,9 +28,9 @@ import { Providers } from "./releases-providers";
 import type { ReleasesRepositoryResponse } from "./releases-repository";
 
 const formatRelativeDate = (value: string): string => {
-  const isMinutes = /\d+m/g.test(value);
+  const isMonths = /\d+m/g.test(value);
   const isOtherUnits = /\d+[HDWY]/g.test(value);
-  return isMinutes ? value.toUpperCase() : isOtherUnits ? value.toLowerCase() : value;
+  return isMonths ? value.toUpperCase() : isOtherUnits ? value.toLowerCase() : value;
 };
 
 export default function ReleasesWidget({ options }: WidgetComponentProps<"releases">) {
