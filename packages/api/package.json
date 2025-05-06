@@ -41,7 +41,7 @@
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@kubernetes/client-node": "^1.1.2",
-    "@tanstack/react-query": "^5.75.2",
+    "@tanstack/react-query": "^5.75.4",
     "@trpc/client": "^11.1.2",
     "@trpc/react-query": "^11.1.2",
     "@trpc/server": "^11.1.2",
@@ -52,7 +52,7 @@
     "react-dom": "19.1.0",
     "superjson": "2.2.2",
     "trpc-to-openapi": "^2.2.0",
-    "zod": "^3.24.3"
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
