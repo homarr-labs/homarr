@@ -34,7 +34,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "bcrypt": "^5.1.1",
     "cookies": "^0.9.1",
-    "ldapts": "7.4.0",
+    "ldapts": "8.0.0",
     "next": "15.3.1",
     "next-auth": "5.0.0-beta.27",
     "react": "19.1.0",
