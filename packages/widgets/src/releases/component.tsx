@@ -103,8 +103,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     results,
     options.repositories,
     options.showOnlyHighlighted,
-    options.newReleaseWithin,
-    options.staleReleaseWithin,
+    relativeDateOptions.newReleaseWithin,
+    relativeDateOptions.staleReleaseWithin,
   ]);
 
   const toggleExpandedRepository = useCallback(

@@ -15,7 +15,7 @@ const errorSchema = z.object({
 
 type ReleasesError = z.infer<typeof errorSchema>;
 
-const reponseSchema = z.object({
+const _reponseSchema = z.object({
   identifier: z.string(),
   providerKey: z.string(),
   latestRelease: z.string().optional(),
@@ -119,4 +119,4 @@ export const releasesRequestHandler = createCachedWidgetRequestHandler({
   cacheDuration: dayjs.duration(5, "minutes"),
 });
 
-export type ReleaseResponse = z.infer<typeof reponseSchema>;
+export type ReleaseResponse = z.infer<typeof _reponseSchema>;
