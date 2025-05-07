@@ -2198,8 +2198,8 @@ importers:
         specifier: 15.3.2
         version: 15.3.2
       eslint-config-prettier:
-        specifier: ^10.1.2
-        version: 10.1.2(eslint@9.26.0)
+        specifier: ^10.1.3
+        version: 10.1.3(eslint@9.26.0)
       eslint-config-turbo:
         specifier: ^2.5.3
         version: 2.5.3(eslint@9.26.0)(turbo@2.5.3)
@@ -6342,8 +6342,8 @@ packages:
     engines: {node: '>=6.0'}
     hasBin: true
 
-  eslint-config-prettier@10.1.2:
-    resolution: {integrity: sha512-Epgp/EofAUeEpIdZkW60MHKvPyru1ruQJxPL+WIycnaPApuseK0Zpkrh/FwL9oIpQvIhJwV7ptOy0DWUjTlCiA==}
+  eslint-config-prettier@10.1.3:
+    resolution: {integrity: sha512-vDo4d9yQE+cS2tdIT4J02H/16veRvkHgiLDRpej+WL67oCfbOb97itZXn8wMPJ/GsiEBVjrjs//AVNw2Cp1EcA==}
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
@@ -15366,7 +15366,7 @@ snapshots:
     optionalDependencies:
       source-map: 0.6.1
 
-  eslint-config-prettier@10.1.2(eslint@9.26.0):
+  eslint-config-prettier@10.1.3(eslint@9.26.0):
     dependencies:
       eslint: 9.26.0
 
