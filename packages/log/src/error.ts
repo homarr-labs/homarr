@@ -20,6 +20,10 @@ export const formatErrorCause = (cause: unknown, iteration = 0): string => {
     }
 
     return `\ncaused by ${formatErrorTitle(cause)}\n${formatErrorStack(cause.stack)}${formatErrorCause(cause.cause, iteration + 1)}`;
+  } 
+
+  if (cause instanceof Object) {
+    return `\ncaused by ${JSON.stringify(cause)}`;
   }
 
   return `\ncaused by ${cause as string}`;
