@@ -2,12 +2,15 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import { Agent as HttpsAgent } from "node:https";
 import path from "node:path";
-import { rootCertificates } from "node:tls";
+import { checkServerIdentity, rootCertificates } from "node:tls";
 import axios from "axios";
 import { fetch } from "undici";
 
 import { env } from "@homarr/common/env";
 import { LoggingAgent } from "@homarr/common/server";
+import type { InferSelectModel } from "@homarr/db";
+import { db } from "@homarr/db";
+import type { trustedCertificateHostnames } from "@homarr/db/schema";
 
 const getCertificateFolder = () => {
   return env.NODE_ENV === "production"
@@ -40,7 +43,12 @@ export const loadCustomRootCertificatesAsync = async () => {
 export const removeCustomRootCertificateAsync = async (fileName: string) => {
   const folder = getCertificateFolder();
   if (!folder) {
-    return;
+    return null;
+  }
+
+  const existingFiles = await fs.readdir(folder, { withFileTypes: true });
+  if (!existingFiles.some((file) => file.isFile() && file.name === fileName)) {
+    throw new Error(`File ${fileName} does not exist`);
   }
 
   await fs.rm(path.join(folder, fileName));
@@ -61,15 +69,35 @@ export const addCustomRootCertificateAsync = async (fileName: string, content: s
   await fs.writeFile(path.join(folder, fileName), content);
 };
 
+export const getTrustedCertificateHostnamesAsync = async () => {
+  return await db.query.trustedCertificateHostnames.findMany();
+};
+
 export const getAllTrustedCertificatesAsync = async () => {
   const customCertificates = await loadCustomRootCertificatesAsync();
   return rootCertificates.concat(customCertificates.map((cert) => cert.content));
+};
+
+export const createCustomCheckServerIdentity = (
+  trustedHostnames: InferSelectModel<typeof trustedCertificateHostnames>[],
+): typeof checkServerIdentity => {
+  return (hostname, peerCertificate) => {
+    const matchingTrustedHostnames = trustedHostnames.filter(
+      (cert) => cert.thumbprint === peerCertificate.fingerprint256,
+    );
+
+    // We trust the certificate if we have a matching hostname
+    if (matchingTrustedHostnames.some((cert) => cert.hostname === hostname)) return undefined;
+
+    return checkServerIdentity(hostname, peerCertificate);
+  };
 };
 
 export const createCertificateAgentAsync = async () => {
   return new LoggingAgent({
     connect: {
       ca: await getAllTrustedCertificatesAsync(),
+      checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
     },
   });
 };
@@ -77,6 +105,7 @@ export const createCertificateAgentAsync = async () => {
 export const createHttpsAgentAsync = async () => {
   return new HttpsAgent({
     ca: await getAllTrustedCertificatesAsync(),
+    checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
   });
 };
 

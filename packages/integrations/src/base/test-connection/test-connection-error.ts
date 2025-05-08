@@ -83,10 +83,14 @@ export class TestConnectionError<TType extends TestConnectionErrorType> extends 
   private static Status(input: { status: number; url: string }) {
     if (input.status === 401 || input.status === 403) return this.Authorization(input.status);
 
+    // We don't want to leak the query parameters in the error message
+    const urlWithoutQuery = new URL(input.url);
+    urlWithoutQuery.search = "";
+
     return new TestConnectionError("statusCode", {
       statusCode: input.status,
       reason: input.status in statusCodeMap ? statusCodeMap[input.status as keyof typeof statusCodeMap] : "other",
-      url: input.url,
+      url: urlWithoutQuery.toString(),
     });
   }
 
@@ -144,7 +148,7 @@ export class TestConnectionError<TType extends TestConnectionErrorType> extends 
 const statusCodeMap = {
   400: "badRequest",
   404: "notFound",
-  429: "toManyRequests",
+  429: "tooManyRequests",
   500: "internalServerError",
   503: "serviceUnavailable",
   504: "gatewayTimeout",

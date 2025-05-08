@@ -4,6 +4,7 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 
 import { addCustomRootCertificateAsync, removeCustomRootCertificateAsync } from "@homarr/certificates/server";
+import { trustedCertificateHostnames } from "@homarr/db/schema";
 import { certificateValidFileNameSchema, superRefineCertificateFile } from "@homarr/validation/certificates";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
@@ -30,6 +31,15 @@ export const certificateRouter = createTRPCRouter({
       }
 
       await addCustomRootCertificateAsync(input.file.name, content);
+    }),
+  trustHostnameMismatch: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.object({ hostname: z.string(), thumbprint: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.insert(trustedCertificateHostnames).values({
+        hostname: input.hostname,
+        thumbprint: input.thumbprint,
+      });
     }),
   removeCertificate: permissionRequiredProcedure
     .requiresPermission("admin")

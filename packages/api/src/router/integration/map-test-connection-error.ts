@@ -33,13 +33,9 @@ const mapError = (error: Error): MappedError => {
 };
 
 export interface MappedCertificate {
-  issuer?: MappedCertificate;
-  subject: {
-    commonName?: string;
-    organizationName?: string;
-    countryCode?: string;
-    city?: string;
-  };
+  isSelfSigned: boolean;
+  issuer: string;
+  subject: string;
   serialNumber: string;
   validFrom: Date;
   validTo: Date;
@@ -47,22 +43,12 @@ export interface MappedCertificate {
   pem: string;
 }
 
-const mapSubjectProperties = (subject: string): MappedCertificate["subject"] => {
-  const keyValuePairs = subject
-    .split("\n")
-    .map((row) => row.split("="))
-    .filter((row) => row.length === 2) as [string, string][];
-  return {
-    commonName: keyValuePairs.find(([key]) => key === "CN")?.at(1),
-    organizationName: keyValuePairs.find(([key]) => key === "O")?.at(1),
-    countryCode: keyValuePairs.find(([key]) => key === "C")?.at(1),
-    city: keyValuePairs.find(([key]) => key === "L")?.at(1),
-  };
-};
-
 const mapCertificate = (certificate: X509Certificate): MappedCertificate => ({
-  issuer: certificate.issuerCertificate ? mapCertificate(certificate.issuerCertificate) : undefined,
-  subject: mapSubjectProperties(certificate.subject),
+  isSelfSigned:
+    certificate.issuerCertificate !== undefined &&
+    certificate.issuerCertificate.fingerprint256 === certificate.fingerprint256,
+  issuer: certificate.issuer,
+  subject: certificate.subject,
   serialNumber: certificate.serialNumber,
   validFrom: certificate.validFromDate,
   validTo: certificate.validToDate,

@@ -30,8 +30,8 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { appHrefSchema } from "@homarr/validation/app";
 import { integrationCreateSchema } from "@homarr/validation/integration";
 
-import { IntegrationTestConnectionError } from "../_components/integration-test-connection-error";
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
+import { IntegrationTestConnectionError } from "../_components/test-connection/integration-test-connection-error";
 
 interface NewIntegrationFormProps {
   searchParams: Partial<z.infer<typeof integrationCreateSchema>> & {
@@ -164,7 +164,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
           </Stack>
         </Fieldset>
 
-        {error !== null && <IntegrationTestConnectionError error={error} />}
+        {error !== null && <IntegrationTestConnectionError error={error} url={form.values.url} />}
 
         {supportsSearchEngine && (
           <Checkbox

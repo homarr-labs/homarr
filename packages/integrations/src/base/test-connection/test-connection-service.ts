@@ -1,7 +1,11 @@
 import type { X509Certificate } from "node:crypto";
 import tls from "node:tls";
 
-import { getAllTrustedCertificatesAsync } from "@homarr/certificates/server";
+import {
+  createCustomCheckServerIdentity,
+  getAllTrustedCertificatesAsync,
+  getTrustedCertificateHostnamesAsync,
+} from "@homarr/certificates/server";
 import { getPortFromUrl } from "@homarr/common";
 import { logger } from "@homarr/log";
 
@@ -19,7 +23,10 @@ export type TestingResult =
       success: false;
       error: AnyTestConnectionError;
     };
-type AsyncTestingCallback = (input: { ca: string[] | string }) => Promise<TestingResult>;
+type AsyncTestingCallback = (input: {
+  ca: string[] | string;
+  checkServerIdentity?: typeof tls.checkServerIdentity;
+}) => Promise<TestingResult>;
 
 export class TestConnectionService {
   constructor(private url: URL) {}
@@ -27,7 +34,10 @@ export class TestConnectionService {
   // TODO: pihole issue
   // https://discourse.pi-hole.net/t/include-ca-certificate-in-self-signed/79629
   public async handleAsync(testingCallbackAsync: AsyncTestingCallback) {
-    const firstResult = await testingCallbackAsync({ ca: await getAllTrustedCertificatesAsync() })
+    const firstResult = await testingCallbackAsync({
+      ca: await getAllTrustedCertificatesAsync(),
+      checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
+    })
       .then((result) => {
         if (result.success) return result;
 

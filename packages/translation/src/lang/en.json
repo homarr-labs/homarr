@@ -717,15 +717,45 @@
         },
         "statusCode": {
           "title": "Response error",
-          "description": "The response returned an unexpected status code. Please verify that the URL is pointing to the base URL of the service."
+          "description": "Received unexpected {statusCode} ({reason}) response from <url></url>. Please verify that the URL is pointing to the base URL of the integration.",
+          "otherDescription": "Received unexpected {statusCode} response from <url></url>. Please verify that the URL is pointing to the base URL of the integration.",
+          "reason": {
+            "badRequest": "Bad request",
+            "notFound": "Not found",
+            "tooManyRequests": "Too many requests",
+            "internalServerError": "Internal server error",
+            "serviceUnavailable": "Service unavailable",
+            "gatewayTimeout": "Gateway timeout"
+          }
         },
         "certificate": {
           "title": "Certificate error",
-          "description": "The certificate could not be verified. Please follow the instructions below to add the certificate to the trusted list."
+          "description": {
+            "expired": "The certificate has expired.",
+            "notYetValid": "The certificate is not yet valid.",
+            "untrusted": "The certificate is not trusted.",
+            "hostnameMismatch": "The certificate hostname does not match the URL."
+          }
         },
         "request": {
           "title": "Request error",
-          "description": "The request could not be sent. Please verify that the URL is correct and the service is running."
+          "description": {
+            "connection": {
+              "hostUnreachable": "The server could not be reached. This usually means the host is offline or unreachable from your network.",
+              "networkUnreachable": "The network is unreachable. Please check your internet connection or network configuration.",
+              "refused": "The server refused the connection. It may not be running or is rejecting requests on the specified port.",
+              "reset": "The connection was unexpectedly closed by the server. This can happen if the server is unstable or restarted."
+            },
+            "dns": {
+              "notFound": "The server address could not be found. Please check the URL for typos or invalid domain names.",
+              "timeout": "DNS lookup timed out. This may be a temporary issue—please try again in a few moments.",
+              "noAnswer": "The DNS server didn't return a valid response. The domain may exist but has no valid records."
+            },
+            "timeout": {
+              "aborted": "The request was aborted before it could complete. This might be due to a user action or system timeout.",
+              "timeout": "The request took too long to complete and was timed out. Check your network or try again later."
+            }
+          }
         }
       },
       "alertNotice": "The Save button is enabled once a successful connection is established",

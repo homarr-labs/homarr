@@ -1,16 +1,19 @@
 import { useMemo } from "react";
-import { Accordion, Card, Stack, Text } from "@mantine/core";
+import { Accordion, Anchor, Card, Stack, Text } from "@mantine/core";
 import { IconSubtask } from "@tabler/icons-react";
 
 import type { AnyMappedTestConnectionError, MappedError } from "@homarr/api";
 import { getMantineColor } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
+import { CertificateErrorDetails } from "./test-connection-certificate";
+
 interface IntegrationTestConnectionErrorProps {
   error: AnyMappedTestConnectionError;
+  url: string;
 }
 
-export const IntegrationTestConnectionError = ({ error }: IntegrationTestConnectionErrorProps) => {
+export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestConnectionErrorProps) => {
   const t = useI18n();
   const causeArray = useMemo(() => toCauseArray(error.cause), [error.cause]);
 
@@ -18,14 +21,43 @@ export const IntegrationTestConnectionError = ({ error }: IntegrationTestConnect
     <Card withBorder style={{ borderColor: getMantineColor("red", 8) }}>
       <Stack>
         <Stack gap="sm">
-          <Text fw={500} c="red.8">
+          <Text size="lg" fw={500} c="red.8">
             {t(`integration.testConnection.error.${error.type}.title`)}
           </Text>
 
-          <Text size="sm">{t(`integration.testConnection.error.${error.type}.description`)}</Text>
-        </Stack>
+          {error.type !== "request" && error.type !== "certificate" && error.type !== "statusCode" ? (
+            <Text size="md">{t(`integration.testConnection.error.${error.type}.description`)}</Text>
+          ) : null}
 
-        {error.data ? JSON.stringify(error.data, null, 2) : null}
+          {error.type === "request" ? (
+            <Text size="md">
+              {t(
+                `integration.testConnection.error.request.description.${error.data.type}.${error.data.reason}` as never,
+              )}
+            </Text>
+          ) : null}
+
+          {error.type === "statusCode" ? (
+            error.data.reason === "other" ? (
+              <Text size="md">
+                {t.rich("integration.testConnection.error.statusCode.otherDescription", {
+                  statusCode: error.data.statusCode.toString(),
+                  url: () => <Anchor href={error.data.url}>{error.data.url}</Anchor>,
+                })}
+              </Text>
+            ) : (
+              <Text size="md">
+                {t.rich("integration.testConnection.error.statusCode.description", {
+                  reason: t(`integration.testConnection.error.statusCode.reason.${error.data.reason}`),
+                  statusCode: error.data.statusCode.toString(),
+                  url: () => <Anchor href={error.data.url}>{error.data.url}</Anchor>,
+                })}
+              </Text>
+            )
+          ) : null}
+
+          {error.type === "certificate" ? <CertificateErrorDetails error={error} url={url} /> : null}
+        </Stack>
 
         {error.cause ? (
           <Accordion variant="contained">

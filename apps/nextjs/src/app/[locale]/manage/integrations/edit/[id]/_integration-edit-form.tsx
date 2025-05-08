@@ -16,9 +16,9 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 import { integrationUpdateSchema } from "@homarr/validation/integration";
 
-import { IntegrationTestConnectionError } from "../../_components/integration-test-connection-error";
 import { SecretCard } from "../../_components/secrets/integration-secret-card";
 import { IntegrationSecretInput } from "../../_components/secrets/integration-secret-inputs";
+import { IntegrationTestConnectionError } from "../../_components/test-connection/integration-test-connection-error";
 
 interface EditIntegrationForm {
   integration: RouterOutputs["integration"]["byId"];
@@ -128,7 +128,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
           </Stack>
         </Fieldset>
 
-        {error !== null && <IntegrationTestConnectionError error={error} />}
+        {error !== null && <IntegrationTestConnectionError error={error} url={form.values.url} />}
 
         <Group justify="end" align="center">
           <Button variant="default" component={Link} href="/manage/integrations">

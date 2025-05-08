@@ -738,6 +738,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/db':
+        specifier: workspace:^0.1.0
+        version: link:../db
       undici:
         specifier: 7.8.0
         version: 7.8.0

@@ -85,16 +85,18 @@ export abstract class Integration {
   public async testConnectionAsync(): Promise<TestingResult> {
     try {
       const url = new URL(this.integration.url);
-      return await new TestConnectionService(url).handleAsync(async ({ ca }) => {
+      return await new TestConnectionService(url).handleAsync(async ({ ca, checkServerIdentity }) => {
         const fetchDispatcher = new LoggingAgent({
           connect: {
             ca,
+            checkServerIdentity,
           },
         });
 
         const axiosInstance = axios.create({
           httpsAgent: new HttpsAgent({
             ca,
+            checkServerIdentity,
           }),
         });
 
