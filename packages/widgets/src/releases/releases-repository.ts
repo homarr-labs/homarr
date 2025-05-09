@@ -9,7 +9,9 @@ export interface ReleasesRepository {
   identifier: string;
   versionFilter?: ReleasesVersionFilter;
   iconUrl?: string;
+}
 
+export interface ReleasesRepositoryResponse extends ReleasesRepository {
   latestRelease?: string;
   latestReleaseAt?: Date;
   isNewRelease: boolean;
@@ -27,4 +29,6 @@ export interface ReleasesRepository {
   starsCount?: number;
   forksCount?: number;
   openIssues?: number;
+
+  error?: { code?: string; message?: string };
 }

@@ -1,3 +1,28 @@
+## [1.19.0](https://github.com/homarr-labs/homarr/compare/v1.18.1...v1.19.0) (2025-05-02)
+
+### Features
+
+* **widget:** add prefetch for apps and bookmarks ([#2895](https://github.com/homarr-labs/homarr/issues/2895)) ([82c5361](https://github.com/homarr-labs/homarr/commit/82c53611122dd07e5639a902afa0a6a4fd8ed4e5))
+
+### Bug Fixes
+
+* **cookie:** parsing of header not working with percentage char ([#2989](https://github.com/homarr-labs/homarr/issues/2989)) ([547a8c3](https://github.com/homarr-labs/homarr/commit/547a8c34c58c88e6f0074df327f49aadf9ab07f4))
+* **deps:** update dependency @t3-oss/env-nextjs to ^0.13.4 ([#2993](https://github.com/homarr-labs/homarr/issues/2993)) ([1a07fa9](https://github.com/homarr-labs/homarr/commit/1a07fa9af59e93f9ce5d70b72855bb070f5b5787))
+* **deps:** update dependency tsx to v4.19.4 ([#2981](https://github.com/homarr-labs/homarr/issues/2981)) ([a2dbac5](https://github.com/homarr-labs/homarr/commit/a2dbac5ad73aa50af7f4b40076bb5fcfa61adf80))
+* **deps:** update dependency typescript-eslint to ^8.31.1 ([#2979](https://github.com/homarr-labs/homarr/issues/2979)) ([284ea23](https://github.com/homarr-labs/homarr/commit/284ea239f71f49c74e3ea60fa5de2fd968f1675b))
+* **deps:** update mantine monorepo to ^7.17.7 ([#3004](https://github.com/homarr-labs/homarr/issues/3004)) ([a70b0b7](https://github.com/homarr-labs/homarr/commit/a70b0b70479df8fff8a2d256995844bad1fb55a0))
+* **deps:** update tanstack-query monorepo to ^5.74.11 ([#2984](https://github.com/homarr-labs/homarr/issues/2984)) ([3299ced](https://github.com/homarr-labs/homarr/commit/3299cedc04cd87c7f014f69a900e7c6e6c33d954))
+* **deps:** update tanstack-query monorepo to ^5.74.7 ([#2924](https://github.com/homarr-labs/homarr/issues/2924)) ([f4ce76a](https://github.com/homarr-labs/homarr/commit/f4ce76ac13136c2f559d3aff019dcc2add7c98dd))
+* **deps:** update tanstack-query monorepo to ^5.74.9 ([#2983](https://github.com/homarr-labs/homarr/issues/2983)) ([1012cad](https://github.com/homarr-labs/homarr/commit/1012cad0e32f43f46bbb4e89ade3f0eb7fa54313))
+* **deps:** update tanstack-query monorepo to ^5.75.0 ([#2998](https://github.com/homarr-labs/homarr/issues/2998)) ([0d1b40c](https://github.com/homarr-labs/homarr/commit/0d1b40c381fc068c770480f81c6c7dcefce0ec86))
+* **deps:** update tanstack-query monorepo to ^5.75.1 ([#3006](https://github.com/homarr-labs/homarr/issues/3006)) ([2b1c433](https://github.com/homarr-labs/homarr/commit/2b1c433cefe667d930ce5178cc1218ffb7fa43c0))
+* **deps:** update testcontainers-node monorepo to ^10.25.0 ([#2997](https://github.com/homarr-labs/homarr/issues/2997)) ([a934529](https://github.com/homarr-labs/homarr/commit/a934529146a0f53a047d2e3e834145c62c8ee891))
+* **deps:** update tiptap monorepo to v2.11.9 ([#2987](https://github.com/homarr-labs/homarr/issues/2987)) ([70686a0](https://github.com/homarr-labs/homarr/commit/70686a00662a7f690efbb45920e5c45ad4a866ef))
+* **deps:** update trpc monorepo to ^11.1.2 ([#2982](https://github.com/homarr-labs/homarr/issues/2982)) ([b10f33b](https://github.com/homarr-labs/homarr/commit/b10f33bf0b976217b2076ce84d8d1d9219b36e4c))
+* **media-request:** add missing completed status ([#2990](https://github.com/homarr-labs/homarr/issues/2990)) ([9006d3d](https://github.com/homarr-labs/homarr/commit/9006d3d2fc21be5ba2eae616e467113356c91ebe))
+* **releases-widget:** improve ui for smaller widgets ([#2962](https://github.com/homarr-labs/homarr/issues/2962)) ([f39a21c](https://github.com/homarr-labs/homarr/commit/f39a21c2962530298274ee705f3d85da023ea3e0))
+* **unifi:** port is ignored ([#2995](https://github.com/homarr-labs/homarr/issues/2995)) ([0c9c5b8](https://github.com/homarr-labs/homarr/commit/0c9c5b8955c883191e5b6b137660c1a3cbd16ce4))
+
 ## [1.18.1](https://github.com/homarr-labs/homarr/compare/v1.18.0...v1.18.1) (2025-04-27)
 
 ### Bug Fixes

@@ -5,7 +5,7 @@ import { releasesRequestHandler } from "@homarr/request-handler/releases";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
-const formatVersionFilterRegex = (versionFilter: z.infer<typeof _releaseVersionFilterSchema> | undefined) => {
+const formatVersionFilterRegex = (versionFilter: z.infer<typeof releaseVersionFilterSchema> | undefined) => {
   if (!versionFilter) return undefined;
 
   const escapedPrefix = versionFilter.prefix ? escapeForRegEx(versionFilter.prefix) : "";
@@ -15,7 +15,7 @@ const formatVersionFilterRegex = (versionFilter: z.infer<typeof _releaseVersionF
   return `^${escapedPrefix}${precision}${escapedSuffix}$`;
 };
 
-const _releaseVersionFilterSchema = z.object({
+const releaseVersionFilterSchema = z.object({
   prefix: z.string().optional(),
   precision: z.number(),
   suffix: z.string().optional(),
@@ -29,7 +29,7 @@ export const releasesRouter = createTRPCRouter({
           z.object({
             providerKey: z.string(),
             identifier: z.string(),
-            versionFilter: _releaseVersionFilterSchema.optional(),
+            versionFilter: releaseVersionFilterSchema.optional(),
           }),
         ),
       }),

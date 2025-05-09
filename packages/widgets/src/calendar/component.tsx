@@ -72,8 +72,8 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
   return (
     <Calendar
       defaultDate={new Date()}
-      onPreviousMonth={setMonth}
-      onNextMonth={setMonth}
+      onPreviousMonth={(month) => setMonth(new Date(month))}
+      onNextMonth={(month) => setMonth(new Date(month))}
       highlightToday
       locale={locale}
       hideWeekdays={false}
@@ -126,7 +126,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
           .filter((event): event is CalendarEvent => Boolean(event.date));
         return (
           <CalendarDay
-            date={tileDate}
+            date={new Date(tileDate)}
             events={eventsForDate}
             disabled={isEditMode || eventsForDate.length === 0}
             rootWidth={width}

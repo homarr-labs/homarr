@@ -13,6 +13,7 @@ import { extractProfileName } from "./providers/oidc/oidc-provider";
 
 export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["events"], undefined>["signIn"] => {
   return async ({ user, profile }) => {
+    logger.debug(`SignIn EventHandler for user: ${JSON.stringify(user)} . profile: ${JSON.stringify(profile)}`);
     if (!user.id) throw new Error("User ID is missing");
 
     const dbUser = await db.query.users.findFirst({
@@ -28,11 +29,13 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
     const groupsKey = env.AUTH_OIDC_GROUPS_ATTRIBUTE;
     // Groups from oidc provider are provided from the profile, it's not typed.
     if (profile && groupsKey in profile && Array.isArray(profile[groupsKey])) {
+      logger.debug(`Using profile groups (${groupsKey}): ${JSON.stringify(profile[groupsKey])}`);
       await synchronizeGroupsWithExternalForUserAsync(db, user.id, profile[groupsKey] as string[]);
     }
 
     // In ldap-authroization we return the groups from ldap, it's not typed.
     if ("groups" in user && Array.isArray(user.groups)) {
+      logger.debug(`Using profile groups: ${JSON.stringify(user.groups)}`);
       await synchronizeGroupsWithExternalForUserAsync(db, user.id, user.groups as string[]);
     }
     await addUserToEveryoneGroupIfNotMemberAsync(db, user.id);
