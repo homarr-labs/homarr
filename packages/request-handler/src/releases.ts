@@ -8,7 +8,6 @@ import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-ha
 import { Providers } from "./releases-providers";
 import type { DetailsResponse } from "./releases-providers";
 
-
 const errorSchema = z.object({
   code: z.string().optional(),
   message: z.string().optional(),
