@@ -253,12 +253,12 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
             <Group gap={5}>
               <IconStar
                 size={12}
-                color={repository.starsCount === 0 ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+                color={!repository.starsCount ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
               />
-              <Text size="xs" c={repository.starsCount === 0 ? "dimmed" : ""}>
-                {repository.starsCount === 0
+              <Text size="xs" c={!repository.starsCount ? "dimmed" : ""}>
+                {!repository.starsCount
                   ? "-"
-                  : formatter.number(repository.starsCount ?? 0, {
+                  : formatter.number(repository.starsCount, {
                       notation: "compact",
                       maximumFractionDigits: 1,
                     })}
@@ -270,12 +270,12 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
             <Group gap={5}>
               <IconGitFork
                 size={12}
-                color={repository.forksCount === 0 ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+                color={!repository.forksCount ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
               />
-              <Text size="xs" c={repository.forksCount === 0 ? "dimmed" : ""}>
-                {repository.forksCount === 0
+              <Text size="xs" c={!repository.forksCount ? "dimmed" : ""}>
+                {!repository.forksCount
                   ? "-"
-                  : formatter.number(repository.forksCount ?? 0, {
+                  : formatter.number(repository.forksCount, {
                       notation: "compact",
                       maximumFractionDigits: 1,
                     })}
@@ -287,12 +287,12 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
             <Group gap={5}>
               <IconCircleDot
                 size={12}
-                color={repository.openIssues === 0 ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+                color={!repository.openIssues ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
               />
-              <Text size="xs" c={repository.openIssues === 0 ? "dimmed" : ""}>
-                {repository.openIssues === 0
+              <Text size="xs" c={!repository.openIssues ? "dimmed" : ""}>
+                {!repository.openIssues
                   ? "-"
-                  : formatter.number(repository.openIssues ?? 0, {
+                  : formatter.number(repository.openIssues, {
                       notation: "compact",
                       maximumFractionDigits: 1,
                     })}
