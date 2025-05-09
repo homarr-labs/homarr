@@ -33,14 +33,6 @@ const formatRelativeDate = (value: string): string => {
   return isMonths ? value.toUpperCase() : isOtherUnits ? value.toLowerCase() : value;
 };
 
-function chunkArray<T>(array: T[], size: number): T[][] {
-  const chunks: T[][] = [];
-  for (let i = 0; i < array.length; i += size) {
-    chunks.push(array.slice(i, i + size));
-  }
-  return chunks;
-}
-
 export default function ReleasesWidget({ options }: WidgetComponentProps<"releases">) {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
@@ -57,7 +49,6 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   );
 
   const batchedRepositories = useMemo(() => splitToChunksWithNItems(options.repositories, 5), [options.repositories]);
-  
   const [results] = clientApi.useSuspenseQueries((t) =>
     batchedRepositories.flatMap((chunk) =>
       t.widget.releases.getLatest({
