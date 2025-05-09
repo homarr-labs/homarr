@@ -9,7 +9,7 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const healthMonitoringRouter = createTRPCRouter({
   getSystemHealthStatus: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot"))
+    .concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot"))
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -26,7 +26,7 @@ export const healthMonitoringRouter = createTRPCRouter({
       );
     }),
   subscribeSystemHealthStatus: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot"))
+    .concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot"))
     .subscription(({ ctx }) => {
       return observable<{ integrationId: string; healthInfo: HealthMonitoring; timestamp: Date }>((emit) => {
         const unsubscribes: (() => void)[] = [];
@@ -49,14 +49,14 @@ export const healthMonitoringRouter = createTRPCRouter({
       });
     }),
   getClusterHealthStatus: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("query", "proxmox"))
+    .concat(createOneIntegrationMiddleware("query", "proxmox"))
     .query(async ({ ctx }) => {
       const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
       const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
       return data;
     }),
   subscribeClusterHealthStatus: publicProcedure
-    .unstable_concat(createOneIntegrationMiddleware("query", "proxmox"))
+    .concat(createOneIntegrationMiddleware("query", "proxmox"))
     .subscription(({ ctx }) => {
       return observable<ProxmoxClusterInfo>((emit) => {
         const unsubscribes: (() => void)[] = [];

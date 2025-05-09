@@ -18,7 +18,7 @@ const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
 
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure
-    .unstable_concat(createDownloadClientIntegrationMiddleware("query"))
+    .concat(createDownloadClientIntegrationMiddleware("query"))
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -39,7 +39,7 @@ export const downloadsRouter = createTRPCRouter({
       );
     }),
   subscribeToJobsAndStatuses: publicProcedure
-    .unstable_concat(createDownloadClientIntegrationMiddleware("query"))
+    .concat(createDownloadClientIntegrationMiddleware("query"))
     .subscription(({ ctx }) => {
       return observable<{
         integration: Modify<Integration, { kind: IntegrationKindByCategory<"downloadClient"> }>;
@@ -64,18 +64,16 @@ export const downloadsRouter = createTRPCRouter({
         };
       });
     }),
-  pause: protectedProcedure
-    .unstable_concat(createDownloadClientIntegrationMiddleware("interact"))
-    .mutation(async ({ ctx }) => {
-      await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const integrationInstance = await createIntegrationAsync(integration);
-          await integrationInstance.pauseQueueAsync();
-        }),
-      );
-    }),
+  pause: protectedProcedure.concat(createDownloadClientIntegrationMiddleware("interact")).mutation(async ({ ctx }) => {
+    await Promise.all(
+      ctx.integrations.map(async (integration) => {
+        const integrationInstance = await createIntegrationAsync(integration);
+        await integrationInstance.pauseQueueAsync();
+      }),
+    );
+  }),
   pauseItem: protectedProcedure
-    .unstable_concat(createDownloadClientIntegrationMiddleware("interact"))
+    .concat(createDownloadClientIntegrationMiddleware("interact"))
     .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
       await Promise.all(
@@ -85,18 +83,16 @@ export const downloadsRouter = createTRPCRouter({
         }),
       );
     }),
-  resume: protectedProcedure
-    .unstable_concat(createDownloadClientIntegrationMiddleware("interact"))
-    .mutation(async ({ ctx }) => {
-      await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const integrationInstance = await createIntegrationAsync(integration);
-          await integrationInstance.resumeQueueAsync();
-        }),
-      );
-    }),
+  resume: protectedProcedure.concat(createDownloadClientIntegrationMiddleware("interact")).mutation(async ({ ctx }) => {
+    await Promise.all(
+      ctx.integrations.map(async (integration) => {
+        const integrationInstance = await createIntegrationAsync(integration);
+        await integrationInstance.resumeQueueAsync();
+      }),
+    );
+  }),
   resumeItem: protectedProcedure
-    .unstable_concat(createDownloadClientIntegrationMiddleware("interact"))
+    .concat(createDownloadClientIntegrationMiddleware("interact"))
     .input(z.object({ item: downloadClientItemSchema }))
     .mutation(async ({ ctx, input }) => {
       await Promise.all(
@@ -107,7 +103,7 @@ export const downloadsRouter = createTRPCRouter({
       );
     }),
   deleteItem: protectedProcedure
-    .unstable_concat(createDownloadClientIntegrationMiddleware("interact"))
+    .concat(createDownloadClientIntegrationMiddleware("interact"))
     .input(z.object({ item: downloadClientItemSchema, fromDisk: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       await Promise.all(

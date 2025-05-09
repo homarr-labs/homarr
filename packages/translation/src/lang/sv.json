@@ -258,7 +258,7 @@
             },
             "toLarge": {
               "title": "Bilden är för stor",
-              "message": ""
+              "message": "Maximal bildstorlek är {size}"
             }
           }
         },
@@ -612,17 +612,17 @@
       "select": {
         "label": "",
         "notFound": "",
-        "search": "",
+        "search": "Sök efter en applikation",
         "noResults": "",
-        "action": "",
-        "title": ""
+        "action": "Välj {app}",
+        "title": "Välj en applikation att lägga till på tavlan"
       },
       "create": {
         "title": "Addera en ny applikation",
         "description": "Addera en ny applikation ",
-        "action": ""
+        "action": "Addera applikation"
       },
-      "add": ""
+      "add": "Lägg till en applikation"
     }
   },
   "integration": {
@@ -954,7 +954,7 @@
     "unsavedChanges": "",
     "preview": {
       "show": "Förhandsgranska",
-      "hide": ""
+      "hide": "Dölj förhandsgranskning"
     },
     "zod": {
       "errors": {
@@ -990,7 +990,7 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
+        "create": "Ny dynamisk sektion",
         "remove": ""
       },
       "option": {
@@ -1013,7 +1013,7 @@
         }
       },
       "action": {
-        "create": "",
+        "create": "Ny kategori",
         "edit": "",
         "remove": "",
         "moveUp": "Flytta uppåt",
@@ -1024,7 +1024,7 @@
       },
       "create": {
         "title": "",
-        "submit": ""
+        "submit": "Lägg till kategori"
       },
       "remove": {
         "title": "",
@@ -1048,7 +1048,7 @@
   },
   "item": {
     "action": {
-      "create": "",
+      "create": "Nytt objekt",
       "import": "",
       "edit": "Redigera objekt",
       "moveResize": "",
@@ -1063,7 +1063,7 @@
     "create": {
       "title": "Välj objekt du vill lägga till",
       "search": "",
-      "addToBoard": ""
+      "addToBoard": "Lägg till på tavlan"
     },
     "moveResize": {
       "title": "",
@@ -1138,7 +1138,7 @@
     },
     "bookmarks": {
       "name": "Bokmärken",
-      "description": "",
+      "description": "Visar länkar till flera applikationer",
       "option": {
         "title": {
           "label": "Titel"
@@ -1252,7 +1252,7 @@
       }
     },
     "clock": {
-      "name": "",
+      "name": "Datum och tid",
       "description": "Visar aktuellt datum och tid.",
       "option": {
         "customTitleToggle": {
@@ -1949,7 +1949,8 @@
         "pending": "",
         "approved": "",
         "declined": "",
-        "failed": ""
+        "failed": "",
+        "completed": ""
       },
       "toBeDetermined": ""
     },
@@ -2297,16 +2298,16 @@
         "label": "Namn på sidan"
       },
       "metaTitle": {
-        "label": ""
+        "label": "Metarubrik (visas i huvudet eller fliken i webbläsaren)"
       },
       "logoImageUrl": {
         "label": "URL-adress till logo för tavlan"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "URL-adress till bilden som visas som favoritbild"
       },
       "backgroundImageUrl": {
-        "label": "",
+        "label": "URL-adress till bakgrundsbilden",
         "placeholder": "",
         "group": {
           "your": "",
@@ -2314,49 +2315,49 @@
         }
       },
       "backgroundImageAttachment": {
-        "label": "Bilaga med bakgrundsbild",
+        "label": "Bakgrundsbildens beteende",
         "option": {
           "fixed": {
-            "label": "",
-            "description": ""
+            "label": "Fast",
+            "description": "Bakgrunden stannar i samma läge."
           },
           "scroll": {
-            "label": "",
-            "description": ""
+            "label": "Förflyttas",
+            "description": "Bakgrunden förflyttas med musens rörelse."
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "",
+        "label": "Upprepa bakgrundsbilden",
         "option": {
           "repeat": {
-            "label": "",
-            "description": ""
+            "label": "Upprepa",
+            "description": "Bilden kommer att upprepas så mycket som krävs för att täcka bakgrunden."
           },
           "no-repeat": {
-            "label": "",
-            "description": ""
+            "label": "Ingen upprepning",
+            "description": "Bilden upprepas inte och kommer eventuellt inte fylla hela bakgrunden."
           },
           "repeat-x": {
-            "label": "",
-            "description": ""
+            "label": "Upprepa horisontellt",
+            "description": "Samma sak om 'Upprepa' men endast horisontellt."
           },
           "repeat-y": {
-            "label": "",
-            "description": ""
+            "label": "Upprepa vertikalt",
+            "description": "Samma sak som 'Upprepa' men endast vertikalt."
           }
         }
       },
       "backgroundImageSize": {
-        "label": "Storlek på bakgrundsbild",
+        "label": "Storlek på bakgrundsbilden",
         "option": {
           "cover": {
-            "label": "",
-            "description": ""
+            "label": "Täck",
+            "description": "Gör bilden så liten som möjligt för att täcka hela tavlan genom att beskära överflödig den av bilden."
           },
           "contain": {
-            "label": "",
-            "description": ""
+            "label": "Maximera",
+            "description": "Gör bilden så stor som möjligt för att täcka hela tavlan utan att beskära eller sträcka ut bilden."
           }
         }
       },
@@ -2410,7 +2411,7 @@
       "metaTitle": ""
     },
     "setting": {
-      "title": "Inställningar för tavlan {boardName}",
+      "title": "Inställningar för tavlan \"{boardName}\"",
       "section": {
         "general": {
           "title": "Generellt",
@@ -2429,7 +2430,7 @@
           "title": "Bakgrund"
         },
         "appearance": {
-          "title": ""
+          "title": "Utseende"
         },
         "customCss": {
           "title": ""
@@ -3387,11 +3388,11 @@
         "label": "Grupp"
       },
       "permission": {
-        "label": ""
+        "label": "Behörighet"
       }
     },
     "action": {
-      "saveUser": "",
+      "saveUser": "Spara behörighet",
       "saveGroup": ""
     }
   },

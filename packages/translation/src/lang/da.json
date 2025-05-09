@@ -1949,7 +1949,8 @@
         "pending": "Afventende",
         "approved": "Godkendt",
         "declined": "Afvist",
-        "failed": "Mislykket"
+        "failed": "Mislykket",
+        "completed": ""
       },
       "toBeDetermined": "TBD"
     },

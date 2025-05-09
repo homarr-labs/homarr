@@ -1949,7 +1949,8 @@
         "pending": "Bekleyen",
         "approved": "Onaylandı",
         "declined": "Reddedildi",
-        "failed": "Başarısız"
+        "failed": "Başarısız",
+        "completed": "Tamamlandı"
       },
       "toBeDetermined": "-Yapım Aşamasında-"
     },
@@ -2053,83 +2054,83 @@
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "Sürümler",
+      "description": "Verilen sürüm düzenli ifadesiyle, belirtilen depoların mevcut sürümlerinin bir listesini gösterir.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Yeni Sürüm Süresi (içinde)",
+          "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri: h (saat), d (gün), w (hafta), m (ay), y (yıl). Yeni sürümleri vurgulamak istemiyorsanız boş bırakın."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Eski Sürüm Süresi (içinde)",
+          "description": "Kullanım örneği: 1w (1 hafta), 10m (10 ay). Kabul edilen birim türleri h (saat), d (gün), w (hafta), m (ay), y (yıl). Eski sürümleri vurgulamak istemiyorsanız boş bırakın."
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "Yalnızca Vurgulananları Göster",
+          "description": "Yalnızca yeni veya eski sürümleri göster. Yukarıdaki açıklamaya göre."
         },
         "showDetails": {
-          "label": ""
+          "label": "Ayrıntıları Göster"
         },
         "repositories": {
-          "label": "",
+          "label": "Depolar",
           "addRRepository": {
-            "label": ""
+            "label": "Depo Ekle"
           },
           "provider": {
-            "label": ""
+            "label": "Sağlayıcı"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "Tanımlayıcı",
+            "placeholder": "Ad veya Sahip/Ad"
           },
           "versionFilter": {
-            "label": "",
+            "label": "Sürüm Filtresi",
             "prefix": {
-              "label": ""
+              "label": "Önek"
             },
             "precision": {
-              "label": "",
+              "label": "Hassasiyet",
               "options": {
-                "none": ""
+                "none": "Hiçbiri"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "Sonek"
             },
             "regex": {
-              "label": ""
+              "label": "Düzenli İfade"
             }
           },
           "edit": {
-            "label": ""
+            "label": "Düzenle"
           },
           "editForm": {
-            "title": "",
+            "title": "Depoyu Düzenle",
             "cancel": {
-              "label": ""
+              "label": "Vazgeç"
             },
             "confirm": {
-              "label": ""
+              "label": "Onayla"
             }
           },
           "example": {
-            "label": ""
+            "label": "Örnek"
           },
-          "invalid": ""
+          "invalid": "Geçersiz depo tanımı, lütfen değerleri kontrol edin"
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "created": ""
+      "not-found": "Bulunamadı",
+      "pre-release": "Ön Sürüm",
+      "archived": "Arşivlenmiş",
+      "forked": "Çatallanmış",
+      "starsCount": "Yıldızlar",
+      "forksCount": "Çatallar",
+      "issuesCount": "Sorunları Aç",
+      "openProjectPage": "Proje Sayfasını Aç",
+      "openReleasePage": "Sürüm Sayfasını Aç",
+      "releaseDescription": "Sürüm Açıklaması",
+      "created": "Oluşturuldu"
     },
     "networkControllerSummary": {
       "option": {},

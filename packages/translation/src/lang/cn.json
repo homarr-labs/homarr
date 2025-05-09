@@ -1949,7 +1949,8 @@
         "pending": "待处理",
         "approved": "已批准",
         "declined": "已拒绝",
-        "failed": "失败"
+        "failed": "失败",
+        "completed": ""
       },
       "toBeDetermined": "待定"
     },
