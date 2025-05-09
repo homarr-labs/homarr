@@ -256,7 +256,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
                 color={!repository.starsCount ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
               />
               <Text size="xs" c={!repository.starsCount ? "dimmed" : ""}>
-                {!repository.starsCount || repository.starsCount === 0
+                {!repository.starsCount
                   ? "-"
                   : formatter.number(repository.starsCount, {
                       notation: "compact",
@@ -273,7 +273,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
                 color={!repository.forksCount ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
               />
               <Text size="xs" c={!repository.forksCount ? "dimmed" : ""}>
-                {!repository.forksCount || repository.forksCount === 0
+                {!repository.forksCount
                   ? "-"
                   : formatter.number(repository.forksCount, {
                       notation: "compact",
@@ -290,7 +290,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
                 color={!repository.openIssues ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
               />
               <Text size="xs" c={!repository.openIssues ? "dimmed" : ""}>
-                {!repository.openIssues || repository.openIssues === 0
+                {!repository.openIssues
                   ? "-"
                   : formatter.number(repository.openIssues, {
                       notation: "compact",
