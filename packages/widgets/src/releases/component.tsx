@@ -62,7 +62,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   );
 
   const repositories = useMemo(() => {
-    return results
+    const formattedResults = results
       .flat()
       .map(({ data }) => {
         if (data === undefined) return undefined;
@@ -74,8 +74,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         if (repository === undefined) return undefined;
 
         return {
+          ...repository,
           ...data,
-          iconUrl: repository.iconUrl,
           isNewRelease:
             relativeDateOptions.newReleaseWithin !== "" && data.latestReleaseAt
               ? isDateWithin(data.latestReleaseAt, relativeDateOptions.newReleaseWithin)
@@ -98,12 +98,13 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         if (repoA?.latestReleaseAt === undefined) return 1;
         if (repoB?.latestReleaseAt === undefined) return -1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
-      })
-      .slice(
-        0,
-        typeof options.topReleases !== "string" && options.topReleases > 0 ? options.topReleases : undefined,
-      ) as ReleasesRepositoryResponse[];
+      }) as ReleasesRepositoryResponse[];
 
+    if (typeof options.topReleases !== "string" && options.topReleases > 0) {
+      return formattedResults.slice(0, options.topReleases);
+    }
+
+    return formattedResults;
   }, [
     results,
     options.repositories,
