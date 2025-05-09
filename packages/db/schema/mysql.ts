@@ -494,6 +494,19 @@ export const onboarding = mysqlTable("onboarding", {
   previousStep: varchar({ length: 64 }).$type<OnboardingStep>(),
 });
 
+export const trustedCertificateHostnames = mysqlTable(
+  "trusted_certificate_hostname",
+  {
+    hostname: varchar({ length: 256 }).notNull(),
+    thumbprint: varchar({ length: 128 }).notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.hostname, table.thumbprint],
+    }),
+  }),
+);
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
