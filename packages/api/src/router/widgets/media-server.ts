@@ -14,7 +14,7 @@ const createMediaServerIntegrationMiddleware = (action: IntegrationAction) =>
 
 export const mediaServerRouter = createTRPCRouter({
   getCurrentStreams: publicProcedure
-    .unstable_concat(createMediaServerIntegrationMiddleware("query"))
+    .concat(createMediaServerIntegrationMiddleware("query"))
     .input(z.object({ showOnlyPlaying: z.boolean() }))
     .query(async ({ ctx, input }) => {
       return await Promise.all(
@@ -32,7 +32,7 @@ export const mediaServerRouter = createTRPCRouter({
       );
     }),
   subscribeToCurrentStreams: publicProcedure
-    .unstable_concat(createMediaServerIntegrationMiddleware("query"))
+    .concat(createMediaServerIntegrationMiddleware("query"))
     .input(z.object({ showOnlyPlaying: z.boolean() }))
     .subscription(({ ctx, input }) => {
       return observable<{ integrationId: string; data: StreamSession[] }>((emit) => {

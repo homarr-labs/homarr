@@ -215,6 +215,7 @@ const statusMapping = {
   [MediaRequestStatus.Approved]: { color: "green", label: (t) => t("approved") },
   [MediaRequestStatus.Declined]: { color: "red", label: (t) => t("declined") },
   [MediaRequestStatus.Failed]: { color: "red", label: (t) => t("failed") },
+  [MediaRequestStatus.Completed]: { color: "green", label: (t) => t("completed") },
 } satisfies Record<
   MediaRequestStatus,
   {

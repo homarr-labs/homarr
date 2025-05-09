@@ -18,6 +18,7 @@ import ReactMarkdown from "react-markdown";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { isDateWithin, splitToChunksWithNItems } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
@@ -26,43 +27,11 @@ import classes from "./component.module.scss";
 import { Providers } from "./releases-providers";
 import type { ReleasesRepositoryResponse } from "./releases-repository";
 
-function isDateWithin(date: Date, relativeDate: string): boolean {
-  const amount = parseInt(relativeDate.slice(0, -1), 10);
-  const unit = relativeDate.slice(-1);
-
-  const startTime = new Date().getTime();
-  const endTime = new Date(date).getTime();
-  const diffTime = Math.abs(endTime - startTime);
-  const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
-
-  switch (unit) {
-    case "h":
-      return diffHours < amount;
-
-    case "d":
-      return diffHours / 24 < amount;
-
-    case "w":
-      return diffHours / (24 * 7) < amount;
-
-    case "m":
-      return diffHours / (24 * 30) < amount;
-
-    case "y":
-      return diffHours / (24 * 365) < amount;
-
-    default:
-      throw new Error("Invalid unit");
-  }
-}
-
-function chunkArray<T>(array: T[], size: number): T[][] {
-  const chunks: T[][] = [];
-  for (let i = 0; i < array.length; i += size) {
-    chunks.push(array.slice(i, i + size));
-  }
-  return chunks;
-}
+const formatRelativeDate = (value: string): string => {
+  const isMonths = /\d+m/g.test(value);
+  const isOtherUnits = /\d+[HDWY]/g.test(value);
+  return isMonths ? value.toUpperCase() : isOtherUnits ? value.toLowerCase() : value;
+};
 
 export default function ReleasesWidget({ options }: WidgetComponentProps<"releases">) {
   const t = useScopedI18n("widget.releases");
@@ -71,8 +40,15 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const board = useRequiredBoard();
   const [expandedRepository, setExpandedRepository] = useState({ providerKey: "", identifier: "" });
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
+  const relativeDateOptions = useMemo(
+    () => ({
+      newReleaseWithin: formatRelativeDate(options.newReleaseWithin),
+      staleReleaseWithin: formatRelativeDate(options.staleReleaseWithin),
+    }),
+    [options.newReleaseWithin, options.staleReleaseWithin],
+  );
 
-  const batchedRepositories = useMemo(() => chunkArray(options.repositories, 5), [options.repositories]);
+  const batchedRepositories = useMemo(() => splitToChunksWithNItems(options.repositories, 5), [options.repositories]);
   const [results] = clientApi.useSuspenseQueries((t) =>
     batchedRepositories.flatMap((chunk) =>
       t.widget.releases.getLatest({
@@ -99,15 +75,14 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 
         return {
           ...data,
-          name: repository.name,
           iconUrl: repository.iconUrl,
           isNewRelease:
-            options.newReleaseWithin !== "" && data.latestReleaseAt
-              ? isDateWithin(data.latestReleaseAt, options.newReleaseWithin)
+            relativeDateOptions.newReleaseWithin !== "" && data.latestReleaseAt
+              ? isDateWithin(data.latestReleaseAt, relativeDateOptions.newReleaseWithin)
               : false,
           isStaleRelease:
-            options.staleReleaseWithin !== "" && data.latestReleaseAt
-              ? !isDateWithin(data.latestReleaseAt, options.staleReleaseWithin)
+            relativeDateOptions.staleReleaseWithin !== "" && data.latestReleaseAt
+              ? !isDateWithin(data.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
               : false,
         };
       })
@@ -128,13 +103,14 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         0,
         typeof options.topReleases !== "string" && options.topReleases > 0 ? options.topReleases : undefined,
       ) as ReleasesRepositoryResponse[];
+
   }, [
     results,
     options.repositories,
     options.showOnlyHighlighted,
-    options.newReleaseWithin,
-    options.staleReleaseWithin,
     options.topReleases,
+    relativeDateOptions.newReleaseWithin,
+    relativeDateOptions.staleReleaseWithin,
   ]);
 
   const toggleExpandedRepository = useCallback(
@@ -376,9 +352,11 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             </Text>
           )}
         </Group>
+
         <Text size="xs" c="iconColor" ff="monospace">
           {repository.identifier}
         </Text>
+
         {(repository.releaseUrl ?? repository.projectUrl) && (
           <>
             <Divider my={10} mx="30%" />

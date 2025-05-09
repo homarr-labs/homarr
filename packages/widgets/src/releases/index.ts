@@ -4,6 +4,11 @@ import { z } from "zod";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
+const relativeDateSchema = z
+  .string()
+  .regex(/^\d+[hdwmyHDWMY]$/)
+  .or(z.literal(""));
+
 export const { definition, componentLoader } = createWidgetDefinition("releases", {
   icon: IconRocket,
   createOptions() {
@@ -11,18 +16,12 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       newReleaseWithin: factory.text({
         defaultValue: "1w",
         withDescription: true,
-        validate: z
-          .string()
-          .regex(/^\d+[hdwmy]$/)
-          .or(z.literal("")),
+        validate: relativeDateSchema,
       }),
       staleReleaseWithin: factory.text({
-        defaultValue: "6m",
+        defaultValue: "6M",
         withDescription: true,
-        validate: z
-          .string()
-          .regex(/^\d+[hdwmy]$/)
-          .or(z.literal("")),
+        validate: relativeDateSchema,
       }),
       showOnlyHighlighted: factory.switch({
         withDescription: true,

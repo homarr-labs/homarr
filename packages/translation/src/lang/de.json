@@ -618,11 +618,11 @@
         "title": ""
       },
       "create": {
-        "title": "",
+        "title": "Neue App erstellen",
         "description": "",
         "action": ""
       },
-      "add": ""
+      "add": "App hinzufügen"
     }
   },
   "integration": {
@@ -995,7 +995,7 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "borderColor": {
           "label": "Rahmenfarbe"
@@ -1949,7 +1949,8 @@
         "pending": "Ausstehend",
         "approved": "Bestätigt",
         "declined": "Abgelehnt",
-        "failed": "Fehlgeschlagen"
+        "failed": "Fehlgeschlagen",
+        "completed": ""
       },
       "toBeDetermined": "Noch Festzulegen"
     },

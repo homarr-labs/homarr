@@ -63,7 +63,7 @@ export const Providers: ProvidersProps = {
           ),
         })
         .transform((resp) => {
-          return resp.results.map((release) => release);
+          return resp.results;
         })
         .safeParse(response);
     },

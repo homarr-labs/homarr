@@ -1,9 +1,10 @@
 import type { LoaderComponent } from "next/dynamic";
+import type { QueryClient } from "@tanstack/react-query";
 import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { ServerSettings } from "@homarr/server-settings";
-import type { SettingsContextProps } from "@homarr/settings";
+import type { SettingsContextProps } from "@homarr/settings/creator";
 import type { stringOrTranslation } from "@homarr/translation";
 import type { TablerIcon } from "@homarr/ui";
 
@@ -20,6 +21,15 @@ const createWithDynamicImport =
     kind,
     componentLoader,
   });
+
+export type PrefetchLoader<TKind extends WidgetKind> = () => Promise<{ default: Prefetch<TKind> }>;
+export type Prefetch<TKind extends WidgetKind> = (
+  queryClient: QueryClient,
+  items: {
+    options: inferOptionsFromCreator<WidgetOptionsRecordOf<TKind>>;
+    integrationIds: string[];
+  }[],
+) => Promise<void>;
 
 export const createWidgetDefinition = <TKind extends WidgetKind, TDefinition extends WidgetDefinition>(
   kind: TKind,

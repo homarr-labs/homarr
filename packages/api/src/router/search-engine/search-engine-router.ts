@@ -133,14 +133,14 @@ export const searchEngineRouter = createTRPCRouter({
     });
   }),
   getMediaRequestOptions: protectedProcedure
-    .unstable_concat(createOneIntegrationMiddleware("query", "jellyseerr", "overseerr"))
+    .concat(createOneIntegrationMiddleware("query", "jellyseerr", "overseerr"))
     .input(mediaRequestOptionsSchema)
     .query(async ({ ctx, input }) => {
       const integration = await createIntegrationAsync(ctx.integration);
       return await integration.getSeriesInformationAsync(input.mediaType, input.mediaId);
     }),
   requestMedia: protectedProcedure
-    .unstable_concat(createOneIntegrationMiddleware("interact", "jellyseerr", "overseerr"))
+    .concat(createOneIntegrationMiddleware("interact", "jellyseerr", "overseerr"))
     .input(mediaRequestRequestSchema)
     .mutation(async ({ ctx, input }) => {
       const integration = await createIntegrationAsync(ctx.integration);
