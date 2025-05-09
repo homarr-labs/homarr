@@ -10,6 +10,7 @@ import {
   IconGitFork,
   IconProgressCheck,
   IconStar,
+  IconTriangleFilled,
 } from "@tabler/icons-react";
 import combineClasses from "clsx";
 import { useFormatter, useNow } from "next-intl";
@@ -17,118 +18,116 @@ import ReactMarkdown from "react-markdown";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { isDateWithin, splitToChunksWithNItems } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 import { Providers } from "./releases-providers";
-import type { ReleasesRepository } from "./releases-repository";
+import type { ReleasesRepositoryResponse } from "./releases-repository";
 
-function isDateWithin(date: Date, relativeDate: string): boolean {
-  const amount = parseInt(relativeDate.slice(0, -1), 10);
-  const unit = relativeDate.slice(-1);
-
-  const startTime = new Date().getTime();
-  const endTime = new Date(date).getTime();
-  const diffTime = Math.abs(endTime - startTime);
-  const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
-
-  switch (unit) {
-    case "h":
-      return diffHours < amount;
-
-    case "d":
-      return diffHours / 24 < amount;
-
-    case "w":
-      return diffHours / (24 * 7) < amount;
-
-    case "m":
-      return diffHours / (24 * 30) < amount;
-
-    case "y":
-      return diffHours / (24 * 365) < amount;
-
-    default:
-      throw new Error("Invalid unit");
-  }
-}
+const formatRelativeDate = (value: string): string => {
+  const isMonths = /\d+m/g.test(value);
+  const isOtherUnits = /\d+[HDWY]/g.test(value);
+  return isMonths ? value.toUpperCase() : isOtherUnits ? value.toLowerCase() : value;
+};
 
 export default function ReleasesWidget({ options }: WidgetComponentProps<"releases">) {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
   const board = useRequiredBoard();
-  const [expandedRepository, setExpandedRepository] = useState("");
+  const [expandedRepository, setExpandedRepository] = useState({ providerKey: "", identifier: "" });
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
+  const relativeDateOptions = useMemo(
+    () => ({
+      newReleaseWithin: formatRelativeDate(options.newReleaseWithin),
+      staleReleaseWithin: formatRelativeDate(options.staleReleaseWithin),
+    }),
+    [options.newReleaseWithin, options.staleReleaseWithin],
+  );
 
-  const [results] = clientApi.widget.releases.getLatest.useSuspenseQuery(
-    {
-      repositories: options.repositories.map((repository) => ({
-        providerKey: repository.providerKey,
-        identifier: repository.identifier,
-        versionFilter: repository.versionFilter,
-      })),
-    },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
+  const batchedRepositories = useMemo(() => splitToChunksWithNItems(options.repositories, 5), [options.repositories]);
+  const [results] = clientApi.useSuspenseQueries((t) =>
+    batchedRepositories.flatMap((chunk) =>
+      t.widget.releases.getLatest({
+        repositories: chunk.map((repository) => ({
+          providerKey: repository.providerKey,
+          identifier: repository.identifier,
+          versionFilter: repository.versionFilter,
+        })),
+      }),
+    ),
   );
 
   const repositories = useMemo(() => {
     return results
+      .flat()
       .map(({ data }) => {
         if (data === undefined) return undefined;
 
         const repository = options.repositories.find(
-          (repository: ReleasesRepository) =>
-            repository.providerKey === data.providerKey && repository.identifier === data.identifier,
+          (repository) => repository.providerKey === data.providerKey && repository.identifier === data.identifier,
         );
 
         if (repository === undefined) return undefined;
 
         return {
-          ...repository,
           ...data,
+          iconUrl: repository.iconUrl,
           isNewRelease:
-            options.newReleaseWithin !== "" ? isDateWithin(data.latestReleaseAt, options.newReleaseWithin) : false,
+            relativeDateOptions.newReleaseWithin !== "" && data.latestReleaseAt
+              ? isDateWithin(data.latestReleaseAt, relativeDateOptions.newReleaseWithin)
+              : false,
           isStaleRelease:
-            options.staleReleaseWithin !== "" ? !isDateWithin(data.latestReleaseAt, options.staleReleaseWithin) : false,
+            relativeDateOptions.staleReleaseWithin !== "" && data.latestReleaseAt
+              ? !isDateWithin(data.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
+              : false,
         };
       })
       .filter(
         (repository) =>
           repository !== undefined &&
-          (!options.showOnlyHighlighted || repository.isNewRelease || repository.isStaleRelease),
+          (repository.error !== undefined ||
+            !options.showOnlyHighlighted ||
+            repository.isNewRelease ||
+            repository.isStaleRelease),
       )
       .sort((repoA, repoB) => {
         if (repoA?.latestReleaseAt === undefined) return 1;
         if (repoB?.latestReleaseAt === undefined) return -1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
-      }) as ReleasesRepository[];
+      }) as ReleasesRepositoryResponse[];
   }, [
     results,
     options.repositories,
     options.showOnlyHighlighted,
-    options.newReleaseWithin,
-    options.staleReleaseWithin,
+    relativeDateOptions.newReleaseWithin,
+    relativeDateOptions.staleReleaseWithin,
   ]);
 
   const toggleExpandedRepository = useCallback(
-    (identifier: string) => {
-      setExpandedRepository(expandedRepository === identifier ? "" : identifier);
+    (repository: ReleasesRepositoryResponse) => {
+      if (
+        expandedRepository.providerKey === repository.providerKey &&
+        expandedRepository.identifier === repository.identifier
+      ) {
+        setExpandedRepository({ providerKey: "", identifier: "" });
+      } else {
+        setExpandedRepository({ providerKey: repository.providerKey, identifier: repository.identifier });
+      }
     },
     [expandedRepository],
   );
 
   return (
     <Stack gap={0}>
-      {repositories.map((repository: ReleasesRepository) => {
-        const isActive = expandedRepository === repository.identifier;
+      {repositories.map((repository: ReleasesRepositoryResponse) => {
+        const isActive =
+          expandedRepository.providerKey === repository.providerKey &&
+          expandedRepository.identifier === repository.identifier;
+        const hasError = repository.error !== undefined;
 
         return (
           <Stack
@@ -141,7 +140,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 [classes.active ?? ""]: isActive,
               })}
               p="xs"
-              onClick={() => toggleExpandedRepository(repository.identifier)}
+              onClick={() => toggleExpandedRepository(repository)}
             >
               <MaskedOrNormalImage
                 imageUrl={repository.iconUrl ?? Providers[repository.providerKey]?.iconUrl}
@@ -155,9 +154,14 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
               <Group gap={5} justify="space-between" style={{ flex: 1 }}>
                 <Text size="xs">{repository.identifier}</Text>
 
-                <Tooltip label={repository.latestRelease ?? t("not-found")}>
-                  <Text size="xs" fw={700} truncate="end" style={{ flexShrink: 1 }}>
-                    {repository.latestRelease ?? t("not-found")}
+                <Tooltip
+                  withArrow
+                  arrowSize={5}
+                  label={repository.latestRelease}
+                  events={{ hover: repository.latestRelease !== undefined, focus: false, touch: false }}
+                >
+                  <Text size="xs" fw={700} truncate="end" c={hasError ? "red" : "text"} style={{ flexShrink: 1 }}>
+                    {hasError ? t("error.label") : (repository.latestRelease ?? t("not-found"))}
                   </Text>
                 </Tooltip>
               </Group>
@@ -168,20 +172,25 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                   c={repository.isNewRelease ? "primaryColor" : repository.isStaleRelease ? "secondaryColor" : "dimmed"}
                 >
                   {repository.latestReleaseAt &&
+                    !hasError &&
                     formatter.relativeTime(repository.latestReleaseAt, {
                       now,
                       style: "narrow",
                     })}
                 </Text>
-                {(repository.isNewRelease || repository.isStaleRelease) && (
-                  <IconCircleFilled
-                    size={10}
-                    color={
-                      repository.isNewRelease
-                        ? "var(--mantine-color-primaryColor-filled)"
-                        : "var(--mantine-color-secondaryColor-filled)"
-                    }
-                  />
+                {!hasError ? (
+                  (repository.isNewRelease || repository.isStaleRelease) && (
+                    <IconCircleFilled
+                      size={10}
+                      color={
+                        repository.isNewRelease
+                          ? "var(--mantine-color-primaryColor-filled)"
+                          : "var(--mantine-color-secondaryColor-filled)"
+                      }
+                    />
+                  )
+                ) : (
+                  <IconTriangleFilled size={10} color={"var(--mantine-color-red-filled)"} />
                 )}
               </Group>
             </Group>
@@ -198,8 +207,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 }
 
 interface DetailsDisplayProps {
-  repository: ReleasesRepository;
-  toggleExpandedRepository: (identifier: string) => void;
+  repository: ReleasesRepositoryResponse;
+  toggleExpandedRepository: (repository: ReleasesRepositoryResponse) => void;
 }
 
 const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplayProps) => {
@@ -208,15 +217,15 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
 
   return (
     <>
-      <Divider onClick={() => toggleExpandedRepository(repository.identifier)} />
+      <Divider onClick={() => toggleExpandedRepository(repository)} />
       <Group
         className={classes.releasesRepositoryDetails}
         justify="space-between"
         p={5}
-        onClick={() => toggleExpandedRepository(repository.identifier)}
+        onClick={() => toggleExpandedRepository(repository)}
       >
         <Group>
-          <Tooltip label={t("pre-release")}>
+          <Tooltip label={t("pre-release")} withArrow arrowSize={5}>
             <IconProgressCheck
               size={13}
               color={
@@ -225,14 +234,14 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
             />
           </Tooltip>
 
-          <Tooltip label={t("archived")}>
+          <Tooltip label={t("archived")} withArrow arrowSize={5}>
             <IconArchive
               size={13}
               color={repository.isArchived ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"}
             />
           </Tooltip>
 
-          <Tooltip label={t("forked")}>
+          <Tooltip label={t("forked")} withArrow arrowSize={5}>
             <IconGitFork
               size={13}
               color={repository.isFork ? "var(--mantine-color-secondaryColor-text)" : "var(--mantine-color-dimmed)"}
@@ -240,16 +249,16 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
           </Tooltip>
         </Group>
         <Group>
-          <Tooltip label={t("starsCount")}>
+          <Tooltip label={t("starsCount")} withArrow arrowSize={5}>
             <Group gap={5}>
               <IconStar
                 size={12}
-                color={repository.starsCount === 0 ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+                color={!repository.starsCount ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
               />
-              <Text size="xs" c={repository.starsCount === 0 ? "dimmed" : ""}>
-                {repository.starsCount === 0
+              <Text size="xs" c={!repository.starsCount ? "dimmed" : ""}>
+                {!repository.starsCount
                   ? "-"
-                  : formatter.number(repository.starsCount ?? 0, {
+                  : formatter.number(repository.starsCount, {
                       notation: "compact",
                       maximumFractionDigits: 1,
                     })}
@@ -257,16 +266,16 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
             </Group>
           </Tooltip>
 
-          <Tooltip label={t("forksCount")}>
+          <Tooltip label={t("forksCount")} withArrow arrowSize={5}>
             <Group gap={5}>
               <IconGitFork
                 size={12}
-                color={repository.forksCount === 0 ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+                color={!repository.forksCount ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
               />
-              <Text size="xs" c={repository.forksCount === 0 ? "dimmed" : ""}>
-                {repository.forksCount === 0
+              <Text size="xs" c={!repository.forksCount ? "dimmed" : ""}>
+                {!repository.forksCount
                   ? "-"
-                  : formatter.number(repository.forksCount ?? 0, {
+                  : formatter.number(repository.forksCount, {
                       notation: "compact",
                       maximumFractionDigits: 1,
                     })}
@@ -274,16 +283,16 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
             </Group>
           </Tooltip>
 
-          <Tooltip label={t("issuesCount")}>
+          <Tooltip label={t("issuesCount")} withArrow arrowSize={5}>
             <Group gap={5}>
               <IconCircleDot
                 size={12}
-                color={repository.openIssues === 0 ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
+                color={!repository.openIssues ? "var(--mantine-color-dimmed)" : "var(--mantine-color-text)"}
               />
-              <Text size="xs" c={repository.openIssues === 0 ? "dimmed" : ""}>
-                {repository.openIssues === 0
+              <Text size="xs" c={!repository.openIssues ? "dimmed" : ""}>
+                {!repository.openIssues
                   ? "-"
-                  : formatter.number(repository.openIssues ?? 0, {
+                  : formatter.number(repository.openIssues, {
                       notation: "compact",
                       maximumFractionDigits: 1,
                     })}
@@ -297,7 +306,7 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
 };
 
 interface ExtendedDisplayProps {
-  repository: ReleasesRepository;
+  repository: ReleasesRepositoryResponse;
   hasIconColor: boolean;
 }
 
@@ -337,17 +346,32 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             </Text>
           )}
         </Group>
-        <Divider my={10} mx="30%" />
-        <Button
-          variant="light"
-          component="a"
-          href={repository.releaseUrl ?? repository.projectUrl}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <IconExternalLink />
-          {repository.releaseUrl ? t("openReleasePage") : t("openProjectPage")}
-        </Button>
+        {(repository.releaseUrl ?? repository.projectUrl) && (
+          <>
+            <Divider my={10} mx="30%" />
+            <Button
+              variant="light"
+              component="a"
+              href={repository.releaseUrl ?? repository.projectUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <IconExternalLink />
+              {repository.releaseUrl ? t("openReleasePage") : t("openProjectPage")}
+            </Button>
+          </>
+        )}
+        {repository.error && (
+          <>
+            <Divider my={10} mx="30%" />
+            <Title order={4} ta="center">
+              {t("error.label")}
+            </Title>
+            <Text size="xs" ff="monospace" c="red" style={{ whiteSpace: "pre-wrap" }}>
+              {repository.error.code ? t(`error.options.${repository.error.code}` as never) : repository.error.message}
+            </Text>
+          </>
+        )}
         {repository.releaseDescription && (
           <>
             <Divider my={10} mx="30%" />

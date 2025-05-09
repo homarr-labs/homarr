@@ -41,12 +41,8 @@ export const Providers: ProvidersProps = {
         .transform((resp) => ({
           projectUrl: `https://hub.docker.com/r/${resp.namespace === "library" ? "_" : resp.namespace}/${resp.name}`,
           projectDescription: resp.description,
-          isFork: false,
-          isArchived: false,
           createdAt: resp.date_registered,
           starsCount: resp.star_count,
-          openIssues: 0,
-          forksCount: 0,
         }))
         .safeParse(response);
     },
@@ -67,12 +63,7 @@ export const Providers: ProvidersProps = {
           ),
         })
         .transform((resp) => {
-          return resp.results.map((release) => ({
-            ...release,
-            releaseUrl: "",
-            releaseDescription: "",
-            isPreRelease: false,
-          }));
+          return resp.results;
         })
         .safeParse(response);
     },
@@ -89,7 +80,7 @@ export const Providers: ProvidersProps = {
       return z
         .object({
           html_url: z.string(),
-          description: z.string(),
+          description: z.string().nullable(),
           fork: z.boolean(),
           archived: z.boolean(),
           created_at: z.string().transform((value) => new Date(value)),
@@ -99,7 +90,7 @@ export const Providers: ProvidersProps = {
         })
         .transform((resp) => ({
           projectUrl: resp.html_url,
-          projectDescription: resp.description,
+          projectDescription: resp.description ?? undefined,
           isFork: resp.fork,
           isArchived: resp.archived,
           createdAt: resp.created_at,
@@ -120,7 +111,7 @@ export const Providers: ProvidersProps = {
               tag_name: z.string(),
               published_at: z.string().transform((value) => new Date(value)),
               html_url: z.string(),
-              body: z.string(),
+              body: z.string().nullable(),
               prerelease: z.boolean(),
             })
             .transform((tag) => ({
@@ -128,7 +119,7 @@ export const Providers: ProvidersProps = {
               latestRelease: tag.tag_name,
               latestReleaseAt: tag.published_at,
               releaseUrl: tag.html_url,
-              releaseDescription: tag.body,
+              releaseDescription: tag.body ?? undefined,
               isPreRelease: tag.prerelease,
             })),
         )
@@ -144,17 +135,17 @@ export const Providers: ProvidersProps = {
         .object({
           web_url: z.string(),
           description: z.string(),
-          forked_from_project: z.object({ id: z.number() }).nullable(),
-          archived: z.boolean(),
+          forked_from_project: z.object({ id: z.number() }).optional(),
+          archived: z.boolean().optional(),
           created_at: z.string().transform((value) => new Date(value)),
           star_count: z.number(),
-          open_issues_count: z.number(),
+          open_issues_count: z.number().optional(),
           forks_count: z.number(),
         })
         .transform((resp) => ({
           projectUrl: resp.web_url,
           projectDescription: resp.description,
-          isFork: resp.forked_from_project !== null,
+          isFork: resp.forked_from_project !== undefined,
           isArchived: resp.archived,
           createdAt: resp.created_at,
           starsCount: resp.star_count,
@@ -217,7 +208,6 @@ export const Providers: ProvidersProps = {
             ...release,
             releaseUrl: `https://www.npmjs.com/package/${resp.name}/v/${release.latestRelease}`,
             releaseDescription: resp.versions[release.latestRelease]?.description ?? "",
-            isPreRelease: false,
           }));
         })
         .safeParse(response);
@@ -282,23 +272,31 @@ export const Providers: ProvidersProps = {
   },
 };
 
-const _detailsSchema = z.object({
-  projectUrl: z.string(),
-  projectDescription: z.string(),
-  isFork: z.boolean(),
-  isArchived: z.boolean(),
-  createdAt: z.date(),
-  starsCount: z.number(),
-  openIssues: z.number(),
-  forksCount: z.number(),
-});
+const _detailsSchema = z
+  .object({
+    projectUrl: z.string().optional(),
+    projectDescription: z.string().optional(),
+    isFork: z.boolean().optional(),
+    isArchived: z.boolean().optional(),
+    createdAt: z.date().optional(),
+    starsCount: z.number().optional(),
+    openIssues: z.number().optional(),
+    forksCount: z.number().optional(),
+  })
+  .optional();
 
 const _releasesSchema = z.object({
   latestRelease: z.string(),
   latestReleaseAt: z.date(),
-  releaseUrl: z.string(),
-  releaseDescription: z.string(),
-  isPreRelease: z.boolean(),
+  releaseUrl: z.string().optional(),
+  releaseDescription: z.string().optional(),
+  isPreRelease: z.boolean().optional(),
+  error: z
+    .object({
+      code: z.string().optional(),
+      message: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type DetailsResponse = z.infer<typeof _detailsSchema>;

@@ -63,7 +63,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
     const item = {
       providerKey: "DockerHub",
       identifier: "",
-    } as ReleasesRepository;
+    };
 
     form.setValues((previous) => {
       const previousValues = previous.options?.[property] as ReleasesRepository[];
@@ -98,7 +98,6 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       };
     });
   };
-
   return (
     <Fieldset legend={t("label")}>
       <Stack gap="5">
