@@ -1,3 +1,4 @@
+import { X509Certificate } from "node:crypto";
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import type { AgentOptions } from "node:https";
@@ -44,7 +45,7 @@ export const loadCustomRootCertificatesAsync = async () => {
 export const removeCustomRootCertificateAsync = async (fileName: string) => {
   const folder = getCertificateFolder();
   if (!folder) {
-    return;
+    return null;
   }
 
   const existingFiles = await fs.readdir(folder, { withFileTypes: true });
@@ -52,7 +53,15 @@ export const removeCustomRootCertificateAsync = async (fileName: string) => {
     throw new Error(`File ${fileName} does not exist`);
   }
 
-  await fs.rm(path.join(folder, fileName));
+  const fullPath = path.join(folder, fileName);
+  const content = await fs.readFile(fullPath, "utf8");
+
+  await fs.rm(fullPath);
+  try {
+    return new X509Certificate(content);
+  } catch {
+    return null;
+  }
 };
 
 export const addCustomRootCertificateAsync = async (fileName: string, content: string) => {

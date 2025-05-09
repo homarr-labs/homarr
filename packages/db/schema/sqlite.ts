@@ -484,6 +484,7 @@ export const trustedCertificateHostnames = sqliteTable(
   {
     hostname: text().notNull(),
     thumbprint: text().notNull(),
+    certificate: text().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({

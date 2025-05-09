@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "d51aafe5-c774-40b3-8bf0-819334ec53b6",
+  "id": "e1dd9109-989b-4538-9306-45c725672ff3",
   "prevId": "177bc66f-d1ec-404c-9ce8-d23e3538e5fd",
   "tables": {
     "account": {
@@ -1830,6 +1830,13 @@
         "thumbprint": {
           "name": "thumbprint",
           "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "certificate": {
+          "name": "certificate",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false

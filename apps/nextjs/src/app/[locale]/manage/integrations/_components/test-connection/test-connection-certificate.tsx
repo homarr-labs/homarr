@@ -37,7 +37,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
         await trustHostnameAsync(
           {
             hostname,
-            thumbprint: error.data.certificate.fingerprint,
+            certificate: error.data.certificate.pem,
           },
           {
             onSuccess() {

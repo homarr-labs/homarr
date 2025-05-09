@@ -499,6 +499,7 @@ export const trustedCertificateHostnames = mysqlTable(
   {
     hostname: varchar({ length: 256 }).notNull(),
     thumbprint: varchar({ length: 128 }).notNull(),
+    certificate: text().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({

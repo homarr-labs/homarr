@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "d4ead30f-54ea-4c1a-8610-6bd629cb3400",
+  "id": "cd54fd6e-3f1e-42a2-8145-e9c40b75fb47",
   "prevId": "c83137fb-068e-49cb-b955-bde696efcc6c",
   "tables": {
     "account": {
@@ -1754,6 +1754,13 @@
         },
         "thumbprint": {
           "name": "thumbprint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "certificate": {
+          "name": "certificate",
           "type": "text",
           "primaryKey": false,
           "notNull": true,

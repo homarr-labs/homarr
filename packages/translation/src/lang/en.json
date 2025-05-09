@@ -3613,7 +3613,10 @@
           "label": "Logs"
         },
         "certificates": {
-          "label": "Certificates"
+          "label": "Certificates",
+          "hostnames": {
+            "label": "Hostnames"
+          }
         }
       },
       "settings": {

@@ -1,6 +1,7 @@
 import { X509Certificate } from "node:crypto";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Button, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { IconAlertTriangle, IconCertificate, IconCertificateOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
@@ -64,7 +65,12 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
             <Text>{t("certificate.page.list.description")}</Text>
           </Stack>
 
-          <AddCertificateButton />
+          <Group>
+            <Button variant="default" component={Link} href="/manage/tools/certificates/hostnames">
+              Trusted hostnames
+            </Button>
+            <AddCertificateButton />
+          </Group>
         </Group>
 
         {x509Certificates.length === 0 && (
