@@ -41,12 +41,8 @@ export const Providers: ProvidersProps = {
         .transform((resp) => ({
           projectUrl: `https://hub.docker.com/r/${resp.namespace === "library" ? "_" : resp.namespace}/${resp.name}`,
           projectDescription: resp.description,
-          isFork: false,
-          isArchived: false,
           createdAt: resp.date_registered,
           starsCount: resp.star_count,
-          openIssues: 0,
-          forksCount: 0,
         }))
         .safeParse(response);
     },
@@ -67,12 +63,7 @@ export const Providers: ProvidersProps = {
           ),
         })
         .transform((resp) => {
-          return resp.results.map((release) => ({
-            ...release,
-            releaseUrl: "",
-            releaseDescription: "",
-            isPreRelease: false,
-          }));
+          return resp.results;
         })
         .safeParse(response);
     },
@@ -217,7 +208,6 @@ export const Providers: ProvidersProps = {
             ...release,
             releaseUrl: `https://www.npmjs.com/package/${resp.name}/v/${release.latestRelease}`,
             releaseDescription: resp.versions[release.latestRelease]?.description ?? "",
-            isPreRelease: false,
           }));
         })
         .safeParse(response);
@@ -282,23 +272,31 @@ export const Providers: ProvidersProps = {
   },
 };
 
-const _detailsSchema = z.object({
-  projectUrl: z.string(),
-  projectDescription: z.string(),
-  isFork: z.boolean(),
-  isArchived: z.boolean(),
-  createdAt: z.date(),
-  starsCount: z.number(),
-  openIssues: z.number(),
-  forksCount: z.number(),
-});
+const _detailsSchema = z
+  .object({
+    projectUrl: z.string().optional(),
+    projectDescription: z.string().optional(),
+    isFork: z.boolean().optional(),
+    isArchived: z.boolean().optional(),
+    createdAt: z.date().optional(),
+    starsCount: z.number().optional(),
+    openIssues: z.number().optional(),
+    forksCount: z.number().optional(),
+  })
+  .optional();
 
 const _releasesSchema = z.object({
   latestRelease: z.string(),
   latestReleaseAt: z.date(),
-  releaseUrl: z.string(),
-  releaseDescription: z.string(),
-  isPreRelease: z.boolean(),
+  releaseUrl: z.string().optional(),
+  releaseDescription: z.string().optional(),
+  isPreRelease: z.boolean().optional(),
+  error: z
+    .object({
+      code: z.string().optional(),
+      message: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type DetailsResponse = z.infer<typeof _detailsSchema>;
