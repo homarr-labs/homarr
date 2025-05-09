@@ -159,7 +159,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
               />
 
               <Group gap={5} justify="space-between" style={{ flex: 1 }}>
-                <Text size="xs">{repository.name ?? repository.identifier}</Text>
+                {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+                <Text size="xs">{repository.name || repository.identifier}</Text>
 
                 <Tooltip
                   withArrow

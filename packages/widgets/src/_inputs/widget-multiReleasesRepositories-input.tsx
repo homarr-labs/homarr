@@ -124,7 +124,8 @@ export const WidgetMultiReleasesRepositoriesInput = ({
 
                 <Group justify="space-between" align="center" style={{ flex: 1 }} gap={5}>
                   <Text size="sm" style={{ flex: 1, whiteSpace: "nowrap" }}>
-                    {repository.name ?? repository.identifier}
+                    {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+                    {repository.name || repository.identifier}
                   </Text>
 
                   <Text c="dimmed" size="xs" ta="end" style={{ flex: 1, whiteSpace: "nowrap" }}>
@@ -250,7 +251,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
             });
           }}
           error={formErrors[`${innerProps.fieldPath}.identifier`]}
-          style={{ width: "100%" }}
+          w="100%"
         />
       </Group>
 
