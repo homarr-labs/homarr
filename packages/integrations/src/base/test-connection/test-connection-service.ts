@@ -7,7 +7,6 @@ import {
   getTrustedCertificateHostnamesAsync,
 } from "@homarr/certificates/server";
 import { getPortFromUrl } from "@homarr/common";
-import { logger } from "@homarr/log";
 
 import type { IntegrationRequestErrorOfType } from "../errors/http/integration-request-error";
 import { IntegrationRequestError } from "../errors/http/integration-request-error";
@@ -25,14 +24,12 @@ export type TestingResult =
     };
 type AsyncTestingCallback = (input: {
   ca: string[] | string;
-  checkServerIdentity?: typeof tls.checkServerIdentity;
+  checkServerIdentity: typeof tls.checkServerIdentity;
 }) => Promise<TestingResult>;
 
 export class TestConnectionService {
   constructor(private url: URL) {}
 
-  // TODO: pihole issue
-  // https://discourse.pi-hole.net/t/include-ca-certificate-in-self-signed/79629
   public async handleAsync(testingCallbackAsync: AsyncTestingCallback) {
     const firstResult = await testingCallbackAsync({
       ca: await getAllTrustedCertificatesAsync(),
@@ -93,36 +90,7 @@ export class TestConnectionService {
       return TestConnectionError.UnknownResult(new Error("Unable to fetch certificate"));
     }
 
-    const fallbackResult = TestConnectionError.CertificateResult(requestError.cause, certificate);
-
-    if (requestError.cause.reason !== "untrusted") {
-      return fallbackResult;
-    }
-
-    const caResult = await testingCallbackAsync({
-      ca: certificate.toString(),
-    })
-      // If we reach then, it means it would be trusted with the CA
-      .then(() => ({ success: true }) as const)
-      .catch((error: unknown) => {
-        logger.error("Error while testing connection");
-        logger.error(error);
-        if (!(error instanceof IntegrationRequestError)) {
-          return TestConnectionError.UnknownResult(error);
-        }
-
-        if (!(error.cause.type === "certificate")) {
-          return TestConnectionError.UnknownResult(error);
-        }
-
-        return TestConnectionError.CertificateResult(error.cause, certificate);
-      });
-
-    if (caResult.success) {
-      return fallbackResult;
-    }
-
-    return caResult;
+    return TestConnectionError.CertificateResult(requestError.cause, certificate);
   }
 
   private async fetchCertificateAsync(): Promise<X509Certificate | undefined> {

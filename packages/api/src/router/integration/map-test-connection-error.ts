@@ -44,9 +44,7 @@ export interface MappedCertificate {
 }
 
 const mapCertificate = (certificate: X509Certificate): MappedCertificate => ({
-  isSelfSigned:
-    certificate.issuerCertificate !== undefined &&
-    certificate.issuerCertificate.fingerprint256 === certificate.fingerprint256,
+  isSelfSigned: certificate.ca,
   issuer: certificate.issuer,
   subject: certificate.subject,
   serialNumber: certificate.serialNumber,

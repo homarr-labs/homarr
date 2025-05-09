@@ -5,6 +5,7 @@ import type { AnyMappedTestConnectionError, MappedCertificate } from "@homarr/ap
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { getMantineColor } from "@homarr/common";
+import { createId } from "@homarr/db/client";
 import { createModal, useConfirmModal, useModalAction } from "@homarr/modals";
 import { AddCertificateModal } from "@homarr/modals-collection";
 import { useCurrentLocale, useI18n } from "@homarr/translation/client";
@@ -22,6 +23,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
   const { openModal: openUploadModal } = useModalAction(AddCertificateModal);
   const { openConfirmModal } = useConfirmModal();
   const { mutateAsync: trustHostnameAsync } = clientApi.certificates.trustHostnameMismatch.useMutation();
+  const { mutateAsync: addCertificateAsync } = clientApi.certificates.addCertificate.useMutation();
 
   const handleTrustHostname = () => {
     const { hostname } = new URL(url);
@@ -34,6 +36,25 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
           hostname,
           thumbprint: error.data.certificate.fingerprint,
         });
+      },
+    });
+  };
+
+  const handleTrustSelfSigned = () => {
+    const { hostname } = new URL(url);
+    openConfirmModal({
+      title: "Trust self signed certificate",
+      children: "Are you sure you want to trust this self signed certificate?",
+      // eslint-disable-next-line no-restricted-syntax
+      async onConfirm() {
+        const formData = new FormData();
+        formData.append(
+          "file",
+          new File([error.data.certificate.pem], `${hostname}-${createId()}.crt`, {
+            type: "application/x-x509-ca-cert",
+          }),
+        );
+        await addCertificateAsync(formData);
       },
     });
   };
@@ -67,7 +88,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
           <Button
             variant="default"
             fullWidth
-            onClick={error.data.reason === "hostnameMismatch" ? handleTrustHostname : undefined}
+            onClick={error.data.reason === "hostnameMismatch" ? handleTrustHostname : handleTrustSelfSigned}
           >
             Trust certificate
           </Button>
