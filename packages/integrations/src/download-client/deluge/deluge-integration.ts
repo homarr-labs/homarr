@@ -2,6 +2,8 @@ import { Deluge } from "@ctrl/deluge";
 import dayjs from "dayjs";
 import type { Dispatcher } from "undici";
 
+import { createCertificateAgentAsync } from "@homarr/certificates/server";
+
 import { HandleIntegrationErrors } from "../../base/errors/decorator";
 import { integrationOFetchHttpErrorHandler } from "../../base/errors/http";
 import type { IntegrationTestingInput } from "../../base/integration";
@@ -110,7 +112,7 @@ export class DelugeIntegration extends DownloadClientIntegration {
     return new Deluge({
       baseUrl: this.url("/").toString(),
       password: this.getSecretValue("password"),
-      dispatcher: dispatcher ?? (await this.createTrustedDispatcherAsync()),
+      dispatcher: dispatcher ?? (await createCertificateAgentAsync()),
     });
   }
 

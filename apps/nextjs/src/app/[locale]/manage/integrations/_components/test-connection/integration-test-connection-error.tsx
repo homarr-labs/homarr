@@ -2,11 +2,11 @@ import { useMemo } from "react";
 import { Accordion, Anchor, Card, Stack, Text } from "@mantine/core";
 import { IconSubtask } from "@tabler/icons-react";
 
-import type { AnyMappedTestConnectionError, MappedError } from "@homarr/api";
 import { getMantineColor } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
 
 import { CertificateErrorDetails } from "./test-connection-certificate";
+import type { AnyMappedTestConnectionError, MappedError } from "./types";
 
 interface IntegrationTestConnectionErrorProps {
   error: AnyMappedTestConnectionError;
@@ -63,7 +63,7 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
           <Accordion variant="contained">
             <Accordion.Item value="cause">
               <Accordion.Control icon={<IconSubtask size={16} stroke={1.5} />}>
-                Cause with more details
+                {t("integration.testConnection.error.common.cause.title")}
               </Accordion.Control>
               <Accordion.Panel>
                 <pre style={{ whiteSpace: "pre-wrap" }}>

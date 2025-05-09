@@ -5,6 +5,7 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import { ProxmoxApiErrorHandler } from "./proxmox-error-handler";
@@ -19,8 +20,8 @@ import type {
 
 @HandleIntegrationErrors([new ProxmoxApiErrorHandler()])
 export class ProxmoxIntegration extends Integration {
-  protected async testingAsync(): Promise<TestingResult> {
-    const proxmox = this.getPromoxApi();
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const proxmox = this.getPromoxApi(input.fetchAsync);
     await proxmox.nodes.$get();
     return { success: true };
   }
@@ -42,12 +43,12 @@ export class ProxmoxIntegration extends Integration {
     };
   }
 
-  private getPromoxApi() {
+  private getPromoxApi(fetchAsync = fetchWithTrustedCertificatesAsync) {
     return proxmoxApi({
       host: this.url("/").host,
       tokenID: `${this.getSecretValue("username")}@${this.getSecretValue("realm")}!${this.getSecretValue("tokenId")}`,
       tokenSecret: this.getSecretValue("apiKey"),
-      fetch: fetchWithTrustedCertificatesAsync,
+      fetch: fetchAsync,
     });
   }
 }

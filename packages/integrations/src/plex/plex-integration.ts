@@ -4,6 +4,7 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ParseError } from "@homarr/common";
 import { logger } from "@homarr/log";
 
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -64,10 +65,10 @@ export class PlexIntegration extends Integration {
     return medias;
   }
 
-  protected async testingAsync(): Promise<TestingResult> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const token = super.getSecretValue("apiKey");
 
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/"), {
+    const response = await input.fetchAsync(this.url("/"), {
       headers: {
         "X-Plex-Token": token,
       },

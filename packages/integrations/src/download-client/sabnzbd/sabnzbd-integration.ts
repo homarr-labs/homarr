@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import type { fetch as undiciFetch } from "undici";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common";
 
 import type { IntegrationTestingInput } from "../../base/integration";
@@ -105,7 +106,7 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
   }
 
   private async sabNzbApiCallAsync(mode: string, searchParams?: Record<string, string>): Promise<unknown> {
-    return await this.sabNzbApiCallWithCustomFetchAsync(this.fetchAsync.bind(this), mode, searchParams);
+    return await this.sabNzbApiCallWithCustomFetchAsync(fetchWithTrustedCertificatesAsync, mode, searchParams);
   }
   private async sabNzbApiCallWithCustomFetchAsync(
     fetchAsync: typeof undiciFetch,

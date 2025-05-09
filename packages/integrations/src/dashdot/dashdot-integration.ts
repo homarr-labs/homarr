@@ -5,6 +5,8 @@ import "@homarr/redis";
 import dayjs from "dayjs";
 import { z } from "zod";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+
 import { createChannelEventHistory } from "../../../redis/src/lib/channel";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -62,7 +64,7 @@ export class DashDotIntegration extends Integration {
   }
 
   private async getInfoAsync() {
-    const infoResponse = await this.fetchAsync(this.url("/info"));
+    const infoResponse = await fetchWithTrustedCertificatesAsync(this.url("/info"));
     const serverInfo = await internalServerInfoApi.parseAsync(await infoResponse.json());
     return {
       maxAvailableMemoryBytes: serverInfo.ram.size,
@@ -76,7 +78,7 @@ export class DashDotIntegration extends Integration {
 
   private async getCurrentCpuLoadAsync() {
     const channel = this.getChannel();
-    const cpu = await this.fetchAsync(this.url("/load/cpu"));
+    const cpu = await fetchWithTrustedCertificatesAsync(this.url("/load/cpu"));
     const data = await cpuLoadPerCoreApiList.parseAsync(await cpu.json());
     await channel.pushAsync(data);
     return {
@@ -98,12 +100,12 @@ export class DashDotIntegration extends Integration {
   }
 
   private async getCurrentStorageLoadAsync() {
-    const storageLoad = await this.fetchAsync(this.url("/load/storage"));
+    const storageLoad = await fetchWithTrustedCertificatesAsync(this.url("/load/storage"));
     return (await storageLoad.json()) as number[];
   }
 
   private async getCurrentMemoryLoadAsync() {
-    const memoryLoad = await this.fetchAsync(this.url("/load/ram"));
+    const memoryLoad = await fetchWithTrustedCertificatesAsync(this.url("/load/ram"));
     const data = await memoryLoadApi.parseAsync(await memoryLoad.json());
     return {
       loadInBytes: data.load,

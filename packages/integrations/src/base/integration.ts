@@ -1,12 +1,9 @@
-import { Agent as HttpsAgent } from "node:https";
 import type { AxiosInstance } from "axios";
-import axios from "axios";
 import type { Dispatcher } from "undici";
 import { fetch as undiciFetch } from "undici";
 
-import { createCertificateAgentAsync } from "@homarr/certificates/server";
-import { removeTrailingSlash, ResponseError } from "@homarr/common";
-import { LoggingAgent } from "@homarr/common/server";
+import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/certificates/server";
+import { removeTrailingSlash } from "@homarr/common";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 
 import { HandleIntegrationErrors } from "./errors/decorator";
@@ -71,33 +68,18 @@ export abstract class Integration {
     return url;
   }
 
-  protected async fetchAsync(...[input, options]: Parameters<typeof undiciFetch>) {
-    return await undiciFetch(input, {
-      ...options,
-      dispatcher: await this.createTrustedDispatcherAsync(),
-    });
-  }
-
-  protected async createTrustedDispatcherAsync() {
-    return await createCertificateAgentAsync();
-  }
-
   public async testConnectionAsync(): Promise<TestingResult> {
     try {
       const url = new URL(this.integration.url);
       return await new TestConnectionService(url).handleAsync(async ({ ca, checkServerIdentity }) => {
-        const fetchDispatcher = new LoggingAgent({
-          connect: {
-            ca,
-            checkServerIdentity,
-          },
+        const fetchDispatcher = await createCertificateAgentAsync({
+          ca,
+          checkServerIdentity,
         });
 
-        const axiosInstance = axios.create({
-          httpsAgent: new HttpsAgent({
-            ca,
-            checkServerIdentity,
-          }),
+        const axiosInstance = await createAxiosCertificateInstanceAsync({
+          ca,
+          checkServerIdentity,
         });
 
         const callback: typeof this.testingAsync = this.testingAsync.bind(this);
@@ -108,14 +90,6 @@ export abstract class Integration {
         });
       });
     } catch (error) {
-      // TODO: This can be removed, correct?
-      if (error instanceof ResponseError) {
-        return TestConnectionError.StatusResult({
-          status: error.statusCode,
-          url: error.url ?? "?",
-        });
-      }
-
       if (!(error instanceof TestConnectionError)) {
         return TestConnectionError.UnknownResult(error);
       }

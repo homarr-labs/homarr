@@ -1,6 +1,7 @@
 import path from "path";
 import type { fetch as undiciFetch } from "undici";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common";
 
 import type { IntegrationTestingInput } from "../../base/integration";
@@ -102,7 +103,7 @@ export class Aria2Integration extends DownloadClientIntegration {
     };
   }
 
-  private getClient(fetchAsync: typeof undiciFetch = this.fetchAsync.bind(this)) {
+  private getClient(fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync) {
     const url = this.url("/jsonrpc");
 
     return new Proxy(

@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -78,9 +79,9 @@ export class ProwlarrIntegration extends Integration {
     }
   }
 
-  protected async testingAsync(): Promise<TestingResult> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const apiKey = super.getSecretValue("apiKey");
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api"), {
+    const response = await input.fetchAsync(this.url("/api"), {
       headers: {
         "X-Api-Key": apiKey,
       },

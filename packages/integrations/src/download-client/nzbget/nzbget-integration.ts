@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import type { fetch as undiciFetch } from "undici";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common";
 
 import type { IntegrationTestingInput } from "../../base/integration";
@@ -100,7 +101,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     method: CallType,
     ...params: Parameters<NzbGetClient[CallType]>
   ): Promise<ReturnType<NzbGetClient[CallType]>> {
-    return await this.nzbGetApiCallWithCustomFetchAsync(this.fetchAsync.bind(this), method, ...params);
+    return await this.nzbGetApiCallWithCustomFetchAsync(fetchWithTrustedCertificatesAsync, method, ...params);
   }
 
   private async nzbGetApiCallWithCustomFetchAsync<CallType extends keyof NzbGetClient>(

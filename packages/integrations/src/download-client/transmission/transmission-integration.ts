@@ -2,6 +2,8 @@ import { Transmission } from "@ctrl/transmission";
 import dayjs from "dayjs";
 import type { Dispatcher } from "undici";
 
+import { createCertificateAgentAsync } from "@homarr/certificates/server";
+
 import { HandleIntegrationErrors } from "../../base/errors/decorator";
 import { integrationOFetchHttpErrorHandler } from "../../base/errors/http";
 import type { IntegrationTestingInput } from "../../base/integration";
@@ -88,7 +90,7 @@ export class TransmissionIntegration extends DownloadClientIntegration {
       baseUrl: this.url("/").toString(),
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
-      dispatcher: dispatcher ?? (await this.createTrustedDispatcherAsync()),
+      dispatcher: dispatcher ?? (await createCertificateAgentAsync()),
     });
   }
 

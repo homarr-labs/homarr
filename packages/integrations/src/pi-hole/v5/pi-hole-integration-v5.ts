@@ -1,6 +1,7 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common";
 
+import type { IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
@@ -27,10 +28,10 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
     };
   }
 
-  protected async testingAsync(): Promise<TestingResult> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const apiKey = super.getSecretValue("apiKey");
 
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?status", { auth: apiKey }));
+    const response = await input.fetchAsync(this.url("/admin/api.php?status", { auth: apiKey }));
 
     if (!response.ok) return TestConnectionError.StatusResult(response);
 

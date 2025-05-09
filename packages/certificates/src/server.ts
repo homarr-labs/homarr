@@ -1,5 +1,6 @@
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
+import type { AgentOptions } from "node:https";
 import { Agent as HttpsAgent } from "node:https";
 import path from "node:path";
 import { checkServerIdentity, rootCertificates } from "node:tls";
@@ -43,7 +44,7 @@ export const loadCustomRootCertificatesAsync = async () => {
 export const removeCustomRootCertificateAsync = async (fileName: string) => {
   const folder = getCertificateFolder();
   if (!folder) {
-    return null;
+    return;
   }
 
   const existingFiles = await fs.readdir(folder, { withFileTypes: true });
@@ -93,25 +94,32 @@ export const createCustomCheckServerIdentity = (
   };
 };
 
-export const createCertificateAgentAsync = async () => {
+export const createCertificateAgentAsync = async (override?: {
+  ca: string | string[];
+  checkServerIdentity: typeof checkServerIdentity;
+}) => {
   return new LoggingAgent({
-    connect: {
+    connect: override ?? {
       ca: await getAllTrustedCertificatesAsync(),
       checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
     },
   });
 };
 
-export const createHttpsAgentAsync = async () => {
-  return new HttpsAgent({
-    ca: await getAllTrustedCertificatesAsync(),
-    checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
-  });
+export const createHttpsAgentAsync = async (override?: Pick<AgentOptions, "ca" | "checkServerIdentity">) => {
+  return new HttpsAgent(
+    override ?? {
+      ca: await getAllTrustedCertificatesAsync(),
+      checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
+    },
+  );
 };
 
-export const createAxiosCertificateInstanceAsync = async () => {
+export const createAxiosCertificateInstanceAsync = async (
+  override?: Pick<AgentOptions, "ca" | "checkServerIdentity">,
+) => {
   return axios.create({
-    httpsAgent: await createHttpsAgentAsync(),
+    httpsAgent: await createHttpsAgentAsync(override),
   });
 };
 

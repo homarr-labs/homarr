@@ -31,7 +31,7 @@ export class TestConnectionService {
   constructor(private url: URL) {}
 
   public async handleAsync(testingCallbackAsync: AsyncTestingCallback) {
-    const firstResult = await testingCallbackAsync({
+    const testingResult = await testingCallbackAsync({
       ca: await getAllTrustedCertificatesAsync(),
       checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
     })
@@ -62,35 +62,20 @@ export class TestConnectionService {
         } as const;
       });
 
-    if (firstResult.success) {
-      return firstResult;
+    if (testingResult.success) {
+      return testingResult;
     }
 
-    if (!(firstResult.error instanceof IntegrationRequestError)) {
-      return firstResult.error.toResult();
+    if (!(testingResult.error instanceof IntegrationRequestError)) {
+      return testingResult.error.toResult();
     }
 
-    return await this.handleCertificateErrorAsync(testingCallbackAsync, firstResult.error);
-  }
-
-  private async handleCertificateErrorAsync(
-    testingCallbackAsync: AsyncTestingCallback,
-    requestError: IntegrationRequestErrorOfType<"certificate">,
-  ): Promise<
-    | {
-        success: true;
-      }
-    | {
-        success: false;
-        error: AnyTestConnectionError;
-      }
-  > {
     const certificate = await this.fetchCertificateAsync();
     if (!certificate) {
       return TestConnectionError.UnknownResult(new Error("Unable to fetch certificate"));
     }
 
-    return TestConnectionError.CertificateResult(requestError.cause, certificate);
+    return TestConnectionError.CertificateResult(testingResult.error.cause, certificate);
   }
 
   private async fetchCertificateAsync(): Promise<X509Certificate | undefined> {

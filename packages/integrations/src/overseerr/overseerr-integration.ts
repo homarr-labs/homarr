@@ -3,6 +3,7 @@ import { z } from "zod";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { ISearchableIntegration } from "../base/searchable-integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -83,8 +84,8 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
     }
   }
 
-  protected async testingAsync(): Promise<TestingResult> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/auth/me"), {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const response = await input.fetchAsync(this.url("/api/v1/auth/me"), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },

@@ -1,5 +1,6 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -9,8 +10,8 @@ import type { TdarrWorker } from "../interfaces/media-transcoding/workers";
 import { getNodesResponseSchema, getStatisticsSchema, getStatusTableSchema } from "./tdarr-validation-schemas";
 
 export class TdarrIntegration extends Integration {
-  protected async testingAsync(): Promise<TestingResult> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v2/is-server-alive"), {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const response = await input.fetchAsync(this.url("/api/v2/is-server-alive"), {
       method: "POST",
       headers: {
         accept: "application/json",

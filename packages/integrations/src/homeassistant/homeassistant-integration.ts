@@ -1,3 +1,4 @@
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
 import type { IntegrationTestingInput } from "../base/integration";
@@ -80,7 +81,7 @@ export class HomeAssistantIntegration extends Integration {
    * @returns the response from the API
    */
   private async getAsync(path: `/api/${string}`) {
-    return await this.fetchAsync(this.url(path), {
+    return await fetchWithTrustedCertificatesAsync(this.url(path), {
       headers: this.getAuthHeaders(),
     });
   }
@@ -93,7 +94,7 @@ export class HomeAssistantIntegration extends Integration {
    * @returns the response from the API
    */
   private async postAsync(path: `/api/${string}`, body: Record<string, string>) {
-    return await this.fetchAsync(this.url(path), {
+    return await fetchWithTrustedCertificatesAsync(this.url(path), {
       headers: this.getAuthHeaders(),
       body: JSON.stringify(body),
       method: "POST",

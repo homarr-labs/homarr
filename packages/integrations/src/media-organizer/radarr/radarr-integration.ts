@@ -4,6 +4,7 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import type { AtLeastOneOf } from "@homarr/common/types";
 import { logger } from "@homarr/log";
 
+import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { CalendarEvent } from "../../calendar-types";
@@ -95,8 +96,8 @@ export class RadarrIntegration extends MediaOrganizerIntegration {
     return bestImage.remoteUrl;
   };
 
-  protected async testingAsync(): Promise<TestingResult> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api"), {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const response = await input.fetchAsync(this.url("/api"), {
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },
     });
 

@@ -32,8 +32,3 @@ type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export { createTRPCContext, appRouter, createCaller, openApiDocument };
 export type { AppRouter, RouterInputs, RouterOutputs };
-export type {
-  AnyMappedTestConnectionError,
-  MappedCertificate,
-  MappedError,
-} from "./router/integration/map-test-connection-error";

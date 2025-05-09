@@ -703,6 +703,11 @@
         "edit": "Test connection and save"
       },
       "error": {
+        "common": {
+          "cause": {
+            "title": "Cause with more details"
+          }
+        },
         "unknown": {
           "title": "Unknown error",
           "description": "An unknown error occurred, open the cause below to see more details"
@@ -735,6 +740,68 @@
             "notYetValid": "The certificate is not yet valid.",
             "untrusted": "The certificate is not trusted.",
             "hostnameMismatch": "The certificate hostname does not match the URL."
+          },
+          "alert": {
+            "permission": {
+              "title": "Not enough permissions",
+              "message": "You are not allowed to trust or upload certificates. Please contact your administrator to upload the necessary root certificate."
+            },
+            "hostnameMismatch": {
+              "title": "Hostname mismatch",
+              "message": "The hostname in the certificate does not match the hostname you are connecting to. This could indicate a security risk, but you can still choose to trust this certificate."
+            },
+            "extract": {
+              "title": "CA certificate extraction failed",
+              "message": "Only self signed certificates without a chain can be fetched automatically. If you are using a self signed certificate, please make sure to upload the CA certificate manually. You can find instructions on how to do this <docsLink></docsLink>."
+            }
+          },
+          "action": {
+            "trust": {
+              "label": "Trust certificate"
+            },
+            "upload": {
+              "label": "Upload certificate"
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "Trust hostname mismatch",
+              "message": "Are you sure you want to trust the certificate with a hostname mismatch?"
+            },
+            "notification": {
+              "success": {
+                "title": "Trusted certificate",
+                "message": "Added hostname to trusted certificate list"
+              },
+              "error": {
+                "title": "Failed to trust certificate",
+                "message": "The certificate with a hostname mismatch could not be trusted"
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "Trust self signed certificate",
+              "message": "Are you sure you want to trust this self signed certificate?"
+            },
+            "notification": {
+              "success": {
+                "title": "Trusted certificate",
+                "message": "Added certificate to trusted certificate list"
+              },
+              "error": {
+                "title": "Failed to trust certificate",
+                "message": "Failed to add certificate to trusted certificate list"
+              }
+            }
+          },
+          "details": {
+            "title": "Details",
+            "description": "Review the certificate information before deciding to trust it.",
+            "content": {
+              "action": "Show content",
+              "title": "PEM Certificate"
+            }
           }
         },
         "request": {
@@ -934,6 +1001,7 @@
       "cancel": "Cancel",
       "delete": "Delete",
       "discard": "Discard",
+      "close": "Close",
       "confirm": "Confirm",
       "continue": "Continue",
       "previous": "Previous",
@@ -3943,6 +4011,26 @@
     }
   },
   "certificate": {
+    "field": {
+      "subject": {
+        "label": "Subject"
+      },
+      "issuer": {
+        "label": "Issuer"
+      },
+      "validFrom": {
+        "label": "Valid from"
+      },
+      "validTo": {
+        "label": "Valid to"
+      },
+      "serialNumber": {
+        "label": "Serial number"
+      },
+      "fingerprint": {
+        "label": "Fingerprint"
+      }
+    },
     "page": {
       "list": {
         "title": "Trusted certificates",

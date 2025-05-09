@@ -1,22 +1,24 @@
 import { ActionIcon, Alert, Anchor, Button, Card, CopyButton, Group, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle, IconCheck, IconCopy, IconExclamationCircle } from "@tabler/icons-react";
 
-import type { AnyMappedTestConnectionError, MappedCertificate } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { getMantineColor } from "@homarr/common";
 import { createId } from "@homarr/db/client";
 import { createModal, useConfirmModal, useModalAction } from "@homarr/modals";
 import { AddCertificateModal } from "@homarr/modals-collection";
-import { useCurrentLocale, useI18n } from "@homarr/translation/client";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { useCurrentLocale, useI18n, useScopedI18n } from "@homarr/translation/client";
+
+import type { MappedCertificate, MappedTestConnectionCertificateError } from "./types";
 
 interface CertificateErrorDetailsProps {
-  error: Extract<AnyMappedTestConnectionError, { type: "certificate" }>;
+  error: MappedTestConnectionCertificateError;
   url: string;
 }
 
 export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsProps) => {
-  const t = useI18n();
+  const tError = useScopedI18n("integration.testConnection.error");
   const { data: session } = useSession();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
 
@@ -28,14 +30,30 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
   const handleTrustHostname = () => {
     const { hostname } = new URL(url);
     openConfirmModal({
-      title: "Trust hostname mismatch",
-      children: "Are you sure you want to trust this hostname mismatch?",
+      title: tError("certificate.hostnameMismatch.confirm.title"),
+      children: tError("certificate.hostnameMismatch.confirm.message"),
       // eslint-disable-next-line no-restricted-syntax
       async onConfirm() {
-        await trustHostnameAsync({
-          hostname,
-          thumbprint: error.data.certificate.fingerprint,
-        });
+        await trustHostnameAsync(
+          {
+            hostname,
+            thumbprint: error.data.certificate.fingerprint,
+          },
+          {
+            onSuccess() {
+              showSuccessNotification({
+                title: tError("certificate.hostnameMismatch.notification.success.title"),
+                message: tError("certificate.hostnameMismatch.notification.success.message"),
+              });
+            },
+            onError() {
+              showErrorNotification({
+                title: tError("certificate.hostnameMismatch.notification.error.title"),
+                message: tError("certificate.hostnameMismatch.notification.error.message"),
+              });
+            },
+          },
+        );
       },
     });
   };
@@ -43,8 +61,8 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
   const handleTrustSelfSigned = () => {
     const { hostname } = new URL(url);
     openConfirmModal({
-      title: "Trust self signed certificate",
-      children: "Are you sure you want to trust this self signed certificate?",
+      title: tError("certificate.selfSigned.confirm.title"),
+      children: tError("certificate.selfSigned.confirm.message"),
       // eslint-disable-next-line no-restricted-syntax
       async onConfirm() {
         const formData = new FormData();
@@ -54,14 +72,25 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
             type: "application/x-x509-ca-cert",
           }),
         );
-        await addCertificateAsync(formData);
+        await addCertificateAsync(formData, {
+          onSuccess() {
+            showSuccessNotification({
+              title: tError("certificate.selfSigned.notification.success.title"),
+              message: tError("certificate.selfSigned.notification.success.message"),
+            });
+          },
+          onError() {
+            showErrorNotification({
+              title: tError("certificate.selfSigned.notification.error.title"),
+              message: tError("certificate.selfSigned.notification.error.message"),
+            });
+          },
+        });
       },
     });
   };
 
-  const description = (
-    <Text size="md">{t(`integration.testConnection.error.certificate.description.${error.data.reason}`)}</Text>
-  );
+  const description = <Text size="md">{tError(`certificate.description.${error.data.reason}`)}</Text>;
 
   if (!isAdmin) {
     return (
@@ -90,12 +119,12 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
             fullWidth
             onClick={error.data.reason === "hostnameMismatch" ? handleTrustHostname : handleTrustSelfSigned}
           >
-            Trust certificate
+            {tError("certificate.action.trust.label")}
           </Button>
         ) : null}
         {error.data.reason === "untrusted" && !error.data.certificate.isSelfSigned ? (
           <Button variant="default" fullWidth onClick={() => openUploadModal({})}>
-            Upload certificate
+            {tError("certificate.action.upload.label")}
           </Button>
         ) : null}
       </Group>
@@ -104,29 +133,42 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
 };
 
 const NotEnoughPermissionsAlert = () => {
+  const t = useI18n();
   return (
-    <Alert icon={<IconAlertTriangle size={16} />} title="Not enough permissions" color="yellow">
-      You are not allowed to trust or upload certificates. Please contact your administrator to upload the necessary
-      root certificate.
+    <Alert
+      icon={<IconAlertTriangle size={16} />}
+      title={t("integration.testConnection.error.certificate.alert.permission.title")}
+      color="yellow"
+    >
+      {t("integration.testConnection.error.certificate.alert.permission.message")}
     </Alert>
   );
 };
 
 const HostnameMismatchAlert = () => {
+  const t = useI18n();
   return (
-    <Alert icon={<IconAlertTriangle size={16} />} title="Hostname mismatch" color="yellow">
-      The hostname in the certificate does not match the hostname you are connecting to. This could indicate a security
-      risk, but you can still choose to trust this certificate.
+    <Alert
+      icon={<IconAlertTriangle size={16} />}
+      title={t("integration.testConnection.error.certificate.alert.hostnameMismatch.title")}
+      color="yellow"
+    >
+      {t("integration.testConnection.error.certificate.alert.hostnameMismatch.message")}
     </Alert>
   );
 };
 
 const CertificateExtractAlert = () => {
+  const t = useI18n();
   return (
-    <Alert icon={<IconExclamationCircle size={16} />} title="CA certificate extraction failed" color="red">
-      Only self signed certificates without a chain can be fetched automatically. If you are using a self signed
-      certificate, please make sure to upload the CA certificate manually. You can find instructions on how to do this
-      here
+    <Alert
+      icon={<IconExclamationCircle size={16} />}
+      title={t("integration.testConnection.error.certificate.alert.extract.title")}
+      color="red"
+    >
+      {t.rich("integration.testConnection.error.certificate.alert.extract.message", {
+        docsLink: () => <Anchor>{t("common.here")}</Anchor>,
+      })}
     </Alert>
   );
 };
@@ -138,13 +180,15 @@ interface CertificateDetailsProps {
 export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps) => {
   const { openModal } = useModalAction(PemContentModal);
   const locale = useCurrentLocale();
+  const tDetails = useScopedI18n("integration.testConnection.error.certificate.details");
+  const tCertificateField = useScopedI18n("certificate.field");
 
   return (
     <Card withBorder>
-      <Text fw={500}>Details</Text>
+      <Text fw={500}>{tDetails("title")}</Text>
       <Group justify="space-between">
         <Text size="sm" c="dimmed">
-          Review the certificate information before deciding to trust it
+          {tDetails("description")}
         </Text>
         <Anchor
           size="sm"
@@ -153,26 +197,26 @@ export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps)
           type="button"
           onClick={() => openModal({ content: certificate.pem })}
         >
-          Show content
+          {tDetails("content.action")}
         </Anchor>
       </Group>
 
       <SimpleGrid cols={{ base: 1, md: 2 }} mt="md">
         <Stack gap={0}>
           <Text size="xs" c="dimmed">
-            Subject
+            {tCertificateField("subject.label")}
           </Text>
           <Text size="sm">{certificate.subject}</Text>
         </Stack>
         <Stack gap={0}>
           <Text size="xs" c="dimmed">
-            Issuer
+            {tCertificateField("issuer.label")}
           </Text>
           <Text size="sm">{certificate.issuer}</Text>
         </Stack>
         <Stack gap={0}>
           <Text size="xs" c="dimmed">
-            Valid From
+            {tCertificateField("validFrom.label")}
           </Text>
           <Text size="sm">
             {new Intl.DateTimeFormat(locale, {
@@ -183,7 +227,7 @@ export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps)
         </Stack>
         <Stack gap={0}>
           <Text size="xs" c="dimmed">
-            Valid To
+            {tCertificateField("validTo.label")}
           </Text>
           <Text size="sm">
             {new Intl.DateTimeFormat(locale, {
@@ -194,7 +238,7 @@ export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps)
         </Stack>
         <Stack gap={0}>
           <Text size="xs" c="dimmed">
-            Serial Number
+            {tCertificateField("serialNumber.label")}
           </Text>
           <Text size="sm">{certificate.serialNumber}</Text>
         </Stack>
@@ -203,7 +247,7 @@ export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps)
       <SimpleGrid cols={1} mt="md">
         <Stack gap={0}>
           <Text size="xs" c="dimmed">
-            Fingerprint
+            {tCertificateField("fingerprint.label")}
           </Text>
           <Text size="sm">{certificate.fingerprint}</Text>
         </Stack>
@@ -213,6 +257,8 @@ export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps)
 };
 
 const PemContentModal = createModal<{ content: string }>(({ actions, innerProps }) => {
+  const t = useI18n();
+
   return (
     <Stack>
       <Card w="100%" pos="relative" bg="dark.6" fz="xs" p="sm">
@@ -238,11 +284,13 @@ const PemContentModal = createModal<{ content: string }>(({ actions, innerProps 
       </Card>
 
       <Button variant="light" color="gray" onClick={actions.closeModal}>
-        Close
+        {t("common.action.close")}
       </Button>
     </Stack>
   );
 }).withOptions({
-  defaultTitle: "PEM Certificate",
+  defaultTitle(t) {
+    return t("integration.testConnection.error.certificate.details.content.title");
+  },
   size: "lg",
 });

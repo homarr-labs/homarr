@@ -1,6 +1,8 @@
 import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
 import { z } from "zod";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -53,7 +55,7 @@ export class EmbyIntegration extends Integration {
 
   public async getCurrentSessionsAsync(options: CurrentSessionsInput): Promise<StreamSession[]> {
     const apiKey = super.getSecretValue("apiKey");
-    const response = await this.fetchAsync(super.url("/emby/Sessions"), {
+    const response = await fetchWithTrustedCertificatesAsync(super.url("/emby/Sessions"), {
       headers: {
         [EmbyIntegration.apiKeyHeader]: apiKey,
         Authorization: EmbyIntegration.authorizationHeaderValue,
