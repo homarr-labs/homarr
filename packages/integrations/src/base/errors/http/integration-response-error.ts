@@ -1,4 +1,4 @@
-import type { ResponseError } from "@homarr/common";
+import type { ResponseError } from "@homarr/common/server";
 
 import type { IntegrationErrorData } from "../integration-error";
 import { IntegrationError } from "../integration-error";

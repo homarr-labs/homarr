@@ -1,7 +1,7 @@
 import { parseStringPromise } from "xml2js";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { ParseError } from "@homarr/common";
+import { ParseError } from "@homarr/common/server";
 import { logger } from "@homarr/log";
 
 import type { IntegrationTestingInput } from "../base/integration";

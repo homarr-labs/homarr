@@ -1,5 +1,5 @@
-import { ParseError } from "@homarr/common";
-import type { ParseErrorHandler } from "@homarr/common";
+import { ParseError } from "@homarr/common/server";
+import type { ParseErrorHandler } from "@homarr/common/server";
 
 import type { IIntegrationErrorHandler } from "../handler";
 import type { IntegrationError, IntegrationErrorData } from "../integration-error";

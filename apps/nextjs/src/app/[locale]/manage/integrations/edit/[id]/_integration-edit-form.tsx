@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button, Fieldset, Group, Stack, TextInput } from "@mantine/core";
 import type { z } from "zod";
 
-import type { AnyMappedTestConnectionError, RouterOutputs } from "@homarr/api";
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { getAllSecretKindOptions, getDefaultSecretKinds } from "@homarr/definitions";
@@ -19,6 +19,7 @@ import { integrationUpdateSchema } from "@homarr/validation/integration";
 import { SecretCard } from "../../_components/secrets/integration-secret-card";
 import { IntegrationSecretInput } from "../../_components/secrets/integration-secret-inputs";
 import { IntegrationTestConnectionError } from "../../_components/test-connection/integration-test-connection-error";
+import type { AnyMappedTestConnectionError } from "../../_components/test-connection/types";
 
 interface EditIntegrationForm {
   integration: RouterOutputs["integration"]["byId"];

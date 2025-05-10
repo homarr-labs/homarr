@@ -1,6 +1,6 @@
 import type { X509Certificate } from "node:crypto";
 
-import type { AnyRequestError, ParseError, RequestError } from "@homarr/common";
+import type { AnyRequestError, ParseError, RequestError } from "@homarr/common/server";
 
 import { IntegrationRequestError } from "../errors/http/integration-request-error";
 import { IntegrationResponseError } from "../errors/http/integration-response-error";

@@ -6,6 +6,7 @@ import { zfd } from "zod-form-data";
 import { addCustomRootCertificateAsync, removeCustomRootCertificateAsync } from "@homarr/certificates/server";
 import { and, eq } from "@homarr/db";
 import { trustedCertificateHostnames } from "@homarr/db/schema";
+import { logger } from "@homarr/log";
 import { certificateValidFileNameSchema, superRefineCertificateFile } from "@homarr/validation/certificates";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
@@ -22,9 +23,15 @@ export const certificateRouter = createTRPCRouter({
       const content = await input.file.text();
 
       // Validate the certificate
+      let x509Certificate: X509Certificate;
       try {
-        const certificate = new X509Certificate(content);
-        if (!certificate.ca) {
+        x509Certificate = new X509Certificate(content);
+        logger.info("Adding trusted certificate", {
+          subject: x509Certificate.subject,
+          issuer: x509Certificate.issuer,
+        });
+
+        if (!x509Certificate.ca) {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message:
@@ -39,6 +46,11 @@ export const certificateRouter = createTRPCRouter({
       }
 
       await addCustomRootCertificateAsync(input.file.name, content);
+
+      logger.info("Added trusted certificate", {
+        subject: x509Certificate.subject,
+        issuer: x509Certificate.issuer,
+      });
     }),
   trustHostnameMismatch: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -48,6 +60,12 @@ export const certificateRouter = createTRPCRouter({
       let x509Certificate: X509Certificate;
       try {
         x509Certificate = new X509Certificate(input.certificate);
+        logger.info("Adding trusted hostname", {
+          subject: x509Certificate.subject,
+          issuer: x509Certificate.issuer,
+          thumbprint: x509Certificate.fingerprint256,
+          hostname: input.hostname,
+        });
       } catch {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -60,12 +78,23 @@ export const certificateRouter = createTRPCRouter({
         thumbprint: x509Certificate.fingerprint256,
         certificate: input.certificate,
       });
+
+      logger.info("Added trusted hostname", {
+        subject: x509Certificate.subject,
+        issuer: x509Certificate.issuer,
+        thumbprint: x509Certificate.fingerprint256,
+        hostname: input.hostname,
+      });
     }),
   removeTrustedHostname: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ hostname: z.string(), thumbprint: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db
+      logger.info("Removing trusted hostname", {
+        hostname: input.hostname,
+        thumbprint: input.thumbprint,
+      });
+      const dbResult = await ctx.db
         .delete(trustedCertificateHostnames)
         .where(
           and(
@@ -73,11 +102,21 @@ export const certificateRouter = createTRPCRouter({
             eq(trustedCertificateHostnames.thumbprint, input.thumbprint),
           ),
         );
+
+      logger.info("Removed trusted hostname", {
+        hostname: input.hostname,
+        thumbprint: input.thumbprint,
+        count: dbResult.changes,
+      });
     }),
   removeCertificate: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(z.object({ fileName: certificateValidFileNameSchema }))
     .mutation(async ({ input, ctx }) => {
+      logger.info("Removing trusted certificate", {
+        fileName: input.fileName,
+      });
+
       const certificate = await removeCustomRootCertificateAsync(input.fileName);
       if (!certificate) return;
 
@@ -85,5 +124,11 @@ export const certificateRouter = createTRPCRouter({
       await ctx.db
         .delete(trustedCertificateHostnames)
         .where(eq(trustedCertificateHostnames.thumbprint, certificate.fingerprint256));
+
+      logger.info("Removed trusted certificate", {
+        fileName: input.fileName,
+        subject: certificate.subject,
+        issuer: certificate.issuer,
+      });
     }),
 });

@@ -18,7 +18,6 @@ import {
 import { IconInfoCircle } from "@tabler/icons-react";
 import { z } from "zod";
 
-import type { AnyMappedTestConnectionError } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
@@ -32,6 +31,7 @@ import { integrationCreateSchema } from "@homarr/validation/integration";
 
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
 import { IntegrationTestConnectionError } from "../_components/test-connection/integration-test-connection-error";
+import type { AnyMappedTestConnectionError } from "../_components/test-connection/types";
 
 interface NewIntegrationFormProps {
   searchParams: Partial<z.infer<typeof integrationCreateSchema>> & {

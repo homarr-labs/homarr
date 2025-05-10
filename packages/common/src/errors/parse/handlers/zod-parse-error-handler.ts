@@ -1,6 +1,8 @@
 import { ZodError } from "zod";
 import { fromError } from "zod-validation-error";
 
+import { logger } from "@homarr/log";
+
 import { ParseError } from "../parse-error";
 import { ParseErrorHandler } from "./parse-error-handler";
 
@@ -14,6 +16,8 @@ export class ZodParseErrorHandler extends ParseErrorHandler {
       issueSeparator: "\n",
       prefix: null,
     }).toString();
+
+    logger.debug("Received Zod parse error");
 
     return new ParseError(message, { cause: error });
   }

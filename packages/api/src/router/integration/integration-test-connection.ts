@@ -19,6 +19,12 @@ export const testConnectionAsync = async (
     value: `${string}.${string}`;
   }[] = [],
 ) => {
+  logger.info("Testing connection", {
+    integrationName: integration.name,
+    integrationKind: integration.kind,
+    integrationUrl: integration.url,
+  });
+
   const formSecrets = integration.secrets
     .filter((secret) => secret.value !== null)
     .map((secret) => ({
@@ -72,7 +78,15 @@ export const testConnectionAsync = async (
     decryptedSecrets,
   });
 
-  return await integrationInstance.testConnectionAsync();
+  const result = await integrationInstance.testConnectionAsync();
+  if (result.success) {
+    logger.info("Tested connection successfully", {
+      integrationName: integration.name,
+      integrationKind: integration.kind,
+      integrationUrl: integration.url,
+    });
+  }
+  return result;
 };
 
 interface SourcedIntegrationSecret {

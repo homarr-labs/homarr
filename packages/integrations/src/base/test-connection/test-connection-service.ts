@@ -7,12 +7,17 @@ import {
   getTrustedCertificateHostnamesAsync,
 } from "@homarr/certificates/server";
 import { getPortFromUrl } from "@homarr/common";
+import { logger } from "@homarr/log";
 
 import type { IntegrationRequestErrorOfType } from "../errors/http/integration-request-error";
 import { IntegrationRequestError } from "../errors/http/integration-request-error";
 import { IntegrationError } from "../errors/integration-error";
 import type { AnyTestConnectionError } from "./test-connection-error";
 import { TestConnectionError } from "./test-connection-error";
+
+const localLogger = logger.child({
+  module: "TestConnectionService",
+});
 
 export type TestingResult =
   | {
@@ -31,6 +36,10 @@ export class TestConnectionService {
   constructor(private url: URL) {}
 
   public async handleAsync(testingCallbackAsync: AsyncTestingCallback) {
+    localLogger.debug("Testing connection", {
+      url: this.url.toString(),
+    });
+
     const testingResult = await testingCallbackAsync({
       ca: await getAllTrustedCertificatesAsync(),
       checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
@@ -63,8 +72,17 @@ export class TestConnectionService {
       });
 
     if (testingResult.success) {
+      localLogger.debug("Testing connection succeeded", {
+        url: this.url.toString(),
+      });
+
       return testingResult;
     }
+
+    localLogger.debug("Testing connection failed", {
+      url: this.url.toString(),
+      error: `${testingResult.error.name}: ${testingResult.error.message}`,
+    });
 
     if (!(testingResult.error instanceof IntegrationRequestError)) {
       return testingResult.error.toResult();
@@ -79,6 +97,10 @@ export class TestConnectionService {
   }
 
   private async fetchCertificateAsync(): Promise<X509Certificate | undefined> {
+    logger.debug("Fetching certificate", {
+      url: this.url.toString(),
+    });
+
     const url = this.url;
     const port = getPortFromUrl(url);
     const socket = await new Promise<tls.TLSSocket>((resolve, reject) => {
@@ -101,6 +123,12 @@ export class TestConnectionService {
 
     const x509 = socket.getPeerX509Certificate();
     socket.destroy();
+
+    localLogger.debug("Fetched certificate", {
+      url: this.url.toString(),
+      subject: x509?.subject,
+      issuer: x509?.issuer,
+    });
     return x509;
   }
 }

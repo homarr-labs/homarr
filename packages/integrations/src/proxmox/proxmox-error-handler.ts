@@ -1,4 +1,4 @@
-import { ResponseError } from "@homarr/common";
+import { ResponseError } from "@homarr/common/server";
 
 import type { IIntegrationErrorHandler } from "../base/errors/handler";
 import { integrationFetchHttpErrorHandler } from "../base/errors/http";

@@ -1,5 +1,5 @@
-import { RequestError, ResponseError } from "@homarr/common";
-import type { HttpErrorHandler } from "@homarr/common";
+import { RequestError, ResponseError } from "@homarr/common/server";
+import type { HttpErrorHandler } from "@homarr/common/server";
 
 import type { IIntegrationErrorHandler } from "../handler";
 import type { IntegrationError, IntegrationErrorData } from "../integration-error";

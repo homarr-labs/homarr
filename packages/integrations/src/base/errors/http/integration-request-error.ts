@@ -1,4 +1,4 @@
-import type { AnyRequestError, RequestError, RequestErrorType } from "@homarr/common";
+import type { AnyRequestError, RequestError, RequestErrorType } from "@homarr/common/server";
 
 import type { IntegrationErrorData } from "../integration-error";
 import { IntegrationError } from "../integration-error";

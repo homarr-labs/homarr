@@ -10,5 +10,4 @@ export * from "./number";
 export * from "./error";
 export * from "./fetch-with-timeout";
 export * from "./theme";
-export * from "./errors";
 export * from "./function";

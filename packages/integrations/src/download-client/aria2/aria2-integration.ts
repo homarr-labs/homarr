@@ -2,7 +2,7 @@ import path from "path";
 import type { fetch as undiciFetch } from "undici";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { ResponseError } from "@homarr/common";
+import { ResponseError } from "@homarr/common/server";
 
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";

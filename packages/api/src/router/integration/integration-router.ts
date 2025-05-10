@@ -187,6 +187,12 @@ export const integrationRouter = createTRPCRouter({
     .requiresPermission("integration-create")
     .input(integrationCreateSchema)
     .mutation(async ({ ctx, input }) => {
+      logger.info("Creating integration", {
+        name: input.name,
+        kind: input.kind,
+        url: input.url,
+      });
+
       const result = await testConnectionAsync({
         id: "new",
         name: input.name,
@@ -227,6 +233,13 @@ export const integrationRouter = createTRPCRouter({
         );
       }
 
+      logger.info("Created integration", {
+        id: integrationId,
+        name: input.name,
+        kind: input.kind,
+        url: input.url,
+      });
+
       if (
         input.attemptSearchEngineCreation &&
         integrationDefs[input.kind].category.flatMap((category) => category).includes("search")
@@ -244,6 +257,10 @@ export const integrationRouter = createTRPCRouter({
     }),
   update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
+
+    logger.info("Updating integration", {
+      id: input.id,
+    });
 
     const integration = await ctx.db.query.integrations.findFirst({
       where: eq(integrations.id, input.id),
@@ -316,6 +333,13 @@ export const integrationRouter = createTRPCRouter({
         }
       }
     }
+
+    logger.info("Updated integration", {
+      id: input.id,
+      name: input.name,
+      kind: integration.kind,
+      url: input.url,
+    });
   }),
   delete: protectedProcedure.input(byIdSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");

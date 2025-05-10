@@ -1,3 +1,5 @@
+import { logger } from "@homarr/log";
+
 import { objectEntries } from "../../../object";
 import type { Modify } from "../../../types";
 import type { AnyRequestError, AnyRequestErrorInput, RequestErrorReason } from "../request-error";
@@ -6,8 +8,16 @@ import type { ResponseError } from "../response-error";
 import { HttpErrorHandler } from "./http-error-handler";
 
 export class FetchHttpErrorHandler extends HttpErrorHandler {
+  constructor(private type = "undici") {
+    super();
+  }
+
   handleRequestError(error: unknown): AnyRequestError | undefined {
     if (!isTypeErrorWithCode(error)) return undefined;
+
+    logger.debug(`Received ${this.type} request error`, {
+      code: error.cause.code,
+    });
 
     const result = matchErrorCode(error.cause.code);
     if (!result) return undefined;

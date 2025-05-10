@@ -1,4 +1,4 @@
-import { JsonParseErrorHandler, ZodParseErrorHandler } from "@homarr/common";
+import { JsonParseErrorHandler, ZodParseErrorHandler } from "@homarr/common/server";
 
 import { IntegrationParseErrorHandler } from "./integration-parse-error-handler";
 

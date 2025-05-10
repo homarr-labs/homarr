@@ -3,7 +3,7 @@ import {
   FetchHttpErrorHandler,
   OFetchHttpErrorHandler,
   TsdavHttpErrorHandler,
-} from "@homarr/common";
+} from "@homarr/common/server";
 
 import { IntegrationHttpErrorHandler } from "./integration-http-error-handler";
 
