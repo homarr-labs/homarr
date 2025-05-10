@@ -638,8 +638,8 @@ importers:
         specifier: ^0.39.1
         version: 0.39.1
       '@auth/drizzle-adapter':
-        specifier: ^1.9.0
-        version: 1.9.0
+        specifier: ^1.9.1
+        version: 1.9.1
       '@homarr/certificates':
         specifier: workspace:^0.1.0
         version: link:../certificates
@@ -2274,20 +2274,6 @@ packages:
   '@asamuzakjp/css-color@2.8.2':
     resolution: {integrity: sha512-RtWv9jFN2/bLExuZgFFZ0I3pWWeezAHGgrmjqGGWclATl1aDe3yhCUaI0Ilkp6OCk9zX7+FjvDasEX8Q9Rxc5w==}
 
-  '@auth/core@0.39.0':
-    resolution: {integrity: sha512-jusviw/sUSfAh6S/wjY5tRmJOq0Itd3ImF+c/b4HB9DfmfChtcfVJTNJeqCeExeCG8oh4PBKRsMQJsn2W6NhFQ==}
-    peerDependencies:
-      '@simplewebauthn/browser': ^9.0.1
-      '@simplewebauthn/server': ^9.0.2
-      nodemailer: ^6.8.0
-    peerDependenciesMeta:
-      '@simplewebauthn/browser':
-        optional: true
-      '@simplewebauthn/server':
-        optional: true
-      nodemailer:
-        optional: true
-
   '@auth/core@0.39.1':
     resolution: {integrity: sha512-McD8slui0oOA1pjR5sPjLPl5Zm//nLP/8T3kr8hxIsvNLvsiudYvPHhDFPjh1KcZ2nFxCkZmP6bRxaaPd/AnLA==}
     peerDependencies:
@@ -2302,8 +2288,8 @@ packages:
       nodemailer:
         optional: true
 
-  '@auth/drizzle-adapter@1.9.0':
-    resolution: {integrity: sha512-uRQjT9b66vOvkS5vgzK2ZFT3Ubg0JhcYPzOZtrNdwrsfQZ7hmnh+6rZntkl1s2TrKxwxHVTIfndON7+CgsHRkw==}
+  '@auth/drizzle-adapter@1.9.1':
+    resolution: {integrity: sha512-WQ4vtDxpo3jAPfSLJbrjFx++/lMO1HJbV7ZwzCUBEkhqYMTrqQBJhLb+vcusDu95wiekVOUCPe1y6QSNbMeeYA==}
 
   '@axiomhq/js@1.0.0-rc.3':
     resolution: {integrity: sha512-Zm10TczcMLounWqC42nMkXQ7XKLqjzLrd5ia022oBKDUZqAFVg2y9d1quQVNV4FlXyg9MKDdfMjpKQRmzEGaog==}
@@ -10841,14 +10827,6 @@ snapshots:
       '@csstools/css-tokenizer': 3.0.3
       lru-cache: 11.0.2
 
-  '@auth/core@0.39.0':
-    dependencies:
-      '@panva/hkdf': 1.2.1
-      jose: 6.0.8
-      oauth4webapi: 3.3.0
-      preact: 10.24.3
-      preact-render-to-string: 6.5.11(preact@10.24.3)
-
   '@auth/core@0.39.1':
     dependencies:
       '@panva/hkdf': 1.2.1
@@ -10857,9 +10835,9 @@ snapshots:
       preact: 10.24.3
       preact-render-to-string: 6.5.11(preact@10.24.3)
 
-  '@auth/drizzle-adapter@1.9.0':
+  '@auth/drizzle-adapter@1.9.1':
     dependencies:
-      '@auth/core': 0.39.0
+      '@auth/core': 0.39.1
     transitivePeerDependencies:
       - '@simplewebauthn/browser'
       - '@simplewebauthn/server'
