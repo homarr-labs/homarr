@@ -21,22 +21,22 @@ export const RemoveHostnameActionIcon = (input: RemoveHostnameActionIconProps) =
 
   const handleRemove = () => {
     openConfirmModal({
-      title: "Remove trusted hostname",
-      children:
-        "Are you sure you want to remove this trusted hostname? This can cause some integrations to stop working.",
+      title: t("certificate.action.removeHostname.label"),
+      children: t("certificate.action.removeHostname.confirm"),
       // eslint-disable-next-line no-restricted-syntax
       async onConfirm() {
         await mutateAsync(input, {
           async onSuccess() {
             await revalidatePathActionAsync("/manage/tools/certificates/hostnames");
             showSuccessNotification({
-              title: "Trusted hostname removed",
-              message: "Removed the trusted hostname successfully",
+              title: t("certificate.action.removeHostname.notification.success.title"),
+              message: t("certificate.action.removeHostname.notification.success.message"),
             });
           },
           onError() {
             showErrorNotification({
-              message: "Failed to remove the trusted hostname",
+              title: t("certificate.action.removeHostname.notification.error.title"),
+              message: t("certificate.action.removeHostname.notification.error.message"),
             });
           },
         });

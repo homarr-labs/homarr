@@ -54,29 +54,26 @@ export default async function TrustedHostnamesPage() {
       <Stack>
         <Group justify="space-between">
           <Stack gap={4}>
-            <Title>Trusted certificate hostnames</Title>
-            <Text>
-              Some certificates did not allow the specific domain Homarr uses to request them, because of this all
-              trusted hostnames with their certificate thumbprints are used to bypass this restrictions.
-            </Text>
+            <Title>{t("certificate.page.hostnames.title")}</Title>
+            <Text>{t("certificate.page.hostnames.description")}</Text>
           </Stack>
 
           <Button variant="default" component={Link} href="/manage/tools/certificates">
-            Certificates
+            {t("certificate.page.hostnames.toCertificates")}
           </Button>
         </Group>
 
         {trustedHostnames.length === 0 && (
-          <NoResults icon={IconCertificateOff} title="There are no trusted hostnames yet" />
+          <NoResults icon={IconCertificateOff} title={t("certificate.page.hostnames.noResults.title")} />
         )}
 
         {trustedHostnames.length >= 1 && (
           <Table>
             <TableThead>
               <TableTr>
-                <TableTh>Hostname</TableTh>
-                <TableTh>Subject</TableTh>
-                <TableTh>Fingerprint</TableTh>
+                <TableTh>{t("certificate.field.hostname.label")}</TableTh>
+                <TableTh>{t("certificate.field.subject.label")}</TableTh>
+                <TableTh>{t("certificate.field.fingerprint.label")}</TableTh>
                 <TableTh></TableTh>
               </TableTr>
             </TableThead>

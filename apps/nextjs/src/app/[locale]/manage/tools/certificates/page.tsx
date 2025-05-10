@@ -67,7 +67,7 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
 
           <Group>
             <Button variant="default" component={Link} href="/manage/tools/certificates/hostnames">
-              Trusted hostnames
+              {t("certificate.page.list.toHostnames")}
             </Button>
             <AddCertificateButton />
           </Group>
