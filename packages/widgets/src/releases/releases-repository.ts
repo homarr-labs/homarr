@@ -7,6 +7,7 @@ export interface ReleasesVersionFilter {
 export interface ReleasesRepository {
   providerKey: string;
   identifier: string;
+  name?: string;
   versionFilter?: ReleasesVersionFilter;
   iconUrl?: string;
 }
