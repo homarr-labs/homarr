@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  proxmox-api>undici: 7.8.0
+  proxmox-api>undici: 7.9.0
 
 importers:
 
@@ -18216,7 +18216,7 @@ snapshots:
 
   proxmox-api@1.1.1:
     dependencies:
-      undici: 7.8.0
+      undici: 7.9.0
 
   proxy-addr@2.0.7:
     dependencies:
