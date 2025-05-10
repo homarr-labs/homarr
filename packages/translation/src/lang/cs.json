@@ -2130,7 +2130,13 @@
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
-      "created": ""
+      "created": "",
+      "error": {
+        "label": "",
+        "options": {
+          "noMatchingVersion": ""
+        }
+      }
     },
     "networkControllerSummary": {
       "option": {},

@@ -1093,7 +1093,7 @@
           "label": "אינטגרציות"
         },
         "title": {
-          "label": ""
+          "label": "כותרת"
         },
         "customCssClasses": {
           "label": "מחלקות עיצוב מותאמות אישית"
@@ -1771,8 +1771,8 @@
       "description": "הצג את הזרמים הנוכחיים בשרתי המדיה שלך",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "הצג רק את ההפעלה הנוכחית",
+          "description": "השבתת אפשרות זו לא תעבוד עבור פלקס"
         }
       },
       "items": {
@@ -1950,7 +1950,7 @@
         "approved": "אושר",
         "declined": "נדחה",
         "failed": "נכשל",
-        "completed": ""
+        "completed": "הושלם"
       },
       "toBeDetermined": "ייקבע בהמשך"
     },
@@ -2054,83 +2054,89 @@
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "מהדורות",
+      "description": "מציג רשימה של הגרסה הנוכחית של המאגרים הנתונים עם הקוד הרגולרי של הגרסה הנתון.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
+          "label": "מהדורה חדשה בתוך",
           "description": ""
         },
         "staleReleaseWithin": {
-          "label": "",
+          "label": "מהדורה חדשה בתוך",
           "description": ""
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "הצג רק את המודגשים",
+          "description": "הצג רק מהדורות חדשות או ישנות. בהתאם לאמור לעיל."
         },
         "showDetails": {
-          "label": ""
+          "label": "הצג פרטים"
         },
         "repositories": {
-          "label": "",
+          "label": "מאגרים",
           "addRRepository": {
-            "label": ""
+            "label": "הוסף מאגר"
           },
           "provider": {
-            "label": ""
+            "label": "ספק"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "מזהה",
+            "placeholder": "שם או בעלים/שם"
           },
           "versionFilter": {
-            "label": "",
+            "label": "מסנן גירסאות",
             "prefix": {
-              "label": ""
+              "label": "קידומת"
             },
             "precision": {
-              "label": "",
+              "label": "דיוק",
               "options": {
-                "none": ""
+                "none": "ללא"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "סיומת"
             },
             "regex": {
-              "label": ""
+              "label": "ביטויים רגילים"
             }
           },
           "edit": {
-            "label": ""
+            "label": "עריכה"
           },
           "editForm": {
-            "title": "",
+            "title": "ערוך מאגר",
             "cancel": {
-              "label": ""
+              "label": "בטל"
             },
             "confirm": {
-              "label": ""
+              "label": "אשר"
             }
           },
           "example": {
-            "label": ""
+            "label": "דוגמא"
           },
-          "invalid": ""
+          "invalid": "הגדרת מאגר לא חוקית, אנא בדוק את הערכים"
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "created": ""
+      "not-found": "לא נמצא",
+      "pre-release": "קדם-הפצה",
+      "archived": "בארכיון",
+      "forked": "מפוצל",
+      "starsCount": "כוכבים",
+      "forksCount": "פיצולים",
+      "issuesCount": "תקלות פתוחות",
+      "openProjectPage": "פתח את דף הפרויקט",
+      "openReleasePage": "פתח את דף הגרסאות",
+      "releaseDescription": "תיאור הגרסה",
+      "created": "נוצר",
+      "error": {
+        "label": "",
+        "options": {
+          "noMatchingVersion": ""
+        }
+      }
     },
     "networkControllerSummary": {
       "option": {},
@@ -3889,8 +3895,8 @@
           "title": "אין עדיין תעודות אבטחה"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "אישור לא חוקי",
+          "description": "נכשל בהוספת תעודת אבטחה"
         },
         "expires": "פג ב- {when}"
       }
