@@ -37,7 +37,7 @@ importers:
         version: 2.5.3(@types/node@22.15.17)(typescript@5.8.3)
       '@vitejs/plugin-react':
         specifier: ^4.4.1
-        version: 4.4.1(vite@5.4.5(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0))
+        version: 4.4.1(vite@5.4.5(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0))
       '@vitest/coverage-v8':
         specifier: ^3.1.3
         version: 3.1.3(vitest@3.1.3)
@@ -70,10 +70,10 @@ importers:
         version: 5.8.3
       vite-tsconfig-paths:
         specifier: ^5.1.4
-        version: 5.1.4(typescript@5.8.3)(vite@5.4.5(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0))
+        version: 5.1.4(typescript@5.8.3)(vite@5.4.5(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0))
       vitest:
         specifier: ^3.1.3
-        version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)(@vitest/ui@3.1.3)(jsdom@26.1.0)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
+        version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)(@vitest/ui@3.1.3)(jsdom@26.1.0)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
 
   apps/nextjs:
     dependencies:
@@ -208,13 +208,13 @@ importers:
         version: 5.75.7(@tanstack/react-query@5.75.7(react@19.1.0))(react@19.1.0)
       '@tanstack/react-query-next-experimental':
         specifier: ^5.75.7
-        version: 5.75.7(@tanstack/react-query@5.75.7(react@19.1.0))(next@15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0))(react@19.1.0)
+        version: 5.75.7(@tanstack/react-query@5.75.7(react@19.1.0))(next@15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0))(react@19.1.0)
       '@trpc/client':
         specifier: ^11.1.2
         version: 11.1.2(@trpc/server@11.1.2(typescript@5.8.3))(typescript@5.8.3)
       '@trpc/next':
         specifier: ^11.1.2
-        version: 11.1.2(@tanstack/react-query@5.75.7(react@19.1.0))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.3))(typescript@5.8.3))(@trpc/react-query@11.1.2(@tanstack/react-query@5.75.7(react@19.1.0))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.1.2(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@trpc/server@11.1.2(typescript@5.8.3))(next@15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+        version: 11.1.2(@tanstack/react-query@5.75.7(react@19.1.0))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.3))(typescript@5.8.3))(@trpc/react-query@11.1.2(@tanstack/react-query@5.75.7(react@19.1.0))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.1.2(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@trpc/server@11.1.2(typescript@5.8.3))(next@15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       '@trpc/react-query':
         specifier: ^11.1.2
         version: 11.1.2(@tanstack/react-query@5.75.7(react@19.1.0))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.1.2(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
@@ -256,7 +256,7 @@ importers:
         version: 2.0.0-beta.9(@mantine/core@8.0.0(@mantine/hooks@8.0.0(react@19.1.0))(@types/react@19.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/dates@8.0.0(@mantine/core@8.0.0(@mantine/hooks@8.0.0(react@19.1.0))(@types/react@19.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.0.0(react@19.1.0))(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.0.0(react@19.1.0))(@tabler/icons-react@3.31.0(react@19.1.0))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next:
         specifier: 15.3.2
-        version: 15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+        version: 15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       postcss-preset-mantine:
         specifier: ^1.17.0
         version: 1.17.0(postcss@8.4.47)
@@ -276,8 +276,8 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       sass:
-        specifier: ^1.87.0
-        version: 1.87.0
+        specifier: ^1.88.0
+        version: 1.88.0
       superjson:
         specifier: 2.2.2
         version: 2.2.2
@@ -596,7 +596,7 @@ importers:
         version: 4.5.0
       next:
         specifier: 15.3.2
-        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -672,10 +672,10 @@ importers:
         version: 8.0.0
       next:
         specifier: 15.3.2
-        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       next-auth:
         specifier: 5.0.0-beta.28
-        version: 5.0.0-beta.28(next@15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0))(react@19.1.0)
+        version: 5.0.0-beta.28(next@15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0))(react@19.1.0)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -814,7 +814,7 @@ importers:
         version: 1.11.13
       next:
         specifier: 15.3.2
-        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -1462,7 +1462,7 @@ importers:
         version: 1.11.13
       next:
         specifier: 15.3.2
-        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -1563,7 +1563,7 @@ importers:
         version: 0.5.16
       next:
         specifier: 15.3.2
-        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -1779,7 +1779,7 @@ importers:
         version: 8.0.0(@mantine/core@8.0.0(@mantine/hooks@8.0.0(react@19.1.0))(@types/react@19.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.0.0(react@19.1.0))(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next:
         specifier: 15.3.2
-        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -1852,7 +1852,7 @@ importers:
         version: 2.12.4(@types/react@19.1.3)(react@19.1.0)
       next:
         specifier: 15.3.2
-        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -1898,10 +1898,10 @@ importers:
         version: 2.0.0-beta.9(@mantine/core@8.0.0(@mantine/hooks@8.0.0(react@19.1.0))(@types/react@19.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/dates@8.0.0(@mantine/core@8.0.0(@mantine/hooks@8.0.0(react@19.1.0))(@types/react@19.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.0.0(react@19.1.0))(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.0.0(react@19.1.0))(@tabler/icons-react@3.31.0(react@19.1.0))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next:
         specifier: 15.3.2
-        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       next-intl:
         specifier: 4.1.0
-        version: 4.1.0(next@15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0))(react@19.1.0)(typescript@5.8.3)
+        version: 4.1.0(next@15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0))(react@19.1.0)(typescript@5.8.3)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -1959,7 +1959,7 @@ importers:
         version: 2.0.0-beta.9(@mantine/core@8.0.0(@mantine/hooks@8.0.0(react@19.1.0))(@types/react@19.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/dates@8.0.0(@mantine/core@8.0.0(@mantine/hooks@8.0.0(react@19.1.0))(@types/react@19.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.0.0(react@19.1.0))(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.0.0(react@19.1.0))(@tabler/icons-react@3.31.0(react@19.1.0))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next:
         specifier: 15.3.2
-        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -2153,7 +2153,7 @@ importers:
         version: 2.0.0-beta.9(@mantine/core@8.0.0(@mantine/hooks@8.0.0(react@19.1.0))(@types/react@19.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/dates@8.0.0(@mantine/core@8.0.0(@mantine/hooks@8.0.0(react@19.1.0))(@types/react@19.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.0.0(react@19.1.0))(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.0.0(react@19.1.0))(@tabler/icons-react@3.31.0(react@19.1.0))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next:
         specifier: 15.3.2
-        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+        version: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -9335,8 +9335,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  sass@1.87.0:
-    resolution: {integrity: sha512-d0NoFH4v6SjEK7BoX810Jsrhj7IQSYHAHLi/iSpgqKc7LaIDshFRlSg5LOymf9FqQhxEHs2W5ZQXlvy0KD45Uw==}
+  sass@1.88.0:
+    resolution: {integrity: sha512-sF6TWQqjFvr4JILXzG4ucGOLELkESHL+I5QJhh7CNaE+Yge0SI+ehCatsXhJ7ymU1hAFcIS3/PBpjdIbXoyVbg==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -10228,10 +10228,6 @@ packages:
   undici@5.28.5:
     resolution: {integrity: sha512-zICwjrDrcrUE0pyyJc1I2QzBkLM8FINsgOrt6WjA+BgajVq9Nxu2PbFFXUrAggLfDXlZGZBVZYw7WNV5KiBiBA==}
     engines: {node: '>=14.0'}
-
-  undici@7.8.0:
-    resolution: {integrity: sha512-vFv1GA99b7eKO1HG/4RPu2Is3FBTWBrmzqzO0mz+rLxN3yXkE4mqRcb8g8fHxzX4blEysrNZLqg5RbJLqX5buA==}
-    engines: {node: '>=20.18.1'}
 
   undici@7.9.0:
     resolution: {integrity: sha512-e696y354tf5cFZPXsF26Yg+5M63+5H3oE6Vtkh2oqbvsE2Oe7s2nIbcQh5lmG7Lp/eS29vJtTpw9+p6PX0qNSg==}
@@ -12918,10 +12914,10 @@ snapshots:
       '@tanstack/react-query': 5.75.7(react@19.1.0)
       react: 19.1.0
 
-  '@tanstack/react-query-next-experimental@5.75.7(@tanstack/react-query@5.75.7(react@19.1.0))(next@15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0))(react@19.1.0)':
+  '@tanstack/react-query-next-experimental@5.75.7(@tanstack/react-query@5.75.7(react@19.1.0))(next@15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0))(react@19.1.0)':
     dependencies:
       '@tanstack/react-query': 5.75.7(react@19.1.0)
-      next: 15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+      next: 15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       react: 19.1.0
 
   '@tanstack/react-query@5.75.7(react@19.1.0)':
@@ -13174,11 +13170,11 @@ snapshots:
       '@trpc/server': 11.1.2(typescript@5.8.3)
       typescript: 5.8.3
 
-  '@trpc/next@11.1.2(@tanstack/react-query@5.75.7(react@19.1.0))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.3))(typescript@5.8.3))(@trpc/react-query@11.1.2(@tanstack/react-query@5.75.7(react@19.1.0))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.1.2(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@trpc/server@11.1.2(typescript@5.8.3))(next@15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)':
+  '@trpc/next@11.1.2(@tanstack/react-query@5.75.7(react@19.1.0))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.3))(typescript@5.8.3))(@trpc/react-query@11.1.2(@tanstack/react-query@5.75.7(react@19.1.0))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.1.2(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@trpc/server@11.1.2(typescript@5.8.3))(next@15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)':
     dependencies:
       '@trpc/client': 11.1.2(@trpc/server@11.1.2(typescript@5.8.3))(typescript@5.8.3)
       '@trpc/server': 11.1.2(typescript@5.8.3)
-      next: 15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+      next: 15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       typescript: 5.8.3
@@ -13636,14 +13632,14 @@ snapshots:
       global: 4.4.0
       is-function: 1.0.2
 
-  '@vitejs/plugin-react@4.4.1(vite@5.4.5(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0))':
+  '@vitejs/plugin-react@4.4.1(vite@5.4.5(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0))':
     dependencies:
       '@babel/core': 7.26.10
       '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.26.10)
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.26.10)
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 5.4.5(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
+      vite: 5.4.5(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -13661,7 +13657,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)(@vitest/ui@3.1.3)(jsdom@26.1.0)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
+      vitest: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)(@vitest/ui@3.1.3)(jsdom@26.1.0)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -13672,13 +13668,13 @@ snapshots:
       chai: 5.2.0
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@3.1.3(vite@5.4.5(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0))':
+  '@vitest/mocker@3.1.3(vite@5.4.5(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0))':
     dependencies:
       '@vitest/spy': 3.1.3
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      vite: 5.4.5(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
+      vite: 5.4.5(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
 
   '@vitest/pretty-format@3.1.3':
     dependencies:
@@ -13708,7 +13704,7 @@ snapshots:
       sirv: 3.0.1
       tinyglobby: 0.2.13
       tinyrainbow: 2.0.0
-      vitest: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)(@vitest/ui@3.1.3)(jsdom@26.1.0)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
+      vitest: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)(@vitest/ui@3.1.3)(jsdom@26.1.0)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
 
   '@vitest/utils@3.1.3':
     dependencies:
@@ -17398,23 +17394,23 @@ snapshots:
 
   netmask@2.0.2: {}
 
-  next-auth@5.0.0-beta.28(next@15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0))(react@19.1.0):
+  next-auth@5.0.0-beta.28(next@15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0))(react@19.1.0):
     dependencies:
       '@auth/core': 0.39.1
-      next: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+      next: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       react: 19.1.0
 
-  next-intl@4.1.0(next@15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0))(react@19.1.0)(typescript@5.8.3):
+  next-intl@4.1.0(next@15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0))(react@19.1.0)(typescript@5.8.3):
     dependencies:
       '@formatjs/intl-localematcher': 0.5.5
       negotiator: 1.0.0
-      next: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0)
+      next: 15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0)
       react: 19.1.0
       use-intl: 4.1.0(react@19.1.0)
     optionalDependencies:
       typescript: 5.8.3
 
-  next@15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0):
+  next@15.3.2(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0):
     dependencies:
       '@next/env': 15.3.2
       '@swc/counter': 0.1.3
@@ -17435,13 +17431,13 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 15.3.2
       '@next/swc-win32-x64-msvc': 15.3.2
       '@playwright/test': 1.49.1
-      sass: 1.87.0
+      sass: 1.88.0
       sharp: 0.34.1
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
 
-  next@15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.87.0):
+  next@15.3.2(@babel/core@7.26.10)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0):
     dependencies:
       '@next/env': 15.3.2
       '@swc/counter': 0.1.3
@@ -17462,7 +17458,7 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 15.3.2
       '@next/swc-win32-x64-msvc': 15.3.2
       '@playwright/test': 1.49.1
-      sass: 1.87.0
+      sass: 1.88.0
       sharp: 0.34.1
     transitivePeerDependencies:
       - '@babel/core'
@@ -18784,7 +18780,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sass@1.87.0:
+  sass@1.88.0:
     dependencies:
       chokidar: 4.0.0
       immutable: 5.0.2
@@ -19911,8 +19907,6 @@ snapshots:
     dependencies:
       '@fastify/busboy': 2.1.1
 
-  undici@7.8.0: {}
-
   undici@7.9.0: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
@@ -20164,13 +20158,13 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  vite-node@3.1.3(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0):
+  vite-node@3.1.3(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0):
     dependencies:
       cac: 6.7.14
       debug: 4.4.0
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 5.4.5(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
+      vite: 5.4.5(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -20182,18 +20176,18 @@ snapshots:
       - supports-color
       - terser
 
-  vite-tsconfig-paths@5.1.4(typescript@5.8.3)(vite@5.4.5(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)):
+  vite-tsconfig-paths@5.1.4(typescript@5.8.3)(vite@5.4.5(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)):
     dependencies:
       debug: 4.3.7
       globrex: 0.1.2
       tsconfck: 3.1.3(typescript@5.8.3)
     optionalDependencies:
-      vite: 5.4.5(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
+      vite: 5.4.5(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@5.4.5(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0):
+  vite@5.4.5(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
@@ -20201,14 +20195,14 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.15.17
       fsevents: 2.3.3
-      sass: 1.87.0
+      sass: 1.88.0
       sugarss: 4.0.1(postcss@8.4.47)
       terser: 5.39.0
 
-  vitest@3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)(@vitest/ui@3.1.3)(jsdom@26.1.0)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0):
+  vitest@3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)(@vitest/ui@3.1.3)(jsdom@26.1.0)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0):
     dependencies:
       '@vitest/expect': 3.1.3
-      '@vitest/mocker': 3.1.3(vite@5.4.5(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0))
+      '@vitest/mocker': 3.1.3(vite@5.4.5(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0))
       '@vitest/pretty-format': 3.1.3
       '@vitest/runner': 3.1.3
       '@vitest/snapshot': 3.1.3
@@ -20225,8 +20219,8 @@ snapshots:
       tinyglobby: 0.2.13
       tinypool: 1.0.2
       tinyrainbow: 2.0.0
-      vite: 5.4.5(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
-      vite-node: 3.1.3(@types/node@22.15.17)(sass@1.87.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
+      vite: 5.4.5(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
+      vite-node: 3.1.3(@types/node@22.15.17)(sass@1.88.0)(sugarss@4.0.1(postcss@8.4.47))(terser@5.39.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/debug': 4.1.12
