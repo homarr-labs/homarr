@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { ActionIcon, Alert, Anchor, Button, Card, CopyButton, Group, SimpleGrid, Stack, Text } from "@mantine/core";
-import { IconAlertTriangle, IconCheck, IconCopy, IconExclamationCircle } from "@tabler/icons-react";
+import { IconAlertTriangle, IconCheck, IconCopy, IconExclamationCircle, IconRepeat } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -21,6 +22,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
   const tError = useScopedI18n("integration.testConnection.error");
   const { data: session } = useSession();
   const isAdmin = session?.user.permissions.includes("admin") ?? false;
+  const [showRetryButton, setShowRetryButton] = useState(false);
 
   const { openModal: openUploadModal } = useModalAction(AddCertificateModal);
   const { openConfirmModal } = useConfirmModal();
@@ -45,6 +47,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
                 title: tError("certificate.hostnameMismatch.notification.success.title"),
                 message: tError("certificate.hostnameMismatch.notification.success.message"),
               });
+              setShowRetryButton(true);
             },
             onError() {
               showErrorNotification({
@@ -78,6 +81,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
               title: tError("certificate.selfSigned.notification.success.title"),
               message: tError("certificate.selfSigned.notification.success.message"),
             });
+            setShowRetryButton(true);
           },
           onError() {
             showErrorNotification({
@@ -111,23 +115,42 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
 
       {!error.data.certificate.isSelfSigned && error.data.reason === "untrusted" && <CertificateExtractAlert />}
 
-      <Group>
-        {(error.data.reason === "untrusted" && error.data.certificate.isSelfSigned) ||
-        error.data.reason === "hostnameMismatch" ? (
-          <Button
-            variant="default"
-            fullWidth
-            onClick={error.data.reason === "hostnameMismatch" ? handleTrustHostname : handleTrustSelfSigned}
-          >
-            {tError("certificate.action.trust.label")}
-          </Button>
-        ) : null}
-        {error.data.reason === "untrusted" && !error.data.certificate.isSelfSigned ? (
-          <Button variant="default" fullWidth onClick={() => openUploadModal({})}>
-            {tError("certificate.action.upload.label")}
-          </Button>
-        ) : null}
-      </Group>
+      {showRetryButton && (
+        <Button
+          variant="default"
+          fullWidth
+          leftSection={<IconRepeat size={16} color={getMantineColor("blue", 6)} stroke={1.5} />}
+          type="submit"
+        >
+          Retry creation
+        </Button>
+      )}
+
+      {(error.data.reason === "untrusted" && error.data.certificate.isSelfSigned) ||
+      error.data.reason === "hostnameMismatch" ? (
+        <Button
+          variant="default"
+          fullWidth
+          onClick={error.data.reason === "hostnameMismatch" ? handleTrustHostname : handleTrustSelfSigned}
+        >
+          {tError("certificate.action.trust.label")}
+        </Button>
+      ) : null}
+      {error.data.reason === "untrusted" && !error.data.certificate.isSelfSigned ? (
+        <Button
+          variant="default"
+          fullWidth
+          onClick={() =>
+            openUploadModal({
+              onSuccess() {
+                setShowRetryButton(true);
+              },
+            })
+          }
+        >
+          {tError("certificate.action.upload.label")}
+        </Button>
+      ) : null}
     </>
   );
 };
