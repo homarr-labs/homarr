@@ -3,8 +3,8 @@ import { z } from "zod";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
-import { DockerSingleton } from "@homarr/docker";
 import type { Container, ContainerInfo, ContainerState, Docker, Port } from "@homarr/docker";
+import { DockerSingleton } from "@homarr/docker";
 import { logger } from "@homarr/log";
 import { createCacheChannel } from "@homarr/redis";
 
@@ -180,6 +180,8 @@ interface DockerContainer {
   image: string;
   ports: Port[];
   iconUrl: string | null;
+  cpuUsage?: number;
+  memoryUsage?: number;
 }
 
 function sanitizeContainers(
