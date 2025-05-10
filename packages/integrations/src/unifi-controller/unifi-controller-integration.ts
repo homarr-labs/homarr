@@ -3,11 +3,15 @@ import { Controller } from "node-unifi";
 
 import { getPortFromUrl } from "@homarr/common";
 
+import { HandleIntegrationErrors } from "../base/errors/decorator";
+import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
 import { Integration } from "../base/integration";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { NetworkControllerSummaryIntegration } from "../interfaces/network-controller-summary/network-controller-summary-integration";
 import type { NetworkControllerSummary } from "../interfaces/network-controller-summary/network-controller-summary-types";
 import type { HealthSubsystem } from "./unifi-controller-types";
 
+@HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class UnifiControllerIntegration extends Integration implements NetworkControllerSummaryIntegration {
   public async getNetworkSummaryAsync(): Promise<NetworkControllerSummary> {
     const client = await this.createControllerClientAsync();
@@ -38,9 +42,10 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     } satisfies NetworkControllerSummary;
   }
 
-  public async testConnectionAsync(): Promise<void> {
+  protected async testingAsync(): Promise<TestingResult> {
     const client = await this.createControllerClientAsync();
     await client.getSitesStats();
+    return { success: true };
   }
 
   private async createControllerClientAsync() {

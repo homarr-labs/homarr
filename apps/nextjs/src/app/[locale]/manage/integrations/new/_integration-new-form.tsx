@@ -24,13 +24,14 @@ import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions
 import { getAllSecretKindOptions, getIconUrl, getIntegrationName, integrationDefs } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
-import { convertIntegrationTestConnectionError } from "@homarr/integrations/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { appHrefSchema } from "@homarr/validation/app";
 import { integrationCreateSchema } from "@homarr/validation/integration";
 
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
+import { IntegrationTestConnectionError } from "../_components/test-connection/integration-test-connection-error";
+import type { AnyMappedTestConnectionError } from "../_components/test-connection/types";
 
 interface NewIntegrationFormProps {
   searchParams: Partial<z.infer<typeof integrationCreateSchema>> & {
@@ -73,6 +74,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
     clientApi.integration.create.useMutation();
   const { mutateAsync: createAppAsync, isPending: isPendingApp } = clientApi.app.create.useMutation();
   const isPending = isPendingIntegration || isPendingApp;
+  const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
 
   const handleSubmitAsync = async (values: FormType) => {
     await createIntegrationAsync(
@@ -81,7 +83,17 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
         ...values,
       },
       {
-        async onSuccess() {
+        async onSuccess(data) {
+          // We do it this way as we are unable to send a typesafe error through onError
+          if (data?.error) {
+            setError(data.error);
+            showErrorNotification({
+              title: t("integration.page.create.notification.error.title"),
+              message: t("integration.page.create.notification.error.message"),
+            });
+            return;
+          }
+
           showSuccessNotification({
             title: t("integration.page.create.notification.success.title"),
             message: t("integration.page.create.notification.success.message"),
@@ -114,19 +126,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
             },
           );
         },
-        onError: (error) => {
-          const testConnectionError = convertIntegrationTestConnectionError(error.data?.error);
-
-          if (testConnectionError) {
-            showErrorNotification({
-              title: t(`integration.testConnection.notification.${testConnectionError.key}.title`),
-              message:
-                testConnectionError.message ??
-                t(`integration.testConnection.notification.${testConnectionError.key}.message`),
-            });
-            return;
-          }
-
+        onError: () => {
           showErrorNotification({
             title: t("integration.page.create.notification.error.title"),
             message: t("integration.page.create.notification.error.message"),
@@ -163,6 +163,8 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
             )}
           </Stack>
         </Fieldset>
+
+        {error !== null && <IntegrationTestConnectionError error={error} url={form.values.url} />}
 
         {supportsSearchEngine && (
           <Checkbox

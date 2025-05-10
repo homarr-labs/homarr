@@ -1,17 +1,32 @@
 import { Deluge } from "@ctrl/deluge";
 import dayjs from "dayjs";
+import type { Dispatcher } from "undici";
 
 import { createCertificateAgentAsync } from "@homarr/certificates/server";
 
+import { HandleIntegrationErrors } from "../../base/errors/decorator";
+import { integrationOFetchHttpErrorHandler } from "../../base/errors/http";
+import type { IntegrationTestingInput } from "../../base/integration";
+import { TestConnectionError } from "../../base/test-connection/test-connection-error";
+import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
 
+@HandleIntegrationErrors([integrationOFetchHttpErrorHandler])
 export class DelugeIntegration extends DownloadClientIntegration {
-  public async testConnectionAsync(): Promise<void> {
-    const client = await this.getClientAsync();
-    await client.login();
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const client = await this.getClientAsync(input.dispatcher);
+    const isSuccess = await client.login();
+
+    if (!isSuccess) {
+      return TestConnectionError.UnauthorizedResult(401);
+    }
+
+    return {
+      success: true,
+    };
   }
 
   public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
@@ -93,11 +108,11 @@ export class DelugeIntegration extends DownloadClientIntegration {
     await client.removeTorrent(id, fromDisk);
   }
 
-  private async getClientAsync() {
+  private async getClientAsync(dispatcher?: Dispatcher) {
     return new Deluge({
       baseUrl: this.url("/").toString(),
       password: this.getSecretValue("password"),
-      dispatcher: await createCertificateAgentAsync(),
+      dispatcher: dispatcher ?? (await createCertificateAgentAsync()),
     });
   }
 

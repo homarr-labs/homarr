@@ -1,24 +1,28 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { TdarrQueue } from "../interfaces/media-transcoding/queue";
 import type { TdarrStatistics } from "../interfaces/media-transcoding/statistics";
 import type { TdarrWorker } from "../interfaces/media-transcoding/workers";
 import { getNodesResponseSchema, getStatisticsSchema, getStatusTableSchema } from "./tdarr-validation-schemas";
 
 export class TdarrIntegration extends Integration {
-  public async testConnectionAsync(): Promise<void> {
-    await super.handleTestConnectionResponseAsync({
-      queryFunctionAsync: async () => {
-        return await fetchWithTrustedCertificatesAsync(this.url("/api/v2/is-server-alive"), {
-          method: "POST",
-          headers: {
-            accept: "application/json",
-            "X-Api-Key": super.hasSecretValue("apiKey") ? super.getSecretValue("apiKey") : "",
-          },
-        });
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const response = await input.fetchAsync(this.url("/api/v2/is-server-alive"), {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "X-Api-Key": super.hasSecretValue("apiKey") ? super.getSecretValue("apiKey") : "",
       },
     });
+
+    if (!response.ok) return TestConnectionError.StatusResult(response);
+
+    await response.json();
+    return { success: true };
   }
 
   public async getStatisticsAsync(): Promise<TdarrStatistics> {

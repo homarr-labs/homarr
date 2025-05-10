@@ -40,4 +40,3 @@ export { downloadClientItemSchema } from "./interfaces/downloads/download-client
 
 // Helpers
 export { createIntegrationAsync, createIntegrationAsyncFromSecrets } from "./base/creator";
-export { IntegrationTestConnectionError } from "./base/test-connection-error";

@@ -3,7 +3,10 @@ import { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/session";
 import { convertJellyfinType } from "../jellyfin/jellyfin-integration";
 
@@ -32,19 +35,22 @@ export class EmbyIntegration extends Integration {
   private static readonly deviceId = "homarr-emby-integration";
   private static readonly authorizationHeaderValue = `Emby Client="Dashboard", Device="Homarr", DeviceId="${EmbyIntegration.deviceId}", Version="0.0.1"`;
 
-  public async testConnectionAsync(): Promise<void> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const apiKey = super.getSecretValue("apiKey");
-
-    await super.handleTestConnectionResponseAsync({
-      queryFunctionAsync: async () => {
-        return await fetchWithTrustedCertificatesAsync(super.url("/emby/System/Ping"), {
-          headers: {
-            [EmbyIntegration.apiKeyHeader]: apiKey,
-            Authorization: EmbyIntegration.authorizationHeaderValue,
-          },
-        });
+    const response = await input.fetchAsync(super.url("/emby/System/Ping"), {
+      headers: {
+        [EmbyIntegration.apiKeyHeader]: apiKey,
+        Authorization: EmbyIntegration.authorizationHeaderValue,
       },
     });
+
+    if (!response.ok) {
+      return TestConnectionError.StatusResult(response);
+    }
+
+    return {
+      success: true,
+    };
   }
 
   public async getCurrentSessionsAsync(options: CurrentSessionsInput): Promise<StreamSession[]> {

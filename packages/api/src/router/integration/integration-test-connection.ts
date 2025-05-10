@@ -2,7 +2,7 @@ import { decryptSecret } from "@homarr/common/server";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
-import { createIntegrationAsync, IntegrationTestConnectionError } from "@homarr/integrations";
+import { createIntegrationAsync } from "@homarr/integrations";
 import { logger } from "@homarr/log";
 
 type FormIntegration = Integration & {
@@ -19,6 +19,12 @@ export const testConnectionAsync = async (
     value: `${string}.${string}`;
   }[] = [],
 ) => {
+  logger.info("Testing connection", {
+    integrationName: integration.name,
+    integrationKind: integration.kind,
+    integrationUrl: integration.url,
+  });
+
   const formSecrets = integration.secrets
     .filter((secret) => secret.value !== null)
     .map((secret) => ({
@@ -72,7 +78,15 @@ export const testConnectionAsync = async (
     decryptedSecrets,
   });
 
-  await integrationInstance.testConnectionAsync();
+  const result = await integrationInstance.testConnectionAsync();
+  if (result.success) {
+    logger.info("Tested connection successfully", {
+      integrationName: integration.name,
+      integrationKind: integration.kind,
+      integrationUrl: integration.url,
+    });
+  }
+  return result;
 };
 
 interface SourcedIntegrationSecret {
@@ -87,7 +101,7 @@ const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedInteg
   );
 
   if (matchingSecretKindOptions.length === 0) {
-    throw new IntegrationTestConnectionError("secretNotDefined");
+    throw new MissingSecretError();
   }
 
   if (matchingSecretKindOptions.length === 1) {
@@ -122,3 +136,9 @@ const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedInteg
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return matchingSecretKindOptions[0]!;
 };
+
+export class MissingSecretError extends Error {
+  constructor() {
+    super("No secret defined for this integration");
+  }
+}

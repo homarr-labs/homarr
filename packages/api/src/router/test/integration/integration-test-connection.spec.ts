@@ -22,7 +22,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
     factorySpy.mockReturnValue(
       Promise.resolve({
-        testConnectionAsync: async () => await Promise.resolve(),
+        testConnectionAsync: async () => await Promise.resolve({ success: true }),
       } as homarrIntegrations.PiHoleIntegrationV6),
     );
     optionsSpy.mockReturnValue([["apiKey"]]);
@@ -64,7 +64,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
     factorySpy.mockReturnValue(
       Promise.resolve({
-        testConnectionAsync: async () => await Promise.resolve(),
+        testConnectionAsync: async () => await Promise.resolve({ success: true }),
       } as homarrIntegrations.PiHoleIntegrationV6),
     );
     optionsSpy.mockReturnValue([["apiKey"]]);
@@ -113,7 +113,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
     factorySpy.mockReturnValue(
       Promise.resolve({
-        testConnectionAsync: async () => await Promise.resolve(),
+        testConnectionAsync: async () => await Promise.resolve({ success: true }),
       } as homarrIntegrations.PiHoleIntegrationV6),
     );
     optionsSpy.mockReturnValue([["apiKey"]]);
@@ -162,7 +162,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
     factorySpy.mockReturnValue(
       Promise.resolve({
-        testConnectionAsync: async () => await Promise.resolve(),
+        testConnectionAsync: async () => await Promise.resolve({ success: true }),
       } as homarrIntegrations.PiHoleIntegrationV6),
     );
     optionsSpy.mockReturnValue([["username", "password"], ["apiKey"]]);
@@ -215,7 +215,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
     const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
     factorySpy.mockReturnValue(
       Promise.resolve({
-        testConnectionAsync: async () => await Promise.resolve(),
+        testConnectionAsync: async () => await Promise.resolve({ success: true }),
       } as homarrIntegrations.PiHoleIntegrationV6),
     );
     optionsSpy.mockReturnValue([["username", "password"], ["apiKey"]]);

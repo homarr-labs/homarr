@@ -3,8 +3,11 @@ import { z } from "zod";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { ISearchableIntegration } from "../base/searchable-integration";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { MediaRequest, RequestStats, RequestUser } from "../interfaces/media-requests/media-request";
 import { MediaAvailability, MediaRequestStatus } from "../interfaces/media-requests/media-request";
 
@@ -81,18 +84,18 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
     }
   }
 
-  public async testConnectionAsync(): Promise<void> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/auth/me"), {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const response = await input.fetchAsync(this.url("/api/v1/auth/me"), {
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
     });
-    const json = (await response.json()) as object;
-    if (Object.keys(json).includes("id")) {
-      return;
-    }
 
-    throw new Error(`Received response but unable to parse it: ${JSON.stringify(json)}`);
+    if (!response.ok) return TestConnectionError.StatusResult(response);
+
+    const responseSchema = z.object({ id: z.number() });
+    await responseSchema.parseAsync(await response.json());
+    return { success: true };
   }
 
   public async getRequestsAsync(): Promise<MediaRequest[]> {

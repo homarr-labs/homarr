@@ -18,6 +18,7 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true,
     "strictNullChecks": true,
+    "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]

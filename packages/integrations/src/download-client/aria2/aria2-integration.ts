@@ -1,7 +1,11 @@
 import path from "path";
+import type { fetch as undiciFetch } from "undici";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ResponseError } from "@homarr/common/server";
 
+import type { IntegrationTestingInput } from "../../base/integration";
+import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
@@ -91,12 +95,15 @@ export class Aria2Integration extends DownloadClientIntegration {
     }
   }
 
-  public async testConnectionAsync(): Promise<void> {
-    const client = this.getClient();
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const client = this.getClient(input.fetchAsync);
     await client.getVersion();
+    return {
+      success: true,
+    };
   }
 
-  private getClient() {
+  private getClient(fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync) {
     const url = this.url("/jsonrpc");
 
     return new Proxy(
@@ -114,21 +121,24 @@ export class Aria2Integration extends DownloadClientIntegration {
               method: `aria2.${method}`,
               params,
             });
-            return await fetchWithTrustedCertificatesAsync(url, { method: "POST", body })
+
+            return await fetchAsync(url, { method: "POST", body })
               .then(async (response) => {
                 const responseBody = (await response.json()) as { result: ReturnType<Aria2GetClient[typeof method]> };
 
                 if (!response.ok) {
-                  throw new Error(response.statusText);
+                  throw new ResponseError(response);
                 }
                 return responseBody.result;
               })
               .catch((error) => {
                 if (error instanceof Error) {
-                  throw new Error(error.message);
-                } else {
-                  throw new Error("Error communicating with Aria2");
+                  throw error;
                 }
+
+                throw new Error("Error communicating with Aria2", {
+                  cause: error,
+                });
               });
           };
         },
