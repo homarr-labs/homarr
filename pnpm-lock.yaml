@@ -391,8 +391,8 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       undici:
-        specifier: 7.8.0
-        version: 7.8.0
+        specifier: 7.9.0
+        version: 7.9.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -745,8 +745,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../common
       undici:
-        specifier: 7.8.0
-        version: 7.8.0
+        specifier: 7.9.0
+        version: 7.9.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -822,8 +822,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       undici:
-        specifier: 7.8.0
-        version: 7.8.0
+        specifier: 7.9.0
+        version: 7.9.0
       zod:
         specifier: ^3.24.4
         version: 3.24.4
@@ -1309,7 +1309,7 @@ importers:
         version: 0.20.1
       node-unifi:
         specifier: ^2.5.1
-        version: 2.5.1(deasync@0.1.30)(undici@7.8.0)
+        version: 2.5.1(deasync@0.1.30)(undici@7.9.0)
       proxmox-api:
         specifier: 1.1.1
         version: 1.1.1
@@ -1317,8 +1317,8 @@ importers:
         specifier: ^2.1.4
         version: 2.1.4
       undici:
-        specifier: 7.8.0
-        version: 7.8.0
+        specifier: 7.9.0
+        version: 7.9.0
       xml2js:
         specifier: ^0.6.2
         version: 0.6.2
@@ -10233,6 +10233,10 @@ packages:
     resolution: {integrity: sha512-vFv1GA99b7eKO1HG/4RPu2Is3FBTWBrmzqzO0mz+rLxN3yXkE4mqRcb8g8fHxzX4blEysrNZLqg5RbJLqX5buA==}
     engines: {node: '>=20.18.1'}
 
+  undici@7.9.0:
+    resolution: {integrity: sha512-e696y354tf5cFZPXsF26Yg+5M63+5H3oE6Vtkh2oqbvsE2Oe7s2nIbcQh5lmG7Lp/eS29vJtTpw9+p6PX0qNSg==}
+    engines: {node: '>=20.18.1'}
+
   unicode-emoji-modifier-base@1.0.0:
     resolution: {integrity: sha512-yLSH4py7oFH3oG/9K+XWrz1pSi3dfUrWEnInbxMfArOfc1+33BlGPQtLsOYwvdMy11AwUBetYuaRxSPqgkq+8g==}
     engines: {node: '>=4'}
@@ -16207,13 +16211,13 @@ snapshots:
 
   html-url-attributes@3.0.1: {}
 
-  http-cookie-agent@5.0.4(deasync@0.1.30)(tough-cookie@4.1.4)(undici@7.8.0):
+  http-cookie-agent@5.0.4(deasync@0.1.30)(tough-cookie@4.1.4)(undici@7.9.0):
     dependencies:
       agent-base: 7.1.3
       tough-cookie: 4.1.4
     optionalDependencies:
       deasync: 0.1.30
-      undici: 7.8.0
+      undici: 7.9.0
 
   http-errors@2.0.0:
     dependencies:
@@ -17560,11 +17564,11 @@ snapshots:
 
   node-releases@2.0.19: {}
 
-  node-unifi@2.5.1(deasync@0.1.30)(undici@7.8.0):
+  node-unifi@2.5.1(deasync@0.1.30)(undici@7.9.0):
     dependencies:
       axios: 1.6.2
       eventemitter2: 6.4.9
-      http-cookie-agent: 5.0.4(deasync@0.1.30)(tough-cookie@4.1.4)(undici@7.8.0)
+      http-cookie-agent: 5.0.4(deasync@0.1.30)(tough-cookie@4.1.4)(undici@7.9.0)
       tough-cookie: 4.1.4
       url: 0.11.4
       ws: 8.18.2
@@ -19908,6 +19912,8 @@ snapshots:
       '@fastify/busboy': 2.1.1
 
   undici@7.8.0: {}
+
+  undici@7.9.0: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 
