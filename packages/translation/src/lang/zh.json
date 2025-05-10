@@ -2130,7 +2130,13 @@
       "openProjectPage": "開啟專案頁面",
       "openReleasePage": "開啟發布葉面",
       "releaseDescription": "版本描述",
-      "created": "已創建"
+      "created": "已創建",
+      "error": {
+        "label": "",
+        "options": {
+          "noMatchingVersion": ""
+        }
+      }
     },
     "networkControllerSummary": {
       "option": {},

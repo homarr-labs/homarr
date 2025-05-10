@@ -2130,7 +2130,13 @@
       "openProjectPage": "Proje Sayfasını Aç",
       "openReleasePage": "Sürüm Sayfasını Aç",
       "releaseDescription": "Sürüm Açıklaması",
-      "created": "Oluşturuldu"
+      "created": "Oluşturuldu",
+      "error": {
+        "label": "",
+        "options": {
+          "noMatchingVersion": ""
+        }
+      }
     },
     "networkControllerSummary": {
       "option": {},
