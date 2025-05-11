@@ -2,10 +2,21 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
-import { beforeAll, describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test, vi } from "vitest";
+
+import { createDb } from "@homarr/db/test";
 
 import { NzbGetIntegration } from "../src";
 import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
+
+vi.mock("@homarr/db", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const actual = await importActual<typeof import("@homarr/db")>();
+  return {
+    ...actual,
+    db: createDb(),
+  };
+});
 
 const username = "nzbget";
 const password = "tegbzn6789";

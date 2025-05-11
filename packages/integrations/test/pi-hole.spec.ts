@@ -2,9 +2,20 @@ import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, Wait } from "testcontainers";
 import { describe, expect, test, vi } from "vitest";
 
+import { createDb } from "@homarr/db/test";
+
 import { PiHoleIntegrationV5, PiHoleIntegrationV6 } from "../src";
 import type { SessionStore } from "../src/base/session-store";
 import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
+
+vi.mock("@homarr/db", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const actual = await importActual<typeof import("@homarr/db")>();
+  return {
+    ...actual,
+    db: createDb(),
+  };
+});
 
 const DEFAULT_PASSWORD = "12341234";
 const DEFAULT_API_KEY = "3b1434980677dcf53fa8c4a611db3b1f0f88478790097515c0abb539102778b9"; // Some hash generated from password
