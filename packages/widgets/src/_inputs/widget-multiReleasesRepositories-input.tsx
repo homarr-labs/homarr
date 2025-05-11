@@ -127,10 +127,6 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                     {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
                     {repository.name || repository.identifier}
                   </Text>
-
-                  <Text c="dimmed" size="xs" ta="end" style={{ flex: 1, whiteSpace: "nowrap" }}>
-                    {formatVersionFilterRegex(repository.versionFilter) ?? ""}
-                  </Text>
                 </Group>
 
                 <Button
