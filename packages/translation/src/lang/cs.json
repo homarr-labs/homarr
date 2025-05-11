@@ -2072,6 +2072,10 @@
         "showDetails": {
           "label": ""
         },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
         "repositories": {
           "label": "",
           "addRRepository": {
@@ -2083,6 +2087,9 @@
           "identifier": {
             "label": "",
             "placeholder": ""
+          },
+          "name": {
+            "label": ""
           },
           "versionFilter": {
             "label": "",

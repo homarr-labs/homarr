@@ -2072,6 +2072,10 @@
         "showDetails": {
           "label": "顯示詳情"
         },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
         "repositories": {
           "label": "儲存庫",
           "addRRepository": {
@@ -2083,6 +2087,9 @@
           "identifier": {
             "label": "識別碼",
             "placeholder": "名稱或擁有者/名稱"
+          },
+          "name": {
+            "label": ""
           },
           "versionFilter": {
             "label": "版本篩選",
@@ -2132,9 +2139,9 @@
       "releaseDescription": "版本描述",
       "created": "已創建",
       "error": {
-        "label": "",
+        "label": "錯誤",
         "options": {
-          "noMatchingVersion": ""
+          "noMatchingVersion": "找不到匹配的版本"
         }
       }
     },
