@@ -28,3 +28,7 @@
 .releasesRepositoryExpanded {
   background-color: var(--mantine-color-default-hover);
 }
+
+.releasesDescription > ul {
+  padding-inline-start: 15px;
+}

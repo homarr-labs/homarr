@@ -391,7 +391,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             <Title order={4} ta="center">
               {t("releaseDescription")}
             </Title>
-            <Text component="div" size="xs" ff="monospace">
+            <Text component="div" size="xs" ff="monospace" className={classes.releasesDescription}>
               <ReactMarkdown skipHtml>{repository.releaseDescription}</ReactMarkdown>
             </Text>
           </>
