@@ -3,7 +3,7 @@
   "compilerOptions": {
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
     "paths": {
-      "@homarr/node-unifi": ["../../node_modules/@types/node-unifi"],
+      "@homarr/node-unifi": ["../../node_modules/@types/node-unifi"]
     }
   },
   "include": ["*.ts", "src", "test"],
