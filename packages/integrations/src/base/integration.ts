@@ -87,8 +87,8 @@ export abstract class Integration {
           checkServerIdentity,
         });
 
-        const callback: typeof this.testingAsync = this.testingAsync.bind(this);
-        return await callback({
+        const testingAsync: typeof this.testingAsync = this.testingAsync.bind(this);
+        return await testingAsync({
           dispatcher: fetchDispatcher,
           fetchAsync: async (url, options) => await undiciFetch(url, { ...options, dispatcher: fetchDispatcher }),
           axiosInstance,

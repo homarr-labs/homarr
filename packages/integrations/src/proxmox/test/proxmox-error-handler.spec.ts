@@ -82,7 +82,7 @@ const runWithAsync = async (mockedFetch: typeof undiciFetch) => {
 const createProxmoxClient = (fetch: typeof undiciFetch) => {
   return proxmoxApi({
     host: "proxmox.example.com",
-    tokenID: `username@realm!tokenId`,
+    tokenID: "username@realm!tokenId",
     tokenSecret: crypto.randomUUID(),
     fetch,
   });

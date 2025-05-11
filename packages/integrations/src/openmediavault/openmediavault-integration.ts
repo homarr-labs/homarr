@@ -109,11 +109,11 @@ export class OpenMediaVaultIntegration extends Integration {
   }
 
   private async makeRpcCallWithCustomFetchAsync(
-    fetchAsync: typeof undiciFetch | undefined = fetchWithTrustedCertificatesAsync,
     serviceName: string,
     method: string,
     params: Record<string, unknown> = {},
     headers: HeadersInit = {},
+    fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync,
   ): Promise<UndiciResponse> {
     return await fetchAsync(this.url("/rpc.php"), {
       method: "POST",
@@ -136,7 +136,7 @@ export class OpenMediaVaultIntegration extends Integration {
     params: Record<string, unknown> = {},
     headers: HeadersInit = {},
   ): Promise<UndiciResponse> {
-    return await this.makeRpcCallWithCustomFetchAsync(undefined, serviceName, method, params, headers);
+    return await this.makeRpcCallWithCustomFetchAsync(serviceName, method, params, headers);
   }
 
   /**
@@ -167,10 +167,16 @@ export class OpenMediaVaultIntegration extends Integration {
    * @returns The session details
    */
   private async getSessionAsync(fetchAsync?: typeof undiciFetch): Promise<SessionStoreValue> {
-    const response = await this.makeRpcCallWithCustomFetchAsync(fetchAsync, "session", "login", {
-      username: this.getSecretValue("username"),
-      password: this.getSecretValue("password"),
-    });
+    const response = await this.makeRpcCallWithCustomFetchAsync(
+      "session",
+      "login",
+      {
+        username: this.getSecretValue("username"),
+        password: this.getSecretValue("password"),
+      },
+      undefined,
+      fetchAsync,
+    );
 
     if (!response.ok) {
       throw new ResponseError(response);

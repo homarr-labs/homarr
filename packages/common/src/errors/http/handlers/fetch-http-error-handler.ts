@@ -63,4 +63,6 @@ export const matchErrorCode = (code: string): AnyRequestErrorInput | undefined =
       code: code as RequestErrorCode,
     };
   }
+
+  return undefined;
 };

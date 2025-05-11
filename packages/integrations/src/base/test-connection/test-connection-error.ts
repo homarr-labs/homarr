@@ -56,7 +56,7 @@ export class TestConnectionError<TType extends TestConnectionErrorType> extends 
     return new TestConnectionError(
       "certificate",
       {
-        requestError: requestError,
+        requestError,
         certificate,
       },
       {
