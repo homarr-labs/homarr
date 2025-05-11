@@ -2072,6 +2072,10 @@
         "showDetails": {
           "label": "Ayrıntıları Göster"
         },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
         "repositories": {
           "label": "Depolar",
           "addRRepository": {
@@ -2083,6 +2087,9 @@
           "identifier": {
             "label": "Tanımlayıcı",
             "placeholder": "Ad veya Sahip/Ad"
+          },
+          "name": {
+            "label": ""
           },
           "versionFilter": {
             "label": "Sürüm Filtresi",

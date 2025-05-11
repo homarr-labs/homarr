@@ -2072,6 +2072,10 @@
         "showDetails": {
           "label": "הצג פרטים"
         },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
         "repositories": {
           "label": "מאגרים",
           "addRRepository": {
@@ -2083,6 +2087,9 @@
           "identifier": {
             "label": "מזהה",
             "placeholder": "שם או בעלים/שם"
+          },
+          "name": {
+            "label": ""
           },
           "versionFilter": {
             "label": "מסנן גירסאות",
