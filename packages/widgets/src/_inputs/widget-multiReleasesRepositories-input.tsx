@@ -83,11 +83,12 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       fieldPath: `options.${property}.${index}`,
       repository: item,
       onRepositorySave: (saved) => onRepositorySave(saved, index),
+      onRepositoryCancel: () => onRepositoryRemove(index),
       versionFilterPrecisionOptions,
     });
   };
 
-  const onReleaseRemove = (index: number) => {
+  const onRepositoryRemove = (index: number) => {
     form.setValues((previous) => {
       const previousValues = previous.options?.[property] as ReleasesRepository[];
       return {
@@ -99,6 +100,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       };
     });
   };
+
   return (
     <Fieldset legend={t("label")}>
       <Stack gap="5">
@@ -149,7 +151,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                   {tRepository("edit.label")}
                 </Button>
 
-                <ActionIcon variant="transparent" color="red" onClick={() => onReleaseRemove(index)}>
+                <ActionIcon variant="transparent" color="red" onClick={() => onRepositoryRemove(index)}>
                   <IconTrash size={15} />
                 </ActionIcon>
               </Group>
@@ -189,6 +191,7 @@ interface ReleaseEditProps {
   fieldPath: string;
   repository: ReleasesRepository;
   onRepositorySave: (repository: ReleasesRepository) => FormValidation;
+  onRepositoryCancel?: () => void;
   versionFilterPrecisionOptions: string[];
 }
 
@@ -209,6 +212,14 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
     setLoading(false);
   }, [innerProps, tempRepository, actions]);
+
+  const handleCancel = useCallback(() => {
+    if (innerProps.onRepositoryCancel) {
+      innerProps.onRepositoryCancel();
+    }
+
+    actions.closeModal();
+  }, [innerProps, actions]);
 
   const handleChange = useCallback((changedValue: Partial<ReleasesRepository>) => {
     setTempRepository((prev) => ({ ...prev, ...changedValue }));
@@ -336,7 +347,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
       <Divider my={"sm"} />
       <Group justify="flex-end">
-        <Button variant="default" onClick={actions.closeModal} color="gray.5">
+        <Button variant="default" onClick={handleCancel} color="gray.5">
           {tRepository("editForm.cancel.label")}
         </Button>
 
