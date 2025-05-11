@@ -30,14 +30,6 @@ export const certificateRouter = createTRPCRouter({
           subject: x509Certificate.subject,
           issuer: x509Certificate.issuer,
         });
-
-        if (!x509Certificate.ca) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message:
-              "Certificate is not a CA certificate. It's only possible to use CA / Root certificates for trusting.",
-          });
-        }
       } catch {
         throw new TRPCError({
           code: "BAD_REQUEST",

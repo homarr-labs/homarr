@@ -1,10 +1,19 @@
-import type { SiteStats } from "node-unifi";
-import { Controller } from "node-unifi";
+import type tls from "node:tls";
+import axios from "axios";
+import { HttpCookieAgent, HttpsCookieAgent } from "http-cookie-agent/http";
 
+import {
+  createCustomCheckServerIdentity,
+  getAllTrustedCertificatesAsync,
+  getTrustedCertificateHostnamesAsync,
+} from "@homarr/certificates/server";
 import { getPortFromUrl } from "@homarr/common";
+import type { SiteStats } from "@homarr/node-unifi";
+import Unifi from "@homarr/node-unifi";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { NetworkControllerSummaryIntegration } from "../interfaces/network-controller-summary/network-controller-summary-integration";
@@ -42,21 +51,38 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     } satisfies NetworkControllerSummary;
   }
 
-  protected async testingAsync(): Promise<TestingResult> {
-    const client = await this.createControllerClientAsync();
+  protected async testingAsync({ options }: IntegrationTestingInput): Promise<TestingResult> {
+    const client = await this.createControllerClientAsync(options);
     await client.getSitesStats();
     return { success: true };
   }
 
-  private async createControllerClientAsync() {
+  private async createControllerClientAsync(options?: {
+    ca: string | string[];
+    checkServerIdentity: typeof tls.checkServerIdentity;
+  }) {
     const url = new URL(this.integration.url);
+    const certificateOptions = options ?? {
+      ca: await getAllTrustedCertificatesAsync(),
+      checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
+    };
 
-    const client = new Controller({
+    const client = new Unifi.Controller({
       host: url.hostname,
       port: getPortFromUrl(url),
-      sslverify: false, // TODO: implement a "ignore certificate toggle", see https://github.com/homarr-labs/homarr/issues/2553
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
+      createAxiosInstance({ cookies }) {
+        return axios.create({
+          adapter: "http",
+          httpAgent: new HttpCookieAgent({ cookies }),
+          httpsAgent: new HttpsCookieAgent({
+            cookies,
+            requestCert: true,
+            ...certificateOptions,
+          }),
+        });
+      },
     });
 
     await client.login(this.getSecretValue("username"), this.getSecretValue("password"), null);

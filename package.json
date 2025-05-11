@@ -77,6 +77,9 @@
       "@scarf/scarf",
       "core-js-pure",
       "protobufjs"
-    ]
+    ],
+    "patchedDependencies": {
+      "@types/node-unifi": "patches/@types__node-unifi.patch"
+    }
   }
 }

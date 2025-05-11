@@ -1,7 +1,10 @@
 {
   "extends": "@homarr/tsconfig/base.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "paths": {
+      "@homarr/node-unifi": ["../../node_modules/@types/node-unifi"],
+    }
   },
   "include": ["*.ts", "src", "test"],
   "exclude": ["node_modules"]

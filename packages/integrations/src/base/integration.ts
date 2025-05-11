@@ -1,3 +1,4 @@
+import type tls from "node:tls";
 import type { AxiosInstance } from "axios";
 import type { Dispatcher } from "undici";
 import { fetch as undiciFetch } from "undici";
@@ -25,6 +26,10 @@ export interface IntegrationTestingInput {
   fetchAsync: typeof undiciFetch;
   dispatcher: Dispatcher;
   axiosInstance: AxiosInstance;
+  options: {
+    ca: string[] | string;
+    checkServerIdentity: typeof tls.checkServerIdentity;
+  };
 }
 
 @HandleIntegrationErrors([
@@ -87,6 +92,10 @@ export abstract class Integration {
           dispatcher: fetchDispatcher,
           fetchAsync: async (url, options) => await undiciFetch(url, { ...options, dispatcher: fetchDispatcher }),
           axiosInstance,
+          options: {
+            ca,
+            checkServerIdentity,
+          },
         });
       });
     } catch (error) {

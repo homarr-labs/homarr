@@ -2,7 +2,7 @@ import { logger } from "@homarr/log";
 
 import { objectEntries } from "../../../object";
 import type { Modify } from "../../../types";
-import type { AnyRequestError, AnyRequestErrorInput, RequestErrorReason } from "../request-error";
+import type { AnyRequestError, AnyRequestErrorInput, RequestErrorCode, RequestErrorReason } from "../request-error";
 import { RequestError, requestErrorMap } from "../request-error";
 import type { ResponseError } from "../response-error";
 import { HttpErrorHandler } from "./http-error-handler";
@@ -60,6 +60,7 @@ export const matchErrorCode = (code: string): AnyRequestErrorInput | undefined =
     return {
       type: key,
       reason: found[0] as RequestErrorReason<typeof key>,
+      code: code as RequestErrorCode,
     };
   }
 };

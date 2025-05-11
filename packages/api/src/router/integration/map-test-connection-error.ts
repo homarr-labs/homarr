@@ -1,5 +1,6 @@
 import type { X509Certificate } from "node:crypto";
 
+import type { RequestErrorCode } from "@homarr/common/server";
 import type {
   AnyTestConnectionError,
   TestConnectionErrorDataOfType,
@@ -43,8 +44,8 @@ export interface MappedCertificate {
   pem: string;
 }
 
-const mapCertificate = (certificate: X509Certificate): MappedCertificate => ({
-  isSelfSigned: certificate.ca,
+const mapCertificate = (certificate: X509Certificate, code: RequestErrorCode): MappedCertificate => ({
+  isSelfSigned: certificate.ca || code === "DEPTH_ZERO_SELF_SIGNED_CERT",
   issuer: certificate.issuer,
   subject: certificate.subject,
   serialNumber: certificate.serialNumber,
@@ -91,7 +92,7 @@ const mapData = (error: AnyTestConnectionError): AnyMappedData => {
     return {
       type: error.data.requestError.type,
       reason: error.data.requestError.reason,
-      certificate: mapCertificate(error.data.certificate),
+      certificate: mapCertificate(error.data.certificate, error.data.requestError.code),
     };
   }
   if (error.type === "request") {

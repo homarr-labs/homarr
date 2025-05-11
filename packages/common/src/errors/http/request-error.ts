@@ -9,11 +9,13 @@ export type AnyRequestErrorInput = {
 export interface RequestErrorInput<TType extends RequestErrorType> {
   type: TType;
   reason: RequestErrorReason<TType>;
+  code: RequestErrorCode;
 }
 
 export class RequestError<TType extends RequestErrorType> extends Error {
   public readonly type: TType;
   public readonly reason: RequestErrorReason<TType>;
+  public readonly code: RequestErrorCode;
 
   constructor(input: AnyRequestErrorInput, options: { cause?: Error }) {
     super("Request failed", options);
@@ -21,6 +23,7 @@ export class RequestError<TType extends RequestErrorType> extends Error {
 
     this.type = input.type as TType;
     this.reason = input.reason as RequestErrorReason<TType>;
+    this.code = input.code;
   }
 
   get cause(): Error | undefined {
@@ -50,7 +53,7 @@ export const requestErrorMap = {
     aborted: "ECONNABORTED",
     timeout: "ETIMEDOUT",
   },
-} satisfies Record<string, Record<string, string | string[]>>;
+} as const satisfies Record<string, Record<string, string | string[]>>;
 
 type RequestErrorMap = typeof requestErrorMap;
 
@@ -60,3 +63,11 @@ export type RequestErrorReason<TType extends RequestErrorType> = keyof RequestEr
 export type AnyRequestErrorReason = {
   [key in keyof RequestErrorMap]: RequestErrorReason<key>;
 }[keyof RequestErrorMap];
+
+type ExtractInnerValues<T> = {
+  [K in keyof T]: T[K][keyof T[K]];
+}[keyof T];
+
+type FlattenStringOrStringArray<T> = T extends (infer U)[] ? U : T;
+
+export type RequestErrorCode = FlattenStringOrStringArray<ExtractInnerValues<typeof requestErrorMap>>;
