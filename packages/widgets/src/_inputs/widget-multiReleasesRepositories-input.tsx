@@ -275,7 +275,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
         <IconPicker
           withAsterisk={false}
-          value={tempRepository.iconUrl}
+          value={tempRepository.iconUrl ?? ""}
           onChange={(url) => handleChange({ iconUrl: url === "" ? undefined : url })}
           error={formErrors[`${innerProps.fieldPath}.iconUrl`] as string}
         />
