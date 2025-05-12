@@ -204,7 +204,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
   const [autoSetIcon, setAutoSetIcon] = useState(false);
 
   // Debounce the name value with 200ms delay
-  const [debouncedName] = useDebouncedValue(tempRepository.name, 200);
+  const [debouncedName] = useDebouncedValue(tempRepository.name, 800);
 
   const handleConfirm = useCallback(() => {
     setLoading(true);
@@ -274,8 +274,6 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
           label={tRepository("identifier.label")}
           value={tempRepository.identifier}
           onChange={(event) => {
-            setAutoSetIcon(true);
-
             const name =
               tempRepository.name === undefined ||
               formatIdentifierName(tempRepository.identifier) === tempRepository.name
@@ -286,6 +284,8 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
               identifier: event.currentTarget.value,
               name,
             });
+
+            if (event.currentTarget.value) setAutoSetIcon(true);
           }}
           error={formErrors[`${innerProps.fieldPath}.identifier`]}
           w="100%"
@@ -297,8 +297,9 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
           label={tRepository("name.label")}
           value={tempRepository.name ?? ""}
           onChange={(event) => {
-            setAutoSetIcon(true);
             handleChange({ name: event.currentTarget.value });
+
+            if (event.currentTarget.value) setAutoSetIcon(true);
           }}
           error={formErrors[`${innerProps.fieldPath}.name`]}
           style={{ flex: 1, flexBasis: "40%" }}
@@ -306,7 +307,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
         <IconPicker
           withAsterisk={false}
-          value={tempRepository.iconUrl}
+          value={tempRepository.iconUrl ?? ""}
           onChange={(url) => {
             if (url === "") {
               setAutoSetIcon(false);
