@@ -2073,8 +2073,8 @@
           "label": "Ayrıntıları Göster"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "En İyi Sürümler",
+          "description": "Gösterilecek en son sürümlerin maksimum sayısı. Sıfır, sınır olmadığı anlamına gelir."
         },
         "repositories": {
           "label": "Depolar",
@@ -2089,7 +2089,7 @@
             "placeholder": "Ad veya Sahip/Ad"
           },
           "name": {
-            "label": ""
+            "label": "İsim"
           },
           "versionFilter": {
             "label": "Sürüm Filtresi",
@@ -2139,9 +2139,9 @@
       "releaseDescription": "Sürüm Açıklaması",
       "created": "Oluşturuldu",
       "error": {
-        "label": "",
+        "label": "Hata",
         "options": {
-          "noMatchingVersion": ""
+          "noMatchingVersion": "Eşleşen sürüm bulunamadı"
         }
       }
     },
