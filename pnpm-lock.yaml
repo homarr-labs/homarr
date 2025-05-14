@@ -1692,8 +1692,8 @@ importers:
   packages/request-handler:
     dependencies:
       '@extractus/feed-extractor':
-        specifier: 7.1.5
-        version: 7.1.5
+        specifier: 7.1.6
+        version: 7.1.6
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -3151,8 +3151,8 @@ packages:
     resolution: {integrity: sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@extractus/feed-extractor@7.1.5':
-    resolution: {integrity: sha512-Egpo3DoIgnYHL1EH3Rsc7UstfqEd3nn/8xDTIhqx0WFsw1WHr19//v48I6W86beg0QZkuuLUJCqj8BygyVEjFA==}
+  '@extractus/feed-extractor@7.1.6':
+    resolution: {integrity: sha512-hgTjb7vHNXPiSSshAJSE6D5w2bMW6jWklj52B2SG5BI5GakkH14PxDiXHzyRZrJgVd2t1BEcA/aaM8eXazUHaA==}
     engines: {node: '>= 18'}
 
   '@fastify/busboy@2.1.1':
@@ -3523,6 +3523,9 @@ packages:
   '@modelcontextprotocol/sdk@1.11.0':
     resolution: {integrity: sha512-k/1pb70eD638anoi0e8wUGAlbMJXyvdV4p62Ko+EZ7eBe1xMx8Uhak1R5DgfoofsK5IBBnRwsYGTaLZl+6/+RQ==}
     engines: {node: '>=18'}
+
+  '@ndaidong/bellajs@12.0.1':
+    resolution: {integrity: sha512-1iY42uiHz0cxNMbde7O3zVN+ZX1viOOUOBRt6ht6lkRZbSjwOnFV34Zv4URp3hGzEe6L9Byk7BOq/41H0PzAOQ==}
 
   '@next/env@15.3.2':
     resolution: {integrity: sha512-xURk++7P7qR9JG1jJtLzPzf0qEvqCN0A/T3DXf8IPMKo9/6FfjxtEffRJIIew/bIL4T3C2jLLqBor8B/zVlx6g==}
@@ -5278,10 +5281,6 @@ packages:
   before-after-hook@3.0.2:
     resolution: {integrity: sha512-Nik3Sc0ncrMK4UUdXQmAnRtzmNQTAAXmXIopizwZ1W1t8QmfJj+zL4OA2I7XPTPW5z5TDqv4hRo/JzouDJnX3A==}
 
-  bellajs@11.2.0:
-    resolution: {integrity: sha512-Wjss+Bc674ZABPr+SCKWTqA4V1pyYFhzDTjNBJy4jdmgOv0oGIGXeKBRJyINwP5tIy+iIZD9SfgZpztduzQ5QA==}
-    engines: {node: '>= 18.4'}
-
   better-sqlite3@11.10.0:
     resolution: {integrity: sha512-EwhOpyXiOEL/lKzHz9AW1msWFNzGc/z+LzeB3/jnFJpxu+th2yqvzsSWas1v9jgs9+xiXJcD5A8CJxAG2TaghQ==}
 
@@ -6543,8 +6542,8 @@ packages:
   fast-uri@3.0.6:
     resolution: {integrity: sha512-Atfo14OibSv5wAp4VWNsFYE1AchQRTv9cBGWET4pZWHzYshFSS9NQI6I57rdKn9croWVMbYFbLhJ+yJvmZIIHw==}
 
-  fast-xml-parser@5.2.1:
-    resolution: {integrity: sha512-Kqq/ewnRACQ20e0BlQ5KqHRYWRBp7yv+jttK4Yj2yY+2ldgCoxJkrP1NHUhjypsJ+eQXlGJ/jebM3wa60s1rbQ==}
+  fast-xml-parser@5.2.3:
+    resolution: {integrity: sha512-OdCYfRqfpuLUFonTNjvd30rCBZUneHpSQkCqfaeWQ9qrKcl6XlWeDBNVwGb+INAIxRshuN2jF+BE0L6gbBO2mw==}
     hasBin: true
 
   faster-babel-types@0.1.0:
@@ -11438,11 +11437,11 @@ snapshots:
       '@eslint/core': 0.13.0
       levn: 0.4.1
 
-  '@extractus/feed-extractor@7.1.5':
+  '@extractus/feed-extractor@7.1.6':
     dependencies:
-      bellajs: 11.2.0
+      '@ndaidong/bellajs': 12.0.1
       cross-fetch: 4.1.0
-      fast-xml-parser: 5.2.1
+      fast-xml-parser: 5.2.3
       html-entities: 2.6.0
     transitivePeerDependencies:
       - encoding
@@ -11872,6 +11871,8 @@ snapshots:
       zod-to-json-schema: 3.24.5(zod@3.24.4)
     transitivePeerDependencies:
       - supports-color
+
+  '@ndaidong/bellajs@12.0.1': {}
 
   '@next/env@15.3.2': {}
 
@@ -14061,8 +14062,6 @@ snapshots:
 
   before-after-hook@3.0.2: {}
 
-  bellajs@11.2.0: {}
-
   better-sqlite3@11.10.0:
     dependencies:
       bindings: 1.5.0
@@ -15572,7 +15571,7 @@ snapshots:
 
   fast-uri@3.0.6: {}
 
-  fast-xml-parser@5.2.1:
+  fast-xml-parser@5.2.3:
     dependencies:
       strnum: 2.1.0
 
