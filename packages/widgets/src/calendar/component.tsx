@@ -126,7 +126,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
           .filter((event): event is CalendarEvent => Boolean(event.date));
         return (
           <CalendarDay
-            date={new Date(tileDate)}
+            date={dayjs(tileDate).toDate()}
             events={eventsForDate}
             disabled={isEditMode || eventsForDate.length === 0}
             rootWidth={width}
