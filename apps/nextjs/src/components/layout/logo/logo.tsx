@@ -9,7 +9,7 @@ interface LogoProps {
   shouldUseNextImage?: boolean;
 }
 
-export const Logo = ({ size = 60, shouldUseNextImage = false, src, alt}: LogoProps) =>
+export const Logo = ({ size = 60, shouldUseNextImage = false, src, alt }: LogoProps) =>
   shouldUseNextImage ? (
     <Image className="logo" src={src} alt={alt} width={size} height={size} />
   ) : (
