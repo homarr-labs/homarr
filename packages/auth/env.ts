@@ -40,7 +40,7 @@ export const env = createEnv({
           AUTH_OIDC_GROUPS_ATTRIBUTE: z.string().default("groups"), // Is used in the signIn event to assign the correct groups, key is from object of decoded id_token
           AUTH_OIDC_NAME_ATTRIBUTE_OVERWRITE: z.string().optional(),
           AUTH_OIDC_FORCE_USERINFO: createBooleanSchema(false),
-          AUTH_OIDC_ENABLE_ACCOUNT_LINKING: createBooleanSchema(false),
+          AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING: createBooleanSchema(false),
         }
       : {}),
     ...(authProviders.includes("ldap")
