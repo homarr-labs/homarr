@@ -1,0 +1,1 @@
+ALTER TABLE `board` ADD COLUMN `show_in_navigation` boolean DEFAULT false NOT NULL; 

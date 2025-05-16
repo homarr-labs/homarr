@@ -273,6 +273,7 @@ export const boards = sqliteTable("board", {
   iconColor: text(),
   itemRadius: text().$type<MantineSize>().default("lg").notNull(),
   disableStatus: int({ mode: "boolean" }).default(false).notNull(),
+  showInNavigation: int({ mode: "boolean" }).default(false).notNull(),
 });
 
 export const boardUserPermissions = sqliteTable(

@@ -1,0 +1,24 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "id": "0032_add_show_in_navigation",
+  "name": "add_show_in_navigation",
+  "statements": [
+    {
+      "type": "alter_table",
+      "name": "board",
+      "operation": {
+        "type": "add_column",
+        "column": {
+          "name": "show_in_navigation",
+          "type": "boolean",
+          "default": {
+            "type": "literal",
+            "value": false
+          },
+          "not_null": true
+        }
+      }
+    }
+  ]
+} 

@@ -2398,6 +2398,10 @@
         "label": "Disable app status",
         "description": "Disables the status check for all apps on this board"
       },
+      "showInNavigation": {
+        "label": "Show in navigation bar",
+        "description": "Display this board in the navigation bar at the top of the page"
+      },
       "columnCount": {
         "label": "Column count"
       },
