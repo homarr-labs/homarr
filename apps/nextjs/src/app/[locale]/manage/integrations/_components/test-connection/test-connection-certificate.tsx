@@ -6,6 +6,7 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { getMantineColor } from "@homarr/common";
 import { createId } from "@homarr/db/client";
+import { createDocumentationLink } from "@homarr/definitions";
 import { createModal, useConfirmModal, useModalAction } from "@homarr/modals";
 import { AddCertificateModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -122,7 +123,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
           leftSection={<IconRepeat size={16} color={getMantineColor("blue", 6)} stroke={1.5} />}
           type="submit"
         >
-          Retry creation
+          {tError("certificate.action.retry.label")}
         </Button>
       )}
 
@@ -190,7 +191,14 @@ const CertificateExtractAlert = () => {
       color="red"
     >
       {t.rich("integration.testConnection.error.certificate.alert.extract.message", {
-        docsLink: () => <Anchor>{t("common.here")}</Anchor>,
+        docsLink: () => (
+          <Anchor
+            href={createDocumentationLink("https://homarr.dev/docs/management/certificates", "#obtaining-certificates")}
+            target="_blank"
+          >
+            {t("common.here")}
+          </Anchor>
+        ),
       })}
     </Alert>
   );

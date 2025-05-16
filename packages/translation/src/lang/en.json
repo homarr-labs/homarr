@@ -756,6 +756,9 @@
             }
           },
           "action": {
+            "retry": {
+              "label": "Retry creation"
+            },
             "trust": {
               "label": "Trust certificate"
             },
