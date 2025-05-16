@@ -193,7 +193,7 @@ const CertificateExtractAlert = () => {
       {t.rich("integration.testConnection.error.certificate.alert.extract.message", {
         docsLink: () => (
           <Anchor
-            href={createDocumentationLink("https://homarr.dev/docs/management/certificates", "#obtaining-certificates")}
+            href={createDocumentationLink("/docs/management/certificates", "#obtaining-certificates")}
             target="_blank"
           >
             {t("common.here")}
