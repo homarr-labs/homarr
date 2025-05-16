@@ -1079,6 +1079,12 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      fast-xml-parser:
+        specifier: ^5.2.3
+        version: 5.2.3
+      zod:
+        specifier: ^3.24.4
+        version: 3.24.4
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1092,6 +1098,9 @@ importers:
       eslint:
         specifier: ^9.26.0
         version: 9.26.0
+      tsx:
+        specifier: 4.19.4
+        version: 4.19.4
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
