@@ -1,10 +1,13 @@
 import { parseStringPromise } from "xml2js";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ParseError } from "@homarr/common/server";
 import { logger } from "@homarr/log";
 
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
-import { IntegrationTestConnectionError } from "../base/test-connection-error";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/session";
 import type { PlexResponse } from "./interface";
 
@@ -19,7 +22,7 @@ export class PlexIntegration extends Integration {
     });
     const body = await response.text();
     // convert xml response to objects, as there is no JSON api
-    const data = await PlexIntegration.parseXml<PlexResponse>(body);
+    const data = await PlexIntegration.parseXmlAsync<PlexResponse>(body);
     const mediaContainer = data.MediaContainer;
     const mediaElements = [mediaContainer.Video ?? [], mediaContainer.Track ?? []].flat();
 
@@ -62,31 +65,36 @@ export class PlexIntegration extends Integration {
     return medias;
   }
 
-  public async testConnectionAsync(): Promise<void> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const token = super.getSecretValue("apiKey");
 
-    await super.handleTestConnectionResponseAsync({
-      queryFunctionAsync: async () => {
-        return await fetchWithTrustedCertificatesAsync(this.url("/"), {
-          headers: {
-            "X-Plex-Token": token,
-          },
-        });
-      },
-      handleResponseAsync: async (response) => {
-        try {
-          const result = await response.text();
-          await PlexIntegration.parseXml<PlexResponse>(result);
-          return;
-        } catch {
-          throw new IntegrationTestConnectionError("invalidCredentials");
-        }
+    const response = await input.fetchAsync(this.url("/"), {
+      headers: {
+        "X-Plex-Token": token,
       },
     });
+
+    if (!response.ok) return TestConnectionError.StatusResult(response);
+
+    const result = await response.text();
+
+    await PlexIntegration.parseXmlAsync<PlexResponse>(result);
+    return { success: true };
   }
 
-  static parseXml<T>(xml: string): Promise<T> {
-    return parseStringPromise(xml) as Promise<T>;
+  static async parseXmlAsync<T>(xml: string): Promise<T> {
+    try {
+      return (await parseStringPromise(xml)) as Promise<T>;
+    } catch (error) {
+      throw new ParseError(
+        "Invalid xml format",
+        error instanceof Error
+          ? {
+              cause: error,
+            }
+          : undefined,
+      );
+    }
   }
 
   static getCurrentlyPlayingType(type: string): NonNullable<StreamSession["currentlyPlaying"]>["type"] {

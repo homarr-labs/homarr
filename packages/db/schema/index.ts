@@ -39,6 +39,7 @@ export const {
   layouts,
   itemLayouts,
   sectionLayouts,
+  trustedCertificateHostnames,
 } = schema;
 
 export type User = InferSelectModel<typeof schema.users>;

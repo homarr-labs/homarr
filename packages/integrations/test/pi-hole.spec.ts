@@ -2,8 +2,20 @@ import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, Wait } from "testcontainers";
 import { describe, expect, test, vi } from "vitest";
 
+import { createDb } from "@homarr/db/test";
+
 import { PiHoleIntegrationV5, PiHoleIntegrationV6 } from "../src";
 import type { SessionStore } from "../src/base/session-store";
+import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
+
+vi.mock("@homarr/db", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const actual = await importActual<typeof import("@homarr/db")>();
+  return {
+    ...actual,
+    db: createDb(),
+  };
+});
 
 const DEFAULT_PASSWORD = "12341234";
 const DEFAULT_API_KEY = "3b1434980677dcf53fa8c4a611db3b1f0f88478790097515c0abb539102778b9"; // Some hash generated from password
@@ -27,31 +39,34 @@ describe("Pi-hole v5 integration", () => {
     await piholeContainer.stop();
   }, 20_000); // Timeout of 20 seconds
 
-  test("testConnectionAsync should not throw", async () => {
+  test("testConnectionAsync should be successful", async () => {
     // Arrange
     const piholeContainer = await createPiHoleV5Container(DEFAULT_PASSWORD).start();
     const piHoleIntegration = createPiHoleIntegrationV5(piholeContainer, DEFAULT_API_KEY);
 
     // Act
-    const actAsync = async () => await piHoleIntegration.testConnectionAsync();
+    const result = await piHoleIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).resolves.not.toThrow();
+    expect(result.success).toBe(true);
 
     // Cleanup
     await piholeContainer.stop();
   }, 20_000); // Timeout of 20 seconds
 
-  test("testConnectionAsync should throw with wrong credentials", async () => {
+  test("testConnectionAsync should fail with unauthorized for wrong credentials", async () => {
     // Arrange
     const piholeContainer = await createPiHoleV5Container(DEFAULT_PASSWORD).start();
     const piHoleIntegration = createPiHoleIntegrationV5(piholeContainer, "wrong-api-key");
 
     // Act
-    const actAsync = async () => await piHoleIntegration.testConnectionAsync();
+    const result = await piHoleIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).rejects.toThrow();
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error).toBeInstanceOf(TestConnectionError);
+    expect(result.error.type).toBe("authorization");
 
     // Cleanup
     await piholeContainer.stop();
@@ -138,31 +153,34 @@ describe("Pi-hole v6 integration", () => {
     expect(status.timer).toBeGreaterThan(timer - 10);
   }, 20_000); // Timeout of 20 seconds
 
-  test("testConnectionAsync should not throw", async () => {
+  test("testConnectionAsync should be successful", async () => {
     // Arrange
     const piholeContainer = await createPiHoleV6Container(DEFAULT_PASSWORD).start();
     const piHoleIntegration = createPiHoleIntegrationV6(piholeContainer, DEFAULT_PASSWORD);
 
     // Act
-    const actAsync = async () => await piHoleIntegration.testConnectionAsync();
+    const result = await piHoleIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).resolves.not.toThrow();
+    expect(result.success).toBe(true);
 
     // Cleanup
     await piholeContainer.stop();
   }, 20_000); // Timeout of 20 seconds
 
-  test("testConnectionAsync should throw with wrong credentials", async () => {
+  test("testConnectionAsync should fail with unauthorized for wrong credentials", async () => {
     // Arrange
     const piholeContainer = await createPiHoleV6Container(DEFAULT_PASSWORD).start();
     const piHoleIntegration = createPiHoleIntegrationV6(piholeContainer, "wrong-api-key");
 
     // Act
-    const actAsync = async () => await piHoleIntegration.testConnectionAsync();
+    const result = await piHoleIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).rejects.toThrow();
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error).toBeInstanceOf(TestConnectionError);
+    expect(result.error.type).toBe("authorization");
 
     // Cleanup
     await piholeContainer.stop();

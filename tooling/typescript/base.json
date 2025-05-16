@@ -18,8 +18,10 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true,
     "strictNullChecks": true,
+    "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
+      "@homarr/node-unifi": ["${configDir}/../../node_modules/@types/node-unifi"],
       "*": ["node_modules/*"]
     }
   },

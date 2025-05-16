@@ -1,17 +1,19 @@
-import type { Response } from "undici";
-import { z } from "zod";
+import type tls from "node:tls";
+import type { AxiosInstance } from "axios";
+import type { Dispatcher } from "undici";
+import { fetch as undiciFetch } from "undici";
 
-import { extractErrorMessage, removeTrailingSlash } from "@homarr/common";
+import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/certificates/server";
+import { removeTrailingSlash } from "@homarr/common";
 import type { IntegrationSecretKind } from "@homarr/definitions";
-import { logger } from "@homarr/log";
-import type { TranslationObject } from "@homarr/translation";
 
-import { IntegrationTestConnectionError } from "./test-connection-error";
+import { HandleIntegrationErrors } from "./errors/decorator";
+import { integrationFetchHttpErrorHandler } from "./errors/http";
+import { integrationJsonParseErrorHandler, integrationZodParseErrorHandler } from "./errors/parse";
+import { TestConnectionError } from "./test-connection/test-connection-error";
+import type { TestingResult } from "./test-connection/test-connection-service";
+import { TestConnectionService } from "./test-connection/test-connection-service";
 import type { IntegrationSecret } from "./types";
-
-const causeSchema = z.object({
-  code: z.string(),
-});
 
 export interface IntegrationInput {
   id: string;
@@ -20,8 +22,31 @@ export interface IntegrationInput {
   decryptedSecrets: IntegrationSecret[];
 }
 
+export interface IntegrationTestingInput {
+  fetchAsync: typeof undiciFetch;
+  dispatcher: Dispatcher;
+  axiosInstance: AxiosInstance;
+  options: {
+    ca: string[] | string;
+    checkServerIdentity: typeof tls.checkServerIdentity;
+  };
+}
+
+@HandleIntegrationErrors([
+  integrationZodParseErrorHandler,
+  integrationJsonParseErrorHandler,
+  integrationFetchHttpErrorHandler,
+])
 export abstract class Integration {
   constructor(protected integration: IntegrationInput) {}
+
+  public get publicIntegration() {
+    return {
+      id: this.integration.id,
+      name: this.integration.name,
+      url: this.integration.url,
+    };
+  }
 
   protected getSecretValue(kind: IntegrationSecretKind) {
     const secret = this.integration.decryptedSecrets.find((secret) => secret.kind === kind);
@@ -48,89 +73,43 @@ export abstract class Integration {
     return url;
   }
 
-  /**
-   * Test the connection to the integration
-   * @throws {IntegrationTestConnectionError} if the connection fails
-   */
-  public abstract testConnectionAsync(): Promise<void>;
+  public async testConnectionAsync(): Promise<TestingResult> {
+    try {
+      const url = new URL(this.integration.url);
+      return await new TestConnectionService(url).handleAsync(async ({ ca, checkServerIdentity }) => {
+        const fetchDispatcher = await createCertificateAgentAsync({
+          ca,
+          checkServerIdentity,
+        });
 
-  protected async handleTestConnectionResponseAsync({
-    queryFunctionAsync,
-    handleResponseAsync,
-  }: {
-    queryFunctionAsync: () => Promise<Response>;
-    handleResponseAsync?: (response: Response) => Promise<void>;
-  }): Promise<void> {
-    const response = await queryFunctionAsync().catch((error) => {
-      if (error instanceof Error) {
-        const cause = causeSchema.safeParse(error.cause);
-        if (!cause.success) {
-          logger.error("Failed to test connection", error);
-          throw new IntegrationTestConnectionError("commonError", extractErrorMessage(error));
-        }
+        const axiosInstance = await createAxiosCertificateInstanceAsync({
+          ca,
+          checkServerIdentity,
+        });
 
-        if (cause.data.code === "ENOTFOUND") {
-          logger.error("Failed to test connection: Domain not found");
-          throw new IntegrationTestConnectionError("domainNotFound");
-        }
-
-        if (cause.data.code === "ECONNREFUSED") {
-          logger.error("Failed to test connection: Connection refused");
-          throw new IntegrationTestConnectionError("connectionRefused");
-        }
-
-        if (cause.data.code === "ECONNABORTED") {
-          logger.error("Failed to test connection: Connection aborted");
-          throw new IntegrationTestConnectionError("connectionAborted");
-        }
+        const testingAsync: typeof this.testingAsync = this.testingAsync.bind(this);
+        return await testingAsync({
+          dispatcher: fetchDispatcher,
+          fetchAsync: async (url, options) => await undiciFetch(url, { ...options, dispatcher: fetchDispatcher }),
+          axiosInstance,
+          options: {
+            ca,
+            checkServerIdentity,
+          },
+        });
+      });
+    } catch (error) {
+      if (!(error instanceof TestConnectionError)) {
+        return TestConnectionError.UnknownResult(error);
       }
 
-      logger.error("Failed to test connection", error);
-
-      throw new IntegrationTestConnectionError("commonError", extractErrorMessage(error));
-    });
-
-    if (response.status >= 400) {
-      const body = await response.text();
-      logger.error(`Failed to test connection with status code ${response.status}. Body: '${body}'`);
-
-      throwErrorByStatusCode(response.status);
+      return error.toResult();
     }
-
-    await handleResponseAsync?.(response);
   }
-}
 
-export interface TestConnectionError {
-  key: Exclude<keyof TranslationObject["integration"]["testConnection"]["notification"], "success">;
-  message?: string;
+  /**
+   * Test the connection to the integration
+   * @returns {Promise<TestingResult>}
+   */
+  protected abstract testingAsync(input: IntegrationTestingInput): Promise<TestingResult>;
 }
-export type TestConnectionResult =
-  | {
-      success: false;
-      error: TestConnectionError;
-    }
-  | {
-      success: true;
-    };
-
-export const throwErrorByStatusCode = (statusCode: number) => {
-  switch (statusCode) {
-    case 400:
-      throw new IntegrationTestConnectionError("badRequest");
-    case 401:
-      throw new IntegrationTestConnectionError("unauthorized");
-    case 403:
-      throw new IntegrationTestConnectionError("forbidden");
-    case 404:
-      throw new IntegrationTestConnectionError("notFound");
-    case 429:
-      throw new IntegrationTestConnectionError("tooManyRequests");
-    case 500:
-      throw new IntegrationTestConnectionError("internalServerError");
-    case 503:
-      throw new IntegrationTestConnectionError("serviceUnavailable");
-    default:
-      throw new IntegrationTestConnectionError("commonError");
-  }
-};

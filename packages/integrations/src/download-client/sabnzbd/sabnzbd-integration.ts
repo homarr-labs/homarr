@@ -1,8 +1,12 @@
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
+import type { fetch as undiciFetch } from "undici";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ResponseError } from "@homarr/common/server";
 
+import type { IntegrationTestingInput } from "../../base/integration";
+import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
@@ -12,9 +16,10 @@ import { historySchema, queueSchema } from "./sabnzbd-schema";
 dayjs.extend(duration);
 
 export class SabnzbdIntegration extends DownloadClientIntegration {
-  public async testConnectionAsync(): Promise<void> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     //This is the one call that uses the least amount of data while requiring the api key
-    await this.sabNzbApiCallAsync("translate", { value: "ping" });
+    await this.sabNzbApiCallWithCustomFetchAsync(input.fetchAsync, "translate", { value: "ping" });
+    return { success: true };
   }
 
   public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
@@ -101,6 +106,13 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
   }
 
   private async sabNzbApiCallAsync(mode: string, searchParams?: Record<string, string>): Promise<unknown> {
+    return await this.sabNzbApiCallWithCustomFetchAsync(fetchWithTrustedCertificatesAsync, mode, searchParams);
+  }
+  private async sabNzbApiCallWithCustomFetchAsync(
+    fetchAsync: typeof undiciFetch,
+    mode: string,
+    searchParams?: Record<string, string>,
+  ): Promise<unknown> {
     const url = this.url("/api", {
       ...searchParams,
       output: "json",
@@ -108,19 +120,21 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
       apikey: this.getSecretValue("apiKey"),
     });
 
-    return await fetchWithTrustedCertificatesAsync(url)
+    return await fetchAsync(url)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(response.statusText);
+          throw new ResponseError(response);
         }
         return response.json();
       })
       .catch((error) => {
         if (error instanceof Error) {
-          throw new Error(error.message);
-        } else {
-          throw new Error("Error communicating with SABnzbd");
+          throw error;
         }
+
+        throw new Error("Error communicating with SABnzbd", {
+          cause: error,
+        });
       });
   }
 

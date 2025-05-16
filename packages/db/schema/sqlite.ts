@@ -479,6 +479,20 @@ export const onboarding = sqliteTable("onboarding", {
   previousStep: text().$type<OnboardingStep>(),
 });
 
+export const trustedCertificateHostnames = sqliteTable(
+  "trusted_certificate_hostname",
+  {
+    hostname: text().notNull(),
+    thumbprint: text().notNull(),
+    certificate: text().notNull(),
+  },
+  (table) => ({
+    compoundKey: primaryKey({
+      columns: [table.hostname, table.thumbprint],
+    }),
+  }),
+);
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],

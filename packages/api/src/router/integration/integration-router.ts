@@ -24,6 +24,7 @@ import {
   integrationSecretKindObject,
 } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
+import { logger } from "@homarr/log";
 import { byIdSchema } from "@homarr/validation/common";
 import {
   integrationCreateSchema,
@@ -34,7 +35,8 @@ import {
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "./integration-access";
-import { testConnectionAsync } from "./integration-test-connection";
+import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
+import { mapTestConnectionError } from "./map-test-connection-error";
 
 export const integrationRouter = createTRPCRouter({
   all: publicProcedure.query(async ({ ctx }) => {
@@ -185,13 +187,33 @@ export const integrationRouter = createTRPCRouter({
     .requiresPermission("integration-create")
     .input(integrationCreateSchema)
     .mutation(async ({ ctx, input }) => {
-      await testConnectionAsync({
+      logger.info("Creating integration", {
+        name: input.name,
+        kind: input.kind,
+        url: input.url,
+      });
+
+      const result = await testConnectionAsync({
         id: "new",
         name: input.name,
         url: input.url,
         kind: input.kind,
         secrets: input.secrets,
+      }).catch((error) => {
+        if (!(error instanceof MissingSecretError)) throw error;
+
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: error.message,
+        });
       });
+
+      if (!result.success) {
+        logger.error(result.error);
+        return {
+          error: mapTestConnectionError(result.error),
+        };
+      }
 
       const integrationId = createId();
       await ctx.db.insert(integrations).values({
@@ -211,6 +233,13 @@ export const integrationRouter = createTRPCRouter({
         );
       }
 
+      logger.info("Created integration", {
+        id: integrationId,
+        name: input.name,
+        kind: input.kind,
+        url: input.url,
+      });
+
       if (
         input.attemptSearchEngineCreation &&
         integrationDefs[input.kind].category.flatMap((category) => category).includes("search")
@@ -229,6 +258,10 @@ export const integrationRouter = createTRPCRouter({
   update: protectedProcedure.input(integrationUpdateSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
 
+    logger.info("Updating integration", {
+      id: input.id,
+    });
+
     const integration = await ctx.db.query.integrations.findFirst({
       where: eq(integrations.id, input.id),
       with: {
@@ -243,7 +276,7 @@ export const integrationRouter = createTRPCRouter({
       });
     }
 
-    await testConnectionAsync(
+    const testResult = await testConnectionAsync(
       {
         id: input.id,
         name: input.name,
@@ -252,7 +285,21 @@ export const integrationRouter = createTRPCRouter({
         secrets: input.secrets,
       },
       integration.secrets,
-    );
+    ).catch((error) => {
+      if (!(error instanceof MissingSecretError)) throw error;
+
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: error.message,
+      });
+    });
+
+    if (!testResult.success) {
+      logger.error(testResult.error);
+      return {
+        error: mapTestConnectionError(testResult.error),
+      };
+    }
 
     await ctx.db
       .update(integrations)
@@ -286,6 +333,13 @@ export const integrationRouter = createTRPCRouter({
         }
       }
     }
+
+    logger.info("Updated integration", {
+      id: input.id,
+      name: input.name,
+      kind: integration.kind,
+      url: input.url,
+    });
   }),
   delete: protectedProcedure.input(byIdSchema).mutation(async ({ ctx, input }) => {
     await throwIfActionForbiddenAsync(ctx, eq(integrations.id, input.id), "full");
