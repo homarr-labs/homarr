@@ -30,7 +30,10 @@ const fetchGithubContributors = async (slug, repository) => {
   const response = await fetch(url, options);
   const data = await response.json();
 
-  return data;
+  return data.map((contributor) => ({
+    login: contributor.login,
+    avatar_url: contributor.avatar_url,
+  }));
 };
 
 const fetchCrowdinMembers = async (projectId) => {
@@ -46,7 +49,10 @@ const fetchCrowdinMembers = async (projectId) => {
   const response = await fetch(url, options);
   const data = await response.json();
 
-  return data.data.flatMap((data) => data.data);
+  return data.data.flatMap((data) => data.data).map(contributor => ({
+    username: contributor.username,
+    avatarUrl: contributor.avatarUrl,
+  }));
 };
 
 const distinctBy = (callback) => (value, index, self) => {
