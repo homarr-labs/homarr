@@ -24,7 +24,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/ui": "workspace:^0.1.0",
-    "@mantine/notifications": "^8.0.0",
+    "@mantine/notifications": "^8.0.1",
     "@tabler/icons-react": "^3.31.0"
   },
   "devDependencies": {

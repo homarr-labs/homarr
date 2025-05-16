@@ -124,9 +124,13 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
             )?.date,
           }))
           .filter((event): event is CalendarEvent => Boolean(event.date));
+
         return (
           <CalendarDay
-            date={new Date(tileDate)}
+            // new Date() does not work here, because for timezones like UTC-7 it will
+            // show one day earlier (probably due to the time being set to 00:00)
+            // see https://github.com/homarr-labs/homarr/pull/3120
+            date={dayjs(tileDate).toDate()}
             events={eventsForDate}
             disabled={isEditMode || eventsForDate.length === 0}
             rootWidth={width}

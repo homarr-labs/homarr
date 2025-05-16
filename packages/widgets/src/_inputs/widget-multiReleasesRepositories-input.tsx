@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ActionIcon, Button, Divider, Fieldset, Group, Select, Stack, Text, TextInput } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
+import { useDebouncedValue } from "@mantine/hooks";
 import { IconEdit, IconTrash, IconTriangleFilled } from "@tabler/icons-react";
 import { escapeForRegEx } from "@tiptap/react";
 
-import { IconPicker } from "@homarr/forms-collection";
+import { clientApi } from "@homarr/api/client";
+import { findBestIconMatch, IconPicker } from "@homarr/forms-collection";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
@@ -83,11 +85,12 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       fieldPath: `options.${property}.${index}`,
       repository: item,
       onRepositorySave: (saved) => onRepositorySave(saved, index),
+      onRepositoryCancel: () => onRepositoryRemove(index),
       versionFilterPrecisionOptions,
     });
   };
 
-  const onReleaseRemove = (index: number) => {
+  const onRepositoryRemove = (index: number) => {
     form.setValues((previous) => {
       const previousValues = previous.options?.[property] as ReleasesRepository[];
       return {
@@ -99,6 +102,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       };
     });
   };
+
   return (
     <Fieldset legend={t("label")}>
       <Stack gap="5">
@@ -127,10 +131,6 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                     {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
                     {repository.name || repository.identifier}
                   </Text>
-
-                  <Text c="dimmed" size="xs" ta="end" style={{ flex: 1, whiteSpace: "nowrap" }}>
-                    {formatVersionFilterRegex(repository.versionFilter) ?? ""}
-                  </Text>
                 </Group>
 
                 <Button
@@ -149,7 +149,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                   {tRepository("edit.label")}
                 </Button>
 
-                <ActionIcon variant="transparent" color="red" onClick={() => onReleaseRemove(index)}>
+                <ActionIcon variant="transparent" color="red" onClick={() => onRepositoryRemove(index)}>
                   <IconTrash size={15} />
                 </ActionIcon>
               </Group>
@@ -189,6 +189,7 @@ interface ReleaseEditProps {
   fieldPath: string;
   repository: ReleasesRepository;
   onRepositorySave: (repository: ReleasesRepository) => FormValidation;
+  onRepositoryCancel?: () => void;
   versionFilterPrecisionOptions: string[];
 }
 
@@ -197,6 +198,13 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
   const [loading, setLoading] = useState(false);
   const [tempRepository, setTempRepository] = useState(() => ({ ...innerProps.repository }));
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+
+  // Allows user to not select an icon by removing the url from the input,
+  // will only try and get an icon if the name or identifier changes
+  const [autoSetIcon, setAutoSetIcon] = useState(false);
+
+  // Debounce the name value with 200ms delay
+  const [debouncedName] = useDebouncedValue(tempRepository.name, 800);
 
   const handleConfirm = useCallback(() => {
     setLoading(true);
@@ -210,9 +218,36 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
     setLoading(false);
   }, [innerProps, tempRepository, actions]);
 
+  const handleCancel = useCallback(() => {
+    if (innerProps.onRepositoryCancel) {
+      innerProps.onRepositoryCancel();
+    }
+
+    actions.closeModal();
+  }, [innerProps, actions]);
+
   const handleChange = useCallback((changedValue: Partial<ReleasesRepository>) => {
     setTempRepository((prev) => ({ ...prev, ...changedValue }));
   }, []);
+
+  // Auto-select icon based on identifier formatted name with debounced search
+  const { data: iconsData } = clientApi.icon.findIcons.useQuery(
+    {
+      searchText: debouncedName,
+    },
+    {
+      enabled: autoSetIcon && (debouncedName?.length ?? 0) > 3,
+    },
+  );
+
+  useEffect(() => {
+    if (autoSetIcon && debouncedName && !tempRepository.iconUrl && iconsData?.icons) {
+      const bestMatch = findBestIconMatch(debouncedName, iconsData.icons);
+      if (bestMatch) {
+        handleChange({ iconUrl: bestMatch });
+      }
+    }
+  }, [debouncedName, iconsData, tempRepository, handleChange, autoSetIcon]);
 
   return (
     <Stack>
@@ -249,6 +284,8 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
               identifier: event.currentTarget.value,
               name,
             });
+
+            if (event.currentTarget.value) setAutoSetIcon(true);
           }}
           error={formErrors[`${innerProps.fieldPath}.identifier`]}
           w="100%"
@@ -261,6 +298,8 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
           value={tempRepository.name ?? ""}
           onChange={(event) => {
             handleChange({ name: event.currentTarget.value });
+
+            if (event.currentTarget.value) setAutoSetIcon(true);
           }}
           error={formErrors[`${innerProps.fieldPath}.name`]}
           style={{ flex: 1, flexBasis: "40%" }}
@@ -268,8 +307,15 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
         <IconPicker
           withAsterisk={false}
-          value={tempRepository.iconUrl}
-          onChange={(url) => handleChange({ iconUrl: url })}
+          value={tempRepository.iconUrl ?? ""}
+          onChange={(url) => {
+            if (url === "") {
+              setAutoSetIcon(false);
+              handleChange({ iconUrl: undefined });
+            } else {
+              handleChange({ iconUrl: url });
+            }
+          }}
           error={formErrors[`${innerProps.fieldPath}.iconUrl`] as string}
         />
       </Group>
@@ -336,7 +382,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 
       <Divider my={"sm"} />
       <Group justify="flex-end">
-        <Button variant="default" onClick={actions.closeModal} color="gray.5">
+        <Button variant="default" onClick={handleCancel} color="gray.5">
           {tRepository("editForm.cancel.label")}
         </Button>
 
