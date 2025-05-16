@@ -2072,6 +2072,10 @@
         "showDetails": {
           "label": "Ayrıntıları Göster"
         },
+        "topReleases": {
+          "label": "En İyi Sürümler",
+          "description": "Gösterilecek en son sürümlerin maksimum sayısı. Sıfır, sınır olmadığı anlamına gelir."
+        },
         "repositories": {
           "label": "Depolar",
           "addRRepository": {
@@ -2083,6 +2087,9 @@
           "identifier": {
             "label": "Tanımlayıcı",
             "placeholder": "Ad veya Sahip/Ad"
+          },
+          "name": {
+            "label": "İsim"
           },
           "versionFilter": {
             "label": "Sürüm Filtresi",
@@ -2130,7 +2137,13 @@
       "openProjectPage": "Proje Sayfasını Aç",
       "openReleasePage": "Sürüm Sayfasını Aç",
       "releaseDescription": "Sürüm Açıklaması",
-      "created": "Oluşturuldu"
+      "created": "Oluşturuldu",
+      "error": {
+        "label": "Hata",
+        "options": {
+          "noMatchingVersion": "Eşleşen sürüm bulunamadı"
+        }
+      }
     },
     "networkControllerSummary": {
       "option": {},

@@ -1,7 +1,10 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import { entityStateSchema } from "./homeassistant-types";
 
 export class HomeAssistantIntegration extends Integration {
@@ -57,12 +60,18 @@ export class HomeAssistantIntegration extends Integration {
     }
   }
 
-  public async testConnectionAsync(): Promise<void> {
-    await super.handleTestConnectionResponseAsync({
-      queryFunctionAsync: async () => {
-        return await this.getAsync("/api/config");
-      },
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const response = await input.fetchAsync(this.url("/api/config"), {
+      headers: this.getAuthHeaders(),
     });
+
+    if (!response.ok) {
+      return TestConnectionError.StatusResult(response);
+    }
+
+    return {
+      success: true,
+    };
   }
 
   /**

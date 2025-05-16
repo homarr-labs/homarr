@@ -1,10 +1,22 @@
 import { join } from "path";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
 import type { StartedTestContainer } from "testcontainers";
-import { beforeAll, describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test, vi } from "vitest";
+
+import { createDb } from "@homarr/db/test";
 
 import { SabnzbdIntegration } from "../src";
+import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
 import type { DownloadClientItem } from "../src/interfaces/downloads/download-client-items";
+
+vi.mock("@homarr/db", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const actual = await importActual<typeof import("@homarr/db")>();
+  return {
+    ...actual,
+    db: createDb(),
+  };
+});
 
 const DEFAULT_API_KEY = "8r45mfes43s3iw7x3oecto6dl9ilxnf9";
 const IMAGE_NAME = "linuxserver/sabnzbd:latest";
@@ -21,10 +33,10 @@ describe("Sabnzbd integration", () => {
     const sabnzbdIntegration = createSabnzbdIntegration(startedContainer, DEFAULT_API_KEY);
 
     // Act
-    const actAsync = async () => await sabnzbdIntegration.testConnectionAsync();
+    const result = await sabnzbdIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).resolves.not.toThrow();
+    expect(result.success).toBe(true);
 
     // Cleanup
     await startedContainer.stop();
@@ -36,10 +48,13 @@ describe("Sabnzbd integration", () => {
     const sabnzbdIntegration = createSabnzbdIntegration(startedContainer, "wrong-api-key");
 
     // Act
-    const actAsync = async () => await sabnzbdIntegration.testConnectionAsync();
+    const result = await sabnzbdIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).rejects.toThrow();
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error).toBeInstanceOf(TestConnectionError);
+    expect(result.error.type).toBe("authorization");
 
     // Cleanup
     await startedContainer.stop();

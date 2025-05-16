@@ -62,7 +62,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   );
 
   const repositories = useMemo(() => {
-    return results
+    const formattedResults = results
       .flat()
       .map(({ data }) => {
         if (data === undefined) return undefined;
@@ -74,8 +74,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         if (repository === undefined) return undefined;
 
         return {
+          ...repository,
           ...data,
-          iconUrl: repository.iconUrl,
           isNewRelease:
             relativeDateOptions.newReleaseWithin !== "" && data.latestReleaseAt
               ? isDateWithin(data.latestReleaseAt, relativeDateOptions.newReleaseWithin)
@@ -99,10 +99,17 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         if (repoB?.latestReleaseAt === undefined) return -1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
       }) as ReleasesRepositoryResponse[];
+
+    if (typeof options.topReleases !== "string" && options.topReleases > 0) {
+      return formattedResults.slice(0, options.topReleases);
+    }
+
+    return formattedResults;
   }, [
     results,
     options.repositories,
     options.showOnlyHighlighted,
+    options.topReleases,
     relativeDateOptions.newReleaseWithin,
     relativeDateOptions.staleReleaseWithin,
   ]);
@@ -152,7 +159,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
               />
 
               <Group gap={5} justify="space-between" style={{ flex: 1 }}>
-                <Text size="xs">{repository.identifier}</Text>
+                {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+                <Text size="xs">{repository.name || repository.identifier}</Text>
 
                 <Tooltip
                   withArrow
@@ -346,6 +354,11 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             </Text>
           )}
         </Group>
+
+        <Text size="xs" c="iconColor" ff="monospace">
+          {repository.identifier}
+        </Text>
+
         {(repository.releaseUrl ?? repository.projectUrl) && (
           <>
             <Divider my={10} mx="30%" />
@@ -378,7 +391,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             <Title order={4} ta="center">
               {t("releaseDescription")}
             </Title>
-            <Text component="div" size="xs" ff="monospace">
+            <Text component="div" size="xs" ff="monospace" className={classes.releasesDescription}>
               <ReactMarkdown skipHtml>{repository.releaseDescription}</ReactMarkdown>
             </Text>
           </>

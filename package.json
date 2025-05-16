@@ -47,15 +47,15 @@
     "jsdom": "^26.1.0",
     "prettier": "^3.5.3",
     "semantic-release": "^24.2.3",
-    "testcontainers": "^10.25.0",
+    "testcontainers": "^10.26.0",
     "turbo": "^2.5.3",
     "typescript": "^5.8.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.1.3"
   },
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.11.0",
   "engines": {
-    "node": ">=22.15.0"
+    "node": ">=22.15.1"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -70,13 +70,16 @@
       "tree-sitter-json"
     ],
     "overrides": {
-      "proxmox-api>undici": "7.8.0"
+      "proxmox-api>undici": "7.9.0"
     },
     "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [
       "@scarf/scarf",
       "core-js-pure",
       "protobufjs"
-    ]
+    ],
+    "patchedDependencies": {
+      "@types/node-unifi": "patches/@types__node-unifi.patch"
+    }
   }
 }

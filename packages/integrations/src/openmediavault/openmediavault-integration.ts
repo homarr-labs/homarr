@@ -1,14 +1,14 @@
-import type { Headers, HeadersInit, Response as UndiciResponse } from "undici";
+import type { Headers, HeadersInit, fetch as undiciFetch, Response as UndiciResponse } from "undici";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ResponseError } from "@homarr/common/server";
 import { logger } from "@homarr/log";
 
-import { ResponseError } from "../base/error";
-import type { IntegrationInput } from "../base/integration";
+import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { SessionStore } from "../base/session-store";
 import { createSessionStore } from "../base/session-store";
-import { IntegrationTestConnectionError } from "../base/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { HealthMonitoring } from "../types";
 import { cpuTempSchema, fileSystemSchema, smartSchema, systemInformationSchema } from "./openmediavault-types";
 
@@ -84,12 +84,9 @@ export class OpenMediaVaultIntegration extends Integration {
     };
   }
 
-  public async testConnectionAsync(): Promise<void> {
-    await this.getSessionAsync().catch((error) => {
-      if (error instanceof ResponseError) {
-        throw new IntegrationTestConnectionError("invalidCredentials");
-      }
-    });
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    await this.getSessionAsync(input.fetchAsync);
+    return { success: true };
   }
 
   private async makeAuthenticatedRpcCallAsync(
@@ -111,13 +108,14 @@ export class OpenMediaVaultIntegration extends Integration {
     });
   }
 
-  private async makeRpcCallAsync(
+  private async makeRpcCallWithCustomFetchAsync(
     serviceName: string,
     method: string,
     params: Record<string, unknown> = {},
     headers: HeadersInit = {},
+    fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync,
   ): Promise<UndiciResponse> {
-    return await fetchWithTrustedCertificatesAsync(this.url("/rpc.php"), {
+    return await fetchAsync(this.url("/rpc.php"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -130,6 +128,15 @@ export class OpenMediaVaultIntegration extends Integration {
         params,
       }),
     });
+  }
+
+  private async makeRpcCallAsync(
+    serviceName: string,
+    method: string,
+    params: Record<string, unknown> = {},
+    headers: HeadersInit = {},
+  ): Promise<UndiciResponse> {
+    return await this.makeRpcCallWithCustomFetchAsync(serviceName, method, params, headers);
   }
 
   /**
@@ -159,11 +166,21 @@ export class OpenMediaVaultIntegration extends Integration {
    * Get a session id from the openmediavault server
    * @returns The session details
    */
-  private async getSessionAsync(): Promise<SessionStoreValue> {
-    const response = await this.makeRpcCallAsync("session", "login", {
-      username: this.getSecretValue("username"),
-      password: this.getSecretValue("password"),
-    });
+  private async getSessionAsync(fetchAsync?: typeof undiciFetch): Promise<SessionStoreValue> {
+    const response = await this.makeRpcCallWithCustomFetchAsync(
+      "session",
+      "login",
+      {
+        username: this.getSecretValue("username"),
+        password: this.getSecretValue("password"),
+      },
+      undefined,
+      fetchAsync,
+    );
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
 
     const data = (await response.json()) as { response?: { sessionid?: string } };
     if (data.response?.sessionid) {
@@ -176,10 +193,10 @@ export class OpenMediaVaultIntegration extends Integration {
       const loginToken = OpenMediaVaultIntegration.extractLoginTokenFromCookies(response.headers);
 
       if (!sessionId || !loginToken) {
-        throw new ResponseError(
-          response,
-          `${JSON.stringify(data)} - sessionId=${"*".repeat(sessionId?.length ?? 0)} loginToken=${"*".repeat(loginToken?.length ?? 0)}`,
-        );
+        throw new ResponseError({
+          status: 401,
+          url: response.url,
+        });
       }
 
       return {

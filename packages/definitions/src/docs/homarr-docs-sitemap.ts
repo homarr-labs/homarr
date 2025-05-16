@@ -174,6 +174,7 @@ export type HomarrDocumentationPath =
   | "/docs/getting-started/installation/easy-panel"
   | "/docs/getting-started/installation/helm"
   | "/docs/getting-started/installation/home-assistant"
+  | "/docs/getting-started/installation/pika-pods"
   | "/docs/getting-started/installation/portainer"
   | "/docs/getting-started/installation/proxmox"
   | "/docs/getting-started/installation/qnap"

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "@homarr/node-unifi": ["../../node_modules/@types/node-unifi"]
     },
     "plugins": [
       {
