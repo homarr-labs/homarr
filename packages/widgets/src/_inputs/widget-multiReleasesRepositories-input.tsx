@@ -149,21 +149,13 @@ export const WidgetMultiReleasesRepositoriesInput = ({
                   (repository) => repository.providerKey === providerKey && repository.identifier === identifier,
                 ),
             )
-            .map((containerImage) => {
-              // const versionFilter =
-              //   containerImage.version === undefined || /^([^0-9]+|[^.]+)$/.test(containerImage.version)
-              //     ? undefined
-              //     : ({
-              //       precision: containerImage.version.cou
-              //     });
-
-              return {
-                providerKey: containerImage.providerKey,
-                identifier: containerImage.identifier,
-                iconUrl: containerImage.iconUrl,
-                name: formatIdentifierName(containerImage.identifier),
-              };
-            });
+            .map((containerImage) => ({
+              providerKey: containerImage.providerKey,
+              identifier: containerImage.identifier,
+              iconUrl: containerImage.iconUrl,
+              name: formatIdentifierName(containerImage.identifier),
+              versionFilter: containerImage.version ? parseImageVersionToVersionFilter(containerImage.version) : undefined,
+            }));
 
           form.setValues((previous) => {
             const previousValues = previous.options?.[property] as ReleasesRepository[];
@@ -263,6 +255,20 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       </Stack>
     </Fieldset>
   );
+};
+
+const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersionFilter | undefined => {
+  const version = /(?<=\D|^)\d+(?:\.\d+)*(?![\d.])/.exec(imageVersion)?.[0];
+
+  if (!version) return undefined;
+
+  const [prefix, suffix] = imageVersion.split(version);
+
+  return {
+    prefix: prefix,
+    precision: version.split(".").length,
+    suffix: suffix,
+  };
 };
 
 const formatVersionFilterRegex = (versionFilter: ReleasesVersionFilter | undefined) => {
