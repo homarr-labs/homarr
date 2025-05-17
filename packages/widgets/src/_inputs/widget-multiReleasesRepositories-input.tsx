@@ -154,7 +154,9 @@ export const WidgetMultiReleasesRepositoriesInput = ({
               identifier: containerImage.identifier,
               iconUrl: containerImage.iconUrl,
               name: formatIdentifierName(containerImage.identifier),
-              versionFilter: containerImage.version ? parseImageVersionToVersionFilter(containerImage.version) : undefined,
+              versionFilter: containerImage.version
+                ? parseImageVersionToVersionFilter(containerImage.version)
+                : undefined,
             }));
 
           form.setValues((previous) => {
