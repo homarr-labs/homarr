@@ -11,12 +11,6 @@ import { createCacheChannel } from "@homarr/redis";
 import { dockerMiddleware } from "../../middlewares/docker";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 
-interface ContainerImage {
-  image: string;
-  containerId: string;
-  instance: string;
-}
-
 const dockerCache = createCacheChannel<{
   containers: (ContainerInfo & { instance: string; iconUrl: string | null })[];
 }>("docker-containers", 5 * 60 * 1000);
@@ -147,52 +141,6 @@ export const dockerRouter = createTRPCRouter({
       );
 
       await dockerCache.invalidateAsync();
-    }),
-  getContainersImage: permissionRequiredProcedure
-    .requiresPermission("admin")
-    .concat(dockerMiddleware())
-    .query(async () => {
-      const dockerInstances = DockerSingleton.getInstances();
-      const containersImage: ContainerImage[] = await Promise.all(
-        // Return all the containers of all the instances into only one item
-        dockerInstances.map(({ instance, host: key }) =>
-          instance.listContainers({ all: true }).then(
-            async (containers) =>
-              await Promise.all(
-                containers.map((container) =>
-                  instance
-                    .getContainer(container.Id)
-                    .inspect()
-                    .then((inspect) => ({ image: inspect.Config.Image, containerId: inspect.Id, instance: key })),
-                ),
-              ),
-          ),
-        ),
-      ).then((containerImage) => containerImage.flat());
-
-      const extractImage = (containerImage: ContainerImage) =>
-        containerImage.image.split("/").at(-1)?.split(":").at(0) ?? "";
-      const likeQueries = containersImage.map((containerImage) =>
-        like(icons.name, `%${extractImage(containerImage)}%`),
-      );
-      const dbIcons =
-        likeQueries.length >= 1
-          ? await db.query.icons.findMany({
-              where: or(...likeQueries),
-            })
-          : [];
-
-      return {
-        containersImage: containersImage.map((containerImage) => ({
-          ...containerImage,
-          iconUrl:
-            dbIcons.find((icon) => {
-              const extractedImage = extractImage(containerImage);
-              if (!extractedImage) return false;
-              return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
-            })?.url ?? null,
-        })),
-      };
     }),
 });
 
