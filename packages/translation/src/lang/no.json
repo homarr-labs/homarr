@@ -702,6 +702,132 @@
         "create": "Test tilkobling og opprett",
         "edit": "Test tilkobling og lagre"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "Lagre-knappen er aktivert når en vellykket tilkobling er opprettet",
       "notification": {
         "success": {
@@ -878,6 +1004,7 @@
       "cancel": "Avbryt",
       "delete": "Slett",
       "discard": "Forkast",
+      "close": "",
       "confirm": "Bekreft",
       "continue": "Fortsett",
       "previous": "Tidligere",
@@ -3496,7 +3623,10 @@
           "label": "Logger"
         },
         "certificates": {
-          "label": "Sertifikater"
+          "label": "Sertifikater",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3894,6 +4024,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "Betrodde sertifikater",
@@ -3905,7 +4058,16 @@
           "title": "",
           "description": ""
         },
-        "expires": "Utløper {when}"
+        "expires": "Utløper {when}",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3933,6 +4095,20 @@
           "error": {
             "title": "Sertifikat ikke fjernet",
             "message": "Sertifikatet kunne ikke fjernes"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

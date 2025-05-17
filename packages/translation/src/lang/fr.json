@@ -702,6 +702,132 @@
         "create": "Tester la connexion et créer",
         "edit": "Tester la connexion et enregistrer"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "Le bouton Enregistrer est activé une fois qu'une connexion est établie avec succès",
       "notification": {
         "success": {
@@ -878,6 +1004,7 @@
       "cancel": "Annuler",
       "delete": "Supprimer",
       "discard": "Abandonner",
+      "close": "",
       "confirm": "Confirmer",
       "continue": "Continuer",
       "previous": "Précédent",
@@ -3496,7 +3623,10 @@
           "label": "Journaux"
         },
         "certificates": {
-          "label": "Certificats"
+          "label": "Certificats",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3894,6 +4024,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "Certificats de confiance",
@@ -3905,7 +4058,16 @@
           "title": "",
           "description": ""
         },
-        "expires": "Expire le {when}"
+        "expires": "Expire le {when}",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3933,6 +4095,20 @@
           "error": {
             "title": "Certificat non supprimé",
             "message": "Le certificat n'a pas pu être supprimé"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }
