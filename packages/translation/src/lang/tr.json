@@ -702,6 +702,132 @@
         "create": "Bağlantıyı test et ve oluştur",
         "edit": "Bağlantıyı test et ve kaydet"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "Bağlantı başarılı olduğunda Kaydet butonu etkinleştirilir",
       "notification": {
         "success": {
@@ -878,6 +1004,7 @@
       "cancel": "Vazgeç",
       "delete": "Sil",
       "discard": "Yoksay",
+      "close": "",
       "confirm": "Onayla",
       "continue": "Devam Et",
       "previous": "Önceki",
@@ -3496,7 +3623,10 @@
           "label": "Günlükler"
         },
         "certificates": {
-          "label": "Sertifikalar"
+          "label": "Sertifikalar",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3894,6 +4024,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "Güvenilen sertifikalar",
@@ -3905,7 +4058,16 @@
           "title": "Geçersiz sertifika",
           "description": "Sertifika çözümlenemedi"
         },
-        "expires": "{when} süresi doluyor"
+        "expires": "{when} süresi doluyor",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3933,6 +4095,20 @@
           "error": {
             "title": "Sertifika kaldırılmadı",
             "message": "Sertifika kaldırılamadı"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

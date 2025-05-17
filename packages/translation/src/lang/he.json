@@ -702,6 +702,132 @@
         "create": "בדוק חיבור וצור",
         "edit": "בדוק את החיבור ושמור"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "הלחצן שמור מופעל לאחר יצירת חיבור מוצלח",
       "notification": {
         "success": {
@@ -878,6 +1004,7 @@
       "cancel": "בטל",
       "delete": "מחיקה",
       "discard": "ביטול",
+      "close": "",
       "confirm": "לאשר",
       "continue": "המשך",
       "previous": "הקודם",
@@ -2059,11 +2186,11 @@
       "option": {
         "newReleaseWithin": {
           "label": "מהדורה חדשה בתוך",
-          "description": ""
+          "description": "דוגמת שימוש: שבוע אחד (1), חודש אחד (10 חודשים). סוגי יחידות מקובלים: h (שעות), d (ימים), w (שבועות), M (חודשים), y (שנים). השאר ריק כדי לא להדגיש מהדורות חדשות."
         },
         "staleReleaseWithin": {
           "label": "מהדורה חדשה בתוך",
-          "description": ""
+          "description": "דוגמת שימוש: 1w (שבוע אחד), 10M (10 חודשים). סוגי יחידות מקובלים h (שעות), d (ימים), w (שבועות), M (חודשים), y (שנים). השאר ריק כדי לא להדגיש גרסאות ישנות."
         },
         "showOnlyHighlighted": {
           "label": "הצג רק את המודגשים",
@@ -2073,8 +2200,8 @@
           "label": "הצג פרטים"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "מהדורות מובילות",
+          "description": "המספר המרבי של מהדורות אחרונות להצגה. אפס פירושו שאין הגבלה."
         },
         "repositories": {
           "label": "מאגרים",
@@ -2089,7 +2216,7 @@
             "placeholder": "שם או בעלים/שם"
           },
           "name": {
-            "label": ""
+            "label": "שם"
           },
           "versionFilter": {
             "label": "מסנן גירסאות",
@@ -2139,9 +2266,9 @@
       "releaseDescription": "תיאור הגרסה",
       "created": "נוצר",
       "error": {
-        "label": "",
+        "label": "שגיאה",
         "options": {
-          "noMatchingVersion": ""
+          "noMatchingVersion": "לא נמצאה גרסה תואמת"
         }
       }
     },
@@ -3496,7 +3623,10 @@
           "label": "קבצי לוג"
         },
         "certificates": {
-          "label": "אישורי אבטחה"
+          "label": "אישורי אבטחה",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3894,6 +4024,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "תעודות מהימנות",
@@ -3905,7 +4058,16 @@
           "title": "אישור לא חוקי",
           "description": "נכשל בהוספת תעודת אבטחה"
         },
-        "expires": "פג ב- {when}"
+        "expires": "פג ב- {when}",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3933,6 +4095,20 @@
           "error": {
             "title": "תעודת אבטחה לא הוסרה",
             "message": "לא היה ניתן להסיר את תעודת האבטחה"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

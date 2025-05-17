@@ -55,7 +55,7 @@
     "@mantine/modals": "^8.0.1",
     "@mantine/tiptap": "^8.0.1",
     "@million/lint": "1.0.14",
-    "@tabler/icons-react": "^3.31.0",
+    "@tabler/icons-react": "^3.33.0",
     "@tanstack/react-query": "^5.76.1",
     "@tanstack/react-query-devtools": "^5.76.1",
     "@tanstack/react-query-next-experimental": "^5.76.1",
@@ -98,7 +98,7 @@
     "@types/react-dom": "19.1.5",
     "@types/swagger-ui-react": "^5.18.0",
     "concurrently": "^9.1.2",
-    "eslint": "^9.26.0",
+    "eslint": "^9.27.0",
     "node-loader": "^2.1.0",
     "prettier": "^3.5.3",
     "typescript": "^5.8.3"
