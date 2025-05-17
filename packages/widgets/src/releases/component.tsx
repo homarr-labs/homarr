@@ -150,7 +150,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
               onClick={() => toggleExpandedRepository(repository)}
             >
               <MaskedOrNormalImage
-                imageUrl={repository.iconUrl ?? Providers[repository.providerKey]?.iconUrl}
+                imageUrl={repository.iconUrl ?? Providers[repository.providerKey].iconUrl}
                 hasColor={hasIconColor}
                 style={{
                   width: "1em",
@@ -330,7 +330,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
         <Group justify="space-between" align="center">
           <Group gap={5} align="center">
             <MaskedOrNormalImage
-              imageUrl={Providers[repository.providerKey]?.iconUrl}
+              imageUrl={Providers[repository.providerKey].iconUrl}
               hasColor={hasIconColor}
               style={{
                 width: "1em",
@@ -338,7 +338,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
               }}
             />
             <Text size="xs" c="iconColor" ff="monospace">
-              {Providers[repository.providerKey]?.name}
+              {Providers[repository.providerKey].name}
             </Text>
           </Group>
           {repository.createdAt && (

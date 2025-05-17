@@ -2208,6 +2208,10 @@
           "addRRepository": {
             "label": "Add repository"
           },
+          "importRepositories": {
+            "label": "Import from docker",
+            "loading": "Loading docker images"
+          },
           "provider": {
             "label": "Provider"
           },
@@ -2247,6 +2251,9 @@
             "confirm": {
               "label": "Confirm"
             }
+          },
+          "importForm": {
+            "title": "Import from Docker"
           },
           "example": {
             "label": "Example"
