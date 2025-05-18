@@ -4,7 +4,7 @@ export const appHrefSchema = z
   .string()
   .trim()
   .url()
-  .regex(/^(?!javascript)[a-zA-Z]*:\/\//) // javascript: is not allowed
+  .regex(/^(?!javascript)[a-zA-Z]*:\/\//i) // javascript: is not allowed, i for case insensitive (so Javascript: is also not allowed)
   .or(z.literal(""))
   .transform((value) => (value.length === 0 ? null : value))
   .nullable();
