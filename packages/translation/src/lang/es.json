@@ -3,7 +3,7 @@
     "step": {
       "start": {
         "title": "Bienvenido a Homarr",
-        "subtitle": "Comencemos con la configuración de tu instancia de Homar.",
+        "subtitle": "Comencemos con la configuración de tu instancia de Homarr.",
         "description": "Para empezar, por favor, seleccione cómo desea configurar su instancia de Homarr.",
         "action": {
           "scratch": "Empezar de cero",
@@ -35,7 +35,7 @@
           }
         },
         "summary": {
-          "title": "Importar resumen",
+          "title": "Resumen de importación",
           "description": "",
           "action": {
             "import": "Confirmar la importación y continuar"
@@ -160,7 +160,7 @@
       }
     },
     "error": {
-      "usernameTaken": "Nombre de usuario ya está ocupado"
+      "usernameTaken": ""
     },
     "action": {
       "login": {
@@ -172,7 +172,7 @@
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Inicio de sesión fallido",
             "message": ""
           }
         },
