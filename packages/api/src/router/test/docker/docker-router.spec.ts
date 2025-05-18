@@ -18,6 +18,9 @@ vi.mock("@homarr/request-handler/docker", () => ({
       getCachedOrUpdatedDataAsync: async () => {
         return await Promise.resolve({ containers: [] });
       },
+      invalidateAsync: async () => {
+        return await Promise.resolve();
+      },
     }),
   },
 }));
