@@ -56,7 +56,7 @@ const validInputs: {
   [key in (typeof procedureKeys)[number]]: RouterInputs["docker"][key];
 } = {
   getContainers: undefined,
-  getContainersStats: undefined,
+  subscribeContainers: undefined,
   startAll: { ids: ["1"] },
   stopAll: { ids: ["1"] },
   restartAll: { ids: ["1"] },
