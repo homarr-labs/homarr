@@ -6,6 +6,7 @@
   "type": "module",
   "exports": {
     ".": "./index.ts",
+    "./shared": "./src/shared.ts",
     "./env": "./src/env.ts"
   },
   "typesVersions": {

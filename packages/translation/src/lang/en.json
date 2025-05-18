@@ -2959,6 +2959,9 @@
             },
             "networkController": {
               "label": "Network Controller"
+            },
+            "dockerContainers": {
+              "label": "Docker containers"
             }
           }
         },

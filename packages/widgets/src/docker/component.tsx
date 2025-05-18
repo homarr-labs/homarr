@@ -1,6 +1,6 @@
 "use client";
 
-import type { MantineColor, MantineStyleProp } from "@mantine/core";
+import { useMemo } from "react";
 import { ActionIcon, Avatar, Badge, Group, Stack, Text, Tooltip } from "@mantine/core";
 import type { IconProps } from "@tabler/icons-react";
 import { IconBrandDocker, IconPlayerPlay, IconPlayerStop, IconRotateClockwise } from "@tabler/icons-react";
@@ -9,33 +9,35 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useTimeAgo } from "@homarr/common";
+import { humanFileSize, useTimeAgo } from "@homarr/common";
+import type { ContainerState } from "@homarr/docker";
+import { containerStateColorMap } from "@homarr/docker/shared";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
-import type { ContainerState } from "../../../docker/src";
-
-const containerStates = {
-  created: "cyan",
-  running: "green",
-  paused: "yellow",
-  restarting: "orange",
-  exited: "red",
-  removing: "pink",
-  dead: "dark",
-} satisfies Record<ContainerState, MantineColor>;
+import type { WidgetComponentProps } from "../definition";
 
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
-  const t = useScopedI18n("docker");
+  const t = useScopedI18n("docker.field.state.option");
+
   return (
-    <Badge radius="sm" variant="transparent" color={containerStates[state]}>
-      <Text size="sm">{t(`field.state.option.${state}`)}</Text>
+    <Badge size="xs" radius="sm" variant="light" color={containerStateColorMap[state]}>
+      {t(state)}
     </Badge>
   );
 };
 
-const badgeColor = (number: number, state: string) => {
+const memoryUsageColor = (number: number, state: string) => {
+  const mbUsage = number / 1024 / 1024;
+  if (mbUsage === 0 && state !== "running") return "red";
+  if (mbUsage < 128) return "green";
+  if (mbUsage < 256) return "yellow";
+  if (mbUsage < 512) return "orange";
+  return "red";
+};
+
+const cpuUsageColor = (number: number, state: string) => {
   if (number === 0 && state !== "running") return "red";
   if (number < 40) return "green";
   if (number < 60) return "yellow";
@@ -43,31 +45,22 @@ const badgeColor = (number: number, state: string) => {
   return "red";
 };
 
-const safeValue = (value?: number, fallback = 0) => value ?? fallback;
+const safeValue = (value?: number, fallback = 0) => (value !== undefined && !isNaN(value) ? value : fallback);
 
 const actionIconIconStyle: IconProps["style"] = {
   height: "var(--ai-icon-size)",
   width: "var(--ai-icon-size)",
 };
 
-const baseStyle: MantineStyleProp = {
-  "--total-width": "calc(100cqw / var(--total-width))",
-  "--ratio-width": "calc(100cqw / var(--total-width))",
-  "--space-size": "calc(var(--ratio-width) * 0.1)", //Standard gap and spacing value
-  "--text-fz": "calc(var(--ratio-width) * 0.45)", //General Font Size
-  "--icon-size": "calc(var(--ratio-width) * 2 / 3)", //Normal icon size
-  "--mrt-base-background-color": "transparent",
-};
-
-const columns = (
+const createColumns = (
   t: ReturnType<typeof useScopedI18n<"docker">>,
-): MRT_ColumnDef<RouterOutputs["docker"]["getContainersStats"]["data"]["containers"][number]>[] => [
+): MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["containers"][number]>[] => [
   {
     accessorKey: "name",
     header: t("field.name.label"),
     Cell({ renderedCellValue, row }) {
       return (
-        <Group gap="xs">
+        <Group gap="xs" wrap="nowrap">
           <Avatar variant="outline" radius="md" size={20} src={row.original.iconUrl} />
           <Text p="0.5" size="sm" style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
             {renderedCellValue}
@@ -78,43 +71,43 @@ const columns = (
   },
   {
     accessorKey: "state",
+    size: 100,
     header: t("field.state.label"),
     Cell({ row }) {
-      return <ContainerStateBadge state={row.original.state as ContainerState} />;
+      return <ContainerStateBadge state={row.original.state} />;
     },
   },
   {
     accessorKey: "cpuUsage",
+    size: 80,
     header: t("field.stats.cpu.label"),
     Cell({ row }) {
+      const cpuUsage = safeValue(row.original.cpuUsage);
+
       return (
-        <Badge
-          radius="sm"
-          variant="transparent"
-          color={badgeColor(safeValue(row.original.cpuUsage), row.original.state)}
-        >
-          <Text size="sm">{`${row.original.cpuUsage.toFixed(2)}%`}</Text>
-        </Badge>
+        <Text size="xs" c={cpuUsageColor(cpuUsage, row.original.state)}>
+          {cpuUsage.toFixed(2)}%
+        </Text>
       );
     },
   },
   {
     accessorKey: "memoryUsage",
+    size: 80,
     header: t("field.stats.memory.label"),
     Cell({ row }) {
+      const bytesUsage = safeValue(row.original.memoryUsage);
+
       return (
-        <Badge
-          radius="sm"
-          variant="transparent"
-          color={badgeColor(safeValue(row.original.memoryUsage), row.original.state)}
-        >
-          <Text size="sm">{(safeValue(row.original.memoryUsage) / (1024 * 1024)).toFixed(2)} MiB</Text>
-        </Badge>
+        <Text size="xs" c={memoryUsageColor(bytesUsage, row.original.state)}>
+          {humanFileSize(bytesUsage)}
+        </Text>
       );
     },
   },
   {
     accessorKey: "actions",
+    size: 80,
     header: t("action.title"),
     Cell({ row }) {
       const utils = clientApi.useUtils();
@@ -129,7 +122,7 @@ const columns = (
           { ids: [row.original.id] },
           {
             async onSettled() {
-              await utils.docker.getContainersStats.invalidate();
+              await utils.docker.getContainers.invalidate();
             },
             onSuccess() {
               showSuccessNotification({
@@ -151,9 +144,9 @@ const columns = (
         <Group wrap="nowrap" gap="xs">
           <Tooltip label={row.original.state === "running" ? t("action.stop.label") : t("action.start.label")}>
             <ActionIcon
-              variant="transparent"
-              radius={999}
-              size={20}
+              variant="subtle"
+              size="xs"
+              radius="100%"
               onClick={() => handleActionAsync(row.original.state === "running" ? "stop" : "start")}
             >
               {row.original.state === "running" ? (
@@ -164,7 +157,7 @@ const columns = (
             </ActionIcon>
           </Tooltip>
           <Tooltip label={t("action.restart.label")}>
-            <ActionIcon variant="transparent" radius={999} size={20} onClick={() => handleActionAsync("restart")}>
+            <ActionIcon variant="subtle" size="xs" radius="100%" onClick={() => handleActionAsync("restart")}>
               <IconRotateClockwise style={actionIconIconStyle} />
             </ActionIcon>
           </Tooltip>
@@ -174,21 +167,27 @@ const columns = (
   },
 ];
 
-export default function DockerWidget() {
+export default function DockerWidget({ width }: WidgetComponentProps<"dockerContainers">) {
   const t = useScopedI18n("docker");
+  const isTiny = width <= 256;
 
-  const [{ data }] = clientApi.docker.getContainersStats.useSuspenseQuery();
-  const relativeTime = useTimeAgo(new Date());
+  const utils = clientApi.useUtils();
+  const [{ containers, timestamp }] = clientApi.docker.getContainers.useSuspenseQuery();
+  const relativeTime = useTimeAgo(timestamp);
 
-  const totalContainers = data.containers.length;
-  const containerStateCounts = data.containers.reduce<Record<string, number>>((acc, container) => {
-    acc[container.state] = (acc[container.state] ?? 0) + 1;
-    return acc;
-  }, {});
+  clientApi.docker.subscribeContainers.useSubscription(undefined, {
+    onData(data) {
+      utils.docker.getContainers.setData(undefined, { containers: data, timestamp: new Date() });
+    },
+  });
+
+  const totalContainers = containers.length;
+
+  const columns = useMemo(() => createColumns(t), [t]);
 
   const table = useTranslatedMantineReactTable({
-    columns: columns(t),
-    data: data.containers,
+    columns,
+    data: containers,
     enablePagination: false,
     enableTopToolbar: false,
     enableBottomToolbar: false,
@@ -220,7 +219,10 @@ export default function DockerWidget() {
       fz: "xs",
     },
     mantineTableHeadCellProps: {
-      py: 4,
+      p: 4,
+    },
+    mantineTableBodyCellProps: {
+      p: 4,
     },
     mantineTableContainerProps: {
       style: {
@@ -230,36 +232,25 @@ export default function DockerWidget() {
   });
 
   return (
-    <Stack gap={0} h="100%" display="flex" style={baseStyle}>
+    <Stack gap={0} h="100%" display="flex">
       <MantineReactTable table={table} />
-      <Group
-        gap="1cqmin"
-        h="var(--ratio-width)"
-        px="var(--space-size)"
-        pr="3cqmin"
-        pl="3cqmin"
-        justify="space-between"
-        style={{
-          borderTop: "0.0625rem solid var(--border-color)",
-        }}
-      >
-        <Group gap={1}>
-          <IconBrandDocker size={20} />
-          <Text size="sm">{t("table.footer", { count: totalContainers.toString() })}</Text>
+
+      {!isTiny && (
+        <Group
+          justify="space-between"
+          style={{
+            borderTop: "0.0625rem solid var(--border-color)",
+          }}
+          p={4}
+        >
+          <Group gap={4}>
+            <IconBrandDocker size={20} />
+            <Text size="sm">{t("table.footer", { count: totalContainers.toString() })}</Text>
+          </Group>
+
+          <Text size="sm">{t("table.updated", { when: relativeTime })}</Text>
         </Group>
-        <Group gap="2cqmin">
-          {Object.entries(containerStateCounts).map(([state, count]) =>
-            count > 0 ? (
-              <Text key={state} variant="light" size="sm">
-                {t(`field.state.option.${state as keyof typeof containerStates}`)}:{count}
-              </Text>
-            ) : null,
-          )}
-        </Group>
-        <Text p="2cqmin" size="sm">
-          {t("table.updated", { when: relativeTime })}
-        </Text>
-      </Group>
+      )}
     </Stack>
   );
 }

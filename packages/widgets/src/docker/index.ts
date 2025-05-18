@@ -8,9 +8,6 @@ export const { definition, componentLoader } = createWidgetDefinition("dockerCon
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },
-  restrict({ user }: { user: { permissions: string[] } }) {
-    return user.permissions.includes("admin") ? "none" : "all";
-  },
   errors: {
     INTERNAL_SERVER_ERROR: {
       icon: IconServerOff,
