@@ -11,6 +11,9 @@ export const { definition, componentLoader } = createWidgetDefinition("mediaRele
         defaultValue: "backdrop",
         options: ["backdrop", "poster"],
       }),
+      showDescriptionTooltip: factory.switch({
+        defaultValue: true,
+      }),
       showType: factory.switch({
         defaultValue: true,
       }),
@@ -19,6 +22,6 @@ export const { definition, componentLoader } = createWidgetDefinition("mediaRele
       }),
     }));
   },
-  supportedIntegrations: ["mock"],
+  supportedIntegrations: ["mock", "emby"],
   // supportedIntegrations: ["plex", "jellyfin", "emby", "lidarr", "radarr", "readarr", "sonarr"],
 }).withDynamicImport(() => import("./component"));

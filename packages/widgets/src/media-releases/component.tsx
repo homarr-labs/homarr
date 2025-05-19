@@ -38,7 +38,12 @@ interface ItemProps {
 
 const Item = ({ item, options }: ItemProps) => {
   return (
-    <TooltipFloating label={item.description} w={300} multiline disabled={item.description === undefined}>
+    <TooltipFloating
+      label={item.description}
+      w={300}
+      multiline
+      disabled={item.description === undefined || !options.showDescriptionTooltip}
+    >
       <UnstyledButton
         component="a"
         href={item.href}
@@ -55,7 +60,7 @@ const Item = ({ item, options }: ItemProps) => {
             top={0}
             left={0}
             style={{
-              backgroundImage: `url(${item.imageUrls.poster})`,
+              backgroundImage: `url(${item.imageUrls.backdrop})`,
               borderRadius: 8,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",

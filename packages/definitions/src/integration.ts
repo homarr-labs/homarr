@@ -95,7 +95,7 @@ export const integrationDefs = {
     name: "Emby",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/emby.svg",
-    category: ["mediaService"],
+    category: ["mediaService", "mediaRelease"],
   },
   plex: {
     name: "Plex",

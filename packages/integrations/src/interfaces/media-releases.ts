@@ -22,6 +22,9 @@ export const mediaTypeConfigurations = {
   article: {
     color: "pink",
   },
+  unknown: {
+    color: "gray",
+  },
 } satisfies Record<string, { color: MantineColor }>;
 
 export type MediaType = keyof typeof mediaTypeConfigurations;
