@@ -138,7 +138,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
         iconUrl: containerImage.iconUrl ?? undefined,
         name: formatIdentifierName(identifier),
         versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
-        isDisabled: repositories.some((item) => item.providerKey == providerKey && item.identifier === identifier),
+        isDisabled: repositories.some((item) => item.providerKey === providerKey && item.identifier === identifier),
       });
       return acc;
     }, []);
