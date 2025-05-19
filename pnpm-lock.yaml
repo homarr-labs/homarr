@@ -2279,8 +2279,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../typescript
       prettier-plugin-packagejson:
-        specifier: ^2.5.13
-        version: 2.5.13(prettier@3.5.3)
+        specifier: ^2.5.14
+        version: 2.5.14(prettier@3.5.3)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -8590,8 +8590,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-plugin-packagejson@2.5.13:
-    resolution: {integrity: sha512-94B/Xy25HwiwSkGUGnwQw3cBw9jg9L5LfKCHpuRMjC8ETPq4oCMa2S4EblV628E0XER9n6v5rH0TQY9cUd10pg==}
+  prettier-plugin-packagejson@2.5.14:
+    resolution: {integrity: sha512-h+3tSpr2nVpp+YOK1MDIYtYhHVXr8/0V59UUbJpIJFaqi3w4fvUokJo6eV8W+vELrUXIZzJ+DKm5G7lYzrMcKQ==}
     peerDependencies:
       prettier: '>= 1.16.0'
     peerDependenciesMeta:
@@ -9597,8 +9597,8 @@ packages:
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
-  synckit@0.11.5:
-    resolution: {integrity: sha512-frqvfWyDA5VPVdrWfH24uM6SI/O8NLpVbIIJxb8t/a3YGsp4AW9CYgSKC0OaSEfexnp7Y1pVh2Y6IHO8ggGDmA==}
+  synckit@0.11.6:
+    resolution: {integrity: sha512-2pR2ubZSV64f/vqm9eLPz/KOvR9Dm+Co/5ChLgeHl0yEDRc6h5hXHoxEQH8Y5Ljycozd3p1k5TTSVdzYGkPvLw==}
     engines: {node: ^14.18.0 || >=16.0.0}
 
   tabbable@6.2.0:
@@ -17587,10 +17587,10 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-packagejson@2.5.13(prettier@3.5.3):
+  prettier-plugin-packagejson@2.5.14(prettier@3.5.3):
     dependencies:
       sort-package-json: 3.2.1
-      synckit: 0.11.5
+      synckit: 0.11.6
     optionalDependencies:
       prettier: 3.5.3
 
@@ -18911,10 +18911,9 @@ snapshots:
 
   symbol-tree@3.2.4: {}
 
-  synckit@0.11.5:
+  synckit@0.11.6:
     dependencies:
       '@pkgr/core': 0.2.4
-      tslib: 2.8.1
 
   tabbable@6.2.0: {}
 
