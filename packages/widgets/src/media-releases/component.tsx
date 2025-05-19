@@ -15,7 +15,7 @@ export default function MediaReleasesWidget({ options }: WidgetComponentProps<"m
     <Stack p="xs" gap="sm">
       {mockReleases.map((item, index) => (
         <Fragment key={item.id}>
-          {index !== 0 && <Divider />}
+          {index !== 0 && options.layout === "poster" && <Divider />}
           <Item item={item} options={options} />
         </Fragment>
       ))}
