@@ -2210,7 +2210,10 @@
           },
           "importRepositories": {
             "label": "Import from docker",
-            "loading": "Loading docker images"
+            "loading": "Loading docker images",
+            "importDisabled": {
+              "tooltip": "This image has already been imported"
+            }
           },
           "provider": {
             "label": "Provider"

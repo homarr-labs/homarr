@@ -13,6 +13,7 @@ import {
   Stack,
   Text,
   TextInput,
+  Tooltip,
 } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
 import { useDebouncedValue } from "@mantine/hooks";
@@ -148,6 +149,8 @@ export const WidgetMultiReleasesRepositoriesInput = ({
         containersImage,
         versionFilterPrecisionOptions,
         onConfirm: (selectedRepositories) => {
+          if (!selectedRepositories.length) return;
+
           form.setValues((previous) => {
             const previousValues = previous.options?.[property] as ReleasesRepository[];
             return {
@@ -170,10 +173,14 @@ export const WidgetMultiReleasesRepositoriesInput = ({
           <Button leftSection={<IconPlus />} onClick={addNewRepository}>
             {tRepository("addRRepository.label")}
           </Button>
-          <Button leftSection={<IconBrandDocker />} onClick={importNewRepository} disabled={!docker?.containers.length}>
+          <Button
+            leftSection={docker?.containers.length && <IconBrandDocker />}
+            onClick={importNewRepository}
+            disabled={!docker?.containers.length}
+          >
             {!docker?.containers.length ? (
-              <Group>
-                <Loader size="sm" color="gray" />
+              <Group gap="xs">
+                <Loader size="xs" color="gray" />
                 <Text>{tRepository("importRepositories.loading")}</Text>
               </Group>
             ) : (
@@ -521,35 +528,46 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
             justify="space-between"
           >
             <Group gap="md">
-              <Checkbox
-                disabled={containerImage.isDisabled}
-                label={
-                  <Group>
-                    <MaskedOrNormalImage
-                      hasColor={false}
-                      imageUrl={containerImage.iconUrl}
-                      style={{
-                        height: "1.2em",
-                        width: "1.2em",
-                      }}
-                    />
-                    <Text>{containerImage.identifier}</Text>
-                  </Group>
-                }
-                onChange={(event) =>
-                  event.currentTarget.checked
-                    ? setSelectedImages([...selectedImages, containerImage])
-                    : setSelectedImages(selectedImages.filter((img) => img !== containerImage))
-                }
-              />
-              <Text c="dimmed" size="sm" fw={600}>
-                {tRepository("versionFilter.label")}:{" "}
-              </Text>
-              {containerImage.versionFilter?.prefix && <Text c="dimmed">{containerImage.versionFilter.prefix}</Text>}
-              <Text c="dimmed">
-                {innerProps.versionFilterPrecisionOptions[containerImage.versionFilter?.precision ?? 0]}
-              </Text>
-              {containerImage.versionFilter?.suffix && <Text c="dimmed">{containerImage.versionFilter.suffix}</Text>}
+              <Tooltip
+                label={tRepository("importRepositories.importDisabled.tooltip")}
+                withArrow
+                disabled={!containerImage.isDisabled}
+              >
+                <Checkbox
+                  disabled={containerImage.isDisabled}
+                  label={
+                    <Group>
+                      <MaskedOrNormalImage
+                        hasColor={false}
+                        imageUrl={containerImage.iconUrl}
+                        style={{
+                          height: "1.2em",
+                          width: "1.2em",
+                        }}
+                      />
+                      <Text>{containerImage.identifier}</Text>
+                    </Group>
+                  }
+                  onChange={(event) =>
+                    event.currentTarget.checked
+                      ? setSelectedImages([...selectedImages, containerImage])
+                      : setSelectedImages(selectedImages.filter((img) => img !== containerImage))
+                  }
+                />
+              </Tooltip>
+
+              {containerImage.versionFilter && (
+                <Group gap={5}>
+                  <Text c="dimmed" size="xs">
+                    Version Fitler:
+                  </Text>
+                  {containerImage.versionFilter.prefix && <Text c="dimmed">{containerImage.versionFilter.prefix}</Text>}
+                  <Text c="dimmed" fw={700}>
+                    {innerProps.versionFilterPrecisionOptions[containerImage.versionFilter.precision]}
+                  </Text>
+                  {containerImage.versionFilter.suffix && <Text c="dimmed">{containerImage.versionFilter.suffix}</Text>}
+                </Group>
+              )}
             </Group>
 
             <Group>
