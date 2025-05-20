@@ -705,125 +705,125 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "סיבה עם פרטים נוספים"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "שגיאה לא ידועה",
+          "description": "אירעה שגיאה לא ידועה, פתח את הסיבה למטה כדי לראות פרטים נוספים"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "שגיאת ניתוח",
+          "description": "לא ניתן היה לנתח את התגובה. אנא ודא שכתובת האתר מפנה לכתובת האתר הבסיסית של השירות."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "שגיאת הרשאה",
+          "description": "הבקשה לא אושרה. אנא ודא שהאישורים נכונים ושהוגדרו לך הרשאות מספיקות."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "שגיאת תגובה",
+          "description": "התקבלה תגובה בלתי צפויה של {statusCode} ({reason}) מ-<url></url>. אנא ודא שכתובת האתר מפנה לכתובת האתר הבסיסית של האינטגרציה.",
+          "otherDescription": "התקבלה תגובה בלתי צפויה של {statusCode} מ-<url></url>. אנא ודא שכתובת האתר מפנה לכתובת האתר הבסיסית של האינטגרציה.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "בקשה שגויה",
+            "notFound": "לא נמצא",
+            "tooManyRequests": "בקשות רבות מדי",
+            "internalServerError": "שגיאת שרת פנימית",
+            "serviceUnavailable": "השירות אינו זמין",
+            "gatewayTimeout": "פסק זמן של השער"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "שגיאת תעודה",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "פג תוקפה של תעודה זו.",
+            "notYetValid": "התעודה עדיין אינה בתוקף.",
+            "untrusted": "התעודה אינה מהימנה.",
+            "hostnameMismatch": "שם המארח של האישור אינו תואם לכתובת ה-URL."
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "אין מספיק הרשאות",
+              "message": "אינך רשאי לתת אמון באישורים או להעלות אותם. אנא צור קשר עם מנהל המערכת שלך כדי להעלות את אישור הבסיס הדרוש."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "שם השרת לא תואם",
+              "message": "שם המארח בתעודה אינו תואם לשם המארח שאליו אתה מתחבר. זה יכול להצביע על סיכון אבטחה, אך עדיין תוכל לבחור לתת אמון בתעודה זו."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "חילוץ תעודת CA נכשל",
+              "message": "ניתן לאחזר באופן אוטומטי רק אישורים חתומים עצמית ללא שרשרת. אם אתם משתמשים באישור חתום עצמית, אנא ודאו שאתם מעלים את אישור רשות האישור באופן ידני. תוכלו למצוא הוראות כיצד לעשות זאת <docsLink></docsLink>."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "נסה ליצור שוב"
             },
             "trust": {
-              "label": ""
+              "label": "תעודה מהימנה"
             },
             "upload": {
-              "label": ""
+              "label": "העלאת תעודת אבטחה"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "אי התאמה בשם המארח",
+              "message": "האם אתה בטוח שאתה רוצה לסמוך על האישור עם אי התאמה בשם המארח?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "תעודה מהימנה",
+                "message": "נוסף שם מארח לרשימת האישורים המהימנים"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "נכשל בהוספת תעודת אבטחה",
+                "message": "לא ניתן היה לסמוך על האישור עם אי-התאמה בשם המארח"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "תעודת אמון חתומה עצמית",
+              "message": "האם אתה בטוח שאתה רוצה לסמוך על אישור חתום עצמי זה?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "תעודה מהימנה",
+                "message": "נוסף שם מארח לרשימת האישורים המהימנים"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "נכשל בהוספת תעודת אבטחה",
+                "message": "נכשל בהוספת האישור לרשימת האישורים המהימנים"
               }
             }
           },
           "details": {
-            "title": "",
-            "description": "",
+            "title": "פרטים",
+            "description": "בדוק את פרטי האישור לפני שתחליט לסמוך עליו.",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "הצג תוכן",
+              "title": "תעודת PEM"
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "שגיאת בקשה",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "לא ניתן היה להגיע לשרת. משמעות הדבר בדרך כלל היא שהמארח לא מקוון או שאינו ניתן להשגה מהרשת שלך.",
+              "networkUnreachable": "הרשת אינה נגישה. אנא בדוק את חיבור האינטרנט או את תצורת הרשת שלך.",
+              "refused": "השרת דחה את החיבור. ייתכן שהוא אינו פועל או דוחה בקשות בפורט שצוין.",
+              "reset": "החיבור נסגר באופן בלתי צפוי על ידי השרת. זה יכול לקרות אם השרת אינו יציב או שהופעל מחדש."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "לא ניתן היה למצוא את כתובת השרת. אנא בדוק את כתובת ה-URL עבור שגיאות הקלדה או שמות דומיין לא חוקיים.",
+              "timeout": "בדיקת DNS הסתיימה. ייתכן שמדובר בבעיה זמנית - אנא נסה שוב בעוד מספר רגעים.",
+              "noAnswer": "שרת ה-DNS לא החזיר תגובה תקפה. ייתכן שהדומיין קיים אך אין לו רשומות תקפות."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "הבקשה בוטלה לפני שהספיקה להשלים אותה. ייתכן שהדבר נובע מפעולת משתמש או מפסק זמן של המערכת.",
+              "timeout": "הבקשה ארכה זמן רב מדי להשלמה ופג תוקפו. בדוק את הרשת שלך או נסה שוב מאוחר יותר."
             }
           }
         }
@@ -1004,7 +1004,7 @@
       "cancel": "בטל",
       "delete": "מחיקה",
       "discard": "ביטול",
-      "close": "",
+      "close": "סגור",
       "confirm": "לאשר",
       "continue": "המשך",
       "previous": "הקודם",
@@ -3625,7 +3625,7 @@
         "certificates": {
           "label": "אישורי אבטחה",
           "hostnames": {
-            "label": ""
+            "label": "שמות מארחים"
           }
         }
       },
@@ -4026,25 +4026,25 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "שם מארח"
       },
       "subject": {
-        "label": ""
+        "label": "נושא"
       },
       "issuer": {
-        "label": ""
+        "label": "מנפיק"
       },
       "validFrom": {
-        "label": ""
+        "label": "בתוקף מ: "
       },
       "validTo": {
-        "label": ""
+        "label": "בתוקף מ: "
       },
       "serialNumber": {
-        "label": ""
+        "label": "מספר סידורי"
       },
       "fingerprint": {
-        "label": ""
+        "label": "טביעת אצבע"
       }
     },
     "page": {
@@ -4059,15 +4059,15 @@
           "description": "נכשל בהוספת תעודת אבטחה"
         },
         "expires": "פג ב- {when}",
-        "toHostnames": ""
+        "toHostnames": "שמות מארחים מאושרים"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "שמות מארחים של תעודות מהימנות",
+        "description": "חלק מהאישורים אינם מאפשרים לדומיין הספציפי בו Homarr משתמש לבקש אותם, מסיבה זו כל שמות המארח המהימנים עם טביעות האצבע של האישור שלהם משמשים כדי לעקוף את ההגבלות הללו.",
         "noResults": {
-          "title": ""
+          "title": "אין עדיין שמות מארחים"
         },
-        "toCertificates": ""
+        "toCertificates": "אישורי אבטחה"
       }
     },
     "action": {
@@ -4099,16 +4099,16 @@
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "הסר שם מארח מהימן",
+        "confirm": "האם אתה בטוח שברצונך להסיר את שם המארח המהימן הזה? זה עלול לגרום לחלק מהאינטגרציות להפסיק לפעול.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "שם המארח הוסר",
+            "message": "שם המארח הוסר בהצלחה"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "שם המארח לא הוסר",
+            "message": "לא היה ניתן להסיר את שם המארח"
           }
         }
       }

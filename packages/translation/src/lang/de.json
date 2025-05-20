@@ -612,15 +612,15 @@
       "select": {
         "label": "App auswählen",
         "notFound": "Keine App gefunden",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "Nach einer App suchen",
+        "noResults": "Keine Ergebnisse",
+        "action": "{app} auswählen",
+        "title": "Wählen Sie eine App, die diesem Board hinzugefügt werden soll"
       },
       "create": {
         "title": "Neue App erstellen",
-        "description": "",
-        "action": ""
+        "description": "Eine neue App erstellen",
+        "action": "App-Erstellung öffnen"
       },
       "add": "App hinzufügen"
     }
@@ -705,101 +705,101 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Fall mit mehr Details"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Unbekannter Fehler",
+          "description": "Ein unbekannter Fehler ist aufgetreten, den Fall unten für mehr Details öffnen"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Fehler beim Parsen",
+          "description": "Die Antwort konnte nicht analysiert werden. Bitte stellen Sie sicher, dass die URL auf die Basis-URL des Dienstes zeigt."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "Autorisierungsfehler",
+          "description": "Die Anfrage wurde nicht autorisiert. Bitte überprüfen Sie, ob die Anmeldedaten korrekt sind und Sie diese mit mit den entsprechenden Berechtigungen konfiguriert haben."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Antwort Fehler",
+          "description": "Unerwartete {statusCode} ({reason}) Antwort von <url></url>erhalten. Bitte überprüfen Sie, ob die URL auf die Basis-URL der Integration verweist.",
+          "otherDescription": "Unerwartete {statusCode} Antwort von <url></url>erhalten. Bitte stellen Sie sicher, dass die URL auf die Basis-URL der Integration zeigt.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "Fehlerhafte Anfrage",
+            "notFound": "Nicht gefunden",
+            "tooManyRequests": "Zu viele Anfragen",
+            "internalServerError": "Interner Serverfehler",
+            "serviceUnavailable": "Dienst nicht verfügbar",
+            "gatewayTimeout": "Gateway-Zeitüberschreitung"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Zertifikatfehler",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "Das Zertifikat ist abgelaufen.",
+            "notYetValid": "Das Zertifikat ist noch nicht gültig.",
+            "untrusted": "Dem Zertifikat wird nicht vertraut.",
+            "hostnameMismatch": "Der Hostname des Zertifikats entspricht nicht der URL."
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "Nicht genügend Berechtigungen",
+              "message": "Sie sind nicht berechtigt Zertifikate zu vertrauen oder hochzuladen. Bitte kontaktieren Sie Ihren Administrator, um das notwendige Root-Zertifikat hochzuladen."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "Hostname stimmt nicht überein",
+              "message": "Der Hostname im Zertifikat stimmt nicht mit dem Hostnamen überein, mit dem Sie probieren sich zu verbinden. Dies könnte auf ein Sicherheitsrisiko hindeuten, Sie können trotzdem diesem Zertifikat vertrauen."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "CA-Zertifikatextraktion fehlgeschlagen",
+              "message": "Nur selbstsignierte Zertifikate ohne Kette können automatisch abgerufen werden. Falls Sie ein selbst signiertes Zertifikat verwenden, stellen Sie bitte sicher, dass Sie das CA-Zertifikat manuell hochladen. Hier finden Sie Anweisungen, wie man das <docsLink></docsLink> macht."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Erstellung wiederholen"
             },
             "trust": {
-              "label": ""
+              "label": "Zertifikat vertrauen"
             },
             "upload": {
-              "label": ""
+              "label": "Zertifikat hochladen"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Der Nichtübereinstimmung der Hostnamen zustimmen",
+              "message": "Sind Sie sicher, dass Sie dem Zertifikat mit einer Nichtübereinstimmung des Hostnamens vertrauen möchten?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Vertrauenswürdige Zertifikate",
+                "message": "Hostname zu vertrauenswürdiger Zertifikatsliste hinzugefügt"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Ein Fehler ist beim vertrauen des Zertifikats aufgetreten",
+                "message": "Dem Zertifikat mit einer Nichtübereinstimmung des Hostnamens konnte nicht vertraut werden"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Selbstsigniertem Zertifikat vertrauen",
+              "message": "Sind Sie sicher, dass Sie diesem selbst signierten Zertifikat vertrauen möchten?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Vertrauenswürdige Zertifikate",
+                "message": "Zertifikat zur vertrauenswürdigen Zertifikatsliste hinzugefügt"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Ein Fehler ist beim vertrauen des Zertifikats aufgetreten",
+                "message": "Das Zertifikat konnte nicht zur vertrauenswürdigen Zertifikatsliste hinzugefügt werden"
               }
             }
           },
           "details": {
-            "title": "",
+            "title": "Details",
             "description": "",
             "content": {
               "action": "",
