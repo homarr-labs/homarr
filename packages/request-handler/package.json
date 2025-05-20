@@ -30,7 +30,7 @@
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
-    "octokit": "^4.1.3",
+    "octokit": "^4.1.4",
     "superjson": "2.2.2"
   },
   "devDependencies": {
