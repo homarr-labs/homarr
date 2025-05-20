@@ -612,17 +612,17 @@
       "select": {
         "label": "App selecteren",
         "notFound": "Geen app gevonden",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "Zoek naar een app",
+        "noResults": "Geen resultaten gevonden voor deze zoekopdracht",
+        "action": "Selecteer {app}",
+        "title": "Selecteer een app om aan dit bord toe te voegen"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "Nieuwe app aanmaken",
+        "description": "Een nieuwe app aanmaken ",
+        "action": "Open app aanmaken"
       },
-      "add": ""
+      "add": "Een app toevoegen"
     }
   },
   "integration": {
@@ -705,19 +705,19 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Reden met meer details"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Onbekende fout",
+          "description": "Er is een onbekende fout opgetreden, open de reden hieronder om meer details te zien"
         },
         "parse": {
-          "title": "",
+          "title": "Parser fout",
           "description": ""
         },
         "authorization": {
-          "title": "",
+          "title": "Fout tijdens het aanmelden",
           "description": ""
         },
         "statusCode": {
