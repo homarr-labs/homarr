@@ -33,7 +33,7 @@
     "next": "15.3.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "undici": "7.9.0",
+    "undici": "7.10.0",
     "zod": "^3.25.7",
     "zod-validation-error": "^3.4.1"
   },
