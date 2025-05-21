@@ -141,7 +141,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             key={`${repository.providerKey}.${repository.identifier}`}
             className={combineClasses(
               "releases-repository",
-              `releases-repository-${repository.providerKey}-${repository.name ?? repository.identifier}`,
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+              `releases-repository-${repository.providerKey}-${repository.name || repository.identifier.replace(/[^a-zA-Z0-9]/g, "_")}`,
               classes.releasesRepository,
             )}
             gap={0}
@@ -487,11 +488,11 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
         </Group>
 
         {repository.createdAt && (
-          <Text className="releases-repository-expanded-header-createdAt" size="xs" c="dimmed" ff="monospace">
-            <Text className="releases-repository-expanded-header-createdAt-label" span>
+          <Text className="releases-repository-expanded-createdAt" size="xs" c="dimmed" ff="monospace">
+            <Text className="releases-repository-expanded-createdAt-label" span>
               {`${t("created")} | `}
             </Text>
-            <Text className="releases-repository-expanded-header-createdAt-date" span fw={700}>
+            <Text className="releases-repository-expanded-createdAt-date" span fw={700}>
               {formatter.relativeTime(repository.createdAt, {
                 now,
                 style: "narrow",
@@ -501,17 +502,17 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
         )}
         {(repository.releaseUrl ?? repository.projectUrl) && (
           <>
-            <Divider className="releases-repository-expanded-header-openButton-divider" mx="30%" />
+            <Divider className="releases-repository-expanded-openButton-divider" mx="30%" />
             <Button
-              className="releases-repository-expanded-header-openButton"
+              className="releases-repository-expanded-openButton"
               variant="light"
               component="a"
               href={repository.releaseUrl ?? repository.projectUrl}
               target="_blank"
               rel="noreferrer"
             >
-              <IconExternalLink className="releases-repository-expanded-header-openButton-icon" />
-              <Text className="releases-repository-expanded-header-openButton-text">
+              <IconExternalLink className="releases-repository-expanded-openButton-icon" />
+              <Text className="releases-repository-expanded-openButton-text">
                 {repository.releaseUrl ? t("openReleasePage") : t("openProjectPage")}
               </Text>
             </Button>
@@ -519,12 +520,12 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
         )}
         {repository.error && (
           <>
-            <Divider className="releases-repository-expanded-header-error-divider" mx="30%" />
-            <Title className="releases-repository-expanded-header-error-title" order={4} ta="center">
+            <Divider className="releases-repository-expanded-error-divider" mx="30%" />
+            <Title className="releases-repository-expanded-error-title" order={4} ta="center">
               {t("error.label")}
             </Title>
             <Text
-              className="releases-repository-expanded-header-error-text"
+              className="releases-repository-expanded-error-text"
               size="xs"
               ff="monospace"
               c="red"
@@ -536,13 +537,13 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
         )}
         {repository.releaseDescription && (
           <>
-            <Divider className="releases-repository-expanded-header-description-divider" my={10} mx="30%" />
-            <Title className="releases-repository-expanded-header-description-title" order={4} ta="center">
+            <Divider className="releases-repository-expanded-description-divider" my={10} mx="30%" />
+            <Title className="releases-repository-expanded-description-title" order={4} ta="center">
               {t("releaseDescription")}
             </Title>
             <Text
               className={combineClasses(
-                "releases-repository-expanded-header-description-text",
+                "releases-repository-expanded-description-text",
                 classes.releasesDescription,
               )}
               component="div"
