@@ -1,5 +1,7 @@
 name: "[Deployment] Release the helm chart"
 
+permissions: {}
+
 on:
   release:
     types: [released]
