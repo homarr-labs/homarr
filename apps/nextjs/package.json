@@ -83,18 +83,18 @@
     "react-simple-code-editor": "^0.14.1",
     "sass": "^1.89.0",
     "superjson": "2.2.2",
-    "swagger-ui-react": "^5.21.0",
+    "swagger-ui-react": "^5.22.0",
     "use-deep-compare-effect": "^1.8.1",
-    "zod": "^3.25.7"
+    "zod": "^3.25.17"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/chroma-js": "3.1.1",
-    "@types/node": "^22.15.19",
+    "@types/node": "^22.15.21",
     "@types/prismjs": "^1.26.5",
-    "@types/react": "19.1.4",
+    "@types/react": "19.1.5",
     "@types/react-dom": "19.1.5",
     "@types/swagger-ui-react": "^5.18.0",
     "concurrently": "^9.1.2",
