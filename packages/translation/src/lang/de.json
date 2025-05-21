@@ -800,30 +800,30 @@
           },
           "details": {
             "title": "Details",
-            "description": "",
+            "description": "Überprüfen Sie die Zertifikatsinformationen, bevor Sie sich dazu entschließen, ihr zu vertrauen.",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "Inhalt anzeigen",
+              "title": "PEM Zertifikat"
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "Anfrage Fehler",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "Der Server konnte nicht erreicht werden. Dies bedeutet in der Regel, dass der Host offline oder nicht von Ihrem Netzwerk aus erreichbar ist.",
+              "networkUnreachable": "Das Netzwerk ist nicht erreichbar. Bitte überprüfen Sie Ihre Internetverbindung oder die Netzwerkkonfiguration.",
+              "refused": "Der Server hat die Verbindung abgelehnt. Er läuft möglicherweise nicht oder lehnt Anfragen auf dem angegebenen Port ab.",
+              "reset": "Die Verbindung wurde unerwartet vom Server getrennt. Dies kann passieren, wenn der Server instabil ist oder neu gestartet wurde."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "Die Serveradresse konnte nicht gefunden werden. Bitte überprüfen Sie die URL auf Tippfehler oder ungültige Domainnamen.",
+              "timeout": "Zeitüberschreitung bei der DNS Anfrage. Dies kann ein temporäres Problem sein – bitte versuchen Sie es in ein paar Augenblicken erneut.",
+              "noAnswer": "Der DNS-Server hat keine gültige Antwort zurückgegeben. Die Domain existiert vielleicht, hat jedoch keine gültigen Datensätze."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "Die Anfrage wurde abgebrochen, bevor sie abgeschlossen werden konnte. Dies könnte auf eine Benutzeraktion oder einen System Timeout zurückzuführen sein.",
+              "timeout": "Die Anfrage zu bearbeiten hat zu lange gedauert, sie ist damit abgelaufen. Überprüfe dein Netzwerk oder versuche es später erneut."
             }
           }
         }
@@ -895,8 +895,8 @@
           "message": "Der Pfad ist vermutlich nicht korrekt"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "Zu viele Anfragen innerhalb einer bestimmten Zeit",
+          "message": "Es gab zu viele Anfragen. Sie werden wahrscheinlich vom Zielsystem begrenzt oder abgelehnt"
         }
       }
     },
@@ -1004,7 +1004,7 @@
       "cancel": "Abbrechen",
       "delete": "Löschen",
       "discard": "Verwerfen",
-      "close": "",
+      "close": "Schließen",
       "confirm": "Bestätigen",
       "continue": "Fortfahren",
       "previous": "Zurück",
@@ -1220,7 +1220,7 @@
           "label": "Integrationen"
         },
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "customCssClasses": {
           "label": "Benutzerdefinierte CSS Klassen"
@@ -1572,76 +1572,76 @@
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Aktienpreis",
+      "description": "Zeigt den aktuellen Aktienkurs einer Firma an",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Aktiensymbol"
         },
         "timeRange": {
-          "label": "",
+          "label": "Zeitraum",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 Tag"
             },
             "5d": {
-              "label": ""
+              "label": "5 Tage"
             },
             "1mo": {
-              "label": ""
+              "label": "1 Monat"
             },
             "3mo": {
-              "label": ""
+              "label": "3 Monate"
             },
             "6mo": {
-              "label": ""
+              "label": "6 Monate"
             },
             "ytd": {
-              "label": ""
+              "label": "Bisheriger Jahresverlauf"
             },
             "1y": {
-              "label": ""
+              "label": "1 Jahr"
             },
             "2y": {
-              "label": ""
+              "label": "2 Jahre"
             },
             "5y": {
-              "label": ""
+              "label": "5 Jahre"
             },
             "10y": {
-              "label": ""
+              "label": "10 Jahre"
             },
             "max": {
-              "label": ""
+              "label": "Max"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Zeitintervall",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 Minuten"
             },
             "15m": {
-              "label": ""
+              "label": "15 Minuten"
             },
             "30m": {
-              "label": ""
+              "label": "30 Minuten"
             },
             "1h": {
-              "label": ""
+              "label": "1 Stunde"
             },
             "1d": {
-              "label": ""
+              "label": "1 Tag"
             },
             "5d": {
-              "label": ""
+              "label": "5 Tage"
             },
             "1wk": {
-              "label": ""
+              "label": "1 Woche"
             },
             "1mo": {
-              "label": ""
+              "label": "1 Monat"
             }
           }
         }
@@ -1898,8 +1898,8 @@
       "description": "Zeige die aktuellen Streams auf deinen Medienservern an",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Nur aktuelle Wiedergabe anzeigen",
+          "description": "Diese Einstellung zu deaktivieren wird für Plex nicht funktionieren"
         }
       },
       "items": {
@@ -1932,7 +1932,7 @@
           "label": "Torrent Einträge anzeigen die abgeschlossen wurden"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Andere Einträge als abgeschlossen anzeigen"
         },
         "activeTorrentThreshold": {
           "label": "Abgeschlossene Torrents unter diesem Schwellenwert ausblenden (in kiB/s)"
@@ -2077,7 +2077,7 @@
         "approved": "Bestätigt",
         "declined": "Abgelehnt",
         "failed": "Fehlgeschlagen",
-        "completed": ""
+        "completed": "Abgeschlossen"
       },
       "toBeDetermined": "Noch Festzulegen"
     },
@@ -2181,94 +2181,94 @@
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "Veröffentlichungen",
+      "description": "Zeigt eine Liste der aktuellen Version der angegebenen Repositories mit der angegebenen Version regex an.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Neue Version innerhalb",
+          "description": "Anwendungsbeispiel: 1w (1 Woche), 10M (10 Monate). Akzeptierte Einheiten h (Stunden), d (Tage), w (Wochen), M (Monate), y (Jahre). Leer lassen für keine Hervorhebung neuer Releases."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Veraltete Version innerhalb",
+          "description": "Anwendungsbeispiel: 1w (1 Woche), 10M (10 Monate). Akzeptierte Einheiten h (Stunden), d (Tage), w (Wochen), M (Monate), y (Jahre). Leer lassen für keine Hervorhebung von veralteten Releases."
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "Nur markierte anzeigen",
+          "description": "Nur neue oder veraltete Versionen anzeigen. Wie oben beschrieben."
         },
         "showDetails": {
-          "label": ""
+          "label": "Details anzeigen"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "Top Releases",
+          "description": "Die maximale Anzahl der neuesten Versionen, die angezeigt werden sollen. Null bedeutet kein Limit."
         },
         "repositories": {
-          "label": "",
+          "label": "Repositories",
           "addRRepository": {
-            "label": ""
+            "label": "Repository hinzufügen"
           },
           "provider": {
-            "label": ""
+            "label": "Anbieter"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "Identifier",
+            "placeholder": "Name oder Eigentümer/Name"
           },
           "name": {
-            "label": ""
+            "label": "Name"
           },
           "versionFilter": {
-            "label": "",
+            "label": "Versionsfilter",
             "prefix": {
-              "label": ""
+              "label": "Präfix"
             },
             "precision": {
-              "label": "",
+              "label": "Präzision",
               "options": {
-                "none": ""
+                "none": "Keine"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "Suffix"
             },
             "regex": {
-              "label": ""
+              "label": "Regulärer Ausdruck"
             }
           },
           "edit": {
-            "label": ""
+            "label": "Bearbeiten"
           },
           "editForm": {
-            "title": "",
+            "title": "Repository bearbeiten",
             "cancel": {
-              "label": ""
+              "label": "Abbrechen"
             },
             "confirm": {
-              "label": ""
+              "label": "Bestätigen"
             }
           },
           "example": {
-            "label": ""
+            "label": "Beispiel"
           },
-          "invalid": ""
+          "invalid": "Ungültige Repository Definition, bitte überprüfen Sie die Werte"
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "created": "",
+      "not-found": "Nicht gefunden",
+      "pre-release": "Vorveröffentlichung",
+      "archived": "Archiviert",
+      "forked": "Forked",
+      "starsCount": "Sterne",
+      "forksCount": "Ableger",
+      "issuesCount": "Offene Tickets",
+      "openProjectPage": "Projektseite öffnen",
+      "openReleasePage": "Release Seite öffnen",
+      "releaseDescription": "Release Beschreibung",
+      "created": "Erstellt",
       "error": {
-        "label": "",
+        "label": "Fehler",
         "options": {
-          "noMatchingVersion": ""
+          "noMatchingVersion": "Keine passende Version gefunden"
         }
       }
     },
@@ -2276,56 +2276,56 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "{count} verbunden"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Keine Daten verfügbar, alle Integrationen getrennt",
+        "unknownContentOption": "Unbekannte Inhaltsoption für das Widget der Netzwerk Controller Zusammenfassung: "
       },
-      "name": "",
-      "description": ""
+      "name": "Netzwerk Controller Zusammenfassung",
+      "description": "Zeigt die Zusammenfassung eines Netzwerk Controller (wie UniFi-Controller) an"
     },
     "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
-            "name": ""
+            "name": "Kabel"
           },
           "wifi": {
-            "name": ""
+            "name": "WLAN"
           }
         },
         "users": {
-          "label": ""
+          "label": "Benutzer"
         },
         "guests": {
-          "label": ""
+          "label": "Gäste"
         }
       },
       "option": {
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "WLAN"
             },
             "wired": {
-              "label": ""
+              "label": "Kabel"
             }
           },
-          "label": ""
+          "label": "Widget Inhalt"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Keine Daten verfügbar, alle Integrationen getrennt",
+        "unknownContentOption": "Unbekannte Inhaltsoption für das Netzwerkstatus Widget: "
       },
-      "name": "",
-      "description": ""
+      "name": "Netzwerkstatus",
+      "description": "Angeschlossene Geräte in einem Netzwerk anzeigen"
     },
     "networkController": {
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Fehler beim Abrufen der Netzwerk Controller Zusammenfassung"
       }
     }
   },
@@ -2448,10 +2448,10 @@
       },
       "backgroundImageUrl": {
         "label": "URL des Hintergrundbildes",
-        "placeholder": "",
+        "placeholder": "Tippen, um nach lokale Bilder zu suchen",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "Ihre Bilder",
+          "other": "Andere Bilder"
         }
       },
       "backgroundImageAttachment": {
@@ -3090,7 +3090,7 @@
               "label": "Medien Transkodierung"
             },
             "networkController": {
-              "label": ""
+              "label": "Netzwerk Controller"
             }
           }
         },
@@ -3625,7 +3625,7 @@
         "certificates": {
           "label": "Zertifikate",
           "hostnames": {
-            "label": ""
+            "label": "Hostnamen"
           }
         }
       },
@@ -4026,25 +4026,25 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Hostname"
       },
       "subject": {
-        "label": ""
+        "label": "Thema"
       },
       "issuer": {
-        "label": ""
+        "label": "Ersteller"
       },
       "validFrom": {
-        "label": ""
+        "label": "Gültig ab"
       },
       "validTo": {
-        "label": ""
+        "label": "Gültig bis"
       },
       "serialNumber": {
-        "label": ""
+        "label": "Seriennummer"
       },
       "fingerprint": {
-        "label": ""
+        "label": "Fingerabdruck"
       }
     },
     "page": {
@@ -4055,19 +4055,19 @@
           "title": "Es gibt noch keine Zertifikate"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Ungültiges Zertifikat",
+          "description": "Fehler beim Analysieren des Zertifikats"
         },
         "expires": "Gültig bis {when}",
-        "toHostnames": ""
+        "toHostnames": "Vertrauenswürdige Hostnamen"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "Hostnamen der vertrauten Zertifikate",
+        "description": "Einige Zertifikate erlauben es der spezifischen Domäne von Homarr nicht, sie anzufordern. Um diese Einschränkungen zu umgehen werden alle vertrauenswürdigen Hostnamen mit ihrem Zertifikats Fingerabdruck verwendet.",
         "noResults": {
-          "title": ""
+          "title": "Noch keine Hostnamen vorhanden"
         },
-        "toCertificates": ""
+        "toCertificates": "Zertifikate"
       }
     },
     "action": {
@@ -4099,16 +4099,16 @@
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "Vertrauenswürdigen Hostnamen entfernen",
+        "confirm": "Sind Sie sicher, dass Sie diesen vertrauenswürdigen Hostnamen entfernen wollen? Dies kann dazu führen, dass einige Integrationen nicht mehr funktionieren.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Hostname entfernt",
+            "message": "Der Hostname wurde erfolgreich entfernt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Hostname nicht entfernt",
+            "message": "Der Hostname konnte nicht entfernt werden"
           }
         }
       }
