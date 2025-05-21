@@ -15,3 +15,7 @@ export interface StreamSession {
     episodeCount?: number | null;
   } | null;
 }
+
+export interface CurrentSessionsInput {
+  showOnlyPlaying: boolean;
+}

@@ -10,13 +10,13 @@ import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { CustomPasswordInput } from "@homarr/ui";
-import { validation } from "@homarr/validation";
+import { userInitSchema } from "@homarr/validation/user";
 
 export const InitUserForm = () => {
   const t = useScopedI18n("user");
   const tUser = useScopedI18n("init.step.user");
   const { mutateAsync, isPending } = clientApi.user.initUser.useMutation();
-  const form = useZodForm(validation.user.init, {
+  const form = useZodForm(userInitSchema, {
     initialValues: {
       username: "",
       password: "",
@@ -74,4 +74,4 @@ export const InitUserForm = () => {
   );
 };
 
-type FormType = z.infer<typeof validation.user.init>;
+type FormType = z.infer<typeof userInitSchema>;

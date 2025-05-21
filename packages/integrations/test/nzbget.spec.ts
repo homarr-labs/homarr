@@ -2,9 +2,21 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
-import { beforeAll, describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test, vi } from "vitest";
+
+import { createDb } from "@homarr/db/test";
 
 import { NzbGetIntegration } from "../src";
+import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
+
+vi.mock("@homarr/db", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const actual = await importActual<typeof import("@homarr/db")>();
+  return {
+    ...actual,
+    db: createDb(),
+  };
+});
 
 const username = "nzbget";
 const password = "tegbzn6789";
@@ -22,10 +34,10 @@ describe("Nzbget integration", () => {
     const nzbGetIntegration = createNzbGetIntegration(startedContainer, username, password);
 
     // Act
-    const actAsync = async () => await nzbGetIntegration.testConnectionAsync();
+    const result = await nzbGetIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).resolves.not.toThrow();
+    expect(result.success).toBe(true);
 
     // Cleanup
     await startedContainer.stop();
@@ -37,10 +49,14 @@ describe("Nzbget integration", () => {
     const nzbGetIntegration = createNzbGetIntegration(startedContainer, "wrong-user", "wrong-password");
 
     // Act
-    const actAsync = async () => await nzbGetIntegration.testConnectionAsync();
+    const result = await nzbGetIntegration.testConnectionAsync();
 
     // Assert
-    await expect(actAsync()).rejects.toThrow();
+    expect(result.success).toBe(false);
+    if (result.success) return;
+
+    expect(result.error).toBeInstanceOf(TestConnectionError);
+    expect(result.error.type).toBe("authorization");
 
     // Cleanup
     await startedContainer.stop();

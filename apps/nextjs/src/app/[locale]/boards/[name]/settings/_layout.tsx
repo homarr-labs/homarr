@@ -6,7 +6,7 @@ import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/db/client";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { boardSaveLayoutsSchema } from "@homarr/validation/board";
 
 import type { Board } from "../../_types";
 
@@ -22,7 +22,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
       void utils.board.getHomeBoard.invalidate();
     },
   });
-  const form = useZodForm(validation.board.saveLayouts.omit({ id: true }).required(), {
+  const form = useZodForm(boardSaveLayoutsSchema.omit({ id: true }).required(), {
     initialValues: {
       layouts: board.layouts,
     },
@@ -105,7 +105,7 @@ export const LayoutSettingsContent = ({ board }: Props) => {
         </Stack>
 
         <Group justify="end">
-          <Button type="submit" loading={isPending} color="teal">
+          <Button type="submit" loading={isPending}>
             {t("common.action.saveChanges")}
           </Button>
         </Group>

@@ -23,13 +23,14 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
-    "undici": "7.7.0"
+    "@homarr/db": "workspace:^0.1.0",
+    "undici": "7.10.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.23.0",
-    "typescript": "^5.8.2"
+    "eslint": "^9.27.0",
+    "typescript": "^5.8.3"
   }
 }

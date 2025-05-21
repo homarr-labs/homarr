@@ -12,9 +12,9 @@ import { useZodForm } from "@homarr/form";
 import { IconPicker } from "@homarr/forms-collection";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { searchEngineManageSchema } from "@homarr/validation/search-engine";
 
-type FormType = z.infer<typeof validation.searchEngine.manage>;
+type FormType = z.infer<typeof searchEngineManageSchema>;
 
 interface SearchEngineFormProps {
   submitButtonTranslation: (t: TranslationFunction) => string;
@@ -30,7 +30,7 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
 
   const [integrationData] = clientApi.integration.allThatSupportSearch.useSuspenseQuery();
 
-  const form = useZodForm(validation.searchEngine.manage, {
+  const form = useZodForm(searchEngineManageSchema, {
     initialValues: initialValues ?? {
       name: "",
       short: "",

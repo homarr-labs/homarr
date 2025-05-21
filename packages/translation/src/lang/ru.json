@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Выбрать приложение",
-        "notFound": "Приложения не найдены"
-      }
+        "notFound": "Приложения не найдены",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {
@@ -692,6 +702,132 @@
         "create": "Проверить подключение и создать",
         "edit": "Проверить подключение и сохранить"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "Кнопка сохранения станет доступна после успешного подключения",
       "notification": {
         "success": {
@@ -757,6 +893,10 @@
         "wrongPath": {
           "title": "Неверный путь",
           "message": "Возможно, указан неверный путь"
+        },
+        "tooManyRequests": {
+          "title": "",
+          "message": ""
         }
       }
     },
@@ -864,6 +1004,7 @@
       "cancel": "Отмена",
       "delete": "Удалить",
       "discard": "Отменить",
+      "close": "",
       "confirm": "Подтвердить",
       "continue": "Продолжить",
       "previous": "Назад",
@@ -1077,6 +1218,9 @@
       "field": {
         "integrations": {
           "label": "Интеграции"
+        },
+        "title": {
+          "label": ""
         },
         "customCssClasses": {
           "label": "Пользовательские CSS классы"
@@ -1752,7 +1896,12 @@
     "mediaServer": {
       "name": "Активные просмотры",
       "description": "Отображает текущие сеансы воспроизведения на медиасерверах",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "",
         "user": "Пользователь",
@@ -1781,6 +1930,9 @@
         },
         "showCompletedTorrent": {
           "label": "Показывать завершённые торренты"
+        },
+        "showCompletedHttp": {
+          "label": ""
         },
         "activeTorrentThreshold": {
           "label": "Скрывать завершённые торренты ниже этого порога (в КиБ/с)"
@@ -1924,7 +2076,8 @@
         "pending": "В ожидании",
         "approved": "Одобрено",
         "declined": "Отклонено",
-        "failed": "Ошибка"
+        "failed": "Ошибка",
+        "completed": ""
       },
       "toBeDetermined": "Будет определено позже"
     },
@@ -2025,6 +2178,154 @@
         "maximumAmountPosts": {
           "label": "Максимальное количество записей"
         }
+      }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "name": {
+            "label": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": "",
+      "error": {
+        "label": "",
+        "options": {
+          "noMatchingVersion": ""
+        }
+      }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": ""
+          },
+          "wifi": {
+            "name": ""
+          }
+        },
+        "users": {
+          "label": ""
+        },
+        "guests": {
+          "label": ""
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": ""
+            },
+            "wired": {
+              "label": ""
+            }
+          },
+          "label": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": ""
       }
     }
   },
@@ -2146,7 +2447,12 @@
         "label": "URL изображения favicon"
       },
       "backgroundImageUrl": {
-        "label": "URL фонового изображения"
+        "label": "URL фонового изображения",
+        "placeholder": "",
+        "group": {
+          "your": "",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "Поведение фонового изображения",
@@ -2782,6 +3088,9 @@
             },
             "mediaTranscoding": {
               "label": "Перекодирование медиафайлов"
+            },
+            "networkController": {
+              "label": ""
             }
           }
         },
@@ -3314,7 +3623,10 @@
           "label": "Логи"
         },
         "certificates": {
-          "label": "Сертификаты"
+          "label": "Сертификаты",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3712,6 +4024,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "Доверенные сертификаты",
@@ -3719,7 +4054,20 @@
         "noResults": {
           "title": "Доверенные сертификаты отсутствуют"
         },
-        "expires": "Истекает {when}"
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
+        "expires": "Истекает {when}",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3747,6 +4095,20 @@
           "error": {
             "title": "Не удалось удалить сертификат",
             "message": "Произошла ошибка при удалении сертификата"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

@@ -5,13 +5,15 @@ import { asc, createId, eq, like } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import { searchEngines, users } from "@homarr/db/schema";
 import { createIntegrationAsync } from "@homarr/integrations";
-import { validation } from "@homarr/validation";
+import { byIdSchema, paginatedSchema, searchSchema } from "@homarr/validation/common";
+import { searchEngineEditSchema, searchEngineManageSchema } from "@homarr/validation/search-engine";
+import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 
 export const searchEngineRouter = createTRPCRouter({
-  getPaginated: protectedProcedure.input(validation.common.paginated).query(async ({ input, ctx }) => {
+  getPaginated: protectedProcedure.input(paginatedSchema).query(async ({ input, ctx }) => {
     const whereQuery = input.search ? like(searchEngines.name, `%${input.search.trim()}%`) : undefined;
     const searchEngineCount = await ctx.db.$count(searchEngines, whereQuery);
 
@@ -41,7 +43,7 @@ export const searchEngineRouter = createTRPCRouter({
         .then((engines) => engines.map((engine) => ({ value: engine.id, label: engine.name })));
     }),
 
-  byId: protectedProcedure.input(validation.common.byId).query(async ({ ctx, input }) => {
+  byId: protectedProcedure.input(byIdSchema).query(async ({ ctx, input }) => {
     const searchEngine = await ctx.db.query.searchEngines.findFirst({
       where: eq(searchEngines.id, input.id),
     });
@@ -115,7 +117,7 @@ export const searchEngineRouter = createTRPCRouter({
 
     return null;
   }),
-  search: protectedProcedure.input(validation.common.search).query(async ({ ctx, input }) => {
+  search: protectedProcedure.input(searchSchema).query(async ({ ctx, input }) => {
     return await ctx.db.query.searchEngines.findMany({
       where: like(searchEngines.short, `${input.query.toLowerCase().trim()}%`),
       with: {
@@ -131,22 +133,22 @@ export const searchEngineRouter = createTRPCRouter({
     });
   }),
   getMediaRequestOptions: protectedProcedure
-    .unstable_concat(createOneIntegrationMiddleware("query", "jellyseerr", "overseerr"))
-    .input(validation.common.mediaRequestOptions)
+    .concat(createOneIntegrationMiddleware("query", "jellyseerr", "overseerr"))
+    .input(mediaRequestOptionsSchema)
     .query(async ({ ctx, input }) => {
       const integration = await createIntegrationAsync(ctx.integration);
       return await integration.getSeriesInformationAsync(input.mediaType, input.mediaId);
     }),
   requestMedia: protectedProcedure
-    .unstable_concat(createOneIntegrationMiddleware("interact", "jellyseerr", "overseerr"))
-    .input(validation.common.requestMedia)
+    .concat(createOneIntegrationMiddleware("interact", "jellyseerr", "overseerr"))
+    .input(mediaRequestRequestSchema)
     .mutation(async ({ ctx, input }) => {
       const integration = await createIntegrationAsync(ctx.integration);
       return await integration.requestMediaAsync(input.mediaType, input.mediaId, input.seasons);
     }),
   create: permissionRequiredProcedure
     .requiresPermission("search-engine-create")
-    .input(validation.searchEngine.manage)
+    .input(searchEngineManageSchema)
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(searchEngines).values({
         id: createId(),
@@ -161,7 +163,7 @@ export const searchEngineRouter = createTRPCRouter({
     }),
   update: permissionRequiredProcedure
     .requiresPermission("search-engine-modify-all")
-    .input(validation.searchEngine.edit)
+    .input(searchEngineEditSchema)
     .mutation(async ({ ctx, input }) => {
       const searchEngine = await ctx.db.query.searchEngines.findFirst({
         where: eq(searchEngines.id, input.id),
@@ -188,7 +190,7 @@ export const searchEngineRouter = createTRPCRouter({
     }),
   delete: permissionRequiredProcedure
     .requiresPermission("search-engine-full-all")
-    .input(validation.common.byId)
+    .input(byIdSchema)
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .update(users)

@@ -1,6 +1,6 @@
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { mediaTranscodingRequestHandler } from "@homarr/request-handler/media-transcoding";
-import { validation } from "@homarr/validation";
+import { paginatedSchema } from "@homarr/validation/common";
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
@@ -11,8 +11,8 @@ const createIndexerManagerIntegrationMiddleware = (action: IntegrationAction) =>
 
 export const mediaTranscodingRouter = createTRPCRouter({
   getDataAsync: publicProcedure
-    .unstable_concat(createIndexerManagerIntegrationMiddleware("query"))
-    .input(validation.common.paginated.pick({ page: true, pageSize: true }))
+    .concat(createIndexerManagerIntegrationMiddleware("query"))
+    .input(paginatedSchema.pick({ page: true, pageSize: true }))
     .query(async ({ ctx, input }) => {
       const innerHandler = mediaTranscodingRequestHandler.handler(ctx.integration, {
         pageOffset: input.page,

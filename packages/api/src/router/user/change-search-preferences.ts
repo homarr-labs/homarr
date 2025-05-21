@@ -6,9 +6,9 @@ import type { Modify } from "@homarr/common/types";
 import { eq } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { users } from "@homarr/db/schema";
-import { validation } from "@homarr/validation";
+import { userChangeSearchPreferencesSchema } from "@homarr/validation/user";
 
-export const changeSearchPreferencesInputSchema = validation.user.changeSearchPreferences.and(
+export const changeSearchPreferencesInputSchema = userChangeSearchPreferencesSchema.and(
   z.object({ userId: z.string() }),
 );
 

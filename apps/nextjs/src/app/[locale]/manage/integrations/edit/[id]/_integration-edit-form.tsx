@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button, Fieldset, Group, Stack, TextInput } from "@mantine/core";
@@ -10,14 +11,15 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { getAllSecretKindOptions, getDefaultSecretKinds } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
-import { convertIntegrationTestConnectionError } from "@homarr/integrations/client";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { integrationUpdateSchema } from "@homarr/validation/integration";
 
 import { SecretCard } from "../../_components/secrets/integration-secret-card";
 import { IntegrationSecretInput } from "../../_components/secrets/integration-secret-inputs";
+import { IntegrationTestConnectionError } from "../../_components/test-connection/integration-test-connection-error";
+import type { AnyMappedTestConnectionError } from "../../_components/test-connection/types";
 
 interface EditIntegrationForm {
   integration: RouterOutputs["integration"]["byId"];
@@ -32,7 +34,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
     ) ?? getDefaultSecretKinds(integration.kind);
 
   const router = useRouter();
-  const form = useZodForm(validation.integration.update.omit({ id: true }), {
+  const form = useZodForm(integrationUpdateSchema.omit({ id: true }), {
     initialValues: {
       name: integration.name,
       url: integration.url,
@@ -43,6 +45,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
     },
   });
   const { mutateAsync, isPending } = clientApi.integration.update.useMutation();
+  const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
 
   const secretsMap = new Map(integration.secrets.map((secret) => [secret.kind, secret]));
 
@@ -57,26 +60,24 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
         })),
       },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          // We do it this way as we are unable to send a typesafe error through onError
+          if (data?.error) {
+            setError(data.error);
+            showErrorNotification({
+              title: t("integration.page.edit.notification.error.title"),
+              message: t("integration.page.edit.notification.error.message"),
+            });
+            return;
+          }
+
           showSuccessNotification({
             title: t("integration.page.edit.notification.success.title"),
             message: t("integration.page.edit.notification.success.message"),
           });
           void revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
         },
-        onError: (error) => {
-          const testConnectionError = convertIntegrationTestConnectionError(error.data?.error);
-
-          if (testConnectionError) {
-            showErrorNotification({
-              title: t(`integration.testConnection.notification.${testConnectionError.key}.title`),
-              message:
-                testConnectionError.message ??
-                t(`integration.testConnection.notification.${testConnectionError.key}.message`),
-            });
-            return;
-          }
-
+        onError: () => {
           showErrorNotification({
             title: t("integration.page.edit.notification.error.title"),
             message: t("integration.page.edit.notification.error.message"),
@@ -128,6 +129,8 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
           </Stack>
         </Fieldset>
 
+        {error !== null && <IntegrationTestConnectionError error={error} url={form.values.url} />}
+
         <Group justify="end" align="center">
           <Button variant="default" component={Link} href="/manage/integrations">
             {t("common.action.backToOverview")}
@@ -141,4 +144,4 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   );
 };
 
-type FormType = Omit<z.infer<typeof validation.integration.update>, "id">;
+type FormType = Omit<z.infer<typeof integrationUpdateSchema>, "id">;

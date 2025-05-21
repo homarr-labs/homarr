@@ -4,15 +4,21 @@ import { TRPCError } from "@trpc/server";
 // Placed here because gridstack styles are used for board content
 import "~/styles/gridstack.scss";
 
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+
+import { getQueryClient } from "@homarr/api/server";
 import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { isNullOrWhitespace } from "@homarr/common";
+import type { WidgetKind } from "@homarr/definitions";
+import { logger } from "@homarr/log";
 import { getI18n } from "@homarr/translation/server";
+import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
 
 import { createMetaTitle } from "~/metadata";
 import { createBoardLayout } from "../_layout-creator";
-import type { Board } from "../_types";
+import type { Board, Item } from "../_types";
 import { DynamicClientBoard } from "./_dynamic-client";
 import { BoardContentHeaderActions } from "./_header-actions";
 
@@ -31,14 +37,36 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       getInitialBoardAsync: getInitialBoard,
     }),
     // eslint-disable-next-line no-restricted-syntax
-    page: async () => {
+    page: async ({ params }: { params: Promise<TParams> }) => {
       const session = await auth();
       const integrations = await getIntegrationsWithPermissionsAsync(session);
 
+      const board = await getInitialBoard(await params);
+      const queryClient = getQueryClient();
+
+      // Prefetch item data
+      const itemsMap = board.items.reduce((acc, item) => {
+        const existing = acc.get(item.kind);
+        if (existing) {
+          existing.push(item);
+        } else {
+          acc.set(item.kind, [item]);
+        }
+        return acc;
+      }, new Map<WidgetKind, Item[]>());
+
+      for (const [kind, items] of itemsMap) {
+        await prefetchForKindAsync(kind, queryClient, items).catch((error) => {
+          logger.error(new Error("Failed to prefetch widget", { cause: error }));
+        });
+      }
+
       return (
-        <IntegrationProvider integrations={integrations}>
-          <DynamicClientBoard />
-        </IntegrationProvider>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <IntegrationProvider integrations={integrations}>
+            <DynamicClientBoard />
+          </IntegrationProvider>
+        </HydrationBoundary>
       );
     },
     generateMetadataAsync: async ({ params }: { params: Promise<TParams> }): Promise<Metadata> => {

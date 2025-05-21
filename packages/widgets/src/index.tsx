@@ -5,7 +5,7 @@ import { Center, Loader as UiLoader } from "@mantine/core";
 
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
-import type { SettingsContextProps } from "@homarr/settings";
+import type { SettingsContextProps } from "@homarr/settings/creator";
 
 import * as app from "./app";
 import * as bookmarks from "./bookmarks";
@@ -24,8 +24,11 @@ import * as mediaRequestsStats from "./media-requests/stats";
 import * as mediaServer from "./media-server";
 import * as mediaTranscoding from "./media-transcoding";
 import * as minecraftServerStatus from "./minecraft/server-status";
+import * as networkControllerStatus from "./network-controller/network-status";
+import * as networkControllerSummary from "./network-controller/summary";
 import * as notebook from "./notebook";
 import type { WidgetOptionDefinition } from "./options";
+import * as releases from "./releases";
 import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
@@ -53,12 +56,15 @@ export const widgetImports = {
   downloads,
   "mediaRequests-requestList": mediaRequestsList,
   "mediaRequests-requestStats": mediaRequestsStats,
+  networkControllerSummary,
+  networkControllerStatus,
   rssFeed,
   bookmarks,
   indexerManager,
   healthMonitoring,
   mediaTranscoding,
   minecraftServerStatus,
+  releases,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "选择应用",
-        "notFound": "未找到应用"
-      }
+        "notFound": "未找到应用",
+        "search": "",
+        "noResults": "",
+        "action": "",
+        "title": ""
+      },
+      "create": {
+        "title": "",
+        "description": "",
+        "action": ""
+      },
+      "add": ""
     }
   },
   "integration": {
@@ -692,6 +702,132 @@
         "create": "测试连接并创建",
         "edit": "测试连接并保存"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "成功建立连接后保存按钮将启用",
       "notification": {
         "success": {
@@ -757,6 +893,10 @@
         "wrongPath": {
           "title": "路径错误",
           "message": "该路径可能不正确"
+        },
+        "tooManyRequests": {
+          "title": "",
+          "message": ""
         }
       }
     },
@@ -864,6 +1004,7 @@
       "cancel": "取消",
       "delete": "删除",
       "discard": "Discard",
+      "close": "",
       "confirm": "确认",
       "continue": "继续",
       "previous": "上一步",
@@ -1077,6 +1218,9 @@
       "field": {
         "integrations": {
           "label": "集成"
+        },
+        "title": {
+          "label": ""
         },
         "customCssClasses": {
           "label": "自定义 CSS 类"
@@ -1752,7 +1896,12 @@
     "mediaServer": {
       "name": "当前媒体服务流",
       "description": "显示媒体服务器上的当前流",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "正在播放",
         "user": "用户",
@@ -1781,6 +1930,9 @@
         },
         "showCompletedTorrent": {
           "label": "显示标记为已完成的 Torrent 条目"
+        },
+        "showCompletedHttp": {
+          "label": ""
         },
         "activeTorrentThreshold": {
           "label": "隐藏在此阈值下已完成的 Torrent (kiB/s)"
@@ -1924,7 +2076,8 @@
         "pending": "待处理",
         "approved": "已批准",
         "declined": "已拒绝",
-        "failed": "失败"
+        "failed": "失败",
+        "completed": ""
       },
       "toBeDetermined": "待定"
     },
@@ -2025,6 +2178,154 @@
         "maximumAmountPosts": {
           "label": "帖子数量限制"
         }
+      }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "name": {
+            "label": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": "",
+      "error": {
+        "label": "",
+        "options": {
+          "noMatchingVersion": ""
+        }
+      }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": ""
+          },
+          "wifi": {
+            "name": ""
+          }
+        },
+        "users": {
+          "label": ""
+        },
+        "guests": {
+          "label": ""
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": ""
+            },
+            "wired": {
+              "label": ""
+            }
+          },
+          "label": ""
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "",
+        "unknownContentOption": ""
+      },
+      "name": "",
+      "description": ""
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": ""
       }
     }
   },
@@ -2146,7 +2447,12 @@
         "label": "Favicon 图像 URL"
       },
       "backgroundImageUrl": {
-        "label": "背景图片 URL"
+        "label": "背景图片 URL",
+        "placeholder": "",
+        "group": {
+          "your": "你的图像",
+          "other": ""
+        }
       },
       "backgroundImageAttachment": {
         "label": "背景图片附件",
@@ -2782,6 +3088,9 @@
             },
             "mediaTranscoding": {
               "label": "媒体转码"
+            },
+            "networkController": {
+              "label": "网络控制器"
             }
           }
         },
@@ -3314,7 +3623,10 @@
           "label": "日志"
         },
         "certificates": {
-          "label": "证书"
+          "label": "证书",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3712,6 +4024,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "可信证书",
@@ -3719,7 +4054,20 @@
         "noResults": {
           "title": "还没有证书"
         },
-        "expires": "到期时间 {when}"
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
+        "expires": "到期时间 {when}",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3747,6 +4095,20 @@
           "error": {
             "title": "证书未删除",
             "message": "无法删除证书"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

@@ -1,11 +1,11 @@
 import { and, like } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
-import { validation } from "@homarr/validation";
+import { iconsFindSchema } from "@homarr/validation/icons";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const iconsRouter = createTRPCRouter({
-  findIcons: publicProcedure.input(validation.icons.findIcons).query(async ({ ctx, input }) => {
+  findIcons: publicProcedure.input(iconsFindSchema).query(async ({ ctx, input }) => {
     return {
       icons: await ctx.db.query.iconRepositories.findMany({
         with: {

@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "App selecteren",
-        "notFound": "Geen app gevonden"
-      }
+        "notFound": "Geen app gevonden",
+        "search": "Zoek naar een app",
+        "noResults": "Geen resultaten gevonden voor deze zoekopdracht",
+        "action": "Selecteer {app}",
+        "title": "Selecteer een app om aan dit bord toe te voegen"
+      },
+      "create": {
+        "title": "Nieuwe app aanmaken",
+        "description": "Een nieuwe app aanmaken ",
+        "action": "Open app aanmaken"
+      },
+      "add": "Een app toevoegen"
     }
   },
   "integration": {
@@ -692,6 +702,132 @@
         "create": "Verbinding testen en aanmaken",
         "edit": "Verbinding testen en opslaan"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": "Reden met meer details"
+          }
+        },
+        "unknown": {
+          "title": "Onbekende fout",
+          "description": "Er is een onbekende fout opgetreden, open de reden hieronder om meer details te zien"
+        },
+        "parse": {
+          "title": "Parser fout",
+          "description": ""
+        },
+        "authorization": {
+          "title": "Fout tijdens het aanmelden",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "De opslaan knop wordt ingeschakeld zodra er een succesvolle verbinding tot stand is gebracht",
       "notification": {
         "success": {
@@ -757,6 +893,10 @@
         "wrongPath": {
           "title": "Verkeerde pad",
           "message": "Het pad is waarschijnlijk niet juist"
+        },
+        "tooManyRequests": {
+          "title": "Te veel verzoeken in een bepaalde tijd",
+          "message": "Er waren te veel aanvragen. Je wordt waarschijnlijk beperkt in snelheid of afgewezen door het doelsysteem"
         }
       }
     },
@@ -864,6 +1004,7 @@
       "cancel": "Annuleren",
       "delete": "Verwijderen",
       "discard": "Negeren",
+      "close": "",
       "confirm": "Bevestigen",
       "continue": "Doorgaan",
       "previous": "Vorige",
@@ -981,7 +1122,7 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "borderColor": {
           "label": "Randkleur"
@@ -1077,6 +1218,9 @@
       "field": {
         "integrations": {
           "label": "Integraties"
+        },
+        "title": {
+          "label": ""
         },
         "customCssClasses": {
           "label": "Aangepaste CSS-classes"
@@ -1752,7 +1896,12 @@
     "mediaServer": {
       "name": "Huidige mediaserver streams",
       "description": "De huidige streams op je mediaservers weergeven",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Momenteel aan het afspelen",
         "user": "Gebruiker",
@@ -1781,6 +1930,9 @@
         },
         "showCompletedTorrent": {
           "label": "Torrentvermeldingen weergeven die zijn gemarkeerd als voltooid"
+        },
+        "showCompletedHttp": {
+          "label": ""
         },
         "activeTorrentThreshold": {
           "label": "Voltooide torrent verbergen onder deze drempel (in kiB/s)"
@@ -1924,7 +2076,8 @@
         "pending": "In afwachting",
         "approved": "Goedgekeurd",
         "declined": "Afgewezen",
-        "failed": "Mislukt"
+        "failed": "Mislukt",
+        "completed": ""
       },
       "toBeDetermined": "TBD"
     },
@@ -2025,6 +2178,154 @@
         "maximumAmountPosts": {
           "label": "Aantal berichtenlimiet"
         }
+      }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "name": {
+            "label": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": "",
+      "error": {
+        "label": "",
+        "options": {
+          "noMatchingVersion": ""
+        }
+      }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": "{count} verbonden"
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "Geen gegevens beschikbaar, alle integraties verbroken",
+        "unknownContentOption": "Onbekende inhoudsoptie voor netwerkcontroller samenvatting widget:"
+      },
+      "name": "Netwerkcontroller samenvatting",
+      "description": "Geeft de samenvatting weer van een netwerkcontroller (zoals UniFi Controller)"
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": "Bedraad"
+          },
+          "wifi": {
+            "name": "Wi-Fi"
+          }
+        },
+        "users": {
+          "label": "Gebruikers"
+        },
+        "guests": {
+          "label": "Gasten"
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": "Wi-Fi"
+            },
+            "wired": {
+              "label": "Bedraad"
+            }
+          },
+          "label": "Widget inhoud"
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "Geen gegevens beschikbaar, alle integraties verbroken",
+        "unknownContentOption": "Onbekende inhoudsoptie voor netwerkstatus widget:"
+      },
+      "name": "Netwerkstatus",
+      "description": "Verbonden apparaten op een netwerk weergeven"
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": "Netwerkcontroller samenvatting ophalen mislukt"
       }
     }
   },
@@ -2146,7 +2447,12 @@
         "label": "Favicon afbeeldings-URL"
       },
       "backgroundImageUrl": {
-        "label": "Achtergrondafbeelding URL"
+        "label": "Achtergrondafbeelding URL",
+        "placeholder": "Begin met typen om lokale afbeeldingen te zoeken",
+        "group": {
+          "your": "Jouw afbeeldingen",
+          "other": "Andere afbeeldingen"
+        }
       },
       "backgroundImageAttachment": {
         "label": "Achtergrondafbeelding bijlage",
@@ -2782,6 +3088,9 @@
             },
             "mediaTranscoding": {
               "label": "Mediatranscodering"
+            },
+            "networkController": {
+              "label": "Netwerkcontroller"
             }
           }
         },
@@ -3314,7 +3623,10 @@
           "label": "Logs"
         },
         "certificates": {
-          "label": "Certificaten"
+          "label": "Certificaten",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3712,6 +4024,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "Vertrouwde certificaten",
@@ -3719,7 +4054,20 @@
         "noResults": {
           "title": "Er zijn nog geen certificaten"
         },
-        "expires": "Verloopt {when}"
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
+        "expires": "Verloopt {when}",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3747,6 +4095,20 @@
           "error": {
             "title": "Certificaat niet verwijderd",
             "message": "Certificaat kon niet worden verwijderd"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

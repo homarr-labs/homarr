@@ -22,7 +22,7 @@ export const passwordRequirements = [
   value: keyof TranslationObject["user"]["field"]["password"]["requirement"];
 }[];
 
-const passwordSchema = z
+export const userPasswordSchema = z
   .string()
   .min(8)
   .max(255)
@@ -51,39 +51,39 @@ const addConfirmPasswordRefinement = <TObj extends { password: string; confirmPa
   });
 };
 
-const baseCreateUserSchema = z.object({
+export const userBaseCreateSchema = z.object({
   username: usernameSchema,
-  password: passwordSchema,
+  password: userPasswordSchema,
   confirmPassword: z.string(),
   email: z.string().email().or(z.string().length(0).optional()),
   groupIds: z.array(z.string()),
 });
 
-const createUserSchema = addConfirmPasswordRefinement(baseCreateUserSchema);
+export const userCreateSchema = addConfirmPasswordRefinement(userBaseCreateSchema);
 
-const initUserSchema = addConfirmPasswordRefinement(baseCreateUserSchema.omit({ groupIds: true }));
+export const userInitSchema = addConfirmPasswordRefinement(userBaseCreateSchema.omit({ groupIds: true }));
 
-const signInSchema = z.object({
+export const userSignInSchema = z.object({
   name: z.string().min(1),
   password: z.string().min(1),
 });
 
-const registrationSchema = addConfirmPasswordRefinement(
+export const userRegistrationSchema = addConfirmPasswordRefinement(
   z.object({
     username: usernameSchema,
-    password: passwordSchema,
+    password: userPasswordSchema,
     confirmPassword: z.string(),
   }),
 );
 
-const registrationSchemaApi = registrationSchema.and(
+export const userRegistrationApiSchema = userRegistrationSchema.and(
   z.object({
     inviteId: z.string(),
     token: z.string(),
   }),
 );
 
-const editProfileSchema = z.object({
+export const userEditProfileSchema = z.object({
   id: z.string(),
   name: usernameSchema,
   email: z
@@ -97,51 +97,33 @@ const editProfileSchema = z.object({
 
 const baseChangePasswordSchema = z.object({
   previousPassword: z.string().min(1),
-  password: passwordSchema,
+  password: userPasswordSchema,
   confirmPassword: z.string(),
   userId: z.string(),
 });
 
-const changePasswordSchema = addConfirmPasswordRefinement(baseChangePasswordSchema.omit({ userId: true }));
+export const userChangePasswordSchema = addConfirmPasswordRefinement(baseChangePasswordSchema.omit({ userId: true }));
 
-const changePasswordApiSchema = addConfirmPasswordRefinement(baseChangePasswordSchema);
+export const userChangePasswordApiSchema = addConfirmPasswordRefinement(baseChangePasswordSchema);
 
-const changeHomeBoardSchema = z.object({
+export const userChangeHomeBoardsSchema = z.object({
   homeBoardId: z.string().nullable(),
   mobileHomeBoardId: z.string().nullable(),
 });
 
-const changeSearchPreferencesSchema = z.object({
+export const userChangeSearchPreferencesSchema = z.object({
   defaultSearchEngineId: z.string().min(1).nullable(),
   openInNewTab: z.boolean(),
 });
 
-const changeColorSchemeSchema = z.object({
+export const userChangeColorSchemeSchema = z.object({
   colorScheme: zodEnumFromArray(colorSchemes),
 });
 
-const firstDayOfWeekSchema = z.object({
+export const userFirstDayOfWeekSchema = z.object({
   firstDayOfWeek: z.custom<DayOfWeek>((value) => z.number().min(0).max(6).safeParse(value).success),
 });
 
-const pingIconsEnabledSchema = z.object({
+export const userPingIconsEnabledSchema = z.object({
   pingIconsEnabled: z.boolean(),
 });
-
-export const userSchemas = {
-  signIn: signInSchema,
-  registration: registrationSchema,
-  registrationApi: registrationSchemaApi,
-  init: initUserSchema,
-  create: createUserSchema,
-  baseCreate: baseCreateUserSchema,
-  password: passwordSchema,
-  editProfile: editProfileSchema,
-  changePassword: changePasswordSchema,
-  changeHomeBoards: changeHomeBoardSchema,
-  changeSearchPreferences: changeSearchPreferencesSchema,
-  changePasswordApi: changePasswordApiSchema,
-  changeColorScheme: changeColorSchemeSchema,
-  firstDayOfWeek: firstDayOfWeekSchema,
-  pingIconsEnabled: pingIconsEnabledSchema,
-};

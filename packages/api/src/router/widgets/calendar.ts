@@ -17,7 +17,7 @@ export const calendarRouter = createTRPCRouter({
         showUnmonitored: z.boolean(),
       }),
     )
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("calendar")))
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("calendar")))
     .query(async ({ ctx, input }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {

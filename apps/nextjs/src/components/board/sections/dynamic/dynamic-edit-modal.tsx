@@ -6,7 +6,7 @@ import type { z } from "zod";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { dynamicSectionOptionsSchema } from "@homarr/validation";
+import { dynamicSectionOptionsSchema } from "@homarr/validation/shared";
 
 interface ModalProps {
   value: z.infer<typeof dynamicSectionOptionsSchema>;
@@ -48,9 +48,7 @@ export const DynamicSectionEditModal = createModal<ModalProps>(({ actions, inner
             <Button onClick={actions.closeModal} variant="subtle" color="gray">
               {t("common.action.cancel")}
             </Button>
-            <Button type="submit" color="teal">
-              {t("common.action.saveChanges")}
-            </Button>
+            <Button type="submit">{t("common.action.saveChanges")}</Button>
           </Group>
         </Group>
       </Stack>

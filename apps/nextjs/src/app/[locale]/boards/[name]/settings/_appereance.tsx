@@ -20,7 +20,7 @@ import { useDisclosure } from "@mantine/hooks";
 
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
 import type { Board } from "../../_types";
 import { generateColors } from "../../(content)/_theme";
@@ -35,7 +35,7 @@ const hexRegex = /^#[0-9a-fA-F]{6}$/;
 const progressPercentageLabel = (value: number) => `${value}%`;
 
 export const ColorSettingsContent = ({ board }: Props) => {
-  const form = useZodForm(validation.board.savePartialSettings, {
+  const form = useZodForm(boardSavePartialSettingsSchema, {
     initialValues: {
       primaryColor: board.primaryColor,
       secondaryColor: board.secondaryColor,
@@ -123,7 +123,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
           </Grid.Col>
         </Grid>
         <Group justify="end">
-          <Button type="submit" loading={isPending} color="teal">
+          <Button type="submit" loading={isPending}>
             {t("common.action.saveChanges")}
           </Button>
         </Group>

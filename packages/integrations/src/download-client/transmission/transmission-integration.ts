@@ -1,17 +1,26 @@
 import { Transmission } from "@ctrl/transmission";
 import dayjs from "dayjs";
+import type { Dispatcher } from "undici";
 
 import { createCertificateAgentAsync } from "@homarr/certificates/server";
 
+import { HandleIntegrationErrors } from "../../base/errors/decorator";
+import { integrationOFetchHttpErrorHandler } from "../../base/errors/http";
+import type { IntegrationTestingInput } from "../../base/integration";
+import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
 
+@HandleIntegrationErrors([integrationOFetchHttpErrorHandler])
 export class TransmissionIntegration extends DownloadClientIntegration {
-  public async testConnectionAsync(): Promise<void> {
-    const client = await this.getClientAsync();
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const client = await this.getClientAsync(input.dispatcher);
     await client.getSession();
+    return {
+      success: true,
+    };
   }
 
   public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
@@ -24,7 +33,7 @@ export class TransmissionIntegration extends DownloadClientIntegration {
     );
     const paused =
       torrents.find(({ status }) => TransmissionIntegration.getTorrentState(status) !== "paused") === undefined;
-    const status: DownloadClientStatus = { paused, rates, type };
+    const status: DownloadClientStatus = { paused, rates, types: [type] };
     const items = torrents.map((torrent): DownloadClientItem => {
       const state = TransmissionIntegration.getTorrentState(torrent.status);
       return {
@@ -76,12 +85,12 @@ export class TransmissionIntegration extends DownloadClientIntegration {
     await client.removeTorrent(id, fromDisk);
   }
 
-  private async getClientAsync() {
+  private async getClientAsync(dispatcher?: Dispatcher) {
     return new Transmission({
       baseUrl: this.url("/").toString(),
       username: this.getSecretValue("username"),
       password: this.getSecretValue("password"),
-      dispatcher: await createCertificateAgentAsync(),
+      dispatcher: dispatcher ?? (await createCertificateAgentAsync()),
     });
   }
 

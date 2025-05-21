@@ -9,7 +9,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { userEditProfileSchema } from "@homarr/validation/user";
 
 interface UserProfileFormProps {
   user: RouterOutputs["user"]["getById"];
@@ -43,7 +43,7 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
       });
     },
   });
-  const form = useZodForm(validation.user.editProfile.omit({ id: true }), {
+  const form = useZodForm(userEditProfileSchema.omit({ id: true }), {
     initialValues: {
       name: user.name ?? "",
       email: user.email ?? "",
@@ -81,7 +81,7 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
 
         {isProviderCredentials && (
           <Group justify="end">
-            <Button type="submit" color="teal" disabled={!form.isDirty()} loading={isPending}>
+            <Button type="submit" disabled={!form.isDirty()} loading={isPending}>
               {t("common.action.saveChanges")}
             </Button>
           </Group>

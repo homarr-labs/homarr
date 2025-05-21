@@ -5,7 +5,7 @@ import { createCustomErrorParams } from "./form/i18n";
 
 export const supportedMediaUploadFormats = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml"];
 
-export const uploadMediaSchema = zfd.formData({
+export const mediaUploadSchema = zfd.formData({
   file: zfd.file().superRefine((value: File | null, context: z.RefinementCtx) => {
     if (!value) {
       return context.addIssue({
@@ -26,6 +26,7 @@ export const uploadMediaSchema = zfd.formData({
     }
 
     if (value.size > 1024 * 1024 * 32) {
+      // Don't forget to update the limit in nginx.conf (client_max_body_size)
       return context.addIssue({
         code: "custom",
         params: createCustomErrorParams({
@@ -38,7 +39,3 @@ export const uploadMediaSchema = zfd.formData({
     return null;
   }),
 });
-
-export const mediaSchemas = {
-  uploadMedia: uploadMediaSchema,
-};

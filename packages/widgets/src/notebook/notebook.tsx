@@ -67,6 +67,10 @@ import type { WidgetComponentProps } from "../definition";
 
 import "./notebook.css";
 
+import { useSession } from "@homarr/auth/client";
+import { constructBoardPermissions } from "@homarr/auth/shared";
+import { useRequiredBoard } from "@homarr/boards/context";
+
 const iconProps = {
   size: 30,
   stroke: 1.5,
@@ -81,8 +85,11 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
   const [content, setContent] = useState(options.content);
   const [toSaveContent, setToSaveContent] = useState(content);
 
-  // TODO: Add check for user permissions
-  const enabled = !isEditMode;
+  const board = useRequiredBoard();
+  const { data: session } = useSession();
+  const { hasChangeAccess } = constructBoardPermissions(board, session);
+
+  const enabled = !isEditMode && hasChangeAccess;
   const [isEditing, setIsEditing] = useState(false);
 
   const { primaryColor } = useMantineTheme();

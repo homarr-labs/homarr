@@ -1,7 +1,10 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ResponseError } from "@homarr/common/server";
 
+import type { IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
-import { IntegrationTestConnectionError } from "../../base/test-connection-error";
+import { TestConnectionError } from "../../base/test-connection/test-connection-error";
+import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DnsHoleSummaryIntegration } from "../../interfaces/dns-hole-summary/dns-hole-summary-integration";
 import type { DnsHoleSummary } from "../../interfaces/dns-hole-summary/dns-hole-summary-types";
 import { summaryResponseSchema } from "./pi-hole-schemas-v5";
@@ -11,46 +14,35 @@ export class PiHoleIntegrationV5 extends Integration implements DnsHoleSummaryIn
     const apiKey = super.getSecretValue("apiKey");
     const response = await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?summaryRaw", { auth: apiKey }));
     if (!response.ok) {
-      throw new Error(
-        `Failed to fetch summary for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
-      );
+      throw new ResponseError(response);
     }
 
-    const result = summaryResponseSchema.safeParse(await response.json());
-
-    if (!result.success) {
-      throw new Error(
-        `Failed to parse summary for ${this.integration.name} (${this.integration.id}), most likely your api key is wrong: ${result.error.message}`,
-      );
-    }
+    const data = await summaryResponseSchema.parseAsync(await response.json());
 
     return {
-      status: result.data.status,
-      adsBlockedToday: result.data.ads_blocked_today,
-      adsBlockedTodayPercentage: result.data.ads_percentage_today,
-      domainsBeingBlocked: result.data.domains_being_blocked,
-      dnsQueriesToday: result.data.dns_queries_today,
+      status: data.status,
+      adsBlockedToday: data.ads_blocked_today,
+      adsBlockedTodayPercentage: data.ads_percentage_today,
+      domainsBeingBlocked: data.domains_being_blocked,
+      dnsQueriesToday: data.dns_queries_today,
     };
   }
 
-  public async testConnectionAsync(): Promise<void> {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const apiKey = super.getSecretValue("apiKey");
 
-    await super.handleTestConnectionResponseAsync({
-      queryFunctionAsync: async () => {
-        return await fetchWithTrustedCertificatesAsync(this.url("/admin/api.php?status", { auth: apiKey }));
-      },
-      handleResponseAsync: async (response) => {
-        try {
-          const result = await response.json();
-          if (typeof result === "object" && result !== null && "status" in result) return;
-        } catch {
-          throw new IntegrationTestConnectionError("invalidJson");
-        }
+    const response = await input.fetchAsync(this.url("/admin/api.php?status", { auth: apiKey }));
 
-        throw new IntegrationTestConnectionError("invalidCredentials");
-      },
-    });
+    if (!response.ok) return TestConnectionError.StatusResult(response);
+
+    const data = await response.json();
+
+    // Pi-hole v5 returned an empty array if the API key is wrong
+    if (typeof data !== "object" || Array.isArray(data)) {
+      return TestConnectionError.UnauthorizedResult(401);
+    }
+
+    return { success: true };
   }
 
   public async enableAsync(): Promise<void> {

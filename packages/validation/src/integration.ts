@@ -5,7 +5,7 @@ import { integrationKinds, integrationPermissions, integrationSecretKinds } from
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
 
-const integrationCreateSchema = z.object({
+export const integrationCreateSchema = z.object({
   name: z.string().nonempty().max(127),
   url: z
     .string()
@@ -21,7 +21,7 @@ const integrationCreateSchema = z.object({
   attemptSearchEngineCreation: z.boolean(),
 });
 
-const integrationUpdateSchema = z.object({
+export const integrationUpdateSchema = z.object({
   id: z.string().cuid2(),
   name: z.string().nonempty().max(127),
   url: z.string().url(),
@@ -33,29 +33,4 @@ const integrationUpdateSchema = z.object({
   ),
 });
 
-const idSchema = z.object({
-  id: z.string(),
-});
-
-const testConnectionSchema = z.object({
-  id: z.string().cuid2().nullable(), // Is used to use existing secrets if they have not been updated
-  url: z.string().url(),
-  kind: zodEnumFromArray(integrationKinds),
-  secrets: z.array(
-    z.object({
-      kind: zodEnumFromArray(integrationSecretKinds),
-      value: z.string().nullable(),
-    }),
-  ),
-});
-
-const savePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(integrationPermissions));
-
-export const integrationSchemas = {
-  create: integrationCreateSchema,
-  update: integrationUpdateSchema,
-  delete: idSchema,
-  byId: idSchema,
-  testConnection: testConnectionSchema,
-  savePermissions: savePermissionsSchema,
-};
+export const integrationSavePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(integrationPermissions));

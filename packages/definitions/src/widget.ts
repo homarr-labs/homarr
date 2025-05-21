@@ -17,9 +17,12 @@ export const widgetKinds = [
   "mediaRequests-requestStats",
   "mediaTranscoding",
   "minecraftServerStatus",
+  "networkControllerSummary",
+  "networkControllerStatus",
   "rssFeed",
   "bookmarks",
   "indexerManager",
   "healthMonitoring",
+  "releases",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];

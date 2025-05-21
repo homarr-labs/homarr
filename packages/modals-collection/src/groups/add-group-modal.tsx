@@ -6,12 +6,12 @@ import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { groupCreateSchema } from "@homarr/validation/group";
 
 export const AddGroupModal = createModal<void>(({ actions }) => {
   const t = useI18n();
   const { mutate, isPending } = clientApi.group.createGroup.useMutation();
-  const form = useZodForm(validation.group.create, {
+  const form = useZodForm(groupCreateSchema, {
     initialValues: {
       name: "",
     },
@@ -44,7 +44,7 @@ export const AddGroupModal = createModal<void>(({ actions }) => {
           <Button onClick={actions.closeModal} variant="subtle" color="gray">
             {t("common.action.cancel")}
           </Button>
-          <Button loading={isPending} type="submit" color="teal">
+          <Button loading={isPending} type="submit">
             {t("common.action.create")}
           </Button>
         </Group>

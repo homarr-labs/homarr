@@ -1,7 +1,8 @@
 import { X509Certificate } from "node:crypto";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import { IconCertificate, IconCertificateOff } from "@tabler/icons-react";
+import { Button, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { IconAlertTriangle, IconCertificate, IconCertificateOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
 import { auth } from "@homarr/auth/next";
@@ -31,11 +32,27 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
   const t = await getI18n();
   const certificates = await loadCustomRootCertificatesAsync();
   const x509Certificates = certificates
-    .map((cert) => ({
-      ...cert,
-      x509: new X509Certificate(cert.content),
-    }))
-    .sort((certA, certB) => certA.x509.validToDate.getTime() - certB.x509.validToDate.getTime());
+    .map((cert) => {
+      try {
+        const x509 = new X509Certificate(cert.content);
+        return {
+          ...cert,
+          isError: false,
+          x509,
+        } as const;
+      } catch {
+        return {
+          ...cert,
+          isError: true,
+          x509: null,
+        } as const;
+      }
+    })
+    .sort((certA, certB) => {
+      if (certA.isError) return -1;
+      if (certB.isError) return 1;
+      return certA.x509.validToDate.getTime() - certB.x509.validToDate.getTime();
+    });
 
   return (
     <>
@@ -48,7 +65,12 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
             <Text>{t("certificate.page.list.description")}</Text>
           </Stack>
 
-          <AddCertificateButton />
+          <Group>
+            <Button variant="default" component={Link} href="/manage/tools/certificates/hostnames">
+              {t("certificate.page.list.toHostnames")}
+            </Button>
+            <AddCertificateButton />
+          </Group>
         </Group>
 
         {x509Certificates.length === 0 && (
@@ -57,32 +79,47 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
 
         <SimpleGrid cols={{ sm: 1, lg: 2, xl: 3 }} spacing="lg">
           {x509Certificates.map((cert) => (
-            <Card key={cert.x509.fingerprint} withBorder>
+            <Card key={cert.fileName} withBorder>
               <Group wrap="nowrap">
-                <IconCertificate
-                  color={getMantineColor(iconColor(cert.x509.validToDate), 6)}
-                  style={{ minWidth: 32 }}
-                  size={32}
-                  stroke={1.5}
-                />
+                {cert.isError ? (
+                  <IconAlertTriangle
+                    color={getMantineColor("red", 6)}
+                    style={{ minWidth: 32 }}
+                    size={32}
+                    stroke={1.5}
+                  />
+                ) : (
+                  <IconCertificate
+                    color={getMantineColor(iconColor(cert.x509.validToDate), 6)}
+                    style={{ minWidth: 32 }}
+                    size={32}
+                    stroke={1.5}
+                  />
+                )}
                 <Stack flex={1} gap="xs" maw="calc(100% - 48px)">
                   <Group justify="space-between" wrap="nowrap">
                     <Text fw={500} lineClamp={1} style={{ wordBreak: "break-all" }}>
-                      {cert.x509.subject}
+                      {cert.isError ? t("certificate.page.list.invalid.title") : cert.x509.subject}
                     </Text>
                     <Text c="gray.6" ta="end" size="sm">
                       {cert.fileName}
                     </Text>
                   </Group>
                   <Group justify="space-between">
-                    <Text size="sm" c="gray.6" title={cert.x509.validToDate.toISOString()}>
-                      {t("certificate.page.list.expires", {
-                        when: new Intl.RelativeTimeFormat(locale).format(
-                          dayjs(cert.x509.validToDate).diff(dayjs(), "days"),
-                          "days",
-                        ),
-                      })}
-                    </Text>
+                    {cert.isError ? (
+                      <Text size="sm" c="gray.6">
+                        {t("certificate.page.list.invalid.description")}
+                      </Text>
+                    ) : (
+                      <Text size="sm" c="gray.6" title={cert.x509.validToDate.toISOString()}>
+                        {t("certificate.page.list.expires", {
+                          when: new Intl.RelativeTimeFormat(locale).format(
+                            dayjs(cert.x509.validToDate).diff(dayjs(), "days"),
+                            "days",
+                          ),
+                        })}
+                      </Text>
+                    )}
                     <RemoveCertificate fileName={cert.fileName} />
                   </Group>
                 </Stack>

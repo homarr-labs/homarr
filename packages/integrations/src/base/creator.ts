@@ -5,6 +5,7 @@ import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { DashDotIntegration } from "../dashdot/dashdot-integration";
+import { Aria2Integration } from "../download-client/aria2/aria2-integration";
 import { DelugeIntegration } from "../download-client/deluge/deluge-integration";
 import { NzbGetIntegration } from "../download-client/nzbget/nzbget-integration";
 import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorrent-integration";
@@ -26,6 +27,7 @@ import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-fac
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
+import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
 export const createIntegrationAsync = async <TKind extends keyof typeof integrationCreators>(
@@ -77,6 +79,7 @@ export const integrationCreators = {
   qBittorrent: QBitTorrentIntegration,
   deluge: DelugeIntegration,
   transmission: TransmissionIntegration,
+  aria2: Aria2Integration,
   jellyseerr: JellyseerrIntegration,
   overseerr: OverseerrIntegration,
   prowlarr: ProwlarrIntegration,
@@ -88,6 +91,7 @@ export const integrationCreators = {
   proxmox: ProxmoxIntegration,
   emby: EmbyIntegration,
   nextcloud: NextcloudIntegration,
+  unifiController: UnifiControllerIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

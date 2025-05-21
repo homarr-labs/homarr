@@ -9,10 +9,11 @@ import { getSectionElements } from "./section-elements";
 
 export interface CreateItemInput {
   kind: WidgetKind;
+  options?: Record<string, unknown>;
 }
 
 export const createItemCallback =
-  ({ kind }: CreateItemInput) =>
+  ({ kind, options = {} }: CreateItemInput) =>
   (previous: Board): Board => {
     const firstSection = previous.sections
       .filter((section): section is EmptySection => section.kind === "empty")
@@ -24,10 +25,11 @@ export const createItemCallback =
     const widget = {
       id: createId(),
       kind,
-      options: {},
+      options,
       layouts: createItemLayouts(previous, firstSection),
       integrationIds: [],
       advancedOptions: {
+        title: null,
         customCssClasses: [],
         borderColor: "",
       },

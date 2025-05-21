@@ -3,21 +3,28 @@ import objectSupport from "dayjs/plugin/objectSupport";
 import utc from "dayjs/plugin/utc";
 import * as ical from "node-ical";
 import { DAVClient } from "tsdav";
-import type { RequestInit as UndiciFetchRequestInit } from "undici";
+import type { Dispatcher, RequestInit as UndiciFetchRequestInit } from "undici";
 
 import { createCertificateAgentAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
+import { HandleIntegrationErrors } from "../base/errors/decorator";
+import { integrationTsdavHttpErrorHandler } from "../base/errors/http";
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { CalendarEvent } from "../calendar-types";
 
 dayjs.extend(utc);
 dayjs.extend(objectSupport);
 
+@HandleIntegrationErrors([integrationTsdavHttpErrorHandler])
 export class NextcloudIntegration extends Integration {
-  public async testConnectionAsync(): Promise<void> {
-    const client = await this.createCalendarClientAsync();
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const client = await this.createCalendarClientAsync(input.dispatcher);
     await client.login();
+
+    return { success: true };
   }
 
   public async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]> {
@@ -85,7 +92,7 @@ export class NextcloudIntegration extends Integration {
     });
   }
 
-  private async createCalendarClientAsync() {
+  private async createCalendarClientAsync(dispatcher?: Dispatcher) {
     return new DAVClient({
       serverUrl: this.integration.url,
       credentials: {
@@ -96,7 +103,7 @@ export class NextcloudIntegration extends Integration {
       defaultAccountType: "caldav",
       fetchOptions: {
         // We can use the undici options as the global fetch is used instead of the polyfilled.
-        dispatcher: await createCertificateAgentAsync(),
+        dispatcher: dispatcher ?? (await createCertificateAgentAsync()),
       } satisfies UndiciFetchRequestInit as RequestInit,
     });
   }

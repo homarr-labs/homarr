@@ -10,7 +10,7 @@ import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { CustomPasswordInput } from "@homarr/ui";
-import { validation } from "@homarr/validation";
+import { userChangePasswordSchema } from "@homarr/validation/user";
 
 interface ChangePasswordFormProps {
   user: RouterOutputs["user"]["getById"];
@@ -34,7 +34,7 @@ export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
       });
     },
   });
-  const form = useZodForm(validation.user.changePassword, {
+  const form = useZodForm(userChangePasswordSchema, {
     initialValues: {
       /* Require previous password if the current user want's to change his password */
       previousPassword: session?.user.id === user.id ? "" : "_",
@@ -85,7 +85,7 @@ export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
             />
 
             <Group justify="end">
-              <Button type="submit" color="teal" loading={isPending}>
+              <Button type="submit" loading={isPending}>
                 {t("common.action.confirm")}
               </Button>
             </Group>

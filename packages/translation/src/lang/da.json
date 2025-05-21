@@ -611,8 +611,18 @@
     "action": {
       "select": {
         "label": "Vælg app",
-        "notFound": "Ingen app fundet"
-      }
+        "notFound": "Ingen app fundet",
+        "search": "Søg efter en app",
+        "noResults": "Ingen resultater",
+        "action": "Vælg {app}",
+        "title": "Vælg en app, der skal tilføjes til denne tavle"
+      },
+      "create": {
+        "title": "Opret ny app",
+        "description": "Opret en ny app ",
+        "action": "Åbn app-oprettelse"
+      },
+      "add": "Tilføj en app"
     }
   },
   "integration": {
@@ -692,6 +702,132 @@
         "create": "Test forbindelse og opret",
         "edit": "Test forbindelse og gem"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "Gem-knappen er aktiveret, når en vellykket forbindelse er etableret",
       "notification": {
         "success": {
@@ -757,6 +893,10 @@
         "wrongPath": {
           "title": "Forkert sti",
           "message": "Stien er sandsynligvis ikke korrekt"
+        },
+        "tooManyRequests": {
+          "title": "For mange anmodninger i et givet tidsrum",
+          "message": "Der var for mange anmodninger. Du bliver sandsynligvis rate-limited eller afvist af målsystemet"
         }
       }
     },
@@ -864,6 +1004,7 @@
       "cancel": "Annuller",
       "delete": "Slet",
       "discard": "Kassér",
+      "close": "",
       "confirm": "Bekræft",
       "continue": "Forsæt",
       "previous": "Forrige",
@@ -1077,6 +1218,9 @@
       "field": {
         "integrations": {
           "label": "Integrationer"
+        },
+        "title": {
+          "label": ""
         },
         "customCssClasses": {
           "label": "Brugerdefinerede CSS-klasser"
@@ -1752,7 +1896,12 @@
     "mediaServer": {
       "name": "Aktuelle medieserver streams",
       "description": "Vis de aktuelle streams på dine medieservere",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Afspiller lige nu",
         "user": "Bruger",
@@ -1781,6 +1930,9 @@
         },
         "showCompletedTorrent": {
           "label": "Vis torrent poster markeret som fuldførte"
+        },
+        "showCompletedHttp": {
+          "label": "Vis Diverse poster markeret som færdige"
         },
         "activeTorrentThreshold": {
           "label": "Skjul afsluttet torrent under denne tærskel (i kiB/s)"
@@ -1924,7 +2076,8 @@
         "pending": "Afventende",
         "approved": "Godkendt",
         "declined": "Afvist",
-        "failed": "Mislykket"
+        "failed": "Mislykket",
+        "completed": ""
       },
       "toBeDetermined": "TBD"
     },
@@ -2025,6 +2178,154 @@
         "maximumAmountPosts": {
           "label": "Grænse for antal indlæg"
         }
+      }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "name": {
+            "label": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": "",
+      "error": {
+        "label": "",
+        "options": {
+          "noMatchingVersion": ""
+        }
+      }
+    },
+    "networkControllerSummary": {
+      "option": {},
+      "card": {
+        "vpn": {
+          "countConnected": "{count} tilsluttet"
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "Ingen tilgængelige data, alle integrationer afbrudt",
+        "unknownContentOption": "Ukendt indhold indstilling for netværkscontroller resumé widget: "
+      },
+      "name": "Netværkskontroller Oversigt",
+      "description": "Viser resuméet af en netværkskontroller (som UniFi Controller)"
+    },
+    "networkControllerStatus": {
+      "card": {
+        "variants": {
+          "wired": {
+            "name": "Kablet"
+          },
+          "wifi": {
+            "name": "WiFi"
+          }
+        },
+        "users": {
+          "label": "Brugere"
+        },
+        "guests": {
+          "label": "Gæster"
+        }
+      },
+      "option": {
+        "content": {
+          "option": {
+            "wifi": {
+              "label": "WiFi"
+            },
+            "wired": {
+              "label": "Kablet"
+            }
+          },
+          "label": "Widget indhold"
+        }
+      },
+      "error": {
+        "integrationsDisconnected": "Ingen tilgængelige data, alle integrationer afbrudt",
+        "unknownContentOption": "Ukendt indhold indstilling for netværksstatuswidget: "
+      },
+      "name": "Status for netværk",
+      "description": "Vis tilsluttede enheder på et netværk"
+    },
+    "networkController": {
+      "error": {
+        "internalServerError": "Kunne ikke hente Netværkskontroloversigt"
       }
     }
   },
@@ -2146,7 +2447,12 @@
         "label": "Favicon billede URL"
       },
       "backgroundImageUrl": {
-        "label": "Baggrundsbillede URL"
+        "label": "Baggrundsbillede URL",
+        "placeholder": "Begynd at skrive for at søge efter lokale billeder",
+        "group": {
+          "your": "Dine billeder",
+          "other": "Andre billeder"
+        }
       },
       "backgroundImageAttachment": {
         "label": "Vedhæftning af baggrundsbillede",
@@ -2782,6 +3088,9 @@
             },
             "mediaTranscoding": {
               "label": "Omkodning af medier"
+            },
+            "networkController": {
+              "label": "Netværkskontroller"
             }
           }
         },
@@ -3314,7 +3623,10 @@
           "label": "Logs"
         },
         "certificates": {
-          "label": "Certifikater"
+          "label": "Certifikater",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3712,6 +4024,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "Betroede certifikater",
@@ -3719,7 +4054,20 @@
         "noResults": {
           "title": "Der er endnu ingen certifikater"
         },
-        "expires": "Udløber {when}"
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
+        "expires": "Udløber {when}",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3747,6 +4095,20 @@
           "error": {
             "title": "Certifikat ikke fjernet",
             "message": "Certifikatet kunne ikke slettes"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

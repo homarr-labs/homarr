@@ -12,7 +12,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { userFirstDayOfWeekSchema } from "@homarr/validation/user";
 
 dayjs.extend(localeData);
 
@@ -42,7 +42,7 @@ export const FirstDayOfWeek = ({ user }: FirstDayOfWeekProps) => {
       });
     },
   });
-  const form = useZodForm(validation.user.firstDayOfWeek, {
+  const form = useZodForm(userFirstDayOfWeekSchema, {
     initialValues: {
       firstDayOfWeek: user.firstDayOfWeek as DayOfWeek,
     },
@@ -71,7 +71,7 @@ export const FirstDayOfWeek = ({ user }: FirstDayOfWeekProps) => {
         </Radio.Group>
 
         <Group justify="end">
-          <Button type="submit" color="teal" loading={isPending}>
+          <Button type="submit" loading={isPending}>
             {t("common.action.save")}
           </Button>
         </Group>
@@ -80,4 +80,4 @@ export const FirstDayOfWeek = ({ user }: FirstDayOfWeekProps) => {
   );
 };
 
-type FormType = z.infer<typeof validation.user.firstDayOfWeek>;
+type FormType = z.infer<typeof userFirstDayOfWeekSchema>;

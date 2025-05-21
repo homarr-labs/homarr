@@ -1,34 +1,45 @@
-import { z } from "zod";
-
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { TdarrQueue } from "../interfaces/media-transcoding/queue";
 import type { TdarrStatistics } from "../interfaces/media-transcoding/statistics";
 import type { TdarrWorker } from "../interfaces/media-transcoding/workers";
 import { getNodesResponseSchema, getStatisticsSchema, getStatusTableSchema } from "./tdarr-validation-schemas";
 
 export class TdarrIntegration extends Integration {
-  public async testConnectionAsync(): Promise<void> {
-    const url = this.url("/api/v2/status");
-    const response = await fetchWithTrustedCertificatesAsync(url);
-    if (response.status !== 200) {
-      throw new Error(`Unexpected status code: ${response.status}`);
-    }
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const response = await input.fetchAsync(this.url("/api/v2/is-server-alive"), {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "X-Api-Key": super.hasSecretValue("apiKey") ? super.getSecretValue("apiKey") : "",
+      },
+    });
 
-    await z.object({ status: z.string() }).parseAsync(await response.json());
+    if (!response.ok) return TestConnectionError.StatusResult(response);
+
+    await response.json();
+    return { success: true };
   }
 
   public async getStatisticsAsync(): Promise<TdarrStatistics> {
-    const url = this.url("/api/v2/cruddb");
+    const url = this.url("/api/v2/stats/get-pies");
+
+    const headerParams = {
+      accept: "application/json",
+      "Content-Type": "application/json",
+      ...(super.hasSecretValue("apiKey") ? { "X-Api-Key": super.getSecretValue("apiKey") } : {}),
+    };
+
     const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: headerParams,
       body: JSON.stringify({
         data: {
-          collection: "StatisticsJSONDB",
-          mode: "getById",
-          docID: "statistics",
+          libraryId: "", // empty string to get all libraries
         },
       }),
     });
@@ -36,36 +47,41 @@ export class TdarrIntegration extends Integration {
     const statisticsData = await getStatisticsSchema.parseAsync(await response.json());
 
     return {
-      totalFileCount: statisticsData.totalFileCount,
-      totalTranscodeCount: statisticsData.totalTranscodeCount,
-      totalHealthCheckCount: statisticsData.totalHealthCheckCount,
-      failedTranscodeCount: statisticsData.table3Count,
-      failedHealthCheckCount: statisticsData.table6Count,
-      stagedTranscodeCount: statisticsData.table1Count,
-      stagedHealthCheckCount: statisticsData.table4Count,
-      pies: statisticsData.pies.map((pie) => ({
-        libraryName: pie[0],
-        libraryId: pie[1],
-        totalFiles: pie[2],
-        totalTranscodes: pie[3],
-        savedSpace: pie[4] * 1_000_000_000, // file_size is in GB, convert to bytes,
-        totalHealthChecks: pie[5],
-        transcodeStatus: pie[6],
-        healthCheckStatus: pie[7],
-        videoCodecs: pie[8],
-        videoContainers: pie[9],
-        videoResolutions: pie[10],
-        audioCodecs: pie[11],
-        audioContainers: pie[12],
-      })),
+      libraryName: "All",
+      totalFileCount: statisticsData.pieStats.totalFiles,
+      totalTranscodeCount: statisticsData.pieStats.totalTranscodeCount,
+      totalHealthCheckCount: statisticsData.pieStats.totalHealthCheckCount,
+      // The Tdarr API only returns a category if there is at least one item in it
+      failedTranscodeCount:
+        statisticsData.pieStats.status.transcode.find((transcode) => transcode.name === "Transcode error")?.value ?? 0,
+      failedHealthCheckCount:
+        statisticsData.pieStats.status.healthcheck.find((healthcheck) => healthcheck.name === "Error")?.value ?? 0,
+      stagedTranscodeCount:
+        statisticsData.pieStats.status.transcode.find((transcode) => transcode.name === "Transcode success")?.value ??
+        0,
+      stagedHealthCheckCount:
+        statisticsData.pieStats.status.healthcheck.find((healthcheck) => healthcheck.name === "Queued")?.value ?? 0,
+
+      totalSavedSpace: statisticsData.pieStats.sizeDiff * 1_000_000_000, // sizeDiff is in GB, convert to bytes
+      transcodeStatus: statisticsData.pieStats.status.transcode,
+      healthCheckStatus: statisticsData.pieStats.status.healthcheck,
+      videoCodecs: statisticsData.pieStats.video.codecs,
+      videoContainers: statisticsData.pieStats.video.containers,
+      videoResolutions: statisticsData.pieStats.video.resolutions,
+      audioCodecs: statisticsData.pieStats.audio.codecs,
+      audioContainers: statisticsData.pieStats.audio.containers,
     };
   }
 
   public async getWorkersAsync(): Promise<TdarrWorker[]> {
     const url = this.url("/api/v2/get-nodes");
+    const headerParams = {
+      "Content-Type": "application/json",
+      ...(super.hasSecretValue("apiKey") ? { "X-Api-Key": super.getSecretValue("apiKey") } : {}),
+    };
     const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "GET",
-      headers: { "content-type": "application/json" },
+      headers: headerParams,
     });
 
     const nodesData = await getNodesResponseSchema.parseAsync(await response.json());
@@ -103,9 +119,13 @@ export class TdarrIntegration extends Integration {
 
   private async getTranscodingQueueAsync(firstItemIndex: number, pageSize: number) {
     const url = this.url("/api/v2/client/status-tables");
+    const headerParams = {
+      "Content-Type": "application/json",
+      ...(super.hasSecretValue("apiKey") ? { "X-Api-Key": super.getSecretValue("apiKey") } : {}),
+    };
     const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: headerParams,
       body: JSON.stringify({
         data: {
           start: firstItemIndex,
@@ -124,7 +144,7 @@ export class TdarrIntegration extends Integration {
         healthCheck: item.HealthCheck,
         transcode: item.TranscodeDecisionMaker,
         filePath: item.file,
-        fileSize: item.file_size * 1_000_000, // file_size is in MB, convert to bytes
+        fileSize: Math.floor(item.file_size * 1_000_000), // file_size is in MB, convert to bytes, floor because it returns as float
         container: item.container,
         codec: item.video_codec_name,
         resolution: item.video_resolution,
@@ -138,9 +158,13 @@ export class TdarrIntegration extends Integration {
 
   private async getHealthCheckDataAsync(firstItemIndex: number, pageSize: number, totalQueueCount: number) {
     const url = this.url("/api/v2/client/status-tables");
+    const headerParams = {
+      "Content-Type": "application/json",
+      ...(super.hasSecretValue("apiKey") ? { "X-Api-Key": super.getSecretValue("apiKey") } : {}),
+    };
     const response = await fetchWithTrustedCertificatesAsync(url, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: headerParams,
       body: JSON.stringify({
         data: {
           start: Math.max(firstItemIndex - totalQueueCount, 0),
@@ -162,7 +186,7 @@ export class TdarrIntegration extends Integration {
         healthCheck: item.HealthCheck,
         transcode: item.TranscodeDecisionMaker,
         filePath: item.file,
-        fileSize: item.file_size * 1_000_000, // file_size is in MB, convert to bytes
+        fileSize: Math.floor(item.file_size * 1_000_000), // file_size is in MB, convert to bytes, floor because it returns as float
         container: item.container,
         codec: item.video_codec_name,
         resolution: item.video_resolution,

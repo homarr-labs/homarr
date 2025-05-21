@@ -8,18 +8,18 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
-import { validation } from "@homarr/validation";
+import { groupCreateSchema } from "@homarr/validation/group";
 
 export const InitGroup = () => {
   const t = useI18n();
   const { mutateAsync } = clientApi.group.createInitialExternalGroup.useMutation();
-  const form = useZodForm(validation.group.create, {
+  const form = useZodForm(groupCreateSchema, {
     initialValues: {
       name: "",
     },
   });
 
-  const handleSubmitAsync = async (values: z.infer<typeof validation.group.create>) => {
+  const handleSubmitAsync = async (values: z.infer<typeof groupCreateSchema>) => {
     await mutateAsync(values, {
       async onSuccess() {
         await revalidatePathActionAsync("/init");
