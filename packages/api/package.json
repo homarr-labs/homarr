@@ -52,7 +52,7 @@
     "react-dom": "19.1.0",
     "superjson": "2.2.2",
     "trpc-to-openapi": "^2.2.0",
-    "zod": "^3.25.14"
+    "zod": "^3.25.16"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
