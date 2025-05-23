@@ -542,10 +542,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
               {t("releaseDescription")}
             </Title>
             <Text
-              className={combineClasses(
-                "releases-repository-expanded-description-text",
-                classes.releasesDescription,
-              )}
+              className={combineClasses("releases-repository-expanded-description-text", classes.releasesDescription)}
               component="div"
               size="xs"
               ff="monospace"
