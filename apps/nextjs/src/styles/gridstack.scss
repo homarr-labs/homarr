@@ -6,6 +6,12 @@
   --gridstack-cell-size: 0;
 }
 
+.ui-resizable-handle {
+  // Override default z-index of 100 to prevent it from being on top of the header.
+  // See https://github.com/homarr-labs/homarr/issues/1999
+  z-index: 1 !important;
+}
+
 .grid-stack-placeholder > .placeholder-content {
   background-color: rgb(248, 249, 250) !important;
   border-radius: 12px;

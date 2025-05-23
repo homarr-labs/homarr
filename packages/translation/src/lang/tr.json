@@ -702,6 +702,132 @@
         "create": "Bağlantıyı test et ve oluştur",
         "edit": "Bağlantıyı test et ve kaydet"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": "Daha fazla detay içeren neden"
+          }
+        },
+        "unknown": {
+          "title": "Bilinmeyen hata",
+          "description": "Bilinmeyen bir hata oluştu, daha fazla ayrıntı görmek için aşağıdaki nedeni açın"
+        },
+        "parse": {
+          "title": "Ayrıştırma hatası",
+          "description": "Yanıt ayrıştırılamadı. Lütfen URL'nin hizmetin temel URL’sine yönlendirildiğinden emin olun."
+        },
+        "authorization": {
+          "title": "Yetkilendirme hatası",
+          "description": "İstek yetkilendirilemedi. Lütfen kimlik bilgilerinin doğru olduğunu ve yeterli izinlerle yapılandırıldığını doğrulayın."
+        },
+        "statusCode": {
+          "title": "Yanıt hatası",
+          "description": "<url></url> adresinden beklenmeyen bir {statusCode} ({reason}) yanıtı alındı. Lütfen URL’nin entegrasyon temel URL’sine yönlendirildiğinden emin olun.",
+          "otherDescription": "<url></url> adresinden beklenmeyen {statusCode} yanıtı alındı. Lütfen URL’nin entegrasyonun temel URL’sine yönlendirildiğinden emin olun.",
+          "reason": {
+            "badRequest": "Geçersiz istek",
+            "notFound": "Bulunamadı",
+            "tooManyRequests": "Çok fazla istek",
+            "internalServerError": "Dahili sunucu hatası",
+            "serviceUnavailable": "Hizmet mevcut değil",
+            "gatewayTimeout": "Ağ geçidi zaman aşımı"
+          }
+        },
+        "certificate": {
+          "title": "Sertifika hatası",
+          "description": {
+            "expired": "Sertifikanın süresi doldu.",
+            "notYetValid": "Sertifika henüz geçerli değil.",
+            "untrusted": "Sertifika güvenilir değil.",
+            "hostnameMismatch": "Sertifika ana makine adı URL ile eşleşmiyor."
+          },
+          "alert": {
+            "permission": {
+              "title": "İzinler yetersiz",
+              "message": "Sertifikalara güvenmeniz veya yüklemeniz yasaktır. Lütfen gerekli kök sertifikayı yüklemek için yöneticinizle iletişime geçin."
+            },
+            "hostnameMismatch": {
+              "title": "Ana makine adı uyumsuzluğu",
+              "message": "Sertifikadaki ana makine adı, bağlandığınız ana makine adıyla eşleşmiyor. Bu bir güvenlik riski olduğunu gösterebilir, ancak yine de bu sertifikaya güvenmeyi seçebilirsiniz."
+            },
+            "extract": {
+              "title": "CA sertifikası çıkarma işlemi başarısız oldu",
+              "message": "Yalnızca zinciri olmayan kendinden imzalı sertifikalar otomatik olarak alınabilir. Kendinden imzalı bir sertifika kullanıyorsanız, lütfen CA sertifikasını manuel olarak yüklediğinizden emin olun. Bunu nasıl yapacağınızla ilgili talimatları <docsLink></docsLink> adresinde bulabilirsiniz."
+            }
+          },
+          "action": {
+            "retry": {
+              "label": "Yeniden oluşturmayı deneyin"
+            },
+            "trust": {
+              "label": "Güvenilir sertifika"
+            },
+            "upload": {
+              "label": "Sertifika yükle"
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "Güvenilen ana makine adı uyumsuzluğu",
+              "message": "Ana makine adı uyumsuzluğu olan sertifikaya güvenmek istediğinizden emin misiniz?"
+            },
+            "notification": {
+              "success": {
+                "title": "Güvenilen sertifika",
+                "message": "Ana makine adı güvenilir sertifika listesine eklendi"
+              },
+              "error": {
+                "title": "Sertifikaya güvenilemedi",
+                "message": "Ana makine adı uyuşmazlığı olan sertifikaya güvenilemedi"
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "Kendinden imzalı sertifikaya güven",
+              "message": "Kendinden imzalı bu sertifikaya güvenmek istediğinizden emin misiniz?"
+            },
+            "notification": {
+              "success": {
+                "title": "Güvenilen sertifika",
+                "message": "Sertifika güvenilen sertifika listesine eklendi"
+              },
+              "error": {
+                "title": "Sertifikaya güvenilemedi",
+                "message": "Sertifika güvenilen sertifika listesine eklenemedi"
+              }
+            }
+          },
+          "details": {
+            "title": "Ayrıntılar",
+            "description": "Güvenmeye karar vermeden önce sertifika bilgilerini inceleyin.",
+            "content": {
+              "action": "İçeriği göster",
+              "title": "PEM Sertifikası"
+            }
+          }
+        },
+        "request": {
+          "title": "İstek hatası",
+          "description": {
+            "connection": {
+              "hostUnreachable": "Sunucuya ulaşılamadı. Bu genellikle ana makinanın çevrimdışı olduğu veya ağınızdan erişilemediği anlamına gelir.",
+              "networkUnreachable": "Ağa ulaşılamıyor. Lütfen internet bağlantınızı veya ağ yapılandırmanızı kontrol edin.",
+              "refused": "Sunucu bağlantıyı reddetti. Belirtilen portta çalışmıyor olabilir veya istekler reddediliyor olabilir.",
+              "reset": "Bağlantı sunucu tarafından beklenmedik şekilde kapatıldı. Bu, sunucunun dengesiz olması veya yeniden başlatılması durumunda olabilir."
+            },
+            "dns": {
+              "notFound": "Sunucu adresine ulaşılamadı. Lütfen URL’de yazım hatası veya geçersiz bir alan adı olup olmadığını kontrol edin.",
+              "timeout": "DNS sorgusu zaman aşımına uğradı. Bu geçici bir sorun olabilir lütfen kısa bir süre sonra yeniden deneyin.",
+              "noAnswer": "DNS sunucusu geçerli bir yanıt döndürmedi. Alan adı mevcut olabilir ancak geçerli kayıtlara sahip olmayabilir."
+            },
+            "timeout": {
+              "aborted": "İstek tamamlanmadan önce iptal edildi. Bunun nedeni kullanıcı müdahalesi veya sistem zaman aşımı olabilir.",
+              "timeout": "İsteğin tamamlanması çok uzun sürdü ve zaman aşımına uğradı. Ağ bağlantınızı kontrol edin veya daha sonra tekrar deneyin."
+            }
+          }
+        }
+      },
       "alertNotice": "Bağlantı başarılı olduğunda Kaydet butonu etkinleştirilir",
       "notification": {
         "success": {
@@ -878,6 +1004,7 @@
       "cancel": "Vazgeç",
       "delete": "Sil",
       "discard": "Yoksay",
+      "close": "Kapat",
       "confirm": "Onayla",
       "continue": "Devam Et",
       "previous": "Önceki",
@@ -3496,7 +3623,10 @@
           "label": "Günlükler"
         },
         "certificates": {
-          "label": "Sertifikalar"
+          "label": "Sertifikalar",
+          "hostnames": {
+            "label": "Ana makine adları"
+          }
         }
       },
       "settings": {
@@ -3894,6 +4024,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": "Sunucu"
+      },
+      "subject": {
+        "label": "Konu"
+      },
+      "issuer": {
+        "label": "Sağlayıcı"
+      },
+      "validFrom": {
+        "label": "Zamanından itibaren"
+      },
+      "validTo": {
+        "label": "Zamanına kadar"
+      },
+      "serialNumber": {
+        "label": "Seri numarası"
+      },
+      "fingerprint": {
+        "label": "Parmak izi"
+      }
+    },
     "page": {
       "list": {
         "title": "Güvenilen sertifikalar",
@@ -3905,7 +4058,16 @@
           "title": "Geçersiz sertifika",
           "description": "Sertifika çözümlenemedi"
         },
-        "expires": "{when} süresi doluyor"
+        "expires": "{when} süresi doluyor",
+        "toHostnames": "Güvenilir ana makine adları"
+      },
+      "hostnames": {
+        "title": "Güvenilen sertifika ana makine adları",
+        "description": "Bazı sertifikalar, Homarr’ın kullanmak istediği belirli alan adından istek yapılmasına izin vermemektedir. Bu nedenle, bu kısıtlamaları aşmak için tüm güvenilen ana makineler ve onların sertifika parmak izleri kullanılır.",
+        "noResults": {
+          "title": "Henüz hiçbir ana makine adı yok"
+        },
+        "toCertificates": "Sertifikalar"
       }
     },
     "action": {
@@ -3933,6 +4095,20 @@
           "error": {
             "title": "Sertifika kaldırılmadı",
             "message": "Sertifika kaldırılamadı"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "Güvenilen ana makine adını kaldır",
+        "confirm": "Güvenilen bu ana makine adını kaldırmak istediğinizden emin misiniz? İşlem, bazı entegrasyonların çalışmamasına neden olabilir.",
+        "notification": {
+          "success": {
+            "title": "Ana makine adı kaldırıldı",
+            "message": "Ana makine adı başarıyla kaldırıldı"
+          },
+          "error": {
+            "title": "Ana makine adı kaldırılmadı",
+            "message": "Ana makine adı kaldırılamadı"
           }
         }
       }

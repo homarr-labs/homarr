@@ -1,4 +1,5 @@
 import { analyticsJob } from "./jobs/analytics";
+import { dockerContainersJob } from "./jobs/docker";
 import { iconsUpdaterJob } from "./jobs/icons-updater";
 import { dnsHoleJob } from "./jobs/integrations/dns-hole";
 import { downloadsJob } from "./jobs/integrations/downloads";
@@ -35,6 +36,7 @@ export const jobGroup = createCronJobGroup({
   updateChecker: updateCheckerJob,
   mediaTranscoding: mediaTranscodingJob,
   minecraftServerStatus: minecraftServerStatusJob,
+  dockerContainers: dockerContainersJob,
   networkController: networkControllerJob,
 });
 

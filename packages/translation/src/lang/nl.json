@@ -612,17 +612,17 @@
       "select": {
         "label": "App selecteren",
         "notFound": "Geen app gevonden",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "Zoek naar een app",
+        "noResults": "Geen resultaten gevonden voor deze zoekopdracht",
+        "action": "Selecteer {app}",
+        "title": "Selecteer een app om aan dit bord toe te voegen"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "Nieuwe app aanmaken",
+        "description": "Een nieuwe app aanmaken ",
+        "action": "Open app aanmaken"
       },
-      "add": ""
+      "add": "Een app toevoegen"
     }
   },
   "integration": {
@@ -701,6 +701,132 @@
       "action": {
         "create": "Verbinding testen en aanmaken",
         "edit": "Verbinding testen en opslaan"
+      },
+      "error": {
+        "common": {
+          "cause": {
+            "title": "Reden met meer details"
+          }
+        },
+        "unknown": {
+          "title": "Onbekende fout",
+          "description": "Er is een onbekende fout opgetreden, open de reden hieronder om meer details te zien"
+        },
+        "parse": {
+          "title": "Parser fout",
+          "description": ""
+        },
+        "authorization": {
+          "title": "Fout tijdens het aanmelden",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
       },
       "alertNotice": "De opslaan knop wordt ingeschakeld zodra er een succesvolle verbinding tot stand is gebracht",
       "notification": {
@@ -878,6 +1004,7 @@
       "cancel": "Annuleren",
       "delete": "Verwijderen",
       "discard": "Negeren",
+      "close": "",
       "confirm": "Bevestigen",
       "continue": "Doorgaan",
       "previous": "Vorige",
@@ -3496,7 +3623,10 @@
           "label": "Logs"
         },
         "certificates": {
-          "label": "Certificaten"
+          "label": "Certificaten",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3894,6 +4024,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "Vertrouwde certificaten",
@@ -3905,7 +4058,16 @@
           "title": "",
           "description": ""
         },
-        "expires": "Verloopt {when}"
+        "expires": "Verloopt {when}",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3933,6 +4095,20 @@
           "error": {
             "title": "Certificaat niet verwijderd",
             "message": "Certificaat kon niet worden verwijderd"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

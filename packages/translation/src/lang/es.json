@@ -3,7 +3,7 @@
     "step": {
       "start": {
         "title": "Bienvenido a Homarr",
-        "subtitle": "Comencemos con la configuración de tu instancia de Homar.",
+        "subtitle": "Comencemos con la configuración de tu instancia de Homarr.",
         "description": "Para empezar, por favor, seleccione cómo desea configurar su instancia de Homarr.",
         "action": {
           "scratch": "Empezar de cero",
@@ -35,7 +35,7 @@
           }
         },
         "summary": {
-          "title": "Importar resumen",
+          "title": "Resumen de importación",
           "description": "",
           "action": {
             "import": "Confirmar la importación y continuar"
@@ -160,7 +160,7 @@
       }
     },
     "error": {
-      "usernameTaken": "Nombre de usuario ya está ocupado"
+      "usernameTaken": ""
     },
     "action": {
       "login": {
@@ -172,7 +172,7 @@
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "Inicio de sesión fallido",
             "message": ""
           }
         },
@@ -702,6 +702,132 @@
         "create": "",
         "edit": ""
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "",
       "notification": {
         "success": {
@@ -878,6 +1004,7 @@
       "cancel": "Cancelar",
       "delete": "Eliminar",
       "discard": "",
+      "close": "",
       "confirm": "Confirmar",
       "continue": "",
       "previous": "Anterior",
@@ -3496,7 +3623,10 @@
           "label": ""
         },
         "certificates": {
-          "label": ""
+          "label": "",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3894,6 +4024,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "",
@@ -3905,7 +4058,16 @@
           "title": "",
           "description": ""
         },
-        "expires": ""
+        "expires": "",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3923,6 +4085,20 @@
         }
       },
       "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "removeHostname": {
         "label": "",
         "confirm": "",
         "notification": {
