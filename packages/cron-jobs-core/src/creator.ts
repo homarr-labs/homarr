@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
-import cron from "node-cron";
+import type { ScheduledTask } from "node-cron";
+import { schedule, validate } from "node-cron";
 
 import { Stopwatch } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
@@ -64,12 +65,11 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
 
     /**
      * We are not using the runOnInit method as we want to run the job only once we start the cron job schedule manually.
-     * This allows us to always run it once we start it. Additionally it will not run the callback if only the cron job file is imported.
+     * This allows us to always run it once we start it. Additionally, it will not run the callback if only the cron job file is imported.
      */
-    let scheduledTask: cron.ScheduledTask | null = null;
+    let scheduledTask: ScheduledTask | null = null;
     if (cronExpression !== "never") {
-      scheduledTask = cron.schedule(cronExpression, () => void catchingCallbackAsync(), {
-        scheduled: false,
+      scheduledTask = schedule(cronExpression, () => void catchingCallbackAsync(), {
         name,
         timezone: creatorOptions.timezone,
       });
@@ -110,7 +110,7 @@ export const createCronJobCreator = <TAllowedNames extends string = string>(
     options: CreateCronJobOptions = { runOnStart: false },
   ) => {
     creatorOptions.logger.logDebug(`Validating cron expression '${cronExpression}' for job: ${name}`);
-    if (cronExpression !== "never" && !cron.validate(cronExpression)) {
+    if (cronExpression !== "never" && !validate(cronExpression)) {
       throw new Error(`Invalid cron expression '${cronExpression}' for job '${name}'`);
     }
     creatorOptions.logger.logDebug(`Cron job expression '${cronExpression}' for job ${name} is valid`);
