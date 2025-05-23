@@ -3,16 +3,7 @@ export interface ReleasesProvider {
   iconUrl: string;
 }
 
-interface ProvidersProps {
-  [key: string]: ReleasesProvider;
-  DockerHub: ReleasesProvider;
-  Github: ReleasesProvider;
-  Gitlab: ReleasesProvider;
-  Npm: ReleasesProvider;
-  Codeberg: ReleasesProvider;
-}
-
-export const Providers: ProvidersProps = {
+export const Providers = {
   DockerHub: {
     name: "Docker Hub",
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/docker.svg",
@@ -33,4 +24,10 @@ export const Providers: ProvidersProps = {
     name: "Codeberg",
     iconUrl: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/codeberg.svg",
   },
+} as const satisfies Record<string, ReleasesProvider>;
+
+export type ProviderKey = keyof typeof Providers;
+
+export const isProviderKey = (key: string): key is ProviderKey => {
+  return key in Providers;
 };
