@@ -28,7 +28,7 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
   options: CreateCronJobOptions,
   creatorOptions: CreateCronJobCreatorOptions<TAllowedNames>,
 ) => {
-  const expectedMaximumDurationInMillis = options.expectedMaximumDurationInMillis ?? 1000;
+  const expectedMaximumDurationInMillis = options.expectedMaximumDurationInMillis ?? 2500;
   return (callback: () => MaybePromise<void>) => {
     const catchingCallbackAsync = async () => {
       try {

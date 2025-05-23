@@ -21,7 +21,7 @@ const REDACTED = "REDACTED";
 describe("LoggingAgent should log all requests", () => {
   test("should log all requests", () => {
     // Arrange
-    const infoLogSpy = vi.spyOn(logger, "info");
+    const infoLogSpy = vi.spyOn(logger, "debug");
     const agent = new LoggingAgent();
 
     // Act
@@ -33,7 +33,7 @@ describe("LoggingAgent should log all requests", () => {
 
   test("should show amount of headers", () => {
     // Arrange
-    const infoLogSpy = vi.spyOn(logger, "info");
+    const infoLogSpy = vi.spyOn(logger, "debug");
     const agent = new LoggingAgent();
 
     // Act
@@ -68,7 +68,7 @@ describe("LoggingAgent should log all requests", () => {
     [`/?stringWith13Chars=${"a".repeat(13)}`, `/?stringWith13Chars=${REDACTED}`],
   ])("should redact sensitive data in url https://homarr.dev%s", (path, expected) => {
     // Arrange
-    const infoLogSpy = vi.spyOn(logger, "info");
+    const infoLogSpy = vi.spyOn(logger, "debug");
     const agent = new LoggingAgent();
 
     // Act
@@ -87,7 +87,7 @@ describe("LoggingAgent should log all requests", () => {
     ["date times", "/?datetime=2022-01-01T00:00:00.000Z"],
   ])("should not redact values that are %s", (_reason, path) => {
     // Arrange
-    const infoLogSpy = vi.spyOn(logger, "info");
+    const infoLogSpy = vi.spyOn(logger, "debug");
     const agent = new LoggingAgent();
 
     // Act
