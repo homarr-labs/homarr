@@ -2075,6 +2075,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/docker':
+        specifier: workspace:^0.1.0
+        version: link:../docker
       '@homarr/form':
         specifier: workspace:^0.1.0
         version: link:../form
