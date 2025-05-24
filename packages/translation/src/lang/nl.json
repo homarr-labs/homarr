@@ -1832,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "Stad / postcode",
@@ -3091,6 +3099,9 @@
             },
             "networkController": {
               "label": "Netwerkcontroller"
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3166,8 @@
     "table": {
       "updated": "{when} bijgewerkt",
       "search": "Zoek {count} containers",
-      "selected": "{selectCount} van {totalCount} containers geselecteerd"
+      "selected": "{selectCount} van {totalCount} containers geselecteerd",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3185,14 @@
           "dead": "Dood"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Image"
       },
@@ -3181,6 +3201,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Starten",
         "notification": {

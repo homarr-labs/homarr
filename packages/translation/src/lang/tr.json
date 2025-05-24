@@ -1832,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "Docker istatistikleri",
+      "description": "Konteynerlerinizin istatistikleri (Bu widget yalnızca yönetici ayrıcalıklarıyla eklenebilir)",
+      "option": {},
+      "error": {
+        "internalServerError": "Konteyner istatistikleri alınamadı"
+      }
+    },
     "common": {
       "location": {
         "query": "Şehir / Posta kodu",
@@ -3091,6 +3099,9 @@
             },
             "networkController": {
               "label": "Ağ Denetleyicisi"
+            },
+            "dockerContainers": {
+              "label": "Docker konteynerleri"
             }
           }
         },
@@ -3155,7 +3166,8 @@
     "table": {
       "updated": "{when} Güncellendi",
       "search": "{count} konteyner içinde ara",
-      "selected": "{selectCount} / {totalCount} konteyner seçildi"
+      "selected": "{selectCount} / {totalCount} konteyner seçildi",
+      "footer": "Toplam {count} konteyner"
     },
     "field": {
       "name": {
@@ -3173,6 +3185,14 @@
           "dead": "Ölü"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": "İşlemci"
+        },
+        "memory": {
+          "label": "Bellek"
+        }
+      },
       "containerImage": {
         "label": "İmaj"
       },
@@ -3181,6 +3201,7 @@
       }
     },
     "action": {
+      "title": "Eylemler",
       "start": {
         "label": "Başlat",
         "notification": {

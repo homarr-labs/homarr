@@ -1832,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "城市/邮编",
@@ -3091,6 +3099,9 @@
             },
             "networkController": {
               "label": "网络控制器"
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3166,8 @@
     "table": {
       "updated": "已更新 {when}",
       "search": "搜索 {count} 容器",
-      "selected": "{totalCount} 容器的 {selectCount}"
+      "selected": "{totalCount} 容器的 {selectCount}",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3185,14 @@
           "dead": "废弃"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "镜像"
       },
@@ -3181,6 +3201,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "开始",
         "notification": {

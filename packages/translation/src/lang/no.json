@@ -1832,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "By / Postnummer",
@@ -3091,6 +3099,9 @@
             },
             "networkController": {
               "label": ""
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3166,8 @@
     "table": {
       "updated": "Oppdatert {when}",
       "search": "Søk i {count} containere",
-      "selected": "{selectCount} av {totalCount} containere valgt"
+      "selected": "{selectCount} av {totalCount} containere valgt",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3185,14 @@
           "dead": "Død"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Image"
       },
@@ -3181,6 +3201,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Start",
         "notification": {
