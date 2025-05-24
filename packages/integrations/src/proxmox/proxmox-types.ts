@@ -7,6 +7,7 @@ interface ResourceBase<TType extends string> {
 }
 
 export interface ComputeResourceBase<TType extends string> extends ResourceBase<TType> {
+  id: string;
   cpu: {
     utilization: number; // previously cpu (0-1)
     cores: number; // previously cpuCores
@@ -40,6 +41,7 @@ export interface QemuResource extends ComputeResourceBase<"qemu"> {
 }
 
 export interface StorageResource extends ResourceBase<"storage"> {
+  id: string;
   storagePlugin: string;
   used: number; // previously disk
   total: number; // previously maxDisk
