@@ -618,8 +618,8 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       trpc-to-openapi:
-        specifier: ^2.2.0
-        version: 2.2.0(@trpc/server@11.1.2(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.25.28))(zod@3.25.28)
+        specifier: ^2.3.1
+        version: 2.3.1(@trpc/server@11.1.2(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.25.28))(zod@3.25.28)
       zod:
         specifier: ^3.25.28
         version: 3.25.28
@@ -9841,8 +9841,8 @@ packages:
   trough@2.2.0:
     resolution: {integrity: sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw==}
 
-  trpc-to-openapi@2.2.0:
-    resolution: {integrity: sha512-tIKpykAKsZqad/AQXc0JKDd1Evq8fm8j3jVMVVJ+keo2KUb67uyucHRzEsJWSN99RPf6esuytsmnetx7Q0S9wg==}
+  trpc-to-openapi@2.3.1:
+    resolution: {integrity: sha512-5AjKSjk7AGkC8haFufD3skeCClzT3TrhdbIF4E/zVukiOPCdgA2RDgZWnsXk6zPDM4Ni8uLWDEm2ILdweMsWew==}
     peerDependencies:
       '@trpc/server': ^11.1.0
       zod: ^3.23.8
@@ -15844,7 +15844,7 @@ snapshots:
       iron-webcrypto: 1.2.1
       node-mock-http: 1.0.0
       radix3: 1.1.2
-      ufo: 1.5.4
+      ufo: 1.6.1
       uncrypto: 0.1.3
 
   handlebars@4.7.8:
@@ -19252,7 +19252,7 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-openapi@2.2.0(@trpc/server@11.1.2(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.25.28))(zod@3.25.28):
+  trpc-to-openapi@2.3.1(@trpc/server@11.1.2(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.25.28))(zod@3.25.28):
     dependencies:
       '@trpc/server': 11.1.2(typescript@5.8.3)
       co-body: 6.2.0
