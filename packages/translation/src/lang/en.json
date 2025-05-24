@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Show Memory Info"
         },
+        "showUptime": {
+          "label": "Show Uptime"
+        },
         "fileSystem": {
           "label": "Show Filesystem Info"
         },
         "defaultTab": {
           "label": "Default tab"
+        },
+        "visibleClusterSections": {
+          "label": "Visible cluster sections"
         },
         "sectionIndicatorRequirement": {
           "label": "Section indicator requirement"
