@@ -538,7 +538,7 @@ export default function DownloadClientsWidget({
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const upSpeed = cell.getValue<ExtendedDownloadClientItem["upSpeed"]>();
-          return upSpeed && <Text>{humanFileSize(upSpeed, "/s")}</Text>;
+          return upSpeed && <Text size="xs">{humanFileSize(upSpeed, "/s")}</Text>;
         },
       },
     ],
