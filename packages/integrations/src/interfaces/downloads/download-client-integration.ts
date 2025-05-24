@@ -4,7 +4,7 @@ import type { DownloadClientItem } from "./download-client-items";
 
 export abstract class DownloadClientIntegration extends Integration {
   /** Get download client's status and list of all of it's items */
-  public abstract getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus>;
+  public abstract getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus>;
   /** Pauses the client or all of it's items */
   public abstract pauseQueueAsync(): Promise<void>;
   /** Pause a single item using it's ID */

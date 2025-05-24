@@ -20,7 +20,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     };
   }
 
-  public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
     const queue = await this.nzbGetApiCallAsync("listgroups");
     const history = await this.nzbGetApiCallAsync("history");
@@ -65,7 +65,8 @@ export class NzbGetIntegration extends DownloadClientIntegration {
             category: file.Category,
           };
         }),
-      );
+      )
+      .slice(0, input.limit);
     return { status, items };
   }
 

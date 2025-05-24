@@ -1953,6 +1953,10 @@
         },
         "applyFilterToRatio": {
           "label": "Use filter to calculate Ratio"
+        },
+        "limitPerIntegration": {
+          "label": "Limit items per integration",
+          "description": "This will limit the number of items shown per integration, not globally"
         }
       },
       "errors": {
