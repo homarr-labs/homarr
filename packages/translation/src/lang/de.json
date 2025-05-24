@@ -1832,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "Stadt / Postleitzahl",
@@ -3091,6 +3099,9 @@
             },
             "networkController": {
               "label": "Netzwerk Controller"
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3166,8 @@
     "table": {
       "updated": "Aktualisiert {when}",
       "search": "{count} Container durchsuchen",
-      "selected": "{selectCount} von {totalCount} ausgewählten Containern"
+      "selected": "{selectCount} von {totalCount} ausgewählten Containern",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3185,14 @@
           "dead": "Tot"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Image"
       },
@@ -3181,6 +3201,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Starten",
         "notification": {

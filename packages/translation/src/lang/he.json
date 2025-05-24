@@ -1832,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "סטטיסטיקות דוקר",
+      "description": "סטטיסטיקות של המכולות שלך (ניתן להוסיף ווידג'ט זה רק עם הרשאות מנהל)",
+      "option": {},
+      "error": {
+        "internalServerError": "נכשל באחזור סטטיסטיקות המכולות"
+      }
+    },
     "common": {
       "location": {
         "query": "עיר / מיקוד",
@@ -3091,6 +3099,9 @@
             },
             "networkController": {
               "label": "בקר רשת"
+            },
+            "dockerContainers": {
+              "label": "מכולות דוקר"
             }
           }
         },
@@ -3155,7 +3166,8 @@
     "table": {
       "updated": "עודכן ב- {when}",
       "search": "חפש {count} קונטיינרים",
-      "selected": "{selectCount} מ- {totalCount} קונטיינרים נבחרו"
+      "selected": "{selectCount} מ- {totalCount} קונטיינרים נבחרו",
+      "footer": "סה״כ {count} קונטיינרים"
     },
     "field": {
       "name": {
@@ -3173,6 +3185,14 @@
           "dead": "מת"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": "מעבד"
+        },
+        "memory": {
+          "label": "זיכרון"
+        }
+      },
       "containerImage": {
         "label": "קובץ תמונה"
       },
@@ -3181,6 +3201,7 @@
       }
     },
     "action": {
+      "title": "פעולות",
       "start": {
         "label": "התחל",
         "notification": {
