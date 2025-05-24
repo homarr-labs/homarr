@@ -120,4 +120,6 @@ You can also support us by helping with [translating the entire project](https:/
 Thanks to your generous sponsors we can continue to build Homarr. Check them out for high quality and easy to use development tools.
 Feel free to contact us at homarr-labs@proton.me if you wish to become a sponsor.
 
-[![Covered by Argos Visual Testing](https://argos-ci.com/badge-large.svg)](https://argos-ci.com?utm_source=%5Bhomarr%5D&utm_campaign=oss)
+[![Covered by Argos Visual Testing](https://argos-ci.com/badge-large.svg)](https://argos-ci.com?utm_source=%5Bhomarr%5D&utm_campaign=oss) \
+[![Supported by PikaPods](https://www.pikapods.com/static/run-button.svg)](https://www.pikapods.com/pods?run=homarr-v1)
+
