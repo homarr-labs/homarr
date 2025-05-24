@@ -40,7 +40,7 @@ export const ResourceTable = ({ type, data, isTiny }: ResourceTableProps) => {
       <TableTbody>
         {data.map((item) => {
           return (
-            <ResourcePopover key={item.name} item={item}>
+            <ResourcePopover key={item.id} item={item}>
               <Popover.Target>
                 <TableTr fz={isTiny ? "8px" : "xs"}>
                   <td>
