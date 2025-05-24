@@ -43,6 +43,7 @@ export class TransmissionIntegration extends DownloadClientIntegration {
         name: torrent.name,
         size: torrent.totalSize,
         sent: torrent.uploadedEver,
+        received: torrent.downloadedEver,
         downSpeed: torrent.percentDone !== 1 ? torrent.rateDownload : undefined,
         upSpeed: torrent.rateUpload,
         time:
