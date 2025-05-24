@@ -82,6 +82,10 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
         applyFilterToRatio: factory.switch({
           defaultValue: true,
         }),
+        limitPerIntegration: factory.number({
+          defaultValue: 50,
+          validate: z.number().min(1),
+        }),
       }),
       {
         defaultSort: {

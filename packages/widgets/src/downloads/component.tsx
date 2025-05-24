@@ -87,6 +87,7 @@ export default function DownloadClientsWidget({
   const [currentItems] = clientApi.widget.downloads.getJobsAndStatuses.useSuspenseQuery(
     {
       integrationIds,
+      limitPerIntegration: options.limitPerIntegration,
     },
     {
       refetchOnMount: false,
@@ -126,6 +127,7 @@ export default function DownloadClientsWidget({
   clientApi.widget.downloads.subscribeToJobsAndStatuses.useSubscription(
     {
       integrationIds,
+      limitPerIntegration: options.limitPerIntegration,
     },
     {
       onData: (data) => {

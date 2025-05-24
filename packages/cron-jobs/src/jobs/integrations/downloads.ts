@@ -8,7 +8,9 @@ export const downloadsJob = createCronJob("downloads", EVERY_5_SECONDS).withCall
   createRequestIntegrationJobHandler(downloadClientRequestHandler.handler, {
     widgetKinds: ["downloads"],
     getInput: {
-      downloads: () => ({}),
+      downloads: (options) => ({
+        limit: typeof options.limitPerIntegration === "string" ? 50 : options.limitPerIntegration,
+      }),
     },
   }),
 );
