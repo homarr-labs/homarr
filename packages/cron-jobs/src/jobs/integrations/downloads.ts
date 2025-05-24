@@ -9,7 +9,7 @@ export const downloadsJob = createCronJob("downloads", EVERY_5_SECONDS).withCall
     widgetKinds: ["downloads"],
     getInput: {
       downloads: (options) => ({
-        limit: typeof options.limitPerIntegration === "string" ? 50 : options.limitPerIntegration,
+        limit: options.limitPerIntegration,
       }),
     },
   }),
