@@ -184,20 +184,21 @@ export class OverseerrIntegration extends Integration implements ISearchableInte
 
   public async approveRequestAsync(requestId: number): Promise<void> {
     logger.info(`Approving media request id='${requestId}' integration='${this.integration.name}'`);
-    await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/approve`), {
+    const response = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/approve`), {
       method: "POST",
       headers: {
         "X-Api-Key": this.getSecretValue("apiKey"),
       },
-    }).then((response) => {
-      if (!response.ok) {
-        logger.error(
-          `Failed to approve media request id='${requestId}' integration='${this.integration.name}' reason='${response.status} ${response.statusText}' url='${response.url}'`,
-        );
-      }
-
-      logger.info(`Successfully approved media request id='${requestId}' integration='${this.integration.name}'`);
     });
+
+    if (!response.ok) {
+      const content = await response.text();
+      logger.error(
+        `Failed to approve media request id='${requestId}' integration='${this.integration.name}' reason='${response.status} ${response.statusText}' url='${response.url}' content='${content}'`,
+      );
+    }
+
+    logger.info(`Successfully approved media request id='${requestId}' integration='${this.integration.name}'`);
   }
 
   public async declineRequestAsync(requestId: number): Promise<void> {
