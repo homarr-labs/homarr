@@ -85,6 +85,7 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
         limitPerIntegration: factory.number({
           defaultValue: 50,
           validate: z.number().min(1),
+          withDescription: true,
         }),
       }),
       {
