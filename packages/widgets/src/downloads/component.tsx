@@ -183,7 +183,7 @@ export default function DownloadClientsWidget({
             )
             //Add extrapolated data and actions if user is allowed interaction
             .map((item): ExtendedDownloadClientItem => {
-              const received = Math.floor(item.size * item.progress);
+              const received = item.received ?? Math.floor(item.size * item.progress);
               const integrationIds = [pair.integration.id];
               return {
                 integration: pair.integration,

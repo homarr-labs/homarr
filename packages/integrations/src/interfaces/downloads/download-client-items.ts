@@ -26,6 +26,8 @@ export const downloadClientItemSchema = z.object({
   size: z.number(),
   /** Total uploaded in Bytes, only required for Torrent items */
   sent: z.number().optional(),
+  /** Total downloaded in Bytes, only required for Torrent items */
+  received: z.number().optional(),
   /** Download speed in Bytes/s, only required if not complete
    *  (Says 0 only if it should be downloading but isn't) */
   downSpeed: z.number().optional(),
