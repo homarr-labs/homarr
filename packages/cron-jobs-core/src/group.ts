@@ -34,33 +34,33 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
 
         options.logger.logInfo(`Starting schedule cron job ${job.name}.`);
         await job.onStartAsync();
-        job.scheduledTask?.start();
+        await job.scheduledTask?.start();
       },
       startAllAsync: async () => {
         for (const job of jobRegistry.values()) {
           options.logger.logInfo(`Starting schedule of cron job ${job.name}.`);
           await job.onStartAsync();
-          job.scheduledTask?.start();
+          await job.scheduledTask?.start();
         }
       },
-      runManually: (name: keyof TJobs) => {
+      runManuallyAsync: async (name: keyof TJobs) => {
         const job = jobRegistry.get(name as string);
         if (!job) return;
 
         options.logger.logInfo(`Running schedule cron job ${job.name} manually.`);
-        job.scheduledTask?.now();
+        await job.scheduledTask?.execute();
       },
-      stop: (name: keyof TJobs) => {
+      stopAsync: async (name: keyof TJobs) => {
         const job = jobRegistry.get(name as string);
         if (!job) return;
 
         options.logger.logInfo(`Stopping schedule cron job ${job.name}.`);
-        job.scheduledTask?.stop();
+        await job.scheduledTask?.stop();
       },
-      stopAll: () => {
+      stopAllAsync: async () => {
         for (const job of jobRegistry.values()) {
           options.logger.logInfo(`Stopping schedule cron job ${job.name}.`);
-          job.scheduledTask?.stop();
+          await job.scheduledTask?.stop();
         }
       },
       getJobRegistry() {

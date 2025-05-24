@@ -1832,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "Mesto / PSČ",
@@ -3091,6 +3099,9 @@
             },
             "networkController": {
               "label": ""
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3166,8 @@
     "table": {
       "updated": "Aktualizované {when}",
       "search": "Vyhľadajte {count} kontajnery",
-      "selected": "{selectCount} z {totalCount} vybratých kontajnerov"
+      "selected": "{selectCount} z {totalCount} vybratých kontajnerov",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3185,14 @@
           "dead": "Mŕtvy"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Obraz"
       },
@@ -3181,6 +3201,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Spustiť",
         "notification": {

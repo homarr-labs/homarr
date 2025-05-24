@@ -96,6 +96,7 @@ export default function MediaServerWidget({
       gap="xs"
       p="sm"
       align="center"
+      justify="space-between"
       style={{ pointerEvents: isEditMode ? "none" : undefined }}
     >
       <Stack gap={4} w="100%">
@@ -123,7 +124,7 @@ export default function MediaServerWidget({
           ))}
         </Grid>
       </Stack>
-      <Stack gap={4} w="100%" h="100%">
+      <Stack gap={4} w="100%">
         <Text className="mediaRequests-stats-users-title" fw="bold" ta="center" size={isTiny ? "xs" : "sm"}>
           {t("titles.users.main")} ({t("titles.users.requests")})
         </Text>

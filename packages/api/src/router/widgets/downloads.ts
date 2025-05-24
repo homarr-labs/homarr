@@ -19,10 +19,11 @@ const createDownloadClientIntegrationMiddleware = (action: IntegrationAction) =>
 export const downloadsRouter = createTRPCRouter({
   getJobsAndStatuses: publicProcedure
     .concat(createDownloadClientIntegrationMiddleware("query"))
-    .query(async ({ ctx }) => {
+    .input(z.object({ limitPerIntegration: z.number().default(50) }))
+    .query(async ({ ctx, input }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const innerHandler = downloadClientRequestHandler.handler(integration, {});
+          const innerHandler = downloadClientRequestHandler.handler(integration, { limit: input.limitPerIntegration });
 
           const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
 
@@ -40,7 +41,8 @@ export const downloadsRouter = createTRPCRouter({
     }),
   subscribeToJobsAndStatuses: publicProcedure
     .concat(createDownloadClientIntegrationMiddleware("query"))
-    .subscription(({ ctx }) => {
+    .input(z.object({ limitPerIntegration: z.number().default(50) }))
+    .subscription(({ ctx, input }) => {
       return observable<{
         integration: Modify<Integration, { kind: IntegrationKindByCategory<"downloadClient"> }>;
         data: DownloadClientJobsAndStatus;
@@ -48,7 +50,9 @@ export const downloadsRouter = createTRPCRouter({
         const unsubscribes: (() => void)[] = [];
         for (const integrationWithSecrets of ctx.integrations) {
           const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = downloadClientRequestHandler.handler(integrationWithSecrets, {});
+          const innerHandler = downloadClientRequestHandler.handler(integrationWithSecrets, {
+            limit: input.limitPerIntegration,
+          });
           const unsubscribe = innerHandler.subscribe((data) => {
             emit.next({
               integration,

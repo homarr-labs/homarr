@@ -26,10 +26,10 @@ export class QBitTorrentIntegration extends DownloadClientIntegration {
     };
   }
 
-  public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const type = "torrent";
     const client = await this.getClientAsync();
-    const torrents = await client.listTorrents();
+    const torrents = await client.listTorrents({ limit: input.limit });
     const rates = torrents.reduce(
       ({ down, up }, { dlspeed, upspeed }) => ({ down: down + dlspeed, up: up + upspeed }),
       { down: 0, up: 0 },

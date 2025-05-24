@@ -1,3 +1,39 @@
+## [1.21.0](https://github.com/homarr-labs/homarr/compare/v1.20.0...v1.21.0) (2025-05-23)
+
+### Features
+
+* docker widget ([#2288](https://github.com/homarr-labs/homarr/issues/2288)) ([e1eda53](https://github.com/homarr-labs/homarr/commit/e1eda534da6d97655546f3140f9e36eca8817db3))
+
+### Bug Fixes
+
+* **deps:** update dependency @tabler/icons-react to ^3.33.0 ([#3132](https://github.com/homarr-labs/homarr/issues/3132)) ([ee8870b](https://github.com/homarr-labs/homarr/commit/ee8870b66bbcb8eeeef359ece9391a496198be0d))
+* **deps:** update dependency octokit to ^4.1.4 ([#3165](https://github.com/homarr-labs/homarr/issues/3165)) ([50445b5](https://github.com/homarr-labs/homarr/commit/50445b560edc3af2631f8d8d9aa81f3387d848f7))
+* **deps:** update dependency octokit to v5 ([#3156](https://github.com/homarr-labs/homarr/issues/3156)) ([8c59abd](https://github.com/homarr-labs/homarr/commit/8c59abdde3d8034f22a2b926b3291b55a0d492ea))
+* **deps:** update dependency swagger-ui-react to ^5.22.0 ([#3178](https://github.com/homarr-labs/homarr/issues/3178)) ([1e7b2e6](https://github.com/homarr-labs/homarr/commit/1e7b2e617b1437f0f98bc791e763bc49b6589b9e))
+* **deps:** update dependency undici to v7.10.0 ([#3158](https://github.com/homarr-labs/homarr/issues/3158)) ([eb5d5f8](https://github.com/homarr-labs/homarr/commit/eb5d5f8260cc9795806ecdb56fbb3f8d19858ed7))
+* **deps:** update dependency zod to ^3.25.12 ([#3172](https://github.com/homarr-labs/homarr/issues/3172)) ([caaee50](https://github.com/homarr-labs/homarr/commit/caaee503c128ff2a0b2a7de7a7c353484e4741a5))
+* **deps:** update dependency zod to ^3.25.13 ([#3173](https://github.com/homarr-labs/homarr/issues/3173)) ([dae6ded](https://github.com/homarr-labs/homarr/commit/dae6dedde544bf28fcdf87c71a9d585078527b82))
+* **deps:** update dependency zod to ^3.25.14 ([#3174](https://github.com/homarr-labs/homarr/issues/3174)) ([23404a2](https://github.com/homarr-labs/homarr/commit/23404a27f1a9dfec4e9126750f8d97e7c5eda572))
+* **deps:** update dependency zod to ^3.25.16 ([#3175](https://github.com/homarr-labs/homarr/issues/3175)) ([5080f51](https://github.com/homarr-labs/homarr/commit/5080f51a8dbe1b82571f356f7ae29ed7be69e18e))
+* **deps:** update dependency zod to ^3.25.17 ([#3177](https://github.com/homarr-labs/homarr/issues/3177)) ([371803a](https://github.com/homarr-labs/homarr/commit/371803ac509efd246367c812a6c0143e7aeda03f))
+* **deps:** update dependency zod to ^3.25.20 ([#3183](https://github.com/homarr-labs/homarr/issues/3183)) ([49498c8](https://github.com/homarr-labs/homarr/commit/49498c870e494b417e6c63d8547a4c0ffd93768b))
+* **deps:** update dependency zod to ^3.25.21 ([#3187](https://github.com/homarr-labs/homarr/issues/3187)) ([37d637d](https://github.com/homarr-labs/homarr/commit/37d637dcae6cbf62efda25a8dc01eedba66f2c74))
+* **deps:** update dependency zod to ^3.25.23 ([#3188](https://github.com/homarr-labs/homarr/issues/3188)) ([9840644](https://github.com/homarr-labs/homarr/commit/9840644ca50d3157223e7da0cf895f2e750afc58))
+* **deps:** update dependency zod to ^3.25.3 ([#3148](https://github.com/homarr-labs/homarr/issues/3148)) ([6e2aa87](https://github.com/homarr-labs/homarr/commit/6e2aa87102b72319236483b9a1d3e5ddd6fe2c82))
+* **deps:** update dependency zod to ^3.25.4 ([#3150](https://github.com/homarr-labs/homarr/issues/3150)) ([49b7080](https://github.com/homarr-labs/homarr/commit/49b7080415aaeee576507d48e8cda18acc9943a8))
+* **deps:** update dependency zod to ^3.25.5 ([#3152](https://github.com/homarr-labs/homarr/issues/3152)) ([79755c9](https://github.com/homarr-labs/homarr/commit/79755c95d3cf58680e434f0113c130db9f649d96))
+* **deps:** update dependency zod to ^3.25.6 ([#3153](https://github.com/homarr-labs/homarr/issues/3153)) ([92ebc05](https://github.com/homarr-labs/homarr/commit/92ebc05fbfded6d20d242ad477cb0dc30243e8cc))
+* **deps:** update dependency zod to ^3.25.7 ([#3154](https://github.com/homarr-labs/homarr/issues/3154)) ([22954b8](https://github.com/homarr-labs/homarr/commit/22954b8d2637cdea9a6502cab2d3d40359fa098f))
+* **deps:** update dependency zod to ^3.25.8 ([#3170](https://github.com/homarr-labs/homarr/issues/3170)) ([72bcbe8](https://github.com/homarr-labs/homarr/commit/72bcbe8effe47fdfb6a94de8defc0d3c12e7c754))
+* **deps:** update dependency zod-validation-error to ^3.4.1 ([#3127](https://github.com/homarr-labs/homarr/issues/3127)) ([886e95d](https://github.com/homarr-labs/homarr/commit/886e95d51714ce20e03d32b4c2cfb673e7e4c218))
+* **deps:** update tanstack-query monorepo to ^5.76.2 ([#3186](https://github.com/homarr-labs/homarr/issues/3186)) ([1584114](https://github.com/homarr-labs/homarr/commit/1584114e72246a018b9f49a859e49f7fb985009d))
+* **deps:** update testcontainers-node monorepo to ^10.27.0 ([#3159](https://github.com/homarr-labs/homarr/issues/3159)) ([18c465e](https://github.com/homarr-labs/homarr/commit/18c465e81e92cf58b7e32bcb70f1ab404a03a135))
+* **deps:** update testcontainers-node monorepo to ^10.28.0 ([#3191](https://github.com/homarr-labs/homarr/issues/3191)) ([43b8241](https://github.com/homarr-labs/homarr/commit/43b82419e9396f0b80bafa0a707d575c3732dc5b))
+* **downloads:** reordering columns in widget does not work ([#3194](https://github.com/homarr-labs/homarr/issues/3194)) ([09f4e67](https://github.com/homarr-labs/homarr/commit/09f4e6785b2ce38da3b52003e9c9300cdd0feb85))
+* esbuild not part of dependencies ([#3139](https://github.com/homarr-labs/homarr/issues/3139)) ([ef540e9](https://github.com/homarr-labs/homarr/commit/ef540e980f90f730020ef081dd105e33b0671232))
+* **items:** resize handle overlaps header ([#3193](https://github.com/homarr-labs/homarr/issues/3193)) ([09f3989](https://github.com/homarr-labs/homarr/commit/09f398948348fb402600506571a967ba405fbafb))
+* **releases-widget:** add hardcoded css classNames([#3181](https://github.com/homarr-labs/homarr/issues/3181)) ([4cb004f](https://github.com/homarr-labs/homarr/commit/4cb004fce0750da339f603b944de55135faa4bfa))
+
 ## [1.20.0](https://github.com/homarr-labs/homarr/compare/v1.19.1...v1.20.0) (2025-05-16)
 
 ### Features

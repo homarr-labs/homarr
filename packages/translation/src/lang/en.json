@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Show Memory Info"
         },
+        "showUptime": {
+          "label": "Show Uptime"
+        },
         "fileSystem": {
           "label": "Show Filesystem Info"
         },
         "defaultTab": {
           "label": "Default tab"
+        },
+        "visibleClusterSections": {
+          "label": "Visible cluster sections"
         },
         "sectionIndicatorRequirement": {
           "label": "Section indicator requirement"
@@ -1830,6 +1836,14 @@
             "node": "Node"
           }
         }
+      }
+    },
+    "dockerContainers": {
+      "name": "Docker stats",
+      "description": "Stats of your containers (This widget can only be added with administrator privileges)",
+      "option": {},
+      "error": {
+        "internalServerError": "Failed to fetch containers stats"
       }
     },
     "common": {
@@ -1945,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Use filter to calculate Ratio"
+        },
+        "limitPerIntegration": {
+          "label": "Limit items per integration",
+          "description": "This will limit the number of items shown per integration, not globally"
         }
       },
       "errors": {
@@ -3091,6 +3109,9 @@
             },
             "networkController": {
               "label": "Network Controller"
+            },
+            "dockerContainers": {
+              "label": "Docker containers"
             }
           }
         },
@@ -3154,8 +3175,9 @@
     "title": "Containers",
     "table": {
       "updated": "Updated {when}",
-      "search": "Search {count} containers",
-      "selected": "{selectCount} of {totalCount} containers selected"
+      "search": "Seach {count} containers",
+      "selected": "{selectCount} of {totalCount} containers selected",
+      "footer": "Total {count} containers"
     },
     "field": {
       "name": {
@@ -3173,6 +3195,14 @@
           "dead": "Dead"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": "CPU"
+        },
+        "memory": {
+          "label": "Memory"
+        }
+      },
       "containerImage": {
         "label": "Image"
       },
@@ -3181,6 +3211,7 @@
       }
     },
     "action": {
+      "title": "Actions",
       "start": {
         "label": "Start",
         "notification": {
