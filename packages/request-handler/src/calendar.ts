@@ -13,8 +13,10 @@ export const calendarMonthRequestHandler = createCachedIntegrationRequestHandler
 >({
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
-    const startDate = dayjs().year(input.year).month(input.month).startOf("month");
-    const endDate = startDate.clone().endOf("month");
+    // Calendar component shows up to 6 days before and after the month, for example if 1. of january is sunday, it shows the last 6 days of december.
+    const startDate = dayjs().year(input.year).month(input.month).startOf("month").subtract(6, "days");
+    const endDate = dayjs().year(input.year).month(input.month).endOf("month").add(6, "days");
+
     return await integrationInstance.getCalendarEventsAsync(
       startDate.toDate(),
       endDate.toDate(),
