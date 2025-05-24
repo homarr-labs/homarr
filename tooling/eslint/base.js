@@ -7,7 +7,7 @@ import tseslint from "typescript-eslint";
 export default tseslint.config(
   {
     // Globally ignored files
-    ignores: ["**/*.config.js"],
+    ignores: ["**/*.config.js", "**/*.cjs", "**/lang/*.d.json.ts"],
   },
   {
     files: ["**/*.js", "**/*.ts", "**/*.tsx"],

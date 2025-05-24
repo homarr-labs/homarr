@@ -702,6 +702,132 @@
         "create": "Test connection and create",
         "edit": "Test connection and save"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": "Cause with more details"
+          }
+        },
+        "unknown": {
+          "title": "Unknown error",
+          "description": "An unknown error occurred, open the cause below to see more details"
+        },
+        "parse": {
+          "title": "Parse error",
+          "description": "The response could not be parsed. Please verify that the URL is pointing to the base URL of the service."
+        },
+        "authorization": {
+          "title": "Authorization error",
+          "description": "The request was not authorized. Please verify that the credentials are correct and you have them configured with enough permissions."
+        },
+        "statusCode": {
+          "title": "Response error",
+          "description": "Received unexpected {statusCode} ({reason}) response from <url></url>. Please verify that the URL is pointing to the base URL of the integration.",
+          "otherDescription": "Received unexpected {statusCode} response from <url></url>. Please verify that the URL is pointing to the base URL of the integration.",
+          "reason": {
+            "badRequest": "Bad request",
+            "notFound": "Not found",
+            "tooManyRequests": "Too many requests",
+            "internalServerError": "Internal server error",
+            "serviceUnavailable": "Service unavailable",
+            "gatewayTimeout": "Gateway timeout"
+          }
+        },
+        "certificate": {
+          "title": "Certificate error",
+          "description": {
+            "expired": "The certificate has expired.",
+            "notYetValid": "The certificate is not yet valid.",
+            "untrusted": "The certificate is not trusted.",
+            "hostnameMismatch": "The certificate hostname does not match the URL."
+          },
+          "alert": {
+            "permission": {
+              "title": "Not enough permissions",
+              "message": "You are not allowed to trust or upload certificates. Please contact your administrator to upload the necessary root certificate."
+            },
+            "hostnameMismatch": {
+              "title": "Hostname mismatch",
+              "message": "The hostname in the certificate does not match the hostname you are connecting to. This could indicate a security risk, but you can still choose to trust this certificate."
+            },
+            "extract": {
+              "title": "CA certificate extraction failed",
+              "message": "Only self signed certificates without a chain can be fetched automatically. If you are using a self signed certificate, please make sure to upload the CA certificate manually. You can find instructions on how to do this <docsLink></docsLink>."
+            }
+          },
+          "action": {
+            "retry": {
+              "label": "Retry creation"
+            },
+            "trust": {
+              "label": "Trust certificate"
+            },
+            "upload": {
+              "label": "Upload certificate"
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "Trust hostname mismatch",
+              "message": "Are you sure you want to trust the certificate with a hostname mismatch?"
+            },
+            "notification": {
+              "success": {
+                "title": "Trusted certificate",
+                "message": "Added hostname to trusted certificate list"
+              },
+              "error": {
+                "title": "Failed to trust certificate",
+                "message": "The certificate with a hostname mismatch could not be trusted"
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "Trust self signed certificate",
+              "message": "Are you sure you want to trust this self signed certificate?"
+            },
+            "notification": {
+              "success": {
+                "title": "Trusted certificate",
+                "message": "Added certificate to trusted certificate list"
+              },
+              "error": {
+                "title": "Failed to trust certificate",
+                "message": "Failed to add certificate to trusted certificate list"
+              }
+            }
+          },
+          "details": {
+            "title": "Details",
+            "description": "Review the certificate information before deciding to trust it.",
+            "content": {
+              "action": "Show content",
+              "title": "PEM Certificate"
+            }
+          }
+        },
+        "request": {
+          "title": "Request error",
+          "description": {
+            "connection": {
+              "hostUnreachable": "The server could not be reached. This usually means the host is offline or unreachable from your network.",
+              "networkUnreachable": "The network is unreachable. Please check your internet connection or network configuration.",
+              "refused": "The server refused the connection. It may not be running or is rejecting requests on the specified port.",
+              "reset": "The connection was unexpectedly closed by the server. This can happen if the server is unstable or restarted."
+            },
+            "dns": {
+              "notFound": "The server address could not be found. Please check the URL for typos or invalid domain names.",
+              "timeout": "DNS lookup timed out. This may be a temporary issue—please try again in a few moments.",
+              "noAnswer": "The DNS server didn't return a valid response. The domain may exist but has no valid records."
+            },
+            "timeout": {
+              "aborted": "The request was aborted before it could complete. This might be due to a user action or system timeout.",
+              "timeout": "The request took too long to complete and was timed out. Check your network or try again later."
+            }
+          }
+        }
+      },
       "alertNotice": "The Save button is enabled once a successful connection is established",
       "notification": {
         "success": {
@@ -878,6 +1004,7 @@
       "cancel": "Cancel",
       "delete": "Delete",
       "discard": "Discard",
+      "close": "Close",
       "confirm": "Confirm",
       "continue": "Continue",
       "previous": "Previous",
@@ -1091,6 +1218,9 @@
       "field": {
         "integrations": {
           "label": "Integrations"
+        },
+        "title": {
+          "label": "Title"
         },
         "customCssClasses": {
           "label": "Custom css classes"
@@ -1702,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "Docker stats",
+      "description": "Stats of your containers (This widget can only be added with administrator privileges)",
+      "option": {},
+      "error": {
+        "internalServerError": "Failed to fetch containers stats"
+      }
+    },
     "common": {
       "location": {
         "query": "City / Postal code",
@@ -1766,7 +1904,12 @@
     "mediaServer": {
       "name": "Current media server streams",
       "description": "Show the current streams on your media servers",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "Show only currently playing",
+          "description": "Disabling this will not work for plex"
+        }
+      },
       "items": {
         "currentlyPlaying": "Currently playing",
         "user": "User",
@@ -1941,7 +2084,8 @@
         "pending": "Pending",
         "approved": "Approved",
         "declined": "Declined",
-        "failed": "Failed"
+        "failed": "Failed",
+        "completed": "Completed"
       },
       "toBeDetermined": "TBD"
     },
@@ -2041,6 +2185,98 @@
         },
         "maximumAmountPosts": {
           "label": "Amount posts limit"
+        }
+      }
+    },
+    "releases": {
+      "name": "Releases",
+      "description": "Displays a list of the current version of the given repositories with the given version regex.",
+      "option": {
+        "newReleaseWithin": {
+          "label": "New Release Within",
+          "description": "Usage example: 1w (1 week), 10M (10 months). Accepted unit types h (hours), d (days), w (weeks), M (months), y (years). Leave empty for no highlighting of new releases."
+        },
+        "staleReleaseWithin": {
+          "label": "Stale Release Within",
+          "description": "Usage example: 1w (1 week), 10M (10 months). Accepted unit types h (hours), d (days), w (weeks), M (months), y (years). Leave empty for no highlighting of stale releases."
+        },
+        "showOnlyHighlighted": {
+          "label": "Show Only Highlighted",
+          "description": "Show only new or stale releases. As per the above."
+        },
+        "showDetails": {
+          "label": "Show Details"
+        },
+        "topReleases": {
+          "label": "Top Releases",
+          "description": "The max number of latest releases to show. Zero means no limit."
+        },
+        "repositories": {
+          "label": "Repositories",
+          "addRRepository": {
+            "label": "Add repository"
+          },
+          "provider": {
+            "label": "Provider"
+          },
+          "identifier": {
+            "label": "Identifier",
+            "placeholder": "Name or Owner/Name"
+          },
+          "name": {
+            "label": "Name"
+          },
+          "versionFilter": {
+            "label": "Version Filter",
+            "prefix": {
+              "label": "Prefix"
+            },
+            "precision": {
+              "label": "Precision",
+              "options": {
+                "none": "None"
+              }
+            },
+            "suffix": {
+              "label": "Suffix"
+            },
+            "regex": {
+              "label": "Regular Expression"
+            }
+          },
+          "edit": {
+            "label": "Edit"
+          },
+          "editForm": {
+            "title": "Edit Repository",
+            "cancel": {
+              "label": "Cancel"
+            },
+            "confirm": {
+              "label": "Confirm"
+            }
+          },
+          "example": {
+            "label": "Example"
+          },
+          "invalid": "Invalid repository definition, please check the values"
+        }
+      },
+      "not-found": "Not Found",
+      "pre-release": "Pre-Release",
+      "archived": "Archived",
+      "forked": "Forked",
+      "starsCount": "Stars",
+      "forksCount": "Forks",
+      "issuesCount": "Open Issues",
+      "openProjectPage": "Open Project Page",
+      "openReleasePage": "Open Release Page",
+      "releaseDescription": "Release Description",
+      "created": "Created",
+      "error": {
+        "label": "Error",
+        "options": {
+          "noMatchingVersion": "No matching version found"
         }
       }
     },
@@ -2877,6 +3113,9 @@
             },
             "refreshNotifications": {
               "label": "Notification Updater"
+            },
+            "dockerContainers": {
+              "label": "Docker containers"
             }
           }
         },
@@ -2940,8 +3179,9 @@
     "title": "Containers",
     "table": {
       "updated": "Updated {when}",
-      "search": "Search {count} containers",
-      "selected": "{selectCount} of {totalCount} containers selected"
+      "search": "Seach {count} containers",
+      "selected": "{selectCount} of {totalCount} containers selected",
+      "footer": "Total {count} containers"
     },
     "field": {
       "name": {
@@ -2959,6 +3199,14 @@
           "dead": "Dead"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": "CPU"
+        },
+        "memory": {
+          "label": "Memory"
+        }
+      },
       "containerImage": {
         "label": "Image"
       },
@@ -2967,6 +3215,7 @@
       }
     },
     "action": {
+      "title": "Actions",
       "start": {
         "label": "Start",
         "notification": {
@@ -3409,7 +3658,10 @@
           "label": "Logs"
         },
         "certificates": {
-          "label": "Certificates"
+          "label": "Certificates",
+          "hostnames": {
+            "label": "Hostnames"
+          }
         }
       },
       "settings": {
@@ -3807,6 +4059,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": "Hostname"
+      },
+      "subject": {
+        "label": "Subject"
+      },
+      "issuer": {
+        "label": "Issuer"
+      },
+      "validFrom": {
+        "label": "Valid from"
+      },
+      "validTo": {
+        "label": "Valid to"
+      },
+      "serialNumber": {
+        "label": "Serial number"
+      },
+      "fingerprint": {
+        "label": "Fingerprint"
+      }
+    },
     "page": {
       "list": {
         "title": "Trusted certificates",
@@ -3814,7 +4089,20 @@
         "noResults": {
           "title": "There are no certificates yet"
         },
-        "expires": "Expires {when}"
+        "invalid": {
+          "title": "Invalid certificate",
+          "description": "Failed to parse certificate"
+        },
+        "expires": "Expires {when}",
+        "toHostnames": "Trusted hostnames"
+      },
+      "hostnames": {
+        "title": "Trusted certificate hostnames",
+        "description": "Some certificates do not allow the specific domain Homarr uses to request them, because of this all trusted hostnames with their certificate thumbprints are used to bypass these restrictions.",
+        "noResults": {
+          "title": "There are no hostnames yet"
+        },
+        "toCertificates": "Certificates"
       }
     },
     "action": {
@@ -3842,6 +4130,20 @@
           "error": {
             "title": "Certificate not removed",
             "message": "The certificate could not be removed"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "Remove trusted hostname",
+        "confirm": "Are you sure you want to remove this trusted hostname? This can cause some integrations to stop working.",
+        "notification": {
+          "success": {
+            "title": "Hostname removed",
+            "message": "The hostname was removed successfully"
+          },
+          "error": {
+            "title": "Hostname not removed",
+            "message": "The hostname could not be removed"
           }
         }
       }

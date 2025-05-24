@@ -12,7 +12,7 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const networkControllerRouter = createTRPCRouter({
   summary: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("networkController")))
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("networkController")))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -34,7 +34,7 @@ export const networkControllerRouter = createTRPCRouter({
     }),
 
   subscribeToSummary: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("networkController")))
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("networkController")))
     .subscription(({ ctx }) => {
       return observable<{
         integration: Modify<Integration, { kind: IntegrationKindByCategory<"networkController"> }>;

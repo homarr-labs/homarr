@@ -1,7 +1,10 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ParseError } from "@homarr/common/server";
 
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
-import { IntegrationTestConnectionError } from "../base/test-connection-error";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { DnsHoleSummaryIntegration } from "../interfaces/dns-hole-summary/dns-hole-summary-integration";
 import type { DnsHoleSummary } from "../interfaces/dns-hole-summary/dns-hole-summary-types";
 import { filteringStatusSchema, statsResponseSchema, statusResponseSchema } from "./adguard-home-types";
@@ -85,26 +88,19 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
     };
   }
 
-  public async testConnectionAsync(): Promise<void> {
-    await super.handleTestConnectionResponseAsync({
-      queryFunctionAsync: async () => {
-        return await fetchWithTrustedCertificatesAsync(this.url("/control/status"), {
-          headers: {
-            Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
-          },
-        });
-      },
-      handleResponseAsync: async (response) => {
-        try {
-          const result = await response.json();
-          if (typeof result === "object" && result !== null) return;
-        } catch {
-          throw new IntegrationTestConnectionError("invalidJson");
-        }
-
-        throw new IntegrationTestConnectionError("invalidCredentials");
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const response = await input.fetchAsync(this.url("/control/status"), {
+      headers: {
+        Authorization: `Basic ${this.getAuthorizationHeaderValue()}`,
       },
     });
+
+    if (!response.ok) return TestConnectionError.StatusResult(response);
+
+    const result = await response.json();
+    if (typeof result === "object" && result !== null) return { success: true };
+
+    return TestConnectionError.ParseResult(new ParseError("Expected object data"));
   }
 
   public async enableAsync(): Promise<void> {

@@ -15,6 +15,7 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
   clientId: env.AUTH_OIDC_CLIENT_ID,
   clientSecret: env.AUTH_OIDC_CLIENT_SECRET,
   issuer: env.AUTH_OIDC_ISSUER,
+  allowDangerousEmailAccountLinking: env.AUTH_OIDC_ENABLE_DANGEROUS_ACCOUNT_LINKING,
   authorization: {
     params: {
       scope: env.AUTH_OIDC_SCOPE_OVERWRITE,

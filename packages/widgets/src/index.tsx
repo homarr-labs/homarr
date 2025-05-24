@@ -5,7 +5,7 @@ import { Center, Loader as UiLoader } from "@mantine/core";
 
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
-import type { SettingsContextProps } from "@homarr/settings";
+import type { SettingsContextProps } from "@homarr/settings/creator";
 
 import * as app from "./app";
 import * as bookmarks from "./bookmarks";
@@ -14,6 +14,7 @@ import * as clock from "./clock";
 import type { WidgetComponentProps } from "./definition";
 import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
+import * as dockerContainers from "./docker";
 import * as downloads from "./downloads";
 import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
@@ -29,6 +30,7 @@ import * as networkControllerSummary from "./network-controller/summary";
 import * as notebook from "./notebook";
 import * as notifications from "./notifications";
 import type { WidgetOptionDefinition } from "./options";
+import * as releases from "./releases";
 import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
@@ -64,6 +66,8 @@ export const widgetImports = {
   healthMonitoring,
   mediaTranscoding,
   minecraftServerStatus,
+  dockerContainers,
+  releases,
   notifications,
 } satisfies WidgetImportRecord;
 

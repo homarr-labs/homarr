@@ -702,6 +702,132 @@
         "create": "Test forbindelse og opret",
         "edit": "Test forbindelse og gem"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "Gem-knappen er aktiveret, når en vellykket forbindelse er etableret",
       "notification": {
         "success": {
@@ -878,6 +1004,7 @@
       "cancel": "Annuller",
       "delete": "Slet",
       "discard": "Kassér",
+      "close": "",
       "confirm": "Bekræft",
       "continue": "Forsæt",
       "previous": "Forrige",
@@ -1091,6 +1218,9 @@
       "field": {
         "integrations": {
           "label": "Integrationer"
+        },
+        "title": {
+          "label": ""
         },
         "customCssClasses": {
           "label": "Brugerdefinerede CSS-klasser"
@@ -1702,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "By / Postnummer",
@@ -1766,7 +1904,12 @@
     "mediaServer": {
       "name": "Aktuelle medieserver streams",
       "description": "Vis de aktuelle streams på dine medieservere",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Afspiller lige nu",
         "user": "Bruger",
@@ -1941,7 +2084,8 @@
         "pending": "Afventende",
         "approved": "Godkendt",
         "declined": "Afvist",
-        "failed": "Mislykket"
+        "failed": "Mislykket",
+        "completed": ""
       },
       "toBeDetermined": "TBD"
     },
@@ -2041,6 +2185,98 @@
         },
         "maximumAmountPosts": {
           "label": "Grænse for antal indlæg"
+        }
+      }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "name": {
+            "label": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": "",
+      "error": {
+        "label": "",
+        "options": {
+          "noMatchingVersion": ""
         }
       }
     },
@@ -2863,6 +3099,9 @@
             },
             "networkController": {
               "label": "Netværkskontroller"
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -2927,7 +3166,8 @@
     "table": {
       "updated": "Opdateret {when}",
       "search": "Søg {count} containere",
-      "selected": "{selectCount} af {totalCount} containere valgt"
+      "selected": "{selectCount} af {totalCount} containere valgt",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -2945,6 +3185,14 @@
           "dead": "Død"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Billede"
       },
@@ -2953,6 +3201,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Start",
         "notification": {
@@ -3395,7 +3644,10 @@
           "label": "Logs"
         },
         "certificates": {
-          "label": "Certifikater"
+          "label": "Certifikater",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3793,6 +4045,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "Betroede certifikater",
@@ -3800,7 +4075,20 @@
         "noResults": {
           "title": "Der er endnu ingen certifikater"
         },
-        "expires": "Udløber {when}"
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
+        "expires": "Udløber {when}",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3828,6 +4116,20 @@
           "error": {
             "title": "Certifikat ikke fjernet",
             "message": "Certifikatet kunne ikke slettes"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

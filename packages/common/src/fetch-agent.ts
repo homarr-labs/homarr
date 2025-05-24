@@ -24,7 +24,7 @@ export class LoggingAgent extends Agent {
       url.searchParams.set(key, "REDACTED");
     });
 
-    logger.info(
+    logger.debug(
       `Dispatching request ${url.toString().replaceAll("=&", "&")} (${Object.keys(options.headers ?? {}).length} headers)`,
     );
     return super.dispatch(options, handler);

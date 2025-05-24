@@ -23,6 +23,8 @@ export const widgetKinds = [
   "bookmarks",
   "indexerManager",
   "healthMonitoring",
+  "releases",
+  "dockerContainers",
   "notifications",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];

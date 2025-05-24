@@ -12,7 +12,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trp
 
 export const mediaRequestsRouter = createTRPCRouter({
   getLatestRequests: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -39,7 +39,7 @@ export const mediaRequestsRouter = createTRPCRouter({
         });
     }),
   subscribeToLatestRequests: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .subscription(({ ctx }) => {
       return observable<{
         integrationId: string;
@@ -65,7 +65,7 @@ export const mediaRequestsRouter = createTRPCRouter({
       });
     }),
   getStats: publicProcedure
-    .unstable_concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("mediaRequest")))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -91,7 +91,7 @@ export const mediaRequestsRouter = createTRPCRouter({
       };
     }),
   answerRequest: protectedProcedure
-    .unstable_concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("mediaRequest")))
+    .concat(createOneIntegrationMiddleware("interact", ...getIntegrationKindsByCategory("mediaRequest")))
     .input(z.object({ requestId: z.number(), answer: z.enum(["approve", "decline"]) }))
     .mutation(async ({ ctx: { integration }, input }) => {
       const integrationInstance = await createIntegrationAsync(integration);

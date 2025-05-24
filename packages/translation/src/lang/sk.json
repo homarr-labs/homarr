@@ -702,6 +702,132 @@
         "create": "Otestujte pripojenie a vytvorte",
         "edit": "Otestujte pripojenie a uložte"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "Tlačidlo Uložiť sa aktivuje po úspešnom nadviazaní spojenia.",
       "notification": {
         "success": {
@@ -878,6 +1004,7 @@
       "cancel": "Zrušiť",
       "delete": "Vymazať",
       "discard": "Zahodiť",
+      "close": "",
       "confirm": "Potvrďte",
       "continue": "Pokračovať",
       "previous": "Predchádzajúci",
@@ -1091,6 +1218,9 @@
       "field": {
         "integrations": {
           "label": "Integrácie"
+        },
+        "title": {
+          "label": ""
         },
         "customCssClasses": {
           "label": "Vlastné css triedy"
@@ -1702,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "Mesto / PSČ",
@@ -1766,7 +1904,12 @@
     "mediaServer": {
       "name": "Aktuálne streamy mediálneho servera",
       "description": "Zobrazte aktuálne streamy na vašich mediálnych serveroch",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "",
         "user": "Používateľ",
@@ -1941,7 +2084,8 @@
         "pending": "",
         "approved": "",
         "declined": "",
-        "failed": ""
+        "failed": "",
+        "completed": ""
       },
       "toBeDetermined": "TBD"
     },
@@ -2041,6 +2185,98 @@
         },
         "maximumAmountPosts": {
           "label": "Limit počtu príspevkov"
+        }
+      }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "name": {
+            "label": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": "",
+      "error": {
+        "label": "",
+        "options": {
+          "noMatchingVersion": ""
         }
       }
     },
@@ -2863,6 +3099,9 @@
             },
             "networkController": {
               "label": ""
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -2927,7 +3166,8 @@
     "table": {
       "updated": "Aktualizované {when}",
       "search": "Vyhľadajte {count} kontajnery",
-      "selected": "{selectCount} z {totalCount} vybratých kontajnerov"
+      "selected": "{selectCount} z {totalCount} vybratých kontajnerov",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -2945,6 +3185,14 @@
           "dead": "Mŕtvy"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Obraz"
       },
@@ -2953,6 +3201,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Spustiť",
         "notification": {
@@ -3395,7 +3644,10 @@
           "label": "Záznamy"
         },
         "certificates": {
-          "label": ""
+          "label": "",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3793,6 +4045,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "",
@@ -3800,7 +4075,20 @@
         "noResults": {
           "title": ""
         },
-        "expires": ""
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
+        "expires": "",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3823,6 +4111,20 @@
         "notification": {
           "success": {
             "title": "Certifikát odstránený",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
             "message": ""
           },
           "error": {

@@ -21,3 +21,20 @@ export const extractBaseUrlFromHeaders = (
 
   return `${protocol}://${host}`;
 };
+
+export const getPortFromUrl = (url: URL): number => {
+  const port = url.port;
+  if (port) {
+    return Number(port);
+  }
+
+  if (url.protocol === "https:") {
+    return 443;
+  }
+
+  if (url.protocol === "http:") {
+    return 80;
+  }
+
+  throw new Error(`Unsupported protocol: ${url.protocol}`);
+};

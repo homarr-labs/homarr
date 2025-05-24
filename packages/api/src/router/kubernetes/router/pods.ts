@@ -12,7 +12,7 @@ import { KubernetesClient } from "../kubernetes-client";
 export const podsRouter = createTRPCRouter({
   getPods: permissionRequiredProcedure
     .requiresPermission("admin")
-    .unstable_concat(kubernetesMiddleware())
+    .concat(kubernetesMiddleware())
     .query(async (): Promise<KubernetesPod[]> => {
       const { coreApi, kubeConfig } = KubernetesClient.getInstance();
       try {

@@ -1,4 +1,5 @@
 import { observable } from "@trpc/server/observable";
+import { z } from "zod";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
@@ -13,11 +14,14 @@ const createMediaServerIntegrationMiddleware = (action: IntegrationAction) =>
 
 export const mediaServerRouter = createTRPCRouter({
   getCurrentStreams: publicProcedure
-    .unstable_concat(createMediaServerIntegrationMiddleware("query"))
-    .query(async ({ ctx }) => {
+    .concat(createMediaServerIntegrationMiddleware("query"))
+    .input(z.object({ showOnlyPlaying: z.boolean() }))
+    .query(async ({ ctx, input }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const innerHandler = mediaServerRequestHandler.handler(integration, {});
+          const innerHandler = mediaServerRequestHandler.handler(integration, {
+            showOnlyPlaying: input.showOnlyPlaying,
+          });
           const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
           return {
             integrationId: integration.id,
@@ -28,12 +32,15 @@ export const mediaServerRouter = createTRPCRouter({
       );
     }),
   subscribeToCurrentStreams: publicProcedure
-    .unstable_concat(createMediaServerIntegrationMiddleware("query"))
-    .subscription(({ ctx }) => {
+    .concat(createMediaServerIntegrationMiddleware("query"))
+    .input(z.object({ showOnlyPlaying: z.boolean() }))
+    .subscription(({ ctx, input }) => {
       return observable<{ integrationId: string; data: StreamSession[] }>((emit) => {
         const unsubscribes: (() => void)[] = [];
         for (const integration of ctx.integrations) {
-          const innerHandler = mediaServerRequestHandler.handler(integration, {});
+          const innerHandler = mediaServerRequestHandler.handler(integration, {
+            showOnlyPlaying: input.showOnlyPlaying,
+          });
 
           const unsubscribe = innerHandler.subscribe((sessions) => {
             emit.next({

@@ -17,10 +17,15 @@ import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 import type { WidgetComponentProps } from "../definition";
 
-export default function MediaServerWidget({ integrationIds, isEditMode }: WidgetComponentProps<"mediaServer">) {
+export default function MediaServerWidget({
+  options,
+  integrationIds,
+  isEditMode,
+}: WidgetComponentProps<"mediaServer">) {
   const [currentStreams] = clientApi.widget.mediaServer.getCurrentStreams.useSuspenseQuery(
     {
       integrationIds,
+      showOnlyPlaying: options.showOnlyPlaying,
     },
     {
       refetchOnMount: false,
@@ -80,21 +85,25 @@ export default function MediaServerWidget({ integrationIds, isEditMode }: Widget
   clientApi.widget.mediaServer.subscribeToCurrentStreams.useSubscription(
     {
       integrationIds,
+      showOnlyPlaying: options.showOnlyPlaying,
     },
     {
       enabled: !isEditMode,
       onData(data) {
-        utils.widget.mediaServer.getCurrentStreams.setData({ integrationIds }, (previousData) => {
-          return previousData?.map((pair) => {
-            if (pair.integrationId === data.integrationId) {
-              return {
-                ...pair,
-                sessions: data.data,
-              };
-            }
-            return pair;
-          });
-        });
+        utils.widget.mediaServer.getCurrentStreams.setData(
+          { integrationIds, showOnlyPlaying: options.showOnlyPlaying },
+          (previousData) => {
+            return previousData?.map((pair) => {
+              if (pair.integrationId === data.integrationId) {
+                return {
+                  ...pair,
+                  sessions: data.data,
+                };
+              }
+              return pair;
+            });
+          },
+        );
       },
     },
   );

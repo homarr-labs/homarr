@@ -702,6 +702,132 @@
         "create": "",
         "edit": ""
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "",
       "notification": {
         "success": {
@@ -878,6 +1004,7 @@
       "cancel": "Ακύρωση",
       "delete": "Διαγραφή",
       "discard": "",
+      "close": "",
       "confirm": "Επιβεβαίωση",
       "continue": "",
       "previous": "Προηγούμενο",
@@ -1090,6 +1217,9 @@
       },
       "field": {
         "integrations": {
+          "label": ""
+        },
+        "title": {
           "label": ""
         },
         "customCssClasses": {
@@ -1702,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "",
@@ -1766,7 +1904,12 @@
     "mediaServer": {
       "name": "",
       "description": "",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "",
         "user": "",
@@ -1941,7 +2084,8 @@
         "pending": "",
         "approved": "",
         "declined": "",
-        "failed": ""
+        "failed": "",
+        "completed": ""
       },
       "toBeDetermined": ""
     },
@@ -2041,6 +2185,98 @@
         },
         "maximumAmountPosts": {
           "label": ""
+        }
+      }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "name": {
+            "label": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": "",
+      "error": {
+        "label": "",
+        "options": {
+          "noMatchingVersion": ""
         }
       }
     },
@@ -2863,6 +3099,9 @@
             },
             "networkController": {
               "label": ""
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -2927,7 +3166,8 @@
     "table": {
       "updated": "",
       "search": "",
-      "selected": ""
+      "selected": "",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -2945,6 +3185,14 @@
           "dead": ""
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Εικόνα"
       },
@@ -2953,6 +3201,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Έναρξη",
         "notification": {
@@ -3395,7 +3644,10 @@
           "label": ""
         },
         "certificates": {
-          "label": ""
+          "label": "",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3793,6 +4045,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "",
@@ -3800,7 +4075,20 @@
         "noResults": {
           "title": ""
         },
-        "expires": ""
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
+        "expires": "",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3818,6 +4106,20 @@
         }
       },
       "remove": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
+          }
+        }
+      },
+      "removeHostname": {
         "label": "",
         "confirm": "",
         "notification": {

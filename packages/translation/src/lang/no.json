@@ -702,6 +702,132 @@
         "create": "Test tilkobling og opprett",
         "edit": "Test tilkobling og lagre"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "Lagre-knappen er aktivert når en vellykket tilkobling er opprettet",
       "notification": {
         "success": {
@@ -878,6 +1004,7 @@
       "cancel": "Avbryt",
       "delete": "Slett",
       "discard": "Forkast",
+      "close": "",
       "confirm": "Bekreft",
       "continue": "Fortsett",
       "previous": "Tidligere",
@@ -1091,6 +1218,9 @@
       "field": {
         "integrations": {
           "label": "Integrasjoner"
+        },
+        "title": {
+          "label": ""
         },
         "customCssClasses": {
           "label": "Egendefinerte css-klasser"
@@ -1702,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "By / Postnummer",
@@ -1766,7 +1904,12 @@
     "mediaServer": {
       "name": "Pågående medieserver-strømmer",
       "description": "Vis pågående strømmer på dine media-servere",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "",
+          "description": ""
+        }
+      },
       "items": {
         "currentlyPlaying": "Spilles nå",
         "user": "Bruker",
@@ -1941,7 +2084,8 @@
         "pending": "Venter",
         "approved": "Godkjent",
         "declined": "Avslått",
-        "failed": "Feilet"
+        "failed": "Feilet",
+        "completed": ""
       },
       "toBeDetermined": "Uavklart"
     },
@@ -2041,6 +2185,98 @@
         },
         "maximumAmountPosts": {
           "label": "Antall poster grense"
+        }
+      }
+    },
+    "releases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "newReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "staleReleaseWithin": {
+          "label": "",
+          "description": ""
+        },
+        "showOnlyHighlighted": {
+          "label": "",
+          "description": ""
+        },
+        "showDetails": {
+          "label": ""
+        },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
+        "repositories": {
+          "label": "",
+          "addRRepository": {
+            "label": ""
+          },
+          "provider": {
+            "label": ""
+          },
+          "identifier": {
+            "label": "",
+            "placeholder": ""
+          },
+          "name": {
+            "label": ""
+          },
+          "versionFilter": {
+            "label": "",
+            "prefix": {
+              "label": ""
+            },
+            "precision": {
+              "label": "",
+              "options": {
+                "none": ""
+              }
+            },
+            "suffix": {
+              "label": ""
+            },
+            "regex": {
+              "label": ""
+            }
+          },
+          "edit": {
+            "label": ""
+          },
+          "editForm": {
+            "title": "",
+            "cancel": {
+              "label": ""
+            },
+            "confirm": {
+              "label": ""
+            }
+          },
+          "example": {
+            "label": ""
+          },
+          "invalid": ""
+        }
+      },
+      "not-found": "",
+      "pre-release": "",
+      "archived": "",
+      "forked": "",
+      "starsCount": "",
+      "forksCount": "",
+      "issuesCount": "",
+      "openProjectPage": "",
+      "openReleasePage": "",
+      "releaseDescription": "",
+      "created": "",
+      "error": {
+        "label": "",
+        "options": {
+          "noMatchingVersion": ""
         }
       }
     },
@@ -2863,6 +3099,9 @@
             },
             "networkController": {
               "label": ""
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -2927,7 +3166,8 @@
     "table": {
       "updated": "Oppdatert {when}",
       "search": "Søk i {count} containere",
-      "selected": "{selectCount} av {totalCount} containere valgt"
+      "selected": "{selectCount} av {totalCount} containere valgt",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -2945,6 +3185,14 @@
           "dead": "Død"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Image"
       },
@@ -2953,6 +3201,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Start",
         "notification": {
@@ -3395,7 +3644,10 @@
           "label": "Logger"
         },
         "certificates": {
-          "label": "Sertifikater"
+          "label": "Sertifikater",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3793,6 +4045,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "Betrodde sertifikater",
@@ -3800,7 +4075,20 @@
         "noResults": {
           "title": "Det er ingen sertifikater enda"
         },
-        "expires": "Utløper {when}"
+        "invalid": {
+          "title": "",
+          "description": ""
+        },
+        "expires": "Utløper {when}",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3828,6 +4116,20 @@
           "error": {
             "title": "Sertifikat ikke fjernet",
             "message": "Sertifikatet kunne ikke fjernes"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

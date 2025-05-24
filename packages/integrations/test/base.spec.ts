@@ -1,250 +1,57 @@
-import { Response } from "undici";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
-import { IntegrationTestConnectionError } from "../src";
+import { ResponseError } from "@homarr/common/server";
+import { createDb } from "@homarr/db/test";
+
+import type { IntegrationTestingInput } from "../src/base/integration";
 import { Integration } from "../src/base/integration";
+import type { TestingResult } from "../src/base/test-connection/test-connection-service";
 
-type HandleResponseProps = Parameters<Integration["handleTestConnectionResponseAsync"]>[0];
-
-class BaseIntegrationMock extends Integration {
-  public async fakeTestConnectionAsync(props: HandleResponseProps): Promise<void> {
-    await super.handleTestConnectionResponseAsync(props);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public async testConnectionAsync(): Promise<void> {}
-}
+vi.mock("@homarr/db", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const actual = await importActual<typeof import("@homarr/db")>();
+  return {
+    ...actual,
+    db: createDb(),
+  };
+});
 
 describe("Base integration", () => {
-  describe("handleTestConnectionResponseAsync", () => {
-    test("With no cause error should throw IntegrationTestConnectionError with key commonError", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
+  test("testConnectionAsync should handle errors", async () => {
+    const responseError = new ResponseError({ status: 500, url: "https://example.com" });
+    const integration = new FakeIntegration(undefined, responseError);
 
-      const errorMessage = "The error message";
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.reject(new Error(errorMessage));
-        },
-      };
+    const result = await integration.testConnectionAsync();
 
-      // Act
-      const actPromise = integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actPromise).rejects.toHaveProperty("key", "commonError");
-      await expect(actPromise).rejects.toHaveProperty("detailMessage", errorMessage);
-    });
-
-    test("With cause ENOTFOUND should throw IntegrationTestConnectionError with key domainNotFound", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
-
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.reject(new Error("Error", { cause: { code: "ENOTFOUND" } }));
-        },
-      };
-
-      // Act
-      const actAsync = async () => await integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actAsync()).rejects.toHaveProperty("key", "domainNotFound");
-    });
-
-    test("With cause ENOTFOUND should throw IntegrationTestConnectionError with key connectionRefused", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
-
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.reject(new Error("Error", { cause: { code: "ECONNREFUSED" } }));
-        },
-      };
-
-      // Act
-      const actAsync = async () => await integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actAsync()).rejects.toHaveProperty("key", "connectionRefused");
-    });
-
-    test("With cause ENOTFOUND should throw IntegrationTestConnectionError with key connectionAborted", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
-
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.reject(new Error("Error", { cause: { code: "ECONNABORTED" } }));
-        },
-      };
-
-      // Act
-      const actAsync = async () => await integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actAsync()).rejects.toHaveProperty("key", "connectionAborted");
-    });
-
-    test("With not handled cause error should throw IntegrationTestConnectionError with key commonError", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
-
-      const errorMessage = "The error message";
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.reject(new Error(errorMessage));
-        },
-      };
-
-      // Act
-      const actPromise = integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actPromise).rejects.toHaveProperty("key", "commonError");
-      await expect(actPromise).rejects.toHaveProperty("detailMessage", errorMessage);
-    });
-
-    test("With response status code 400 should throw IntegrationTestConnectionError with key badRequest", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
-
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.resolve(new Response(null, { status: 400 }));
-        },
-      };
-
-      // Act
-      const actAsync = async () => await integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actAsync()).rejects.toHaveProperty("key", "badRequest");
-    });
-
-    test("With response status code 401 should throw IntegrationTestConnectionError with key unauthorized", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
-
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.resolve(new Response(null, { status: 401 }));
-        },
-      };
-
-      // Act
-      const actAsync = async () => await integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actAsync()).rejects.toHaveProperty("key", "unauthorized");
-    });
-
-    test("With response status code 403 should throw IntegrationTestConnectionError with key forbidden", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
-
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.resolve(new Response(null, { status: 403 }));
-        },
-      };
-
-      // Act
-      const actAsync = async () => await integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actAsync()).rejects.toHaveProperty("key", "forbidden");
-    });
-
-    test("With response status code 404 should throw IntegrationTestConnectionError with key notFound", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
-
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.resolve(new Response(null, { status: 404 }));
-        },
-      };
-
-      // Act
-      const actAsync = async () => await integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actAsync()).rejects.toHaveProperty("key", "notFound");
-    });
-
-    test("With response status code 500 should throw IntegrationTestConnectionError with key internalServerError", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
-
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.resolve(new Response(null, { status: 500 }));
-        },
-      };
-
-      // Act
-      const actAsync = async () => await integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actAsync()).rejects.toHaveProperty("key", "internalServerError");
-    });
-
-    test("With response status code 503 should throw IntegrationTestConnectionError with key serviceUnavailable", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
-
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.resolve(new Response(null, { status: 503 }));
-        },
-      };
-
-      // Act
-      const actAsync = async () => await integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actAsync()).rejects.toHaveProperty("key", "serviceUnavailable");
-    });
-
-    test("With response status code 418 (or any other unhandled code) should throw IntegrationTestConnectionError with key commonError", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
-
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.resolve(new Response(null, { status: 418 }));
-        },
-      };
-
-      // Act
-      const actAsync = async () => await integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actAsync()).rejects.toHaveProperty("key", "commonError");
-    });
-
-    test("Errors from handleResponseAsync should be thrown", async () => {
-      // Arrange
-      const integration = new BaseIntegrationMock({ id: "id", name: "name", url: "url", decryptedSecrets: [] });
-
-      const errorMessage = "The error message";
-      const props: HandleResponseProps = {
-        async queryFunctionAsync() {
-          return await Promise.resolve(new Response(null, { status: 200 }));
-        },
-        async handleResponseAsync() {
-          return await Promise.reject(new IntegrationTestConnectionError("commonError", errorMessage));
-        },
-      };
-
-      // Act
-      const actPromise = integration.fakeTestConnectionAsync(props);
-
-      // Assert
-      await expect(actPromise).rejects.toHaveProperty("key", "commonError");
-      await expect(actPromise).rejects.toHaveProperty("detailMessage", errorMessage);
-    });
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.type === "statusCode").toBe(true);
+    if (result.error.type !== "statusCode") return;
+    expect(result.error.data.statusCode).toBe(500);
+    expect(result.error.data.url).toContain("https://example.com");
+    expect(result.error.data.reason).toBe("internalServerError");
   });
 });
+
+class FakeIntegration extends Integration {
+  constructor(
+    private testingResult?: TestingResult,
+    private error?: Error,
+  ) {
+    super({
+      id: "test",
+      name: "Test",
+      url: "https://example.com",
+      decryptedSecrets: [],
+    });
+  }
+
+  // eslint-disable-next-line no-restricted-syntax
+  protected testingAsync(_: IntegrationTestingInput): Promise<TestingResult> {
+    if (this.error) {
+      return Promise.reject(this.error);
+    }
+
+    return Promise.resolve(this.testingResult ?? { success: true });
+  }
+}

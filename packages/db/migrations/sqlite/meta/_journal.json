@@ -225,6 +225,13 @@
       "when": 1740784849045,
       "tag": "0031_add_dynamic_section_options",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "6",
+      "when": 1746821779051,
+      "tag": "0032_add_trusted_certificate_hostnames",
+      "breakpoints": true
     }
   ]
 }

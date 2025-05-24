@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Anchor, Button, Card, Code, Collapse, Divider, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { z } from "zod";
@@ -15,6 +15,8 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 import { userSignInSchema } from "@homarr/validation/user";
 
+type Provider = "credentials" | "ldap" | "oidc";
+
 interface LoginFormProps {
   providers: string[];
   oidcClientName: string;
@@ -26,6 +28,8 @@ const extendedValidation = userSignInSchema.extend({ provider: z.enum(["credenti
 
 export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, callbackUrl }: LoginFormProps) => {
   const t = useScopedI18n("user");
+  const searchParams = useSearchParams();
+  const isError = searchParams.has("error");
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const form = useZodForm(extendedValidation, {
@@ -39,10 +43,24 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
   const credentialInputsVisible = providers.includes("credentials") || providers.includes("ldap");
 
   const onSuccess = useCallback(
-    async (response: Awaited<ReturnType<typeof signIn>>) => {
-      if (response && (!response.ok || response.error)) {
+    async (provider: Provider, response: Awaited<ReturnType<typeof signIn>>) => {
+      if (!response.ok || response.error) {
         // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw response.error;
+      }
+
+      if (provider === "oidc") {
+        if (!response.url) {
+          showErrorNotification({
+            title: t("action.login.notification.error.title"),
+            message: t("action.login.notification.error.message"),
+            autoClose: 10000,
+          });
+          return;
+        }
+
+        router.push(response.url);
+        return;
       }
 
       showSuccessNotification({
@@ -51,10 +69,8 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
       });
 
       // Redirect to the callback URL if the response is defined and comes from a credentials provider (ldap or credentials). oidc is redirected automatically.
-      if (response) {
-        await revalidatePathActionAsync("/");
-        router.push(callbackUrl);
-      }
+      await revalidatePathActionAsync("/");
+      router.push(callbackUrl);
     },
     [t, router, callbackUrl],
   );
@@ -70,14 +86,14 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
   }, [t]);
 
   const signInAsync = useCallback(
-    async (provider: string, options?: Parameters<typeof signIn>[1]) => {
+    async (provider: Provider, options?: Parameters<typeof signIn>[1]) => {
       setIsPending(true);
       await signIn(provider, {
         ...options,
         redirect: false,
         callbackUrl: new URL(callbackUrl, window.location.href).href,
       })
-        .then(onSuccess)
+        .then((response) => onSuccess(provider, response))
         .catch(onError);
     },
     [setIsPending, onSuccess, onError, callbackUrl],
@@ -86,11 +102,12 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
   const isLoginInProgress = useRef(false);
 
   useEffect(() => {
+    if (isError) return;
     if (isOidcAutoLoginEnabled && !isPending && !isLoginInProgress.current) {
       isLoginInProgress.current = true;
       void signInAsync("oidc");
     }
-  }, [signInAsync, isOidcAutoLoginEnabled, isPending]);
+  }, [signInAsync, isOidcAutoLoginEnabled, isPending, isError]);
 
   return (
     <Stack gap="xl">

@@ -702,6 +702,132 @@
         "create": "測試連線並創建",
         "edit": "測試連線並儲存"
       },
+      "error": {
+        "common": {
+          "cause": {
+            "title": ""
+          }
+        },
+        "unknown": {
+          "title": "",
+          "description": ""
+        },
+        "parse": {
+          "title": "",
+          "description": ""
+        },
+        "authorization": {
+          "title": "",
+          "description": ""
+        },
+        "statusCode": {
+          "title": "",
+          "description": "",
+          "otherDescription": "",
+          "reason": {
+            "badRequest": "",
+            "notFound": "",
+            "tooManyRequests": "",
+            "internalServerError": "",
+            "serviceUnavailable": "",
+            "gatewayTimeout": ""
+          }
+        },
+        "certificate": {
+          "title": "",
+          "description": {
+            "expired": "",
+            "notYetValid": "",
+            "untrusted": "",
+            "hostnameMismatch": ""
+          },
+          "alert": {
+            "permission": {
+              "title": "",
+              "message": ""
+            },
+            "hostnameMismatch": {
+              "title": "",
+              "message": ""
+            },
+            "extract": {
+              "title": "",
+              "message": ""
+            }
+          },
+          "action": {
+            "retry": {
+              "label": ""
+            },
+            "trust": {
+              "label": ""
+            },
+            "upload": {
+              "label": ""
+            }
+          },
+          "hostnameMismatch": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "selfSigned": {
+            "confirm": {
+              "title": "",
+              "message": ""
+            },
+            "notification": {
+              "success": {
+                "title": "",
+                "message": ""
+              },
+              "error": {
+                "title": "",
+                "message": ""
+              }
+            }
+          },
+          "details": {
+            "title": "",
+            "description": "",
+            "content": {
+              "action": "",
+              "title": ""
+            }
+          }
+        },
+        "request": {
+          "title": "",
+          "description": {
+            "connection": {
+              "hostUnreachable": "",
+              "networkUnreachable": "",
+              "refused": "",
+              "reset": ""
+            },
+            "dns": {
+              "notFound": "",
+              "timeout": "",
+              "noAnswer": ""
+            },
+            "timeout": {
+              "aborted": "",
+              "timeout": ""
+            }
+          }
+        }
+      },
       "alertNotice": "成功建立連線後儲存按鈕將啟用",
       "notification": {
         "success": {
@@ -878,6 +1004,7 @@
       "cancel": "取消",
       "delete": "移除",
       "discard": "丟棄",
+      "close": "",
       "confirm": "確認",
       "continue": "繼續",
       "previous": "上一步",
@@ -1091,6 +1218,9 @@
       "field": {
         "integrations": {
           "label": "集成"
+        },
+        "title": {
+          "label": "標題"
         },
         "customCssClasses": {
           "label": "自定義 CSS html"
@@ -1702,6 +1832,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
+      }
+    },
     "common": {
       "location": {
         "query": "城市 / 郵遞區號",
@@ -1766,7 +1904,12 @@
     "mediaServer": {
       "name": "當前多媒體伺服器串流",
       "description": "顯示當前多媒體伺服器的串流",
-      "option": {},
+      "option": {
+        "showOnlyPlaying": {
+          "label": "只顯示目前播放中的項目",
+          "description": "停用此功能將無法在 Plex 上運作"
+        }
+      },
       "items": {
         "currentlyPlaying": "目前播放中",
         "user": "使用者",
@@ -1941,7 +2084,8 @@
         "pending": "待處理",
         "approved": "已批准",
         "declined": "已拒絕",
-        "failed": "失敗"
+        "failed": "失敗",
+        "completed": "已完成"
       },
       "toBeDetermined": "多媒體請求狀態"
     },
@@ -2041,6 +2185,98 @@
         },
         "maximumAmountPosts": {
           "label": "帖子數量限制"
+        }
+      }
+    },
+    "releases": {
+      "name": "版本發佈",
+      "description": "顯示符合指定版本規則的儲存庫及其目前版本列表",
+      "option": {
+        "newReleaseWithin": {
+          "label": "新版本發布於",
+          "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示新版本"
+        },
+        "staleReleaseWithin": {
+          "label": "過時版本範圍內",
+          "description": "使用範例：1w（1週）、10m（10個月）。接受的單位類型有：h（小時）、d（天）、w（週）、m（個月）、y（年）。若留空，則不會特別標示過時版本"
+        },
+        "showOnlyHighlighted": {
+          "label": "只顯示已標示的項目",
+          "description": "只顯示新版本或過時版本。如上所述"
+        },
+        "showDetails": {
+          "label": "顯示詳情"
+        },
+        "topReleases": {
+          "label": "",
+          "description": ""
+        },
+        "repositories": {
+          "label": "儲存庫",
+          "addRRepository": {
+            "label": "新增儲存庫"
+          },
+          "provider": {
+            "label": "提供者"
+          },
+          "identifier": {
+            "label": "識別碼",
+            "placeholder": "名稱或擁有者/名稱"
+          },
+          "name": {
+            "label": ""
+          },
+          "versionFilter": {
+            "label": "版本篩選",
+            "prefix": {
+              "label": "前綴"
+            },
+            "precision": {
+              "label": "精確度",
+              "options": {
+                "none": "無"
+              }
+            },
+            "suffix": {
+              "label": "後綴"
+            },
+            "regex": {
+              "label": "正則表達式"
+            }
+          },
+          "edit": {
+            "label": "編輯"
+          },
+          "editForm": {
+            "title": "編輯儲存庫",
+            "cancel": {
+              "label": "取消"
+            },
+            "confirm": {
+              "label": "確認"
+            }
+          },
+          "example": {
+            "label": "範例"
+          },
+          "invalid": "無效的儲存庫定義，請檢查值的設定"
+        }
+      },
+      "not-found": "未找到",
+      "pre-release": "預發佈",
+      "archived": "已歸檔",
+      "forked": "已分支",
+      "starsCount": "星標",
+      "forksCount": "分支數",
+      "issuesCount": "開放問題",
+      "openProjectPage": "開啟專案頁面",
+      "openReleasePage": "開啟發布葉面",
+      "releaseDescription": "版本描述",
+      "created": "已創建",
+      "error": {
+        "label": "錯誤",
+        "options": {
+          "noMatchingVersion": "找不到匹配的版本"
         }
       }
     },
@@ -2863,6 +3099,9 @@
             },
             "networkController": {
               "label": "網路控制"
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -2927,7 +3166,8 @@
     "table": {
       "updated": "已更新於 {when}",
       "search": "搜尋 {count} 容器",
-      "selected": "{totalCount} 容器的 {selectCount}"
+      "selected": "{totalCount} 容器的 {selectCount}",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -2945,6 +3185,14 @@
           "dead": "廢棄"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "鏡像"
       },
@@ -2953,6 +3201,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "啟動",
         "notification": {
@@ -3395,7 +3644,10 @@
           "label": "Logs"
         },
         "certificates": {
-          "label": "憑證"
+          "label": "憑證",
+          "hostnames": {
+            "label": ""
+          }
         }
       },
       "settings": {
@@ -3793,6 +4045,29 @@
     }
   },
   "certificate": {
+    "field": {
+      "hostname": {
+        "label": ""
+      },
+      "subject": {
+        "label": ""
+      },
+      "issuer": {
+        "label": ""
+      },
+      "validFrom": {
+        "label": ""
+      },
+      "validTo": {
+        "label": ""
+      },
+      "serialNumber": {
+        "label": ""
+      },
+      "fingerprint": {
+        "label": ""
+      }
+    },
     "page": {
       "list": {
         "title": "可信任的憑證",
@@ -3800,7 +4075,20 @@
         "noResults": {
           "title": "尚無憑證"
         },
-        "expires": "到期 {when}"
+        "invalid": {
+          "title": "無效的證書",
+          "description": "解析證書失敗"
+        },
+        "expires": "到期 {when}",
+        "toHostnames": ""
+      },
+      "hostnames": {
+        "title": "",
+        "description": "",
+        "noResults": {
+          "title": ""
+        },
+        "toCertificates": ""
       }
     },
     "action": {
@@ -3828,6 +4116,20 @@
           "error": {
             "title": "憑證未被移除",
             "message": "此憑證無法被移除"
+          }
+        }
+      },
+      "removeHostname": {
+        "label": "",
+        "confirm": "",
+        "notification": {
+          "success": {
+            "title": "",
+            "message": ""
+          },
+          "error": {
+            "title": "",
+            "message": ""
           }
         }
       }

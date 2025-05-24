@@ -17,6 +17,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
 import type { ContainerState } from "@homarr/docker";
+import { containerStateColorMap } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -244,21 +245,11 @@ const ContainerActionBarButton = (props: ContainerActionBarButtonProps) => {
   );
 };
 
-const containerStates = {
-  created: "cyan",
-  running: "green",
-  paused: "yellow",
-  restarting: "orange",
-  exited: "red",
-  removing: "pink",
-  dead: "dark",
-} satisfies Record<ContainerState, MantineColor>;
-
 const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   const t = useScopedI18n("docker.field.state.option");
 
   return (
-    <Badge size="lg" radius="sm" variant="light" w={120} color={containerStates[state]}>
+    <Badge size="lg" radius="sm" variant="light" w={120} color={containerStateColorMap[state]}>
       {t(state)}
     </Badge>
   );

@@ -2,12 +2,18 @@ import { Jellyfin } from "@jellyfin/sdk";
 import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
 import { getSessionApi } from "@jellyfin/sdk/lib/utils/api/session-api";
 import { getSystemApi } from "@jellyfin/sdk/lib/utils/api/system-api";
+import type { AxiosInstance } from "axios";
 
 import { createAxiosCertificateInstanceAsync } from "@homarr/certificates/server";
 
+import { HandleIntegrationErrors } from "../base/errors/decorator";
+import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
-import type { StreamSession } from "../interfaces/media-server/session";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/session";
 
+@HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class JellyfinIntegration extends Integration {
   private readonly jellyfin: Jellyfin = new Jellyfin({
     clientInfo: {
@@ -20,24 +26,22 @@ export class JellyfinIntegration extends Integration {
     },
   });
 
-  public async testConnectionAsync(): Promise<void> {
-    const api = await this.getApiAsync();
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const api = await this.getApiAsync(input.axiosInstance);
     const systemApi = getSystemApi(api);
     await systemApi.getPingSystem();
+    return { success: true };
   }
 
-  public async getCurrentSessionsAsync(): Promise<StreamSession[]> {
+  public async getCurrentSessionsAsync(options: CurrentSessionsInput): Promise<StreamSession[]> {
     const api = await this.getApiAsync();
     const sessionApi = getSessionApi(api);
     const sessions = await sessionApi.getSessions();
 
-    if (sessions.status !== 200) {
-      throw new Error(`Jellyfin server ${this.url("/")} returned a non successful status code: ${sessions.status}`);
-    }
-
     return sessions.data
       .filter((sessionInfo) => sessionInfo.UserId !== undefined)
       .filter((sessionInfo) => sessionInfo.DeviceId !== "homarr")
+      .filter((sessionInfo) => !options.showOnlyPlaying || sessionInfo.NowPlayingItem !== undefined)
       .map((sessionInfo): StreamSession => {
         let currentlyPlaying: StreamSession["currentlyPlaying"] | null = null;
 
@@ -70,14 +74,14 @@ export class JellyfinIntegration extends Integration {
    * with a username and password.
    * @returns An instance of Api that has been authenticated
    */
-  private async getApiAsync() {
-    const httpsAgent = await createAxiosCertificateInstanceAsync();
+  private async getApiAsync(fallbackInstance?: AxiosInstance) {
+    const axiosInstance = fallbackInstance ?? (await createAxiosCertificateInstanceAsync());
     if (this.hasSecretValue("apiKey")) {
       const apiKey = this.getSecretValue("apiKey");
-      return this.jellyfin.createApi(this.url("/").toString(), apiKey, httpsAgent);
+      return this.jellyfin.createApi(this.url("/").toString(), apiKey, axiosInstance);
     }
 
-    const apiClient = this.jellyfin.createApi(this.url("/").toString(), undefined, httpsAgent);
+    const apiClient = this.jellyfin.createApi(this.url("/").toString(), undefined, axiosInstance);
     // Authentication state is stored internally in the Api class, so now
     // requests that require authentication can be made normally.
     // see https://typescript-sdk.jellyfin.org/#usage

@@ -6,6 +6,7 @@
   "type": "module",
   "exports": {
     ".": "./index.ts",
+    "./test-connection": "./src/base/test-connection/index.ts",
     "./client": "./src/client.ts",
     "./types": "./src/types.ts"
   },
@@ -25,13 +26,14 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@ctrl/deluge": "^7.1.0",
-    "@ctrl/qbittorrent": "^9.5.2",
+    "@ctrl/qbittorrent": "^9.6.0",
     "@ctrl/transmission": "^7.2.0",
     "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
+    "@homarr/node-unifi": "^2.6.0",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
@@ -39,17 +41,18 @@
     "maria2": "^0.4.0",
     "node-ical": "^0.20.1",
     "proxmox-api": "1.1.1",
-    "tsdav": "^2.1.3",
-    "undici": "7.8.0",
+    "tsdav": "^2.1.4",
+    "undici": "7.10.0",
     "xml2js": "^0.6.2",
-    "zod": "^3.24.3"
+    "zod": "^3.25.28"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node-unifi": "^2.5.1",
     "@types/xml2js": "^0.4.14",
-    "eslint": "^9.25.0",
+    "eslint": "^9.27.0",
     "typescript": "^5.8.3"
   }
 }

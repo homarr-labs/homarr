@@ -6,7 +6,7 @@ import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 
-interface BaseWidgetErrorProps {
+export interface BaseWidgetErrorProps {
   icon: TablerIcon;
   message: stringOrTranslation;
   showLogsLink?: boolean;
