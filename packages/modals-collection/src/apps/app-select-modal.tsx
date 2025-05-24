@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import Image from "next/image";
 import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
 import { IconPlus, IconSearch } from "@tabler/icons-react";
 
@@ -23,7 +22,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
     () =>
       apps
         .filter((app) => app.name.toLowerCase().includes(search.toLowerCase()))
-        .sort((a, b) => a.name.localeCompare(b.name)),
+        .sort((appA, appB) => appA.name.localeCompare(appB.name)),
     [apps, search],
   );
 
@@ -88,7 +87,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
               <Stack justify="space-between" h="100%">
                 <Stack gap="xs">
                   <Center>
-                    <Image src={app.iconUrl || ""} alt={app.name} width={24} height={24} />
+                    <img src={app.iconUrl} alt={app.name} width={24} height={24} />
                   </Center>
                   <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center">
                     {app.name}
