@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Afficher les infos de la mémoire"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Afficher les infos sur le système de fichiers"
         },
         "defaultTab": {
           "label": "Onglet par défaut"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "Exigence de l'indicateur de section"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Utiliser le filtre pour calculer le ratio"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

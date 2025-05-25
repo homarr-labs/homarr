@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Vis hukommelsesoplysninger"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Vis information om filsystemet"
         },
         "defaultTab": {
           "label": "Standard fane"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "Sektion indikator er et krav"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Brug filteret til at beregne forholdet"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

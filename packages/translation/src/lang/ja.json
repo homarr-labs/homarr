@@ -1757,10 +1757,16 @@
         "memory": {
           "label": "メモリー情報を表示"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "ファイルシステム情報を表示"
         },
         "defaultTab": {
+          "label": ""
+        },
+        "visibleClusterSections": {
           "label": ""
         },
         "sectionIndicatorRequirement": {
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": ""
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

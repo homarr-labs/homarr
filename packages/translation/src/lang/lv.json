@@ -1757,10 +1757,16 @@
         "memory": {
           "label": "Rādīt atmiņas informāciju"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Rādīt failu sistēmas informāciju"
         },
         "defaultTab": {
+          "label": ""
+        },
+        "visibleClusterSections": {
           "label": ""
         },
         "sectionIndicatorRequirement": {
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": ""
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "顯示記憶體訊息"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "顯示檔案系統訊息"
         },
         "defaultTab": {
           "label": "預設頁面"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "部分指示需求"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "使用篩選器來計算速率"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

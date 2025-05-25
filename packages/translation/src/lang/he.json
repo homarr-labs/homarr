@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "הצג מידע זיכרון"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "הצג מידע על מערכת הקבצים"
         },
         "defaultTab": {
           "label": "כרטיסיית ברירת מחדל"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "דרישת מציין מקטע"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "השתמש במסנן כדי לחשב יחס"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

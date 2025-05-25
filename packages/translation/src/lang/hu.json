@@ -1757,10 +1757,16 @@
         "memory": {
           "label": "Memóriainformációk megjelenítése"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Fájlrendszer-információk megjelenítése"
         },
         "defaultTab": {
+          "label": ""
+        },
+        "visibleClusterSections": {
           "label": ""
         },
         "sectionIndicatorRequirement": {
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": ""
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

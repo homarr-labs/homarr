@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Werkgeheugen info weergeven"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Bestandssysteem info weergeven"
         },
         "defaultTab": {
           "label": "Standaard tab"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "Sectie indicator vereiste"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Gebruik filter om ratio te berekenen"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

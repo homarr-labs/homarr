@@ -1757,10 +1757,16 @@
         "memory": {
           "label": "Pokaż informacje o pamięci"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Pokaż informacje o systemie plików"
         },
         "defaultTab": {
+          "label": ""
+        },
+        "visibleClusterSections": {
           "label": ""
         },
         "sectionIndicatorRequirement": {
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Użyj filtra do obliczenia współczynnika"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
