@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Vis minneinfo"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Vis filsysteminfo"
         },
         "defaultTab": {
           "label": "Standard fane"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "Krav til seksjonsindikator"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Bruk filter for å beregne ratio"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

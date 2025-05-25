@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "显示内存信息"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "显示文件系统信息"
         },
         "defaultTab": {
           "label": "默认标签"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "部分指标要求"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "使用过滤器来计算比率"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

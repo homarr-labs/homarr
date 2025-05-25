@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Bellek Bilgilerini Göster"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Dosya Sistemi Bilgilerini Göster"
         },
         "defaultTab": {
           "label": "Varsayılan sekme"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "Bölüm göstergesi gereksinimi"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Oranı hesaplamak için filtreyi kullanın"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

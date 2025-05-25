@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Speicher-Info anzeigen"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Dateisystem Info anzeigen"
         },
         "defaultTab": {
           "label": "Standard Tab"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "Anforderung der Sektionsindikatoren"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Filter zur Berechnung des Verhältnisses verwenden"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

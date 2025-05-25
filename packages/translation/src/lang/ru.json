@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Показать информацию о памяти"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Показать информацию о файловой системе"
         },
         "defaultTab": {
           "label": "Вкладка по умолчанию"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "Пороговое значение индикатора раздела"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Использовать фильтр при расчёте рейтинга"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {

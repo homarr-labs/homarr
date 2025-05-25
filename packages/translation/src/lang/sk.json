@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Zobraziť informácie o pamäti"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Zobraziť informácie o súborovom systéme"
         },
         "defaultTab": {
           "label": "Predvolená karta"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": ""
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Na výpočet pomeru použite filter"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
