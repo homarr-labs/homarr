@@ -38,34 +38,40 @@ export const ResourceTable = ({ type, data, isTiny }: ResourceTableProps) => {
         </TableTr>
       </TableThead>
       <TableTbody>
-        {data.map((item) => {
-          return (
-            <ResourcePopover key={item.id} item={item}>
-              <Popover.Target>
-                <TableTr fz={isTiny ? "8px" : "xs"}>
-                  <td>
-                    <Group wrap="nowrap" gap={isTiny ? 8 : "xs"}>
-                      <Indicator size={isTiny ? 4 : 8} children={null} color={item.isRunning ? "green" : "yellow"} />
-                      <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
-                        {item.name}
-                      </Text>
-                    </Group>
-                  </td>
-                  {item.type === "storage" ? (
-                    <td style={{ WebkitLineClamp: "1" }}>{item.node}</td>
-                  ) : (
-                    <>
-                      <td style={{ whiteSpace: "nowrap" }}>{(item.cpu.utilization * 100).toFixed(1)}%</td>
-                      <td style={{ whiteSpace: "nowrap" }}>
-                        {(item.memory.total ? (item.memory.used / item.memory.total) * 100 : 0).toFixed(1)}%
-                      </td>
-                    </>
-                  )}
-                </TableTr>
-              </Popover.Target>
-            </ResourcePopover>
-          );
-        })}
+        {data
+          .sort((itemA, itemB) => {
+            const nodeResult = itemA.node.localeCompare(itemB.node);
+            if (nodeResult !== 0) return nodeResult;
+            return itemA.name.localeCompare(itemB.name);
+          })
+          .map((item) => {
+            return (
+              <ResourcePopover key={item.id} item={item}>
+                <Popover.Target>
+                  <TableTr fz={isTiny ? "8px" : "xs"}>
+                    <td>
+                      <Group wrap="nowrap" gap={isTiny ? 8 : "xs"}>
+                        <Indicator size={isTiny ? 4 : 8} children={null} color={item.isRunning ? "green" : "yellow"} />
+                        <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
+                          {item.name}
+                        </Text>
+                      </Group>
+                    </td>
+                    {item.type === "storage" ? (
+                      <td style={{ WebkitLineClamp: "1" }}>{item.node}</td>
+                    ) : (
+                      <>
+                        <td style={{ whiteSpace: "nowrap" }}>{(item.cpu.utilization * 100).toFixed(1)}%</td>
+                        <td style={{ whiteSpace: "nowrap" }}>
+                          {(item.memory.total ? (item.memory.used / item.memory.total) * 100 : 0).toFixed(1)}%
+                        </td>
+                      </>
+                    )}
+                  </TableTr>
+                </Popover.Target>
+              </ResourcePopover>
+            );
+          })}
       </TableTbody>
     </Table>
   );
