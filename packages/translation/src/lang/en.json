@@ -3015,7 +3015,8 @@
             "documentation": "Documentation",
             "submitIssue": "Submit an issue",
             "discord": "Community Discord",
-            "sourceCode": "Source Code"
+            "sourceCode": "Source Code",
+            "tours": "Interactive tours"
           }
         },
         "about": "About"
@@ -3977,6 +3978,12 @@
           "label": "Edit"
         }
       },
+      "help": {
+        "label": "Help",
+        "tours": {
+          "label": "Interactive tours"
+        }
+      },
       "users": {
         "label": "Users",
         "create": {
@@ -4530,6 +4537,11 @@
         "warn": "Warn",
         "error": "Error"
       }
+    }
+  },
+  "tours": {
+    "page": {
+      "title": "Interactive tours"
     }
   }
 }

@@ -83,6 +83,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-error-boundary": "^6.0.0",
+    "react-joyride": "^2.9.3",
     "react-simple-code-editor": "^0.14.1",
     "sass": "^1.96.0",
     "superjson": "2.2.6",
