@@ -43,7 +43,7 @@ interface SelectInput<TOptions extends readonly SelectOption[]>
   searchable?: boolean;
 }
 
-interface NumberInput extends CommonInput<number | ""> {
+interface NumberInput extends CommonInput<number> {
   validate: z.ZodNumber;
   step?: number;
 }
@@ -87,7 +87,7 @@ const optionsFactory = {
   }),
   number: (input: NumberInput) => ({
     type: "number" as const,
-    defaultValue: input.defaultValue ?? ("" as const),
+    defaultValue: input.defaultValue ?? 0,
     step: input.step,
     withDescription: input.withDescription ?? false,
     validate: input.validate,

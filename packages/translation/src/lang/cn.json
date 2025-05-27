@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "显示内存信息"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "显示文件系统信息"
         },
         "defaultTab": {
           "label": "默认标签"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "部分指标要求"
@@ -1830,6 +1836,14 @@
             "node": "节点"
           }
         }
+      }
+    },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
@@ -1945,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "使用过滤器来计算比率"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -3091,6 +3109,9 @@
             },
             "networkController": {
               "label": "网络控制器"
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3176,8 @@
     "table": {
       "updated": "已更新 {when}",
       "search": "搜索 {count} 容器",
-      "selected": "{totalCount} 容器的 {selectCount}"
+      "selected": "{totalCount} 容器的 {selectCount}",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3195,14 @@
           "dead": "废弃"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "镜像"
       },
@@ -3181,6 +3211,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "开始",
         "notification": {

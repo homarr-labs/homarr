@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Afficher les infos de la mémoire"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Afficher les infos sur le système de fichiers"
         },
         "defaultTab": {
           "label": "Onglet par défaut"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "Exigence de l'indicateur de section"
@@ -1830,6 +1836,14 @@
             "node": "Noeud"
           }
         }
+      }
+    },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
@@ -1945,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Utiliser le filtre pour calculer le ratio"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -3091,6 +3109,9 @@
             },
             "networkController": {
               "label": ""
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3176,8 @@
     "table": {
       "updated": "Mis à jour {when}",
       "search": "Rechercher dans {count} conteneurs",
-      "selected": "{selectCount} sur {totalCount} conteneurs sélectionnés"
+      "selected": "{selectCount} sur {totalCount} conteneurs sélectionnés",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3195,14 @@
           "dead": "Mort"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Image"
       },
@@ -3181,6 +3211,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Début",
         "notification": {

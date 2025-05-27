@@ -1757,10 +1757,16 @@
         "memory": {
           "label": "Memóriainformációk megjelenítése"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Fájlrendszer-információk megjelenítése"
         },
         "defaultTab": {
+          "label": ""
+        },
+        "visibleClusterSections": {
           "label": ""
         },
         "sectionIndicatorRequirement": {
@@ -1830,6 +1836,14 @@
             "node": ""
           }
         }
+      }
+    },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
@@ -1945,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": ""
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -3091,6 +3109,9 @@
             },
             "networkController": {
               "label": ""
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3176,8 @@
     "table": {
       "updated": "",
       "search": "",
-      "selected": ""
+      "selected": "",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3195,14 @@
           "dead": ""
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Kép"
       },
@@ -3181,6 +3211,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Indítás",
         "notification": {

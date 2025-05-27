@@ -125,8 +125,8 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
             setOptions={(partialNewOptions) =>
               updateOptions({
                 newOptions: {
-                  ...partialNewOptions.newOptions,
                   ...options,
+                  ...partialNewOptions.newOptions,
                 },
               })
             }

@@ -33,6 +33,7 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/docker": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
     "@homarr/forms-collection": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
@@ -47,9 +48,9 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/charts": "^8.0.1",
-    "@mantine/core": "^8.0.1",
-    "@mantine/hooks": "^8.0.1",
+    "@mantine/charts": "^8.0.2",
+    "@mantine/core": "^8.0.2",
+    "@mantine/hooks": "^8.0.2",
     "@tabler/icons-react": "^3.33.0",
     "@tiptap/extension-color": "2.12.0",
     "@tiptap/extension-highlight": "2.12.0",
@@ -75,7 +76,7 @@
     "react-markdown": "^10.1.0",
     "recharts": "^2.15.3",
     "video.js": "^8.22.0",
-    "zod": "^3.25.17"
+    "zod": "^3.25.30"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

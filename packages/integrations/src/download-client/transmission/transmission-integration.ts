@@ -23,9 +23,10 @@ export class TransmissionIntegration extends DownloadClientIntegration {
     };
   }
 
-  public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const type = "torrent";
     const client = await this.getClientAsync();
+    // Currently there is no way to limit the number of returned torrents
     const { torrents } = (await client.listTorrents()).arguments;
     const rates = torrents.reduce(
       ({ down, up }, { rateDownload, rateUpload }) => ({ down: down + rateDownload, up: up + rateUpload }),
@@ -34,27 +35,29 @@ export class TransmissionIntegration extends DownloadClientIntegration {
     const paused =
       torrents.find(({ status }) => TransmissionIntegration.getTorrentState(status) !== "paused") === undefined;
     const status: DownloadClientStatus = { paused, rates, types: [type] };
-    const items = torrents.map((torrent): DownloadClientItem => {
-      const state = TransmissionIntegration.getTorrentState(torrent.status);
-      return {
-        type,
-        id: torrent.hashString,
-        index: torrent.queuePosition,
-        name: torrent.name,
-        size: torrent.totalSize,
-        sent: torrent.uploadedEver,
-        downSpeed: torrent.percentDone !== 1 ? torrent.rateDownload : undefined,
-        upSpeed: torrent.rateUpload,
-        time:
-          torrent.percentDone === 1
-            ? Math.min(torrent.doneDate * 1000 - dayjs().valueOf(), -1)
-            : Math.max(torrent.eta * 1000, 0),
-        added: torrent.addedDate * 1000,
-        state,
-        progress: torrent.percentDone,
-        category: torrent.labels,
-      };
-    });
+    const items = torrents
+      .map((torrent): DownloadClientItem => {
+        const state = TransmissionIntegration.getTorrentState(torrent.status);
+        return {
+          type,
+          id: torrent.hashString,
+          index: torrent.queuePosition,
+          name: torrent.name,
+          size: torrent.totalSize,
+          sent: torrent.uploadedEver,
+          downSpeed: torrent.percentDone !== 1 ? torrent.rateDownload : undefined,
+          upSpeed: torrent.rateUpload,
+          time:
+            torrent.percentDone === 1
+              ? Math.min(torrent.doneDate * 1000 - dayjs().valueOf(), -1)
+              : Math.max(torrent.eta * 1000, 0),
+          added: torrent.addedDate * 1000,
+          state,
+          progress: torrent.percentDone,
+          category: torrent.labels,
+        };
+      })
+      .slice(0, input.limit);
     return { status, items };
   }
 

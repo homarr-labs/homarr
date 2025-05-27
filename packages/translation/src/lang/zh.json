@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "顯示記憶體訊息"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "顯示檔案系統訊息"
         },
         "defaultTab": {
           "label": "預設頁面"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "部分指示需求"
@@ -1830,6 +1836,14 @@
             "node": "節點"
           }
         }
+      }
+    },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
@@ -1945,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "使用篩選器來計算速率"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -3091,6 +3109,9 @@
             },
             "networkController": {
               "label": "網路控制"
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3176,8 @@
     "table": {
       "updated": "已更新於 {when}",
       "search": "搜尋 {count} 容器",
-      "selected": "{totalCount} 容器的 {selectCount}"
+      "selected": "{totalCount} 容器的 {selectCount}",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3195,14 @@
           "dead": "廢棄"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "鏡像"
       },
@@ -3181,6 +3211,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "啟動",
         "notification": {
