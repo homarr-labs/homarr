@@ -21,7 +21,7 @@ import { z } from "zod";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
-import { getAllSecretKindOptions, getIconUrl, getIntegrationName, integrationDefs } from "@homarr/definitions";
+import { getAllSecretKindOptions, getIconUrl, getIntegrationName, integrationDefs, getIntegrationDefaultUrl } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -54,7 +54,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   const form = useZodForm(formSchema, {
     initialValues: {
       name: searchParams.name ?? getIntegrationName(searchParams.kind),
-      url: searchParams.url ?? "",
+      url: searchParams.url ?? getIntegrationDefaultUrl(searchParams.kind),
       secrets: secretKinds[0].map((kind) => ({
         kind,
         value: "",
@@ -137,6 +137,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   };
 
   const supportsSearchEngine = integrationDefs[searchParams.kind].category.flat().includes("search");
+  const supportsProviders = integrationDefs[searchParams.kind].category.flat().includes("providers");
 
   return (
     <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
@@ -176,11 +177,13 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
           />
         )}
 
-        <Checkbox
-          {...form.getInputProps("createApp", { type: "checkbox" })}
-          label={t("integration.field.createApp.label")}
-          description={t("integration.field.createApp.description")}
-        />
+        {!supportsProviders && (
+          <Checkbox
+            {...form.getInputProps("createApp", { type: "checkbox" })}
+            label={t("integration.field.createApp.label")}
+            description={t("integration.field.createApp.description")}
+          />
+        )}
 
         <Collapse in={opened}>
           <TextInput placeholder={t("integration.field.appHref.placeholder")} {...form.getInputProps("appHref")} />
