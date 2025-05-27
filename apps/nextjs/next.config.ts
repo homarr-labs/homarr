@@ -17,7 +17,7 @@ const withNextIntl = createNextIntlPlugin({
   requestConfig: "../../packages/translation/src/request.ts",
 });
 
-interface WebpackConfig {
+interface _WebpackConfig {
   module: {
     rules: {
       test: RegExp;
@@ -32,7 +32,7 @@ const nextConfig: NextConfig = {
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-  webpack: (config: WebpackConfig, { isServer }) => {
+  /*webpack: (config: WebpackConfig, { isServer }) => {
     if (isServer) {
       config.module.rules.push({
         test: /\.node$/,
@@ -41,11 +41,21 @@ const nextConfig: NextConfig = {
     }
 
     return config;
-  },
+  },*/
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
   },
-  transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
+  serverExternalPackages: [
+    "dockerode",
+    "@kubernetes/client-node",
+    "@ctrl/deluge",
+    "@ctrl/qbittorrent",
+    "@ctrl/transmission",
+    "node-ical",
+    "tsdav",
+    "proxmox-api",
+    "@jellyfin/sdk",
+  ],
   images: {
     domains: ["cdn.jsdelivr.net"],
   },
