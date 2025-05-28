@@ -170,18 +170,11 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
     category: ["networkController"],
   },
-  githubReleases: {
+  github: {
     name: "Github Releases",
     secretKinds: [["tokenId"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/github.png",
-    category: ["providers"],
-    defaultUrl: "https://api.github.com",
-  },
-  githubPackages: {
-    name: "Github Packages",
-    secretKinds: [["tokenId"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/github.png",
-    category: ["providers"],
+    category: ["releasesProvider"],
     defaultUrl: "https://api.github.com",
   },
 } as const satisfies Record<string, integrationDefinition>;
@@ -244,4 +237,4 @@ export type IntegrationCategory =
   | "search"
   | "mediaTranscoding"
   | "networkController"
-  | "providers";
+  | "releasesProvider";

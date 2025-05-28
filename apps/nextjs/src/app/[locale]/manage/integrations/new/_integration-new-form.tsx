@@ -137,7 +137,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   };
 
   const supportsSearchEngine = integrationDefs[searchParams.kind].category.flat().includes("search");
-  const supportsProviders = integrationDefs[searchParams.kind].category.flat().includes("providers");
+  const supportsProviders = integrationDefs[searchParams.kind].category.flat().includes("releasesProvider");
 
   return (
     <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
