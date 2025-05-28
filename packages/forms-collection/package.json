@@ -31,7 +31,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "^8.0.2",
     "react": "19.1.0",
-    "zod": "^3.25.32"
+    "zod": "^3.25.34"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
