@@ -9,7 +9,7 @@ import * as mysqlSchema from "../schema/mysql";
 
 describe("Mysql Migration", () => {
   test("should add all tables and keys specified in migration files", async () => {
-    const mysqlContainer = await new MySqlContainer().start();
+    const mysqlContainer = await new MySqlContainer("mysql:latest").start();
 
     const connection = mysql.createConnection({
       host: mysqlContainer.getHost(),
