@@ -2223,7 +2223,7 @@
         },
         "repositories": {
           "label": "Depolar",
-          "addRRepository": {
+          "addRepository": {
             "label": "Depo Ekle"
           },
           "provider": {

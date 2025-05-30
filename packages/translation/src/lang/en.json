@@ -2223,7 +2223,7 @@
         },
         "repositories": {
           "label": "Repositories",
-          "addRRepository": {
+          "addRepository": {
             "label": "Add repository"
           },
           "importRepositories": {

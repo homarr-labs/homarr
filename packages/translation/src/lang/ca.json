@@ -2223,7 +2223,7 @@
         },
         "repositories": {
           "label": "",
-          "addRRepository": {
+          "addRepository": {
             "label": ""
           },
           "provider": {

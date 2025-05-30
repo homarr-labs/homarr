@@ -137,7 +137,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       <Stack gap="5">
         <Group grow>
           <Button leftSection={<IconPlus />} onClick={addNewRepository}>
-            {tRepository("addRRepository.label")}
+            {tRepository("addRepository.label")}
           </Button>
           <Tooltip label={tRepository("importRepositories.onlyAdminCanImport")} disabled={isAdmin} withArrow>
             <Button
