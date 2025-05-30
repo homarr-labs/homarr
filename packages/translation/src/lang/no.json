@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Vis minneinfo"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Vis filsysteminfo"
         },
         "defaultTab": {
           "label": "Standard fane"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "Krav til seksjonsindikator"
@@ -1830,6 +1836,14 @@
             "node": "Node"
           }
         }
+      }
+    },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
@@ -1945,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Bruk filter for å beregne ratio"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -3091,6 +3109,9 @@
             },
             "networkController": {
               "label": ""
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3176,8 @@
     "table": {
       "updated": "Oppdatert {when}",
       "search": "Søk i {count} containere",
-      "selected": "{selectCount} av {totalCount} containere valgt"
+      "selected": "{selectCount} av {totalCount} containere valgt",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3195,14 @@
           "dead": "Død"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Image"
       },
@@ -3181,6 +3211,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Start",
         "notification": {

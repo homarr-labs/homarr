@@ -68,6 +68,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
   const mantineTheme = useMantineTheme();
   const actualItemRadius = mantineTheme.radius[board.itemRadius];
   const { ref, width, height } = useElementSize();
+  const isSmall = width < 256;
 
   return (
     <Calendar
@@ -82,16 +83,20 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
       firstDayOfWeek={firstDayOfWeek}
       static={isEditMode}
       className={classes.calendar}
-      w={"100%"}
-      h={"100%"}
+      w="100%"
+      h="100%"
       ref={ref}
       styles={{
         calendarHeaderControl: {
           pointerEvents: isEditMode ? "none" : undefined,
           borderRadius: "md",
+          height: isSmall ? "1.5rem" : undefined,
+          width: isSmall ? "1.5rem" : undefined,
         },
         calendarHeaderLevel: {
           pointerEvents: "none",
+          fontSize: isSmall ? "0.75rem" : undefined,
+          height: "100%",
         },
         levelsGroup: {
           height: "100%",
@@ -107,10 +112,12 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
         day: {
           borderRadius: actualItemRadius,
           width: "100%",
-          height: "auto",
+          height: "100%",
           position: "relative",
         },
-        month: {},
+        month: {
+          height: "100%",
+        },
         weekday: {
           padding: 0,
         },

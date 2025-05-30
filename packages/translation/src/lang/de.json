@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Speicher-Info anzeigen"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Dateisystem Info anzeigen"
         },
         "defaultTab": {
           "label": "Standard Tab"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "Anforderung der Sektionsindikatoren"
@@ -1830,6 +1836,14 @@
             "node": "Node"
           }
         }
+      }
+    },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
@@ -1945,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Filter zur Berechnung des Verhältnisses verwenden"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -3091,6 +3109,9 @@
             },
             "networkController": {
               "label": "Netzwerk Controller"
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3176,8 @@
     "table": {
       "updated": "Aktualisiert {when}",
       "search": "{count} Container durchsuchen",
-      "selected": "{selectCount} von {totalCount} ausgewählten Containern"
+      "selected": "{selectCount} von {totalCount} ausgewählten Containern",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3195,14 @@
           "dead": "Tot"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Image"
       },
@@ -3181,6 +3211,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Starten",
         "notification": {

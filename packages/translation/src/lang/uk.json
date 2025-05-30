@@ -1757,10 +1757,16 @@
         "memory": {
           "label": "Показати інформацію про пам'ять"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": ""
         },
         "defaultTab": {
+          "label": ""
+        },
+        "visibleClusterSections": {
           "label": ""
         },
         "sectionIndicatorRequirement": {
@@ -1830,6 +1836,14 @@
             "node": ""
           }
         }
+      }
+    },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
@@ -1945,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Використати фільтр при розрахунку рейтингу"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -3091,6 +3109,9 @@
             },
             "networkController": {
               "label": ""
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3176,8 @@
     "table": {
       "updated": "Оновлено {when}",
       "search": "",
-      "selected": "Вибрано {selectCount} із {totalCount} контейнерів"
+      "selected": "Вибрано {selectCount} із {totalCount} контейнерів",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3195,14 @@
           "dead": "Несправний"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Образ"
       },
@@ -3181,6 +3211,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Пуск",
         "notification": {

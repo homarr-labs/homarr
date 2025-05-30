@@ -705,125 +705,125 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Årsag med flere detaljer"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Ukendt fejl",
+          "description": "En ukendt fejl opstod, åbn årsagen nedenfor for at se flere detaljer"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Parsingfejl",
+          "description": "Svaret kunne ikke fortolkes. Kontroller, at URL'en peger på tjenestens grundlæggende URL."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "Godkendelsesfejl",
+          "description": "Anmodningen blev ikke godkendt. Kontroller, at legitimationsoplysningerne er korrekte og at du har dem konfigureret med nok tilladelser."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Svar fejl",
+          "description": "Modtaget uventet {statusCode} ({reason}) svar fra <url></url>. Kontroller, at URL'en peger på basis-URL'en for integrationen.",
+          "otherDescription": "Modtaget uventet {statusCode} svar fra <url></url>. Kontroller, at URLen peger på den grundlæggende URL for integrationen.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "Ugyldig forespørgsel",
+            "notFound": "Ikke fundet",
+            "tooManyRequests": "For mange forespørgsler",
+            "internalServerError": "Intern serverfejl",
+            "serviceUnavailable": "Tjeneste ikke tilgængelig",
+            "gatewayTimeout": "Gateway-timeout"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Certifikatfejl",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "Certifikatet er udløbet.",
+            "notYetValid": "Certifikatet er ikke gyldigt endnu.",
+            "untrusted": "Der er ikke tillid til certifikatet.",
+            "hostnameMismatch": "Certifikatets værtsnavn matcher ikke URL'en."
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "Ikke tilstrækkelige tilladelser",
+              "message": "Du har ikke tilladelse til at stole på eller uploade certifikater. Kontakt venligst din administrator for at uploade det nødvendige rodcertifikat."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "Værtsnavn matcher ikke",
+              "message": "Værtsnavnet i certifikatet matcher ikke det værtsnavn du forbinder til. Dette kan indikere en sikkerhedsrisiko, men du kan stadig vælge at stole på dette certifikat."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "Ekstraktion af CA-certifikat mislykkedes",
+              "message": "Kun selvsignerede certifikater uden kæde kan hentes automatisk. Hvis du bruger et selvsigneret certifikat, skal du sørge for at uploade CA-certifikatet manuelt. Du kan finde instruktioner om, hvordan du gør dette <docsLink></docsLink>."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Gentag oprettelse"
             },
             "trust": {
-              "label": ""
+              "label": "Stol på certifikat"
             },
             "upload": {
-              "label": ""
+              "label": "Upload certifikat"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Stol på uoverensstemmelse mellem værtsnavn",
+              "message": "Er du sikker på du vil have tillid til certifikatet med et værtsnavn uoverensstemmelse?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Betroet certifikat",
+                "message": "Tilføjet værtsnavn til liste over betroede certifikater"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Kunne ikke stole på certifikat",
+                "message": "Certifikatet med et værtsnavn mismatch kunne ikke stoles på"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Stol på selvsigneret certifikat",
+              "message": "Er du sikker på, at du vil stole på dette selvsignerede certifikat?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Betroet certifikat",
+                "message": "Tilføjet certifikat til liste over betroede certifikater"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Kunne ikke stole på certifikat",
+                "message": "Kunne ikke tilføje certifikat til listen over betroede certifikater"
               }
             }
           },
           "details": {
-            "title": "",
-            "description": "",
+            "title": "Detaljer",
+            "description": "Gennemgå certifikatoplysningerne, før du beslutter dig for at stole på den.",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "Vis indhold",
+              "title": "PEM Certifikat"
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "Anmodningsfejl",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "Serveren kunne ikke nås. Dette betyder normalt, at værten er offline eller ikke kan nås fra dit netværk.",
+              "networkUnreachable": "Netværket er ikke tilgængeligt. Tjek venligst din internetforbindelse eller netværkskonfiguration.",
+              "refused": "Serveren nægtede forbindelsen. Den kører muligvis ikke eller afviser forespørgsler på den angivne port.",
+              "reset": "Forbindelsen blev uventet lukket af serveren. Dette kan ske hvis serveren er ustabil eller genstartet."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "Serveradressen kunne ikke findes. Tjek venligst URL'en for stave eller ugyldige domænenavne.",
+              "timeout": "DNS-opslag fik timeout. Dette kan være et midlertidigt problem - prøv igen om et øjeblik.",
+              "noAnswer": "DNS-serveren returnerede ikke et gyldigt svar. Domænet findes måske men har ingen gyldige poster."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "Anmodningen blev afbrudt før den kunne fuldføres. Dette kan skyldes en bruger handling eller system timeout.",
+              "timeout": "Forespørgslen tog for lang tid at fuldføre og fik timeout. Tjek dit netværk eller prøv igen senere."
             }
           }
         }
@@ -1004,7 +1004,7 @@
       "cancel": "Annuller",
       "delete": "Slet",
       "discard": "Kassér",
-      "close": "",
+      "close": "Luk",
       "confirm": "Bekræft",
       "continue": "Forsæt",
       "previous": "Forrige",
@@ -1220,7 +1220,7 @@
           "label": "Integrationer"
         },
         "title": {
-          "label": ""
+          "label": "Titel"
         },
         "customCssClasses": {
           "label": "Brugerdefinerede CSS-klasser"
@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Vis hukommelsesoplysninger"
         },
+        "showUptime": {
+          "label": "Vis Oppetid"
+        },
         "fileSystem": {
           "label": "Vis information om filsystemet"
         },
         "defaultTab": {
           "label": "Standard fane"
+        },
+        "visibleClusterSections": {
+          "label": "Synlige klynge sektioner"
         },
         "sectionIndicatorRequirement": {
           "label": "Sektion indikator er et krav"
@@ -1832,6 +1838,14 @@
         }
       }
     },
+    "dockerContainers": {
+      "name": "Docker statistik",
+      "description": "Statistik for dine containere (Denne widget kan kun tilføjes med administratorrettigheder)",
+      "option": {},
+      "error": {
+        "internalServerError": "Kunne ikke hente containerstatistik"
+      }
+    },
     "common": {
       "location": {
         "query": "By / Postnummer",
@@ -1898,8 +1912,8 @@
       "description": "Vis de aktuelle streams på dine medieservere",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Vis kun hvad der aktuelt afspilles",
+          "description": "Deaktivering af dette vil ikke virke for plex"
         }
       },
       "items": {
@@ -1945,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Brug filteret til at beregne forholdet"
+        },
+        "limitPerIntegration": {
+          "label": "Begræns elementer pr. integration",
+          "description": "Dette vil begrænse antallet af elementer vist pr. integration, ikke globalt"
         }
       },
       "errors": {
@@ -2077,7 +2095,7 @@
         "approved": "Godkendt",
         "declined": "Afvist",
         "failed": "Mislykket",
-        "completed": ""
+        "completed": "Fuldført"
       },
       "toBeDetermined": "TBD"
     },
@@ -2181,94 +2199,94 @@
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "Udgivelser",
+      "description": "Viser en liste over den aktuelle version af de givne depoter med den givne version regex.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Ny Udgivelse Inden",
+          "description": "Anvendelseseksempel: 1w (1 uge), 10M (10 måneder). Accepterede enhedstyper h (timer), d (dage), w (uger), M (måneder), y (år). Lad være tom for ingen fremhævning af nye udgivelser."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Gamle Udgivelse Indenfor",
+          "description": "Anvendelseseksempel: 1w (1 uge), 10M (10 måneder). Accepterede enhedstyper h (timer), d (dage), w (uger), M (måneder), y (år). Lad være tom for ingen fremhævning af forældede udgivelser."
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "Vis Kun Fremhævede",
+          "description": "Vis kun nye eller forældede udgivelser. Som pr ovenfor."
         },
         "showDetails": {
-          "label": ""
+          "label": "Vis detaljer"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "Top Udgivelser",
+          "description": "Det maksimale antal seneste udgivelser at vise. Nul betyder ingen grænse."
         },
         "repositories": {
-          "label": "",
+          "label": "Repositories",
           "addRRepository": {
-            "label": ""
+            "label": "Tilføj repository"
           },
           "provider": {
-            "label": ""
+            "label": "Udbyder"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "Identifikator",
+            "placeholder": "Navn eller ejer/navn"
           },
           "name": {
-            "label": ""
+            "label": "Navn"
           },
           "versionFilter": {
-            "label": "",
+            "label": "Versionsfilter",
             "prefix": {
-              "label": ""
+              "label": "Præfiks"
             },
             "precision": {
-              "label": "",
+              "label": "Præcision",
               "options": {
-                "none": ""
+                "none": "Ingen"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "Suffiks"
             },
             "regex": {
-              "label": ""
+              "label": "Regulært Udtryk"
             }
           },
           "edit": {
-            "label": ""
+            "label": "Rediger"
           },
           "editForm": {
-            "title": "",
+            "title": "Rediger Repository",
             "cancel": {
-              "label": ""
+              "label": "Annuller"
             },
             "confirm": {
-              "label": ""
+              "label": "Bekræft"
             }
           },
           "example": {
-            "label": ""
+            "label": "Eksempel"
           },
-          "invalid": ""
+          "invalid": "Ugyldig repository definition, tjek venligst værdierne"
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "created": "",
+      "not-found": "Ikke fundet",
+      "pre-release": "Pre-Release",
+      "archived": "Arkiveret",
+      "forked": "Forked",
+      "starsCount": "Stjerner",
+      "forksCount": "Forks",
+      "issuesCount": "Åbne Problemer",
+      "openProjectPage": "Åbn Projektside",
+      "openReleasePage": "Åbn Udgivelsesside",
+      "releaseDescription": "Udgivelse Beskrivelse",
+      "created": "Oprettet",
       "error": {
-        "label": "",
+        "label": "Fejl",
         "options": {
-          "noMatchingVersion": ""
+          "noMatchingVersion": "Ingen matchende version fundet"
         }
       }
     },
@@ -3091,6 +3109,9 @@
             },
             "networkController": {
               "label": "Netværkskontroller"
+            },
+            "dockerContainers": {
+              "label": "Docker containers"
             }
           }
         },
@@ -3155,7 +3176,8 @@
     "table": {
       "updated": "Opdateret {when}",
       "search": "Søg {count} containere",
-      "selected": "{selectCount} af {totalCount} containere valgt"
+      "selected": "{selectCount} af {totalCount} containere valgt",
+      "footer": "Total {count} containere"
     },
     "field": {
       "name": {
@@ -3173,6 +3195,14 @@
           "dead": "Død"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": "CPU"
+        },
+        "memory": {
+          "label": "Hukommelse"
+        }
+      },
       "containerImage": {
         "label": "Billede"
       },
@@ -3181,6 +3211,7 @@
       }
     },
     "action": {
+      "title": "Handlinger",
       "start": {
         "label": "Start",
         "notification": {
@@ -3625,7 +3656,7 @@
         "certificates": {
           "label": "Certifikater",
           "hostnames": {
-            "label": ""
+            "label": "Værtsnavne"
           }
         }
       },
@@ -4026,25 +4057,25 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Værtsnavn"
       },
       "subject": {
-        "label": ""
+        "label": "Emne"
       },
       "issuer": {
-        "label": ""
+        "label": "Udsteder"
       },
       "validFrom": {
-        "label": ""
+        "label": "Gyldig fra"
       },
       "validTo": {
-        "label": ""
+        "label": "Gyldig til"
       },
       "serialNumber": {
-        "label": ""
+        "label": "Serienummer"
       },
       "fingerprint": {
-        "label": ""
+        "label": "Fingeraftryk"
       }
     },
     "page": {
@@ -4055,19 +4086,19 @@
           "title": "Der er endnu ingen certifikater"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Ugyldigt certifikat",
+          "description": "Kunne ikke fortolke certifikat"
         },
         "expires": "Udløber {when}",
-        "toHostnames": ""
+        "toHostnames": "Betroede værtsnavne"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "Betroet certifikat værtsnavne",
+        "description": "Nogle certifikater tillader ikke det specifikke domæne Homarr bruger til at anmode om dem, på grund af dette alle betroede værtsnavne med deres certifikat thumbprints bruges til at omgå disse restriktioner.",
         "noResults": {
-          "title": ""
+          "title": "Der er endnu ingen værtsnavne"
         },
-        "toCertificates": ""
+        "toCertificates": "Certifikater"
       }
     },
     "action": {
@@ -4099,16 +4130,16 @@
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "Fjern betroet værtsnavn",
+        "confirm": "Er du sikker på du vil fjerne dette betroede værtsnavn? Dette kan få nogle integrationer til at stoppe med at virke.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Værtsnavn fjernet",
+            "message": "Værtsnavnet blev fjernet korrekt"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Værtsnavn ikke fjernet",
+            "message": "Værtsnavnet kunne ikke fjernes"
           }
         }
       }

@@ -55,7 +55,7 @@ export default function RssFeed({ options }: WidgetComponentProps<"rssFeed">) {
                   dir={languageDir}
                   c="dimmed"
                   size="sm"
-                  lineClamp={options.textLinesClamp as number}
+                  lineClamp={options.textLinesClamp}
                   dangerouslySetInnerHTML={{ __html: feedEntry.description }}
                 />
               )}

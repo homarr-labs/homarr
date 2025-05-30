@@ -7,6 +7,6 @@ import { cronJobRunnerChannel } from ".";
  */
 export const registerCronJobRunner = () => {
   cronJobRunnerChannel.subscribe((jobName) => {
-    jobGroup.runManually(jobName);
+    void jobGroup.runManuallyAsync(jobName);
   });
 };

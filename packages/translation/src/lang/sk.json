@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Zobraziť informácie o pamäti"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Zobraziť informácie o súborovom systéme"
         },
         "defaultTab": {
           "label": "Predvolená karta"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": ""
@@ -1830,6 +1836,14 @@
             "node": ""
           }
         }
+      }
+    },
+    "dockerContainers": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "error": {
+        "internalServerError": ""
       }
     },
     "common": {
@@ -1945,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Na výpočet pomeru použite filter"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -3091,6 +3109,9 @@
             },
             "networkController": {
               "label": ""
+            },
+            "dockerContainers": {
+              "label": ""
             }
           }
         },
@@ -3155,7 +3176,8 @@
     "table": {
       "updated": "Aktualizované {when}",
       "search": "Vyhľadajte {count} kontajnery",
-      "selected": "{selectCount} z {totalCount} vybratých kontajnerov"
+      "selected": "{selectCount} z {totalCount} vybratých kontajnerov",
+      "footer": ""
     },
     "field": {
       "name": {
@@ -3173,6 +3195,14 @@
           "dead": "Mŕtvy"
         }
       },
+      "stats": {
+        "cpu": {
+          "label": ""
+        },
+        "memory": {
+          "label": ""
+        }
+      },
       "containerImage": {
         "label": "Obraz"
       },
@@ -3181,6 +3211,7 @@
       }
     },
     "action": {
+      "title": "",
       "start": {
         "label": "Spustiť",
         "notification": {

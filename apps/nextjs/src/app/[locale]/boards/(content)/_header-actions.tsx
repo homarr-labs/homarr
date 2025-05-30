@@ -1,6 +1,5 @@
 "use client";
 
-import type { MouseEvent } from "react";
 import { useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -204,17 +203,22 @@ const SelectBoardsMenu = () => {
   );
 };
 
+const anchorSelector = "a[href]:not([target='_blank'])";
 const usePreventLeaveWithDirty = (isDirty: boolean) => {
   const t = useI18n();
   const { openConfirmModal } = useConfirmModal();
   const router = useRouter();
 
   useEffect(() => {
-    const handleClick = (event: MouseEvent<HTMLElement>) => {
+    if (!isDirty) return;
+
+    const handleClick = (event: Event) => {
       const target = (event.target as HTMLElement).closest("a");
 
-      if (!target) return;
-      if (!isDirty) return;
+      if (!target) {
+        console.warn("No anchor element found for click event", event);
+        return;
+      }
 
       event.preventDefault();
 
@@ -231,33 +235,29 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
     };
 
     const handlePopState = (event: Event) => {
-      if (isDirty) {
-        window.history.pushState(null, document.title, window.location.href);
-        event.preventDefault();
-      } else {
-        window.history.back();
-      }
+      window.history.pushState(null, document.title, window.location.href);
+      event.preventDefault();
     };
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (!isDirty) return;
       if (env.NODE_ENV === "development") return; // Allow to reload in development
 
       event.preventDefault();
       event.returnValue = true;
     };
 
-    document.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", handleClick as never);
+    const anchors = document.querySelectorAll(anchorSelector);
+    anchors.forEach((link) => {
+      link.addEventListener("click", handleClick);
     });
     window.addEventListener("popstate", handlePopState);
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      document.querySelectorAll("a").forEach((link) => {
-        link.removeEventListener("click", handleClick as never);
-        window.removeEventListener("popstate", handlePopState);
+      anchors.forEach((link) => {
+        link.removeEventListener("click", handleClick);
       });
+      window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
