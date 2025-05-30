@@ -1,30 +1,26 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
+import type { IntegrationTestingInput } from "../base/integration";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { Notification } from "../interfaces/notifications/notification";
 import { NotificationsIntegration } from "../interfaces/notifications/notifications-integration";
 import { ntfyNotificationSchema } from "./ntfy-schema";
 
 export class NTFYIntegration extends NotificationsIntegration {
-  public async testConnectionAsync(): Promise<void> {
-    await super.handleTestConnectionResponseAsync({
-      queryFunctionAsync: async () => {
-        return await fetchWithTrustedCertificatesAsync(this.url("/v1/account"), { headers: this.getHeaders() });
-      },
-    });
+  public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    await input.fetchAsync(this.url("/v1/account"), { headers: this.getHeaders() });
+    return { success: true };
   }
 
-  private getTopicURL(topics: string[]) {
-    return this.url(`/${topics.join(",")}/json`, { poll: 1 });
+  private getTopicURL() {
+    return this.url(`/${encodeURIComponent(super.getSecretValue("topic"))}/json`, { poll: 1 });
   }
   private getHeaders() {
     return this.hasSecretValue("apiKey") ? { Authorization: `Bearer ${super.getSecretValue("apiKey")}` } : {};
   }
 
-  public async getNotificationsAsync(topics: string[]) {
-    // can't fetch notifications without a topic
-    if (topics.length == 0) return [];
-
-    const url = this.getTopicURL(topics);
+  public async getNotificationsAsync() {
+    const url = this.getTopicURL();
     const notifications = await Promise.all(
       (
         await fetchWithTrustedCertificatesAsync(url, { headers: this.getHeaders() })

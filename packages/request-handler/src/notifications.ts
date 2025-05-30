@@ -9,11 +9,11 @@ import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-
 export const notificationsRequestHandler = createCachedIntegrationRequestHandler<
   Notification[],
   IntegrationKindByCategory<"notifications">,
-  { topics: string[] }
+  Record<string, never>
 >({
-  async requestAsync(integration, input) {
+  async requestAsync(integration) {
     const integrationInstance = await createIntegrationAsync(integration);
-    return await integrationInstance.getNotificationsAsync(input.topics);
+    return await integrationInstance.getNotificationsAsync();
   },
   cacheDuration: dayjs.duration(30, "seconds"),
   queryKey: "notificationsJobStatus",
