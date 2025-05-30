@@ -2229,9 +2229,10 @@
           "importRepositories": {
             "label": "Import from docker",
             "loading": "Loading docker images",
-            "importDisabled": {
-              "tooltip": "This image has already been imported"
-            }
+            "noImagesFound": "No docker images found",
+            "listFoundImages": "List of found images",
+            "listAlreadyImportedImages": "List of already imported images",
+            "allImagesAlreadyImported": "All images already imported"
           },
           "provider": {
             "label": "Provider"

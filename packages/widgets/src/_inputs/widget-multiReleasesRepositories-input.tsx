@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  Accordion,
   ActionIcon,
   Button,
   Checkbox,
@@ -13,11 +14,20 @@ import {
   Stack,
   Text,
   TextInput,
-  Tooltip,
+  Title,
 } from "@mantine/core";
+import type { CheckboxProps } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
 import { useDebouncedValue } from "@mantine/hooks";
-import { IconBrandDocker, IconEdit, IconPlus, IconTrash, IconTriangleFilled } from "@tabler/icons-react";
+import {
+  IconBrandDocker,
+  IconEdit,
+  IconPlus,
+  IconSquare,
+  IconSquareCheck,
+  IconTrash,
+  IconTriangleFilled,
+} from "@tabler/icons-react";
 import { escapeForRegEx } from "@tiptap/react";
 
 import { clientApi } from "@homarr/api/client";
@@ -51,11 +61,6 @@ export const WidgetMultiReleasesRepositoriesInput = ({
     () => [tRepository("versionFilter.precision.options.none"), "#", "#.#", "#.#.#", "#.#.#.#", "#.#.#.#.#"],
     [tRepository],
   );
-  const { data: docker } = clientApi.docker.getContainers.useQuery(undefined, {
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
 
   const onRepositorySave = useCallback(
     (repository: ReleasesRepository, index: number): FormValidation => {
@@ -122,50 +127,6 @@ export const WidgetMultiReleasesRepositoriesInput = ({
     });
   };
 
-  const importNewRepository = () => {
-    const containersImage: ReleasesRepositoryImport[] | undefined = docker?.containers.reduce<
-      ReleasesRepositoryImport[]
-    >((acc, containerImage) => {
-      const providerKey = containerImage.image.startsWith("ghcr.io/") ? "Github" : "DockerHub";
-      const [identifier, version] = containerImage.image.replace(/^(ghcr\.io\/|docker\.io\/)/, "").split(":");
-
-      if (!identifier) return acc;
-
-      if (acc.some((item) => item.providerKey === providerKey && item.identifier === identifier)) return acc;
-
-      acc.push({
-        providerKey,
-        identifier,
-        iconUrl: containerImage.iconUrl ?? undefined,
-        name: formatIdentifierName(identifier),
-        versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
-        isDisabled: repositories.some((item) => item.providerKey === providerKey && item.identifier === identifier),
-      });
-      return acc;
-    }, []);
-
-    if (containersImage) {
-      openImportModal({
-        containersImage,
-        versionFilterPrecisionOptions,
-        onConfirm: (selectedRepositories) => {
-          if (!selectedRepositories.length) return;
-
-          form.setValues((previous) => {
-            const previousValues = previous.options?.[property] as ReleasesRepository[];
-            return {
-              ...previous,
-              options: {
-                ...previous.options,
-                [property]: [...previousValues, ...selectedRepositories],
-              },
-            };
-          });
-        },
-      });
-    }
-  };
-
   return (
     <Fieldset legend={t("label")}>
       <Stack gap="5">
@@ -173,19 +134,31 @@ export const WidgetMultiReleasesRepositoriesInput = ({
           <Button leftSection={<IconPlus />} onClick={addNewRepository}>
             {tRepository("addRRepository.label")}
           </Button>
+          {/*TODO: check if admin to enable this button*/}
           <Button
-            leftSection={docker?.containers.length && <IconBrandDocker />}
-            onClick={importNewRepository}
-            disabled={!docker?.containers.length}
+            leftSection={<IconBrandDocker stroke={1.25} />}
+            onClick={() =>
+              openImportModal({
+                repositories,
+                versionFilterPrecisionOptions,
+                onConfirm: (selectedRepositories) => {
+                  if (!selectedRepositories.length) return;
+
+                  form.setValues((previous) => {
+                    const previousValues = previous.options?.[property] as ReleasesRepository[];
+                    return {
+                      ...previous,
+                      options: {
+                        ...previous.options,
+                        [property]: [...previousValues, ...selectedRepositories],
+                      },
+                    };
+                  });
+                },
+              })
+            }
           >
-            {!docker?.containers.length ? (
-              <Group gap="xs">
-                <Loader size="xs" color="gray" />
-                <Text>{tRepository("importRepositories.loading")}</Text>
-              </Group>
-            ) : (
-              tRepository("importRepositories.label")
-            )}
+            {tRepository("importRepositories.label")}
           </Button>
         </Group>
         <Divider my="sm" />
@@ -495,11 +468,80 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
 });
 
 interface ReleasesRepositoryImport extends ReleasesRepository {
-  isDisabled: boolean;
+  alreadyImported: boolean;
 }
 
+const ContainerImageSelector = (
+  containerImage: ReleasesRepositoryImport,
+  versionFilterPrecisionOptions: string[],
+  onImageSelectionChanged?: (isSelected: boolean) => void,
+) => {
+  const checkBoxProps: CheckboxProps = {};
+  if (onImageSelectionChanged === undefined) {
+    checkBoxProps.disabled = true;
+    checkBoxProps.checked = true;
+  } else {
+    checkBoxProps.onChange = (event) => onImageSelectionChanged(event.currentTarget.checked);
+  }
+
+  return (
+    <Group
+      key={`${Providers[containerImage.providerKey].name}/${containerImage.identifier}`}
+      gap="xl"
+      justify="space-between"
+    >
+      <Group gap="md">
+        <Checkbox
+          label={
+            <Group>
+              <MaskedOrNormalImage
+                hasColor={false}
+                imageUrl={containerImage.iconUrl}
+                style={{
+                  height: "1.2em",
+                  width: "1.2em",
+                }}
+              />
+              <Text>{containerImage.identifier}</Text>
+            </Group>
+          }
+          {...checkBoxProps}
+        />
+
+        {containerImage.versionFilter && (
+          <Group gap={5}>
+            <Text c="dimmed" size="xs">
+              Version Fitler:
+            </Text>
+            {containerImage.versionFilter.prefix && <Text c="dimmed">{containerImage.versionFilter.prefix}</Text>}
+            <Text c="dimmed" fw={700}>
+              {versionFilterPrecisionOptions[containerImage.versionFilter.precision]}
+            </Text>
+            {containerImage.versionFilter.suffix && <Text c="dimmed">{containerImage.versionFilter.suffix}</Text>}
+          </Group>
+        )}
+      </Group>
+
+      <Group>
+        <MaskedOrNormalImage
+          hasColor
+          color="dimmed"
+          imageUrl={Providers[containerImage.providerKey].iconUrl}
+          style={{
+            height: "1em",
+            width: "1em",
+          }}
+        />
+        <Text ff="monospace" c="dimmed" size="sm">
+          {Providers[containerImage.providerKey].name}
+        </Text>
+      </Group>
+    </Group>
+  );
+};
+
 interface RepositoryImportProps {
-  containersImage: ReleasesRepositoryImport[];
+  repositories: ReleasesRepository[];
   versionFilterPrecisionOptions: string[];
   onConfirm: (containersImage: ReleasesRepositoryImport[]) => void;
 }
@@ -508,6 +550,35 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   const tRepository = useScopedI18n("widget.releases.option.repositories");
   const [loading, setLoading] = useState(false);
   const [selectedImages, setSelectedImages] = useState([] as ReleasesRepositoryImport[]);
+
+  const docker = clientApi.docker.getContainers.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const containersImage: ReleasesRepositoryImport[] | undefined = docker.data?.containers.reduce<
+    ReleasesRepositoryImport[]
+  >((acc, containerImage) => {
+    const providerKey = containerImage.image.startsWith("ghcr.io/") ? "Github" : "DockerHub";
+    const [identifier, version] = containerImage.image.replace(/^(ghcr\.io\/|docker\.io\/)/, "").split(":");
+
+    if (!identifier) return acc;
+
+    if (acc.some((item) => item.providerKey === providerKey && item.identifier === identifier)) return acc;
+
+    acc.push({
+      providerKey,
+      identifier,
+      iconUrl: containerImage.iconUrl ?? undefined,
+      name: formatIdentifierName(identifier),
+      versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
+      alreadyImported: innerProps.repositories.some(
+        (item) => item.providerKey === providerKey && item.identifier === identifier,
+      ),
+    });
+    return acc;
+  }, []);
 
   const handleConfirm = useCallback(() => {
     setLoading(true);
@@ -518,83 +589,78 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
     actions.closeModal();
   }, [innerProps, selectedImages, actions]);
 
+  const allImagesImported = useMemo(
+    () => containersImage?.every((containerImage) => containerImage.alreadyImported) ?? false,
+    [containersImage],
+  );
+
+  const anyImagesImported = useMemo(
+    () => containersImage?.some((containerImage) => containerImage.alreadyImported) ?? false,
+    [containersImage],
+  );
+
   return (
     <Stack>
-      {innerProps.containersImage.map((containerImage) => {
-        return (
-          <Group
-            key={`${Providers[containerImage.providerKey].name}/${containerImage.identifier}`}
-            gap="xl"
-            justify="space-between"
-          >
-            <Group gap="md">
-              <Tooltip
-                label={tRepository("importRepositories.importDisabled.tooltip")}
-                withArrow
-                disabled={!containerImage.isDisabled}
-              >
-                <Checkbox
-                  disabled={containerImage.isDisabled}
-                  label={
-                    <Group>
-                      <MaskedOrNormalImage
-                        hasColor={false}
-                        imageUrl={containerImage.iconUrl}
-                        style={{
-                          height: "1.2em",
-                          width: "1.2em",
-                        }}
-                      />
-                      <Text>{containerImage.identifier}</Text>
-                    </Group>
-                  }
-                  onChange={(event) =>
-                    event.currentTarget.checked
-                      ? setSelectedImages([...selectedImages, containerImage])
-                      : setSelectedImages(selectedImages.filter((img) => img !== containerImage))
-                  }
-                />
-              </Tooltip>
-
-              {containerImage.versionFilter && (
-                <Group gap={5}>
-                  <Text c="dimmed" size="xs">
-                    Version Fitler:
-                  </Text>
-                  {containerImage.versionFilter.prefix && <Text c="dimmed">{containerImage.versionFilter.prefix}</Text>}
-                  <Text c="dimmed" fw={700}>
-                    {innerProps.versionFilterPrecisionOptions[containerImage.versionFilter.precision]}
-                  </Text>
-                  {containerImage.versionFilter.suffix && <Text c="dimmed">{containerImage.versionFilter.suffix}</Text>}
+      {docker.isPending ? (
+        <Stack justify="center" align="center">
+          <Loader size="xl" />
+          <Title order={3}>{tRepository("importRepositories.loading")}</Title>
+        </Stack>
+      ) : !containersImage || containersImage.length === 0 ? (
+        <Stack justify="center" align="center">
+          <IconBrandDocker stroke={1} width={128} height={128} />
+          <Title order={3}>{tRepository("importRepositories.noImagesFound")}</Title>
+        </Stack>
+      ) : (
+        <Stack>
+          <Accordion defaultValue={!allImagesImported ? "foundImages" : anyImagesImported ? "alreadyImported" : ""}>
+            <Accordion.Item value="foundImages">
+              <Accordion.Control disabled={allImagesImported} icon={<IconSquare stroke={1.25} />}>
+                <Group>
+                  {tRepository("importRepositories.listFoundImages")}
+                  {allImagesImported && (
+                    <Text c="dimmed" size="sm">
+                      {tRepository("importRepositories.allImagesAlreadyImported")}
+                    </Text>
+                  )}
                 </Group>
-              )}
-            </Group>
+              </Accordion.Control>
+              <Accordion.Panel>
+                {!allImagesImported &&
+                  containersImage
+                    .filter((containerImage) => !containerImage.alreadyImported)
+                    .map((containerImage) =>
+                      ContainerImageSelector(containerImage, innerProps.versionFilterPrecisionOptions, (isSelected) =>
+                        isSelected
+                          ? setSelectedImages([...selectedImages, containerImage])
+                          : setSelectedImages(selectedImages.filter((img) => img !== containerImage)),
+                      ),
+                    )}
+              </Accordion.Panel>
+            </Accordion.Item>
+            <Accordion.Item value="alreadyImported">
+              <Accordion.Control disabled={!anyImagesImported} icon={<IconSquareCheck stroke={1.25} />}>
+                {tRepository("importRepositories.listAlreadyImportedImages")}
+              </Accordion.Control>
+              <Accordion.Panel>
+                {anyImagesImported &&
+                  containersImage
+                    .filter((containerImage) => containerImage.alreadyImported)
+                    .map((containerImage) =>
+                      ContainerImageSelector(containerImage, innerProps.versionFilterPrecisionOptions),
+                    )}
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+        </Stack>
+      )}
 
-            <Group>
-              <MaskedOrNormalImage
-                hasColor
-                color="dimmed"
-                imageUrl={Providers[containerImage.providerKey].iconUrl}
-                style={{
-                  height: "1em",
-                  width: "1em",
-                }}
-              />
-              <Text ff="monospace" c="dimmed" size="sm">
-                {Providers[containerImage.providerKey].name}
-              </Text>
-            </Group>
-          </Group>
-        );
-      })}
-
-      <Divider my={"sm"} />
       <Group justify="flex-end">
         <Button variant="default" onClick={actions.closeModal} color="gray.5">
           {tRepository("editForm.cancel.label")}
         </Button>
 
-        <Button data-autofocus onClick={handleConfirm} loading={loading}>
+        <Button onClick={handleConfirm} loading={loading} disabled={selectedImages.length === 0}>
           {tRepository("editForm.confirm.label")}
         </Button>
       </Group>
