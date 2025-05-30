@@ -36,10 +36,10 @@
     "@mantine/core": "^8.0.2",
     "@tabler/icons-react": "^3.33.0",
     "dayjs": "^1.11.13",
-    "next": "15.3.2",
+    "next": "15.3.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "zod": "^3.25.30"
+    "zod": "^3.25.42"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
