@@ -936,6 +936,10 @@
         "realm": {
           "label": "Realm",
           "newLabel": "New realm"
+        },
+        "topic": {
+          "label": "Topic",
+          "newLabel": "New topic"
         }
       }
     },

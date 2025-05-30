@@ -7,6 +7,7 @@ export const integrationSecretKindObject = {
   password: { isPublic: false },
   tokenId: { isPublic: true },
   realm: { isPublic: true },
+  topic: { isPublic: true },
 } satisfies Record<string, { isPublic: boolean }>;
 
 export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
@@ -171,7 +172,7 @@ export const integrationDefs = {
   },
   ntfy: {
     name: "ntfy",
-    secretKinds: [[], ["apiKey"]],
+    secretKinds: [["topic"], ["topic", "apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
     category: ["notifications"],
   },
