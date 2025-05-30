@@ -6,6 +6,7 @@ import {
   ActionIcon,
   Button,
   Checkbox,
+  Code,
   Divider,
   Fieldset,
   Group,
@@ -15,6 +16,7 @@ import {
   Text,
   TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import type { CheckboxProps } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
@@ -31,6 +33,7 @@ import {
 import { escapeForRegEx } from "@tiptap/react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { findBestIconMatch, IconPicker } from "@homarr/forms-collection";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -61,6 +64,8 @@ export const WidgetMultiReleasesRepositoriesInput = ({
     () => [tRepository("versionFilter.precision.options.none"), "#", "#.#", "#.#.#", "#.#.#.#", "#.#.#.#.#"],
     [tRepository],
   );
+  const { data: session } = useSession();
+  const isAdmin = session?.user.permissions.includes("admin") ?? false;
 
   const onRepositorySave = useCallback(
     (repository: ReleasesRepository, index: number): FormValidation => {
@@ -134,32 +139,35 @@ export const WidgetMultiReleasesRepositoriesInput = ({
           <Button leftSection={<IconPlus />} onClick={addNewRepository}>
             {tRepository("addRRepository.label")}
           </Button>
-          {/*TODO: check if admin to enable this button*/}
-          <Button
-            leftSection={<IconBrandDocker stroke={1.25} />}
-            onClick={() =>
-              openImportModal({
-                repositories,
-                versionFilterPrecisionOptions,
-                onConfirm: (selectedRepositories) => {
-                  if (!selectedRepositories.length) return;
+          <Tooltip label={tRepository("importRepositories.onlyAdminCanImport")} disabled={isAdmin} withArrow>
+            <Button
+              disabled={!isAdmin}
+              leftSection={<IconBrandDocker stroke={1.25} />}
+              onClick={() =>
+                openImportModal({
+                  repositories,
+                  versionFilterPrecisionOptions,
+                  onConfirm: (selectedRepositories) => {
+                    if (!selectedRepositories.length) return;
 
-                  form.setValues((previous) => {
-                    const previousValues = previous.options?.[property] as ReleasesRepository[];
-                    return {
-                      ...previous,
-                      options: {
-                        ...previous.options,
-                        [property]: [...previousValues, ...selectedRepositories],
-                      },
-                    };
-                  });
-                },
-              })
-            }
-          >
-            {tRepository("importRepositories.label")}
-          </Button>
+                    form.setValues((previous) => {
+                      const previousValues = previous.options?.[property] as ReleasesRepository[];
+                      return {
+                        ...previous,
+                        options: {
+                          ...previous.options,
+                          [property]: [...previousValues, ...selectedRepositories],
+                        },
+                      };
+                    });
+                  },
+                  isAdmin,
+                })
+              }
+            >
+              {tRepository("importRepositories.label")}
+            </Button>
+          </Tooltip>
         </Group>
         <Divider my="sm" />
 
@@ -471,18 +479,26 @@ interface ReleasesRepositoryImport extends ReleasesRepository {
   alreadyImported: boolean;
 }
 
-const ContainerImageSelector = (
-  containerImage: ReleasesRepositoryImport,
-  versionFilterPrecisionOptions: string[],
-  onImageSelectionChanged?: (isSelected: boolean) => void,
-) => {
-  const checkBoxProps: CheckboxProps = {};
-  if (onImageSelectionChanged === undefined) {
-    checkBoxProps.disabled = true;
-    checkBoxProps.checked = true;
-  } else {
-    checkBoxProps.onChange = (event) => onImageSelectionChanged(event.currentTarget.checked);
-  }
+interface ContainerImageSelectorProps {
+  containerImage: ReleasesRepositoryImport;
+  versionFilterPrecisionOptions: string[];
+  onImageSelectionChanged?: (isSelected: boolean) => void;
+}
+
+const ContainerImageSelector = ({
+  containerImage,
+  versionFilterPrecisionOptions,
+  onImageSelectionChanged,
+}: ContainerImageSelectorProps) => {
+  const tRepository = useScopedI18n("widget.releases.option.repositories");
+  const checkBoxProps: CheckboxProps = !onImageSelectionChanged
+    ? {
+        disabled: true,
+        checked: true,
+      }
+    : {
+        onChange: (event) => onImageSelectionChanged(event.currentTarget.checked),
+      };
 
   return (
     <Group
@@ -511,13 +527,14 @@ const ContainerImageSelector = (
         {containerImage.versionFilter && (
           <Group gap={5}>
             <Text c="dimmed" size="xs">
-              Version Fitler:
+              {tRepository("versionFilter.label")}:
             </Text>
-            {containerImage.versionFilter.prefix && <Text c="dimmed">{containerImage.versionFilter.prefix}</Text>}
-            <Text c="dimmed" fw={700}>
+
+            <Code>{containerImage.versionFilter.prefix && containerImage.versionFilter.prefix}</Code>
+            <Code color="var(--mantine-primary-color-light)" fw={700}>
               {versionFilterPrecisionOptions[containerImage.versionFilter.precision]}
-            </Text>
-            {containerImage.versionFilter.suffix && <Text c="dimmed">{containerImage.versionFilter.suffix}</Text>}
+            </Code>
+            <Code>{containerImage.versionFilter.suffix && containerImage.versionFilter.suffix}</Code>
           </Group>
         )}
       </Group>
@@ -544,6 +561,7 @@ interface RepositoryImportProps {
   repositories: ReleasesRepository[];
   versionFilterPrecisionOptions: string[];
   onConfirm: (containersImage: ReleasesRepositoryImport[]) => void;
+  isAdmin: boolean;
 }
 
 const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, actions }) => {
@@ -555,30 +573,33 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+    enabled: innerProps.isAdmin,
   });
 
-  const containersImage: ReleasesRepositoryImport[] | undefined = docker.data?.containers.reduce<
-    ReleasesRepositoryImport[]
-  >((acc, containerImage) => {
-    const providerKey = containerImage.image.startsWith("ghcr.io/") ? "Github" : "DockerHub";
-    const [identifier, version] = containerImage.image.replace(/^(ghcr\.io\/|docker\.io\/)/, "").split(":");
+  const containersImage: ReleasesRepositoryImport[] | undefined = useMemo(
+    () =>
+      docker.data?.containers.reduce<ReleasesRepositoryImport[]>((acc, containerImage) => {
+        const providerKey = containerImage.image.startsWith("ghcr.io/") ? "Github" : "DockerHub";
+        const [identifier, version] = containerImage.image.replace(/^(ghcr\.io\/|docker\.io\/)/, "").split(":");
 
-    if (!identifier) return acc;
+        if (!identifier) return acc;
 
-    if (acc.some((item) => item.providerKey === providerKey && item.identifier === identifier)) return acc;
+        if (acc.some((item) => item.providerKey === providerKey && item.identifier === identifier)) return acc;
 
-    acc.push({
-      providerKey,
-      identifier,
-      iconUrl: containerImage.iconUrl ?? undefined,
-      name: formatIdentifierName(identifier),
-      versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
-      alreadyImported: innerProps.repositories.some(
-        (item) => item.providerKey === providerKey && item.identifier === identifier,
-      ),
-    });
-    return acc;
-  }, []);
+        acc.push({
+          providerKey,
+          identifier,
+          iconUrl: containerImage.iconUrl ?? undefined,
+          name: formatIdentifierName(identifier),
+          versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
+          alreadyImported: innerProps.repositories.some(
+            (item) => item.providerKey === providerKey && item.identifier === identifier,
+          ),
+        });
+        return acc;
+      }, []),
+    [docker.data, innerProps.repositories],
+  );
 
   const handleConfirm = useCallback(() => {
     setLoading(true);
@@ -629,13 +650,20 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
                 {!allImagesImported &&
                   containersImage
                     .filter((containerImage) => !containerImage.alreadyImported)
-                    .map((containerImage) =>
-                      ContainerImageSelector(containerImage, innerProps.versionFilterPrecisionOptions, (isSelected) =>
-                        isSelected
-                          ? setSelectedImages([...selectedImages, containerImage])
-                          : setSelectedImages(selectedImages.filter((img) => img !== containerImage)),
-                      ),
-                    )}
+                    .map((containerImage) => {
+                      return (
+                        <ContainerImageSelector
+                          key={`${containerImage.providerKey}/${containerImage.identifier}`}
+                          containerImage={containerImage}
+                          versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
+                          onImageSelectionChanged={(isSelected) =>
+                            isSelected
+                              ? setSelectedImages([...selectedImages, containerImage])
+                              : setSelectedImages(selectedImages.filter((img) => img !== containerImage))
+                          }
+                        />
+                      );
+                    })}
               </Accordion.Panel>
             </Accordion.Item>
             <Accordion.Item value="alreadyImported">
@@ -646,9 +674,15 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
                 {anyImagesImported &&
                   containersImage
                     .filter((containerImage) => containerImage.alreadyImported)
-                    .map((containerImage) =>
-                      ContainerImageSelector(containerImage, innerProps.versionFilterPrecisionOptions),
-                    )}
+                    .map((containerImage) => {
+                      return (
+                        <ContainerImageSelector
+                          key={`${containerImage.providerKey}/${containerImage.identifier}`}
+                          containerImage={containerImage}
+                          versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
+                        />
+                      );
+                    })}
               </Accordion.Panel>
             </Accordion.Item>
           </Accordion>

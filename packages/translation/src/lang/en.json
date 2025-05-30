@@ -2232,7 +2232,8 @@
             "noImagesFound": "No docker images found",
             "listFoundImages": "List of found images",
             "listAlreadyImportedImages": "List of already imported images",
-            "allImagesAlreadyImported": "All images already imported"
+            "allImagesAlreadyImported": "All images already imported",
+            "onlyAdminCanImport": "Only administrators can import from docker"
           },
           "provider": {
             "label": "Provider"
