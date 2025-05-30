@@ -98,7 +98,7 @@
     "@types/react-dom": "19.1.5",
     "@types/swagger-ui-react": "^5.18.0",
     "concurrently": "^9.1.2",
-    "eslint": "^9.27.0",
+    "eslint": "^9.28.0",
     "node-loader": "^2.1.0",
     "prettier": "^3.5.3",
     "typescript": "^5.8.3"
