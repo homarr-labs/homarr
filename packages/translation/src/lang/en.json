@@ -2286,6 +2286,7 @@
       "error": {
         "label": "Error",
         "options": {
+          "invalidIdentifier": "Invalid identifier",
           "noMatchingVersion": "No matching version found"
         }
       }
