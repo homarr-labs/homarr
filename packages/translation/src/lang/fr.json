@@ -747,7 +747,7 @@
               "message": ""
             },
             "hostnameMismatch": {
-              "title": "",
+              "title": "Nom d'hôte incohérent",
               "message": ""
             },
             "extract": {
