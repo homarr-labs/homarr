@@ -156,7 +156,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             >
               <MaskedOrNormalImage
                 className="releases-repository-header-icon"
-                imageUrl={repository.iconUrl ?? Providers[repository.providerKey]?.iconUrl}
+                imageUrl={repository.iconUrl ?? Providers[repository.providerKey].iconUrl}
                 hasColor={hasIconColor}
                 style={{
                   width: "1em",
@@ -474,7 +474,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
           <Group className="releases-repository-expanded-header-provider-wrapper" gap={5} align="center">
             <MaskedOrNormalImage
               className="releases-repository-expanded-header-provider-icon"
-              imageUrl={Providers[repository.providerKey]?.iconUrl}
+              imageUrl={Providers[repository.providerKey].iconUrl}
               hasColor={hasIconColor}
               style={{
                 width: "1em",
@@ -482,7 +482,7 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
               }}
             />
             <Text className="releases-repository-expanded-header-provider-name" size="xs" c="iconColor" ff="monospace">
-              {Providers[repository.providerKey]?.name}
+              {Providers[repository.providerKey].name}
             </Text>
           </Group>
         </Group>

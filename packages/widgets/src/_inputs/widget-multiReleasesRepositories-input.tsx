@@ -1,19 +1,45 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ActionIcon, Button, Divider, Fieldset, Group, Select, Stack, Text, TextInput } from "@mantine/core";
+import {
+  Accordion,
+  ActionIcon,
+  Button,
+  Checkbox,
+  Code,
+  Divider,
+  Fieldset,
+  Group,
+  Loader,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+  Tooltip,
+} from "@mantine/core";
+import type { CheckboxProps } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
 import { useDebouncedValue } from "@mantine/hooks";
-import { IconEdit, IconTrash, IconTriangleFilled } from "@tabler/icons-react";
+import {
+  IconBrandDocker,
+  IconEdit,
+  IconPlus,
+  IconSquare,
+  IconSquareCheck,
+  IconTrash,
+  IconTriangleFilled,
+} from "@tabler/icons-react";
 import { escapeForRegEx } from "@tiptap/react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { findBestIconMatch, IconPicker } from "@homarr/forms-collection";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
-import { Providers } from "../releases/releases-providers";
+import { isProviderKey, Providers } from "../releases/releases-providers";
 import type { ReleasesRepository, ReleasesVersionFilter } from "../releases/releases-repository";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -32,11 +58,14 @@ export const WidgetMultiReleasesRepositoriesInput = ({
   const tRepository = useScopedI18n("widget.releases.option.repositories");
   const form = useFormContext();
   const repositories = form.values.options[property] as ReleasesRepository[];
-  const { openModal } = useModalAction(ReleaseEditModal);
+  const { openModal: openEditModal } = useModalAction(RepositoryEditModal);
+  const { openModal: openImportModal } = useModalAction(RepositoryImportModal);
   const versionFilterPrecisionOptions = useMemo(
     () => [tRepository("versionFilter.precision.options.none"), "#", "#.#", "#.#.#", "#.#.#.#", "#.#.#.#.#"],
     [tRepository],
   );
+  const { data: session } = useSession();
+  const isAdmin = session?.user.permissions.includes("admin") ?? false;
 
   const onRepositorySave = useCallback(
     (repository: ReleasesRepository, index: number): FormValidation => {
@@ -62,8 +91,8 @@ export const WidgetMultiReleasesRepositoriesInput = ({
     [form, property],
   );
 
-  const addNewItem = () => {
-    const item = {
+  const addNewRepository = () => {
+    const repository: ReleasesRepository = {
       providerKey: "DockerHub",
       identifier: "",
     };
@@ -74,16 +103,16 @@ export const WidgetMultiReleasesRepositoriesInput = ({
         ...previous,
         options: {
           ...previous.options,
-          [property]: [...previousValues, item],
+          [property]: [...previousValues, repository],
         },
       };
     });
 
     const index = repositories.length;
 
-    openModal({
+    openEditModal({
       fieldPath: `options.${property}.${index}`,
-      repository: item,
+      repository,
       onRepositorySave: (saved) => onRepositorySave(saved, index),
       onRepositoryCancel: () => onRepositoryRemove(index),
       versionFilterPrecisionOptions,
@@ -106,7 +135,40 @@ export const WidgetMultiReleasesRepositoriesInput = ({
   return (
     <Fieldset legend={t("label")}>
       <Stack gap="5">
-        <Button onClick={addNewItem}>{tRepository("addRRepository.label")}</Button>
+        <Group grow>
+          <Button leftSection={<IconPlus />} onClick={addNewRepository}>
+            {tRepository("addRepository.label")}
+          </Button>
+          <Tooltip label={tRepository("importRepositories.onlyAdminCanImport")} disabled={isAdmin} withArrow>
+            <Button
+              disabled={!isAdmin}
+              leftSection={<IconBrandDocker stroke={1.25} />}
+              onClick={() =>
+                openImportModal({
+                  repositories,
+                  versionFilterPrecisionOptions,
+                  onConfirm: (selectedRepositories) => {
+                    if (!selectedRepositories.length) return;
+
+                    form.setValues((previous) => {
+                      const previousValues = previous.options?.[property] as ReleasesRepository[];
+                      return {
+                        ...previous,
+                        options: {
+                          ...previous.options,
+                          [property]: [...previousValues, ...selectedRepositories],
+                        },
+                      };
+                    });
+                  },
+                  isAdmin,
+                })
+              }
+            >
+              {tRepository("importRepositories.label")}
+            </Button>
+          </Tooltip>
+        </Group>
         <Divider my="sm" />
 
         {repositories.map((repository, index) => {
@@ -115,15 +177,15 @@ export const WidgetMultiReleasesRepositoriesInput = ({
               <Group align="center" gap="xs">
                 <MaskedOrNormalImage
                   hasColor={false}
-                  imageUrl={repository.iconUrl ?? Providers[repository.providerKey]?.iconUrl}
+                  imageUrl={repository.iconUrl ?? Providers[repository.providerKey].iconUrl}
                   style={{
-                    height: "1em",
-                    width: "1em",
+                    height: "1.2em",
+                    width: "1.2em",
                   }}
                 />
 
                 <Text c="dimmed" fw={100} size="xs">
-                  {Providers[repository.providerKey]?.name}
+                  {Providers[repository.providerKey].name}
                 </Text>
 
                 <Group justify="space-between" align="center" style={{ flex: 1 }} gap={5}>
@@ -135,7 +197,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
 
                 <Button
                   onClick={() =>
-                    openModal({
+                    openEditModal({
                       fieldPath: `options.${property}.${index}`,
                       repository,
                       onRepositorySave: (saved) => onRepositorySave(saved, index),
@@ -170,6 +232,20 @@ export const WidgetMultiReleasesRepositoriesInput = ({
   );
 };
 
+const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersionFilter | undefined => {
+  const version = /(?<=\D|^)\d+(?:\.\d+)*(?![\d.])/.exec(imageVersion)?.[0];
+
+  if (!version) return undefined;
+
+  const [prefix, suffix] = imageVersion.split(version);
+
+  return {
+    prefix,
+    precision: version.split(".").length,
+    suffix,
+  };
+};
+
 const formatVersionFilterRegex = (versionFilter: ReleasesVersionFilter | undefined) => {
   if (!versionFilter) return undefined;
 
@@ -185,7 +261,7 @@ const formatIdentifierName = (identifier: string) => {
   return unformattedName?.replace(/[-_]/g, " ").replace(/(?:^\w|[A-Z]|\b\w)/g, (char) => char.toUpperCase()) ?? "";
 };
 
-interface ReleaseEditProps {
+interface RepositoryEditProps {
   fieldPath: string;
   repository: ReleasesRepository;
   onRepositorySave: (repository: ReleasesRepository) => FormValidation;
@@ -193,7 +269,7 @@ interface ReleaseEditProps {
   versionFilterPrecisionOptions: string[];
 }
 
-const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions }) => {
+const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, actions }) => {
   const tRepository = useScopedI18n("widget.releases.option.repositories");
   const [loading, setLoading] = useState(false);
   const [tempRepository, setTempRepository] = useState(() => ({ ...innerProps.repository }));
@@ -262,7 +338,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
           value={tempRepository.providerKey}
           error={formErrors[`${innerProps.fieldPath}.providerKey`]}
           onChange={(value) => {
-            if (value && Providers[value]) {
+            if (value && isProviderKey(value)) {
               handleChange({ providerKey: value });
             }
           }}
@@ -386,7 +462,7 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
           {tRepository("editForm.cancel.label")}
         </Button>
 
-        <Button data-autofocus onClick={handleConfirm} color="red.9" loading={loading}>
+        <Button data-autofocus onClick={handleConfirm} loading={loading}>
           {tRepository("editForm.confirm.label")}
         </Button>
       </Group>
@@ -395,6 +471,238 @@ const ReleaseEditModal = createModal<ReleaseEditProps>(({ innerProps, actions })
 }).withOptions({
   defaultTitle(t) {
     return t("widget.releases.option.repositories.editForm.title");
+  },
+  size: "xl",
+});
+
+interface ReleasesRepositoryImport extends ReleasesRepository {
+  alreadyImported: boolean;
+}
+
+interface ContainerImageSelectorProps {
+  containerImage: ReleasesRepositoryImport;
+  versionFilterPrecisionOptions: string[];
+  onImageSelectionChanged?: (isSelected: boolean) => void;
+}
+
+const ContainerImageSelector = ({
+  containerImage,
+  versionFilterPrecisionOptions,
+  onImageSelectionChanged,
+}: ContainerImageSelectorProps) => {
+  const tRepository = useScopedI18n("widget.releases.option.repositories");
+  const checkBoxProps: CheckboxProps = !onImageSelectionChanged
+    ? {
+        disabled: true,
+        checked: true,
+      }
+    : {
+        onChange: (event) => onImageSelectionChanged(event.currentTarget.checked),
+      };
+
+  return (
+    <Group
+      key={`${Providers[containerImage.providerKey].name}/${containerImage.identifier}`}
+      gap="xl"
+      justify="space-between"
+    >
+      <Group gap="md">
+        <Checkbox
+          label={
+            <Group>
+              <MaskedOrNormalImage
+                hasColor={false}
+                imageUrl={containerImage.iconUrl}
+                style={{
+                  height: "1.2em",
+                  width: "1.2em",
+                }}
+              />
+              <Text>{containerImage.identifier}</Text>
+            </Group>
+          }
+          {...checkBoxProps}
+        />
+
+        {containerImage.versionFilter && (
+          <Group gap={5}>
+            <Text c="dimmed" size="xs">
+              {tRepository("versionFilter.label")}:
+            </Text>
+
+            <Code>{containerImage.versionFilter.prefix && containerImage.versionFilter.prefix}</Code>
+            <Code color="var(--mantine-primary-color-light)" fw={700}>
+              {versionFilterPrecisionOptions[containerImage.versionFilter.precision]}
+            </Code>
+            <Code>{containerImage.versionFilter.suffix && containerImage.versionFilter.suffix}</Code>
+          </Group>
+        )}
+      </Group>
+
+      <Group>
+        <MaskedOrNormalImage
+          hasColor
+          color="dimmed"
+          imageUrl={Providers[containerImage.providerKey].iconUrl}
+          style={{
+            height: "1em",
+            width: "1em",
+          }}
+        />
+        <Text ff="monospace" c="dimmed" size="sm">
+          {Providers[containerImage.providerKey].name}
+        </Text>
+      </Group>
+    </Group>
+  );
+};
+
+interface RepositoryImportProps {
+  repositories: ReleasesRepository[];
+  versionFilterPrecisionOptions: string[];
+  onConfirm: (containersImage: ReleasesRepositoryImport[]) => void;
+  isAdmin: boolean;
+}
+
+const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, actions }) => {
+  const tRepository = useScopedI18n("widget.releases.option.repositories");
+  const [loading, setLoading] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([] as ReleasesRepositoryImport[]);
+
+  const docker = clientApi.docker.getContainers.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    enabled: innerProps.isAdmin,
+  });
+
+  const containersImage: ReleasesRepositoryImport[] | undefined = useMemo(
+    () =>
+      docker.data?.containers.reduce<ReleasesRepositoryImport[]>((acc, containerImage) => {
+        const providerKey = containerImage.image.startsWith("ghcr.io/") ? "Github" : "DockerHub";
+        const [identifier, version] = containerImage.image.replace(/^(ghcr\.io\/|docker\.io\/)/, "").split(":");
+
+        if (!identifier) return acc;
+
+        if (acc.some((item) => item.providerKey === providerKey && item.identifier === identifier)) return acc;
+
+        acc.push({
+          providerKey,
+          identifier,
+          iconUrl: containerImage.iconUrl ?? undefined,
+          name: formatIdentifierName(identifier),
+          versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
+          alreadyImported: innerProps.repositories.some(
+            (item) => item.providerKey === providerKey && item.identifier === identifier,
+          ),
+        });
+        return acc;
+      }, []),
+    [docker.data, innerProps.repositories],
+  );
+
+  const handleConfirm = useCallback(() => {
+    setLoading(true);
+
+    innerProps.onConfirm(selectedImages);
+
+    setLoading(false);
+    actions.closeModal();
+  }, [innerProps, selectedImages, actions]);
+
+  const allImagesImported = useMemo(
+    () => containersImage?.every((containerImage) => containerImage.alreadyImported) ?? false,
+    [containersImage],
+  );
+
+  const anyImagesImported = useMemo(
+    () => containersImage?.some((containerImage) => containerImage.alreadyImported) ?? false,
+    [containersImage],
+  );
+
+  return (
+    <Stack>
+      {docker.isPending ? (
+        <Stack justify="center" align="center">
+          <Loader size="xl" />
+          <Title order={3}>{tRepository("importRepositories.loading")}</Title>
+        </Stack>
+      ) : !containersImage || containersImage.length === 0 ? (
+        <Stack justify="center" align="center">
+          <IconBrandDocker stroke={1} width={128} height={128} />
+          <Title order={3}>{tRepository("importRepositories.noImagesFound")}</Title>
+        </Stack>
+      ) : (
+        <Stack>
+          <Accordion defaultValue={!allImagesImported ? "foundImages" : anyImagesImported ? "alreadyImported" : ""}>
+            <Accordion.Item value="foundImages">
+              <Accordion.Control disabled={allImagesImported} icon={<IconSquare stroke={1.25} />}>
+                <Group>
+                  {tRepository("importRepositories.listFoundImages")}
+                  {allImagesImported && (
+                    <Text c="dimmed" size="sm">
+                      {tRepository("importRepositories.allImagesAlreadyImported")}
+                    </Text>
+                  )}
+                </Group>
+              </Accordion.Control>
+              <Accordion.Panel>
+                {!allImagesImported &&
+                  containersImage
+                    .filter((containerImage) => !containerImage.alreadyImported)
+                    .map((containerImage) => {
+                      return (
+                        <ContainerImageSelector
+                          key={`${containerImage.providerKey}/${containerImage.identifier}`}
+                          containerImage={containerImage}
+                          versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
+                          onImageSelectionChanged={(isSelected) =>
+                            isSelected
+                              ? setSelectedImages([...selectedImages, containerImage])
+                              : setSelectedImages(selectedImages.filter((img) => img !== containerImage))
+                          }
+                        />
+                      );
+                    })}
+              </Accordion.Panel>
+            </Accordion.Item>
+            <Accordion.Item value="alreadyImported">
+              <Accordion.Control disabled={!anyImagesImported} icon={<IconSquareCheck stroke={1.25} />}>
+                {tRepository("importRepositories.listAlreadyImportedImages")}
+              </Accordion.Control>
+              <Accordion.Panel>
+                {anyImagesImported &&
+                  containersImage
+                    .filter((containerImage) => containerImage.alreadyImported)
+                    .map((containerImage) => {
+                      return (
+                        <ContainerImageSelector
+                          key={`${containerImage.providerKey}/${containerImage.identifier}`}
+                          containerImage={containerImage}
+                          versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
+                        />
+                      );
+                    })}
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+        </Stack>
+      )}
+
+      <Group justify="flex-end">
+        <Button variant="default" onClick={actions.closeModal} color="gray.5">
+          {tRepository("editForm.cancel.label")}
+        </Button>
+
+        <Button onClick={handleConfirm} loading={loading} disabled={selectedImages.length === 0}>
+          {tRepository("editForm.confirm.label")}
+        </Button>
+      </Group>
+    </Stack>
+  );
+}).withOptions({
+  defaultTitle(t) {
+    return t("widget.releases.option.repositories.importForm.title");
   },
   size: "xl",
 });
