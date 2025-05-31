@@ -996,8 +996,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../common
       node-cron:
-        specifier: ^4.0.7
-        version: 4.0.7
+        specifier: ^4.1.0
+        version: 4.1.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -8081,8 +8081,8 @@ packages:
     resolution: {integrity: sha512-8VOpLHFrOQlAH+qA0ZzuGRlALRA6/LVh8QJldbrC4DY0hXoMP0l4Acq8TzFC018HztWiRqyCEj2aTWY2UvnJUg==}
     engines: {node: ^18 || ^20 || >= 21}
 
-  node-cron@4.0.7:
-    resolution: {integrity: sha512-A37UUDpxRT/kWanELr/oMayCWQFk9Zx9BEUoXrAKuKwKzH4XuAX+vMixMBPkgZBkADgJwXv91w5cMRTNSVP/mA==}
+  node-cron@4.1.0:
+    resolution: {integrity: sha512-OS+3ORu+h03/haS6Di8Qr7CrVs4YaKZZOynZwQpyPZDnR3tqRbwJmuP2gVR16JfhLgyNlloAV1VTrrWlRogCFA==}
     engines: {node: '>=6.0.0'}
 
   node-domexception@1.0.0:
@@ -17156,7 +17156,7 @@ snapshots:
 
   node-addon-api@8.3.0: {}
 
-  node-cron@4.0.7: {}
+  node-cron@4.1.0: {}
 
   node-domexception@1.0.0: {}
 
