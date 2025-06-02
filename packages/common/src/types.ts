@@ -19,7 +19,7 @@ export type Inverse<T extends Invertible> = {
 
 type Invertible = Record<PropertyKey, PropertyKey>;
 
-export type inferSearchParamsFromSchema<TSchema extends z.AnyZodObject> = inferSearchParamsFromSchemaInner<
+export type inferSearchParamsFromSchema<TSchema extends z.ZodObject> = inferSearchParamsFromSchemaInner<
   z.infer<TSchema>
 >;
 
