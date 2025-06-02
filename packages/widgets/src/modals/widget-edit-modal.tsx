@@ -41,7 +41,9 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   const [advancedOptions, setAdvancedOptions] = useState<BoardItemAdvancedOptions>(innerProps.value.advancedOptions);
 
   // Translate the error messages
-  z.setErrorMap(zodErrorMap(t));
+  z.config({
+    customError: zodErrorMap(t),
+  });
   const { definition } = widgetImports[innerProps.kind];
   const options = definition.createOptions(innerProps.settings) as Record<string, OptionsBuilderResult[string]>;
 

@@ -1,6 +1,6 @@
 import { useForm, zodResolver } from "@mantine/form";
-import { z } from "zod/v4";
 import type { AnyZodObject, ZodDiscriminatedUnion, ZodEffects, ZodIntersection } from "zod/v4";
+import { z } from "zod/v4";
 
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
@@ -19,7 +19,9 @@ export const useZodForm = <
 ) => {
   const t = useI18n();
 
-  z.setErrorMap(zodErrorMap(t));
+  z.config({
+    customError: zodErrorMap(t),
+  });
   return useForm<z.infer<TSchema>>({
     ...options,
     validateInputOnBlur: true,

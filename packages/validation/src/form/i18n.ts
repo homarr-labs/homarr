@@ -1,132 +1,139 @@
-import type { ErrorMapCtx, z, ZodTooBigIssue, ZodTooSmallIssue } from "zod/v4";
-import { ZodIssueCode } from "zod/v4";
+import type { z } from "zod/v4";
 
-import type { TranslationFunction, TranslationObject } from "@homarr/translation";
+import type { ScopedTranslationFunction, TranslationFunction, TranslationObject } from "@homarr/translation";
 
-export const zodErrorMap = <TFunction extends TranslationFunction>(t: TFunction) => {
-  return (issue: z.ZodIssueOptionalMessage, ctx: ErrorMapCtx) => {
-    const error = handleZodError(issue, ctx);
-    if ("message" in error && error.message) {
-      return {
-        message: error.message,
-      };
+export const zodErrorMap = (t: TranslationFunction): z.core.$ZodErrorMap<z.core.$ZodIssue> => {
+  return (issue) => {
+    const error = handleError(issue);
+    if (typeof error === "string") {
+      return error;
     }
-    return {
-      // use never to make ts happy
-      message: t(error.key ? `common.zod.${error.key}` : "common.zod.errors.default", (error.params ?? {}) as never),
-    };
+    return t(`common.zod.errors.${error.key}`, (error.params ?? {}) as never);
   };
 };
 
-const handleStringError = (issue: z.ZodInvalidStringIssue) => {
-  if (issue.validation === "email") {
+type ValidTranslationKeys = Parameters<ScopedTranslationFunction<"common.zod.errors">>[0];
+
+type HandlerReturnValue =
+  | string
+  | {
+      key: ValidTranslationKeys;
+      params?: Record<string, string | number>;
+    };
+
+const handleError = (issue: z.core.$ZodRawIssue): HandlerReturnValue => {
+  if (issue.code === "too_big") return handleTooBigError(issue);
+  if (issue.code === "too_small") return handleTooSmallError(issue);
+  if (issue.code === "invalid_format") return handleInvalidFormatError(issue);
+  if (issue.code === "invalid_type" && issue.expected === "string" && issue.input === null) {
     return {
-      key: "errors.string.invalidEmail",
-    } as const;
+      key: "required",
+    };
+  }
+  if (issue.code === "custom" && issue.params?.i18n) {
+    const i18n = issue.params.i18n as { key: CustomErrorKey; params?: Record<string, string | number> };
+    return {
+      key: `custom.${i18n.key}`,
+      params: i18n.params,
+    };
   }
 
-  if (typeof issue.validation === "object") {
-    if ("startsWith" in issue.validation) {
-      return {
-        key: "errors.string.startsWith",
-        params: {
-          startsWith: issue.validation.startsWith,
-        },
-      } as const;
-    } else if ("endsWith" in issue.validation) {
-      return {
-        key: "errors.string.endsWith",
-        params: {
-          endsWith: issue.validation.endsWith,
-        },
-      } as const;
+  return (
+    issue.message ?? {
+      key: "default",
     }
+  );
+};
 
+const handleTooBigError = (
+  issue: Pick<z.core.$ZodIssueTooBig, "origin" | "maximum"> & { message?: string },
+): HandlerReturnValue => {
+  if (issue.origin !== "string" && issue.origin !== "number") {
+    return (
+      issue.message ?? {
+        key: "default",
+      }
+    );
+  }
+
+  const origin = issue.origin as "string" | "number";
+
+  return {
+    key: `tooBig.${origin}`,
+    params: {
+      maximum: issue.maximum.toString(),
+      count: issue.maximum.toString(),
+    },
+  } as const;
+};
+
+const handleTooSmallError = (
+  issue: Pick<z.core.$ZodIssueTooSmall, "origin" | "minimum"> & { message?: string },
+): HandlerReturnValue => {
+  if (issue.origin !== "string" && issue.origin !== "number") {
+    return (
+      issue.message ?? {
+        key: "default",
+      }
+    );
+  }
+
+  const origin = issue.origin as "string" | "number";
+  if (origin === "string" && issue.minimum === 1) {
     return {
-      key: "errors.string.includes",
+      key: "required",
+    } as const;
+  }
+  return {
+    key: `tooSmall.${origin}`,
+    params: {
+      minimum: issue.minimum.toString(),
+      count: issue.minimum.toString(),
+    },
+  } as const;
+};
+
+const handleInvalidFormatError = (
+  issue: Pick<z.core.$ZodIssueInvalidStringFormat, "format"> & { message?: string },
+): HandlerReturnValue => {
+  if (issue.format === "includes" && "includes" in issue && typeof issue.includes === "string") {
+    return {
+      key: "string.includes",
       params: {
-        includes: issue.validation.includes,
+        includes: issue.includes,
       },
     } as const;
   }
 
-  return {
-    message: issue.message,
-  };
-};
-
-const handleTooSmallError = (issue: ZodTooSmallIssue) => {
-  if (issue.type !== "string" && issue.type !== "number") {
+  if (issue.format === "ends_with" && "suffix" in issue && typeof issue.suffix === "string") {
     return {
-      message: issue.message,
-    };
-  }
-
-  if (issue.type === "string" && issue.minimum === 1) {
-    return {
-      key: "errors.required",
+      key: "string.endsWith",
+      params: {
+        endsWith: issue.suffix,
+      },
     } as const;
   }
 
-  return {
-    key: `errors.tooSmall.${issue.type}`,
-    params: {
-      minimum: issue.minimum,
-      count: issue.minimum,
-    },
-  } as const;
-};
-
-const handleTooBigError = (issue: ZodTooBigIssue) => {
-  if (issue.type !== "string" && issue.type !== "number") {
+  if (issue.format === "starts_with" && "prefix" in issue && typeof issue.prefix === "string") {
     return {
-      message: issue.message,
-    };
-  }
-
-  return {
-    key: `errors.tooBig.${issue.type}`,
-    params: {
-      maximum: issue.maximum,
-      count: issue.maximum,
-    },
-  } as const;
-};
-
-const handleZodError = (issue: z.ZodIssueOptionalMessage, ctx: ErrorMapCtx) => {
-  if (ctx.defaultError === "Required") {
-    return {
-      key: "errors.required",
-      params: {},
+      key: "string.startsWith",
+      params: {
+        startsWith: issue.prefix,
+      },
     } as const;
   }
 
-  if (issue.code === ZodIssueCode.invalid_string) {
-    return handleStringError(issue);
-  }
-  if (issue.code === ZodIssueCode.too_small) {
-    return handleTooSmallError(issue);
-  }
-  if (issue.code === ZodIssueCode.too_big) {
-    return handleTooBigError(issue);
-  }
-  if (issue.code === ZodIssueCode.invalid_type && (ctx.data === "" || issue.received === "null")) {
+  if (issue.format === "email") {
     return {
-      key: "errors.required",
-      params: {},
-    } as const;
-  }
-  if (issue.code === ZodIssueCode.custom && issue.params?.i18n) {
-    const { i18n } = issue.params as CustomErrorParams<CustomErrorKey>;
-    return {
-      key: `errors.custom.${i18n.key}`,
-      params: i18n.params,
+      key: "string.invalidEmail",
     } as const;
   }
 
-  return {
-    message: issue.message,
-  };
+  return (
+    issue.message ?? {
+      key: "default",
+    }
+  );
 };
 
 type CustomErrorKey = keyof TranslationObject["common"]["zod"]["errors"]["custom"];
