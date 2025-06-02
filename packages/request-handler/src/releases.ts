@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { fetchWithTimeout } from "@homarr/common";
 import { logger } from "@homarr/log";

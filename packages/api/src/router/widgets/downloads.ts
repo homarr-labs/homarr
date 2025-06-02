@@ -1,5 +1,5 @@
 import { observable } from "@trpc/server/observable";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { Modify } from "@homarr/common/types";
 import type { Integration } from "@homarr/db/schema";

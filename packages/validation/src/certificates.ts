@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { createCustomErrorParams } from "./form/i18n";
 

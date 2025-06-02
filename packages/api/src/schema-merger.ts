@@ -1,5 +1,5 @@
-import { z } from "zod";
-import type { AnyZodObject, ZodIntersection, ZodObject } from "zod";
+import { z } from "zod/v4";
+import type { AnyZodObject, ZodIntersection, ZodObject } from "zod/v4";
 
 export function convertIntersectionToZodObject<TIntersection extends ZodIntersection<AnyZodObject, AnyZodObject>>(
   intersection: TIntersection,

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export interface ReleasesProvider {
   getDetailsUrl: (identifier: string) => string | undefined;

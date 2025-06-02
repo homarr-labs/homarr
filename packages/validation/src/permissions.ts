@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const createSavePermissionsSchema = <const TPermissionSchema extends z.ZodEnum<[string, ...string[]]>>(
   permissionSchema: TPermissionSchema,

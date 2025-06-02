@@ -1,7 +1,7 @@
 import type { FeedData, FeedEntry } from "@extractus/feed-extractor";
 import { extract } from "@extractus/feed-extractor";
 import dayjs from "dayjs";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { Modify } from "@homarr/common/types";
 import { logger } from "@homarr/log";

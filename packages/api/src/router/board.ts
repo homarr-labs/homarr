@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import type { DeviceType } from "@homarr/common/server";

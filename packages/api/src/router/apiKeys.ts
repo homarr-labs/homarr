@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import { generateSecureRandomToken } from "@homarr/common/server";

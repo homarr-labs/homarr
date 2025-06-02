@@ -1,5 +1,5 @@
-import type { ErrorMapCtx, z, ZodTooBigIssue, ZodTooSmallIssue } from "zod";
-import { ZodIssueCode } from "zod";
+import type { ErrorMapCtx, z, ZodTooBigIssue, ZodTooSmallIssue } from "zod/v4";
+import { ZodIssueCode } from "zod/v4";
 
 import type { TranslationFunction, TranslationObject } from "@homarr/translation";
 

@@ -1,5 +1,5 @@
-import type { z } from "zod";
 import { zfd } from "zod-form-data";
+import type { z } from "zod/v4";
 
 import { createCustomErrorParams } from "./form/i18n";
 

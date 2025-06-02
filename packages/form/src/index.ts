@@ -1,6 +1,6 @@
 import { useForm, zodResolver } from "@mantine/form";
-import { z } from "zod";
-import type { AnyZodObject, ZodDiscriminatedUnion, ZodEffects, ZodIntersection } from "zod";
+import { z } from "zod/v4";
+import type { AnyZodObject, ZodDiscriminatedUnion, ZodEffects, ZodIntersection } from "zod/v4";
 
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form/i18n";

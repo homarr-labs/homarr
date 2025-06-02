@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, FileInput, Group, Stack, TextInput } from "@mantine/core";
 import { IconFileUpload } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";

@@ -1,6 +1,6 @@
 import { Button, FileInput, Group, Stack } from "@mantine/core";
 import { IconCertificate } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import type { MaybePromise } from "@homarr/common/types";

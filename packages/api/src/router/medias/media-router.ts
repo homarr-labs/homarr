@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { InferInsertModel } from "@homarr/db";
 import { and, createId, desc, eq, like } from "@homarr/db";

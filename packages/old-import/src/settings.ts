@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { zfd } from "zod-form-data";
+import { z } from "zod/v4";
 
 import { boardNameSchema } from "@homarr/validation/board";
 import { createCustomErrorParams } from "@homarr/validation/form/i18n";

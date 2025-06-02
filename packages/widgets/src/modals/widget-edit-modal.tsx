@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button, Group, Stack } from "@mantine/core";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";

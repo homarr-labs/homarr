@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { env as commonEnv } from "@homarr/common/env";
 import { createEnv } from "@homarr/env";

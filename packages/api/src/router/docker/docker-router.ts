@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { Container, ContainerState, Docker, Port } from "@homarr/docker";
 import { DockerSingleton } from "@homarr/docker";

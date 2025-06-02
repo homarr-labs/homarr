@@ -1,7 +1,7 @@
 import { X509Certificate } from "node:crypto";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 import { zfd } from "zod-form-data";
+import { z } from "zod/v4";
 
 import { addCustomRootCertificateAsync, removeCustomRootCertificateAsync } from "@homarr/certificates/server";
 import { and, eq } from "@homarr/db";

@@ -3,7 +3,7 @@ import { humanFileSize } from "@homarr/common";
 import "@homarr/redis";
 
 import dayjs from "dayjs";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
