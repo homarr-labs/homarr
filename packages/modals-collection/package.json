@@ -34,7 +34,7 @@
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "^8.0.2",
-    "@tabler/icons-react": "^3.33.0",
+    "@tabler/icons-react": "^3.34.0",
     "dayjs": "^1.11.13",
     "next": "15.3.3",
     "react": "19.1.0",
