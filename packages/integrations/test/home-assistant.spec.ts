@@ -64,26 +64,29 @@ describe("Home Assistant integration", () => {
 const prepareHomeAssistantContainerAsync = async () => {
   const homeAssistantContainer = createHomeAssistantContainer();
   const startedContainer = await homeAssistantContainer.start();
-
   await startedContainer.exec(["unzip", "-o", "/tmp/config.zip", "-d", "/config"]);
   await startedContainer.restart();
   return startedContainer;
 };
 
 const createHomeAssistantContainer = () => {
-  return new GenericContainer(IMAGE_NAME)
-    .withCopyFilesToContainer([
-      {
-        source: join(__dirname, "/volumes/home-assistant-config.zip"),
-        target: "/tmp/config.zip",
-      },
-    ])
-    .withPrivilegedMode()
-    .withExposedPorts(8123)
-    .withWaitStrategy(Wait.forHttp("/", 8123));
+  return (
+    new GenericContainer(IMAGE_NAME)
+      .withCopyFilesToContainer([
+        {
+          source: join(__dirname, "/volumes/home-assistant-config.zip"),
+          target: "/tmp/config.zip",
+        },
+      ])
+      .withPrivilegedMode()
+      .withExposedPorts(8123)
+      // This has to be a page that is not redirected (or a status code has to be defined withStatusCode(statusCode))
+      .withWaitStrategy(Wait.forHttp("/onboarding.html", 8123))
+  );
 };
 
 const createHomeAssistantIntegration = (container: StartedTestContainer, apiKeyOverride?: string) => {
+  console.log("Creating Home Assistant integration...");
   return new HomeAssistantIntegration({
     id: "1",
     decryptedSecrets: [
