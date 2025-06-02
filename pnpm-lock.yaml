@@ -554,6 +554,9 @@ importers:
       '@homarr/docker':
         specifier: workspace:^0.1.0
         version: link:../docker
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../env
       '@homarr/icons':
         specifier: workspace:^0.1.0
         version: link:../icons
