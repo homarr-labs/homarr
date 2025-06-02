@@ -27,6 +27,7 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/form": "^8.0.2",
+    "mantine-form-zod-resolver": "^1.2.1",
     "zod": "^3.25.48"
   },
   "devDependencies": {

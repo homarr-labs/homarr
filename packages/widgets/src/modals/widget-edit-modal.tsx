@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { Button, Group, Stack } from "@mantine/core";
+import { zod4Resolver } from "mantine-form-zod-resolver";
 import { z } from "zod/v4";
 
 import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
-import { zodResolver } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useI18n } from "@homarr/translation/client";
@@ -50,7 +50,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
   const form = useForm({
     mode: "controlled",
     initialValues: innerProps.value,
-    validate: zodResolver(
+    validate: zod4Resolver(
       z.object({
         options: z.object(
           objectEntries(options).reduce(

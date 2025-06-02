@@ -1,16 +1,12 @@
-import { useForm, zodResolver } from "@mantine/form";
-import type { AnyZodObject, ZodDiscriminatedUnion, ZodEffects, ZodIntersection } from "zod/v4";
+import { useForm } from "@mantine/form";
+import { zod4Resolver } from "mantine-form-zod-resolver";
+import type { ZodType } from "zod/v4";
 import { z } from "zod/v4";
 
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
 
-export const useZodForm = <
-  TSchema extends
-    | AnyZodObject
-    | ZodEffects<AnyZodObject>
-    | ZodIntersection<AnyZodObject | ZodDiscriminatedUnion<string, AnyZodObject[]>, AnyZodObject>,
->(
+export const useZodForm = <TSchema extends ZodType>(
   schema: TSchema,
   options: Omit<
     Exclude<Parameters<typeof useForm<z.infer<TSchema>>>[0], undefined>,
@@ -26,6 +22,6 @@ export const useZodForm = <
     ...options,
     validateInputOnBlur: true,
     validateInputOnChange: true,
-    validate: zodResolver(schema),
+    validate: zod4Resolver(schema),
   });
 };
