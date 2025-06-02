@@ -85,7 +85,7 @@
     "superjson": "2.2.2",
     "swagger-ui-react": "^5.22.0",
     "use-deep-compare-effect": "^1.8.1",
-    "zod": "^3.25.48"
+    "zod": "^3.25.49"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
