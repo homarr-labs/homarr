@@ -40,7 +40,7 @@ export const sharedItemSchema = z.object({
 export const commonItemSchema = z
   .object({
     kind: zodEnumFromArray(widgetKinds),
-    options: z.record(z.unknown()),
+    options: z.record(z.string(), z.unknown()),
   })
   .and(sharedItemSchema);
 
