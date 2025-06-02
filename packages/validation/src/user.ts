@@ -38,9 +38,8 @@ export const userPasswordSchema = z
     },
   );
 
-const addConfirmPasswordRefinement = <TObj extends { password: string; confirmPassword: string }>(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  schema: z.ZodObject<any, "strip", z.ZodTypeAny, TObj>,
+const addConfirmPasswordRefinement = (
+  schema: z.ZodObject<{ password: z.core.$ZodString; confirmPassword: z.core.$ZodString }, z.core.$strip>,
 ) => {
   return schema.refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
