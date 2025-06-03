@@ -27,7 +27,7 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/form": "^8.0.2",
-    "zod": "^3.25.49"
+    "zod": "^3.25.50"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
