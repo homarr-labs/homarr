@@ -95,7 +95,7 @@
     "@types/node": "^22.15.29",
     "@types/prismjs": "^1.26.5",
     "@types/react": "19.1.6",
-    "@types/react-dom": "19.1.5",
+    "@types/react-dom": "19.1.6",
     "@types/swagger-ui-react": "^5.18.0",
     "concurrently": "^9.1.2",
     "eslint": "^9.28.0",
