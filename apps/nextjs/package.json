@@ -56,9 +56,9 @@
     "@mantine/tiptap": "^8.0.2",
     "@million/lint": "1.0.14",
     "@tabler/icons-react": "^3.34.0",
-    "@tanstack/react-query": "^5.80.2",
-    "@tanstack/react-query-devtools": "^5.80.2",
-    "@tanstack/react-query-next-experimental": "^5.80.2",
+    "@tanstack/react-query": "^5.80.3",
+    "@tanstack/react-query-devtools": "^5.80.3",
+    "@tanstack/react-query-next-experimental": "^5.80.3",
     "@trpc/client": "^11.2.0",
     "@trpc/next": "^11.2.0",
     "@trpc/react-query": "^11.2.0",
@@ -85,7 +85,7 @@
     "superjson": "2.2.2",
     "swagger-ui-react": "^5.22.0",
     "use-deep-compare-effect": "^1.8.1",
-    "zod": "^3.25.49"
+    "zod": "^3.25.51"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -95,7 +95,7 @@
     "@types/node": "^22.15.29",
     "@types/prismjs": "^1.26.5",
     "@types/react": "19.1.6",
-    "@types/react-dom": "19.1.5",
+    "@types/react-dom": "19.1.6",
     "@types/swagger-ui-react": "^5.18.0",
     "concurrently": "^9.1.2",
     "eslint": "^9.28.0",
