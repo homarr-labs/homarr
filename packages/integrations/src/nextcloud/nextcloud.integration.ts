@@ -1,6 +1,3 @@
-import dayjs from "dayjs";
-import objectSupport from "dayjs/plugin/objectSupport";
-import utc from "dayjs/plugin/utc";
 import * as ical from "node-ical";
 import { DAVClient } from "tsdav";
 import type { Dispatcher, RequestInit as UndiciFetchRequestInit } from "undici";
@@ -15,8 +12,6 @@ import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { CalendarEvent } from "../calendar-types";
 
-dayjs.extend(utc);
-dayjs.extend(objectSupport);
 
 @HandleIntegrationErrors([integrationTsdavHttpErrorHandler])
 export class NextcloudIntegration extends Integration {
@@ -27,7 +22,7 @@ export class NextcloudIntegration extends Integration {
     return { success: true };
   }
 
-  public async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]> {
+  public async getCalendarEventsAsync(start: Date, end: Date, _showUnmonitored?: boolean): Promise<CalendarEvent[]> {
     const client = await this.createCalendarClientAsync();
     await client.login();
 
@@ -57,14 +52,7 @@ export class NextcloudIntegration extends Integration {
 
       logger.debug(`Converting VEVENT event to ${event.etag} from Nextcloud: ${JSON.stringify(veventObject)}`);
 
-      const date = dayjs.utc({
-        days: veventObject.start.getDay(),
-        month: veventObject.start.getMonth(),
-        year: veventObject.start.getFullYear(),
-        hours: veventObject.start.getHours(),
-        minutes: veventObject.start.getMinutes(),
-        seconds: veventObject.start.getSeconds(),
-      });
+      const date = veventObject.start;
 
       const eventUrlWithoutHost = new URL(event.url).pathname;
       const dateInMillis = veventObject.start.valueOf();
@@ -75,7 +63,7 @@ export class NextcloudIntegration extends Integration {
 
       return {
         name: veventObject.summary,
-        date: date.toDate(),
+        date,
         subName: "",
         description: veventObject.description,
         links: [
