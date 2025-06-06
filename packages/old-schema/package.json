@@ -23,7 +23,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
-    "zod": "^3.25.42"
+    "zod": "^3.25.55"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
