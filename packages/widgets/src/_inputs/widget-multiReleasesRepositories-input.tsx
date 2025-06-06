@@ -10,6 +10,7 @@ import {
   Divider,
   Fieldset,
   Group,
+  Image,
   Loader,
   Select,
   Stack,
@@ -17,7 +18,6 @@ import {
   TextInput,
   Title,
   Tooltip,
-  Image
 } from "@mantine/core";
 import type { CheckboxProps } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
@@ -230,20 +230,6 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       </Stack>
     </Fieldset>
   );
-};
-
-const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersionFilter | undefined => {
-  const version = /(?<=\D|^)\d+(?:\.\d+)*(?![\d.])/.exec(imageVersion)?.[0];
-
-  if (!version) return undefined;
-
-  const [prefix, suffix] = imageVersion.split(version);
-
-  return {
-    prefix,
-    precision: version.split(".").length,
-    suffix,
-  };
 };
 
 const formatVersionFilterRegex = (versionFilter: ReleasesVersionFilter | undefined) => {
@@ -704,3 +690,17 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   },
   size: "xl",
 });
+
+const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersionFilter | undefined => {
+  const version = /(?<=\D|^)\d+(?:\.\d+)*(?![\d.])/.exec(imageVersion)?.[0];
+
+  if (!version) return undefined;
+
+  const [prefix, suffix] = imageVersion.split(version);
+
+  return {
+    prefix,
+    precision: version.split(".").length,
+    suffix,
+  };
+};
