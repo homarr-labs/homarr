@@ -2223,7 +2223,7 @@
         },
         "repositories": {
           "label": "מאגרים",
-          "addRRepository": {
+          "addRepository": {
             "label": "הוסף מאגר"
           },
           "provider": {
