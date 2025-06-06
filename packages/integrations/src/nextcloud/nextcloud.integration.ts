@@ -12,7 +12,6 @@ import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { CalendarEvent } from "../calendar-types";
 
-
 @HandleIntegrationErrors([integrationTsdavHttpErrorHandler])
 export class NextcloudIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
