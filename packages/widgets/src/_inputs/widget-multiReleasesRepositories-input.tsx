@@ -629,7 +629,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
         </Stack>
       ) : !containersImage || containersImage.length === 0 ? (
         <Stack justify="center" align="center">
-          <IconBrandDocker stroke={1} width={128} height={128} />
+          <IconBrandDocker stroke={1} size={128} />
           <Title order={3}>{tRepository("importRepositories.noImagesFound")}</Title>
         </Stack>
       ) : (
