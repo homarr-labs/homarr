@@ -560,7 +560,7 @@ const ContainerImageSelector = ({
 interface RepositoryImportProps {
   repositories: ReleasesRepository[];
   versionFilterPrecisionOptions: string[];
-  onConfirm: (containersImage: ReleasesRepositoryImport[]) => void;
+  onConfirm: (selectedRepositories: ReleasesRepositoryImport[]) => void;
   isAdmin: boolean;
 }
 
@@ -576,7 +576,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
     enabled: innerProps.isAdmin,
   });
 
-  const containersImage: ReleasesRepositoryImport[] | undefined = useMemo(
+  const containersImages: ReleasesRepositoryImport[] | undefined = useMemo(
     () =>
       docker.data?.containers.reduce<ReleasesRepositoryImport[]>((acc, containerImage) => {
         const providerKey = containerImage.image.startsWith("ghcr.io/") ? "Github" : "DockerHub";
@@ -611,13 +611,13 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   }, [innerProps, selectedImages, actions]);
 
   const allImagesImported = useMemo(
-    () => containersImage?.every((containerImage) => containerImage.alreadyImported) ?? false,
-    [containersImage],
+    () => containersImages?.every((containerImage) => containerImage.alreadyImported) ?? false,
+    [containersImages],
   );
 
   const anyImagesImported = useMemo(
-    () => containersImage?.some((containerImage) => containerImage.alreadyImported) ?? false,
-    [containersImage],
+    () => containersImages?.some((containerImage) => containerImage.alreadyImported) ?? false,
+    [containersImages],
   );
 
   return (
@@ -627,7 +627,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
           <Loader size="xl" />
           <Title order={3}>{tRepository("importRepositories.loading")}</Title>
         </Stack>
-      ) : !containersImage || containersImage.length === 0 ? (
+      ) : !containersImages || containersImages.length === 0 ? (
         <Stack justify="center" align="center">
           <IconBrandDocker stroke={1} size={128} />
           <Title order={3}>{tRepository("importRepositories.noImagesFound")}</Title>
@@ -648,7 +648,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
               </Accordion.Control>
               <Accordion.Panel>
                 {!allImagesImported &&
-                  containersImage
+                  containersImages
                     .filter((containerImage) => !containerImage.alreadyImported)
                     .map((containerImage) => {
                       return (
@@ -672,7 +672,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
               </Accordion.Control>
               <Accordion.Panel>
                 {anyImagesImported &&
-                  containersImage
+                  containersImages
                     .filter((containerImage) => containerImage.alreadyImported)
                     .map((containerImage) => {
                       return (
