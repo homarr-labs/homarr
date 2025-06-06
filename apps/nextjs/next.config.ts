@@ -62,7 +62,7 @@ const nextConfig: NextConfig = {
               script-src * 'unsafe-inline' 'unsafe-eval';
               base-uri 'self';
               connect-src *;
-              style-src 'self' 'unsafe-inline'; 
+              style-src * 'unsafe-inline'; 
               frame-ancestors *;
               frame-src *;
               form-action 'self';
