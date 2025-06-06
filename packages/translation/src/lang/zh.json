@@ -2223,7 +2223,7 @@
         },
         "repositories": {
           "label": "儲存庫",
-          "addRRepository": {
+          "addRepository": {
             "label": "新增儲存庫"
           },
           "provider": {

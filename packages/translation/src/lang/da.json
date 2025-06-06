@@ -2223,7 +2223,7 @@
         },
         "repositories": {
           "label": "Repositories",
-          "addRRepository": {
+          "addRepository": {
             "label": "Tilføj repository"
           },
           "provider": {

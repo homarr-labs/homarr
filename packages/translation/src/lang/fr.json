@@ -747,7 +747,7 @@
               "message": ""
             },
             "hostnameMismatch": {
-              "title": "",
+              "title": "Nom d'hôte incohérent",
               "message": ""
             },
             "extract": {
@@ -2223,7 +2223,7 @@
         },
         "repositories": {
           "label": "",
-          "addRRepository": {
+          "addRepository": {
             "label": ""
           },
           "provider": {

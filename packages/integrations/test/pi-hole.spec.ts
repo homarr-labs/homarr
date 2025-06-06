@@ -211,12 +211,15 @@ const createPiHoleIntegrationV5 = (container: StartedTestContainer, apiKey: stri
 };
 
 const createPiHoleV6Container = (password: string) => {
-  return new GenericContainer("pihole/pihole:latest")
-    .withEnvironment({
-      FTLCONF_webserver_api_password: password,
-    })
-    .withExposedPorts(80)
-    .withWaitStrategy(Wait.forHttp("/admin", 80));
+  return (
+    new GenericContainer("pihole/pihole:latest")
+      .withEnvironment({
+        FTLCONF_webserver_api_password: password,
+      })
+      .withExposedPorts(80)
+      // This has to be a page that is not redirected (or a status code has to be defined withStatusCode(statusCode))
+      .withWaitStrategy(Wait.forHttp("/admin/login", 80))
+  );
 };
 
 const createPiHoleIntegrationV6 = (container: StartedTestContainer, apiKey: string) => {

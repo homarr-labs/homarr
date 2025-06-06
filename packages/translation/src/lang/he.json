@@ -1758,7 +1758,7 @@
           "label": "הצג מידע זיכרון"
         },
         "showUptime": {
-          "label": ""
+          "label": "הצג זמן פעולה"
         },
         "fileSystem": {
           "label": "הצג מידע על מערכת הקבצים"
@@ -1767,7 +1767,7 @@
           "label": "כרטיסיית ברירת מחדל"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "מקטעי אשכול גלויים"
         },
         "sectionIndicatorRequirement": {
           "label": "דרישת מציין מקטע"
@@ -1961,8 +1961,8 @@
           "label": "השתמש במסנן כדי לחשב יחס"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "הגבלת פריטים לכל אינטגרציה",
+          "description": "פעולה זו תגביל את מספר הפריטים המוצגים בכל אינטגרציה, לא באופן גלובלי"
         }
       },
       "errors": {
@@ -2223,7 +2223,7 @@
         },
         "repositories": {
           "label": "מאגרים",
-          "addRRepository": {
+          "addRepository": {
             "label": "הוסף מאגר"
           },
           "provider": {

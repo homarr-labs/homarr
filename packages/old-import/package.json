@@ -44,7 +44,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "superjson": "2.2.2",
-    "zod": "^3.25.42",
+    "zod": "^3.25.55",
     "zod-form-data": "^2.0.7"
   },
   "devDependencies": {
@@ -52,7 +52,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/adm-zip": "0.5.7",
-    "eslint": "^9.27.0",
+    "eslint": "^9.28.0",
     "typescript": "^5.8.3"
   }
 }

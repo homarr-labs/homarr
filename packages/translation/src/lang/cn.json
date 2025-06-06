@@ -612,17 +612,17 @@
       "select": {
         "label": "选择应用",
         "notFound": "未找到应用",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "搜索应用",
+        "noResults": "没有结果",
+        "action": "选择 {app}",
+        "title": "选择一个应用程序添加到此面板"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "创建应用",
+        "description": "创建应用 ",
+        "action": "打开应用创建"
       },
-      "add": ""
+      "add": "添加应用"
     }
   },
   "integration": {
@@ -705,59 +705,59 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "更多详情"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "未知错误",
+          "description": "发生未知错误，打开下面的原因以查看更多详情"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "解析错误",
+          "description": "无法解析该响应。请确认URL指向服务的基本URL。"
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "授权错误",
+          "description": "请求未被授权。请验证凭据是否正确，并且您拥有足够的权限。"
         },
         "statusCode": {
-          "title": "",
+          "title": "响应错误",
           "description": "",
           "otherDescription": "",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "错误请求",
+            "notFound": "未找到",
+            "tooManyRequests": "请求过于频繁",
+            "internalServerError": "服务器内部错误",
+            "serviceUnavailable": "服务暂时不可用",
+            "gatewayTimeout": "网关超时"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "证书错误",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "此证书已经过期。",
+            "notYetValid": "此证书尚未生效。",
+            "untrusted": "此证书不受信任。",
+            "hostnameMismatch": "证书主机名与 URL 不匹配。"
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "权限不足",
+              "message": "您无权信任或上传证书。请与您的管理员联系上传必要的根证书。"
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "主机名不匹配",
+              "message": "证书中的主机名与您连接的主机名不匹配。 这可能会显示安全风险，但您仍然可以选择信任此证书。"
             },
             "extract": {
-              "title": "",
+              "title": "CA证书提取失败",
               "message": ""
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "重试创建"
             },
             "trust": {
               "label": ""
@@ -2223,7 +2223,7 @@
         },
         "repositories": {
           "label": "",
-          "addRRepository": {
+          "addRepository": {
             "label": ""
           },
           "provider": {
