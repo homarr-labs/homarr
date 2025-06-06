@@ -576,7 +576,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
     enabled: innerProps.isAdmin,
   });
 
-  const containersImages: ReleasesRepositoryImport[] | undefined = useMemo(
+  const containersImages: ReleasesRepositoryImport[] = useMemo(
     () =>
       docker.data?.containers.reduce<ReleasesRepositoryImport[]>((acc, containerImage) => {
         const providerKey = containerImage.image.startsWith("ghcr.io/") ? "Github" : "DockerHub";
@@ -597,7 +597,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
           ),
         });
         return acc;
-      }, []),
+      }, []) ?? [],
     [docker.data, innerProps.repositories],
   );
 
@@ -611,12 +611,12 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   }, [innerProps, selectedImages, actions]);
 
   const allImagesImported = useMemo(
-    () => containersImages?.every((containerImage) => containerImage.alreadyImported) ?? false,
+    () => containersImages.every((containerImage) => containerImage.alreadyImported),
     [containersImages],
   );
 
   const anyImagesImported = useMemo(
-    () => containersImages?.some((containerImage) => containerImage.alreadyImported) ?? false,
+    () => containersImages.some((containerImage) => containerImage.alreadyImported),
     [containersImages],
   );
 
@@ -627,7 +627,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
           <Loader size="xl" />
           <Title order={3}>{tRepository("importRepositories.loading")}</Title>
         </Stack>
-      ) : !containersImages || containersImages.length === 0 ? (
+      ) : containersImages.length === 0 ? (
         <Stack justify="center" align="center">
           <IconBrandDocker stroke={1} size={128} />
           <Title order={3}>{tRepository("importRepositories.noImagesFound")}</Title>
