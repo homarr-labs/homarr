@@ -17,6 +17,7 @@ import {
   TextInput,
   Title,
   Tooltip,
+  Image
 } from "@mantine/core";
 import type { CheckboxProps } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
@@ -37,7 +38,7 @@ import { useSession } from "@homarr/auth/client";
 import { findBestIconMatch, IconPicker } from "@homarr/forms-collection";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
-import { MaskedOrNormalImage } from "@homarr/ui";
+import { MaskedImage } from "@homarr/ui";
 
 import { isProviderKey, Providers } from "../releases/releases-providers";
 import type { ReleasesRepository, ReleasesVersionFilter } from "../releases/releases-repository";
@@ -175,9 +176,8 @@ export const WidgetMultiReleasesRepositoriesInput = ({
           return (
             <Stack key={`${repository.providerKey}.${repository.identifier}`} gap={5}>
               <Group align="center" gap="xs">
-                <MaskedOrNormalImage
-                  hasColor={false}
-                  imageUrl={repository.iconUrl ?? Providers[repository.providerKey].iconUrl}
+                <Image
+                  src={repository.iconUrl ?? Providers[repository.providerKey].iconUrl}
                   style={{
                     height: "1.2em",
                     width: "1.2em",
@@ -510,9 +510,8 @@ const ContainerImageSelector = ({
         <Checkbox
           label={
             <Group>
-              <MaskedOrNormalImage
-                hasColor={false}
-                imageUrl={containerImage.iconUrl}
+              <Image
+                src={containerImage.iconUrl}
                 style={{
                   height: "1.2em",
                   width: "1.2em",
@@ -540,8 +539,7 @@ const ContainerImageSelector = ({
       </Group>
 
       <Group>
-        <MaskedOrNormalImage
-          hasColor
+        <MaskedImage
           color="dimmed"
           imageUrl={Providers[containerImage.providerKey].iconUrl}
           style={{
