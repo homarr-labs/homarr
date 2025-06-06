@@ -1137,8 +1137,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../env
       dockerode:
-        specifier: ^4.0.6
-        version: 4.0.6
+        specifier: ^4.0.7
+        version: 4.0.7
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -5995,8 +5995,8 @@ packages:
     resolution: {integrity: sha512-ens7BiayssQz/uAxGzH8zGXCtiV24rRWXdjNha5V4zSOcxmAZsfGVm/PPFbwQdqEkDnhG+SyR9E3zSHUbOKXBQ==}
     engines: {node: '>= 8.0'}
 
-  dockerode@4.0.6:
-    resolution: {integrity: sha512-FbVf3Z8fY/kALB9s+P9epCpWhfi/r0N2DgYYcYpsAUlaTxPjdsitsFobnltb+lyCgAIvf9C+4PSWlTnHlJMf1w==}
+  dockerode@4.0.7:
+    resolution: {integrity: sha512-R+rgrSRTRdU5mH14PZTCPZtW/zw3HDWNTS/1ZAQpL/5Upe/ye5K9WQkIysu4wBoiMwKynsz0a8qWuGsHgEvSAA==}
     engines: {node: '>= 8.0'}
 
   doctrine@2.1.0:
@@ -14621,7 +14621,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  dockerode@4.0.6:
+  dockerode@4.0.7:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@grpc/grpc-js': 1.12.5
@@ -19012,7 +19012,7 @@ snapshots:
       byline: 5.0.0
       debug: 4.4.1
       docker-compose: 1.2.0
-      dockerode: 4.0.6
+      dockerode: 4.0.7
       get-port: 7.1.0
       proper-lockfile: 4.1.2
       properties-reader: 2.3.0
