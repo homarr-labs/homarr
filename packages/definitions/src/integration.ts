@@ -16,6 +16,7 @@ interface integrationDefinition {
   iconUrl: string;
   secretKinds: AtLeastOneOf<IntegrationSecretKind[]>; // at least one secret kind set is required
   category: AtLeastOneOf<IntegrationCategory>;
+  defaultUrl?: string; // optional default URL for the integration
 }
 
 export const integrationDefs = {
@@ -169,6 +170,13 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
     category: ["networkController"],
   },
+  github: {
+    name: "Github Releases",
+    secretKinds: [["tokenId"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/github.png",
+    category: ["releasesProvider"],
+    defaultUrl: "https://api.github.com",
+  },
 } as const satisfies Record<string, integrationDefinition>;
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
@@ -182,6 +190,11 @@ export const getDefaultSecretKinds = (integration: IntegrationKind): Integration
 
 export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationSecretKind[]> =>
   integrationDefs[integration].secretKinds;
+
+export const getIntegrationDefaultUrl = (integration: IntegrationKind) => {
+  const definition = integrationDefs[integration];
+  return "defaultUrl" in definition ? definition.defaultUrl : "";
+};
 
 /**
  * Get all integration kinds that share a category, typed only by the kinds belonging to the category
@@ -223,4 +236,5 @@ export type IntegrationCategory =
   | "healthMonitoring"
   | "search"
   | "mediaTranscoding"
-  | "networkController";
+  | "networkController"
+  | "releasesProvider";
