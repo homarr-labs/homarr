@@ -936,6 +936,10 @@
         "realm": {
           "label": "Realm",
           "newLabel": "New realm"
+        },
+        "topic": {
+          "label": "Topic",
+          "newLabel": "New topic"
         }
       }
     },
@@ -2357,6 +2361,11 @@
       "error": {
         "internalServerError": "Failed to fetch Network Controller Summary"
       }
+    },
+    "notifications": {
+      "name": "Notifications",
+      "description": "Display notification history from an integration",
+      "noItems": "No notifications to display."
     }
   },
   "widgetPreview": {
@@ -3121,6 +3130,9 @@
             },
             "networkController": {
               "label": "Network Controller"
+            },
+            "refreshNotifications": {
+              "label": "Notification Updater"
             },
             "dockerContainers": {
               "label": "Docker containers"
