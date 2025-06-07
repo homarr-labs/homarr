@@ -2226,6 +2226,15 @@
           "addRepository": {
             "label": ""
           },
+          "importRepositories": {
+            "label": "",
+            "loading": "",
+            "noImagesFound": "",
+            "listFoundImages": "",
+            "listAlreadyImportedImages": "",
+            "allImagesAlreadyImported": "",
+            "onlyAdminCanImport": ""
+          },
           "provider": {
             "label": ""
           },
@@ -2265,6 +2274,9 @@
             "confirm": {
               "label": ""
             }
+          },
+          "importForm": {
+            "title": ""
           },
           "example": {
             "label": ""
