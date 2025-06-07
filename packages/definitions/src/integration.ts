@@ -89,7 +89,7 @@ export const integrationDefs = {
     name: "Jellyfin",
     secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg",
-    category: ["mediaService"],
+    category: ["mediaService", "mediaRelease"],
   },
   emby: {
     name: "Emby",
