@@ -35,7 +35,7 @@ async function importCookiesAsync() {
 
   return (await cookies())
     .getAll()
-    .map(({ name, value }) => `${name}=${value}`)
+    .map(({ name, value }) => `${name}=${encodeURIComponent(value)}`)
     .join(";");
 }
 
