@@ -105,7 +105,7 @@ export class JellyfinIntegration extends Integration implements IMediaReleasesIn
       producer: item.Studios?.at(0)?.Name ?? undefined,
       rating: item.CommunityRating?.toFixed(1),
       tags: item.Genres ?? [],
-      href: super.url(`/web/index.html#!/item?id=${item.Id}&serverId=${item.ServerId}`).toString(),
+      href: super.url(`/web/index.html#!/details?id=${item.Id}&serverId=${item.ServerId}`).toString(),
     }));
   }
 
