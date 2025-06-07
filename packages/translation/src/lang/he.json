@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "הצג מידע זיכרון"
         },
+        "showUptime": {
+          "label": "הצג זמן פעולה"
+        },
         "fileSystem": {
           "label": "הצג מידע על מערכת הקבצים"
         },
         "defaultTab": {
           "label": "כרטיסיית ברירת מחדל"
+        },
+        "visibleClusterSections": {
+          "label": "מקטעי אשכול גלויים"
         },
         "sectionIndicatorRequirement": {
           "label": "דרישת מציין מקטע"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "השתמש במסנן כדי לחשב יחס"
+        },
+        "limitPerIntegration": {
+          "label": "הגבלת פריטים לכל אינטגרציה",
+          "description": "פעולה זו תגביל את מספר הפריטים המוצגים בכל אינטגרציה, לא באופן גלובלי"
         }
       },
       "errors": {
@@ -2213,8 +2223,17 @@
         },
         "repositories": {
           "label": "מאגרים",
-          "addRRepository": {
+          "addRepository": {
             "label": "הוסף מאגר"
+          },
+          "importRepositories": {
+            "label": "",
+            "loading": "",
+            "noImagesFound": "",
+            "listFoundImages": "",
+            "listAlreadyImportedImages": "",
+            "allImagesAlreadyImported": "",
+            "onlyAdminCanImport": ""
           },
           "provider": {
             "label": "ספק"
@@ -2255,6 +2274,9 @@
             "confirm": {
               "label": "אשר"
             }
+          },
+          "importForm": {
+            "title": ""
           },
           "example": {
             "label": "דוגמא"

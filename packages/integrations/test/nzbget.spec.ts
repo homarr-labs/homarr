@@ -145,8 +145,8 @@ describe("Nzbget integration", () => {
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
-    // NzbGet is slow and we wait for a second before querying the items. Test was flaky without this.
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // NzbGet is slow and we wait for a few seconds before querying the items. Test was flaky without this.
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const result = await nzbGetIntegration.getClientJobsAndStatusAsync({ limit: 99 });
     expect(result.items).toHaveLength(0);
 

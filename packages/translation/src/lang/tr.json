@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Bellek Bilgilerini Göster"
         },
+        "showUptime": {
+          "label": "Çalışma Süresini Göster"
+        },
         "fileSystem": {
           "label": "Dosya Sistemi Bilgilerini Göster"
         },
         "defaultTab": {
           "label": "Varsayılan sekme"
+        },
+        "visibleClusterSections": {
+          "label": "Görünür küme alanları"
         },
         "sectionIndicatorRequirement": {
           "label": "Bölüm göstergesi gereksinimi"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Oranı hesaplamak için filtreyi kullanın"
+        },
+        "limitPerIntegration": {
+          "label": "Her entegrasyon için öğe sınırı",
+          "description": "Bu, gösterilecek öğe sayısını tüm entegrasyonlar için değil, her entegrasyon özelinde sınırlar"
         }
       },
       "errors": {
@@ -2213,8 +2223,17 @@
         },
         "repositories": {
           "label": "Depolar",
-          "addRRepository": {
+          "addRepository": {
             "label": "Depo Ekle"
+          },
+          "importRepositories": {
+            "label": "",
+            "loading": "",
+            "noImagesFound": "",
+            "listFoundImages": "",
+            "listAlreadyImportedImages": "",
+            "allImagesAlreadyImported": "",
+            "onlyAdminCanImport": ""
           },
           "provider": {
             "label": "Sağlayıcı"
@@ -2255,6 +2274,9 @@
             "confirm": {
               "label": "Onayla"
             }
+          },
+          "importForm": {
+            "title": ""
           },
           "example": {
             "label": "Örnek"

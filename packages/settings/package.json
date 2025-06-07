@@ -26,8 +26,8 @@
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/dates": "^8.0.1",
-    "next": "15.3.2",
+    "@mantine/dates": "^8.0.2",
+    "next": "15.3.3",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
@@ -35,7 +35,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.27.0",
+    "eslint": "^9.28.0",
     "typescript": "^5.8.3"
   }
 }

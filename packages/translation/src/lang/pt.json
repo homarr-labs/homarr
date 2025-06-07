@@ -1757,10 +1757,16 @@
         "memory": {
           "label": "Mostrar informações da memória"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Mostrar informações do sistema de arquivos"
         },
         "defaultTab": {
+          "label": ""
+        },
+        "visibleClusterSections": {
           "label": ""
         },
         "sectionIndicatorRequirement": {
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": ""
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -2213,8 +2223,17 @@
         },
         "repositories": {
           "label": "",
-          "addRRepository": {
+          "addRepository": {
             "label": ""
+          },
+          "importRepositories": {
+            "label": "",
+            "loading": "",
+            "noImagesFound": "",
+            "listFoundImages": "",
+            "listAlreadyImportedImages": "",
+            "allImagesAlreadyImported": "",
+            "onlyAdminCanImport": ""
           },
           "provider": {
             "label": ""
@@ -2255,6 +2274,9 @@
             "confirm": {
               "label": ""
             }
+          },
+          "importForm": {
+            "title": ""
           },
           "example": {
             "label": ""
