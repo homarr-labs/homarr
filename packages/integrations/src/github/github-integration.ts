@@ -2,8 +2,6 @@ import { Octokit, RequestError } from "octokit";
 
 import { logger } from "@homarr/log";
 
-import { HandleIntegrationErrors } from "../base/errors/decorator";
-import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -17,8 +15,6 @@ import type {
   ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
-// TODO: Check integrations errors
-@HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class GithubIntegration extends Integration implements ReleasesProviderIntegration {
   private static readonly userAgent = "Homarr-Lab/Homarr:GithubIntegration";
 
@@ -44,7 +40,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
       repositories.map(async (repository) => {
         const [owner, name] = repository.identifier.split("/");
         if (!owner || !name) {
-          logger.warn(`Invalid identifier format. Expected 'owner/name', for ${repository.identifier} on Github`, {
+          logger.warn(`Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Github integration`, {
             identifier: repository.identifier,
           });
           return {
@@ -86,7 +82,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
           return getLatestRelease(releasesProviderResponse, repository, details);
         } catch (error) {
           if (error instanceof RequestError) {
-            logger.warn(`Failed to get releases for ${owner}\\${name} on Github`, {
+            logger.warn(`Failed to get releases for ${owner}\\${name} with Github integration`, {
               owner,
               name,
               error: error.message,
@@ -126,7 +122,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
         forksCount: response.data.forks_count,
       };
     } catch (error) {
-      logger.warn(`Failed to get details for ${owner}\\${name} on Github`, {
+      logger.warn(`Failed to get details for ${owner}\\${name} with Github integration`, {
         owner,
         name,
         error: error instanceof RequestError ? error.message : String(error),

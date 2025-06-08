@@ -1,0 +1,196 @@
+import type { RequestInit } from "undici";
+import { z } from "zod";
+
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { logger } from "@homarr/log";
+
+import type { IntegrationTestingInput } from "../base/integration";
+import { Integration } from "../base/integration";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
+import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
+import type {
+  DetailsProviderResponse,
+  ReleasesRepository,
+  ReleasesResponse,
+} from "../interfaces/releases-providers/releases-providers-types";
+
+export class DockerHubIntegration extends Integration implements ReleasesProviderIntegration {
+  protected async buildHeadersAsync(): Promise<RequestInit["headers"]> {
+    // Request auth token
+    const accessTokenResponse = await fetchWithTrustedCertificatesAsync(this.url(`/auth/token`), {
+      body: JSON.stringify({
+        identifier: this.getSecretValue("username"),
+        secret: this.getSecretValue("personalAccessToken") || this.getSecretValue("password"),
+      }),
+    });
+
+    if (!accessTokenResponse.ok) {
+      logger.warn("Failed to fetch access token for Docker Hub", {
+        status: accessTokenResponse.status,
+        statusText: accessTokenResponse.statusText,
+      });
+      return {};
+    }
+
+    // Parse response
+    const accessTokenResponseJson: unknown = await accessTokenResponse.json();
+    const accessTokenResult = z
+      .object({
+        access_token: z.string(),
+      })
+      .safeParse(accessTokenResponseJson);
+
+    if (!accessTokenResult.success || !accessTokenResult.data.access_token) {
+      logger.warn("Failed to parse access token response for Docker Hub", {
+        error: accessTokenResult.error,
+        response: accessTokenResponseJson,
+      });
+      return {};
+    }
+
+    return {
+      Authorization: `Bearer ${accessTokenResult.data.access_token}`,
+    };
+  }
+
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const response = await input.fetchAsync(this.url("/octocat"), { headers: await this.buildHeadersAsync() });
+
+    if (!response.ok) {
+      return TestConnectionError.StatusResult(response);
+    }
+
+    return {
+      success: true,
+    };
+  }
+
+  public async getReleasesAsync(repositories: ReleasesRepository[]): Promise<ReleasesResponse[]> {
+    return await Promise.all(
+      repositories.map(async (repository) => {
+        const relativeUrl = this.getRelativeUrl(repository.identifier);
+        if (relativeUrl === "/") {
+          logger.warn(
+            `Invalid identifier format. Expected 'owner/name' or 'name', for ${repository.identifier} on DockerHub`,
+            {
+              identifier: repository.identifier,
+            },
+          );
+          return {
+            identifier: repository.identifier,
+            providerKey: repository.providerKey,
+            error: { code: "invalidIdentifier" },
+          };
+        }
+
+        const headers = await this.buildHeadersAsync();
+        const details = await this.getDetailsAsync(relativeUrl, headers);
+
+        const releasesResponse = await fetchWithTrustedCertificatesAsync(
+          this.url(`${relativeUrl}/tags?page_size=100`),
+          { headers },
+        );
+
+        if (!releasesResponse.ok) {
+          return {
+            identifier: repository.identifier,
+            providerKey: repository.providerKey,
+            error: { message: releasesResponse.statusText },
+          };
+        }
+
+        const releasesResponseJson: unknown = await releasesResponse.json();
+        const releasesResult = z
+          .object({
+            results: z.array(
+              z
+                .object({ name: z.string(), last_updated: z.string().transform((value) => new Date(value)) })
+                .transform((tag) => ({
+                  identifier: "",
+                  latestRelease: tag.name,
+                  latestReleaseAt: tag.last_updated,
+                })),
+            ),
+          })
+          .transform((resp) => {
+            return resp.results;
+          })
+          .safeParse(releasesResponseJson);
+
+        if (!releasesResult.success) {
+          return {
+            identifier: repository.identifier,
+            providerKey: repository.providerKey,
+            error: {
+              message: releasesResponseJson
+                ? JSON.stringify(releasesResponseJson, null, 2)
+                : releasesResult.error.message,
+            },
+          };
+        } else {
+          return getLatestRelease(releasesResult.data, repository, details);
+        }
+      }),
+    );
+  }
+
+  protected async getDetailsAsync(
+    relativeUrl: `/${string}`,
+    headers: RequestInit["headers"],
+  ): Promise<DetailsProviderResponse | undefined> {
+    const response = await fetchWithTrustedCertificatesAsync(this.url(relativeUrl), {
+      headers,
+    });
+
+    if (!response.ok) {
+      logger.warn(`Failed to get details response for ${relativeUrl} with DockerHub integration`, {
+        relativeUrl,
+        error: response.statusText,
+      });
+
+      return undefined;
+    }
+
+    const responseJson = await response.json();
+    const parsedDetails = z
+      .object({
+        name: z.string(),
+        namespace: z.string(),
+        description: z.string(),
+        star_count: z.number(),
+        date_registered: z.string().transform((value) => new Date(value)),
+      })
+      .transform((resp) => ({
+        projectUrl: `https://hub.docker.com/r/${resp.namespace === "library" ? "_" : resp.namespace}/${resp.name}`,
+        projectDescription: resp.description,
+        createdAt: resp.date_registered,
+        starsCount: resp.star_count,
+      }))
+      .safeParse(responseJson);
+
+    if (!parsedDetails.success) {
+      logger.warn(`Failed to parse details response for ${relativeUrl} with DockerHub integration`, {
+        relativeUrl,
+        error: parsedDetails.error,
+      });
+
+      return undefined;
+    }
+
+    return parsedDetails.data;
+  }
+
+  protected getRelativeUrl(identifier: string): `/${string}` {
+    if (identifier.indexOf("/") > 0) {
+      const [owner, name] = identifier.split("/");
+      if (!owner || !name) {
+        return "/";
+      }
+      return `/namespaces/${encodeURIComponent(owner)}/repositories/${encodeURIComponent(name)}`;
+    } else {
+      return `/repositories/library/${encodeURIComponent(identifier)}`;
+    }
+  }
+}

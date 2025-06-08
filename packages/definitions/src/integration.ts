@@ -174,9 +174,16 @@ export const integrationDefs = {
   github: {
     name: "Github",
     secretKinds: [[], ["personalAccessToken"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/github.png",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/github.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://api.github.com",
+  },
+  dockerHub: {
+    name: "Docker Hub",
+    secretKinds: [[], ["username", "personalAccessToken"], ["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/docker.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://hub.docker.com/v2",
   },
 } as const satisfies Record<string, integrationDefinition>;
 
