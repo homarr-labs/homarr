@@ -1,7 +1,5 @@
-import type { RequestInit } from "undici";
-import { z } from "zod";
+import { Octokit, RequestError } from "octokit";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
@@ -14,6 +12,7 @@ import type { ReleasesProviderIntegration } from "../interfaces/releases-provide
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
   DetailsProviderResponse,
+  ReleaseProviderResponse,
   ReleasesRepository,
   ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
@@ -21,18 +20,15 @@ import type {
 // TODO: Check integrations errors
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class GithubIntegration extends Integration implements ReleasesProviderIntegration {
-  protected buildHeaders(accept = "application/vnd.github+json"): RequestInit {
-    return {
-      headers: {
-        Authorization: `Bearer ${this.getSecretValue("tokenId")}`,
-        "User-Agent": "Homarr-Lab/Homarr:GithubIntegration",
-        Accept: accept,
-      },
-    };
-  }
+  private static readonly userAgent = "Homarr-Lab/Homarr:GithubIntegration";
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const response = await input.fetchAsync(this.url("/octocat"), this.buildHeaders());
+    const response = await input.fetchAsync(this.url("/octocat"), {
+      headers: {
+        "User-Agent": GithubIntegration.userAgent,
+        Authorization: `Bearer ${this.getSecretValue("personalAccessToken")}`,
+      },
+    });
 
     if (!response.ok) {
       return TestConnectionError.StatusResult(response);
@@ -44,7 +40,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
   }
 
   public async getReleasesAsync(repositories: ReleasesRepository[]): Promise<ReleasesResponse[]> {
-    return await Promise.all(
+    const results = await Promise.all(
       repositories.map(async (repository) => {
         const [owner, name] = repository.identifier.split("/");
         if (!owner || !name) {
@@ -58,109 +54,92 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
           };
         }
 
-        const details = await this.getDetailsAsync(owner, name);
+        const api = this.getApi();
 
-        const releasesResponse = await fetchWithTrustedCertificatesAsync(
-          this.url(`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/releases`),
-          this.buildHeaders(),
-        );
+        const details = await this.getDetailsAsync(api, owner, name);
 
-        if (!releasesResponse.ok) {
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: { message: releasesResponse.statusText },
-          };
-        }
+        try {
+          const releasesResponse = await api.rest.repos.listReleases({
+            owner,
+            repo: name,
+            per_page: 100, // Fetch up to 100 releases
+          });
 
-        const releasesResponseJson: unknown = await releasesResponse.json();
-        const releasesResult = z
-          .array(
-            z
-              .object({
-                tag_name: z.string(),
-                published_at: z.string().transform((value) => new Date(value)),
-                html_url: z.string(),
-                body: z.string().nullable(),
-                prerelease: z.boolean(),
-              })
-              .transform((tag) => ({
-                latestRelease: tag.tag_name,
-                latestReleaseAt: tag.published_at,
-                releaseUrl: tag.html_url,
-                releaseDescription: tag.body ?? undefined,
-                isPreRelease: tag.prerelease,
-              })),
-          )
-          .safeParse(releasesResponseJson);
+          if (releasesResponse.data.length === 0) {
+            //TODO: check packages container registry ??
+            return undefined;
+          }
 
-        if (!releasesResult.success) {
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: {
-              message: releasesResponseJson
-                ? JSON.stringify(releasesResponseJson, null, 2)
-                : releasesResult.error.message,
-            },
-          };
-        } else {
-          return getLatestRelease(releasesResult.data, repository, details);
+          const releasesProviderResponse = releasesResponse.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
+            if (!release.published_at) return acc;
+
+            acc.push({
+              latestRelease: release.tag_name,
+              latestReleaseAt: new Date(release.published_at),
+              releaseUrl: release.html_url,
+              releaseDescription: release.body ?? undefined,
+              isPreRelease: release.prerelease,
+            });
+            return acc;
+          }, []);
+
+          return getLatestRelease(releasesProviderResponse, repository, details);
+        } catch (error) {
+          if (error instanceof RequestError) {
+            logger.warn(`Failed to get releases for ${owner}\\${name} on Github`, {
+              owner,
+              name,
+              error: error.message,
+            });
+
+            return {
+              identifier: repository.identifier,
+              providerKey: repository.providerKey,
+              error: { message: error.message },
+            };
+          }
         }
       }),
     );
+    return results.filter((result): result is ReleasesResponse => result !== undefined);
   }
 
-  protected async getDetailsAsync(owner: string, name: string): Promise<DetailsProviderResponse | undefined> {
-    const response = await fetchWithTrustedCertificatesAsync(
-      this.url(`/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`),
-      this.buildHeaders(),
-    );
-
-    if (!response.ok) {
-      logger.warn(`Failed to get details response for ${owner}\\${name} on Github`, {
+  protected async getDetailsAsync(
+    api: Octokit,
+    owner: string,
+    name: string,
+  ): Promise<DetailsProviderResponse | undefined> {
+    try {
+      const response = await api.rest.repos.get({
         owner,
-        name,
-        error: response.statusText,
+        repo: name,
       });
 
-      return undefined;
-    }
-
-    const responseJson = await response.json();
-    const parsedDetails = z
-      .object({
-        html_url: z.string(),
-        description: z.string().nullable(),
-        fork: z.boolean(),
-        archived: z.boolean(),
-        created_at: z.string().transform((value) => new Date(value)),
-        stargazers_count: z.number(),
-        open_issues_count: z.number(),
-        forks_count: z.number(),
-      })
-      .transform((resp) => ({
-        projectUrl: resp.html_url,
-        projectDescription: resp.description ?? undefined,
-        isFork: resp.fork,
-        isArchived: resp.archived,
-        createdAt: resp.created_at,
-        starsCount: resp.stargazers_count,
-        openIssues: resp.open_issues_count,
-        forksCount: resp.forks_count,
-      }))
-      .safeParse(responseJson);
-
-    if (!parsedDetails.success) {
-      logger.warn(`Failed to parse details response for ${owner}\\${name} on Github`, {
+      return {
+        projectUrl: response.data.html_url,
+        projectDescription: response.data.description ?? undefined,
+        isFork: response.data.fork,
+        isArchived: response.data.archived,
+        createdAt: new Date(response.data.created_at),
+        starsCount: response.data.stargazers_count,
+        openIssues: response.data.open_issues_count,
+        forksCount: response.data.forks_count,
+      };
+    } catch (error) {
+      logger.warn(`Failed to get details for ${owner}\\${name} on Github`, {
         owner,
         name,
-        error: parsedDetails.error,
+        error: error instanceof RequestError ? error.message : String(error),
       });
-
       return undefined;
     }
+  }
 
-    return parsedDetails.data;
+  private getApi() {
+    return new Octokit({
+      baseUrl: this.url.toString(),
+      userAgent: GithubIntegration.userAgent,
+      auth: this.getSecretValue("personalAccessToken"),
+    });
   }
 }

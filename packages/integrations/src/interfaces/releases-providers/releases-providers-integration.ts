@@ -2,7 +2,7 @@ import { escapeForRegEx } from "@tiptap/react";
 
 import type {
   DetailsProviderResponse,
-  ReleasesProviderResponse,
+  ReleaseProviderResponse,
   ReleasesRepository,
   ReleasesResponse,
   ReleasesVersionFilter,
@@ -19,7 +19,7 @@ const formatVersionFilterRegex = (versionFilter: ReleasesVersionFilter | undefin
 };
 
 export const getLatestRelease = (
-  releases: ReleasesProviderResponse[],
+  releases: ReleaseProviderResponse[],
   repository: ReleasesRepository,
   details: DetailsProviderResponse | undefined,
 ): ReleasesResponse => {

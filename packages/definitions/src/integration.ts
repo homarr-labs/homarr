@@ -7,6 +7,7 @@ export const integrationSecretKindObject = {
   password: { isPublic: false },
   tokenId: { isPublic: true },
   realm: { isPublic: true },
+  personalAccessToken: { isPublic: false },
 } satisfies Record<string, { isPublic: boolean }>;
 
 export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
@@ -171,8 +172,8 @@ export const integrationDefs = {
     category: ["networkController"],
   },
   github: {
-    name: "Github Releases",
-    secretKinds: [["tokenId"]],
+    name: "Github",
+    secretKinds: [[], ["personalAccessToken"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/github.png",
     category: ["releasesProvider"],
     defaultUrl: "https://api.github.com",

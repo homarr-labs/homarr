@@ -21,7 +21,7 @@ const _detailsProviderSchema = z
 
 export type DetailsProviderResponse = z.infer<typeof _detailsProviderSchema>;
 
-const _releasesProviderSchema = z.object({
+const _releaseProviderSchema = z.object({
   latestRelease: z.string(),
   latestReleaseAt: z.date(),
   releaseUrl: z.string().optional(),
@@ -29,7 +29,7 @@ const _releasesProviderSchema = z.object({
   isPreRelease: z.boolean().optional(),
 });
 
-export type ReleasesProviderResponse = z.infer<typeof _releasesProviderSchema>;
+export type ReleaseProviderResponse = z.infer<typeof _releaseProviderSchema>;
 
 const _releasesRepositorySchema = z.object({
   providerKey: z.string(),
