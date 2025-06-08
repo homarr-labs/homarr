@@ -101,7 +101,7 @@ export const integrationDefs = {
     name: "Plex",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/plex.svg",
-    category: ["mediaService"],
+    category: ["mediaService", "mediaRelease"],
   },
   jellyseerr: {
     name: "Jellyseerr",

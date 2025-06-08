@@ -41,8 +41,8 @@ export interface MediaRelease {
   description?: string;
   releaseDate: Date;
   imageUrls: {
-    poster: string;
-    backdrop: string;
+    poster: string | undefined;
+    backdrop: string | undefined;
   };
   /**
    * The name of the studio, publisher or author.

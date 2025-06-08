@@ -22,6 +22,6 @@ export const { definition, componentLoader } = createWidgetDefinition("mediaRele
       }),
     }));
   },
-  supportedIntegrations: ["mock", "emby", "jellyfin"],
+  supportedIntegrations: ["mock", "emby", "jellyfin", "plex"],
   // supportedIntegrations: ["plex", "jellyfin", "emby", "lidarr", "radarr", "readarr", "sonarr"],
 }).withDynamicImport(() => import("./component"));
