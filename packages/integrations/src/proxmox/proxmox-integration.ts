@@ -69,6 +69,7 @@ const mapResource = (resource: Proxmox.clusterResourcesResources): Resource | nu
 
 const mapComputeResource = (resource: Proxmox.clusterResourcesResources): Omit<ComputeResourceBase<string>, "type"> => {
   return {
+    id: resource.id,
     cpu: {
       utilization: resource.cpu ?? 0,
       cores: resource.maxcpu ?? 0,
@@ -114,6 +115,7 @@ const mapVmResource = (resource: Proxmox.clusterResourcesResources): LxcResource
 
 const mapStorageResource = (resource: Proxmox.clusterResourcesResources): StorageResource => {
   return {
+    id: resource.id,
     type: "storage",
     name: resource.storage ?? "",
     node: resource.node ?? "",

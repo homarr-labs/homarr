@@ -2223,8 +2223,17 @@
         },
         "repositories": {
           "label": "Depolar",
-          "addRRepository": {
+          "addRepository": {
             "label": "Depo Ekle"
+          },
+          "importRepositories": {
+            "label": "",
+            "loading": "",
+            "noImagesFound": "",
+            "listFoundImages": "",
+            "listAlreadyImportedImages": "",
+            "allImagesAlreadyImported": "",
+            "onlyAdminCanImport": ""
           },
           "provider": {
             "label": "Sağlayıcı"
@@ -2265,6 +2274,9 @@
             "confirm": {
               "label": "Onayla"
             }
+          },
+          "importForm": {
+            "title": ""
           },
           "example": {
             "label": "Örnek"

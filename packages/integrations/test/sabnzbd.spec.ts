@@ -192,16 +192,19 @@ describe("Sabnzbd integration", () => {
 });
 
 const createSabnzbdContainer = () => {
-  return new GenericContainer(IMAGE_NAME)
-    .withCopyFilesToContainer([
-      {
-        source: join(__dirname, "/volumes/usenet/sabnzbd.ini"),
-        target: "/config/sabnzbd.ini",
-      },
-    ])
-    .withExposedPorts(1212)
-    .withEnvironment({ PUID: "0", PGID: "0" })
-    .withWaitStrategy(Wait.forHttp("/", 1212));
+  return (
+    new GenericContainer(IMAGE_NAME)
+      .withCopyFilesToContainer([
+        {
+          source: join(__dirname, "/volumes/usenet/sabnzbd.ini"),
+          target: "/config/sabnzbd.ini",
+        },
+      ])
+      .withExposedPorts(1212)
+      .withEnvironment({ PUID: "0", PGID: "0" })
+      // This has to be a page that is not redirected (or a status code has to be defined withStatusCode(statusCode))
+      .withWaitStrategy(Wait.forHttp("/sabnzbd/wizard/", 1212))
+  );
 };
 
 const createSabnzbdIntegration = (container: StartedTestContainer, apiKey: string) => {
