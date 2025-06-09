@@ -2299,7 +2299,8 @@
         "label": "Error",
         "options": {
           "invalidIdentifier": "Invalid identifier",
-          "noMatchingVersion": "No matching version found"
+          "noMatchingVersion": "No matching version found",
+          "noReleasesFound": "No releases found"
         }
       }
     },
