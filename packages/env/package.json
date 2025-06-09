@@ -23,7 +23,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@t3-oss/env-nextjs": "^0.13.6",
+    "@t3-oss/env-nextjs": "^0.13.7",
     "zod": "^3.25.56"
   },
   "devDependencies": {
