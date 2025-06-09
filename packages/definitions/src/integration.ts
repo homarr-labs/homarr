@@ -185,6 +185,13 @@ export const integrationDefs = {
     category: ["releasesProvider"],
     defaultUrl: "https://hub.docker.com",
   },
+  gitlab: {
+    name: "Gitlab",
+    secretKinds: [[], ["personalAccessToken"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gitlab.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://gitlab.com",
+  },
 } as const satisfies Record<string, integrationDefinition>;
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
