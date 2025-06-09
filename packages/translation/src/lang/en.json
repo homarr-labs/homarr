@@ -2297,7 +2297,7 @@
       "created": "Created",
       "error": {
         "label": "Error",
-        "options": {
+        "messages": {
           "invalidIdentifier": "Invalid identifier",
           "noMatchingVersion": "No matching version found",
           "noReleasesFound": "No releases found"
