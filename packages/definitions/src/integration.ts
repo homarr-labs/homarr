@@ -183,7 +183,7 @@ export const integrationDefs = {
     secretKinds: [[], ["username", "personalAccessToken"], ["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/docker.svg",
     category: ["releasesProvider"],
-    defaultUrl: "https://hub.docker.com/v2",
+    defaultUrl: "https://hub.docker.com",
   },
 } as const satisfies Record<string, integrationDefinition>;
 

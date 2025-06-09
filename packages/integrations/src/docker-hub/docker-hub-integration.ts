@@ -56,7 +56,12 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const response = await input.fetchAsync(this.url("/octocat"), { headers: await this.buildHeadersAsync() });
+    const response = await input.fetchAsync(this.url("/auth/token"), {
+      body: JSON.stringify({
+        identifier: this.getSecretValue("username"),
+        secret: this.getSecretValue("personalAccessToken") || this.getSecretValue("password"),
+      }),
+    });
 
     if (!response.ok) {
       return TestConnectionError.StatusResult(response);
@@ -108,14 +113,10 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
               z
                 .object({ name: z.string(), last_updated: z.string().transform((value) => new Date(value)) })
                 .transform((tag) => ({
-                  identifier: "",
                   latestRelease: tag.name,
                   latestReleaseAt: tag.last_updated,
                 })),
             ),
-          })
-          .transform((resp) => {
-            return resp.results;
           })
           .safeParse(releasesResponseJson);
 
@@ -130,7 +131,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
             },
           };
         } else {
-          return getLatestRelease(releasesResult.data, repository, details);
+          return getLatestRelease(releasesResult.data.results, repository, details);
         }
       }),
     );
@@ -188,9 +189,9 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
       if (!owner || !name) {
         return "/";
       }
-      return `/namespaces/${encodeURIComponent(owner)}/repositories/${encodeURIComponent(name)}`;
+      return `/v2/namespaces/${encodeURIComponent(owner)}/repositories/${encodeURIComponent(name)}`;
     } else {
-      return `/repositories/library/${encodeURIComponent(identifier)}`;
+      return `/v2/repositories/library/${encodeURIComponent(identifier)}`;
     }
   }
 }
