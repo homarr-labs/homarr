@@ -21,6 +21,7 @@ export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
 export { LidarrIntegration } from "./media-organizer/lidarr/lidarr-integration";
 export { ReadarrIntegration } from "./media-organizer/readarr/readarr-integration";
 export { NextcloudIntegration } from "./nextcloud/nextcloud.integration";
+export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";

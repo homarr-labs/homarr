@@ -17,6 +17,7 @@ import { rssFeedRouter } from "./rssFeed";
 import { smartHomeRouter } from "./smart-home";
 import { stockPriceRouter } from "./stocks";
 import { weatherRouter } from "./weather";
+import { firewallRouter } from "./firewall";
 
 export const widgetRouter = createTRPCRouter({
   notebook: notebookRouter,
@@ -37,4 +38,5 @@ export const widgetRouter = createTRPCRouter({
   options: optionsRouter,
   releases: releasesRouter,
   networkController: networkControllerRouter,
+  firewall: firewallRouter,
 });

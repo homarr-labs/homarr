@@ -1,6 +1,7 @@
 export * from "./calendar-types";
 export * from "./interfaces/dns-hole-summary/dns-hole-summary-types";
 export * from "./interfaces/network-controller-summary/network-controller-summary-types";
+export * from "./interfaces/firewall-summary/firewall-summary-types";
 export * from "./interfaces/health-monitoring/healt-monitoring";
 export * from "./interfaces/indexer-manager/indexer";
 export * from "./interfaces/media-requests/media-request";
@@ -8,3 +9,4 @@ export * from "./base/searchable-integration";
 export * from "./homeassistant/homeassistant-types";
 export * from "./proxmox/proxmox-types";
 export * from "./unifi-controller/unifi-controller-types";
+export * from './opnsense/opnsense-types';

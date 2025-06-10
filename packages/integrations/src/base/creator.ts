@@ -28,6 +28,8 @@ import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
+import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
+
 import type { Integration, IntegrationInput } from "./integration";
 
 export const createIntegrationAsync = async <TKind extends keyof typeof integrationCreators>(
@@ -92,6 +94,7 @@ export const integrationCreators = {
   emby: EmbyIntegration,
   nextcloud: NextcloudIntegration,
   unifiController: UnifiControllerIntegration,
+  opnsense: OPNsenseIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

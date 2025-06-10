@@ -12,6 +12,7 @@ import { mediaServerJob } from "./jobs/integrations/media-server";
 import { mediaTranscodingJob } from "./jobs/integrations/media-transcoding";
 import { networkControllerJob } from "./jobs/integrations/network-controller";
 import { minecraftServerStatusJob } from "./jobs/minecraft-server-status";
+import { firewallJob } from "./jobs/integrations/firewall";
 import { pingJob } from "./jobs/ping";
 import { rssFeedsJob } from "./jobs/rss-feeds";
 import { sessionCleanupJob } from "./jobs/session-cleanup";
@@ -38,6 +39,7 @@ export const jobGroup = createCronJobGroup({
   minecraftServerStatus: minecraftServerStatusJob,
   dockerContainers: dockerContainersJob,
   networkController: networkControllerJob,
+  firewall: firewallJob,
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];
