@@ -1,4 +1,4 @@
-import { IconWall } from "@tabler/icons-react";
+import { IconWall, IconWallOff } from "@tabler/icons-react";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
@@ -11,5 +11,10 @@ export const { definition, componentLoader } = createWidgetDefinition("firewall"
     return optionsBuilder.from(() => ({}));
   },
   supportedIntegrations: getIntegrationKindsByCategory("firewall"),
-
+  errors: {
+    INTERNAL_SERVER_ERROR: {
+      icon: IconWallOff,
+      message: (t) => t("widget.firewall.error.internalServerError"),
+    },
+  },
 }).withDynamicImport(() => import("./component"));

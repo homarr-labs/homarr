@@ -2,15 +2,7 @@
 
 import { ScrollArea, Tabs, RingProgress, Center, Text } from "@mantine/core";
 import {
-  IconBrain,
-  IconClock,
   IconCpu,
-  IconCpu2,
-  IconFileReport,
-  IconInfoCircle,
-  IconServer,
-  IconTemperature,
-  IconVersions,
 } from "@tabler/icons-react";
 
 import dayjs from "dayjs";
@@ -21,7 +13,6 @@ import { useI18n } from "@homarr/translation/client";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { WidgetComponentProps } from "../definition";
-import { progressColor } from "../health-monitoring/system-health";
 
 
 dayjs.extend(duration);
@@ -54,7 +45,7 @@ export default function firewallWidget({
           }
           return prevData.map((item) =>
             item.integrationId === data.integrationId
-              ? { ...item, healthInfo: data.healthInfo, updatedAt: data.timestamp }
+              ? { ...item, firewallSummary: data.firewallSummary, updatedAt: data.timestamp }
               : item,
           );
         });
@@ -63,7 +54,6 @@ export default function firewallWidget({
   );
   const t = useI18n();
   const board = useRequiredBoard();
-  console.log(integrations)
 
   const isTiny = width < 256;
   return (
@@ -88,14 +78,13 @@ export default function firewallWidget({
                 <Text
                   className="firewall-cpu-utilization-value"
                   size={isTiny ? "8px" : "xs"}
-                >{`${data.cpuidle.toFixed(2)}%`}</Text>
+                >{`${firewallSummary.cpuidle.toFixed(2)}%`}</Text>
                 <IconCpu className="firewall-cpu-utilization-icon" size={isTiny ? 8 : 16} />
               </Center>
             }
             sections={[
               {
-                value: Number(data.cpuidle.toFixed(2)),
-                color: progressColor(Number(data.cpuidle.toFixed(2))),
+                value: Number(firewallSummary.cpuidle.toFixed(2)),
               },
             ]}
           />
