@@ -1,3 +1,4 @@
+import type { Gitlab as CoreGitlab } from "@gitbeaker/core";
 import { Gitlab } from "@gitbeaker/rest";
 
 import { logger } from "@homarr/log";
@@ -63,7 +64,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
             latestReleaseAt: new Date(release.released_at),
             releaseUrl: release._links.self,
             releaseDescription: release.description ?? undefined,
-            isPreRelease: release.upcoming_release ?? false, //TODO: Missing from SDK
+            //isPreRelease: release.upcoming_release ?? false, // upcoming_release - is not available with @gitbeaker/rest SDK. Raised issue on GitHub https://github.com/jdalrymple/gitbeaker/issues/3730
           });
           return acc;
         }, []);
@@ -73,10 +74,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
     );
   }
 
-  protected async getDetailsAsync(
-    api: InstanceType<typeof Gitlab>,
-    identifier: string,
-  ): Promise<DetailsProviderResponse | undefined> {
+  protected async getDetailsAsync(api: CoreGitlab, identifier: string): Promise<DetailsProviderResponse | undefined> {
     const response = await api.Projects.show(identifier);
 
     if (response instanceof Error) {

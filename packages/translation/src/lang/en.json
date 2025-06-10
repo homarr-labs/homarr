@@ -936,6 +936,10 @@
         "realm": {
           "label": "Realm",
           "newLabel": "New realm"
+        },
+        "personalAccessToken": {
+          "label": "Personal Access Token",
+          "newLabel": "New Personal Access Token"
         }
       }
     },
