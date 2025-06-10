@@ -287,8 +287,8 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       swagger-ui-react:
-        specifier: ^5.24.0
-        version: 5.24.0(@types/react@19.1.7)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^5.24.1
+        version: 5.24.1(@types/react@19.1.7)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       use-deep-compare-effect:
         specifier: ^1.8.1
         version: 1.8.1(react@19.1.0)
@@ -9655,8 +9655,8 @@ packages:
   swagger-client@3.35.5:
     resolution: {integrity: sha512-ayCrpDAgm5jIdq1kmcVWJRfp27cqU9tSRiAfKg3BKeplOmvu3+lKTPPtz4x1uI8v5l5/92Aopvq0EzRkXEr7Rw==}
 
-  swagger-ui-react@5.24.0:
-    resolution: {integrity: sha512-v/EH8gZU2CfKTgbeXsHYELROGHasbZgKZdPsnpkkS7ApkjZqgCSvCTOJkoKoNBZrlL5byOgEtvnqttffsmWAeg==}
+  swagger-ui-react@5.24.1:
+    resolution: {integrity: sha512-maqFHClB/srDyaJZfHVkj/uyfMeWxkBwPJjKfJCqbnoan6JUrbRtoyO9xuYYvVn9aLtvRKkvLV6BaXcR/Ql7YQ==}
     peerDependencies:
       react: '>=16.8.0 <19'
       react-dom: '>=16.8.0 <19'
@@ -10806,7 +10806,7 @@ snapshots:
   '@babel/helper-module-imports@7.25.9':
     dependencies:
       '@babel/traverse': 7.27.0
-      '@babel/types': 7.27.0
+      '@babel/types': 7.27.6
     transitivePeerDependencies:
       - supports-color
 
@@ -10898,8 +10898,8 @@ snapshots:
   '@babel/template@7.27.0':
     dependencies:
       '@babel/code-frame': 7.26.2
-      '@babel/parser': 7.27.0
-      '@babel/types': 7.27.0
+      '@babel/parser': 7.27.5
+      '@babel/types': 7.27.6
 
   '@babel/template@7.27.2':
     dependencies:
@@ -11815,7 +11815,7 @@ snapshots:
     dependencies:
       '@antfu/ni': 0.21.12
       '@axiomhq/js': 1.0.0-rc.3
-      '@babel/parser': 7.27.0
+      '@babel/parser': 7.27.5
       '@babel/types': 7.26.0
       '@clack/prompts': 0.7.0
       ast-types: 0.14.2
@@ -13114,16 +13114,16 @@ snapshots:
 
   '@types/babel__generator@7.6.8':
     dependencies:
-      '@babel/types': 7.27.0
+      '@babel/types': 7.27.6
 
   '@types/babel__template@7.4.4':
     dependencies:
-      '@babel/parser': 7.27.0
-      '@babel/types': 7.27.0
+      '@babel/parser': 7.27.5
+      '@babel/types': 7.27.6
 
   '@types/babel__traverse@7.20.6':
     dependencies:
-      '@babel/types': 7.27.0
+      '@babel/types': 7.27.6
 
   '@types/bcrypt@5.0.2':
     dependencies:
@@ -18984,7 +18984,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  swagger-ui-react@5.24.0(@types/react@19.1.7)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  swagger-ui-react@5.24.1(@types/react@19.1.7)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@babel/runtime-corejs3': 7.27.1
       '@scarf/scarf': 1.4.0
