@@ -201,7 +201,7 @@ export const integrationDefs = {
   },
   codeberg: {
     name: "Codeberg",
-    secretKinds: [[]],
+    secretKinds: [[], ["personalAccessToken"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/codeberg.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://codeberg.org",
