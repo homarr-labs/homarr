@@ -2227,13 +2227,13 @@
             "label": "Depo Ekle"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "label": "Docker'dan içe aktar",
+            "loading": "Docker imajları yükleniyor",
+            "noImagesFound": "Hiç docker imajı bulunamadı",
+            "listFoundImages": "Bulunan imajların listesi",
+            "listAlreadyImportedImages": "Daha önce içe aktarılan imajların listesi",
+            "allImagesAlreadyImported": "Tüm imajlar daha önce içe aktarıldı",
+            "onlyAdminCanImport": "Sadece yöneticiler docker'dan içe aktarabilir"
           },
           "provider": {
             "label": "Sağlayıcı"
@@ -2276,7 +2276,7 @@
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Docker'dan içe aktar"
           },
           "example": {
             "label": "Örnek"
