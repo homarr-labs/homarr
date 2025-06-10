@@ -192,6 +192,13 @@ export const integrationDefs = {
     category: ["releasesProvider"],
     defaultUrl: "https://gitlab.com",
   },
+  npm: {
+    name: "NPM",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets//assets/npm.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://registry.npmjs.org",
+  },
 } as const satisfies Record<string, integrationDefinition>;
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;

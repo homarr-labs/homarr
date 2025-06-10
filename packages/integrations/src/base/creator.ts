@@ -31,6 +31,7 @@ import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller
 import { GithubIntegration } from "../github/github-integration";
 import { DockerHubIntegration } from "../docker-hub/docker-hub-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
+import { NPMIntegration } from "../npm/npm-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
 export const createIntegrationAsync = async <TKind extends keyof typeof integrationCreators>(
@@ -98,6 +99,7 @@ export const integrationCreators = {
   github: GithubIntegration,
   dockerHub: DockerHubIntegration,
   gitlab: GitlabIntegration,
+  npm: NPMIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

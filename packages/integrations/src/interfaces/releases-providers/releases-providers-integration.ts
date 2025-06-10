@@ -21,7 +21,7 @@ const formatVersionFilterRegex = (versionFilter: ReleasesVersionFilter | undefin
 export const getLatestRelease = (
   releases: ReleaseProviderResponse[],
   repository: ReleasesRepository,
-  details: DetailsProviderResponse | undefined,
+  details?: DetailsProviderResponse,
 ): ReleasesResponse => {
   const validReleases = releases.filter((result) => {
     if (result.latestRelease) {
@@ -34,11 +34,11 @@ export const getLatestRelease = (
 
   const latest =
     validReleases.length === 0
-      ? {
+      ? ({
           identifier: repository.identifier,
           providerKey: repository.providerKey,
           error: { code: "noMatchingVersion" },
-        }
+        } as ReleasesResponse)
       : validReleases.reduce(
           (latest, result) => {
             return {
