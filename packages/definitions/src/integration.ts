@@ -199,6 +199,13 @@ export const integrationDefs = {
     category: ["releasesProvider"],
     defaultUrl: "https://registry.npmjs.org",
   },
+  codeberg: {
+    name: "Codeberg",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/codeberg.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://codeberg.org",
+  },
 } as const satisfies Record<string, integrationDefinition>;
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
