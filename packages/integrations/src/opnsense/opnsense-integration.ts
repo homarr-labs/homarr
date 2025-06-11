@@ -1,4 +1,5 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ParseError } from "@homarr/common/server";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
@@ -7,19 +8,23 @@ import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { FirewallSummaryIntegration } from "../interfaces/firewall-summary/firewall-summary-integration";
-import type { FirewallSummary, FirewallInterfaceSummary } from "../interfaces/firewall-summary/firewall-summary-types";
-import { opnsenseActivitySchema, opnsenseInterfacesSchema, opnsenseMemorySchema, opnsenseMemorySummary, opnsenseSystemSummarySchema } from "./opnsense-types";
-import { ParseError } from "@homarr/common/server";
-
+import type { FirewallInterfaceSummary, FirewallSummary } from "../interfaces/firewall-summary/firewall-summary-types";
+import {
+  opnsenseActivitySchema,
+  opnsenseInterfacesSchema,
+  opnsenseMemorySchema,
+  opnsenseMemorySummary,
+  opnsenseSystemSummarySchema,
+} from "./opnsense-types";
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class OPNsenseIntegration extends Integration implements FirewallSummaryIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const response = await input.fetchAsync(this.url("/api/diagnostics/system/system_information"),{
-        headers: {
-          Authorization: this.getAuthHeaders(),
-        }
-      });
+    const response = await input.fetchAsync(this.url("/api/diagnostics/system/system_information"), {
+      headers: {
+        Authorization: this.getAuthHeaders(),
+      },
+    });
     if (!response.ok) return TestConnectionError.StatusResult(response);
 
     const result = await response.json();
@@ -29,17 +34,20 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
   }
 
   private getAuthHeaders() {
-      const username = super.getSecretValue("username");
-      const password = super.getSecretValue("password");
-      return 'Basic ' + btoa(`${username}:${password}`);
-    }
+    const username = super.getSecretValue("username");
+    const password = super.getSecretValue("password");
+    return "Basic " + btoa(`${username}:${password}`);
+  }
 
   private async getCpuValuesAsync() {
-    const responseActivity = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/activity/getActivity"), {
-      headers: {
-        Authorization: this.getAuthHeaders(),
-      }
-    });
+    const responseActivity = await fetchWithTrustedCertificatesAsync(
+      this.url("/api/diagnostics/activity/getActivity"),
+      {
+        headers: {
+          Authorization: this.getAuthHeaders(),
+        },
+      },
+    );
 
     if (!responseActivity.ok) {
       throw new Error(
@@ -63,11 +71,14 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
   }
 
   private async getMemoryValuesAsync() {
-    const responseMemory = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/system/systemResources"), {
-      headers: {
-        Authorization: this.getAuthHeaders(),
-      }
-    });
+    const responseMemory = await fetchWithTrustedCertificatesAsync(
+      this.url("/api/diagnostics/system/systemResources"),
+      {
+        headers: {
+          Authorization: this.getAuthHeaders(),
+        },
+      },
+    );
     if (!responseMemory.ok) {
       throw new Error(
         `Failed to fetch memory for ${this.integration.name} (${this.integration.id}): ${responseMemory.statusText}`,
@@ -80,24 +91,27 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
         `Failed to parse memory summary for ${this.integration.name} (${this.integration.id}):\n${memory.error.message}`,
       );
     }
-     // Using parseInt for memoryTotal is normal, the api sends the total memory as a string
+    // Using parseInt for memoryTotal is normal, the api sends the total memory as a string
     const memoryTotal = parseInt(memory.data.memory.total);
     const memoryUsed = memory.data.memory.used;
-    const memoryPercent = 100 * memory.data.memory.used / parseInt(memory.data.memory.total);
+    const memoryPercent = (100 * memory.data.memory.used) / parseInt(memory.data.memory.total);
     const memorySummary: opnsenseMemorySummary = {
       total: memoryTotal,
       used: memoryUsed,
-      percent: memoryPercent
+      percent: memoryPercent,
     };
 
     return memorySummary;
   }
   private async getVersionAsync() {
-    const responseSummary = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/system/system_information"), {
-      headers: {
-        Authorization: this.getAuthHeaders(),
-      }
-    });
+    const responseSummary = await fetchWithTrustedCertificatesAsync(
+      this.url("/api/diagnostics/system/system_information"),
+      {
+        headers: {
+          Authorization: this.getAuthHeaders(),
+        },
+      },
+    );
     if (!responseSummary.ok) {
       throw new Error(
         `Failed to fetch version for ${this.integration.name} (${this.integration.id}): ${responseSummary.statusText}`,
@@ -116,7 +130,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     const interfaceSummary = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/traffic/interface"), {
       headers: {
         Authorization: this.getAuthHeaders(),
-      }
+      },
     });
 
     if (!interfaceSummary.ok) {
@@ -124,7 +138,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
         `Failed to fetch interfaces for ${this.integration.name} (${this.integration.id}): ${interfaceSummary.statusText}`,
       );
     }
-    const test_value = await interfaceSummary.json()
+    const test_value = await interfaceSummary.json();
     const interfaces = opnsenseInterfacesSchema.safeParse(test_value);
     if (!interfaces.success) {
       throw new Error(
@@ -134,39 +148,38 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     const returnValue: FirewallInterfaceSummary[] = [];
     const interfaceKeys = Object.keys(interfaces.data.interfaces);
 
-
-    interfaceKeys.forEach(key => {
-      const inter = interfaces.data.interfaces[key]
+    interfaceKeys.forEach((key) => {
+      const inter = interfaces.data.interfaces[key];
       const name = inter["name"];
 
-      const nameValue = typeof name === 'string' ? name : 'unknown';
+      const nameValue = typeof name === "string" ? name : "unknown";
       const bytesTransmitted = inter["bytes transmitted"];
       const bytesReceived = inter["bytes received"];
-      const recvValue = typeof bytesReceived === 'string' ? parseInt(bytesReceived, 10) : 0;
-      const transValue = typeof bytesTransmitted === 'string' ? parseInt(bytesTransmitted, 10) : 0;
+      const recvValue = typeof bytesReceived === "string" ? parseInt(bytesReceived, 10) : 0;
+      const transValue = typeof bytesTransmitted === "string" ? parseInt(bytesTransmitted, 10) : 0;
 
       returnValue.push({
         name: nameValue,
         recv: recvValue,
         trans: transValue,
       });
-    })
+    });
 
-    return returnValue
+    return returnValue;
   }
 
   public async getFirewallSummaryAsync(): Promise<FirewallSummary> {
-    const version = await this.getVersionAsync()
-    const memory_values = await this.getMemoryValuesAsync()
-    const cpu_values = await this.getCpuValuesAsync()
-    const interfaces = await this.getInterfacesAsync()
+    const version = await this.getVersionAsync();
+    const memory_values = await this.getMemoryValuesAsync();
+    const cpu_values = await this.getCpuValuesAsync();
+    const interfaces = await this.getInterfacesAsync();
     return {
-      version: typeof version === 'string' ? version : 'unknown',
+      version: typeof version === "string" ? version : "unknown",
       memory: memory_values,
       cpu: {
         idle: cpu_values,
       },
       interfaces: interfaces,
-    }
+    };
   }
 }

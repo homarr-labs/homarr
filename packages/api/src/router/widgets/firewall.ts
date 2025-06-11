@@ -1,17 +1,18 @@
 import { observable } from "@trpc/server/observable";
 
-import type { FirewallSummary } from "@homarr/integrations";
+import type { Modify } from "@homarr/common/types";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKindByCategory } from "@homarr/definitions";
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import type { FirewallSummary } from "@homarr/integrations";
+import { firewallRequestHandler } from "@homarr/request-handler/firewall";
+
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
-import { firewallRequestHandler } from "@homarr/request-handler/firewall";
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
-
-import type { Modify } from "@homarr/common/types";
 
 export const firewallRouter = createTRPCRouter({
-  getFirewallStatus: publicProcedure    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
+  getFirewallStatus: publicProcedure
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {

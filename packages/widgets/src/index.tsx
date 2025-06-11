@@ -16,6 +16,7 @@ import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
 import * as dockerContainers from "./docker";
 import * as downloads from "./downloads";
+import * as firewall from "./firewall";
 import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
@@ -36,7 +37,7 @@ import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as stockPrice from "./stocks";
 import * as video from "./video";
 import * as weather from "./weather";
-import * as firewall from "./firewall";
+
 export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
 export type { WidgetComponentProps };
 

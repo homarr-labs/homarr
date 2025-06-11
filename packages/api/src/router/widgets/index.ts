@@ -3,6 +3,7 @@ import { appRouter } from "./app";
 import { calendarRouter } from "./calendar";
 import { dnsHoleRouter } from "./dns-hole";
 import { downloadsRouter } from "./downloads";
+import { firewallRouter } from "./firewall";
 import { healthMonitoringRouter } from "./health-monitoring";
 import { indexerManagerRouter } from "./indexer-manager";
 import { mediaRequestsRouter } from "./media-requests";
@@ -17,7 +18,6 @@ import { rssFeedRouter } from "./rssFeed";
 import { smartHomeRouter } from "./smart-home";
 import { stockPriceRouter } from "./stocks";
 import { weatherRouter } from "./weather";
-import { firewallRouter } from "./firewall";
 
 export const widgetRouter = createTRPCRouter({
   notebook: notebookRouter,

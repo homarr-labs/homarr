@@ -1,9 +1,9 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const opnsenseSystemSummarySchema = z.object({
   name: z.string(),
   versions: z.array(z.string()),
-})
+});
 
 export const opnsenseActivitySchema = z.object({
   headers: z.array(z.string()),
@@ -20,10 +20,10 @@ export const opnsenseActivitySchema = z.object({
       STATE: z.string(),
       TIME: z.string(),
       WCPU: z.string(),
-      COMMAND: z.string()
-    })
-  )
-})
+      COMMAND: z.string(),
+    }),
+  ),
+});
 
 export const opnsenseMemorySchema = z.object({
   memory: z.object({
@@ -34,9 +34,8 @@ export const opnsenseMemorySchema = z.object({
     arc: z.string(),
     arc_frmt: z.string(),
     arc_txt: z.string(),
-  })
-})
-
+  }),
+});
 
 const interfaceSchema = z.object({
   device: z.string(),
@@ -78,13 +77,13 @@ export const opnsenseInterfacesSchema = z.object({
 });
 
 export interface opnsenseMemorySummary {
-  used: number,
-  total: number,
-  percent: number,
+  used: number;
+  total: number;
+  percent: number;
 }
 
 export interface opnsenseInterfaceSummary {
-  recv: number,
-  trans: number,
-  name: string,
+  recv: number;
+  trans: number;
+  name: string;
 }

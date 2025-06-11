@@ -6,8 +6,7 @@ import { zodEnumFromArray } from "@homarr/validation/enums";
 export const cronJobRunnerChannel = createSubPubChannel<JobGroupKeys>("cron-job-runner", { persist: false });
 
 export const cronJobs = {
-
-  firewall: { preventManualExecution: false},
+  firewall: { preventManualExecution: false },
   analytics: { preventManualExecution: true },
   iconsUpdater: { preventManualExecution: false },
   ping: { preventManualExecution: false },
@@ -27,7 +26,6 @@ export const cronJobs = {
   minecraftServerStatus: { preventManualExecution: false },
   networkController: { preventManualExecution: false },
   dockerContainers: { preventManualExecution: false },
-
 } satisfies Record<JobGroupKeys, { preventManualExecution?: boolean }>;
 
 /**

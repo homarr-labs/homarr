@@ -1,27 +1,32 @@
 "use client";
 
-import { ScrollArea, Tabs, RingProgress, Center, Text, Table, TableTbody, TableThead, TableTr, Flex, Accordion } from "@mantine/core";
 import {
-  IconCpu,
-} from "@tabler/icons-react";
-
+  Accordion,
+  Center,
+  Flex,
+  RingProgress,
+  ScrollArea,
+  Table,
+  TableTbody,
+  TableThead,
+  TableTr,
+  Tabs,
+  Text,
+} from "@mantine/core";
+import { IconCpu } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
 
-import { useRequiredBoard } from "@homarr/boards/context";
 import type { WidgetComponentProps } from "../definition";
 import { progressColor } from "../health-monitoring/system-health";
 
 dayjs.extend(duration);
 
-export default function FirewallWidget({
-                                         options,
-                                         integrationIds,
-                                         width,
-                                       }: WidgetComponentProps<"firewall">) {
+export default function FirewallWidget({ options, integrationIds, width }: WidgetComponentProps<"firewall">) {
   const [firewallsData] = clientApi.widget.firewall.getFirewallStatus.useSuspenseQuery(
     {
       integrationIds,
@@ -31,26 +36,53 @@ export default function FirewallWidget({
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: false,
-    }
+    },
   );
 
-  console.log("Firewalls: ", firewallsData);
+  const utils = clientApi.useUtils();
+
+  clientApi.widget.firewall.subscribeFirewallStatus.useSubscription(
+    {
+      integrationIds,
+    },
+    {
+      onData: (data) => {
+        utils.widget.firewall.getFirewallStatus.setData(
+          {
+            integrationIds,
+          },
+          (prevData) => {
+            if (!prevData) {
+              return undefined;
+            }
+
+            const newData = prevData.map((item) =>
+
+              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
+            );
+            console.log("Datas:", newData, prevData)
+            return newData;
+          },
+        );
+      },
+    },
+  );
 
   const t = useI18n();
   const isTiny = width < 256;
 
   function formatBytes(bytes: number, decimals: number = 2): string {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
 
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + " " + sizes[i];
   }
   return (
-  <ScrollArea h="100%" >
+    <ScrollArea h="100%">
       {firewallsData.map(({ integration, summary }) => (
         <Tabs key={integration.name} variant="outline">
           <Tabs.List grow>
@@ -59,12 +91,11 @@ export default function FirewallWidget({
             </Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value={integration.name}>
-            <Flex gap="sm"
-                   className="firewall"
-                   p="sm"
-                   pos="relative"
-            >
-              <Text w="100%" pos="relative" align="center" top={8} left={8}>Version: <br/>{summary.version}</Text>
+            <Flex gap="sm" className="firewall" p="sm" pos="relative">
+              <Text w="100%" pos="relative" align="center" size={isTiny ? "8px" : "xs"} top={8} left={8}>
+                Version: <br />
+                {summary.version}
+              </Text>
               <RingProgress
                 className="firewall-cpu"
                 roundCaps
@@ -110,7 +141,9 @@ export default function FirewallWidget({
             </Flex>
             <Accordion>
               <Accordion.Item value="interfaces">
-                <Accordion.Control>{t("widget.firewall.widget.interfaces.title")}</Accordion.Control>
+                <Accordion.Control size={isTiny ? "8px" : "xs"}>
+                  {t("widget.firewall.widget.interfaces.title")}
+                </Accordion.Control>
                 <Accordion.Panel>
                   <Table highlightOnHover>
                     <TableThead>
@@ -143,5 +176,5 @@ export default function FirewallWidget({
         </Tabs>
       ))}
     </ScrollArea>
-  )
+  );
 }
