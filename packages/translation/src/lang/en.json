@@ -2357,7 +2357,8 @@
         "interfaces": {
           "name": "name",
           "trans": "Bytes transmitted",
-          "recv": "Bytes received"
+          "recv": "Bytes received",
+          "title": "Interfaces"
         }
       }
     }
