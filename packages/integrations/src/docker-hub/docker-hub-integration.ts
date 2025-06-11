@@ -18,6 +18,7 @@ import type {
 
 export class DockerHubIntegration extends Integration implements ReleasesProviderIntegration {
   protected async buildHeadersAsync(): Promise<RequestInit["headers"]> {
+    //TODO: Change flow to handle no credentials
     // Request auth token
     const accessTokenResponse = await fetchWithTrustedCertificatesAsync(this.url(`/auth/token`), {
       body: JSON.stringify({
@@ -56,6 +57,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    //TODO: Change flow to handle no credentials
     const response = await input.fetchAsync(this.url("/auth/token"), {
       body: JSON.stringify({
         identifier: this.getSecretValue("username"),

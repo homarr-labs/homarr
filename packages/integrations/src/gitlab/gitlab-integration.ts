@@ -20,7 +20,9 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/v4/projects"), {
       headers: {
-        Authorization: `Bearer ${this.getSecretValue("personalAccessToken")}`,
+        ...(this.hasSecretValue("personalAccessToken")
+          ? { Authorization: `Bearer ${this.getSecretValue("personalAccessToken")}` }
+          : {}),
       },
     });
 
@@ -108,7 +110,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
   private getApi() {
     return new Gitlab({
       host: this.url.toString(),
-      token: this.getSecretValue("personalAccessToken"),
+      ...(this.hasSecretValue("personalAccessToken") ? { token: this.getSecretValue("personalAccessToken") } : {}),
     });
   }
 }

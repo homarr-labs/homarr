@@ -18,12 +18,10 @@ import type {
 
 export class CodebergIntegration extends Integration implements ReleasesProviderIntegration {
   protected buildHeaders(): RequestInit["headers"] {
-    const token = this.getSecretValue("personalAccessToken");
-
-    if (!token) return {};
+    if (!this.hasSecretValue("personalAccessToken")) return {};
 
     return {
-      Authorization: `token ${token}`,
+      Authorization: `token ${this.getSecretValue("personalAccessToken")}`,
     };
   }
 

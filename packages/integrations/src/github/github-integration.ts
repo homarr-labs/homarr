@@ -19,11 +19,15 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
   private static readonly userAgent = "Homarr-Lab/Homarr:GithubIntegration";
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const headers: RequestInit["headers"] = {
+      "User-Agent": GithubIntegration.userAgent,
+    };
+
+    if (this.hasSecretValue("personalAccessToken"))
+      headers.Authorization = `Bearer ${this.getSecretValue("personalAccessToken")}`;
+
     const response = await input.fetchAsync(this.url("/octocat"), {
-      headers: {
-        "User-Agent": GithubIntegration.userAgent,
-        Authorization: `Bearer ${this.getSecretValue("personalAccessToken")}`,
-      },
+      headers,
     });
 
     if (!response.ok) {
@@ -143,7 +147,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     return new Octokit({
       baseUrl: this.url.toString(),
       userAgent: GithubIntegration.userAgent,
-      auth: this.getSecretValue("personalAccessToken"),
+      ...(this.hasSecretValue("personalAccessToken") ? { auth: this.getSecretValue("personalAccessToken") } : {}),
     });
   }
 }
