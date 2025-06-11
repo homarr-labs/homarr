@@ -80,6 +80,7 @@ export const opnsenseInterfacesSchema = z.object({
 export interface opnsenseMemorySummary {
   used: number,
   total: number,
+  percent: number,
 }
 
 export interface opnsenseInterfaceSummary {

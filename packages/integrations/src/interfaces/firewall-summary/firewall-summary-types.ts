@@ -5,6 +5,7 @@ export interface FirewallSummary {
   memory: {
     used: number,
     total: number,
+    percent: number,
   },
   interfaces: FirewallInterfaceSummary[],
   version: string,
