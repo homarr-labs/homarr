@@ -18,7 +18,6 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -26,7 +25,7 @@ import { progressColor } from "../health-monitoring/system-health";
 
 dayjs.extend(duration);
 
-export default function FirewallWidget({ options, integrationIds, width }: WidgetComponentProps<"firewall">) {
+export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
   const [firewallsData] = clientApi.widget.firewall.getFirewallStatus.useSuspenseQuery(
     {
       integrationIds,
@@ -56,12 +55,9 @@ export default function FirewallWidget({ options, integrationIds, width }: Widge
               return undefined;
             }
 
-            const newData = prevData.map((item) =>
-
+            return prevData.map((item) =>
               item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
             );
-            console.log("Datas:", newData, prevData)
-            return newData;
           },
         );
       },
@@ -71,16 +67,22 @@ export default function FirewallWidget({ options, integrationIds, width }: Widge
   const t = useI18n();
   const isTiny = width < 256;
 
-  function formatBytes(bytes: number, decimals: number = 2): string {
+  function formatBytes(bytes: number, decimals: number): string {
     if (bytes === 0) return "0 Bytes";
 
-    const k = 1024;
+    const kilobyte = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    const i = Math.floor(Math.log(bytes) / Math.log(kilobyte));
 
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + " " + sizes[i];
+    return parseFloat((bytes / Math.pow(kilobyte, i)).toFixed(decimals)) + " " + sizes[i];
   }
+
+  if (!Array.isArray(firewallsData)) {
+    console.log("firewallsData: ", firewallsData);
+    return <div>No data available</div>;
+  }
+
   return (
     <ScrollArea h="100%">
       {firewallsData.map(({ integration, summary }) => (
@@ -163,8 +165,8 @@ export default function FirewallWidget({ options, integrationIds, width }: Widge
                       {summary.interfaces.map((item) => (
                         <TableTr key={item.name} fz={isTiny ? "8px" : "xs"}>
                           <td>{item.name}</td>
-                          <td style={{ WebkitLineClamp: "1" }}>{formatBytes(item.trans)}</td>
-                          <td>{formatBytes(item.recv)}</td>
+                          <td style={{ WebkitLineClamp: "1" }}>{formatBytes(item.trans, 2)}</td>
+                          <td>{formatBytes(item.recv, 2)}</td>
                         </TableTr>
                       ))}
                     </TableTbody>

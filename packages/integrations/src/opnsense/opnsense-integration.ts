@@ -150,7 +150,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
 
     interfaceKeys.forEach((key) => {
       const inter = interfaces.data.interfaces[key];
-      const name = inter["name"];
+      const name = inter.name;
 
       const nameValue = typeof name === "string" ? name : "unknown";
       const bytesTransmitted = inter["bytes transmitted"];

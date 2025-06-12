@@ -7,7 +7,7 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { FirewallSummary } from "@homarr/integrations";
 import { firewallRequestHandler } from "@homarr/request-handler/firewall";
 
-import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
+import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const firewallRouter = createTRPCRouter({

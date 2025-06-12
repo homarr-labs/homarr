@@ -15,6 +15,6 @@ export const firewallRequestHandler = createCachedIntegrationRequestHandler<
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallSummaryAsync();
   },
-  cacheDuration: dayjs.duration(5, "minutes"),
+  cacheDuration: dayjs.duration(1, "minutes"),
   queryKey: "firewallSummary",
 });
