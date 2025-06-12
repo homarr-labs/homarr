@@ -34,7 +34,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "undici": "7.10.0",
-    "zod": "^3.25.62",
+    "zod": "^3.25.63",
     "zod-validation-error": "^3.5.0"
   },
   "devDependencies": {
