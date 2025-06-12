@@ -21,6 +21,7 @@ export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
 export { LidarrIntegration } from "./media-organizer/lidarr/lidarr-integration";
 export { ReadarrIntegration } from "./media-organizer/readarr/readarr-integration";
 export { NextcloudIntegration } from "./nextcloud/nextcloud.integration";
+export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
@@ -28,6 +29,7 @@ export type { DownloadClientJobsAndStatus } from "./interfaces/downloads/downloa
 export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download-client-items";
 export type { ExtendedClientStatus } from "./interfaces/downloads/download-client-status";
 export type { HealthMonitoring } from "./interfaces/health-monitoring/healt-monitoring";
+export type { FirewallSummary } from "./interfaces/firewall-summary/firewall-summary-types";
 export { MediaRequestStatus } from "./interfaces/media-requests/media-request";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request";
 export type { StreamSession } from "./interfaces/media-server/session";
