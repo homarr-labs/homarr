@@ -5,6 +5,7 @@ import { env } from "./env";
 export interface DockerInstance {
   host: string;
   instance: Docker;
+  isSocket?: boolean;
 }
 
 export class DockerSingleton {
@@ -14,7 +15,7 @@ export class DockerSingleton {
     const hostVariable = env.DOCKER_HOSTNAMES;
     const portVariable = env.DOCKER_PORTS;
     if (hostVariable === undefined || portVariable === undefined) {
-      return [{ host: "socket", instance: new Docker() }];
+      return [{ host: "socket", instance: new Docker(), isSocket: true }];
     }
     const hostnames = hostVariable.split(",");
     const ports = portVariable.split(",");
