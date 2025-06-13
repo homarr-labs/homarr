@@ -47,7 +47,7 @@
     "@types/node": "^22.15.31",
     "dotenv-cli": "^8.0.0",
     "esbuild": "^0.25.5",
-    "eslint": "^9.28.0",
+    "eslint": "^9.29.0",
     "prettier": "^3.5.3",
     "tsx": "4.20.3",
     "typescript": "^5.8.3"
