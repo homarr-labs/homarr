@@ -23,8 +23,8 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@t3-oss/env-nextjs": "^0.13.6",
-    "zod": "^3.25.55"
+    "@t3-oss/env-nextjs": "^0.13.8",
+    "zod": "^3.25.64"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
