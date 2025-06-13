@@ -9,7 +9,16 @@ export const { definition, componentLoader } = createWidgetDefinition("mediaRele
     return optionsBuilder.from((factory) => ({
       layout: factory.select({
         defaultValue: "backdrop",
-        options: ["backdrop", "poster"],
+        options: [
+          {
+            value: "backdrop",
+            label: (t) => t("widget.mediaReleases.option.layout.option.backdrop.label"),
+          },
+          {
+            value: "poster",
+            label: (t) => t("widget.mediaReleases.option.layout.option.poster.label"),
+          },
+        ],
       }),
       showDescriptionTooltip: factory.switch({
         defaultValue: true,
@@ -23,5 +32,4 @@ export const { definition, componentLoader } = createWidgetDefinition("mediaRele
     }));
   },
   supportedIntegrations: ["mock", "emby", "jellyfin", "plex"],
-  // supportedIntegrations: ["plex", "jellyfin", "emby", "lidarr", "radarr", "readarr", "sonarr"],
 }).withDynamicImport(() => import("./component"));

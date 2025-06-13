@@ -2070,6 +2070,32 @@
       },
       "globalRatio": "Global Ratio"
     },
+    "mediaReleases": {
+      "name": "Media releases",
+      "description": "Display newly added medias or upcoming releases from different integrations",
+      "option": {
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "backdrop": {
+              "label": "Backdrop"
+            },
+            "poster": {
+              "label": "Poster"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "Show description tooltip"
+        },
+        "showType": {
+          "label": "Show media type badge"
+        },
+        "showSource": {
+          "label": "Show source integration"
+        }
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Media Requests List",
       "description": "See a list of all media requests from your Overseerr or Jellyseerr instance",
