@@ -250,20 +250,24 @@ export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
 
 export type IntegrationSecretKind = keyof typeof integrationSecretKindObject;
 export type IntegrationKind = keyof typeof integrationDefs;
-export type IntegrationCategory =
-  | "dnsHole"
-  | "mediaService"
-  | "calendar"
-  | "mediaSearch"
-  | "mediaRequest"
-  | "downloadClient"
-  | "usenet"
-  | "torrent"
-  | "miscellaneous"
-  | "smartHomeServer"
-  | "indexerManager"
-  | "healthMonitoring"
-  | "search"
-  | "mediaTranscoding"
-  | "networkController"
-  | "releasesProvider";
+
+export const IntegrationCategories = [
+  "dnsHole",
+  "mediaService",
+  "calendar",
+  "mediaSearch",
+  "mediaRequest",
+  "downloadClient",
+  "usenet",
+  "torrent",
+  "miscellaneous",
+  "smartHomeServer",
+  "indexerManager",
+  "healthMonitoring",
+  "search",
+  "mediaTranscoding",
+  "networkController",
+  "releasesProvider",
+] as const;
+
+export type IntegrationCategory = typeof IntegrationCategories[number];

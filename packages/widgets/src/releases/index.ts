@@ -39,6 +39,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
         defaultValue: [],
         validate: z.array(
           z.object({
+            providerIntegrationId: z.string(),
             providerKey: z.string().min(1),
             identifier: z.string().min(1),
             name: z.string().optional(),
@@ -54,5 +55,5 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
         ),
       }),
     }));
-  },
+  }
 }).withDynamicImport(() => import("./component"));

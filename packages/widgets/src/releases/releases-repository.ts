@@ -7,7 +7,11 @@ export interface ReleasesVersionFilter {
 }
 
 export interface ReleasesRepository {
-  providerKey: ProviderKey;
+  providerIntegrationId?: string;
+  /**
+   * @deprecated Use the new integration system instead.
+   */
+  providerKey?: ProviderKey;
   identifier: string;
   name?: string;
   versionFilter?: ReleasesVersionFilter;

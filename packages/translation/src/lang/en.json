@@ -2285,7 +2285,11 @@
           "example": {
             "label": "Example"
           },
-          "invalid": "Invalid repository definition, please check the values"
+          "invalid": "Invalid repository definition, please check the values",
+          "noProvider": {
+            "label": "No Provider",
+            "tooltip": "The provider could not be parsed, please manually set it after importing the images"
+          }
         }
       },
       "not-found": "Not Found",

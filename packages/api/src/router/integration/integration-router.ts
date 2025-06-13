@@ -19,6 +19,7 @@ import {
   getIconUrl,
   getIntegrationKindsByCategory,
   getPermissionsWithParents,
+  IntegrationCategories,
   integrationDefs,
   integrationKinds,
   integrationSecretKindObject,
@@ -129,6 +130,60 @@ export const integrationRouter = createTRPCRouter({
           integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
       );
   }),
+  allOfGivenCategory: publicProcedure
+    .input(
+      z.object({
+        category: z.enum(IntegrationCategories),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+      });
+
+      const intergrationKinds = getIntegrationKindsByCategory(input.category);
+
+      const integrationsFromDb = await ctx.db.query.integrations.findMany({
+        with: {
+          userPermissions: {
+            where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
+          },
+          groupPermissions: {
+            where: inArray(
+              integrationGroupPermissions.groupId,
+              groupsOfCurrentUser.map((group) => group.groupId),
+            ),
+          },
+        },
+        where: inArray(
+          integrations.kind,
+          intergrationKinds
+        ),
+      });
+      return integrationsFromDb
+        .map((integration) => {
+          const permissions = integration.userPermissions
+            .map(({ permission }) => permission)
+            .concat(integration.groupPermissions.map(({ permission }) => permission));
+
+          return {
+            id: integration.id,
+            name: integration.name,
+            kind: integration.kind,
+            url: integration.url,
+            permissions: {
+              hasUseAccess:
+                permissions.includes("use") || permissions.includes("interact") || permissions.includes("full"),
+              hasInteractAccess: permissions.includes("interact") || permissions.includes("full"),
+              hasFullAccess: permissions.includes("full"),
+            },
+          };
+        })
+        .sort(
+          (integrationA, integrationB) =>
+            integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
+        );
+    }),
   search: protectedProcedure
     .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
     .query(async ({ ctx, input }) => {
