@@ -1,16 +1,11 @@
 {
-  "name": "@homarr/common",
+  "name": "@homarr/image-proxy",
   "version": "0.1.0",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts",
-    "./types": "./src/types.ts",
-    "./server": "./src/server.ts",
-    "./client": "./src/client.ts",
-    "./env": "./env.ts",
-    "./env-validation": "./src/env-validation.ts"
+    ".": "./src/index.ts"
   },
   "typesVersions": {
     "*": {
@@ -27,21 +22,17 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@homarr/env": "workspace:^0.1.0",
+    "@homarr/certificates": "workspace:^0.1.0",
+    "@homarr/common": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
-    "@paralleldrive/cuid2": "^2.2.2",
-    "dayjs": "^1.11.13",
-    "next": "15.3.3",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "undici": "7.10.0",
-    "zod": "^3.25.56",
-    "zod-validation-error": "^3.4.1"
+    "@homarr/redis": "workspace:^0.1.0",
+    "bcrypt": "^6.0.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/bcrypt": "5.0.2",
     "eslint": "^9.28.0",
     "typescript": "^5.8.3"
   }

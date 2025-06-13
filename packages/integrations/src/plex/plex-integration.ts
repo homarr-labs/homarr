@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ParseError } from "@homarr/common/server";
+import { ImageProxy } from "@homarr/image-proxy";
 import { logger } from "@homarr/log";
 
 import type { IntegrationTestingInput } from "../base/integration";
@@ -78,10 +79,26 @@ export class PlexIntegration extends Integration implements IMediaReleasesIntegr
     });
 
     const data = await recentlyAddedSchema.parseAsync(await response.json());
-    return (
-      data.MediaContainer.Metadata?.map((item) => {
+    const imageProxy = new ImageProxy();
+
+    return await Promise.all(
+      data.MediaContainer.Metadata?.map(async (item) => {
         const poster = item.Image.find((image) => image?.type === "coverPoster")?.url;
         const backdrop = item.Image.find((image) => image?.type === "background")?.url;
+
+        // TODO: instead allow the bulk creation of images in the image proxy
+        const posterUrl = poster ? super.url(poster as `/${string}`) : undefined;
+        const backdropUrl = backdrop ? super.url(backdrop as `/${string}`) : undefined;
+        const posterUrlWithProxy = posterUrl
+          ? await imageProxy.createImageAsync(posterUrl.toString(), {
+              "X-Plex-Token": token,
+            })
+          : undefined;
+        const backdropUrlWithProxy = backdropUrl
+          ? await imageProxy.createImageAsync(backdropUrl.toString(), {
+              "X-Plex-Token": token,
+            })
+          : undefined;
 
         return {
           id: item.Media.at(0)?.id.toString() ?? item.key,
@@ -91,8 +108,8 @@ export class PlexIntegration extends Integration implements IMediaReleasesIntegr
           description: item.summary,
           releaseDate: item.originallyAvailableAt ? new Date(item.originallyAvailableAt) : new Date(item.addedAt),
           imageUrls: {
-            poster: poster ? super.url(poster as `/${string}`).toString() : undefined,
-            backdrop: backdrop ? super.url(backdrop as `/${string}`).toString() : undefined,
+            poster: posterUrlWithProxy,
+            backdrop: backdropUrlWithProxy,
           },
           producer: item.studio,
           rating: item.rating?.toFixed(1),
@@ -102,7 +119,7 @@ export class PlexIntegration extends Integration implements IMediaReleasesIntegr
             .toString(),
           length: item.duration ? Math.round(item.duration / 1000) : undefined,
         };
-      }) ?? []
+      }) ?? [],
     );
   }
 
@@ -210,228 +227,3 @@ const identitySchema = z.object({
     machineIdentifier: z.string(),
   }),
 });
-
-/*
-{
-  "MediaContainer": {
-    "size": 2,
-    "allowSync": false,
-    "identifier": "com.plexapp.plugins.library",
-    "mediaTagPrefix": "/system/bundle/media/flags/",
-    "mediaTagVersion": 1744189307,
-    "mixedParents": true,
-    "Metadata": [
-      {
-        "allowSync": true,
-        "librarySectionID": 1,
-        "librarySectionTitle": "Films",
-        "librarySectionUUID": "0b711797-d871-47fe-bea2-0d79a3b2a2f8",
-        "ratingKey": "2",
-        "key": "/library/metadata/2",
-        "guid": "plex://movie/64a73d4790aebd038a220a7d",
-        "slug": "mphatso",
-        "studio": "JJC Films",
-        "type": "movie",
-        "title": "Mphatso",
-        "summary": "",
-        "thumb": "/library/metadata/2/thumb/1749324289",
-        "duration": 8669529,
-        "addedAt": 1749324286,
-        "updatedAt": 1749324289,
-        "Media": [
-          {
-            "id": 2,
-            "duration": 8669529,
-            "bitrate": 2035,
-            "width": 720,
-            "height": 304,
-            "aspectRatio": 2.35,
-            "audioChannels": 6,
-            "audioCodec": "ac3",
-            "videoCodec": "mpeg4",
-            "videoResolution": "sd",
-            "container": "avi",
-            "videoFrameRate": "24p",
-            "videoProfile": "advanced simple",
-            "Part": [
-              {
-                "id": 2,
-                "key": "/library/parts/2/1464786896/file.avi",
-                "duration": 8669529,
-                "file": "/movies/mp-htsob-xvid.avi",
-                "size": 2205199166,
-                "container": "avi",
-                "videoProfile": "advanced simple"
-              }
-            ]
-          }
-        ],
-        "Image": [
-          {
-            "alt": "Mphatso",
-            "type": "coverPoster",
-            "url": "/library/metadata/2/thumb/1749324289"
-          }
-        ],
-        "UltraBlurColors": {
-          "topLeft": "3c2a0d",
-          "topRight": "73431c",
-          "bottomRight": "674821",
-          "bottomLeft": "3d1b09"
-        },
-        "Genre": [
-          {
-            "tag": "Drama"
-          }
-        ],
-        "Country": [
-          {
-            "tag": "Zambia"
-          }
-        ],
-        "Director": [
-          {
-            "tag": "Michael Tembo"
-          }
-        ],
-        "Writer": [
-          {
-            "tag": "Ruth Chivwaka"
-          },
-          {
-            "tag": "Phillip Chungu"
-          }
-        ],
-        "Role": [
-          {
-            "tag": "Richard Chibuye"
-          },
-          {
-            "tag": "Emmanuel Chindawi"
-          },
-          {
-            "tag": "Lazarus Daka"
-          }
-        ]
-      },
-      {
-        "allowSync": true,
-        "librarySectionID": 1,
-        "librarySectionTitle": "Films",
-        "librarySectionUUID": "0b711797-d871-47fe-bea2-0d79a3b2a2f8",
-        "ratingKey": "1",
-        "key": "/library/metadata/1",
-        "guid": "plex://movie/5d776831103a2d001f566b86",
-        "slug": "idiocracy",
-        "studio": "20th Century Fox",
-        "type": "movie",
-        "title": "Idiocracy",
-        "contentRating": "R",
-        "summary": "Corporal Joe Bauers, a decidedly average American, is selected for a top-secret hibernation program but is forgotten and left to awaken to a future so incredibly moronic that he's easily the most intelligent person alive.",
-        "rating": 7.1,
-        "audienceRating": 6.1,
-        "year": 2006,
-        "tagline": "In the future, intelligence is extinct.",
-        "thumb": "/library/metadata/1/thumb/1749324288",
-        "art": "/library/metadata/1/art/1749324288",
-        "duration": 4844064,
-        "originallyAvailableAt": "2006-09-01",
-        "addedAt": 1749324285,
-        "updatedAt": 1749324288,
-        "audienceRatingImage": "rottentomatoes://image.rating.upright",
-        "hasPremiumExtras": "1",
-        "hasPremiumPrimaryExtra": "1",
-        "ratingImage": "rottentomatoes://image.rating.ripe",
-        "Media": [
-          {
-            "id": 1,
-            "duration": 4844064,
-            "bitrate": 11737,
-            "width": 1920,
-            "height": 1080,
-            "aspectRatio": 1.78,
-            "audioChannels": 6,
-            "audioCodec": "ac3",
-            "videoCodec": "h264",
-            "videoResolution": "1080",
-            "container": "mkv",
-            "videoFrameRate": "PAL",
-            "videoProfile": "high",
-            "Part": [
-              {
-                "id": 1,
-                "key": "/library/parts/1/1281850929/file.mkv",
-                "duration": 4844064,
-                "file": "/movies/Idiocracy.mkv",
-                "size": 7106662502,
-                "container": "mkv",
-                "videoProfile": "high"
-              }
-            ]
-          }
-        ],
-        "Image": [
-          {
-            "alt": "Idiocracy",
-            "type": "coverPoster",
-            "url": "/library/metadata/1/thumb/1749324288"
-          },
-          {
-            "alt": "Idiocracy",
-            "type": "background",
-            "url": "/library/metadata/1/art/1749324288"
-          },
-          {
-            "alt": "Idiocracy",
-            "type": "clearLogo",
-            "url": "/library/metadata/1/clearLogo/1749324288"
-          }
-        ],
-        "UltraBlurColors": {
-          "topLeft": "501a03",
-          "topRight": "8b4611",
-          "bottomRight": "864e10",
-          "bottomLeft": "683409"
-        },
-        "Genre": [
-          {
-            "tag": "Adventure"
-          },
-          {
-            "tag": "Comedy"
-          }
-        ],
-        "Country": [
-          {
-            "tag": "United States of America"
-          }
-        ],
-        "Director": [
-          {
-            "tag": "Mike Judge"
-          }
-        ],
-        "Writer": [
-          {
-            "tag": "Etan Cohen"
-          },
-          {
-            "tag": "Mike Judge"
-          }
-        ],
-        "Role": [
-          {
-            "tag": "Luke Wilson"
-          },
-          {
-            "tag": "Maya Rudolph"
-          },
-          {
-            "tag": "Dax Shepard"
-          }
-        ]
-      }
-    ]
-  }
-}
-  */

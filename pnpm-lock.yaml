@@ -136,6 +136,9 @@ importers:
       '@homarr/icons':
         specifier: workspace:^0.1.0
         version: link:../../packages/icons
+      '@homarr/image-proxy':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/image-proxy
       '@homarr/integrations':
         specifier: workspace:^0.1.0
         version: link:../../packages/integrations
@@ -826,6 +829,9 @@ importers:
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
+      '@paralleldrive/cuid2':
+        specifier: ^2.2.2
+        version: 2.2.2
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -1295,6 +1301,43 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
+  packages/image-proxy:
+    dependencies:
+      '@homarr/certificates':
+        specifier: workspace:^0.1.0
+        version: link:../certificates
+      '@homarr/common':
+        specifier: workspace:^0.1.0
+        version: link:../common
+      '@homarr/log':
+        specifier: workspace:^0.1.0
+        version: link:../log
+      '@homarr/redis':
+        specifier: workspace:^0.1.0
+        version: link:../redis
+      bcrypt:
+        specifier: ^6.0.0
+        version: 6.0.0
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      '@types/bcrypt':
+        specifier: 5.0.2
+        version: 5.0.2
+      eslint:
+        specifier: ^9.28.0
+        version: 9.28.0
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
   packages/integrations:
     dependencies:
       '@ctrl/deluge':
@@ -1318,6 +1361,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/image-proxy':
+        specifier: workspace:^0.1.0
+        version: link:../image-proxy
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log

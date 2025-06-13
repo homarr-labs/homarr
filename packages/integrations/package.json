@@ -32,6 +32,7 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/image-proxy": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/node-unifi": "^2.6.0",
     "@homarr/redis": "workspace:^0.1.0",
