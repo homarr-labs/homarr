@@ -2297,7 +2297,7 @@
       "created": "Erstellt",
       "error": {
         "label": "Fehler",
-        "options": {
+        "messages": {
           "noMatchingVersion": "Keine passende Version gefunden"
         }
       }

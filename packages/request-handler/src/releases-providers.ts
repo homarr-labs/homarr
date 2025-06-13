@@ -47,7 +47,7 @@ export const Providers: ProvidersProps = {
         .safeParse(response);
     },
     getReleasesUrl(identifier) {
-      return `${this.getDetailsUrl(identifier)}/tags?page_size=200`;
+      return `${this.getDetailsUrl(identifier)}/tags?page_size=100`;
     },
     parseReleasesResponse(response) {
       return z

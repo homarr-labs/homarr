@@ -2297,7 +2297,7 @@
       "created": "Oprettet",
       "error": {
         "label": "Fejl",
-        "options": {
+        "messages": {
           "noMatchingVersion": "Ingen matchende version fundet"
         }
       }
