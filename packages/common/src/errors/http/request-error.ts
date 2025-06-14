@@ -36,7 +36,12 @@ export const requestErrorMap = {
     expired: ["CERT_HAS_EXPIRED"],
     hostnameMismatch: ["ERR_TLS_CERT_ALTNAME_INVALID", "CERT_COMMON_NAME_INVALID"],
     notYetValid: ["CERT_NOT_YET_VALID"],
-    untrusted: ["DEPTH_ZERO_SELF_SIGNED_CERT", "UNABLE_TO_VERIFY_LEAF_SIGNATURE", "UNABLE_TO_GET_ISSUER_CERT_LOCALLY"],
+    untrusted: [
+      "DEPTH_ZERO_SELF_SIGNED_CERT",
+      "UNABLE_TO_VERIFY_LEAF_SIGNATURE",
+      "UNABLE_TO_GET_ISSUER_CERT_LOCALLY",
+      "SELF_SIGNED_CERT_IN_CHAIN",
+    ],
   },
   connection: {
     hostUnreachable: "EHOSTUNREACH",
