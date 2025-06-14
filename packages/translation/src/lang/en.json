@@ -2094,6 +2094,9 @@
         "showSource": {
           "label": "Show source integration"
         }
+      },
+      "length": {
+        "duration": "{length}min"
       }
     },
     "mediaRequests-requestList": {

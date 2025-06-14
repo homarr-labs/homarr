@@ -2,13 +2,16 @@
 
 import { Fragment } from "react";
 import { Avatar, Badge, Box, Divider, Group, Image, Stack, Text, TooltipFloating, UnstyledButton } from "@mantine/core";
-import { IconCalendar, IconClock, IconStarFilled } from "@tabler/icons-react";
+import { IconBook, IconCalendar, IconClock, IconStarFilled } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { getMantineColor } from "@homarr/common";
 import { getIconUrl } from "@homarr/definitions";
+import type { MediaRelease } from "@homarr/integrations/types";
 import { mediaTypeConfigurations } from "@homarr/integrations/types";
+import type { TranslationFunction } from "@homarr/translation";
+import { useCurrentLocale, useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
 
@@ -37,12 +40,16 @@ interface ItemProps {
 }
 
 const Item = ({ item, options }: ItemProps) => {
+  const locale = useCurrentLocale();
+  const t = useI18n();
+  const length = formatLength(item.length, item.type, t);
+
   return (
     <TooltipFloating
       label={item.description}
       w={300}
       multiline
-      disabled={item.description === undefined || !options.showDescriptionTooltip}
+      disabled={item.description === undefined || item.description.trim() === "" || !options.showDescriptionTooltip}
     >
       <UnstyledButton
         component="a"
@@ -84,11 +91,21 @@ const Item = ({ item, options }: ItemProps) => {
                 )}
               </Stack>
               <Group gap={6} style={{ rowGap: 0 }}>
-                <Info icon={IconCalendar} label={item.releaseDate.toLocaleString()} />
-                {item.length !== undefined && (
+                <Info
+                  icon={IconCalendar}
+                  label={Intl.DateTimeFormat(locale, {
+                    month: "2-digit",
+                    year: "numeric",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  }).format(item.releaseDate)}
+                />
+                {length !== undefined && (
                   <>
                     <InfoDivider />
-                    <Info icon={IconClock} label={item.length.toString()} />
+                    <Info icon={length.type === "duration" ? IconClock : IconBook} label={length.label} />
                   </>
                 )}
                 {item.producer !== undefined && (
@@ -106,7 +123,7 @@ const Item = ({ item, options }: ItemProps) => {
                 {item.price !== undefined && (
                   <>
                     <InfoDivider />
-                    <Info label={`$${item.price.toFixed()}`} />
+                    <Info label={`$${item.price.toFixed(2)}`} />
                   </>
                 )}
               </Group>
@@ -166,4 +183,24 @@ const Info = ({ icon: Icon, label }: IconAndLabelProps) => {
       </Text>
     </Group>
   );
+};
+
+const formatLength = (length: number | undefined, type: MediaRelease["type"], t: TranslationFunction) => {
+  if (!length) return undefined;
+  if (type === "movie" || type === "tv" || type === "video" || type === "music" || type === "article") {
+    return {
+      type: "duration" as const,
+      label: t("widget.mediaReleases.length.duration", {
+        length: Math.round(length / 60).toString(),
+      }),
+    };
+  }
+  if (type === "book") {
+    return {
+      type: "page" as const,
+      label: length.toString(),
+    };
+  }
+
+  return undefined;
 };
