@@ -77,7 +77,7 @@ const Item = ({ item, options }: ItemProps) => {
           />
         )}
         <Group justify="space-between" h="100%" wrap="nowrap">
-          <Group align="start" wrap="nowrap">
+          <Group align="start" wrap="nowrap" style={{ zIndex: 0 }}>
             {options.layout === "poster" && <Image w={60} src={item.imageUrls.poster} alt={item.title} />}
             <Stack gap={4}>
               <Stack gap={0}>
@@ -140,7 +140,7 @@ const Item = ({ item, options }: ItemProps) => {
             </Stack>
           </Group>
           {(options.showType || options.showSource) && (
-            <Stack justify="space-between" align="end" h="100%">
+            <Stack justify="space-between" align="end" h="100%" style={{ zIndex: 0 }}>
               {options.showType && (
                 <Badge
                   w="max-content"
