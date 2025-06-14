@@ -124,7 +124,9 @@ export class PlexIntegration extends Integration implements IMediaReleasesIntegr
           title: item.title,
           subtitle: item.tagline,
           description: item.summary,
-          releaseDate: item.originallyAvailableAt ? new Date(item.originallyAvailableAt) : new Date(item.addedAt),
+          releaseDate: item.originallyAvailableAt
+            ? new Date(item.originallyAvailableAt)
+            : new Date(item.addedAt * 1000),
           imageUrls: {
             poster: proxiedImages.find((image) => image.mediaKey === item.key && image.type === "poster")?.url,
             backdrop: proxiedImages.find((image) => image.mediaKey === item.key && image.type === "backdrop")?.url,
