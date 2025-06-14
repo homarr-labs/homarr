@@ -33,19 +33,19 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^8.0.2",
+    "@mantine/core": "^8.1.0",
     "@tabler/icons-react": "^3.34.0",
     "dayjs": "^1.11.13",
     "next": "15.3.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "zod": "^3.25.56"
+    "zod": "^3.25.64"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.28.0",
+    "eslint": "^9.29.0",
     "typescript": "^5.8.3"
   }
 }

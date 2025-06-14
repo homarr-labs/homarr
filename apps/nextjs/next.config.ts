@@ -53,6 +53,7 @@ const nextConfig: NextConfig = {
               form-action 'self';
               img-src * data:;
               font-src * data:;
+              media-src * data:;
             `
               .replace(/\s{2,}/g, " ")
               .trim(),
