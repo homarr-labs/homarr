@@ -25,6 +25,7 @@ export class ImageProxy {
     }
 
     const salt = await bcrypt.genSalt(10);
+    logger.debug(`Generated new salt for image proxy salt="${salt}"`);
     ImageProxy.salt = salt;
     await saltChannel.setAsync(salt);
     return salt;
@@ -33,6 +34,9 @@ export class ImageProxy {
   public async createImageAsync(url: string, headers?: Record<string, string>): Promise<string> {
     const existingId = await this.getExistingIdAsync(url, headers);
     if (existingId) {
+      logger.debug(
+        `Image already exists in the proxy id="${existingId}" url="${this.redactUrl(url)}" headers="${this.redactHeaders(headers ?? null)}"`,
+      );
       return this.createImageUrl(existingId);
     }
 
@@ -44,17 +48,28 @@ export class ImageProxy {
 
   public async forwardImageAsync(id: string): Promise<Blob | null> {
     const urlAndHeaders = await this.getImageUrlAndHeadersAsync(id);
-    if (!urlAndHeaders) return null;
+    if (!urlAndHeaders) {
+      return null;
+    }
 
     const response = await fetchWithTrustedCertificatesAsync(urlAndHeaders.url, {
       headers: urlAndHeaders.headers ?? {},
     });
+
+    const proxyUrl = this.createImageUrl(id);
     if (!response.ok) {
-      logger.error(`Failed to fetch image for id=${id}: ${response.status}`);
+      logger.error(
+        `Failed to fetch image id="${id}" url="${this.redactUrl(urlAndHeaders.url)}" headers="${this.redactHeaders(urlAndHeaders.headers)}" proxyUrl="${proxyUrl}" statusCode="${response.status}"`,
+      );
       return null;
     }
 
-    return (await response.blob()) as Blob;
+    const blob = (await response.blob()) as Blob;
+    logger.debug(
+      `Forwarding image succeeded id="${id}" url="${this.redactUrl(urlAndHeaders.url)}" headers="${this.redactHeaders(urlAndHeaders.headers)}" proxyUrl="${proxyUrl} size="${(blob.size / 1024).toFixed(1)}KB"`,
+    );
+
+    return blob;
   }
 
   private createImageUrl(id: string): string {
@@ -64,7 +79,10 @@ export class ImageProxy {
   private async getImageUrlAndHeadersAsync(id: string) {
     const urlHeaderChannel = createUrlByIdChannel(id);
     const urlHeader = await urlHeaderChannel.getAsync();
-    if (!urlHeader) return null;
+    if (!urlHeader) {
+      logger.warn(`Image not found in the proxy id="${id}"`);
+      return null;
+    }
 
     return {
       url: decryptSecret(urlHeader.url),
@@ -93,5 +111,23 @@ export class ImageProxy {
       headers: encryptSecret(JSON.stringify(headers ?? null)),
     });
     await hashChannel.setAsync(id);
+
+    logger.debug(
+      `Stored image in the proxy id="${id}" url="${this.redactUrl(url)}" headers="${this.redactHeaders(headers ?? null)}"`,
+    );
+  }
+
+  private redactUrl(url: string): string {
+    const urlObject = new URL(url);
+
+    const redactedSearch = [...urlObject.searchParams.keys()].map((key) => `${key}=REDACTED`).join("&");
+
+    return `${urlObject.origin}${urlObject.pathname}${redactedSearch ? `?${redactedSearch}` : ""}`;
+  }
+
+  private redactHeaders(headers: Record<string, string> | null): string | null {
+    if (!headers) return null;
+
+    return Object.keys(headers).join(", ");
   }
 }
