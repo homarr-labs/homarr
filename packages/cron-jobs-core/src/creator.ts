@@ -93,6 +93,9 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
         creatorOptions.logger.logDebug(`The cron job '${name}' is running because runOnStart is set to true`);
         await catchingCallbackAsync();
       },
+      async executeAsync() {
+        await catchingCallbackAsync();
+      },
     };
   };
 };
@@ -109,6 +112,7 @@ export const createCronJobCreator = <TAllowedNames extends string = string>(
     cronExpression: TExpression,
     options: CreateCronJobOptions = { runOnStart: false },
   ) => {
+    // TODO: actually use the configured cron expression and wheter or not a job is disabled from database
     creatorOptions.logger.logDebug(`Validating cron expression '${cronExpression}' for job: ${name}`);
     if (cronExpression !== "never" && !validate(cronExpression)) {
       throw new Error(`Invalid cron expression '${cronExpression}' for job '${name}'`);

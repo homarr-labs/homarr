@@ -22,6 +22,7 @@
   "dependencies": {
     "@homarr/analytics": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/cron-job-api": "workspace:^0.1.0",
     "@homarr/cron-job-runner": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
     "@homarr/cron-jobs-core": "workspace:^0.1.0",
@@ -37,6 +38,7 @@
     "@homarr/widgets": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",
+    "fastify": "^5.4.0",
     "superjson": "2.2.2",
     "undici": "7.10.0"
   },
