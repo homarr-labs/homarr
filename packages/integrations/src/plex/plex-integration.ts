@@ -81,25 +81,43 @@ export class PlexIntegration extends Integration implements IMediaReleasesIntegr
     const data = await recentlyAddedSchema.parseAsync(await response.json());
     const imageProxy = new ImageProxy();
 
-    return await Promise.all(
-      data.MediaContainer.Metadata?.map(async (item) => {
-        const poster = item.Image.find((image) => image?.type === "coverPoster")?.url;
-        const backdrop = item.Image.find((image) => image?.type === "background")?.url;
+    const images =
+      data.MediaContainer.Metadata?.flatMap((item) => [
+        {
+          mediaKey: item.key,
+          type: "poster",
+          url: item.Image.find((image) => image?.type === "coverPoster")?.url,
+        },
+        {
+          mediaKey: item.key,
+          type: "backdrop",
+          url: item.Image.find((image) => image?.type === "background")?.url,
+        },
+      ]).filter(
+        (image): image is { mediaKey: string; type: "poster" | "backdrop"; url: string } => image.url !== undefined,
+      ) ?? [];
 
-        // TODO: instead allow the bulk creation of images in the image proxy
-        const posterUrl = poster ? super.url(poster as `/${string}`) : undefined;
-        const backdropUrl = backdrop ? super.url(backdrop as `/${string}`) : undefined;
-        const posterUrlWithProxy = posterUrl
-          ? await imageProxy.createImageAsync(posterUrl.toString(), {
-              "X-Plex-Token": token,
-            })
-          : undefined;
-        const backdropUrlWithProxy = backdropUrl
-          ? await imageProxy.createImageAsync(backdropUrl.toString(), {
-              "X-Plex-Token": token,
-            })
-          : undefined;
+    const proxiedImages = await Promise.all(
+      images.map(async (image) => {
+        const imageUrl = super.url(image.url as `/${string}`);
+        const proxiedImageUrl = await imageProxy
+          .createImageAsync(imageUrl.toString(), {
+            "X-Plex-Token": token,
+          })
+          .catch((error) => {
+            logger.debug(new Error("Failed to proxy image", { cause: error }));
+            return undefined;
+          });
+        return {
+          mediaKey: image.mediaKey,
+          type: image.type,
+          url: proxiedImageUrl,
+        };
+      }),
+    );
 
+    return (
+      data.MediaContainer.Metadata?.map((item) => {
         return {
           id: item.Media.at(0)?.id.toString() ?? item.key,
           type: item.type === "movie" ? "movie" : item.type === "tv" ? "tv" : "unknown",
@@ -108,8 +126,8 @@ export class PlexIntegration extends Integration implements IMediaReleasesIntegr
           description: item.summary,
           releaseDate: item.originallyAvailableAt ? new Date(item.originallyAvailableAt) : new Date(item.addedAt),
           imageUrls: {
-            poster: posterUrlWithProxy,
-            backdrop: backdropUrlWithProxy,
+            poster: proxiedImages.find((image) => image.mediaKey === item.key && image.type === "poster")?.url,
+            backdrop: proxiedImages.find((image) => image.mediaKey === item.key && image.type === "backdrop")?.url,
           },
           producer: item.studio,
           rating: item.rating?.toFixed(1),
@@ -119,7 +137,7 @@ export class PlexIntegration extends Integration implements IMediaReleasesIntegr
             .toString(),
           length: item.duration ? Math.round(item.duration / 1000) : undefined,
         };
-      }) ?? [],
+      }) ?? []
     );
   }
 

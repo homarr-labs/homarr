@@ -33,14 +33,10 @@ export class ImageProxy {
   public async createImageAsync(url: string, headers?: Record<string, string>): Promise<string> {
     const existingId = await this.getExistingIdAsync(url, headers);
     if (existingId) {
-      // TODO: remove
-      logger.info(`Found existing image for url=${url}, id=${existingId}`);
       return this.createImageUrl(existingId);
     }
 
     const id = createId();
-    // TODO: remove
-    logger.info(`Creating new image for url=${url} with id=${id}`);
     await this.storeImageAsync(id, url, headers);
 
     return this.createImageUrl(id);
