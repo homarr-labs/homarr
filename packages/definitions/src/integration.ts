@@ -89,19 +89,19 @@ export const integrationDefs = {
     name: "Jellyfin",
     secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg",
-    category: ["mediaService"],
+    category: ["mediaService", "mediaRelease"],
   },
   emby: {
     name: "Emby",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/emby.svg",
-    category: ["mediaService"],
+    category: ["mediaService", "mediaRelease"],
   },
   plex: {
     name: "Plex",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/plex.svg",
-    category: ["mediaService"],
+    category: ["mediaService", "mediaRelease"],
   },
   jellyseerr: {
     name: "Jellyseerr",
@@ -169,6 +169,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
     category: ["networkController"],
   },
+  mock: {
+    name: "Mock",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/vitest.svg",
+    category: ["mediaRelease"],
+  },
 } as const satisfies Record<string, integrationDefinition>;
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
@@ -223,4 +229,5 @@ export type IntegrationCategory =
   | "healthMonitoring"
   | "search"
   | "mediaTranscoding"
-  | "networkController";
+  | "networkController"
+  | "mediaRelease";
