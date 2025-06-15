@@ -7,7 +7,7 @@ import fastify from "fastify";
 
 import type { JobRouter } from "@homarr/cron-job-api";
 import { jobRouter } from "@homarr/cron-job-api";
-import { registerCronJobRunner } from "@homarr/cron-job-runner/register";
+import { CRON_JOB_API_KEY_HEADER, CRON_JOB_API_PATH, CRON_JOB_API_PORT } from "@homarr/cron-job-api/constants";
 import { jobGroup } from "@homarr/cron-jobs";
 import { db } from "@homarr/db";
 
@@ -17,11 +17,12 @@ const server = fastify({
   maxParamLength: 5000,
 });
 server.register(fastifyTRPCPlugin, {
-  prefix: "/trpc",
+  prefix: CRON_JOB_API_PATH,
   trpcOptions: {
     router: jobRouter,
-    createContext: () => ({
+    createContext: ({ req }) => ({
       manager: new JobManager(db, jobGroup),
+      apiKey: req.headers[CRON_JOB_API_KEY_HEADER] as string | undefined,
     }),
     onError({ path, error }) {
       // report to error monitoring
@@ -31,11 +32,11 @@ server.register(fastifyTRPCPlugin, {
 });
 
 void (async () => {
-  registerCronJobRunner();
+  await jobGroup.initializeAsync();
   await jobGroup.startAllAsync();
 
   try {
-    await server.listen({ port: 3002 });
+    await server.listen({ port: CRON_JOB_API_PORT });
   } catch (err) {
     server.log.error(err);
     process.exit(1);

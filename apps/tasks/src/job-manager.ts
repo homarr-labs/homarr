@@ -29,13 +29,16 @@ export class JobManager implements IJobManager {
       throw new Error(`Invalid cron expression: ${cron}`);
     }
     await this.updateConfigurationAsync(name, { cronExpression: cron });
-    await job.scheduledTask?.destroy();
+    await this.jobGroup.getTask(name)?.destroy();
 
     console.log(`Updating cron job ${name} to new cron expression: ${cron}`);
 
-    job.scheduledTask = schedule(cron, () => void job.executeAsync(), {
+    this.jobGroup.setTask(
       name,
-    });
+      schedule(cron, () => void job.executeAsync(), {
+        name,
+      }),
+    );
   }
   public async disableAsync(name: JobGroupKeys): Promise<void> {
     const job = this.jobGroup.getJobRegistry().get(name);
@@ -75,19 +78,19 @@ export class JobManager implements IJobManager {
       .values({ name, cronExpression: job.cronExpression, isEnabled: job.cronExpression !== "never" });
   }
 
-  public async getInfoAsync(
-    name: JobGroupKeys,
-  ): Promise<{ name: JobGroupKeys; cron: string; isRunning: boolean; nextRun: Date | null }> {
-    const job = this.jobGroup.getJobRegistry().get(name);
-    if (!job) throw new Error(`Job ${name} not found`);
+  public async getAllAsync(): Promise<
+    { name: JobGroupKeys; cron: string; preventManualExecution: boolean; isEnabled: boolean }[]
+  > {
+    const configurations = await this.db.query.cronJobConfigurations.findMany();
 
-    const status = await job.scheduledTask?.getStatus();
-
-    return {
-      cron: job.cronExpression,
-      isRunning: status === "running",
-      nextRun: job.scheduledTask?.getNextRun() ?? null,
-      name: job.name,
-    };
+    return [...this.jobGroup.getJobRegistry().entries()].map(([name, job]) => {
+      const config = configurations.find((config) => config.name === name);
+      return {
+        name,
+        cron: config?.cronExpression ?? job.cronExpression,
+        preventManualExecution: job.preventManualExecution,
+        isEnabled: config?.isEnabled ?? true,
+      };
+    });
   }
 }

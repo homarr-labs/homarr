@@ -5,7 +5,10 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts",
+    "./constants": "./src/constants.ts",
+    "./client": "./src/client.ts"
   },
   "typesVersions": {
     "*": {
@@ -24,14 +27,20 @@
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
+    "@homarr/env": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
+    "@tanstack/react-query": "^5.80.7",
+    "@trpc/client": "^11.4.1",
     "@trpc/server": "^11.4.1",
+    "@trpc/tanstack-react-query": "^11.4.1",
+    "react": "19.1.0",
     "zod": "^3.25.64"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/react": "19.1.8",
     "eslint": "^9.29.0",
     "typescript": "^5.8.3"
   }

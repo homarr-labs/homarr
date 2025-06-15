@@ -3065,7 +3065,8 @@
           "status": {
             "idle": "Idle",
             "running": "Running",
-            "error": "Error"
+            "error": "Error",
+            "disabled": "Disabled"
           },
           "job": {
             "minecraftServerStatus": {

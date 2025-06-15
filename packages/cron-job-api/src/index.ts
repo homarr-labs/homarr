@@ -1,10 +1,13 @@
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import type { JobGroupKeys } from "@homarr/cron-jobs";
 import { jobGroup } from "@homarr/cron-jobs";
 
-const jobNameSchema = z.enum(jobGroup.getKeys());
+import { env } from "./env";
+
+export const jobGroupKeys = jobGroup.getKeys();
+export const jobNameSchema = z.enum(jobGroup.getKeys());
 
 export interface IJobManager {
   startAsync(name: JobGroupKeys): Promise<void>;
@@ -13,46 +16,56 @@ export interface IJobManager {
   updateIntervalAsync(name: JobGroupKeys, cron: string): Promise<void>;
   disableAsync(name: JobGroupKeys): Promise<void>;
   enableAsync(name: JobGroupKeys): Promise<void>;
-  getInfoAsync(name: JobGroupKeys): Promise<{
-    name: JobGroupKeys;
-    cron: string;
-    isRunning: boolean;
-    nextRun: Date | null;
-  }>;
+  getAllAsync(): Promise<{ name: JobGroupKeys; cron: string; preventManualExecution: boolean; isEnabled: boolean }[]>;
 }
 
 const t = initTRPC
   .context<{
     manager: IJobManager;
+    apiKey?: string;
   }>()
   .create();
 
-export const router = t.router;
-export const publicProcedure = t.procedure;
+const createTrpcRouter = t.router;
+const apiKeyProcedure = t.procedure.use(({ ctx, next }) => {
+  if (ctx.apiKey !== env.CRON_JOB_API_KEY) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Missing or invalid API key",
+    });
+  }
 
-export const jobRouter = router({
-  start: publicProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
+  return next({
+    ctx: {
+      ...ctx,
+      apiKey: undefined, // Clear the API key after checking
+    },
+  });
+});
+
+export const jobRouter = createTrpcRouter({
+  start: apiKeyProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
     await ctx.manager.startAsync(input);
   }),
-  trigger: publicProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
+  trigger: apiKeyProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
     await ctx.manager.triggerAsync(input);
   }),
-  stop: publicProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
+  stop: apiKeyProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
     await ctx.manager.stopAsync(input);
   }),
-  updateInterval: publicProcedure
+  updateInterval: apiKeyProcedure
     .input(z.object({ name: jobNameSchema, cron: z.string() }))
     .mutation(async ({ input, ctx }) => {
       await ctx.manager.updateIntervalAsync(input.name, input.cron);
     }),
-  disable: publicProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
+  disable: apiKeyProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
     await ctx.manager.disableAsync(input);
   }),
-  enable: publicProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
+  enable: apiKeyProcedure.input(jobNameSchema).mutation(async ({ input, ctx }) => {
     await ctx.manager.enableAsync(input);
   }),
-  getInfo: publicProcedure.input(jobNameSchema).query(async ({ input, ctx }) => {
-    return ctx.manager.getInfoAsync(input);
+  getAll: apiKeyProcedure.query(({ ctx }) => {
+    return ctx.manager.getAllAsync();
   }),
 });
 
