@@ -17,15 +17,21 @@ import { useFormatter, useNow } from "next-intl";
 import ReactMarkdown from "react-markdown";
 
 import { clientApi } from "@homarr/api/client";
+import { useIntegrationsWithUseAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { isDateWithin, splitToChunksWithNItems } from "@homarr/common";
+import { getIconUrl } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
-import { Providers } from "./releases-providers";
-import type { ReleasesRepositoryResponse } from "./releases-repository";
+import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
+
+interface Interaction {
+  name: string;
+  iconUrl: string;
+}
 
 const formatRelativeDate = (value: string): string => {
   const isMonths = /\d+m/g.test(value);
@@ -38,7 +44,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const now = useNow();
   const formatter = useFormatter();
   const board = useRequiredBoard();
-  const [expandedRepository, setExpandedRepository] = useState({ providerKey: "", identifier: "" });
+  const [expandedRepositoryId, setExpandedRepositoryId] = useState("");
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
   const relativeDateOptions = useMemo(
     () => ({
@@ -48,12 +54,46 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     [options.newReleaseWithin, options.staleReleaseWithin],
   );
 
-  const batchedRepositories = useMemo(() => splitToChunksWithNItems(options.repositories, 5), [options.repositories]);
+  const integrations = useIntegrationsWithUseAccess().reduce<Record<string, Interaction>>((acc, integration) => {
+    acc[integration.id] = {
+      name: integration.name,
+      iconUrl: getIconUrl(integration.kind),
+    };
+    return acc;
+  }, {});
+
+  // Group repositories by integration
+  const groupedRepositories = useMemo(() => {
+    return options.repositories.reduce(
+      (acc, repo) => {
+        const key = repo.providerIntegrationId;
+        if (!key) return acc;
+
+        acc[key] ??= [];
+        acc[key].push(repo);
+
+        return acc;
+      },
+      {} as Record<string, ReleasesRepository[]>,
+    );
+  }, [options.repositories]);
+
+  // For each group, split into chunks of 5
+  const batchedRepositories = useMemo(() => {
+    return Object.entries(groupedRepositories).flatMap(([integrationId, group]) =>
+      splitToChunksWithNItems(group, 5).map((chunk) => ({
+        integrationId,
+        repositories: chunk,
+      })),
+    );
+  }, [groupedRepositories]);
+
   const [results] = clientApi.useSuspenseQueries((t) =>
-    batchedRepositories.flatMap((chunk) =>
+    batchedRepositories.flatMap(({ integrationId, repositories }) =>
       t.widget.releases.getLatest({
-        repositories: chunk.map((repository) => ({
-          providerKey: repository.providerKey,
+        integrationId: integrationId,
+        repositories: repositories.map((repository) => ({
+          id: repository.id,
           identifier: repository.identifier,
           versionFilter: repository.versionFilter,
         })),
@@ -65,11 +105,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     const formattedResults = results
       .flat()
       .map(({ data }) => {
-        if (data === undefined) return undefined;
-
-        const repository = options.repositories.find(
-          (repository) => repository.providerKey === data.providerKey && repository.identifier === data.identifier,
-        );
+        const repository = options.repositories.find((repository) => repository.id === data.id);
 
         if (repository === undefined) return undefined;
 
@@ -115,34 +151,27 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   ]);
 
   const toggleExpandedRepository = useCallback(
-    (repository: ReleasesRepositoryResponse) => {
-      if (
-        expandedRepository.providerKey === repository.providerKey &&
-        expandedRepository.identifier === repository.identifier
-      ) {
-        setExpandedRepository({ providerKey: "", identifier: "" });
-      } else {
-        setExpandedRepository({ providerKey: repository.providerKey, identifier: repository.identifier });
-      }
-    },
-    [expandedRepository],
+    (repository: ReleasesRepositoryResponse) =>
+      setExpandedRepositoryId(expandedRepositoryId === repository.id ? "" : repository.id),
+    [expandedRepositoryId],
   );
 
   return (
     <Stack gap={0} className="releases">
       {repositories.map((repository: ReleasesRepositoryResponse) => {
-        const isActive =
-          expandedRepository.providerKey === repository.providerKey &&
-          expandedRepository.identifier === repository.identifier;
+        const isActive = expandedRepositoryId === repository.id;
         const hasError = repository.error !== undefined;
+        const integration = repository.providerIntegrationId
+          ? integrations[repository.providerIntegrationId]
+          : undefined;
 
         return (
           <Stack
-            key={`${repository.providerKey}.${repository.identifier}`}
+            key={repository.id}
             className={combineClasses(
               "releases-repository",
               // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              `releases-repository-${repository.providerKey}-${repository.name || repository.identifier.replace(/[^a-zA-Z0-9]/g, "_")}`,
+              `releases-repository-${integration?.name ?? "error"}-${repository.name || repository.identifier.replace(/[^a-zA-Z0-9]/g, "_")}`,
               classes.releasesRepository,
             )}
             gap={0}
@@ -156,7 +185,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             >
               <MaskedOrNormalImage
                 className="releases-repository-header-icon"
-                imageUrl={repository.iconUrl ?? Providers[repository.providerKey].iconUrl}
+                imageUrl={repository.iconUrl ?? integration?.iconUrl}
                 hasColor={hasIconColor}
                 style={{
                   width: "1em",
@@ -451,9 +480,10 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
 interface ExtendedDisplayProps {
   repository: ReleasesRepositoryResponse;
   hasIconColor: boolean;
+  interaction?: Interaction;
 }
 
-const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => {
+const ExpandedDisplay = ({ repository, hasIconColor, interaction }: ExtendedDisplayProps) => {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
@@ -471,20 +501,27 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             {repository.identifier}
           </Text>
 
-          <Group className="releases-repository-expanded-header-provider-wrapper" gap={5} align="center">
-            <MaskedOrNormalImage
-              className="releases-repository-expanded-header-provider-icon"
-              imageUrl={Providers[repository.providerKey].iconUrl}
-              hasColor={hasIconColor}
-              style={{
-                width: "1em",
-                aspectRatio: "1/1",
-              }}
-            />
-            <Text className="releases-repository-expanded-header-provider-name" size="xs" c="iconColor" ff="monospace">
-              {Providers[repository.providerKey].name}
-            </Text>
-          </Group>
+          {interaction && (
+            <Group className="releases-repository-expanded-header-provider-wrapper" gap={5} align="center">
+              <MaskedOrNormalImage
+                className="releases-repository-expanded-header-provider-icon"
+                imageUrl={interaction.iconUrl}
+                hasColor={hasIconColor}
+                style={{
+                  width: "1em",
+                  aspectRatio: "1/1",
+                }}
+              />
+              <Text
+                className="releases-repository-expanded-header-provider-name"
+                size="xs"
+                c="iconColor"
+                ff="monospace"
+              >
+                {interaction.name}
+              </Text>
+            </Group>
+          )}
         </Group>
 
         {repository.createdAt && (

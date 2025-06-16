@@ -39,77 +39,70 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     };
   }
 
-  public async getReleasesAsync(repositories: ReleasesRepository[]): Promise<ReleasesResponse[]> {
-    return await Promise.all(
-      repositories.map(async (repository) => {
-        const [owner, name] = repository.identifier.split("/");
-        if (!owner || !name) {
-          logger.warn(
-            `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Github integration`,
-            {
-              identifier: repository.identifier,
-            },
-          );
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: { code: "invalidIdentifier" },
-          };
-        }
+  public async getReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
+    const [owner, name] = repository.identifier.split("/");
+    if (!owner || !name) {
+      logger.warn(
+        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Github integration`,
+        {
+          identifier: repository.identifier,
+        },
+      );
+      return {
+        id: repository.id,
+        error: { code: "invalidIdentifier" },
+      };
+    }
 
-        const api = this.getApi();
+    const api = this.getApi();
 
-        const details = await this.getDetailsAsync(api, owner, name);
+    const details = await this.getDetailsAsync(api, owner, name);
 
-        try {
-          const releasesResponse = await api.rest.repos.listReleases({
-            owner,
-            repo: name,
-            per_page: 100,
-          });
+    try {
+      const releasesResponse = await api.rest.repos.listReleases({
+        owner,
+        repo: name,
+        per_page: 100,
+      });
 
-          if (releasesResponse.data.length === 0) {
-            logger.warn(`No releases found, for ${repository.identifier} with Github integration`, {
-              identifier: repository.identifier,
-            });
-            return {
-              identifier: repository.identifier,
-              providerKey: repository.providerKey,
-              error: { code: "noReleasesFound" },
-            };
-          }
+      if (releasesResponse.data.length === 0) {
+        logger.warn(`No releases found, for ${repository.identifier} with Github integration`, {
+          identifier: repository.identifier,
+        });
+        return {
+          id: repository.id,
+          error: { code: "noReleasesFound" },
+        };
+      }
 
-          const releasesProviderResponse = releasesResponse.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
-            if (!release.published_at) return acc;
+      const releasesProviderResponse = releasesResponse.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
+        if (!release.published_at) return acc;
 
-            acc.push({
-              latestRelease: release.tag_name,
-              latestReleaseAt: new Date(release.published_at),
-              releaseUrl: release.html_url,
-              releaseDescription: release.body ?? undefined,
-              isPreRelease: release.prerelease,
-            });
-            return acc;
-          }, []);
+        acc.push({
+          latestRelease: release.tag_name,
+          latestReleaseAt: new Date(release.published_at),
+          releaseUrl: release.html_url,
+          releaseDescription: release.body ?? undefined,
+          isPreRelease: release.prerelease,
+        });
+        return acc;
+      }, []);
 
-          return getLatestRelease(releasesProviderResponse, repository, details);
-        } catch (error) {
-          const errorMessage = error instanceof RequestError ? error.message : String(error);
+      return getLatestRelease(releasesProviderResponse, repository, details);
+    } catch (error) {
+      const errorMessage = error instanceof RequestError ? error.message : String(error);
 
-          logger.warn(`Failed to get releases for ${owner}\\${name} with Github integration`, {
-            owner,
-            name,
-            error: errorMessage,
-          });
+      logger.warn(`Failed to get releases for ${owner}\\${name} with Github integration`, {
+        owner,
+        name,
+        error: errorMessage,
+      });
 
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: { message: errorMessage },
-          };
-        }
-      }),
-    );
+      return {
+        id: repository.id,
+        error: { message: errorMessage },
+      };
+    }
   }
 
   protected async getDetailsAsync(

@@ -34,6 +34,7 @@ export type { StreamSession } from "./interfaces/media-server/session";
 export type { TdarrQueue } from "./interfaces/media-transcoding/queue";
 export type { TdarrPieSegment, TdarrStatistics } from "./interfaces/media-transcoding/statistics";
 export type { TdarrWorker } from "./interfaces/media-transcoding/workers";
+export type { ReleasesResponse } from "./interfaces/releases-providers/releases-providers-types";
 
 // Schemas
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";

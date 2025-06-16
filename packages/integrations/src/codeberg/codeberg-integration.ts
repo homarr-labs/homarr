@@ -39,76 +39,67 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     };
   }
 
-  public async getReleasesAsync(repositories: ReleasesRepository[]): Promise<ReleasesResponse[]> {
-    return await Promise.all(
-      repositories.map(async (repository) => {
-        const [owner, name] = repository.identifier.split("/");
-        if (!owner || !name) {
-          logger.warn(
-            `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Codeberg integration`,
-            {
-              identifier: repository.identifier,
-            },
-          );
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: { code: "invalidIdentifier" },
-          };
-        }
+  public async getReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
+    const [owner, name] = repository.identifier.split("/");
+    if (!owner || !name) {
+      logger.warn(
+        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Codeberg integration`,
+        {
+          identifier: repository.identifier,
+        },
+      );
+      return {
+        id: repository.id,
+        error: { code: "invalidIdentifier" },
+      };
+    }
 
-        const headers = this.buildHeaders();
-        const details = await this.getDetailsAsync(owner, name, headers);
+    const headers = this.buildHeaders();
+    const details = await this.getDetailsAsync(owner, name, headers);
 
-        const releasesResponse = await fetchWithTrustedCertificatesAsync(
-          this.url(`/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/releases`),
-          { headers },
-        );
-
-        if (!releasesResponse.ok) {
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: { message: releasesResponse.statusText },
-          };
-        }
-
-        const releasesResponseJson: unknown = await releasesResponse.json();
-        const releasesResult = z
-          .array(
-            z
-              .object({
-                tag_name: z.string(),
-                published_at: z.string().transform((value) => new Date(value)),
-                url: z.string(),
-                body: z.string(),
-                prerelease: z.boolean(),
-              })
-              .transform((tag) => ({
-                latestRelease: tag.tag_name,
-                latestReleaseAt: tag.published_at,
-                releaseUrl: tag.url,
-                releaseDescription: tag.body,
-                isPreRelease: tag.prerelease,
-              })),
-          )
-          .safeParse(releasesResponseJson);
-
-        if (!releasesResult.success) {
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: {
-              message: releasesResponseJson
-                ? JSON.stringify(releasesResponseJson, null, 2)
-                : releasesResult.error.message,
-            },
-          };
-        } else {
-          return getLatestRelease(releasesResult.data, repository, details);
-        }
-      }),
+    const releasesResponse = await fetchWithTrustedCertificatesAsync(
+      this.url(`/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/releases`),
+      { headers },
     );
+
+    if (!releasesResponse.ok) {
+      return {
+        id: repository.id,
+        error: { message: releasesResponse.statusText },
+      };
+    }
+
+    const releasesResponseJson: unknown = await releasesResponse.json();
+    const releasesResult = z
+      .array(
+        z
+          .object({
+            tag_name: z.string(),
+            published_at: z.string().transform((value) => new Date(value)),
+            url: z.string(),
+            body: z.string(),
+            prerelease: z.boolean(),
+          })
+          .transform((tag) => ({
+            latestRelease: tag.tag_name,
+            latestReleaseAt: tag.published_at,
+            releaseUrl: tag.url,
+            releaseDescription: tag.body,
+            isPreRelease: tag.prerelease,
+          })),
+      )
+      .safeParse(releasesResponseJson);
+
+    if (!releasesResult.success) {
+      return {
+        id: repository.id,
+        error: {
+          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
+        },
+      };
+    } else {
+      return getLatestRelease(releasesResult.data, repository, details);
+    }
   }
 
   protected async getDetailsAsync(

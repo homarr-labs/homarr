@@ -1,22 +1,10 @@
-import { escapeForRegEx } from "@tiptap/react";
-
 import type {
   DetailsProviderResponse,
   ReleaseProviderResponse,
   ReleasesRepository,
   ReleasesResponse,
-  ReleasesVersionFilter,
 } from "./releases-providers-types";
 
-const formatVersionFilterRegex = (versionFilter: ReleasesVersionFilter | undefined) => {
-  if (!versionFilter) return undefined;
-
-  const escapedPrefix = versionFilter.prefix ? escapeForRegEx(versionFilter.prefix) : "";
-  const precision = "[0-9]+\\.".repeat(versionFilter.precision).slice(0, -2);
-  const escapedSuffix = versionFilter.suffix ? escapeForRegEx(versionFilter.suffix) : "";
-
-  return `^${escapedPrefix}${precision}${escapedSuffix}$`;
-};
 
 export const getLatestRelease = (
   releases: ReleaseProviderResponse[],
@@ -25,8 +13,7 @@ export const getLatestRelease = (
 ): ReleasesResponse => {
   const validReleases = releases.filter((result) => {
     if (result.latestRelease) {
-      const versionRegex = formatVersionFilterRegex(repository.versionFilter);
-      return versionRegex ? new RegExp(versionRegex).test(result.latestRelease) : true;
+      return repository.versionRegex ? new RegExp(repository.versionRegex).test(result.latestRelease) : true;
     }
 
     return true;
@@ -35,8 +22,7 @@ export const getLatestRelease = (
   const latest =
     validReleases.length === 0
       ? ({
-          identifier: repository.identifier,
-          providerKey: repository.providerKey,
+          id: repository.id,
           error: { code: "noMatchingVersion" },
         } as ReleasesResponse)
       : validReleases.reduce(
@@ -44,13 +30,11 @@ export const getLatestRelease = (
             return {
               ...details,
               ...(result.latestReleaseAt > latest.latestReleaseAt ? result : latest),
-              identifier: repository.identifier,
-              providerKey: repository.providerKey,
+              id: repository.id,
             };
           },
           {
-            identifier: "",
-            providerKey: "",
+            id: "",
             latestRelease: "",
             latestReleaseAt: new Date(0),
           },
@@ -60,5 +44,5 @@ export const getLatestRelease = (
 };
 
 export interface ReleasesProviderIntegration {
-  getReleasesAsync(repositories: ReleasesRepository[]): Promise<ReleasesResponse[]>;
+  getReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse>;
 }

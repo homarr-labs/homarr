@@ -35,45 +35,40 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
     };
   }
 
-  public async getReleasesAsync(repositories: ReleasesRepository[]): Promise<ReleasesResponse[]> {
-    return await Promise.all(
-      repositories.map(async (repository) => {
-        const api = this.getApi();
+  public async getReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
+    const api = this.getApi();
 
-        const details = await this.getDetailsAsync(api, repository.identifier);
+    const details = await this.getDetailsAsync(api, repository.identifier);
 
-        const releasesResponse = await api.ProjectReleases.all(repository.identifier, {
-          perPage: 100,
-        });
+    const releasesResponse = await api.ProjectReleases.all(repository.identifier, {
+      perPage: 100,
+    });
 
-        if (releasesResponse instanceof Error) {
-          logger.warn(`Failed to get releases for ${repository.identifier} with Gitlab integration`, {
-            identifier: repository.identifier,
-            error: releasesResponse.message,
-          });
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: { code: "noReleasesFound" },
-          };
-        }
+    if (releasesResponse instanceof Error) {
+      logger.warn(`Failed to get releases for ${repository.identifier} with Gitlab integration`, {
+        identifier: repository.identifier,
+        error: releasesResponse.message,
+      });
+      return {
+        id: repository.id,
+        error: { code: "noReleasesFound" },
+      };
+    }
 
-        const releasesProviderResponse = releasesResponse.reduce<ReleaseProviderResponse[]>((acc, release) => {
-          if (!release.released_at) return acc;
+    const releasesProviderResponse = releasesResponse.reduce<ReleaseProviderResponse[]>((acc, release) => {
+      if (!release.released_at) return acc;
 
-          acc.push({
-            latestRelease: release.tag_name,
-            latestReleaseAt: new Date(release.released_at),
-            releaseUrl: release._links.self,
-            releaseDescription: release.description ?? undefined,
-            //isPreRelease: release.upcoming_release ?? false, // upcoming_release - is not available with @gitbeaker/rest SDK. Raised issue on GitHub https://github.com/jdalrymple/gitbeaker/issues/3730
-          });
-          return acc;
-        }, []);
+      acc.push({
+        latestRelease: release.tag_name,
+        latestReleaseAt: new Date(release.released_at),
+        releaseUrl: release._links.self,
+        releaseDescription: release.description ?? undefined,
+        //isPreRelease: release.upcoming_release ?? false, // upcoming_release - is not available with @gitbeaker/rest SDK. Raised issue on GitHub https://github.com/jdalrymple/gitbeaker/issues/3730
+      });
+      return acc;
+    }, []);
 
-        return getLatestRelease(releasesProviderResponse, repository, details);
-      }),
-    );
+    return getLatestRelease(releasesProviderResponse, repository, details);
   }
 
   protected async getDetailsAsync(api: CoreGitlab, identifier: string): Promise<DetailsProviderResponse | undefined> {

@@ -1,5 +1,3 @@
-import type { ProviderKey } from "./releases-providers";
-
 export interface ReleasesVersionFilter {
   prefix?: string;
   precision: number;
@@ -9,10 +7,6 @@ export interface ReleasesVersionFilter {
 export interface ReleasesRepository {
   id: string;
   providerIntegrationId?: string;
-  /**
-   * @deprecated Use the new integration system instead.
-   */
-  providerKey?: ProviderKey;
   identifier: string;
   name?: string;
   versionFilter?: ReleasesVersionFilter;

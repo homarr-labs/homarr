@@ -17,12 +17,11 @@ import {
   Text,
   TextInput,
   Title,
-  Tooltip
+  Tooltip,
 } from "@mantine/core";
-import { randomId } from "@mantine/hooks";
 import type { CheckboxProps } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
-import { useDebouncedValue } from "@mantine/hooks";
+import { randomId, useDebouncedValue } from "@mantine/hooks";
 import {
   IconAlertTriangleFilled,
   IconBrandDocker,
@@ -58,7 +57,6 @@ interface FormValidation {
 interface Integration extends IntegrationSelectOption {
   iconUrl: string;
 }
-type Integrations = Record<string, Integration>;
 
 export const WidgetMultiReleasesRepositoriesInput = ({
   property,
@@ -87,9 +85,9 @@ export const WidgetMultiReleasesRepositoriesInput = ({
       refetchOnReconnect: false,
     },
   );
-  const integrations: Integrations = useMemo(
+  const integrations = useMemo(
     () =>
-      integrationsApi.data?.reduce<Integrations>((acc, integration) => {
+      integrationsApi.data?.reduce<Record<string, Integration>>((acc, integration) => {
         acc[integration.id] = {
           id: integration.id,
           name: integration.name,
@@ -293,7 +291,7 @@ interface RepositoryEditProps {
   onRepositorySave: (repository: ReleasesRepository) => FormValidation;
   onRepositoryCancel?: () => void;
   versionFilterPrecisionOptions: string[];
-  integrations: Integrations;
+  integrations: Record<string, Integration>;
 }
 
 const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, actions }) => {
@@ -593,7 +591,7 @@ const ContainerImageSelector = ({
 
 interface RepositoryImportProps {
   repositories: ReleasesRepository[];
-  integrations: Integrations;
+  integrations: Record<string, Integration>;
   versionFilterPrecisionOptions: string[];
   onConfirm: (selectedRepositories: ReleasesRepositoryImport[]) => void;
   isAdmin: boolean;

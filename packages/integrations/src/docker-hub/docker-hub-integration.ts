@@ -25,7 +25,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
       return {};
 
     // Request auth token
-    const accessTokenResponse = await fetchWithTrustedCertificatesAsync(this.url(`/v2/auth/token`), {
+    const accessTokenResponse = await fetchWithTrustedCertificatesAsync(this.url("/v2/auth/token"), {
       body: JSON.stringify({
         identifier: this.getSecretValue("username"),
         secret: this.getSecretValue("personalAccessToken") || this.getSecretValue("password"),
@@ -84,69 +84,59 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     };
   }
 
-  public async getReleasesAsync(repositories: ReleasesRepository[]): Promise<ReleasesResponse[]> {
-    return await Promise.all(
-      repositories.map(async (repository) => {
-        const relativeUrl = this.getRelativeUrl(repository.identifier);
-        if (relativeUrl === "/") {
-          logger.warn(
-            `Invalid identifier format. Expected 'owner/name' or 'name', for ${repository.identifier} on DockerHub`,
-            {
-              identifier: repository.identifier,
-            },
-          );
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: { code: "invalidIdentifier" },
-          };
-        }
+  public async getReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
+    const relativeUrl = this.getRelativeUrl(repository.identifier);
+    if (relativeUrl === "/") {
+      logger.warn(
+        `Invalid identifier format. Expected 'owner/name' or 'name', for ${repository.identifier} on DockerHub`,
+        {
+          identifier: repository.identifier,
+        },
+      );
+      return {
+        id: repository.id,
+        error: { code: "invalidIdentifier" },
+      };
+    }
 
-        const headers = await this.buildHeadersAsync();
-        const details = await this.getDetailsAsync(relativeUrl, headers);
+    const headers = await this.buildHeadersAsync();
+    const details = await this.getDetailsAsync(relativeUrl, headers);
 
-        const releasesResponse = await fetchWithTrustedCertificatesAsync(
-          this.url(`${relativeUrl}/tags?page_size=100`),
-          { headers },
-        );
+    const releasesResponse = await fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/tags?page_size=100`), {
+      headers,
+    });
 
-        if (!releasesResponse.ok) {
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: { message: releasesResponse.statusText },
-          };
-        }
+    if (!releasesResponse.ok) {
+      return {
+        id: repository.id,
+        error: { message: releasesResponse.statusText },
+      };
+    }
 
-        const releasesResponseJson: unknown = await releasesResponse.json();
-        const releasesResult = z
-          .object({
-            results: z.array(
-              z
-                .object({ name: z.string(), last_updated: z.string().transform((value) => new Date(value)) })
-                .transform((tag) => ({
-                  latestRelease: tag.name,
-                  latestReleaseAt: tag.last_updated,
-                })),
-            ),
-          })
-          .safeParse(releasesResponseJson);
+    const releasesResponseJson: unknown = await releasesResponse.json();
+    const releasesResult = z
+      .object({
+        results: z.array(
+          z
+            .object({ name: z.string(), last_updated: z.string().transform((value) => new Date(value)) })
+            .transform((tag) => ({
+              latestRelease: tag.name,
+              latestReleaseAt: tag.last_updated,
+            })),
+        ),
+      })
+      .safeParse(releasesResponseJson);
 
-        if (!releasesResult.success) {
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: {
-              message: releasesResponseJson
-                ? JSON.stringify(releasesResponseJson, null, 2)
-                : releasesResult.error.message,
-            },
-          };
-        } else {
-          return getLatestRelease(releasesResult.data.results, repository, details);
-        }
-      }),
-    );
+    if (!releasesResult.success) {
+      return {
+        id: repository.id,
+        error: {
+          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
+        },
+      };
+    } else {
+      return getLatestRelease(releasesResult.data.results, repository, details);
+    }
   }
 
   protected async getDetailsAsync(

@@ -23,57 +23,49 @@ export class NPMIntegration extends Integration implements ReleasesProviderInteg
     };
   }
 
-  public async getReleasesAsync(repositories: ReleasesRepository[]): Promise<ReleasesResponse[]> {
-    return await Promise.all(
-      repositories.map(async (repository) => {
-        const releasesResponse = await fetchWithTrustedCertificatesAsync(
-          this.url(`/${encodeURIComponent(repository.identifier)}`),
-        );
-
-        if (!releasesResponse.ok) {
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: { message: releasesResponse.statusText },
-          };
-        }
-
-        const releasesResponseJson: unknown = await releasesResponse.json();
-        const releasesResult = z
-          .object({
-            time: z.record(z.string().transform((value) => new Date(value))).transform((version) =>
-              Object.entries(version).map(([key, value]) => ({
-                identifier: "",
-                latestRelease: key,
-                latestReleaseAt: value,
-              })),
-            ),
-            versions: z.record(z.object({ description: z.string() })),
-            name: z.string(),
-          })
-          .transform((resp) => {
-            return resp.time.map((release) => ({
-              ...release,
-              releaseUrl: `https://www.npmjs.com/package/${resp.name}/v/${release.latestRelease}`,
-              releaseDescription: resp.versions[release.latestRelease]?.description ?? "",
-            }));
-          })
-          .safeParse(releasesResponseJson);
-
-        if (!releasesResult.success) {
-          return {
-            identifier: repository.identifier,
-            providerKey: repository.providerKey,
-            error: {
-              message: releasesResponseJson
-                ? JSON.stringify(releasesResponseJson, null, 2)
-                : releasesResult.error.message,
-            },
-          };
-        } else {
-          return getLatestRelease(releasesResult.data, repository);
-        }
-      }),
+  public async getReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
+    const releasesResponse = await fetchWithTrustedCertificatesAsync(
+      this.url(`/${encodeURIComponent(repository.identifier)}`),
     );
+
+    if (!releasesResponse.ok) {
+      return {
+        id: repository.id,
+        error: { message: releasesResponse.statusText },
+      };
+    }
+
+    const releasesResponseJson: unknown = await releasesResponse.json();
+    const releasesResult = z
+      .object({
+        time: z.record(z.string().transform((value) => new Date(value))).transform((version) =>
+          Object.entries(version).map(([key, value]) => ({
+            identifier: "",
+            latestRelease: key,
+            latestReleaseAt: value,
+          })),
+        ),
+        versions: z.record(z.object({ description: z.string() })),
+        name: z.string(),
+      })
+      .transform((resp) => {
+        return resp.time.map((release) => ({
+          ...release,
+          releaseUrl: `https://www.npmjs.com/package/${resp.name}/v/${release.latestRelease}`,
+          releaseDescription: resp.versions[release.latestRelease]?.description ?? "",
+        }));
+      })
+      .safeParse(releasesResponseJson);
+
+    if (!releasesResult.success) {
+      return {
+        id: repository.id,
+        error: {
+          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
+        },
+      };
+    } else {
+      return getLatestRelease(releasesResult.data, repository);
+    }
   }
 }

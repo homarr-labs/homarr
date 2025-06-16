@@ -1,11 +1,5 @@
 import type { TranslationObject } from "@homarr/translation";
 
-export interface ReleasesVersionFilter {
-  prefix?: string;
-  precision: number;
-  suffix?: string;
-}
-
 export interface DetailsProviderResponse {
   projectUrl?: string;
   projectDescription?: string;
@@ -26,16 +20,15 @@ export interface ReleaseProviderResponse {
 }
 
 export interface ReleasesRepository {
-  providerKey: string;
+  id: string;
   identifier: string;
-  versionFilter?: ReleasesVersionFilter;
+  versionRegex?: string;
 }
 
 type ReleasesErrorKeys = keyof TranslationObject["widget"]["releases"]["error"]["messages"];
 
 export interface ReleasesResponse {
-  identifier: string;
-  providerKey: string;
+  id: string;
   latestRelease?: string;
   latestReleaseAt?: Date;
   releaseUrl?: string;
