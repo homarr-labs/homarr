@@ -26,7 +26,7 @@ import { progressColor } from "../health-monitoring/system-health";
 dayjs.extend(duration);
 
 export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
-  const [firewallsData] = clientApi.widget.firewall.getFirewallStatus.useSuspenseQuery(
+  const [firewallsCpuData] = clientApi.widget.firewall.getFirewallCpuStatus.useSuspenseQuery(
     {
       integrationIds,
     },
@@ -40,29 +40,6 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
 
   const utils = clientApi.useUtils();
 
-  clientApi.widget.firewall.subscribeFirewallStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
 
   const t = useI18n();
   const isTiny = width < 256;
@@ -78,14 +55,14 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     return parseFloat((bytes / Math.pow(kilobyte, i)).toFixed(decimals)) + " " + sizes[i];
   }
 
-  if (!Array.isArray(firewallsData)) {
-    console.log("firewallsData: ", firewallsData);
+  if (!Array.isArray(firewallsCpuData)) {
+    console.log("firewallsData: ", firewallsCpuData);
     return <div>No data available</div>;
   }
 
   return (
     <ScrollArea h="100%">
-      {firewallsData.map(({ integration, summary }) => (
+      {firewallsCpuData.map(({ integration, summary }) => (
         <Tabs key={integration.name} variant="outline">
           <Tabs.List grow>
             <Tabs.Tab value={integration.name} fz="xs">

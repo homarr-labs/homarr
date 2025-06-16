@@ -11,12 +11,12 @@ import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const firewallRouter = createTRPCRouter({
-  getFirewallStatus: publicProcedure
+  getFirewallCpuStatus: publicProcedure
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
     .query(async ({ ctx }) => {
       const results = await Promise.all(
         ctx.integrations.map(async (integration) => {
-          const innerHandler = firewallRequestHandler.handler(integration, {});
+          const innerHandler = firewallCpuRequestHandler.handler(integration, {});
           const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
 
           return {

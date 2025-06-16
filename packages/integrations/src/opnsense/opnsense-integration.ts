@@ -8,12 +8,16 @@ import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { FirewallSummaryIntegration } from "../interfaces/firewall-summary/firewall-summary-integration";
-import type { FirewallInterfaceSummary, FirewallMemorySummary, FirewallVersionSummary, FirewallCpuSummary } from "../interfaces/firewall-summary/firewall-summary-types";
+import type {
+  FirewallInterfaceSummary,
+  FirewallMemorySummary,
+  FirewallVersionSummary,
+  FirewallCpuSummary
+} from "../interfaces/firewall-summary/firewall-summary-types";
 import {
   opnsenseActivitySchema,
   opnsenseInterfacesSchema,
   opnsenseMemorySchema,
-  opnsenseMemorySummary,
   opnsenseSystemSummarySchema,
 } from "./opnsense-types";
 
@@ -193,7 +197,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     }
   }
 
-  public getFirewallCpu(): FirewallCpuSummary {
+  public async getFirewallCpuAsync(): FirewallCpuSummary {
 
     // The API endpoint for OPNsense is SSE compliant. But I'll just get one event and close the connection
     const response = await fetch('/api/diagnostics/cpu_usage/stream', {
