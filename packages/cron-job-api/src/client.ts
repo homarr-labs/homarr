@@ -16,5 +16,5 @@ export const cronJobApi = createTRPCClient<JobRouter>({
 });
 
 function getBaseUrl() {
-  return `http://${process.env.HOSTNAME ?? "localhost"}:${CRON_JOB_API_PORT}`;
+  return `http://localhost:${CRON_JOB_API_PORT}`;
 }
