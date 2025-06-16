@@ -1150,8 +1150,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/dockerode':
-        specifier: ^3.3.40
-        version: 3.3.40
+        specifier: ^3.3.41
+        version: 3.3.41
       eslint:
         specifier: ^9.29.0
         version: 9.29.0
@@ -4680,8 +4680,8 @@ packages:
   '@types/docker-modem@3.0.6':
     resolution: {integrity: sha512-yKpAGEuKRSS8wwx0joknWxsmLha78wNMe9R2S3UNsVOkZded8UqOrV8KoeDXoXsjndxwyF3eIhyClGbO1SEhEg==}
 
-  '@types/dockerode@3.3.40':
-    resolution: {integrity: sha512-O1ckSFYbcYv/KcnAHMLCnKQYY8/5+6CRzpsOPcQIePHRX2jG4Gmz8uXPMCXIxTGN9OYkE5eox/L67l2sGY1UYg==}
+  '@types/dockerode@3.3.41':
+    resolution: {integrity: sha512-5kOi6bcnEjqfJ68ZNV/bBvSMLNIucc0XbRmBO4hg5OoFCoP99eSRcbMysjkzV7ZxQEmmc/zMnv4A7odwuKFzDA==}
 
   '@types/estree-jsx@1.0.5':
     resolution: {integrity: sha512-52CcUVNFyfb1A2ALocQw/Dd1BQFNmSdkuC3BkZ6iqhdMfQz7JWOFRuJFloOzjk+6WijU56m9oKXFAXc7o3Towg==}
@@ -13223,7 +13223,7 @@ snapshots:
       '@types/node': 22.15.32
       '@types/ssh2': 1.15.1
 
-  '@types/dockerode@3.3.40':
+  '@types/dockerode@3.3.41':
     dependencies:
       '@types/docker-modem': 3.0.6
       '@types/node': 22.15.32
@@ -19143,7 +19143,7 @@ snapshots:
   testcontainers@11.0.3:
     dependencies:
       '@balena/dockerignore': 1.0.2
-      '@types/dockerode': 3.3.40
+      '@types/dockerode': 3.3.41
       archiver: 7.0.1
       async-lock: 1.4.1
       byline: 5.0.0
