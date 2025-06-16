@@ -95,7 +95,8 @@ interface JobCardProps {
 }
 
 const JobCard = ({ job, status }: JobCardProps) => {
-  const t = useScopedI18n("management.page.tool.tasks");
+  const t = useI18n();
+  const tTasks = useScopedI18n("management.page.tool.tasks");
   const triggerMutation = clientApi.cronJobs.triggerJob.useMutation();
   const handleJobTrigger = React.useCallback(
     async (name: JobName) => {
@@ -133,9 +134,9 @@ const JobCard = ({ job, status }: JobCardProps) => {
       <Group justify={"space-between"} gap={"md"}>
         <Stack gap={0}>
           <Group>
-            <Text>{t(`job.${job.name}.label`)}</Text>
+            <Text>{tTasks(`job.${job.name}.label`)}</Text>
             <StatusBadge isEnabled={isEnabled} status={status} />
-            {status?.lastExecutionStatus === "error" && <Badge color="red">{t("status.error")}</Badge>}
+            {status?.lastExecutionStatus === "error" && <Badge color="red">{tTasks("status.error")}</Badge>}
           </Group>
           <Group gap="xs">
             {status && (
@@ -145,7 +146,7 @@ const JobCard = ({ job, status }: JobCardProps) => {
                   •
                 </Text>
                 <Text size="sm" c="dimmed">
-                  {cronExpressions.find((expression) => expression.value === job.cron)?.label ?? job.cron}
+                  {cronExpressions.find((expression) => expression.value === job.cron)?.label(t) ?? job.cron}
                 </Text>
               </>
             )}
@@ -177,8 +178,8 @@ const JobCard = ({ job, status }: JobCardProps) => {
               openModal(
                 { job },
                 {
-                  title: t("settings.title", {
-                    jobName: t(`job.${job.name}.label`),
+                  title: tTasks("settings.title", {
+                    jobName: tTasks(`job.${job.name}.label`),
                   }),
                 },
               )
