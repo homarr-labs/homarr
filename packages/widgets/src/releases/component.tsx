@@ -91,7 +91,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const [results] = clientApi.useSuspenseQueries((t) =>
     batchedRepositories.flatMap(({ integrationId, repositories }) =>
       t.widget.releases.getLatest({
-        integrationId: integrationId,
+        integrationId,
         repositories: repositories.map((repository) => ({
           id: repository.id,
           identifier: repository.identifier,
