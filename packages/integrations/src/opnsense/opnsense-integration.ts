@@ -8,7 +8,7 @@ import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { FirewallSummaryIntegration } from "../interfaces/firewall-summary/firewall-summary-integration";
-import type { FirewallInterfaceSummary, FirewallSummary } from "../interfaces/firewall-summary/firewall-summary-types";
+import type { FirewallInterfaceSummary, FirewallMemorySummary, FirewallVersionSummary, FirewallCpuSummary } from "../interfaces/firewall-summary/firewall-summary-types";
 import {
   opnsenseActivitySchema,
   opnsenseInterfacesSchema,
@@ -95,14 +95,17 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     const memoryTotal = parseInt(memory.data.memory.total);
     const memoryUsed = memory.data.memory.used;
     const memoryPercent = (100 * memory.data.memory.used) / parseInt(memory.data.memory.total);
-    const memorySummary: opnsenseMemorySummary = {
-      total: memoryTotal,
-      used: memoryUsed,
-      percent: memoryPercent,
+    const memorySummary: FirewallMemorySummary = {
+      memory: {
+        total: memoryTotal,
+        used: memoryUsed,
+        percent: memoryPercent,
+      }
     };
 
     return memorySummary;
   }
+
   private async getVersionAsync() {
     const responseSummary = await fetchWithTrustedCertificatesAsync(
       this.url("/api/diagnostics/system/system_information"),
@@ -168,18 +171,68 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     return returnValue;
   }
 
-  public async getFirewallSummaryAsync(): Promise<FirewallSummary> {
+
+  public async getFirewallVersionAsync(): Promise<FirewallVersionSummary> {
     const version = await this.getVersionAsync();
-    const memory_values = await this.getMemoryValuesAsync();
-    const cpu_values = await this.getCpuValuesAsync();
+    return {
+      version,
+    }
+  }
+
+  public async getFirewallInterfacesAsync(): Promise<FirewallInterfaceSummary> {
     const interfaces = await this.getInterfacesAsync();
     return {
-      version: typeof version === "string" ? version : "unknown",
-      memory: memory_values,
-      cpu: {
-        idle: cpu_values,
+      interfaces,
+    }
+  }
+
+  public async getFirewallMemoryAsync(): Promise<FirewallMemorySummary> {
+    const memory = await this.getMemoryAsync();
+    return {
+      memory,
+    }
+  }
+
+  public getFirewallCpu(): FirewallCpuSummary {
+
+    // The API endpoint for OPNsense is SSE compliant. But I'll just get one event and close the connection
+    const response = await fetch('/api/diagnostics/cpu_usage/stream', {
+      headers: {
+        Authorization: this.getAuthHeaders(),
       },
-      interfaces: interfaces,
-    };
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    if (!response.body) {
+      throw new Error("ReadableStream not supported in this environment.");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+
+      if (done) {
+        break;
+      }
+
+      const chunk = decoder.decode(value, { stream: true });
+      const lines = chunk.split('\n');
+
+      for (const line of lines) {
+        if (line.startsWith('data:')) {
+          const data = line.substring(5).trim();
+          console.log(`Received data: ${data}`);
+
+          await reader.cancel();
+          return;
+        }
+      }
+    }
   }
 }
+

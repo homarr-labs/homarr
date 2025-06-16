@@ -87,3 +87,4 @@ export interface opnsenseInterfaceSummary {
   trans: number;
   name: string;
 }
+
