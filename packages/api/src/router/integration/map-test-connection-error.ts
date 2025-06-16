@@ -36,6 +36,7 @@ const mapError = (error: Error): MappedError => {
 export interface MappedCertificate {
   isSelfSigned: boolean;
   issuer: string;
+  issuerCertificate?: MappedCertificate;
   subject: string;
   serialNumber: string;
   validFrom: Date;
@@ -47,6 +48,7 @@ export interface MappedCertificate {
 const mapCertificate = (certificate: X509Certificate, code: RequestErrorCode): MappedCertificate => ({
   isSelfSigned: certificate.ca || code === "DEPTH_ZERO_SELF_SIGNED_CERT",
   issuer: certificate.issuer,
+  issuerCertificate: certificate.issuerCertificate ? mapCertificate(certificate.issuerCertificate, code) : undefined,
   subject: certificate.subject,
   serialNumber: certificate.serialNumber,
   validFrom: certificate.validFromDate,
