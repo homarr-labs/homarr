@@ -1,4 +1,5 @@
 import { initTRPC, TRPCError } from "@trpc/server";
+import { validate } from "node-cron";
 import { z } from "zod/v4";
 
 import type { JobGroupKeys } from "@homarr/cron-jobs";
@@ -30,7 +31,7 @@ const createTrpcRouter = t.router;
 const apiKeyProcedure = t.procedure.use(({ ctx, next }) => {
   if (ctx.apiKey !== env.CRON_JOB_API_KEY) {
     throw new TRPCError({
-      code: "UNAUTHORIZED",
+      code: "FORBIDDEN",
       message: "Missing or invalid API key",
     });
   }
@@ -41,6 +42,10 @@ const apiKeyProcedure = t.procedure.use(({ ctx, next }) => {
       apiKey: undefined, // Clear the API key after checking
     },
   });
+});
+
+export const cronExpressionSchema = z.string().refine((expression) => validate(expression), {
+  error: "Invalid cron expression",
 });
 
 export const jobRouter = createTrpcRouter({
@@ -54,7 +59,12 @@ export const jobRouter = createTrpcRouter({
     await ctx.manager.stopAsync(input);
   }),
   updateInterval: apiKeyProcedure
-    .input(z.object({ name: jobNameSchema, cron: z.string() }))
+    .input(
+      z.object({
+        name: jobNameSchema,
+        cron: cronExpressionSchema,
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
       await ctx.manager.updateIntervalAsync(input.name, input.cron);
     }),

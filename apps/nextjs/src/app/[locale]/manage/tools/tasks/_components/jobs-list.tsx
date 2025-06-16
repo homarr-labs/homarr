@@ -11,7 +11,7 @@ import { getMantineColor, useTimeAgo } from "@homarr/common";
 import type { TaskStatus } from "@homarr/cron-job-status";
 import { useForm } from "@homarr/form";
 import { createModal, useModalAction } from "@homarr/modals";
-import type { TranslationKeys } from "@homarr/translation";
+import { TranslationFunction } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { IconPowerOff } from "@homarr/ui/icons";
 
@@ -49,45 +49,45 @@ export const JobsList = ({ initialJobs }: JobsListProps) => {
 const cronExpressions = [
   {
     value: "*/5 * * * * *",
-    label: "Every 5 seconds",
+    label: (t) => t("management.page.tool.tasks.interval.seconds", { interval: 5 }),
   },
   {
     value: "*/10 * * * * *",
-    label: "Every 10 seconds",
+    label: (t) => t("management.page.tool.tasks.interval.seconds", { interval: 10 }),
   },
   {
     value: "*/20 * * * * *",
-    label: "Every 20 seconds",
+    label: (t) => t("management.page.tool.tasks.interval.seconds", { interval: 20 }),
   },
   {
     value: "* * * * *",
-    label: "Every minute",
+    label: (t) => t("management.page.tool.tasks.interval.minutes", { interval: 1 }),
   },
   {
     value: "*/5 * * * *",
-    label: "Every 5 minutes",
+    label: (t) => t("management.page.tool.tasks.interval.minutes", { interval: 5 }),
   },
   {
     value: "*/10 * * * *",
-    label: "Every 10 minutes",
+    label: (t) => t("management.page.tool.tasks.interval.minutes", { interval: 10 }),
   },
   {
     value: "*/15 * * * *",
-    label: "Every 15 minutes",
+    label: (t) => t("management.page.tool.tasks.interval.minutes", { interval: 15 }),
   },
   {
     value: "0 * * * *",
-    label: "Every hour",
+    label: (t) => t("management.page.tool.tasks.interval.hours", { interval: 1 }),
   },
   {
     value: "0 0 * * */1",
-    label: "Every days midnight",
+    label: (t) => t("management.page.tool.tasks.interval.midnight"),
   },
   {
     value: "0 0 * * 1",
-    label: "Every monday midnight",
+    label: (t) => t("management.page.tool.tasks.interval.weeklyMonday"),
   },
-];
+] satisfies { value: string; label: (t: TranslationFunction) => string }[];
 
 interface JobCardProps {
   job: RouterOutputs["cronJobs"]["getJobs"][number];
@@ -133,7 +133,7 @@ const JobCard = ({ job, status }: JobCardProps) => {
       <Group justify={"space-between"} gap={"md"}>
         <Stack gap={0}>
           <Group>
-            <Text>{t(`job.${job.name}.label` as TranslationKeys)}</Text>
+            <Text>{t(`job.${job.name}.label`)}</Text>
             <StatusBadge isEnabled={isEnabled} status={status} />
             {status?.lastExecutionStatus === "error" && <Badge color="red">{t("status.error")}</Badge>}
           </Group>
@@ -177,7 +177,9 @@ const JobCard = ({ job, status }: JobCardProps) => {
               openModal(
                 { job },
                 {
-                  title: `Task settings for ${t(`job.${job.name}.label`)}`,
+                  title: t("settings.title", {
+                    jobName: t(`job.${job.name}.label`),
+                  }),
                 },
               )
             }
@@ -260,7 +262,11 @@ const TaskConfigurationModal = createModal<{
       })}
     >
       <Stack gap="sm">
-        <Select label="Schedule interval" {...form.getInputProps("cron")} data={cronExpressions} />
+        <Select
+          label={t("management.page.tool.tasks.field.interval.label")}
+          {...form.getInputProps("cron")}
+          data={cronExpressions.map(({ value, label }) => ({ value, label: label(t) }))}
+        />
         <Group justify="end">
           <Button variant="subtle" color="gray" disabled={isPending} onClick={actions.closeModal}>
             {t("common.action.cancel")}

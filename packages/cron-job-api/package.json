@@ -33,6 +33,7 @@
     "@trpc/client": "^11.4.1",
     "@trpc/server": "^11.4.1",
     "@trpc/tanstack-react-query": "^11.4.1",
+    "node-cron": "^4.1.0",
     "react": "19.1.0",
     "zod": "^3.25.64"
   },
@@ -40,6 +41,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node-cron": "^3.0.11",
     "@types/react": "19.1.8",
     "eslint": "^9.29.0",
     "typescript": "^5.8.3"

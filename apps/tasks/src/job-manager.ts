@@ -5,6 +5,7 @@ import type { jobGroup as cronJobGroup, JobGroupKeys } from "@homarr/cron-jobs";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { cronJobConfigurations } from "@homarr/db/schema";
+import { logger } from "@homarr/log";
 
 export class JobManager implements IJobManager {
   constructor(
@@ -22,6 +23,7 @@ export class JobManager implements IJobManager {
     await this.jobGroup.stopAsync(name);
   }
   public async updateIntervalAsync(name: JobGroupKeys, cron: string): Promise<void> {
+    logger.info(`Updating cron job interval name="${name}" expression="${cron}"`);
     const job = this.jobGroup.getJobRegistry().get(name);
     if (!job) throw new Error(`Job ${name} not found`);
     if (job.cronExpression === "never") throw new Error(`Job ${name} cannot be updated as it is set to "never"`);
@@ -31,26 +33,29 @@ export class JobManager implements IJobManager {
     await this.updateConfigurationAsync(name, { cronExpression: cron });
     await this.jobGroup.getTask(name)?.destroy();
 
-    console.log(`Updating cron job ${name} to new cron expression: ${cron}`);
-
     this.jobGroup.setTask(
       name,
       schedule(cron, () => void job.executeAsync(), {
         name,
       }),
     );
+    logger.info(`Cron job interval updated name="${name}" expression="${cron}"`);
   }
   public async disableAsync(name: JobGroupKeys): Promise<void> {
+    logger.info(`Disabling cron job name="${name}"`);
     const job = this.jobGroup.getJobRegistry().get(name);
     if (!job) throw new Error(`Job ${name} not found`);
     if (job.cronExpression === "never") throw new Error(`Job ${name} cannot be disabled as it is set to "never"`);
 
     await this.updateConfigurationAsync(name, { isEnabled: false });
     await this.jobGroup.stopAsync(name);
+    logger.info(`Cron job disabled name="${name}"`);
   }
   public async enableAsync(name: JobGroupKeys): Promise<void> {
+    logger.info(`Enabling cron job name="${name}"`);
     await this.updateConfigurationAsync(name, { isEnabled: true });
     await this.jobGroup.startAsync(name);
+    logger.info(`Cron job enabled name="${name}"`);
   }
 
   private async updateConfigurationAsync(
@@ -61,12 +66,17 @@ export class JobManager implements IJobManager {
       where: (table, { eq }) => eq(table.name, name),
     });
 
+    logger.debug(
+      `Updating cron job configuration name="${name}" configuration="${JSON.stringify(configuration)}" exists="${Boolean(existingConfig)}"`,
+    );
+
     if (existingConfig) {
       await this.db
         .update(cronJobConfigurations)
         // prevent updating the name, as it is the primary key
         .set({ ...configuration, name: undefined })
         .where(eq(cronJobConfigurations.name, name));
+      logger.debug(`Cron job configuration updated name="${name}" configuration="${JSON.stringify(configuration)}"`);
       return;
     }
 
@@ -76,6 +86,7 @@ export class JobManager implements IJobManager {
     await this.db
       .insert(cronJobConfigurations)
       .values({ name, cronExpression: job.cronExpression, isEnabled: job.cronExpression !== "never" });
+    logger.debug(`Cron job configuration updated name="${name}" configuration="${JSON.stringify(configuration)}"`);
   }
 
   public async getAllAsync(): Promise<

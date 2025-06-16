@@ -1,7 +1,7 @@
 import { observable } from "@trpc/server/observable";
 import z from "zod/v4";
 
-import { jobGroupKeys, jobNameSchema } from "@homarr/cron-job-api";
+import { cronExpressionSchema, jobGroupKeys, jobNameSchema } from "@homarr/cron-job-api";
 import { cronJobApi } from "@homarr/cron-job-api/client";
 import type { TaskStatus } from "@homarr/cron-job-status";
 import { createCronJobStatusChannel } from "@homarr/cron-job-status";
@@ -33,7 +33,7 @@ export const cronJobsRouter = createTRPCRouter({
     .input(
       z.object({
         name: jobNameSchema,
-        cron: z.string().nonempty(),
+        cron: cronExpressionSchema,
       }),
     )
     .mutation(async ({ input }) => {

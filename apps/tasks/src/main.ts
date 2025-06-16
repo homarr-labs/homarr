@@ -10,6 +10,7 @@ import { jobRouter } from "@homarr/cron-job-api";
 import { CRON_JOB_API_KEY_HEADER, CRON_JOB_API_PATH, CRON_JOB_API_PORT } from "@homarr/cron-job-api/constants";
 import { jobGroup } from "@homarr/cron-jobs";
 import { db } from "@homarr/db";
+import { logger } from "@homarr/log";
 
 import { JobManager } from "./job-manager";
 
@@ -25,8 +26,7 @@ server.register(fastifyTRPCPlugin, {
       apiKey: req.headers[CRON_JOB_API_KEY_HEADER] as string | undefined,
     }),
     onError({ path, error }) {
-      // report to error monitoring
-      console.error(`Error in tRPC handler on path '${path}':`, error);
+      logger.error(new Error(`Error in tasks tRPC handler path="${path}"`, { cause: error }));
     },
   } satisfies FastifyTRPCPluginOptions<JobRouter>["trpcOptions"],
 });
@@ -37,8 +37,9 @@ void (async () => {
 
   try {
     await server.listen({ port: CRON_JOB_API_PORT });
+    logger.info(`Tasks web server started successfully port="${CRON_JOB_API_PORT}"`);
   } catch (err) {
-    server.log.error(err);
+    logger.error(new Error(`Failed to start tasks web server port="${CRON_JOB_API_PORT}"`, { cause: err }));
     process.exit(1);
   }
 })();
