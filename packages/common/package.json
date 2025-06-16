@@ -34,8 +34,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "undici": "7.10.0",
-    "zod": "^3.25.64",
-    "zod-validation-error": "^3.5.0"
+    "zod": "^3.25.65",
+    "zod-validation-error": "^3.5.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
