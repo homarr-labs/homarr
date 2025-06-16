@@ -83,13 +83,11 @@ export class JobManager implements IJobManager {
     const job = this.jobGroup.getJobRegistry().get(name);
     if (!job) throw new Error(`Job ${name} not found`);
 
-    await this.db
-      .insert(cronJobConfigurations)
-      .values({
-        name,
-        cronExpression: configuration.cronExpression ?? job.cronExpression,
-        isEnabled: configuration.isEnabled ?? true,
-      });
+    await this.db.insert(cronJobConfigurations).values({
+      name,
+      cronExpression: configuration.cronExpression ?? job.cronExpression,
+      isEnabled: configuration.isEnabled ?? true,
+    });
     logger.debug(`Cron job configuration updated name="${name}" configuration="${JSON.stringify(configuration)}"`);
   }
 
