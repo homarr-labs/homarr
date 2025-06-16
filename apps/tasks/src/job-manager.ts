@@ -85,7 +85,11 @@ export class JobManager implements IJobManager {
 
     await this.db
       .insert(cronJobConfigurations)
-      .values({ name, cronExpression: job.cronExpression, isEnabled: job.cronExpression !== "never" });
+      .values({
+        name,
+        cronExpression: configuration.cronExpression ?? job.cronExpression,
+        isEnabled: configuration.isEnabled ?? true,
+      });
     logger.debug(`Cron job configuration updated name="${name}" configuration="${JSON.stringify(configuration)}"`);
   }
 
