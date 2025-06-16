@@ -7,6 +7,7 @@ export interface ReleasesVersionFilter {
 }
 
 export interface ReleasesRepository {
+  id: string;
   providerIntegrationId?: string;
   /**
    * @deprecated Use the new integration system instead.

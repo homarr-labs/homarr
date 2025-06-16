@@ -17,8 +17,9 @@ import {
   Text,
   TextInput,
   Title,
-  Tooltip,
+  Tooltip
 } from "@mantine/core";
+import { randomId } from "@mantine/hooks";
 import type { CheckboxProps } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
 import { useDebouncedValue } from "@mantine/hooks";
@@ -127,6 +128,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
 
   const addNewRepository = () => {
     const repository: ReleasesRepository = {
+      id: randomId(),
       identifier: "",
     };
 
@@ -211,7 +213,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
             ? integrations[repository.providerIntegrationId]
             : undefined;
           return (
-            <Stack key={index} gap={5}>
+            <Stack key={repository.id} gap={5}>
               <Group align="center" gap="xs">
                 <Image
                   src={repository.iconUrl ?? integration?.iconUrl ?? null}
@@ -621,6 +623,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
 
         //TODO: Work out how to map the container image url into integrations, there cloud be many integrations for Github for example
         acc.push({
+          id: randomId(),
           providerKey,
           identifier,
           iconUrl: containerImage.iconUrl ?? undefined,
@@ -684,14 +687,14 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
                 {!allImagesImported &&
                   containersImages
                     .filter((containerImage) => !containerImage.alreadyImported)
-                    .map((containerImage, index) => {
+                    .map((containerImage) => {
                       const integration = containerImage.providerIntegrationId
                         ? innerProps.integrations[containerImage.providerIntegrationId]
                         : undefined;
 
                       return (
                         <ContainerImageSelector
-                          key={index}
+                          key={containerImage.id}
                           containerImage={containerImage}
                           integration={integration}
                           versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
@@ -713,14 +716,14 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
                 {anyImagesImported &&
                   containersImages
                     .filter((containerImage) => containerImage.alreadyImported)
-                    .map((containerImage, index) => {
+                    .map((containerImage) => {
                       const integration = containerImage.providerIntegrationId
                         ? innerProps.integrations[containerImage.providerIntegrationId]
                         : undefined;
 
                       return (
                         <ContainerImageSelector
-                          key={index}
+                          key={containerImage.id}
                           containerImage={containerImage}
                           integration={integration}
                           versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
