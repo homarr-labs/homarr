@@ -303,8 +303,7 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
     () => Object.values(innerProps.integrations),
     [innerProps.integrations],
   );
-  console.log(innerProps.integrations);
-  console.log(integrationSelectOptions);
+  
   // Allows user to not select an icon by removing the url from the input,
   // will only try and get an icon if the name or identifier changes
   const [autoSetIcon, setAutoSetIcon] = useState(false);
