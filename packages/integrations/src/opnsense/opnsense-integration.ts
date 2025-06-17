@@ -43,7 +43,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     return "Basic " + btoa(`${username}:${password}`);
   }
 
-  private async getCpuValuesAsync() {
+  private async getCpuAsync() {
     const responseActivity = await fetchWithTrustedCertificatesAsync(
       this.url("/api/diagnostics/activity/getActivity"),
       {
@@ -74,7 +74,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     return -1;
   }
 
-  private async getMemoryValuesAsync() {
+  private async getMemoryAsync() {
     const responseMemory = await fetchWithTrustedCertificatesAsync(
       this.url("/api/diagnostics/system/systemResources"),
       {
@@ -197,10 +197,11 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     }
   }
 
-  public async getFirewallCpuAsync(): FirewallCpuSummary {
+  public async getFirewallCpuAsync(): Promise<FirewallCpuSummary> {
 
     // The API endpoint for OPNsense is SSE compliant. But I'll just get one event and close the connection
-    const response = await fetch('/api/diagnostics/cpu_usage/stream', {
+
+    const response = await fetch(this.url("/api/diagnostics/cpu_usage/stream"), {
       headers: {
         Authorization: this.getAuthHeaders(),
       },

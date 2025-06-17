@@ -1,4 +1,4 @@
-export interface FirewallInterfaceSummary {
+export interface FirewallInterfacesSummary {
   name: string;
   recv: number;
   trans: number;

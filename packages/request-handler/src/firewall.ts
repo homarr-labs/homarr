@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
-import type { FirewallCpuSummary, FirewallVersionSummary, FirewallMemorySummary, FirewallInterfaceSummary } from "@homarr/integrations/types";
+import type { FirewallCpuSummary, FirewallVersionSummary, FirewallMemorySummary, FirewallInterfacesSummary } from "@homarr/integrations/types";
 
 import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
