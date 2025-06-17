@@ -9,17 +9,18 @@ export interface FirewallVersionSummary {
 }
 
 export interface FirewallCpuSummary {
-  cpu:{
+    total: number;
     idle: number;
     system: number;
     user: number;
-  }
+
 }
 
 export interface FirewallMemorySummary {
-  memory: {
-    used: number;
-    total: number;
-    percent: number;
-  }
+  total: number;
+  user: number;
+  nice: number;
+  system: number;
+  intr: number;
+  idle: number;
 }

@@ -15,10 +15,10 @@ import type {
   FirewallCpuSummary
 } from "../interfaces/firewall-summary/firewall-summary-types";
 import {
-  opnsenseActivitySchema,
+  opnsenseActivitySchema, opnsenseCPUSchema,
   opnsenseInterfacesSchema,
   opnsenseMemorySchema,
-  opnsenseSystemSummarySchema,
+  opnsenseSystemSummarySchema
 } from "./opnsense-types";
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
@@ -43,74 +43,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     return "Basic " + btoa(`${username}:${password}`);
   }
 
-  private async getCpuAsync() {
-    const responseActivity = await fetchWithTrustedCertificatesAsync(
-      this.url("/api/diagnostics/activity/getActivity"),
-      {
-        headers: {
-          Authorization: this.getAuthHeaders(),
-        },
-      },
-    );
-
-    if (!responseActivity.ok) {
-      throw new Error(
-        `Failed to fetch CPU values for ${this.integration.name} (${this.integration.id}): ${responseActivity.statusText}`,
-      );
-    }
-    const activity = opnsenseActivitySchema.safeParse(await responseActivity.json());
-    if (!activity.success) {
-      throw new Error(
-        `Failed to parse cpu values for ${this.integration.name} (${this.integration.id}):\n${activity.error.message}`,
-      );
-    }
-
-    const rawCpuValues = String(activity.data.headers[2]);
-
-    const regexRes = / ([0-9.]+)% idle/.exec(rawCpuValues);
-    if (regexRes?.[1]) {
-      return 100 - parseInt(regexRes[1], 10);
-    }
-    return -1;
-  }
-
-  private async getMemoryAsync() {
-    const responseMemory = await fetchWithTrustedCertificatesAsync(
-      this.url("/api/diagnostics/system/systemResources"),
-      {
-        headers: {
-          Authorization: this.getAuthHeaders(),
-        },
-      },
-    );
-    if (!responseMemory.ok) {
-      throw new Error(
-        `Failed to fetch memory for ${this.integration.name} (${this.integration.id}): ${responseMemory.statusText}`,
-      );
-    }
-
-    const memory = opnsenseMemorySchema.safeParse(await responseMemory.json());
-    if (!memory.success) {
-      throw new Error(
-        `Failed to parse memory summary for ${this.integration.name} (${this.integration.id}):\n${memory.error.message}`,
-      );
-    }
-    // Using parseInt for memoryTotal is normal, the api sends the total memory as a string
-    const memoryTotal = parseInt(memory.data.memory.total);
-    const memoryUsed = memory.data.memory.used;
-    const memoryPercent = (100 * memory.data.memory.used) / parseInt(memory.data.memory.total);
-    const memorySummary: FirewallMemorySummary = {
-      memory: {
-        total: memoryTotal,
-        used: memoryUsed,
-        percent: memoryPercent,
-      }
-    };
-
-    return memorySummary;
-  }
-
-  private async getVersionAsync() {
+  public async getFirewallVersionAsync(): Promise<FirewallVersionSummary> {
     const responseSummary = await fetchWithTrustedCertificatesAsync(
       this.url("/api/diagnostics/system/system_information"),
       {
@@ -130,10 +63,14 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
         `Failed to parse version for ${this.integration.name} (${this.integration.id}):\n${summary.error.message}`,
       );
     }
-    return summary.data.versions[0];
+    const firewallVersion: FirewallVersionSummary = {
+      version: typeof summary.data.versions[0] === "string" ? summary.data.versions[0] : "Unknown"
+
+    }
+    return firewallVersion
   }
 
-  private async getInterfacesAsync() {
+  public async getFirewallInterfacesAsync(): Promise<FirewallInterfaceSummary> {
     const interfaceSummary = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/traffic/interface"), {
       headers: {
         Authorization: this.getAuthHeaders(),
@@ -175,47 +112,61 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     return returnValue;
   }
 
-
-  public async getFirewallVersionAsync(): Promise<FirewallVersionSummary> {
-    const version = await this.getVersionAsync();
-    return {
-      version,
-    }
-  }
-
-  public async getFirewallInterfacesAsync(): Promise<FirewallInterfaceSummary> {
-    const interfaces = await this.getInterfacesAsync();
-    return {
-      interfaces,
-    }
-  }
-
   public async getFirewallMemoryAsync(): Promise<FirewallMemorySummary> {
-    const memory = await this.getMemoryAsync();
-    return {
-      memory,
+    const responseMemory = await fetchWithTrustedCertificatesAsync(
+      this.url("/api/diagnostics/system/systemResources"),
+      {
+        headers: {
+          Authorization: this.getAuthHeaders(),
+        },
+      },
+    );
+    if (!responseMemory.ok) {
+      throw new Error(
+        `Failed to fetch memory for ${this.integration.name} (${this.integration.id}): ${responseMemory.statusText}`,
+      );
     }
+
+    const memory = opnsenseMemorySchema.safeParse(await responseMemory.json());
+    if (!memory.success) {
+      throw new Error(
+        `Failed to parse memory summary for ${this.integration.name} (${this.integration.id}):\n${memory.error.message}`,
+      );
+    }
+    // Using parseInt for memoryTotal is normal, the api sends the total memory as a string
+    const memoryTotal = parseInt(memory.data.memory.total);
+    const memoryUsed = memory.data.memory.used;
+    const memoryPercent = (100 * memory.data.memory.used) / parseInt(memory.data.memory.total);
+    const memorySummary: FirewallMemorySummary = {
+
+      total: memoryTotal,
+      used: memoryUsed,
+      percent: memoryPercent,
+    };
+
+    return memorySummary;
+
   }
 
   public async getFirewallCpuAsync(): Promise<FirewallCpuSummary> {
 
     // The API endpoint for OPNsense is SSE compliant. But I'll just get one event and close the connection
-
-    const response = await fetch(this.url("/api/diagnostics/cpu_usage/stream"), {
+    const cpuSummary = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/cpu_usage/stream"), {
       headers: {
         Authorization: this.getAuthHeaders(),
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+
+    if (!cpuSummary.ok) {
+      throw new Error(`HTTP error! status: ${cpuSummary.status}`);
     }
 
-    if (!response.body) {
+    if (!cpuSummary.body) {
       throw new Error("ReadableStream not supported in this environment.");
     }
 
-    const reader = response.body.getReader();
+    const reader = cpuSummary.body.getReader();
     const decoder = new TextDecoder();
 
     while (true) {
@@ -231,10 +182,19 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       for (const line of lines) {
         if (line.startsWith('data:')) {
           const data = line.substring(5).trim();
-          console.log(`Received data: ${data}`);
 
+          const cpu_values = opnsenseCPUSchema.safeParse(JSON.parse(data));
+          if (!cpu_values.success) {
+            throw new Error(
+              `Failed to parse cpu summary for ${this.integration.name} (${this.integration.id}):\n${cpu_values.error.message}`,
+            );
+          }
+          console.log('Received data:', cpu_values.data);
           await reader.cancel();
-          return;
+          const returnValue: FirewallCpuSummary = {
+            ...cpu_values.data,
+          }
+          return returnValue;
         }
       }
     }
