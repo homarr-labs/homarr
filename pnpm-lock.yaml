@@ -1346,8 +1346,8 @@ importers:
         specifier: 1.1.1
         version: 1.1.1
       tsdav:
-        specifier: ^2.1.4
-        version: 2.1.4
+        specifier: ^2.1.5
+        version: 2.1.5
       undici:
         specifier: 7.10.0
         version: 7.10.0
@@ -9938,8 +9938,8 @@ packages:
   tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}
 
-  tsdav@2.1.4:
-    resolution: {integrity: sha512-yNF2VHw2neaRbbpSioOqa26i81RT8x2AghLWUgS4bUY47Nb8zlOGV8bDuXULb2NRx+LFU+Z6JgkuMn48fRjQjw==}
+  tsdav@2.1.5:
+    resolution: {integrity: sha512-ZUNFysY8Dr11I7aVpFmjk6apvHCMSmOPKGz8Wc1F/8BPn/kVS50LR2T8eCsdF5u+h8hrZrQhC0HWD5d2CCov+g==}
     engines: {node: '>=10'}
 
   tslib@1.14.1:
@@ -19340,11 +19340,11 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdav@2.1.4:
+  tsdav@2.1.5:
     dependencies:
       base-64: 1.0.0
       cross-fetch: 4.1.0
-      debug: 4.4.0
+      debug: 4.4.1
       xml-js: 1.6.11
     transitivePeerDependencies:
       - encoding
