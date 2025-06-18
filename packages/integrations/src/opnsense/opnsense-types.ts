@@ -95,4 +95,4 @@ export const opnsenseCPUSchema = z.object({
   sys: z.number(),
   intr: z.number(),
   idle: z.number(),
-})
+});

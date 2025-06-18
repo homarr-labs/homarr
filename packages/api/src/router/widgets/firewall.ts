@@ -4,19 +4,23 @@ import type { Modify } from "@homarr/common/types";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import type { FirewallCpuSummary, FirewallInterfacesSummary, FirewallMemorySummary, FirewallVersionSummary } from "@homarr/integrations";
+import type {
+  FirewallCpuSummary,
+  FirewallInterfacesSummary,
+  FirewallMemorySummary,
+  FirewallVersionSummary,
+} from "@homarr/integrations";
 import {
   firewallCpuRequestHandler,
   firewallInterfacesRequestHandler,
   firewallMemoryRequestHandler,
-  firewallVersionRequestHandler
+  firewallVersionRequestHandler,
 } from "@homarr/request-handler/firewall";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const firewallRouter = createTRPCRouter({
-
   getFirewallCpuStatus: publicProcedure
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
     .query(async ({ ctx }) => {
@@ -208,5 +212,4 @@ export const firewallRouter = createTRPCRouter({
         };
       });
     }),
-
 });

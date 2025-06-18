@@ -9,11 +9,10 @@ export interface FirewallVersionSummary {
 }
 
 export interface FirewallCpuSummary {
-    total: number;
-    idle: number;
-    system: number;
-    user: number;
-
+  total: number;
+  idle: number;
+  system: number;
+  user: number;
 }
 
 export interface FirewallMemorySummary {

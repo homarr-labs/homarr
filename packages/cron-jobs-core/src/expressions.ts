@@ -9,4 +9,3 @@ export const EVERY_HOUR = checkCron("0 * * * *") satisfies string;
 export const EVERY_DAY = checkCron("0 0 * * */1") satisfies string;
 export const EVERY_WEEK = checkCron("0 0 * * 1") satisfies string;
 export const NEVER = "never";
-

@@ -1,9 +1,9 @@
-import { EVERY_5_SECONDS, EVERY_30_SECONDS, EVERY_MINUTE, EVERY_HOUR } from "@homarr/cron-jobs-core/expressions";
+import { EVERY_5_SECONDS, EVERY_30_SECONDS, EVERY_HOUR, EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
 import {
-  firewallVersionRequestHandler,
   firewallCpuRequestHandler,
   firewallInterfacesRequestHandler,
-  firewallMemoryRequestHandler
+  firewallMemoryRequestHandler,
+  firewallVersionRequestHandler,
 } from "@homarr/request-handler/firewall";
 import { createRequestIntegrationJobHandler } from "@homarr/request-handler/lib/cached-request-integration-job-handler";
 

@@ -1,5 +1,8 @@
 import type {
-  FirewallCpuSummary, FirewallInterfacesSummary, FirewallMemorySummary, FirewallVersionSummary
+  FirewallCpuSummary,
+  FirewallInterfacesSummary,
+  FirewallMemorySummary,
+  FirewallVersionSummary,
 } from "./firewall-summary-types";
 
 export interface FirewallSummaryIntegration {
@@ -8,4 +11,3 @@ export interface FirewallSummaryIntegration {
   getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary>;
   getFirewallVersionAsync(): Promise<FirewallVersionSummary>;
 }
-

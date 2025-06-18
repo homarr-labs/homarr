@@ -9,16 +9,16 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { FirewallSummaryIntegration } from "../interfaces/firewall-summary/firewall-summary-integration";
 import type {
+  FirewallCpuSummary,
   FirewallInterfacesSummary,
   FirewallMemorySummary,
   FirewallVersionSummary,
-  FirewallCpuSummary
 } from "../interfaces/firewall-summary/firewall-summary-types";
 import {
   opnsenseCPUSchema,
   opnsenseInterfacesSchema,
   opnsenseMemorySchema,
-  opnsenseSystemSummarySchema
+  opnsenseSystemSummarySchema,
 } from "./opnsense-types";
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
@@ -64,10 +64,9 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       );
     }
     const firewallVersion: FirewallVersionSummary = {
-      version: typeof summary.data.versions[0] === "string" ? summary.data.versions[0] : "Unknown"
-
-    }
-    return firewallVersion
+      version: typeof summary.data.versions[0] === "string" ? summary.data.versions[0] : "Unknown",
+    };
+    return firewallVersion;
   }
 
   public async getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary> {
@@ -138,25 +137,21 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     const memoryUsed = memory.data.memory.used;
     const memoryPercent = (100 * memory.data.memory.used) / parseInt(memory.data.memory.total);
     const memorySummary: FirewallMemorySummary = {
-
       total: memoryTotal,
       used: memoryUsed,
       percent: memoryPercent,
     };
 
     return memorySummary;
-
   }
 
   public async getFirewallCpuAsync(): Promise<FirewallCpuSummary> {
-
     // The API endpoint for OPNsense is SSE compliant. But I'll just get one event and close the connection
     const cpuSummary = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/cpu_usage/stream"), {
       headers: {
         Authorization: this.getAuthHeaders(),
       },
     });
-
 
     if (!cpuSummary.ok) {
       throw new Error(`HTTP error! status: ${cpuSummary.status}`);
@@ -177,10 +172,10 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       }
 
       const chunk = decoder.decode(value, { stream: true });
-      const lines = chunk.split('\n');
+      const lines = chunk.split("\n");
 
       for (const line of lines) {
-        if (line.startsWith('data:')) {
+        if (line.startsWith("data:")) {
           const data = line.substring(5).trim();
 
           const cpu_values = opnsenseCPUSchema.safeParse(JSON.parse(data));
@@ -192,11 +187,10 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
           await reader.cancel();
           const returnValue: FirewallCpuSummary = {
             ...cpu_values.data,
-          }
+          };
           return returnValue;
         }
       }
     }
   }
 }
-

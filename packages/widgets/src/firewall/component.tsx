@@ -1,23 +1,14 @@
 "use client";
 
-import {
-  Accordion,
-  ScrollArea,
-  Table,
-  TableTbody,
-  TableThead,
-  TableTr,
-  Tabs
-} from "@mantine/core";
-import { IconCpu } from "@tabler/icons-react";
+import { Accordion, Progress, ScrollArea, Table, TableTbody, TableThead, TableTr, Tabs } from "@mantine/core";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import { clientApi } from "@homarr/api/client";
+import { FirewallInterfacesSummary } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-import { progressColor } from "../health-monitoring/system-health";
 
 dayjs.extend(duration);
 
@@ -34,7 +25,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     },
   );
 
-  const [ firewallsMemoryData ] = clientApi.widget.firewall.getFirewallMemoryStatus.useSuspenseQuery(
+  const [firewallsMemoryData] = clientApi.widget.firewall.getFirewallMemoryStatus.useSuspenseQuery(
     {
       integrationIds,
     },
@@ -46,7 +37,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     },
   );
 
-  const [ firewallsInterfacesData ] = clientApi.widget.firewall.getFirewallInterfacesStatus.useSuspenseQuery(
+  const [firewallsInterfacesData] = clientApi.widget.firewall.getFirewallInterfacesStatus.useSuspenseQuery(
     {
       integrationIds,
     },
@@ -58,7 +49,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     },
   );
 
-  const [ firewallsVersionData ] = clientApi.widget.firewall.getFirewallVersionStatus.useSuspenseQuery(
+  const [firewallsVersionData] = clientApi.widget.firewall.getFirewallVersionStatus.useSuspenseQuery(
     {
       integrationIds,
     },
@@ -94,7 +85,6 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
       },
     },
   );
-
 
   clientApi.widget.firewall.subscribeFirewallVersionStatus.useSubscription(
     {
@@ -159,18 +149,23 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
             }
 
             // compute the delta between prevData and data
-            console.log(prevData, data) ;
-            const prevInterfacesMap: { [key: string]: Interface } = {};
-            prevData[0].summary.forEach(iface => {
+            console.log(prevData, data);
+            const prevInterfacesMap: { [key: string]: FirewallInterfacesSummary } = {};
+            prevData[0].summary.forEach((iface) => {
               prevInterfacesMap[iface.name] = iface;
             });
 
             return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary.map(iface => ({
-                  name: iface.name,
-                  recv: iface.recv - prevInterfacesMap[iface.name].recv,
-                  trans: iface.trans - prevInterfacesMap[iface.name].trans
-                })) } : item,
+              item.integration.id === data.integration.id
+                ? {
+                    ...item,
+                    summary: data.summary.map((iface) => ({
+                      name: iface.name,
+                      recv: iface.recv - prevInterfacesMap[iface.name].recv,
+                      trans: iface.trans - prevInterfacesMap[iface.name].trans,
+                    })),
+                  }
+                : item,
             );
           },
         );
@@ -196,7 +191,12 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
   console.log("firewallsMemoryData: ", firewallsMemoryData);
 */
 
-  if (!Array.isArray(firewallsCpuData) || !Array.isArray(firewallsVersionData) || !Array.isArray(firewallsMemoryData) || !Array.isArray(firewallsInterfacesData) ) {
+  if (
+    !Array.isArray(firewallsCpuData) ||
+    !Array.isArray(firewallsVersionData) ||
+    !Array.isArray(firewallsMemoryData) ||
+    !Array.isArray(firewallsInterfacesData)
+  ) {
     console.log("ERROR firewallsCpuData: ", firewallsCpuData);
     console.log("ERROR firewallsMemoryData: ", firewallsMemoryData);
     console.log("ERROR firewallsInterfacesData: ", firewallsInterfacesData);
@@ -208,9 +208,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     <ScrollArea h="100%">
       <Accordion>
         <Accordion.Item value="version">
-          <Accordion.Control size={isTiny ? "8px" : "xs"}>
-            {t("widget.firewall.widget.versiontitle")}
-          </Accordion.Control>
+          <Accordion.Control size={isTiny ? "8px" : "xs"}>{t("widget.firewall.widget.versiontitle")}</Accordion.Control>
 
           <Accordion.Panel>
             <Table highlightOnHover>
@@ -231,18 +229,14 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                     <td style={{ WebkitLineClamp: "1" }}>{summary.version}</td>
                   </TableTr>
                 ))}
-
               </TableTbody>
-
             </Table>
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>
       <Accordion>
         <Accordion.Item value="cpu">
-          <Accordion.Control size={isTiny ? "8px" : "xs"}>
-            {t("widget.firewall.widget.cputitle")}
-          </Accordion.Control>
+          <Accordion.Control size={isTiny ? "8px" : "xs"}>{t("widget.firewall.widget.cputitle")}</Accordion.Control>
           <Accordion.Panel>
             <Table highlightOnHover>
               <TableThead>
@@ -253,26 +247,33 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                   <Table.Th ta="start" p={0}>
                     {t("widget.firewall.widget.cpu")}
                   </Table.Th>
-
                 </TableTr>
+              </TableThead>
                 <TableTbody>
                   {firewallsCpuData.map(({ integration, summary }) => (
                     <TableTr key={integration.name} fz={isTiny ? "8px" : "xs"}>
-                      <td>{integration.name}</td>
-                      <td style={{ WebkitLineClamp: "1" }}>{summary.idle}</td>
+                      <Table.Td>{integration.name}</Table.Td>
+                      <Table.Td style={{ WebkitLineClamp: "1" }}>
+                        <Progress.Root>
+                          <Progress.Section
+                        value={summary.total}
+                        color={summary.total < 75 ? "yellow" : "red"}
+                        radius="lg"
+                        />
+                        </Progress.Root>
+                        { summary.total }%
+                      </Table.Td>
                     </TableTr>
                   ))}
                 </TableTbody>
-              </TableThead>
+
             </Table>
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>
       <Accordion>
         <Accordion.Item value="memory">
-          <Accordion.Control size={isTiny ? "8px" : "xs"}>
-            {t("widget.firewall.widget.memorytitle")}
-          </Accordion.Control>
+          <Accordion.Control size={isTiny ? "8px" : "xs"}>{t("widget.firewall.widget.memorytitle")}</Accordion.Control>
           <Accordion.Panel>
             <Table highlightOnHover>
               <TableThead>
@@ -283,13 +284,21 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                   <Table.Th ta="start" p={0}>
                     {t("widget.firewall.widget.memory")}
                   </Table.Th>
-
                 </TableTr>
                 <TableTbody>
                   {firewallsMemoryData.map(({ integration, summary }) => (
                     <TableTr key={integration.name} fz={isTiny ? "8px" : "xs"}>
-                      <td>{integration.name}</td>
-                      <td style={{ WebkitLineClamp: "1" }}>{summary.percent.toFixed(2)}</td>
+                      <Table.Td>{integration.name}</Table.Td>
+                      <Table.Td style={{ WebkitLineClamp: "1" }}>
+                        <Progress.Root>
+                          <Progress.Section
+                            value={summary.percent}
+                            color={summary.percent.toFixed(1) < 75 ? "yellow" : "red"}
+                            radius="lg"
+                          />
+                        </Progress.Root>
+                        { summary.percent.toFixed(1) }%
+                      </Table.Td>
                     </TableTr>
                   ))}
                 </TableTbody>
@@ -299,52 +308,50 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
         </Accordion.Item>
       </Accordion>
 
-            <Accordion>
-              <Accordion.Item value="interfaces">
-                <Accordion.Control size={isTiny ? "8px" : "xs"}>
-                  {t("widget.firewall.widget.interfaces.title")}
-                </Accordion.Control>
-                <Accordion.Panel>
-                  { firewallsInterfacesData.map(({ integration, summary }) => (
-                  <Tabs key={integration.name} defaultValue={firewallsInterfacesData[0].integration.name} variant="outline">
-                    <Tabs.List grow>
-                      <Tabs.Tab value={integration.name} fz="xs">
-                        <b>{integration.name}</b>
-                      </Tabs.Tab>
-                    </Tabs.List>
-                    <Tabs.Panel value={integration.name}>
-                      <Table highlightOnHover>
-                        <TableThead>
-                          <TableTr fz={isTiny ? "8px" : "xs"}>
-                            <Table.Th ta="start" p={0}>
-                              {t("widget.firewall.widget.interfaces.name")}
-                            </Table.Th>
-                            <Table.Th ta="start" p={0}>
-                              {t("widget.firewall.widget.interfaces.trans")}
-                            </Table.Th>
-                            <Table.Th ta="start" p={0}>
-                              {t("widget.firewall.widget.interfaces.recv")}
-                            </Table.Th>
-                          </TableTr>
-                        </TableThead>
-                        <TableTbody>
-                          {summary.map((item) => (
-                            <TableTr key={item.name} fz={isTiny ? "8px" : "xs"}>
-                              <td>{item.name}</td>
-                              <td style={{ WebkitLineClamp: "1" }}>{formatBytes(item.trans, 2)}</td>
-                              <td>{formatBytes(item.recv, 2)}</td>
-                            </TableTr>
-                          ))}
-                        </TableTbody>
-                      </Table>
-                    </Tabs.Panel>
-                  </Tabs>
-
-                  ))}
-
-                </Accordion.Panel>
-              </Accordion.Item>
-            </Accordion>
+      <Accordion>
+        <Accordion.Item value="interfaces">
+          <Accordion.Control size={isTiny ? "8px" : "xs"}>
+            {t("widget.firewall.widget.interfaces.title")}
+          </Accordion.Control>
+          <Accordion.Panel>
+            {firewallsInterfacesData.map(({ integration, summary }) => (
+              <Tabs key={integration.name} defaultValue={firewallsInterfacesData[0].integration.name} variant="outline">
+                <Tabs.List grow>
+                  <Tabs.Tab value={integration.name} fz="xs">
+                    <b>{integration.name}</b>
+                  </Tabs.Tab>
+                </Tabs.List>
+                <Tabs.Panel value={integration.name}>
+                  <Table highlightOnHover>
+                    <TableThead>
+                      <TableTr fz={isTiny ? "8px" : "xs"}>
+                        <Table.Th ta="start" p={0}>
+                          {t("widget.firewall.widget.interfaces.name")}
+                        </Table.Th>
+                        <Table.Th ta="start" p={0}>
+                          {t("widget.firewall.widget.interfaces.trans")}
+                        </Table.Th>
+                        <Table.Th ta="start" p={0}>
+                          {t("widget.firewall.widget.interfaces.recv")}
+                        </Table.Th>
+                      </TableTr>
+                    </TableThead>
+                    <TableTbody>
+                      {summary.map((item) => (
+                        <TableTr key={item.name} fz={isTiny ? "8px" : "xs"}>
+                          <td>{item.name}</td>
+                          <td style={{ WebkitLineClamp: "1" }}>{formatBytes(item.trans, 2)}</td>
+                          <td>{formatBytes(item.recv, 2)}</td>
+                        </TableTr>
+                      ))}
+                    </TableTbody>
+                  </Table>
+                </Tabs.Panel>
+              </Tabs>
+            ))}
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
     </ScrollArea>
   );
 }
