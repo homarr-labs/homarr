@@ -845,8 +845,8 @@ importers:
         specifier: ^3.25.67
         version: 3.25.67
       zod-validation-error:
-        specifier: ^3.5.1
-        version: 3.5.1(zod@3.25.67)
+        specifier: ^3.5.2
+        version: 3.5.2(zod@3.25.67)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -10665,8 +10665,8 @@ packages:
     peerDependencies:
       zod: ^3.21.4
 
-  zod-validation-error@3.5.1:
-    resolution: {integrity: sha512-ozT8jy2nHaeKjaRIEThwgRXBwm16hAy0BaTRx1I2IY1xrezPegmlFmYKb5tcvYqZDQm0sfZtDr2IR7CdCJzTGw==}
+  zod-validation-error@3.5.2:
+    resolution: {integrity: sha512-mdi7YOLtram5dzJ5aDtm1AG9+mxRma1iaMrZdYIpFO7epdKBUwLHIxTF8CPDeCQ828zAXYtizrKlEJAtzgfgrw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       zod: ^3.25.0
@@ -20144,7 +20144,7 @@ snapshots:
     dependencies:
       zod: 3.25.67
 
-  zod-validation-error@3.5.1(zod@3.25.67):
+  zod-validation-error@3.5.2(zod@3.25.67):
     dependencies:
       zod: 3.25.67
 
