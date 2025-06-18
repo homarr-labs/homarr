@@ -65,6 +65,101 @@ export const firewallRouter = createTRPCRouter({
       });
     }),
 
+  getFirewallInterfacesStatus: publicProcedure
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
+    .query(async ({ ctx }) => {
+      const results = await Promise.all(
+        ctx.integrations.map(async (integration) => {
+          const innerHandler = firewallInterfacesRequestHandler.handler(integration, {});
+          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+
+          return {
+            integration: {
+              id: integration.id,
+              name: integration.name,
+              kind: integration.kind,
+              updatedAt: timestamp,
+            },
+            summary: data,
+          };
+        }),
+      );
+      return results;
+    }),
+  subscribeFirewallInterfacesStatus: publicProcedure
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
+    .subscription(({ ctx }) => {
+      return observable<{
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall"> }>;
+        summary: FirewallInterfacesSummary;
+      }>((emit) => {
+        const unsubscribes: (() => void)[] = [];
+        for (const integrationWithSecrets of ctx.integrations) {
+          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
+          const innerHandler = firewallInterfacesRequestHandler.handler(integrationWithSecrets, {});
+          const unsubscribe = innerHandler.subscribe((summary) => {
+            emit.next({
+              integration,
+              summary,
+            });
+          });
+          unsubscribes.push(unsubscribe);
+        }
+        return () => {
+          unsubscribes.forEach((unsubscribe) => {
+            unsubscribe();
+          });
+        };
+      });
+    }),
+
+  getFirewallVersionStatus: publicProcedure
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
+    .query(async ({ ctx }) => {
+      const results = await Promise.all(
+        ctx.integrations.map(async (integration) => {
+          const innerHandler = firewallVersionRequestHandler.handler(integration, {});
+          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+
+          return {
+            integration: {
+              id: integration.id,
+              name: integration.name,
+              kind: integration.kind,
+              updatedAt: timestamp,
+            },
+            summary: data,
+          };
+        }),
+      );
+      return results;
+    }),
+  subscribeFirewallVersionStatus: publicProcedure
+    .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
+    .subscription(({ ctx }) => {
+      return observable<{
+        integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall"> }>;
+        summary: FirewallVersionSummary;
+      }>((emit) => {
+        const unsubscribes: (() => void)[] = [];
+        for (const integrationWithSecrets of ctx.integrations) {
+          const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
+          const innerHandler = firewallVersionRequestHandler.handler(integrationWithSecrets, {});
+          const unsubscribe = innerHandler.subscribe((summary) => {
+            emit.next({
+              integration,
+              summary,
+            });
+          });
+          unsubscribes.push(unsubscribe);
+        }
+        return () => {
+          unsubscribes.forEach((unsubscribe) => {
+            unsubscribe();
+          });
+        };
+      });
+    }),
 
   getFirewallMemoryStatus: publicProcedure
     .concat(createManyIntegrationMiddleware("query", ...getIntegrationKindsByCategory("firewall")))
@@ -97,7 +192,7 @@ export const firewallRouter = createTRPCRouter({
         const unsubscribes: (() => void)[] = [];
         for (const integrationWithSecrets of ctx.integrations) {
           const { decryptedSecrets: _, ...integration } = integrationWithSecrets;
-          const innerHandler = firewallCpuRequestHandler.handler(integrationWithSecrets, {});
+          const innerHandler = firewallMemoryRequestHandler.handler(integrationWithSecrets, {});
           const unsubscribe = innerHandler.subscribe((summary) => {
             emit.next({
               integration,

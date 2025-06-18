@@ -9,13 +9,13 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { FirewallSummaryIntegration } from "../interfaces/firewall-summary/firewall-summary-integration";
 import type {
-  FirewallInterfaceSummary,
+  FirewallInterfacesSummary,
   FirewallMemorySummary,
   FirewallVersionSummary,
   FirewallCpuSummary
 } from "../interfaces/firewall-summary/firewall-summary-types";
 import {
-  opnsenseActivitySchema, opnsenseCPUSchema,
+  opnsenseCPUSchema,
   opnsenseInterfacesSchema,
   opnsenseMemorySchema,
   opnsenseSystemSummarySchema
@@ -70,7 +70,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     return firewallVersion
   }
 
-  public async getFirewallInterfacesAsync(): Promise<FirewallInterfaceSummary> {
+  public async getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary> {
     const interfaceSummary = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/traffic/interface"), {
       headers: {
         Authorization: this.getAuthHeaders(),
@@ -89,7 +89,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
         `Failed to parse interfaces for ${this.integration.name} (${this.integration.id}):\n${interfaces.error.message}`,
       );
     }
-    const returnValue: FirewallInterfaceSummary[] = [];
+    const returnValue: FirewallInterfacesSummary[] = [];
     const interfaceKeys = Object.keys(interfaces.data.interfaces);
 
     interfaceKeys.forEach((key) => {
@@ -189,7 +189,6 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
               `Failed to parse cpu summary for ${this.integration.name} (${this.integration.id}):\n${cpu_values.error.message}`,
             );
           }
-          console.log('Received data:', cpu_values.data);
           await reader.cancel();
           const returnValue: FirewallCpuSummary = {
             ...cpu_values.data,

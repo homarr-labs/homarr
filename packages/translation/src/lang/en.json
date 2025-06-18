@@ -2352,6 +2352,11 @@
         "interfaces": "Interfaces"
       },
       "widget": {
+        "fwname": "Name",
+        "version": "Version",
+        "versiontitle": "Versions",
+        "cputitle": "CPU usage",
+        "memorytitle": "Memory usage",
         "cpu": "CPU",
         "memory": "Memory",
         "interfaces": {
