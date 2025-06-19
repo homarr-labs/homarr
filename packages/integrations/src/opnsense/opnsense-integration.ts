@@ -76,7 +76,6 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
   }
 
   public async getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary[]> {
-    console.log("getFirewallInterfacesAsync was invoked");
     const channel = this.getChannel();
 
     const interfaceSummary = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/traffic/interface"), {

@@ -12,7 +12,7 @@ import type { WidgetComponentProps } from "../definition";
 
 dayjs.extend(duration);
 
-export function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
+export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
   const [firewallsCpuData] = clientApi.widget.firewall.getFirewallCpuStatus.useSuspenseQuery(
     {
       integrationIds,
