@@ -1,18 +1,31 @@
-export interface FirewallSummary {
-  cpu: {
-    idle: number;
-  };
-  memory: {
-    used: number;
-    total: number;
-    percent: number;
-  };
-  interfaces: FirewallInterfaceSummary[];
-  version: string;
+export interface FirewallInterfacesSummary {
+  data: FirewallInterface[];
+  timestamp: Date;
 }
 
-export interface FirewallInterfaceSummary {
+export interface FirewallInterface {
   name: string;
   recv: number;
   trans: number;
+}
+
+export interface FirewallVersionSummary {
+  version: string;
+}
+
+export interface FirewallCpuSummary {
+  total: number;
+  idle: number;
+  system: number;
+  user: number;
+}
+
+export interface FirewallMemorySummary {
+  total: number;
+  user: number;
+  nice: number;
+  system: number;
+  intr: number;
+  idle: number;
+  percent: number;
 }

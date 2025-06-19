@@ -1,5 +1,13 @@
-import type { FirewallSummary } from "./firewall-summary-types";
+import type {
+  FirewallCpuSummary,
+  FirewallInterfacesSummary,
+  FirewallMemorySummary,
+  FirewallVersionSummary,
+} from "./firewall-summary-types";
 
 export interface FirewallSummaryIntegration {
-  getFirewallSummaryAsync(): Promise<FirewallSummary>;
+  getFirewallCpuAsync(): Promise<FirewallCpuSummary>;
+  getFirewallMemoryAsync(): Promise<FirewallMemorySummary>;
+  getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary>;
+  getFirewallVersionAsync(): Promise<FirewallVersionSummary>;
 }

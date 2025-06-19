@@ -2364,12 +2364,17 @@
         "interfaces": "Interfaces"
       },
       "widget": {
+        "fwname": "Name",
+        "version": "Version",
+        "versiontitle": "Versions",
+        "cputitle": "CPU usage",
+        "memorytitle": "Memory usage",
         "cpu": "CPU",
         "memory": "Memory",
         "interfaces": {
           "name": "name",
-          "trans": "Bytes transmitted",
-          "recv": "Bytes received",
+          "trans": "Transmited",
+          "recv": "Received",
           "title": "Interfaces"
         }
       }

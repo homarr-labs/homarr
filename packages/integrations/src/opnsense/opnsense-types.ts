@@ -87,3 +87,12 @@ export interface opnsenseInterfaceSummary {
   trans: number;
   name: string;
 }
+
+export const opnsenseCPUSchema = z.object({
+  total: z.number(),
+  user: z.number(),
+  nice: z.number(),
+  sys: z.number(),
+  intr: z.number(),
+  idle: z.number(),
+});
