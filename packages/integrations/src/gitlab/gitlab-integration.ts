@@ -104,7 +104,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
 
   private getApi() {
     return new Gitlab({
-      host: this.url.toString(),
+      host: this.url("/").toString(),
       ...(this.hasSecretValue("personalAccessToken") ? { token: this.getSecretValue("personalAccessToken") } : {}),
     });
   }

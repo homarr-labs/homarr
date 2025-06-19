@@ -62,7 +62,6 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
       const releasesResponse = await api.rest.repos.listReleases({
         owner,
         repo: name,
-        per_page: 100,
       });
 
       if (releasesResponse.data.length === 0) {
@@ -138,7 +137,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
 
   private getApi() {
     return new Octokit({
-      baseUrl: this.url.toString(),
+      baseUrl: this.url("/").origin,
       userAgent: GithubIntegration.userAgent,
       ...(this.hasSecretValue("personalAccessToken") ? { auth: this.getSecretValue("personalAccessToken") } : {}),
     });

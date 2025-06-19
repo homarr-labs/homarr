@@ -28,7 +28,7 @@ import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
 
-interface Interaction {
+interface Integration {
   name: string;
   iconUrl: string;
 }
@@ -54,7 +54,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     [options.newReleaseWithin, options.staleReleaseWithin],
   );
 
-  const integrations = useIntegrationsWithUseAccess().reduce<Record<string, Interaction>>((acc, integration) => {
+  const integrations = useIntegrationsWithUseAccess().reduce<Record<string, Integration>>((acc, integration) => {
     acc[integration.id] = {
       name: integration.name,
       iconUrl: getIconUrl(integration.kind),
@@ -261,7 +261,9 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             {options.showDetails && (
               <DetailsDisplay repository={repository} toggleExpandedRepository={toggleExpandedRepository} />
             )}
-            {isActive && <ExpandedDisplay repository={repository} hasIconColor={hasIconColor} />}
+            {isActive && (
+              <ExpandedDisplay repository={repository} hasIconColor={hasIconColor} integration={integration} />
+            )}
             <Divider className="releases-repository-divider" />
           </Stack>
         );
@@ -480,10 +482,10 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
 interface ExtendedDisplayProps {
   repository: ReleasesRepositoryResponse;
   hasIconColor: boolean;
-  interaction?: Interaction;
+  integration?: Integration;
 }
 
-const ExpandedDisplay = ({ repository, hasIconColor, interaction }: ExtendedDisplayProps) => {
+const ExpandedDisplay = ({ repository, hasIconColor, integration }: ExtendedDisplayProps) => {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
@@ -501,11 +503,11 @@ const ExpandedDisplay = ({ repository, hasIconColor, interaction }: ExtendedDisp
             {repository.identifier}
           </Text>
 
-          {interaction && (
+          {integration && (
             <Group className="releases-repository-expanded-header-provider-wrapper" gap={5} align="center">
               <MaskedOrNormalImage
                 className="releases-repository-expanded-header-provider-icon"
-                imageUrl={interaction.iconUrl}
+                imageUrl={integration.iconUrl}
                 hasColor={hasIconColor}
                 style={{
                   width: "1em",
@@ -518,7 +520,7 @@ const ExpandedDisplay = ({ repository, hasIconColor, interaction }: ExtendedDisp
                 c="iconColor"
                 ff="monospace"
               >
-                {interaction.name}
+                {integration.name}
               </Text>
             </Group>
           )}
@@ -568,7 +570,7 @@ const ExpandedDisplay = ({ repository, hasIconColor, interaction }: ExtendedDisp
               c="red"
               style={{ whiteSpace: "pre-wrap" }}
             >
-              {repository.error.code ? t(`error.options.${repository.error.code}` as never) : repository.error.message}
+              {repository.error.code ? t(`error.messages.${repository.error.code}` as never) : repository.error.message}
             </Text>
           </>
         )}
