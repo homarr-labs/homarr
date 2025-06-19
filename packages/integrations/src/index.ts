@@ -30,6 +30,7 @@ export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download
 export type { ExtendedClientStatus } from "./interfaces/downloads/download-client-status";
 export type { HealthMonitoring } from "./interfaces/health-monitoring/healt-monitoring";
 export type {
+  FirewallInterface,
   FirewallCpuSummary,
   FirewallInterfacesSummary,
   FirewallVersionSummary,
