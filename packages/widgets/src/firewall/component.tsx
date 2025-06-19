@@ -259,7 +259,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                       <Progress.Root>
                         <Progress.Section
                           value={summary.total}
-                          color={summary.total < 75 ? "yellow" : "red"}
+                          color={summary.total > 50 ? summary.total < 75 ? "yellow" : "red" : "green"}
                           radius="lg"
                         />
                       </Progress.Root>
@@ -286,6 +286,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                     {t("widget.firewall.widget.memory")}
                   </Table.Th>
                 </TableTr>
+              </TableThead>
                 <TableTbody>
                   {firewallsMemoryData.map(({ integration, summary }) => (
                     <TableTr key={integration.name} fz={isTiny ? "8px" : "xs"}>
@@ -294,7 +295,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                         <Progress.Root>
                           <Progress.Section
                             value={summary.percent}
-                            color={summary.percent.toFixed(1) < 75 ? "yellow" : "red"}
+                            color={summary.percent.toFixed(1) > 50 ? summary.percent.toFixed(1) < 75 ? "yellow" : "red" : "green"}
                             radius="lg"
                           />
                         </Progress.Root>
@@ -303,7 +304,6 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                     </TableTr>
                   ))}
                 </TableTbody>
-              </TableThead>
             </Table>
           </Accordion.Panel>
         </Accordion.Item>
@@ -340,12 +340,9 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                     <TableTbody>
                       {Array.isArray(summary) && summary.every(item => Array.isArray(item.data)) ? (
                         calculateBandwidth(summary).data.map(({ name, recv, trans }) => (
-                          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                           <TableTr key={name} fz={isTiny ? "8px" : "xs"}>
                             <Table.Td>{name}</Table.Td>
-                            {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument */}
                             <Table.Td style={{ WebkitLineClamp: "1" }}>{formatBitsPerSec(trans, 2)}</Table.Td>
-                            {/* eslint-disable-next-line @typescript-eslint/no-unsafe-argument */}
                             <Table.Td>{formatBitsPerSec(recv, 2)}</Table.Td>
                           </TableTr>
                         ))
