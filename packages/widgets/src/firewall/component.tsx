@@ -139,7 +139,6 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     },
     {
       onData: (data) => {
-        console.log("Ondata");
         utils.widget.firewall.getFirewallInterfacesStatus.setData(
           {
             integrationIds,
@@ -148,7 +147,6 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
             if (!prevData) {
               return undefined;
             }
-            console.log("Datas: ", data);
             return prevData.map((item) =>
               item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
             );
