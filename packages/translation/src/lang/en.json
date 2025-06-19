@@ -2361,8 +2361,8 @@
         "memory": "Memory",
         "interfaces": {
           "name": "name",
-          "trans": "Bytes transmitted",
-          "recv": "Bytes received",
+          "trans": "Transmited",
+          "recv": "Received",
           "title": "Interfaces"
         }
       }

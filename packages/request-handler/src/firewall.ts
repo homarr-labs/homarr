@@ -33,12 +33,12 @@ export const firewallMemoryRequestHandler = createCachedIntegrationRequestHandle
     const integrationInstance = await createIntegrationAsync(integration);
     return await integrationInstance.getFirewallMemoryAsync();
   },
-  cacheDuration: dayjs.duration(30, "seconds"),
+  cacheDuration: dayjs.duration(15, "seconds"),
   queryKey: "firewallMemorySummary",
 });
 
 export const firewallInterfacesRequestHandler = createCachedIntegrationRequestHandler<
-  FirewallInterfacesSummary,
+  FirewallInterfacesSummary[],
   IntegrationKindByCategory<"firewall">,
   Record<string, never>
 >({

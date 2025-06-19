@@ -1,6 +1,7 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ParseError } from "@homarr/common/server";
 
+import { createChannelEventHistory } from "../../../redis/src/lib/channel";
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
@@ -10,6 +11,7 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { FirewallSummaryIntegration } from "../interfaces/firewall-summary/firewall-summary-integration";
 import type {
   FirewallCpuSummary,
+  FirewallInterface,
   FirewallInterfacesSummary,
   FirewallMemorySummary,
   FirewallVersionSummary,
@@ -69,7 +71,14 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     return firewallVersion;
   }
 
-  public async getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary> {
+  private getChannel() {
+    return createChannelEventHistory<FirewallInterfacesSummary[]>(`integration:${this.integration.id}:interfaces`, 15);
+  }
+
+  public async getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary[]> {
+    console.log("getFirewallInterfacesAsync was invoked");
+    const channel = this.getChannel();
+
     const interfaceSummary = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/traffic/interface"), {
       headers: {
         Authorization: this.getAuthHeaders(),
@@ -88,7 +97,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
         `Failed to parse interfaces for ${this.integration.name} (${this.integration.id}):\n${interfaces.error.message}`,
       );
     }
-    const returnValue: FirewallInterfacesSummary[] = [];
+    const returnValue: FirewallInterface[] = [];
     const interfaceKeys = Object.keys(interfaces.data.interfaces);
 
     interfaceKeys.forEach((key) => {
@@ -108,7 +117,9 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       });
     });
 
-    return returnValue;
+    await channel.pushAsync(returnValue);
+
+    return await channel.getSliceAsync(0, 1);
   }
 
   public async getFirewallMemoryAsync(): Promise<FirewallMemorySummary> {
@@ -165,11 +176,12 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     const decoder = new TextDecoder();
 
     while (true) {
-      const { done, value } = await reader.read();
-
-      if (done) {
+      const result = await reader.read();
+      if (result.done) {
         break;
       }
+
+      const value: unknown = result.value;
 
       const chunk = decoder.decode(value, { stream: true });
       const lines = chunk.split("\n");

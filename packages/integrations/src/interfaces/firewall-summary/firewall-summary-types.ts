@@ -1,4 +1,9 @@
 export interface FirewallInterfacesSummary {
+  data: FirewallInterface[];
+  timestamp: Date;
+}
+
+export interface FirewallInterface {
   name: string;
   recv: number;
   trans: number;
@@ -22,4 +27,5 @@ export interface FirewallMemorySummary {
   system: number;
   intr: number;
   idle: number;
+  percent: number;
 }
