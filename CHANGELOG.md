@@ -1,3 +1,29 @@
+## [1.25.0](https://github.com/homarr-labs/homarr/compare/v1.24.0...v1.25.0) (2025-06-20)
+
+### Features
+
+* **integrations:** add support for self-signed-cert-in-chain request error ([#3399](https://github.com/homarr-labs/homarr/issues/3399)) ([e6cb35b](https://github.com/homarr-labs/homarr/commit/e6cb35b7c2dc45349a9cf0819aa21228aea03e26))
+
+### Bug Fixes
+
+* **deps:** update dependency node-cron to ^4.1.1 ([#3427](https://github.com/homarr-labs/homarr/issues/3427)) ([f6a99ff](https://github.com/homarr-labs/homarr/commit/f6a99ffedd690c01e18f445ade6343f1ca476b27))
+* **deps:** update dependency swagger-ui-react to ^5.24.2 ([#3405](https://github.com/homarr-labs/homarr/issues/3405)) ([bdca920](https://github.com/homarr-labs/homarr/commit/bdca92036a3dde7f655735c305e55c5c15b63440))
+* **deps:** update dependency swagger-ui-react to ^5.25.2 ([#3420](https://github.com/homarr-labs/homarr/issues/3420)) ([02cd7a5](https://github.com/homarr-labs/homarr/commit/02cd7a50dad9e954cfd569b0f1efcc4fe4fd5da4))
+* **deps:** update dependency tsdav to ^2.1.5 ([#3414](https://github.com/homarr-labs/homarr/issues/3414)) ([6bcfe78](https://github.com/homarr-labs/homarr/commit/6bcfe789561c518e7ce6c78a9be95412a50f04dd))
+* **deps:** update dependency typescript-eslint to ^8.34.1 ([#3409](https://github.com/homarr-labs/homarr/issues/3409)) ([637bfb8](https://github.com/homarr-labs/homarr/commit/637bfb8b47b7dc6c70163bd481c47bca9bd93d55))
+* **deps:** update dependency zod to ^3.25.65 ([#3410](https://github.com/homarr-labs/homarr/issues/3410)) ([a8c9c07](https://github.com/homarr-labs/homarr/commit/a8c9c075f08bca4b86307e98156cae7167ef6ab1))
+* **deps:** update dependency zod to ^3.25.67 ([#3413](https://github.com/homarr-labs/homarr/issues/3413)) ([56ca8b7](https://github.com/homarr-labs/homarr/commit/56ca8b7b0b1c0187457c085af1c7f4504d72ed9a))
+* **deps:** update dependency zod-validation-error to ^3.5.1 ([#3406](https://github.com/homarr-labs/homarr/issues/3406)) ([adbef25](https://github.com/homarr-labs/homarr/commit/adbef252c61c29fbbc8c7b0e325a0e9d69bb3191))
+* **deps:** update dependency zod-validation-error to ^3.5.2 ([#3417](https://github.com/homarr-labs/homarr/issues/3417)) ([430f671](https://github.com/homarr-labs/homarr/commit/430f6714345b5b90859fd3302f76fd3d14956148))
+* **deps:** update mantine monorepo to ^8.1.1 ([#3404](https://github.com/homarr-labs/homarr/issues/3404)) ([f97a261](https://github.com/homarr-labs/homarr/commit/f97a2619734dcf3b326c69587fa2f4e170cb9c88))
+* **deps:** update nextjs monorepo to v15.3.4 ([#3421](https://github.com/homarr-labs/homarr/issues/3421)) ([3759a98](https://github.com/homarr-labs/homarr/commit/3759a9831c6fe54b0b0eb0e101c8eb912b752b41))
+* **deps:** update tanstack-query monorepo to ^5.80.10 ([#3422](https://github.com/homarr-labs/homarr/issues/3422)) ([7c58e8a](https://github.com/homarr-labs/homarr/commit/7c58e8ac9bdb2868637648b43b7965189421b295))
+* **deps:** update tiptap monorepo to v2.14.1 ([#3423](https://github.com/homarr-labs/homarr/issues/3423)) ([9e4b463](https://github.com/homarr-labs/homarr/commit/9e4b4635bc582e4d92821844d58fdb3d057f7fec))
+* **deps:** update tiptap monorepo to v2.22.0 ([#3425](https://github.com/homarr-labs/homarr/issues/3425)) ([ec4dde6](https://github.com/homarr-labs/homarr/commit/ec4dde64fdd4302b091a0255ec1bcdc6b2caca89))
+* **deps:** update trpc monorepo to ^11.4.2 ([#3419](https://github.com/homarr-labs/homarr/issues/3419)) ([8e428e2](https://github.com/homarr-labs/homarr/commit/8e428e20a764c54c15fc44b57f85fa684cfbc00e))
+* **downloads:** not updating automatically ([#3412](https://github.com/homarr-labs/homarr/issues/3412)) ([b5ef7e5](https://github.com/homarr-labs/homarr/commit/b5ef7e5194a828abfddcac5eb492910de5f1f7d8))
+* **widget-integration-select:** fixed error about `<p>` being descendant of `<p>` ([#3418](https://github.com/homarr-labs/homarr/issues/3418)) ([73fff02](https://github.com/homarr-labs/homarr/commit/73fff02ad0a3a710aa39cda7dccf9206569c2879))
+
 ## [1.24.0](https://github.com/homarr-labs/homarr/compare/v1.23.0...v1.24.0) (2025-06-13)
 
 ### Features
