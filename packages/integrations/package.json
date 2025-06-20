@@ -41,10 +41,10 @@
     "maria2": "^0.4.0",
     "node-ical": "^0.20.1",
     "proxmox-api": "1.1.1",
-    "tsdav": "^2.1.4",
+    "tsdav": "^2.1.5",
     "undici": "7.10.0",
     "xml2js": "^0.6.2",
-    "zod": "^3.25.64"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -52,7 +52,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-unifi": "^2.5.1",
     "@types/xml2js": "^0.4.14",
-    "eslint": "^9.28.0",
+    "eslint": "^9.29.0",
     "typescript": "^5.8.3"
   }
 }

@@ -131,19 +131,22 @@ export default function DownloadClientsWidget({
     },
     {
       onData: (data) => {
-        utils.widget.downloads.getJobsAndStatuses.setData({ integrationIds }, (prevData) => {
-          return prevData?.map((item) => {
-            if (item.integration.id !== data.integration.id) return item;
+        utils.widget.downloads.getJobsAndStatuses.setData(
+          { integrationIds, limitPerIntegration: options.limitPerIntegration },
+          (prevData) => {
+            return prevData?.map((item) => {
+              if (item.integration.id !== data.integration.id) return item;
 
-            return {
-              data: data.data,
-              integration: {
-                ...data.integration,
-                updatedAt: new Date(),
-              },
-            };
-          });
-        });
+              return {
+                data: data.data,
+                integration: {
+                  ...data.integration,
+                  updatedAt: new Date(),
+                },
+              };
+            });
+          },
+        );
       },
     },
   );
