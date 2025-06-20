@@ -493,6 +493,12 @@ export const trustedCertificateHostnames = sqliteTable(
   }),
 );
 
+export const cronJobConfigurations = sqliteTable("cron_job_configuration", {
+  name: text().notNull().primaryKey(),
+  cronExpression: text().notNull(),
+  isEnabled: int({ mode: "boolean" }).default(true).notNull(),
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],

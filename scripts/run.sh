@@ -13,6 +13,8 @@ fi
 
 # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
 export AUTH_SECRET=$(openssl rand -base64 32)
+# Cron job API key is generated every time the container starts as it is required for communication between nextjs-api and tasks-api
+export CRON_JOB_API_KEY=$(openssl rand -base64 32)
 
 # Start nginx proxy
 # 1. Replace the HOSTNAME in the nginx template file
