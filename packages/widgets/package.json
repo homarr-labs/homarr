@@ -53,7 +53,7 @@
     "@mantine/hooks": "^8.1.1",
     "@tabler/icons-react": "^3.34.0",
     "@tiptap/extension-color": "2.22.1",
-    "@tiptap/extension-highlight": "2.22.0",
+    "@tiptap/extension-highlight": "2.22.1",
     "@tiptap/extension-image": "2.22.1",
     "@tiptap/extension-link": "^2.22.1",
     "@tiptap/extension-table": "2.22.1",
