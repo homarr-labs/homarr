@@ -9,7 +9,17 @@ echo "Starting with UID='$PUID', GID='$PGID'"
 if [ "${PUID}" != "0" ] || [ "${PGID}" != "0" ]; then
     # The below command will change the owner of all files in the /app directory (except node_modules) to the new UID and GID
     echo "Changing owner to $PUID:$PGID, this will take about 10 seconds..."
-    find . -name 'node_modules' -prune -o -mindepth 1 -maxdepth 1 -exec chown -R $PUID:$PGID {} +
+    chown $PUID:$PGID ./run.sh
+    chown $PUID:$PGID ./apps/cli
+    chown $PUID:$PGID ./apps/nextjs/server.js
+    chown $PUID:$PGID ./apps/nextjs/.next
+    mkdir -p ./apps/nextjs/.next/cache
+    chown $PUID:$PGID ./apps/nextjs/.next/cache
+    chown $PUID:$PGID ./apps/websocket/wssServer.cjs
+    chown $PUID:$PGID ./apps/tasks/tasks.cjs
+    chown $PUID:$PGID ./db/migrations/sqlite/migrate.cjs
+    chown $PUID:$PGID ./db/migrations/mysql/migrate.cjs
+    chown $PUID:$PGID ./build/better_sqlite3.node
     chown -R $PUID:$PGID /var/cache/nginx
     chown -R $PUID:$PGID /var/log/nginx
     chown -R $PUID:$PGID /var/lib/nginx
