@@ -22,6 +22,7 @@ import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration"
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
+import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
 import { PlexIntegration } from "../plex/plex-integration";
@@ -92,6 +93,7 @@ export const integrationCreators = {
   emby: EmbyIntegration,
   nextcloud: NextcloudIntegration,
   unifiController: UnifiControllerIntegration,
+  opnsense: OPNsenseIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

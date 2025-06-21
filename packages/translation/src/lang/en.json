@@ -2357,6 +2357,27 @@
       "error": {
         "internalServerError": "Failed to fetch Network Controller Summary"
       }
+    },
+    "firewall": {
+      "tab": {
+        "system": "System",
+        "interfaces": "Interfaces"
+      },
+      "widget": {
+        "fwname": "Name",
+        "version": "Version",
+        "versiontitle": "Versions",
+        "cputitle": "CPU usage",
+        "memorytitle": "Memory usage",
+        "cpu": "CPU",
+        "memory": "Memory",
+        "interfaces": {
+          "name": "name",
+          "trans": "Transmited",
+          "recv": "Received",
+          "title": "Interfaces"
+        }
+      }
     }
   },
   "widgetPreview": {
