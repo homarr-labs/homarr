@@ -12,6 +12,8 @@ export {
   createGetSetChannel,
 } from "./lib/channel";
 
+export { createIntegrationHistoryChannel } from "./lib/channels/history-channel";
+
 export const pingUrlChannel = createListChannel<string>("ping-url");
 
 export const homeAssistantEntityState = createSubPubChannel<{
