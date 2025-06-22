@@ -3,10 +3,10 @@
 import { useMemo } from "react";
 import { Card, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
-import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { useTimeAgo } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
@@ -78,7 +78,7 @@ export default function NotificationsWidget({ options, integrationIds }: WidgetC
                   {notification.body}
                 </Text>
 
-                <InfoDisplay date={dayjs(notification.time).fromNow()} />
+                <InfoDisplay date={notification.time} />
               </Flex>
             </Card>
           ))
@@ -92,11 +92,15 @@ export default function NotificationsWidget({ options, integrationIds }: WidgetC
   );
 }
 
-const InfoDisplay = ({ date }: { date: string }) => (
-  <Group gap={5} align={"center"}>
-    <IconClock size={"1rem"} color={"var(--mantine-color-dimmed)"} />
-    <Text size="sm" c="dimmed">
-      {date}
-    </Text>
-  </Group>
-);
+const InfoDisplay = ({ date }: { date: Date }) => {
+  const timeAgo = useTimeAgo(date, 30000); // update every 30sec
+
+  return (
+    <Group gap={5} align={"center"}>
+      <IconClock size={"1rem"} color={"var(--mantine-color-dimmed)"} />
+      <Text size="sm" c="dimmed">
+        {timeAgo}
+      </Text>
+    </Group>
+  );
+};
