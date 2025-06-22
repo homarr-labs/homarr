@@ -4,9 +4,13 @@ export interface SystemHealthMonitoring {
   version: string;
   cpuModelName: string;
   cpuUtilization: number;
-  memUsed: string;
-  memAvailable: string;
+  memUsedInBytes: number;
+  memAvailableInBytes: number;
   uptime: number;
+  network: {
+    up: number;
+    down: number;
+  } | null;
   loadAverage: {
     "1min": number;
     "5min": number;
