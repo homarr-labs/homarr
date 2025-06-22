@@ -5,7 +5,7 @@ import { z } from "zod";
 export const ntfyNotificationSchema = z.object({
   id: z.string(),
   time: z.number(),
-  event: z.literal("message"), // we only care about messages
+  event: z.string(), // we only care about "message"
   topic: z.string(),
   title: z.optional(z.string()),
   message: z.string(),

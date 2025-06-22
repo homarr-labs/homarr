@@ -1,4 +1,5 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ResponseError } from "@homarr/common/server";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
@@ -25,15 +26,12 @@ export class NTFYIntegration extends NotificationsIntegration {
       (
         await fetchWithTrustedCertificatesAsync(url, { headers: this.getHeaders() })
           .then((response) => {
-            if (!response.ok) {
-              throw new Error(response.statusText);
-            }
+            if (!response.ok) throw new ResponseError(response);
             return response.text();
           })
           .catch((error) => {
-            if (error instanceof Error) {
-              throw new Error(error.message);
-            } else {
+            if (error instanceof Error) throw error;
+            else {
               throw new Error("Error communicating with ntfy");
             }
           })
@@ -46,7 +44,7 @@ export class NTFYIntegration extends NotificationsIntegration {
 
           const json = JSON.parse(line) as unknown;
           const parsed = await ntfyNotificationSchema.safeParseAsync(json);
-          if (parsed.success) return parsed.data;
+          if (parsed.success && parsed.data.event == "message") return parsed.data;
           // ignore invalid formatted messages
           else return null;
         }),
