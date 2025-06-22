@@ -9,11 +9,11 @@ import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-
 export const downloadClientRequestHandler = createCachedIntegrationRequestHandler<
   DownloadClientJobsAndStatus,
   IntegrationKindByCategory<"downloadClient">,
-  Record<string, never>
+  { limit: number }
 >({
-  async requestAsync(integration, _input) {
+  async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
-    return await integrationInstance.getClientJobsAndStatusAsync();
+    return await integrationInstance.getClientJobsAndStatusAsync(input);
   },
   cacheDuration: dayjs.duration(5, "seconds"),
   queryKey: "downloadClientJobStatus",

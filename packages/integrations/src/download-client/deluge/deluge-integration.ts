@@ -29,9 +29,10 @@ export class DelugeIntegration extends DownloadClientIntegration {
     };
   }
 
-  public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const type = "torrent";
     const client = await this.getClientAsync();
+    // Currently there is no way to limit the number of returned torrents
     const {
       stats: { download_rate, upload_rate },
       torrents: rawTorrents,
@@ -49,27 +50,29 @@ export class DelugeIntegration extends DownloadClientIntegration {
       },
       types: [type],
     };
-    const items = torrents.map((torrent): DownloadClientItem => {
-      const state = DelugeIntegration.getTorrentState(torrent.state);
-      return {
-        type,
-        id: torrent.id,
-        index: torrent.queue,
-        name: torrent.name,
-        size: torrent.total_wanted,
-        sent: torrent.total_uploaded,
-        downSpeed: torrent.progress !== 100 ? torrent.download_payload_rate : undefined,
-        upSpeed: torrent.upload_payload_rate,
-        time:
-          torrent.progress === 100
-            ? Math.min((torrent.completed_time - dayjs().unix()) * 1000, -1)
-            : Math.max(torrent.eta * 1000, 0),
-        added: torrent.time_added * 1000,
-        state,
-        progress: torrent.progress / 100,
-        category: torrent.label,
-      };
-    });
+    const items = torrents
+      .map((torrent): DownloadClientItem => {
+        const state = DelugeIntegration.getTorrentState(torrent.state);
+        return {
+          type,
+          id: torrent.id,
+          index: torrent.queue,
+          name: torrent.name,
+          size: torrent.total_wanted,
+          sent: torrent.total_uploaded,
+          downSpeed: torrent.progress !== 100 ? torrent.download_payload_rate : undefined,
+          upSpeed: torrent.upload_payload_rate,
+          time:
+            torrent.progress === 100
+              ? Math.min((torrent.completed_time - dayjs().unix()) * 1000, -1)
+              : Math.max(torrent.eta * 1000, 0),
+          added: torrent.time_added * 1000,
+          state,
+          progress: torrent.progress / 100,
+          category: torrent.label,
+        };
+      })
+      .slice(0, input.limit);
     return { status, items };
   }
 

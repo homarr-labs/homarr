@@ -66,7 +66,7 @@ export class OpenMediaVaultIntegration extends Integration {
 
     return {
       version: systemResult.data.response.version,
-      cpuModelName: systemResult.data.response.cpuModelName,
+      cpuModelName: systemResult.data.response.cpuModelName ?? "Unknown CPU",
       cpuUtilization: systemResult.data.response.cpuUtilization,
       memUsed: systemResult.data.response.memUsed,
       memAvailable: systemResult.data.response.memAvailable,

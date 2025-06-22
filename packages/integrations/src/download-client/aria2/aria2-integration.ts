@@ -12,7 +12,7 @@ import type { DownloadClientItem } from "../../interfaces/downloads/download-cli
 import type { Aria2Download, Aria2GetClient } from "./aria2-types";
 
 export class Aria2Integration extends DownloadClientIntegration {
-  public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const client = this.getClient();
     const keys: (keyof Aria2Download)[] = [
       "bittorrent",
@@ -27,12 +27,12 @@ export class Aria2Integration extends DownloadClientIntegration {
     ];
     const [activeDownloads, waitingDownloads, stoppedDownloads, globalStats] = await Promise.all([
       client.tellActive(),
-      client.tellWaiting(0, 1000, keys),
-      client.tellStopped(0, 1000, keys),
+      client.tellWaiting(0, input.limit, keys),
+      client.tellStopped(0, input.limit, keys),
       client.getGlobalStat(),
     ]);
 
-    const downloads = [...activeDownloads, ...waitingDownloads, ...stoppedDownloads];
+    const downloads = [...activeDownloads, ...waitingDownloads, ...stoppedDownloads].slice(0, input.limit);
     const allPaused = downloads.every((download) => download.status === "paused");
 
     return {

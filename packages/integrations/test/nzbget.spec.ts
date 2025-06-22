@@ -69,7 +69,7 @@ describe("Nzbget integration", () => {
 
     // Acts
     const actAsync = async () => await nzbGetIntegration.pauseQueueAsync();
-    const getAsync = async () => await nzbGetIntegration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await nzbGetIntegration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
@@ -87,7 +87,7 @@ describe("Nzbget integration", () => {
 
     // Acts
     const actAsync = async () => await nzbGetIntegration.resumeQueueAsync();
-    const getAsync = async () => await nzbGetIntegration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await nzbGetIntegration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
@@ -105,7 +105,7 @@ describe("Nzbget integration", () => {
     const nzbGetIntegration = createNzbGetIntegration(startedContainer, username, password);
 
     // Act
-    const getAsync = async () => await nzbGetIntegration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await nzbGetIntegration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(getAsync()).resolves.not.toThrow();
@@ -124,7 +124,7 @@ describe("Nzbget integration", () => {
     await nzbGetAddItemAsync(startedContainer, username, password, nzbGetIntegration);
 
     // Act
-    const getAsync = async () => await nzbGetIntegration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await nzbGetIntegration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(getAsync()).resolves.not.toThrow();
@@ -145,9 +145,9 @@ describe("Nzbget integration", () => {
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
-    // NzbGet is slow and we wait for a second before querying the items. Test was flaky without this.
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    const result = await nzbGetIntegration.getClientJobsAndStatusAsync();
+    // NzbGet is slow and we wait for a few seconds before querying the items. Test was flaky without this.
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    const result = await nzbGetIntegration.getClientJobsAndStatusAsync({ limit: 99 });
     expect(result.items).toHaveLength(0);
 
     // Cleanup
@@ -209,7 +209,7 @@ const nzbGetAddItemAsync = async (
 
   const {
     items: [item],
-  } = await integration.getClientJobsAndStatusAsync();
+  } = await integration.getClientJobsAndStatusAsync({ limit: 99 });
 
   if (!item) {
     throw new Error("No item found");

@@ -2,9 +2,10 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { asc, createId, eq, like } from "@homarr/db";
-import { getServerSettingByKeyAsync } from "@homarr/db/queries";
+import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "@homarr/db/queries";
 import { searchEngines, users } from "@homarr/db/schema";
 import { createIntegrationAsync } from "@homarr/integrations";
+import { logger } from "@homarr/log";
 import { byIdSchema, paginatedSchema, searchSchema } from "@homarr/validation/common";
 import { searchEngineEditSchema, searchEngineManageSchema } from "@homarr/validation/search-engine";
 import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
@@ -96,23 +97,35 @@ export const searchEngineRouter = createTRPCRouter({
       });
     }
 
-    const serverDefaultId = await getServerSettingByKeyAsync(ctx.db, "search").then(
-      (setting) => setting.defaultSearchEngineId,
-    );
+    const searchSettings = await getServerSettingByKeyAsync(ctx.db, "search");
 
-    if (serverDefaultId) {
-      return await ctx.db.query.searchEngines.findFirst({
-        where: eq(searchEngines.id, serverDefaultId),
-        with: {
-          integration: {
-            columns: {
-              kind: true,
-              url: true,
-              id: true,
-            },
+    if (!searchSettings.defaultSearchEngineId) return null;
+
+    const serverDefault = await ctx.db.query.searchEngines.findFirst({
+      where: eq(searchEngines.id, searchSettings.defaultSearchEngineId),
+      with: {
+        integration: {
+          columns: {
+            kind: true,
+            url: true,
+            id: true,
           },
         },
+      },
+    });
+
+    if (serverDefault) return serverDefault;
+
+    // Remove the default search engine ID from settings if it does not longer exist
+    try {
+      await updateServerSettingByKeyAsync(ctx.db, "search", {
+        ...searchSettings,
+        defaultSearchEngineId: null,
       });
+    } catch (error) {
+      logger.warn(
+        new Error("Failed to update search settings after default search engine not found", { cause: error }),
+      );
     }
 
     return null;

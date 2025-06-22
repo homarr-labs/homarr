@@ -1761,11 +1761,17 @@
         "memory": {
           "label": "Show Memory Info"
         },
+        "showUptime": {
+          "label": "Show Uptime"
+        },
         "fileSystem": {
           "label": "Show Filesystem Info"
         },
         "defaultTab": {
           "label": "Default tab"
+        },
+        "visibleClusterSections": {
+          "label": "Visible cluster sections"
         },
         "sectionIndicatorRequirement": {
           "label": "Section indicator requirement"
@@ -1957,6 +1963,10 @@
         },
         "applyFilterToRatio": {
           "label": "Use filter to calculate Ratio"
+        },
+        "limitPerIntegration": {
+          "label": "Limit items per integration",
+          "description": "This will limit the number of items shown per integration, not globally"
         }
       },
       "errors": {
@@ -2217,8 +2227,17 @@
         },
         "repositories": {
           "label": "Repositories",
-          "addRRepository": {
+          "addRepository": {
             "label": "Add repository"
+          },
+          "importRepositories": {
+            "label": "Import from docker",
+            "loading": "Loading docker images",
+            "noImagesFound": "No docker images found",
+            "listFoundImages": "List of found images",
+            "listAlreadyImportedImages": "List of already imported images",
+            "allImagesAlreadyImported": "All images already imported",
+            "onlyAdminCanImport": "Only administrators can import from docker"
           },
           "provider": {
             "label": "Provider"
@@ -2259,6 +2278,9 @@
             "confirm": {
               "label": "Confirm"
             }
+          },
+          "importForm": {
+            "title": "Import from Docker"
           },
           "example": {
             "label": "Example"

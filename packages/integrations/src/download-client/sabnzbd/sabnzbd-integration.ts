@@ -22,10 +22,14 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
     return { success: true };
   }
 
-  public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
-    const { queue } = await queueSchema.parseAsync(await this.sabNzbApiCallAsync("queue"));
-    const { history } = await historySchema.parseAsync(await this.sabNzbApiCallAsync("history"));
+    const { queue } = await queueSchema.parseAsync(
+      await this.sabNzbApiCallAsync("queue", { limit: input.limit.toString() }),
+    );
+    const { history } = await historySchema.parseAsync(
+      await this.sabNzbApiCallAsync("history", { limit: input.limit.toString() }),
+    );
     const status: DownloadClientStatus = {
       paused: queue.paused,
       rates: { down: Math.floor(Number(queue.kbpersec) * 1024) }, //Actually rounded kiBps ()
@@ -73,7 +77,8 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
             category: slot.category,
           };
         }),
-      );
+      )
+      .slice(0, input.limit);
     return { status, items };
   }
 

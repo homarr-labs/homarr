@@ -44,13 +44,13 @@
     "@homarr/env": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/core": "^8.0.1",
+    "@mantine/core": "^8.1.1",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@testcontainers/mysql": "^10.28.0",
+    "@testcontainers/mysql": "^11.0.3",
     "better-sqlite3": "^11.10.0",
     "dotenv": "^16.5.0",
     "drizzle-kit": "^0.31.1",
-    "drizzle-orm": "^0.43.1",
+    "drizzle-orm": "^0.44.2",
     "drizzle-zod": "^0.7.1",
     "mysql2": "3.14.1"
   },
@@ -60,10 +60,10 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.13",
     "dotenv-cli": "^8.0.0",
-    "esbuild": "^0.25.4",
-    "eslint": "^9.27.0",
+    "esbuild": "^0.25.5",
+    "eslint": "^9.29.0",
     "prettier": "^3.5.3",
-    "tsx": "4.19.4",
+    "tsx": "4.20.3",
     "typescript": "^5.8.3"
   }
 }

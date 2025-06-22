@@ -67,7 +67,7 @@ describe("Sabnzbd integration", () => {
 
     // Acts
     const actAsync = async () => await sabnzbdIntegration.pauseQueueAsync();
-    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
@@ -85,7 +85,7 @@ describe("Sabnzbd integration", () => {
 
     // Acts
     const actAsync = async () => await sabnzbdIntegration.resumeQueueAsync();
-    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
@@ -103,7 +103,7 @@ describe("Sabnzbd integration", () => {
     const sabnzbdIntegration = createSabnzbdIntegration(startedContainer, DEFAULT_API_KEY);
 
     // Act
-    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(getAsync()).resolves.not.toThrow();
@@ -122,7 +122,7 @@ describe("Sabnzbd integration", () => {
     await sabNzbdAddItemAsync(startedContainer, DEFAULT_API_KEY, sabnzbdIntegration);
 
     // Act
-    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(getAsync()).resolves.not.toThrow();
@@ -140,7 +140,7 @@ describe("Sabnzbd integration", () => {
 
     // Act
     const actAsync = async () => await sabnzbdIntegration.pauseItemAsync(item);
-    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(getAsync()).resolves.toMatchObject({ items: [{ ...item, state: "downloading" }] });
@@ -160,7 +160,7 @@ describe("Sabnzbd integration", () => {
 
     // Act
     const actAsync = async () => await sabnzbdIntegration.resumeItemAsync(item);
-    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(getAsync()).resolves.toMatchObject({ items: [{ ...item, state: "paused" }] });
@@ -180,7 +180,7 @@ describe("Sabnzbd integration", () => {
     // Act - fromDisk already doesn't work for sabnzbd, so only test deletion itself.
     const actAsync = async () =>
       await sabnzbdIntegration.deleteItemAsync({ ...item, progress: 0 } as DownloadClientItem, false);
-    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
@@ -192,16 +192,19 @@ describe("Sabnzbd integration", () => {
 });
 
 const createSabnzbdContainer = () => {
-  return new GenericContainer(IMAGE_NAME)
-    .withCopyFilesToContainer([
-      {
-        source: join(__dirname, "/volumes/usenet/sabnzbd.ini"),
-        target: "/config/sabnzbd.ini",
-      },
-    ])
-    .withExposedPorts(1212)
-    .withEnvironment({ PUID: "0", PGID: "0" })
-    .withWaitStrategy(Wait.forHttp("/", 1212));
+  return (
+    new GenericContainer(IMAGE_NAME)
+      .withCopyFilesToContainer([
+        {
+          source: join(__dirname, "/volumes/usenet/sabnzbd.ini"),
+          target: "/config/sabnzbd.ini",
+        },
+      ])
+      .withExposedPorts(1212)
+      .withEnvironment({ PUID: "0", PGID: "0" })
+      // This has to be a page that is not redirected (or a status code has to be defined withStatusCode(statusCode))
+      .withWaitStrategy(Wait.forHttp("/sabnzbd/wizard/", 1212))
+  );
 };
 
 const createSabnzbdIntegration = (container: StartedTestContainer, apiKey: string) => {
@@ -242,7 +245,7 @@ const sabNzbdAddItemAsync = async (
   for (let i = 0; i < 5; i++) {
     const {
       items: [item],
-    } = await integration.getClientJobsAndStatusAsync();
+    } = await integration.getClientJobsAndStatusAsync({ limit: 99 });
     if (item) return item;
   }
   // Throws if it can't find the item

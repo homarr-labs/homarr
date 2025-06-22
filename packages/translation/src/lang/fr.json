@@ -747,7 +747,7 @@
               "message": ""
             },
             "hostnameMismatch": {
-              "title": "",
+              "title": "Nom d'hôte incohérent",
               "message": ""
             },
             "extract": {
@@ -1757,11 +1757,17 @@
         "memory": {
           "label": "Afficher les infos de la mémoire"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Afficher les infos sur le système de fichiers"
         },
         "defaultTab": {
           "label": "Onglet par défaut"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "Exigence de l'indicateur de section"
@@ -1953,6 +1959,10 @@
         },
         "applyFilterToRatio": {
           "label": "Utiliser le filtre pour calculer le ratio"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -2213,8 +2223,17 @@
         },
         "repositories": {
           "label": "",
-          "addRRepository": {
+          "addRepository": {
             "label": ""
+          },
+          "importRepositories": {
+            "label": "",
+            "loading": "",
+            "noImagesFound": "",
+            "listFoundImages": "",
+            "listAlreadyImportedImages": "",
+            "allImagesAlreadyImported": "",
+            "onlyAdminCanImport": ""
           },
           "provider": {
             "label": ""
@@ -2255,6 +2274,9 @@
             "confirm": {
               "label": ""
             }
+          },
+          "importForm": {
+            "title": ""
           },
           "example": {
             "label": ""
