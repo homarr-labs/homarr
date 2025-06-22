@@ -226,7 +226,48 @@ export const createItemChannel = <TData>(itemId: string) => {
   return createChannelWithLatestAndEvents<TData>(`item:${itemId}`);
 };
 
-export const createChannelEventHistory = <TData>(channelName: string, maxElements = 15) => {
+export const createChannelEventHistory = <TData>(channelName: string, maxElements = 32) => {
+  return {
+    subscribe: (callback: (data: TData) => void) => {
+      return ChannelSubscriptionTracker.subscribe(channelName, (message) => {
+        callback(superjson.parse(message));
+      });
+    },
+    pushAsync: async (data: TData, options = { publish: false }) => {
+      if (options.publish) await publisher.publish(channelName, superjson.stringify(data));
+      await getSetClient.lpush(channelName, superjson.stringify({ data, timestamp: new Date() }));
+      await getSetClient.ltrim(channelName, 0, maxElements);
+    },
+    clearAsync: async () => {
+      await getSetClient.del(channelName);
+    },
+    /**
+     * Returns a slice of the available data in the channel.
+     * If any of the indexes are out of range (or -range), returned data will be clamped.
+     * @param startIndex Start index of the slice, negative values are counted from the end, defaults at beginning of range.
+     * @param endIndex End index of the slice, negative values are counted from the end, defaults at end of range.
+     */
+    getSliceAsync: async (startIndex = 0, endIndex = -1) => {
+      const range = await getSetClient.lrange(channelName, startIndex, endIndex);
+      return range.map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item));
+    },
+    getSliceUntilTimeAsync: async (time: Date) => {
+      const itemsInCollection = await getSetClient.lrange(channelName, 0, -1);
+      return itemsInCollection
+        .map((item) => superjson.parse<{ data: TData; timestamp: Date }>(item))
+        .filter((item) => item.timestamp < time);
+    },
+    getLengthAsync: async () => {
+      return await getSetClient.llen(channelName);
+    },
+    name: channelName,
+  };
+};
+
+/**
+ * @deprecated This function should no longer be used, see history-channel functions.
+ */
+export const createChannelEventHistoryOld = <TData>(channelName: string, maxElements = 15) => {
   const popElementsOverMaxAsync = async () => {
     const length = await getSetClient.llen(channelName);
     if (length <= maxElements) {
