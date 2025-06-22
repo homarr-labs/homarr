@@ -12,6 +12,8 @@ export {
   createGetSetChannel,
 } from "./lib/channel";
 
+export { createIntegrationHistoryChannel } from "./lib/channels/history-channel";
+
 export const exampleChannel = createSubPubChannel<{ message: string }>("example");
 export const pingChannel = createSubPubChannel<{ url: string; statusCode: number } | { url: string; error: string }>(
   "ping",
