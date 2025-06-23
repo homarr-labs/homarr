@@ -18,17 +18,14 @@ import type {
 
 export class DockerHubIntegration extends Integration implements ReleasesProviderIntegration {
   protected async buildHeadersAsync(): Promise<RequestInit["headers"]> {
-    if (
-      !this.hasSecretValue("username") ||
-      (!this.hasSecretValue("personalAccessToken") && !this.hasSecretValue("password"))
-    )
-      return {};
+    if (!this.hasSecretValue("username") || !this.hasSecretValue("personalAccessToken")) return {};
 
     // Request auth token
     const accessTokenResponse = await fetchWithTrustedCertificatesAsync(this.url("/v2/auth/token"), {
+      method: "POST",
       body: JSON.stringify({
         identifier: this.getSecretValue("username"),
-        secret: this.getSecretValue("personalAccessToken") || this.getSecretValue("password"),
+        secret: this.getSecretValue("personalAccessToken"),
       }),
     });
 
@@ -62,15 +59,13 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const hasAuth =
-      this.hasSecretValue("username") &&
-      (this.hasSecretValue("personalAccessToken") || this.hasSecretValue("password"));
-
+    const hasAuth = this.hasSecretValue("username") && this.hasSecretValue("personalAccessToken");
     const response = hasAuth
       ? await input.fetchAsync(this.url("/v2/auth/token"), {
+          method: "POST",
           body: JSON.stringify({
             identifier: this.getSecretValue("username"),
-            secret: this.getSecretValue("personalAccessToken") || this.getSecretValue("password"),
+            secret: this.getSecretValue("personalAccessToken"),
           }),
         })
       : await input.fetchAsync(this.url("/v2/repositories/library"));

@@ -40,66 +40,87 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
 
     const details = await this.getDetailsAsync(api, repository.identifier);
 
-    const releasesResponse = await api.ProjectReleases.all(repository.identifier, {
-      perPage: 100,
-    });
+    try {
+      const releasesResponse = await api.ProjectReleases.all(repository.identifier, {
+        perPage: 100,
+      });
 
-    if (releasesResponse instanceof Error) {
+      if (releasesResponse instanceof Error) {
+        logger.warn(`Failed to get releases for ${repository.identifier} with Gitlab integration`, {
+          identifier: repository.identifier,
+          error: releasesResponse.message,
+        });
+        return {
+          id: repository.id,
+          error: { code: "noReleasesFound" },
+        };
+      }
+
+      const releasesProviderResponse = releasesResponse.reduce<ReleaseProviderResponse[]>((acc, release) => {
+        if (!release.released_at) return acc;
+
+        acc.push({
+          latestRelease: release.tag_name,
+          latestReleaseAt: new Date(release.released_at),
+          releaseUrl: release._links.self,
+          releaseDescription: release.description ?? undefined,
+          //isPreRelease: release.upcoming_release ?? false, // upcoming_release - is not available with @gitbeaker/rest SDK. Raised issue on GitHub https://github.com/jdalrymple/gitbeaker/issues/3730
+        });
+        return acc;
+      }, []);
+
+      return getLatestRelease(releasesProviderResponse, repository, details);
+    } catch (error) {
       logger.warn(`Failed to get releases for ${repository.identifier} with Gitlab integration`, {
         identifier: repository.identifier,
-        error: releasesResponse.message,
+        error: error instanceof Error ? error.message : String(error),
       });
+
       return {
         id: repository.id,
         error: { code: "noReleasesFound" },
       };
     }
-
-    const releasesProviderResponse = releasesResponse.reduce<ReleaseProviderResponse[]>((acc, release) => {
-      if (!release.released_at) return acc;
-
-      acc.push({
-        latestRelease: release.tag_name,
-        latestReleaseAt: new Date(release.released_at),
-        releaseUrl: release._links.self,
-        releaseDescription: release.description ?? undefined,
-        //isPreRelease: release.upcoming_release ?? false, // upcoming_release - is not available with @gitbeaker/rest SDK. Raised issue on GitHub https://github.com/jdalrymple/gitbeaker/issues/3730
-      });
-      return acc;
-    }, []);
-
-    return getLatestRelease(releasesProviderResponse, repository, details);
   }
 
   protected async getDetailsAsync(api: CoreGitlab, identifier: string): Promise<DetailsProviderResponse | undefined> {
-    const response = await api.Projects.show(identifier);
+    try {
+      const response = await api.Projects.show(identifier);
 
-    if (response instanceof Error) {
+      if (response instanceof Error) {
+        logger.warn(`Failed to get details for ${identifier} with Gitlab integration`, {
+          identifier,
+          error: response.message,
+        });
+
+        return undefined;
+      }
+
+      if (!response.web_url || typeof response.web_url !== "string") {
+        logger.warn(`No web URL found for ${identifier} with Gitlab integration`, {
+          identifier,
+        });
+        return undefined;
+      }
+
+      return {
+        projectUrl: response.web_url,
+        projectDescription: response.description,
+        isFork: response.forked_from_project !== null,
+        isArchived: response.archived,
+        createdAt: typeof response.created_at === "string" ? new Date(response.created_at) : undefined,
+        starsCount: typeof response.star_count === "number" ? response.star_count : undefined,
+        openIssues: typeof response.open_issues_count === "number" ? response.open_issues_count : undefined,
+        forksCount: typeof response.forks_count === "number" ? response.forks_count : undefined,
+      };
+    } catch (error) {
       logger.warn(`Failed to get details for ${identifier} with Gitlab integration`, {
         identifier,
-        error: response.message,
+        error: error instanceof Error ? error.message : String(error),
       });
 
       return undefined;
     }
-
-    if (!response.web_url || typeof response.web_url !== "string") {
-      logger.warn(`No web URL found for ${identifier} with Gitlab integration`, {
-        identifier,
-      });
-      return undefined;
-    }
-
-    return {
-      projectUrl: response.web_url,
-      projectDescription: response.description,
-      isFork: response.forked_from_project !== null,
-      isArchived: response.archived,
-      createdAt: typeof response.created_at === "string" ? new Date(response.created_at) : undefined,
-      starsCount: typeof response.star_count === "number" ? response.star_count : undefined,
-      openIssues: typeof response.open_issues_count === "number" ? response.open_issues_count : undefined,
-      forksCount: typeof response.forks_count === "number" ? response.forks_count : undefined,
-    };
   }
 
   private getApi() {

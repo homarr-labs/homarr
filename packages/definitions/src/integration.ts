@@ -181,7 +181,7 @@ export const integrationDefs = {
   },
   dockerHub: {
     name: "Docker Hub",
-    secretKinds: [[], ["username", "personalAccessToken"], ["username", "password"]],
+    secretKinds: [[], ["username", "personalAccessToken"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/docker.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://hub.docker.com",

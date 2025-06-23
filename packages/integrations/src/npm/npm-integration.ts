@@ -40,7 +40,6 @@ export class NPMIntegration extends Integration implements ReleasesProviderInteg
       .object({
         time: z.record(z.string().transform((value) => new Date(value))).transform((version) =>
           Object.entries(version).map(([key, value]) => ({
-            identifier: "",
             latestRelease: key,
             latestReleaseAt: value,
           })),
