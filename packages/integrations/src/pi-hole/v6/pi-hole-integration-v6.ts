@@ -77,6 +77,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
   protected async testingAsync({ fetchAsync }: IntegrationTestingInput): Promise<TestingResult> {
     const sessionId = await this.getSessionAsync(fetchAsync);
     await this.clearSessionAsync(sessionId, fetchAsync);
+    await this.sessionStore.clearAsync();
     return { success: true };
   }
 

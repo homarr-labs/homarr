@@ -2223,8 +2223,17 @@
         },
         "repositories": {
           "label": "Repositories",
-          "addRRepository": {
+          "addRepository": {
             "label": "Tilføj repository"
+          },
+          "importRepositories": {
+            "label": "",
+            "loading": "",
+            "noImagesFound": "",
+            "listFoundImages": "",
+            "listAlreadyImportedImages": "",
+            "allImagesAlreadyImported": "",
+            "onlyAdminCanImport": ""
           },
           "provider": {
             "label": "Udbyder"
@@ -2265,6 +2274,9 @@
             "confirm": {
               "label": "Bekræft"
             }
+          },
+          "importForm": {
+            "title": ""
           },
           "example": {
             "label": "Eksempel"

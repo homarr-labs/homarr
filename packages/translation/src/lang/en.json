@@ -936,6 +936,10 @@
         "realm": {
           "label": "Realm",
           "newLabel": "New realm"
+        },
+        "topic": {
+          "label": "Topic",
+          "newLabel": "New topic"
         }
       }
     },
@@ -2088,7 +2092,9 @@
         "pending": "Pending",
         "processing": "Processing",
         "partiallyAvailable": "Partial",
-        "available": "Available"
+        "available": "Available",
+        "blacklisted": "Blacklisted",
+        "deleted": "Deleted"
       },
       "status": {
         "pending": "Pending",
@@ -2223,8 +2229,17 @@
         },
         "repositories": {
           "label": "Repositories",
-          "addRRepository": {
+          "addRepository": {
             "label": "Add repository"
+          },
+          "importRepositories": {
+            "label": "Import from docker",
+            "loading": "Loading docker images",
+            "noImagesFound": "No docker images found",
+            "listFoundImages": "List of found images",
+            "listAlreadyImportedImages": "List of already imported images",
+            "allImagesAlreadyImported": "All images already imported",
+            "onlyAdminCanImport": "Only administrators can import from docker"
           },
           "provider": {
             "label": "Provider"
@@ -2265,6 +2280,9 @@
             "confirm": {
               "label": "Confirm"
             }
+          },
+          "importForm": {
+            "title": "Import from Docker"
           },
           "example": {
             "label": "Example"
@@ -2345,6 +2363,12 @@
       "error": {
         "internalServerError": "Failed to fetch Network Controller Summary"
       }
+    },
+    "notifications": {
+      "name": "Notifications",
+      "description": "Display notification history from an integration",
+      "noItems": "No notifications to display.",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -3109,6 +3133,9 @@
             },
             "networkController": {
               "label": "Network Controller"
+            },
+            "refreshNotifications": {
+              "label": "Notification Updater"
             },
             "dockerContainers": {
               "label": "Docker containers"

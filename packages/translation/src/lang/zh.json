@@ -2223,8 +2223,17 @@
         },
         "repositories": {
           "label": "儲存庫",
-          "addRRepository": {
+          "addRepository": {
             "label": "新增儲存庫"
+          },
+          "importRepositories": {
+            "label": "",
+            "loading": "",
+            "noImagesFound": "",
+            "listFoundImages": "",
+            "listAlreadyImportedImages": "",
+            "allImagesAlreadyImported": "",
+            "onlyAdminCanImport": ""
           },
           "provider": {
             "label": "提供者"
@@ -2265,6 +2274,9 @@
             "confirm": {
               "label": "確認"
             }
+          },
+          "importForm": {
+            "title": ""
           },
           "example": {
             "label": "範例"
