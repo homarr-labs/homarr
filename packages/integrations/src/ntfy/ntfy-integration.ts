@@ -40,7 +40,7 @@ export class NTFYIntegration extends NotificationsIntegration {
         .split("\n")
         .map(async (line) => {
           // ignore empty lines
-          if (line.length == 0) return null;
+          if (line.length === 0) return null;
 
           const json = JSON.parse(line) as unknown;
           const parsed = await ntfyNotificationSchema.parseAsync(json);
