@@ -23,39 +23,33 @@ export const initialOldmarrImportSettings = oldmarrImportConfigurationSchema.pic
 
 export type InitialOldmarrImportSettings = z.infer<typeof initialOldmarrImportSettings>;
 
-export const superRefineJsonImportFile = (value: File | null, context: z.RefinementCtx) => {
-  if (!value) {
-    return context.addIssue({
-      code: "invalid_type",
-      expected: "object",
-      received: "null",
-    });
-  }
-
-  if (value.type !== "application/json") {
-    return context.addIssue({
+export const checkJsonImportFile: z.core.CheckFn<File> = (context) => {
+  if (context.value.type !== "application/json") {
+    context.issues.push({
       code: "custom",
       params: createCustomErrorParams({
         key: "invalidFileType",
         params: { expected: "JSON" },
       }),
+      input: context.value.type,
     });
+    return;
   }
 
-  if (value.size > 1024 * 1024) {
-    return context.addIssue({
+  if (context.value.size > 1024 * 1024) {
+    context.issues.push({
       code: "custom",
       params: createCustomErrorParams({
         key: "fileTooLarge",
         params: { maxSize: "1 MB" },
       }),
+      input: context.value.size,
     });
+    return;
   }
-
-  return null;
 };
 
 export const importJsonFileSchema = zfd.formData({
-  file: zfd.file().superRefine(superRefineJsonImportFile),
+  file: zfd.file().check(checkJsonImportFile),
   configuration: zfd.json(oldmarrImportConfigurationSchema),
 });

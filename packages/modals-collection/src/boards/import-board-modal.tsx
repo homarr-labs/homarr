@@ -10,7 +10,7 @@ import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { OldmarrImportAppsSettings, SidebarBehaviourSelect } from "@homarr/old-import/components";
 import type { OldmarrImportConfiguration } from "@homarr/old-import/shared";
-import { oldmarrImportConfigurationSchema, superRefineJsonImportFile } from "@homarr/old-import/shared";
+import { checkJsonImportFile, oldmarrImportConfigurationSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -22,7 +22,7 @@ export const ImportBoardModal = createModal(({ actions }) => {
   const [fileValid, setFileValid] = useState(true);
   const form = useZodForm(
     z.object({
-      file: z.instanceof(File).nullable().superRefine(superRefineJsonImportFile),
+      file: z.file().check(checkJsonImportFile),
       configuration: oldmarrImportConfigurationSchema,
     }),
     {
@@ -43,6 +43,8 @@ export const ImportBoardModal = createModal(({ actions }) => {
             return;
           }
 
+          // Before validation it can still be null
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (!values.file) {
             return;
           }
@@ -51,7 +53,7 @@ export const ImportBoardModal = createModal(({ actions }) => {
           const result = oldmarrConfigSchema.safeParse(JSON.parse(content));
 
           if (!result.success) {
-            console.error(result.error.errors);
+            console.error(result.error.issues);
             setFileValid(false);
             return;
           }
@@ -97,9 +99,7 @@ export const ImportBoardModal = createModal(({ actions }) => {
         }
 
         void handleSubmitAsync({
-          // It's checked for null in the superrefine
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          file: values.file!,
+          file: values.file,
           configuration: values.configuration,
         });
       })}
