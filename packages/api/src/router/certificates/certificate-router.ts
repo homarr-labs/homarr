@@ -16,7 +16,7 @@ export const certificateRouter = createTRPCRouter({
     .requiresPermission("admin")
     .input(
       zfd.formData({
-        file: zfd.file().superRefine(checkCertificateFile),
+        file: zfd.file().check(checkCertificateFile),
       }),
     )
     .mutation(async ({ input }) => {
