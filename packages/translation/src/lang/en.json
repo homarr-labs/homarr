@@ -2088,7 +2088,9 @@
         "pending": "Pending",
         "processing": "Processing",
         "partiallyAvailable": "Partial",
-        "available": "Available"
+        "available": "Available",
+        "blacklisted": "Blacklisted",
+        "deleted": "Deleted"
       },
       "status": {
         "pending": "Pending",
