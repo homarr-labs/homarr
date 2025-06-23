@@ -7,7 +7,7 @@ import { addCustomRootCertificateAsync, removeCustomRootCertificateAsync } from 
 import { and, eq } from "@homarr/db";
 import { trustedCertificateHostnames } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
-import { certificateValidFileNameSchema, superRefineCertificateFile } from "@homarr/validation/certificates";
+import { certificateValidFileNameSchema, checkCertificateFile } from "@homarr/validation/certificates";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 
@@ -16,7 +16,7 @@ export const certificateRouter = createTRPCRouter({
     .requiresPermission("admin")
     .input(
       zfd.formData({
-        file: zfd.file().superRefine(superRefineCertificateFile),
+        file: zfd.file().superRefine(checkCertificateFile),
       }),
     )
     .mutation(async ({ input }) => {

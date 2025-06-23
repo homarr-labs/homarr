@@ -8,7 +8,7 @@ import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { superRefineCertificateFile } from "@homarr/validation/certificates";
+import { checkCertificateFile } from "@homarr/validation/certificates";
 
 interface InnerProps {
   onSuccess?: () => MaybePromise<void>;
@@ -18,7 +18,7 @@ export const AddCertificateModal = createModal<InnerProps>(({ actions, innerProp
   const t = useI18n();
   const form = useZodForm(
     z.object({
-      file: z.instanceof(File).nullable().superRefine(superRefineCertificateFile),
+      file: z.file().check(checkCertificateFile),
     }),
     {
       initialValues: {
@@ -33,8 +33,7 @@ export const AddCertificateModal = createModal<InnerProps>(({ actions, innerProp
     <form
       onSubmit={form.onSubmit(async (values) => {
         const formData = new FormData();
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        formData.set("file", values.file!);
+        formData.set("file", values.file);
         await mutateAsync(formData, {
           async onSuccess() {
             showSuccessNotification({
