@@ -5,8 +5,8 @@ export interface FirewallInterfacesSummary {
 
 export interface FirewallInterface {
   name: string;
-  recv: number;
-  trans: number;
+  receive: number;
+  transmit: number;
 }
 
 export interface FirewallVersionSummary {
@@ -15,17 +15,10 @@ export interface FirewallVersionSummary {
 
 export interface FirewallCpuSummary {
   total: number;
-  idle: number;
-  system: number;
-  user: number;
 }
 
 export interface FirewallMemorySummary {
+  used: number;
   total: number;
-  user: number;
-  nice: number;
-  system: number;
-  intr: number;
-  idle: number;
   percent: number;
 }

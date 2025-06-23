@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+// API documentation : https://docs.opnsense.org/development/api.html#core-api
+
 export const opnsenseSystemSummarySchema = z.object({
   name: z.string(),
   versions: z.array(z.string()),
@@ -83,16 +85,17 @@ export interface opnsenseMemorySummary {
 }
 
 export interface opnsenseInterfaceSummary {
-  recv: number;
-  trans: number;
+  receive: number;
+  transmit: number;
   name: string;
 }
 
 export const opnsenseCPUSchema = z.object({
   total: z.number(),
-  user: z.number(),
-  nice: z.number(),
-  sys: z.number(),
-  intr: z.number(),
-  idle: z.number(),
+  //  user: z.number(),
+  // Nice here is the percentage of time that the kernel spent running processes with a positive nice value (aka, processes with a lesser priority than other).
+  // nice: z.number(),
+  // sys: z.number(),
+  // intr: z.number(),
+  // idle: z.number(),
 });

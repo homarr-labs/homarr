@@ -172,7 +172,7 @@ export const integrationDefs = {
   opnsense: {
     name: "OPNsense",
     secretKinds: [["username", "password"]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/opnsense.png",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg",
     category: ["firewall"],
   },
 } as const satisfies Record<string, integrationDefinition>;

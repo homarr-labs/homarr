@@ -1,9 +1,8 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { ParseError } from "@homarr/common/server";
+import { ParseError, ResponseError } from "@homarr/common/server";
+import { createChannelEventHistory } from "@homarr/redis";
 
-import { createChannelEventHistory } from "../../../redis/src/lib/channel";
 import { HandleIntegrationErrors } from "../base/errors/decorator";
-import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -23,7 +22,7 @@ import {
   opnsenseSystemSummarySchema,
 } from "./opnsense-types";
 
-@HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
+@HandleIntegrationErrors([])
 export class OPNsenseIntegration extends Integration implements FirewallSummaryIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/diagnostics/system/system_information"), {
@@ -55,9 +54,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       },
     );
     if (!responseSummary.ok) {
-      throw new Error(
-        `Failed to fetch version for ${this.integration.name} (${this.integration.id}): ${responseSummary.statusText}`,
-      );
+      throw new ResponseError(responseSummary);
     }
     const summary = opnsenseSystemSummarySchema.safeParse(await responseSummary.json());
     if (!summary.success) {
@@ -66,17 +63,21 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       );
     }
     const firewallVersion: FirewallVersionSummary = {
-      version: typeof summary.data.versions[0] === "string" ? summary.data.versions[0] : "Unknown",
+      version: summary.data.versions.at(0) ?? "Unknown",
     };
     return firewallVersion;
   }
 
-  private getChannel() {
+  private getInterfacesChannel() {
     return createChannelEventHistory<FirewallInterfacesSummary[]>(`integration:${this.integration.id}:interfaces`, 15);
   }
 
-  public async getFirewallInterfacesAsync(): Promise<FirewallInterface[]> {
-    const channel = this.getChannel();
+  private getCpuChannel() {
+    return createChannelEventHistory<FirewallInterfacesSummary[]>(`integration:${this.integration.id}:cpu_history`, 5);
+  }
+
+  public async getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary[]> {
+    const channel = this.getInterfacesChannel();
 
     const interfaceSummary = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/traffic/interface"), {
       headers: {
@@ -85,9 +86,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     });
 
     if (!interfaceSummary.ok) {
-      throw new Error(
-        `Failed to fetch interfaces for ${this.integration.name} (${this.integration.id}): ${interfaceSummary.statusText}`,
-      );
+      throw new ResponseError(interfaceSummary);
     }
     const test_value = await interfaceSummary.json();
     const interfaces = opnsenseInterfacesSchema.safeParse(test_value);
@@ -101,19 +100,21 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
 
     interfaceKeys.forEach((key) => {
       const inter = interfaces.data.interfaces[key];
-      const name = inter.name;
+      if (inter) {
+        const name = inter.name;
 
-      const nameValue = typeof name === "string" ? name : "unknown";
-      const bytesTransmitted = inter["bytes transmitted"];
-      const bytesReceived = inter["bytes received"];
-      const recvValue = typeof bytesReceived === "string" ? parseInt(bytesReceived, 10) : 0;
-      const transValue = typeof bytesTransmitted === "string" ? parseInt(bytesTransmitted, 10) : 0;
+        const nameValue = typeof name === "string" ? name : "unknown";
+        const bytesTransmitted = inter["bytes transmitted"];
+        const bytesReceived = inter["bytes received"];
+        const recvValue = typeof bytesReceived === "string" ? parseInt(bytesReceived, 10) : 0;
+        const transValue = typeof bytesTransmitted === "string" ? parseInt(bytesTransmitted, 10) : 0;
 
-      returnValue.push({
-        name: nameValue,
-        recv: recvValue,
-        trans: transValue,
-      });
+        returnValue.push({
+          name: nameValue,
+          receive: recvValue,
+          transmit: transValue,
+        });
+      }
     });
 
     await channel.pushAsync(returnValue);
@@ -131,9 +132,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       },
     );
     if (!responseMemory.ok) {
-      throw new Error(
-        `Failed to fetch memory for ${this.integration.name} (${this.integration.id}): ${responseMemory.statusText}`,
-      );
+      throw new ResponseError(responseMemory);
     }
 
     const memory = opnsenseMemorySchema.safeParse(await responseMemory.json());
@@ -145,18 +144,15 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     // Using parseInt for memoryTotal is normal, the api sends the total memory as a string
     const memoryTotal = parseInt(memory.data.memory.total);
     const memoryUsed = memory.data.memory.used;
-    const memoryPercent = (100 * memory.data.memory.used) / parseInt(memory.data.memory.total);
-    const memorySummary: FirewallMemorySummary = {
+    const memoryPercent = (100 * memoryUsed) / memoryTotal;
+    return {
       total: memoryTotal,
       used: memoryUsed,
       percent: memoryPercent,
     };
-
-    return memorySummary;
   }
 
   public async getFirewallCpuAsync(): Promise<FirewallCpuSummary> {
-    // The API endpoint for OPNsense is SSE compliant. But I'll just get one event and close the connection
     const cpuSummary = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/cpu_usage/stream"), {
       headers: {
         Authorization: this.getAuthHeaders(),
@@ -174,34 +170,42 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     const reader = cpuSummary.body.getReader();
     const decoder = new TextDecoder();
 
-    while (true) {
-      const result = await reader.read();
-      if (result.done) {
-        break;
-      }
+    try {
+      while (true) {
+        const result = await reader.read();
+        if (result.done) {
+          break;
+        }
+        const value: unknown = result.value;
+        if (!(value instanceof ArrayBuffer)) {
+          throw new Error("Received value is not an ArrayBuffer.");
+        }
 
-      const value: unknown = result.value;
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split("\n");
 
-      const chunk = decoder.decode(value, { stream: true });
-      const lines = chunk.split("\n");
+        for (const line of lines) {
+          if (line.startsWith("data:")) {
+            const data = line.substring(5).trim();
+            const cpu_values = opnsenseCPUSchema.safeParse(JSON.parse(data));
 
-      for (const line of lines) {
-        if (line.startsWith("data:")) {
-          const data = line.substring(5).trim();
+            if (!cpu_values.success) {
+              throw new Error(
+                `Failed to parse cpu summary for ${this.integration.name} (${this.integration.id}):\n${cpu_values.error.message}`,
+              );
+            }
 
-          const cpu_values = opnsenseCPUSchema.safeParse(JSON.parse(data));
-          if (!cpu_values.success) {
-            throw new Error(
-              `Failed to parse cpu summary for ${this.integration.name} (${this.integration.id}):\n${cpu_values.error.message}`,
-            );
+            return {
+              ...cpu_values.data,
+            };
           }
-          await reader.cancel();
-          const returnValue: FirewallCpuSummary = {
-            ...cpu_values.data,
-          };
-          return returnValue;
         }
       }
+
+      throw new Error("No valid CPU data found.");
+    } finally {
+      await reader.cancel();
     }
   }
+
 }
