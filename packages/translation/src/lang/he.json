@@ -2227,13 +2227,13 @@
             "label": "הוסף מאגר"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "label": "ייבוא מדוקר",
+            "loading": "טוען תמונות דוקר",
+            "noImagesFound": "לא נמצאו תמונות דוקר",
+            "listFoundImages": "רשימת התמונות שנמצאו",
+            "listAlreadyImportedImages": "רשימת התמונות שכבר יובאו",
+            "allImagesAlreadyImported": "כל התמונות כבר יובאו",
+            "onlyAdminCanImport": "רק מנהלים יכולים לייבא מדוקר"
           },
           "provider": {
             "label": "ספק"
@@ -2276,7 +2276,7 @@
             }
           },
           "importForm": {
-            "title": ""
+            "title": "ייבוא מדוקר"
           },
           "example": {
             "label": "דוגמא"

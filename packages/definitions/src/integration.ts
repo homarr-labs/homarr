@@ -8,6 +8,7 @@ export const integrationSecretKindObject = {
   tokenId: { isPublic: true },
   realm: { isPublic: true },
   personalAccessToken: { isPublic: false },
+  topic: { isPublic: true },
 } satisfies Record<string, { isPublic: boolean }>;
 
 export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
@@ -205,6 +206,11 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/codeberg.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://codeberg.org",
+  ntfy: {
+    name: "ntfy",
+    secretKinds: [["topic"], ["topic", "apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
+    category: ["notifications"],
   },
 } as const satisfies Record<string, integrationDefinition>;
 
@@ -268,6 +274,7 @@ export const IntegrationCategories = [
   "mediaTranscoding",
   "networkController",
   "releasesProvider",
+  "notifications",
 ] as const;
 
 export type IntegrationCategory = typeof IntegrationCategories[number];

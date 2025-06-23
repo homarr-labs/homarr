@@ -1,4 +1,4 @@
-import { IconGrid3x3, IconKey, IconPassword, IconServer, IconUser, IconPasswordUser } from "@tabler/icons-react";
+import { IconGrid3x3, IconKey, IconMessage, IconPassword, IconServer, IconUser, IconPasswordUser } from "@tabler/icons-react";
 
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import type { TablerIcon } from "@homarr/ui";
@@ -10,4 +10,5 @@ export const integrationSecretIcons = {
   realm: IconServer,
   tokenId: IconGrid3x3,
   personalAccessToken: IconPasswordUser,
+  topic: IconMessage,
 } satisfies Record<IntegrationSecretKind, TablerIcon>;

@@ -252,7 +252,11 @@ function getAvailabilityProperties(
       return { color: "blue", label: t("availability.processing") };
     case MediaAvailability.Pending:
       return { color: "violet", label: t("availability.pending") };
+    case MediaAvailability.Blacklisted:
+      return { color: "gray", label: t("availability.blacklisted") };
+    case MediaAvailability.Deleted:
+      return { color: "red", label: t("availability.deleted") };
     default:
-      return { color: "red", label: t("availability.unknown") };
+      return { color: "orange", label: t("availability.unknown") };
   }
 }

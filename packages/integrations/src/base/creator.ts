@@ -26,6 +26,7 @@ import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration"
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { NPMIntegration } from "../npm/npm-integration";
+import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
@@ -102,6 +103,7 @@ export const integrationCreators = {
   gitlab: GitlabIntegration,
   npm: NPMIntegration,
   codeberg: CodebergIntegration,
+  ntfy: NTFYIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

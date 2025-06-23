@@ -56,9 +56,9 @@
     "@mantine/tiptap": "^8.1.1",
     "@million/lint": "1.0.14",
     "@tabler/icons-react": "^3.34.0",
-    "@tanstack/react-query": "^5.80.10",
-    "@tanstack/react-query-devtools": "^5.80.10",
-    "@tanstack/react-query-next-experimental": "^5.80.10",
+    "@tanstack/react-query": "^5.81.2",
+    "@tanstack/react-query-devtools": "^5.81.2",
+    "@tanstack/react-query-next-experimental": "^5.81.2",
     "@trpc/client": "^11.4.2",
     "@trpc/next": "^11.4.2",
     "@trpc/react-query": "^11.4.2",
@@ -97,10 +97,10 @@
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "@types/swagger-ui-react": "^5.18.0",
-    "concurrently": "^9.1.2",
+    "concurrently": "^9.2.0",
     "eslint": "^9.29.0",
     "node-loader": "^2.1.0",
-    "prettier": "^3.5.3",
+    "prettier": "^3.6.0",
     "typescript": "^5.8.3"
   }
 }
