@@ -940,6 +940,7 @@
         "personalAccessToken": {
           "label": "Personal Access Token",
           "newLabel": "New Personal Access Token"
+        },
         "topic": {
           "label": "Topic",
           "newLabel": "New topic"
