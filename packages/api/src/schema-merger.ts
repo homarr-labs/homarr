@@ -4,8 +4,8 @@ import type { ZodIntersection, ZodObject } from "zod/v4";
 export function convertIntersectionToZodObject<TIntersection extends ZodIntersection<ZodObject, ZodObject>>(
   intersection: TIntersection,
 ) {
-  const left = intersection.def.left as ZodObject;
-  const right = intersection.def.right as ZodObject;
+  const left = intersection.def.left;
+  const right = intersection.def.right;
 
   // Merge the shapes
   const mergedShape = { ...left.def.shape, ...right.def.shape };
