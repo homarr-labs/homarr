@@ -2,9 +2,9 @@ import { z } from "zod/v4";
 
 export interface ReleasesProvider {
   getDetailsUrl: (identifier: string) => string | undefined;
-  parseDetailsResponse: (response: unknown) => z.SafeParseReturnType<unknown, DetailsResponse> | undefined;
+  parseDetailsResponse: (response: unknown) => z.ZodSafeParseResult<DetailsResponse> | undefined;
   getReleasesUrl: (identifier: string) => string;
-  parseReleasesResponse: (response: unknown) => z.SafeParseReturnType<unknown, ReleasesResponse[]>;
+  parseReleasesResponse: (response: unknown) => z.ZodSafeParseResult<ReleasesResponse[]>;
 }
 
 interface ProvidersProps {
@@ -205,7 +205,7 @@ export const Providers: ProvidersProps = {
                 latestReleaseAt: value,
               })),
             ),
-          versions: z.record(z.object({ description: z.string() })),
+          versions: z.record(z.string(), z.object({ description: z.string() })),
           name: z.string(),
         })
         .transform((resp) => {
