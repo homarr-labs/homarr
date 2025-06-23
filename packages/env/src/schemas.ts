@@ -5,23 +5,12 @@ const falseStrings = ["0", "no", "f", "false"];
 
 export const createBooleanSchema = (defaultValue: boolean) =>
   z
-    .string()
-    .default(defaultValue.toString())
-    .transform((value) => {
-      const normalized = value.trim().toLowerCase();
-      if (trueStrings.includes(normalized)) return true;
-      if (falseStrings.includes(normalized)) return false;
-      return value;
+    .stringbool({
+      truthy: trueStrings,
+      falsy: falseStrings,
+      case: "insensitive",
     })
-    .check((context) => {
-      if (typeof context.value === "boolean") return;
-
-      context.issues.push({
-        code: "invalid_value",
-        input: context.value,
-        values: [...trueStrings, ...falseStrings],
-      });
-    });
+    .default(defaultValue);
 
 export const createDurationSchema = (defaultValue: `${number}${"s" | "m" | "h" | "d"}`) =>
   z
