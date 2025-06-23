@@ -2365,7 +2365,8 @@
     "notifications": {
       "name": "Notifications",
       "description": "Display notification history from an integration",
-      "noItems": "No notifications to display."
+      "noItems": "No notifications to display.",
+      "option": {}
     }
   },
   "widgetPreview": {
