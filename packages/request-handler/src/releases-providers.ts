@@ -193,13 +193,18 @@ export const Providers: ProvidersProps = {
     parseReleasesResponse(response) {
       return z
         .object({
-          time: z.record(z.string().transform((value) => new Date(value))).transform((version) =>
-            Object.entries(version).map(([key, value]) => ({
-              identifier: "",
-              latestRelease: key,
-              latestReleaseAt: value,
-            })),
-          ),
+          time: z
+            .record(
+              z.string(),
+              z.string().transform((value) => new Date(value)),
+            )
+            .transform((version) =>
+              Object.entries(version).map(([key, value]) => ({
+                identifier: "",
+                latestRelease: key,
+                latestReleaseAt: value,
+              })),
+            ),
           versions: z.record(z.object({ description: z.string() })),
           name: z.string(),
         })

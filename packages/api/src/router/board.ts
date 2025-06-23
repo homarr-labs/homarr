@@ -1622,7 +1622,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
 const forKind = <T extends WidgetKind>(kind: T) =>
   z.object({
     kind: z.literal(kind),
-    options: z.record(z.unknown()),
+    options: z.record(z.string(), z.unknown()),
   });
 
 const outputItemSchema = zodUnionFromArray(widgetKinds.map((kind) => forKind(kind))).and(sharedItemSchema);
