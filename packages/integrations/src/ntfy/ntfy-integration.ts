@@ -44,7 +44,7 @@ export class NTFYIntegration extends NotificationsIntegration {
 
           const json = JSON.parse(line) as unknown;
           const parsed = await ntfyNotificationSchema.parseAsync(json);
-          if (parsed.event == "message") return parsed;
+          if (parsed.event === "message") return parsed;
           // ignore non-event messages
           else return null;
         }),
