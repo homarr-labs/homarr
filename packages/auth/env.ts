@@ -20,7 +20,7 @@ const authProvidersSchema = z
         return false;
       }),
   )
-  .default("credentials");
+  .default(["credentials"]);
 
 const authProviders = authProvidersSchema.safeParse(process.env.AUTH_PROVIDERS).data ?? [];
 
