@@ -16,7 +16,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";

@@ -9,8 +9,7 @@
     "./types": "./src/types.ts",
     "./server": "./src/server.ts",
     "./client": "./src/client.ts",
-    "./env": "./env.ts",
-    "./env-validation": "./src/env-validation.ts"
+    "./env": "./env.ts"
   },
   "typesVersions": {
     "*": {

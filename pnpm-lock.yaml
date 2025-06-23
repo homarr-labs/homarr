@@ -554,6 +554,9 @@ importers:
       '@homarr/docker':
         specifier: workspace:^0.1.0
         version: link:../docker
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../env
       '@homarr/icons':
         specifier: workspace:^0.1.0
         version: link:../icons
@@ -1060,8 +1063,8 @@ importers:
         specifier: ^0.44.2
         version: 0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.0.0)(gel@2.0.0)(mysql2@3.14.1)
       drizzle-zod:
-        specifier: ^0.7.1
-        version: 0.7.1(drizzle-orm@0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.0.0)(gel@2.0.0)(mysql2@3.14.1))(zod@3.25.67)
+        specifier: ^0.8.2
+        version: 0.8.2(drizzle-orm@0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.0.0)(gel@2.0.0)(mysql2@3.14.1))(zod@3.25.67)
       mysql2:
         specifier: 3.14.1
         version: 3.14.1
@@ -1198,6 +1201,9 @@ importers:
       '@mantine/form':
         specifier: ^8.1.1
         version: 8.1.1(react@19.1.0)
+      mantine-form-zod-resolver:
+        specifier: ^1.2.1
+        version: 1.2.1(@mantine/form@8.1.1(react@19.1.0))(zod@3.25.67)
       zod:
         specifier: ^3.25.67
         version: 3.25.67
@@ -1609,8 +1615,8 @@ importers:
         specifier: ^3.25.67
         version: 3.25.67
       zod-form-data:
-        specifier: ^2.0.7
-        version: 2.0.7(zod@3.25.67)
+        specifier: ^3.0.0
+        version: 3.0.0(zod@3.25.67)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -2030,8 +2036,8 @@ importers:
         specifier: ^3.25.67
         version: 3.25.67
       zod-form-data:
-        specifier: ^2.0.7
-        version: 2.0.7(zod@3.25.67)
+        specifier: ^3.0.0
+        version: 3.0.0(zod@3.25.67)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -2183,6 +2189,9 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
+      mantine-form-zod-resolver:
+        specifier: ^1.2.1
+        version: 1.2.1(@mantine/form@8.1.1(react@19.1.0))(zod@3.25.67)
       mantine-react-table:
         specifier: 2.0.0-beta.9
         version: 2.0.0-beta.9(@mantine/core@8.1.1(@mantine/hooks@8.1.1(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/dates@8.1.1(@mantine/core@8.1.1(@mantine/hooks@8.1.1(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.1(react@19.1.0))(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.1(react@19.1.0))(@tabler/icons-react@3.34.0(react@19.1.0))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -6204,11 +6213,11 @@ packages:
       sqlite3:
         optional: true
 
-  drizzle-zod@0.7.1:
-    resolution: {integrity: sha512-nZzALOdz44/AL2U005UlmMqaQ1qe5JfanvLujiTHiiT8+vZJTBFhj3pY4Vk+L6UWyKFfNmLhk602Hn4kCTynKQ==}
+  drizzle-zod@0.8.2:
+    resolution: {integrity: sha512-9Do/16OjFFNrQDZgvMtxtDDwKWbFOxUAIwNPKX98SfxrP8H18vhN1BvNXbhelLcdgCE7GEaXDJqBjMExSkhpkA==}
     peerDependencies:
       drizzle-orm: '>=0.36.0'
-      zod: '>=3.0.0'
+      zod: ^3.25.1
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -7795,6 +7804,13 @@ packages:
 
   make-error@1.3.6:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
+
+  mantine-form-zod-resolver@1.2.1:
+    resolution: {integrity: sha512-8Y7jX3ybZEhQeLzkbrzCS9gulnCX7sgjM5bCkRDxQHbmal8V5lLM9yZq583UEme8DuM77x/BJNTrBkYZo+JUFw==}
+    engines: {node: '>=16.6.0'}
+    peerDependencies:
+      '@mantine/form': '>=7.0.0'
+      zod: '>=3.25.0'
 
   mantine-react-table@2.0.0-beta.9:
     resolution: {integrity: sha512-ZdfcwebWaPERoDvAuk43VYcBCzamohARVclnbuepT0PHZ0wRcDPMBR+zgaocL+pFy8EXUGwvWTOKNh25ITpjNQ==}
@@ -10709,10 +10725,10 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
-  zod-form-data@2.0.7:
-    resolution: {integrity: sha512-O27uzKMx7qc7z51KXER326Fp966jqHGvZX3i18CbvElF/QqVsQQN6Q7BnzepkzeBzTJnU3golibVSagf4dp7RQ==}
+  zod-form-data@3.0.0:
+    resolution: {integrity: sha512-jTQbmXQU5wMfI+ERZH6EuATzeD9FEOviPasLL2hCUP+FcLagXLtboUM95PHsSOFseL8Nv91YKlwln3zo1sAS2g==}
     peerDependencies:
-      zod: '>= 3.11.0'
+      zod: '>= 3.25.0'
 
   zod-openapi@2.19.0:
     resolution: {integrity: sha512-OUAAyBDPPwZ9u61i4k/LieXUzP2re8kFjqdNh2AvHjsyi/aRNz9leDAtMGcSoSzUT5xUeQoACJufBI6FzzZyxA==}
@@ -14891,7 +14907,7 @@ snapshots:
       gel: 2.0.0
       mysql2: 3.14.1
 
-  drizzle-zod@0.7.1(drizzle-orm@0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.0.0)(gel@2.0.0)(mysql2@3.14.1))(zod@3.25.67):
+  drizzle-zod@0.8.2(drizzle-orm@0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.0.0)(gel@2.0.0)(mysql2@3.14.1))(zod@3.25.67):
     dependencies:
       drizzle-orm: 0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.0.0)(gel@2.0.0)(mysql2@3.14.1)
       zod: 3.25.67
@@ -16872,6 +16888,11 @@ snapshots:
       semver: 7.7.1
 
   make-error@1.3.6: {}
+
+  mantine-form-zod-resolver@1.2.1(@mantine/form@8.1.1(react@19.1.0))(zod@3.25.67):
+    dependencies:
+      '@mantine/form': 8.1.1(react@19.1.0)
+      zod: 3.25.67
 
   mantine-react-table@2.0.0-beta.9(@mantine/core@8.1.1(@mantine/hooks@8.1.1(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/dates@8.1.1(@mantine/core@8.1.1(@mantine/hooks@8.1.1(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.1(react@19.1.0))(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@mantine/hooks@8.1.1(react@19.1.0))(@tabler/icons-react@3.34.0(react@19.1.0))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
@@ -20324,7 +20345,7 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-form-data@2.0.7(zod@3.25.67):
+  zod-form-data@3.0.0(zod@3.25.67):
     dependencies:
       '@rvf/set-get': 7.0.1
       zod: 3.25.67

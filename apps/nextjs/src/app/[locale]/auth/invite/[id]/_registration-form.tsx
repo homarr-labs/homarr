@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";

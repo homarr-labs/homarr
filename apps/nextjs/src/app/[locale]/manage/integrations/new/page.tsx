@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { Container, Group, Stack, Title } from "@mantine/core";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { auth } from "@homarr/auth/next";
 import type { IntegrationKind } from "@homarr/definitions";

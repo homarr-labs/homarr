@@ -1,6 +1,6 @@
 import { IconCloud } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

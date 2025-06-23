@@ -1,5 +1,5 @@
 import { escapeForRegEx } from "@tiptap/react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { releasesRequestHandler } from "@homarr/request-handler/releases";
 

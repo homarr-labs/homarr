@@ -28,10 +28,6 @@ export const AddBoardModal = createModal(({ actions }) => {
 
   const boardNameStatus = useBoardNameStatus(form.values.name);
 
-  const columnCountChecks = boardColumnCountSchema._def.checks;
-  const minColumnCount = columnCountChecks.find((check) => check.kind === "min")?.value;
-  const maxColumnCount = columnCountChecks.find((check) => check.kind === "max")?.value;
-
   return (
     <form
       onSubmit={form.onSubmit((values) => {
@@ -69,7 +65,12 @@ export const AddBoardModal = createModal(({ actions }) => {
           }
         />
         <InputWrapper label={t("board.field.columnCount.label")} {...form.getInputProps("columnCount")}>
-          <Slider min={minColumnCount} max={maxColumnCount} step={1} {...form.getInputProps("columnCount")} />
+          <Slider
+            min={boardColumnCountSchema.minValue ?? undefined}
+            max={boardColumnCountSchema.maxValue ?? undefined}
+            step={1}
+            {...form.getInputProps("columnCount")}
+          />
         </InputWrapper>
 
         <Switch

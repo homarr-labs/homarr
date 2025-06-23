@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { supportedAuthProviders } from "@homarr/definitions";
 import { createEnv } from "@homarr/env";
@@ -20,7 +20,7 @@ const authProvidersSchema = z
         return false;
       }),
   )
-  .default("credentials");
+  .default(["credentials"]);
 
 const authProviders = authProvidersSchema.safeParse(process.env.AUTH_PROVIDERS).data ?? [];
 

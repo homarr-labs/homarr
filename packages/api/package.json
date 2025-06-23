@@ -30,6 +30,7 @@
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/docker": "workspace:^0.1.0",
+    "@homarr/env": "workspace:^0.1.0",
     "@homarr/icons": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/log": "workspace:^",

@@ -1,8 +1,8 @@
 import type React from "react";
 import type { DraggableAttributes, UniqueIdentifier } from "@dnd-kit/core";
 import type { ActionIconProps } from "@mantine/core";
-import { z } from "zod";
-import type { ZodType } from "zod";
+import { z } from "zod/v4";
+import type { ZodType } from "zod/v4";
 
 import type { IntegrationKind } from "@homarr/definitions";
 

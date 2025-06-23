@@ -24,7 +24,7 @@ export const recreateAdmin = command({
 
     if (!result.success) {
       console.error("Invalid username:");
-      console.error(result.error.errors.map((error) => `- ${error.message}`).join("\n"));
+      console.error(result.error.issues.map((error) => `- ${error.message}`).join("\n"));
       return;
     }
 

@@ -1,5 +1,5 @@
 import { IconDownload } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedDownloadClientItem } from "@homarr/integrations";
