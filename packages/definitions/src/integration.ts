@@ -206,6 +206,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/codeberg.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://codeberg.org",
+  },
   ntfy: {
     name: "ntfy",
     secretKinds: [["topic"], ["topic", "apiKey"]],
