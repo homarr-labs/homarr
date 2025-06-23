@@ -2,7 +2,7 @@ import { z } from "zod/v4";
 
 import { objectKeys } from "@homarr/common";
 
-const createAreaSchema = <TType extends string, TPropertiesSchema extends z.AnyZodObject>(
+const createAreaSchema = <TType extends string, TPropertiesSchema extends z.ZodObject>(
   type: TType,
   propertiesSchema: TPropertiesSchema,
 ) =>
@@ -58,7 +58,7 @@ export const tileBaseSchema = z.object({
 
 export type SizedShape = z.infer<typeof sizedShapeSchema>;
 
-export const boardSizes = objectKeys(shapeSchema._def.shape());
+export const boardSizes = objectKeys(shapeSchema.def.shape);
 export type BoardSize = (typeof boardSizes)[number];
 
 export const getBoardSizeName = (size: BoardSize) => {
