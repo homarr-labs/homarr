@@ -25,7 +25,7 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "zod": "^3.25.48",
-    "zod-form-data": "^2.0.7"
+    "zod-form-data": "^3.0.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

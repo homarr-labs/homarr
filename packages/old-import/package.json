@@ -45,7 +45,7 @@
     "react-dom": "19.1.0",
     "superjson": "2.2.2",
     "zod": "^3.25.48",
-    "zod-form-data": "^2.0.7"
+    "zod-form-data": "^3.0.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
