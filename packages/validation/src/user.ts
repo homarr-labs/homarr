@@ -56,7 +56,7 @@ export const userBaseCreateSchema = z.object({
   username: usernameSchema,
   password: userPasswordSchema,
   confirmPassword: z.string(),
-  email: z.string().email().or(z.string().length(0).optional()),
+  email: z.string().email().or(z.string().length(0)).optional(),
   groupIds: z.array(z.string()),
 });
 
