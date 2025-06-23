@@ -38,8 +38,10 @@ export const userPasswordSchema = z
     },
   );
 
-const addConfirmPasswordRefinement = (
-  schema: z.ZodObject<{ password: z.core.$ZodString; confirmPassword: z.core.$ZodString }, z.core.$strip>,
+const addConfirmPasswordRefinement = <
+  TSchema extends z.ZodObject<{ password: z.core.$ZodString; confirmPassword: z.core.$ZodString }, z.core.$strip>,
+>(
+  schema: TSchema,
 ) => {
   return schema.refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
