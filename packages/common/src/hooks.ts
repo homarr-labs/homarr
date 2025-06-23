@@ -10,11 +10,11 @@ const calculateTimeAgo = (timestamp: Date) => {
   return dayjs().to(timestamp);
 };
 
-export const useTimeAgo = (timestamp: Date) => {
+export const useTimeAgo = (timestamp: Date, updateFrequency = 1000) => {
   const [timeAgo, setTimeAgo] = useState(calculateTimeAgo(timestamp));
 
   useEffect(() => {
-    const intervalId = setInterval(() => setTimeAgo(calculateTimeAgo(timestamp)), 1000); // update every second
+    const intervalId = setInterval(() => setTimeAgo(calculateTimeAgo(timestamp)), updateFrequency);
 
     return () => clearInterval(intervalId); // clear interval on hook unmount
   }, [timestamp]);

@@ -25,6 +25,7 @@ export const cronJobs = {
   minecraftServerStatus: { preventManualExecution: false },
   networkController: { preventManualExecution: false },
   dockerContainers: { preventManualExecution: false },
+  refreshNotifications: { preventManualExecution: false },
 } satisfies Record<JobGroupKeys, { preventManualExecution?: boolean }>;
 
 /**
