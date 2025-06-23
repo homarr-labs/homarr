@@ -1337,8 +1337,8 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(axios@1.9.0)
       maria2:
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: ^0.4.1
+        version: 0.4.1
       node-ical:
         specifier: ^0.20.1
         version: 0.20.1
@@ -7808,8 +7808,8 @@ packages:
       react: '>=18.0'
       react-dom: '>=18.0'
 
-  maria2@0.4.0:
-    resolution: {integrity: sha512-jQ9yezKDaSeiy7SZRA8zMAYkFyfx3yoeB/lhcOSQsoGf4YyVaPDopP+dEU6HWNJwK2Oo/rmgqTb5Na1gJcLtrg==}
+  maria2@0.4.1:
+    resolution: {integrity: sha512-3lr8UeB+R+BN9c7eOBkeH1GlHf7+0Kzt0pcEgsT9xoXIA5gfXAzjd1niYiYDsvb62v5rLPqCqDiyYxtmmhGJ3g==}
     engines: {node: '>= 22.5.0'}
 
   markdown-it@14.1.0:
@@ -16886,7 +16886,7 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  maria2@0.4.0: {}
+  maria2@0.4.1: {}
 
   markdown-it@14.1.0:
     dependencies:
