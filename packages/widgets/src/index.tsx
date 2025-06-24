@@ -29,6 +29,7 @@ import * as minecraftServerStatus from "./minecraft/server-status";
 import * as networkControllerStatus from "./network-controller/network-status";
 import * as networkControllerSummary from "./network-controller/summary";
 import * as notebook from "./notebook";
+import * as notifications from "./notifications";
 import type { WidgetOptionDefinition } from "./options";
 import * as releases from "./releases";
 import * as rssFeed from "./rssFeed";
@@ -69,6 +70,7 @@ export const widgetImports = {
   dockerContainers,
   releases,
   firewall,
+  notifications,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

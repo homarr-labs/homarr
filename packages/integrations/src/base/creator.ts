@@ -21,6 +21,7 @@ import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integrati
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
+import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
@@ -94,6 +95,7 @@ export const integrationCreators = {
   nextcloud: NextcloudIntegration,
   unifiController: UnifiControllerIntegration,
   opnsense: OPNsenseIntegration,
+  ntfy: NTFYIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {
