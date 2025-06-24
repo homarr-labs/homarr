@@ -95,21 +95,21 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
 
     interfaceKeys.forEach((key) => {
       const inter = interfaces.data.interfaces[key];
-      if (inter) {
-        const name = inter.name;
+      if (!inter) continue;
+      
+      const name = inter.name;
 
-        const nameValue = typeof name === "string" ? name : "unknown";
-        const bytesTransmitted = inter["bytes transmitted"];
-        const bytesReceived = inter["bytes received"];
-        const receiveValue = typeof bytesReceived === "string" ? parseInt(bytesReceived, 10) : 0;
-        const transmitValue = typeof bytesTransmitted === "string" ? parseInt(bytesTransmitted, 10) : 0;
+      const nameValue = typeof name === "string" ? name : "unknown";
+      const bytesTransmitted = inter["bytes transmitted"];
+      const bytesReceived = inter["bytes received"];
+      const receiveValue = typeof bytesReceived === "string" ? parseInt(bytesReceived, 10) : 0;
+      const transmitValue = typeof bytesTransmitted === "string" ? parseInt(bytesTransmitted, 10) : 0;
 
-        returnValue.push({
-          name: nameValue,
-          receive: receiveValue,
-          transmit: transmitValue,
-        });
-      }
+      returnValue.push({
+        name: nameValue,
+        receive: receiveValue,
+        transmit: transmitValue,
+      });
     });
 
     await channel.pushAsync(returnValue);
