@@ -4,158 +4,22 @@ import { Accordion, Progress, ScrollArea, Table, TableTbody, TableThead, TableTr
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
-import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
-
+import { useUpdatingCpuStatus, useUpdatingMemoryStatus, useUpdatingVersionStatus, useUpdatingInterfacesStatus} from "./hooks/datas";
 import { formatBitsPerSec, calculateBandwidth } from "./functions"
 
 import type { WidgetComponentProps } from "../definition";
 
 dayjs.extend(duration);
 
+
 export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
-  const [firewallsCpuData] = clientApi.widget.firewall.getFirewallCpuStatus.useSuspenseQuery(
-    {
-      integrationIds,
-    },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
 
-  const [firewallsMemoryData] = clientApi.widget.firewall.getFirewallMemoryStatus.useSuspenseQuery(
-    {
-      integrationIds,
-    },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
+  const firewallsCpuData = useUpdatingCpuStatus(integrationIds);
+  const firewallsMemoryData = useUpdatingMemoryStatus(integrationIds);
+  const firewallsVersionData = useUpdatingVersionStatus(integrationIds);
+  const firewallsInterfacesData = useUpdatingInterfacesStatus(integrationIds);
 
-  const [firewallsInterfacesData] = clientApi.widget.firewall.getFirewallInterfacesStatus.useSuspenseQuery(
-    {
-      integrationIds,
-    },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-
-  const [firewallsVersionData] = clientApi.widget.firewall.getFirewallVersionStatus.useSuspenseQuery(
-    {
-      integrationIds,
-    },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
-  const utils = clientApi.useUtils();
-
-  clientApi.widget.firewall.subscribeFirewallCpuStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallCpuStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
-
-  clientApi.widget.firewall.subscribeFirewallVersionStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallVersionStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
-
-  clientApi.widget.firewall.subscribeFirewallMemoryStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallMemoryStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
-  clientApi.widget.firewall.subscribeFirewallInterfacesStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData: (data) => {
-        utils.widget.firewall.getFirewallInterfacesStatus.setData(
-          {
-            integrationIds,
-          },
-          (prevData) => {
-            if (!prevData) {
-              return undefined;
-            }
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
-          },
-        );
-      },
-    },
-  );
   const t = useI18n();
   const isTiny = width < 256;
 

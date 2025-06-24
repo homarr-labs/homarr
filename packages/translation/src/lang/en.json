@@ -2368,6 +2368,9 @@
       "error": {
         "internalServerError": "Unable to get data from firewall"
       },
+      "option": {
+        
+      },
       "widget": {
         "fwname": "Name",
         "version": "Version",
