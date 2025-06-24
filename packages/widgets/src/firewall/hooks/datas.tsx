@@ -42,7 +42,6 @@ export const useUpdatingCpuStatus = (integrationIds: string[]) => {
 };
 
 export const useUpdatingMemoryStatus = (integrationIds: string[]) => {
-
   const utils = clientApi.useUtils();
   const [firewallsMemoryData] = clientApi.widget.firewall.getFirewallMemoryStatus.useSuspenseQuery(
     {
@@ -84,7 +83,6 @@ export const useUpdatingMemoryStatus = (integrationIds: string[]) => {
 };
 
 export const useUpdatingVersionStatus = (integrationIds: string[]) => {
-
   const utils = clientApi.useUtils();
   const [firewallsVersionData] = clientApi.widget.firewall.getFirewallVersionStatus.useSuspenseQuery(
     {
@@ -125,7 +123,6 @@ export const useUpdatingVersionStatus = (integrationIds: string[]) => {
 };
 
 export const useUpdatingInterfacesStatus = (integrationIds: string[]) => {
-
   const utils = clientApi.useUtils();
   const [firewallsInterfacesData] = clientApi.widget.firewall.getFirewallInterfacesStatus.useSuspenseQuery(
     {
