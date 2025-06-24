@@ -5,16 +5,19 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import { useI18n } from "@homarr/translation/client";
-import { useUpdatingCpuStatus, useUpdatingMemoryStatus, useUpdatingVersionStatus, useUpdatingInterfacesStatus} from "./hooks/datas";
-import { formatBitsPerSec, calculateBandwidth } from "./functions"
 
 import type { WidgetComponentProps } from "../definition";
+import { calculateBandwidth, formatBitsPerSec } from "./functions";
+import {
+  useUpdatingCpuStatus,
+  useUpdatingInterfacesStatus,
+  useUpdatingMemoryStatus,
+  useUpdatingVersionStatus,
+} from "./hooks/datas";
 
 dayjs.extend(duration);
 
-
 export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
-
   const firewallsCpuData = useUpdatingCpuStatus(integrationIds);
   const firewallsMemoryData = useUpdatingMemoryStatus(integrationIds);
   const firewallsVersionData = useUpdatingVersionStatus(integrationIds);
@@ -23,7 +26,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
   const t = useI18n();
   const isTiny = width < 256;
 
-  const defaultTabValue = firewallsInterfacesData[0] ? firewallsInterfacesData[0].integration.name : '';
+  const defaultTabValue = firewallsInterfacesData[0] ? firewallsInterfacesData[0].integration.name : "";
 
   return (
     <ScrollArea h="100%">
@@ -113,13 +116,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                       <Progress.Root>
                         <Progress.Section
                           value={summary.percent}
-                          color={
-                            summary.percent > 50
-                              ? summary.percent < 75
-                                ? "yellow"
-                                : "red"
-                              : "green"
-                          }
+                          color={summary.percent > 50 ? (summary.percent < 75 ? "yellow" : "red") : "green"}
                         />
                       </Progress.Root>
                       {summary.percent.toFixed(1)}%
@@ -134,16 +131,10 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
 
       <Accordion>
         <Accordion.Item value="interfaces">
-          <Accordion.Control >
-            {t("widget.firewall.widget.interfaces.title")}
-          </Accordion.Control>
+          <Accordion.Control>{t("widget.firewall.widget.interfaces.title")}</Accordion.Control>
           <Accordion.Panel>
             {firewallsInterfacesData.map(({ integration, summary }) => (
-              <Tabs
-                key={integration.name}
-                defaultValue={defaultTabValue}
-                variant="outline"
-              >
+              <Tabs key={integration.name} defaultValue={defaultTabValue} variant="outline">
                 <Tabs.List grow>
                   <Tabs.Tab value={integration.name} fz="xs">
                     <b>{integration.name}</b>
@@ -182,7 +173,6 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
               </Tabs>
             ))}
           </Accordion.Panel>
-
         </Accordion.Item>
       </Accordion>
     </ScrollArea>

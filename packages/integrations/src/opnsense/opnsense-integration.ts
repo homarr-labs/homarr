@@ -2,17 +2,25 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ParseError, ResponseError } from "@homarr/common/server";
 import { createChannelEventHistory } from "@homarr/redis";
 
-
-
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { FirewallSummaryIntegration } from "../interfaces/firewall-summary/firewall-summary-integration";
-import type { FirewallCpuSummary, FirewallInterface, FirewallInterfacesSummary, FirewallMemorySummary, FirewallVersionSummary } from "../interfaces/firewall-summary/firewall-summary-types";
-import { opnsenseCPUSchema, opnsenseInterfacesSchema, opnsenseMemorySchema, opnsenseSystemSummarySchema } from "./opnsense-types";
-
+import type {
+  FirewallCpuSummary,
+  FirewallInterface,
+  FirewallInterfacesSummary,
+  FirewallMemorySummary,
+  FirewallVersionSummary,
+} from "../interfaces/firewall-summary/firewall-summary-types";
+import {
+  opnsenseCPUSchema,
+  opnsenseInterfacesSchema,
+  opnsenseMemorySchema,
+  opnsenseSystemSummarySchema,
+} from "./opnsense-types";
 
 @HandleIntegrationErrors([])
 export class OPNsenseIntegration extends Integration implements FirewallSummaryIntegration {
@@ -61,10 +69,6 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
 
   private getInterfacesChannel() {
     return createChannelEventHistory<FirewallInterface[]>(`integration:${this.integration.id}:interfaces`, 15);
-  }
-
-  private getCpuChannel() {
-    return createChannelEventHistory<FirewallCpuSummary[]>(`integration:${this.integration.id}:cpu_history`, 5);
   }
 
   public async getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary[]> {
@@ -171,28 +175,27 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
           throw new Error("Received value is not an Uint8Array.");
         }
 
-
         const value: AllowSharedBufferSource = result.value;
-
 
         const chunk = decoder.decode(value, { stream: true });
         const lines = chunk.split("\n");
 
         for (const line of lines) {
-          if (line.startsWith("data:")) {
-            const data = line.substring(5).trim();
-            const cpu_values = opnsenseCPUSchema.safeParse(JSON.parse(data));
-
-            if (!cpu_values.success) {
-              throw new Error(
-                `Failed to parse cpu summary for ${this.integration.name} (${this.integration.id}):\n${cpu_values.error.message}`,
-              );
-            }
-
-            return {
-              ...cpu_values.data,
-            };
+          if (!line.startsWith("data:")) {
+            continue;
           }
+          const data = line.substring(5).trim();
+          const cpu_values = opnsenseCPUSchema.safeParse(JSON.parse(data));
+
+          if (!cpu_values.success) {
+            throw new Error(
+              `Failed to parse cpu summary for ${this.integration.name} (${this.integration.id}):\n${cpu_values.error.message}`,
+            );
+          }
+
+          return {
+            ...cpu_values.data,
+          };
         }
       }
 

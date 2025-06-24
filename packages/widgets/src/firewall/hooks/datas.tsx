@@ -1,8 +1,4 @@
-
 import { clientApi } from "@homarr/api/client";
-
-
-const utils = clientApi.useUtils();
 
 export const useUpdatingCpuStatus = (integrationIds: string[]) => {
   const utils = clientApi.useUtils();
@@ -43,9 +39,11 @@ export const useUpdatingCpuStatus = (integrationIds: string[]) => {
   );
 
   return firewallsCpuData;
-}
+};
 
 export const useUpdatingMemoryStatus = (integrationIds: string[]) => {
+
+  const utils = clientApi.useUtils();
   const [firewallsMemoryData] = clientApi.widget.firewall.getFirewallMemoryStatus.useSuspenseQuery(
     {
       integrationIds,
@@ -82,12 +80,12 @@ export const useUpdatingMemoryStatus = (integrationIds: string[]) => {
     },
   );
 
-
   return firewallsMemoryData;
-}
+};
 
 export const useUpdatingVersionStatus = (integrationIds: string[]) => {
 
+  const utils = clientApi.useUtils();
   const [firewallsVersionData] = clientApi.widget.firewall.getFirewallVersionStatus.useSuspenseQuery(
     {
       integrationIds,
@@ -99,7 +97,6 @@ export const useUpdatingVersionStatus = (integrationIds: string[]) => {
       retry: false,
     },
   );
-
 
   clientApi.widget.firewall.subscribeFirewallVersionStatus.useSubscription(
     {
@@ -125,10 +122,11 @@ export const useUpdatingVersionStatus = (integrationIds: string[]) => {
     },
   );
   return firewallsVersionData;
-}
+};
 
 export const useUpdatingInterfacesStatus = (integrationIds: string[]) => {
 
+  const utils = clientApi.useUtils();
   const [firewallsInterfacesData] = clientApi.widget.firewall.getFirewallInterfacesStatus.useSuspenseQuery(
     {
       integrationIds,
@@ -165,4 +163,4 @@ export const useUpdatingInterfacesStatus = (integrationIds: string[]) => {
   );
 
   return firewallsInterfacesData;
-}
+};
