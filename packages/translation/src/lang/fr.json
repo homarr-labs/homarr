@@ -2357,32 +2357,6 @@
       "error": {
         "internalServerError": ""
       }
-    },
-    "firewall": {
-      "name": "Surveillance de firewall",
-      "description": "Affiche un résumé de vos firewalls",
-      "tab": {
-        "system": "Systèmes",
-        "interfaces": "Interfaces"
-      },
-      "error": {
-        "internalServerError": "Impossible d'interroger vos firewalls"
-      },
-      "widget": {
-        "fwname": "Nom",
-        "version": "Version",
-        "versiontitle": "Versions",
-        "cputitle": "Utilisation CPU",
-        "memorytitle": "Utilisation Mémoire",
-        "cpu": "CPU",
-        "memory": "Mémoire",
-        "interfaces": {
-          "name": "nom",
-          "trans": "Transmis",
-          "recv": "Reçus",
-          "title": "Interfaces"
-        }
-      }
     }
   },
   "widgetPreview": {
