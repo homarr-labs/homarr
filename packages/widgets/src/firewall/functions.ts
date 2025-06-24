@@ -8,7 +8,7 @@ export function formatBitsPerSec(bytes: number, decimals: number): string {
 
   const i = Math.floor(Math.log(bytes) / Math.log(kilobyte));
 
-  return parseFloat((bytes / Math.pow(kilobyte, i)).toFixed(decimals)) + " " + sizes[i];
+  return `${parseFloat((bytes / Math.pow(kilobyte, i)).toFixed(decimals))} ${sizes[i]}`;
 }
 
 export function calculateBandwidth(data: FirewallInterfacesSummary[]): { data: FirewallInterface[] } {

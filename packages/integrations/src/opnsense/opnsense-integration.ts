@@ -41,7 +41,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
   private getAuthHeaders() {
     const username = super.getSecretValue("username");
     const password = super.getSecretValue("password");
-    return "Basic " + btoa(`${username}:${password}`);
+    return `Basic ${btoa(`${username}:${password}`)}`;
   }
 
   public async getFirewallVersionAsync(): Promise<FirewallVersionSummary> {
