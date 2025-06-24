@@ -8,6 +8,6 @@ import type {
 export interface FirewallSummaryIntegration {
   getFirewallCpuAsync(): Promise<FirewallCpuSummary>;
   getFirewallMemoryAsync(): Promise<FirewallMemorySummary>;
-  getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary>;
+  getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary[]>;
   getFirewallVersionAsync(): Promise<FirewallVersionSummary>;
 }

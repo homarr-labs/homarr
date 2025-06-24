@@ -5,8 +5,9 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
 import { clientApi } from "@homarr/api/client";
-import type { FirewallInterfacesSummary, FirewallInterface } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
+
+import { formatBitsPerSec, calculateBandwidth } from "./functions"
 
 import type { WidgetComponentProps } from "../definition";
 
@@ -158,57 +159,13 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
   const t = useI18n();
   const isTiny = width < 256;
 
-  function formatBitsPerSec(bytes: number, decimals: number): string {
-    if (bytes === 0) return "0 Bytes";
-
-    const kilobyte = 1024;
-    const sizes = ["bps", "Kbps", "Mbps", "Gbps", "Tbps", "Pbps", "Ebps", "Zbps", "Ybps"];
-
-    const i = Math.floor(Math.log(bytes) / Math.log(kilobyte));
-
-    return parseFloat((bytes / Math.pow(kilobyte, i)).toFixed(decimals)) + " " + sizes[i];
-  }
-
-  function calculateBandwidth(data: FirewallInterfacesSummary[]): { data: FirewallInterface[] } {
-    const time1 = new Date(data[0].timestamp);
-    const time2 = new Date(data[1].timestamp);
-    const timeDiffInSeconds = (time1 - time2) / 1000;
-
-    const result = {
-      data: [] as FirewallInterface[],
-      timestamp: new Date().toISOString(),
-    };
-
-    data[0].data.forEach((iface) => {
-      const ifaceName = iface.name;
-      const recv1 = iface.recv;
-      const trans1 = iface.trans;
-
-      const iface2 = data[1].data.find((i) => i.name === ifaceName);
-      if (iface2) {
-        const recv2 = iface2.recv;
-        const trans2 = iface2.trans;
-
-        const recvDiff = recv1 - recv2;
-        const transDiff = trans1 - trans2;
-
-        result.data.push({
-          name: ifaceName,
-          recv: (8 * recvDiff) / timeDiffInSeconds,
-          trans: (8 * transDiff) / timeDiffInSeconds,
-        });
-      }
-    });
-
-    return result;
-  }
-
+  const defaultTabValue = firewallsInterfacesData[0] ? firewallsInterfacesData[0].integration.name : '';
 
   return (
     <ScrollArea h="100%">
       <Accordion>
         <Accordion.Item value="version">
-          <Accordion.Control size={isTiny ? "8px" : "xs"}>{t("widget.firewall.widget.versiontitle")}</Accordion.Control>
+          <Accordion.Control>{t("widget.firewall.widget.versiontitle")}</Accordion.Control>
 
           <Accordion.Panel>
             <Table highlightOnHover>
@@ -226,7 +183,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                 {firewallsVersionData.map(({ integration, summary }) => (
                   <TableTr key={integration.name} fz={isTiny ? "8px" : "xs"}>
                     <td>{integration.name}</td>
-                    <td style={{ WebkitLineClamp: "1" }}>{summary.version}</td>
+                    <td>{summary.version}</td>
                   </TableTr>
                 ))}
               </TableTbody>
@@ -236,7 +193,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
       </Accordion>
       <Accordion>
         <Accordion.Item value="cpu">
-          <Accordion.Control size={isTiny ? "8px" : "xs"}>{t("widget.firewall.widget.cputitle")}</Accordion.Control>
+          <Accordion.Control>{t("widget.firewall.widget.cputitle")}</Accordion.Control>
           <Accordion.Panel>
             <Table highlightOnHover>
               <TableThead>
@@ -257,8 +214,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                       <Progress.Root>
                         <Progress.Section
                           value={summary.total}
-                          color={summary.total > 50 ? summary.total < 75 ? "yellow" : "red" : "green"}
-                          radius="lg"
+                          color={summary.total > 50 ? (summary.total < 75 ? "yellow" : "red") : "green"}
                         />
                       </Progress.Root>
                       {summary.total}%
@@ -272,7 +228,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
       </Accordion>
       <Accordion>
         <Accordion.Item value="memory">
-          <Accordion.Control size={isTiny ? "8px" : "xs"}>{t("widget.firewall.widget.memorytitle")}</Accordion.Control>
+          <Accordion.Control>{t("widget.firewall.widget.memorytitle")}</Accordion.Control>
           <Accordion.Panel>
             <Table highlightOnHover>
               <TableThead>
@@ -285,23 +241,28 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                   </Table.Th>
                 </TableTr>
               </TableThead>
-                <TableTbody>
-                  {firewallsMemoryData.map(({ integration, summary }) => (
-                    <TableTr key={integration.name} fz={isTiny ? "8px" : "xs"}>
-                      <Table.Td>{integration.name}</Table.Td>
-                      <Table.Td style={{ WebkitLineClamp: "1" }}>
-                        <Progress.Root>
-                          <Progress.Section
-                            value={summary.percent}
-                            color={summary.percent.toFixed(1) > 50 ? summary.percent.toFixed(1) < 75 ? "yellow" : "red" : "green"}
-                            radius="lg"
-                          />
-                        </Progress.Root>
-                        {summary.percent.toFixed(1)}%
-                      </Table.Td>
-                    </TableTr>
-                  ))}
-                </TableTbody>
+              <TableTbody>
+                {firewallsMemoryData.map(({ integration, summary }) => (
+                  <TableTr key={integration.name} fz={isTiny ? "8px" : "xs"}>
+                    <Table.Td>{integration.name}</Table.Td>
+                    <Table.Td style={{ WebkitLineClamp: "1" }}>
+                      <Progress.Root>
+                        <Progress.Section
+                          value={summary.percent}
+                          color={
+                            summary.percent > 50
+                              ? summary.percent < 75
+                                ? "yellow"
+                                : "red"
+                              : "green"
+                          }
+                        />
+                      </Progress.Root>
+                      {summary.percent.toFixed(1)}%
+                    </Table.Td>
+                  </TableTr>
+                ))}
+              </TableTbody>
             </Table>
           </Accordion.Panel>
         </Accordion.Item>
@@ -309,12 +270,16 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
 
       <Accordion>
         <Accordion.Item value="interfaces">
-          <Accordion.Control size={isTiny ? "8px" : "xs"}>
+          <Accordion.Control >
             {t("widget.firewall.widget.interfaces.title")}
           </Accordion.Control>
           <Accordion.Panel>
             {firewallsInterfacesData.map(({ integration, summary }) => (
-              <Tabs key={integration.name} defaultValue={firewallsInterfacesData[0].integration.name} variant="outline">
+              <Tabs
+                key={integration.name}
+                defaultValue={defaultTabValue}
+                variant="outline"
+              >
                 <Tabs.List grow>
                   <Tabs.Tab value={integration.name} fz="xs">
                     <b>{integration.name}</b>
@@ -336,24 +301,24 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                       </TableTr>
                     </TableThead>
                     <TableTbody>
-                      {Array.isArray(summary) && summary.every(item => Array.isArray(item.data)) ? (
-                        calculateBandwidth(summary).data.map(({ name, recv, trans }) => (
+                      {Array.isArray(summary) && summary.every((item) => Array.isArray(item.data)) ? (
+                        calculateBandwidth(summary).data.map(({ name, receive, transmit }) => (
                           <TableTr key={name} fz={isTiny ? "8px" : "xs"}>
                             <Table.Td>{name}</Table.Td>
-                            <Table.Td style={{ WebkitLineClamp: "1" }}>{formatBitsPerSec(trans, 2)}</Table.Td>
-                            <Table.Td>{formatBitsPerSec(recv, 2)}</Table.Td>
+                            <Table.Td style={{ WebkitLineClamp: "1" }}>{formatBitsPerSec(transmit, 2)}</Table.Td>
+                            <Table.Td>{formatBitsPerSec(receive, 2)}</Table.Td>
                           </TableTr>
                         ))
                       ) : (
                         <TableTr></TableTr>
                       )}
-
                     </TableTbody>
                   </Table>
                 </Tabs.Panel>
               </Tabs>
             ))}
           </Accordion.Panel>
+
         </Accordion.Item>
       </Accordion>
     </ScrollArea>

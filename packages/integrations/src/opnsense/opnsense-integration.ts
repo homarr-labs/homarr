@@ -2,25 +2,17 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ParseError, ResponseError } from "@homarr/common/server";
 import { createChannelEventHistory } from "@homarr/redis";
 
+
+
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { FirewallSummaryIntegration } from "../interfaces/firewall-summary/firewall-summary-integration";
-import type {
-  FirewallCpuSummary,
-  FirewallInterface,
-  FirewallInterfacesSummary,
-  FirewallMemorySummary,
-  FirewallVersionSummary,
-} from "../interfaces/firewall-summary/firewall-summary-types";
-import {
-  opnsenseCPUSchema,
-  opnsenseInterfacesSchema,
-  opnsenseMemorySchema,
-  opnsenseSystemSummarySchema,
-} from "./opnsense-types";
+import type { FirewallCpuSummary, FirewallInterface, FirewallInterfacesSummary, FirewallMemorySummary, FirewallVersionSummary } from "../interfaces/firewall-summary/firewall-summary-types";
+import { opnsenseCPUSchema, opnsenseInterfacesSchema, opnsenseMemorySchema, opnsenseSystemSummarySchema } from "./opnsense-types";
+
 
 @HandleIntegrationErrors([])
 export class OPNsenseIntegration extends Integration implements FirewallSummaryIntegration {
@@ -62,18 +54,17 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
         `Failed to parse version for ${this.integration.name} (${this.integration.id}):\n${summary.error.message}`,
       );
     }
-    const firewallVersion: FirewallVersionSummary = {
+    return {
       version: summary.data.versions.at(0) ?? "Unknown",
     };
-    return firewallVersion;
   }
 
   private getInterfacesChannel() {
-    return createChannelEventHistory<FirewallInterfacesSummary[]>(`integration:${this.integration.id}:interfaces`, 15);
+    return createChannelEventHistory<FirewallInterface[]>(`integration:${this.integration.id}:interfaces`, 15);
   }
 
   private getCpuChannel() {
-    return createChannelEventHistory<FirewallInterfacesSummary[]>(`integration:${this.integration.id}:cpu_history`, 5);
+    return createChannelEventHistory<FirewallCpuSummary[]>(`integration:${this.integration.id}:cpu_history`, 5);
   }
 
   public async getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary[]> {
@@ -106,13 +97,13 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
         const nameValue = typeof name === "string" ? name : "unknown";
         const bytesTransmitted = inter["bytes transmitted"];
         const bytesReceived = inter["bytes received"];
-        const recvValue = typeof bytesReceived === "string" ? parseInt(bytesReceived, 10) : 0;
-        const transValue = typeof bytesTransmitted === "string" ? parseInt(bytesTransmitted, 10) : 0;
+        const receiveValue = typeof bytesReceived === "string" ? parseInt(bytesReceived, 10) : 0;
+        const transmitValue = typeof bytesTransmitted === "string" ? parseInt(bytesTransmitted, 10) : 0;
 
         returnValue.push({
           name: nameValue,
-          receive: recvValue,
-          transmit: transValue,
+          receive: receiveValue,
+          transmit: transmitValue,
         });
       }
     });
@@ -176,10 +167,13 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
         if (result.done) {
           break;
         }
-        const value: unknown = result.value;
-        if (!(value instanceof ArrayBuffer)) {
-          throw new Error("Received value is not an ArrayBuffer.");
+        if (!(result.value instanceof Uint8Array)) {
+          throw new Error("Received value is not an Uint8Array.");
         }
+
+
+        const value: AllowSharedBufferSource = result.value;
+
 
         const chunk = decoder.decode(value, { stream: true });
         const lines = chunk.split("\n");
@@ -207,5 +201,4 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       await reader.cancel();
     }
   }
-
 }

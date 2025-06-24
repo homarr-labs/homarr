@@ -95,7 +95,7 @@ export const firewallRouter = createTRPCRouter({
     .subscription(({ ctx }) => {
       return observable<{
         integration: Modify<Integration, { kind: IntegrationKindByCategory<"firewall"> }>;
-        summary: FirewallInterfacesSummary;
+        summary: FirewallInterfacesSummary[];
       }>((emit) => {
         const unsubscribes: (() => void)[] = [];
         for (const integrationWithSecrets of ctx.integrations) {

@@ -2359,9 +2359,14 @@
       }
     },
     "firewall": {
+      "name": "Firewall Monitoring",
+      "description": "Displays a summary of firewalls",
       "tab": {
         "system": "System",
         "interfaces": "Interfaces"
+      },
+      "error": {
+        "internalServerError": "Unable to get data from firewall"
       },
       "widget": {
         "fwname": "Name",
@@ -3145,6 +3150,18 @@
             },
             "dockerContainers": {
               "label": "Docker containers"
+            },
+            "firewallCpu": {
+              "label": "Firewall CPU"
+            },
+            "firewallMemory": {
+              "label": "Firewall Memory"
+            },
+            "firewallVersion": {
+              "label": "Firewall Version"
+            },
+            "firewallInterfaces": {
+              "label": "Firewall Interfaces"
             }
           }
         },

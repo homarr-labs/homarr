@@ -9,7 +9,7 @@ import { createRequestIntegrationJobHandler } from "@homarr/request-handler/lib/
 
 import { createCronJob } from "../../lib";
 
-export const firewallCpuJob = createCronJob("firewall", EVERY_5_SECONDS).withCallback(
+export const firewallCpuJob = createCronJob("firewallCpu", EVERY_5_SECONDS).withCallback(
   createRequestIntegrationJobHandler(firewallCpuRequestHandler.handler, {
     widgetKinds: ["firewall"],
     getInput: {
@@ -18,7 +18,7 @@ export const firewallCpuJob = createCronJob("firewall", EVERY_5_SECONDS).withCal
   }),
 );
 
-export const firewallMemoryJob = createCronJob("firewall", EVERY_MINUTE).withCallback(
+export const firewallMemoryJob = createCronJob("firewallMemory", EVERY_MINUTE).withCallback(
   createRequestIntegrationJobHandler(firewallMemoryRequestHandler.handler, {
     widgetKinds: ["firewall"],
     getInput: {
@@ -27,7 +27,7 @@ export const firewallMemoryJob = createCronJob("firewall", EVERY_MINUTE).withCal
   }),
 );
 
-export const firewallInterfacesJob = createCronJob("firewall", EVERY_30_SECONDS).withCallback(
+export const firewallInterfacesJob = createCronJob("firewallInterfaces", EVERY_30_SECONDS).withCallback(
   createRequestIntegrationJobHandler(firewallInterfacesRequestHandler.handler, {
     widgetKinds: ["firewall"],
     getInput: {
@@ -36,7 +36,7 @@ export const firewallInterfacesJob = createCronJob("firewall", EVERY_30_SECONDS)
   }),
 );
 
-export const firewallVersionJob = createCronJob("firewall", EVERY_HOUR).withCallback(
+export const firewallVersionJob = createCronJob("firewallVersion", EVERY_HOUR).withCallback(
   createRequestIntegrationJobHandler(firewallVersionRequestHandler.handler, {
     widgetKinds: ["firewall"],
     getInput: {
