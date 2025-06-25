@@ -45,7 +45,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
   }
 
   public async getFirewallVersionAsync(): Promise<FirewallVersionSummary> {
-    const responseSummary = await fetchWithTrustedCertificatesAsync(
+    const responseVersion = await fetchWithTrustedCertificatesAsync(
       this.url("/api/diagnostics/system/system_information"),
       {
         headers: {
@@ -53,10 +53,10 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
         },
       },
     );
-    if (!responseSummary.ok) {
-      throw new ResponseError(responseSummary);
+    if (!responseVersion.ok) {
+      throw new ResponseError(responseVersion);
     }
-    const summary = opnsenseSystemSummarySchema.parse(await responseSummary.json());
+    const summary = opnsenseSystemSummarySchema.parse(await responseVersion.json());
 
     return {
       version: summary.versions.at(0) ?? "Unknown",
@@ -70,16 +70,16 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
   public async getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary[]> {
     const channel = this.getInterfacesChannel();
 
-    const interfaceSummary = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/traffic/interface"), {
+    const responseInterfaces = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/traffic/interface"), {
       headers: {
         Authorization: this.getAuthHeaders(),
       },
     });
 
-    if (!interfaceSummary.ok) {
-      throw new ResponseError(interfaceSummary);
+    if (!responseInterfaces.ok) {
+      throw new ResponseError(responseInterfaces);
     }
-    const interfaces = opnsenseInterfacesSchema.parse(await interfaceSummary.json());
+    const interfaces = opnsenseInterfacesSchema.parse(await responseInterfaces.json());
 
     const returnValue: FirewallInterface[] = [];
     const interfaceKeys = Object.keys(interfaces.interfaces);
@@ -132,21 +132,21 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
   }
 
   public async getFirewallCpuAsync(): Promise<FirewallCpuSummary> {
-    const cpuSummary = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/cpu_usage/stream"), {
+    const responseCpu = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/cpu_usage/stream"), {
       headers: {
         Authorization: this.getAuthHeaders(),
       },
     });
 
-    if (!cpuSummary.ok) {
-      throw new ResponseError(cpuSummary);
+    if (!responseCpu.ok) {
+      throw new ResponseError(responseCpu);
     }
 
-    if (!cpuSummary.body) {
+    if (!responseCpu.body) {
       throw new Error("ReadableStream not supported in this environment.");
     }
 
-    const reader = cpuSummary.body.getReader();
+    const reader = responseCpu.body.getReader();
     const decoder = new TextDecoder();
     let loopCounter = 0;
     try {
