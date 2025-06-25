@@ -172,10 +172,10 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
             continue;
           }
           const data = line.substring(5).trim();
-          const cpu_values = opnsenseCPUSchema.parse(JSON.parse(data));
+          const cpuValues = opnsenseCPUSchema.parse(JSON.parse(data));
           
           return {
-            ...cpu_values,
+            ...cpuValues,
           };
         }
       }
