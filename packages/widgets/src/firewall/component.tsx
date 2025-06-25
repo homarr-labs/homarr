@@ -1,18 +1,12 @@
 "use client";
 
 import { Accordion, Progress, ScrollArea, Table, TableTbody, TableThead, TableTr, Tabs } from "@mantine/core";
-import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
-
-import { useI18n } from "@homarr/translation/client";
 
 import { clientApi } from "@homarr/api/client";
+import type { FirewallInterface, FirewallInterfacesSummary } from "@homarr/integrations";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
-
-import type { FirewallInterface, FirewallInterfacesSummary } from "@homarr/integrations";
-
-dayjs.extend(duration);
 
 export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
   const firewallsCpuData = useUpdatingCpuStatus(integrationIds);
@@ -175,7 +169,6 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     </ScrollArea>
   );
 }
-
 
 export const useUpdatingCpuStatus = (integrationIds: string[]) => {
   const utils = clientApi.useUtils();

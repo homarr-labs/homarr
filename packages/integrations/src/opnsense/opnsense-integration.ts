@@ -88,15 +88,13 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       const inter = interfaces.interfaces[key];
       if (!inter) continue;
 
-      const name = inter.name;
-      const nameValue = typeof name === "string" ? name : "unknown";
       const bytesTransmitted = inter["bytes transmitted"];
       const bytesReceived = inter["bytes received"];
-      const receiveValue = typeof bytesReceived === "string" ? parseInt(bytesReceived, 10) : 0;
-      const transmitValue = typeof bytesTransmitted === "string" ? parseInt(bytesTransmitted, 10) : 0;
+      const receiveValue = parseInt(bytesReceived, 10);
+      const transmitValue = parseInt(bytesTransmitted, 10);
 
       returnValue.push({
-        name: nameValue,
+        name: inter.name,
         receive: receiveValue,
         transmit: transmitValue,
       });
@@ -173,7 +171,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
           }
           const data = line.substring(5).trim();
           const cpuValues = opnsenseCPUSchema.parse(JSON.parse(data));
-          
+
           return {
             ...cpuValues,
           };
