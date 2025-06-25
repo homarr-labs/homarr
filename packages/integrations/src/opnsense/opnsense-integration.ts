@@ -163,9 +163,10 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
 
     const reader = cpuSummary.body.getReader();
     const decoder = new TextDecoder();
-    const loop = true
+    let loopCounter = 0
     try {
-      while (loop) {
+      while (loopCounter < 10) {
+        loopCounter++
         const result = await reader.read();
         if (result.done) {
           break;
