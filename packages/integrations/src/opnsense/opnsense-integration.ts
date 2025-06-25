@@ -79,8 +79,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     if (!interfaceSummary.ok) {
       throw new ResponseError(interfaceSummary);
     }
-    const test_value = await interfaceSummary.json();
-    const interfaces = opnsenseInterfacesSchema.parse(test_value);
+    const interfaces = opnsenseInterfacesSchema.parse(await interfaceSummary.json());
 
     const returnValue: FirewallInterface[] = [];
     const interfaceKeys = Object.keys(interfaces.interfaces);
