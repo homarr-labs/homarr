@@ -56,14 +56,10 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     if (!responseSummary.ok) {
       throw new ResponseError(responseSummary);
     }
-    const summary = opnsenseSystemSummarySchema.safeParse(await responseSummary.json());
-    if (!summary.success) {
-      throw new Error(
-        `Failed to parse version for ${this.integration.name} (${this.integration.id}):\n${summary.error.message}`,
-      );
-    }
+    const summary = opnsenseSystemSummarySchema.parse(await responseSummary.json());
+
     return {
-      version: summary.data.versions.at(0) ?? "Unknown",
+      version: summary.versions.at(0) ?? "Unknown",
     };
   }
 
@@ -84,17 +80,13 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       throw new ResponseError(interfaceSummary);
     }
     const test_value = await interfaceSummary.json();
-    const interfaces = opnsenseInterfacesSchema.safeParse(test_value);
-    if (!interfaces.success) {
-      throw new Error(
-        `Failed to parse interfaces for ${this.integration.name} (${this.integration.id}):\n${interfaces.error.message}`,
-      );
-    }
+    const interfaces = opnsenseInterfacesSchema.parse(test_value);
+
     const returnValue: FirewallInterface[] = [];
-    const interfaceKeys = Object.keys(interfaces.data.interfaces);
+    const interfaceKeys = Object.keys(interfaces.interfaces);
 
     for (const key of interfaceKeys) {
-      const inter = interfaces.data.interfaces[key];
+      const inter = interfaces.interfaces[key];
       if (!inter) continue;
 
       const name = inter.name;
@@ -129,15 +121,11 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
       throw new ResponseError(responseMemory);
     }
 
-    const memory = opnsenseMemorySchema.safeParse(await responseMemory.json());
-    if (!memory.success) {
-      throw new Error(
-        `Failed to parse memory summary for ${this.integration.name} (${this.integration.id}):\n${memory.error.message}`,
-      );
-    }
+    const memory = opnsenseMemorySchema.parse(await responseMemory.json());
+
     // Using parseInt for memoryTotal is normal, the api sends the total memory as a string
-    const memoryTotal = parseInt(memory.data.memory.total);
-    const memoryUsed = memory.data.memory.used;
+    const memoryTotal = parseInt(memory.memory.total);
+    const memoryUsed = memory.memory.used;
     const memoryPercent = (100 * memoryUsed) / memoryTotal;
     return {
       total: memoryTotal,
@@ -185,16 +173,10 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
             continue;
           }
           const data = line.substring(5).trim();
-          const cpu_values = opnsenseCPUSchema.safeParse(JSON.parse(data));
-
-          if (!cpu_values.success) {
-            throw new Error(
-              `Failed to parse cpu summary for ${this.integration.name} (${this.integration.id}):\n${cpu_values.error.message}`,
-            );
-          }
-
+          const cpu_values = opnsenseCPUSchema.parse(JSON.parse(data));
+          
           return {
-            ...cpu_values.data,
+            ...cpu_values,
           };
         }
       }
