@@ -95,7 +95,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
 
     for (const key of interfaceKeys) {
       const inter = interfaces.data.interfaces[key];
-      if (!inter) continue; 
+      if (!inter) continue;
 
       const name = inter.name;
       const nameValue = typeof name === "string" ? name : "unknown";
@@ -163,10 +163,10 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
 
     const reader = cpuSummary.body.getReader();
     const decoder = new TextDecoder();
-    let loopCounter = 0
+    let loopCounter = 0;
     try {
       while (loopCounter < 10) {
-        loopCounter++
+        loopCounter++;
         const result = await reader.read();
         if (result.done) {
           break;

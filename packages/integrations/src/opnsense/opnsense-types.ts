@@ -92,5 +92,4 @@ export interface opnsenseInterfaceSummary {
 
 export const opnsenseCPUSchema = z.object({
   total: z.number(),
-
 });
