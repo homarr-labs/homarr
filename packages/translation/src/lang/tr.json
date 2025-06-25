@@ -938,8 +938,8 @@
           "newLabel": "Yeni erişim alanı"
         },
         "topic": {
-          "label": "",
-          "newLabel": ""
+          "label": "Konu",
+          "newLabel": "Yeni konu"
         }
       }
     },
@@ -2093,8 +2093,8 @@
         "processing": "İşlemde",
         "partiallyAvailable": "Kısmi",
         "available": "Mevcut",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "Engellenenler",
+        "deleted": "Silinen"
       },
       "status": {
         "pending": "Bekleyen",
@@ -2365,9 +2365,9 @@
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "Bildirimler",
+      "description": "Entegrasyonların bildirim geçmişini görüntüle",
+      "noItems": "Görüntülenecek bildirim yok.",
       "option": {}
     }
   },
@@ -3135,7 +3135,7 @@
               "label": "Ağ Denetleyicisi"
             },
             "refreshNotifications": {
-              "label": ""
+              "label": "Bildirim Güncelleyici"
             },
             "dockerContainers": {
               "label": "Docker konteynerleri"

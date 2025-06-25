@@ -4,7 +4,7 @@
       "start": {
         "title": "Homarrへようこそ",
         "subtitle": "Homarr を設定しましょう。",
-        "description": "",
+        "description": "始めるには、Homarrインスタンスの設定方法を選択してください。",
         "action": {
           "scratch": "ゼロからスタート",
           "importOldmarr": ""
@@ -189,7 +189,7 @@
             "message": ""
           },
           "error": {
-            "title": "",
+            "title": "アカウントの作成に失敗しました",
             "message": ""
           }
         }
@@ -281,7 +281,7 @@
             "message": ""
           },
           "error": {
-            "message": ""
+            "message": "プロファイルを更新できません"
           }
         }
       },
@@ -358,17 +358,17 @@
             "description": ""
           },
           "modify-all": {
-            "label": "",
+            "label": "すべてのボードを変更",
             "description": ""
           },
           "full-all": {
             "label": "",
-            "description": ""
+            "description": "メンバーがすべてのボードを表示、変更、削除することを許可する (アクセス制御ゾーンと危険ゾーンを含む)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "インテグレーション",
         "item": {
           "create": {
             "label": "",
@@ -502,7 +502,7 @@
             "message": ""
           },
           "error": {
-            "message": ""
+            "message": "グループ {name} を保存できません"
           }
         }
       },
@@ -639,7 +639,7 @@
         "notification": {
           "success": {
             "title": "",
-            "message": ""
+            "message": "インテグレーションが正常に作成されました"
           },
           "error": {
             "title": "",
