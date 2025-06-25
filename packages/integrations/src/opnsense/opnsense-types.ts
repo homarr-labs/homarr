@@ -92,10 +92,5 @@ export interface opnsenseInterfaceSummary {
 
 export const opnsenseCPUSchema = z.object({
   total: z.number(),
-  //  user: z.number(),
-  // Nice here is the percentage of time that the kernel spent running processes with a positive nice value (aka, processes with a lesser priority than other).
-  // nice: z.number(),
-  // sys: z.number(),
-  // intr: z.number(),
-  // idle: z.number(),
+
 });

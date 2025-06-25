@@ -93,24 +93,23 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     const returnValue: FirewallInterface[] = [];
     const interfaceKeys = Object.keys(interfaces.data.interfaces);
 
-    interfaceKeys.forEach((key) => {
+    for (const key of interfaceKeys) {
       const inter = interfaces.data.interfaces[key];
-      if (inter) {
-        const name = inter.name;
+      if (!inter) continue; 
 
-        const nameValue = typeof name === "string" ? name : "unknown";
-        const bytesTransmitted = inter["bytes transmitted"];
-        const bytesReceived = inter["bytes received"];
-        const receiveValue = typeof bytesReceived === "string" ? parseInt(bytesReceived, 10) : 0;
-        const transmitValue = typeof bytesTransmitted === "string" ? parseInt(bytesTransmitted, 10) : 0;
+      const name = inter.name;
+      const nameValue = typeof name === "string" ? name : "unknown";
+      const bytesTransmitted = inter["bytes transmitted"];
+      const bytesReceived = inter["bytes received"];
+      const receiveValue = typeof bytesReceived === "string" ? parseInt(bytesReceived, 10) : 0;
+      const transmitValue = typeof bytesTransmitted === "string" ? parseInt(bytesTransmitted, 10) : 0;
 
-        returnValue.push({
-          name: nameValue,
-          receive: receiveValue,
-          transmit: transmitValue,
-        });
-      }
-    });
+      returnValue.push({
+        name: nameValue,
+        receive: receiveValue,
+        transmit: transmitValue,
+      });
+    }
 
     await channel.pushAsync(returnValue);
 
@@ -164,9 +163,9 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
 
     const reader = cpuSummary.body.getReader();
     const decoder = new TextDecoder();
-
+    const loop = true
     try {
-      while (true) {
+      while (loop) {
         const result = await reader.read();
         if (result.done) {
           break;

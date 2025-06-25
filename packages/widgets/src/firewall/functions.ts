@@ -4,7 +4,7 @@ export function formatBitsPerSec(bytes: number, decimals: number): string {
   if (bytes === 0) return "0 Bytes";
 
   const kilobyte = 1024;
-  const sizes = ["b/s", "kb/s", "Mb/s", "Gb/s", "Tb/s", "Pb/s", "Eb/s", "Zb/s", "Yb/" + "s"];
+  const sizes = ["b/s", "kb/s", "Mb/s", "Gb/s", "Tb/s", "Pb/s", "Eb/s", "Zb/s", "Yb/s"];
 
   const i = Math.floor(Math.log(bytes) / Math.log(kilobyte));
 
