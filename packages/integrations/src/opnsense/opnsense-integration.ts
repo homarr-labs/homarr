@@ -141,7 +141,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
     });
 
     if (!cpuSummary.ok) {
-      throw new Error(`HTTP error! status: ${cpuSummary.status}`);
+      throw new ResponseError(cpuSummary);
     }
 
     if (!cpuSummary.body) {
