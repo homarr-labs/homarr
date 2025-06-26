@@ -7,98 +7,98 @@
         "description": "始めるには、Homarrインスタンスの設定方法を選択してください。",
         "action": {
           "scratch": "ゼロからスタート",
-          "importOldmarr": ""
+          "importOldmarr": "1.0 より前の Homarr からインポート"
         }
       },
       "import": {
         "title": "データのインポート",
-        "subtitle": "",
+        "subtitle": "既存のHomarrインスタンスからデータをインポートできます。",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "ここにzipファイルをドラッグするか、クリックして参照してください",
+          "description": "アップロードされたzipファイルは処理され、インポートするものを選択することができます"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "ファイルを変更"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "設定をインポート",
+          "description": "インポートの動作を設定"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "{count} 個のボードを見つけました",
+          "description": "インポートしたいサイズのボードをすべて選択してください",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "すべてを選択",
+            "unselectAll": "すべて選択解除"
           }
         },
         "summary": {
-          "title": "",
-          "description": "",
+          "title": "インポートサマリー",
+          "description": "以下のサマリーで、インポートする内容を確認できます",
           "action": {
-            "import": ""
+            "import": "インポートを確認して続ける"
           },
           "entities": {
             "apps": "アプリ",
             "boards": "ボード",
             "integrations": "インテグレーション",
-            "credentialUsers": ""
+            "credentialUsers": "認証ユーザー"
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "インポート トークンを入力してください",
           "field": {
             "token": {
               "label": "トークン",
-              "description": ""
+              "description": "以前のhomarrインスタンスから表示されたインポートトークンを入力してください"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "無効なトークン",
+              "message": "入力されたトークンは無効です"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "管理者ユーザー",
+        "subtitle": "管理者ユーザーの資格情報を指定します。",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "ユーザーが作成されました",
+            "message": "ユーザーが正常に作成されました"
           },
           "error": {
-            "title": ""
+            "title": "ユーザーの作成に失敗しました"
           }
         }
       },
       "group": {
-        "title": "",
-        "subtitle": "",
+        "title": "外部グループ",
+        "subtitle": "外部ユーザーに使用するグループを指定します。",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "グループ名",
+            "description": "名前は外部プロバイダの管理者グループと一致する必要があります"
           }
         }
       },
       "settings": {
         "title": "設定",
-        "subtitle": ""
+        "subtitle": "サーバー設定。"
       },
       "finish": {
-        "title": "",
+        "title": "設定終了",
         "subtitle": "準備ができています！",
         "description": "セットアップが正常に完了しました。使い始めることができます。次のアクションを選択してください：",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
+          "goToBoard": "{name} ボードへ移動",
+          "createBoard": "最初のボードを作成",
           "inviteUser": "他のユーザーを招待する",
-          "docs": ""
+          "docs": "ドキュメントを読む"
         }
       }
     },
@@ -109,23 +109,23 @@
     "name": "ユーザー",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "アカウントにログイン",
+        "subtitle": "おかえりなさい！認証情報を入力してください"
       },
       "invite": {
-        "title": "",
+        "title": "Homarrに参加",
         "subtitle": "Homarr へようこそ！アカウントを作成してください",
-        "description": ""
+        "description": "あなたは {username}に招待されました"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "新しいHomarrのインストール",
+        "subtitle": "最初の管理者ユーザを作成してください"
       }
     },
     "field": {
       "email": {
         "label": "Eメール",
-        "verified": ""
+        "verified": "認証済み"
       },
       "username": {
         "label": "ユーザー名"
@@ -137,39 +137,39 @@
           "lowercase": "小文字を含む",
           "uppercase": "大文字を含む",
           "number": "番号を含む",
-          "special": ""
+          "special": "特殊記号を含む"
         }
       },
       "passwordConfirm": {
         "label": "パスワードの確認"
       },
       "previousPassword": {
-        "label": ""
+        "label": "以前のパスワード"
       },
       "homeBoard": {
-        "label": ""
+        "label": "ホームボード"
       },
       "pingIconsEnabled": {
-        "label": ""
+        "label": "Pingにアイコンを使う"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "既定の検索エンジン"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "新しいタブで検索結果を見る"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "そのユーザー名はすでに使われています"
     },
     "action": {
       "login": {
         "label": "ログイン",
-        "labelWith": "",
+        "labelWith": "{provider} でログイン",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "ログイン成功",
+            "message": "ログインしました"
           },
           "error": {
             "title": "ログイン失敗",
@@ -186,91 +186,91 @@
         "notification": {
           "success": {
             "title": "アカウント作成",
-            "message": ""
+            "message": "続けるにはログインしてください"
           },
           "error": {
             "title": "アカウントの作成に失敗しました",
-            "message": ""
+            "message": "あなたのアカウントを作成できませんでした"
           }
         }
       },
       "create": "ユーザー作成",
       "changePassword": {
-        "label": "",
+        "label": "パスワードの変更",
         "notification": {
           "success": {
-            "message": ""
+            "message": "パスワードは正しく変更されました"
           },
           "error": {
-            "message": ""
+            "message": "パスワードを変更できません"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "ホームボードは正常に変更されました"
           },
           "error": {
-            "message": ""
+            "message": "ホームボードを変更することができません"
           }
         }
       },
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "検索設定は正常に変更されました"
           },
           "error": {
-            "message": ""
+            "message": "検索設定を変更することができません"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "週の最初の日が正常に変更されました"
           },
           "error": {
-            "message": ""
+            "message": "週の最初の日を変更することができません"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Pingアイコンの切り替えに成功しました"
           },
           "error": {
-            "message": ""
+            "message": "Pingアイコンを切り替えることができません"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "画像を変更する",
           "notification": {
             "success": {
-              "message": ""
+              "message": "画像は正常に変更されました"
             },
             "error": {
-              "message": ""
+              "message": "画像を変更することができません"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "画像のサイズが大きすぎます",
+              "message": "画像の最大サイズは {size}です"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "画像を削除",
+          "confirm": "本当にこの画像を削除しますか？",
           "notification": {
             "success": {
-              "message": ""
+              "message": "画像の削除に成功しました"
             },
             "error": {
-              "message": ""
+              "message": "画像を削除することができません"
             }
           }
         }
@@ -278,7 +278,7 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "プロファイルが正常に更新されました"
           },
           "error": {
             "message": "プロファイルを更新できません"
@@ -286,33 +286,33 @@
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "ユーザーを恒久的に削除",
+        "description": "ユーザー設定を含むこのユーザーを削除します。ボードは削除されません。ユーザーには通知されません。",
+        "confirm": "ユーザー {username} とユーザ設定を削除することを了承しますか。"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "ユーザーを選択",
+        "notFound": "ユーザーが見つかりません"
       },
       "transfer": {
-        "label": ""
+        "label": "新しいオーナーを選択"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "グループ",
+    "name": "グループ",
+    "search": "グループを探す",
     "field": {
       "name": "名称",
-      "members": "",
+      "members": "メンバー",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "ホームボード",
+        "description": "グループにアクセス可能なボードだけを選択できます"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "モバイルボード",
+        "description": "グループにアクセス可能なボードだけを選択できます"
       }
     },
     "permission": {
@@ -320,8 +320,8 @@
         "title": "管理者",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "管理者",
+            "description": "この権限を持つメンバーは、すべての機能と設定にフルアクセスできます"
           }
         }
       },
@@ -329,20 +329,20 @@
         "title": "アプリ",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "アプリ作成",
+            "description": "メンバーがアプリを作成することを許可する"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "すべてのアプリを使用",
+            "description": "メンバーが自分のボードにアプリを追加することを許可する"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "すべてのアプリを変更",
+            "description": "メンバーがすべてのアプリを変更することを許可する"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "アプリへのフルアクセス",
+            "description": "メンバーがアプリを管理、使用、削除することを許可する"
           }
         }
       },
@@ -350,19 +350,19 @@
         "title": "ボード",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "ボードを作成",
+            "description": "メンバーがボードを作成することを許可する"
           },
           "view-all": {
-            "label": "",
+            "label": "すべてのボードを表示",
             "description": ""
           },
           "modify-all": {
             "label": "すべてのボードを変更",
-            "description": ""
+            "description": "メンバーがすべてのボードを変更することを許可します（アクセス制御ゾーンと危険ゾーンは含まれません）"
           },
           "full-all": {
-            "label": "",
+            "label": "フルボードアクセス",
             "description": "メンバーがすべてのボードを表示、変更、削除することを許可する (アクセス制御ゾーンと危険ゾーンを含む)"
           }
         }
@@ -371,135 +371,135 @@
         "title": "インテグレーション",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "インテグレーションを作成",
+            "description": "メンバーがインテグレーションを作成することを許可する"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "すべてのインテグレーションを使用",
+            "description": "メンバーが自分のボードに任意のインテグレーションを追加することを許可する"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "任意のインテグレーションとやりとりする",
+            "description": "メンバーが任意のインテグレーションとやり取りすることを許可する"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "完全なインテグレーションアクセス",
+            "description": "メンバーが任意のインテグレーションを管理、使用、操作できるようにします"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "メディア",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "メディアをアップロード",
+            "description": "メンバーがメディアをアップロードで許可する"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "すべてのメディアを表示",
+            "description": "メンバーにすべてのメディアの表示を許可する"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "メディアへのフルアクセス",
+            "description": "メンバーにメディアの管理と削除を許可する"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "その他",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "ログの表示",
+            "description": "メンバーにログの表示を許可する"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "検索エンジン",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "検索エンジンの作成",
+            "description": "メンバーに検索エンジンの作成を許可する"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "すべての検索エンジンを変更",
+            "description": "メンバーにすべての検索エンジンの変更を許可する"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "完全な検索エンジンアクセス",
+            "description": "メンバーに任意の検索エンジンの管理と削除を許可する"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "外部プロバイダからのメンバーがいます。ここでは管理できません",
+      "external": "すべてのメンバーは外部プロバイダからのものであり、ここでは管理できません"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "このグループは、システムでの使用のため予約されており、一部のアクションを制限します。 <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "新規グループ",
         "notification": {
           "success": {
-            "message": ""
+            "message": "グループは正常に作成されました"
           },
           "error": {
-            "message": ""
+            "message": "グループを作成できませんでした"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "所有権の譲渡",
+        "description": "このグループの所有権を別のユーザーに譲渡します。",
+        "confirm": "グループ {name} の所有権を {username} に譲渡してもよろしいですか？",
         "notification": {
           "success": {
-            "message": ""
+            "message": "グループ {group} を {user} に譲渡しました"
           },
           "error": {
-            "message": ""
+            "message": "所有権を譲渡できません"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "メンバーを追加"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "メンバーを削除",
+        "confirm": "このグループから {user} を削除してもよろしいですか？"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "グループを削除",
+        "description": "グループを削除すると、元に戻すことはできません。確認してください。",
+        "confirm": "グループ {name} を削除してもよろしいですか？",
         "notification": {
           "success": {
-            "message": ""
+            "message": "グループ {name} の削除に成功しました"
           },
           "error": {
-            "message": ""
+            "message": "グループ {name} を削除できません"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "権限が保存されました",
+            "message": "権限が正常に保存されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "権限は保存されませんでした",
+            "message": "権限は保存されていません"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "グループ {name} は正常に保存されました"
           },
           "error": {
             "message": "グループ {name} を保存できません"
@@ -507,19 +507,19 @@
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "グループを選択",
+        "notFound": "グループがありません。"
       },
       "settings": {
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "設定が保存されました",
+              "message": "ボードの設定を正常に保存しました"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "設定を保存できませんでした",
+              "message": "ボードの設定を保存できません"
             }
           }
         }
@@ -527,66 +527,66 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "位置が変更されました"
           },
           "error": {
-            "message": ""
+            "message": "位置を変更できません"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "デフォルトのグループ",
+      "description": "{name} - すべてのサインインユーザー"
     }
   },
   "app": {
-    "search": "",
+    "search": "アプリを探す",
     "page": {
       "list": {
         "title": "アプリ",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "アプリは、まだありません",
+          "action": "最初のアプリを作成する"
         }
       },
       "create": {
-        "title": "",
+        "title": "アプリを新規作成",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "作成成功",
+            "message": "アプリが正常に作成されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "作成失敗",
+            "message": "アプリを作成できませんでした"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "アプリを編集",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "変更は正常に適用されました",
+            "message": "アプリは正常に保存されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "変更を適用できません",
+            "message": "アプリを保存できませんでした"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "アプリを削除",
+        "message": "アプリ {name} を削除してもよろしいですか？",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "削除成功",
+            "message": "アプリが正常に削除されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "削除失敗",
+            "message": "アプリを削除できませんでした"
           }
         }
       }
@@ -596,81 +596,81 @@
         "label": "名称"
       },
       "description": {
-        "label": ""
+        "label": "説明"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "ping に 別の URL を使用する",
+          "description": "Homarrが内部ホスト名やネットワークを使ってISPの帯域幅使用を避けるために直接アクセスできる場合に便利です"
         }
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": "",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "label": "アプリを選択",
+        "notFound": "アプリが見つかりません",
+        "search": "アプリを探す",
+        "noResults": "該当なし",
+        "action": "{app} を選択",
+        "title": "このボードに追加するアプリを選択"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "新しいアプリを作成",
+        "description": "新しいアプリを作成する ",
+        "action": "アプリの作成を開く"
       },
-      "add": ""
+      "add": "アプリを追加する"
     }
   },
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "インテグレーション",
+        "search": "インテグレーションを検索",
         "noResults": {
-          "title": ""
+          "title": "まだ、インテグレーションはありません"
         }
       },
       "create": {
-        "title": "",
+        "title": "新しい {name} インテグレーション",
         "notification": {
           "success": {
-            "title": "",
+            "title": "作成完了",
             "message": "インテグレーションが正常に作成されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "作成失敗",
+            "message": "インテグレーションを作成できません"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "{name} インテグレーションを編集",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "変更の適用成功",
+            "message": "インテグレーションが正常に作成されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "変更の適用失敗",
+            "message": "インテグレーションを保存できません"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": " インテグレーション削除",
+        "message": "インテグレーション {name}を削除してもよろしいですか？",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "削除成功",
+            "message": "インテグレーションは正常に削除されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "削除失敗",
+            "message": "インテグレーションの削除ができませんでした"
           }
         }
       }
@@ -680,273 +680,273 @@
         "label": "名称"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "検索エンジンを作成",
+        "description": "インテグレーション \"{kind}\" は、検索エンジンで使用できます。検索エンジンを自動的に設定するには、これにチェックを入れてください。"
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "アプリの作成",
+        "description": "インテグレーションと同じ名前とアイコンを持つアプリを作成します。 アプリケーションを作成するには、以下の入力フィールドを空のままにしてください。"
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "カスタム アプリ URL"
       }
     },
     "action": {
-      "create": ""
+      "create": "新しいインテグレーションを作る"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "接続をテストして作成する",
+        "edit": "接続をテストして保存する"
       },
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "詳細な原因"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "不明なエラー",
+          "description": "不明なエラーが発生しました。詳細を確認するには以下の原因を開いてください"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "解析エラー",
+          "description": "レスポンスを解析できませんでした。URLが、サービスのベースURLを指していることを確認してください。"
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "認証エラー",
+          "description": "リクエストは承認されませんでした。認証情報が正しいこと、十分な権限が設定されていることを確認してください。"
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "応答エラー",
+          "description": "<url></url> から予期しない {statusCode} ({reason}) 応答を受信しました。URL がインテグレーションのベース URL を指していることを確認してください。",
+          "otherDescription": "<url></url> から予期しない {statusCode} 応答を受信しました。URL がインテグレーションのベース URL を指していることを確認してください。 ",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "不正なリクエスト",
+            "notFound": "見つかりません",
+            "tooManyRequests": "リクエストが多すぎます",
+            "internalServerError": "内部サーバーエラー",
+            "serviceUnavailable": "サービスは利用できません",
+            "gatewayTimeout": "ゲートウェイタイムアウト"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "証明書エラー",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "証明書の期限が切れています。",
+            "notYetValid": "証明書はまだ有効ではありません",
+            "untrusted": "証明書が信頼されていません。",
+            "hostnameMismatch": "証明書のホスト名が URL と一致しません。"
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "権限が不足しています",
+              "message": "証明書を信頼またはアップロードすることはできません。必要なルート証明書をアップロードするには、管理者に問い合わせてください。"
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "ホスト名が一致しない",
+              "message": "証明書中のホスト名が接続先のホスト名と一致しません。 これはセキュリティ上のリスクを示す可能性がありますが、この証明書を信頼することを選択することはできます。"
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "CA証明書の抽出失敗",
+              "message": "チェーンを持たない自己署名証明書のみ自動的に取得できます。 自己署名証明書を使用している場合は、必ず手動で CA 証明書をアップロードしてください。 これを行う方法については、 <docsLink></docsLink> を参照してください。"
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "再作成する"
             },
             "trust": {
-              "label": ""
+              "label": "証明書を信頼する"
             },
             "upload": {
-              "label": ""
+              "label": "証明書のアップロード"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "ホスト名の不一致を信頼する",
+              "message": "ホスト名の不一致で証明書を信頼してもよろしいですか？"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "信頼済み証明書",
+                "message": "信頼できる証明書リストにホスト名を追加しました"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "証明書の信頼に失敗しました",
+                "message": "ホスト名が一致しない証明書は信頼できませんでした"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "自己署名証明書の信頼",
+              "message": "自己署名証明書を信頼してもよろしいですか？"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "信頼できる証明書",
+                "message": "信頼できる証明書リストに証明書を追加しました"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "証明書の信頼に失敗",
+                "message": "信頼できる証明書リストに証明書を追加できませんでした"
               }
             }
           },
           "details": {
             "title": "",
-            "description": "",
+            "description": "信頼することを決める前に、証明書情報を確認してください。",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "コンテンツを表示する",
+              "title": "PEM証明書"
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "リクエストエラー",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "サーバーに到達できませんでした。これは通常、ホストがオフラインまたはネットワークから到達できないことを意味します。",
+              "networkUnreachable": "ネットワークに接続できません。インターネット接続またはネットワーク設定を確認してください。",
+              "refused": "サーバーが接続を拒否しました。サーバーが稼働していないか、指定されたポートへのリクエストを拒否している可能性があります。",
+              "reset": "サーバーによって予期せず接続が切断されました。サーバーが不安定または再起動された場合に発生する可能性があります。"
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "サーバーのアドレスが見つかりません。URLのタイプミスまたは無効なドメイン名かを確認してください。",
+              "timeout": "DNS ルックアップがタイムアウトしました。これは一時的な問題である可能性があります。しばらくしてからもう一度お試しください。",
+              "noAnswer": "DNSサーバーは有効な応答を返しませんでした。ドメインは存在する可能性がありますが、有効なレコードがありません。"
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "リクエストが完了する前に中止されました。これはユーザーアクションまたはシステムタイムアウトによる可能性があります。",
+              "timeout": "リクエストを完了するのに時間がかかりすぎてタイムアウトしました。ネットワークを確認するか、あとでもう一度お試しください。"
             }
           }
         }
       },
-      "alertNotice": "",
+      "alertNotice": "保存ボタンは、接続が成功すると有効になります",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "接続成功",
+          "message": "接続が正常に確立されました"
         },
         "invalidUrl": {
           "title": "無効なURL",
-          "message": ""
+          "message": "URL が無効です"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "認証情報の不足",
+          "message": "すべての認証情報が提供されていません"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "無効な認証情報",
+          "message": "認証情報が無効です"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "接続失敗",
+          "message": "接続が確立できませんでした。"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "不正なリクエスト",
+          "message": "リクエストが不正な形式になっています"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "認証失敗",
+          "message": "認証情報が間違っている可能性があります"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "アクセス不可",
+          "message": "権限がない可能性があります"
         },
         "notFound": {
-          "title": "",
-          "message": ""
+          "title": "見つかりません",
+          "message": "URLまたはパスが間違っている可能性があります"
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "内部サーバーエラー",
+          "message": "サーバーでエラーが発生しました"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "サービスを利用できません",
+          "message": "サーバーは現在利用できません"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "接続中断",
+          "message": "接続が中断されました"
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "ドメインが見つかりません",
+          "message": "ドメインが見つかりませんでした"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "接続拒否",
+          "message": "接続が拒否されました"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "不正な JSON",
+          "message": "応答は有効な JSON ではありません"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "間違ったパス",
+          "message": "パスが正しくない可能性があります"
         },
         "tooManyRequests": {
-          "title": "",
+          "title": "一定時間内にリクエストが多すぎます",
           "message": ""
         }
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "シークレット",
+      "lastUpdated": "最終更新日 {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "値の設定なし",
+        "tooltip": "この必要なシークレットはまだ設定されていません"
       },
-      "secureNotice": "",
+      "secureNotice": "このシークレットは作成後に取得できません",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "シークレットをリセット",
+        "message": "このシークレットをリセットしてもよろしいですか？"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "シークレットなし",
+        "text": "このインテグレーションにシークレットは必要ありません"
       },
       "kind": {
         "username": {
           "label": "ユーザー名",
-          "newLabel": ""
+          "newLabel": "新しいユーザ名"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API キー",
+          "newLabel": "新規APIキー"
         },
         "password": {
           "label": "パスワード",
           "newLabel": "新しいパスワード"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "トークンID",
+          "newLabel": "新規トークンID"
         },
         "realm": {
           "label": "",
           "newLabel": ""
         },
         "topic": {
-          "label": "",
-          "newLabel": ""
+          "label": "トピック",
+          "newLabel": "新規トピック"
         }
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "アイテム内のインテグレーションの選択",
+      "interact": "インテグレーションとの連携",
+      "full": "完全なインテグレーションアクセス"
     }
   },
   "media": {
@@ -960,25 +960,25 @@
     "action": {
       "upload": {
         "label": "",
-        "file": "",
+        "file": "ファイルの選択",
         "notification": {
           "success": {
-            "message": ""
+            "message": "メディアは正常にアップロードされました"
           },
           "error": {
-            "message": ""
+            "message": "メディアをアップロードできませんでした"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "メディアの削除",
+        "description": "メディア <bName></bName> を削除してもよろしいですか？",
         "notification": {
           "success": {
-            "message": ""
+            "message": "メディアは正常に削除されました"
           },
           "error": {
-            "message": ""
+            "message": "メディアは削除できませんでした"
           }
         }
       },
@@ -986,12 +986,12 @@
         "label": ""
       },
       "open": {
-        "label": ""
+        "label": "メディアを開く"
       }
     }
   },
   "common": {
-    "beta": "",
+    "beta": "Beta",
     "error": "エラー",
     "action": {
       "add": "追加",
@@ -1092,18 +1092,18 @@
         "default": "このフィールドは無効です。",
         "required": "このフィールドは必須です",
         "string": {
-          "startsWith": "このフィールドは {startsWith}で始まらなければならない。",
-          "endsWith": "このフィールドの末尾は {endsWith}でなければならない。",
-          "includes": "このフィールドには {includes}を含めなければならない。",
+          "startsWith": "このフィールドは {startsWith} で始まらなければならない。",
+          "endsWith": "このフィールドの末尾は {endsWith} でなければならない。",
+          "includes": "このフィールドには {includes} を含めなければならない。",
           "invalidEmail": ""
         },
         "tooSmall": {
           "string": "このフィールドは {minimum} 文字以上で入力してください。",
-          "number": "このフィールドは {minimum}以上でなければならない。"
+          "number": "このフィールドは {minimum} 以上でなければならない。"
         },
         "tooBig": {
           "string": "このフィールドは {maximum} 文字以内で入力してください。",
-          "number": "このフィールドは {maximum}以下でなければならない。"
+          "number": "このフィールドは {maximum} 以下でなければならない。"
         },
         "custom": {
           "passwordsDoNotMatch": "",
@@ -1179,7 +1179,7 @@
   },
   "item": {
     "action": {
-      "create": "",
+      "create": "新しいアイテム",
       "import": "",
       "edit": "",
       "moveResize": "",
@@ -1505,7 +1505,7 @@
       }
     },
     "iframe": {
-      "name": "iframe ",
+      "name": "iFrame",
       "description": "インターネットから任意のコンテンツを埋め込みます。一部のウェブサイトではアクセスが制限される場合があります",
       "option": {
         "embedUrl": {
@@ -1913,7 +1913,7 @@
     },
     "mediaServer": {
       "name": "",
-      "description": "",
+      "description": "メディアサーバーに現在のストリームを表示します",
       "option": {
         "showOnlyPlaying": {
           "label": "",
@@ -2027,7 +2027,7 @@
           "detailsTitle": ""
         },
         "time": {
-          "columnTitle": "",
+          "columnTitle": "終了時刻",
           "detailsTitle": ""
         },
         "type": {
@@ -3009,10 +3009,10 @@
           },
           "crawlingAndIndexing": {
             "title": "",
-            "warning": "",
+            "warning": "ここで設定を有効または無効にすると、検索エンジンがページをインデックスしてクロールする方法に深刻な影響を与えます。 すべての設定はリクエストであり、これらの設定を適用することはクローラー次第です。 変更が適用されるまでに数日または数週間かかる場合があります。",
             "noIndex": {
               "title": "",
-              "text": ""
+              "text": "検索エンジンでウェブサイトにインデックスを付けず、検索結果には表示しません"
             },
             "noFollow": {
               "title": "",
