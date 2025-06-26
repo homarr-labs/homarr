@@ -396,8 +396,8 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       undici:
-        specifier: 7.10.0
-        version: 7.10.0
+        specifier: 7.11.0
+        version: 7.11.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -759,8 +759,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../db
       undici:
-        specifier: 7.10.0
-        version: 7.10.0
+        specifier: 7.11.0
+        version: 7.11.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -839,8 +839,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       undici:
-        specifier: 7.10.0
-        version: 7.10.0
+        specifier: 7.11.0
+        version: 7.11.0
       zod:
         specifier: ^3.25.67
         version: 3.25.67
@@ -1323,7 +1323,7 @@ importers:
         version: link:../log
       '@homarr/node-unifi':
         specifier: ^2.6.0
-        version: 2.6.0(undici@7.10.0)
+        version: 2.6.0(undici@7.11.0)
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
@@ -1349,8 +1349,8 @@ importers:
         specifier: ^2.1.5
         version: 2.1.5
       undici:
-        specifier: 7.10.0
-        version: 7.10.0
+        specifier: 7.11.0
+        version: 7.11.0
       xml2js:
         specifier: ^0.6.2
         version: 0.6.2
@@ -10166,6 +10166,10 @@ packages:
     resolution: {integrity: sha512-u5otvFBOBZvmdjWLVW+5DAc9Nkq8f24g0O9oY7qw2JVIF1VocIFoyz9JFkuVOS2j41AufeO0xnlweJ2RLT8nGw==}
     engines: {node: '>=20.18.1'}
 
+  undici@7.11.0:
+    resolution: {integrity: sha512-heTSIac3iLhsmZhUCjyS3JQEkZELateufzZuBaVM5RHXdSBMb1LPMQf5x+FH7qjsZYDP0ttAc3nnVpUB+wYbOg==}
+    engines: {node: '>=20.18.1'}
+
   unicode-emoji-modifier-base@1.0.0:
     resolution: {integrity: sha512-yLSH4py7oFH3oG/9K+XWrz1pSi3dfUrWEnInbxMfArOfc1+33BlGPQtLsOYwvdMy11AwUBetYuaRxSPqgkq+8g==}
     engines: {node: '>=4'}
@@ -11573,11 +11577,11 @@ snapshots:
 
   '@homarr/gridstack@1.12.0': {}
 
-  '@homarr/node-unifi@2.6.0(undici@7.10.0)':
+  '@homarr/node-unifi@2.6.0(undici@7.11.0)':
     dependencies:
       axios: 1.9.0
       eventemitter2: 6.4.9
-      http-cookie-agent: 6.0.8(tough-cookie@5.1.2)(undici@7.10.0)
+      http-cookie-agent: 6.0.8(tough-cookie@5.1.2)(undici@7.11.0)
       tough-cookie: 5.1.2
       ws: 8.18.2
     transitivePeerDependencies:
@@ -16107,12 +16111,12 @@ snapshots:
 
   html-url-attributes@3.0.1: {}
 
-  http-cookie-agent@6.0.8(tough-cookie@5.1.2)(undici@7.10.0):
+  http-cookie-agent@6.0.8(tough-cookie@5.1.2)(undici@7.11.0):
     dependencies:
       agent-base: 7.1.3
       tough-cookie: 5.1.2
     optionalDependencies:
-      undici: 7.10.0
+      undici: 7.11.0
 
   http-errors@2.0.0:
     dependencies:
@@ -19329,7 +19333,7 @@ snapshots:
       ssh-remote-port-forward: 1.0.4
       tar-fs: 3.0.9
       tmp: 0.2.3
-      undici: 7.10.0
+      undici: 7.11.0
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -19702,6 +19706,8 @@ snapshots:
   undici-types@6.21.0: {}
 
   undici@7.10.0: {}
+
+  undici@7.11.0: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 
