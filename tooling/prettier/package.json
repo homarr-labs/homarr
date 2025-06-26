@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "prettier-plugin-packagejson": "^2.5.15",
+    "prettier-plugin-packagejson": "^2.5.16",
     "typescript": "^5.8.3"
   }
 }
