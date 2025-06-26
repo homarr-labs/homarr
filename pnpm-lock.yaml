@@ -32,8 +32,8 @@ importers:
         specifier: ^11.0.3
         version: 11.0.3(semantic-release@24.2.5(typescript@5.8.3))
       '@semantic-release/npm':
-        specifier: ^12.0.1
-        version: 12.0.1(semantic-release@24.2.5(typescript@5.8.3))
+        specifier: ^12.0.2
+        version: 12.0.2(semantic-release@24.2.5(typescript@5.8.3))
       '@semantic-release/release-notes-generator':
         specifier: ^14.0.3
         version: 14.0.3(semantic-release@24.2.5(typescript@5.8.3))
@@ -4086,8 +4086,8 @@ packages:
     peerDependencies:
       semantic-release: '>=24.1.0'
 
-  '@semantic-release/npm@12.0.1':
-    resolution: {integrity: sha512-/6nntGSUGK2aTOI0rHPwY3ZjgY9FkXmEHbW9Kr+62NVOsyqpKKeP0lrCH+tphv+EsNdJNmqqwijTEnVWUMQ2Nw==}
+  '@semantic-release/npm@12.0.2':
+    resolution: {integrity: sha512-+M9/Lb35IgnlUO6OSJ40Ie+hUsZLuph2fqXC/qrKn0fMvUU/jiCjpoL6zEm69vzcmaZJ8yNKtMBEKHWN49WBbQ==}
     engines: {node: '>=20.8.1'}
     peerDependencies:
       semantic-release: '>=20.1.0'
@@ -8252,8 +8252,8 @@ packages:
     resolution: {integrity: sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA==}
     engines: {node: '>=18'}
 
-  npm@10.9.2:
-    resolution: {integrity: sha512-iriPEPIkoMYUy3F6f3wwSZAU93E0Eg6cHwIR6jzzOXWSy+SD/rOODEs74cVONHKSx2obXtuUoyidVEhISrisgQ==}
+  npm@10.9.3:
+    resolution: {integrity: sha512-6Eh1u5Q+kIVXeA8e7l2c/HpnFFcwrkt37xDMujD5be1gloWa9p6j3Fsv3mByXXmqJHy+2cElRMML8opNT7xIJQ==}
     engines: {node: ^18.17.0 || >=20.5.0}
     hasBin: true
     bundledDependencies:
@@ -12390,7 +12390,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@semantic-release/npm@12.0.1(semantic-release@24.2.5(typescript@5.8.3))':
+  '@semantic-release/npm@12.0.2(semantic-release@24.2.5(typescript@5.8.3))':
     dependencies:
       '@semantic-release/error': 4.0.0
       aggregate-error: 5.0.0
@@ -12399,12 +12399,12 @@ snapshots:
       lodash-es: 4.17.21
       nerf-dart: 1.0.0
       normalize-url: 8.0.1
-      npm: 10.9.2
+      npm: 10.9.3
       rc: 1.2.8
       read-pkg: 9.0.1
       registry-auth-token: 5.0.2
       semantic-release: 24.2.5(typescript@5.8.3)
-      semver: 7.6.3
+      semver: 7.7.1
       tempy: 3.1.0
 
   '@semantic-release/release-notes-generator@14.0.3(semantic-release@24.2.5(typescript@5.8.3))':
@@ -17453,7 +17453,7 @@ snapshots:
       path-key: 4.0.0
       unicorn-magic: 0.3.0
 
-  npm@10.9.2: {}
+  npm@10.9.3: {}
 
   nwsapi@2.2.16: {}
 
@@ -17714,7 +17714,7 @@ snapshots:
 
   parse-json@8.1.0:
     dependencies:
-      '@babel/code-frame': 7.26.2
+      '@babel/code-frame': 7.27.1
       index-to-position: 0.1.2
       type-fest: 4.40.0
 
@@ -18639,7 +18639,7 @@ snapshots:
       '@semantic-release/commit-analyzer': 13.0.1(semantic-release@24.2.5(typescript@5.8.3))
       '@semantic-release/error': 4.0.0
       '@semantic-release/github': 11.0.3(semantic-release@24.2.5(typescript@5.8.3))
-      '@semantic-release/npm': 12.0.1(semantic-release@24.2.5(typescript@5.8.3))
+      '@semantic-release/npm': 12.0.2(semantic-release@24.2.5(typescript@5.8.3))
       '@semantic-release/release-notes-generator': 14.0.3(semantic-release@24.2.5(typescript@5.8.3))
       aggregate-error: 5.0.0
       cosmiconfig: 9.0.0(typescript@5.8.3)
