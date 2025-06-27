@@ -85,7 +85,7 @@ export class JellyfinIntegration extends Integration implements IMediaReleasesIn
 
     const result = await userLibraryApi.getLatestMedia({
       fields: ["CustomRating", "Studios", "Genres", "ChildCount", "DateCreated", "Overview", "Taglines"],
-      userId: userId,
+      userId,
       limit: 100,
     });
     return result.data.map((item) => ({
