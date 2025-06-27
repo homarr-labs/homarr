@@ -936,6 +936,10 @@
         "realm": {
           "label": "Område",
           "newLabel": "Nytt område"
+        },
+        "topic": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2088,7 +2092,9 @@
         "pending": "Pågår",
         "processing": "Prosesserer",
         "partiallyAvailable": "Delvis",
-        "available": "Tilgjengelig"
+        "available": "Tilgjengelig",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "Venter",
@@ -2357,6 +2363,12 @@
       "error": {
         "internalServerError": ""
       }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -3120,6 +3132,9 @@
               "label": "Media transkoding"
             },
             "networkController": {
+              "label": ""
+            },
+            "refreshNotifications": {
               "label": ""
             },
             "dockerContainers": {

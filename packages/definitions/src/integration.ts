@@ -7,6 +7,7 @@ export const integrationSecretKindObject = {
   password: { isPublic: false },
   tokenId: { isPublic: true },
   realm: { isPublic: true },
+  topic: { isPublic: true },
 } satisfies Record<string, { isPublic: boolean }>;
 
 export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
@@ -169,6 +170,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
     category: ["networkController"],
   },
+  ntfy: {
+    name: "ntfy",
+    secretKinds: [["topic"], ["topic", "apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
+    category: ["notifications"],
+  },
 } as const satisfies Record<string, integrationDefinition>;
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;
@@ -223,4 +230,5 @@ export type IntegrationCategory =
   | "healthMonitoring"
   | "search"
   | "mediaTranscoding"
-  | "networkController";
+  | "networkController"
+  | "notifications";
