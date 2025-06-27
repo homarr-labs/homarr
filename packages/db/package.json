@@ -49,7 +49,7 @@
     "@testcontainers/mysql": "^11.0.3",
     "better-sqlite3": "^12.1.1",
     "dotenv": "^16.6.0",
-    "drizzle-kit": "^0.31.3",
+    "drizzle-kit": "^0.31.4",
     "drizzle-orm": "^0.44.2",
     "drizzle-zod": "^0.7.1",
     "mysql2": "3.14.1"
