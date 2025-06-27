@@ -936,6 +936,10 @@
         "realm": {
           "label": "Realm",
           "newLabel": "New realm"
+        },
+        "topic": {
+          "label": "Topic",
+          "newLabel": "New topic"
         }
       }
     },
@@ -2117,7 +2121,9 @@
         "pending": "Pending",
         "processing": "Processing",
         "partiallyAvailable": "Partial",
-        "available": "Available"
+        "available": "Available",
+        "blacklisted": "Blacklisted",
+        "deleted": "Deleted"
       },
       "status": {
         "pending": "Pending",
@@ -2386,6 +2392,12 @@
       "error": {
         "internalServerError": "Failed to fetch Network Controller Summary"
       }
+    },
+    "notifications": {
+      "name": "Notifications",
+      "description": "Display notification history from an integration",
+      "noItems": "No notifications to display.",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -3150,6 +3162,9 @@
             },
             "networkController": {
               "label": "Network Controller"
+            },
+            "refreshNotifications": {
+              "label": "Notification Updater"
             },
             "dockerContainers": {
               "label": "Docker containers"

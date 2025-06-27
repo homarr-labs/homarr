@@ -26,5 +26,6 @@ export const widgetKinds = [
   "releases",
   "mediaReleases",
   "dockerContainers",
+  "notifications",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];

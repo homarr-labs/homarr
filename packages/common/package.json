@@ -31,12 +31,12 @@
     "@homarr/log": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "dayjs": "^1.11.13",
-    "next": "15.3.3",
+    "next": "15.3.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "undici": "7.10.0",
-    "zod": "^3.25.64",
-    "zod-validation-error": "^3.5.0"
+    "undici": "7.11.0",
+    "zod": "^3.25.67",
+    "zod-validation-error": "^3.5.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

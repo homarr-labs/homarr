@@ -33,13 +33,13 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^8.1.0",
+    "@mantine/core": "^8.1.2",
     "@tabler/icons-react": "^3.34.0",
     "dayjs": "^1.11.13",
-    "next": "15.3.3",
+    "next": "15.3.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "zod": "^3.25.64"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

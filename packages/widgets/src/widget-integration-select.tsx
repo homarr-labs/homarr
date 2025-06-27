@@ -105,7 +105,7 @@ export const WidgetIntegrationSelect = ({
         <PillsInput
           inputWrapperOrder={["label", "input", "description", "error"]}
           description={
-            <Text size="xs">
+            <Text size="xs" span>
               {t.rich("widget.common.integration.description", {
                 here: () => (
                   <Anchor size="xs" component={Link} target="_blank" href="/manage/integrations">

@@ -12,6 +12,7 @@ import { mediaTranscodingRouter } from "./media-transcoding";
 import { minecraftRouter } from "./minecraft";
 import { networkControllerRouter } from "./network-controller";
 import { notebookRouter } from "./notebook";
+import { notificationsRouter } from "./notifications";
 import { optionsRouter } from "./options";
 import { releasesRouter } from "./releases";
 import { rssFeedRouter } from "./rssFeed";
@@ -39,4 +40,5 @@ export const widgetRouter = createTRPCRouter({
   options: optionsRouter,
   releases: releasesRouter,
   networkController: networkControllerRouter,
+  notifications: notificationsRouter,
 });

@@ -7,6 +7,7 @@ export const integrationSecretKindObject = {
   password: { isPublic: false },
   tokenId: { isPublic: true },
   realm: { isPublic: true },
+  topic: { isPublic: true },
 } satisfies Record<string, { isPublic: boolean }>;
 
 export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
@@ -169,6 +170,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
     category: ["networkController"],
   },
+  ntfy: {
+    name: "ntfy",
+    secretKinds: [["topic"], ["topic", "apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
+    category: ["notifications"],
+  },
   mock: {
     name: "Mock",
     secretKinds: [[]],
@@ -230,4 +237,5 @@ export type IntegrationCategory =
   | "search"
   | "mediaTranscoding"
   | "networkController"
+  | "notifications"
   | "mediaRelease";
