@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import {
   Accordion,
+  Box,
   Center,
   Flex,
   Group,
@@ -81,26 +82,43 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
 
   return (
     <ScrollArea h="100%">
-      <Group justify="space-beetween" w="100%">
-        <Menu onOpen={handleOpen} onClose={handleClose} radius="md" width="target" withinPortal>
-          <Menu.Target>
-            <UnstyledButton data-expanded={opened || undefined}>
-              <Group gap="xs">
-                <span>{selectedFirewall.integration.name}</span>
-                <IconChevronDown size={16} stroke={1.5} />
-              </Group>
-            </UnstyledButton>
-          </Menu.Target>
-          <Menu.Dropdown>{dropdownItems}</Menu.Dropdown>
-        </Menu>
-
-        <Text margin-left="auto" ta="right" size={isTiny ? "8px" : "s"}>
-          {firewallsVersionData
-            .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
-            .map(({ summary }) => (
-              <span key={summary.version}>{formatVersion(summary.version)}</span>
-            ))}
-        </Text>
+      <Group justify="space-between" w="100%" style={{ padding: "8px" }}>
+        <Box
+          style={{
+            border: "1px solid #ccc",
+            padding: "8px",
+            borderRadius: "4px",
+            display: "inline-block",
+          }}
+        >
+          <Menu onOpen={handleOpen} onClose={handleClose} radius="md" width="target" withinPortal>
+            <Menu.Target>
+              <UnstyledButton data-expanded={opened || undefined}>
+                <Group gap="xs">
+                  <span>{selectedFirewall.integration.name}</span>
+                  <IconChevronDown size={isTiny ? 8 : 16} stroke={1.5} />
+                </Group>
+              </UnstyledButton>
+            </Menu.Target>
+            <Menu.Dropdown>{dropdownItems}</Menu.Dropdown>
+          </Menu>
+        </Box>
+        <Box
+          style={{
+            border: "1px solid #ccc",
+            padding: "8px",
+            borderRadius: "4px",
+            display: "inline-block",
+          }}
+        >
+          <Text size={isTiny ? "8px" : "xs"}>
+            {firewallsVersionData
+              .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
+              .map(({ summary }) => (
+                <span key={summary.version}>{formatVersion(summary.version)}</span>
+              ))}
+          </Text>
+        </Box>
       </Group>
       <Flex justify="center" align="center" wrap="wrap">
         {firewallsCpuData
