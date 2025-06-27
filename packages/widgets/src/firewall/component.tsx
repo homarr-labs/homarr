@@ -1,33 +1,28 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import {
-  Accordion,
-  Box,
-  Center,
-  Flex,
-  Group,
-  Menu,
-  RingProgress,
-  ScrollArea,
-  Table,
-  Text,
-  UnstyledButton,
-} from "@mantine/core";
-import {
-  IconArrowBarDown,
-  IconArrowBarUp,
-  IconBrain,
-  IconChevronDown,
-  IconCpu,
-  IconTopologyBus,
-} from "@tabler/icons-react";
+import { Accordion, Center, Flex, Group, Menu, RingProgress, ScrollArea, Table, Text } from "@mantine/core";
+import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconCpu, IconTopologyBus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import type { FirewallInterface, FirewallInterfacesSummary, FirewallVersionSummary } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import { FirewallMenu } from "./firewall-menu";
+import { FirewallVersion } from "./firewall-version";
+
+export interface FirewallIntegration {
+  id: string;
+  name: string;
+  kind: string;
+  updatedAt: Date;
+}
+
+export interface Firewall {
+  integration: FirewallIntegration;
+  summary: FirewallVersionSummary;
+}
 
 export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
   const handleOpen = useCallback(() => {
@@ -58,17 +53,6 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     },
   };
 
-  interface FirewallIntegration {
-    id: string;
-    name: string;
-    kind: string;
-    updatedAt: Date;
-  }
-
-  interface Firewall {
-    integration: FirewallIntegration;
-    summary: FirewallVersionSummary;
-  }
   const isTiny = width < 256;
 
   const [selectedFirewall, setSelectedFirewall] = useState<Firewall>(initialSelectedFirewall);
@@ -80,75 +64,6 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
   ));
 
   const t = useI18n();
-
-  interface FirewallMenuProps {
-    opened: boolean;
-    handleOpen: () => void;
-    handleClose: () => void;
-    selectedFirewall: Firewall;
-    dropdownItems: React.ReactElement<typeof Menu.Item>[];
-    isTiny: boolean;
-  }
-  interface FirewallVersionProps {
-    firewallsVersionData: {
-      integration: FirewallIntegration;
-      summary: FirewallVersionSummary;
-    }[];
-    selectedFirewall: Firewall;
-    isTiny: boolean;
-  }
-  const FirewallMenu = ({
-    opened,
-    handleOpen,
-    handleClose,
-    selectedFirewall,
-    dropdownItems,
-    isTiny,
-  }: FirewallMenuProps) => (
-    <Box
-      style={{
-        border: "1px solid #ccc",
-        padding: "8px",
-        borderRadius: "4px",
-        minHeight: "40px",
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <Menu onOpen={handleOpen} onClose={handleClose} radius="md" width="target" withinPortal>
-        <Menu.Target>
-          <UnstyledButton data-expanded={opened || undefined}>
-            <Group gap="xs">
-              <Text size={isTiny ? "8px" : "xs"}>{selectedFirewall.integration.name}</Text>
-              <IconChevronDown size={isTiny ? 8 : 16} stroke={1.5} />
-            </Group>
-          </UnstyledButton>
-        </Menu.Target>
-        <Menu.Dropdown>{dropdownItems}</Menu.Dropdown>
-      </Menu>
-    </Box>
-  );
-
-  const FirewallVersion = ({ firewallsVersionData, selectedFirewall, isTiny }: FirewallVersionProps) => (
-    <Box
-      style={{
-        border: "1px solid #ccc",
-        padding: "8px",
-        borderRadius: "4px",
-        minHeight: "40px",
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <Text size={isTiny ? "8px" : "xs"}>
-        {firewallsVersionData
-          .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
-          .map(({ summary }) => (
-            <span key={summary.version}>{formatVersion(summary.version)}</span>
-          ))}
-      </Text>
-    </Box>
-  );
 
   return (
     <ScrollArea h="100%">
@@ -480,14 +395,4 @@ export function calculateBandwidth(data: FirewallInterfacesSummary[]): { data: F
   }
 
   return result;
-}
-
-export function formatVersion(inputString: string): string {
-  const regex = /(\d+\.\d+\.\d+_\d+)/;
-  const match = regex.exec(inputString);
-  if (match?.[1]) {
-    return match[1];
-  } else {
-    return "Unknown Version";
-  }
 }
