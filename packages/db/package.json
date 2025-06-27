@@ -61,7 +61,7 @@
     "@types/better-sqlite3": "7.6.13",
     "dotenv-cli": "^8.0.0",
     "esbuild": "^0.25.5",
-    "eslint": "^9.29.0",
+    "eslint": "^9.30.0",
     "prettier": "^3.6.2",
     "tsx": "4.20.3",
     "typescript": "^5.8.3"
