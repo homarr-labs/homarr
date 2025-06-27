@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Accordion,
   Center,
@@ -13,7 +13,14 @@ import {
   Text,
   UnstyledButton,
 } from "@mantine/core";
-import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconChevronDown, IconCpu } from "@tabler/icons-react";
+import {
+  IconArrowBarDown,
+  IconArrowBarUp,
+  IconBrain,
+  IconChevronDown,
+  IconCpu,
+  IconTopologyBus,
+} from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import type { FirewallInterface, FirewallInterfacesSummary, FirewallVersionSummary } from "@homarr/integrations";
@@ -22,12 +29,22 @@ import { useI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 
 export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
+  const handleOpen = useCallback(() => {
+    setOpened(true);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setOpened(false);
+  }, []);
+
+  const handleSelect = useCallback((firewall: Firewall) => {
+    setSelectedFirewall(firewall);
+  }, []);
   const firewallsCpuData = useUpdatingCpuStatus(integrationIds);
   const firewallsMemoryData = useUpdatingMemoryStatus(integrationIds);
   const firewallsVersionData = useUpdatingVersionStatus(integrationIds);
   const firewallsInterfacesData = useUpdatingInterfacesStatus(integrationIds);
 
-  const [opened, setOpened] = useState(false);
   const initialSelectedFirewall = firewallsVersionData[0] ?? {
     integration: {
       id: "default-id",
@@ -52,9 +69,9 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     summary: FirewallVersionSummary;
   }
   const [selectedFirewall, setSelectedFirewall] = useState<Firewall>(initialSelectedFirewall);
-
+  const [opened, setOpened] = useState(false);
   const dropdownItems = firewallsVersionData.map((firewall) => (
-    <Menu.Item onClick={() => setSelectedFirewall(firewall)} key={firewall.integration.id}>
+    <Menu.Item onClick={handleSelect.bind(null, firewall)} key={firewall.integration.id}>
       {firewall.integration.name}
     </Menu.Item>
   ));
@@ -64,8 +81,8 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
 
   return (
     <ScrollArea h="100%">
-      <Flex justify="space-beetween" align-items="center">
-        <Menu onOpen={() => setOpened(true)} onClose={() => setOpened(false)} radius="md" width="target" withinPortal>
+      <Group justify="space-beetween" w="100%">
+        <Menu onOpen={handleOpen} onClose={handleClose} radius="md" width="target" withinPortal>
           <Menu.Target>
             <UnstyledButton data-expanded={opened || undefined}>
               <Group gap="xs">
@@ -77,20 +94,20 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
           <Menu.Dropdown>{dropdownItems}</Menu.Dropdown>
         </Menu>
 
-        <Text margin-left="auto">
+        <Text margin-left="auto" ta="right" size={isTiny ? "8px" : "s"}>
           {firewallsVersionData
             .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
             .map(({ summary }) => (
               <span key={summary.version}>{formatVersion(summary.version)}</span>
             ))}
         </Text>
-      </Flex>
+      </Group>
       <Flex justify="center" align="center" wrap="wrap">
         {firewallsCpuData
           .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
-          .map(({ summary }, index) => (
+          .map(({ summary, integration }) => (
             <RingProgress
-              key={index}
+              key={`${integration.name}-cpu`}
               roundCaps
               size={isTiny ? 50 : 100}
               thickness={isTiny ? 4 : 8}
@@ -110,9 +127,9 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
           ))}
         {firewallsMemoryData
           .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
-          .map(({ summary }, index) => (
+          .map(({ summary, integration }) => (
             <RingProgress
-              key={index}
+              key={`${integration.name}-memory`}
               roundCaps
               size={isTiny ? 50 : 100}
               thickness={isTiny ? 4 : 8}
@@ -133,7 +150,9 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
       </Flex>
       <Accordion>
         <Accordion.Item value="interfaces">
-          <Accordion.Control>{t("widget.firewall.widget.interfaces.title")}</Accordion.Control>
+          <Accordion.Control icon={isTiny ? null : <IconTopologyBus size={16} />}>
+            <Text size={isTiny ? "8px" : "xs"}> {t("widget.firewall.widget.interfaces.title")} </Text>
+          </Accordion.Control>
           <Accordion.Panel>
             {firewallsInterfacesData.map(({ integration, summary }) => (
               <Table key={integration.name} highlightOnHover>
@@ -155,7 +174,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                         </Table.Td>
                         <Table.Td>
                           <Flex align-items="center" gap="4">
-                            <IconArrowBarUp />
+                            <IconArrowBarUp size={isTiny ? "8" : "16"} color="lightgreen" />
                             <Text size={isTiny ? "8px" : "xs"} color="lightgreen">
                               {formatBitsPerSec(transmit, 2)}
                             </Text>
@@ -163,7 +182,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                         </Table.Td>
                         <Table.Td>
                           <Flex align-items="center" gap="4">
-                            <IconArrowBarDown />
+                            <IconArrowBarDown size={isTiny ? "8" : "16"} color="yellow" />
                             <Text size={isTiny ? "8px" : "xs"} color="yellow">
                               {formatBitsPerSec(receive, 2)}
                             </Text>
