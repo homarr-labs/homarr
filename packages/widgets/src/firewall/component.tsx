@@ -1,11 +1,24 @@
 "use client";
 
-import { useState } from 'react';
-import { Accordion, Center, Group, ScrollArea, RingProgress, Table, Menu, UnstyledButton, Text, Flex } from "@mantine/core";
-import { IconChevronDown, IconCpu, IconBrain, IconArrowBarDown, IconArrowBarUp } from '@tabler/icons-react';
+import { useState } from "react";
+import {
+  Accordion,
+  Center,
+  Flex,
+  Group,
+  Menu,
+  RingProgress,
+  ScrollArea,
+  Table,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
+import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconChevronDown, IconCpu } from "@tabler/icons-react";
+
 import { clientApi } from "@homarr/api/client";
-import type { FirewallInterface, FirewallInterfacesSummary } from "@homarr/integrations";
+import type { FirewallInterface, FirewallInterfacesSummary, FirewallVersionSummary } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
+
 import type { WidgetComponentProps } from "../definition";
 
 export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
@@ -17,16 +30,15 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
   const [opened, setOpened] = useState(false);
   const initialSelectedFirewall = firewallsVersionData[0] ?? {
     integration: {
-      id: 'default-id',
-      name: 'Default Firewall',
-      kind: 'opnsense',
+      id: "default-id",
+      name: "Default Firewall",
+      kind: "opnsense",
       updatedAt: new Date(),
     },
     summary: {
-      version: '0.0.0_0',
+      version: "0.0.0_0",
     },
   };
-
 
   interface FirewallIntegration {
     id: string;
@@ -35,20 +47,15 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     updatedAt: Date;
   }
 
-  interface FirewallSummary {
-    version: string;
-  }
-
   interface Firewall {
     integration: FirewallIntegration;
     summary: FirewallVersionSummary;
   }
   const [selectedFirewall, setSelectedFirewall] = useState<Firewall>(initialSelectedFirewall);
 
-
-  const dropdownItems = firewallsVersionData.map(({ integration }) => (
-    <Menu.Item onClick={() => setSelectedFirewall(integration)} key={integration.id}>
-      {integration.name}
+  const dropdownItems = firewallsVersionData.map((firewall) => (
+    <Menu.Item onClick={() => setSelectedFirewall(firewall)} key={firewall.integration.id}>
+      {firewall.integration.name}
     </Menu.Item>
   ));
 
@@ -57,83 +64,73 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
 
   return (
     <ScrollArea h="100%">
-      <Flex justify="space-beetween" align-items="center"> 
-      <Menu
-        onOpen={() => setOpened(true)}
-        onClose={() => setOpened(false)}
-        radius="md"
-        width="target"
-        withinPortal
-      >
-        <Menu.Target>
-          <UnstyledButton data-expanded={opened || undefined}>
-            <Group gap="xs">
-              <span>{selectedFirewall.integration?.name}</span>
-              <IconChevronDown size={16} stroke={1.5} />
-            </Group>
-          </UnstyledButton>
-        </Menu.Target>
-        <Menu.Dropdown>{dropdownItems}</Menu.Dropdown>
-      </Menu>
+      <Flex justify="space-beetween" align-items="center">
+        <Menu onOpen={() => setOpened(true)} onClose={() => setOpened(false)} radius="md" width="target" withinPortal>
+          <Menu.Target>
+            <UnstyledButton data-expanded={opened || undefined}>
+              <Group gap="xs">
+                <span>{selectedFirewall.integration.name}</span>
+                <IconChevronDown size={16} stroke={1.5} />
+              </Group>
+            </UnstyledButton>
+          </Menu.Target>
+          <Menu.Dropdown>{dropdownItems}</Menu.Dropdown>
+        </Menu>
 
-      <Text margin-left="auto">
-        {firewallsVersionData
-          .filter(({ integration }) => integration.id === selectedFirewall.integration?.id)
-          .map(({ summary }) => (
-            <span key={summary.version}>{formatVersion(summary.version)}</span>
-          ))}
-      </Text>
+        <Text margin-left="auto">
+          {firewallsVersionData
+            .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
+            .map(({ summary }) => (
+              <span key={summary.version}>{formatVersion(summary.version)}</span>
+            ))}
+        </Text>
       </Flex>
       <Flex justify="center" align="center" wrap="wrap">
-      {firewallsCpuData
-        .filter(({ integration }) => integration.id === selectedFirewall.integration?.id)
-        .map(({ summary }, index) => (
-          <RingProgress
-            key={index}
-            roundCaps
-            size={isTiny ? 50 : 100}
-            thickness={isTiny ? 4 : 8}
-            label={
-              <Center style={{ flexDirection: "column" }}>
-                <Text size={isTiny ? "8px" : "xs"}>
-                  {`${summary.total.toFixed(2)}%`}
-                </Text>
-                <IconCpu size={isTiny ? 8 : 16} />
-              </Center>
-            }
-            sections={[
-              {
-                value: Number(summary.total.toFixed(1)),
-                color: summary.total > 50 ? summary.total < 75 ? "yellow" : "red" : "green",
-              },
-            ]}
-          />
-        ))}
-      {firewallsMemoryData
-        .filter(({ integration }) => integration.id === selectedFirewall.integration?.id)
-        .map(({ summary }, index) => (
-          <RingProgress
-            key={index}
-            roundCaps
-            size={isTiny ? 50 : 100}
-            thickness={isTiny ? 4 : 8}
-            label={
-              <Center style={{ flexDirection: "column" }}>
-                <Text size={isTiny ? "8px" : "xs"}>
-                  {`${summary.percent.toFixed(1)}%`}
-                </Text>
-                <IconBrain size={isTiny ? 8 : 16} />
-              </Center>
-            }
-            sections={[
-              {
-                value: Number(summary.percent.toFixed(1)),
-                color: summary.percent > 50 ? summary.percent < 75 ? "yellow" : "red" : "green",
-              },
-            ]}
-          />
-        ))}
-</Flex>
+        {firewallsCpuData
+          .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
+          .map(({ summary }, index) => (
+            <RingProgress
+              key={index}
+              roundCaps
+              size={isTiny ? 50 : 100}
+              thickness={isTiny ? 4 : 8}
+              label={
+                <Center style={{ flexDirection: "column" }}>
+                  <Text size={isTiny ? "8px" : "xs"}>{`${summary.total.toFixed(2)}%`}</Text>
+                  <IconCpu size={isTiny ? 8 : 16} />
+                </Center>
+              }
+              sections={[
+                {
+                  value: Number(summary.total.toFixed(1)),
+                  color: summary.total > 50 ? (summary.total < 75 ? "yellow" : "red") : "green",
+                },
+              ]}
+            />
+          ))}
+        {firewallsMemoryData
+          .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
+          .map(({ summary }, index) => (
+            <RingProgress
+              key={index}
+              roundCaps
+              size={isTiny ? 50 : 100}
+              thickness={isTiny ? 4 : 8}
+              label={
+                <Center style={{ flexDirection: "column" }}>
+                  <Text size={isTiny ? "8px" : "xs"}>{`${summary.percent.toFixed(1)}%`}</Text>
+                  <IconBrain size={isTiny ? 8 : 16} />
+                </Center>
+              }
+              sections={[
+                {
+                  value: Number(summary.percent.toFixed(1)),
+                  color: summary.percent > 50 ? (summary.percent < 75 ? "yellow" : "red") : "green",
+                },
+              ]}
+            />
+          ))}
+      </Flex>
       <Accordion>
         <Accordion.Item value="interfaces">
           <Accordion.Control>{t("widget.firewall.widget.interfaces.title")}</Accordion.Control>
@@ -144,9 +141,34 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                   {Array.isArray(summary) && summary.every((item) => Array.isArray(item.data)) ? (
                     calculateBandwidth(summary).data.map(({ name, receive, transmit }) => (
                       <Table.Tr key={name}>
-                        <Table.Td style={{ maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}><Text size={isTiny ? "8px" : "xs"} color="lightblue">{name}</Text></Table.Td>
-                        <Table.Td><Flex align-items="center" gap="4"><IconArrowBarUp /><Text size={isTiny ? "8px" : "xs"} color="lightgreen">{formatBitsPerSec(transmit, 2)}</Text></Flex></Table.Td>
-                        <Table.Td><Flex align-items="center" gap="4"><IconArrowBarDown /><Text size={isTiny ? "8px" : "xs"} color="yellow">{formatBitsPerSec(receive, 2)}</Text></Flex></Table.Td>
+                        <Table.Td
+                          style={{
+                            maxWidth: "100px",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          <Text size={isTiny ? "8px" : "xs"} color="lightblue">
+                            {name}
+                          </Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <Flex align-items="center" gap="4">
+                            <IconArrowBarUp />
+                            <Text size={isTiny ? "8px" : "xs"} color="lightgreen">
+                              {formatBitsPerSec(transmit, 2)}
+                            </Text>
+                          </Flex>
+                        </Table.Td>
+                        <Table.Td>
+                          <Flex align-items="center" gap="4">
+                            <IconArrowBarDown />
+                            <Text size={isTiny ? "8px" : "xs"} color="yellow">
+                              {formatBitsPerSec(receive, 2)}
+                            </Text>
+                          </Flex>
+                        </Table.Td>
                       </Table.Tr>
                     ))
                   ) : (

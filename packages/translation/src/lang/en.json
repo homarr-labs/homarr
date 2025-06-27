@@ -2374,7 +2374,9 @@
       "error": {
         "internalServerError": "Unable to get data from firewall"
       },
-      "option": {},
+      "option": {
+        "interfaces": "Network interfaces to display"
+      },
       "widget": {
         "fwname": "Name",
         "version": "Version",
