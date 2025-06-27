@@ -2387,7 +2387,7 @@
           "name": "name",
           "trans": "Transmited",
           "recv": "Received",
-          "title": "Interfaces"
+          "title": "Network Interfaces"
         }
       }
     },

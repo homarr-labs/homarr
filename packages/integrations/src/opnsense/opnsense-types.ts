@@ -28,3 +28,4 @@ export const opnsenseInterfacesSchema = z.object({
 export const opnsenseCPUSchema = z.object({
   total: z.number(),
 });
+
