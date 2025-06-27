@@ -799,7 +799,7 @@
             }
           },
           "details": {
-            "title": "",
+            "title": "詳細",
             "description": "信頼することを決める前に、証明書情報を確認してください。",
             "content": {
               "action": "コンテンツを表示する",
@@ -896,7 +896,7 @@
         },
         "tooManyRequests": {
           "title": "一定時間内にリクエストが多すぎます",
-          "message": ""
+          "message": "リクエストが多すぎます。対象システムによってレート制限または拒否されている可能性があります"
         }
       }
     },
@@ -934,8 +934,8 @@
           "newLabel": "新規トークンID"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Realm",
+          "newLabel": "新しい Realm"
         },
         "topic": {
           "label": "トピック",
@@ -950,8 +950,8 @@
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "メディア",
+    "search": "メディアを探す",
     "field": {
       "name": "名称",
       "size": "サイズ",
@@ -959,7 +959,7 @@
     },
     "action": {
       "upload": {
-        "label": "",
+        "label": "メディアのアップロード",
         "file": "ファイルの選択",
         "notification": {
           "success": {
@@ -996,96 +996,96 @@
     "action": {
       "add": "追加",
       "apply": "適用",
-      "backToOverview": "",
+      "backToOverview": "概要に戻る",
       "create": "作成",
-      "createAnother": "",
+      "createAnother": "作成・新規入力",
       "edit": "編集",
-      "import": "",
+      "import": "インポートする",
       "insert": "挿入",
       "remove": "削除",
       "save": "保存",
       "saveChanges": "変更を保存する",
       "cancel": "キャンセル",
       "delete": "削除",
-      "discard": "",
-      "close": "",
+      "discard": "破棄する",
+      "close": "閉じる",
       "confirm": "確認",
       "continue": "次へ",
       "previous": "前へ",
       "next": "次へ",
-      "checkoutDocs": "",
-      "checkLogs": "",
+      "checkoutDocs": "ドキュメントを確認する",
+      "checkLogs": "詳細はログを確認してください",
       "tryAgain": "リトライ",
-      "loading": ""
+      "loading": "読み込み中"
     },
-    "here": "",
+    "here": "こちら",
     "iconPicker": {
-      "label": "",
-      "header": ""
+      "label": "アイコン URL",
+      "header": "アイコンをフィルタするために、名前またはオブジェクトを入力してください... Homarrは {countIcons} アイコンを検索します。"
     },
     "colorScheme": {
       "options": {
-        "light": "",
-        "dark": ""
+        "light": "ライト",
+        "dark": "ダーク"
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
+      "min": "最小",
+      "max": "最大",
+      "days": "日数",
       "hours": "時間",
       "minutes": "分"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "作成に成功しました",
+        "error": "作成に失敗しました"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "削除に成功しました",
+        "error": "削除に失敗しました"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "変更は正常に適用されました",
+        "error": "変更を適用できません"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "転送に成功しました",
+        "error": "転送に失敗しました"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "1つ以上の値を選択します"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "より多くの値を追加",
+      "addLabel": "{value} を追加"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "値を選択",
       "badge": {
-        "recommended": ""
+        "recommended": "推奨"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "ダークモードに切り替え",
+        "switchToLightMode": "ライトモードに切り替え",
+        "management": "管理",
         "preferences": "あなたの好み",
-        "logout": "",
+        "logout": "ログアウト",
         "login": "ログイン",
-        "homeBoard": "",
-        "loggedOut": "",
-        "updateAvailable": ""
+        "homeBoard": "あなたのホーム ボード",
+        "loggedOut": "ログアウトしました",
+        "updateAvailable": "{countUpdates} 個のアップデート利用可能: {tag}"
       }
     },
     "dangerZone": "危険な操作",
     "noResults": "結果が見つかりません",
-    "unsavedChanges": "",
+    "unsavedChanges": "保存していない変更があります！",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "プレビューを表示",
+      "hide": "プレビューを閉じる"
     },
     "zod": {
       "errors": {
@@ -1095,7 +1095,7 @@
           "startsWith": "このフィールドは {startsWith} で始まらなければならない。",
           "endsWith": "このフィールドの末尾は {endsWith} でなければならない。",
           "includes": "このフィールドには {includes} を含めなければならない。",
-          "invalidEmail": ""
+          "invalidEmail": "このフィールドは有効なメールアドレスでなければなりません"
         },
         "tooSmall": {
           "string": "このフィールドは {minimum} 文字以上で入力してください。",
@@ -1106,14 +1106,14 @@
           "number": "このフィールドは {maximum} 以下でなければならない。"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
-          "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "passwordsDoNotMatch": "パスワードが一致しません",
+          "passwordRequirements": "パスワードが要件を満たしていません",
+          "boardAlreadyExists": "この名前のボードは既に存在します",
+          "invalidFileType": "無効なファイルタイプです。 {expected} が必要です",
+          "invalidFileName": "無効なファイル名です",
+          "fileTooLarge": "ファイルが大きすぎます。最大サイズは {maxSize} です",
+          "invalidConfiguration": "無効な設定",
+          "groupNameTaken": "グループ名は、既に使用されています"
         }
       }
     }
@@ -1121,20 +1121,20 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "新しいダイナミックセクション",
+        "remove": "ダイナミックセクションを削除する"
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "タイトル"
         },
         "borderColor": {
-          "label": ""
+          "label": "境界線の色"
         }
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "ダイナミックセクションの削除",
+        "message": "この動的セクションを削除してもよろしいですか？アイテムは親セクションの同じ場所に移動されます。"
       }
     },
     "category": {
@@ -1144,47 +1144,47 @@
         }
       },
       "action": {
-        "create": "",
-        "edit": "",
-        "remove": "",
+        "create": "新しいカテゴリー",
+        "edit": "カテゴリー名の変更",
+        "remove": "カテゴリーを削除",
         "moveUp": "上に移動",
         "moveDown": "下へ移動",
-        "createAbove": "",
-        "createBelow": "",
-        "openAllInNewTabs": ""
+        "createAbove": "上に新しいカテゴリー",
+        "createBelow": "下に新しいカテゴリ",
+        "openAllInNewTabs": "すべてのタブを開く"
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "新しいカテゴリー",
+        "submit": "カテゴリーを追加"
       },
       "remove": {
-        "title": "",
-        "message": ""
+        "title": "カテゴリーの削除",
+        "message": "カテゴリー {name} を削除してもよろしいですか？"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "カテゴリー名変更",
+        "submit": "カテゴリー名を変更"
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "新しいカテゴリー",
           "changePosition": "ポジションを変更する"
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "すべてのタブを開く",
+        "text": "一部のブラウザーはセキュリティ上の理由からタブの一括開封をブロックすることがあります。 あなたのブラウザがこの操作をブロックしたため、Homarrはすべてのウィンドウを開くことができませんでした。「ポップアップウィンドウを開く」を許可して再試行してください。"
       }
     }
   },
   "item": {
     "action": {
       "create": "新しいアイテム",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "import": "アイテムをインポート",
+      "edit": "アイテムを編集",
+      "moveResize": "アイテムを移動/サイズ変更",
+      "duplicate": "アイテムを複製",
+      "remove": "アイテムを削除"
     },
     "menu": {
       "label": {
@@ -1192,12 +1192,12 @@
       }
     },
     "create": {
-      "title": "",
-      "search": "",
-      "addToBoard": ""
+      "title": "追加するアイテムを選択",
+      "search": "アイテムをフィルタする",
+      "addToBoard": "ボードに追加"
     },
     "moveResize": {
-      "title": "",
+      "title": "アイテムの移動/サイズ変更",
       "field": {
         "width": {
           "label": "幅"
@@ -1206,73 +1206,73 @@
           "label": "高さ"
         },
         "xOffset": {
-          "label": ""
+          "label": "X オフセット"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y\n オフセット"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "アイテムの編集",
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "高度な設定",
+        "title": "高度なアイテムオプション"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "インテグレーション"
         },
         "title": {
-          "label": ""
+          "label": "タイトル"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "カスタム CSS クラス"
         },
         "borderColor": {
-          "label": ""
+          "label": "境界線の色"
         }
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "アイテム削除",
+      "message": "このアイテムを削除してもよろしいですか？"
     }
   },
   "widget": {
     "app": {
-      "name": "",
-      "description": "",
+      "name": "アプリ",
+      "description": "アプリをボードに埋め込みます。",
       "option": {
         "appId": {
-          "label": ""
+          "label": "アプリを選択"
         },
         "openInNewTab": {
           "label": "新しいタブで開く"
         },
         "showTitle": {
-          "label": ""
+          "label": "アプリ名を表示"
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "説明ツールチップを表示"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "ステータスチェックを有効にする"
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "アプリがありません",
+          "tooltip": "有効なアプリが選択されていません"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "ブックマーク",
+      "description": "複数のアプリリンクを表示します",
       "option": {
         "title": {
-          "label": ""
+          "label": "タイトル"
         },
         "layout": {
           "label": "レイアウト",
@@ -1284,34 +1284,34 @@
               "label": "垂直"
             },
             "grid": {
-              "label": ""
+              "label": "グリッド"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "グリッドは水平方向"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "タイトルを非表示"
         },
         "hideIcon": {
-          "label": ""
+          "label": "アイコンを非表示"
         },
         "hideHostname": {
-          "label": ""
+          "label": "ホスト名を非表示"
         },
         "openNewTab": {
-          "label": ""
+          "label": "新しいタブで開く"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "ブックマーク",
+          "add": "ブックマークに追加"
         }
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "DNS Hole 概要",
+      "description": "DNS Hole の概要を表示します",
       "option": {
         "layout": {
           "label": "レイアウト",
@@ -1323,28 +1323,28 @@
               "label": "垂直"
             },
             "grid": {
-              "label": ""
+              "label": "グリッド"
             }
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Pi-Hole の色を使用"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "DNS Hole Summary の取得に失敗しました",
+        "integrationsDisconnected": "利用可能なデータがありません。すべてのインテグレーションが切断されました"
       },
       "data": {
         "adsBlockedToday": "今日のブロック",
         "adsBlockedTodayPercentage": "今日のブロック",
         "dnsQueriesToday": "今日のクエリ",
-        "domainsBeingBlocked": ""
+        "domainsBeingBlocked": "ブロックリストにあるドメイン"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "複数のインテグレーションにより、Homarrはブロックされているドメインの正確な数を計算できません"
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "DNS Hole の 制御",
       "description": "ダッシュボードからPiHoleまたはAdGuardをコントロールする",
       "option": {
         "layout": {
@@ -1357,95 +1357,95 @@
               "label": "垂直"
             },
             "grid": {
-              "label": ""
+              "label": "グリッド"
             }
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "すべてのボタンを表示"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "DNS Hole の 制御に失敗しました"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
+        "enableAll": "すべて有効",
+        "disableAll": "すべて無効",
+        "setTimer": "タイマー設定",
         "set": "設定",
         "enabled": "有効",
         "disabled": "無効",
-        "processing": "",
-        "disconnected": "",
+        "processing": "処理中",
+        "disconnected": "切断されました",
         "hours": "時間",
         "minutes": "分",
-        "unlimited": ""
+        "unlimited": "無制限にする場合は、空白のままにしてください"
       }
     },
     "clock": {
-      "name": "",
+      "name": "日付と時刻",
       "description": "現在の日付と時刻を表示します。",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "都市名部にカスタム表示",
+          "description": "時計の上にカスタムタイトルまたは都市/国の名前を表示します。"
         },
         "customTitle": {
-          "label": ""
+          "label": "タイトル"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24時間表示",
+          "description": "12 時間形式の代わりに 24 時間形式を使用します"
         },
         "showSeconds": {
-          "label": ""
+          "label": "秒を表示"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "固定のタイムゾーンを使用"
         },
         "timezone": {
           "label": "タイムゾーン",
-          "description": ""
+          "description": "以下の IANA 標準タイムゾーンを選択してください"
         },
         "showDate": {
-          "label": ""
+          "label": "日付を表示"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "日付の形式",
+          "description": "日付がどのように表示されるか"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "時間の書式をカスタマイズ",
+          "description": "時刻の書式に ISO-8601を使用します（これは他のオプションを上書きします）"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "日付の書式をカスタマイズ",
+          "description": "日付の書式に ISO-8601を使用します（これは他のオプションを上書きします）"
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Minecraft サーバーステータス",
+      "description": "Minecraft サーバーのステータスを表示します",
       "option": {
         "title": {
-          "label": ""
+          "label": "タイトル"
         },
         "domain": {
-          "label": ""
+          "label": "サーバーアドレス"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Bedrockサーバー"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "オンライン",
+        "offline": "オフライン"
       }
     },
     "notebook": {
       "name": "メモ帳",
-      "description": "",
+      "description": "マークダウンをサポートするシンプルなノートブックウィジェット",
       "option": {
         "showToolbar": {
           "label": "マークダウンを書くのに役立つツールバーを表示する"
@@ -1537,32 +1537,32 @@
         }
       },
       "error": {
-        "noUrl": "",
-        "unsupportedProtocol": "",
+        "noUrl": "IFrame URLが指定されていません",
+        "unsupportedProtocol": "提供された URL は、サポートされていないプロトコルを使用しています。( {supportedProtocols} ) から１つを使ってください",
         "noBrowerSupport": "お使いのブラウザは iframe をサポートしていません。ブラウザを更新してください。"
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "エンティティ状態",
+      "description": "エンティティの状態を表示し、オプションで切り替えます",
       "option": {
         "entityId": {
           "label": "エンティティID"
         },
         "displayName": {
-          "label": ""
+          "label": "表示名"
         },
         "entityUnit": {
-          "label": ""
+          "label": "エンティティユニット"
         },
         "clickable": {
-          "label": ""
+          "label": "クリック可能"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "オートメーションの実行",
+      "description": "ワンクリックでオートメーションをトリガーする",
       "option": {
         "displayName": {
           "label": "表示名"
@@ -1572,80 +1572,80 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "{name} を実行"
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "株価",
+      "description": "会社の現在の株価を表示します",
       "option": {
         "stock": {
-          "label": ""
+          "label": "株式銘柄"
         },
         "timeRange": {
-          "label": "",
+          "label": "対象期間",
           "option": {
             "1d": {
-              "label": ""
+              "label": "１日"
             },
             "5d": {
-              "label": ""
+              "label": "５日"
             },
             "1mo": {
-              "label": ""
+              "label": "１ヵ月"
             },
             "3mo": {
-              "label": ""
+              "label": "３ヵ月"
             },
             "6mo": {
-              "label": ""
+              "label": "６ヵ月"
             },
             "ytd": {
-              "label": ""
+              "label": "年始から今日まで"
             },
             "1y": {
-              "label": ""
+              "label": "１年"
             },
             "2y": {
-              "label": ""
+              "label": "２年"
             },
             "5y": {
-              "label": ""
+              "label": "５年"
             },
             "10y": {
-              "label": ""
+              "label": "１０年"
             },
             "max": {
-              "label": ""
+              "label": "最大"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "時間間隔",
           "option": {
             "5m": {
-              "label": ""
+              "label": "５分"
             },
             "15m": {
-              "label": ""
+              "label": "１５分"
             },
             "30m": {
-              "label": ""
+              "label": "３０分"
             },
             "1h": {
-              "label": ""
+              "label": "１時間"
             },
             "1d": {
-              "label": ""
+              "label": "１日"
             },
             "5d": {
-              "label": ""
+              "label": "５日"
             },
             "1wk": {
-              "label": ""
+              "label": "１週間"
             },
             "1mo": {
-              "label": ""
+              "label": "１ヵ月"
             }
           }
         }
@@ -1653,21 +1653,21 @@
     },
     "calendar": {
       "name": "カレンダー",
-      "description": "",
+      "description": "カレンダービューで、特定の相対的な期間内に、インテグレーションからのイベントを表示します",
       "option": {
         "releaseType": {
           "label": "ラダーリリースタイプ",
           "options": {
-            "inCinemas": "",
+            "inCinemas": "映画",
             "digitalRelease": "",
             "physicalRelease": ""
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "開始日"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "終了日"
         },
         "showUnmonitored": {
           "label": ""
@@ -1679,30 +1679,30 @@
       "description": "設定した場所の現在の天気情報を表示します。",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "華氏温度"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "温度の小数点以下を無効にする"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "現在の風速を表示",
+          "description": "現在の天気のみ表示"
         },
         "location": {
           "label": "天候の場所"
         },
         "showCity": {
-          "label": ""
+          "label": "都市名を表示"
         },
         "hasForecast": {
-          "label": ""
+          "label": "天気予報を表示"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "天気予報の日数",
+          "description": "ウィジェットの幅が十分でない場合、より少ない日数が表示されます"
         },
         "dateFormat": {
-          "label": "",
+          "label": "日付の形式",
           "description": ""
         }
       },
@@ -1837,36 +1837,36 @@
             "name": "",
             "cpu": "",
             "memory": "",
-            "node": ""
+            "node": "ノード"
           }
         }
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Dockerのステータス",
+      "description": "あなたのコンテナの統計（このウィジェットは管理者権限でのみ追加できます）",
       "option": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "コンテナステータスの取得に失敗しました"
       }
     },
     "common": {
       "location": {
-        "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
+        "query": "都市/郵便番号",
+        "latitude": "緯度",
+        "longitude": "経度",
+        "disabledTooltip": "都市または郵便番号を入力してください",
+        "unknownLocation": "不明な場所",
         "search": "検索",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
+            "city": "都市",
+            "country": "国/地域",
             "coordinates": "",
             "population": ""
           },
           "action": {
-            "select": ""
+            "select": "{city} / {countryCode} を選択する"
           },
           "population": {
             "fallback": "不明"
@@ -1874,17 +1874,17 @@
         }
       },
       "integration": {
-        "noData": "",
-        "description": ""
+        "noData": "インテグレーションが見つかりません",
+        "description": "<here></here> をクリックして新しいインテグレーションを作成する"
       },
       "app": {
-        "noData": "",
-        "description": "",
-        "quickCreate": ""
+        "noData": "アプリが見つかりません",
+        "description": "<here></here> をクリックして新しいアプリを作成する",
+        "quickCreate": "その場でアプリを作成"
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "インテグレーションが選択されていません",
+        "noData": "利用可能なインテグレーションデータがありません"
       },
       "option": {}
     },
@@ -1897,38 +1897,38 @@
         },
         "hasAutoPlay": {
           "label": "オートプレイ",
-          "description": ""
+          "description": "自動再生はブラウザの制限によりミュートされた場合にのみ機能します"
         },
         "isMuted": {
-          "label": ""
+          "label": "ミュート"
         },
         "hasControls": {
-          "label": ""
+          "label": "コントロールを表示"
         }
       },
       "error": {
-        "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "noUrl": "動画の URL が提供されていません",
+        "forYoutubeUseIframe": "YouTube動画の場合、iframeオプションを使用してください"
       }
     },
     "mediaServer": {
-      "name": "",
+      "name": "現在のメディアサーバーのストリーム",
       "description": "メディアサーバーに現在のストリームを表示します",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "現在再生中のみ表示",
+          "description": "これを無効にすると plex では動作しません"
         }
       },
       "items": {
-        "currentlyPlaying": "",
-        "user": "",
-        "name": "",
-        "id": ""
+        "currentlyPlaying": "再生中の曲",
+        "user": "ユーザー",
+        "name": "名前",
+        "id": "ID"
       }
     },
     "downloads": {
-      "name": "",
+      "name": "クライアントをダウンロード",
       "description": "",
       "option": {
         "columns": {
