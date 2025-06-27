@@ -69,56 +69,103 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     integration: FirewallIntegration;
     summary: FirewallVersionSummary;
   }
+  const isTiny = width < 256;
+
   const [selectedFirewall, setSelectedFirewall] = useState<Firewall>(initialSelectedFirewall);
   const [opened, setOpened] = useState(false);
   const dropdownItems = firewallsVersionData.map((firewall) => (
     <Menu.Item onClick={handleSelect.bind(null, firewall)} key={firewall.integration.id}>
-      {firewall.integration.name}
+      <Text size={isTiny ? "8px" : "xs"}>{firewall.integration.name}</Text>
     </Menu.Item>
   ));
 
   const t = useI18n();
-  const isTiny = width < 256;
+
+  interface FirewallMenuProps {
+    opened: boolean;
+    handleOpen: () => void;
+    handleClose: () => void;
+    selectedFirewall: Firewall;
+    dropdownItems: React.ReactElement<typeof Menu.Item>[];
+    isTiny: boolean;
+  }
+  interface FirewallVersionProps {
+    firewallsVersionData: {
+      integration: FirewallIntegration;
+      summary: FirewallVersionSummary;
+    }[];
+    selectedFirewall: Firewall;
+    isTiny: boolean;
+  }
+  const FirewallMenu = ({
+    opened,
+    handleOpen,
+    handleClose,
+    selectedFirewall,
+    dropdownItems,
+    isTiny,
+  }: FirewallMenuProps) => (
+    <Box
+      style={{
+        border: "1px solid #ccc",
+        padding: "8px",
+        borderRadius: "4px",
+        minHeight: "40px",
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      <Menu onOpen={handleOpen} onClose={handleClose} radius="md" width="target" withinPortal>
+        <Menu.Target>
+          <UnstyledButton data-expanded={opened || undefined}>
+            <Group gap="xs">
+              <Text size={isTiny ? "8px" : "xs"}>{selectedFirewall.integration.name}</Text>
+              <IconChevronDown size={isTiny ? 8 : 16} stroke={1.5} />
+            </Group>
+          </UnstyledButton>
+        </Menu.Target>
+        <Menu.Dropdown>{dropdownItems}</Menu.Dropdown>
+      </Menu>
+    </Box>
+  );
+
+  const FirewallVersion = ({ firewallsVersionData, selectedFirewall, isTiny }: FirewallVersionProps) => (
+    <Box
+      style={{
+        border: "1px solid #ccc",
+        padding: "8px",
+        borderRadius: "4px",
+        minHeight: "40px",
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      <Text size={isTiny ? "8px" : "xs"}>
+        {firewallsVersionData
+          .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
+          .map(({ summary }) => (
+            <span key={summary.version}>{formatVersion(summary.version)}</span>
+          ))}
+      </Text>
+    </Box>
+  );
 
   return (
     <ScrollArea h="100%">
       <Group justify="space-between" w="100%" style={{ padding: "8px" }}>
-        <Box
-          style={{
-            border: "1px solid #ccc",
-            padding: "8px",
-            borderRadius: "4px",
-            display: "inline-block",
-          }}
-        >
-          <Menu onOpen={handleOpen} onClose={handleClose} radius="md" width="target" withinPortal>
-            <Menu.Target>
-              <UnstyledButton data-expanded={opened || undefined}>
-                <Group gap="xs">
-                  <span>{selectedFirewall.integration.name}</span>
-                  <IconChevronDown size={isTiny ? 8 : 16} stroke={1.5} />
-                </Group>
-              </UnstyledButton>
-            </Menu.Target>
-            <Menu.Dropdown>{dropdownItems}</Menu.Dropdown>
-          </Menu>
-        </Box>
-        <Box
-          style={{
-            border: "1px solid #ccc",
-            padding: "8px",
-            borderRadius: "4px",
-            display: "inline-block",
-          }}
-        >
-          <Text size={isTiny ? "8px" : "xs"}>
-            {firewallsVersionData
-              .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
-              .map(({ summary }) => (
-                <span key={summary.version}>{formatVersion(summary.version)}</span>
-              ))}
-          </Text>
-        </Box>
+        <FirewallMenu
+          opened={opened}
+          handleOpen={handleOpen}
+          handleClose={handleClose}
+          selectedFirewall={selectedFirewall}
+          dropdownItems={dropdownItems}
+          isTiny={isTiny}
+        />
+        <FirewallVersion
+          firewallsVersionData={firewallsVersionData}
+          selectedFirewall={selectedFirewall}
+          isTiny={isTiny}
+        />
       </Group>
       <Flex justify="center" align="center" wrap="wrap">
         {firewallsCpuData
