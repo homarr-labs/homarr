@@ -3,6 +3,12 @@ import { dockerContainersJob } from "./jobs/docker";
 import { iconsUpdaterJob } from "./jobs/icons-updater";
 import { dnsHoleJob } from "./jobs/integrations/dns-hole";
 import { downloadsJob } from "./jobs/integrations/downloads";
+import {
+  firewallCpuJob,
+  firewallInterfacesJob,
+  firewallMemoryJob,
+  firewallVersionJob,
+} from "./jobs/integrations/firewall";
 import { healthMonitoringJob } from "./jobs/integrations/health-monitoring";
 import { smartHomeEntityStateJob } from "./jobs/integrations/home-assistant";
 import { indexerManagerJob } from "./jobs/integrations/indexer-manager";
@@ -39,6 +45,10 @@ export const jobGroup = createCronJobGroup({
   minecraftServerStatus: minecraftServerStatusJob,
   dockerContainers: dockerContainersJob,
   networkController: networkControllerJob,
+  firewallCpu: firewallCpuJob,
+  firewallMemory: firewallMemoryJob,
+  firewallVersion: firewallVersionJob,
+  firewallInterfaces: firewallInterfacesJob,
   refreshNotifications: refreshNotificationsJob,
 });
 
