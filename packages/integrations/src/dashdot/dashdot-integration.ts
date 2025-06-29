@@ -13,7 +13,7 @@ import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
-import type { SystemHealthMonitoring } from "../types";
+import type { SystemHealthMonitoring } from "../interfaces/health-monitoring/health-monitoring-types";
 
 export class DashDotIntegration extends Integration implements ISystemHealthMonitoringIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

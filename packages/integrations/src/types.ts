@@ -1,4 +1,4 @@
-export * from "./calendar-types";
+export * from "./interfaces/calendar/calendar-types";
 export * from "./interfaces/dns-hole-summary/dns-hole-summary-types";
 export * from "./interfaces/network-controller-summary/network-controller-summary-types";
 export * from "./interfaces/health-monitoring/health-monitoring-types";

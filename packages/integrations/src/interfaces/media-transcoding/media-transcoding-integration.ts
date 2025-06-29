@@ -1,6 +1,4 @@
-import type { TdarrQueue } from "./queue";
-import type { TdarrStatistics } from "./statistics";
-import type { TdarrWorker } from "./workers";
+import type { TdarrQueue, TdarrStatistics, TdarrWorker } from "./media-transcoding-types";
 
 export interface IMediaTranscodingIntegration {
   getStatisticsAsync(): Promise<TdarrStatistics>;

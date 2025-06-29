@@ -1,5 +1,5 @@
-import type { CalendarEvent } from "../../types";
+import type { CalendarEvent } from "./calendar-types";
 
-export interface CalendarIntegration {
+export interface ICalendarIntegration {
   getCalendarEventsAsync(start: Date, end: Date, includeUnmonitored: boolean): Promise<CalendarEvent[]>;
 }

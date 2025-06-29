@@ -1,7 +1,7 @@
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { CalendarIntegration } from "../interfaces/calendar/calendar-integration";
+import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
 import type { DnsHoleSummaryIntegration } from "../interfaces/dns-hole-summary/dns-hole-summary-integration";
 import type { IDownloadClientIntegration } from "../interfaces/downloads/download-client-integration";
 import type {
@@ -31,7 +31,7 @@ export class MockIntegration
   extends Integration
   implements
     DnsHoleSummaryIntegration,
-    CalendarIntegration,
+    ICalendarIntegration,
     IDownloadClientIntegration,
     IClusterHealthMonitoringIntegration,
     ISystemHealthMonitoringIntegration,

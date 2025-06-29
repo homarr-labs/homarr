@@ -1,7 +1,7 @@
-import type { CalendarEvent } from "../../calendar-types";
-import type { CalendarIntegration } from "../../interfaces/calendar/calendar-integration";
+import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-integration";
+import type { CalendarEvent } from "../../interfaces/calendar/calendar-types";
 
-export class CalendarMockService implements CalendarIntegration {
+export class CalendarMockService implements ICalendarIntegration {
   public async getCalendarEventsAsync(start: Date, end: Date, _includeUnmonitored: boolean): Promise<CalendarEvent[]> {
     const result = [homarrMeetup(start, end), titanicRelease(start, end), seriesRelease(start, end)];
     return await Promise.resolve(result);

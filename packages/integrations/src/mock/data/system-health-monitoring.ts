@@ -1,8 +1,8 @@
-import type { HealthMonitoring } from "../..";
+import type { SystemHealthMonitoring } from "../..";
 import type { ISystemHealthMonitoringIntegration } from "../../interfaces/health-monitoring/health-monitoring-integration";
 
 export class SystemHealthMonitoringMockService implements ISystemHealthMonitoringIntegration {
-  public async getSystemInfoAsync(): Promise<HealthMonitoring> {
+  public async getSystemInfoAsync(): Promise<SystemHealthMonitoring> {
     return await Promise.resolve({
       version: "1.0.0",
       cpuModelName: "Mock CPU",

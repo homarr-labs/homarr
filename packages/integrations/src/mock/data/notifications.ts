@@ -1,4 +1,4 @@
-import type { Notification } from "../../interfaces/notifications/notification";
+import type { Notification } from "../../interfaces/notifications/notification-types";
 import type { INotificationsIntegration } from "../../interfaces/notifications/notifications-integration";
 
 export class NotificationsMockService implements INotificationsIntegration {

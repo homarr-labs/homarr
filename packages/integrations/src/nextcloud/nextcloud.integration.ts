@@ -10,11 +10,11 @@ import { integrationTsdavHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { CalendarEvent } from "../calendar-types";
-import type { CalendarIntegration } from "../interfaces/calendar/calendar-integration";
+import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
+import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
 
 @HandleIntegrationErrors([integrationTsdavHttpErrorHandler])
-export class NextcloudIntegration extends Integration implements CalendarIntegration {
+export class NextcloudIntegration extends Integration implements ICalendarIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = await this.createCalendarClientAsync(input.dispatcher);
     await client.login();

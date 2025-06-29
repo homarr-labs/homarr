@@ -5,9 +5,7 @@ import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IMediaTranscodingIntegration } from "../interfaces/media-transcoding/media-transcoding-integration";
-import type { TdarrQueue } from "../interfaces/media-transcoding/queue";
-import type { TdarrStatistics } from "../interfaces/media-transcoding/statistics";
-import type { TdarrWorker } from "../interfaces/media-transcoding/workers";
+import type { TdarrQueue, TdarrStatistics, TdarrWorker } from "../interfaces/media-transcoding/media-transcoding-types";
 import { getNodesResponseSchema, getStatisticsSchema, getStatusTableSchema } from "./tdarr-validation-schemas";
 
 export class TdarrIntegration extends Integration implements IMediaTranscodingIntegration {
