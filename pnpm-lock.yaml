@@ -882,25 +882,25 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../log
       '@tanstack/react-query':
-        specifier: ^5.80.7
+        specifier: ^5.81.5
         version: 5.81.5(react@19.1.0)
       '@trpc/client':
-        specifier: ^11.4.1
+        specifier: ^11.4.3
         version: 11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3)
       '@trpc/server':
-        specifier: ^11.4.1
+        specifier: ^11.4.3
         version: 11.4.3(typescript@5.8.3)
       '@trpc/tanstack-react-query':
-        specifier: ^11.4.1
+        specifier: ^11.4.3
         version: 11.4.3(@tanstack/react-query@5.81.5(react@19.1.0))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.4.3(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       node-cron:
-        specifier: ^4.1.0
+        specifier: ^4.1.1
         version: 4.1.1
       react:
         specifier: 19.1.0
         version: 19.1.0
       zod:
-        specifier: ^3.25.65
+        specifier: ^3.25.67
         version: 3.25.67
     devDependencies:
       '@homarr/eslint-config':
