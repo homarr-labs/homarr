@@ -2302,8 +2302,8 @@
       "releaseDescription": "Popis vydania",
       "created": "Vytvorené",
       "error": {
-        "label": "Chyba",
-        "options": {
+        "label": "",
+        "messages": {
           "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia"
         }
       }
