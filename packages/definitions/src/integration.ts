@@ -176,6 +176,13 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
     category: ["notifications"],
   },
+  // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
+  mock: {
+    name: "Mock",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/vitest.svg",
+    category: ["calendar", "dnsHole", "downloadClient", "healthMonitoring", "indexerManager", "mediaRequest"],
+  },
 } as const satisfies Record<string, integrationDefinition>;
 
 export const integrationKinds = objectKeys(integrationDefs) as AtLeastOneOf<IntegrationKind>;

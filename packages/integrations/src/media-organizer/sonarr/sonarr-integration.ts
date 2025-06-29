@@ -7,9 +7,10 @@ import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { CalendarEvent } from "../../calendar-types";
+import type { CalendarIntegration } from "../../interfaces/calendar/calendar-integration";
 import { MediaOrganizerIntegration } from "../media-organizer-integration";
 
-export class SonarrIntegration extends MediaOrganizerIntegration {
+export class SonarrIntegration extends MediaOrganizerIntegration implements CalendarIntegration {
   /**
    * Gets the events in the Sonarr calendar between two dates.
    * @param start The start date

@@ -7,9 +7,10 @@ import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { CalendarEvent } from "../../calendar-types";
+import type { CalendarIntegration } from "../../interfaces/calendar/calendar-integration";
 import { MediaOrganizerIntegration } from "../media-organizer-integration";
 
-export class ReadarrIntegration extends MediaOrganizerIntegration {
+export class ReadarrIntegration extends MediaOrganizerIntegration implements CalendarIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api"), {
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },

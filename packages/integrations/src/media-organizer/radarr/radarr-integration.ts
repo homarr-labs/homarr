@@ -9,9 +9,10 @@ import { TestConnectionError } from "../../base/test-connection/test-connection-
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { CalendarEvent } from "../../calendar-types";
 import { radarrReleaseTypes } from "../../calendar-types";
+import type { CalendarIntegration } from "../../interfaces/calendar/calendar-integration";
 import { MediaOrganizerIntegration } from "../media-organizer-integration";
 
-export class RadarrIntegration extends MediaOrganizerIntegration {
+export class RadarrIntegration extends MediaOrganizerIntegration implements CalendarIntegration {
   /**
    * Gets the events in the Radarr calendar between two dates.
    * @param start The start date
