@@ -43,6 +43,7 @@ export interface MediaRequestStats {
   users: RequestUser[];
 }
 
+// https://github.com/fallenbagel/jellyseerr/blob/0fd03f38480f853e7015ad9229ed98160e37602e/server/constants/media.ts#L1
 export enum MediaRequestStatus {
   PendingApproval = 1,
   Approved = 2,
@@ -51,6 +52,7 @@ export enum MediaRequestStatus {
   Completed = 5,
 }
 
+// https://github.com/fallenbagel/jellyseerr/blob/0fd03f38480f853e7015ad9229ed98160e37602e/server/constants/media.ts#L14
 export enum MediaAvailability {
   Unknown = 1,
   Pending = 2,
@@ -58,4 +60,5 @@ export enum MediaAvailability {
   PartiallyAvailable = 4,
   Available = 5,
   Blacklisted = 6,
+  Deleted = 7,
 }

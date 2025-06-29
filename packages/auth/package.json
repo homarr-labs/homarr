@@ -23,8 +23,8 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@auth/core": "^0.39.1",
-    "@auth/drizzle-adapter": "^1.9.1",
+    "@auth/core": "^0.40.0",
+    "@auth/drizzle-adapter": "^1.10.0",
     "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
@@ -34,12 +34,12 @@
     "@homarr/validation": "workspace:^0.1.0",
     "bcrypt": "^6.0.0",
     "cookies": "^0.9.1",
-    "ldapts": "8.0.1",
-    "next": "15.3.3",
-    "next-auth": "5.0.0-beta.28",
+    "ldapts": "8.0.2",
+    "next": "15.3.4",
+    "next-auth": "5.0.0-beta.29",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "zod": "^3.25.65"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -47,8 +47,8 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/bcrypt": "5.0.2",
     "@types/cookies": "0.9.1",
-    "eslint": "^9.29.0",
-    "prettier": "^3.5.3",
+    "eslint": "^9.30.0",
+    "prettier": "^3.6.2",
     "typescript": "^5.8.3"
   }
 }

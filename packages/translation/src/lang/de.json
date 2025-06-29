@@ -936,6 +936,10 @@
         "realm": {
           "label": "Bereich",
           "newLabel": "Neuer Bereich"
+        },
+        "topic": {
+          "label": "Thema",
+          "newLabel": "Neues Thema erstellen"
         }
       }
     },
@@ -1758,7 +1762,7 @@
           "label": "Speicher-Info anzeigen"
         },
         "showUptime": {
-          "label": ""
+          "label": "Laufzeit anzeigen"
         },
         "fileSystem": {
           "label": "Dateisystem Info anzeigen"
@@ -1767,7 +1771,7 @@
           "label": "Standard Tab"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Sichtbare Cluster-Abschnitte"
         },
         "sectionIndicatorRequirement": {
           "label": "Anforderung der Sektionsindikatoren"
@@ -1839,11 +1843,11 @@
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Docker Statistiken",
+      "description": "Statistiken Ihrer Container (Dieses Widget kann nur mit Administratorrechten hinzugefügt werden)",
       "option": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Fehler beim Abrufen der Container Statistiken"
       }
     },
     "common": {
@@ -1961,8 +1965,8 @@
           "label": "Filter zur Berechnung des Verhältnisses verwenden"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Elemente pro Integration begrenzen",
+          "description": "Dies begrenzt die Anzahl der Elemente pro Integration, jedoch nicht global"
         }
       },
       "errors": {
@@ -2088,7 +2092,9 @@
         "pending": "Ausstehend",
         "processing": "In Bearbeitung",
         "partiallyAvailable": "Teilweise",
-        "available": "Verfügbar"
+        "available": "Verfügbar",
+        "blacklisted": "Gesperrt",
+        "deleted": "Gelöscht"
       },
       "status": {
         "pending": "Ausstehend",
@@ -2227,13 +2233,13 @@
             "label": "Repository hinzufügen"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "label": "Von Docker importieren",
+            "loading": "Lade Docker Images",
+            "noImagesFound": "Keine Docker Images gefunden",
+            "listFoundImages": "Liste der gefundenen Images",
+            "listAlreadyImportedImages": "Liste der bereits importierten Images",
+            "allImagesAlreadyImported": "Alle Images wurden bereits importiert",
+            "onlyAdminCanImport": "Nur Administratoren können vom Docker importieren"
           },
           "provider": {
             "label": "Anbieter"
@@ -2276,7 +2282,7 @@
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Von Docker importieren"
           },
           "example": {
             "label": "Beispiel"
@@ -2357,6 +2363,12 @@
       "error": {
         "internalServerError": "Fehler beim Abrufen der Netzwerk Controller Zusammenfassung"
       }
+    },
+    "notifications": {
+      "name": "Benachrichtigungen",
+      "description": "Benachrichtigungshistorie von einer Integration anzeigen",
+      "noItems": "Keine Benachrichtigungen zum Anzeigen.",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -3122,8 +3134,11 @@
             "networkController": {
               "label": "Netzwerk Controller"
             },
+            "refreshNotifications": {
+              "label": "Benachrichtigungs Updater"
+            },
             "dockerContainers": {
-              "label": ""
+              "label": "Docker Container"
             }
           }
         },
@@ -3189,7 +3204,7 @@
       "updated": "Aktualisiert {when}",
       "search": "{count} Container durchsuchen",
       "selected": "{selectCount} von {totalCount} ausgewählten Containern",
-      "footer": ""
+      "footer": "Insgesamt {count} Container"
     },
     "field": {
       "name": {
@@ -3209,10 +3224,10 @@
       },
       "stats": {
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Speicher"
         }
       },
       "containerImage": {
@@ -3223,7 +3238,7 @@
       }
     },
     "action": {
-      "title": "",
+      "title": "Aktionen",
       "start": {
         "label": "Starten",
         "notification": {

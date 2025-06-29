@@ -38,13 +38,13 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@jellyfin/sdk": "^0.11.0",
-    "maria2": "^0.4.0",
+    "maria2": "^0.4.1",
     "node-ical": "^0.20.1",
     "proxmox-api": "1.1.1",
-    "tsdav": "^2.1.4",
-    "undici": "7.10.0",
+    "tsdav": "^2.1.5",
+    "undici": "7.11.0",
     "xml2js": "^0.6.2",
-    "zod": "^3.25.65"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -52,7 +52,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-unifi": "^2.5.1",
     "@types/xml2js": "^0.4.14",
-    "eslint": "^9.29.0",
+    "eslint": "^9.30.0",
     "typescript": "^5.8.3"
   }
 }
