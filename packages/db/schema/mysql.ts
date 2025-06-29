@@ -508,6 +508,12 @@ export const trustedCertificateHostnames = mysqlTable(
   }),
 );
 
+export const cronJobConfigurations = mysqlTable("cron_job_configuration", {
+  name: varchar({ length: 256 }).notNull().primaryKey(),
+  cronExpression: varchar({ length: 32 }).notNull(),
+  isEnabled: boolean().default(true).notNull(),
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
