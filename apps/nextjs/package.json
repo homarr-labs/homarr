@@ -33,6 +33,7 @@
     "@homarr/forms-collection": "workspace:^0.1.0",
     "@homarr/gridstack": "^1.12.0",
     "@homarr/icons": "workspace:^0.1.0",
+    "@homarr/image-proxy": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/log": "workspace:^",
     "@homarr/modals": "workspace:^0.1.0",
