@@ -4,14 +4,15 @@ import type { fetch as undiciFetch } from "undici";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
 
+import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
-import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
+import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { Aria2Download, Aria2GetClient } from "./aria2-types";
 
-export class Aria2Integration extends DownloadClientIntegration {
+export class Aria2Integration extends Integration implements IDownloadClientIntegration {
   public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const client = this.getClient();
     const keys: (keyof Aria2Download)[] = [

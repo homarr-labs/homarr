@@ -7,7 +7,8 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/session";
+import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
+import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
 import { convertJellyfinType } from "../jellyfin/jellyfin-integration";
 
 const sessionSchema = z.object({
@@ -30,7 +31,7 @@ const sessionSchema = z.object({
   UserName: z.string().nullish(),
 });
 
-export class EmbyIntegration extends Integration {
+export class EmbyIntegration extends Integration implements IMediaServerIntegration {
   private static readonly apiKeyHeader = "X-Emby-Token";
   private static readonly deviceId = "homarr-emby-integration";
   private static readonly authorizationHeaderValue = `Emby Client="Dashboard", Device="Homarr", DeviceId="${EmbyIntegration.deviceId}", Version="0.0.1"`;

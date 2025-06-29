@@ -3,13 +3,15 @@ import { z } from "zod";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
+import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
-import type { CalendarEvent } from "../../calendar-types";
-import { MediaOrganizerIntegration } from "../media-organizer-integration";
+import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-integration";
+import type { CalendarEvent } from "../../interfaces/calendar/calendar-types";
+import { mediaOrganizerPriorities } from "../media-organizer";
 
-export class ReadarrIntegration extends MediaOrganizerIntegration {
+export class ReadarrIntegration extends Integration implements ICalendarIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api"), {
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },
@@ -81,7 +83,8 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
     const flatImages = [...event.images];
 
     const sortedImages = flatImages.sort(
-      (imageA, imageB) => this.priorities.indexOf(imageA.coverType) - this.priorities.indexOf(imageB.coverType),
+      (imageA, imageB) =>
+        mediaOrganizerPriorities.indexOf(imageA.coverType) - mediaOrganizerPriorities.indexOf(imageB.coverType),
     );
     logger.debug(`Sorted images to [${sortedImages.map((image) => image.coverType).join(",")}]`);
     return sortedImages[0];

@@ -8,6 +8,7 @@ import { HandleIntegrationErrors } from "../base/errors/decorator";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { IClusterHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
 import { ProxmoxApiErrorHandler } from "./proxmox-error-handler";
 import type {
   ComputeResourceBase,
@@ -19,7 +20,7 @@ import type {
 } from "./proxmox-types";
 
 @HandleIntegrationErrors([new ProxmoxApiErrorHandler()])
-export class ProxmoxIntegration extends Integration {
+export class ProxmoxIntegration extends Integration implements IClusterHealthMonitoringIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const proxmox = this.getPromoxApi(input.fetchAsync);
     await proxmox.nodes.$get();

@@ -1,3 +1,25 @@
+interface SerieSeason {
+  id: number;
+  seasonNumber: number;
+  name: string;
+  episodeCount: number;
+}
+
+interface SeriesInformation {
+  id: number;
+  overview: string;
+  seasons: SerieSeason[];
+  posterPath: string;
+}
+
+interface MovieInformation {
+  id: number;
+  overview: string;
+  posterPath: string;
+}
+
+export type MediaInformation = SeriesInformation | MovieInformation;
+
 export interface MediaRequest {
   id: number;
   name: string;

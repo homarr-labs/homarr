@@ -6,10 +6,11 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { Indexer } from "../interfaces/indexer-manager/indexer";
+import type { IIndexerManagerIntegration } from "../interfaces/indexer-manager/indexer-manager-integration";
+import type { Indexer } from "../interfaces/indexer-manager/indexer-manager-types";
 import { indexerResponseSchema, statusResponseSchema } from "./prowlarr-types";
 
-export class ProwlarrIntegration extends Integration {
+export class ProwlarrIntegration extends Integration implements IIndexerManagerIntegration {
   public async getIndexersAsync(): Promise<Indexer[]> {
     const apiKey = super.getSecretValue("apiKey");
 

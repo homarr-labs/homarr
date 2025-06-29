@@ -20,6 +20,7 @@ import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration"
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
+import { MockIntegration } from "../mock/mock-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
@@ -94,6 +95,7 @@ export const integrationCreators = {
   nextcloud: NextcloudIntegration,
   unifiController: UnifiControllerIntegration,
   ntfy: NTFYIntegration,
+  mock: MockIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

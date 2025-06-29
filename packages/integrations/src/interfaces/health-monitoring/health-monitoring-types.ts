@@ -1,4 +1,6 @@
-export interface HealthMonitoring {
+import type { LxcResource, NodeResource, QemuResource, StorageResource } from "../../types";
+
+export interface SystemHealthMonitoring {
   version: string;
   cpuModelName: string;
   cpuUtilization: number;
@@ -24,4 +26,12 @@ export interface HealthMonitoring {
     temperature: number | null;
     overallStatus: string;
   }[];
+}
+
+// TODO: in the future decouple this from the Proxmox integration
+export interface ClusterHealthMonitoring {
+  nodes: NodeResource[];
+  lxcs: LxcResource[];
+  vms: QemuResource[];
+  storages: StorageResource[];
 }

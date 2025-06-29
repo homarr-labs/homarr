@@ -12,9 +12,10 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { HealthMonitoring } from "../types";
+import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
+import type { SystemHealthMonitoring } from "../interfaces/health-monitoring/health-monitoring-types";
 
-export class DashDotIntegration extends Integration {
+export class DashDotIntegration extends Integration implements ISystemHealthMonitoringIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/info"));
     if (!response.ok) return TestConnectionError.StatusResult(response);
@@ -26,7 +27,7 @@ export class DashDotIntegration extends Integration {
     };
   }
 
-  public async getSystemInfoAsync(): Promise<HealthMonitoring> {
+  public async getSystemInfoAsync(): Promise<SystemHealthMonitoring> {
     const info = await this.getInfoAsync();
     const cpuLoad = await this.getCurrentCpuLoadAsync();
     const memoryLoad = await this.getCurrentMemoryLoadAsync();
