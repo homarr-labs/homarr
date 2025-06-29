@@ -28,9 +28,9 @@ export type { DownloadClientJobsAndStatus } from "./interfaces/downloads/downloa
 export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download-client-items";
 export type { ExtendedClientStatus } from "./interfaces/downloads/download-client-status";
 export type { SystemHealthMonitoring as HealthMonitoring } from "./interfaces/health-monitoring/health-monitoring-types";
-export { MediaRequestStatus } from "./interfaces/media-requests/media-request";
-export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request";
-export type { StreamSession } from "./interfaces/media-server/session";
+export { MediaRequestStatus } from "./interfaces/media-requests/media-request-types";
+export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request-types";
+export type { StreamSession } from "./interfaces/media-server/media-server-types";
 export type { TdarrQueue } from "./interfaces/media-transcoding/queue";
 export type { TdarrPieSegment, TdarrStatistics } from "./interfaces/media-transcoding/statistics";
 export type { TdarrWorker } from "./interfaces/media-transcoding/workers";

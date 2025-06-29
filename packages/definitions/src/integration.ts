@@ -181,7 +181,19 @@ export const integrationDefs = {
     name: "Mock",
     secretKinds: [[]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/vitest.svg",
-    category: ["calendar", "dnsHole", "downloadClient", "healthMonitoring", "indexerManager", "mediaRequest"],
+    category: [
+      "calendar",
+      "dnsHole",
+      "downloadClient",
+      "healthMonitoring",
+      "indexerManager",
+      "mediaRequest",
+      "mediaService",
+      "mediaTranscoding",
+      "networkController",
+      "notifications",
+      "smartHomeServer",
+    ],
   },
 } as const satisfies Record<string, integrationDefinition>;
 

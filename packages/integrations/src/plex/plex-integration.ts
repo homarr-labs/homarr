@@ -8,10 +8,11 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/session";
+import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
+import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
 import type { PlexResponse } from "./interface";
 
-export class PlexIntegration extends Integration {
+export class PlexIntegration extends Integration implements IMediaServerIntegration {
   public async getCurrentSessionsAsync(_options: CurrentSessionsInput): Promise<StreamSession[]> {
     const token = super.getSecretValue("apiKey");
 

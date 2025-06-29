@@ -1,13 +1,14 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
 
+import { Integration } from "../base/integration";
 import type { IntegrationTestingInput } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { Notification } from "../interfaces/notifications/notification";
-import { NotificationsIntegration } from "../interfaces/notifications/notifications-integration";
+import type { INotificationsIntegration } from "../interfaces/notifications/notifications-integration";
 import { ntfyNotificationSchema } from "./ntfy-schema";
 
-export class NTFYIntegration extends NotificationsIntegration {
+export class NTFYIntegration extends Integration implements INotificationsIntegration {
   public async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     await input.fetchAsync(this.url("/v1/account"), { headers: this.getHeaders() });
     return { success: true };
