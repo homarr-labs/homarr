@@ -17,7 +17,7 @@ export class MediaServerMockService implements IMediaServerIntegration {
       user: {
         userId: `user-${index}`,
         username: `User${index}`,
-        profilePictureUrl: `https://thispersondoesnotexist.com`,
+        profilePictureUrl: "/images/mock/avatar.jpg",
       },
       currentlyPlaying:
         Math.random() > 0.9 // 10% chance of being null (not currently playing)

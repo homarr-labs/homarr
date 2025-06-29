@@ -9,7 +9,7 @@ export class MediaRequestMockService implements IMediaRequestIntegration {
     return await Promise.resolve({
       id,
       overview: `Overview of media ${id}`,
-      posterPath: `https://m.media-amazon.com/images/M/MV5BNjgxZGM0OWUtZGY1MS00MWRmLTk2N2ItYjQyZTI1OThlZDliXkEyXkFqcGc@._V1_QL75_UX190_CR0,0,190,281_.jpg`,
+      posterPath: "/images/mock/the-mandalorian-poster.jpg",
       seasons:
         mediaType === "tv"
           ? Array.from({ length: 3 }, (_, seasonIndex) => ({
@@ -58,7 +58,7 @@ export class MediaRequestMockService implements IMediaRequestIntegration {
     return {
       id: index,
       displayName: `User ${index}`,
-      avatar: "https://thispersondoesnotexist.com/",
+      avatar: "/images/mock/avatar.jpg",
       requestCount: Math.floor(Math.random() * 100),
       link: `https://example.com/user/${index}`,
     };
@@ -69,17 +69,15 @@ export class MediaRequestMockService implements IMediaRequestIntegration {
       id: index,
       name: `Media Request ${index}`,
       availability: this.randomAvailability(),
-      backdropImageUrl:
-        "https://m.media-amazon.com/images/M/MV5BNjgxZGM0OWUtZGY1MS00MWRmLTk2N2ItYjQyZTI1OThlZDliXkEyXkFqcGc@._V1_QL75_UX190_CR0,0,190,281_.jpg",
-      posterImagePath:
-        "https://m.media-amazon.com/images/M/MV5BNjgxZGM0OWUtZGY1MS00MWRmLTk2N2ItYjQyZTI1OThlZDliXkEyXkFqcGc@._V1_QL75_UX190_CR0,0,190,281_.jpg",
+      backdropImageUrl: "/images/mock/the-mandalorian-poster.jpg",
+      posterImagePath: "/images/mock/the-mandalorian-poster.jpg",
       createdAt: new Date(),
       airDate: new Date(Date.now() + (Math.random() - 0.5) * 1000 * 60 * 60 * 24 * 365 * 4),
       status: this.randomStatus(),
       href: `https://example.com/media/${index}`,
       type: Math.random() > 0.5 ? "movie" : "tv",
       requestedBy: {
-        avatar: "https://thispersondoesnotexist.com/",
+        avatar: "/images/mock/avatar.jpg",
         displayName: `User ${index}`,
         id: index,
         link: `https://example.com/user/${index}`,

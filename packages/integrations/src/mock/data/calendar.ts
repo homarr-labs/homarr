@@ -30,8 +30,7 @@ const titanicRelease = (start: Date, end: Date): CalendarEvent => ({
   subName: "A classic movie",
   description: "A tragic love story set on the ill-fated RMS Titanic.",
   date: randomDateBetween(start, end),
-  thumbnail:
-    "https://m.media-amazon.com/images/M/MV5BYzYyN2FiZmUtYWYzMy00MzViLWJkZTMtOGY1ZjgzNWMwN2YxXkEyXkFqcGc@._V1_QL75_UX190_CR0,1,190,281_.jpg",
+  thumbnail: "/images/mock/titanic-poster.jpg",
   mediaInformation: {
     type: "movie",
   },
@@ -52,8 +51,7 @@ const seriesRelease = (start: Date, end: Date): CalendarEvent => ({
   subName: "A Star Wars Series",
   description: "A lone bounty hunter in the outer reaches of the galaxy.",
   date: randomDateBetween(start, end),
-  thumbnail:
-    "https://m.media-amazon.com/images/M/MV5BNjgxZGM0OWUtZGY1MS00MWRmLTk2N2ItYjQyZTI1OThlZDliXkEyXkFqcGc@._V1_QL75_UX190_CR0,0,190,281_.jpg",
+  thumbnail: "/images/mock/the-mandalorian-poster.jpg",
   mediaInformation: {
     type: "tv",
     seasonNumber: 1,
