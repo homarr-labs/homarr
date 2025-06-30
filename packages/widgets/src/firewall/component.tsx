@@ -1,41 +1,27 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Accordion, Center, Flex, Group, Menu, RingProgress, ScrollArea, Table, Text } from "@mantine/core";
+import { Accordion, Center, Flex, Group, RingProgress, ScrollArea, Table, Text } from "@mantine/core";
 import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconCpu, IconTopologyBus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import type { FirewallInterface, FirewallInterfacesSummary, FirewallVersionSummary } from "@homarr/integrations";
+import type { FirewallInterface, FirewallInterfacesSummary } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { FirewallMenu } from "./firewall-menu";
 import { FirewallVersion } from "./firewall-version";
 
-export interface FirewallIntegration {
-  id: string;
-  name: string;
-  kind: string;
-  updatedAt: Date;
-}
-
 export interface Firewall {
-  integration: FirewallIntegration;
-  summary: FirewallVersionSummary;
+  label: string;
+  value: string;
 }
 
 export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
-  const handleOpen = useCallback(() => {
-    setOpened(true);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setOpened(false);
-  }, []);
-
   const handleSelect = useCallback((firewall: Firewall) => {
     setSelectedFirewall(firewall);
   }, []);
+
   const firewallsCpuData = useUpdatingCpuStatus(integrationIds);
   const firewallsMemoryData = useUpdatingMemoryStatus(integrationIds);
   const firewallsVersionData = useUpdatingVersionStatus(integrationIds);
@@ -56,12 +42,10 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
   const isTiny = width < 256;
 
   const [selectedFirewall, setSelectedFirewall] = useState<Firewall>(initialSelectedFirewall);
-  const [opened, setOpened] = useState(false);
-  const dropdownItems = firewallsVersionData.map((firewall) => (
-    <Menu.Item onClick={handleSelect.bind(null, firewall)} key={firewall.integration.id}>
-      <Text size={isTiny ? "8px" : "xs"}>{firewall.integration.name}</Text>
-    </Menu.Item>
-  ));
+  const dropdownItems = firewallsVersionData.map((firewall) => ({
+    label: firewall.integration.name,
+    value: firewall.integration.id,
+  }));
 
   const t = useI18n();
 
@@ -69,9 +53,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     <ScrollArea h="100%">
       <Group justify="space-between" w="100%" style={{ padding: "8px" }}>
         <FirewallMenu
-          opened={opened}
-          handleOpen={handleOpen}
-          handleClose={handleClose}
+          onSelect={handleSelect}
           selectedFirewall={selectedFirewall}
           dropdownItems={dropdownItems}
           isTiny={isTiny}
@@ -135,7 +117,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
           </Accordion.Control>
           <Accordion.Panel>
             {firewallsInterfacesData.map(({ integration, summary }) => (
-              <Table key={integration.name} highlightOnHover>
+              <Table verticalSpacing="0px" style={{ padding: "0px" }} key={integration.name} highlightOnHover>
                 <Table.Tbody>
                   {Array.isArray(summary) && summary.every((item) => Array.isArray(item.data)) ? (
                     calculateBandwidth(summary).data.map(({ name, receive, transmit }) => (

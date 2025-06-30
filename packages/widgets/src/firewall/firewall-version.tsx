@@ -1,4 +1,4 @@
-import { Box, Text } from "@mantine/core";
+import { Badge, Box } from "@mantine/core";
 
 import type { FirewallVersionSummary } from "@homarr/integrations";
 
@@ -14,23 +14,14 @@ interface FirewallVersionProps {
 }
 
 export const FirewallVersion = ({ firewallsVersionData, selectedFirewall, isTiny }: FirewallVersionProps) => (
-  <Box
-    style={{
-      border: "1px solid #ccc",
-      padding: "8px",
-      borderRadius: "4px",
-      minHeight: "40px",
-      display: "flex",
-      alignItems: "center",
-    }}
-  >
-    <Text size={isTiny ? "8px" : "xs"}>
+  <Box>
+    <Badge autoContrast variant="outline" color="white" size={isTiny ? "8px" : "xs"}>
       {firewallsVersionData
         .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
-        .map(({ summary }) => (
-          <span key={summary.version}>{formatVersion(summary.version)}</span>
+        .map(({ summary, integration }) => (
+          <span key={integration.id}>{formatVersion(summary.version)}</span>
         ))}
-    </Text>
+    </Badge>
   </Box>
 );
 
