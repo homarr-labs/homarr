@@ -936,6 +936,10 @@
         "realm": {
           "label": "",
           "newLabel": ""
+        },
+        "topic": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2088,7 +2092,9 @@
         "pending": "",
         "processing": "",
         "partiallyAvailable": "Částečně dostupné",
-        "available": "K dispozici"
+        "available": "K dispozici",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "",
@@ -2357,6 +2363,12 @@
       "error": {
         "internalServerError": ""
       }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -3120,6 +3132,9 @@
               "label": ""
             },
             "networkController": {
+              "label": ""
+            },
+            "refreshNotifications": {
               "label": ""
             },
             "dockerContainers": {
