@@ -35,10 +35,13 @@ export async function migrateReleaseWidgetProviderToOptionsAsync(db: Database) {
     if (options.repositories.length === 0) continue;
     if (!options.repositories.some((repository) => "providerKey" in repository)) continue;
 
-    const updatedRepositories = options.repositories.map(({ providerKey, ...otherFields }) => ({
-      providerIntegrationId: providerIntegrationMap.get(providerKey) ?? null, // Or do custom mapping if needed
-      ...otherFields,
-    }));
+    const updatedRepositories = options.repositories.map(
+      ({ providerKey, ...otherFields }: { providerKey: IntegrationKind; [key: string]: unknown }) => ({
+        id: crypto.randomUUID(),
+        providerIntegrationId: providerIntegrationMap.get(providerKey),
+        ...otherFields,
+      }),
+    );
 
     updates.push({
       id: item.id,
