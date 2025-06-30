@@ -2,7 +2,7 @@ import { Badge, Box } from "@mantine/core";
 
 import type { FirewallVersionSummary } from "@homarr/integrations";
 
-import type { Firewall, FirewallIntegration } from "./component";
+import type { Firewall } from "./component";
 
 interface FirewallVersionProps {
   firewallsVersionData: {
