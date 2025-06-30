@@ -303,7 +303,7 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
     () => Object.values(innerProps.integrations),
     [innerProps.integrations],
   );
-  
+
   // Allows user to not select an icon by removing the url from the input,
   // will only try and get an icon if the name or identifier changes
   const [autoSetIcon, setAutoSetIcon] = useState(false);
@@ -564,7 +564,7 @@ const ContainerImageSelector = ({
         )}
       </Group>
 
-      <Tooltip label={tRepository("noProvider.tooltip")} disabled={!integration}>
+      <Tooltip label={tRepository("noProvider.tooltip")} disabled={!integration} withArrow>
         <Group>
           {integration ? (
             <MaskedImage
@@ -611,28 +611,38 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   const containersImages: ReleasesRepositoryImport[] = useMemo(
     () =>
       docker.data?.containers.reduce<ReleasesRepositoryImport[]>((acc, containerImage) => {
-        const providerKey = containerImage.image.startsWith("ghcr.io/") ? "Github" : "DockerHub";
-        const [identifier, version] = containerImage.image.replace(/^(ghcr\.io\/|docker\.io\/)/, "").split(":");
+        const imageParts = containerImage.image.split("/");
+        const source = imageParts.length > 1 ? imageParts[0] : "docker.io";
+        const identifierImage = imageParts.length > 1 ? imageParts[1] : imageParts[0];
 
-        if (!identifier) return acc;
+        if (!source || !identifierImage) return acc;
 
-        if (acc.some((item) => item.providerKey === providerKey && item.identifier === identifier)) return acc;
+        const providerKey = source in containerImageToProvider ? containerImageToProvider[source] : "dockerHub";
+        const integrationId = Object.values(innerProps.integrations).find(
+          (integration) => integration.kind === providerKey,
+        )?.id;
 
-        //TODO: Work out how to map the container image url into integrations, there cloud be many integrations for Github for example
+        const [identifier, version] = identifierImage.split(":");
+
+        if (!identifier || !integrationId) return acc;
+
+        if (acc.some((item) => item.providerIntegrationId === integrationId && item.identifier === identifier))
+          return acc;
+
         acc.push({
           id: randomId(),
-          providerKey,
+          providerIntegrationId: integrationId,
           identifier,
           iconUrl: containerImage.iconUrl ?? undefined,
           name: formatIdentifierName(identifier),
           versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
           alreadyImported: innerProps.repositories.some(
-            (item) => item.providerKey === providerKey && item.identifier === identifier,
+            (item) => item.providerIntegrationId === integrationId && item.identifier === identifier,
           ),
         });
         return acc;
       }, []) ?? [],
-    [docker.data, innerProps.repositories],
+    [docker.data, innerProps.repositories, innerProps.integrations],
   );
 
   const handleConfirm = useCallback(() => {
@@ -750,6 +760,11 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   },
   size: "xl",
 });
+
+const containerImageToProvider: Record<string, string> = {
+  "ghcr.io": "github",
+  "docker.io": "dockerHub",
+};
 
 const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersionFilter | undefined => {
   const version = /(?<=\D|^)\d+(?:\.\d+)*(?![\d.])/.exec(imageVersion)?.[0];
