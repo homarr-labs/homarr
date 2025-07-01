@@ -245,8 +245,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       dotenv:
-        specifier: ^16.6.1
-        version: 16.6.1
+        specifier: ^17.0.1
+        version: 17.0.1
       flag-icons:
         specifier: ^7.5.0
         version: 7.5.0
@@ -390,8 +390,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       dotenv:
-        specifier: ^16.6.1
-        version: 16.6.1
+        specifier: ^17.0.1
+        version: 17.0.1
       superjson:
         specifier: 2.2.2
         version: 2.2.2
@@ -457,8 +457,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../packages/validation
       dotenv:
-        specifier: ^16.6.1
-        version: 16.6.1
+        specifier: ^17.0.1
+        version: 17.0.1
       tsx:
         specifier: 4.20.3
         version: 4.20.3
@@ -796,8 +796,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../validation
       dotenv:
-        specifier: ^16.6.1
-        version: 16.6.1
+        specifier: ^17.0.1
+        version: 17.0.1
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1051,8 +1051,8 @@ importers:
         specifier: ^12.2.0
         version: 12.2.0
       dotenv:
-        specifier: ^16.6.1
-        version: 16.6.1
+        specifier: ^17.0.1
+        version: 17.0.1
       drizzle-kit:
         specifier: ^0.31.4
         version: 0.31.4
@@ -6102,6 +6102,10 @@ packages:
 
   dotenv@16.6.1:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
+    engines: {node: '>=12'}
+
+  dotenv@17.0.1:
+    resolution: {integrity: sha512-GLjkduuAL7IMJg/ZnOPm9AnWKJ82mSE2tzXLaJ/6hD6DhwGfZaXG77oB8qbReyiczNxnbxQKyh0OE5mXq0bAHA==}
     engines: {node: '>=12'}
 
   drange@1.1.1:
@@ -14868,6 +14872,8 @@ snapshots:
   dotenv@16.0.3: {}
 
   dotenv@16.6.1: {}
+
+  dotenv@17.0.1: {}
 
   drange@1.1.1: {}
 
