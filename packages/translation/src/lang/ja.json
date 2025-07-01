@@ -1394,7 +1394,7 @@
           "label": "タイトル"
         },
         "is24HourFormat": {
-          "label": "24時間表示",
+          "label": "２４時間表示",
           "description": "12 時間形式の代わりに 24 時間形式を使用します"
         },
         "showSeconds": {
@@ -1656,11 +1656,11 @@
       "description": "カレンダービューで、特定の相対的な期間内に、インテグレーションからのイベントを表示します",
       "option": {
         "releaseType": {
-          "label": "ラダーリリースタイプ",
+          "label": "Radarr リリースタイプ",
           "options": {
-            "inCinemas": "映画",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "映画館",
+            "digitalRelease": "デジタルリリース",
+            "physicalRelease": "物理的なリリース"
           }
         },
         "filterPastMonths": {
@@ -1670,7 +1670,7 @@
           "label": "終了日"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "監視されていない状態で表示"
         }
       }
     },
@@ -1703,10 +1703,10 @@
         },
         "dateFormat": {
           "label": "日付の形式",
-          "description": ""
+          "description": "日付がどのように見えるか"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "時速 {currentWindSpeed} km",
       "dailyForecast": {
         "sunrise": "",
         "sunset": "",
@@ -2024,19 +2024,19 @@
         },
         "state": {
           "columnTitle": "状態",
-          "detailsTitle": ""
+          "detailsTitle": "作業状態"
         },
         "time": {
           "columnTitle": "終了時刻",
-          "detailsTitle": ""
+          "detailsTitle": "完了までの時間"
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "種類",
+          "detailsTitle": "ダウンロードクライアントの種類"
         },
         "upSpeed": {
-          "columnTitle": "アップロード",
-          "detailsTitle": ""
+          "columnTitle": "アップ",
+          "detailsTitle": "アップロード速度"
         }
       },
       "states": {
