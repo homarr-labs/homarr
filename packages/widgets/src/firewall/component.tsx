@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import type { ChangeEvent } from "react";
-import { Accordion, Center, Flex, Group, RingProgress, ScrollArea, Table, Text } from "@mantine/core";
+import { Accordion, Box, Center, Flex, Group, RingProgress, ScrollArea, Text } from "@mantine/core";
 import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconCpu, IconTopologyBus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -109,47 +109,72 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
           <Accordion.Panel>
             {firewallsInterfacesData
               .filter(({ integration }) => integration.id === selectedFirewall)
-              .map(({ integration, summary }) => (
-                <Table verticalSpacing="0px" style={{ padding: "0px" }} key={integration.name} highlightOnHover>
-                  <Table.Tbody>
-                    {Array.isArray(summary) && summary.every((item) => Array.isArray(item.data)) ? (
-                      calculateBandwidth(summary).data.map(({ name, receive, transmit }) => (
-                        <Table.Tr key={name}>
-                          <Table.Td
+              .map(({ summary }) => (
+                <Flex direction="column" key="interfaces">
+                  {Array.isArray(summary) && summary.every((item) => Array.isArray(item.data)) ? (
+                    calculateBandwidth(summary).data.map(({ name, receive, transmit }) => (
+                      <Flex
+                        key={name}
+                        direction={isTiny ? "column" : "row"}
+                        style={{
+                          width: "100%"
+                        }}
+                      >
+                        <Flex
+                          w={isTiny ? "100%" : "33%"}
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          <Text
+                            size="xs"
+                            color="lightblue"
                             style={{
                               maxWidth: "100px",
                               overflow: "hidden",
                               textOverflow: "ellipsis",
                               whiteSpace: "nowrap",
+                              textAlign: "left"
                             }}
                           >
-                            <Text size={isTiny ? "8px" : "xs"} color="lightblue">
-                              {name}
-                            </Text>
-                          </Table.Td>
-                          <Table.Td>
-                            <Flex align-items="center" gap="4">
-                              <IconArrowBarUp size={isTiny ? "8" : "16"} color="lightgreen" />
-                              <Text size={isTiny ? "8px" : "xs"} color="lightgreen">
-                                {formatBitsPerSec(transmit, 2)}
-                              </Text>
-                            </Flex>
-                          </Table.Td>
-                          <Table.Td>
-                            <Flex align-items="center" gap="4">
-                              <IconArrowBarDown size={isTiny ? "8" : "16"} color="yellow" />
-                              <Text size={isTiny ? "8px" : "xs"} color="yellow">
-                                {formatBitsPerSec(receive, 2)}
-                              </Text>
-                            </Flex>
-                          </Table.Td>
-                        </Table.Tr>
-                      ))
-                    ) : (
-                      <Table.Tr></Table.Tr>
-                    )}
-                  </Table.Tbody>
-                </Table>
+                            {name}
+                          </Text>
+                        </Flex>
+                        <Flex
+                          align="center"
+                          gap="4"
+                          w={isTiny ? "100%" : "33%"}
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          <IconArrowBarUp size={isTiny ? "8" : "16"} color="lightgreen" />
+                          <Text
+                            size="xs"
+                            color="lightgreen"
+                            style={{ textAlign: "left" }}
+                          >
+                            {formatBitsPerSec(transmit, 2)}
+                          </Text>
+                        </Flex>
+                        <Flex
+                          align="center"
+                          gap="4"
+                          w={isTiny ? "100%" : "33%"}
+                          style={{ justifyContent: "flex-start" }}
+                        >
+                          <IconArrowBarDown size={isTiny ? "8" : "16"} color="yellow" />
+                          <Text
+                            size="xs"
+                            color="yellow"
+                            style={{ textAlign: "left" }}
+                          >
+                            {formatBitsPerSec(receive, 2)}
+                          </Text>
+                        </Flex>
+                      </Flex>
+                    ))
+                  ) : (
+                    <Box>No data available</Box>
+                  )}
+                </Flex>
+
               ))}
           </Accordion.Panel>
         </Accordion.Item>

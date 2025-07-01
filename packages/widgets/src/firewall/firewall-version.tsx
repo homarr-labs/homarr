@@ -20,7 +20,7 @@ export interface FirewallIntegration {
 
 export const FirewallVersion = ({ firewallsVersionData, selectedFirewall, isTiny }: FirewallVersionProps) => (
   <Box>
-    <Badge autoContrast variant="outline" color="white" size={isTiny ? "8px" : "xs"}>
+    <Badge autoContrast variant="outline" color="lightgray" size={isTiny ? "8px" : "xs"} style={{ minHeight: "30px" }}>
       {firewallsVersionData
         .filter(({ integration }) => integration.id === selectedFirewall)
         .map(({ summary, integration }) => (

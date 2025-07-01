@@ -16,12 +16,13 @@ export const FirewallMenu = ({ onChange, isTiny, dropdownItems, selectedFirewall
       value={selectedFirewall}
       onChange={onChange}
       size={isTiny ? "8px" : "xs"}
-      color="white"
+      color="lightgray"
       data={dropdownItems}
       styles={{
         input: {
-          border: "2px solid white",
+          border: "2px solid lightgray",
           borderRadius: "10px",
+          minHeight: "30px",
         },
       }}
     />
