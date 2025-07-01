@@ -54,7 +54,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   const form = useZodForm(formSchema, {
     initialValues: {
       name: searchParams.name ?? getIntegrationName(searchParams.kind),
-      url: searchParams.url ?? getIntegrationDefaultUrl(searchParams.kind),
+      url: searchParams.url ?? getIntegrationDefaultUrl(searchParams.kind) ?? "",
       secrets: secretKinds[0].map((kind) => ({
         kind,
         value: "",

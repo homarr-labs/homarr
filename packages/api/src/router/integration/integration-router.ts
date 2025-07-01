@@ -155,10 +155,7 @@ export const integrationRouter = createTRPCRouter({
             ),
           },
         },
-        where: inArray(
-          integrations.kind,
-          intergrationKinds
-        ),
+        where: inArray(integrations.kind, intergrationKinds),
       });
       return integrationsFromDb
         .map((integration) => {

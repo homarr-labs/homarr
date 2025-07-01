@@ -229,7 +229,7 @@ export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOn
 
 export const getIntegrationDefaultUrl = (integration: IntegrationKind) => {
   const definition = integrationDefs[integration];
-  return "defaultUrl" in definition ? definition.defaultUrl : "";
+  return "defaultUrl" in definition ? definition.defaultUrl : undefined;
 };
 
 /**
@@ -278,4 +278,4 @@ export const IntegrationCategories = [
   "notifications",
 ] as const;
 
-export type IntegrationCategory = typeof IntegrationCategories[number];
+export type IntegrationCategory = (typeof IntegrationCategories)[number];
