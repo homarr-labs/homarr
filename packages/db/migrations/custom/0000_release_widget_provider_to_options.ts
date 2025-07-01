@@ -2,8 +2,9 @@
 import SuperJSON from "superjson";
 
 import type { IntegrationKind } from "@homarr/definitions";
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
-import { eq, or } from "../..";
+import { eq } from "../..";
 import type { Database } from "../..";
 import { items } from "../../schema";
 
@@ -12,8 +13,9 @@ export async function migrateReleaseWidgetProviderToOptionsAsync(db: Database) {
     where: (items, { eq }) => eq(items.kind, "releases"),
   });
 
+  const integrationKinds = getIntegrationKindsByCategory("releasesProvider");
   const providerIntegrations = await db.query.integrations.findMany({
-    where: (integrations, { eq }) => or(eq(integrations.kind, "github"), eq(integrations.kind, "gitlab")),
+    where: (integrations, { inArray }) => inArray(integrations.kind, integrationKinds),
     columns: {
       id: true,
       kind: true,
@@ -36,11 +38,16 @@ export async function migrateReleaseWidgetProviderToOptionsAsync(db: Database) {
     if (!options.repositories.some((repository) => "providerKey" in repository)) continue;
 
     const updatedRepositories = options.repositories.map(
-      ({ providerKey, ...otherFields }: { providerKey: IntegrationKind; [key: string]: unknown }) => ({
+      ({ providerKey, ...otherFields }: { providerKey: string; [key: string]: unknown }) => {
+        // Ensure providerKey is camelCase
+        const provider = providerKey.charAt(0).toLowerCase() + providerKey.slice(1);
+
+        return {
         id: crypto.randomUUID(),
-        providerIntegrationId: providerIntegrationMap.get(providerKey),
+        providerIntegrationId: providerIntegrationMap.get(provider as IntegrationKind) ?? null,
         ...otherFields,
-      }),
+      };
+      },
     );
 
     updates.push({
