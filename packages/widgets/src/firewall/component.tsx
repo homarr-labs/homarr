@@ -117,13 +117,10 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                         key={name}
                         direction={isTiny ? "column" : "row"}
                         style={{
-                          width: "100%"
+                          width: "100%",
                         }}
                       >
-                        <Flex
-                          w={isTiny ? "100%" : "33%"}
-                          style={{ justifyContent: "flex-start" }}
-                        >
+                        <Flex w={isTiny ? "100%" : "33%"} style={{ justifyContent: "flex-start" }}>
                           <Text
                             size="xs"
                             color="lightblue"
@@ -132,7 +129,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                               overflow: "hidden",
                               textOverflow: "ellipsis",
                               whiteSpace: "nowrap",
-                              textAlign: "left"
+                              textAlign: "left",
                             }}
                           >
                             {name}
@@ -145,11 +142,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                           style={{ justifyContent: "flex-start" }}
                         >
                           <IconArrowBarUp size={isTiny ? "8" : "16"} color="lightgreen" />
-                          <Text
-                            size="xs"
-                            color="lightgreen"
-                            style={{ textAlign: "left" }}
-                          >
+                          <Text size="xs" color="lightgreen" style={{ textAlign: "left" }}>
                             {formatBitsPerSec(transmit, 2)}
                           </Text>
                         </Flex>
@@ -160,11 +153,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                           style={{ justifyContent: "flex-start" }}
                         >
                           <IconArrowBarDown size={isTiny ? "8" : "16"} color="yellow" />
-                          <Text
-                            size="xs"
-                            color="yellow"
-                            style={{ textAlign: "left" }}
-                          >
+                          <Text size="xs" color="yellow" style={{ textAlign: "left" }}>
                             {formatBitsPerSec(receive, 2)}
                           </Text>
                         </Flex>
@@ -174,7 +163,6 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                     <Box>No data available</Box>
                   )}
                 </Flex>
-
               ))}
           </Accordion.Panel>
         </Accordion.Item>
