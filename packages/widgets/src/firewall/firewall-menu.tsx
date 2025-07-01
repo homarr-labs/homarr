@@ -1,19 +1,20 @@
+import type { ChangeEvent } from "react";
 import { Box, NativeSelect } from "@mantine/core";
+
 import type { Firewall } from "./component";
 
 interface FirewallMenuProps {
-  opened: void;
-  onSelect: void;
+  onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
   dropdownItems: Firewall[];
-  selectedFirewall: Firewall;
+  selectedFirewall: string;
   isTiny: boolean;
 }
 
-export const FirewallMenu = ({ isTiny, dropdownItems, selectedFirewall}: FirewallMenuProps) => (
+export const FirewallMenu = ({ onChange, isTiny, dropdownItems, selectedFirewall }: FirewallMenuProps) => (
   <Box>
     <NativeSelect
       value={selectedFirewall}
-
+      onChange={onChange}
       size={isTiny ? "8px" : "xs"}
       color="white"
       data={dropdownItems}

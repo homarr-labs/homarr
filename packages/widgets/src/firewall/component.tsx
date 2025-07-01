@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import type { ChangeEvent } from "react";
 import { Accordion, Center, Flex, Group, RingProgress, ScrollArea, Table, Text } from "@mantine/core";
 import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconCpu, IconTopologyBus } from "@tabler/icons-react";
 
@@ -18,8 +19,8 @@ export interface Firewall {
 }
 
 export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
-  const handleSelect = useCallback((firewall: Firewall) => {
-    setSelectedFirewall(firewall);
+  const handleSelect = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedFirewall(event.target.value);
   }, []);
 
   const firewallsCpuData = useUpdatingCpuStatus(integrationIds);
@@ -27,21 +28,11 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
   const firewallsVersionData = useUpdatingVersionStatus(integrationIds);
   const firewallsInterfacesData = useUpdatingInterfacesStatus(integrationIds);
 
-  const initialSelectedFirewall = firewallsVersionData[0] ?? {
-    integration: {
-      id: "default-id",
-      name: "Default Firewall",
-      kind: "opnsense",
-      updatedAt: new Date(),
-    },
-    summary: {
-      version: "0.0.0_0",
-    },
-  };
-
+  const initialSelectedFirewall = firewallsVersionData[0] ? firewallsVersionData[0].integration.id : "undefined";
+  console.log(initialSelectedFirewall);
   const isTiny = width < 256;
 
-  const [selectedFirewall, setSelectedFirewall] = useState<Firewall>(initialSelectedFirewall);
+  const [selectedFirewall, setSelectedFirewall] = useState<string>(initialSelectedFirewall);
   const dropdownItems = firewallsVersionData.map((firewall) => ({
     label: firewall.integration.name,
     value: firewall.integration.id,
@@ -53,7 +44,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
     <ScrollArea h="100%">
       <Group justify="space-between" w="100%" style={{ padding: "8px" }}>
         <FirewallMenu
-          onSelect={handleSelect}
+          onChange={handleSelect}
           selectedFirewall={selectedFirewall}
           dropdownItems={dropdownItems}
           isTiny={isTiny}
@@ -66,7 +57,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
       </Group>
       <Flex justify="center" align="center" wrap="wrap">
         {firewallsCpuData
-          .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
+          .filter(({ integration }) => integration.id === selectedFirewall)
           .map(({ summary, integration }) => (
             <RingProgress
               key={`${integration.name}-cpu`}
@@ -88,7 +79,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
             />
           ))}
         {firewallsMemoryData
-          .filter(({ integration }) => integration.id === selectedFirewall.integration.id)
+          .filter(({ integration }) => integration.id === selectedFirewall)
           .map(({ summary, integration }) => (
             <RingProgress
               key={`${integration.name}-memory`}
@@ -116,48 +107,50 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
             <Text size={isTiny ? "8px" : "xs"}> {t("widget.firewall.widget.interfaces.title")} </Text>
           </Accordion.Control>
           <Accordion.Panel>
-            {firewallsInterfacesData.map(({ integration, summary }) => (
-              <Table verticalSpacing="0px" style={{ padding: "0px" }} key={integration.name} highlightOnHover>
-                <Table.Tbody>
-                  {Array.isArray(summary) && summary.every((item) => Array.isArray(item.data)) ? (
-                    calculateBandwidth(summary).data.map(({ name, receive, transmit }) => (
-                      <Table.Tr key={name}>
-                        <Table.Td
-                          style={{
-                            maxWidth: "100px",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          <Text size={isTiny ? "8px" : "xs"} color="lightblue">
-                            {name}
-                          </Text>
-                        </Table.Td>
-                        <Table.Td>
-                          <Flex align-items="center" gap="4">
-                            <IconArrowBarUp size={isTiny ? "8" : "16"} color="lightgreen" />
-                            <Text size={isTiny ? "8px" : "xs"} color="lightgreen">
-                              {formatBitsPerSec(transmit, 2)}
+            {firewallsInterfacesData
+              .filter(({ integration }) => integration.id === selectedFirewall)
+              .map(({ integration, summary }) => (
+                <Table verticalSpacing="0px" style={{ padding: "0px" }} key={integration.name} highlightOnHover>
+                  <Table.Tbody>
+                    {Array.isArray(summary) && summary.every((item) => Array.isArray(item.data)) ? (
+                      calculateBandwidth(summary).data.map(({ name, receive, transmit }) => (
+                        <Table.Tr key={name}>
+                          <Table.Td
+                            style={{
+                              maxWidth: "100px",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            <Text size={isTiny ? "8px" : "xs"} color="lightblue">
+                              {name}
                             </Text>
-                          </Flex>
-                        </Table.Td>
-                        <Table.Td>
-                          <Flex align-items="center" gap="4">
-                            <IconArrowBarDown size={isTiny ? "8" : "16"} color="yellow" />
-                            <Text size={isTiny ? "8px" : "xs"} color="yellow">
-                              {formatBitsPerSec(receive, 2)}
-                            </Text>
-                          </Flex>
-                        </Table.Td>
-                      </Table.Tr>
-                    ))
-                  ) : (
-                    <Table.Tr></Table.Tr>
-                  )}
-                </Table.Tbody>
-              </Table>
-            ))}
+                          </Table.Td>
+                          <Table.Td>
+                            <Flex align-items="center" gap="4">
+                              <IconArrowBarUp size={isTiny ? "8" : "16"} color="lightgreen" />
+                              <Text size={isTiny ? "8px" : "xs"} color="lightgreen">
+                                {formatBitsPerSec(transmit, 2)}
+                              </Text>
+                            </Flex>
+                          </Table.Td>
+                          <Table.Td>
+                            <Flex align-items="center" gap="4">
+                              <IconArrowBarDown size={isTiny ? "8" : "16"} color="yellow" />
+                              <Text size={isTiny ? "8px" : "xs"} color="yellow">
+                                {formatBitsPerSec(receive, 2)}
+                              </Text>
+                            </Flex>
+                          </Table.Td>
+                        </Table.Tr>
+                      ))
+                    ) : (
+                      <Table.Tr></Table.Tr>
+                    )}
+                  </Table.Tbody>
+                </Table>
+              ))}
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>
