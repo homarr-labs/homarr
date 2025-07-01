@@ -52,7 +52,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-unifi": "^2.5.1",
     "@types/xml2js": "^0.4.14",
-    "eslint": "^9.30.0",
+    "eslint": "^9.30.1",
     "typescript": "^5.8.3"
   }
 }
