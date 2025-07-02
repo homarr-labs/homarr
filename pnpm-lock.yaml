@@ -287,14 +287,14 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       swagger-ui-react:
-        specifier: ^5.25.4
-        version: 5.25.4(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^5.26.0
+        version: 5.26.0(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       use-deep-compare-effect:
         specifier: ^1.8.1
         version: 1.8.1(react@19.1.0)
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -619,10 +619,10 @@ importers:
         version: 2.2.2
       trpc-to-openapi:
         specifier: ^2.3.2
-        version: 2.3.2(@trpc/server@11.4.3(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.25.67))(zod@3.25.67)
+        version: 2.3.2(@trpc/server@11.4.3(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.25.68))(zod@3.25.68)
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -694,8 +694,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -842,11 +842,11 @@ importers:
         specifier: 7.11.0
         version: 7.11.0
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
       zod-validation-error:
         specifier: ^3.5.2
-        version: 3.5.2(zod@3.25.67)
+        version: 3.5.2(zod@3.25.68)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1061,7 +1061,7 @@ importers:
         version: 0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.1)
       drizzle-zod:
         specifier: ^0.7.1
-        version: 0.7.1(drizzle-orm@0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.1))(zod@3.25.67)
+        version: 0.7.1(drizzle-orm@0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.1))(zod@3.25.68)
       mysql2:
         specifier: 3.14.1
         version: 3.14.1
@@ -1106,8 +1106,8 @@ importers:
         specifier: ^5.2.5
         version: 5.2.5
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1163,10 +1163,10 @@ importers:
     dependencies:
       '@t3-oss/env-nextjs':
         specifier: ^0.13.8
-        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.67)
+        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.68)
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1199,8 +1199,8 @@ importers:
         specifier: ^8.1.2
         version: 8.1.2(react@19.1.0)
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1248,8 +1248,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1358,8 +1358,8 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1398,8 +1398,8 @@ importers:
         specifier: 3.17.0
         version: 3.17.0
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1505,8 +1505,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1609,11 +1609,11 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
       zod-form-data:
         specifier: ^2.0.7
-        version: 2.0.7(zod@3.25.67)
+        version: 2.0.7(zod@3.25.68)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1640,8 +1640,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../common
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1935,8 +1935,8 @@ importers:
         specifier: 15.3.4
         version: 15.3.4(@babel/core@7.27.4)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.89.2)
       next-intl:
-        specifier: 4.3.3
-        version: 4.3.3(next@15.3.4(@babel/core@7.27.4)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.89.2))(react@19.1.0)(typescript@5.8.3)
+        specifier: 4.3.4
+        version: 4.3.4(next@15.3.4(@babel/core@7.27.4)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.89.2))(react@19.1.0)(typescript@5.8.3)
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -2030,11 +2030,11 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../translation
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
       zod-form-data:
         specifier: ^2.0.7
-        version: 2.0.7(zod@3.25.67)
+        version: 2.0.7(zod@3.25.68)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -2208,8 +2208,8 @@ importers:
         specifier: ^8.23.3
         version: 8.23.3
       zod:
-        specifier: ^3.25.67
-        version: 3.25.67
+        specifier: ^3.25.68
+        version: 3.25.68
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -8130,8 +8130,8 @@ packages:
       nodemailer:
         optional: true
 
-  next-intl@4.3.3:
-    resolution: {integrity: sha512-KUyTgkp9Ud8yS2J4cs/MbjILFHjW6Ws9oAtxgL4a2Zyy4p5/xMUo69yV0psg4hGWn47dBQlbcDDj3HID3EyoDA==}
+  next-intl@4.3.4:
+    resolution: {integrity: sha512-VWLIDlGbnL/o4LnveJTJD1NOYN8lh3ZAGTWw2krhfgg53as3VsS4jzUVnArJdqvwtlpU/2BIDbWTZ7V4o1jFEw==}
     peerDependencies:
       next: ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc <19.0.0 || ^19.0.0
@@ -9752,8 +9752,8 @@ packages:
   swagger-client@3.35.5:
     resolution: {integrity: sha512-ayCrpDAgm5jIdq1kmcVWJRfp27cqU9tSRiAfKg3BKeplOmvu3+lKTPPtz4x1uI8v5l5/92Aopvq0EzRkXEr7Rw==}
 
-  swagger-ui-react@5.25.4:
-    resolution: {integrity: sha512-BgUXANPkJ2AwJtQ7trwWEiVwvCtg8094zQruTza2747UWpnwc2THIscb3wHDfrzLf/KMP9eZoeJHarM782R3aw==}
+  swagger-ui-react@5.26.0:
+    resolution: {integrity: sha512-4e6bP9bdJyh+SqQW0lxulPn/SDno4+oWrKXsuon5Z9kjtV0zeoWEJ1c70Qxp8kN/c3caFwec8OyxDNhvo14pkw==}
     peerDependencies:
       react: '>=16.8.0 <19'
       react-dom: '>=16.8.0 <19'
@@ -10316,8 +10316,8 @@ packages:
     peerDependencies:
       react: '>=16.13'
 
-  use-intl@4.3.3:
-    resolution: {integrity: sha512-nyaEdN+NhnQW38uMPeB2z74T3+Uxslo9FtBToq3xbv1hxwXpjGfvZHu7BElJaaOaBDv5KQTRuHBbpliP8HZSTA==}
+  use-intl@4.3.4:
+    resolution: {integrity: sha512-sHfiU0QeJ1rirNWRxvCyvlSh9+NczcOzRnPyMeo2rtHXhVnBsvMRjE+UG4eh3lRhCxrvcqei/I0lBxsc59on1w==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || >=19.0.0-rc <19.0.0 || ^19.0.0
 
@@ -10752,8 +10752,8 @@ packages:
     peerDependencies:
       zod: ^3.25.0
 
-  zod@3.25.67:
-    resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
+  zod@3.25.68:
+    resolution: {integrity: sha512-2APbrl2EQHZRaSvpUZNKWKAJNKwG9sNgDqmd+Y2o/C9UmsB2ClDwE9+/cfxPSkwQRV45T3XPNCrXM/scQ/0TTQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -12846,19 +12846,19 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.67)':
+  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.68)':
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.8.3
-      zod: 3.25.67
+      zod: 3.25.68
 
-  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.67)':
+  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.68)':
     dependencies:
-      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.67)
+      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.68)
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.8.3
-      zod: 3.25.67
+      zod: 3.25.68
 
   '@tabler/icons-react@3.34.0(react@19.1.0)':
     dependencies:
@@ -14937,10 +14937,10 @@ snapshots:
       gel: 2.0.0
       mysql2: 3.14.1
 
-  drizzle-zod@0.7.1(drizzle-orm@0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.1))(zod@3.25.67):
+  drizzle-zod@0.7.1(drizzle-orm@0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.1))(zod@3.25.68):
     dependencies:
       drizzle-orm: 0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.1)
-      zod: 3.25.67
+      zod: 3.25.68
 
   dunder-proto@1.0.1:
     dependencies:
@@ -17329,13 +17329,13 @@ snapshots:
       next: 15.3.4(@babel/core@7.27.4)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.89.2)
       react: 19.1.0
 
-  next-intl@4.3.3(next@15.3.4(@babel/core@7.27.4)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.89.2))(react@19.1.0)(typescript@5.8.3):
+  next-intl@4.3.4(next@15.3.4(@babel/core@7.27.4)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.89.2))(react@19.1.0)(typescript@5.8.3):
     dependencies:
       '@formatjs/intl-localematcher': 0.5.5
       negotiator: 1.0.0
       next: 15.3.4(@babel/core@7.27.4)(@playwright/test@1.49.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.89.2)
       react: 19.1.0
-      use-intl: 4.3.3(react@19.1.0)
+      use-intl: 4.3.4(react@19.1.0)
     optionalDependencies:
       typescript: 5.8.3
 
@@ -19239,7 +19239,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  swagger-ui-react@5.25.4(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  swagger-ui-react@5.26.0(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@babel/runtime-corejs3': 7.27.1
       '@scarf/scarf': 1.4.0
@@ -19514,14 +19514,14 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-openapi@2.3.2(@trpc/server@11.4.3(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.25.67))(zod@3.25.67):
+  trpc-to-openapi@2.3.2(@trpc/server@11.4.3(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.25.68))(zod@3.25.68):
     dependencies:
       '@trpc/server': 11.4.3(typescript@5.8.3)
       co-body: 6.2.0
       h3: 1.15.1
       openapi3-ts: 4.4.0
-      zod: 3.25.67
-      zod-openapi: 2.19.0(zod@3.25.67)
+      zod: 3.25.68
+      zod-openapi: 2.19.0(zod@3.25.68)
     optionalDependencies:
       '@rollup/rollup-linux-x64-gnu': 4.6.1
 
@@ -19895,7 +19895,7 @@ snapshots:
       dequal: 2.0.3
       react: 19.1.0
 
-  use-intl@4.3.3(react@19.1.0):
+  use-intl@4.3.4(react@19.1.0):
     dependencies:
       '@formatjs/fast-memoize': 2.2.1
       '@schummar/icu-type-parser': 1.21.5
@@ -20371,19 +20371,19 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-form-data@2.0.7(zod@3.25.67):
+  zod-form-data@2.0.7(zod@3.25.68):
     dependencies:
       '@rvf/set-get': 7.0.1
-      zod: 3.25.67
+      zod: 3.25.68
 
-  zod-openapi@2.19.0(zod@3.25.67):
+  zod-openapi@2.19.0(zod@3.25.68):
     dependencies:
-      zod: 3.25.67
+      zod: 3.25.68
 
-  zod-validation-error@3.5.2(zod@3.25.67):
+  zod-validation-error@3.5.2(zod@3.25.68):
     dependencies:
-      zod: 3.25.67
+      zod: 3.25.68
 
-  zod@3.25.67: {}
+  zod@3.25.68: {}
 
   zwitch@2.0.4: {}
