@@ -5,7 +5,6 @@ import type {
   ReleasesResponse,
 } from "./releases-providers-types";
 
-
 export const getLatestRelease = (
   releases: ReleaseProviderResponse[],
   repository: ReleasesRepository,

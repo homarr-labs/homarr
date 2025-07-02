@@ -54,5 +54,5 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
         ),
       }),
     }));
-  }
+  },
 }).withDynamicImport(() => import("./component"));

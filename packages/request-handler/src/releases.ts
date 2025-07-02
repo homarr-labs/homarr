@@ -23,6 +23,6 @@ export const releasesRequestHandler = createCachedIntegrationRequestHandler<
       versionRegex: input.versionRegex,
     });
   },
-  cacheDuration: dayjs.duration(5, "seconds"),
+  cacheDuration: dayjs.duration(5, "minutes"),
   queryKey: "repositoriesReleases",
 });

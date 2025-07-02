@@ -148,7 +148,7 @@ const seedDefaultIntegrationsAsync = async (db: Database) => {
     if (defaultUrl !== undefined) {
       acc.push({
         id: "new",
-        name,
+        name: `${name} Default`,
         url: defaultUrl,
         kind,
       });

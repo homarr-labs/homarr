@@ -2302,7 +2302,7 @@
       "releaseDescription": "Popis vydania",
       "created": "Vytvorené",
       "error": {
-        "label": "",
+        "label": "Chyba",
         "messages": {
           "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia"
         }

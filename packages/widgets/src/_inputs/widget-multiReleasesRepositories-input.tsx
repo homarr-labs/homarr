@@ -36,7 +36,7 @@ import { escapeForRegEx } from "@tiptap/react";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
-import { getIconUrl } from "@homarr/definitions";
+import { getIconUrl, IntegrationKind } from "@homarr/definitions";
 import { findBestIconMatch, IconPicker } from "@homarr/forms-collection";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -617,7 +617,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
 
         if (!source || !identifierImage) return acc;
 
-        const providerKey = source in containerImageToProvider ? containerImageToProvider[source] : "dockerHub";
+        const providerKey = source in containerImageToProviderKind ? containerImageToProviderKind[source] : "dockerHub";
         const integrationId = Object.values(innerProps.integrations).find(
           (integration) => integration.kind === providerKey,
         )?.id;
@@ -761,7 +761,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   size: "xl",
 });
 
-const containerImageToProvider: Record<string, string> = {
+const containerImageToProviderKind: Record<string, IntegrationKind> = {
   "ghcr.io": "github",
   "docker.io": "dockerHub",
 };

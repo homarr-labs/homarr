@@ -20,7 +20,7 @@ import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithUseAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { isDateWithin, splitToChunksWithNItems } from "@homarr/common";
-import { getIconUrl } from "@homarr/definitions";
+import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
@@ -54,13 +54,16 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     [options.newReleaseWithin, options.staleReleaseWithin],
   );
 
-  const integrations = useIntegrationsWithUseAccess().reduce<Record<string, Integration>>((acc, integration) => {
-    acc[integration.id] = {
-      name: integration.name,
-      iconUrl: getIconUrl(integration.kind),
-    };
-    return acc;
-  }, {});
+  const releasesIntegrationKinds = useMemo(() => getIntegrationKindsByCategory("releasesProvider"), []);
+  const integrations = useIntegrationsWithUseAccess()
+    .filter((integration) => integration.kind in releasesIntegrationKinds)
+    .reduce<Record<string, Integration>>((acc, integration) => {
+      acc[integration.id] = {
+        name: integration.name,
+        iconUrl: getIconUrl(integration.kind),
+      };
+      return acc;
+    }, {});
 
   // Group repositories by integration
   const groupedRepositories = useMemo(() => {

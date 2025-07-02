@@ -21,7 +21,13 @@ import { z } from "zod";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
-import { getAllSecretKindOptions, getIconUrl, getIntegrationName, integrationDefs, getIntegrationDefaultUrl } from "@homarr/definitions";
+import {
+  getAllSecretKindOptions,
+  getIconUrl,
+  getIntegrationDefaultUrl,
+  getIntegrationName,
+  integrationDefs,
+} from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -137,7 +143,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   };
 
   const supportsSearchEngine = integrationDefs[searchParams.kind].category.flat().includes("search");
-  const supportsProviders = integrationDefs[searchParams.kind].category.flat().includes("releasesProvider");
+  const supportsReleasesProviders = integrationDefs[searchParams.kind].category.flat().includes("releasesProvider");
 
   return (
     <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
@@ -177,7 +183,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
           />
         )}
 
-        {!supportsProviders && (
+        {!supportsReleasesProviders && (
           <Checkbox
             {...form.getInputProps("createApp", { type: "checkbox" })}
             label={t("integration.field.createApp.label")}

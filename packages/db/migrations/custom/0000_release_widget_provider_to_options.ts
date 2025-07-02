@@ -43,10 +43,10 @@ export async function migrateReleaseWidgetProviderToOptionsAsync(db: Database) {
         const provider = providerKey.charAt(0).toLowerCase() + providerKey.slice(1);
 
         return {
-        id: crypto.randomUUID(),
-        providerIntegrationId: providerIntegrationMap.get(provider as IntegrationKind) ?? null,
-        ...otherFields,
-      };
+          id: crypto.randomUUID(),
+          providerIntegrationId: providerIntegrationMap.get(provider as IntegrationKind) ?? null,
+          ...otherFields,
+        };
       },
     );
 
