@@ -105,37 +105,57 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   );
 
   const repositories = useMemo(() => {
-    const formattedResults = results
-      .flat()
-      .map(({ data }) => {
-        const repository = options.repositories.find((repository) => repository.id === data.id);
+    const formattedResults = options.repositories
+      .map((repository) => {
+        if (repository.providerIntegrationId === undefined) {
+          return {
+            ...repository,
+            isNewRelease: false,
+            isStaleRelease: false,
+            latestReleaseAt: undefined,
+            error: {
+              code: "noProviderSeleceted",
+            },
+          };
+        }
 
-        if (repository === undefined) return undefined;
+        const response = results.flat().find(({ data }) => data.id === repository.id)?.data;
+
+        if (response === undefined)
+          return {
+            ...repository,
+            isNewRelease: false,
+            isStaleRelease: false,
+            latestReleaseAt: undefined,
+            error: {
+              code: "noProviderResponse",
+            },
+          };
 
         return {
           ...repository,
-          ...data,
+          ...response,
           isNewRelease:
-            relativeDateOptions.newReleaseWithin !== "" && data.latestReleaseAt
-              ? isDateWithin(data.latestReleaseAt, relativeDateOptions.newReleaseWithin)
+            relativeDateOptions.newReleaseWithin !== "" && response.latestReleaseAt
+              ? isDateWithin(response.latestReleaseAt, relativeDateOptions.newReleaseWithin)
               : false,
           isStaleRelease:
-            relativeDateOptions.staleReleaseWithin !== "" && data.latestReleaseAt
-              ? !isDateWithin(data.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
+            relativeDateOptions.staleReleaseWithin !== "" && response.latestReleaseAt
+              ? !isDateWithin(response.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
               : false,
         };
       })
       .filter(
         (repository) =>
-          repository !== undefined &&
-          (repository.error !== undefined ||
-            !options.showOnlyHighlighted ||
-            repository.isNewRelease ||
-            repository.isStaleRelease),
+          repository.error !== undefined ||
+          !options.showOnlyHighlighted ||
+          repository.isNewRelease ||
+          repository.isStaleRelease,
       )
       .sort((repoA, repoB) => {
-        if (repoA?.latestReleaseAt === undefined) return 1;
-        if (repoB?.latestReleaseAt === undefined) return -1;
+        if (repoA.error !== undefined && repoB.error === undefined) return -1;
+        if (repoA.latestReleaseAt === undefined) return 1;
+        if (repoB.latestReleaseAt === undefined) return -1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
       }) as ReleasesRepositoryResponse[];
 

@@ -2314,7 +2314,9 @@
         "messages": {
           "invalidIdentifier": "Invalid identifier",
           "noMatchingVersion": "No matching version found",
-          "noReleasesFound": "No releases found"
+          "noReleasesFound": "No releases found",
+          "noProviderSeleceted": "No provider selected",
+          "noProviderResponse": "No response from provider"
         }
       }
     },
