@@ -31,7 +31,7 @@ export const FirewallVersion = ({ firewallsVersionData, selectedFirewall, isTiny
 );
 
 function formatVersion(inputString: string): string {
-  const regex = /(\d+\.\d+\.\d+_\d+)/;
+  const regex = /([\d._]+)/;
   const match = regex.exec(inputString);
   if (match?.[1]) {
     return match[1];
