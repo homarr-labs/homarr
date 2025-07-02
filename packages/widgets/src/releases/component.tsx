@@ -157,9 +157,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
           repository.isStaleRelease,
       )
       .sort((repoA, repoB) => {
-        if (repoA.error !== undefined && repoB.error === undefined) return -1;
-        if (repoA.latestReleaseAt === undefined) return 1;
-        if (repoB.latestReleaseAt === undefined) return -1;
+        if (repoA.latestReleaseAt === undefined) return -1;
+        if (repoB.latestReleaseAt === undefined) return 1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
       }) as ReleasesRepositoryResponse[];
 

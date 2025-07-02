@@ -139,6 +139,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     return new Octokit({
       baseUrl: this.url("/").origin,
       userAgent: GithubIntegration.userAgent,
+      throttle: { enabled: false }, // Disable throttling for this integration, Octokit will retry by default after a set time, thus delaying the repsonse to the user in case of errors. Errors will be shown to the user, no need to retry the request.
       ...(this.hasSecretValue("personalAccessToken") ? { auth: this.getSecretValue("personalAccessToken") } : {}),
     });
   }

@@ -60,7 +60,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
         if (!release.released_at) return acc;
 
         acc.push({
-          latestRelease: release.tag_name,
+          latestRelease: release.name ?? release.tag_name,
           latestReleaseAt: new Date(release.released_at),
           releaseUrl: release._links.self,
           releaseDescription: release.description ?? undefined,
