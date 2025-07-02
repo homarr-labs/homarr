@@ -21,6 +21,7 @@ import { useIntegrationsWithUseAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { isDateWithin, splitToChunksWithNItems } from "@homarr/common";
 import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
@@ -54,9 +55,12 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     [options.newReleaseWithin, options.staleReleaseWithin],
   );
 
-  const releasesIntegrationKinds = useMemo(() => getIntegrationKindsByCategory("releasesProvider"), []);
+  const releasesIntegrationKinds: IntegrationKind[] = useMemo(
+    () => getIntegrationKindsByCategory("releasesProvider"),
+    [],
+  );
   const integrations = useIntegrationsWithUseAccess()
-    .filter((integration) => integration.kind in releasesIntegrationKinds)
+    .filter((integration) => releasesIntegrationKinds.includes(integration.kind))
     .reduce<Record<string, Integration>>((acc, integration) => {
       acc[integration.id] = {
         name: integration.name,
