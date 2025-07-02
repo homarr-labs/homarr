@@ -36,7 +36,7 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
-    "dotenv": "^16.6.1",
+    "dotenv": "^17.0.1",
     "fastify": "^5.4.0",
     "superjson": "2.2.2",
     "undici": "7.11.0"
@@ -45,10 +45,10 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^22.15.35",
+    "@types/node": "^22.16.0",
     "dotenv-cli": "^8.0.0",
     "esbuild": "^0.25.5",
-    "eslint": "^9.30.0",
+    "eslint": "^9.30.1",
     "prettier": "^3.6.2",
     "tsx": "4.20.3",
     "typescript": "^5.8.3"
