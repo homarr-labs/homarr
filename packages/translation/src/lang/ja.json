@@ -1929,7 +1929,7 @@
     },
     "downloads": {
       "name": "クライアントをダウンロード",
-      "description": "",
+      "description": "Torrent クライアントと Usenet クライアントの両方から、ダウンロードを表示および管理できます。",
       "option": {
         "columns": {
           "label": ""
