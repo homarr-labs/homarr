@@ -9,7 +9,7 @@ export class MediaRequestMockService implements IMediaRequestIntegration {
     return await Promise.resolve({
       id,
       overview: `Overview of media ${id}`,
-      posterPath: "/images/mock/the-mandalorian-poster.jpg",
+      posterPath: "https://image.tmdb.org/t/p/original/ztvm7C7hiUpS3CZRXFmJxljICzK.jpg",
       seasons:
         mediaType === "tv"
           ? Array.from({ length: 3 }, (_, seasonIndex) => ({
@@ -69,8 +69,8 @@ export class MediaRequestMockService implements IMediaRequestIntegration {
       id: index,
       name: `Media Request ${index}`,
       availability: this.randomAvailability(),
-      backdropImageUrl: "/images/mock/the-mandalorian-poster.jpg",
-      posterImagePath: "/images/mock/the-mandalorian-poster.jpg",
+      backdropImageUrl: "https://image.tmdb.org/t/p/original/ztvm7C7hiUpS3CZRXFmJxljICzK.jpg",
+      posterImagePath: "https://image.tmdb.org/t/p/original/ztvm7C7hiUpS3CZRXFmJxljICzK.jpg",
       createdAt: new Date(),
       airDate: new Date(Date.now() + (Math.random() - 0.5) * 1000 * 60 * 60 * 24 * 365 * 4),
       status: this.randomStatus(),
