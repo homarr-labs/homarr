@@ -1,6 +1,6 @@
 "use client";
 
-import { Center, Flex, Image, Stack, Text, Title } from "@mantine/core";
+import { Center, Flex, Image, Stack, Text } from "@mantine/core";
 import selectn from "selectn";
 
 import { clientApi } from "@homarr/api/client";
