@@ -124,6 +124,9 @@ importers:
       '@homarr/docker':
         specifier: workspace:^0.1.0
         version: link:../../packages/docker
+      '@homarr/env':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/env
       '@homarr/form':
         specifier: workspace:^0.1.0
         version: link:../../packages/form
