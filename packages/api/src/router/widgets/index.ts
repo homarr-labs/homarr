@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "../../trpc";
 import { appRouter } from "./app";
 import { calendarRouter } from "./calendar";
+import { customApiRouter } from "./custom-api";
 import { dnsHoleRouter } from "./dns-hole";
 import { downloadsRouter } from "./downloads";
 import { healthMonitoringRouter } from "./health-monitoring";
@@ -34,6 +35,7 @@ export const widgetRouter = createTRPCRouter({
   indexerManager: indexerManagerRouter,
   healthMonitoring: healthMonitoringRouter,
   mediaTranscoding: mediaTranscodingRouter,
+  customApi: customApiRouter,
   minecraft: minecraftRouter,
   options: optionsRouter,
   releases: releasesRouter,

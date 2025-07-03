@@ -1651,6 +1651,42 @@
         }
       }
     },
+    "customApi": {
+      "name": "Custom API",
+      "description": "Display data from an external API",
+      "option": {
+        "icon": {
+          "label": "Icon URL"
+        },
+        "iconCSS": {
+          "label": "Icon CSS styles",
+          "description": "Use inline CSS to style the icon e.g. filter: grayscale(100%);"
+        },
+        "url": {
+          "label": "URL"
+        },
+        "method": {
+          "label": "Method",
+          "option": {
+            "get": {
+              "label": "GET"
+            },
+            "post": {
+              "label": "POST"
+            }
+          }
+        },
+        "headerName": {
+          "label": "Header name"
+        },
+        "headerValue": {
+          "label": "Header value"
+        },
+        "filter": {
+          "label": "Filter"
+        }
+      }
+    },
     "calendar": {
       "name": "Calendar",
       "description": "Display events from your integrations in a calendar view within a certain relative time period",
