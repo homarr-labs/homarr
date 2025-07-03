@@ -1,12 +1,14 @@
 {
-  "name": "@homarr/cron-job-runner",
+  "name": "@homarr/cron-job-api",
   "version": "0.1.0",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts",
-    "./register": "./src/register.ts"
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts",
+    "./constants": "./src/constants.ts",
+    "./client": "./src/client.ts"
   },
   "typesVersions": {
     "*": {
@@ -25,14 +27,22 @@
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
+    "@homarr/env": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
-    "@homarr/redis": "workspace:^0.1.0",
-    "@homarr/validation": "workspace:^0.1.0"
+    "@tanstack/react-query": "^5.81.5",
+    "@trpc/client": "^11.4.3",
+    "@trpc/server": "^11.4.3",
+    "@trpc/tanstack-react-query": "^11.4.3",
+    "node-cron": "^4.2.0",
+    "react": "19.1.0",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/node-cron": "^3.0.11",
+    "@types/react": "19.1.8",
     "eslint": "^9.30.1",
     "typescript": "^5.8.3"
   }

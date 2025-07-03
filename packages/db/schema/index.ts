@@ -40,6 +40,7 @@ export const {
   itemLayouts,
   sectionLayouts,
   trustedCertificateHostnames,
+  cronJobConfigurations,
 } = schema;
 
 export type User = InferSelectModel<typeof schema.users>;
