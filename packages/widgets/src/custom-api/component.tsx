@@ -7,6 +7,21 @@ import { clientApi } from "@homarr/api/client";
 
 import type { WidgetComponentProps } from "../definition";
 
+function parseInlineCSS(cssString: string): React.CSSProperties {
+  const style: React.CSSProperties = {};
+
+  cssString.split(";").forEach((rule) => {
+    const [property, value] = rule.split(":").map((s) => s?.trim());
+
+    if (property && value) {
+      const camelProperty = property.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+      (style as Record<string, string | number>)[camelProperty] = value;
+    }
+  });
+
+  return style;
+}
+
 export default function CustomApiWidget({ options, width }: WidgetComponentProps<"customApi">) {
   if (!options.url) {
     throw new Error("URL is required");
@@ -27,11 +42,6 @@ export default function CustomApiWidget({ options, width }: WidgetComponentProps
 
   return (
     <Center h="100%" w="100%">
-      {options.title && (
-        <Title pos="absolute" top={10} left={10} ta="center" order={width > 280 ? 3 : 4}>
-          {options.title}
-        </Title>
-      )}
       {options.icon && (
         <Image
           src={String(options.icon)}
@@ -42,11 +52,11 @@ export default function CustomApiWidget({ options, width }: WidgetComponentProps
           h={width > 280 ? "xl" : "lg"}
           style={{
             borderRadius: "100%",
+            ...(options.iconCSS ? parseInlineCSS(options.iconCSS) : {}),
           }}
         />
       )}
       <Stack align="center" justify="center" gap="md">
-        <Flex direction="row" align="center" gap="lg"></Flex>
         <Text ta="center">{String(value)}</Text>
       </Stack>
     </Center>
