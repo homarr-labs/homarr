@@ -170,6 +170,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
     category: ["networkController"],
   },
+  opnsense: {
+    name: "OPNsense",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg",
+    category: ["firewall"],
+  },
   ntfy: {
     name: "ntfy",
     secretKinds: [["topic"], ["topic", "apiKey"]],
@@ -231,4 +237,5 @@ export type IntegrationCategory =
   | "search"
   | "mediaTranscoding"
   | "networkController"
+  | "firewall"
   | "notifications";

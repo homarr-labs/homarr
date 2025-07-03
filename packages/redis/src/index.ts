@@ -7,6 +7,7 @@ export {
   createIntegrationOptionsChannel,
   createWidgetOptionsChannel,
   createChannelWithLatestAndEvents,
+  createChannelEventHistory,
   handshakeAsync,
   createSubPubChannel,
   createGetSetChannel,
