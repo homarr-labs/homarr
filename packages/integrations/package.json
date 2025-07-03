@@ -44,7 +44,7 @@
     "tsdav": "^2.1.5",
     "undici": "7.11.0",
     "xml2js": "^0.6.2",
-    "zod": "^3.25.67"
+    "zod": "^3.25.71"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -52,7 +52,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-unifi": "^2.5.1",
     "@types/xml2js": "^0.4.14",
-    "eslint": "^9.30.0",
+    "eslint": "^9.30.1",
     "typescript": "^5.8.3"
   }
 }

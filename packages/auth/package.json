@@ -34,12 +34,12 @@
     "@homarr/validation": "workspace:^0.1.0",
     "bcrypt": "^6.0.0",
     "cookies": "^0.9.1",
-    "ldapts": "8.0.2",
+    "ldapts": "8.0.4",
     "next": "15.3.4",
     "next-auth": "5.0.0-beta.29",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "zod": "^3.25.67"
+    "zod": "^3.25.71"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -47,7 +47,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/bcrypt": "5.0.2",
     "@types/cookies": "0.9.1",
-    "eslint": "^9.30.0",
+    "eslint": "^9.30.1",
     "prettier": "^3.6.2",
     "typescript": "^5.8.3"
   }

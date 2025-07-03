@@ -24,7 +24,7 @@
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
-    "@homarr/cron-job-runner": "workspace:^0.1.0",
+    "@homarr/cron-job-api": "workspace:^0.1.0",
     "@homarr/cron-job-status": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
@@ -51,14 +51,14 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "superjson": "2.2.2",
-    "trpc-to-openapi": "^2.3.1",
-    "zod": "^3.25.67"
+    "trpc-to-openapi": "^2.3.2",
+    "zod": "^3.25.71"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.30.0",
+    "eslint": "^9.30.1",
     "prettier": "^3.6.2",
     "typescript": "^5.8.3"
   }

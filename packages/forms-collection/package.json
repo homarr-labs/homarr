@@ -31,13 +31,13 @@
     "@homarr/validation": "workspace:^0.1.0",
     "@mantine/core": "^8.1.2",
     "react": "19.1.0",
-    "zod": "^3.25.67"
+    "zod": "^3.25.71"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.30.0",
+    "eslint": "^9.30.1",
     "typescript": "^5.8.3"
   }
 }
