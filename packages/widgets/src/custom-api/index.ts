@@ -7,11 +7,12 @@ export const { definition, componentLoader } = createWidgetDefinition("customApi
   icon: IconWorldWww,
   createOptions() {
     return optionsBuilder.from((factory) => ({
-      title: factory.text({
-        defaultValue: "IP Address",
-      }),
       icon: factory.text({
         defaultValue: "",
+      }),
+      iconCSS: factory.text({
+        defaultValue: "",
+        withDescription: true,
       }),
       url: factory.text({
         defaultValue: "https://api.ipify.org?format=json",
