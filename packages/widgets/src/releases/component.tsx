@@ -45,7 +45,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const now = useNow();
   const formatter = useFormatter();
   const board = useRequiredBoard();
-  const [expandedRepositoryId, setExpandedRepositoryId] = useState("");
+  const [expandedRepositoryId, setExpandedRepositoryId] = useState<string | null>(null);
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
   const relativeDateOptions = useMemo(
     () => ({
