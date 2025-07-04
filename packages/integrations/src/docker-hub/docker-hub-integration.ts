@@ -1,11 +1,14 @@
-import type { RequestInit } from "undici";
+import type { RequestInit, fetch as undiciFetch, Response as UndiciResponse } from "undici";
 import { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ResponseError } from "@homarr/common/server";
 import { logger } from "@homarr/log";
 
-import type { IntegrationTestingInput } from "../base/integration";
+import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import type { SessionStore } from "../base/session-store";
+import { createSessionStore } from "../base/session-store";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
@@ -15,63 +18,56 @@ import type {
   ReleasesRepository,
   ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
+import { accessTokenResponseSchema } from "./docker-hub-schemas";
+
+const localLogger = logger.child({ module: "DockerHubIntegration" });
 
 export class DockerHubIntegration extends Integration implements ReleasesProviderIntegration {
-  protected async buildHeadersAsync(): Promise<RequestInit["headers"]> {
-    if (!this.hasSecretValue("username") || !this.hasSecretValue("personalAccessToken")) return {};
+  private readonly sessionStore: SessionStore<string>;
 
-    // Request auth token
-    const accessTokenResponse = await fetchWithTrustedCertificatesAsync(this.url("/v2/auth/token"), {
-      method: "POST",
-      body: JSON.stringify({
-        identifier: this.getSecretValue("username"),
-        secret: this.getSecretValue("personalAccessToken"),
-      }),
+  constructor(integration: IntegrationInput) {
+    super(integration);
+    this.sessionStore = createSessionStore(integration);
+  }
+
+  private async withHeadersAsync(
+    callback: (headers: RequestInit["headers"]) => Promise<UndiciResponse>,
+  ): Promise<UndiciResponse> {
+    if (!this.hasSecretValue("username") || !this.hasSecretValue("personalAccessToken")) return await callback({});
+
+    const storedSession = await this.sessionStore.getAsync();
+
+    if (storedSession) {
+      localLogger.debug("Using stored session for request", { integrationId: this.integration.id });
+      const response = await callback({
+        Authorization: `Bearer ${storedSession}`,
+      });
+      if (response.status !== 401) {
+        return response;
+      }
+
+      localLogger.info("Session expired, getting new session", { integrationId: this.integration.id });
+    }
+
+    const accessToken = await this.getSessionAsync();
+    await this.sessionStore.setAsync(accessToken);
+    return await callback({
+      Authorization: `Bearer ${accessToken}`,
     });
-
-    if (!accessTokenResponse.ok) {
-      logger.warn("Failed to fetch access token for Docker Hub", {
-        status: accessTokenResponse.status,
-        statusText: accessTokenResponse.statusText,
-      });
-      return {};
-    }
-
-    // Parse response
-    const accessTokenResponseJson: unknown = await accessTokenResponse.json();
-    const accessTokenResult = z
-      .object({
-        access_token: z.string(),
-      })
-      .safeParse(accessTokenResponseJson);
-
-    if (!accessTokenResult.success || !accessTokenResult.data.access_token) {
-      logger.warn("Failed to parse access token response for Docker Hub", {
-        error: accessTokenResult.error,
-        response: accessTokenResponseJson,
-      });
-      return {};
-    }
-
-    return {
-      Authorization: `Bearer ${accessTokenResult.data.access_token}`,
-    };
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const hasAuth = this.hasSecretValue("username") && this.hasSecretValue("personalAccessToken");
-    const response = hasAuth
-      ? await input.fetchAsync(this.url("/v2/auth/token"), {
-          method: "POST",
-          body: JSON.stringify({
-            identifier: this.getSecretValue("username"),
-            secret: this.getSecretValue("personalAccessToken"),
-          }),
-        })
-      : await input.fetchAsync(this.url("/v2/repositories/library"));
 
-    if (!response.ok) {
-      return TestConnectionError.StatusResult(response);
+    if (hasAuth) {
+      localLogger.debug("Testing DockerHub connection with authentication", { integrationId: this.integration.id });
+      await this.getSessionAsync(input.fetchAsync);
+    } else {
+      localLogger.debug("Testing DockerHub connection without authentication", { integrationId: this.integration.id });
+      const response = await input.fetchAsync(this.url("/v2/repositories/library"));
+      if (!response.ok) {
+        return TestConnectionError.StatusResult(response);
+      }
     }
 
     return {
@@ -82,7 +78,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
   public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
     const relativeUrl = this.getRelativeUrl(repository.identifier);
     if (relativeUrl === "/") {
-      logger.warn(
+      localLogger.warn(
         `Invalid identifier format. Expected 'owner/name' or 'name', for ${repository.identifier} on DockerHub`,
         {
           identifier: repository.identifier,
@@ -94,11 +90,12 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
       };
     }
 
-    const headers = await this.buildHeadersAsync();
-    const details = await this.getDetailsAsync(relativeUrl, headers);
+    const details = await this.getDetailsAsync(relativeUrl);
 
-    const releasesResponse = await fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/tags?page_size=100`), {
-      headers,
+    const releasesResponse = await this.withHeadersAsync(async (headers) => {
+      return fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/tags?page_size=100`), {
+        headers,
+      });
     });
 
     if (!releasesResponse.ok) {
@@ -134,16 +131,15 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     }
   }
 
-  protected async getDetailsAsync(
-    relativeUrl: `/${string}`,
-    headers: RequestInit["headers"],
-  ): Promise<DetailsProviderResponse | undefined> {
-    const response = await fetchWithTrustedCertificatesAsync(this.url(relativeUrl), {
-      headers,
+  private async getDetailsAsync(relativeUrl: `/${string}`): Promise<DetailsProviderResponse | undefined> {
+    const response = await this.withHeadersAsync(async (headers) => {
+      return fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/`), {
+        headers,
+      });
     });
 
     if (!response.ok) {
-      logger.warn(`Failed to get details response for ${relativeUrl} with DockerHub integration`, {
+      localLogger.warn(`Failed to get details response for ${relativeUrl} with DockerHub integration`, {
         relativeUrl,
         error: response.statusText,
       });
@@ -169,7 +165,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
       .safeParse(responseJson);
 
     if (!parsedDetails.success) {
-      logger.warn(`Failed to parse details response for ${relativeUrl} with DockerHub integration`, {
+      localLogger.warn(`Failed to parse details response for ${relativeUrl} with DockerHub integration`, {
         relativeUrl,
         error: parsedDetails.error,
       });
@@ -180,7 +176,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     return parsedDetails.data;
   }
 
-  protected getRelativeUrl(identifier: string): `/${string}` {
+  private getRelativeUrl(identifier: string): `/${string}` {
     if (identifier.indexOf("/") > 0) {
       const [owner, name] = identifier.split("/");
       if (!owner || !name) {
@@ -190,5 +186,28 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     } else {
       return `/v2/repositories/library/${encodeURIComponent(identifier)}`;
     }
+  }
+
+  private async getSessionAsync(fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync): Promise<string> {
+    const response = await fetchAsync(this.url("/v2/auth/token"), {
+      method: "POST",
+      body: JSON.stringify({
+        identifier: this.getSecretValue("username"),
+        secret: this.getSecretValue("personalAccessToken"),
+      }),
+    });
+
+    if (!response.ok) throw new ResponseError(response);
+
+    const data = await response.json();
+    const result = await accessTokenResponseSchema.parseAsync(data);
+
+    if (!result.access_token) {
+      throw new ResponseError({ status: 401, url: response.url });
+    }
+
+    localLogger.info("Received session successfully", { integrationId: this.integration.id });
+
+    return result.access_token;
   }
 }
