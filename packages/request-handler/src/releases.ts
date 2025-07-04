@@ -17,7 +17,7 @@ export const releasesRequestHandler = createCachedIntegrationRequestHandler<
 >({
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
-    return await integrationInstance.getReleaseAsync({
+    return await integrationInstance.getLatestMatchingReleaseAsync({
       id: input.id,
       identifier: input.identifier,
       versionRegex: input.versionRegex,

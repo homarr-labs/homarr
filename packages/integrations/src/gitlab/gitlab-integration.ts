@@ -35,7 +35,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
     };
   }
 
-  public async getReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
+  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
     const api = this.getApi();
 
     const details = await this.getDetailsAsync(api, repository.identifier);

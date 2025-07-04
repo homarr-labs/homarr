@@ -23,7 +23,7 @@ export class NPMIntegration extends Integration implements ReleasesProviderInteg
     };
   }
 
-  public async getReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
+  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
     const releasesResponse = await fetchWithTrustedCertificatesAsync(
       this.url(`/${encodeURIComponent(repository.identifier)}`),
     );

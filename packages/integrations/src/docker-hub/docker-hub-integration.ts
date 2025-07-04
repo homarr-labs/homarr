@@ -79,7 +79,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     };
   }
 
-  public async getReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
+  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
     const relativeUrl = this.getRelativeUrl(repository.identifier);
     if (relativeUrl === "/") {
       logger.warn(

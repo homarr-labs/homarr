@@ -43,5 +43,5 @@ export const getLatestRelease = (
 };
 
 export interface ReleasesProviderIntegration {
-  getReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse>;
+  getLatestMatchingReleaseAsync (repository: ReleasesRepository): Promise<ReleasesResponse>;
 }

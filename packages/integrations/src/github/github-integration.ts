@@ -39,7 +39,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     };
   }
 
-  public async getReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
+  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
     const [owner, name] = repository.identifier.split("/");
     if (!owner || !name) {
       logger.warn(
