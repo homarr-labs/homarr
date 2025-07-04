@@ -2,6 +2,7 @@ import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
 import { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ResponseError } from "@homarr/common/server";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -9,6 +10,7 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/session";
 import { convertJellyfinType } from "../jellyfin/jellyfin-integration";
+import type { IMediaReleasesIntegration, MediaRelease } from "../types";
 
 const sessionSchema = z.object({
   NowPlayingItem: z
@@ -30,7 +32,34 @@ const sessionSchema = z.object({
   UserName: z.string().nullish(),
 });
 
-export class EmbyIntegration extends Integration {
+const itemSchema = z.object({
+  Id: z.string(),
+  ServerId: z.string(),
+  Name: z.string(),
+  Taglines: z.array(z.string()),
+  Studios: z.array(z.object({ Name: z.string() })),
+  Overview: z.string().optional(),
+  PremiereDate: z
+    .string()
+    .datetime()
+    .transform((date) => new Date(date))
+    .optional(),
+  DateCreated: z
+    .string()
+    .datetime()
+    .transform((date) => new Date(date)),
+  Genres: z.array(z.string()),
+  CommunityRating: z.number().optional(),
+  RunTimeTicks: z.number(),
+  Type: z.string(), // for example "Movie"
+});
+
+const userSchema = z.object({
+  Id: z.string(),
+  Name: z.string(),
+});
+
+export class EmbyIntegration extends Integration implements IMediaReleasesIntegration {
   private static readonly apiKeyHeader = "X-Emby-Token";
   private static readonly deviceId = "homarr-emby-integration";
   private static readonly authorizationHeaderValue = `Emby Client="Dashboard", Device="Homarr", DeviceId="${EmbyIntegration.deviceId}", Version="0.0.1"`;
@@ -101,5 +130,70 @@ export class EmbyIntegration extends Integration {
           currentlyPlaying,
         };
       });
+  }
+
+  public async getMediaReleasesAsync(): Promise<MediaRelease[]> {
+    const limit = 100;
+    const users = await this.fetchUsersPublicAsync();
+    const userId = users.at(0)?.id;
+    if (!userId) {
+      throw new Error("No users found");
+    }
+
+    const apiKey = super.getSecretValue("apiKey");
+    const response = await fetchWithTrustedCertificatesAsync(
+      super.url(
+        `/Users/${userId}/Items/Latest?Limit=${limit}&Fields=CommunityRating,Studios,PremiereDate,Genres,ChildCount,ProductionYear,DateCreated,Overview,Taglines`,
+      ),
+      {
+        headers: {
+          [EmbyIntegration.apiKeyHeader]: apiKey,
+          Authorization: EmbyIntegration.authorizationHeaderValue,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    const items = z.array(itemSchema).parse(await response.json());
+
+    return items.map((item) => ({
+      id: item.Id,
+      type: item.Type === "Movie" ? "movie" : item.Type === "Series" ? "tv" : "unknown",
+      title: item.Name,
+      subtitle: item.Taglines.at(0),
+      description: item.Overview,
+      releaseDate: item.PremiereDate ?? item.DateCreated,
+      imageUrls: {
+        poster: super.url(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`).toString(),
+        backdrop: super.url(`/Items/${item.Id}/Images/Backdrop/0?maxWidth=960&quality=70`).toString(),
+      },
+      producer: item.Studios.at(0)?.Name,
+      rating: item.CommunityRating?.toFixed(1),
+      tags: item.Genres,
+      href: super.url(`/web/index.html#!/item?id=${item.Id}&serverId=${item.ServerId}`).toString(),
+    }));
+  }
+
+  // https://dev.emby.media/reference/RestAPI/UserService/getUsersPublic.html
+  private async fetchUsersPublicAsync(): Promise<{ id: string; name: string }[]> {
+    const apiKey = super.getSecretValue("apiKey");
+    const response = await fetchWithTrustedCertificatesAsync(super.url("/Users/Public"), {
+      headers: {
+        [EmbyIntegration.apiKeyHeader]: apiKey,
+        Authorization: EmbyIntegration.authorizationHeaderValue,
+      },
+    });
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+    const users = z.array(userSchema).parse(await response.json());
+
+    return users.map((user) => ({
+      id: user.Id,
+      name: user.Name,
+    }));
   }
 }
