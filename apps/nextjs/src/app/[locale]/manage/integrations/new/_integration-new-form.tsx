@@ -143,7 +143,6 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   };
 
   const supportsSearchEngine = integrationDefs[searchParams.kind].category.flat().includes("search");
-  const supportsReleasesProviders = integrationDefs[searchParams.kind].category.flat().includes("releasesProvider");
 
   return (
     <form onSubmit={form.onSubmit((value) => void handleSubmitAsync(value))}>
@@ -183,13 +182,11 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
           />
         )}
 
-        {!supportsReleasesProviders && (
-          <Checkbox
-            {...form.getInputProps("createApp", { type: "checkbox" })}
-            label={t("integration.field.createApp.label")}
-            description={t("integration.field.createApp.description")}
-          />
-        )}
+        <Checkbox
+          {...form.getInputProps("createApp", { type: "checkbox" })}
+          label={t("integration.field.createApp.label")}
+          description={t("integration.field.createApp.description")}
+        />
 
         <Collapse in={opened}>
           <TextInput placeholder={t("integration.field.appHref.placeholder")} {...form.getInputProps("appHref")} />
