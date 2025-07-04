@@ -96,7 +96,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
         return undefined;
       }
 
-      if (!response.web_url || typeof response.web_url !== "string") {
+      if (!response.web_url) {
         logger.warn(`No web URL found for ${identifier} with Gitlab integration`, {
           identifier,
         });
@@ -108,10 +108,10 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
         projectDescription: response.description,
         isFork: response.forked_from_project !== null,
         isArchived: response.archived,
-        createdAt: typeof response.created_at === "string" ? new Date(response.created_at) : undefined,
-        starsCount: typeof response.star_count === "number" ? response.star_count : undefined,
-        openIssues: typeof response.open_issues_count === "number" ? response.open_issues_count : undefined,
-        forksCount: typeof response.forks_count === "number" ? response.forks_count : undefined,
+        createdAt: new Date(response.created_at),
+        starsCount: response.star_count,
+        openIssues: response.open_issues_count,
+        forksCount: response.forks_count,
       };
     } catch (error) {
       logger.warn(`Failed to get details for ${identifier} with Gitlab integration`, {
