@@ -1,4 +1,3 @@
-// TODO: add dependency
 import SuperJSON from "superjson";
 
 import type { IntegrationKind } from "@homarr/definitions";
