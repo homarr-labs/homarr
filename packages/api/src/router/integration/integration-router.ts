@@ -19,7 +19,7 @@ import {
   getIconUrl,
   getIntegrationKindsByCategory,
   getPermissionsWithParents,
-  IntegrationCategories,
+  integrationCategories,
   integrationDefs,
   integrationKinds,
   integrationSecretKindObject,
@@ -133,7 +133,7 @@ export const integrationRouter = createTRPCRouter({
   allOfGivenCategory: publicProcedure
     .input(
       z.object({
-        category: z.enum(IntegrationCategories),
+        category: z.enum(integrationCategories),
       }),
     )
     .query(async ({ ctx, input }) => {

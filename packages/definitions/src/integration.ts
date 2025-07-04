@@ -277,7 +277,7 @@ export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
 export type IntegrationSecretKind = keyof typeof integrationSecretKindObject;
 export type IntegrationKind = keyof typeof integrationDefs;
 
-export const IntegrationCategories = [
+export const integrationCategories = [
   "dnsHole",
   "mediaService",
   "calendar",
@@ -297,4 +297,4 @@ export const IntegrationCategories = [
   "notifications",
 ] as const;
 
-export type IntegrationCategory = (typeof IntegrationCategories)[number];
+export type IntegrationCategory = (typeof integrationCategories)[number];
