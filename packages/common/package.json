@@ -30,11 +30,11 @@
     "@homarr/env": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "dayjs": "^1.11.13",
-    "next": "15.3.4",
+    "next": "15.3.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "undici": "7.11.0",
-    "zod": "^3.25.71",
+    "zod": "^3.25.72",
     "zod-validation-error": "^3.5.2"
   },
   "devDependencies": {

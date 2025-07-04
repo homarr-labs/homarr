@@ -75,7 +75,7 @@
     "glob": "^11.0.3",
     "jotai": "^2.12.5",
     "mantine-react-table": "2.0.0-beta.9",
-    "next": "15.3.4",
+    "next": "15.3.5",
     "postcss-preset-mantine": "^1.18.0",
     "prismjs": "^1.30.0",
     "react": "19.1.0",
@@ -86,7 +86,7 @@
     "superjson": "2.2.2",
     "swagger-ui-react": "^5.26.0",
     "use-deep-compare-effect": "^1.8.1",
-    "zod": "^3.25.71"
+    "zod": "^3.25.72"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
