@@ -24,6 +24,7 @@ import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration"
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
+import { MockIntegration } from "../mock/mock-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { NPMIntegration } from "../npm/npm-integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
@@ -104,6 +105,7 @@ export const integrationCreators = {
   npm: NPMIntegration,
   codeberg: CodebergIntegration,
   ntfy: NTFYIntegration,
+  mock: MockIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

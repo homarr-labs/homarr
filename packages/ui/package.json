@@ -7,7 +7,8 @@
   "exports": {
     ".": "./index.ts",
     "./styles.css": "./src/styles.css",
-    "./hooks": "./src/hooks/index.ts"
+    "./hooks": "./src/hooks/index.ts",
+    "./icons": "./src/icons/index.ts"
   },
   "typesVersions": {
     "*": {
@@ -34,9 +35,10 @@
     "@mantine/hooks": "^8.1.2",
     "@tabler/icons-react": "^3.34.0",
     "mantine-react-table": "2.0.0-beta.9",
-    "next": "15.3.4",
+    "next": "15.3.5",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "svgson": "^5.3.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

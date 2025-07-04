@@ -40,11 +40,11 @@
     "@mantine/core": "^8.1.2",
     "@mantine/hooks": "^8.1.2",
     "adm-zip": "0.5.16",
-    "next": "15.3.4",
+    "next": "15.3.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "superjson": "2.2.2",
-    "zod": "^3.25.69",
+    "zod": "^3.25.74",
     "zod-form-data": "^2.0.7"
   },
   "devDependencies": {

@@ -3077,7 +3077,8 @@
           "status": {
             "idle": "",
             "running": "",
-            "error": ""
+            "error": "",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3138,6 +3139,21 @@
               "label": ""
             },
             "dockerContainers": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": ""
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "interval": {
               "label": ""
             }
           }

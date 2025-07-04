@@ -8,7 +8,8 @@ export const healthMonitoringJob = createCronJob("healthMonitoring", EVERY_5_SEC
   createRequestIntegrationJobHandler(
     (integration, itemOptions: Record<string, never>) => {
       const { kind } = integration;
-      if (kind !== "proxmox") {
+
+      if (kind !== "proxmox" && kind !== "mock") {
         return systemInfoRequestHandler.handler({ ...integration, kind }, itemOptions);
       }
       return clusterInfoRequestHandler.handler({ ...integration, kind }, itemOptions);
