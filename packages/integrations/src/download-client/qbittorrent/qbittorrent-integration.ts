@@ -6,16 +6,17 @@ import { createCertificateAgentAsync } from "@homarr/certificates/server";
 
 import { HandleIntegrationErrors } from "../../base/errors/decorator";
 import { integrationOFetchHttpErrorHandler } from "../../base/errors/http";
+import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
-import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
+import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
 
 @HandleIntegrationErrors([integrationOFetchHttpErrorHandler])
-export class QBitTorrentIntegration extends DownloadClientIntegration {
+export class QBitTorrentIntegration extends Integration implements IDownloadClientIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = await this.getClientAsync(input.dispatcher);
     const isSuccess = await client.login();

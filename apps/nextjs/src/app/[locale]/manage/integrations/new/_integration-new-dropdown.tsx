@@ -10,15 +10,20 @@ import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { IntegrationAvatar } from "@homarr/ui";
 
-export const IntegrationCreateDropdownContent = () => {
+interface IntegrationCreateDropdownContentProps {
+  enableMockIntegration: boolean;
+}
+
+export const IntegrationCreateDropdownContent = ({ enableMockIntegration }: IntegrationCreateDropdownContentProps) => {
   const t = useI18n();
   const [search, setSearch] = useState("");
 
   const filteredKinds = useMemo(() => {
-    return integrationKinds.filter((kind) =>
-      getIntegrationName(kind).toLowerCase().includes(search.toLowerCase().trim()),
-    );
-  }, [search]);
+    return integrationKinds
+      .filter((kind) => enableMockIntegration || kind !== "mock")
+      .filter((kind) => getIntegrationName(kind).toLowerCase().includes(search.toLowerCase().trim()))
+      .sort((kindA, kindB) => getIntegrationName(kindA).localeCompare(getIntegrationName(kindB)));
+  }, [search, enableMockIntegration]);
 
   const handleSearch = React.useCallback(
     (event: ChangeEvent<HTMLInputElement>) => setSearch(event.target.value),
