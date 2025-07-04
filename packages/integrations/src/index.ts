@@ -27,6 +27,7 @@ export type { IntegrationInput } from "./base/integration";
 export type { DownloadClientJobsAndStatus } from "./interfaces/downloads/download-client-data";
 export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download-client-items";
 export type { ExtendedClientStatus } from "./interfaces/downloads/download-client-status";
+
 export type { SystemHealthMonitoring } from "./interfaces/health-monitoring/health-monitoring-types";
 export { MediaRequestStatus } from "./interfaces/media-requests/media-request-types";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request-types";
@@ -37,6 +38,7 @@ export type {
   TdarrStatistics,
   TdarrWorker,
 } from "./interfaces/media-transcoding/media-transcoding-types";
+export type { ReleasesResponse } from "./interfaces/releases-providers/releases-providers-types";
 export type { Notification } from "./interfaces/notifications/notification-types";
 
 // Schemas

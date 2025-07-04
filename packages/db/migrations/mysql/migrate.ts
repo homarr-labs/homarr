@@ -5,6 +5,7 @@ import mysql from "mysql2";
 import type { Database } from "../..";
 import { env } from "../../env";
 import * as mysqlSchema from "../../schema/mysql";
+import { applyCustomMigrationsAsync } from "../custom";
 import { seedDataAsync } from "../seed";
 
 const migrationsFolder = process.argv[2] ?? ".";
@@ -30,6 +31,7 @@ const migrateAsync = async () => {
 
   await migrate(db, { migrationsFolder });
   await seedDataAsync(db as unknown as Database);
+  await applyCustomMigrationsAsync(db as unknown as Database);
 };
 
 migrateAsync()
