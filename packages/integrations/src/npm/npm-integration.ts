@@ -50,7 +50,7 @@ export class NPMIntegration extends Integration implements ReleasesProviderInteg
       .transform((resp) => {
         return resp.time.map((release) => ({
           ...release,
-          releaseUrl: `https://www.npmjs.com/package/${resp.name}/v/${release.latestRelease}`,
+          releaseUrl: `https://www.npmjs.com/package/${encodeURIComponent(resp.name)}/v/${encodeURIComponent(release.latestRelease)}`,
           releaseDescription: resp.versions[release.latestRelease]?.description ?? "",
         }));
       })
