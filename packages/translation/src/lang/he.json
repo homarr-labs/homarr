@@ -3077,7 +3077,8 @@
           "status": {
             "idle": "ממתין",
             "running": "פועל",
-            "error": "שגיאה"
+            "error": "שגיאה",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3139,6 +3140,21 @@
             },
             "dockerContainers": {
               "label": "מכולות דוקר"
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": ""
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "interval": {
+              "label": ""
             }
           }
         },
