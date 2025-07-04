@@ -938,8 +938,8 @@
           "newLabel": "新领域"
         },
         "topic": {
-          "label": "",
-          "newLabel": ""
+          "label": "主题",
+          "newLabel": "新主题"
         }
       }
     },
@@ -2093,8 +2093,8 @@
         "processing": "处理中",
         "partiallyAvailable": "部分",
         "available": "可用",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "已列入黑名单",
+        "deleted": "已删除"
       },
       "status": {
         "pending": "待处理",
@@ -2365,9 +2365,9 @@
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "通知",
+      "description": "在集成中显示通知历史",
+      "noItems": "没有可显示的通知。",
       "option": {}
     }
   },
@@ -3077,7 +3077,8 @@
           "status": {
             "idle": "空闲",
             "running": "运行中",
-            "error": "错误"
+            "error": "错误",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3135,10 +3136,25 @@
               "label": "网络控制器"
             },
             "refreshNotifications": {
-              "label": ""
+              "label": "更新通知"
             },
             "dockerContainers": {
               "label": "Docker 容器"
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": ""
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "interval": {
+              "label": ""
             }
           }
         },

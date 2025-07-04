@@ -3077,7 +3077,8 @@
           "status": {
             "idle": "Boşta",
             "running": "Çalışıyor",
-            "error": "Hata"
+            "error": "Hata",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3139,6 +3140,21 @@
             },
             "dockerContainers": {
               "label": "Docker konteynerleri"
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": ""
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "interval": {
+              "label": ""
             }
           }
         },

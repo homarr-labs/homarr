@@ -3077,7 +3077,8 @@
           "status": {
             "idle": "Idle",
             "running": "Running",
-            "error": "Error"
+            "error": "Error",
+            "disabled": "Disabled"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3139,6 +3140,21 @@
             },
             "dockerContainers": {
               "label": "Docker containers"
+            }
+          },
+          "interval": {
+            "seconds": "Every {interval, plural, =1 {second} other {# seconds}}",
+            "minutes": "Every {interval, plural, =1 {minute} other {# minutes}}",
+            "hours": "Every {interval, plural, =1 {hour} other {# hours}}",
+            "midnight": "Every day at midnight",
+            "weeklyMonday": "Every week on monday"
+          },
+          "settings": {
+            "title": "Task settings for {jobName}"
+          },
+          "field": {
+            "interval": {
+              "label": "Schedule interval"
             }
           }
         },

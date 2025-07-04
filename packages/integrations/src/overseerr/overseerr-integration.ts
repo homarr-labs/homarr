@@ -8,8 +8,9 @@ import { Integration } from "../base/integration";
 import type { ISearchableIntegration } from "../base/searchable-integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { MediaRequest, RequestStats, RequestUser } from "../interfaces/media-requests/media-request";
-import { MediaAvailability, MediaRequestStatus } from "../interfaces/media-requests/media-request";
+import type { IMediaRequestIntegration } from "../interfaces/media-requests/media-request-integration";
+import type { MediaRequest, RequestStats, RequestUser } from "../interfaces/media-requests/media-request-types";
+import { MediaAvailability, MediaRequestStatus } from "../interfaces/media-requests/media-request-types";
 
 interface OverseerrSearchResult {
   id: number;
@@ -23,7 +24,10 @@ interface OverseerrSearchResult {
 /**
  * Overseerr Integration. See https://api-docs.overseerr.dev
  */
-export class OverseerrIntegration extends Integration implements ISearchableIntegration<OverseerrSearchResult> {
+export class OverseerrIntegration
+  extends Integration
+  implements IMediaRequestIntegration, ISearchableIntegration<OverseerrSearchResult>
+{
   public async searchAsync(query: string) {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/search", { query }), {
       headers: {
