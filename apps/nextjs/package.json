@@ -29,6 +29,7 @@
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/docker": "workspace:^0.1.0",
+    "@homarr/env": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
     "@homarr/forms-collection": "workspace:^0.1.0",
     "@homarr/gridstack": "^1.12.0",
