@@ -1708,10 +1708,10 @@
       },
       "currentWindSpeed": "時速 {currentWindSpeed} km",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "日出",
+        "sunset": "日没",
+        "maxWindSpeed": "最大風速： {maxWindSpeed} km/h",
+        "maxWindGusts": "最大瞬間風速： {maxWindGusts} km/h"
       },
       "kind": {
         "clear": "クリア",
@@ -1732,24 +1732,24 @@
     },
     "indexerManager": {
       "name": "インデックス・マネージャーのステータス",
-      "description": "",
+      "description": "インデクサーの状態",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "新しいタブでインデクサーサイトを開く"
         }
       },
       "title": "インデクサーマネージャー",
       "testAll": "すべてのテスト",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "インデクサーのステータスの取得に失敗しました"
       }
     },
     "healthMonitoring": {
       "name": "システムヘルスモニタリング",
       "description": "システムの健全性とステータスを示す情報を表示します。",
       "tab": {
-        "system": "",
-        "cluster": ""
+        "system": "システム",
+        "cluster": "クラスター"
       },
       "option": {
         "fahrenheit": {
@@ -1762,81 +1762,81 @@
           "label": "メモリー情報を表示"
         },
         "showUptime": {
-          "label": ""
+          "label": "稼働時間を表示"
         },
         "fileSystem": {
           "label": "ファイルシステム情報を表示"
         },
         "defaultTab": {
-          "label": ""
+          "label": "デフォルトのタブ"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "表示するクラスターセクション"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "セクションインジケーターの要件"
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
-        "memoryAvailable": "",
-        "version": "",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
-        "minutes": "",
-        "used": "",
+        "information": "情報",
+        "processor": "プロセッサー: {cpuModelName}",
+        "memory": "メモリ: {memory}GiB",
+        "memoryAvailable": "利用可能: {memoryAvailable}GiB ({percent}%)",
+        "version": "Version: {version}",
+        "uptime": "稼働時間： {months} ヶ月、 {days} 日、 {hours} 時間、 {minutes} 分",
+        "loadAverage": "平均負荷：",
+        "minute": "１分",
+        "minutes": "{count} 分",
+        "used": "使用中",
         "available": "利用可能",
-        "lastSeen": ""
+        "lastSeen": "最終ステータス更新： {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "ヘルスステータスの取得に失敗しました"
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "ノード"
           },
           "qemu": {
-            "name": ""
+            "name": "VM"
           },
           "lxc": {
-            "name": ""
+            "name": "LXC"
           },
           "storage": {
-            "name": ""
+            "name": "ストレージ"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "ノード",
+            "vmId": "VM ID",
+            "plugin": "プラグイン"
           },
           "detail": {
-            "cpu": "",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "cpu": "コア",
+            "memory": "メモリ",
+            "storage": "ストレージ",
+            "uptime": "稼働時間",
+            "haState": "HA状態",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "ローカルストレージ",
+              "shared": "共有ストレージ"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
+            "name": "名前",
+            "cpu": "CPU",
+            "memory": "RAM",
             "node": "ノード"
           }
         }
@@ -1862,8 +1862,8 @@
           "header": {
             "city": "都市",
             "country": "国/地域",
-            "coordinates": "",
-            "population": ""
+            "coordinates": "座標",
+            "population": "人口"
           },
           "action": {
             "select": "{city} / {countryCode} を選択する"
@@ -1924,7 +1924,7 @@
         "currentlyPlaying": "再生中の曲",
         "user": "ユーザー",
         "name": "名前",
-        "id": "ID"
+        "id": "Id"
       }
     },
     "downloads": {
@@ -1932,95 +1932,95 @@
       "description": "Torrent クライアントと Usenet クライアントの両方から、ダウンロードを表示および管理できます。",
       "option": {
         "columns": {
-          "label": ""
+          "label": "表示する列"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "アイテムの並べ替えを有効にする"
         },
         "defaultSort": {
-          "label": ""
+          "label": "デフォルトで並べ替えに使用される列"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "並べ替えを反転"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "完了とマークされた使用済みエントリを表示"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "完了とマークされた使用済みエントリを表示"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "完了とマークされた使用済みエントリを表示"
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "このしきい値より低速で完了したトレントを非表示にします (KiB/s)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "フィルターするカテゴリ/ラベル"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "ホワイトリストとしてフィルター"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "フィルターを使用して比率を計算する"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "連携ごとに項目を制限",
+          "description": "これは、連携ごとに表示されるアイテム数を制限します。グローバルではありません"
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "項目内の列を選択",
+        "noCommunications": "連携からデータを読み込めません"
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "操作"
         },
         "added": {
-          "columnTitle": "",
-          "detailsTitle": "追加日"
+          "columnTitle": "追加日",
+          "detailsTitle": "追加された日"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "補足",
+          "detailsTitle": "カテゴリー (または追加情報)"
         },
         "downSpeed": {
           "columnTitle": "ダウンロード",
           "detailsTitle": "ダウンロード速度"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "#",
+          "detailsTitle": "クライアント内の現在のインデックス"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "Id"
         },
         "integration": {
-          "columnTitle": "統合化"
+          "columnTitle": "連携"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "ジョブ名"
         },
         "progress": {
           "columnTitle": "進捗状況",
-          "detailsTitle": ""
+          "detailsTitle": "ダウンロード状況"
         },
         "ratio": {
           "columnTitle": "比率",
-          "detailsTitle": ""
+          "detailsTitle": "トレント比 (受信/送信)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "合計ダウン",
+          "detailsTitle": "総ダウンロード数"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "合計アップ",
+          "detailsTitle": "総アップロード数"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "ファイルサイズ",
+          "detailsTitle": "選択範囲/ファイルの合計サイズ"
         },
         "state": {
           "columnTitle": "状態",
@@ -2044,38 +2044,38 @@
         "queued": "処理待ち",
         "paused": "ポーズ",
         "completed": "完了",
-        "failed": "",
-        "processing": "",
-        "leeching": "",
-        "stalled": "",
+        "failed": "処理失敗",
+        "processing": "処理中",
+        "leeching": "リーチ中",
+        "stalled": "停止中",
         "unknown": "不明",
-        "seeding": ""
+        "seeding": "シード中"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
-          "resume": ""
+          "modalTitle": "ダウンロードクライアントの種類",
+          "pause": "すべてのクライアント/アイテムを一時停止する",
+          "resume": "すべてのクライアント/アイテムを再開する"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "クライアントを一時停止する",
+          "resume": "クライアントを再開する"
         },
         "item": {
-          "pause": "",
-          "resume": "",
+          "pause": "アイテムを一時停止する",
+          "resume": "アイテムを再開する",
           "delete": {
-            "title": "",
-            "modalTitle": "",
-            "entry": "",
-            "entryAndFiles": ""
+            "title": "アイテムを削除する",
+            "modalTitle": "本当にこのジョブを削除しますか？",
+            "entry": "エントリーを削除する",
+            "entryAndFiles": "エントリとファイルを削除する"
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "グローバル比"
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "メディアリクエストリスト",
       "description": "OverseerrまたはJellyseerrからの全てのメディアリクエストのリストを見る",
       "option": {
         "linksTargetNewTab": {
@@ -2083,59 +2083,59 @@
         }
       },
       "pending": {
-        "approve": "",
-        "approving": "",
-        "decline": ""
+        "approve": "リクエストを承認",
+        "approving": "リクエスト承認中…",
+        "decline": "リクエストを拒否"
       },
       "availability": {
         "unknown": "不明",
-        "pending": "",
-        "processing": "",
+        "pending": "保留中",
+        "processing": "処理中",
         "partiallyAvailable": "一部",
         "available": "利用可能",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "ブラックリスト",
+        "deleted": "削除済"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": "",
-        "completed": ""
+        "pending": "保留中",
+        "approved": "承認済",
+        "declined": "拒否済",
+        "failed": "失敗",
+        "completed": "完了"
       },
-      "toBeDetermined": ""
+      "toBeDetermined": "未確定"
     },
     "mediaRequests-requestStats": {
-      "name": "",
-      "description": "メディア・リクエストに関する統計",
+      "name": "メディアリクエストの統計",
+      "description": "メディアリクエストに関する統計",
       "option": {},
       "titles": {
         "stats": {
           "main": "メディア統計",
           "approved": "すでに承認済み",
           "pending": "承認待ち",
-          "processing": "",
-          "declined": "",
-          "available": "",
+          "processing": "処理中",
+          "declined": "拒否済みです",
+          "available": "利用可能",
           "tv": "テレビのリクエスト",
           "movie": "映画のリクエスト",
           "total": "合計"
         },
         "users": {
           "main": "トップユーザー",
-          "requests": ""
+          "requests": "リクエスト"
         }
       }
     },
     "mediaTranscoding": {
-      "name": "",
-      "description": "",
+      "name": "メディアのトランスコーディング",
+      "description": "メディアトランスコーディングの統計、現在のキュー、ワーカーの状況",
       "option": {
         "defaultView": {
           "label": "デフォルト表示"
         },
         "queuePageSize": {
-          "label": ""
+          "label": "キューのページサイズ"
         }
       },
       "tab": {
@@ -2143,9 +2143,9 @@
         "queue": "キュー",
         "statistics": "統計"
       },
-      "currentIndex": "",
+      "currentIndex": "全 {total} 中 {start} ～ {end}",
       "healthCheck": {
-        "title": "",
+        "title": "ヘルスチェック",
         "queued": "処理待ち",
         "status": {
           "healthy": "正常",
@@ -2156,11 +2156,11 @@
         "statistics": {
           "empty": "空",
           "transcodes": "トランスコード",
-          "transcodesCount": "",
-          "healthChecksCount": "",
-          "filesCount": "",
-          "savedSpace": "",
-          "healthChecks": "",
+          "transcodesCount": "トランスコード回数",
+          "healthChecksCount": "ヘルスチェック回数",
+          "filesCount": "ファイル数",
+          "savedSpace": "保存されたスペース",
+          "healthChecks": "ヘルスチェック",
           "videoCodecs": "コーデック",
           "videoContainers": "コンテナ",
           "videoResolutions": "解像度"
@@ -2169,10 +2169,10 @@
           "empty": "空",
           "table": {
             "file": "ファイル",
-            "eta": "",
+            "eta": "残り時間",
             "progress": "進捗状況",
             "transcode": "トランスコード",
-            "healthCheck": ""
+            "healthCheck": "ヘルスチェック"
           }
         },
         "queue": {
@@ -2181,130 +2181,130 @@
             "file": "ファイル",
             "size": "サイズ",
             "transcode": "トランスコード",
-            "healthCheck": ""
+            "healthCheck": "ヘルスチェック"
           }
         }
       }
     },
     "rssFeed": {
-      "name": "",
-      "description": "",
+      "name": "RSS フィード",
+      "description": "1つまたは複数の一般的な RSS、ATOM、または JSON フィードを監視して表示します",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "フィードURL"
         },
         "enableRtl": {
-          "label": ""
+          "label": "RTLを有効にする"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "説明行のクランプ"
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "投稿数の上限"
         }
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "リリース",
+      "description": "指定されたバージョンのリポジトリの現在のバージョンと、指定されたバージョンの正規表現のリストを表示します。",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "以下から新しいリリース",
+          "description": "使用例：1w (１週間), 10M (１０ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。新しいリリースを強調表示しない場合は、空白のままにします。"
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "以下から古いリリース",
+          "description": "使用例：1w (１週間), 10M (１０ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。古いリリースを強調表示しない場合は、空白のままにします。"
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "強調表示のみ表示",
+          "description": "上記に従って、新しいリリースまたは古いリリースのみを表示します。"
         },
         "showDetails": {
-          "label": ""
+          "label": "詳細を表示"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "トップリリース",
+          "description": "表示する最新リリースの最大数。ゼロは制限なしです。"
         },
         "repositories": {
-          "label": "",
+          "label": "リポジトリー",
           "addRepository": {
-            "label": ""
+            "label": "リポジトリを追加"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "label": "Docker からインポート",
+            "loading": "Docker イメージを読み込み中",
+            "noImagesFound": "Docker イメージが見つかりません",
+            "listFoundImages": "見つかったイメージの一覧",
+            "listAlreadyImportedImages": "すでにインポートされたイメージのリスト",
+            "allImagesAlreadyImported": "すでにインポートされた全てのイメージ",
+            "onlyAdminCanImport": "管理者のみが Docker からインポートできます"
           },
           "provider": {
-            "label": ""
+            "label": "プロバイダー"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "識別名（リポジトリ名）",
+            "placeholder": "名前または所有者/名前"
           },
           "name": {
-            "label": ""
+            "label": "名称"
           },
           "versionFilter": {
-            "label": "",
+            "label": "バージョンフィルター",
             "prefix": {
-              "label": ""
+              "label": "プレフィックス"
             },
             "precision": {
-              "label": "",
+              "label": "精度",
               "options": {
-                "none": ""
+                "none": "なし"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "接尾辞"
             },
             "regex": {
-              "label": ""
+              "label": "正規表現"
             }
           },
           "edit": {
-            "label": ""
+            "label": "編集"
           },
           "editForm": {
-            "title": "",
+            "title": "リポジトリの編集",
             "cancel": {
-              "label": ""
+              "label": "キャンセル"
             },
             "confirm": {
-              "label": ""
+              "label": "確認"
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Docker からインポート"
           },
           "example": {
-            "label": ""
+            "label": "例"
           },
-          "invalid": ""
+          "invalid": "無効なリポジトリ定義です。値を確認してください"
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "created": "",
+      "not-found": "見つかりませんでした",
+      "pre-release": "プレリリース",
+      "archived": "アーカイブ済み",
+      "forked": "フォークされました",
+      "starsCount": "スター数",
+      "forksCount": "フォーク数",
+      "issuesCount": "未解決の課題数",
+      "openProjectPage": "プロジェクトページを開く",
+      "openReleasePage": "リリースページを開く",
+      "releaseDescription": "リリースの説明",
+      "created": "作成日",
       "error": {
-        "label": "",
+        "label": "エラー",
         "options": {
-          "noMatchingVersion": ""
+          "noMatchingVersion": "一致するバージョンが見つかりません"
         }
       }
     },
@@ -2312,140 +2312,140 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "{count} 接続済み"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "利用可能なデータがありません。すべての連携が切断されました",
+        "unknownContentOption": "ネットワークコントローラサマリーウィジェットの不明なコンテンツオプション： "
       },
-      "name": "",
-      "description": ""
+      "name": "ネットワークコントローラーの概要",
+      "description": "ネットワークコントローラ（UniFiコントローラなど）の概要を表示します"
     },
     "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
-            "name": ""
+            "name": "有線"
           },
           "wifi": {
-            "name": ""
+            "name": "Wi-Fi"
           }
         },
         "users": {
-          "label": ""
+          "label": "ユーザー"
         },
         "guests": {
-          "label": ""
+          "label": "ゲスト"
         }
       },
       "option": {
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "Wi-Fi"
             },
             "wired": {
-              "label": ""
+              "label": "有線"
             }
           },
-          "label": ""
+          "label": "ウィジェットの内容"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "利用可能なデータがありません。すべての連携が切断されました",
+        "unknownContentOption": "ネットワークステータスサマリーウィジェットの不明なコンテンツオプション： "
       },
-      "name": "",
-      "description": ""
+      "name": "ネットワークの状態",
+      "description": "ネットワークに接続されているデバイスを表示する"
     },
     "networkController": {
       "error": {
-        "internalServerError": ""
+        "internalServerError": "ネットワークコントローラの概要の取得に失敗しました"
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "通知",
+      "description": "連携からの通知履歴を表示する",
+      "noItems": "表示する通知はありません。",
       "option": {}
     }
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "編集モードは有効です",
+      "disabled": "編集モードは無効です"
     },
     "dimensions": {
-      "title": ""
+      "title": "サイズの変更"
     }
   },
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "ボードを複製する",
+        "message": "これにより、ボード {name} はすべてのコンテンツと共に複製されます。ウィジェットが使用許可のない連携を参照している場合には、削除されます。",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "ボードが複製されました",
+            "message": "ボードは正常に複製されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "ボードが複製できません",
+            "message": "ボードを複製できませんでした"
           }
         }
       },
       "edit": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "変更は正常に適用されました",
+            "message": "ボードは正常に保存されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "変更を適用できません",
+            "message": "ボードを保存できませんでした"
           }
         },
         "confirmLeave": {
-          "title": "",
-          "message": ""
+          "title": "変動が保存されていません",
+          "message": "保存されていない変更があります。このページから移動してもいいですか？"
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "1.0.0 より前のhomarrからインポート",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "インポート成功",
+            "message": "ボードは、正常にインポートされました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "インポート失敗",
+            "message": "ボードをインポートできませんでした。詳細はログを確認してください"
           }
         },
         "form": {
           "file": {
-            "label": "",
-            "invalidError": ""
+            "label": "JSON ファイルを選択",
+            "invalidError": "無効な設定ファイルです"
           },
           "apps": {
             "label": "アプリ",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "重複の回避",
+              "description": "同じ href を持つアプリが既に存在するアプリを無視します"
             },
             "onlyImportApps": {
-              "label": "",
-              "description": ""
+              "label": "アプリのみインポート",
+              "description": "アプリのみを追加します。ボードを手動で再作成する必要があります"
             }
           },
           "name": {
-            "label": ""
+            "label": "ボード名"
           },
           "screenSize": {
-            "label": "",
-            "description": "",
+            "label": "画面サイズ",
+            "description": "1.0 以前のバージョンでは、3種類のモードが存在するため、画面サイズごとに列数を選択することができました。",
             "option": {
               "sm": "小",
               "md": "中",
@@ -2453,16 +2453,16 @@
             }
           },
           "sidebarBehavior": {
-            "label": "",
-            "description": "",
+            "label": "サイドバーの動作",
+            "description": "サイドバーは 1.0 で削除され、内部のアイテムで何が起こるかを選択できます。",
             "option": {
               "lastSection": {
-                "label": "",
-                "description": ""
+                "label": "最後のセクション",
+                "description": "最後のセクションの下にサイドバーが表示されます"
               },
               "removeItems": {
-                "label": "",
-                "description": ""
+                "label": "アイテムを削除",
+                "description": "サイドバーに含まれるアイテムは削除されます"
               }
             }
           }
@@ -2470,63 +2470,63 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "その場でアプリを作成",
+          "createAndUse": "追加して使用する"
         }
       }
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "ページタイトル"
       },
       "metaTitle": {
-        "label": ""
+        "label": "メタタイトル"
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "ロゴ画像のURL"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "ファビコン画像のURL"
       },
       "backgroundImageUrl": {
-        "label": "",
-        "placeholder": "",
+        "label": "背景画像のURL",
+        "placeholder": "ローカル画像を検索するために入力を開始します",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "あなたの画像",
+          "other": "その他の画像"
         }
       },
       "backgroundImageAttachment": {
         "label": "背景画像の添付ファイル",
         "option": {
           "fixed": {
-            "label": "",
-            "description": ""
+            "label": "固定",
+            "description": "背景は同じ位置にとどまります。"
           },
           "scroll": {
-            "label": "",
-            "description": ""
+            "label": "スクロール",
+            "description": "背景はマウスでスクロールします。"
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "",
+        "label": "背景画像の繰り返し",
         "option": {
           "repeat": {
-            "label": "",
-            "description": ""
+            "label": "繰り返す",
+            "description": "背景画像の描画領域全体をカバーするために必要なだけ画像を繰り返します。"
           },
           "no-repeat": {
-            "label": "",
-            "description": ""
+            "label": "繰返しなし",
+            "description": "画像は繰り返されず、スペース全体を埋めることができません。"
           },
           "repeat-x": {
-            "label": "",
-            "description": ""
+            "label": "水平方向の繰り返し",
+            "description": "「繰り返し」と同じですが、水平方向のみです。"
           },
           "repeat-y": {
-            "label": "",
-            "description": ""
+            "label": "垂直方向の繰り返し",
+            "description": "「繰り返し」と同じですが、垂直方向のみです。"
           }
         }
       },
@@ -2534,12 +2534,12 @@
         "label": "背景画像サイズ",
         "option": {
           "cover": {
-            "label": "",
-            "description": ""
+            "label": "カバー",
+            "description": "余分なスペースを切り取ることによって、ウィンドウ全体をカバーするために、画像をできるだけ小さくスケールします。"
           },
           "contain": {
-            "label": "",
-            "description": ""
+            "label": "封じ込める",
+            "description": "イメージをトリミングしたりストレッチしたりすることなく、コンテナ内のイメージを可能な限り大きく拡大します。"
           }
         }
       },
@@ -2550,35 +2550,35 @@
         "label": "セカンダリーカラー"
       },
       "opacity": {
-        "label": ""
+        "label": "透明度"
       },
       "iconColor": {
-        "label": ""
+        "label": "アイコンの色"
       },
       "customCss": {
-        "label": "",
+        "label": "このボードのカスタム CSS",
         "description": "さらに、CSS を使用してダッシュボードをカスタマイズします。経験豊富なユーザーにのみお勧めします。",
         "customClassesAlert": {
-          "title": "",
-          "description": ""
+          "title": "カスタムクラス",
+          "description": "各項目の詳細オプションでボード項目にカスタムクラスを追加し、上記のカスタム CSS で使用できます。"
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "アプリのステータスを無効にする",
+        "description": "このボード上の、すべてのアプリのステータスチェックを無効にします"
       },
       "columnCount": {
-        "label": ""
+        "label": "列の数"
       },
       "itemRadius": {
-        "label": "",
-        "description": "",
+        "label": "アイテムの半径",
+        "description": "ボード上のタイルの丸みを変更する",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "とても小さい",
+          "sm": "小さい",
+          "md": "中間",
+          "lg": "大きい",
+          "xl": "とても大きい"
         }
       },
       "name": {
@@ -2586,25 +2586,25 @@
       },
       "isPublic": {
         "label": "公開",
-        "description": ""
+        "description": "公開ボードは、アカウントがなくても誰でもアクセスできます。"
       }
     },
     "content": {
-      "metaTitle": ""
+      "metaTitle": "{boardName} ボード"
     },
     "setting": {
-      "title": "",
+      "title": "{boardName} ボードの設定",
       "section": {
         "general": {
           "title": "一般",
-          "unrecognizedLink": ""
+          "unrecognizedLink": "指定されたリンクは認識されておらず、プレビューも表示されません。まだ動作するかもしれません。"
         },
         "layout": {
           "title": "レイアウト",
           "responsive": {
-            "title": "",
+            "title": "レスポンシブなレイアウト",
             "action": {
-              "add": ""
+              "add": "レイアウトを追加する"
             }
           }
         },
@@ -2612,26 +2612,26 @@
           "title": "背景"
         },
         "appearance": {
-          "title": ""
+          "title": "外観"
         },
         "customCss": {
-          "title": ""
+          "title": "カスタム css"
         },
         "behavior": {
-          "title": ""
+          "title": "動作"
         },
         "access": {
-          "title": "",
+          "title": "アクセス管理",
           "permission": {
             "item": {
               "view": {
                 "label": "ボードを見る"
               },
               "modify": {
-                "label": ""
+                "label": "ボードの変更"
               },
               "full": {
-                "label": ""
+                "label": "フルアクセス"
               }
             }
           }
@@ -2640,41 +2640,41 @@
           "title": "危険な操作",
           "action": {
             "rename": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "ボード名を変更する",
+              "description": "名前を変更すると、このボードへのリンクが壊れます。",
+              "button": "名前を変更する",
               "modal": {
-                "title": ""
+                "title": "ボード名の変更"
               }
             },
             "visibility": {
-              "label": "",
+              "label": "ボードの表示を変更する",
               "description": {
-                "public": "",
-                "private": ""
+                "public": "このボードは現在公開されています。",
+                "private": "このボードは現在非公開です。"
               },
               "button": {
-                "public": "",
-                "private": ""
+                "public": "非公開にする",
+                "private": "公開する"
               },
               "confirm": {
                 "public": {
-                  "title": "",
-                  "description": ""
+                  "title": "ボードを非公開にする",
+                  "description": "このボードを非公開にしてもよろしいですか？これにより、ボードは一般公開されません。ゲストユーザーへのリンクは壊れます。"
                 },
                 "private": {
-                  "title": "",
-                  "description": ""
+                  "title": "ボードを公開する",
+                  "description": "このボードを公開してもよろしいですか？これにより、ボードは誰でもアクセスできるようになります。"
                 }
               }
             },
             "delete": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "このボードを削除",
+              "description": "ボードを削除すると、元に戻すことはできません。確認してください。",
+              "button": "このボードを削除する",
               "confirm": {
                 "title": "ボードの削除",
-                "description": ""
+                "description": "このボードを削除してもよろしいですか？これにより、ボードとそのコンテンツは完全に削除されます。"
               }
             }
           }
@@ -2683,33 +2683,33 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "Homarrへようこそ",
+        "description": "あなたの指先にすべてのアプリやサービスを置く洗練されたモダンなダッシュボード。",
+        "link": "最初のボードを作成",
+        "notice": "このページを消去するには、ボードを作成し、ホームボードとして設定します"
       },
       "notFound": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": ""
+        "title": "ボードがありません",
+        "description": "指定されたボードが見つからなかったか、アクセス権がありません。",
+        "link": "すべてのボードを表示",
+        "notice": "リンクを確認するか、管理者に問い合わせてください"
       },
       "homeBoard": {
-        "title": "",
+        "title": "ホームボードがありません",
         "admin": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "サーバーにホームボードを設定していません。",
+          "link": "サーバ全体のホームボードを設定",
+          "notice": "このページをすべてのユーザーに対して見えなくするためには、サーバーのホームボードを設定してください"
         },
         "user": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "まだホームボードを設定していません。",
+          "link": "ホームボードを設定",
+          "notice": "このページを見えなくするには、設定でホームボードを指定してください"
         },
         "anonymous": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "サーバー管理者はまだホームボードを設定していません。",
+          "link": "公開ボードを表示",
+          "notice": "このページを見えなくするためには、サーバーの管理者にサーバーのホームボードを設定するよう問い合わせてください"
         }
       }
     }
@@ -2717,53 +2717,53 @@
   "layout": {
     "field": {
       "name": {
-        "label": ""
+        "label": "名前"
       },
       "columnCount": {
-        "label": ""
+        "label": "列の数"
       },
       "breakpoint": {
-        "label": "",
-        "description": ""
+        "label": "ブレークポイント",
+        "description": "レイアウトは、次の大きなブレークポイントまで、このブレークポイントより大きいすべての画面で使用されます。"
       }
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "管理",
     "title": {
-      "morning": "",
-      "afternoon": "",
-      "evening": ""
+      "morning": "おはようございます、 {username}",
+      "afternoon": "こんにちは、 {username} さん",
+      "evening": "こんばんは、 {username}"
     },
     "notFound": {
-      "title": "",
-      "text": ""
+      "title": "見つかりません",
+      "text": "要求されたリソースが見つかりませんでした"
     },
     "navbar": {
       "items": {
         "home": "ホーム",
         "boards": "ボード",
         "apps": "アプリ",
-        "integrations": "",
-        "searchEngies": "",
-        "medias": "",
+        "integrations": "連携",
+        "searchEngies": "検索エンジン",
+        "medias": "メディア",
         "users": {
           "label": "ユーザー",
           "items": {
             "manage": "管理",
             "invites": "招待",
-            "groups": ""
+            "groups": "グループ"
           }
         },
         "tools": {
           "label": "ツール",
           "items": {
-            "docker": "",
-            "kubernetes": "",
-            "logs": "",
-            "api": "",
-            "certificates": "",
-            "tasks": ""
+            "docker": "Docker",
+            "kubernetes": "Kubernetes",
+            "logs": "ログ",
+            "api": "API",
+            "certificates": "証明書",
+            "tasks": "タスク"
           }
         },
         "settings": "設定",
@@ -2771,12 +2771,12 @@
           "label": "ヘルプ",
           "items": {
             "documentation": "ドキュメンテーション",
-            "submitIssue": "",
+            "submitIssue": "問題を送信する",
             "discord": "コミュニティ・ディスコード",
-            "sourceCode": ""
+            "sourceCode": "ソースコード"
           }
         },
-        "about": ""
+        "about": "このアプリについて"
       }
     },
     "page": {
@@ -2785,57 +2785,57 @@
           "board": "ボード",
           "user": "ユーザー",
           "invite": "招待",
-          "integration": "",
+          "integration": "連携",
           "app": "アプリ",
-          "group": ""
+          "group": "グループ"
         },
         "statisticLabel": {
           "boards": "ボード",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "リソース",
+          "authentication": "認証",
+          "authorization": "認可"
         }
       },
       "board": {
         "title": "ボード",
         "action": {
           "new": {
-            "label": ""
+            "label": "新しいボードを作成"
           },
           "open": {
-            "label": ""
+            "label": "ボードを開く"
           },
           "settings": {
             "label": "設定"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "あなたのホームボードに設定",
             "badge": {
               "label": "ホーム",
-              "tooltip": ""
+              "tooltip": "このボードはあなたのホームボードとして表示されます"
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "あなたのモバイルボードに設定する",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "モバイル",
+              "tooltip": "このボードはあなたのモバイルボードとして表示されます"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "ボードを複製する"
           },
           "delete": {
             "label": "永久削除",
             "confirm": {
               "title": "ボードの削除",
-              "description": ""
+              "description": "{name} ボードを削除してもよろしいですか？"
             }
           }
         },
         "visibility": {
-          "public": "",
-          "private": ""
+          "public": "このボードは公開中です",
+          "private": "このボードは非公開です"
         },
         "modal": {
           "createBoard": {
@@ -2848,24 +2848,24 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "すべてのユーザーのメディアを含める"
       },
       "user": {
-        "back": "",
-        "fieldsDisabledExternalProvider": "",
+        "back": "ユーザーへ戻る",
+        "fieldsDisabledExternalProvider": "外部認証プロバイダーによって管理されているため、特定のフィールドは無効になります。",
         "setting": {
           "general": {
             "title": "一般",
             "item": {
-              "language": "",
+              "language": "言語と地域",
               "board": {
-                "title": "",
+                "title": "ホームボード",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "一般",
+                  "mobile": "モバイル"
                 }
               },
-              "search": "",
+              "search": "検索",
               "firstDayOfWeek": "週の初日",
               "accessibility": "アクセシビリティ"
             }
@@ -2882,50 +2882,50 @@
           "title": "ユーザー"
         },
         "edit": {
-          "metaTitle": ""
+          "metaTitle": "ユーザー {username} を編集"
         },
         "create": {
           "metaTitle": "ユーザー作成",
-          "title": "",
+          "title": "新規ユーザーの作成",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "個人情報"
             },
             "security": {
               "label": "セキュリティ"
             },
             "groups": {
-              "label": "",
-              "title": "",
-              "description": ""
+              "label": "グループ",
+              "title": "ユーザーがメンバーである必要のある、すべてのグループを選択します",
+              "description": "{everyoneGroup} グループはすべてのユーザーに割り当てられているため、削除できません。"
             },
             "review": {
-              "label": ""
+              "label": "レビュー"
             },
             "completed": {
-              "title": ""
+              "title": "ユーザーが作成されました"
             },
             "error": {
-              "title": ""
+              "title": "ユーザーの作成に失敗しました"
             }
           },
           "action": {
-            "createAnother": "",
-            "back": ""
+            "createAnother": "別のユーザーを作成",
+            "back": "ユーザーリストに戻る"
           }
         },
         "invite": {
           "title": "ユーザー招待の管理",
           "action": {
             "new": {
-              "title": "",
+              "title": "新しい招待",
               "description": "有効期限が過ぎると、招待は無効となり、招待を受けた人はアカウントを作成できなくなります。"
             },
             "copy": {
-              "title": "",
-              "description": "",
+              "title": "招待状をコピー",
+              "description": "招待状は作られました。このモーダルボックスを閉じた後、<b>このリンクは、もはやコピーできなくなります</b>。今後、その人を招待したくなくなった場合は、いつでもこの招待を削除できます。",
               "link": "招待リンク",
-              "button": ""
+              "button": "コピーして閉じる"
             },
             "delete": {
               "title": "招待の削除",
@@ -2934,7 +2934,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "クリエイター"
@@ -2949,30 +2949,30 @@
         }
       },
       "group": {
-        "back": "",
+        "back": "グループに戻る",
         "setting": {
           "general": {
             "title": "一般",
             "owner": "所有者",
-            "ownerOfGroup": "",
-            "ownerOfGroupDeleted": ""
+            "ownerOfGroup": "このグループの所有者",
+            "ownerOfGroupDeleted": "このグループの所有者が、削除されました。現在所有者はありません。"
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "設定",
+            "alert": "グループ設定は、リスト内のグループの順序によって優先されます。上部の設定は、下部の設定を上書きします。",
             "board": {
-              "title": ""
+              "title": "ボード"
             }
           },
           "members": {
-            "title": "",
-            "search": "",
-            "notFound": ""
+            "title": "メンバー",
+            "search": "メンバーを探す",
+            "notFound": "メンバーが見つかりません"
           },
           "permissions": {
-            "title": "",
+            "title": "権限",
             "form": {
-              "unsavedChanges": ""
+              "unsavedChanges": "保存していない変更があります！"
             }
           }
         }
@@ -2981,21 +2981,21 @@
         "title": "設定",
         "notification": {
           "success": {
-            "message": ""
+            "message": "設定の保存が完了しました"
           },
           "error": {
-            "message": ""
+            "message": "設定の保存に失敗しました"
           }
         },
         "section": {
           "analytics": {
-            "title": "",
+            "title": "統計情報",
             "general": {
-              "title": "",
+              "title": "匿名の解析を送信",
               "text": ""
             },
             "widgetData": {
-              "title": "",
+              "title": "ウィジェットのデータ",
               "text": ""
             },
             "integrationData": {
@@ -3008,163 +3008,163 @@
             }
           },
           "crawlingAndIndexing": {
-            "title": "",
+            "title": "クローリングとインデックス付け",
             "warning": "ここで設定を有効または無効にすると、検索エンジンがページをインデックスしてクロールする方法に深刻な影響を与えます。 すべての設定はリクエストであり、これらの設定を適用することはクローラー次第です。 変更が適用されるまでに数日または数週間かかる場合があります。",
             "noIndex": {
-              "title": "",
+              "title": "インデックスなし",
               "text": "検索エンジンでウェブサイトにインデックスを付けず、検索結果には表示しません"
             },
             "noFollow": {
-              "title": "",
+              "title": "フォローしない",
               "text": "インデックス登録中はリンクを追跡しない。これを無効にすると、クローラーが、Homarr 上のすべてのリンクを追跡しようとします。"
             },
             "noTranslate": {
-              "title": "",
+              "title": "翻訳しない",
               "text": "サイトの言語がユーザーの読みたい言語ではないとき、Google は検索結果に翻訳のリンクを表示します"
             },
             "noSiteLinksSearchBox": {
-              "title": "",
+              "title": "サイトリンクの検索ボックスがありません",
               "text": "Googleはクローラーによるリンクからサイトリンク検索ボックスを構築します。これを有効にすると Google にそのサイトリンク検索ボックスを無効にするよう求められます。"
             }
           },
           "board": {
             "title": "ボード",
             "homeBoard": {
-              "label": "",
-              "mobileLabel": "",
-              "description": ""
+              "label": "グローバルホームボード",
+              "mobileLabel": "グローバルモバイルボード",
+              "description": "選択できるのは、公開ボードだけです"
             },
             "status": {
-              "title": "",
+              "title": "アプリのステータス",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "デフォルトでステータスを有効にする",
+                "description": "アプリのアイテムを追加するとき、ステータスはデフォルトで有効になります"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "強制的にステータスを無効にする",
+                "description": "アプリのステータスはすべてのユーザーに対して無効になり、有効にすることはできません"
               }
             }
           },
           "search": {
-            "title": "",
+            "title": "検索",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "グローバルな、既定の検索エンジン",
+              "description": "連携の検索エンジンは、ここで選択できません"
             }
           },
           "appearance": {
             "title": "外観",
             "defaultColorScheme": {
-              "label": "",
+              "label": "既定の配色設定",
               "options": {
-                "light": "",
+                "light": "ライト",
                 "dark": "ダーク"
               }
             }
           },
           "culture": {
-            "title": "",
+            "title": "文化",
             "defaultLocale": {
-              "label": ""
+              "label": "デフォルトの言語"
             }
           }
         }
       },
       "tool": {
         "tasks": {
-          "title": "",
+          "title": "タスク",
           "status": {
-            "idle": "",
+            "idle": "アイドル",
             "running": "実行中",
             "error": "エラー",
-            "disabled": ""
+            "disabled": "無効"
           },
           "job": {
             "minecraftServerStatus": {
-              "label": ""
+              "label": "Minecraftサーバーの状態"
             },
             "iconsUpdater": {
-              "label": ""
+              "label": "アイコンアップデータ"
             },
             "analytics": {
-              "label": ""
+              "label": "統計情報"
             },
             "smartHomeEntityState": {
-              "label": ""
+              "label": "スマートホームエンティティの状態"
             },
             "ping": {
-              "label": ""
+              "label": "Pings"
             },
             "mediaServer": {
               "label": "メディアサーバー"
             },
             "mediaOrganizer": {
-              "label": ""
+              "label": "メディアオーガナイザー"
             },
             "downloads": {
-              "label": ""
+              "label": "ダウンロード"
             },
             "mediaRequestStats": {
-              "label": ""
+              "label": "メディアリクエストの統計情報"
             },
             "mediaRequestList": {
-              "label": ""
+              "label": "メディアリクエストのリスト"
             },
             "rssFeeds": {
-              "label": ""
+              "label": "RSS フィード"
             },
             "indexerManager": {
-              "label": ""
+              "label": "インデクサーマネージャー"
             },
             "healthMonitoring": {
-              "label": ""
+              "label": "ヘルスモニタ"
             },
             "dnsHole": {
-              "label": ""
+              "label": "DNS Holeデータ"
             },
             "sessionCleanup": {
-              "label": ""
+              "label": "セッションのクリーンアップ"
             },
             "updateChecker": {
-              "label": ""
+              "label": "アップデートチェッカー"
             },
             "mediaTranscoding": {
-              "label": ""
+              "label": "メディアのトランスコーディング"
             },
             "networkController": {
-              "label": ""
+              "label": "ネットワークコントローラ"
             },
             "refreshNotifications": {
-              "label": ""
+              "label": "通知アップデーター"
             },
             "dockerContainers": {
-              "label": ""
+              "label": "Docker コンテナ"
             }
           },
           "interval": {
-            "seconds": "",
-            "minutes": "",
-            "hours": "",
-            "midnight": "",
-            "weeklyMonday": ""
+            "seconds": "{interval, plural, =1 {秒} other {# 秒}}周期",
+            "minutes": "{interval, plural, =1 {分} other {# 分}}周期",
+            "hours": "{interval, plural, =1 {時間} other {# 時間}}周期",
+            "midnight": "毎日深夜",
+            "weeklyMonday": "毎週月曜日"
           },
           "settings": {
-            "title": ""
+            "title": "{jobName} の タスク設定"
           },
           "field": {
             "interval": {
-              "label": ""
+              "label": "スケジュール間隔"
             }
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "",
-              "description": "",
-              "button": ""
+              "title": "APIトークンが作成されました",
+              "description": "API トークンが作成されました。このトークンはデータベース内で暗号化されているため、二度とあなたに転送されません。 このトークンを紛失した場合、特定のトークンを取得することはできなくなります。",
+              "button": "コピーして閉じる"
             }
           },
           "tab": {
@@ -3172,10 +3172,10 @@
               "label": "ドキュメンテーション"
             },
             "apiKey": {
-              "label": "",
-              "title": "",
+              "label": "認証",
+              "title": "API キー",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "API トークンの生成"
               },
               "modal": {
                 "delete": {
@@ -3343,130 +3343,130 @@
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
-      "label": "",
-      "providers": "",
-      "version": "",
-      "architecture": "",
+      "title": "クラスターダッシュボード",
+      "label": "クラスター",
+      "providers": "プロバイダー",
+      "version": "バージョン",
+      "architecture": "アーキテクチャ",
       "capacity": {
-        "title": "",
+        "title": "容量",
         "resource": {
-          "reserved": "",
-          "used": ""
+          "reserved": "予約済",
+          "used": "使用中"
         }
       },
       "resources": {
-        "title": "",
-        "nodes": "",
-        "namespaces": "",
-        "ingresses": "",
-        "services": "",
-        "pods": "",
-        "configmaps": "",
-        "secrets": "",
-        "volumes": ""
+        "title": "リソース",
+        "nodes": "ノード",
+        "namespaces": "ネームスペース",
+        "ingresses": "イングレス",
+        "services": "サービス",
+        "pods": "Pods",
+        "configmaps": "ConfigMaps",
+        "secrets": "シークレット",
+        "volumes": "ボリューム"
       }
     },
     "nodes": {
-      "label": "",
+      "label": "ノード",
       "field": {
         "name": {
-          "label": ""
+          "label": "名前"
         },
         "state": {
-          "label": "",
+          "label": "状態",
           "option": {
-            "ready": "",
-            "NotReady": ""
+            "ready": "準備完了",
+            "NotReady": "準備未完了"
           }
         },
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "RAM"
         },
         "pods": {
-          "label": ""
+          "label": "Pods"
         },
         "operatingSystem": {
-          "label": ""
+          "label": "OS"
         },
         "architecture": {
-          "label": ""
+          "label": "アーキテクチャ"
         },
         "kubernetesVersion": {
-          "label": ""
+          "label": "Kubernetes バージョン"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "作成日"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} ノードを検索"
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "ネームスペース",
       "field": {
         "name": {
-          "label": ""
+          "label": "名前"
         },
         "state": {
-          "label": "",
+          "label": "状態",
           "option": {
-            "active": "",
-            "terminating": ""
+            "active": "活動中",
+            "terminating": "終了中"
           }
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "作成日"
         }
       },
       "table": {
-        "search": ""
+        "search": "ネームスペース {count} 個を検索"
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "イングレス",
       "field": {
         "name": {
-          "label": ""
+          "label": "名前"
         },
         "namespace": {
-          "label": ""
+          "label": "ネームスペース"
         },
         "className": {
-          "label": ""
+          "label": "クラス名"
         },
         "rulesAndPaths": {
-          "label": ""
+          "label": "ルールとパス"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "作成日"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} 個のイングレスを検索"
       }
     },
     "services": {
-      "label": "",
+      "label": "サービス",
       "field": {
         "name": {
-          "label": ""
+          "label": "名前"
         },
         "namespace": {
-          "label": ""
+          "label": "ネームスペース"
         },
         "type": {
-          "label": ""
+          "label": "種類"
         },
         "ports": {
-          "label": ""
+          "label": "ポート"
         },
         "targetPorts": {
-          "label": ""
+          "label": "ターゲットポート"
         },
         "clusterIP": {
           "label": ""
@@ -3664,42 +3664,42 @@
       "tools": {
         "label": "ツール",
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "kubernetes": {
-          "label": "",
+          "label": "Kubernetes",
           "nodes": {
-            "label": ""
+            "label": "ノード"
           },
           "namespaces": {
-            "label": ""
+            "label": "ネームスペース"
           },
           "ingresses": {
-            "label": ""
+            "label": "イングレス"
           },
           "services": {
-            "label": ""
+            "label": "サービス"
           },
           "pods": {
-            "label": ""
+            "label": "pods"
           },
           "configmaps": {
-            "label": ""
+            "label": "ConfigMaps"
           },
           "secrets": {
-            "label": ""
+            "label": "シークレット"
           },
           "volumes": {
-            "label": ""
+            "label": "ボリューム"
           }
         },
         "logs": {
-          "label": ""
+          "label": "ログ"
         },
         "certificates": {
-          "label": "",
+          "label": "証明書",
           "hostnames": {
-            "label": ""
+            "label": "ホスト名"
           }
         }
       },
@@ -3707,33 +3707,33 @@
         "label": "設定"
       },
       "about": {
-        "label": ""
+        "label": "このアプリについて"
       }
     }
   },
   "search": {
-    "placeholder": "",
-    "nothingFound": "",
+    "placeholder": "何でも検索",
+    "nothingFound": "何も見つかりませんでした",
     "error": {
-      "fetch": ""
+      "fetch": "データの取得中にエラーが発生しました"
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "アプリ、連携、またはボードを検索",
         "group": {
           "app": {
             "title": "アプリ",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "アプリのURLを開く"
                 },
                 "edit": {
-                  "label": ""
+                  "label": "アプリを編集する"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "アプリのアクションを選択"
               }
             }
           },
@@ -3742,105 +3742,105 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "ボードを開く"
                 },
                 "homeBoard": {
-                  "label": ""
+                  "label": "ホームボードとして設定する"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "モバイルボードに設定する"
                 },
                 "settings": {
-                  "label": ""
+                  "label": "設定を開く"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "ボードのアクションを選択"
               }
             }
           },
           "integration": {
-            "title": ""
+            "title": "連携"
           }
         }
       },
       "command": {
-        "help": "",
+        "help": "コマンドモードを有効化",
         "group": {
           "localCommand": {
-            "title": ""
+            "title": "ローカルコマンド"
           },
           "globalCommand": {
-            "title": "",
+            "title": "グローバルコマンド",
             "option": {
               "colorScheme": {
-                "light": "",
+                "light": "ライトモードに切り替え",
                 "dark": "ダークモードに切り替え"
               },
               "language": {
-                "label": "",
+                "label": "言語の変更",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "お好みの言語を選択してください"
                   }
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "新しいボードを作成する"
               },
               "importBoard": {
-                "label": ""
+                "label": "ボードをインポート"
               },
               "newApp": {
-                "label": ""
+                "label": "新しいアプリを作成する"
               },
               "newIntegration": {
-                "label": "",
+                "label": "新しい連携を作成",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "作成したい連系タイプを選択してください"
                   }
                 }
               },
               "newUser": {
-                "label": ""
+                "label": "新規ユーザーの作成"
               },
               "newInvite": {
-                "label": ""
+                "label": "新しい招待を作成"
               },
               "newGroup": {
-                "label": ""
+                "label": "新しいグループの作成"
               }
             }
           }
         }
       },
       "media": {
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": ""
+        "requestMovie": "ムービーをリクエスト",
+        "requestSeries": "シリーズをリクエスト",
+        "openIn": "{kind} で 開く"
       },
       "external": {
-        "help": "",
+        "help": "外部検索エンジンを使用",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "検索エンジン",
             "children": {
               "action": {
                 "search": {
-                  "label": ""
+                  "label": "{name} で検索"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "検索エンジンのアクションを選択"
               },
               "searchResults": {
-                "title": ""
+                "title": "アクションの検索結果を選択"
               }
             },
             "option": {
               "google": {
-                "name": "",
+                "name": "Google",
                 "description": ""
               },
               "bing": {
@@ -4037,44 +4037,44 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "検索エンジンが作成されました",
+              "message": "検索エンジンは正常に作成されました"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "検索エンジンは作成されていません",
+              "message": "検索エンジンを作成できませんでした"
             }
           }
         },
         "edit": {
-          "title": "",
+          "title": "検索エンジンの編集",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "変更は正常に適用されました",
+              "message": "検索エンジンは正常に保存されました"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "変更の適用失敗",
+              "message": "検索エンジンを保存できませんでした"
             }
           },
-          "configControl": "",
+          "configControl": "設定",
           "searchEngineType": {
-            "generic": "",
-            "fromIntegration": ""
+            "generic": "一般",
+            "fromIntegration": "連携から"
           }
         },
         "delete": {
-          "title": "",
-          "message": "",
+          "title": "検索エンジンを削除",
+          "message": "検索エンジン {name} を削除してもよろしいですか？",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "検索エンジンが削除されました",
+              "message": "検索エンジンが正常に削除されました"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "検索エンジンは削除されていません",
+              "message": "検索エンジンを削除できませんでした"
             }
           }
         }
@@ -4082,15 +4082,15 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "リクエスト \"{name}\"",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "シーズン",
+                "episodes": "エピソード"
               }
             },
             "button": {
-              "send": ""
+              "send": "リクエストを送信"
             }
           }
         }
@@ -4100,74 +4100,74 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "ホスト名"
       },
       "subject": {
         "label": ""
       },
       "issuer": {
-        "label": ""
+        "label": "発行者"
       },
       "validFrom": {
-        "label": ""
+        "label": "有効期限開始日"
       },
       "validTo": {
-        "label": ""
+        "label": "有効期間の終了日"
       },
       "serialNumber": {
-        "label": ""
+        "label": "シリアル番号"
       },
       "fingerprint": {
-        "label": ""
+        "label": "フィンガープリント"
       }
     },
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "信頼できる証明書",
+        "description": "連携からデータを要求するために、Homarrが使用します。",
         "noResults": {
-          "title": ""
+          "title": "証明書はまだありません"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "不正な証明書",
+          "description": "証明書の解析に失敗しました"
         },
-        "expires": "",
-        "toHostnames": ""
+        "expires": "期限切れ {when}",
+        "toHostnames": "信頼されたホスト名"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "信頼できる証明書のホスト名",
+        "description": "いくつかの証明書は特定のドメインを許可していません Homarr がそれらを要求するために使用します。 このため、証明書のサムネイルを持つすべての信頼されたホスト名は、これらの制限を回避するために使用されます。",
         "noResults": {
-          "title": ""
+          "title": "ホスト名がまだありません"
         },
-        "toCertificates": ""
+        "toCertificates": "証明書"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "認定・証明書を追加",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "証明書が追加されました",
+            "message": "証明書が正常に追加されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "証明書の追加に失敗しました",
+            "message": "証明書を追加できませんでした"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "証明書を削除",
+        "confirm": "本当に証明書を削除しますか？",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "証明書が削除されました",
+            "message": "証明書は正常に削除されました"
           },
           "error": {
-            "title": "",
+            "title": "証明書は削除されていません",
             "message": ""
           }
         }
