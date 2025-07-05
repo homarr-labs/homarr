@@ -7,7 +7,7 @@ import { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
-import { createChannelEventHistory } from "../../../redis/src/lib/channel";
+import { createChannelEventHistoryOld } from "../../../redis/src/lib/channel";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -114,7 +114,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
   }
 
   private getChannel() {
-    return createChannelEventHistory<z.infer<typeof cpuLoadPerCoreApiList>>(
+    return createChannelEventHistoryOld<z.infer<typeof cpuLoadPerCoreApiList>>(
       `integration:${this.integration.id}:history:cpu`,
       100,
     );
