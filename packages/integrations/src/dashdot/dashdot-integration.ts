@@ -38,8 +38,8 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
 
     return {
       cpuUtilization: cpuLoad.sumLoad,
-      memUsed: `${memoryLoad.loadInBytes}`,
-      memAvailable: `${info.maxAvailableMemoryBytes - memoryLoad.loadInBytes}`,
+      memUsedInBytes: memoryLoad.loadInBytes,
+      memAvailableInBytes: info.maxAvailableMemoryBytes - memoryLoad.loadInBytes,
       fileSystem: info.storage
         .filter((_, index) => storageLoad[index] !== -1) // filter out undermoutned drives, they display as -1 in the load API
         .map((storage, index) => ({

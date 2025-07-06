@@ -1,31 +1,28 @@
-import {CommonChart} from "./common-chart";
+import { Paper, Text } from "@mantine/core";
+import { CommonChart } from "./common-chart";
+import { humanFileSize } from "@homarr/common";
 
-export const SystemResourceMemoryChart = () => {
-  const data = [
-    {
-      date: 'Mar 22',
-      Usage: 12389,
-    },
-    {
-      date: 'Mar 23',
-      Usage: 38932,
-    },
-    {
-      date: 'Mar 24',
-      Usage: 25721
-    },
-    {
-      date: 'Mar 25',
-      Usage: 1237879
-    },
-    {
-      date: 'Mar 26',
-      Usage: 13980
-    },
-  ];
+export const SystemResourceMemoryChart = ({ memoryUsageOverTime }: { memoryUsageOverTime: number[] }) => {
+  const chartData = memoryUsageOverTime.map((usage, index) => ({ index, "usage": usage }));
 
   return (
-    <CommonChart data={data} dataKey={"date"} series={[
-      { name: 'Usage', color: 'orange.6' }]} title={"RAM"} />
-  )
-}
+    <CommonChart
+      data={chartData}
+      dataKey={"index"}
+      series={[{ name: "usage", color: "teal.6" }]}
+      title={"RAM"}
+      tooltipProps={{
+        content: ({ label, payload }) => {
+          const value = payload[0] ? Number(payload[0].value) : 0;
+          return (
+            <Paper px="md" py="sm" withBorder shadow="md" radius="md">
+              <Text c="dimmed" size="xs">
+                {humanFileSize(value)}
+              </Text>
+            </Paper>
+          );
+        },
+      }}
+    />
+  );
+};
