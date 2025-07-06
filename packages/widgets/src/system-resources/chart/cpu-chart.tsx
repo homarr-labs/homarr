@@ -1,41 +1,25 @@
-import {CommonChart} from "./common-chart";
+import { Paper, Text } from "@mantine/core";
+import { CommonChart } from "./common-chart";
 
-export const SystemResourceCPUChart = () => {
-  const data = [
-    {
-      date: 'Mar 22',
-      Apples: 2890,
-      Oranges: 2338,
-      Tomatoes: 2452,
-    },
-    {
-      date: 'Mar 23',
-      Apples: 2756,
-      Oranges: 2103,
-      Tomatoes: 2402,
-    },
-    {
-      date: 'Mar 24',
-      Apples: 3322,
-      Oranges: 986,
-      Tomatoes: 1821,
-    },
-    {
-      date: 'Mar 25',
-      Apples: 3470,
-      Oranges: 2108,
-      Tomatoes: 2809,
-    },
-    {
-      date: 'Mar 26',
-      Apples: 3129,
-      Oranges: 1726,
-      Tomatoes: 2290,
-    },
-  ];
+export const SystemResourceCPUChart = ({ cpuUsageOverTime }: { cpuUsageOverTime: number[] }) => {
+  const chartData = cpuUsageOverTime.map((usage, index) => ({ index, "usage": usage }));
 
   return (
-    <CommonChart data={data} dataKey={"date"} series={[
-      { name: 'Tomatoes', color: 'teal.6' }]} title={"CPU"} />
-  )
-}
+    <CommonChart
+      data={chartData}
+      dataKey={"index"}
+      series={[{ name: "usage", color: "teal.6" }]}
+      title={"CPU"}
+      tooltipProps={{
+        content: ({ label, payload }) => {
+          const value = payload[0] ? Number(payload[0].value) : 0;
+          return (
+          <Paper px="md" py="sm" withBorder shadow="md" radius="md">
+            <Text c="dimmed" size="xs">{value.toFixed(0)}%</Text>
+          </Paper>
+        );
+        }
+      }}
+    />
+  );
+};
