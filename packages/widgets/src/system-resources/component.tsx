@@ -1,6 +1,7 @@
 import type {WidgetComponentProps} from "../definition";
 import {SystemResourceCPUChart} from "./chart/cpu-chart";
 import classes from "./component.module.css";
+import {SystemResourceMemoryChart} from "./chart/memory-chart";
 
 export default function SystemResources({options}: WidgetComponentProps<"systemResources">) {
   return (
@@ -9,7 +10,7 @@ export default function SystemResources({options}: WidgetComponentProps<"systemR
         <SystemResourceCPUChart/>
       </div>
       <div className={classes.colSpanWide}>
-        <SystemResourceCPUChart/>
+        <SystemResourceMemoryChart/>
       </div>
       <SystemResourceCPUChart/>
       <SystemResourceCPUChart/>
