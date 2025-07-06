@@ -1,0 +1,14 @@
+.grid {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    padding: 14px;
+
+    height: 100%;
+}
+
+.colSpanWide {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}

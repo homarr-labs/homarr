@@ -37,6 +37,7 @@ import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as stockPrice from "./stocks";
 import * as video from "./video";
 import * as weather from "./weather";
+import * as systemResources from "./system-resources";
 
 export type { WidgetDefinition, WidgetOptionsSettings } from "./definition";
 export type { WidgetComponentProps };
@@ -69,6 +70,7 @@ export const widgetImports = {
   dockerContainers,
   releases,
   notifications,
+  systemResources
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

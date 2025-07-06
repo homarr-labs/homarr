@@ -2383,6 +2383,10 @@
       "description": "Display notification history from an integration",
       "noItems": "No notifications to display.",
       "option": {}
+    },
+    "systemResources": {
+      "name": "System resources",
+      "description": "CPU, Memory, Disk and other hardware usage of your system"
     }
   },
   "widgetPreview": {
