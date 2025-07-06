@@ -1,5 +1,6 @@
 import { Octokit, RequestError } from "octokit";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
 import type { IntegrationTestingInput } from "../base/integration";
@@ -14,6 +15,8 @@ import type {
   ReleasesRepository,
   ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
+
+const localLogger = logger.child({ module: "GithubIntegration" });
 
 export class GithubIntegration extends Integration implements ReleasesProviderIntegration {
   private static readonly userAgent = "Homarr-Lab/Homarr:GithubIntegration";
@@ -42,7 +45,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
   public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
     const [owner, name] = repository.identifier.split("/");
     if (!owner || !name) {
-      logger.warn(
+      localLogger.warn(
         `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Github integration`,
         {
           identifier: repository.identifier,
@@ -65,7 +68,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
       });
 
       if (releasesResponse.data.length === 0) {
-        logger.warn(`No releases found, for ${repository.identifier} with Github integration`, {
+        localLogger.warn(`No releases found, for ${repository.identifier} with Github integration`, {
           identifier: repository.identifier,
         });
         return {
@@ -91,7 +94,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     } catch (error) {
       const errorMessage = error instanceof RequestError ? error.message : String(error);
 
-      logger.warn(`Failed to get releases for ${owner}\\${name} with Github integration`, {
+      localLogger.warn(`Failed to get releases for ${owner}\\${name} with Github integration`, {
         owner,
         name,
         error: errorMessage,
@@ -126,7 +129,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
         forksCount: response.data.forks_count,
       };
     } catch (error) {
-      logger.warn(`Failed to get details for ${owner}\\${name} with Github integration`, {
+      localLogger.warn(`Failed to get details for ${owner}\\${name} with Github integration`, {
         owner,
         name,
         error: error instanceof RequestError ? error.message : String(error),
@@ -138,6 +141,9 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
   private getApi() {
     return new Octokit({
       baseUrl: this.url("/").origin,
+      request: {
+        fetch: fetchWithTrustedCertificatesAsync,
+      },
       userAgent: GithubIntegration.userAgent,
       throttle: { enabled: false }, // Disable throttling for this integration, Octokit will retry by default after a set time, thus delaying the repsonse to the user in case of errors. Errors will be shown to the user, no need to retry the request.
       ...(this.hasSecretValue("personalAccessToken") ? { auth: this.getSecretValue("personalAccessToken") } : {}),

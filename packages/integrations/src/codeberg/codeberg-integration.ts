@@ -1,4 +1,4 @@
-import type { RequestInit } from "undici";
+import type { RequestInit, Response } from "undici";
 import { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
@@ -16,18 +16,22 @@ import type {
   ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
-export class CodebergIntegration extends Integration implements ReleasesProviderIntegration {
-  protected buildHeaders(): RequestInit["headers"] {
-    if (!this.hasSecretValue("personalAccessToken")) return {};
+const localLogger = logger.child({ module: "CodebergIntegration" });
 
-    return {
+export class CodebergIntegration extends Integration implements ReleasesProviderIntegration {
+  private async withHeadersAsync(callback: (headers: RequestInit["headers"]) => Promise<Response>): Promise<Response> {
+    if (!this.hasSecretValue("personalAccessToken")) return await callback({});
+
+    return await callback({
       Authorization: `token ${this.getSecretValue("personalAccessToken")}`,
-    };
+    });
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const response = await input.fetchAsync(this.url("/version"), {
-      headers: this.buildHeaders(),
+    const response = await this.withHeadersAsync(async (headers) => {
+      return await input.fetchAsync(this.url("/version"), {
+        headers,
+      });
     });
 
     if (!response.ok) {
@@ -42,7 +46,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
   public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
     const [owner, name] = repository.identifier.split("/");
     if (!owner || !name) {
-      logger.warn(
+      localLogger.warn(
         `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Codeberg integration`,
         {
           identifier: repository.identifier,
@@ -54,13 +58,14 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
       };
     }
 
-    const headers = this.buildHeaders();
-    const details = await this.getDetailsAsync(owner, name, headers);
+    const details = await this.getDetailsAsync(owner, name);
 
-    const releasesResponse = await fetchWithTrustedCertificatesAsync(
-      this.url(`/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/releases`),
-      { headers },
-    );
+    const releasesResponse = await this.withHeadersAsync(async (headers) => {
+      return fetchWithTrustedCertificatesAsync(
+        this.url(`/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/releases`),
+        { headers },
+      );
+    });
 
     if (!releasesResponse.ok) {
       return {
@@ -102,20 +107,18 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     }
   }
 
-  protected async getDetailsAsync(
-    owner: string,
-    name: string,
-    headers: RequestInit["headers"],
-  ): Promise<DetailsProviderResponse | undefined> {
-    const response = await fetchWithTrustedCertificatesAsync(
-      this.url(`/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`),
-      {
-        headers,
-      },
-    );
+  protected async getDetailsAsync(owner: string, name: string): Promise<DetailsProviderResponse | undefined> {
+    const response = await this.withHeadersAsync(async (headers) => {
+      return await fetchWithTrustedCertificatesAsync(
+        this.url(`/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`),
+        {
+          headers,
+        },
+      );
+    });
 
     if (!response.ok) {
-      logger.warn(`Failed to get details response for ${owner}/${name} with Codeberg integration`, {
+      localLogger.warn(`Failed to get details response for ${owner}/${name} with Codeberg integration`, {
         owner,
         name,
         error: response.statusText,
@@ -149,7 +152,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
       .safeParse(responseJson);
 
     if (!parsedDetails.success) {
-      logger.warn(`Failed to parse details response for ${owner}/${name} with Codeberg integration`, {
+      localLogger.warn(`Failed to parse details response for ${owner}/${name} with Codeberg integration`, {
         owner,
         name,
         error: parsedDetails.error,

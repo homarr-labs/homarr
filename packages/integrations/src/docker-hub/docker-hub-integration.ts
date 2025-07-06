@@ -1,4 +1,4 @@
-import type { RequestInit, fetch as undiciFetch, Response as UndiciResponse } from "undici";
+import type { fetch, RequestInit, Response } from "undici";
 import { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
@@ -30,9 +30,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     this.sessionStore = createSessionStore(integration);
   }
 
-  private async withHeadersAsync(
-    callback: (headers: RequestInit["headers"]) => Promise<UndiciResponse>,
-  ): Promise<UndiciResponse> {
+  private async withHeadersAsync(callback: (headers: RequestInit["headers"]) => Promise<Response>): Promise<Response> {
     if (!this.hasSecretValue("username") || !this.hasSecretValue("personalAccessToken")) return await callback({});
 
     const storedSession = await this.sessionStore.getAsync();
@@ -93,7 +91,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     const details = await this.getDetailsAsync(relativeUrl);
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
-      return fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/tags?page_size=100`), {
+      return await fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/tags?page_size=100`), {
         headers,
       });
     });
@@ -133,7 +131,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
 
   private async getDetailsAsync(relativeUrl: `/${string}`): Promise<DetailsProviderResponse | undefined> {
     const response = await this.withHeadersAsync(async (headers) => {
-      return fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/`), {
+      return await fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/`), {
         headers,
       });
     });
@@ -188,7 +186,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     }
   }
 
-  private async getSessionAsync(fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync): Promise<string> {
+  private async getSessionAsync(fetchAsync: typeof fetch = fetchWithTrustedCertificatesAsync): Promise<string> {
     const response = await fetchAsync(this.url("/v2/auth/token"), {
       method: "POST",
       body: JSON.stringify({

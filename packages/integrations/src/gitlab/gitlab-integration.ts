@@ -1,6 +1,9 @@
 import type { Gitlab as CoreGitlab } from "@gitbeaker/core";
+import { createRequesterFn, defaultOptionsHandler } from "@gitbeaker/requester-utils";
+import type { FormattedResponse, RequestOptions, ResourceOptions } from "@gitbeaker/requester-utils";
 import { Gitlab } from "@gitbeaker/rest";
 
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
 import type { IntegrationTestingInput } from "../base/integration";
@@ -15,6 +18,8 @@ import type {
   ReleasesRepository,
   ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
+
+const localLogger = logger.child({ module: "GitlabIntegration" });
 
 export class GitlabIntegration extends Integration implements ReleasesProviderIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -46,7 +51,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
       });
 
       if (releasesResponse instanceof Error) {
-        logger.warn(`Failed to get releases for ${repository.identifier} with Gitlab integration`, {
+        localLogger.warn(`Failed to get releases for ${repository.identifier} with Gitlab integration`, {
           identifier: repository.identifier,
           error: releasesResponse.message,
         });
@@ -71,7 +76,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
 
       return getLatestRelease(releasesProviderResponse, repository, details);
     } catch (error) {
-      logger.warn(`Failed to get releases for ${repository.identifier} with Gitlab integration`, {
+      localLogger.warn(`Failed to get releases for ${repository.identifier} with Gitlab integration`, {
         identifier: repository.identifier,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -88,7 +93,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
       const response = await api.Projects.show(identifier);
 
       if (response instanceof Error) {
-        logger.warn(`Failed to get details for ${identifier} with Gitlab integration`, {
+        localLogger.warn(`Failed to get details for ${identifier} with Gitlab integration`, {
           identifier,
           error: response.message,
         });
@@ -97,7 +102,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
       }
 
       if (!response.web_url) {
-        logger.warn(`No web URL found for ${identifier} with Gitlab integration`, {
+        localLogger.warn(`No web URL found for ${identifier} with Gitlab integration`, {
           identifier,
         });
         return undefined;
@@ -114,7 +119,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
         forksCount: response.forks_count,
       };
     } catch (error) {
-      logger.warn(`Failed to get details for ${identifier} with Gitlab integration`, {
+      localLogger.warn(`Failed to get details for ${identifier} with Gitlab integration`, {
         identifier,
         error: error instanceof Error ? error.message : String(error),
       });
@@ -125,7 +130,27 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
 
   private getApi() {
     return new Gitlab({
-      host: this.url("/").toString(),
+      host: this.url("/").origin,
+      requesterFn: createRequesterFn(
+        async (serviceOptions: ResourceOptions, _: RequestOptions) => await defaultOptionsHandler(serviceOptions),
+        async (endpoint: string, options?: Record<string, unknown>): Promise<FormattedResponse> => {
+          if (options === undefined) {
+            throw new Error("Gitlab library is not configured correctly. Options must be provided.");
+          }
+
+          const response = await fetchWithTrustedCertificatesAsync(
+            `${options.prefixUrl as string}${endpoint}`,
+            options,
+          );
+          const headers = Object.fromEntries(response.headers.entries());
+
+          return {
+            status: response.status,
+            headers,
+            body: await response.json(),
+          } as FormattedResponse;
+        },
+      ),
       ...(this.hasSecretValue("personalAccessToken") ? { token: this.getSecretValue("personalAccessToken") } : {}),
     });
   }
