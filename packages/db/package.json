@@ -47,7 +47,7 @@
     "@homarr/server-settings": "workspace:^0.1.0",
     "@mantine/core": "^8.1.2",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@testcontainers/mysql": "^11.0.3",
+    "@testcontainers/mysql": "^11.1.0",
     "better-sqlite3": "^12.2.0",
     "dotenv": "^17.0.1",
     "drizzle-kit": "^0.31.4",
