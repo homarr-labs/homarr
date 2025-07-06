@@ -2992,11 +2992,11 @@
             "title": "統計情報",
             "general": {
               "title": "匿名の解析を送信",
-              "text": ""
+              "text": "HomarrはオープンソースソフトウェアUmamiを使用して匿名化された分析情報を送信します。個人情報を一切収集しないため、GDPRとCCPAに完全に準拠しています。分析機能を有効にすると、オープンソースチームが問題を特定し、バックログの優先順位付けを行うのに役立ちますので、ぜひ有効にしてください。"
             },
             "widgetData": {
               "title": "ウィジェットのデータ",
-              "text": ""
+              "text": "あなたが設定したウィジェット（およびその数量）を送信します。URL、名前、その他のデータは含まれません。"
             },
             "integrationData": {
               "title": "インテグレーション情報",
@@ -3004,7 +3004,7 @@
             },
             "usersData": {
               "title": "ユーザー情報",
-              "text": ""
+              "text": "SSOをアクティベートしたユーザーの数を送信します"
             }
           },
           "crawlingAndIndexing": {
@@ -3179,15 +3179,15 @@
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "API トークンを削除",
+                  "text": "APIトークンを完全に削除します。このトークンを使用したAPIクライアントは認証できず、APIリクエストを実行できません。このアクションは元に戻せません。"
                 }
               },
               "table": {
                 "header": {
-                  "id": "",
-                  "createdBy": "",
-                  "actions": ""
+                  "id": "ID",
+                  "createdBy": "作成者",
+                  "actions": "アクション"
                 }
               }
             }
@@ -3195,20 +3195,20 @@
         }
       },
       "about": {
-        "version": "",
-        "text": "",
+        "version": "バージョン {version}",
+        "text": "Homarrは、ボランティアによって運営されているコミュニティ主導のオープンソースプロジェクトです。 これらの人々のおかげで、Homarrは2021年から成長を続けてきました。 私たちのチームは、余暇に報酬なしで 多くの異なる国からフルリモートでHomarr に取り組んでいます。",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "貢献者",
+            "subtitle": "{count} メンテナンスコード & Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "翻訳者",
+            "subtitle": "{count} の多くの言語で翻訳を行っている"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "ライブラリ",
+            "subtitle": "{count} 個が Homarr のコードで使用されています"
           }
         }
       }
@@ -3217,10 +3217,10 @@
   "docker": {
     "title": "コンテナ",
     "table": {
-      "updated": "",
-      "search": "",
-      "selected": "",
-      "footer": ""
+      "updated": "{when} に更新しました",
+      "search": "{count} 個のコンテナを検索",
+      "selected": "{totalCount} 個のうち、{selectCount} 個のコンテナが選択されています",
+      "footer": "合計 {count} 個のコンテナ"
     },
     "field": {
       "name": {
@@ -3233,17 +3233,17 @@
           "running": "実行中",
           "paused": "ポーズ",
           "restarting": "再起動中",
-          "exited": "",
+          "exited": "終了",
           "removing": "削除中",
-          "dead": ""
+          "dead": "死亡"
         }
       },
       "stats": {
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "メモリ"
         }
       },
       "containerImage": {
@@ -3254,17 +3254,17 @@
       }
     },
     "action": {
-      "title": "",
+      "title": "操作",
       "start": {
         "label": "開始",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "コンテナは開始されました",
+            "message": "コンテナが正常に開始されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "コンテナが開始されていません",
+            "message": "コンテナを開始できませんでした"
           }
         }
       },
@@ -3272,12 +3272,12 @@
         "label": "停止",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "コンテナが停止しました",
+            "message": "コンテナが正常に停止しました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "コンテナが停止していません",
+            "message": "コンテナを停止できませんでした"
           }
         }
       },
@@ -3285,12 +3285,12 @@
         "label": "再起動",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "コンテナが再起動されました",
+            "message": "コンテナが正常に再起動されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "コンテナが再起動されていません",
+            "message": "コンテナは再起動できませんでした"
           }
         }
       },
@@ -3298,47 +3298,47 @@
         "label": "削除",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "コンテナー削除",
+            "message": "コンテナが正常に削除されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "コンテナが削除されていません",
+            "message": "コンテナを削除できませんでした"
           }
         }
       },
       "refresh": {
-        "label": "",
+        "label": "更新する",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "コンテナを更新しました",
+            "message": "最新のデータを表示しています"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "コンテナが更新されていません",
+            "message": "コンテナを更新中に問題が発生しました"
           }
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Homarrに追加する",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Homarrに追加しました",
+            "message": "選択したアプリを Homarrに追加しました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Homar に追加できませんでした",
+            "message": "選択したアプリを Homarrに追加できませんでした"
           }
         },
         "modal": {
-          "title": ""
+          "title": "Homarrに dockerコンテナを追加"
         }
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Dockerコンテナの取得に失敗しました"
     }
   },
   "kubernetes": {
@@ -3359,7 +3359,7 @@
         "title": "リソース",
         "nodes": "ノード",
         "namespaces": "ネームスペース",
-        "ingresses": "イングレス",
+        "ingresses": "Ingress",
         "services": "サービス",
         "pods": "Pods",
         "configmaps": "ConfigMaps",
@@ -3403,7 +3403,7 @@
         }
       },
       "table": {
-        "search": "{count} ノードを検索"
+        "search": "{count} 個のノードを検索"
       }
     },
     "namespaces": {
@@ -3424,11 +3424,11 @@
         }
       },
       "table": {
-        "search": "ネームスペース {count} 個を検索"
+        "search": "{count} 個のネームスペースを検索"
       }
     },
     "ingresses": {
-      "label": "イングレス",
+      "label": "Ingress",
       "field": {
         "name": {
           "label": "名前"
@@ -3447,7 +3447,7 @@
         }
       },
       "table": {
-        "search": "{count} 個のイングレスを検索"
+        "search": "{count} 個の Ingress を検索"
       }
     },
     "services": {
@@ -3469,145 +3469,145 @@
           "label": "ターゲットポート"
         },
         "clusterIP": {
-          "label": ""
+          "label": "クラスター IP"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "作成日"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} 個のサービスを検索"
       }
     },
     "pods": {
-      "label": "",
+      "label": "Pods",
       "field": {
         "name": {
-          "label": ""
+          "label": "名前"
         },
         "namespace": {
-          "label": ""
+          "label": "ネームスペース"
         },
         "image": {
-          "label": ""
+          "label": "イメージ"
         },
         "applicationType": {
-          "label": ""
+          "label": "アプリケーションタイプ"
         },
         "status": {
-          "label": ""
+          "label": "状態"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "作成日"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} 個の Pods を検索"
       }
     },
     "secrets": {
-      "label": "",
+      "label": "シークレット",
       "field": {
         "name": {
-          "label": ""
+          "label": "名前"
         },
         "namespace": {
-          "label": ""
+          "label": "ネームスペース"
         },
         "type": {
-          "label": ""
+          "label": "種類"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "作成日"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} 個のシークレットを検索"
       }
     },
     "configmaps": {
-      "label": "",
+      "label": "ConfigMaps",
       "field": {
         "name": {
-          "label": ""
+          "label": "名前"
         },
         "namespace": {
-          "label": ""
+          "label": "ネームスペース"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "作成日"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} 個の ConfigMap から検索"
       }
     },
     "volumes": {
-      "label": "",
+      "label": "ボリューム",
       "field": {
         "name": {
-          "label": ""
+          "label": "名前"
         },
         "namespace": {
-          "label": ""
+          "label": "ネームスペース"
         },
         "accessModes": {
-          "label": ""
+          "label": "アクセスモード"
         },
         "storage": {
-          "label": ""
+          "label": "ストレージ"
         },
         "storageClassName": {
-          "label": ""
+          "label": "ストレージクラス名"
         },
         "volumeMode": {
-          "label": ""
+          "label": "ボリュームモード"
         },
         "volumeName": {
-          "label": ""
+          "label": "ボリューム名"
         },
         "status": {
-          "label": ""
+          "label": "状態"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "作成日"
         }
       },
       "table": {
-        "search": ""
+        "search": "{count} 個のボリュームを検索"
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Kubernetes データの取得に失敗しました"
     }
   },
   "permission": {
-    "title": "",
+    "title": "権限",
     "userSelect": {
-      "title": ""
+      "title": "ユーザー権限を追加"
     },
     "groupSelect": {
-      "title": ""
+      "title": "グループ権限を追加"
     },
     "tab": {
       "user": "ユーザー",
-      "group": "",
-      "inherited": ""
+      "group": "グループ",
+      "inherited": "継承されたグループ"
     },
     "field": {
       "user": {
         "label": "ユーザー"
       },
       "group": {
-        "label": ""
+        "label": "グループ"
       },
       "permission": {
-        "label": ""
+        "label": "権限"
       }
     },
     "action": {
-      "saveUser": "",
-      "saveGroup": ""
+      "saveUser": "ユーザー権限を保存する",
+      "saveGroup": "グループの権限を保存する"
     }
   },
   "navigationStructure": {
@@ -3617,30 +3617,30 @@
         "label": "ボード"
       },
       "integrations": {
-        "label": "",
+        "label": "連携",
         "edit": {
           "label": "編集"
         },
         "new": {
-          "label": ""
+          "label": "New"
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "検索エンジン",
         "new": {
-          "label": ""
+          "label": "New"
         },
         "edit": {
           "label": "編集"
         }
       },
       "medias": {
-        "label": ""
+        "label": "メディア"
       },
       "apps": {
         "label": "アプリ",
         "new": {
-          "label": ""
+          "label": "New"
         },
         "edit": {
           "label": "編集"
@@ -3655,7 +3655,7 @@
         "security": "セキュリティ",
         "board": "ボード",
         "groups": {
-          "label": ""
+          "label": "グループ"
         },
         "invites": {
           "label": "招待"
@@ -3675,7 +3675,7 @@
             "label": "ネームスペース"
           },
           "ingresses": {
-            "label": "イングレス"
+            "label": "Ingress"
           },
           "services": {
             "label": "サービス"
@@ -3841,23 +3841,23 @@
             "option": {
               "google": {
                 "name": "Google",
-                "description": ""
+                "description": "Google でウェブを検索"
               },
               "bing": {
-                "name": "",
-                "description": ""
+                "name": "Bing",
+                "description": "Bing でウェブを検索"
               },
               "duckduckgo": {
-                "name": "",
-                "description": ""
+                "name": "DuckDuckGo",
+                "description": "DuckDuckGo でウェブを検索"
               },
               "torrent": {
                 "name": "トレント",
-                "description": ""
+                "description": "torrentdownloads.pro で torrent を検索"
               },
               "youTube": {
-                "name": "",
-                "description": ""
+                "name": "YouTube",
+                "description": "YouTubeで動画を検索"
               }
             }
           }
@@ -3866,7 +3866,7 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "モード"
           },
           "help": {
             "title": "ヘルプ",
@@ -3875,7 +3875,7 @@
                 "label": "ドキュメンテーション"
               },
               "submitIssue": {
-                "label": ""
+                "label": "問題を送信する"
               },
               "discord": {
                 "label": "コミュニティ・ディスコード"
@@ -3887,81 +3887,81 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "検索",
             "option": {
               "other": {
-                "label": ""
+                "label": "他の検索エンジンで検索する"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "デフォルトの検索エンジンはありません",
+                "description": "設定でデフォルトの検索エンジンを設定"
               },
               "search": {
-                "label": ""
+                "label": "\"{query}\" を {name} で検索"
               },
               "from-integration": {
-                "description": ""
+                "description": "検索するには文字を入力してください"
               }
             }
           },
           "local": {
-            "title": ""
+            "title": "ローカルの結果"
           }
         }
       },
       "page": {
-        "help": "",
+        "help": "ページを検索",
         "group": {
           "page": {
             "title": "",
             "option": {
               "manageHome": {
-                "label": ""
+                "label": "ホームページの管理"
               },
               "manageBoard": {
-                "label": ""
+                "label": "ボードの管理"
               },
               "manageApp": {
-                "label": ""
+                "label": "アプリの管理"
               },
               "manageIntegration": {
-                "label": ""
+                "label": "連携の管理"
               },
               "manageSearchEngine": {
-                "label": ""
+                "label": "検索エンジンの管理"
               },
               "manageMedia": {
-                "label": ""
+                "label": "メディアの管理"
               },
               "manageUser": {
                 "label": "ユーザー管理"
               },
               "manageInvite": {
-                "label": ""
+                "label": "招待の管理"
               },
               "manageGroup": {
-                "label": ""
+                "label": "グループの管理"
               },
               "manageDocker": {
-                "label": ""
+                "label": "Docker の管理"
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API"
               },
               "manageLog": {
-                "label": ""
+                "label": "ログを表示"
               },
               "manageTask": {
-                "label": ""
+                "label": "タスクの管理"
               },
               "manageSettings": {
-                "label": ""
+                "label": "全体設定"
               },
               "about": {
                 "label": ""
               },
               "homeBoard": {
-                "label": ""
+                "label": "ホームボード"
               },
               "preferences": {
                 "label": "あなたの好み"
@@ -3971,14 +3971,14 @@
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "ユーザまたはグループの検索",
         "group": {
           "user": {
             "title": "ユーザー",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "ユーザーの詳細を表示"
                 }
               },
               "detail": {
