@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
 import type { IntegrationTestingInput } from "../base/integration";
@@ -9,6 +7,7 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type { ReleasesRepository, ReleasesResponse } from "../interfaces/releases-providers/releases-providers-types";
+import { releasesResponseSchema } from "./npm-schemas";
 
 export class NPMIntegration extends Integration implements ReleasesProviderIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -36,35 +35,22 @@ export class NPMIntegration extends Integration implements ReleasesProviderInteg
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
-    const releasesResult = z
-      .object({
-        time: z.record(z.string().transform((value) => new Date(value))).transform((version) =>
-          Object.entries(version).map(([key, value]) => ({
-            latestRelease: key,
-            latestReleaseAt: value,
-          })),
-        ),
-        versions: z.record(z.object({ description: z.string() })),
-        name: z.string(),
-      })
-      .transform((resp) => {
-        return resp.time.map((release) => ({
-          ...release,
-          releaseUrl: `https://www.npmjs.com/package/${encodeURIComponent(resp.name)}/v/${encodeURIComponent(release.latestRelease)}`,
-          releaseDescription: resp.versions[release.latestRelease]?.description ?? "",
-        }));
-      })
-      .safeParse(releasesResponseJson);
+    const { data, success, error } = releasesResponseSchema.safeParse(releasesResponseJson);
 
-    if (!releasesResult.success) {
+    if (!success) {
       return {
         id: repository.id,
         error: {
-          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
+          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
         },
       };
     } else {
-      return getLatestRelease(releasesResult.data, repository);
+      const formattedReleases = data.time.map((tag) => ({
+        ...tag,
+        releaseUrl: `https://www.npmjs.com/package/${encodeURIComponent(data.name)}/v/${encodeURIComponent(tag.latestRelease)}`,
+        releaseDescription: data.versions[tag.latestRelease]?.description ?? "",
+      }));
+      return getLatestRelease(formattedReleases, repository);
     }
   }
 }

@@ -1,5 +1,4 @@
 import type { fetch, RequestInit, Response } from "undici";
-import { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
@@ -18,7 +17,7 @@ import type {
   ReleasesRepository,
   ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
-import { accessTokenResponseSchema } from "./docker-hub-schemas";
+import { accessTokenResponseSchema, detailsResponseSchema, releasesResponseSchema } from "./docker-hub-schemas";
 
 const localLogger = logger.child({ module: "DockerHubIntegration" });
 
@@ -104,18 +103,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
-    const releasesResult = z
-      .object({
-        results: z.array(
-          z
-            .object({ name: z.string(), last_updated: z.string().transform((value) => new Date(value)) })
-            .transform((tag) => ({
-              latestRelease: tag.name,
-              latestReleaseAt: tag.last_updated,
-            })),
-        ),
-      })
-      .safeParse(releasesResponseJson);
+    const releasesResult = releasesResponseSchema.safeParse(releasesResponseJson);
 
     if (!releasesResult.success) {
       return {
@@ -146,32 +134,23 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     }
 
     const responseJson = await response.json();
-    const parsedDetails = z
-      .object({
-        name: z.string(),
-        namespace: z.string(),
-        description: z.string(),
-        star_count: z.number(),
-        date_registered: z.string().transform((value) => new Date(value)),
-      })
-      .transform((resp) => ({
-        projectUrl: `https://hub.docker.com/r/${resp.namespace === "library" ? "_" : resp.namespace}/${resp.name}`,
-        projectDescription: resp.description,
-        createdAt: resp.date_registered,
-        starsCount: resp.star_count,
-      }))
-      .safeParse(responseJson);
+    const { data, success, error } = detailsResponseSchema.safeParse(responseJson);
 
-    if (!parsedDetails.success) {
+    if (!success) {
       localLogger.warn(`Failed to parse details response for ${relativeUrl} with DockerHub integration`, {
         relativeUrl,
-        error: parsedDetails.error,
+        error,
       });
 
       return undefined;
     }
 
-    return parsedDetails.data;
+    return {
+      projectUrl: `https://hub.docker.com/r/${data.namespace === "library" ? "_" : data.namespace}/${data.name}`,
+      projectDescription: data.description,
+      createdAt: data.date_registered,
+      starsCount: data.star_count,
+    };
   }
 
   private getRelativeUrl(identifier: string): `/${string}` {

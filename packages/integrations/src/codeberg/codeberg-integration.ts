@@ -1,5 +1,4 @@
 import type { RequestInit, Response } from "undici";
-import { z } from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
@@ -15,6 +14,7 @@ import type {
   ReleasesRepository,
   ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
+import { detailsResponseSchema, releasesResponseSchema } from "./codeberg-schemas";
 
 const localLogger = logger.child({ module: "CodebergIntegration" });
 
@@ -75,35 +75,24 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
-    const releasesResult = z
-      .array(
-        z
-          .object({
-            tag_name: z.string(),
-            published_at: z.string().transform((value) => new Date(value)),
-            url: z.string(),
-            body: z.string(),
-            prerelease: z.boolean(),
-          })
-          .transform((tag) => ({
-            latestRelease: tag.tag_name,
-            latestReleaseAt: tag.published_at,
-            releaseUrl: tag.url,
-            releaseDescription: tag.body,
-            isPreRelease: tag.prerelease,
-          })),
-      )
-      .safeParse(releasesResponseJson);
+    const { data, success, error } = releasesResponseSchema.safeParse(releasesResponseJson);
 
-    if (!releasesResult.success) {
+    if (!success) {
       return {
         id: repository.id,
         error: {
-          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
+          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
         },
       };
     } else {
-      return getLatestRelease(releasesResult.data, repository, details);
+      const formattedReleases = data.map((tag) => ({
+        latestRelease: tag.tag_name,
+        latestReleaseAt: tag.published_at,
+        releaseUrl: tag.url,
+        releaseDescription: tag.body,
+        isPreRelease: tag.prerelease,
+      }));
+      return getLatestRelease(formattedReleases, repository, details);
     }
   }
 
@@ -128,39 +117,27 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     }
 
     const responseJson = await response.json();
-    const parsedDetails = z
-      .object({
-        html_url: z.string(),
-        description: z.string(),
-        fork: z.boolean(),
-        archived: z.boolean(),
-        created_at: z.string().transform((value) => new Date(value)),
-        stars_count: z.number(),
-        open_issues_count: z.number(),
-        forks_count: z.number(),
-      })
-      .transform((resp) => ({
-        projectUrl: resp.html_url,
-        projectDescription: resp.description,
-        isFork: resp.fork,
-        isArchived: resp.archived,
-        createdAt: resp.created_at,
-        starsCount: resp.stars_count,
-        openIssues: resp.open_issues_count,
-        forksCount: resp.forks_count,
-      }))
-      .safeParse(responseJson);
+    const { data, success, error } = detailsResponseSchema.safeParse(responseJson);
 
-    if (!parsedDetails.success) {
+    if (!success) {
       localLogger.warn(`Failed to parse details response for ${owner}/${name} with Codeberg integration`, {
         owner,
         name,
-        error: parsedDetails.error,
+        error,
       });
 
       return undefined;
     }
 
-    return parsedDetails.data;
+    return {
+      projectUrl: data.html_url,
+      projectDescription: data.description,
+      isFork: data.fork,
+      isArchived: data.archived,
+      createdAt: data.created_at,
+      starsCount: data.stars_count,
+      openIssues: data.open_issues_count,
+      forksCount: data.forks_count,
+    };
   }
 }
