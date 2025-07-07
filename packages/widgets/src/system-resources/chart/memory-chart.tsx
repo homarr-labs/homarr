@@ -1,23 +1,30 @@
-import { Paper, Text } from "@mantine/core";
-import { CommonChart } from "./common-chart";
-import { humanFileSize } from "@homarr/common";
+import {Paper, Text} from "@mantine/core";
+import {CommonChart} from "./common-chart";
+import {humanFileSize} from "@homarr/common";
 
-export const SystemResourceMemoryChart = ({ memoryUsageOverTime }: { memoryUsageOverTime: number[] }) => {
-  const chartData = memoryUsageOverTime.map((usage, index) => ({ index, "usage": usage }));
+export const SystemResourceMemoryChart = ({memoryUsageOverTime, totalCapacityInBytes}: {
+  memoryUsageOverTime: number[],
+  totalCapacityInBytes: number
+}) => {
+  const chartData = memoryUsageOverTime.map((usage, index) => ({index, "usage": usage}));
 
   return (
     <CommonChart
       data={chartData}
       dataKey={"index"}
-      series={[{ name: "usage", color: "teal.6" }]}
+      series={[{name: "usage", color: "teal.6"}]}
       title={"RAM"}
+      yAxisProps={{domain: [0, totalCapacityInBytes]}}
       tooltipProps={{
-        content: ({ label, payload }) => {
+        content: ({payload}) => {
+          if (!payload) {
+            return null;
+          }
           const value = payload[0] ? Number(payload[0].value) : 0;
           return (
             <Paper px="md" py="sm" withBorder shadow="md" radius="md">
               <Text c="dimmed" size="xs">
-                {humanFileSize(value)}
+                {humanFileSize(value)} / {humanFileSize(totalCapacityInBytes)}
               </Text>
             </Paper>
           );
