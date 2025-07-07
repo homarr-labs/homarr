@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import type { ChangeEvent } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Accordion, Box, Center, Flex, Group, RingProgress, ScrollArea, Text } from "@mantine/core";
 import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconCpu, IconTopologyBus } from "@tabler/icons-react";
 
@@ -19,8 +18,14 @@ export interface Firewall {
 }
 
 export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
-  const handleSelect = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedFirewall(event.target.value);
+  const [selectedFirewall, setSelectedFirewall] = useState<string>("");
+
+  const handleSelect = useCallback((value: string | null) => {
+    if (value !== null) {
+      setSelectedFirewall(value);
+    } else {
+      setSelectedFirewall("default_value");
+    }
   }, []);
 
   const firewallsCpuData = useUpdatingCpuStatus(integrationIds);
@@ -29,10 +34,19 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
   const firewallsInterfacesData = useUpdatingInterfacesStatus(integrationIds);
 
   const initialSelectedFirewall = firewallsVersionData[0] ? firewallsVersionData[0].integration.id : "undefined";
-  console.log(initialSelectedFirewall);
   const isTiny = width < 256;
 
-  const [selectedFirewall, setSelectedFirewall] = useState<string>(initialSelectedFirewall);
+  // State for managing the accordion
+  const [accordionValue, setAccordionValue] = useState<string | null>(() => {
+    const savedState = localStorage.getItem(`homarr-accordionState-${selectedFirewall || initialSelectedFirewall}`);
+    return savedState ? (JSON.parse(savedState) as string) : "interfaces";
+  });
+
+  // Save accordion state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("accordionState", JSON.stringify(accordionValue));
+  }, [accordionValue]);
+
   const dropdownItems = firewallsVersionData.map((firewall) => ({
     label: firewall.integration.name,
     value: firewall.integration.id,
@@ -45,19 +59,20 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
       <Group justify="space-between" w="100%" style={{ padding: "8px" }}>
         <FirewallMenu
           onChange={handleSelect}
-          selectedFirewall={selectedFirewall}
+          selectedFirewall={selectedFirewall || initialSelectedFirewall}
           dropdownItems={dropdownItems}
           isTiny={isTiny}
         />
         <FirewallVersion
           firewallsVersionData={firewallsVersionData}
-          selectedFirewall={selectedFirewall}
+          selectedFirewall={selectedFirewall || initialSelectedFirewall}
           isTiny={isTiny}
         />
       </Group>
       <Flex justify="center" align="center" wrap="wrap">
+        {/* Render CPU and Memory data */}
         {firewallsCpuData
-          .filter(({ integration }) => integration.id === selectedFirewall)
+          .filter(({ integration }) => integration.id === (selectedFirewall || initialSelectedFirewall))
           .map(({ summary, integration }) => (
             <RingProgress
               key={`${integration.name}-cpu`}
@@ -79,7 +94,7 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
             />
           ))}
         {firewallsMemoryData
-          .filter(({ integration }) => integration.id === selectedFirewall)
+          .filter(({ integration }) => integration.id === (selectedFirewall || initialSelectedFirewall))
           .map(({ summary, integration }) => (
             <RingProgress
               key={`${integration.name}-memory`}
@@ -101,15 +116,15 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
             />
           ))}
       </Flex>
-      <Accordion>
-        <Accordion.Item value="interfaces">
-          <Accordion.Control icon={isTiny ? null : <IconTopologyBus size={16} />}>
-            <Text size={isTiny ? "8px" : "xs"}> {t("widget.firewall.widget.interfaces.title")} </Text>
-          </Accordion.Control>
-          <Accordion.Panel>
-            {firewallsInterfacesData
-              .filter(({ integration }) => integration.id === selectedFirewall)
-              .map(({ summary }) => (
+      {firewallsInterfacesData
+        .filter(({ integration }) => integration.id === (selectedFirewall || initialSelectedFirewall))
+        .map(({ summary }) => (
+          <Accordion key="interfaces" value={accordionValue} onChange={setAccordionValue}>
+            <Accordion.Item value="interfaces">
+              <Accordion.Control icon={isTiny ? null : <IconTopologyBus size={16} />}>
+                <Text size={isTiny ? "8px" : "xs"}> {t("widget.firewall.widget.interfaces.title")} </Text>
+              </Accordion.Control>
+              <Accordion.Panel>
                 <Flex direction="column" key="interfaces">
                   {Array.isArray(summary) && summary.every((item) => Array.isArray(item.data)) ? (
                     calculateBandwidth(summary).data.map(({ name, receive, transmit }) => (
@@ -118,11 +133,12 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                         direction={isTiny ? "column" : "row"}
                         style={{
                           width: "100%",
+                          padding: isTiny ? "2px" : "0px",
                         }}
                       >
                         <Flex w={isTiny ? "100%" : "33%"} style={{ justifyContent: "flex-start" }}>
                           <Text
-                            size="xs"
+                            size={isTiny ? "8px" : "xs"}
                             color="lightblue"
                             style={{
                               maxWidth: "100px",
@@ -141,8 +157,8 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                           w={isTiny ? "100%" : "33%"}
                           style={{ justifyContent: "flex-start" }}
                         >
-                          <IconArrowBarUp size={isTiny ? "8" : "16"} color="lightgreen" />
-                          <Text size="xs" color="lightgreen" style={{ textAlign: "left" }}>
+                          <IconArrowBarUp size={isTiny ? "8" : "12"} color="lightgreen" />
+                          <Text size={isTiny ? "8px" : "xs"} color="lightgreen" style={{ textAlign: "left" }}>
                             {formatBitsPerSec(transmit, 2)}
                           </Text>
                         </Flex>
@@ -152,8 +168,8 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                           w={isTiny ? "100%" : "33%"}
                           style={{ justifyContent: "flex-start" }}
                         >
-                          <IconArrowBarDown size={isTiny ? "8" : "16"} color="yellow" />
-                          <Text size="xs" color="yellow" style={{ textAlign: "left" }}>
+                          <IconArrowBarDown size={isTiny ? "8" : "12"} color="yellow" />
+                          <Text size={isTiny ? "8px" : "xs"} color="yellow" style={{ textAlign: "left" }}>
                             {formatBitsPerSec(receive, 2)}
                           </Text>
                         </Flex>
@@ -163,10 +179,10 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
                     <Box>No data available</Box>
                   )}
                 </Flex>
-              ))}
-          </Accordion.Panel>
-        </Accordion.Item>
-      </Accordion>
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+        ))}
     </ScrollArea>
   );
 }
