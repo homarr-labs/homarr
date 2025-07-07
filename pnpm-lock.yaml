@@ -65,8 +65,8 @@ importers:
         specifier: ^24.2.6
         version: 24.2.6(typescript@5.8.3)
       testcontainers:
-        specifier: ^11.1.0
-        version: 11.1.0
+        specifier: ^11.2.0
+        version: 11.2.0
       turbo:
         specifier: ^2.5.4
         version: 2.5.4
@@ -1078,8 +1078,8 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       '@testcontainers/mysql':
-        specifier: ^11.1.0
-        version: 11.1.0
+        specifier: ^11.2.0
+        version: 11.2.0
       better-sqlite3:
         specifier: ^12.2.0
         version: 12.2.0
@@ -4364,8 +4364,8 @@ packages:
   '@tanstack/virtual-core@3.11.2':
     resolution: {integrity: sha512-vTtpNt7mKCiZ1pwU9hfKPhpdVO2sVzFQsxoVBGtOSHxlrRRzYr8iQ2TlwbAcRYCcEiZ9ECAM8kBzH0v2+VzfKw==}
 
-  '@testcontainers/mysql@11.1.0':
-    resolution: {integrity: sha512-BK2HjhVgSil7gu4szCOP/W3GtFam+UR2lAEJ3qotWgUBFWMuEHYzcLuFXWzyr86yEsoMuFT4Wda00LBA4oz97g==}
+  '@testcontainers/mysql@11.2.0':
+    resolution: {integrity: sha512-E7YcsOAWFinsDgZ9LkipmeUB4ESJDTF5E/izqEbH6PZDBX3K+DmkGbiC5BdAdaYKt8h4ZiALA0e3pBlYA+BVXg==}
 
   '@tiptap/core@2.25.0':
     resolution: {integrity: sha512-pTLV0+g+SBL49/Y5A9ii7oHwlzIzpgroJVI3AcBk7/SeR7554ZzjxxtJmZkQ9/NxJO+k1jQp9grXaqqOLqC7cA==}
@@ -9932,8 +9932,8 @@ packages:
   tar-fs@3.0.8:
     resolution: {integrity: sha512-ZoROL70jptorGAlgAYiLoBLItEKw/fUxg9BSYK/dF/GAGYFJOJJJMvjPAKDJraCXFwadD456FCuvLWgfhMsPwg==}
 
-  tar-fs@3.0.9:
-    resolution: {integrity: sha512-XF4w9Xp+ZQgifKakjZYmFdkLoSWd34VGKcsTCwlNWM7QG3ZbaxnTsaBwnjFZqHRf/rROxaR8rXnbtwdvaDI+lA==}
+  tar-fs@3.1.0:
+    resolution: {integrity: sha512-5Mty5y/sOF1YWj1J6GiBodjlDc05CUR8PKXrsnFAiSG0xA+GHeWLovaZPYUDXkH/1iKRf2+M5+OrRgzC7O9b7w==}
 
   tar-stream@2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}
@@ -9975,8 +9975,8 @@ packages:
     resolution: {integrity: sha512-pFYqmTw68LXVjeWJMST4+borgQP2AyMNbg1BpZh9LbyhUeNkeaPF9gzfPGUAnSMV3qPYdWUwDIjjCLiSDOl7vg==}
     engines: {node: '>=18'}
 
-  testcontainers@11.1.0:
-    resolution: {integrity: sha512-M0F9Z3b1FZRRXs3KduxdHPeBaqcIbucdqLe/x94r1FC3Kp3eFIgORQwNxM1cTgLvS1xYDaMWGzn7Jdo8wGV2FQ==}
+  testcontainers@11.2.0:
+    resolution: {integrity: sha512-yrlNZUgbdn3PLQZevCOq8DiD0Xn8sX3bPFTZrJ/inp+JVAyo/BXlOJ9pj4X7QfNK6oJ5xYNU82o9c/6mucEzMA==}
 
   text-decoder@1.2.0:
     resolution: {integrity: sha512-n1yg1mOj9DNpk3NeZOx7T6jchTbyJS3i3cucbNN6FcdPriMZx7NsgrGpWWdWZZGxD7ES1XB+3uoqHMgOKaN+fg==}
@@ -13070,9 +13070,9 @@ snapshots:
 
   '@tanstack/virtual-core@3.11.2': {}
 
-  '@testcontainers/mysql@11.1.0':
+  '@testcontainers/mysql@11.2.0':
     dependencies:
-      testcontainers: 11.1.0
+      testcontainers: 11.2.0
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -19604,7 +19604,7 @@ snapshots:
     transitivePeerDependencies:
       - bare-buffer
 
-  tar-fs@3.0.9:
+  tar-fs@3.1.0:
     dependencies:
       pump: 3.0.2
       tar-stream: 3.1.7
@@ -19659,7 +19659,7 @@ snapshots:
       glob: 10.4.5
       minimatch: 9.0.5
 
-  testcontainers@11.1.0:
+  testcontainers@11.2.0:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.42
@@ -19673,7 +19673,7 @@ snapshots:
       proper-lockfile: 4.1.2
       properties-reader: 2.3.0
       ssh-remote-port-forward: 1.0.4
-      tar-fs: 3.0.9
+      tar-fs: 3.1.0
       tmp: 0.2.3
       undici: 7.11.0
     transitivePeerDependencies:
