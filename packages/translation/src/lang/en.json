@@ -4187,5 +4187,15 @@
         }
       }
     }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Debug",
+        "info": "Info",
+        "warn": "Warn",
+        "error": "Error"
+      }
+    }
   }
 }
