@@ -374,9 +374,6 @@ importers:
       '@homarr/log':
         specifier: workspace:^
         version: link:../../packages/log
-      '@homarr/ping':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/ping
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../../packages/redis
@@ -575,9 +572,6 @@ importers:
       '@homarr/old-schema':
         specifier: workspace:^0.1.0
         version: link:../old-schema
-      '@homarr/ping':
-        specifier: workspace:^0.1.0
-        version: link:../ping
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
@@ -982,9 +976,6 @@ importers:
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
-      '@homarr/ping':
-        specifier: workspace:^0.1.0
-        version: link:../ping
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
@@ -1689,34 +1680,6 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
-  packages/ping:
-    dependencies:
-      '@homarr/certificates':
-        specifier: workspace:^0.1.0
-        version: link:../certificates
-      '@homarr/common':
-        specifier: workspace:^0.1.0
-        version: link:../common
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
-    devDependencies:
-      '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
-        version: link:../../tooling/eslint
-      '@homarr/prettier-config':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/prettier
-      '@homarr/tsconfig':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/typescript
-      eslint:
-        specifier: ^9.30.1
-        version: 9.30.1
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
-
   packages/redis:
     dependencies:
       '@homarr/common':
@@ -1786,6 +1749,9 @@ importers:
       superjson:
         specifier: 2.2.2
         version: 2.2.2
+      undici:
+        specifier: 7.11.0
+        version: 7.11.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
