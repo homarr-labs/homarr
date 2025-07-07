@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "1.26.0",
+  "version": "1.27.0",
   "private": true,
   "scripts": {
     "build": "cross-env CI=true turbo build",
@@ -47,7 +47,7 @@
     "jsdom": "^26.1.0",
     "prettier": "^3.6.2",
     "semantic-release": "^24.2.6",
-    "testcontainers": "^11.0.3",
+    "testcontainers": "^11.2.0",
     "turbo": "^2.5.4",
     "typescript": "^5.8.3",
     "vite-tsconfig-paths": "^5.1.4",
