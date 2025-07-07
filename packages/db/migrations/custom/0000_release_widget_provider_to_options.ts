@@ -1,5 +1,6 @@
 import SuperJSON from "superjson";
 
+import { createId } from "@homarr/common";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
@@ -42,7 +43,7 @@ export async function migrateReleaseWidgetProviderToOptionsAsync(db: Database) {
         const provider = providerKey.charAt(0).toLowerCase() + providerKey.slice(1);
 
         return {
-          id: crypto.randomUUID(),
+          id: createId(),
           providerIntegrationId: providerIntegrationMap.get(provider as IntegrationKind) ?? null,
           ...otherFields,
         };

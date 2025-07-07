@@ -21,7 +21,7 @@ import {
 } from "@mantine/core";
 import type { CheckboxProps } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
-import { randomId, useDebouncedValue } from "@mantine/hooks";
+import { useDebouncedValue } from "@mantine/hooks";
 import {
   IconAlertTriangleFilled,
   IconBrandDocker,
@@ -36,7 +36,9 @@ import { escapeForRegEx } from "@tiptap/react";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
-import { getIconUrl, IntegrationKind } from "@homarr/definitions";
+import { createId } from "@homarr/common";
+import { getIconUrl } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
 import { findBestIconMatch, IconPicker } from "@homarr/forms-collection";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
@@ -126,7 +128,7 @@ export const WidgetMultiReleasesRepositoriesInput = ({
 
   const addNewRepository = () => {
     const repository: ReleasesRepository = {
-      id: randomId(),
+      id: createId(),
       identifier: "",
     };
 
@@ -630,7 +632,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
           return acc;
 
         acc.push({
-          id: randomId(),
+          id: createId(),
           providerIntegrationId: integrationId,
           identifier,
           iconUrl: containerImage.iconUrl ?? undefined,
