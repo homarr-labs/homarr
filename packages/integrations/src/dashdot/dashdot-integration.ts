@@ -32,6 +32,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     const cpuLoad = await this.getCurrentCpuLoadAsync();
     const memoryLoad = await this.getCurrentMemoryLoadAsync();
     const storageLoad = await this.getCurrentStorageLoadAsync();
+    const networkLoad = await this.getCurrentNetworkLoadAsync();
 
     const channel = this.getChannel();
     const history = await channel.getSliceUntilTimeAsync(dayjs().subtract(15, "minutes").toDate());
@@ -40,6 +41,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
       cpuUtilization: cpuLoad.sumLoad,
       memUsedInBytes: memoryLoad.loadInBytes,
       memAvailableInBytes: info.maxAvailableMemoryBytes - memoryLoad.loadInBytes,
+      network: networkLoad,
       fileSystem: info.storage
         .filter((_, index) => storageLoad[index] !== -1) // filter out undermoutned drives, they display as -1 in the load API
         .map((storage, index) => ({
@@ -113,6 +115,11 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     };
   }
 
+  private async getCurrentNetworkLoadAsync() {
+    const memoryLoad = await fetchWithTrustedCertificatesAsync(this.url("/load/network"));
+    return await networkLoadApi.parseAsync(await memoryLoad.json());
+  }
+
   private getChannel() {
     return createChannelEventHistoryOld<z.infer<typeof cpuLoadPerCoreApiList>>(
       `integration:${this.integration.id}:history:cpu`,
@@ -128,6 +135,11 @@ const cpuLoadPerCoreApi = z.object({
 
 const memoryLoadApi = z.object({
   load: z.number().min(0),
+});
+
+const networkLoadApi = z.object({
+  up: z.number().min(0),
+  down: z.number().min(0)
 });
 
 const internalServerInfoApi = z.object({

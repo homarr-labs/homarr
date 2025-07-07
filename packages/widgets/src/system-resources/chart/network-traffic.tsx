@@ -2,19 +2,19 @@ import {Paper, Text} from "@mantine/core";
 import {CommonChart} from "./common-chart";
 import {humanFileSize} from "@homarr/common";
 
-export const SystemResourceMemoryChart = ({memoryUsageOverTime, totalCapacityInBytes}: {
-  memoryUsageOverTime: number[],
-  totalCapacityInBytes: number
+export const NetworkTrafficChart = ({usageOverTime, isUp}: {
+  usageOverTime: number[],
+  isUp: boolean
 }) => {
-  const chartData = memoryUsageOverTime.map((usage, index) => ({index, "usage": usage}));
+  const chartData = usageOverTime.map((usage, index) => ({index, "usage": usage}));
 
   return (
     <CommonChart
       data={chartData}
       dataKey={"index"}
       series={[{name: "usage", color: "teal.6"}]}
-      title={"RAM"}
-      yAxisProps={{domain: [0, totalCapacityInBytes]}}
+      title={isUp ? "UP" : "DOWN"}
+      yAxisProps={{domain: [0, "dataMax"]}}
       tooltipProps={{
         content: ({payload}) => {
           if (!payload) {
@@ -24,7 +24,7 @@ export const SystemResourceMemoryChart = ({memoryUsageOverTime, totalCapacityInB
           return (
             <Paper px="md" py="sm" withBorder shadow="md" radius="md">
               <Text c="dimmed" size="xs">
-                {humanFileSize(value)} / {humanFileSize(totalCapacityInBytes)} ({Math.round((value / totalCapacityInBytes) * 100)}%)
+                {humanFileSize(Math.round(value))}/s
               </Text>
             </Paper>
           );
