@@ -64,12 +64,14 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
       const releasesProviderResponse = releasesResponse.reduce<ReleaseProviderResponse[]>((acc, release) => {
         if (!release.released_at) return acc;
 
+        const releaseDate = new Date(release.released_at);
+
         acc.push({
           latestRelease: release.name ?? release.tag_name,
-          latestReleaseAt: new Date(release.released_at),
+          latestReleaseAt: releaseDate,
           releaseUrl: release._links.self,
           releaseDescription: release.description ?? undefined,
-          //isPreRelease: release.upcoming_release ?? false, // upcoming_release - is not available with @gitbeaker/rest SDK. Raised issue on GitHub https://github.com/jdalrymple/gitbeaker/issues/3730
+          isPreRelease: releaseDate > new Date(), // For upcoming releases the `released_at` will be set to the future (https://docs.gitlab.com/api/releases/#upcoming-releases). Gitbreaker doesn't currently support the `upcoming_release` field (https://github.com/jdalrymple/gitbeaker/issues/3730)
         });
         return acc;
       }, []);
