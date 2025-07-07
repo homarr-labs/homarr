@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { LineChartSeries } from "@mantine/charts";
 import { LineChart } from "@mantine/charts";
 import { Card, Center, Text } from "@mantine/core";
-import type { TooltipProps } from "recharts";
+import type { TooltipProps, YAxisProps } from "recharts";
 
 export const CommonChart = ({
   data,
@@ -8,12 +10,14 @@ export const CommonChart = ({
   series,
   title,
   tooltipProps,
+  yAxisProps
 }: {
   data: Record<string, any>[];
   dataKey: string;
   series: LineChartSeries[];
   title: string;
-  tooltipProps?: TooltipProps;
+  tooltipProps?: TooltipProps<number, any>;
+  yAxisProps?: Omit<YAxisProps, 'ref'>;
 }) => {
   return (
     <Card h={"100%"} pos={"relative"} p={0}>
@@ -34,6 +38,7 @@ export const CommonChart = ({
         bg={"#434343"}
         styles={{ root: { padding: 5, borderRadius: 5 } }}
         tooltipProps={tooltipProps}
+        yAxisProps={yAxisProps}
       />
       {data.length == 0 && (
         <Center pos="absolute" w="100%" h="100%">
