@@ -1506,7 +1506,8 @@
         "rows": "Rows",
         "width": "Width",
         "height": "Height"
-      }
+      },
+      "placeholder": "Start writing your notes"
     },
     "iframe": {
       "name": "iFrame",

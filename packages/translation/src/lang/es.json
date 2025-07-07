@@ -305,7 +305,7 @@
     "search": "",
     "field": {
       "name": "Nombre",
-      "members": "",
+      "members": "Miembros",
       "homeBoard": {
         "label": "",
         "description": ""
