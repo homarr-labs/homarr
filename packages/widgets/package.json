@@ -56,6 +56,7 @@
     "@tiptap/extension-highlight": "2.25.0",
     "@tiptap/extension-image": "2.25.0",
     "@tiptap/extension-link": "^2.25.0",
+    "@tiptap/extension-placeholder": "^2.25.0",
     "@tiptap/extension-table": "2.25.0",
     "@tiptap/extension-table-cell": "2.25.0",
     "@tiptap/extension-table-header": "2.25.0",
