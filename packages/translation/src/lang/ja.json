@@ -3,7 +3,7 @@
     "step": {
       "start": {
         "title": "Homarrへようこそ",
-        "subtitle": "Homarr を設定しましょう。",
+        "subtitle": "Homarrインスタンスの設定を始めましょう。",
         "description": "始めるには、Homarrインスタンスの設定方法を選択してください。",
         "action": {
           "scratch": "ゼロからスタート",
@@ -19,7 +19,7 @@
         },
         "fileInfo": {
           "action": {
-            "change": "ファイルを変更"
+            "change": "ファイルを変更する"
           }
         },
         "importSettings": {
@@ -35,7 +35,7 @@
           }
         },
         "summary": {
-          "title": "インポートサマリー",
+          "title": "インポート結果",
           "description": "以下のサマリーで、インポートする内容を確認できます",
           "action": {
             "import": "インポートを確認して続ける"
@@ -43,12 +43,12 @@
           "entities": {
             "apps": "アプリ",
             "boards": "ボード",
-            "integrations": "インテグレーション",
-            "credentialUsers": "認証ユーザー"
+            "integrations": "連携",
+            "credentialUsers": "資格情報ユーザー"
           }
         },
         "tokenModal": {
-          "title": "インポート トークンを入力してください",
+          "title": "インポートトークンを入力してください",
           "field": {
             "token": {
               "label": "トークン",
@@ -93,16 +93,16 @@
       "finish": {
         "title": "設定終了",
         "subtitle": "準備ができています！",
-        "description": "セットアップが正常に完了しました。使い始めることができます。次のアクションを選択してください：",
+        "description": "セットアッププロセスが正常に完了しました。今すぐHomarrの使用を開始できます。次のアクションを選択してください：",
         "action": {
           "goToBoard": "{name} ボードへ移動",
-          "createBoard": "最初のボードを作成",
+          "createBoard": "あなたの最初のボードを作成",
           "inviteUser": "他のユーザーを招待する",
           "docs": "ドキュメントを読む"
         }
       }
     },
-    "backToStart": "戻る"
+    "backToStart": "最初に戻る"
   },
   "user": {
     "title": "ユーザー",
@@ -114,12 +114,12 @@
       },
       "invite": {
         "title": "Homarrに参加",
-        "subtitle": "Homarr へようこそ！アカウントを作成してください",
-        "description": "あなたは {username}に招待されました"
+        "subtitle": "Homarrへようこそ！アカウントを作成してください",
+        "description": "あなたは {username} に招待されました"
       },
       "init": {
         "title": "新しいHomarrのインストール",
-        "subtitle": "最初の管理者ユーザを作成してください"
+        "subtitle": "最初の管理者ユーザーを作成してください"
       }
     },
     "field": {
@@ -136,7 +136,7 @@
           "length": "少なくとも 8 文字以上を含む",
           "lowercase": "小文字を含む",
           "uppercase": "大文字を含む",
-          "number": "番号を含む",
+          "number": "数字を含む",
           "special": "特殊記号を含む"
         }
       },
@@ -288,7 +288,7 @@
       "delete": {
         "label": "ユーザーを恒久的に削除",
         "description": "ユーザー設定を含むこのユーザーを削除します。ボードは削除されません。ユーザーには通知されません。",
-        "confirm": "ユーザー {username} とユーザ設定を削除することを了承しますか。"
+        "confirm": "ユーザー {username} とユーザ設定を削除することを了承しますか？"
       },
       "select": {
         "label": "ユーザーを選択",
@@ -355,7 +355,7 @@
           },
           "view-all": {
             "label": "すべてのボードを表示",
-            "description": ""
+            "description": "メンバーがすべてのボードを表示できるようにする"
           },
           "modify-all": {
             "label": "すべてのボードを変更",
@@ -368,23 +368,23 @@
         }
       },
       "integration": {
-        "title": "インテグレーション",
+        "title": "連携",
         "item": {
           "create": {
-            "label": "インテグレーションを作成",
-            "description": "メンバーがインテグレーションを作成することを許可する"
+            "label": "連携を作成",
+            "description": "メンバーが連携を作成することを許可する"
           },
           "use-all": {
-            "label": "すべてのインテグレーションを使用",
-            "description": "メンバーが自分のボードに任意のインテグレーションを追加することを許可する"
+            "label": "すべての連携を使用",
+            "description": "メンバーが自分のボードに任意の連携を追加することを許可する"
           },
           "interact-all": {
-            "label": "任意のインテグレーションとやりとりする",
-            "description": "メンバーが任意のインテグレーションとやり取りすることを許可する"
+            "label": "任意の連携とやりとりする",
+            "description": "メンバーが任意の連携とやり取りすることを許可する"
           },
           "full-all": {
-            "label": "完全なインテグレーションアクセス",
-            "description": "メンバーが任意のインテグレーションを管理、使用、操作できるようにします"
+            "label": "完全な連携アクセス",
+            "description": "メンバーが任意の連携を管理・使用・操作できるようにします"
           }
         }
       },
@@ -508,7 +508,7 @@
       },
       "select": {
         "label": "グループを選択",
-        "notFound": "グループがありません。"
+        "notFound": "グループが見つかりません"
       },
       "settings": {
         "board": {
@@ -661,7 +661,7 @@
         }
       },
       "delete": {
-        "title": " インテグレーション削除",
+        "title": "連携削除",
         "message": "インテグレーション {name}を削除してもよろしいですか？",
         "notification": {
           "success": {
@@ -737,7 +737,7 @@
           "title": "証明書エラー",
           "description": {
             "expired": "証明書の期限が切れています。",
-            "notYetValid": "証明書はまだ有効ではありません",
+            "notYetValid": "証明書は、まだ有効ではありません。",
             "untrusted": "証明書が信頼されていません。",
             "hostnameMismatch": "証明書のホスト名が URL と一致しません。"
           },
@@ -848,7 +848,7 @@
         },
         "commonError": {
           "title": "接続失敗",
-          "message": "接続が確立できませんでした。"
+          "message": "接続が確立できませんでした"
         },
         "badRequest": {
           "title": "不正なリクエスト",
@@ -864,7 +864,7 @@
         },
         "notFound": {
           "title": "見つかりません",
-          "message": "URLまたはパスが間違っている可能性があります"
+          "message": "URL またはパスが、間違っている可能性があります"
         },
         "internalServerError": {
           "title": "内部サーバーエラー",
@@ -983,7 +983,7 @@
         }
       },
       "copy": {
-        "label": ""
+        "label": "URL をコピーする"
       },
       "open": {
         "label": "メディアを開く"
@@ -1221,7 +1221,7 @@
       },
       "field": {
         "integrations": {
-          "label": "インテグレーション"
+          "label": "連携"
         },
         "title": {
           "label": "タイトル"
@@ -1333,7 +1333,7 @@
       },
       "error": {
         "internalServerError": "DNS Hole Summary の取得に失敗しました",
-        "integrationsDisconnected": "利用可能なデータがありません。すべてのインテグレーションが切断されました"
+        "integrationsDisconnected": "利用可能なデータがありません。すべての連携が切断されました"
       },
       "data": {
         "adsBlockedToday": "今日のブロック",
@@ -1394,7 +1394,7 @@
           "label": "タイトル"
         },
         "is24HourFormat": {
-          "label": "２４時間表示",
+          "label": "24 時間表示",
           "description": "12 時間形式の代わりに 24 時間形式を使用します"
         },
         "showSeconds": {
@@ -1502,7 +1502,8 @@
         "rows": "行数",
         "width": "幅",
         "height": "高さ"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -1586,34 +1587,34 @@
           "label": "対象期間",
           "option": {
             "1d": {
-              "label": "１日"
+              "label": "1 日"
             },
             "5d": {
-              "label": "５日"
+              "label": "5 日"
             },
             "1mo": {
-              "label": "１ヵ月"
+              "label": "1 ヵ月"
             },
             "3mo": {
-              "label": "３ヵ月"
+              "label": "3 ヵ月"
             },
             "6mo": {
-              "label": "６ヵ月"
+              "label": "6 ヵ月"
             },
             "ytd": {
               "label": "年始から今日まで"
             },
             "1y": {
-              "label": "１年"
+              "label": "1 年"
             },
             "2y": {
-              "label": "２年"
+              "label": "2 年"
             },
             "5y": {
-              "label": "５年"
+              "label": "5 年"
             },
             "10y": {
-              "label": "１０年"
+              "label": "10 年"
             },
             "max": {
               "label": "最大"
@@ -1624,28 +1625,28 @@
           "label": "時間間隔",
           "option": {
             "5m": {
-              "label": "５分"
+              "label": "5 分"
             },
             "15m": {
-              "label": "１５分"
+              "label": "15 分"
             },
             "30m": {
-              "label": "３０分"
+              "label": "30 分"
             },
             "1h": {
-              "label": "１時間"
+              "label": "1 時間"
             },
             "1d": {
-              "label": "１日"
+              "label": "1 日"
             },
             "5d": {
-              "label": "５日"
+              "label": "5 日"
             },
             "1wk": {
-              "label": "１週間"
+              "label": "1 週間"
             },
             "1mo": {
-              "label": "１ヵ月"
+              "label": "1 ヵ月"
             }
           }
         }
@@ -1874,8 +1875,8 @@
         }
       },
       "integration": {
-        "noData": "インテグレーションが見つかりません",
-        "description": "<here></here> をクリックして新しいインテグレーションを作成する"
+        "noData": "連携が見つかりません",
+        "description": "<here></here> をクリックして新しい連携を作成する"
       },
       "app": {
         "noData": "アプリが見つかりません",
@@ -2210,11 +2211,11 @@
       "option": {
         "newReleaseWithin": {
           "label": "以下から新しいリリース",
-          "description": "使用例：1w (１週間), 10M (１０ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。新しいリリースを強調表示しない場合は、空白のままにします。"
+          "description": "使用例：1w (1 週間), 10M (10 ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。新しいリリースを強調表示しない場合は、空白のままにします。"
         },
         "staleReleaseWithin": {
           "label": "以下から古いリリース",
-          "description": "使用例：1w (１週間), 10M (１０ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。古いリリースを強調表示しない場合は、空白のままにします。"
+          "description": "使用例：1w (1 週間), 10M (10 ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。古いリリースを強調表示しない場合は、空白のままにします。"
         },
         "showOnlyHighlighted": {
           "label": "強調表示のみ表示",
@@ -2245,7 +2246,7 @@
             "label": "プロバイダー"
           },
           "identifier": {
-            "label": "識別名（リポジトリ名）",
+            "label": "識別名",
             "placeholder": "名前または所有者/名前"
           },
           "name": {
@@ -2999,8 +3000,8 @@
               "text": "あなたが設定したウィジェット（およびその数量）を送信します。URL、名前、その他のデータは含まれません。"
             },
             "integrationData": {
-              "title": "インテグレーション情報",
-              "text": "あなたが設定したインテグレーション（およびその数量）を送信します。URL、名前、その他のデータは含まれません。"
+              "title": "連携情報",
+              "text": "あなたが設定した連携（およびその数量）を送信します。URL、名前、その他のデータは含まれません。"
             },
             "usersData": {
               "title": "ユーザー情報",
@@ -3913,7 +3914,7 @@
         "help": "ページを検索",
         "group": {
           "page": {
-            "title": "",
+            "title": "ページ",
             "option": {
               "manageHome": {
                 "label": "ホームページの管理"
@@ -3958,7 +3959,7 @@
                 "label": "全体設定"
               },
               "about": {
-                "label": ""
+                "label": "このアプリについて"
               },
               "homeBoard": {
                 "label": "ホームボード"
@@ -3982,26 +3983,26 @@
                 }
               },
               "detail": {
-                "title": ""
+                "title": "ユーザーのアクションを選択してください"
               }
             }
           },
           "group": {
-            "title": "",
+            "title": "グループ",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "グループの詳細を表示"
                 },
                 "manageMember": {
-                  "label": ""
+                  "label": "メンバーを管理"
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "権限を管理"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "グループのアクションを選択"
               }
             }
           }
@@ -4009,32 +4010,32 @@
       }
     },
     "engine": {
-      "search": "",
+      "search": "検索エンジンを探す",
       "field": {
         "name": {
           "label": "名称"
         },
         "short": {
-          "label": ""
+          "label": "略称"
         },
         "urlTemplate": {
-          "label": ""
+          "label": "URL 検索テンプレート"
         },
         "description": {
-          "label": ""
+          "label": "説明"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "検索エンジン",
           "noResults": {
-            "title": "",
-            "action": ""
+            "title": "まだ検索エンジンはありません",
+            "action": "最初の検索エンジンを作成する"
           },
-          "interactive": ""
+          "interactive": "インタラクティブ、連携を使用"
         },
         "create": {
-          "title": "",
+          "title": "新しい検索エンジン",
           "notification": {
             "success": {
               "title": "検索エンジンが作成されました",
@@ -4103,7 +4104,7 @@
         "label": "ホスト名"
       },
       "subject": {
-        "label": ""
+        "label": "Subject"
       },
       "issuer": {
         "label": "発行者"
@@ -4168,21 +4169,21 @@
           },
           "error": {
             "title": "証明書は削除されていません",
-            "message": ""
+            "message": "証明書を削除できませんでした"
           }
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "信頼できるホスト名を削除する",
+        "confirm": "この信頼できるホスト名を削除してもよろしいですか？いくつかの統合が機能しなくなる可能性があります。",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "ホスト名は削除されました",
+            "message": "ホスト名が正常に削除されました"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "ホスト名が削除されていません",
+            "message": "ホスト名を削除できませんでした"
           }
         }
       }

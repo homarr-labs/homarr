@@ -1502,7 +1502,8 @@
         "rows": "",
         "width": "Širina",
         "height": "Visina"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",

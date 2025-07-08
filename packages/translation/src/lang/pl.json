@@ -1502,7 +1502,8 @@
         "rows": "Wiersze",
         "width": "Szerokość",
         "height": "Wysokość"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",

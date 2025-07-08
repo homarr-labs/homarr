@@ -1502,7 +1502,8 @@
         "rows": "Řádky",
         "width": "Šířka",
         "height": "Výška"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",

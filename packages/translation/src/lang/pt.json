@@ -1502,7 +1502,8 @@
         "rows": "Linhas",
         "width": "Largura",
         "height": "Altura"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",

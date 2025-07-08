@@ -1502,7 +1502,8 @@
         "rows": "Sorok",
         "width": "Szélesség",
         "height": "Magasság"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "Beágyazott keret (iFrame)",

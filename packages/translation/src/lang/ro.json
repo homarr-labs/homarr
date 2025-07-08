@@ -1502,7 +1502,8 @@
         "rows": "Rânduri",
         "width": "Lățime",
         "height": "Înălțime"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",

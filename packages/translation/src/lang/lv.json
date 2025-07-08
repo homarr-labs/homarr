@@ -1502,7 +1502,8 @@
         "rows": "Rindas",
         "width": "Platums",
         "height": "Augstums"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",

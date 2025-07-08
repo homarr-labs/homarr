@@ -1502,7 +1502,8 @@
         "rows": "שורות",
         "width": "רוחב",
         "height": "גובה"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
