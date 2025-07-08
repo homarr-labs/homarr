@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 
 import type { IntegrationKindByCategory } from "@homarr/definitions";
+import { getIconUrl } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { ReleasesResponse } from "@homarr/integrations";
 
@@ -17,11 +18,19 @@ export const releasesRequestHandler = createCachedIntegrationRequestHandler<
 >({
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
-    return await integrationInstance.getLatestMatchingReleaseAsync({
+    const response = await integrationInstance.getLatestMatchingReleaseAsync({
       id: input.id,
       identifier: input.identifier,
       versionRegex: input.versionRegex,
     });
+
+    return {
+      ...response,
+      integration: {
+        name: integration.name,
+        iconUrl: getIconUrl(integration.kind),
+      },
+    };
   },
   cacheDuration: dayjs.duration(5, "minutes"),
   queryKey: "repositoriesReleases",

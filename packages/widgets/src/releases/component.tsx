@@ -17,22 +17,14 @@ import { useFormatter, useNow } from "next-intl";
 import ReactMarkdown from "react-markdown";
 
 import { clientApi } from "@homarr/api/client";
-import { useIntegrationsWithUseAccess } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { isDateWithin, splitToChunksWithNItems } from "@homarr/common";
-import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
-import type { IntegrationKind } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
 import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
-
-interface Integration {
-  name: string;
-  iconUrl: string;
-}
 
 const formatRelativeDate = (value: string): string => {
   const isMonths = /\d+m/g.test(value);
@@ -54,20 +46,6 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     }),
     [options.newReleaseWithin, options.staleReleaseWithin],
   );
-
-  const releasesIntegrationKinds: IntegrationKind[] = useMemo(
-    () => getIntegrationKindsByCategory("releasesProvider"),
-    [],
-  );
-  const integrations = useIntegrationsWithUseAccess()
-    .filter((integration) => releasesIntegrationKinds.includes(integration.kind))
-    .reduce<Record<string, Integration>>((acc, integration) => {
-      acc[integration.id] = {
-        name: integration.name,
-        iconUrl: getIconUrl(integration.kind),
-      };
-      return acc;
-    }, {});
 
   // Group repositories by integration
   const groupedRepositories = useMemo(() => {
@@ -187,9 +165,6 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
       {repositories.map((repository: ReleasesRepositoryResponse) => {
         const isActive = expandedRepositoryId === repository.id;
         const hasError = repository.error !== undefined;
-        const integration = repository.providerIntegrationId
-          ? integrations[repository.providerIntegrationId]
-          : undefined;
 
         return (
           <Stack
@@ -197,7 +172,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             className={combineClasses(
               "releases-repository",
               // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              `releases-repository-${integration?.name ?? "error"}-${repository.name || repository.identifier.replace(/[^a-zA-Z0-9]/g, "_")}`,
+              `releases-repository-${repository.integration?.name ?? "error"}-${repository.name || repository.identifier.replace(/[^a-zA-Z0-9]/g, "_")}`,
               classes.releasesRepository,
             )}
             gap={0}
@@ -211,7 +186,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             >
               <MaskedOrNormalImage
                 className="releases-repository-header-icon"
-                imageUrl={repository.iconUrl ?? integration?.iconUrl}
+                imageUrl={repository.iconUrl ?? repository.integration?.iconUrl}
                 hasColor={hasIconColor}
                 style={{
                   width: "1em",
@@ -287,9 +262,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             {options.showDetails && (
               <DetailsDisplay repository={repository} toggleExpandedRepository={toggleExpandedRepository} />
             )}
-            {isActive && (
-              <ExpandedDisplay repository={repository} hasIconColor={hasIconColor} integration={integration} />
-            )}
+            {isActive && <ExpandedDisplay repository={repository} hasIconColor={hasIconColor} />}
             <Divider className="releases-repository-divider" />
           </Stack>
         );
@@ -508,10 +481,9 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
 interface ExtendedDisplayProps {
   repository: ReleasesRepositoryResponse;
   hasIconColor: boolean;
-  integration?: Integration;
 }
 
-const ExpandedDisplay = ({ repository, hasIconColor, integration }: ExtendedDisplayProps) => {
+const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
@@ -529,11 +501,11 @@ const ExpandedDisplay = ({ repository, hasIconColor, integration }: ExtendedDisp
             {repository.identifier}
           </Text>
 
-          {integration && (
+          {repository.integration && (
             <Group className="releases-repository-expanded-header-provider-wrapper" gap={5} align="center">
               <MaskedOrNormalImage
                 className="releases-repository-expanded-header-provider-icon"
-                imageUrl={integration.iconUrl}
+                imageUrl={repository.integration.iconUrl}
                 hasColor={hasIconColor}
                 style={{
                   width: "1em",
@@ -546,7 +518,7 @@ const ExpandedDisplay = ({ repository, hasIconColor, integration }: ExtendedDisp
                 c="iconColor"
                 ff="monospace"
               >
-                {integration.name}
+                {repository.integration.name}
               </Text>
             </Group>
           )}

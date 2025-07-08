@@ -42,6 +42,7 @@ export interface ReleasesResponse {
   starsCount?: number;
   openIssues?: number;
   forksCount?: number;
+
   error?:
     | {
         code: ReleasesErrorKeys;

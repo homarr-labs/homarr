@@ -45,6 +45,7 @@ export const releasesRouter = createTRPCRouter({
             identifier: repository.identifier,
             versionRegex: formatVersionFilterRegex(repository.versionFilter),
           });
+
           return await innerHandler.getCachedOrUpdatedDataAsync({
             forceUpdate: false,
           });

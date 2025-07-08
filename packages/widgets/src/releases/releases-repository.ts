@@ -32,5 +32,10 @@ export interface ReleasesRepositoryResponse extends ReleasesRepository {
   forksCount?: number;
   openIssues?: number;
 
+  integration?: {
+    name: string;
+    iconUrl?: string;
+  };
+
   error?: { code?: string; message?: string };
 }
