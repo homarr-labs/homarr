@@ -196,7 +196,7 @@ export const integrationDefs = {
   npm: {
     name: "NPM",
     secretKinds: [[]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets//assets/npm.svg",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/npm.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://registry.npmjs.org",
   },
