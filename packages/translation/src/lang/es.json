@@ -1502,7 +1502,8 @@
         "rows": "Filas",
         "width": "Ancho",
         "height": "Alto"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",

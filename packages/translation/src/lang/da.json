@@ -1502,7 +1502,8 @@
         "rows": "Rækker",
         "width": "Bredde",
         "height": "Højde"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "indlejret dokument (iframe)",

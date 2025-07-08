@@ -1502,7 +1502,8 @@
         "rows": "Eilutės",
         "width": "Plotis",
         "height": "Aukštis"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",
