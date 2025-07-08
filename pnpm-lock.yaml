@@ -39,10 +39,10 @@ importers:
         version: 14.0.3(semantic-release@24.2.6(typescript@5.8.3))
       '@turbo/gen':
         specifier: ^2.5.4
-        version: 2.5.4(@types/node@22.16.0)(typescript@5.8.3)
+        version: 2.5.4(@types/node@22.16.1)(typescript@5.8.3)
       '@vitejs/plugin-react':
         specifier: ^4.6.0
-        version: 4.6.0(vite@5.4.5(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0))
+        version: 4.6.0(vite@5.4.5(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0))
       '@vitest/coverage-v8':
         specifier: ^3.2.4
         version: 3.2.4(vitest@3.2.4)
@@ -75,10 +75,10 @@ importers:
         version: 5.8.3
       vite-tsconfig-paths:
         specifier: ^5.1.4
-        version: 5.1.4(typescript@5.8.3)(vite@5.4.5(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0))
+        version: 5.1.4(typescript@5.8.3)(vite@5.4.5(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0))
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.16.0)(@vitest/ui@3.2.4)(jsdom@26.1.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.16.1)(@vitest/ui@3.2.4)(jsdom@26.1.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
 
   apps/nextjs:
     dependencies:
@@ -248,8 +248,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       dotenv:
-        specifier: ^17.0.1
-        version: 17.0.1
+        specifier: ^17.1.0
+        version: 17.1.0
       flag-icons:
         specifier: ^7.5.0
         version: 7.5.0
@@ -296,8 +296,8 @@ importers:
         specifier: ^1.8.1
         version: 1.8.1(react@19.1.0)
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -312,8 +312,8 @@ importers:
         specifier: 3.1.1
         version: 3.1.1
       '@types/node':
-        specifier: ^22.16.0
-        version: 22.16.0
+        specifier: ^22.16.1
+        version: 22.16.1
       '@types/prismjs':
         specifier: ^1.26.5
         version: 1.26.5
@@ -390,8 +390,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       dotenv:
-        specifier: ^17.0.1
-        version: 17.0.1
+        specifier: ^17.1.0
+        version: 17.1.0
       fastify:
         specifier: ^5.4.0
         version: 5.4.0
@@ -412,8 +412,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/node':
-        specifier: ^22.16.0
-        version: 22.16.0
+        specifier: ^22.16.1
+        version: 22.16.1
       dotenv-cli:
         specifier: ^8.0.0
         version: 8.0.0
@@ -460,8 +460,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../packages/validation
       dotenv:
-        specifier: ^17.0.1
-        version: 17.0.1
+        specifier: ^17.1.0
+        version: 17.1.0
       tsx:
         specifier: 4.20.3
         version: 4.20.3
@@ -619,10 +619,10 @@ importers:
         version: 2.2.2
       trpc-to-openapi:
         specifier: ^2.3.2
-        version: 2.3.2(@trpc/server@11.4.3(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.25.75))(zod@3.25.75)
+        version: 2.3.2(@trpc/server@11.4.3(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.25.76))(zod@3.25.76)
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -694,8 +694,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -796,8 +796,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../validation
       dotenv:
-        specifier: ^17.0.1
-        version: 17.0.1
+        specifier: ^17.1.0
+        version: 17.1.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -845,11 +845,11 @@ importers:
         specifier: 7.11.0
         version: 7.11.0
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
       zod-validation-error:
         specifier: ^3.5.2
-        version: 3.5.2(zod@3.25.75)
+        version: 3.5.2(zod@3.25.76)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -900,8 +900,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1078,8 +1078,8 @@ importers:
         specifier: ^12.2.0
         version: 12.2.0
       dotenv:
-        specifier: ^17.0.1
-        version: 17.0.1
+        specifier: ^17.1.0
+        version: 17.1.0
       drizzle-kit:
         specifier: ^0.31.4
         version: 0.31.4
@@ -1088,7 +1088,7 @@ importers:
         version: 0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.1)
       drizzle-zod:
         specifier: ^0.7.1
-        version: 0.7.1(drizzle-orm@0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.1))(zod@3.25.75)
+        version: 0.7.1(drizzle-orm@0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.1))(zod@3.25.76)
       mysql2:
         specifier: 3.14.1
         version: 3.14.1
@@ -1136,8 +1136,8 @@ importers:
         specifier: ^5.2.5
         version: 5.2.5
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1193,10 +1193,10 @@ importers:
     dependencies:
       '@t3-oss/env-nextjs':
         specifier: ^0.13.8
-        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.75)
+        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.76)
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1229,8 +1229,8 @@ importers:
         specifier: ^8.1.3
         version: 8.1.3(react@19.1.0)
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1278,8 +1278,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1391,8 +1391,8 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1431,8 +1431,8 @@ importers:
         specifier: 3.17.0
         version: 3.17.0
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1538,8 +1538,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1642,11 +1642,11 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
       zod-form-data:
         specifier: ^2.0.7
-        version: 2.0.7(zod@3.25.75)
+        version: 2.0.7(zod@3.25.76)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1673,8 +1673,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../common
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -2041,11 +2041,11 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../translation
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
       zod-form-data:
         specifier: ^2.0.7
-        version: 2.0.7(zod@3.25.75)
+        version: 2.0.7(zod@3.25.76)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -2222,8 +2222,8 @@ importers:
         specifier: ^8.23.3
         version: 8.23.3
       zod:
-        specifier: ^3.25.75
-        version: 3.25.75
+        specifier: ^3.25.76
+        version: 3.25.76
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -4817,8 +4817,8 @@ packages:
   '@types/node@18.19.50':
     resolution: {integrity: sha512-xonK+NRrMBRtkL1hVCc3G+uXtjh1Al4opBLjqVmipe5ZAaBYWW6cNAiBVZ1BvmkBhep698rP3UM3aRAdSALuhg==}
 
-  '@types/node@22.16.0':
-    resolution: {integrity: sha512-B2egV9wALML1JCpv3VQoQ+yesQKAmNMBIAY7OteVrikcOcAkWm+dGL6qpeCktPjAv6N1JLnhbNiqS35UpFyBsQ==}
+  '@types/node@22.16.1':
+    resolution: {integrity: sha512-oaNE4MzsA6uO7HcsjUvqzz19lYIRsV6I1Dc6iOvgwYYDiOeF7/9b2E/PE0UW2ccwpgWPVUedjltYXQXVKFd4EA==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -6185,8 +6185,8 @@ packages:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
     engines: {node: '>=12'}
 
-  dotenv@17.0.1:
-    resolution: {integrity: sha512-GLjkduuAL7IMJg/ZnOPm9AnWKJ82mSE2tzXLaJ/6hD6DhwGfZaXG77oB8qbReyiczNxnbxQKyh0OE5mXq0bAHA==}
+  dotenv@17.1.0:
+    resolution: {integrity: sha512-tG9VUTJTuju6GcXgbdsOuRhupE8cb4mRgY5JLRCh4MtGoVo3/gfGUtOMwmProM6d0ba2mCFvv+WrpYJV6qgJXQ==}
     engines: {node: '>=12'}
 
   drange@1.1.1:
@@ -10924,8 +10924,8 @@ packages:
     peerDependencies:
       zod: ^3.25.0
 
-  zod@3.25.75:
-    resolution: {integrity: sha512-OhpzAmVzabPOL6C3A3gpAifqr9MqihV/Msx3gor2b2kviCgcb+HM9SEOpMWwwNp9MRunWnhtAKUoo0AHhjyPPg==}
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -12007,7 +12007,7 @@ snapshots:
   '@kubernetes/client-node@1.3.0':
     dependencies:
       '@types/js-yaml': 4.0.9
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       '@types/node-fetch': 2.6.12
       '@types/stream-buffers': 3.0.7
       form-data: 4.0.1
@@ -13044,19 +13044,19 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.75)':
+  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.76)':
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.8.3
-      zod: 3.25.75
+      zod: 3.25.76
 
-  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.75)':
+  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.76)':
     dependencies:
-      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.75)
+      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.76)
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.8.3
-      zod: 3.25.75
+      zod: 3.25.76
 
   '@tabler/icons-react@3.34.0(react@19.1.0)':
     dependencies:
@@ -13384,7 +13384,7 @@ snapshots:
 
   '@tsconfig/svelte@1.0.13': {}
 
-  '@turbo/gen@2.5.4(@types/node@22.16.0)(typescript@5.8.3)':
+  '@turbo/gen@2.5.4(@types/node@22.16.1)(typescript@5.8.3)':
     dependencies:
       '@turbo/workspaces': 2.5.4
       commander: 10.0.1
@@ -13394,7 +13394,7 @@ snapshots:
       node-plop: 0.26.3
       picocolors: 1.0.1
       proxy-agent: 6.5.0
-      ts-node: 10.9.2(@types/node@22.16.0)(typescript@5.8.3)
+      ts-node: 10.9.2(@types/node@22.16.1)(typescript@5.8.3)
       update-check: 1.5.4
       validate-npm-package-name: 5.0.1
     transitivePeerDependencies:
@@ -13420,11 +13420,11 @@ snapshots:
 
   '@types/adm-zip@0.5.7':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/asn1@0.2.4':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/aws-lambda@8.10.146': {}
 
@@ -13451,16 +13451,16 @@ snapshots:
 
   '@types/bcrypt@5.0.2':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/better-sqlite3@7.6.13':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/chai@5.2.2':
     dependencies:
@@ -13470,7 +13470,7 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/cookie@0.4.1': {}
 
@@ -13479,11 +13479,11 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/express': 4.17.21
       '@types/keygrip': 1.0.6
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/cors@2.8.17':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/css-font-loading-module@0.0.7': {}
 
@@ -13521,13 +13521,13 @@ snapshots:
 
   '@types/docker-modem@3.0.6':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       '@types/ssh2': 1.15.1
 
   '@types/dockerode@3.3.42':
     dependencies:
       '@types/docker-modem': 3.0.6
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       '@types/ssh2': 1.15.1
 
   '@types/estree-jsx@1.0.5':
@@ -13540,7 +13540,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.5':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       '@types/qs': 6.9.16
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -13555,7 +13555,7 @@ snapshots:
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/hast@2.3.10':
     dependencies:
@@ -13603,7 +13603,7 @@ snapshots:
 
   '@types/node-fetch@2.6.12':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       form-data: 4.0.1
 
   '@types/node-unifi@2.5.1(patch_hash=5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5)':
@@ -13614,7 +13614,7 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
-  '@types/node@22.16.0':
+  '@types/node@22.16.1':
     dependencies:
       undici-types: 6.21.0
 
@@ -13643,21 +13643,21 @@ snapshots:
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       '@types/send': 0.17.4
 
   '@types/ssh2-streams@0.1.12':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/ssh2@0.5.52':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       '@types/ssh2-streams': 0.1.12
 
   '@types/ssh2@1.15.1':
@@ -13666,7 +13666,7 @@ snapshots:
 
   '@types/stream-buffers@3.0.7':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/swagger-ui-react@5.18.0':
     dependencies:
@@ -13674,7 +13674,7 @@ snapshots:
 
   '@types/through@0.0.33':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/tinycolor2@1.4.6': {}
 
@@ -13693,11 +13693,11 @@ snapshots:
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@types/xml2js@0.4.14':
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
 
   '@typescript-eslint/eslint-plugin@8.36.0(@typescript-eslint/parser@8.36.0(eslint@9.30.1)(typescript@5.8.3))(eslint@9.30.1)(typescript@5.8.3)':
     dependencies:
@@ -13823,7 +13823,7 @@ snapshots:
       global: 4.4.0
       is-function: 1.0.2
 
-  '@vitejs/plugin-react@4.6.0(vite@5.4.5(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0))':
+  '@vitejs/plugin-react@4.6.0(vite@5.4.5(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0))':
     dependencies:
       '@babel/core': 7.27.4
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.27.4)
@@ -13831,7 +13831,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.19
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 5.4.5(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
+      vite: 5.4.5(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -13850,7 +13850,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.16.0)(@vitest/ui@3.2.4)(jsdom@26.1.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.16.1)(@vitest/ui@3.2.4)(jsdom@26.1.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -13862,13 +13862,13 @@ snapshots:
       chai: 5.2.0
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@3.2.4(vite@5.4.5(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0))':
+  '@vitest/mocker@3.2.4(vite@5.4.5(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0))':
     dependencies:
       '@vitest/spy': 3.2.4
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      vite: 5.4.5(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
+      vite: 5.4.5(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
 
   '@vitest/pretty-format@3.2.4':
     dependencies:
@@ -13899,7 +13899,7 @@ snapshots:
       sirv: 3.0.1
       tinyglobby: 0.2.14
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.16.0)(@vitest/ui@3.2.4)(jsdom@26.1.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@22.16.1)(@vitest/ui@3.2.4)(jsdom@26.1.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
 
   '@vitest/utils@3.2.4':
     dependencies:
@@ -15137,7 +15137,7 @@ snapshots:
 
   dotenv@16.6.1: {}
 
-  dotenv@17.0.1: {}
+  dotenv@17.1.0: {}
 
   drange@1.1.1: {}
 
@@ -15158,10 +15158,10 @@ snapshots:
       gel: 2.0.0
       mysql2: 3.14.1
 
-  drizzle-zod@0.7.1(drizzle-orm@0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.1))(zod@3.25.75):
+  drizzle-zod@0.7.1(drizzle-orm@0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.1))(zod@3.25.76):
     dependencies:
       drizzle-orm: 0.44.2(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.1)
-      zod: 3.25.75
+      zod: 3.25.76
 
   dunder-proto@1.0.1:
     dependencies:
@@ -15216,7 +15216,7 @@ snapshots:
     dependencies:
       '@types/cookie': 0.4.1
       '@types/cors': 2.8.17
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       accepts: 1.3.8
       base64id: 2.0.0
       cookie: 0.7.2
@@ -16915,7 +16915,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -18411,7 +18411,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       long: 5.2.3
 
   proxmox-api@1.1.1:
@@ -19856,14 +19856,14 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-openapi@2.3.2(@trpc/server@11.4.3(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.25.75))(zod@3.25.75):
+  trpc-to-openapi@2.3.2(@trpc/server@11.4.3(typescript@5.8.3))(zod-openapi@2.19.0(zod@3.25.76))(zod@3.25.76):
     dependencies:
       '@trpc/server': 11.4.3(typescript@5.8.3)
       co-body: 6.2.0
       h3: 1.15.1
       openapi3-ts: 4.4.0
-      zod: 3.25.75
-      zod-openapi: 2.19.0(zod@3.25.75)
+      zod: 3.25.76
+      zod-openapi: 2.19.0(zod@3.25.76)
     optionalDependencies:
       '@rollup/rollup-linux-x64-gnu': 4.6.1
 
@@ -19873,14 +19873,14 @@ snapshots:
 
   ts-mixer@6.0.4: {}
 
-  ts-node@10.9.2(@types/node@22.16.0)(typescript@5.8.3):
+  ts-node@10.9.2(@types/node@22.16.1)(typescript@5.8.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       acorn: 8.14.1
       acorn-walk: 8.3.4
       arg: 4.1.3
@@ -20341,13 +20341,13 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  vite-node@3.2.4(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0):
+  vite-node@3.2.4(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0):
     dependencies:
       cac: 6.7.14
       debug: 4.4.1
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 5.4.5(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
+      vite: 5.4.5(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -20359,34 +20359,34 @@ snapshots:
       - supports-color
       - terser
 
-  vite-tsconfig-paths@5.1.4(typescript@5.8.3)(vite@5.4.5(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)):
+  vite-tsconfig-paths@5.1.4(typescript@5.8.3)(vite@5.4.5(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)):
     dependencies:
       debug: 4.3.7
       globrex: 0.1.2
       tsconfck: 3.1.3(typescript@5.8.3)
     optionalDependencies:
-      vite: 5.4.5(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
+      vite: 5.4.5(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@5.4.5(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0):
+  vite@5.4.5(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
       rollup: 4.21.3
     optionalDependencies:
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       fsevents: 2.3.3
       sass: 1.89.2
       sugarss: 5.0.0(postcss@8.4.47)
       terser: 5.39.0
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.16.0)(@vitest/ui@3.2.4)(jsdom@26.1.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0):
+  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.16.1)(@vitest/ui@3.2.4)(jsdom@26.1.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
-      '@vitest/mocker': 3.2.4(vite@5.4.5(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0))
+      '@vitest/mocker': 3.2.4(vite@5.4.5(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0))
       '@vitest/pretty-format': 3.2.4
       '@vitest/runner': 3.2.4
       '@vitest/snapshot': 3.2.4
@@ -20404,12 +20404,12 @@ snapshots:
       tinyglobby: 0.2.14
       tinypool: 1.1.1
       tinyrainbow: 2.0.0
-      vite: 5.4.5(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
-      vite-node: 3.2.4(@types/node@22.16.0)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
+      vite: 5.4.5(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
+      vite-node: 3.2.4(@types/node@22.16.1)(sass@1.89.2)(sugarss@5.0.0(postcss@8.4.47))(terser@5.39.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/debug': 4.1.12
-      '@types/node': 22.16.0
+      '@types/node': 22.16.1
       '@vitest/ui': 3.2.4(vitest@3.2.4)
       jsdom: 26.1.0
     transitivePeerDependencies:
@@ -20722,19 +20722,19 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-form-data@2.0.7(zod@3.25.75):
+  zod-form-data@2.0.7(zod@3.25.76):
     dependencies:
       '@rvf/set-get': 7.0.1
-      zod: 3.25.75
+      zod: 3.25.76
 
-  zod-openapi@2.19.0(zod@3.25.75):
+  zod-openapi@2.19.0(zod@3.25.76):
     dependencies:
-      zod: 3.25.75
+      zod: 3.25.76
 
-  zod-validation-error@3.5.2(zod@3.25.75):
+  zod-validation-error@3.5.2(zod@3.25.76):
     dependencies:
-      zod: 3.25.75
+      zod: 3.25.76
 
-  zod@3.25.75: {}
+  zod@3.25.76: {}
 
   zwitch@2.0.4: {}

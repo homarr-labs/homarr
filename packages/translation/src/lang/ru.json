@@ -1502,7 +1502,8 @@
         "rows": "Строки",
         "width": "Ширина",
         "height": "Высота"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",

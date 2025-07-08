@@ -1502,7 +1502,8 @@
         "rows": "Vrstice",
         "width": "Širina",
         "height": "Višina"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",

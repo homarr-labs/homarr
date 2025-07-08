@@ -1502,7 +1502,8 @@
         "rows": "Dòng",
         "width": "Chiều rộng",
         "height": "Chiều cao"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",

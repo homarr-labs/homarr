@@ -70,7 +70,7 @@
     "chroma-js": "^3.1.2",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
-    "dotenv": "^17.0.1",
+    "dotenv": "^17.1.0",
     "flag-icons": "^7.5.0",
     "glob": "^11.0.3",
     "jotai": "^2.12.5",
@@ -86,14 +86,14 @@
     "superjson": "2.2.2",
     "swagger-ui-react": "^5.26.2",
     "use-deep-compare-effect": "^1.8.1",
-    "zod": "^3.25.75"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/chroma-js": "3.1.1",
-    "@types/node": "^22.16.0",
+    "@types/node": "^22.16.1",
     "@types/prismjs": "^1.26.5",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",

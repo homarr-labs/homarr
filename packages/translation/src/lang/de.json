@@ -1502,7 +1502,8 @@
         "rows": "Zeilen",
         "width": "Breite",
         "height": "Höhe"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",

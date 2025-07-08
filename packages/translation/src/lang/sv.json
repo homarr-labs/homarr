@@ -1502,7 +1502,8 @@
         "rows": "Rader",
         "width": "Bredd",
         "height": "Höjd"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",

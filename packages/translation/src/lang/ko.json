@@ -1502,7 +1502,8 @@
         "rows": "",
         "width": "너비",
         "height": "높이"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",

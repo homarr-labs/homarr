@@ -1502,7 +1502,8 @@
         "rows": "Γραμμές",
         "width": "Πλάτος",
         "height": "Ύψος"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iframe",

@@ -1502,7 +1502,8 @@
         "rows": "",
         "width": "",
         "height": ""
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",

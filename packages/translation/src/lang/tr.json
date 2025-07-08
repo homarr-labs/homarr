@@ -1502,7 +1502,8 @@
         "rows": "Satırlar",
         "width": "Genişlik",
         "height": "Yükseklik"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
