@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Accordion, Box, Center, Flex, Group, RingProgress, ScrollArea, Text } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconCpu, IconTopologyBus } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -17,7 +18,7 @@ export interface Firewall {
   value: string;
 }
 
-export default function FirewallWidget({ integrationIds, width }: WidgetComponentProps<"firewall">) {
+export default function FirewallWidget({ integrationIds, width, itemId }: WidgetComponentProps<"firewall">) {
   const [selectedFirewall, setSelectedFirewall] = useState<string>("");
 
   const handleSelect = useCallback((value: string | null) => {
@@ -36,16 +37,10 @@ export default function FirewallWidget({ integrationIds, width }: WidgetComponen
   const initialSelectedFirewall = firewallsVersionData[0] ? firewallsVersionData[0].integration.id : "undefined";
   const isTiny = width < 256;
 
-  // State for managing the accordion
-  const [accordionValue, setAccordionValue] = useState<string | null>(() => {
-    const savedState = localStorage.getItem(`homarr-accordionState-${selectedFirewall || initialSelectedFirewall}`);
-    return savedState ? (JSON.parse(savedState) as string) : "interfaces";
+  const [accordionValue, setAccordionValue] = useLocalStorage<string | null>({
+    key: `homarr-${itemId}-firewall`,
+    defaultValue: "interfaces",
   });
-
-  // Save accordion state to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem("accordionState", JSON.stringify(accordionValue));
-  }, [accordionValue]);
 
   const dropdownItems = firewallsVersionData.map((firewall) => ({
     label: firewall.integration.name,
