@@ -10,8 +10,6 @@ RUN apk add --no-cache libc6-compat curl bash
 RUN apk update
 COPY . .
 
-# Install working version of corepack (See https://github.com/nodejs/corepack/issues/612)
-RUN npm install -g corepack@0.31.0 && corepack --version
 RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
 
 # Copy static data as it is not part of the build
@@ -19,8 +17,7 @@ COPY static-data ./static-data
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
 ARG DISABLE_REDIS_LOGS='true'
-# Install working version of corepack (See https://github.com/nodejs/corepack/issues/612)
-RUN npm install -g corepack@0.31.0 && corepack --version
+
 RUN corepack enable pnpm && pnpm build
 
 FROM base AS runner
