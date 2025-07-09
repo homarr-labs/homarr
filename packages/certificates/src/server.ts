@@ -8,16 +8,13 @@ import { checkServerIdentity, rootCertificates } from "node:tls";
 import axios from "axios";
 import { fetch } from "undici";
 
-import { env } from "@homarr/common/env";
 import { LoggingAgent } from "@homarr/common/server";
 import type { InferSelectModel } from "@homarr/db";
 import { db } from "@homarr/db";
 import type { trustedCertificateHostnames } from "@homarr/db/schema";
 
 const getCertificateFolder = () => {
-  return env.NODE_ENV === "production"
-    ? path.join("/appdata", "trusted-certificates")
-    : process.env.LOCAL_CERTIFICATE_PATH;
+  return process.env.LOCAL_CERTIFICATE_PATH ??  path.join("/appdata", "trusted-certificates");
 };
 
 export const loadCustomRootCertificatesAsync = async () => {
