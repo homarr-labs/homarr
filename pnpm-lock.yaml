@@ -2277,8 +2277,8 @@ importers:
   tooling/prettier:
     dependencies:
       '@ianvs/prettier-plugin-sort-imports':
-        specifier: ^4.5.0
-        version: 4.5.0(prettier@3.6.2)
+        specifier: ^4.5.1
+        version: 4.5.1(prettier@3.6.2)
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -3320,8 +3320,8 @@ packages:
     resolution: {integrity: sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==}
     engines: {node: '>=18.18'}
 
-  '@ianvs/prettier-plugin-sort-imports@4.5.0':
-    resolution: {integrity: sha512-KNejY0Amu7a4AYGgKrIo7DzVMCKyHkF9w0dEQ+PqbVXarCNRy6+k/bL25cfDU7KT30zwdAAHNDDCprBCepEhbQ==}
+  '@ianvs/prettier-plugin-sort-imports@4.5.1':
+    resolution: {integrity: sha512-vOQwIyQHnHz0ikvHEQDzwUkNfX74o/7qNEpm9LiPtyBvCg/AU/DOkhwe1o92chPS1QzS6G7HeiO+OwIt8a358A==}
     peerDependencies:
       '@prettier/plugin-oxc': ^0.0.4
       '@vue/compiler-sfc': 2.7.x || 3.x
@@ -11744,7 +11744,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.2': {}
 
-  '@ianvs/prettier-plugin-sort-imports@4.5.0(prettier@3.6.2)':
+  '@ianvs/prettier-plugin-sort-imports@4.5.1(prettier@3.6.2)':
     dependencies:
       '@babel/generator': 7.27.5
       '@babel/parser': 7.27.5
