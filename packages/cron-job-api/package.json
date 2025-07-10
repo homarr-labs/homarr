@@ -35,7 +35,7 @@
     "@trpc/tanstack-react-query": "^11.4.3",
     "node-cron": "^4.2.1",
     "react": "19.1.0",
-    "zod": "^3.25.76"
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
