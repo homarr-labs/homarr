@@ -46,7 +46,7 @@
     "cross-env": "^7.0.3",
     "jsdom": "^26.1.0",
     "prettier": "^3.6.2",
-    "semantic-release": "^24.2.6",
+    "semantic-release": "^24.2.7",
     "testcontainers": "^11.2.1",
     "turbo": "^2.5.4",
     "typescript": "^5.8.3",
