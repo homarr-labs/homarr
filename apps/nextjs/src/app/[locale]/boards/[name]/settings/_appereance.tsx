@@ -103,7 +103,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
             </InputWrapper>
           </Grid.Col>
           <Grid.Col span={{ sm: 12, md: 6 }}>
-            <Group align="end">
+            <Group align="end" gap="md">
               <ColorInput
                 label={t("board.field.iconColor.label")}
                 format="hex"
