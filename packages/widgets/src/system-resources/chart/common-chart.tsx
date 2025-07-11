@@ -4,6 +4,8 @@ import {LineChart} from "@mantine/charts";
 import {Card, Center, Loader, Stack, Text} from "@mantine/core";
 import {useElementSize} from "@mantine/hooks";
 import type {TooltipProps, YAxisProps} from "recharts";
+import {useRequiredBoard} from "@homarr/boards/context";
+import { useMantineTheme } from '@mantine/core';
 
 export const CommonChart = ({
                               data,
@@ -21,10 +23,13 @@ export const CommonChart = ({
   yAxisProps?: Omit<YAxisProps, 'ref'>;
 }) => {
   const {ref, height} = useElementSize();
+  const theme = useMantineTheme();
+  const board = useRequiredBoard();
+
   return (
     <Card ref={ref} h={"100%"} pos={"relative"} p={0}>
       {data.length > 1 && height > 40 && (
-        <Text c={"dimmed"} pos={"absolute"} fw={"bold"} top={0} left={0} ps={6}>
+        <Text c={"dimmed"} pos={"absolute"} size={height > 100 ? "md" : "xs"} fw={"bold"} top={0} left={0} ps={6}>
           {title}
         </Text>
       )}
@@ -48,7 +53,7 @@ export const CommonChart = ({
           withYAxis={false}
           withDots={false}
           bg={"#434343"}
-          styles={{root: {padding: 5, borderRadius: 5}}}
+          styles={{root: {padding: 5, borderRadius: theme.radius[board.itemRadius] }}}
           tooltipProps={tooltipProps}
           yAxisProps={yAxisProps}
         />
