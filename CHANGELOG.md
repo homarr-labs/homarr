@@ -1,3 +1,39 @@
+## [1.28.0](https://github.com/homarr-labs/homarr/compare/v1.27.0...v1.28.0) (2025-07-11)
+
+### Features
+
+* **icon-color:** add icon color clear button ([#3593](https://github.com/homarr-labs/homarr/issues/3593)) ([5a8653d](https://github.com/homarr-labs/homarr/commit/5a8653d8500388d9392b150d62a56474c05843d7))
+* **notebook:** add placeholder, redo and undo button ([#3564](https://github.com/homarr-labs/homarr/issues/3564)) ([3411354](https://github.com/homarr-labs/homarr/commit/3411354677fedec6ff5b5b85eb25eacc94308425))
+* **ping:** ignore certificate error and show request duration ([#3546](https://github.com/homarr-labs/homarr/issues/3546)) ([1eb4731](https://github.com/homarr-labs/homarr/commit/1eb47311fa81184bd67830d0669d9f87d9922e70))
+* **releases-widget:** define providers as integrations ([#3253](https://github.com/homarr-labs/homarr/issues/3253)) ([5d8126d](https://github.com/homarr-labs/homarr/commit/5d8126d71eea61af9c023895cb911d24544f8066))
+
+### Bug Fixes
+
+* **bookmarks:** wrong widget icon ([#3572](https://github.com/homarr-labs/homarr/issues/3572)) ([fb57d46](https://github.com/homarr-labs/homarr/commit/fb57d46b573cc9798469540f4823cbf73afd21a5))
+* **deps:** update dependency @ianvs/prettier-plugin-sort-imports to ^4.5.0 ([#3585](https://github.com/homarr-labs/homarr/issues/3585)) ([ee286c9](https://github.com/homarr-labs/homarr/commit/ee286c95563c99297b5419c005550936ca96757b))
+* **deps:** update dependency @ianvs/prettier-plugin-sort-imports to ^4.5.1 ([#3586](https://github.com/homarr-labs/homarr/issues/3586)) ([7e92f1b](https://github.com/homarr-labs/homarr/commit/7e92f1bafadf1188ee3ddc9d2dc9904f103aab4e))
+* **deps:** update dependency dotenv to ^17.1.0 ([#3567](https://github.com/homarr-labs/homarr/issues/3567)) ([a369beb](https://github.com/homarr-labs/homarr/commit/a369beb248e2cac1f1dcf32421efb48f241700a6))
+* **deps:** update dependency dotenv to ^17.2.0 ([#3578](https://github.com/homarr-labs/homarr/issues/3578)) ([1724f9d](https://github.com/homarr-labs/homarr/commit/1724f9d26c5761e3195d336eb451dd47855266a4))
+* **deps:** update dependency ldapts to v8.0.5 ([#3559](https://github.com/homarr-labs/homarr/issues/3559)) ([8b9832b](https://github.com/homarr-labs/homarr/commit/8b9832b2b81dcc1a4f9081755defe44fc0f38a1d))
+* **deps:** update dependency mysql2 to v3.14.2 ([#3592](https://github.com/homarr-labs/homarr/issues/3592)) ([d68b80e](https://github.com/homarr-labs/homarr/commit/d68b80e6be38366860de84778a45e5a43aae06eb))
+* **deps:** update dependency node-cron to ^4.2.1 ([#3590](https://github.com/homarr-labs/homarr/issues/3590)) ([e21b236](https://github.com/homarr-labs/homarr/commit/e21b236d37f076654768e88bc7ef139a3e51abbc))
+* **deps:** update dependency swagger-ui-react to ^5.26.1 ([#3554](https://github.com/homarr-labs/homarr/issues/3554)) ([12f4e90](https://github.com/homarr-labs/homarr/commit/12f4e90e440a8ea1708a2a9ef64a851ef977bd6c))
+* **deps:** update dependency swagger-ui-react to ^5.26.2 ([#3558](https://github.com/homarr-labs/homarr/issues/3558)) ([57be43f](https://github.com/homarr-labs/homarr/commit/57be43f51b7ef306b962299789194de68ec9e8ea))
+* **deps:** update dependency typescript-eslint to ^8.36.0 ([#3563](https://github.com/homarr-labs/homarr/issues/3563)) ([7c0a742](https://github.com/homarr-labs/homarr/commit/7c0a7428d85d11f3d2226d809ba04671ca713b72))
+* **deps:** update dependency zod to ^3.25.75 ([#3555](https://github.com/homarr-labs/homarr/issues/3555)) ([e9a35ba](https://github.com/homarr-labs/homarr/commit/e9a35ba811bd1807d63c5f0c760d470b20f4410f))
+* **deps:** update dependency zod to ^3.25.76 ([#3569](https://github.com/homarr-labs/homarr/issues/3569)) ([c793bf1](https://github.com/homarr-labs/homarr/commit/c793bf1982c3a484176860cebad80c721acd597d))
+* **deps:** update dependency zod-validation-error to ^3.5.3 ([#3600](https://github.com/homarr-labs/homarr/issues/3600)) ([9020440](https://github.com/homarr-labs/homarr/commit/9020440193595a5b437464957d9a3745fb200c93))
+* **deps:** update mantine monorepo to ^8.1.3 ([#3560](https://github.com/homarr-labs/homarr/issues/3560)) ([1fe3450](https://github.com/homarr-labs/homarr/commit/1fe34505550f401be97c9d84c383ea70bf39b937))
+* **deps:** update tanstack-query monorepo to ^5.82.0 ([#3577](https://github.com/homarr-labs/homarr/issues/3577)) ([90f6a2d](https://github.com/homarr-labs/homarr/commit/90f6a2dd014a73cd0131781b6db56a1056e563b6))
+* **deps:** update tanstack-query monorepo to ^5.83.0 ([#3599](https://github.com/homarr-labs/homarr/issues/3599)) ([bd8ac62](https://github.com/homarr-labs/homarr/commit/bd8ac62c7af034525803410751bfd5ab72094f45))
+* **deps:** update testcontainers-node monorepo to ^11.1.0 ([#3550](https://github.com/homarr-labs/homarr/issues/3550)) ([b0bdf28](https://github.com/homarr-labs/homarr/commit/b0bdf28016bae2ccfab24cab6df5b4846d1a8f48))
+* **deps:** update testcontainers-node monorepo to ^11.2.0 ([#3556](https://github.com/homarr-labs/homarr/issues/3556)) ([824f443](https://github.com/homarr-labs/homarr/commit/824f443949e75ec3f3edacb9093faefbdec47ef4))
+* **deps:** update testcontainers-node monorepo to ^11.2.1 ([#3562](https://github.com/homarr-labs/homarr/issues/3562)) ([5d394c8](https://github.com/homarr-labs/homarr/commit/5d394c849f5f47b47c595f73763e89d0a5d6247a))
+* **deps:** update tiptap monorepo to v2.25.0 ([#3552](https://github.com/homarr-labs/homarr/issues/3552)) ([430dc58](https://github.com/homarr-labs/homarr/commit/430dc580682cf0885fcd0ef2b7b81a0dfdf93425))
+* **deps:** update tiptap monorepo to v2.25.1 ([#3591](https://github.com/homarr-labs/homarr/issues/3591)) ([661afa7](https://github.com/homarr-labs/homarr/commit/661afa72be96c629cad4ab7f6007214b54d8ef6a))
+* **deps:** update tiptap monorepo to v2.26.0 ([#3596](https://github.com/homarr-labs/homarr/issues/3596)) ([df5b6fc](https://github.com/homarr-labs/homarr/commit/df5b6fcb6a6215f5c1cf92e034e27f6e32405b3e))
+* unable to change certificate path for running from source ([#3582](https://github.com/homarr-labs/homarr/issues/3582)) ([f1143e5](https://github.com/homarr-labs/homarr/commit/f1143e54a06e00a348e37b5633fad4cb6390cff7))
+
 ## [1.27.0](https://github.com/homarr-labs/homarr/compare/v1.26.0...v1.27.0) (2025-07-04)
 
 ### Features
