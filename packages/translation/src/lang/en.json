@@ -2556,6 +2556,9 @@
       "iconColor": {
         "label": "Icon color"
       },
+      "clearColor": {
+        "label": "Clear color"
+      },
       "customCss": {
         "label": "Custom css for this board",
         "description": "Further, customize your dashboard using CSS, only recommended for experienced users",
