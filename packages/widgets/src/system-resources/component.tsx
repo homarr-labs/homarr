@@ -63,9 +63,6 @@ export default function SystemResources({ integrationIds }: WidgetComponentProps
       </div>
       <NetworkTrafficChart usageOverTime={queue.map((item) => item.network.down)} isUp={false} />
       <NetworkTrafficChart usageOverTime={queue.map((item) => item.network.up)} isUp={true} />
-      <div>
-        Queue: {queue.length}
-      </div>
     </div>
   );
 }
