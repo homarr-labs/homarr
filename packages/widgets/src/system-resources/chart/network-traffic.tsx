@@ -12,7 +12,7 @@ export const NetworkTrafficChart = ({usageOverTime, isUp}: {
     <CommonChart
       data={chartData}
       dataKey={"index"}
-      series={[{name: "usage", color: "teal.6"}]}
+      series={[{name: "usage", color: "yellow.5"}]}
       title={isUp ? "UP" : "DOWN"}
       yAxisProps={{domain: [0, "dataMax"]}}
       tooltipProps={{

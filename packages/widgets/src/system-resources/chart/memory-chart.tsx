@@ -12,7 +12,7 @@ export const SystemResourceMemoryChart = ({memoryUsageOverTime, totalCapacityInB
     <CommonChart
       data={chartData}
       dataKey={"index"}
-      series={[{name: "usage", color: "teal.6"}]}
+      series={[{name: "usage", color: "red.6"}]}
       title={"RAM"}
       yAxisProps={{domain: [0, totalCapacityInBytes]}}
       tooltipProps={{

@@ -8,7 +8,7 @@ export const SystemResourceCPUChart = ({cpuUsageOverTime}: { cpuUsageOverTime: n
     <CommonChart
       data={chartData}
       dataKey={"index"}
-      series={[{name: "usage", color: "teal.6"}]}
+      series={[{name: "usage", color: "blue.5"}]}
       title={"CPU"}
       yAxisProps={{domain: [0, 100]}}
       tooltipProps={{
