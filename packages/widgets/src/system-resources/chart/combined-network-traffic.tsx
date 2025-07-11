@@ -2,18 +2,20 @@ import {Paper, Text} from "@mantine/core";
 import {CommonChart} from "./common-chart";
 import {humanFileSize} from "@homarr/common";
 
-export const NetworkTrafficChart = ({usageOverTime, isUp}: {
-  usageOverTime: number[],
-  isUp: boolean
+export const CombinedNetworkTrafficChart = ({usageOverTime}: {
+  usageOverTime: {
+    up: number
+    down: number
+  }[]
 }) => {
-  const chartData = usageOverTime.map((usage, index) => ({index, "usage": usage}));
+  const chartData = usageOverTime.map((usage, index) => ({index, up: usage.up, down: usage.down}));
 
   return (
     <CommonChart
       data={chartData}
       dataKey={"index"}
-      series={[{name: "usage", color: "yellow.5"}]}
-      title={isUp ? "UP" : "DOWN"}
+      series={[{name: "up", color: "yellow.5"},{name: "down", color: "yellow.5"}]}
+      title={"NET"}
       yAxisProps={{domain: [0, "dataMax"]}}
       tooltipProps={{
         content: ({payload}) => {
