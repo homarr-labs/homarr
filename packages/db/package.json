@@ -51,7 +51,7 @@
     "dotenv": "^17.2.0",
     "drizzle-kit": "^0.31.4",
     "drizzle-orm": "^0.44.2",
-    "drizzle-zod": "^0.7.1",
+    "drizzle-zod": "^0.8.2",
     "mysql2": "3.14.2"
   },
   "devDependencies": {
