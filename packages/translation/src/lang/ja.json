@@ -6,7 +6,7 @@
         "subtitle": "Homarrインスタンスの設定を始めましょう。",
         "description": "始めるには、Homarrインスタンスの設定方法を選択してください。",
         "action": {
-          "scratch": "ゼロからスタート",
+          "scratch": "自分でゼロから作成",
           "importOldmarr": "1.0 より前の Homarr からインポート"
         }
       },
@@ -43,8 +43,8 @@
           "entities": {
             "apps": "アプリ",
             "boards": "ボード",
-            "integrations": "連携",
-            "credentialUsers": "資格情報ユーザー"
+            "integrations": "連携機能",
+            "credentialUsers": "認証情報ユーザー"
           }
         },
         "tokenModal": {
@@ -65,7 +65,7 @@
       },
       "user": {
         "title": "管理者ユーザー",
-        "subtitle": "管理者ユーザーの資格情報を指定します。",
+        "subtitle": "管理者ユーザーの認証情報を指定します。",
         "notification": {
           "success": {
             "title": "ユーザーが作成されました",
@@ -88,7 +88,7 @@
       },
       "settings": {
         "title": "設定",
-        "subtitle": "サーバー設定。"
+        "subtitle": "サーバーの設定。"
       },
       "finish": {
         "title": "設定終了",
@@ -96,7 +96,7 @@
         "description": "セットアッププロセスが正常に完了しました。今すぐHomarrの使用を開始できます。次のアクションを選択してください：",
         "action": {
           "goToBoard": "{name} ボードへ移動",
-          "createBoard": "あなたの最初のボードを作成",
+          "createBoard": "あなたの最初のボードを作成する",
           "inviteUser": "他のユーザーを招待する",
           "docs": "ドキュメントを読む"
         }
@@ -173,7 +173,7 @@
           },
           "error": {
             "title": "ログイン失敗",
-            "message": "ログイン失敗"
+            "message": "あなたのログインは失敗しました"
           }
         },
         "forgotPassword": {
@@ -189,12 +189,12 @@
             "message": "続けるにはログインしてください"
           },
           "error": {
-            "title": "アカウントの作成に失敗しました",
+            "title": "アカウントの作成に失敗",
             "message": "あなたのアカウントを作成できませんでした"
           }
         }
       },
-      "create": "ユーザー作成",
+      "create": "ユーザーを作成する",
       "changePassword": {
         "label": "パスワードの変更",
         "notification": {
@@ -229,7 +229,7 @@
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": "週の最初の日が正常に変更されました"
+            "message": "週の最初の日は、正常に変更されました"
           },
           "error": {
             "message": "週の最初の日を変更することができません"
@@ -248,7 +248,7 @@
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "画像を変更する",
+          "label": "画像を変更",
           "notification": {
             "success": {
               "message": "画像は正常に変更されました"
@@ -368,7 +368,7 @@
         }
       },
       "integration": {
-        "title": "連携",
+        "title": "連携機能",
         "item": {
           "create": {
             "label": "連携を作成",
@@ -379,12 +379,12 @@
             "description": "メンバーに、各自のボードに任意の連携を追加することを許可する"
           },
           "interact-all": {
-            "label": "任意の連携とやりとりする",
-            "description": "メンバーに、任意の連携とやり取りすることを許可する"
+            "label": "任意の連携機能とやりとりする",
+            "description": "メンバーに、任意の連携機能とやり取りすることを許可する"
           },
           "full-all": {
-            "label": "完全な連携アクセス",
-            "description": "メンバーが任意の連携を管理・使用・操作できるようにします"
+            "label": "完全な連携機能アクセス",
+            "description": "メンバーが任意の連携機能を管理・使用・操作できるようにします"
           }
         }
       },
@@ -393,11 +393,11 @@
         "item": {
           "upload": {
             "label": "メディアをアップロード",
-            "description": "メンバーがメディアをアップロードで許可する"
+            "description": "メンバーにメディアをアップロードすることを許可する"
           },
           "view-all": {
             "label": "すべてのメディアを表示",
-            "description": "メンバーにすべてのメディアの表示を許可する"
+            "description": "メンバーに、すべてのメディアを表示することを許可する"
           },
           "full-all": {
             "label": "メディアへのフルアクセス",
@@ -423,7 +423,7 @@
           },
           "modify-all": {
             "label": "すべての検索エンジンを変更",
-            "description": "メンバーにすべての検索エンジンの変更を許可する"
+            "description": "メンバーに、すべての検索エンジンの変更を許可する"
           },
           "full-all": {
             "label": "完全な検索エンジンアクセス",
@@ -453,7 +453,7 @@
       },
       "transfer": {
         "label": "所有権の譲渡",
-        "description": "このグループの所有権を別のユーザーに譲渡します。",
+        "description": "このグループの所有権を、別のユーザーに譲渡します。",
         "confirm": "グループ {name} の所有権を {username} に譲渡してもよろしいですか？",
         "notification": {
           "success": {
@@ -604,7 +604,7 @@
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "ping に 別の URL を使用する",
-          "description": "Homarrが内部ホスト名やネットワークを使ってISPの帯域幅使用を避けるために直接アクセスできる場合に便利です"
+          "description": "Homarr が内部ホスト名やネットワークを使って ISP の帯域幅使用を避けるために直接アクセスできる場合に便利です"
         }
       }
     },
@@ -613,13 +613,13 @@
         "label": "アプリを選択",
         "notFound": "アプリが見つかりません",
         "search": "アプリを探す",
-        "noResults": "該当なし",
+        "noResults": "検索結果はありません",
         "action": "{app} を選択",
         "title": "このボードに追加するアプリを選択"
       },
       "create": {
         "title": "新しいアプリを作成",
-        "description": "新しいアプリを作成する ",
+        "description": "新しいアプリを作成する",
         "action": "アプリの作成を開く"
       },
       "add": "アプリを追加する"
@@ -628,49 +628,49 @@
   "integration": {
     "page": {
       "list": {
-        "title": "インテグレーション",
-        "search": "インテグレーションを検索",
+        "title": "連携機能",
+        "search": "連携機能を検索",
         "noResults": {
-          "title": "まだ、インテグレーションはありません"
+          "title": "連携機能は、まだありません"
         }
       },
       "create": {
-        "title": "新しい {name} インテグレーション",
+        "title": "新しい {name} 連携機能",
         "notification": {
           "success": {
             "title": "作成完了",
-            "message": "インテグレーションが正常に作成されました"
+            "message": "連携機能が正常に作成されました"
           },
           "error": {
             "title": "作成失敗",
-            "message": "インテグレーションを作成できません"
+            "message": "連携機能を作成できません"
           }
         }
       },
       "edit": {
-        "title": "{name} インテグレーションを編集",
+        "title": "{name} 連携機能を編集",
         "notification": {
           "success": {
             "title": "変更の適用成功",
-            "message": "インテグレーションが正常に作成されました"
+            "message": "連携機能が正常に作成されました"
           },
           "error": {
             "title": "変更の適用失敗",
-            "message": "インテグレーションを保存できません"
+            "message": "連携機能を保存できません"
           }
         }
       },
       "delete": {
-        "title": "連携削除",
-        "message": "インテグレーション {name}を削除してもよろしいですか？",
+        "title": "連携機能削除",
+        "message": "連携機能 {name} を削除してもよろしいですか？",
         "notification": {
           "success": {
             "title": "削除成功",
-            "message": "インテグレーションは正常に削除されました"
+            "message": "連携機能は正常に削除されました"
           },
           "error": {
             "title": "削除失敗",
-            "message": "インテグレーションの削除ができませんでした"
+            "message": "連携機能の削除ができませんでした"
           }
         }
       }
@@ -684,18 +684,18 @@
       },
       "attemptSearchEngineCreation": {
         "label": "検索エンジンを作成",
-        "description": "インテグレーション \"{kind}\" は、検索エンジンで使用できます。検索エンジンを自動的に設定するには、これにチェックを入れてください。"
+        "description": "連携機能 \"{kind}\" は、検索エンジンで使用できます。検索エンジンを自動的に設定するには、これにチェックを入れてください。"
       },
       "createApp": {
         "label": "アプリの作成",
-        "description": "インテグレーションと同じ名前とアイコンを持つアプリを作成します。 アプリケーションを作成するには、以下の入力フィールドを空のままにしてください。"
+        "description": "連携機能と同じ名前とアイコンを持つアプリを作成します。 アプリケーションを作成するには、以下の入力フィールドを空のままにしてください。"
       },
       "appHref": {
-        "placeholder": "カスタム アプリ URL"
+        "placeholder": "カスタムアプリ URL"
       }
     },
     "action": {
-      "create": "新しいインテグレーションを作る"
+      "create": "新しい連携機能を作る"
     },
     "testConnection": {
       "action": {
@@ -752,12 +752,12 @@
             },
             "extract": {
               "title": "CA証明書の抽出失敗",
-              "message": "チェーンを持たない自己署名証明書のみ自動的に取得できます。 自己署名証明書を使用している場合は、必ず手動で CA 証明書をアップロードしてください。 これを行う方法については、 <docsLink></docsLink> を参照してください。"
+              "message": "チェーンを持たない自己署名証明書のみ、自動的に取得できます。 自己署名証明書を使用している場合は、必ず手動で CA 証明書をアップロードしてください。 これを行う方法については、 <docsLink></docsLink> を参照してください。"
             }
           },
           "action": {
             "retry": {
-              "label": "再作成する"
+              "label": "再作成"
             },
             "trust": {
               "label": "証明書を信頼する"
@@ -839,7 +839,7 @@
           "message": "URL が無効です"
         },
         "secretNotDefined": {
-          "title": "認証情報の不足",
+          "title": "認証情報がありません",
           "message": "すべての認証情報が提供されていません"
         },
         "invalidCredentials": {
@@ -914,7 +914,7 @@
       },
       "noSecretsRequired": {
         "segmentTitle": "シークレットなし",
-        "text": "このインテグレーションにシークレットは必要ありません"
+        "text": "この連携機能に、シークレットは必要ありません"
       },
       "kind": {
         "username": {
@@ -923,15 +923,15 @@
         },
         "apiKey": {
           "label": "API キー",
-          "newLabel": "新規APIキー"
+          "newLabel": "新規 API キー"
         },
         "password": {
           "label": "パスワード",
           "newLabel": "新しいパスワード"
         },
         "tokenId": {
-          "label": "トークンID",
-          "newLabel": "新規トークンID"
+          "label": "トークン ID",
+          "newLabel": "新規トークン ID"
         },
         "realm": {
           "label": "Realm",
@@ -944,9 +944,9 @@
       }
     },
     "permission": {
-      "use": "アイテム内のインテグレーションの選択",
-      "interact": "インテグレーションとの連携",
-      "full": "完全なインテグレーションアクセス"
+      "use": "アイテム内の連携機能の選択",
+      "interact": "連携機能とやりとりする",
+      "full": "完全な連携機能アクセス"
     }
   },
   "media": {
@@ -955,7 +955,7 @@
     "field": {
       "name": "名称",
       "size": "サイズ",
-      "creator": "クリエイター"
+      "creator": "作成者"
     },
     "action": {
       "upload": {
@@ -1072,7 +1072,7 @@
         "switchToDarkMode": "ダークモードに切り替え",
         "switchToLightMode": "ライトモードに切り替え",
         "management": "管理",
-        "preferences": "あなたの好み",
+        "preferences": "個人設定",
         "logout": "ログアウト",
         "login": "ログイン",
         "homeBoard": "あなたのホーム ボード",
@@ -1089,21 +1089,21 @@
     },
     "zod": {
       "errors": {
-        "default": "このフィールドは無効です。",
+        "default": "このフィールドは無効です",
         "required": "このフィールドは必須です",
         "string": {
-          "startsWith": "このフィールドは {startsWith} で始まらなければならない。",
-          "endsWith": "このフィールドの末尾は {endsWith} でなければならない。",
-          "includes": "このフィールドには {includes} を含めなければならない。",
+          "startsWith": "このフィールドは {startsWith} で始まらなければならない",
+          "endsWith": "このフィールドの末尾は {endsWith} でなければならない",
+          "includes": "このフィールドには {includes} を含めなければならない",
           "invalidEmail": "このフィールドは有効なメールアドレスでなければなりません"
         },
         "tooSmall": {
           "string": "このフィールドは {minimum} 文字以上で入力してください。",
-          "number": "このフィールドは {minimum} 以上でなければならない。"
+          "number": "このフィールドは {minimum} 以上でなければならない"
         },
         "tooBig": {
-          "string": "このフィールドは {maximum} 文字以内で入力してください。",
-          "number": "このフィールドは {maximum} 以下でなければならない。"
+          "string": "このフィールドは {maximum} 文字以内で入力してください",
+          "number": "このフィールドは {maximum} 以下でなければならない"
         },
         "custom": {
           "passwordsDoNotMatch": "パスワードが一致しません",
@@ -1173,7 +1173,7 @@
       },
       "openAllInNewTabs": {
         "title": "すべてのタブを開く",
-        "text": "一部のブラウザーはセキュリティ上の理由からタブの一括開封をブロックすることがあります。 あなたのブラウザがこの操作をブロックしたため、Homarrはすべてのウィンドウを開くことができませんでした。「ポップアップウィンドウを開く」を許可して再試行してください。"
+        "text": "一部のブラウザーはセキュリティ上の理由からタブの一括開封をブロックすることがあります。 あなたのブラウザがこの操作をブロックしたため、Homarr はすべてのウィンドウを開くことができませんでした。「ポップアップウィンドウを開く」を許可して再試行してください。"
       }
     }
   },
@@ -1221,7 +1221,7 @@
       },
       "field": {
         "integrations": {
-          "label": "連携"
+          "label": "連携機能"
         },
         "title": {
           "label": "タイトル"
@@ -1333,7 +1333,7 @@
       },
       "error": {
         "internalServerError": "DNS Hole Summary の取得に失敗しました",
-        "integrationsDisconnected": "利用可能なデータがありません。すべての連携が切断されました"
+        "integrationsDisconnected": "利用可能なデータがありません。すべての連携機能が切断されました"
       },
       "data": {
         "adsBlockedToday": "今日のブロック",
@@ -1341,11 +1341,11 @@
         "dnsQueriesToday": "今日のクエリ",
         "domainsBeingBlocked": "ブロックリストにあるドメイン"
       },
-      "domainsTooltip": "複数のインテグレーションにより、Homarrはブロックされているドメインの正確な数を計算できません"
+      "domainsTooltip": "複数の連携機能により、Homarr はブロックされているドメインの正確な数を計算できません"
     },
     "dnsHoleControls": {
       "name": "DNS Hole の 制御",
-      "description": "ダッシュボードからPiHoleまたはAdGuardをコントロールする",
+      "description": "ダッシュボードから PiHole または AdGuard をコントロールする",
       "option": {
         "layout": {
           "label": "レイアウト",
@@ -1435,7 +1435,7 @@
           "label": "サーバーアドレス"
         },
         "isBedrockServer": {
-          "label": "Bedrockサーバー"
+          "label": "Bedrock サーバー"
         }
       },
       "status": {
@@ -1490,13 +1490,13 @@
         "deleteRow": "行の削除"
       },
       "align": {
-        "left": "左",
+        "left": "左寄せ",
         "center": "中央寄せ",
-        "right": "右"
+        "right": "右寄せ"
       },
       "popover": {
-        "clearColor": "色をクリア",
-        "source": "参照元",
+        "clearColor": "色を消去",
+        "source": "ソース",
         "widthPlaceholder": "% またはピクセル単位の値",
         "columns": "列数",
         "rows": "行数",
@@ -1539,7 +1539,7 @@
       },
       "error": {
         "noUrl": "IFrame URLが指定されていません",
-        "unsupportedProtocol": "提供された URL は、サポートされていないプロトコルを使用しています。( {supportedProtocols} ) から１つを使ってください",
+        "unsupportedProtocol": "提供された URL は、サポートされていないプロトコルを使用しています。({supportedProtocols}) から１つを使ってください",
         "noBrowerSupport": "お使いのブラウザは iframe をサポートしていません。ブラウザを更新してください。"
       }
     },
@@ -1654,7 +1654,7 @@
     },
     "calendar": {
       "name": "カレンダー",
-      "description": "カレンダービューで、特定の相対的な期間内に、インテグレーションからのイベントを表示します",
+      "description": "カレンダービューで、特定の相対的な期間内に、連携機能からのイベントを表示します",
       "option": {
         "releaseType": {
           "label": "Radarr リリースタイプ",
@@ -1875,8 +1875,8 @@
         }
       },
       "integration": {
-        "noData": "連携が見つかりません",
-        "description": "<here></here> をクリックして新しい連携を作成する"
+        "noData": "連携機能が見つかりません",
+        "description": "<here></here> をクリックして新しい連携機能を作成する"
       },
       "app": {
         "noData": "アプリが見つかりません",
@@ -1884,8 +1884,8 @@
         "quickCreate": "その場でアプリを作成"
       },
       "error": {
-        "noIntegration": "インテグレーションが選択されていません",
-        "noData": "利用可能なインテグレーションデータがありません"
+        "noIntegration": "連携機能が選択されていません",
+        "noData": "利用可能な連携機能のデータがありません"
       },
       "option": {}
     },
@@ -1966,13 +1966,13 @@
           "label": "フィルターを使用して比率を計算する"
         },
         "limitPerIntegration": {
-          "label": "連携ごとに項目を制限",
-          "description": "これは、連携ごとに表示されるアイテム数を制限します。グローバルではありません"
+          "label": "連携機能ごとに項目を制限",
+          "description": "これは、連携機能ごとに表示されるアイテム数を制限します。グローバルではありません"
         }
       },
       "errors": {
         "noColumns": "項目内の列を選択",
-        "noCommunications": "連携からデータを読み込めません"
+        "noCommunications": "連携機能からデータを読み込めません"
       },
       "items": {
         "actions": {
@@ -1998,7 +1998,7 @@
           "columnTitle": "Id"
         },
         "integration": {
-          "columnTitle": "連携"
+          "columnTitle": "連携機能"
         },
         "name": {
           "columnTitle": "ジョブ名"
@@ -2317,7 +2317,7 @@
         }
       },
       "error": {
-        "integrationsDisconnected": "利用可能なデータがありません。すべての連携が切断されました",
+        "integrationsDisconnected": "利用可能なデータがありません。すべての連携機能が切断されました",
         "unknownContentOption": "ネットワークコントローラサマリーウィジェットの不明なコンテンツオプション： "
       },
       "name": "ネットワークコントローラーの概要",
@@ -2354,7 +2354,7 @@
         }
       },
       "error": {
-        "integrationsDisconnected": "利用可能なデータがありません。すべての連携が切断されました",
+        "integrationsDisconnected": "利用可能なデータがありません。すべての連携機能が切断されました",
         "unknownContentOption": "ネットワークステータスサマリーウィジェットの不明なコンテンツオプション： "
       },
       "name": "ネットワークの状態",
@@ -2367,7 +2367,7 @@
     },
     "notifications": {
       "name": "通知",
-      "description": "連携からの通知履歴を表示する",
+      "description": "連携機能からの通知履歴を表示する",
       "noItems": "表示する通知はありません。",
       "option": {}
     }
@@ -2385,7 +2385,7 @@
     "action": {
       "duplicate": {
         "title": "ボードを複製する",
-        "message": "これにより、ボード {name} はすべてのコンテンツと共に複製されます。ウィジェットが使用許可のない連携を参照している場合には、削除されます。",
+        "message": "これにより、ボード {name} はすべてのコンテンツと共に複製されます。ウィジェットが使用許可のない連携機能を参照している場合には、削除されます。",
         "notification": {
           "success": {
             "title": "ボードが複製されました",
@@ -2704,11 +2704,11 @@
         },
         "user": {
           "description": "まだホームボードを設定していません。",
-          "link": "ホームボードを設定",
+          "link": "あなたのホームボードを設定",
           "notice": "このページを見えなくするには、設定でホームボードを指定してください"
         },
         "anonymous": {
-          "description": "サーバー管理者はまだホームボードを設定していません。",
+          "description": "サーバー管理者は、まだホームボードを設定していません。",
           "link": "公開ボードを表示",
           "notice": "このページを見えなくするためには、サーバーの管理者にサーバーのホームボードを設定するよう問い合わせてください"
         }
@@ -2733,7 +2733,7 @@
     "metaTitle": "管理",
     "title": {
       "morning": "おはようございます、 {username}",
-      "afternoon": "こんにちは、 {username} さん",
+      "afternoon": "こんにちは、 {username}",
       "evening": "こんばんは、 {username}"
     },
     "notFound": {
@@ -2745,7 +2745,7 @@
         "home": "ホーム",
         "boards": "ボード",
         "apps": "アプリ",
-        "integrations": "連携",
+        "integrations": "連携機能",
         "searchEngies": "検索エンジン",
         "medias": "メディア",
         "users": {
@@ -2786,7 +2786,7 @@
           "board": "ボード",
           "user": "ユーザー",
           "invite": "招待",
-          "integration": "連携",
+          "integration": "連携機能",
           "app": "アプリ",
           "group": "グループ"
         },
@@ -2813,14 +2813,14 @@
             "label": "あなたのホームボードに設定",
             "badge": {
               "label": "ホーム",
-              "tooltip": "このボードはあなたのホームボードとして表示されます"
+              "tooltip": "このボードは、あなたのホームボードとして表示されます"
             }
           },
           "setMobileHomeBoard": {
             "label": "あなたのモバイルボードに設定する",
             "badge": {
               "label": "モバイル",
-              "tooltip": "このボードはあなたのモバイルボードとして表示されます"
+              "tooltip": "このボードは、あなたのモバイルボードとして表示されます"
             }
           },
           "duplicate": {
@@ -2897,8 +2897,8 @@
             },
             "groups": {
               "label": "グループ",
-              "title": "ユーザーがメンバーである必要のある、すべてのグループを選択します",
-              "description": "{everyoneGroup} グループはすべてのユーザーに割り当てられているため、削除できません。"
+              "title": "ユーザーがメンバーとなる必要のある、すべてのグループを選択",
+              "description": "{everyoneGroup} グループは、すべてのユーザーに割り当てられているため、削除できません。"
             },
             "review": {
               "label": "レビュー"
@@ -2938,7 +2938,7 @@
               "label": "ID"
             },
             "creator": {
-              "label": "クリエイター"
+              "label": "作成者"
             },
             "expirationDate": {
               "label": "有効期限"
@@ -2993,15 +2993,15 @@
             "title": "統計情報",
             "general": {
               "title": "匿名の解析を送信",
-              "text": "HomarrはオープンソースソフトウェアUmamiを使用して匿名化された分析情報を送信します。個人情報を一切収集しないため、GDPRとCCPAに完全に準拠しています。分析機能を有効にすると、オープンソースチームが問題を特定し、バックログの優先順位付けを行うのに役立ちますので、ぜひ有効にしてください。"
+              "text": "Homarr はオープンソースソフトウェア Umami を使用して匿名化された分析情報を送信します。個人情報を一切収集しないため、GDPRとCCPAに完全に準拠しています。分析機能を有効にすると、オープンソースチームが問題を特定し、バックログの優先順位付けを行うのに役立ちますので、ぜひ有効にしてください。"
             },
             "widgetData": {
               "title": "ウィジェットのデータ",
-              "text": "あなたが設定したウィジェット（およびその数量）を送信します。URL、名前、その他のデータは含まれません。"
+              "text": "あなたが設定したウィジェット（およびその数量）を送信します。URL・名前・その他のデータは含まれません。"
             },
             "integrationData": {
               "title": "連携情報",
-              "text": "あなたが設定した連携（およびその数量）を送信します。URL、名前、その他のデータは含まれません。"
+              "text": "あなたが設定した連携機能（およびその数量）を送信します。URL・名前・その他のデータは含まれません。"
             },
             "usersData": {
               "title": "ユーザー情報",
@@ -3025,7 +3025,7 @@
             },
             "noSiteLinksSearchBox": {
               "title": "サイトリンクの検索ボックスがありません",
-              "text": "Googleはクローラーによるリンクからサイトリンク検索ボックスを構築します。これを有効にすると Google にそのサイトリンク検索ボックスを無効にするよう求められます。"
+              "text": "Google はクローラーによるリンクからサイトリンク検索ボックスを構築します。これを有効にすると Google にそのサイトリンク検索ボックスを無効にするよう求められます。"
             }
           },
           "board": {
@@ -3051,7 +3051,7 @@
             "title": "検索",
             "defaultSearchEngine": {
               "label": "グローバルな、既定の検索エンジン",
-              "description": "連携の検索エンジンは、ここで選択できません"
+              "description": "連携機能の検索エンジンは、ここで選択できません"
             }
           },
           "appearance": {
@@ -3083,7 +3083,7 @@
           },
           "job": {
             "minecraftServerStatus": {
-              "label": "Minecraftサーバーの状態"
+              "label": "Minecraft サーバーの状態"
             },
             "iconsUpdater": {
               "label": "アイコンアップデータ"
@@ -3181,7 +3181,7 @@
               "modal": {
                 "delete": {
                   "title": "API トークンを削除",
-                  "text": "APIトークンを完全に削除します。このトークンを使用したAPIクライアントは認証できず、APIリクエストを実行できません。このアクションは元に戻せません。"
+                  "text": "API トークンを完全に削除します。このトークンを使用した API クライアントは認証できず、 API リクエストを実行できません。このアクションは元に戻せません。"
                 }
               },
               "table": {
@@ -3326,20 +3326,20 @@
         "notification": {
           "success": {
             "title": "Homarrに追加しました",
-            "message": "選択したアプリを Homarrに追加しました"
+            "message": "選択したアプリを Homarr に追加しました"
           },
           "error": {
             "title": "Homar に追加できませんでした",
-            "message": "選択したアプリを Homarrに追加できませんでした"
+            "message": "選択したアプリを Homarr に追加できませんでした"
           }
         },
         "modal": {
-          "title": "Homarrに dockerコンテナを追加"
+          "title": "Homarr に docker コンテナを追加"
         }
       }
     },
     "error": {
-      "internalServerError": "Dockerコンテナの取得に失敗しました"
+      "internalServerError": "Docker コンテナの取得に失敗しました"
     }
   },
   "kubernetes": {
@@ -3618,7 +3618,7 @@
         "label": "ボード"
       },
       "integrations": {
-        "label": "連携",
+        "label": "連携機能",
         "edit": {
           "label": "編集"
         },
@@ -3720,7 +3720,7 @@
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "アプリ、連携、またはボードを検索",
+        "help": "アプリ、連携機能、またはボードを検索",
         "group": {
           "app": {
             "title": "アプリ",
@@ -3796,10 +3796,10 @@
                 "label": "新しいアプリを作成する"
               },
               "newIntegration": {
-                "label": "新しい連携を作成",
+                "label": "新しい連携機能を作成",
                 "children": {
                   "detail": {
-                    "title": "作成したい連系タイプを選択してください"
+                    "title": "作成したい連携機能の種類を選択してください"
                   }
                 }
               },
@@ -3926,7 +3926,7 @@
                 "label": "アプリの管理"
               },
               "manageIntegration": {
-                "label": "連携の管理"
+                "label": "連携機能の管理"
               },
               "manageSearchEngine": {
                 "label": "検索エンジンの管理"
@@ -4032,7 +4032,7 @@
             "title": "まだ検索エンジンはありません",
             "action": "最初の検索エンジンを作成する"
           },
-          "interactive": "インタラクティブ、連携を使用"
+          "interactive": "インタラクティブ、連携機能を使用"
         },
         "create": {
           "title": "新しい検索エンジン",
@@ -4062,7 +4062,7 @@
           "configControl": "設定",
           "searchEngineType": {
             "generic": "一般",
-            "fromIntegration": "連携から"
+            "fromIntegration": "連携機能から"
           }
         },
         "delete": {
@@ -4125,7 +4125,7 @@
     "page": {
       "list": {
         "title": "信頼できる証明書",
-        "description": "連携からデータを要求するために、Homarrが使用します。",
+        "description": "連携機能からデータを要求するために、Homarr が使用します。",
         "noResults": {
           "title": "証明書はまだありません"
         },
@@ -4175,7 +4175,7 @@
       },
       "removeHostname": {
         "label": "信頼できるホスト名を削除する",
-        "confirm": "この信頼できるホスト名を削除してもよろしいですか？いくつかの統合が機能しなくなる可能性があります。",
+        "confirm": "この信頼できるホスト名を削除してもよろしいですか？いくつかの連携機能が機能しなくなる可能性があります。",
         "notification": {
           "success": {
             "title": "ホスト名は削除されました",
