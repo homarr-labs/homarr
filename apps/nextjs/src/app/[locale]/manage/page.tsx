@@ -1,13 +1,16 @@
 import Link from "next/link";
-import { Card, Group, SimpleGrid, Space, Stack, Text } from "@mantine/core";
+import { Card, Group, SimpleGrid, Space, Stack, Text, Title } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
+import { getIntegrationName } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
+import { IntegrationAvatar } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { createMetaTitle } from "~/metadata";
 import { HeroBanner } from "./_components/hero-banner";
 
@@ -30,6 +33,8 @@ export async function generateMetadata() {
 export default async function ManagementPage() {
   const statistics = await api.home.getStats();
   const session = await auth();
+  const isAdmin = session?.user.permissions.includes("admin") ?? false;
+  const suggestions = isAdmin ? await api.integration.suggestedIntegrations().catch(catchTrpcNotFound) : [];
   const t = await getScopedI18n("management.page.home");
 
   const links: LinkProps[] = [
@@ -102,6 +107,37 @@ export default async function ManagementPage() {
             ),
         )}
       </SimpleGrid>
+      {suggestions.length >= 1 && (
+        <>
+          <Space h="md" />
+          <Stack gap="sm">
+            <Stack gap={0}>
+              <Title order={3}>Suggested integrations</Title>
+              <Text c="dimmed">Based on your Docker containers</Text>
+            </Stack>
+            <SimpleGrid cols={{ xs: 1, sm: 2, md: 3 }}>
+              {suggestions.slice(0, 6).map((suggestion) => (
+                <Card key={suggestion.kind} component={Link} href="#" radius="lg">
+                  <Group justify="space-between">
+                    <Group>
+                      <IntegrationAvatar kind={suggestion.kind} size="sm" />
+                      <Stack gap={0}>
+                        <Text size="md" fw={500}>
+                          {getIntegrationName(suggestion.kind)}
+                        </Text>
+                        <Text c="dimmed" size="sm">
+                          Show active media streams
+                        </Text>
+                      </Stack>
+                    </Group>
+                    <IconArrowRight />
+                  </Group>
+                </Card>
+              ))}
+            </SimpleGrid>
+          </Stack>
+        </>
+      )}
     </>
   );
 }

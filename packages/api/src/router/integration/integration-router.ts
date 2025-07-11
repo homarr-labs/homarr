@@ -14,15 +14,19 @@ import {
   integrationUserPermissions,
   searchEngines,
 } from "@homarr/db/schema";
-import type { IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import {
   getIconUrl,
   getIntegrationKindsByCategory,
+  getIntegrationName,
   getPermissionsWithParents,
   integrationDefs,
   integrationKinds,
   integrationSecretKindObject,
 } from "@homarr/definitions";
+import type { ContainerInfo, Port } from "@homarr/docker";
+import { DockerSingleton } from "@homarr/docker";
+import { env } from "@homarr/docker/env";
 import { createIntegrationAsync } from "@homarr/integrations";
 import { logger } from "@homarr/log";
 import { byIdSchema } from "@homarr/validation/common";
@@ -527,7 +531,168 @@ export const integrationRouter = createTRPCRouter({
       const integrationInstance = await createIntegrationAsync(ctx.integration);
       return await integrationInstance.searchAsync(encodeURI(input.query));
     }),
+  suggestedIntegrations: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
+    if (!env.ENABLE_DOCKER)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Docker is not enabled",
+      });
+
+    const dockerInstances = DockerSingleton.getInstances();
+    if (dockerInstances.length === 0) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "No Docker instances found",
+      });
+    }
+
+    // TODO: remove those that were already added
+    const containers = await Promise.all(
+      dockerInstances.map(({ instance, host, isSocket }) =>
+        instance.listContainers().then((containers) =>
+          containers.map((containerInfo) => ({
+            info: containerInfo,
+            host,
+            isSocket,
+          })),
+        ),
+      ),
+    ).then((results) => results.flat());
+
+    // Default docker hostname consist out of first 12 characters of the container id
+    const homarrContainer = containers.find((container) => container.info.Id.slice(0, 12) === process.env.HOSTNAME);
+
+    const suggestions = containers
+      .map((container) => getSuggestionFromContainer(container, homarrContainer))
+      .filter((suggestion) => suggestion !== null);
+
+    const groupedSuggestions = suggestions.reduce(
+      (acc, suggestion) => {
+        acc[suggestion.kind] ??= [];
+        // is defined above
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        acc[suggestion.kind]!.push(suggestion);
+        return acc;
+      },
+      {} as Partial<Record<IntegrationKind, IntegrationSuggestion[]>>,
+    );
+
+    return Object.entries(groupedSuggestions)
+      .map(([kind, suggestions]) => ({
+        kind: kind as IntegrationKind,
+        suggestions,
+      }))
+      .sort((itemA, itemB) => {
+        if (itemA.suggestions.length !== itemB.suggestions.length)
+          return itemB.suggestions.length - itemA.suggestions.length;
+
+        const createdAtA = Math.max(...itemA.suggestions.map((suggestion) => suggestion.createdAt?.getTime() ?? 0));
+        const createdAtB = Math.max(...itemB.suggestions.map((suggestion) => suggestion.createdAt?.getTime() ?? 0));
+        return createdAtB - createdAtA;
+      });
+  }),
 });
+
+interface IntegrationSuggestion {
+  containerId: string;
+  name: string;
+  internalUrl: string | null;
+  externalUrl: string | null;
+  kind: IntegrationKind;
+  createdAt?: Date;
+}
+
+interface ContainerInfoWithHost {
+  info: ContainerInfo;
+  host: string;
+  isSocket: boolean | undefined;
+}
+
+const getSuggestionFromContainer = (
+  container: ContainerInfoWithHost,
+  homarrContainer: ContainerInfoWithHost | undefined,
+): IntegrationSuggestion | null => {
+  const integrationKind = getSuggestionKind(container.info);
+
+  if (!integrationKind) return null;
+
+  return {
+    containerId: container.info.Id,
+    name: getIntegrationName(integrationKind),
+    kind: integrationKind,
+    internalUrl: getInternalUrl(container, homarrContainer),
+    externalUrl: getExternalUrl(container),
+    createdAt: container.info.Created ? new Date(container.info.Created * 1000) : undefined,
+  };
+};
+
+const getSuggestionKind = (container: ContainerInfo): IntegrationKind | null => {
+  const [image, _tag] = container.Image.split(":");
+  if (!image) return null;
+  return (
+    objectEntries(integrationDefs).find(
+      ([, integration]) =>
+        "containerImages" in integration &&
+        integration.containerImages.some((containerImage) => containerImage.toLowerCase() === image.toLowerCase()),
+    )?.[0] ?? null
+  );
+};
+
+const calculatePortScore = (port: Port): number => {
+  let score = 0;
+
+  if (port.PublicPort) score += 10; // Public ports are more likely to be used
+  if (port.PrivatePort % 1000 === 80) score += 5; // Default http ports are most likely suffixed with 80 like 8080 or 80
+  if (port.PrivatePort % 1000 === 443) score += 10; // Default https ports are most likely suffixed with 443 like 8443 or 443
+  return score;
+};
+
+const getPort = (container: ContainerInfoWithHost): Port | null => {
+  const ports = container.info.Ports.filter((port) => port.Type === "tcp");
+  return (
+    ports
+      .map((port) => ({ port, score: calculatePortScore(port) }))
+      .sort((portA, portB) => portB.score - portA.score)
+      .at(0)?.port ?? null
+  );
+};
+
+const getInternalUrl = (
+  container: ContainerInfoWithHost,
+  homarrContainer: ContainerInfoWithHost | undefined,
+): string | null => {
+  const port = getPort(container);
+  if (!port) return null;
+  const protocol = port.PrivatePort % 1000 === 443 ? "https" : "http";
+
+  if (homarrContainer) {
+    const matchingNetwork = Object.entries(homarrContainer.info.NetworkSettings.Networks).find(
+      ([_key, homarrNetwork]) =>
+        Object.entries(container.info.NetworkSettings.Networks).some(
+          ([_name, network]) => homarrNetwork.NetworkID === network.NetworkID,
+        ),
+    )?.[1];
+    if (matchingNetwork) return `${protocol}://${matchingNetwork.IPAddress}:${port.PrivatePort}`;
+  }
+
+  // TODO: Let user specify the internal ip-address for integrations --> use as default before falling back to host.docker.internal
+  if (container.host === homarrContainer?.host && container.isSocket === homarrContainer.isSocket) {
+    return `${protocol}://host.docker.internal:${port.PublicPort}`;
+  }
+
+  // TODO: Change this
+  return `${protocol}://localhost:${port.PublicPort}`;
+};
+
+const getExternalUrl = (container: ContainerInfoWithHost): string | null => {
+  const port = getPort(container);
+  if (!port) return null;
+  const protocol = port.PrivatePort % 1000 === 443 ? "https" : "http";
+
+  // TODO: Use some labels like "traefik.host" to determine the external url
+  // For now we just use localhost as external url
+  return `${protocol}://localhost:${port.PublicPort}`;
+};
 
 interface UpdateSecretInput {
   integrationId: string;
