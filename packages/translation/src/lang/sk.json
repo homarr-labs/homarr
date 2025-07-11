@@ -2304,7 +2304,7 @@
       "created": "Vytvorené",
       "error": {
         "label": "Chyba",
-        "options": {
+        "messages": {
           "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia"
         }
       }

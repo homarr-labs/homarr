@@ -2304,7 +2304,7 @@
       "created": "נוצר",
       "error": {
         "label": "שגיאה",
-        "options": {
+        "messages": {
           "noMatchingVersion": "לא נמצאה גרסה תואמת"
         }
       }

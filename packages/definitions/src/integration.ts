@@ -7,6 +7,7 @@ export const integrationSecretKindObject = {
   password: { isPublic: false },
   tokenId: { isPublic: true },
   realm: { isPublic: true },
+  personalAccessToken: { isPublic: false },
   topic: { isPublic: true },
 } satisfies Record<string, { isPublic: boolean }>;
 
@@ -17,6 +18,7 @@ interface integrationDefinition {
   iconUrl: string;
   secretKinds: AtLeastOneOf<IntegrationSecretKind[]>; // at least one secret kind set is required
   category: AtLeastOneOf<IntegrationCategory>;
+  defaultUrl?: string; // optional default URL for the integration
 }
 
 export const integrationDefs = {
@@ -170,6 +172,41 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
     category: ["networkController"],
   },
+  github: {
+    name: "Github",
+    secretKinds: [[], ["personalAccessToken"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/github.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://api.github.com",
+  },
+  dockerHub: {
+    name: "Docker Hub",
+    secretKinds: [[], ["username", "personalAccessToken"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/docker.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://hub.docker.com",
+  },
+  gitlab: {
+    name: "Gitlab",
+    secretKinds: [[], ["personalAccessToken"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gitlab.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://gitlab.com",
+  },
+  npm: {
+    name: "NPM",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/npm.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://registry.npmjs.org",
+  },
+  codeberg: {
+    name: "Codeberg",
+    secretKinds: [[], ["personalAccessToken"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/codeberg.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://codeberg.org",
+  },
   ntfy: {
     name: "ntfy",
     secretKinds: [["topic"], ["topic", "apiKey"]],
@@ -209,6 +246,11 @@ export const getDefaultSecretKinds = (integration: IntegrationKind): Integration
 export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationSecretKind[]> =>
   integrationDefs[integration].secretKinds;
 
+export const getIntegrationDefaultUrl = (integration: IntegrationKind) => {
+  const definition = integrationDefs[integration];
+  return "defaultUrl" in definition ? definition.defaultUrl : undefined;
+};
+
 /**
  * Get all integration kinds that share a category, typed only by the kinds belonging to the category
  * @param category Category to filter by, belonging to IntegrationCategory
@@ -234,20 +276,25 @@ export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
 
 export type IntegrationSecretKind = keyof typeof integrationSecretKindObject;
 export type IntegrationKind = keyof typeof integrationDefs;
-export type IntegrationCategory =
-  | "dnsHole"
-  | "mediaService"
-  | "calendar"
-  | "mediaSearch"
-  | "mediaRequest"
-  | "downloadClient"
-  | "usenet"
-  | "torrent"
-  | "miscellaneous"
-  | "smartHomeServer"
-  | "indexerManager"
-  | "healthMonitoring"
-  | "search"
-  | "mediaTranscoding"
-  | "networkController"
-  | "notifications";
+
+export const integrationCategories = [
+  "dnsHole",
+  "mediaService",
+  "calendar",
+  "mediaSearch",
+  "mediaRequest",
+  "downloadClient",
+  "usenet",
+  "torrent",
+  "miscellaneous",
+  "smartHomeServer",
+  "indexerManager",
+  "healthMonitoring",
+  "search",
+  "mediaTranscoding",
+  "networkController",
+  "releasesProvider",
+  "notifications",
+] as const;
+
+export type IntegrationCategory = (typeof integrationCategories)[number];

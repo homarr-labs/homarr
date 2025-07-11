@@ -2304,7 +2304,7 @@
       "created": "作成日",
       "error": {
         "label": "エラー",
-        "options": {
+        "messages": {
           "noMatchingVersion": "一致するバージョンが見つかりません"
         }
       }
