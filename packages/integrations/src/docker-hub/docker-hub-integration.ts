@@ -43,7 +43,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
         return response;
       }
 
-      localLogger.info("Session expired, getting new session", { integrationId: this.integration.id });
+      localLogger.debug("Session expired, getting new session", { integrationId: this.integration.id });
     }
 
     const accessToken = await this.getSessionAsync();
