@@ -27,7 +27,7 @@ export const CommonChart = ({
   const board = useRequiredBoard();
 
   return (
-    <Card ref={ref} h={"100%"} pos={"relative"} p={0}>
+    <Card ref={ref} h={"100%"} pos={"relative"} p={0} bg={data.length <= 1 ? "rgb(67, 67, 67)" : undefined}>
       {data.length > 1 && height > 40 && (
         <Text c={"dimmed"} pos={"absolute"} size={height > 100 ? "md" : "xs"} fw={"bold"} top={0} left={0} ps={6}>
           {title}
@@ -36,8 +36,7 @@ export const CommonChart = ({
       {data.length <= 1 ? (
         <Center pos="absolute" w="100%" h="100%">
           <Stack px={"xs"} align={"center"}>
-            <Loader type="bars"/>
-            <Text c="dimmed" size="xs">There is currently no data</Text>
+            <Loader type="bars" size={height > 100 ? "md" : "xs"} color={"rgba(94, 94, 94, 1)"} />
           </Stack>
         </Center>
       ) : (
