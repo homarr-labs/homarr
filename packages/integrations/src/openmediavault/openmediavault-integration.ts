@@ -155,7 +155,7 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
         return response;
       }
 
-      localLogger.info("Session expired, getting new session", { integrationId: this.integration.id });
+      localLogger.debug("Session expired, getting new session", { integrationId: this.integration.id });
     }
 
     const session = await this.getSessionAsync();

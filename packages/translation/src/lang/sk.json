@@ -1502,7 +1502,8 @@
         "rows": "Riadky",
         "width": "Šírka",
         "height": "Výška"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -2303,7 +2304,7 @@
       "created": "Vytvorené",
       "error": {
         "label": "Chyba",
-        "options": {
+        "messages": {
           "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia"
         }
       }

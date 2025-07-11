@@ -1502,7 +1502,8 @@
         "rows": "Rader",
         "width": "Bredde",
         "height": "Høyde"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -2303,7 +2304,7 @@
       "created": "",
       "error": {
         "label": "",
-        "options": {
+        "messages": {
           "noMatchingVersion": ""
         }
       }

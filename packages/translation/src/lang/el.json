@@ -1502,7 +1502,8 @@
         "rows": "Γραμμές",
         "width": "Πλάτος",
         "height": "Ύψος"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iframe",
@@ -2303,7 +2304,7 @@
       "created": "",
       "error": {
         "label": "",
-        "options": {
+        "messages": {
           "noMatchingVersion": ""
         }
       }

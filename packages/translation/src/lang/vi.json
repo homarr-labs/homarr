@@ -1502,7 +1502,8 @@
         "rows": "Dòng",
         "width": "Chiều rộng",
         "height": "Chiều cao"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",
@@ -2303,7 +2304,7 @@
       "created": "",
       "error": {
         "label": "",
-        "options": {
+        "messages": {
           "noMatchingVersion": ""
         }
       }

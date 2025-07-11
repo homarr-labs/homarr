@@ -305,7 +305,7 @@
     "search": "",
     "field": {
       "name": "Nombre",
-      "members": "",
+      "members": "Miembros",
       "homeBoard": {
         "label": "",
         "description": ""
@@ -1502,7 +1502,8 @@
         "rows": "Filas",
         "width": "Ancho",
         "height": "Alto"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",
@@ -2303,7 +2304,7 @@
       "created": "",
       "error": {
         "label": "",
-        "options": {
+        "messages": {
           "noMatchingVersion": ""
         }
       }

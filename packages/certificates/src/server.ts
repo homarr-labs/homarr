@@ -15,9 +15,8 @@ import { db } from "@homarr/db";
 import type { trustedCertificateHostnames } from "@homarr/db/schema";
 
 const getCertificateFolder = () => {
-  return env.NODE_ENV === "production"
-    ? path.join("/appdata", "trusted-certificates")
-    : process.env.LOCAL_CERTIFICATE_PATH;
+  if (env.NODE_ENV !== "production") return process.env.LOCAL_CERTIFICATE_PATH;
+  return process.env.LOCAL_CERTIFICATE_PATH ?? path.join("/appdata", "trusted-certificates");
 };
 
 export const loadCustomRootCertificatesAsync = async () => {

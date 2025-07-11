@@ -28,6 +28,7 @@
     "@ctrl/deluge": "^7.1.0",
     "@ctrl/qbittorrent": "^9.6.0",
     "@ctrl/transmission": "^7.2.0",
+    "@gitbeaker/rest": "^42.5.0",
     "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
@@ -40,11 +41,12 @@
     "@jellyfin/sdk": "^0.11.0",
     "maria2": "^0.4.1",
     "node-ical": "^0.20.1",
+    "octokit": "^5.0.3",
     "proxmox-api": "1.1.1",
     "tsdav": "^2.1.5",
     "undici": "7.11.0",
     "xml2js": "^0.6.2",
-    "zod": "^3.25.74"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

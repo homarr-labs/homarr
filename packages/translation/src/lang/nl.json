@@ -613,14 +613,14 @@
         "label": "App selecteren",
         "notFound": "Geen app gevonden",
         "search": "Zoek naar een app",
-        "noResults": "Geen resultaten gevonden voor deze zoekopdracht",
-        "action": "Selecteer {app}",
+        "noResults": "Geen resultaten",
+        "action": "{app} selecteren",
         "title": "Selecteer een app om aan dit bord toe te voegen"
       },
       "create": {
         "title": "Nieuwe app aanmaken",
         "description": "Een nieuwe app aanmaken ",
-        "action": "Open app aanmaken"
+        "action": "App aanmaken openen"
       },
       "add": "Een app toevoegen"
     }
@@ -717,7 +717,7 @@
           "description": ""
         },
         "authorization": {
-          "title": "Fout tijdens het aanmelden",
+          "title": "Autorisatie fout",
           "description": ""
         },
         "statusCode": {
@@ -1502,7 +1502,8 @@
         "rows": "Rijen",
         "width": "Breedte",
         "height": "Hoogte"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -2303,7 +2304,7 @@
       "created": "",
       "error": {
         "label": "",
-        "options": {
+        "messages": {
           "noMatchingVersion": ""
         }
       }
@@ -3218,7 +3219,7 @@
     "title": "Containers",
     "table": {
       "updated": "{when} bijgewerkt",
-      "search": "Zoek {count} containers",
+      "search": "{count} containers zoeken",
       "selected": "{selectCount} van {totalCount} containers geselecteerd",
       "footer": ""
     },

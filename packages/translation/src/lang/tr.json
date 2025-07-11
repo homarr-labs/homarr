@@ -1502,7 +1502,8 @@
         "rows": "Satırlar",
         "width": "Genişlik",
         "height": "Yükseklik"
-      }
+      },
+      "placeholder": "Not almaya başlayın"
     },
     "iframe": {
       "name": "iFrame",
@@ -2303,7 +2304,7 @@
       "created": "Oluşturuldu",
       "error": {
         "label": "Hata",
-        "options": {
+        "messages": {
           "noMatchingVersion": "Eşleşen sürüm bulunamadı"
         }
       }
@@ -3078,7 +3079,7 @@
             "idle": "Boşta",
             "running": "Çalışıyor",
             "error": "Hata",
-            "disabled": ""
+            "disabled": "Pasif"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3143,18 +3144,18 @@
             }
           },
           "interval": {
-            "seconds": "",
-            "minutes": "",
-            "hours": "",
-            "midnight": "",
-            "weeklyMonday": ""
+            "seconds": "Her {interval, plural, =1 {saniye} other {# saniyede bir}}",
+            "minutes": "Her {interval, plural, =1 {dakika} other {# dakikada bir}}",
+            "hours": "Her {interval, plural, =1 {saat} other {# saatte bir}}",
+            "midnight": "Her gün gece yarısı",
+            "weeklyMonday": "Her hafta pazartesi günü"
           },
           "settings": {
-            "title": ""
+            "title": "{jobName} için görev ayarları"
           },
           "field": {
             "interval": {
-              "label": ""
+              "label": "Zamanlama aralığı"
             }
           }
         },

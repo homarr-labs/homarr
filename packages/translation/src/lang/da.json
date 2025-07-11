@@ -1502,7 +1502,8 @@
         "rows": "Rækker",
         "width": "Bredde",
         "height": "Højde"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "indlejret dokument (iframe)",
@@ -2303,7 +2304,7 @@
       "created": "Oprettet",
       "error": {
         "label": "Fejl",
-        "options": {
+        "messages": {
           "noMatchingVersion": "Ingen matchende version fundet"
         }
       }

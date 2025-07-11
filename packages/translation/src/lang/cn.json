@@ -1502,7 +1502,8 @@
         "rows": "行数",
         "width": "宽度",
         "height": "高度"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -2303,7 +2304,7 @@
       "created": "已创建",
       "error": {
         "label": "错误",
-        "options": {
+        "messages": {
           "noMatchingVersion": "没有找到匹配的版本"
         }
       }

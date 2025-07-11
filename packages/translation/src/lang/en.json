@@ -937,6 +937,10 @@
           "label": "Realm",
           "newLabel": "New realm"
         },
+        "personalAccessToken": {
+          "label": "Personal Access Token",
+          "newLabel": "New Personal Access Token"
+        },
         "topic": {
           "label": "Topic",
           "newLabel": "New topic"
@@ -1502,7 +1506,8 @@
         "rows": "Rows",
         "width": "Width",
         "height": "Height"
-      }
+      },
+      "placeholder": "Start writing your notes"
     },
     "iframe": {
       "name": "iFrame",
@@ -2287,7 +2292,11 @@
           "example": {
             "label": "Example"
           },
-          "invalid": "Invalid repository definition, please check the values"
+          "invalid": "Invalid repository definition, please check the values",
+          "noProvider": {
+            "label": "No Provider",
+            "tooltip": "The provider could not be parsed, please manually set it after importing the images"
+          }
         }
       },
       "not-found": "Not Found",
@@ -2303,8 +2312,12 @@
       "created": "Created",
       "error": {
         "label": "Error",
-        "options": {
-          "noMatchingVersion": "No matching version found"
+        "messages": {
+          "invalidIdentifier": "Invalid identifier",
+          "noMatchingVersion": "No matching version found",
+          "noReleasesFound": "No releases found",
+          "noProviderSeleceted": "No provider selected",
+          "noProviderResponse": "No response from provider"
         }
       }
     },
@@ -2554,6 +2567,9 @@
       },
       "iconColor": {
         "label": "Icon color"
+      },
+      "clearColor": {
+        "label": "Clear color"
       },
       "customCss": {
         "label": "Custom css for this board",

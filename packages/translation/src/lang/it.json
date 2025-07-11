@@ -1502,7 +1502,8 @@
         "rows": "Righe",
         "width": "Larghezza",
         "height": "Altezza"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",
@@ -2303,7 +2304,7 @@
       "created": "",
       "error": {
         "label": "",
-        "options": {
+        "messages": {
           "noMatchingVersion": ""
         }
       }
