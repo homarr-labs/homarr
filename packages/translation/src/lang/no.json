@@ -937,6 +937,10 @@
           "label": "Område",
           "newLabel": "Nytt område"
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "",
           "newLabel": ""
@@ -2288,7 +2292,11 @@
           "example": {
             "label": ""
           },
-          "invalid": ""
+          "invalid": "",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "",
@@ -2305,7 +2313,11 @@
       "error": {
         "label": "",
         "messages": {
-          "noMatchingVersion": ""
+          "invalidIdentifier": "",
+          "noMatchingVersion": "",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2555,6 +2567,9 @@
       },
       "iconColor": {
         "label": "Ikonfarge"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Tilpasset css for denne tavlen",
