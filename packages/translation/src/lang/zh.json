@@ -937,6 +937,10 @@
           "label": "領域",
           "newLabel": "新領域"
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "",
           "newLabel": ""
@@ -2288,7 +2292,11 @@
           "example": {
             "label": "範例"
           },
-          "invalid": "無效的儲存庫定義，請檢查值的設定"
+          "invalid": "無效的儲存庫定義，請檢查值的設定",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "未找到",
@@ -2305,7 +2313,11 @@
       "error": {
         "label": "錯誤",
         "messages": {
-          "noMatchingVersion": "找不到匹配的版本"
+          "invalidIdentifier": "",
+          "noMatchingVersion": "找不到匹配的版本",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2555,6 +2567,9 @@
       },
       "iconColor": {
         "label": "icon 顏色"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "自定義此面板 CSS html",

@@ -937,6 +937,10 @@
           "label": "Realm",
           "newLabel": "Nyt realm"
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "Emne",
           "newLabel": "Nyt emne"
@@ -2288,7 +2292,11 @@
           "example": {
             "label": "Eksempel"
           },
-          "invalid": "Ugyldig repository definition, tjek venligst værdierne"
+          "invalid": "Ugyldig repository definition, tjek venligst værdierne",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "Ikke fundet",
@@ -2305,7 +2313,11 @@
       "error": {
         "label": "Fejl",
         "messages": {
-          "noMatchingVersion": "Ingen matchende version fundet"
+          "invalidIdentifier": "",
+          "noMatchingVersion": "Ingen matchende version fundet",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2555,6 +2567,9 @@
       },
       "iconColor": {
         "label": "Ikonfarve"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Brugerdefineret css for denne tavle",

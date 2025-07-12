@@ -1,3 +1,10 @@
+## [1.28.1](https://github.com/homarr-labs/homarr/compare/v1.28.0...v1.28.1) (2025-07-12)
+
+### Bug Fixes
+
+* **deps:** update tiptap monorepo to v2.26.1 ([#3603](https://github.com/homarr-labs/homarr/issues/3603)) ([473a9f4](https://github.com/homarr-labs/homarr/commit/473a9f47f352a532128c1bf2c02490e8e4c6ca7c))
+* **releases-widget:** fixed bug with changing a missing provider ([#3605](https://github.com/homarr-labs/homarr/issues/3605)) ([5ecc4db](https://github.com/homarr-labs/homarr/commit/5ecc4db5dabcfd4f953f3b436527d34ea9191eef))
+
 ## [1.28.0](https://github.com/homarr-labs/homarr/compare/v1.27.0...v1.28.0) (2025-07-11)
 
 ### Features

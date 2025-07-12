@@ -937,6 +937,10 @@
           "label": "Ríša",
           "newLabel": "Nová ríša"
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "",
           "newLabel": ""
@@ -2288,7 +2292,11 @@
           "example": {
             "label": "Príklad"
           },
-          "invalid": "Neplatná definícia úložiska, skontrolujte hodnoty"
+          "invalid": "Neplatná definícia úložiska, skontrolujte hodnoty",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "Nenájdené",
@@ -2305,7 +2313,11 @@
       "error": {
         "label": "Chyba",
         "messages": {
-          "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia"
+          "invalidIdentifier": "",
+          "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2555,6 +2567,9 @@
       },
       "iconColor": {
         "label": "Farba ikony"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Vlastné css pre túto nástenku",

@@ -368,7 +368,7 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
             value={tempRepository.providerIntegrationId ? [tempRepository.providerIntegrationId] : []}
             error={formErrors[`${innerProps.fieldPath}.providerIntegrationId`] as string}
             onChange={(value) => {
-              handleChange({ providerIntegrationId: value.length > 0 ? value[0] : undefined });
+              handleChange({ providerIntegrationId: value.length > 0 ? value.pop() : undefined });
             }}
           />
         </div>

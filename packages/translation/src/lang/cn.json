@@ -937,6 +937,10 @@
           "label": "领域",
           "newLabel": "新领域"
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "主题",
           "newLabel": "新主题"
@@ -2288,7 +2292,11 @@
           "example": {
             "label": "示例"
           },
-          "invalid": "仓库定义无效，请检查值"
+          "invalid": "仓库定义无效，请检查值",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "未找到",
@@ -2305,7 +2313,11 @@
       "error": {
         "label": "错误",
         "messages": {
-          "noMatchingVersion": "没有找到匹配的版本"
+          "invalidIdentifier": "",
+          "noMatchingVersion": "没有找到匹配的版本",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2555,6 +2567,9 @@
       },
       "iconColor": {
         "label": "图标颜色"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "自定义此面板的 css",
