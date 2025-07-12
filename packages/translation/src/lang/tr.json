@@ -937,6 +937,10 @@
           "label": "Erişim Alanı",
           "newLabel": "Yeni erişim alanı"
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "Konu",
           "newLabel": "Yeni konu"
@@ -2288,7 +2292,11 @@
           "example": {
             "label": "Örnek"
           },
-          "invalid": "Geçersiz depo tanımı, lütfen değerleri kontrol edin"
+          "invalid": "Geçersiz depo tanımı, lütfen değerleri kontrol edin",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "Bulunamadı",
@@ -2305,7 +2313,11 @@
       "error": {
         "label": "Hata",
         "messages": {
-          "noMatchingVersion": "Eşleşen sürüm bulunamadı"
+          "invalidIdentifier": "",
+          "noMatchingVersion": "Eşleşen sürüm bulunamadı",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2555,6 +2567,9 @@
       },
       "iconColor": {
         "label": "Simge rengi"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Bu panel için özel css",

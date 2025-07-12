@@ -937,6 +937,10 @@
           "label": "Bereich",
           "newLabel": "Neuer Bereich"
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "Thema",
           "newLabel": "Neues Thema erstellen"
@@ -1503,7 +1507,7 @@
         "width": "Breite",
         "height": "Höhe"
       },
-      "placeholder": ""
+      "placeholder": "Mit dem Schreiben von Notizen beginnen"
     },
     "iframe": {
       "name": "iFrame",
@@ -2288,7 +2292,11 @@
           "example": {
             "label": "Beispiel"
           },
-          "invalid": "Ungültige Repository Definition, bitte überprüfen Sie die Werte"
+          "invalid": "Ungültige Repository Definition, bitte überprüfen Sie die Werte",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "Nicht gefunden",
@@ -2305,7 +2313,11 @@
       "error": {
         "label": "Fehler",
         "messages": {
-          "noMatchingVersion": "Keine passende Version gefunden"
+          "invalidIdentifier": "",
+          "noMatchingVersion": "Keine passende Version gefunden",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2555,6 +2567,9 @@
       },
       "iconColor": {
         "label": "Symbolfarbe"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Benutzerdefinierte css für dieses Board",
@@ -3079,7 +3094,7 @@
             "idle": "Inaktiv",
             "running": "Wird ausgeführt",
             "error": "Fehler",
-            "disabled": ""
+            "disabled": "Deaktiviert"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3144,18 +3159,18 @@
             }
           },
           "interval": {
-            "seconds": "",
-            "minutes": "",
-            "hours": "",
-            "midnight": "",
-            "weeklyMonday": ""
+            "seconds": "Alle(r) {interval, plural, =1 {Sekunde} other {# Sekunden}}",
+            "minutes": "Alle(r) {interval, plural, one {}=1 {Minute} other {# Minuten}}",
+            "hours": "Alle(r) {interval, plural, one {}=1 {Stunde} other {# Stunden}}",
+            "midnight": "Jeden Tag um Mitternacht",
+            "weeklyMonday": "Jede Woche am Montag"
           },
           "settings": {
-            "title": ""
+            "title": "Aufgabeneinstellungen für {jobName}"
           },
           "field": {
             "interval": {
-              "label": ""
+              "label": "Zeitplanintervall"
             }
           }
         },
