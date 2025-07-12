@@ -1,4 +1,4 @@
-import { Box } from "@mantine/core";
+import { Box, Group } from "@mantine/core";
 
 import { getScopedI18n } from "@homarr/translation/server";
 
@@ -7,11 +7,14 @@ import "@xterm/xterm/css/xterm.css";
 import { notFound } from "next/navigation";
 
 import { auth } from "@homarr/auth/next";
+import { env } from "@homarr/log/env";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { fullHeightWithoutHeaderAndFooter } from "~/constants";
 import { createMetaTitle } from "~/metadata";
 import { ClientSideTerminalComponent } from "./client";
+import { LogLevelSelection } from "./level-selection";
+import { LogContextProvider } from "./log-context";
 
 export async function generateMetadata() {
   const session = await auth();
@@ -32,11 +35,14 @@ export default async function LogsManagementPage() {
   }
 
   return (
-    <>
-      <DynamicBreadcrumb />
+    <LogContextProvider defaultLevel={env.LOG_LEVEL}>
+      <Group justify="space-between" align="center" wrap="nowrap">
+        <DynamicBreadcrumb />
+        <LogLevelSelection />
+      </Group>
       <Box style={{ borderRadius: 6 }} h={fullHeightWithoutHeaderAndFooter} p="md" bg="black">
         <ClientSideTerminalComponent />
       </Box>
-    </>
+    </LogContextProvider>
   );
 }

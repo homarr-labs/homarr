@@ -1,3 +1,5 @@
+import { LogLevel } from "@homarr/log/constants";
+
 import { createListChannel, createQueueChannel, createSubPubChannel } from "./lib/channel";
 
 export {
@@ -27,8 +29,7 @@ export const queueChannel = createQueueChannel<{
 
 export interface LoggerMessage {
   message: string;
-  level: string;
-  timestamp: string;
+  level: LogLevel;
 }
 
 export const loggingChannel = createSubPubChannel<LoggerMessage>("logging");
