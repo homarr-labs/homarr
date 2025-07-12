@@ -1,4 +1,4 @@
-import {Paper, Text} from "@mantine/core";
+import {Box, Group, Paper, Stack, Text} from "@mantine/core";
 import {CommonChart} from "./common-chart";
 import {humanFileSize} from "@homarr/common";
 
@@ -14,7 +14,7 @@ export const CombinedNetworkTrafficChart = ({usageOverTime}: {
     <CommonChart
       data={chartData}
       dataKey={"index"}
-      series={[{name: "up", color: "yellow.5"},{name: "down", color: "yellow.5"}]}
+      series={[{name: "up", color: "orange.5"}, {name: "down", color: "yellow.5"}]}
       title={"NET"}
       yAxisProps={{domain: [0, "dataMax"]}}
       tooltipProps={{
@@ -22,12 +22,23 @@ export const CombinedNetworkTrafficChart = ({usageOverTime}: {
           if (!payload) {
             return null;
           }
-          const value = payload[0] ? Number(payload[0].value) : 0;
           return (
             <Paper px={3} py={2} withBorder shadow="md" radius="md">
-              <Text c="dimmed" size="xs">
-                {humanFileSize(Math.round(value))}/s
-              </Text>
+              <Stack gap={0}>
+                {payload.map((payloadData) => (
+                  <Group gap={4}>
+                    <Box bg={payloadData.color} w={10} h={10} style={{ borderRadius: 99 }}></Box>
+                    <Text c="dimmed" size="xs">
+                      {payloadData.value === undefined ? (<>N/A</>) : (
+                        <>
+                          {humanFileSize(Math.round(payloadData.value))}/s
+                        </>
+                      )}
+                    </Text>
+                  </Group>
+                ))}
+              </Stack>
+
             </Paper>
           );
         },

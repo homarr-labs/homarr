@@ -26,8 +26,11 @@ export const CommonChart = ({
   const theme = useMantineTheme();
   const board = useRequiredBoard();
 
+  tooltipProps = tooltipProps ?? {};
+  tooltipProps.allowEscapeViewBox = { x: true, y: true};
+
   return (
-    <Card ref={ref} h={"100%"} pos={"relative"} p={0} bg={data.length <= 1 ? "rgb(67, 67, 67)" : undefined}>
+    <Card ref={ref} h={"100%"} pos={"relative"} style={{ overflow: 'visible' }} p={0} bg={data.length <= 1 ? "rgb(67, 67, 67)" : undefined} radius={board.itemRadius}>
       {data.length > 1 && height > 40 && (
         <Text c={"dimmed"} pos={"absolute"} size={height > 100 ? "md" : "xs"} fw={"bold"} top={0} left={0} ps={6}>
           {title}
@@ -53,6 +56,7 @@ export const CommonChart = ({
           withDots={false}
           bg={"#434343"}
           styles={{root: {padding: 5, borderRadius: theme.radius[board.itemRadius] }}}
+          tooltipAnimationDuration={200}
           tooltipProps={tooltipProps}
           yAxisProps={yAxisProps}
         />

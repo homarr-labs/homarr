@@ -69,7 +69,7 @@ export default function SystemResources({integrationIds}: WidgetComponentProps<"
         <SystemResourceMemoryChart memoryUsageOverTime={queue.map((item) => item.memory)}
                                    totalCapacityInBytes={memoryCapacityInBytes}/>
       </div>
-      {width > 100 ? (
+      {width > 200 ? (
         <>
           <NetworkTrafficChart usageOverTime={queue.map((item) => item.network.down)} isUp={false}/>
           <NetworkTrafficChart usageOverTime={queue.map((item) => item.network.up)} isUp={true}/>
