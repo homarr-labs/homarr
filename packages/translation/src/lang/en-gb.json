@@ -937,6 +937,10 @@
           "label": "Realm",
           "newLabel": "New realm"
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "",
           "newLabel": ""
@@ -2288,7 +2292,11 @@
           "example": {
             "label": ""
           },
-          "invalid": ""
+          "invalid": "",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "",
@@ -2305,7 +2313,11 @@
       "error": {
         "label": "",
         "messages": {
-          "noMatchingVersion": ""
+          "invalidIdentifier": "",
+          "noMatchingVersion": "",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2555,6 +2567,9 @@
       },
       "iconColor": {
         "label": "Icon colour"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "",

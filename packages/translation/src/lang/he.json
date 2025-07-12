@@ -937,9 +937,13 @@
           "label": "תחום",
           "newLabel": "תחום חדש"
         },
-        "topic": {
+        "personalAccessToken": {
           "label": "",
           "newLabel": ""
+        },
+        "topic": {
+          "label": "נושא",
+          "newLabel": "נושא חדש"
         }
       }
     },
@@ -1503,7 +1507,7 @@
         "width": "רוחב",
         "height": "גובה"
       },
-      "placeholder": ""
+      "placeholder": "התחל לכתוב את ההערות שלך"
     },
     "iframe": {
       "name": "iFrame",
@@ -2094,8 +2098,8 @@
         "processing": "מעבד",
         "partiallyAvailable": "חלקי",
         "available": "זמין",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "ברשימה השחורה",
+        "deleted": "נמחק"
       },
       "status": {
         "pending": "ממתין",
@@ -2288,7 +2292,11 @@
           "example": {
             "label": "דוגמא"
           },
-          "invalid": "הגדרת מאגר לא חוקית, אנא בדוק את הערכים"
+          "invalid": "הגדרת מאגר לא חוקית, אנא בדוק את הערכים",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "לא נמצא",
@@ -2305,7 +2313,11 @@
       "error": {
         "label": "שגיאה",
         "messages": {
-          "noMatchingVersion": "לא נמצאה גרסה תואמת"
+          "invalidIdentifier": "",
+          "noMatchingVersion": "לא נמצאה גרסה תואמת",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2366,9 +2378,9 @@
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "התראות",
+      "description": "הצגת היסטוריית התראות מאינטגרציה",
+      "noItems": "אין התראות להצגה.",
       "option": {}
     }
   },
@@ -2555,6 +2567,9 @@
       },
       "iconColor": {
         "label": "צבע סמל"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "עיצוב מותאם אישית עבור הלוח הזה",
@@ -3079,7 +3094,7 @@
             "idle": "ממתין",
             "running": "פועל",
             "error": "שגיאה",
-            "disabled": ""
+            "disabled": "מושבת"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3137,25 +3152,25 @@
               "label": "בקר רשת"
             },
             "refreshNotifications": {
-              "label": ""
+              "label": "עדכון התראות"
             },
             "dockerContainers": {
               "label": "מכולות דוקר"
             }
           },
           "interval": {
-            "seconds": "",
-            "minutes": "",
-            "hours": "",
-            "midnight": "",
-            "weeklyMonday": ""
+            "seconds": "כל {interval, plural, =1 {second} other {# seconds}}",
+            "minutes": "כל {interval, plural, =1 {minute} other {# minutes}}",
+            "hours": "כל {interval, plural, =1 {hour} other {# hours}}",
+            "midnight": "כל יום בחצות",
+            "weeklyMonday": "כל שבוע ביום שני"
           },
           "settings": {
-            "title": ""
+            "title": "הגדרות משימה עבור {jobName}"
           },
           "field": {
             "interval": {
-              "label": ""
+              "label": "מרווח זמן לתזמון"
             }
           }
         },

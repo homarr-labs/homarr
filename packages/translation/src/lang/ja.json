@@ -937,6 +937,10 @@
           "label": "Realm",
           "newLabel": "新しい Realm"
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "トピック",
           "newLabel": "新規トピック"
@@ -1503,7 +1507,7 @@
         "width": "幅",
         "height": "高さ"
       },
-      "placeholder": ""
+      "placeholder": "あなたのノートを書き始めましょう"
     },
     "iframe": {
       "name": "iFrame",
@@ -1715,8 +1719,8 @@
         "maxWindGusts": "最大瞬間風速： {maxWindGusts} km/h"
       },
       "kind": {
-        "clear": "クリア",
-        "mainlyClear": "主なクリア事項",
+        "clear": "晴れ",
+        "mainlyClear": "おおむね晴れ",
         "fog": "霧",
         "drizzle": "小雨",
         "freezingDrizzle": "雨氷",
@@ -1725,8 +1729,8 @@
         "snowFall": "降雪",
         "snowGrains": "霧雪",
         "rainShowers": "にわか雨",
-        "snowShowers": "スノーシャワー",
-        "thunderstorm": "サンダーストーム",
+        "snowShowers": "驟雪",
+        "thunderstorm": "雷雨",
         "thunderstormWithHail": "雹を伴う雷雨",
         "unknown": "不明"
       }
@@ -1757,7 +1761,7 @@
           "label": "CPU温度（華氏）"
         },
         "cpu": {
-          "label": "CPU 情報を表示"
+          "label": "CPU情報を表示"
         },
         "memory": {
           "label": "メモリー情報を表示"
@@ -1781,16 +1785,16 @@
       "popover": {
         "information": "情報",
         "processor": "プロセッサー: {cpuModelName}",
-        "memory": "メモリ: {memory}GiB",
-        "memoryAvailable": "利用可能: {memoryAvailable}GiB ({percent}%)",
+        "memory": "メモリ: {memory} GiB",
+        "memoryAvailable": "利用可能: {memoryAvailable} GiB ({percent}%)",
         "version": "Version: {version}",
-        "uptime": "稼働時間： {months} ヶ月、 {days} 日、 {hours} 時間、 {minutes} 分",
+        "uptime": "稼働時間: {months} ヶ月 {days} 日 {hours} 時間 {minutes} 分",
         "loadAverage": "平均負荷：",
-        "minute": "１分",
+        "minute": "1 分",
         "minutes": "{count} 分",
         "used": "使用中",
         "available": "利用可能",
-        "lastSeen": "最終ステータス更新： {lastSeen}"
+        "lastSeen": "最終ステータス更新: {lastSeen}"
       },
       "memory": {},
       "error": {
@@ -1803,21 +1807,21 @@
         },
         "resource": {
           "node": {
-            "name": "ノード"
+            "name": "Nodes"
           },
           "qemu": {
-            "name": "VM"
+            "name": "VMs"
           },
           "lxc": {
-            "name": "LXC"
+            "name": "LXCs"
           },
           "storage": {
-            "name": "ストレージ"
+            "name": "Storage"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "ノード",
+            "node": "Node",
             "vmId": "VM ID",
             "plugin": "プラグイン"
           },
@@ -1835,10 +1839,10 @@
         },
         "table": {
           "header": {
-            "name": "名前",
+            "name": "名称",
             "cpu": "CPU",
             "memory": "RAM",
-            "node": "ノード"
+            "node": "Node"
           }
         }
       }
@@ -1853,7 +1857,7 @@
     },
     "common": {
       "location": {
-        "query": "都市/郵便番号",
+        "query": "都市／郵便番号",
         "latitude": "緯度",
         "longitude": "経度",
         "disabledTooltip": "都市または郵便番号を入力してください",
@@ -1862,7 +1866,7 @@
         "table": {
           "header": {
             "city": "都市",
-            "country": "国/地域",
+            "country": "国",
             "coordinates": "座標",
             "population": "人口"
           },
@@ -1881,7 +1885,7 @@
       "app": {
         "noData": "アプリが見つかりません",
         "description": "<here></here> をクリックして新しいアプリを作成する",
-        "quickCreate": "その場でアプリを作成"
+        "quickCreate": "即座にアプリを作成"
       },
       "error": {
         "noIntegration": "連携機能が選択されていません",
@@ -1924,7 +1928,7 @@
       "items": {
         "currentlyPlaying": "再生中の曲",
         "user": "ユーザー",
-        "name": "名前",
+        "name": "名称",
         "id": "Id"
       }
     },
@@ -1945,13 +1949,13 @@
           "label": "並べ替えを反転"
         },
         "showCompletedUsenet": {
-          "label": "完了とマークされた使用済みエントリを表示"
+          "label": "完了とマークされた使用済みの項目を表示"
         },
         "showCompletedTorrent": {
-          "label": "完了とマークされた使用済みエントリを表示"
+          "label": "完了とマークされた torrent の項目を表示"
         },
         "showCompletedHttp": {
-          "label": "完了とマークされた使用済みエントリを表示"
+          "label": "完了とマークされたその他の項目を表示"
         },
         "activeTorrentThreshold": {
           "label": "このしきい値より低速で完了したトレントを非表示にします (KiB/s)"
@@ -1987,7 +1991,7 @@
           "detailsTitle": "カテゴリー (または追加情報)"
         },
         "downSpeed": {
-          "columnTitle": "ダウンロード",
+          "columnTitle": "DL速度",
           "detailsTitle": "ダウンロード速度"
         },
         "index": {
@@ -2005,11 +2009,11 @@
         },
         "progress": {
           "columnTitle": "進捗状況",
-          "detailsTitle": "ダウンロード状況"
+          "detailsTitle": "ダウンロードの進捗状況"
         },
         "ratio": {
           "columnTitle": "比率",
-          "detailsTitle": "トレント比 (受信/送信)"
+          "detailsTitle": "Torrent ratio (受信/送信)"
         },
         "received": {
           "columnTitle": "合計ダウン",
@@ -2021,7 +2025,7 @@
         },
         "size": {
           "columnTitle": "ファイルサイズ",
-          "detailsTitle": "選択範囲/ファイルの合計サイズ"
+          "detailsTitle": "選択ファイルの合計サイズ"
         },
         "state": {
           "columnTitle": "状態",
@@ -2036,14 +2040,14 @@
           "detailsTitle": "ダウンロードクライアントの種類"
         },
         "upSpeed": {
-          "columnTitle": "アップ",
+          "columnTitle": "Up",
           "detailsTitle": "アップロード速度"
         }
       },
       "states": {
         "downloading": "ダウンロード中",
         "queued": "処理待ち",
-        "paused": "ポーズ",
+        "paused": "一時停止",
         "completed": "完了",
         "failed": "処理失敗",
         "processing": "処理中",
@@ -2055,8 +2059,8 @@
       "actions": {
         "clients": {
           "modalTitle": "ダウンロードクライアントの種類",
-          "pause": "すべてのクライアント/アイテムを一時停止する",
-          "resume": "すべてのクライアント/アイテムを再開する"
+          "pause": "すべてのクライアント／アイテムを一時停止する",
+          "resume": "すべてのクライアント／アイテムを再開する"
         },
         "client": {
           "pause": "クライアントを一時停止する",
@@ -2077,7 +2081,7 @@
     },
     "mediaRequests-requestList": {
       "name": "メディアリクエストリスト",
-      "description": "OverseerrまたはJellyseerrからの全てのメディアリクエストのリストを見る",
+      "description": "Overseerr または Jellyseerr からの全てのメディアリクエストのリストを見る",
       "option": {
         "linksTargetNewTab": {
           "label": "リンクを新しいタブで開く"
@@ -2210,11 +2214,11 @@
       "description": "指定されたバージョンのリポジトリの現在のバージョンと、指定されたバージョンの正規表現のリストを表示します。",
       "option": {
         "newReleaseWithin": {
-          "label": "以下から新しいリリース",
+          "label": "新しいリリースの期間",
           "description": "使用例：1w (1 週間), 10M (10 ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。新しいリリースを強調表示しない場合は、空白のままにします。"
         },
         "staleReleaseWithin": {
-          "label": "以下から古いリリース",
+          "label": "古いリリースの期間",
           "description": "使用例：1w (1 週間), 10M (10 ヶ月)。使用可能な単位種別： h (時間), d (日), w (週), M (月), y (年)。古いリリースを強調表示しない場合は、空白のままにします。"
         },
         "showOnlyHighlighted": {
@@ -2247,7 +2251,7 @@
           },
           "identifier": {
             "label": "識別名",
-            "placeholder": "名前または所有者/名前"
+            "placeholder": "名前、または所有者名"
           },
           "name": {
             "label": "名称"
@@ -2288,7 +2292,11 @@
           "example": {
             "label": "例"
           },
-          "invalid": "無効なリポジトリ定義です。値を確認してください"
+          "invalid": "無効なリポジトリ定義です。値を確認してください",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "見つかりませんでした",
@@ -2305,7 +2313,11 @@
       "error": {
         "label": "エラー",
         "messages": {
-          "noMatchingVersion": "一致するバージョンが見つかりません"
+          "invalidIdentifier": "",
+          "noMatchingVersion": "一致するバージョンが見つかりません",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2414,7 +2426,7 @@
         }
       },
       "oldImport": {
-        "label": "1.0.0 より前のhomarrからインポート",
+        "label": "1.0.0 より前の Homarr からインポート",
         "notification": {
           "success": {
             "title": "インポート成功",
@@ -2459,11 +2471,11 @@
             "option": {
               "lastSection": {
                 "label": "最後のセクション",
-                "description": "最後のセクションの下にサイドバーが表示されます"
+                "description": "最後のセクションの下に、サイドバーが表示されます"
               },
               "removeItems": {
                 "label": "アイテムを削除",
-                "description": "サイドバーに含まれるアイテムは削除されます"
+                "description": "サイドバーに含まれるアイテムは、削除されます"
               }
             }
           }
@@ -2471,7 +2483,7 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "その場でアプリを作成",
+          "title": "即座にアプリを作成",
           "createAndUse": "追加して使用する"
         }
       }
@@ -2555,6 +2567,9 @@
       },
       "iconColor": {
         "label": "アイコンの色"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "このボードのカスタム CSS",
@@ -3965,14 +3980,14 @@
                 "label": "ホームボード"
               },
               "preferences": {
-                "label": "あなたの好み"
+                "label": "あなたの設定"
               }
             }
           }
         }
       },
       "userGroup": {
-        "help": "ユーザまたはグループの検索",
+        "help": "ユーザーまたはグループの検索",
         "group": {
           "user": {
             "title": "ユーザー",
