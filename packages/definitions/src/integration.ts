@@ -207,6 +207,13 @@ export const integrationDefs = {
     category: ["releasesProvider"],
     defaultUrl: "https://codeberg.org",
   },
+  linuxServerIO: {
+    name: "LinuxServer.io",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/linuxserver-io.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://api.linuxserver.io",
+  },
   ntfy: {
     name: "ntfy",
     secretKinds: [["topic"], ["topic", "apiKey"]],

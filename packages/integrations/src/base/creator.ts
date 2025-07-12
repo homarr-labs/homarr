@@ -19,6 +19,7 @@ import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
+import { LinuxServerIOsIntegration } from "../linuxServerIO/linuxserverio-integration";
 import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
@@ -104,6 +105,7 @@ export const integrationCreators = {
   gitlab: GitlabIntegration,
   npm: NPMIntegration,
   codeberg: CodebergIntegration,
+  linuxServerIO: LinuxServerIOsIntegration,
   ntfy: NTFYIntegration,
   mock: MockIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
