@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 
-import { createId } from "@homarr/db";
+import { createId } from "@homarr/common";
 import { users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 

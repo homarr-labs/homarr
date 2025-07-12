@@ -1697,9 +1697,6 @@ importers:
       '@homarr/common':
         specifier: workspace:^
         version: link:../common
-      '@homarr/db':
-        specifier: workspace:^
-        version: link:../db
       '@homarr/definitions':
         specifier: workspace:^
         version: link:../definitions

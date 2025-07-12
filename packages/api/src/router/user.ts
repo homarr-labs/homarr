@@ -2,8 +2,9 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
+import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
-import { and, createId, eq, like } from "@homarr/db";
+import { and, eq, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { boards, groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";

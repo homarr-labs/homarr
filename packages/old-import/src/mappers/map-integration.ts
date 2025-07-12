@@ -1,5 +1,5 @@
+import { createId } from "@homarr/common";
 import { decryptSecretWithKey } from "@homarr/common/server";
-import { createId } from "@homarr/db";
 import type { IntegrationKind } from "@homarr/definitions";
 import type { OldmarrIntegrationType } from "@homarr/old-schema";
 

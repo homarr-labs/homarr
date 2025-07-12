@@ -4,8 +4,7 @@ import { IconAlertTriangle, IconCheck, IconCopy, IconExclamationCircle, IconRepe
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
-import { getMantineColor } from "@homarr/common";
-import { createId } from "@homarr/db/client";
+import { createId, getMantineColor } from "@homarr/common";
 import { createDocumentationLink } from "@homarr/definitions";
 import { createModal, useConfirmModal, useModalAction } from "@homarr/modals";
 import { AddCertificateModal } from "@homarr/modals-collection";

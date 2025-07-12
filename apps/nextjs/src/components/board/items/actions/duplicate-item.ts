@@ -1,4 +1,4 @@
-import { createId } from "@homarr/db/client";
+import { createId } from "@homarr/common";
 
 import type { Board, EmptySection, ItemLayout, Section } from "~/app/[locale]/boards/_types";
 import { getFirstEmptyPosition } from "./empty-position";

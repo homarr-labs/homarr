@@ -3,7 +3,7 @@
 import { Button, Fieldset, Grid, Group, Input, NumberInput, Slider, Stack, Text, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import { createId } from "@homarr/db/client";
+import { createId } from "@homarr/common";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { boardSaveLayoutsSchema } from "@homarr/validation/board";

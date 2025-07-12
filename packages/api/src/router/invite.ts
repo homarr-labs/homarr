@@ -2,7 +2,8 @@ import { randomBytes } from "crypto";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { asc, createId, eq } from "@homarr/db";
+import { createId } from "@homarr/common";
+import { asc, eq } from "@homarr/db";
 import { invites } from "@homarr/db/schema";
 import { selectInviteSchema } from "@homarr/db/validationSchemas";
 

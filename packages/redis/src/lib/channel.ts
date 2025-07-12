@@ -1,7 +1,6 @@
 import superjson from "superjson";
 
-import { hashObjectBase64 } from "@homarr/common";
-import { createId } from "@homarr/db";
+import { createId, hashObjectBase64 } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
