@@ -55,7 +55,7 @@ export class LinuxServerIOsIntegration extends Integration implements ReleasesPr
       return {
         id: repository.id,
         error: {
-          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
+          message: error.message,
         },
       };
     } else {
@@ -71,17 +71,16 @@ export class LinuxServerIOsIntegration extends Integration implements ReleasesPr
           error: { code: "noReleasesFound" },
         };
       }
-
-      const changelog = release.changelog.length > 0 ? release.changelog[0] : undefined;
+      
       return {
         id: repository.id,
         latestRelease: release.version,
         latestReleaseAt: release.version_timestamp,
-        releaseDescription: changelog?.desc,
+        releaseDescription: release.changelog?.shift()?.desc,
         projectUrl: release.github_url,
         projectDescription: release.description,
         isArchived: release.deprecated,
-        createdAt: new Date(release.initial_data),
+        createdAt: release.initial_date ? new Date(release.initial_date) : undefined,
         starsCount: release.stars,
       };
     }

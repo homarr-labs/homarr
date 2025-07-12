@@ -6,7 +6,7 @@ export const releasesResponseSchema = z.object({
       linuxserver: z.array(
         z.object({
           name: z.string(),
-          initial_data: z.string().transform((value) => new Date(value)),
+          initial_date: z.string().transform((value) => new Date(value)).optional(),
           github_url: z.string(),
           description: z.string(),
           version: z.string(),
@@ -18,7 +18,7 @@ export const releasesResponseSchema = z.object({
               date: z.string().transform((value) => new Date(value)),
               desc: z.string(),
             }),
-          ),
+          ).optional(),
         }),
       ),
     }),
