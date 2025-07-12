@@ -26,8 +26,8 @@ export const CombinedNetworkTrafficChart = ({usageOverTime}: {
             <Paper px={3} py={2} withBorder shadow="md" radius="md">
               <Stack gap={0}>
                 {payload.map((payloadData) => (
-                  <Group gap={4}>
-                    <Box bg={payloadData.color} w={10} h={10} style={{ borderRadius: 99 }}></Box>
+                  <Group key={payloadData.key} gap={4}>
+                    <Box bg={payloadData.color} w={10} h={10} style={{borderRadius: 99}}></Box>
                     <Text c="dimmed" size="xs">
                       {payloadData.value === undefined ? (<>N/A</>) : (
                         <>
@@ -38,7 +38,6 @@ export const CombinedNetworkTrafficChart = ({usageOverTime}: {
                   </Group>
                 ))}
               </Stack>
-
             </Paper>
           );
         },
