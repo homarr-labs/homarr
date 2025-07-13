@@ -938,8 +938,8 @@
           "newLabel": "新しい Realm"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "パーソナルアクセストークン",
+          "newLabel": "新しいパーソナルアクセストークン"
         },
         "topic": {
           "label": "トピック",
@@ -2294,8 +2294,8 @@
           },
           "invalid": "無効なリポジトリ定義です。値を確認してください",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "プロバイダーがありません",
+            "tooltip": "プロバイダーを解析できませんでした。画像をインポートしたあとで、手動で設定してください"
           }
         }
       },
@@ -2313,11 +2313,11 @@
       "error": {
         "label": "エラー",
         "messages": {
-          "invalidIdentifier": "",
+          "invalidIdentifier": "無効な識別子",
           "noMatchingVersion": "一致するバージョンが見つかりません",
-          "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noReleasesFound": "リリースが見つかりませんでした",
+          "noProviderSeleceted": "プロバイダーが選択されていません",
+          "noProviderResponse": "プロバイダーからの応答がありません"
         }
       }
     },
