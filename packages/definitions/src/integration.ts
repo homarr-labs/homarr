@@ -214,6 +214,13 @@ export const integrationDefs = {
     category: ["releasesProvider"],
     defaultUrl: "https://api.linuxserver.io",
   },
+  githubPackages: {
+    name: "Github Packages",
+    secretKinds: [[], ["personalAccessToken"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/github.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://api.github.com",
+  },
   ntfy: {
     name: "ntfy",
     secretKinds: [["topic"], ["topic", "apiKey"]],

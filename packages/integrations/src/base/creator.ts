@@ -14,6 +14,7 @@ import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorre
 import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { EmbyIntegration } from "../emby/emby-integration";
+import { GithubPackagesIntegration } from "../github-packages/github-packages-integration";
 import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
@@ -106,6 +107,7 @@ export const integrationCreators = {
   npm: NPMIntegration,
   codeberg: CodebergIntegration,
   linuxServerIO: LinuxServerIOsIntegration,
+  githubPackages: GithubPackagesIntegration,
   ntfy: NTFYIntegration,
   mock: MockIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
