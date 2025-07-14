@@ -7,12 +7,12 @@ export class SystemHealthMonitoringMockService implements ISystemHealthMonitorin
       version: "1.0.0",
       cpuModelName: "Mock CPU",
       cpuUtilization: Math.random(),
-      memUsedInBytes: (4 * 1024 * 1024 * 1024), // 4 GB in bytes
-      memAvailableInBytes: (8 * 1024 * 1024 * 1024), // 8 GB in bytes
+      memUsedInBytes: 4 * 1024 * 1024 * 1024, // 4 GB in bytes
+      memAvailableInBytes: 8 * 1024 * 1024 * 1024, // 8 GB in bytes
       availablePkgUpdates: 0,
       network: {
         up: 1024 * 16,
-        down: 1024 * 16 * 6
+        down: 1024 * 16 * 6,
       },
       rebootRequired: false,
       cpuTemp: Math.floor(Math.random() * 100), // Random temperature between 0 and 99

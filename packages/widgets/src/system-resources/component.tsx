@@ -1,20 +1,20 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import {useElementSize, useListState} from "@mantine/hooks";
+import { useEffect, useState } from "react";
+import { useElementSize, useListState } from "@mantine/hooks";
 
-import {clientApi} from "@homarr/api/client";
+import { clientApi } from "@homarr/api/client";
 
-import type {WidgetComponentProps} from "../definition";
-import {CombinedNetworkTrafficChart} from "./chart/combined-network-traffic";
-import {SystemResourceCPUChart} from "./chart/cpu-chart";
-import {SystemResourceMemoryChart} from "./chart/memory-chart";
-import {NetworkTrafficChart} from "./chart/network-traffic";
+import type { WidgetComponentProps } from "../definition";
+import { CombinedNetworkTrafficChart } from "./chart/combined-network-traffic";
+import { SystemResourceCPUChart } from "./chart/cpu-chart";
+import { SystemResourceMemoryChart } from "./chart/memory-chart";
+import { NetworkTrafficChart } from "./chart/network-traffic";
 import classes from "./component.module.css";
 
 const MAX_QUEUE_SIZE = 15;
 
-export default function SystemResources({integrationIds}: WidgetComponentProps<"systemResources">) {
+export default function SystemResources({ integrationIds }: WidgetComponentProps<"systemResources">) {
   const [queue, queueHandlers] = useListState<{
     cpu: number;
     memory: number;
@@ -22,9 +22,9 @@ export default function SystemResources({integrationIds}: WidgetComponentProps<"
   }>([]);
   const [memoryCapacityInBytes, setMemoryCapacityInBytes] = useState(0);
 
-  const {ref, width} = useElementSize();
+  const { ref, width } = useElementSize();
 
-  const {data} = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
+  const { data } = clientApi.widget.healthMonitoring.getSystemHealthStatus.useQuery({
     integrationIds,
   });
   clientApi.widget.healthMonitoring.subscribeSystemHealthStatus.useSubscription(
@@ -43,7 +43,7 @@ export default function SystemResources({integrationIds}: WidgetComponentProps<"
     },
   );
 
-  const showNetwork = queue[queue.length - 1].network != null;
+  const showNetwork = queue.length === 0 ? true : queue[queue.length - 1]!.network != null;
 
   useEffect(() => {
     if (!data) {
@@ -65,7 +65,7 @@ export default function SystemResources({integrationIds}: WidgetComponentProps<"
   return (
     <div ref={ref} className={classes.grid}>
       <div className={classes.colSpanWide}>
-        <SystemResourceCPUChart cpuUsageOverTime={queue.map((item) => item.cpu)}/>
+        <SystemResourceCPUChart cpuUsageOverTime={queue.map((item) => item.cpu)} />
       </div>
       <div className={classes.colSpanWide}>
         <SystemResourceMemoryChart
@@ -77,12 +77,12 @@ export default function SystemResources({integrationIds}: WidgetComponentProps<"
         <>
           {width > 200 ? (
             <>
-              <NetworkTrafficChart usageOverTime={queue.map((item) => item.network.down)} isUp={false}/>
-              <NetworkTrafficChart usageOverTime={queue.map((item) => item.network.up)} isUp={true}/>
+              <NetworkTrafficChart usageOverTime={queue.map((item) => item.network!.down)} isUp={false} />
+              <NetworkTrafficChart usageOverTime={queue.map((item) => item.network!.up)} isUp={true} />
             </>
           ) : (
             <div className={classes.colSpanWide}>
-              <CombinedNetworkTrafficChart usageOverTime={queue.map((item) => item.network)}/>
+              <CombinedNetworkTrafficChart usageOverTime={queue.map((item) => item.network!)} />
             </div>
           )}
         </>
