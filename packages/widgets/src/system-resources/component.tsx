@@ -74,24 +74,21 @@ export default function SystemResources({ integrationIds }: WidgetComponentProps
           totalCapacityInBytes={memoryCapacityInBytes}
         />
       </div>
-      {showNetwork && (
-        <>
-          {width > 200 ? (
-            <>
-              {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-              <NetworkTrafficChart usageOverTime={queue.map((item) => item.network!.down)} isUp={false} />
+      {showNetwork &&
+        (width > 200 ? (
+          <>
+            {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
+            <NetworkTrafficChart usageOverTime={queue.map((item) => item.network!.down)} isUp={false} />
 
-              {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-              <NetworkTrafficChart usageOverTime={queue.map((item) => item.network!.up)} isUp={true} />
-            </>
-          ) : (
-            <div className={classes.colSpanWide}>
-              {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-              <CombinedNetworkTrafficChart usageOverTime={queue.map((item) => item.network!)} />
-            </div>
-          )}
-        </>
-      )}
+            {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
+            <NetworkTrafficChart usageOverTime={queue.map((item) => item.network!.up)} isUp />
+          </>
+        ) : (
+          <div className={classes.colSpanWide}>
+            {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
+            <CombinedNetworkTrafficChart usageOverTime={queue.map((item) => item.network!)} />
+          </div>
+        ))}
     </div>
   );
 }

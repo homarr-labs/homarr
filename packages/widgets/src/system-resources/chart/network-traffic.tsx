@@ -5,7 +5,7 @@ import { humanFileSize } from "@homarr/common";
 import { CommonChart } from "./common-chart";
 
 export const NetworkTrafficChart = ({ usageOverTime, isUp }: { usageOverTime: number[]; isUp: boolean }) => {
-  const chartData = usageOverTime.map((usage, index) => ({ index, usage: usage }));
+  const chartData = usageOverTime.map((usage, index) => ({ index, usage }));
 
   return (
     <CommonChart

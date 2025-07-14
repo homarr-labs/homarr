@@ -11,7 +11,7 @@ export const SystemResourceMemoryChart = ({
   memoryUsageOverTime: number[];
   totalCapacityInBytes: number;
 }) => {
-  const chartData = memoryUsageOverTime.map((usage, index) => ({ index, usage: usage }));
+  const chartData = memoryUsageOverTime.map((usage, index) => ({ index, usage }));
 
   return (
     <CommonChart
