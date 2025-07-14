@@ -72,6 +72,8 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
       memUsedInBytes: Number(systemResult.data.response.memUsed),
       memAvailableInBytes: Number(systemResult.data.response.memAvailable),
       uptime: systemResult.data.response.uptime,
+      /* real-time traffic monitoring is not available over the RPC API from OMV */
+      network: null,
       loadAverage: {
         "1min": systemResult.data.response.loadAverage["1min"],
         "5min": systemResult.data.response.loadAverage["5min"],

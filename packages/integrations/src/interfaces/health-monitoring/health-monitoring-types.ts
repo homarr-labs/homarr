@@ -10,7 +10,7 @@ export interface SystemHealthMonitoring {
   network: {
     up: number;
     down: number;
-  };
+  } | null;
   loadAverage: {
     "1min": number;
     "5min": number;
