@@ -139,7 +139,7 @@ const memoryLoadApi = z.object({
 
 const networkLoadApi = z.object({
   up: z.number().min(0),
-  down: z.number().min(0)
+  down: z.number().min(0),
 });
 
 const internalServerInfoApi = z.object({

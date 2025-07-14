@@ -1,22 +1,21 @@
-import {Paper, Text} from "@mantine/core";
-import {CommonChart} from "./common-chart";
-import {humanFileSize} from "@homarr/common";
+import { Paper, Text } from "@mantine/core";
 
-export const NetworkTrafficChart = ({usageOverTime, isUp}: {
-  usageOverTime: number[],
-  isUp: boolean
-}) => {
-  const chartData = usageOverTime.map((usage, index) => ({index, "usage": usage}));
+import { humanFileSize } from "@homarr/common";
+
+import { CommonChart } from "./common-chart";
+
+export const NetworkTrafficChart = ({ usageOverTime, isUp }: { usageOverTime: number[]; isUp: boolean }) => {
+  const chartData = usageOverTime.map((usage, index) => ({ index, usage: usage }));
 
   return (
     <CommonChart
       data={chartData}
       dataKey={"index"}
-      series={[{name: "usage", color: "yellow.5"}]}
+      series={[{ name: "usage", color: "yellow.5" }]}
       title={isUp ? "UP" : "DOWN"}
-      yAxisProps={{domain: [0, "dataMax"]}}
+      yAxisProps={{ domain: [0, "dataMax"] }}
       tooltipProps={{
-        content: ({payload}) => {
+        content: ({ payload }) => {
           if (!payload) {
             return null;
           }

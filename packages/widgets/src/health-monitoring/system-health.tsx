@@ -176,7 +176,11 @@ export const SystemHealthMonitoring = ({
                 <CpuTempRing fahrenheit={options.fahrenheit} cpuTemp={healthInfo.cpuTemp} isTiny={isTiny} />
               )}
               {options.memory && (
-                <MemoryRing available={healthInfo.memAvailableInBytes} used={healthInfo.memUsedInBytes} isTiny={isTiny} />
+                <MemoryRing
+                  available={healthInfo.memAvailableInBytes}
+                  used={healthInfo.memUsedInBytes}
+                  isTiny={isTiny}
+                />
               )}
             </Flex>
             {

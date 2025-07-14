@@ -2386,7 +2386,8 @@
     },
     "systemResources": {
       "name": "System resources",
-      "description": "CPU, Memory, Disk and other hardware usage of your system"
+      "description": "CPU, Memory, Disk and other hardware usage of your system",
+      "option": {}
     }
   },
   "widgetPreview": {
