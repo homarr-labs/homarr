@@ -43,6 +43,7 @@ export default function SystemResources({ integrationIds }: WidgetComponentProps
     },
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const showNetwork = queue.length === 0 ? true : queue[queue.length - 1]!.network != null;
 
   useEffect(() => {
@@ -77,11 +78,15 @@ export default function SystemResources({ integrationIds }: WidgetComponentProps
         <>
           {width > 200 ? (
             <>
+              {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
               <NetworkTrafficChart usageOverTime={queue.map((item) => item.network!.down)} isUp={false} />
+
+              {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
               <NetworkTrafficChart usageOverTime={queue.map((item) => item.network!.up)} isUp={true} />
             </>
           ) : (
             <div className={classes.colSpanWide}>
+              {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
               <CombinedNetworkTrafficChart usageOverTime={queue.map((item) => item.network!)} />
             </div>
           )}
