@@ -20,7 +20,7 @@ import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
-import { LinuxServerIOsIntegration } from "../linuxServerIO/linuxserverio-integration";
+import { LinuxServerIOIntegration } from "../linuxServerIO/linuxserverio-integration";
 import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
@@ -36,6 +36,7 @@ import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-fac
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
+import { QuayIntegration } from "../quay/quay-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
@@ -106,8 +107,9 @@ export const integrationCreators = {
   gitlab: GitlabIntegration,
   npm: NPMIntegration,
   codeberg: CodebergIntegration,
-  linuxServerIO: LinuxServerIOsIntegration,
+  linuxServerIO: LinuxServerIOIntegration,
   githubPackages: GithubPackagesIntegration,
+  quay: QuayIntegration,
   ntfy: NTFYIntegration,
   mock: MockIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;

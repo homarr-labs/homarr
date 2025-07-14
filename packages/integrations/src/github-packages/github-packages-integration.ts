@@ -61,14 +61,14 @@ export class GithubPackagesIntegration extends Integration implements ReleasesPr
     const details = await this.getDetailsAsync(api, owner, name);
 
     try {
-      const versionResponse = await api.rest.packages.getAllPackageVersionsForPackageOwnedByUser({
+      const releasesResponse = await api.rest.packages.getAllPackageVersionsForPackageOwnedByUser({
         username: owner,
         package_type: "container",
         package_name: name,
         per_page: 100,
       });
 
-      const releasesProviderResponse = versionResponse.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
+      const releasesProviderResponse = releasesResponse.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
         if (!release.metadata?.container?.tags || !(release.metadata.container.tags.length > 0)) return acc;
 
         release.metadata.container.tags.forEach((tag) => {

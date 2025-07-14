@@ -11,7 +11,7 @@ import { releasesResponseSchema } from "./linuxserverio-schemas";
 
 const localLogger = logger.child({ module: "LinuxServerIOsIntegration" });
 
-export class LinuxServerIOsIntegration extends Integration implements ReleasesProviderIntegration {
+export class LinuxServerIOIntegration extends Integration implements ReleasesProviderIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/health"));
 
