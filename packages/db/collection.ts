@@ -1,14 +1,24 @@
 import type { InferInsertModel } from "drizzle-orm";
-
 import { objectEntries } from "@homarr/common";
-
-import type { HomarrDatabase, HomarrDatabaseMysql } from "./driver";
+import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
 import { env } from "./env";
 import * as schema from "./schema";
 
 type TableKey = {
   [K in keyof typeof schema]: (typeof schema)[K] extends { _: { brand: "Table" } } ? K : never;
 }[keyof typeof schema];
+
+import type * as mysqlSchema from "./schema/mysql";
+import type * as postgresqlSchema from "./schema/postgresql";
+
+
+export function isMysql(): boolean {
+  return env.DB_DRIVER === "mysql2";
+}
+
+export function isPostgresql(): boolean {
+  return env.DB_DRIVER === "postgresql";
+}
 
 export const createDbInsertCollectionForTransaction = <TTableKey extends TableKey>(
   tablesInInsertOrder: TTableKey[],
@@ -20,6 +30,28 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
     },
     {} as { [K in TTableKey]: InferInsertModel<(typeof schema)[K]>[] },
   );
+  async function insertAllMysqlAsync(db: HomarrDatabaseMysql) {
+    await db.transaction(async (transaction) => {
+      for (const [key, values] of objectEntries(context)) {
+        if (values.length >= 1) {
+          // Below is actually the mysqlSchema when the driver is mysql
+          const schemaMySql = schema as unknown as typeof mysqlSchema;
+          await transaction.insert(schemaMySql[key]).values(values as never);
+        }
+      }
+    });
+  };
+  async function insertAllPostgresqlAsync(db: HomarrDatabasePostgresql) {
+    await db.transaction(async (transaction) => {
+      for (const [key, values] of objectEntries(context)) {
+        if (values.length >= 1) {
+          // Below is actually the mysqlSchema when the driver is mysql
+          const schemaPostgreSql = schema as unknown as typeof postgresqlSchema;
+          await transaction.insert(schemaPostgreSql[key]).values(values as never);
+        }
+      }
+    });
+  };
 
   return {
     ...context,
@@ -35,15 +67,14 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
         }
       });
     },
-    insertAllAsync: async (db: HomarrDatabaseMysql) => {
-      await db.transaction(async (transaction) => {
-        for (const [key, values] of objectEntries(context)) {
-          if (values.length >= 1) {
-            // Below is actually the mysqlSchema when the driver is mysql
-            await transaction.insert(schema[key] as never).values(values as never);
-          }
-        }
-      });
+    insertAllAsync: async ( db: HomarrDatabase ) => {
+      if (isMysql()) {
+        await insertAllMysqlAsync(db as unknown as HomarrDatabaseMysql);
+      } else if (isPostgresql()) {
+        await insertAllPostgresqlAsync(db as unknown as HomarrDatabasePostgresql);
+      } else {
+        throw new Error(`Unsupported DB_DRIVER: ${env.DB_DRIVER}`);
+      }
     },
   };
 };
@@ -56,12 +87,15 @@ export const createDbInsertCollectionWithoutTransaction = <TTableKey extends Tab
   return {
     ...collection,
     insertAllAsync: async (db: HomarrDatabase) => {
-      if (env.DB_DRIVER !== "mysql2") {
-        insertAll(db);
-        return;
+      switch (env.DB_DRIVER) {
+        case "better-sqlite3":
+          // For better-sqlite3, we need to use the synchronous insertAll method
+          insertAll(db);
+          return;
+        default:
+          await insertAllAsync(db);
+          break;
       }
-
-      await insertAllAsync(db as unknown as HomarrDatabaseMysql);
     },
   };
 };
