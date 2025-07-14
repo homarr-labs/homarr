@@ -39,7 +39,7 @@ export class LinuxServerIOsIntegration extends Integration implements ReleasesPr
       };
     }
 
-    const releasesResponse = await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/images`));
+    const releasesResponse = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/images"));
 
     if (!releasesResponse.ok) {
       return {
