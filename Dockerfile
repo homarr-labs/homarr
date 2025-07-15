@@ -1,70 +1,43 @@
+#syntax=docker/dockerfile:1.7-labs
+
 FROM node:22.17.0-alpine AS base
 
+
+FROM base AS installer
+WORKDIR /app
+
+RUN apk add --no-cache python3 make g++ gcc libc6-compat bash
+RUN apk update
+RUN npm install --global node-gyp
+
+COPY --parents */*/package.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY ./patches ./patches
+COPY ./packages/definitions/src/docs ./packages/definitions/src/docs
+
+# We use corepack as it uses the version of pnpm that is configured in package.json
+RUN corepack enable pnpm && pnpm install --frozen-lockfile --recursive
+
 FROM base AS builder
+WORKDIR /app
+
 RUN apk add --no-cache libc6-compat
 RUN apk update
 
-# Set working directory
-WORKDIR /app
-RUN apk add --no-cache libc6-compat curl bash
-RUN apk update
+COPY --from=installer /app/node_modules ./node_modules
+COPY --from=installer --parents /app/*/*/node_modules ../
 COPY . .
 
-RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
-
-# Copy static data as it is not part of the build
-COPY static-data ./static-data
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
 ARG DISABLE_REDIS_LOGS='true'
 
-RUN corepack enable pnpm && pnpm build
+RUN mkdir -p /app/apps/nextjs/.next
+RUN cp ./node_modules/better-sqlite3/build ./apps/nextjs/.next
 
-FROM base AS runner
-WORKDIR /app
+# add pnpm, build and prune (remove dev dependencies)
+RUN corepack enable pnpm && \
+    pnpm build && \
+    pnpm prune --prod --ignore-scripts
 
-# gettext is required for envsubst, openssl for generating AUTH_SECRET, su-exec for running application as non-root
-RUN apk add --no-cache redis nginx bash gettext su-exec openssl
-RUN mkdir /appdata
-VOLUME /appdata
-
-# Enable homarr cli
-COPY --from=builder /app/packages/cli/cli.cjs /app/apps/cli/cli.cjs
-RUN echo $'#!/bin/bash\ncd /app/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
-RUN chmod +x /usr/bin/homarr
-
-# Don't run production as root
-RUN mkdir -p /var/cache/nginx && \
-    mkdir -p /var/log/nginx && \
-    mkdir -p /var/lib/nginx && \
-    touch /run/nginx/nginx.pid && \
-    mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs
-
-COPY --from=builder /app/apps/nextjs/next.config.ts .
-COPY --from=builder /app/apps/nextjs/package.json .
-
-COPY --from=builder /app/apps/tasks/tasks.cjs ./apps/tasks/tasks.cjs
-COPY --from=builder /app/apps/websocket/wssServer.cjs ./apps/websocket/wssServer.cjs
-COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
-
-COPY --from=builder /app/packages/db/migrations ./db/migrations
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder /app/apps/nextjs/.next/standalone ./
-COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
-COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
-COPY scripts/run.sh ./run.sh
-COPY --chmod=777 scripts/entrypoint.sh ./entrypoint.sh
-COPY packages/redis/redis.conf /app/redis.conf
-COPY nginx.conf /etc/nginx/templates/nginx.conf
-
-
-ENV DB_URL='/appdata/db/db.sqlite'
-ENV DB_DIALECT='sqlite'
-ENV DB_DRIVER='better-sqlite3'
-ENV AUTH_PROVIDERS='credentials'
-ENV NODE_ENV='production'
-
-ENTRYPOINT [ "/app/entrypoint.sh" ]
-CMD ["sh", "run.sh"]
+CMD ["ls", "-la", "/app"]

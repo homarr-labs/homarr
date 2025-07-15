@@ -17,12 +17,27 @@ const withNextIntl = createNextIntlPlugin({
   requestConfig: "../../packages/translation/src/request.ts",
 });
 
+interface WebpackConfig {
+  module: {
+    rules: {
+      test: RegExp;
+      use: string;
+    }[];
+  };
+}
+
 const nextConfig: NextConfig = {
-  output: "standalone",
   reactStrictMode: true,
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
+  webpack: (config: WebpackConfig) => {
+    config.module.rules.push({
+      test: /\.node$/,
+      use: "node-loader",
+    });
+    return config;
+  },
   /**
    * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
    */

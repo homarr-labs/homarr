@@ -329,6 +329,9 @@ importers:
       concurrently:
         specifier: ^9.2.0
         version: 9.2.0
+      dotenv-cli:
+        specifier: ^8.0.0
+        version: 8.0.0
       eslint:
         specifier: ^9.31.0
         version: 9.31.0
