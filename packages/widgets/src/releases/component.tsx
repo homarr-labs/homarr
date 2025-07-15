@@ -18,7 +18,7 @@ import ReactMarkdown from "react-markdown";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { isDateWithin, splitToChunksWithNItems } from "@homarr/common";
+import { isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
@@ -572,27 +572,39 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             </Text>
           </>
         )}
-        {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing*/}
-        {(repository.releaseDescription || repository.projectDescription) && (
-          <>
-            <Divider className="releases-repository-expanded-description-divider" my={10} mx="30%" />
-            <Title className="releases-repository-expanded-description-title" order={4} ta="center">
-              {repository.releaseDescription && repository.releaseDescription !== ""
-                ? t("releaseDescription")
-                : t("projectDescription")}
-            </Title>
-            <Text
-              className={combineClasses("releases-repository-expanded-description-text", classes.releasesDescription)}
-              component="div"
-              size="xs"
-              ff="monospace"
-            >
-              {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing*/}
-              <ReactMarkdown skipHtml>{repository.releaseDescription || repository.projectDescription}</ReactMarkdown>
-            </Text>
-          </>
+
+        {repository.releaseDescription ? (
+          <Description title={t("releaseDescription")} description={repository.releaseDescription} />
+        ) : (
+          <Description title={t("projectDescription")} description={repository.projectDescription ?? null} />
         )}
       </Stack>
+    </>
+  );
+};
+
+interface DescriptionProps {
+  title: string;
+  description: string | null;
+}
+
+const Description = ({ title, description }: DescriptionProps) => {
+  if (isNullOrWhitespace(description)) return null;
+
+  return (
+    <>
+      <Divider className="releases-repository-expanded-description-divider" my={10} mx="30%" />
+      <Title className="releases-repository-expanded-description-title" order={4} ta="center">
+        {title}
+      </Title>
+      <Text
+        className={combineClasses("releases-repository-expanded-description-text", classes.releasesDescription)}
+        component="div"
+        size="xs"
+        ff="monospace"
+      >
+        <ReactMarkdown skipHtml>{description}</ReactMarkdown>
+      </Text>
     </>
   );
 };
