@@ -58,9 +58,16 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
       };
     }
 
-    const releasesResponse = await fetchWithTrustedCertificatesAsync(
-      this.url(`/api/v1/repository/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/releases`),
-    );
+    const releasesResponse = await this.withHeadersAsync(async (headers) => {
+      return await fetchWithTrustedCertificatesAsync(
+        this.url(
+          `/api/v1/repository/${encodeURIComponent(owner)}/${encodeURIComponent(name)}?includeTags=true&includeStats=true`,
+        ),
+        {
+          headers,
+        },
+      );
+    });
 
     if (!releasesResponse.ok) {
       return {
@@ -90,7 +97,7 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
         acc.push({
           latestRelease: tag.name,
           latestReleaseAt: new Date(tag.last_modified),
-          releaseUrl: `https://quay.io/repository/${owner}/${name}/tag/${tag.name}`,
+          releaseUrl: `https://quay.io/repository/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/tag/${encodeURIComponent(tag.name)}`,
         });
 
         return acc;
