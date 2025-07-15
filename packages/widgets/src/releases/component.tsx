@@ -572,11 +572,14 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             </Text>
           </>
         )}
-        {repository.releaseDescription && (
+        {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing*/}
+        {(repository.releaseDescription || repository.projectDescription) && (
           <>
             <Divider className="releases-repository-expanded-description-divider" my={10} mx="30%" />
             <Title className="releases-repository-expanded-description-title" order={4} ta="center">
-              {t("releaseDescription")}
+              {repository.releaseDescription && repository.releaseDescription !== ""
+                ? t("releaseDescription")
+                : t("projectDescription")}
             </Title>
             <Text
               className={combineClasses("releases-repository-expanded-description-text", classes.releasesDescription)}
@@ -584,7 +587,8 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
               size="xs"
               ff="monospace"
             >
-              <ReactMarkdown skipHtml>{repository.releaseDescription}</ReactMarkdown>
+              {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing*/}
+              <ReactMarkdown skipHtml>{repository.releaseDescription || repository.projectDescription}</ReactMarkdown>
             </Text>
           </>
         )}
