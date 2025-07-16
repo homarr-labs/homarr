@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
 import { createEnv } from "../env";
-import { runtimeEnvWithPrefix } from "../env/runtime-env";
+import { runtimeEnvWithPrefix } from "../env/prefix";
 import { createBooleanSchema } from "../env/schemas";
 
 export const redisEnv = createEnv({
