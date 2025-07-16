@@ -6,6 +6,7 @@
   "type": "module",
   "exports": {
     "./infrastructure/redis": "./src/infrastructure/redis/client.ts",
+    "./infrastructure/env": "./src/infrastructure/env/index.ts",
     ".": "./src/index.ts"
   },
   "typesVersions": {

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { createEnv } from "@homarr/env";
+import { createEnv } from "@homarr/core/infrastructure/env";
 
 import { logLevels } from "./constants";
 

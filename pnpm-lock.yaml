@@ -115,6 +115,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../../packages/common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/core
       '@homarr/cron-job-status':
         specifier: workspace:^0.1.0
         version: link:../../packages/cron-job-status
@@ -127,9 +130,6 @@ importers:
       '@homarr/docker':
         specifier: workspace:^0.1.0
         version: link:../../packages/docker
-      '@homarr/env':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/env
       '@homarr/form':
         specifier: workspace:^0.1.0
         version: link:../../packages/form
@@ -663,15 +663,15 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
-      '@homarr/env':
-        specifier: workspace:^0.1.0
-        version: link:../env
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -826,9 +826,9 @@ importers:
 
   packages/common:
     dependencies:
-      '@homarr/env':
+      '@homarr/core':
         specifier: workspace:^0.1.0
-        version: link:../env
+        version: link:../core
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -906,12 +906,12 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/cron-jobs':
         specifier: workspace:^0.1.0
         version: link:../cron-jobs
-      '@homarr/env':
-        specifier: workspace:^0.1.0
-        version: link:../env
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -1087,12 +1087,12 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
-      '@homarr/env':
-        specifier: workspace:^0.1.0
-        version: link:../env
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -1197,9 +1197,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
-      '@homarr/env':
+      '@homarr/core':
         specifier: workspace:^0.1.0
-        version: link:../env
+        version: link:../core
       dockerode:
         specifier: ^4.0.7
         version: 4.0.7
@@ -1493,11 +1493,8 @@ importers:
   packages/log:
     dependencies:
       '@homarr/core':
-        specifier: workspace:^
-        version: link:../core
-      '@homarr/env':
         specifier: workspace:^0.1.0
-        version: link:../env
+        version: link:../core
       superjson:
         specifier: 2.2.2
         version: 2.2.2

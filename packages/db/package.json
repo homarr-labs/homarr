@@ -40,8 +40,8 @@
   "dependencies": {
     "@auth/core": "^0.40.0",
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/core": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
-    "@homarr/env": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@mantine/core": "^8.1.3",
