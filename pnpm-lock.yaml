@@ -1223,31 +1223,6 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
-  packages/env:
-    dependencies:
-      '@t3-oss/env-nextjs':
-        specifier: ^0.13.8
-        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.76)
-      zod:
-        specifier: ^3.25.76
-        version: 3.25.76
-    devDependencies:
-      '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
-        version: link:../../tooling/eslint
-      '@homarr/prettier-config':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/prettier
-      '@homarr/tsconfig':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/typescript
-      eslint:
-        specifier: ^9.31.0
-        version: 9.31.0
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
-
   packages/form:
     dependencies:
       '@homarr/common':
