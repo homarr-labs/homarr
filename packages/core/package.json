@@ -1,11 +1,12 @@
 {
-  "name": "@homarr/redis",
+  "name": "@homarr/core",
   "version": "0.1.0",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts"
+    "./infrastructure/redis": "./src/infrastructure/redis/client.ts",
+    ".": "./src/index.ts"
   },
   "typesVersions": {
     "*": {
@@ -22,13 +23,9 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@homarr/common": "workspace:^",
-    "@homarr/core": "workspace:^",
-    "@homarr/db": "workspace:^",
-    "@homarr/definitions": "workspace:^",
-    "@homarr/log": "workspace:^",
+    "@t3-oss/env-nextjs": "^0.13.8",
     "ioredis": "5.6.1",
-    "superjson": "2.2.2"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
