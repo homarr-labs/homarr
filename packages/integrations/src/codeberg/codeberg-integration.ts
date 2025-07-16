@@ -61,7 +61,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     const details = await this.getDetailsAsync(owner, name);
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
-      return fetchWithTrustedCertificatesAsync(
+      return await fetchWithTrustedCertificatesAsync(
         this.url(`/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/releases`),
         { headers },
       );
