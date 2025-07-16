@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { env as commonEnv } from "@homarr/common/env";
-import { createEnv } from "@homarr/env";
+import { createEnv } from "@homarr/core/infrastructure/env";
 
 const drivers = {
   betterSqlite3: "better-sqlite3",

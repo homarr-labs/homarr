@@ -25,8 +25,15 @@ envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 nginx -g 'daemon off;' &
 NGINX_PID=$!
 
-redis-server /app/redis.conf &
-REDIS_PID=$!
+if [ $REDIS_IS_EXTERNAL = "true" ]; then
+    echo "Using external Redis server at redis://$REDIS_HOST:$REDIS_PORT"
+else
+    echo "Starting internal Redis server"
+    redis-server /app/redis.conf &
+    REDIS_PID=$!
+fi
+
+
 
 node apps/tasks/tasks.cjs &
 TASKS_PID=$!

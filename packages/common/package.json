@@ -27,7 +27,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@homarr/env": "workspace:^0.1.0",
+    "@homarr/core": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "dayjs": "^1.11.13",

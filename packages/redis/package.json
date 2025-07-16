@@ -23,6 +23,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^",
+    "@homarr/core": "workspace:^",
     "@homarr/db": "workspace:^",
     "@homarr/definitions": "workspace:^",
     "@homarr/log": "workspace:^",

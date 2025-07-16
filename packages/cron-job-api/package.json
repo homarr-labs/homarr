@@ -26,8 +26,8 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/core": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
-    "@homarr/env": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@tanstack/react-query": "^5.83.0",
     "@trpc/client": "^11.4.3",
