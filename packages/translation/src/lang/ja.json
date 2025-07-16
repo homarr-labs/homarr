@@ -2309,6 +2309,7 @@
       "openProjectPage": "プロジェクトページを開く",
       "openReleasePage": "リリースページを開く",
       "releaseDescription": "リリースの説明",
+      "projectDescription": "",
       "created": "作成日",
       "error": {
         "label": "エラー",

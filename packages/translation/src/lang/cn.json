@@ -2309,6 +2309,7 @@
       "openProjectPage": "打开项目页面",
       "openReleasePage": "打开发布页面",
       "releaseDescription": "发布说明",
+      "projectDescription": "",
       "created": "已创建",
       "error": {
         "label": "错误",
