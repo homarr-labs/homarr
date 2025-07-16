@@ -766,6 +766,8 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
 const containerImageToProviderKind: Record<string, IntegrationKind> = {
   "ghcr.io": "github",
   "docker.io": "dockerHub",
+  "lscr.io": "linuxServerIO",
+  "quay.io": "quay",
 };
 
 const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersionFilter | undefined => {
