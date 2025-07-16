@@ -1360,7 +1360,7 @@ importers:
         version: 5.0.2
       eslint:
         specifier: ^9.29.0
-        version: 9.29.0
+        version: 9.31.0
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
