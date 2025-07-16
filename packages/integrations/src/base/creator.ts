@@ -4,7 +4,9 @@ import type { Integration as DbIntegration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
+import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { DashDotIntegration } from "../dashdot/dashdot-integration";
+import { DockerHubIntegration } from "../docker-hub/docker-hub-integration";
 import { Aria2Integration } from "../download-client/aria2/aria2-integration";
 import { DelugeIntegration } from "../download-client/deluge/deluge-integration";
 import { NzbGetIntegration } from "../download-client/nzbget/nzbget-integration";
@@ -12,6 +14,8 @@ import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorre
 import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { EmbyIntegration } from "../emby/emby-integration";
+import { GithubIntegration } from "../github/github-integration";
+import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
@@ -22,6 +26,7 @@ import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration"
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
 import { MockIntegration } from "../mock/mock-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
+import { NPMIntegration } from "../npm/npm-integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
@@ -94,6 +99,11 @@ export const integrationCreators = {
   emby: EmbyIntegration,
   nextcloud: NextcloudIntegration,
   unifiController: UnifiControllerIntegration,
+  github: GithubIntegration,
+  dockerHub: DockerHubIntegration,
+  gitlab: GitlabIntegration,
+  npm: NPMIntegration,
+  codeberg: CodebergIntegration,
   ntfy: NTFYIntegration,
   mock: MockIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;

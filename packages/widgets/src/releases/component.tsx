@@ -18,14 +18,13 @@ import ReactMarkdown from "react-markdown";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { isDateWithin, splitToChunksWithNItems } from "@homarr/common";
+import { isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
-import { Providers } from "./releases-providers";
-import type { ReleasesRepositoryResponse } from "./releases-repository";
+import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
 
 const formatRelativeDate = (value: string): string => {
   const isMonths = /\d+m/g.test(value);
@@ -38,7 +37,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const now = useNow();
   const formatter = useFormatter();
   const board = useRequiredBoard();
-  const [expandedRepository, setExpandedRepository] = useState({ providerKey: "", identifier: "" });
+  const [expandedRepositoryId, setExpandedRepositoryId] = useState<string | null>(null);
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
   const relativeDateOptions = useMemo(
     () => ({
@@ -48,12 +47,38 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     [options.newReleaseWithin, options.staleReleaseWithin],
   );
 
-  const batchedRepositories = useMemo(() => splitToChunksWithNItems(options.repositories, 5), [options.repositories]);
+  // Group repositories by integration
+  const groupedRepositories = useMemo(() => {
+    return options.repositories.reduce(
+      (acc, repo) => {
+        const key = repo.providerIntegrationId;
+        if (!key) return acc;
+
+        acc[key] ??= [];
+        acc[key].push(repo);
+
+        return acc;
+      },
+      {} as Record<string, ReleasesRepository[]>,
+    );
+  }, [options.repositories]);
+
+  // For each group, split into chunks of 5
+  const batchedRepositories = useMemo(() => {
+    return Object.entries(groupedRepositories).flatMap(([integrationId, group]) =>
+      splitToChunksWithNItems(group, 5).map((chunk) => ({
+        integrationId,
+        repositories: chunk,
+      })),
+    );
+  }, [groupedRepositories]);
+
   const [results] = clientApi.useSuspenseQueries((t) =>
-    batchedRepositories.flatMap((chunk) =>
+    batchedRepositories.flatMap(({ integrationId, repositories }) =>
       t.widget.releases.getLatest({
-        repositories: chunk.map((repository) => ({
-          providerKey: repository.providerKey,
+        integrationId,
+        repositories: repositories.map((repository) => ({
+          id: repository.id,
           identifier: repository.identifier,
           versionFilter: repository.versionFilter,
         })),
@@ -62,41 +87,56 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   );
 
   const repositories = useMemo(() => {
-    const formattedResults = results
-      .flat()
-      .map(({ data }) => {
-        if (data === undefined) return undefined;
+    const formattedResults = options.repositories
+      .map((repository) => {
+        if (repository.providerIntegrationId === undefined) {
+          return {
+            ...repository,
+            isNewRelease: false,
+            isStaleRelease: false,
+            latestReleaseAt: undefined,
+            error: {
+              code: "noProviderSeleceted",
+            },
+          };
+        }
 
-        const repository = options.repositories.find(
-          (repository) => repository.providerKey === data.providerKey && repository.identifier === data.identifier,
-        );
+        const response = results.flat().find(({ data }) => data.id === repository.id)?.data;
 
-        if (repository === undefined) return undefined;
+        if (response === undefined)
+          return {
+            ...repository,
+            isNewRelease: false,
+            isStaleRelease: false,
+            latestReleaseAt: undefined,
+            error: {
+              code: "noProviderResponse",
+            },
+          };
 
         return {
           ...repository,
-          ...data,
+          ...response,
           isNewRelease:
-            relativeDateOptions.newReleaseWithin !== "" && data.latestReleaseAt
-              ? isDateWithin(data.latestReleaseAt, relativeDateOptions.newReleaseWithin)
+            relativeDateOptions.newReleaseWithin !== "" && response.latestReleaseAt
+              ? isDateWithin(response.latestReleaseAt, relativeDateOptions.newReleaseWithin)
               : false,
           isStaleRelease:
-            relativeDateOptions.staleReleaseWithin !== "" && data.latestReleaseAt
-              ? !isDateWithin(data.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
+            relativeDateOptions.staleReleaseWithin !== "" && response.latestReleaseAt
+              ? !isDateWithin(response.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
               : false,
         };
       })
       .filter(
         (repository) =>
-          repository !== undefined &&
-          (repository.error !== undefined ||
-            !options.showOnlyHighlighted ||
-            repository.isNewRelease ||
-            repository.isStaleRelease),
+          repository.error !== undefined ||
+          !options.showOnlyHighlighted ||
+          repository.isNewRelease ||
+          repository.isStaleRelease,
       )
       .sort((repoA, repoB) => {
-        if (repoA?.latestReleaseAt === undefined) return 1;
-        if (repoB?.latestReleaseAt === undefined) return -1;
+        if (repoA.latestReleaseAt === undefined) return -1;
+        if (repoB.latestReleaseAt === undefined) return 1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
       }) as ReleasesRepositoryResponse[];
 
@@ -115,34 +155,24 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   ]);
 
   const toggleExpandedRepository = useCallback(
-    (repository: ReleasesRepositoryResponse) => {
-      if (
-        expandedRepository.providerKey === repository.providerKey &&
-        expandedRepository.identifier === repository.identifier
-      ) {
-        setExpandedRepository({ providerKey: "", identifier: "" });
-      } else {
-        setExpandedRepository({ providerKey: repository.providerKey, identifier: repository.identifier });
-      }
-    },
-    [expandedRepository],
+    (repository: ReleasesRepositoryResponse) =>
+      setExpandedRepositoryId(expandedRepositoryId === repository.id ? "" : repository.id),
+    [expandedRepositoryId],
   );
 
   return (
     <Stack gap={0} className="releases">
       {repositories.map((repository: ReleasesRepositoryResponse) => {
-        const isActive =
-          expandedRepository.providerKey === repository.providerKey &&
-          expandedRepository.identifier === repository.identifier;
+        const isActive = expandedRepositoryId === repository.id;
         const hasError = repository.error !== undefined;
 
         return (
           <Stack
-            key={`${repository.providerKey}.${repository.identifier}`}
+            key={repository.id}
             className={combineClasses(
               "releases-repository",
               // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              `releases-repository-${repository.providerKey}-${repository.name || repository.identifier.replace(/[^a-zA-Z0-9]/g, "_")}`,
+              `releases-repository-${repository.integration?.name ?? "error"}-${repository.name || repository.identifier.replace(/[^a-zA-Z0-9]/g, "_")}`,
               classes.releasesRepository,
             )}
             gap={0}
@@ -156,7 +186,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             >
               <MaskedOrNormalImage
                 className="releases-repository-header-icon"
-                imageUrl={repository.iconUrl ?? Providers[repository.providerKey].iconUrl}
+                imageUrl={repository.iconUrl ?? repository.integration?.iconUrl}
                 hasColor={hasIconColor}
                 style={{
                   width: "1em",
@@ -471,20 +501,27 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             {repository.identifier}
           </Text>
 
-          <Group className="releases-repository-expanded-header-provider-wrapper" gap={5} align="center">
-            <MaskedOrNormalImage
-              className="releases-repository-expanded-header-provider-icon"
-              imageUrl={Providers[repository.providerKey].iconUrl}
-              hasColor={hasIconColor}
-              style={{
-                width: "1em",
-                aspectRatio: "1/1",
-              }}
-            />
-            <Text className="releases-repository-expanded-header-provider-name" size="xs" c="iconColor" ff="monospace">
-              {Providers[repository.providerKey].name}
-            </Text>
-          </Group>
+          {repository.integration && (
+            <Group className="releases-repository-expanded-header-provider-wrapper" gap={5} align="center">
+              <MaskedOrNormalImage
+                className="releases-repository-expanded-header-provider-icon"
+                imageUrl={repository.integration.iconUrl}
+                hasColor={hasIconColor}
+                style={{
+                  width: "1em",
+                  aspectRatio: "1/1",
+                }}
+              />
+              <Text
+                className="releases-repository-expanded-header-provider-name"
+                size="xs"
+                c="iconColor"
+                ff="monospace"
+              >
+                {repository.integration.name}
+              </Text>
+            </Group>
+          )}
         </Group>
 
         {repository.createdAt && (
@@ -531,27 +568,43 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
               c="red"
               style={{ whiteSpace: "pre-wrap" }}
             >
-              {repository.error.code ? t(`error.options.${repository.error.code}` as never) : repository.error.message}
+              {repository.error.code ? t(`error.messages.${repository.error.code}` as never) : repository.error.message}
             </Text>
           </>
         )}
-        {repository.releaseDescription && (
-          <>
-            <Divider className="releases-repository-expanded-description-divider" my={10} mx="30%" />
-            <Title className="releases-repository-expanded-description-title" order={4} ta="center">
-              {t("releaseDescription")}
-            </Title>
-            <Text
-              className={combineClasses("releases-repository-expanded-description-text", classes.releasesDescription)}
-              component="div"
-              size="xs"
-              ff="monospace"
-            >
-              <ReactMarkdown skipHtml>{repository.releaseDescription}</ReactMarkdown>
-            </Text>
-          </>
+
+        {repository.releaseDescription ? (
+          <Description title={t("releaseDescription")} description={repository.releaseDescription} />
+        ) : (
+          <Description title={t("projectDescription")} description={repository.projectDescription ?? null} />
         )}
       </Stack>
+    </>
+  );
+};
+
+interface DescriptionProps {
+  title: string;
+  description: string | null;
+}
+
+const Description = ({ title, description }: DescriptionProps) => {
+  if (isNullOrWhitespace(description)) return null;
+
+  return (
+    <>
+      <Divider className="releases-repository-expanded-description-divider" my={10} mx="30%" />
+      <Title className="releases-repository-expanded-description-title" order={4} ta="center">
+        {title}
+      </Title>
+      <Text
+        className={combineClasses("releases-repository-expanded-description-text", classes.releasesDescription)}
+        component="div"
+        size="xs"
+        ff="monospace"
+      >
+        <ReactMarkdown skipHtml>{description}</ReactMarkdown>
+      </Text>
     </>
   );
 };

@@ -937,6 +937,10 @@
           "label": "Område",
           "newLabel": "Nytt område"
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "",
           "newLabel": ""
@@ -1502,7 +1506,8 @@
         "rows": "Rader",
         "width": "Bredde",
         "height": "Høyde"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -2287,7 +2292,11 @@
           "example": {
             "label": ""
           },
-          "invalid": ""
+          "invalid": "",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "",
@@ -2300,11 +2309,16 @@
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
+      "projectDescription": "",
       "created": "",
       "error": {
         "label": "",
-        "options": {
-          "noMatchingVersion": ""
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2554,6 +2568,9 @@
       },
       "iconColor": {
         "label": "Ikonfarge"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Tilpasset css for denne tavlen",
@@ -3077,7 +3094,8 @@
           "status": {
             "idle": "Inaktiv",
             "running": "Kjører",
-            "error": "Feil"
+            "error": "Feil",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3138,6 +3156,21 @@
               "label": ""
             },
             "dockerContainers": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": ""
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "interval": {
               "label": ""
             }
           }

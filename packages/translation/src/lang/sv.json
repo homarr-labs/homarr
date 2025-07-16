@@ -937,6 +937,10 @@
           "label": "",
           "newLabel": ""
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "",
           "newLabel": ""
@@ -1502,7 +1506,8 @@
         "rows": "Rader",
         "width": "Bredd",
         "height": "Höjd"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",
@@ -2287,7 +2292,11 @@
           "example": {
             "label": ""
           },
-          "invalid": ""
+          "invalid": "",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "",
@@ -2300,11 +2309,16 @@
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
+      "projectDescription": "",
       "created": "",
       "error": {
         "label": "",
-        "options": {
-          "noMatchingVersion": ""
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2554,6 +2568,9 @@
       },
       "iconColor": {
         "label": "Färg på ikoner"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "",
@@ -3077,7 +3094,8 @@
           "status": {
             "idle": "",
             "running": "Körs",
-            "error": "Fel"
+            "error": "Fel",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3138,6 +3156,21 @@
               "label": ""
             },
             "dockerContainers": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": ""
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "interval": {
               "label": ""
             }
           }

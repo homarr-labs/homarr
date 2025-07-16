@@ -6,21 +6,24 @@ import Link from "next/link";
 import { Flex, Group, Menu, ScrollArea, Text, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
-import { env } from "@homarr/common/env";
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { IntegrationAvatar } from "@homarr/ui";
 
-export const IntegrationCreateDropdownContent = () => {
+interface IntegrationCreateDropdownContentProps {
+  enableMockIntegration: boolean;
+}
+
+export const IntegrationCreateDropdownContent = ({ enableMockIntegration }: IntegrationCreateDropdownContentProps) => {
   const t = useI18n();
   const [search, setSearch] = useState("");
 
   const filteredKinds = useMemo(() => {
     return integrationKinds
-      .filter((kind) => env.NODE_ENV === "development" || kind !== "mock")
+      .filter((kind) => enableMockIntegration || kind !== "mock")
       .filter((kind) => getIntegrationName(kind).toLowerCase().includes(search.toLowerCase().trim()))
       .sort((kindA, kindB) => getIntegrationName(kindA).localeCompare(getIntegrationName(kindB)));
-  }, [search]);
+  }, [search, enableMockIntegration]);
 
   const handleSearch = React.useCallback(
     (event: ChangeEvent<HTMLInputElement>) => setSearch(event.target.value),

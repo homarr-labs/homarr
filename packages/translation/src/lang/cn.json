@@ -937,9 +937,13 @@
           "label": "领域",
           "newLabel": "新领域"
         },
+        "personalAccessToken": {
+          "label": "个人访问令牌",
+          "newLabel": "新建个人访问令牌"
+        },
         "topic": {
-          "label": "",
-          "newLabel": ""
+          "label": "主题",
+          "newLabel": "新主题"
         }
       }
     },
@@ -1502,7 +1506,8 @@
         "rows": "行数",
         "width": "宽度",
         "height": "高度"
-      }
+      },
+      "placeholder": "开始写笔记"
     },
     "iframe": {
       "name": "iFrame",
@@ -2093,8 +2098,8 @@
         "processing": "处理中",
         "partiallyAvailable": "部分",
         "available": "可用",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "已列入黑名单",
+        "deleted": "已删除"
       },
       "status": {
         "pending": "待处理",
@@ -2287,7 +2292,11 @@
           "example": {
             "label": "示例"
           },
-          "invalid": "仓库定义无效，请检查值"
+          "invalid": "仓库定义无效，请检查值",
+          "noProvider": {
+            "label": "没有提供者",
+            "tooltip": "无法解析该提供者，请在导入镜像后手动设置"
+          }
         }
       },
       "not-found": "未找到",
@@ -2300,11 +2309,16 @@
       "openProjectPage": "打开项目页面",
       "openReleasePage": "打开发布页面",
       "releaseDescription": "发布说明",
+      "projectDescription": "",
       "created": "已创建",
       "error": {
         "label": "错误",
-        "options": {
-          "noMatchingVersion": "没有找到匹配的版本"
+        "messages": {
+          "invalidIdentifier": "无效标识符",
+          "noMatchingVersion": "没有找到匹配的版本",
+          "noReleasesFound": "没有发现发布信息",
+          "noProviderSeleceted": "没有选择提供者",
+          "noProviderResponse": "提供者没有响应"
         }
       }
     },
@@ -2365,9 +2379,9 @@
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "通知",
+      "description": "在集成中显示通知历史",
+      "noItems": "没有可显示的通知。",
       "option": {}
     }
   },
@@ -2554,6 +2568,9 @@
       },
       "iconColor": {
         "label": "图标颜色"
+      },
+      "clearColor": {
+        "label": "清除颜色"
       },
       "customCss": {
         "label": "自定义此面板的 css",
@@ -3077,7 +3094,8 @@
           "status": {
             "idle": "空闲",
             "running": "运行中",
-            "error": "错误"
+            "error": "错误",
+            "disabled": "禁用"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3135,10 +3153,25 @@
               "label": "网络控制器"
             },
             "refreshNotifications": {
-              "label": ""
+              "label": "更新通知"
             },
             "dockerContainers": {
               "label": "Docker 容器"
+            }
+          },
+          "interval": {
+            "seconds": "每 {interval, plural, =1 {秒} other {# 秒}}",
+            "minutes": "每 {interval, plural, =1 {分钟} other {# 分钟}}",
+            "hours": "每 {interval, plural, =1 {小时} other {# 小时}}",
+            "midnight": "每日午夜",
+            "weeklyMonday": "每周一"
+          },
+          "settings": {
+            "title": "{jobName} 任务设置"
+          },
+          "field": {
+            "interval": {
+              "label": "计划时间间隔"
             }
           }
         },

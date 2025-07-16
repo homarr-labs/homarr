@@ -13,11 +13,12 @@ import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/session";
+import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
+import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
 import type { IMediaReleasesIntegration, MediaRelease } from "../types";
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
-export class JellyfinIntegration extends Integration implements IMediaReleasesIntegration {
+export class JellyfinIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
   private readonly jellyfin: Jellyfin = new Jellyfin({
     clientInfo: {
       name: "Homarr",

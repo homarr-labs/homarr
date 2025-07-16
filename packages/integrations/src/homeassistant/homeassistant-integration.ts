@@ -5,9 +5,10 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { ISmartHomeIntegration } from "../interfaces/smart-home/smart-home-integration";
 import { entityStateSchema } from "./homeassistant-types";
 
-export class HomeAssistantIntegration extends Integration {
+export class HomeAssistantIntegration extends Integration implements ISmartHomeIntegration {
   public async getEntityStateAsync(entityId: string) {
     try {
       const response = await this.getAsync(`/api/states/${entityId}`);
@@ -15,6 +16,7 @@ export class HomeAssistantIntegration extends Integration {
       if (!response.ok) {
         logger.warn(`Response did not indicate success`);
         return {
+          success: false as const,
           error: "Response did not indicate success",
         };
       }

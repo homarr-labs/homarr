@@ -25,17 +25,17 @@
     "@homarr/log": "workspace:^",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "dotenv": "^16.6.0",
+    "dotenv": "^17.2.0",
     "tsx": "4.20.3",
-    "ws": "^8.18.2"
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/ws": "^8.18.1",
-    "esbuild": "^0.25.5",
-    "eslint": "^9.29.0",
+    "esbuild": "^0.25.6",
+    "eslint": "^9.31.0",
     "prettier": "^3.6.2",
     "typescript": "^5.8.3"
   }

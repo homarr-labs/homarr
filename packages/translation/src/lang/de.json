@@ -937,6 +937,10 @@
           "label": "Bereich",
           "newLabel": "Neuer Bereich"
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "Thema",
           "newLabel": "Neues Thema erstellen"
@@ -1502,7 +1506,8 @@
         "rows": "Zeilen",
         "width": "Breite",
         "height": "Höhe"
-      }
+      },
+      "placeholder": "Mit dem Schreiben von Notizen beginnen"
     },
     "iframe": {
       "name": "iFrame",
@@ -2287,7 +2292,11 @@
           "example": {
             "label": "Beispiel"
           },
-          "invalid": "Ungültige Repository Definition, bitte überprüfen Sie die Werte"
+          "invalid": "Ungültige Repository Definition, bitte überprüfen Sie die Werte",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "Nicht gefunden",
@@ -2300,11 +2309,16 @@
       "openProjectPage": "Projektseite öffnen",
       "openReleasePage": "Release Seite öffnen",
       "releaseDescription": "Release Beschreibung",
+      "projectDescription": "",
       "created": "Erstellt",
       "error": {
         "label": "Fehler",
-        "options": {
-          "noMatchingVersion": "Keine passende Version gefunden"
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "Keine passende Version gefunden",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2554,6 +2568,9 @@
       },
       "iconColor": {
         "label": "Symbolfarbe"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Benutzerdefinierte css für dieses Board",
@@ -3077,7 +3094,8 @@
           "status": {
             "idle": "Inaktiv",
             "running": "Wird ausgeführt",
-            "error": "Fehler"
+            "error": "Fehler",
+            "disabled": "Deaktiviert"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3139,6 +3157,21 @@
             },
             "dockerContainers": {
               "label": "Docker Container"
+            }
+          },
+          "interval": {
+            "seconds": "Alle(r) {interval, plural, =1 {Sekunde} other {# Sekunden}}",
+            "minutes": "Alle(r) {interval, plural, one {}=1 {Minute} other {# Minuten}}",
+            "hours": "Alle(r) {interval, plural, one {}=1 {Stunde} other {# Stunden}}",
+            "midnight": "Jeden Tag um Mitternacht",
+            "weeklyMonday": "Jede Woche am Montag"
+          },
+          "settings": {
+            "title": "Aufgabeneinstellungen für {jobName}"
+          },
+          "field": {
+            "interval": {
+              "label": "Zeitplanintervall"
             }
           }
         },

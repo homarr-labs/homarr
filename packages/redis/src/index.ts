@@ -12,10 +12,6 @@ export {
   createGetSetChannel,
 } from "./lib/channel";
 
-export const exampleChannel = createSubPubChannel<{ message: string }>("example");
-export const pingChannel = createSubPubChannel<{ url: string; statusCode: number } | { url: string; error: string }>(
-  "ping",
-);
 export const pingUrlChannel = createListChannel<string>("ping-url");
 
 export const homeAssistantEntityState = createSubPubChannel<{

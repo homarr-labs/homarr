@@ -937,6 +937,10 @@
           "label": "Realm",
           "newLabel": "New realm"
         },
+        "personalAccessToken": {
+          "label": "Personal Access Token",
+          "newLabel": "New Personal Access Token"
+        },
         "topic": {
           "label": "Topic",
           "newLabel": "New topic"
@@ -1502,7 +1506,8 @@
         "rows": "Rows",
         "width": "Width",
         "height": "Height"
-      }
+      },
+      "placeholder": "Start writing your notes"
     },
     "iframe": {
       "name": "iFrame",
@@ -2316,7 +2321,11 @@
           "example": {
             "label": "Example"
           },
-          "invalid": "Invalid repository definition, please check the values"
+          "invalid": "Invalid repository definition, please check the values",
+          "noProvider": {
+            "label": "No Provider",
+            "tooltip": "The provider could not be parsed, please manually set it after importing the images"
+          }
         }
       },
       "not-found": "Not Found",
@@ -2329,11 +2338,16 @@
       "openProjectPage": "Open Project Page",
       "openReleasePage": "Open Release Page",
       "releaseDescription": "Release Description",
+      "projectDescription": "Project Description",
       "created": "Created",
       "error": {
         "label": "Error",
-        "options": {
-          "noMatchingVersion": "No matching version found"
+        "messages": {
+          "invalidIdentifier": "Invalid identifier",
+          "noMatchingVersion": "No matching version found",
+          "noReleasesFound": "No releases found",
+          "noProviderSeleceted": "No provider selected",
+          "noProviderResponse": "No response from provider"
         }
       }
     },
@@ -2583,6 +2597,9 @@
       },
       "iconColor": {
         "label": "Icon color"
+      },
+      "clearColor": {
+        "label": "Clear color"
       },
       "customCss": {
         "label": "Custom css for this board",
@@ -3106,7 +3123,8 @@
           "status": {
             "idle": "Idle",
             "running": "Running",
-            "error": "Error"
+            "error": "Error",
+            "disabled": "Disabled"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3168,6 +3186,21 @@
             },
             "dockerContainers": {
               "label": "Docker containers"
+            }
+          },
+          "interval": {
+            "seconds": "Every {interval, plural, =1 {second} other {# seconds}}",
+            "minutes": "Every {interval, plural, =1 {minute} other {# minutes}}",
+            "hours": "Every {interval, plural, =1 {hour} other {# hours}}",
+            "midnight": "Every day at midnight",
+            "weeklyMonday": "Every week on monday"
+          },
+          "settings": {
+            "title": "Task settings for {jobName}"
+          },
+          "field": {
+            "interval": {
+              "label": "Schedule interval"
             }
           }
         },

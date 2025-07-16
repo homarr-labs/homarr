@@ -1,4 +1,10 @@
-import type { MediaRelease } from "../../interfaces/media-releases";
+import type { IMediaReleasesIntegration, MediaRelease } from "../../interfaces/media-releases";
+
+export class MediaReleasesMockService implements IMediaReleasesIntegration {
+  public async getMediaReleasesAsync(): Promise<MediaRelease[]> {
+    return await Promise.resolve(mockMediaReleases);
+  }
+}
 
 export const mockMediaReleases: MediaRelease[] = [
   {
