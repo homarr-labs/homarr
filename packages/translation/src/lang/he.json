@@ -2309,6 +2309,7 @@
       "openProjectPage": "פתח את דף הפרויקט",
       "openReleasePage": "פתח את דף הגרסאות",
       "releaseDescription": "תיאור הגרסה",
+      "projectDescription": "",
       "created": "נוצר",
       "error": {
         "label": "שגיאה",

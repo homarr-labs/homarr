@@ -938,8 +938,8 @@
           "newLabel": "Yeni erişim alanı"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Kişisel Erişim Anahtarı",
+          "newLabel": "Yeni Kişisel Erişim Anahtarı"
         },
         "topic": {
           "label": "Konu",
@@ -2294,8 +2294,8 @@
           },
           "invalid": "Geçersiz depo tanımı, lütfen değerleri kontrol edin",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "Sağlayıcı Bulunamadı",
+            "tooltip": "Sağlayıcı çözümlenemedi, lütfen görselleri içe aktardıktan sonra elle ayarlayın"
           }
         }
       },
@@ -2309,15 +2309,16 @@
       "openProjectPage": "Proje Sayfasını Aç",
       "openReleasePage": "Sürüm Sayfasını Aç",
       "releaseDescription": "Sürüm Açıklaması",
+      "projectDescription": "Proje Açıklaması",
       "created": "Oluşturuldu",
       "error": {
         "label": "Hata",
         "messages": {
-          "invalidIdentifier": "",
+          "invalidIdentifier": "Geçersiz tanımlayıcı",
           "noMatchingVersion": "Eşleşen sürüm bulunamadı",
-          "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noReleasesFound": "Hiçbir sürüm bulunamadı",
+          "noProviderSeleceted": "Hiçbir sağlayıcı seçilmedi",
+          "noProviderResponse": "Sağlayıcıdan yanıt alınamadı"
         }
       }
     },
@@ -2569,7 +2570,7 @@
         "label": "Simge rengi"
       },
       "clearColor": {
-        "label": ""
+        "label": "Rengi Temizle"
       },
       "customCss": {
         "label": "Bu panel için özel css",

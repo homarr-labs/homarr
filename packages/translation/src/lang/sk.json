@@ -2309,6 +2309,7 @@
       "openProjectPage": "Otvorte stránku projektu",
       "openReleasePage": "Otvorte stránku vydania",
       "releaseDescription": "Popis vydania",
+      "projectDescription": "",
       "created": "Vytvorené",
       "error": {
         "label": "Chyba",
