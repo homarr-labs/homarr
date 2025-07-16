@@ -613,20 +613,18 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   const containersImages: ReleasesRepositoryImport[] = useMemo(
     () =>
       docker.data?.containers.reduce<ReleasesRepositoryImport[]>((acc, containerImage) => {
-        const imageParts = containerImage.image.split("/");
-        const source = imageParts.length > 1 ? imageParts[0] : "docker.io";
-        const identifierImage = imageParts.length > 1 ? imageParts[1] : imageParts[0];
+        const [maybeSource, maybeIdentifierAndVersion] = containerImage.image.split(/\/(.*)/);
+        const hasSource = maybeSource && maybeSource in containerImageToProviderKind;
+        const source = hasSource ? maybeSource : "docker.io";
+        const [identifier, version] =
+          hasSource && maybeIdentifierAndVersion
+            ? maybeIdentifierAndVersion.split(":")
+            : containerImage.image.split(":");
 
-        if (!source || !identifierImage) return acc;
+        if (!identifier) return acc;
 
-        const providerKey = source in containerImageToProviderKind ? containerImageToProviderKind[source] : "dockerHub";
-        const integrationId = Object.values(innerProps.integrations).find(
-          (integration) => integration.kind === providerKey,
-        )?.id;
-
-        const [identifier, version] = identifierImage.split(":");
-
-        if (!identifier || !integrationId) return acc;
+        const providerKeyList = containerImageToProviderKind[source] ?? ["dockerHub"];
+        const integrationId = findIntegrationId(innerProps.integrations, providerKeyList, identifier);
 
         if (acc.some((item) => item.providerIntegrationId === integrationId && item.identifier === identifier))
           return acc;
@@ -763,11 +761,11 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   size: "xl",
 });
 
-const containerImageToProviderKind: Record<string, IntegrationKind> = {
-  "ghcr.io": "github",
-  "docker.io": "dockerHub",
-  "lscr.io": "linuxServerIO",
-  "quay.io": "quay",
+const containerImageToProviderKind: Record<string, IntegrationKind[]> = {
+  "ghcr.io": ["github", "githubPackages"],
+  "docker.io": ["dockerHub"],
+  "lscr.io": ["linuxServerIO"],
+  "quay.io": ["quay"],
 };
 
 const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersionFilter | undefined => {
@@ -782,4 +780,35 @@ const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersion
     precision: version.split(".").length,
     suffix,
   };
+};
+
+const findIntegrationId = (
+  integrations: Record<string, Integration>,
+  providerKeyList: IntegrationKind[],
+  identifier: string,
+): string | undefined => {
+  if (providerKeyList.length === 1)
+    return Object.values(integrations).find((integration) => integration.kind === providerKeyList[0])?.id;
+
+  for (const providerKey of providerKeyList) {
+    const integration = Object.values(integrations).find((integration) => integration.kind === providerKey);
+
+    if (!integration?.id) continue;
+
+    const [results] = clientApi.widget.releases.getLatest.useSuspenseQuery({
+      integrationId: integration.id,
+      repositories: [
+        {
+          id: createId(),
+          identifier,
+        },
+      ],
+    });
+
+    if (results.length > 0 && results[0]?.data.latestRelease) {
+      return integration.id;
+    }
+  }
+
+  return undefined;
 };
