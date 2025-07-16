@@ -2309,6 +2309,7 @@
       "openProjectPage": "Åbn Projektside",
       "openReleasePage": "Åbn Udgivelsesside",
       "releaseDescription": "Udgivelse Beskrivelse",
+      "projectDescription": "",
       "created": "Oprettet",
       "error": {
         "label": "Fejl",

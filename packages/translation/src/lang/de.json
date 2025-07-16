@@ -2309,6 +2309,7 @@
       "openProjectPage": "Projektseite öffnen",
       "openReleasePage": "Release Seite öffnen",
       "releaseDescription": "Release Beschreibung",
+      "projectDescription": "",
       "created": "Erstellt",
       "error": {
         "label": "Fehler",
