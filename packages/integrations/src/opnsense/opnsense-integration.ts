@@ -169,13 +169,19 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
           if (!line.startsWith("data:")) {
             continue;
           }
-          const data = line.substring(5).trim();
-          const cpuValues = opnsenseCPUSchema.parse(JSON.parse(data));
+            if (loopCounter < 2) {
+              continue;
+            }
+            const data = line.substring(5).trim();
+            const cpuValues = opnsenseCPUSchema.parse(JSON.parse(data));
 
-          return {
-            ...cpuValues,
-          };
-        }
+            return {
+              ...cpuValues,
+            };
+
+          }
+
+
       }
 
       throw new Error("No valid CPU data found.");
