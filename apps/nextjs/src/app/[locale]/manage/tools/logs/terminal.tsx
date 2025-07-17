@@ -8,22 +8,29 @@ import { Terminal } from "@xterm/xterm";
 
 import { clientApi } from "@homarr/api/client";
 
+import { useLogContext } from "./log-context";
 import classes from "./terminal.module.css";
 
 export const TerminalComponent = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const { activeLevels } = useLogContext();
 
   const terminalRef = useRef<Terminal>(null);
-  clientApi.log.subscribe.useSubscription(undefined, {
-    onData(data) {
-      terminalRef.current?.writeln(`${data.timestamp} ${data.level} ${data.message}`);
-      terminalRef.current?.refresh(0, terminalRef.current.rows - 1);
+  clientApi.log.subscribe.useSubscription(
+    {
+      levels: activeLevels,
     },
-    onError(err) {
-      // This makes sense as logging might cause an infinite loop
-      alert(err);
+    {
+      onData(data) {
+        terminalRef.current?.writeln(data.message);
+        terminalRef.current?.refresh(0, terminalRef.current.rows - 1);
+      },
+      onError(err) {
+        // This makes sense as logging might cause an infinite loop
+        alert(err);
+      },
     },
-  });
+  );
 
   useEffect(() => {
     if (!ref.current) {
