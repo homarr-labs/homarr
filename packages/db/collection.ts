@@ -88,12 +88,15 @@ export const createDbInsertCollectionWithoutTransaction = <TTableKey extends Tab
     ...collection,
     insertAllAsync: async (db: HomarrDatabase) => {
       switch (env.DB_DRIVER) {
-        case "better-sqlite3":
-          // For better-sqlite3, we need to use the synchronous insertAll method
-          insertAll(db);
+        case "mysql2":
+        case "postgresql":
+          // For mysql2 and postgresql, we can use the async insertAllAsync method
+          await insertAllAsync(db);
           return;
         default:
-          await insertAllAsync(db);
+          // For better-sqlite3, we need to use the synchronous insertAll method
+          // default assumes better-sqlite3. It's original implementation.
+          insertAll(db);
           break;
       }
     },
