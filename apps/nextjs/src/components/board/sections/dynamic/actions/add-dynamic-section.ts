@@ -1,5 +1,5 @@
 import { getBoardLayouts } from "@homarr/boards/context";
-import { createId } from "@homarr/db/client";
+import { createId } from "@homarr/common";
 
 import type { Board, DynamicSection, DynamicSectionLayout, EmptySection } from "~/app/[locale]/boards/_types";
 import { getFirstEmptyPosition } from "~/components/board/items/actions/empty-position";

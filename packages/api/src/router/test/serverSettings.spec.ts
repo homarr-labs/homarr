@@ -2,7 +2,7 @@ import SuperJSON from "superjson";
 import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
-import { createId } from "@homarr/db";
+import { createId } from "@homarr/common";
 import { serverSettings } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";

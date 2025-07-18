@@ -2,6 +2,9 @@ import { Redis } from "ioredis";
 import superjson from "superjson";
 import Transport from "winston-transport";
 
+const messageSymbol = Symbol.for("message");
+const levelSymbol = Symbol.for("level");
+
 //
 // Inherit from `winston-transport` so you can take advantage
 // of the base functionality and `.exceptions.handle()`.
@@ -12,7 +15,7 @@ export class RedisTransport extends Transport {
   /**
    * Log the info to the Redis channel
    */
-  log(info: { message: string; timestamp: string; level: string }, callback: () => void) {
+  log(info: { [messageSymbol]: string; [levelSymbol]: string }, callback: () => void) {
     setImmediate(() => {
       this.emit("logged", info);
     });
@@ -24,9 +27,8 @@ export class RedisTransport extends Transport {
       .publish(
         "pubSub:logging",
         superjson.stringify({
-          message: info.message,
-          timestamp: info.timestamp,
-          level: info.level,
+          message: info[messageSymbol],
+          level: info[levelSymbol],
         }),
       )
       .then(() => {

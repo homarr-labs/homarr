@@ -1,8 +1,9 @@
 import { z } from "zod";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
+import { createId } from "@homarr/common";
 import { generateSecureRandomToken } from "@homarr/common/server";
-import { createId, db, eq } from "@homarr/db";
+import { db, eq } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";

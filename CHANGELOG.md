@@ -1,3 +1,21 @@
+## [1.29.0](https://github.com/homarr-labs/homarr/compare/v1.28.1...v1.29.0) (2025-07-18)
+
+### Features
+
+* **logs:** add log level selection to tools ui ([#3565](https://github.com/homarr-labs/homarr/issues/3565)) ([c4e5c30](https://github.com/homarr-labs/homarr/commit/c4e5c3002bd1c746cee496b5ba6d19159104b7f8))
+* **releases-widget:** show project description when release description is missing ([#3635](https://github.com/homarr-labs/homarr/issues/3635)) ([47806c1](https://github.com/homarr-labs/homarr/commit/47806c180ebc960eb1731c02ec6af42156831bd0))
+
+### Bug Fixes
+
+* **deps:** update dependency drizzle-orm to ^0.44.3 ([#3629](https://github.com/homarr-labs/homarr/issues/3629)) ([e7012b6](https://github.com/homarr-labs/homarr/commit/e7012b6da496a0f4b7aad527d1d05cd03d0bfcda))
+* **deps:** update dependency eslint-config-prettier to ^10.1.7 ([#3651](https://github.com/homarr-labs/homarr/issues/3651)) ([1cc6ecb](https://github.com/homarr-labs/homarr/commit/1cc6ecbce29348cf891dd8cfc29d4238ff5f7f78))
+* **deps:** update dependency ldapts to v8.0.6 ([#3628](https://github.com/homarr-labs/homarr/issues/3628)) ([71dee5c](https://github.com/homarr-labs/homarr/commit/71dee5ca4bca04acc9c295c373d1209641ef3d99))
+* **deps:** update dependency swagger-ui-react to ^5.27.0 ([#3638](https://github.com/homarr-labs/homarr/issues/3638)) ([ee983e8](https://github.com/homarr-labs/homarr/commit/ee983e8241d2f32c1dcbbea4930b18442f32a5bf))
+* **deps:** update dependency typescript-eslint to ^8.37.0 ([#3631](https://github.com/homarr-labs/homarr/issues/3631)) ([d6ea8e8](https://github.com/homarr-labs/homarr/commit/d6ea8e8993d130a03592473744e74be7b4c54a79))
+* **deps:** update dependency undici to v7.12.0 ([#3650](https://github.com/homarr-labs/homarr/issues/3650)) ([cf0d2d3](https://github.com/homarr-labs/homarr/commit/cf0d2d3cdaf495d7786c45ba4c79d49f356c0e37))
+* **deps:** update nextjs monorepo to v15.4.1 ([#3632](https://github.com/homarr-labs/homarr/issues/3632)) ([39b025f](https://github.com/homarr-labs/homarr/commit/39b025f7633391c74aedeb4c4dca10d42fb3b4d8))
+* **deps:** update turbo monorepo to ^2.5.5 ([#3641](https://github.com/homarr-labs/homarr/issues/3641)) ([d4acb01](https://github.com/homarr-labs/homarr/commit/d4acb01efd6a9341fb5550a08def42d82c1f0b92))
+
 ## [1.28.1](https://github.com/homarr-labs/homarr/compare/v1.28.0...v1.28.1) (2025-07-12)
 
 ### Bug Fixes
