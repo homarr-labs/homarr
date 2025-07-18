@@ -139,17 +139,16 @@ test("schemas should match for postgresql", () => {
 
 
   objectEntries(sqliteSchema).forEach(([tableName, sqliteTable]) => {
+    expect(
+      Object.prototype.hasOwnProperty.call(postgresqlSchema, tableName),
+      `expect postgresql schema to have table named ${tableName}`
+    ).toBeTruthy();
+
+    const postgresqlTable = postgresqlSchema[tableName];
     Object.entries(sqliteTable).forEach(([columnName, sqliteColumn]: [string, object]) => {
       if (!("isUnique" in sqliteColumn)) return;
       if (!("uniqueName" in sqliteColumn)) return;
       if (!("primary" in sqliteColumn)) return;
-
-      expect(
-        Object.prototype.hasOwnProperty.call(postgresqlSchema, tableName),
-        `expect postgresql schema to have table named ${tableName}`
-      ).toBeTruthy();
-
-      const postgresqlTable = postgresqlSchema[tableName];
 
       const postgresqlColumn = postgresqlTable[columnName as keyof typeof postgresqlTable] as object;
       if (!("isUnique" in postgresqlColumn)) return;
@@ -170,11 +169,6 @@ test("schemas should match for postgresql", () => {
       ).toEqual(postgresqlColumn.primary);
     });
 
-    expect(
-      Object.prototype.hasOwnProperty.call(postgresqlSchema, tableName),
-      `expect postgresql schema to have table named ${tableName}`
-    ).toBeTruthy();
-    const postgresqlTable = postgresqlSchema[tableName];
 
     const sqliteForeignKeys = sqliteTable[Symbol.for("drizzle:SQLiteInlineForeignKeys") as keyof typeof sqliteTable] as
       | SqliteForeignKey[]
