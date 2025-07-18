@@ -938,8 +938,8 @@
           "newLabel": "Nyt realm"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Personlig adgangstoken",
+          "newLabel": "Ny Personlig adgangstoken"
         },
         "topic": {
           "label": "Emne",
@@ -1484,7 +1484,7 @@
         "image": "Integrer billede",
         "addTable": "Tilføj tabel",
         "deleteTable": "Slet tabel",
-        "colorCell": "Farvecelle",
+        "colorCell": "Farve Celle",
         "mergeCell": "Slå cellefletning til/fra",
         "addColumnLeft": "Tilføj kolonne før",
         "addColumnRight": "Tilføj kolonne efter",
@@ -1507,7 +1507,7 @@
         "width": "Bredde",
         "height": "Højde"
       },
-      "placeholder": ""
+      "placeholder": "Begynd at skrive dine noter"
     },
     "iframe": {
       "name": "indlejret dokument (iframe)",
@@ -2294,8 +2294,8 @@
           },
           "invalid": "Ugyldig repository definition, tjek venligst værdierne",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "Ingen Udbyder",
+            "tooltip": "Udbyderen kunne ikke fortolkes, angiv venligst det manuelt efter import af billederne"
           }
         }
       },
@@ -2309,15 +2309,16 @@
       "openProjectPage": "Åbn Projektside",
       "openReleasePage": "Åbn Udgivelsesside",
       "releaseDescription": "Udgivelse Beskrivelse",
+      "projectDescription": "",
       "created": "Oprettet",
       "error": {
         "label": "Fejl",
         "messages": {
-          "invalidIdentifier": "",
+          "invalidIdentifier": "Ugyldig identifikator",
           "noMatchingVersion": "Ingen matchende version fundet",
-          "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noReleasesFound": "Ingen udgivelser fundet",
+          "noProviderSeleceted": "Ingen udbyder valgt",
+          "noProviderResponse": "Intet svar fra udbyder"
         }
       }
     },
@@ -2569,7 +2570,7 @@
         "label": "Ikonfarve"
       },
       "clearColor": {
-        "label": ""
+        "label": "Ryd farve"
       },
       "customCss": {
         "label": "Brugerdefineret css for denne tavle",
@@ -3094,7 +3095,7 @@
             "idle": "Inaktiv",
             "running": "Kører",
             "error": "Fejl",
-            "disabled": ""
+            "disabled": "Deaktiveret"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3159,18 +3160,18 @@
             }
           },
           "interval": {
-            "seconds": "",
-            "minutes": "",
-            "hours": "",
-            "midnight": "",
-            "weeklyMonday": ""
+            "seconds": "Hvert {interval, plural, one {}=1 {sekund} other {# sekunder}}",
+            "minutes": "Hvert {interval, plural, one {}=1 {minut} other {# minutter}}",
+            "hours": "Hvert {interval, plural, one {}=1 {time} other {# timer}}",
+            "midnight": "Hver dag ved midnat",
+            "weeklyMonday": "Hver uge om mandagen"
           },
           "settings": {
-            "title": ""
+            "title": "Opgave indstillinger for {jobName}"
           },
           "field": {
             "interval": {
-              "label": ""
+              "label": "Planlæg interval"
             }
           }
         },

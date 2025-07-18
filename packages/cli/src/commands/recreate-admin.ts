@@ -1,8 +1,9 @@
 import { command, string } from "@drizzle-team/brocli";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
+import { createId } from "@homarr/common";
 import { generateSecureRandomToken } from "@homarr/common/server";
-import { and, count, createId, db, eq } from "@homarr/db";
+import { and, count, db, eq } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
 import { usernameSchema } from "@homarr/validation/user";

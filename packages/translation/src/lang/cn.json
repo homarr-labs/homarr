@@ -938,8 +938,8 @@
           "newLabel": "新领域"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "个人访问令牌",
+          "newLabel": "新建个人访问令牌"
         },
         "topic": {
           "label": "主题",
@@ -1507,7 +1507,7 @@
         "width": "宽度",
         "height": "高度"
       },
-      "placeholder": ""
+      "placeholder": "开始写笔记"
     },
     "iframe": {
       "name": "iFrame",
@@ -2294,8 +2294,8 @@
           },
           "invalid": "仓库定义无效，请检查值",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "没有提供者",
+            "tooltip": "无法解析该提供者，请在导入镜像后手动设置"
           }
         }
       },
@@ -2309,15 +2309,16 @@
       "openProjectPage": "打开项目页面",
       "openReleasePage": "打开发布页面",
       "releaseDescription": "发布说明",
+      "projectDescription": "",
       "created": "已创建",
       "error": {
         "label": "错误",
         "messages": {
-          "invalidIdentifier": "",
+          "invalidIdentifier": "无效标识符",
           "noMatchingVersion": "没有找到匹配的版本",
-          "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noReleasesFound": "没有发现发布信息",
+          "noProviderSeleceted": "没有选择提供者",
+          "noProviderResponse": "提供者没有响应"
         }
       }
     },
@@ -2569,7 +2570,7 @@
         "label": "图标颜色"
       },
       "clearColor": {
-        "label": ""
+        "label": "清除颜色"
       },
       "customCss": {
         "label": "自定义此面板的 css",
@@ -3094,7 +3095,7 @@
             "idle": "空闲",
             "running": "运行中",
             "error": "错误",
-            "disabled": ""
+            "disabled": "禁用"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3159,18 +3160,18 @@
             }
           },
           "interval": {
-            "seconds": "",
-            "minutes": "",
-            "hours": "",
-            "midnight": "",
-            "weeklyMonday": ""
+            "seconds": "每 {interval, plural, =1 {秒} other {# 秒}}",
+            "minutes": "每 {interval, plural, =1 {分钟} other {# 分钟}}",
+            "hours": "每 {interval, plural, =1 {小时} other {# 小时}}",
+            "midnight": "每日午夜",
+            "weeklyMonday": "每周一"
           },
           "settings": {
-            "title": ""
+            "title": "{jobName} 任务设置"
           },
           "field": {
             "interval": {
-              "label": ""
+              "label": "计划时间间隔"
             }
           }
         },

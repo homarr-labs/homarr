@@ -2309,6 +2309,7 @@
       "openProjectPage": "Open Project Page",
       "openReleasePage": "Open Release Page",
       "releaseDescription": "Release Description",
+      "projectDescription": "Project Description",
       "created": "Created",
       "error": {
         "label": "Error",
@@ -4201,6 +4202,16 @@
             "message": "The hostname could not be removed"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Debug",
+        "info": "Info",
+        "warn": "Warn",
+        "error": "Error"
       }
     }
   }
