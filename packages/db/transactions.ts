@@ -1,11 +1,14 @@
-import type { HomarrDatabase, HomarrDatabaseMysql } from "./driver";
-import { env } from "./env";
+import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
+// import { env } from "./env";
 import * as mysqlSchema from "./schema/mysql";
+import * as pgSchema from "./schema/postgresql";
+import { isMysql, isPostgresql } from "./collection";
 
 type MysqlSchema = typeof mysqlSchema;
+type PostgresqlSchema = typeof pgSchema;
 
 interface HandleTransactionInput {
-  handleAsync: (db: HomarrDatabaseMysql, schema: MysqlSchema) => Promise<void>;
+  handleAsync: (db: HomarrDatabaseMysql | HomarrDatabasePostgresql, schema: MysqlSchema | PostgresqlSchema ) => Promise<void>;
   handleSync: (db: HomarrDatabase) => void;
 }
 
@@ -15,10 +18,11 @@ interface HandleTransactionInput {
  * But it can also generally be used when dealing with different database drivers.
  */
 export const handleDiffrentDbDriverOperationsAsync = async (db: HomarrDatabase, input: HandleTransactionInput) => {
-  if (env.DB_DRIVER !== "mysql2") {
+  if (isMysql(db)) {
+    await input.handleAsync(db as unknown as HomarrDatabaseMysql, mysqlSchema);
+  } else if (isPostgresql(db)) {
+    await input.handleAsync(db as unknown as HomarrDatabasePostgresql, pgSchema);
+  } else {
     input.handleSync(db);
-    return;
   }
-
-  await input.handleAsync(db as unknown as HomarrDatabaseMysql, mysqlSchema);
 };
