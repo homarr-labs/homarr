@@ -7,10 +7,9 @@ import { expect, expectTypeOf, test } from "vitest";
 
 import { objectEntries } from "@homarr/common";
 
+import * as postgresqlSchema from "../schema/postgresql";
 import * as mysqlSchema from "../schema/mysql";
 import * as sqliteSchema from "../schema/sqlite";
-import * as postgresqlSchema from "../schema/postgresql";
-// import { PostgreSqlContainer } from "@testcontainers/postgresql";
 
 // We need the following two types as there is currently no support for Buffer in mysql and
 // so we use a custom type which results in the config beeing different
@@ -145,6 +144,11 @@ test("schemas should match for postgresql", () => {
       if (!("uniqueName" in sqliteColumn)) return;
       if (!("primary" in sqliteColumn)) return;
 
+      expect(
+        Object.prototype.hasOwnProperty.call(postgresqlSchema, tableName),
+        `expect postgresql schema to have table named ${tableName}`
+      ).toBeTruthy();
+
       const postgresqlTable = postgresqlSchema[tableName];
 
       const postgresqlColumn = postgresqlTable[columnName as keyof typeof postgresqlTable] as object;
@@ -166,11 +170,16 @@ test("schemas should match for postgresql", () => {
       ).toEqual(postgresqlColumn.primary);
     });
 
+    expect(
+      Object.prototype.hasOwnProperty.call(postgresqlSchema, tableName),
+      `expect postgresql schema to have table named ${tableName}`
+    ).toBeTruthy();
     const postgresqlTable = postgresqlSchema[tableName];
+
     const sqliteForeignKeys = sqliteTable[Symbol.for("drizzle:SQLiteInlineForeignKeys") as keyof typeof sqliteTable] as
       | SqliteForeignKey[]
       | undefined;
-     const postgresqlForeignKeys = postgresqlTable[Symbol.for("drizzle:PgInlineForeignKeys") as keyof typeof postgresqlTable] as
+    const postgresqlForeignKeys = postgresqlTable[Symbol.for("drizzle:PgInlineForeignKeys") as keyof typeof postgresqlTable] as
        | PostgresqlForeignKey[]
        | undefined;
     if (!sqliteForeignKeys && !postgresqlForeignKeys) return;
