@@ -16,14 +16,14 @@ import type {
   ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
-const localLogger = logger.child({ module: "GithubIntegration" });
+const localLogger = logger.child({ module: "GithubPackagesIntegration" });
 
-export class GithubIntegration extends Integration implements ReleasesProviderIntegration {
-  private static readonly userAgent = "Homarr-Lab/Homarr:GithubIntegration";
+export class GithubPackagesIntegration extends Integration implements ReleasesProviderIntegration {
+  private static readonly userAgent = "Homarr-Lab/Homarr:GithubPackagesIntegration";
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const headers: RequestInit["headers"] = {
-      "User-Agent": GithubIntegration.userAgent,
+      "User-Agent": GithubPackagesIntegration.userAgent,
     };
 
     if (this.hasSecretValue("personalAccessToken"))
@@ -46,7 +46,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     const [owner, name] = repository.identifier.split("/");
     if (!owner || !name) {
       localLogger.warn(
-        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Github integration`,
+        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Github Packages integration`,
         {
           identifier: repository.identifier,
         },
@@ -61,30 +61,23 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     const details = await this.getDetailsAsync(api, owner, name);
 
     try {
-      const releasesResponse = await api.rest.repos.listReleases({
-        owner,
-        repo: name,
+      const releasesResponse = await api.rest.packages.getAllPackageVersionsForPackageOwnedByUser({
+        username: owner,
+        package_type: "container",
+        package_name: name,
+        per_page: 100,
       });
 
-      if (releasesResponse.data.length === 0) {
-        localLogger.warn(`No releases found, for ${repository.identifier} with Github integration`, {
-          identifier: repository.identifier,
-        });
-        return {
-          id: repository.id,
-          error: { code: "noReleasesFound" },
-        };
-      }
-
       const releasesProviderResponse = releasesResponse.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
-        if (!release.published_at) return acc;
+        if (!release.metadata?.container?.tags || !(release.metadata.container.tags.length > 0)) return acc;
 
-        acc.push({
-          latestRelease: release.tag_name,
-          latestReleaseAt: new Date(release.published_at),
-          releaseUrl: release.html_url,
-          releaseDescription: release.body ?? undefined,
-          isPreRelease: release.prerelease,
+        release.metadata.container.tags.forEach((tag) => {
+          acc.push({
+            latestRelease: tag,
+            latestReleaseAt: new Date(release.updated_at),
+            releaseUrl: release.html_url,
+            releaseDescription: release.description ?? undefined,
+          });
         });
         return acc;
       }, []);
@@ -93,7 +86,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     } catch (error) {
       const errorMessage = error instanceof RequestError ? error.message : String(error);
 
-      localLogger.warn(`Failed to get releases for ${owner}\\${name} with Github integration`, {
+      localLogger.warn(`Failed to get releases for ${owner}\\${name} with Github Packages integration`, {
         owner,
         name,
         error: errorMessage,
@@ -112,23 +105,24 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     name: string,
   ): Promise<DetailsProviderResponse | undefined> {
     try {
-      const response = await api.rest.repos.get({
-        owner,
-        repo: name,
+      const response = await api.rest.packages.getPackageForUser({
+        username: owner,
+        package_type: "container",
+        package_name: name,
       });
 
       return {
-        projectUrl: response.data.html_url,
-        projectDescription: response.data.description ?? undefined,
-        isFork: response.data.fork,
-        isArchived: response.data.archived,
+        projectUrl: response.data.repository?.html_url ?? response.data.html_url,
+        projectDescription: response.data.repository?.description ?? undefined,
+        isFork: response.data.repository?.fork,
+        isArchived: response.data.repository?.archived,
         createdAt: new Date(response.data.created_at),
-        starsCount: response.data.stargazers_count,
-        openIssues: response.data.open_issues_count,
-        forksCount: response.data.forks_count,
+        starsCount: response.data.repository?.stargazers_count,
+        openIssues: response.data.repository?.open_issues_count,
+        forksCount: response.data.repository?.forks_count,
       };
     } catch (error) {
-      localLogger.warn(`Failed to get details for ${owner}\\${name} with Github integration`, {
+      localLogger.warn(`Failed to get details for ${owner}\\${name} with Github Packages integration`, {
         owner,
         name,
         error: error instanceof RequestError ? error.message : String(error),
@@ -143,7 +137,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
       request: {
         fetch: fetchWithTrustedCertificatesAsync,
       },
-      userAgent: GithubIntegration.userAgent,
+      userAgent: GithubPackagesIntegration.userAgent,
       throttle: { enabled: false }, // Disable throttling for this integration, Octokit will retry by default after a set time, thus delaying the repsonse to the user in case of errors. Errors will be shown to the user, no need to retry the request.
       ...(this.hasSecretValue("personalAccessToken") ? { auth: this.getSecretValue("personalAccessToken") } : {}),
     });
