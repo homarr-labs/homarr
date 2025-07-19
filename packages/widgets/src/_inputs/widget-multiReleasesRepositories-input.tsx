@@ -509,19 +509,19 @@ interface ReleasesRepositoryImport extends ReleasesRepository {
   alreadyImported: boolean;
 }
 
-interface ContainerImageSelectorProps {
-  containerImage: ReleasesRepositoryImport;
+interface ImportRepositorySelectProps {
+  repository: ReleasesRepositoryImport;
   integration?: Integration;
   versionFilterPrecisionOptions: string[];
   onImageSelectionChanged?: (isSelected: boolean) => void;
 }
 
-const ContainerImageSelector = ({
-  containerImage,
+const ImportRepositorySelect = ({
+  repository,
   integration,
   versionFilterPrecisionOptions,
   onImageSelectionChanged,
-}: ContainerImageSelectorProps) => {
+}: ImportRepositorySelectProps) => {
   const tRepository = useScopedI18n("widget.releases.option.repositories");
   const checkBoxProps: CheckboxProps = !onImageSelectionChanged
     ? {
@@ -539,29 +539,29 @@ const ContainerImageSelector = ({
           label={
             <Group>
               <Image
-                src={containerImage.iconUrl}
+                src={repository.iconUrl}
                 style={{
                   height: "1.2em",
                   width: "1.2em",
                 }}
               />
-              <Text>{containerImage.identifier}</Text>
+              <Text>{repository.identifier}</Text>
             </Group>
           }
           {...checkBoxProps}
         />
 
-        {containerImage.versionFilter && (
+        {repository.versionFilter && (
           <Group gap={5}>
             <Text c="dimmed" size="xs">
               {tRepository("versionFilter.label")}:
             </Text>
 
-            <Code>{containerImage.versionFilter.prefix && containerImage.versionFilter.prefix}</Code>
+            <Code>{repository.versionFilter.prefix && repository.versionFilter.prefix}</Code>
             <Code color="var(--mantine-primary-color-light)" fw={700}>
-              {versionFilterPrecisionOptions[containerImage.versionFilter.precision]}
+              {versionFilterPrecisionOptions[repository.versionFilter.precision]}
             </Code>
-            <Code>{containerImage.versionFilter.suffix && containerImage.versionFilter.suffix}</Code>
+            <Code>{repository.versionFilter.suffix && repository.versionFilter.suffix}</Code>
           </Group>
         )}
       </Group>
@@ -610,36 +610,47 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
     enabled: innerProps.isAdmin,
   });
 
-  const containersImages: ReleasesRepositoryImport[] = useMemo(
+  const importRepositories: ReleasesRepositoryImport[] = useMemo(
     () =>
-      docker.data?.containers.reduce<ReleasesRepositoryImport[]>((acc, containerImage) => {
-        const imageParts = containerImage.image.split("/");
-        const source = imageParts.length > 1 ? imageParts[0] : "docker.io";
-        const identifierImage = imageParts.length > 1 ? imageParts[1] : imageParts[0];
+      docker.data?.containers.reduce<ReleasesRepositoryImport[]>((acc, container) => {
+        const [maybeSource, maybeIdentifierAndVersion] = container.image.split(/\/(.*)/);
+        const hasSource = maybeSource && maybeSource in sourceToProviderKind;
+        const source = hasSource ? maybeSource : "docker.io";
+        const identifierAndVersion = hasSource ? maybeIdentifierAndVersion : container.image;
 
-        if (!source || !identifierImage) return acc;
+        if (!identifierAndVersion) return acc;
 
-        const providerKey = source in containerImageToProviderKind ? containerImageToProviderKind[source] : "dockerHub";
+        const providerKey = sourceToProviderKind[source];
         const integrationId = Object.values(innerProps.integrations).find(
           (integration) => integration.kind === providerKey,
         )?.id;
 
-        const [identifier, version] = identifierImage.split(":");
+        const [identifier, version] = identifierAndVersion.split(":");
 
         if (!identifier || !integrationId) return acc;
 
-        if (acc.some((item) => item.providerIntegrationId === integrationId && item.identifier === identifier))
+        if (
+          acc.some(
+            (item) =>
+              item.providerIntegrationId !== undefined &&
+              innerProps.integrations[item.providerIntegrationId]?.kind === providerKey &&
+              item.identifier === identifier,
+          )
+        )
           return acc;
 
         acc.push({
           id: createId(),
           providerIntegrationId: integrationId,
           identifier,
-          iconUrl: containerImage.iconUrl ?? undefined,
+          iconUrl: container.iconUrl ?? undefined,
           name: formatIdentifierName(identifier),
           versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
           alreadyImported: innerProps.repositories.some(
-            (item) => item.providerIntegrationId === integrationId && item.identifier === identifier,
+            (item) =>
+              item.providerIntegrationId !== undefined &&
+              innerProps.integrations[item.providerIntegrationId]?.kind === providerKey &&
+              item.identifier === identifier,
           ),
         });
         return acc;
@@ -657,13 +668,13 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   }, [innerProps, selectedImages, actions]);
 
   const allImagesImported = useMemo(
-    () => containersImages.every((containerImage) => containerImage.alreadyImported),
-    [containersImages],
+    () => importRepositories.every((repository) => repository.alreadyImported),
+    [importRepositories],
   );
 
   const anyImagesImported = useMemo(
-    () => containersImages.some((containerImage) => containerImage.alreadyImported),
-    [containersImages],
+    () => importRepositories.some((repository) => repository.alreadyImported),
+    [importRepositories],
   );
 
   return (
@@ -673,7 +684,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
           <Loader size="xl" />
           <Title order={3}>{tRepository("importRepositories.loading")}</Title>
         </Stack>
-      ) : containersImages.length === 0 ? (
+      ) : importRepositories.length === 0 ? (
         <Stack justify="center" align="center">
           <IconBrandDocker stroke={1} size={128} />
           <Title order={3}>{tRepository("importRepositories.noImagesFound")}</Title>
@@ -694,23 +705,23 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
               </Accordion.Control>
               <Accordion.Panel>
                 {!allImagesImported &&
-                  containersImages
-                    .filter((containerImage) => !containerImage.alreadyImported)
-                    .map((containerImage) => {
-                      const integration = containerImage.providerIntegrationId
-                        ? innerProps.integrations[containerImage.providerIntegrationId]
+                  importRepositories
+                    .filter((repository) => !repository.alreadyImported)
+                    .map((repository) => {
+                      const integration = repository.providerIntegrationId
+                        ? innerProps.integrations[repository.providerIntegrationId]
                         : undefined;
 
                       return (
-                        <ContainerImageSelector
-                          key={containerImage.id}
-                          containerImage={containerImage}
+                        <ImportRepositorySelect
+                          key={repository.id}
+                          repository={repository}
                           integration={integration}
                           versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
                           onImageSelectionChanged={(isSelected) =>
                             isSelected
-                              ? setSelectedImages([...selectedImages, containerImage])
-                              : setSelectedImages(selectedImages.filter((img) => img !== containerImage))
+                              ? setSelectedImages([...selectedImages, repository])
+                              : setSelectedImages(selectedImages.filter((img) => img !== repository))
                           }
                         />
                       );
@@ -723,17 +734,17 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
               </Accordion.Control>
               <Accordion.Panel>
                 {anyImagesImported &&
-                  containersImages
-                    .filter((containerImage) => containerImage.alreadyImported)
-                    .map((containerImage) => {
-                      const integration = containerImage.providerIntegrationId
-                        ? innerProps.integrations[containerImage.providerIntegrationId]
+                  importRepositories
+                    .filter((repository) => repository.alreadyImported)
+                    .map((repository) => {
+                      const integration = repository.providerIntegrationId
+                        ? innerProps.integrations[repository.providerIntegrationId]
                         : undefined;
 
                       return (
-                        <ContainerImageSelector
-                          key={containerImage.id}
-                          containerImage={containerImage}
+                        <ImportRepositorySelect
+                          key={repository.id}
+                          repository={repository}
                           integration={integration}
                           versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
                         />
@@ -763,7 +774,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   size: "xl",
 });
 
-const containerImageToProviderKind: Record<string, IntegrationKind> = {
+const sourceToProviderKind: Record<string, IntegrationKind> = {
   "ghcr.io": "github",
   "docker.io": "dockerHub",
 };
