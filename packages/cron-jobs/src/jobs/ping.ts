@@ -2,8 +2,8 @@ import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
 import { db } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import { logger } from "@homarr/log";
-import { pingUrlChannel } from "@homarr/redis";
-import { pingRequestHandler } from "@homarr/request-handler/ping";
+import { sendPingRequestAsync } from "@homarr/ping";
+import { pingChannel, pingUrlChannel } from "@homarr/redis";
 
 import { createCronJob } from "../lib";
 
@@ -28,6 +28,16 @@ export const pingJob = createCronJob("ping", EVERY_MINUTE, {
 });
 
 const pingAsync = async (url: string) => {
-  const handler = pingRequestHandler.handler({ url });
-  await handler.getCachedOrUpdatedDataAsync({ forceUpdate: true });
+  const pingResult = await sendPingRequestAsync(url);
+
+  if ("statusCode" in pingResult) {
+    logger.debug(`executed ping for url ${url} with status code ${pingResult.statusCode}`);
+  } else {
+    logger.error(`Executing ping for url ${url} failed with error: ${pingResult.error}`);
+  }
+
+  await pingChannel.publishAsync({
+    url,
+    ...pingResult,
+  });
 };
