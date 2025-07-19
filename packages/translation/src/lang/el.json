@@ -4204,5 +4204,15 @@
         }
       }
     }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
+      }
+    }
   }
 }
