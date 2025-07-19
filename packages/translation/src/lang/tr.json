@@ -4204,5 +4204,15 @@
         }
       }
     }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Hata ayıklama",
+        "info": "Bilgi",
+        "warn": "Uyarı",
+        "error": "Hata"
+      }
+    }
   }
 }
