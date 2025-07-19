@@ -9,6 +9,7 @@ import type {
   ISystemHealthMonitoringIntegration,
 } from "../interfaces/health-monitoring/health-monitoring-integration";
 import type { IIndexerManagerIntegration } from "../interfaces/indexer-manager/indexer-manager-integration";
+import type { IMediaReleasesIntegration } from "../interfaces/media-releases";
 import type { IMediaRequestIntegration } from "../interfaces/media-requests/media-request-integration";
 import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
 import type { IMediaTranscodingIntegration } from "../interfaces/media-transcoding/media-transcoding-integration";
@@ -19,6 +20,7 @@ import { ClusterHealthMonitoringMockService } from "./data/cluster-health-monito
 import { DnsHoleMockService } from "./data/dns-hole";
 import { DownloadClientMockService } from "./data/download";
 import { IndexerManagerMockService } from "./data/indexer-manager";
+import { MediaReleasesMockService } from "./data/media-releases";
 import { MediaRequestMockService } from "./data/media-request";
 import { MediaServerMockService } from "./data/media-server";
 import { MediaTranscodingMockService } from "./data/media-transcoding";
@@ -36,6 +38,7 @@ export class MockIntegration
     IClusterHealthMonitoringIntegration,
     ISystemHealthMonitoringIntegration,
     IIndexerManagerIntegration,
+    IMediaReleasesIntegration,
     IMediaRequestIntegration,
     IMediaServerIntegration,
     IMediaTranscodingIntegration,
@@ -48,6 +51,7 @@ export class MockIntegration
   private static readonly clusterMonitoring = new ClusterHealthMonitoringMockService();
   private static readonly systemMonitoring = new SystemHealthMonitoringMockService();
   private static readonly indexerManager = new IndexerManagerMockService();
+  private static readonly mediaReleases = new MediaReleasesMockService();
   private static readonly mediaRequest = new MediaRequestMockService();
   private static readonly mediaServer = new MediaServerMockService();
   private static readonly mediaTranscoding = new MediaTranscodingMockService();
@@ -86,6 +90,9 @@ export class MockIntegration
   // IndexerManagerIntegration
   getIndexersAsync = MockIntegration.indexerManager.getIndexersAsync.bind(MockIntegration.indexerManager);
   testAllAsync = MockIntegration.indexerManager.testAllAsync.bind(MockIntegration.indexerManager);
+
+  // MediaReleasesIntegration
+  getMediaReleasesAsync = MockIntegration.mediaReleases.getMediaReleasesAsync.bind(MockIntegration.mediaReleases);
 
   // MediaRequestIntegration
   getSeriesInformationAsync = MockIntegration.mediaRequest.getSeriesInformationAsync.bind(MockIntegration.mediaRequest);
