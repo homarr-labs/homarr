@@ -1377,8 +1377,8 @@ importers:
         specifier: ^7.2.0
         version: 7.2.0
       '@gitbeaker/rest':
-        specifier: ^42.5.0
-        version: 42.5.0
+        specifier: ^43.3.0
+        version: 43.3.0
       '@homarr/certificates':
         specifier: workspace:^0.1.0
         version: link:../certificates
@@ -3352,16 +3352,16 @@ packages:
   '@formatjs/intl-localematcher@0.5.5':
     resolution: {integrity: sha512-t5tOGMgZ/i5+ALl2/offNqAQq/lfUnKLEw0mXQI4N4bqpedhrSE+fyKLpwnd22sK0dif6AV+ufQcTsKShB9J1g==}
 
-  '@gitbeaker/core@42.5.0':
-    resolution: {integrity: sha512-rMWpOPaZi1iLiifnOIoVO57p2EmQQdfIwP4txqNyMvG4WjYP5Ez0U7jRD9Nra41x6K5kTPBZkuQcAdxVWRJcEQ==}
+  '@gitbeaker/core@43.3.0':
+    resolution: {integrity: sha512-hORHoQnDFHKOuKDAL6qfFTom+eZvHNGTELuwQ22rFmqW9D3el2XQ+L/fcXEcyEysTGB49b2t2FtRf0Us5Et10g==}
     engines: {node: '>=18.20.0'}
 
-  '@gitbeaker/requester-utils@42.5.0':
-    resolution: {integrity: sha512-HLdLS9LPBMVQumvroQg/4qkphLDtwDB+ygEsrD2u4oYCMUtXV4V1xaVqU4yTXjbTJ5sItOtdB43vYRkBcgueBw==}
+  '@gitbeaker/requester-utils@43.3.0':
+    resolution: {integrity: sha512-A5bQQAi8cH6qFTiyWWiAgtdM1XV8vRD3OPWs0jOpEIEbT+rWJZQRclo3dlKhcsiM+Gz4SRAylwBwUYszdjOzdw==}
     engines: {node: '>=18.20.0'}
 
-  '@gitbeaker/rest@42.5.0':
-    resolution: {integrity: sha512-oC5cM6jS7aFOp0luTw5mWSRuMgdxwHRLZQ/aWkI+ETMfsprR/HyxsXfljlMY/XJ/fRxTbRJiodR5Axf66WjO3w==}
+  '@gitbeaker/rest@43.3.0':
+    resolution: {integrity: sha512-3plSNawPLgHSfJmbBGGzCT3kvKE5rqS4fhzTyQFfiwm/+NvOTxEIqMQ5wxaYWlonYfR/eUVp09sMig1nG9Isww==}
     engines: {node: '>=18.20.0'}
 
   '@grpc/grpc-js@1.12.5':
@@ -9055,6 +9055,10 @@ packages:
     resolution: {integrity: sha512-EJPeIn0CYrGu+hli1xilKAPXODtJ12T0sP63Ijx2/khC2JtuaN3JyNIpvmnkmaEtha9ocbG4A4cMcr+TvqvwQg==}
     engines: {node: '>=0.6'}
 
+  qs@6.14.0:
+    resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
+    engines: {node: '>=0.6'}
+
   querystringify@2.2.0:
     resolution: {integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==}
 
@@ -11829,23 +11833,23 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@gitbeaker/core@42.5.0':
+  '@gitbeaker/core@43.3.0':
     dependencies:
-      '@gitbeaker/requester-utils': 42.5.0
-      qs: 6.13.1
+      '@gitbeaker/requester-utils': 43.3.0
+      qs: 6.14.0
       xcase: 2.0.1
 
-  '@gitbeaker/requester-utils@42.5.0':
+  '@gitbeaker/requester-utils@43.3.0':
     dependencies:
       picomatch-browser: 2.2.6
-      qs: 6.13.1
+      qs: 6.14.0
       rate-limiter-flexible: 4.0.1
       xcase: 2.0.1
 
-  '@gitbeaker/rest@42.5.0':
+  '@gitbeaker/rest@43.3.0':
     dependencies:
-      '@gitbeaker/core': 42.5.0
-      '@gitbeaker/requester-utils': 42.5.0
+      '@gitbeaker/core': 43.3.0
+      '@gitbeaker/requester-utils': 43.3.0
 
   '@grpc/grpc-js@1.12.5':
     dependencies:
@@ -18486,6 +18490,10 @@ snapshots:
   pure-rand@6.1.0: {}
 
   qs@6.13.1:
+    dependencies:
+      side-channel: 1.1.0
+
+  qs@6.14.0:
     dependencies:
       side-channel: 1.1.0
 
