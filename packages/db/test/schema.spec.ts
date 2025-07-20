@@ -10,7 +10,6 @@ import { objectEntries } from "@homarr/common";
 import * as mysqlSchema from "../schema/mysql";
 import * as sqliteSchema from "../schema/sqlite";
 import * as postgresqlSchema from "../schema/postgresql";
-// import { PostgreSqlContainer } from "@testcontainers/postgresql";
 
 // We need the following two types as there is currently no support for Buffer in mysql and
 // so we use a custom type which results in the config beeing different
@@ -138,14 +137,14 @@ test("schemas should match for postgresql", () => {
   expectTypeOf<FixedSqliteConfig>().toEqualTypeOf<FixedPostgresqlConfig>();
   expectTypeOf<FixedPostgresqlConfig>().toEqualTypeOf<FixedSqliteConfig>();
 
-
   objectEntries(sqliteSchema).forEach(([tableName, sqliteTable]) => {
+    // keys of sqliteSchema and postgresqlSchema are the same, so we can safely use tableName as key
+    // skipcq: JS-E1007
+    const postgresqlTable = postgresqlSchema[tableName];
     Object.entries(sqliteTable).forEach(([columnName, sqliteColumn]: [string, object]) => {
       if (!("isUnique" in sqliteColumn)) return;
       if (!("uniqueName" in sqliteColumn)) return;
       if (!("primary" in sqliteColumn)) return;
-
-      const postgresqlTable = postgresqlSchema[tableName];
 
       const postgresqlColumn = postgresqlTable[columnName as keyof typeof postgresqlTable] as object;
       if (!("isUnique" in postgresqlColumn)) return;
@@ -166,7 +165,6 @@ test("schemas should match for postgresql", () => {
       ).toEqual(postgresqlColumn.primary);
     });
 
-    const postgresqlTable = postgresqlSchema[tableName];
     const sqliteForeignKeys = sqliteTable[Symbol.for("drizzle:SQLiteInlineForeignKeys") as keyof typeof sqliteTable] as
       | SqliteForeignKey[]
       | undefined;
@@ -191,13 +189,13 @@ test("schemas should match for postgresql", () => {
         `expect foreign key ${sqliteForeignKey.getName()} to be defined in postgresql schema`,
       ).toBeDefined();
 
-      // PostgreSql の場合、デフォルトで onUpdate は "no action" なので、Sqliteにあわせて undefined として扱う
+      // In PostgreSql, onDelete is "no action" by default, so it is treated as undefined to match Sqlite.
       expect(
         sqliteForeignKey.onDelete,
         `expect foreign key (${sqliteForeignKey.getName()}) onDelete to be the same for both schemas`,
       ).toEqual(postgresqlForeignKey!.onDelete==='no action' ? undefined : postgresqlForeignKey!.onDelete);
 
-      // PostgreSql の場合、デフォルトで onUpdate は "no action" なので、Sqliteにあわせて undefined として扱う
+      // In PostgreSql, onUpdate is "no action" by default, so it is treated as undefined to match Sqlite.
       expect(
         sqliteForeignKey.onUpdate,
         `expect foreign key (${sqliteForeignKey.getName()}) onUpdate to be the same for both schemas`,
