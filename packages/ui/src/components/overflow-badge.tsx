@@ -1,13 +1,17 @@
-import type { BadgeProps } from "@mantine/core";
-import { ActionIcon, Badge, Group, Popover, Stack } from "@mantine/core";
+import type { BadgeProps, MantineSpacing } from "@mantine/core";
+import { Badge, Group, Popover, Stack, UnstyledButton } from "@mantine/core";
 
 export function OverflowBadge({
   data,
   overflowCount = 3,
+  disablePopover = false,
+  groupGap = "xs",
   ...props
 }: {
   data: string[];
   overflowCount?: number;
+  disablePopover?: boolean;
+  groupGap?: MantineSpacing;
 } & BadgeProps) {
   const badgeProps = {
     variant: "default",
@@ -16,8 +20,8 @@ export function OverflowBadge({
     ...props,
   };
   return (
-    <Popover width="content" shadow="md">
-      <Group gap="xs">
+    <Popover width="content" shadow="md" disabled={disablePopover}>
+      <Group gap={groupGap}>
         {data.slice(0, overflowCount).map((item) => (
           <Badge key={item} px="xs" {...badgeProps}>
             {item}
@@ -25,19 +29,11 @@ export function OverflowBadge({
         ))}
         {data.length > overflowCount && (
           <Popover.Target>
-            <ActionIcon
-              {...{
-                variant: badgeProps.variant,
-                color: badgeProps.color,
-              }}
-              size="sm"
-              fw="bold"
-              fz="sm"
-              p="sm"
-              px="md"
-            >
-              +{data.length - overflowCount}
-            </ActionIcon>
+            <UnstyledButton display="flex">
+              <Badge px="xs" style={{ cursor: "pointer", ...badgeProps.style }} {...badgeProps}>
+                +{data.length - overflowCount}
+              </Badge>
+            </UnstyledButton>
           </Popover.Target>
         )}
       </Group>
