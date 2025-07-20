@@ -37,6 +37,9 @@ importers:
       '@semantic-release/release-notes-generator':
         specifier: ^14.0.3
         version: 14.0.3(semantic-release@24.2.7(typescript@5.8.3))
+      '@testcontainers/redis':
+        specifier: ^11.2.1
+        version: 11.2.1
       '@turbo/gen':
         specifier: ^2.5.5
         version: 2.5.5(@types/node@22.16.4)(typescript@5.8.3)
@@ -112,6 +115,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../../packages/common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/core
       '@homarr/cron-job-status':
         specifier: workspace:^0.1.0
         version: link:../../packages/cron-job-status
@@ -124,9 +130,6 @@ importers:
       '@homarr/docker':
         specifier: workspace:^0.1.0
         version: link:../../packages/docker
-      '@homarr/env':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/env
       '@homarr/form':
         specifier: workspace:^0.1.0
         version: link:../../packages/form
@@ -660,15 +663,15 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
-      '@homarr/env':
-        specifier: workspace:^0.1.0
-        version: link:../env
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -823,9 +826,9 @@ importers:
 
   packages/common:
     dependencies:
-      '@homarr/env':
+      '@homarr/core':
         specifier: workspace:^0.1.0
-        version: link:../env
+        version: link:../core
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -870,17 +873,45 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
+  packages/core:
+    dependencies:
+      '@t3-oss/env-nextjs':
+        specifier: ^0.13.8
+        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.76)
+      ioredis:
+        specifier: 5.6.1
+        version: 5.6.1
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
+    devDependencies:
+      '@homarr/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@homarr/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@homarr/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^9.31.0
+        version: 9.31.0
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
   packages/cron-job-api:
     dependencies:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/cron-jobs':
         specifier: workspace:^0.1.0
         version: link:../cron-jobs
-      '@homarr/env':
-        specifier: workspace:^0.1.0
-        version: link:../env
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -1056,12 +1087,12 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
-      '@homarr/env':
-        specifier: workspace:^0.1.0
-        version: link:../env
       '@homarr/log':
         specifier: workspace:^0.1.0
         version: link:../log
@@ -1166,9 +1197,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
-      '@homarr/env':
+      '@homarr/core':
         specifier: workspace:^0.1.0
-        version: link:../env
+        version: link:../core
       dockerode:
         specifier: ^4.0.7
         version: 4.0.7
@@ -1185,31 +1216,6 @@ importers:
       '@types/dockerode':
         specifier: ^3.3.42
         version: 3.3.42
-      eslint:
-        specifier: ^9.31.0
-        version: 9.31.0
-      typescript:
-        specifier: ^5.8.3
-        version: 5.8.3
-
-  packages/env:
-    dependencies:
-      '@t3-oss/env-nextjs':
-        specifier: ^0.13.8
-        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(zod@3.25.76)
-      zod:
-        specifier: ^3.25.76
-        version: 3.25.76
-    devDependencies:
-      '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
-        version: link:../../tooling/eslint
-      '@homarr/prettier-config':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/prettier
-      '@homarr/tsconfig':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/typescript
       eslint:
         specifier: ^9.31.0
         version: 9.31.0
@@ -1461,12 +1467,9 @@ importers:
 
   packages/log:
     dependencies:
-      '@homarr/env':
+      '@homarr/core':
         specifier: workspace:^0.1.0
-        version: link:../env
-      ioredis:
-        specifier: 5.6.1
-        version: 5.6.1
+        version: link:../core
       superjson:
         specifier: 2.2.2
         version: 2.2.2
@@ -1740,6 +1743,12 @@ importers:
       '@homarr/common':
         specifier: workspace:^
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^
+        version: link:../core
+      '@homarr/db':
+        specifier: workspace:^
+        version: link:../db
       '@homarr/definitions':
         specifier: workspace:^
         version: link:../definitions
@@ -4422,6 +4431,9 @@ packages:
 
   '@testcontainers/mysql@11.3.0':
     resolution: {integrity: sha512-5zOzAcsQUVbN9tCC6cbD0zkxOu/P8NdFsYc+w1YFctGUOf5DL0QBBwDv5LkFj92+eic4veggPlzVd2SX8LT3SQ==}
+
+  '@testcontainers/redis@11.2.1':
+    resolution: {integrity: sha512-Q5j+irNw0BLec3he30s2E0fhE06Zr9ROVutkyKUgcwQoZxEVW3xV69ke2AFCT5teEcIvTKqevObN4UDkq33Qow==}
 
   '@tiptap/core@2.26.1':
     resolution: {integrity: sha512-fymyd/XZvYiHjBoLt1gxs024xP/LY26d43R1vluYq7AHBL/7DE3ywzy+1GEsGyAv5Je2L0KBhNIR/izbq3Kaqg==}
@@ -13172,6 +13184,13 @@ snapshots:
       - bare-buffer
       - supports-color
 
+  '@testcontainers/redis@11.2.1':
+    dependencies:
+      testcontainers: 11.3.0
+    transitivePeerDependencies:
+      - bare-buffer
+      - supports-color
+
   '@tiptap/core@2.26.1(@tiptap/pm@2.26.1)':
     dependencies:
       '@tiptap/pm': 2.26.1
@@ -16639,7 +16658,7 @@ snapshots:
     dependencies:
       '@ioredis/commands': 1.2.0
       cluster-key-slot: 1.1.2
-      debug: 4.4.0
+      debug: 4.4.1
       denque: 2.1.0
       lodash.defaults: 4.2.0
       lodash.isarguments: 3.1.0
