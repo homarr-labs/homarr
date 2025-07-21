@@ -2299,7 +2299,7 @@ importers:
         specifier: 15.4.2
         version: 15.4.2
       eslint-config-prettier:
-        specifier: ^10.1.7
+        specifier: ^10.1.8
         version: 10.1.8(eslint@9.31.0)
       eslint-config-turbo:
         specifier: ^2.5.5
