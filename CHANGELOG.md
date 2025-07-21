@@ -1,3 +1,20 @@
+## [1.30.0](https://github.com/homarr-labs/homarr/compare/v1.29.0...v1.30.0) (2025-07-21)
+
+### Features
+
+* **infra:** add external redis ([#3639](https://github.com/homarr-labs/homarr/issues/3639)) ([8e96032](https://github.com/homarr-labs/homarr/commit/8e960324bcc43a64100fd9c6c1fd6822c7759160))
+* **widgets:** add media release widget ([#3219](https://github.com/homarr-labs/homarr/issues/3219)) ([66ebb50](https://github.com/homarr-labs/homarr/commit/66ebb5061fd219f9c804ef3a6bbe3372d296f740))
+
+### Bug Fixes
+
+* **deps:** update dependency @gitbeaker/rest to v43 ([#3623](https://github.com/homarr-labs/homarr/issues/3623)) ([732bce7](https://github.com/homarr-labs/homarr/commit/732bce72aee6c99d0ee94d04e173d378c2552a16))
+* **deps:** update dependency @tabler/icons-react to ^3.34.1 ([#3661](https://github.com/homarr-labs/homarr/issues/3661)) ([bf88f0d](https://github.com/homarr-labs/homarr/commit/bf88f0d0918b4073a5770ab3589e00e5f89cacf1))
+* **deps:** update nextjs monorepo to v15.4.2 ([#3654](https://github.com/homarr-labs/homarr/issues/3654)) ([42301b4](https://github.com/homarr-labs/homarr/commit/42301b4a1ed9e9f638b449a460862db9cd7ed50b))
+* **deps:** update testcontainers-node monorepo to ^11.3.0 ([#3652](https://github.com/homarr-labs/homarr/issues/3652)) ([2394159](https://github.com/homarr-labs/homarr/commit/2394159f8b546e8b6e2d3cdc7c6bd0f75483209c))
+* **deps:** update testcontainers-node monorepo to ^11.3.1 ([#3659](https://github.com/homarr-labs/homarr/issues/3659)) ([98f8279](https://github.com/homarr-labs/homarr/commit/98f8279b61013c312d492522e317bcf93f10e2a6))
+* improved import from docker parsing ([#3642](https://github.com/homarr-labs/homarr/issues/3642)) ([36b0f57](https://github.com/homarr-labs/homarr/commit/36b0f576e5a00726d76695fd3300710be6f925f8))
+* **security:** upgrade eslint-config-prettier to latest version without malicious code ([ecda928](https://github.com/homarr-labs/homarr/commit/ecda928bef407c67f01ce798c5f7a086cbd0dd9c))
+
 ## [1.29.0](https://github.com/homarr-labs/homarr/compare/v1.28.1...v1.29.0) (2025-07-18)
 
 ### Features
