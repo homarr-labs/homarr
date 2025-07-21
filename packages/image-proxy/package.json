@@ -1,12 +1,11 @@
 {
-  "name": "@homarr/env",
+  "name": "@homarr/image-proxy",
   "version": "0.1.0",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./index.ts",
-    "./schemas": "./src/schemas.ts"
+    ".": "./src/index.ts"
   },
   "typesVersions": {
     "*": {
@@ -23,13 +22,17 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@t3-oss/env-nextjs": "^0.13.8",
-    "zod": "^3.25.76"
+    "@homarr/certificates": "workspace:^0.1.0",
+    "@homarr/common": "workspace:^0.1.0",
+    "@homarr/log": "workspace:^0.1.0",
+    "@homarr/redis": "workspace:^0.1.0",
+    "bcrypt": "^6.0.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/bcrypt": "5.0.2",
     "eslint": "^9.31.0",
     "typescript": "^5.8.3"
   }

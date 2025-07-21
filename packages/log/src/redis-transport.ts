@@ -1,6 +1,8 @@
-import { Redis } from "ioredis";
 import superjson from "superjson";
 import Transport from "winston-transport";
+
+import type { RedisClient } from "@homarr/core/infrastructure/redis";
+import { createRedisClient } from "@homarr/core/infrastructure/redis";
 
 const messageSymbol = Symbol.for("message");
 const levelSymbol = Symbol.for("level");
@@ -10,7 +12,7 @@ const levelSymbol = Symbol.for("level");
 // of the base functionality and `.exceptions.handle()`.
 //
 export class RedisTransport extends Transport {
-  private redis: Redis | null = null;
+  private redis: RedisClient | null = null;
 
   /**
    * Log the info to the Redis channel
@@ -21,7 +23,7 @@ export class RedisTransport extends Transport {
     });
 
     // Is only initialized here because it did not work when initialized in the constructor or outside the class
-    this.redis ??= new Redis();
+    this.redis ??= createRedisClient();
 
     this.redis
       .publish(

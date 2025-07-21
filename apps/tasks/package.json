@@ -10,7 +10,7 @@
   "main": "./src/main.ts",
   "types": "./src/main.ts",
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --platform=node --loader:.scss=text --external:*.node --external:@opentelemetry/api --external:deasync --outfile=tasks.cjs",
+    "build": "esbuild src/main.ts --bundle --platform=node --loader:.scss=text --external:*.node --external:@opentelemetry/api --external:deasync --external:bcrypt --outfile=tasks.cjs",
     "clean": "rm -rf .turbo node_modules",
     "dev": "pnpm with-env tsx ./src/main.ts",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -46,7 +46,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node": "^22.16.4",
     "dotenv-cli": "^8.0.0",
-    "esbuild": "^0.25.6",
+    "esbuild": "^0.25.8",
     "eslint": "^9.31.0",
     "prettier": "^3.6.2",
     "tsx": "4.20.3",

@@ -7,3 +7,6 @@ export const defaultEnvOptions = {
 } satisfies Partial<Parameters<typeof createEnvT3>[0]>;
 
 export const createEnv: typeof createEnvT3 = (options) => createEnvT3({ ...defaultEnvOptions, ...options });
+
+export * from "./prefix";
+export * from "./schemas";
