@@ -2335,6 +2335,7 @@
       "starsCount": "Stars",
       "forksCount": "Forks",
       "issuesCount": "Open Issues",
+      "complete": "Complete",
       "openProjectPage": "Open Project Page",
       "openReleasePage": "Open Release Page",
       "releaseDescription": "Release Description",
