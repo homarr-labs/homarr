@@ -24,6 +24,7 @@ import { useDebouncedValue } from "@mantine/hooks";
 import {
   IconAlertTriangleFilled,
   IconBrandDocker,
+  IconCopy,
   IconCopyCheckFilled,
   IconEdit,
   IconPackageImport,
@@ -31,7 +32,6 @@ import {
   IconTrash,
   IconTriangleFilled,
   IconZoomScan,
-  IconCopy,
 } from "@tabler/icons-react";
 import { escapeForRegEx } from "@tiptap/react";
 
@@ -722,9 +722,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
                       </Button>
                       <Button
                         leftSection={<IconCopy />}
-                        onClick={() =>
-                          setSelectedImages([])
-                        }
+                        onClick={() => setSelectedImages([])}
                         size="xs"
                         variant="default"
                         color="gray.5"
