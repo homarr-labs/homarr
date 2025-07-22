@@ -31,6 +31,7 @@ body:
       label: Version
       description: What version of Homarr are you running?
       options:
+        - 1.30.0
         - 1.29.0
         - 1.28.1
         - 1.28.0
