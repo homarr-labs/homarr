@@ -200,10 +200,12 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 justify="space-between"
                 style={{ flex: 1 }}
               >
-                <Text className="releases-repository-header-name" size="xs">
-                  {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-                  {repository.name || repository.identifier}
-                </Text>
+                {!options.showOnlyIcon && (
+                  <Text className="releases-repository-header-name" size="xs">
+                    {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+                    {repository.name || repository.identifier}
+                  </Text>
+                )}
 
                 <Tooltip
                   className="releases-repository-header-version-tooltip"
