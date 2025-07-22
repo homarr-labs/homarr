@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
 import { env as commonEnv } from "@homarr/common/env";
-import { createEnv } from "@homarr/env";
+import { createEnv } from "@homarr/core/infrastructure/env";
 
 export const env = createEnv({
   server: {

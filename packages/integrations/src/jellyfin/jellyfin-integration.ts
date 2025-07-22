@@ -2,6 +2,8 @@ import { Jellyfin } from "@jellyfin/sdk";
 import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
 import { getSessionApi } from "@jellyfin/sdk/lib/utils/api/session-api";
 import { getSystemApi } from "@jellyfin/sdk/lib/utils/api/system-api";
+import { getUserApi } from "@jellyfin/sdk/lib/utils/api/user-api";
+import { getUserLibraryApi } from "@jellyfin/sdk/lib/utils/api/user-library-api";
 import type { AxiosInstance } from "axios";
 
 import { createAxiosCertificateInstanceAsync } from "@homarr/certificates/server";
@@ -13,9 +15,10 @@ import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
+import type { IMediaReleasesIntegration, MediaRelease } from "../types";
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
-export class JellyfinIntegration extends Integration implements IMediaServerIntegration {
+export class JellyfinIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
   private readonly jellyfin: Jellyfin = new Jellyfin({
     clientInfo: {
       name: "Homarr",
@@ -68,6 +71,43 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
           currentlyPlaying,
         };
       });
+  }
+
+  public async getMediaReleasesAsync(): Promise<MediaRelease[]> {
+    const apiClient = await this.getApiAsync();
+    const userLibraryApi = getUserLibraryApi(apiClient);
+    const userApi = getUserApi(apiClient);
+
+    const users = await userApi.getUsers();
+    const userId = users.data.at(0)?.Id;
+    if (!userId) {
+      throw new Error("No users found");
+    }
+
+    const result = await userLibraryApi.getLatestMedia({
+      fields: ["CustomRating", "Studios", "Genres", "ChildCount", "DateCreated", "Overview", "Taglines"],
+      userId,
+      limit: 100,
+    });
+    return result.data.map((item) => ({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      id: item.Id!,
+      type: item.Type === "Movie" ? "movie" : item.Type === "Series" ? "tv" : "unknown",
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      title: item.Name!,
+      subtitle: item.Taglines?.at(0),
+      description: item.Overview ?? undefined,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      releaseDate: new Date(item.PremiereDate ?? item.DateCreated!),
+      imageUrls: {
+        poster: super.url(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`).toString(),
+        backdrop: super.url(`/Items/${item.Id}/Images/Backdrop/0?maxWidth=960&quality=70`).toString(),
+      },
+      producer: item.Studios?.at(0)?.Name ?? undefined,
+      rating: item.CommunityRating?.toFixed(1),
+      tags: item.Genres ?? [],
+      href: super.url(`/web/index.html#!/details?id=${item.Id}&serverId=${item.ServerId}`).toString(),
+    }));
   }
 
   /**
