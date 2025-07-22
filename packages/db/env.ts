@@ -6,6 +6,7 @@ import { createEnv } from "@homarr/core/infrastructure/env";
 const drivers = {
   betterSqlite3: "better-sqlite3",
   mysql2: "mysql2",
+  postgresql: "postgresql",
 } as const;
 
 const isDriver = (driver: (typeof drivers)[keyof typeof drivers]) => process.env.DB_DRIVER === driver;
@@ -21,7 +22,7 @@ export const env = createEnv({
    */
   server: {
     DB_DRIVER: z
-      .union([z.literal(drivers.betterSqlite3), z.literal(drivers.mysql2)], {
+      .union([z.literal(drivers.betterSqlite3), z.literal(drivers.mysql2), z.literal(drivers.postgresql)], {
         message: `Invalid database driver, supported are ${Object.keys(drivers).join(", ")}`,
       })
       .default(drivers.betterSqlite3),
