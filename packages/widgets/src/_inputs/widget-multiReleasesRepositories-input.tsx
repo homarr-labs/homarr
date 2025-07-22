@@ -566,7 +566,7 @@ const ImportRepositorySelect = ({
         )}
       </Group>
 
-      <Tooltip label={tRepository("noProvider.tooltip")} disabled={!integration} withArrow>
+      <Tooltip label={tRepository("noProvider.tooltip")} disabled={integration !== undefined} withArrow>
         <Group>
           {integration ? (
             <MaskedImage
@@ -760,7 +760,8 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
 });
 
 const containerImageToProviderKind: Record<string, IntegrationKind[]> = {
-  "ghcr.io": ["github", "githubPackages"],
+  // "ghcr.io": ["github", "githubPackages"],
+  "ghcr.io": ["github"],
   "docker.io": ["dockerHub"],
   "lscr.io": ["linuxServerIO"],
   "quay.io": ["quay"],
