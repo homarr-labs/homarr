@@ -778,10 +778,10 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
                           <ImportRepositorySelect
                             key={repository.id}
                             repository={repository}
-                            checked={true}
                             integration={integration}
                             versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
-                            disabled={true}
+                            checked
+                            disabled
                           />
                         );
                       })}
