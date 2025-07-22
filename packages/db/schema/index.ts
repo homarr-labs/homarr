@@ -1,8 +1,8 @@
 import type { InferSelectModel } from "drizzle-orm";
 
 import * as mysqlSchema from "./mysql";
-import * as sqliteSchema from "./sqlite";
 import * as pgSchema from "./postgresql";
+import * as sqliteSchema from "./sqlite";
 
 type Schema = typeof sqliteSchema;
 

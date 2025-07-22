@@ -1,16 +1,16 @@
 import type { InferInsertModel } from "drizzle-orm";
+
 import { objectEntries } from "@homarr/common";
+
 import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
 import { env } from "./env";
 import * as schema from "./schema";
+import type * as mysqlSchema from "./schema/mysql";
+import type * as postgresqlSchema from "./schema/postgresql";
 
 type TableKey = {
   [K in keyof typeof schema]: (typeof schema)[K] extends { _: { brand: "Table" } } ? K : never;
 }[keyof typeof schema];
-
-import type * as mysqlSchema from "./schema/mysql";
-import type * as postgresqlSchema from "./schema/postgresql";
-
 
 export function isMysql(): boolean {
   return env.DB_DRIVER === "mysql2";
@@ -40,7 +40,7 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
         }
       }
     });
-  };
+  }
   async function insertAllPostgresqlAsync(db: HomarrDatabasePostgresql) {
     await db.transaction(async (transaction) => {
       for (const [key, values] of objectEntries(context)) {
@@ -51,7 +51,7 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
         }
       }
     });
-  };
+  }
 
   return {
     ...context,
@@ -67,7 +67,7 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
         }
       });
     },
-    insertAllAsync: async ( db: HomarrDatabase ) => {
+    insertAllAsync: async (db: HomarrDatabase) => {
       if (isMysql()) {
         await insertAllMysqlAsync(db as unknown as HomarrDatabaseMysql);
       } else if (isPostgresql()) {

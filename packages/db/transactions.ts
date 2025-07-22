@@ -1,14 +1,17 @@
+import { isMysql, isPostgresql } from "./collection";
 import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
 // import { env } from "./env";
 import * as mysqlSchema from "./schema/mysql";
 import * as pgSchema from "./schema/postgresql";
-import { isMysql, isPostgresql } from "./collection";
 
 type MysqlSchema = typeof mysqlSchema;
 type PostgresqlSchema = typeof pgSchema;
 
 interface HandleTransactionInput {
-  handleAsync: (db: HomarrDatabaseMysql | HomarrDatabasePostgresql, schema: MysqlSchema | PostgresqlSchema ) => Promise<void>;
+  handleAsync: (
+    db: HomarrDatabaseMysql | HomarrDatabasePostgresql,
+    schema: MysqlSchema | PostgresqlSchema,
+  ) => Promise<void>;
   handleSync: (db: HomarrDatabase) => void;
 }
 

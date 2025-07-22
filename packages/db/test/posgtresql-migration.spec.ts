@@ -2,8 +2,9 @@ import path from "path";
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { describe, test } from "vitest";
 import { Pool } from "pg";
+import { describe, test } from "vitest";
+
 import * as pgSchema from "../schema/postgresql";
 
 describe("PostgreSql Migration", () => {

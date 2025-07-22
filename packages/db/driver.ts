@@ -9,12 +9,13 @@ import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import type { Pool as MysqlConnectionPool } from "mysql2";
 import mysql from "mysql2";
+
 import { logger } from "@homarr/log";
+
 import { env } from "./env";
 import * as mysqlSchema from "./schema/mysql";
 import * as pgSchema from "./schema/postgresql";
 import * as sqliteSchema from "./schema/sqlite";
-
 
 export type HomarrDatabase = BetterSQLite3Database<typeof sqliteSchema>;
 export type HomarrDatabaseMysql = MySql2Database<typeof mysqlSchema>;
@@ -81,11 +82,17 @@ const initMySQL2 = () => {
 
 const initPostgreSQL = () => {
   if (env.DB_URL) {
-    throw new Error("PostgreSQL does not support DB_URL. Please use DB_HOST, DB_NAME, DB_USER, DB_PASSWORD, and DB_PORT instead.");
+    throw new Error(
+      "PostgreSQL does not support DB_URL. Please use DB_HOST, DB_NAME, DB_USER, DB_PASSWORD, and DB_PORT instead.",
+    );
   } else if (!env.DB_HOST || !env.DB_NAME || !env.DB_USER || !env.DB_PASSWORD || !env.DB_PORT) {
-    throw new Error("PostgreSQL requires DB_HOST, DB_NAME, DB_USER, DB_PASSWORD, and DB_PORT to be set in the environment variables.");
+    throw new Error(
+      "PostgreSQL requires DB_HOST, DB_NAME, DB_USER, DB_PASSWORD, and DB_PORT to be set in the environment variables.",
+    );
   } else if (env.DB_HOST === "localhost" && env.DB_PORT === 5432) {
-    logger.warn("Using default PostgreSQL port 5432 on localhost. This is not recommended for production environments.");
+    logger.warn(
+      "Using default PostgreSQL port 5432 on localhost. This is not recommended for production environments.",
+    );
   }
 
   database = drizzlePg({

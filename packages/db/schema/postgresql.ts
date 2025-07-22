@@ -10,9 +10,9 @@ import {
   integer,
   pgTable,
   primaryKey,
+  smallint,
   text,
   timestamp,
-  smallint,
   varchar,
 } from "drizzle-orm/pg-core";
 
