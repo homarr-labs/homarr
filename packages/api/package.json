@@ -35,6 +35,7 @@
     "@homarr/log": "workspace:^",
     "@homarr/old-import": "workspace:^0.1.0",
     "@homarr/old-schema": "workspace:^0.1.0",
+    "@homarr/ping": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/request-handler": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
