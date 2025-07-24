@@ -79,24 +79,29 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
       },
     });
 
-    const data = await recentlyAddedSchema.parseAsync(await response.json());
+    const json = await response.json();
+    const data = await recentlyAddedSchema.parseAsync(json);
     const imageProxy = new ImageProxy();
 
     const images =
-      data.MediaContainer.Metadata?.flatMap((item) => [
-        {
-          mediaKey: item.key,
-          type: "poster",
-          url: item.Image.find((image) => image?.type === "coverPoster")?.url,
-        },
-        {
-          mediaKey: item.key,
-          type: "backdrop",
-          url: item.Image.find((image) => image?.type === "background")?.url,
-        },
-      ]).filter(
-        (image): image is { mediaKey: string; type: "poster" | "backdrop"; url: string } => image.url !== undefined,
-      ) ?? [];
+      data.MediaContainer.Metadata?.filter((item) => item.Image)
+        .flatMap((item) => [
+          {
+            mediaKey: item.key,
+            type: "poster",
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            url: item.Image!.find((image) => image?.type === "coverPoster")?.url,
+          },
+          {
+            mediaKey: item.key,
+            type: "backdrop",
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            url: item.Image!.find((image) => image?.type === "background")?.url,
+          },
+        ])
+        .filter(
+          (image): image is { mediaKey: string; type: "poster" | "backdrop"; url: string } => image.url !== undefined,
+        ) ?? [];
 
     const proxiedImages = await Promise.all(
       images.map(async (image) => {
@@ -117,11 +122,11 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
       }),
     );
 
-    return (
-      data.MediaContainer.Metadata?.map((item) => {
+    const media =
+      data.MediaContainer.Metadata?.filter((item) => item.Image).map((item) => {
         return {
-          id: item.Media.at(0)?.id.toString() ?? item.key,
-          type: item.type === "movie" ? "movie" : item.type === "tv" ? "tv" : "unknown",
+          id: item.Media?.at(0)?.id.toString() ?? item.key,
+          type: mapType(item.type),
           title: item.title,
           subtitle: item.tagline,
           description: item.summary,
@@ -134,14 +139,15 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
           },
           producer: item.studio,
           rating: item.rating?.toFixed(1),
-          tags: item.Genre.map((genre) => genre.tag),
+          tags: item.Genre?.map((genre) => genre.tag) ?? [],
           href: super
             .url(`/web/index.html#!/server/${machineIdentifier}/details?key=${encodeURIComponent(item.key)}`)
             .toString(),
           length: item.duration ? Math.round(item.duration / 1000) : undefined,
         };
-      }) ?? []
-    );
+      }) ?? [];
+
+    return media;
   }
 
   private async getMachineIdentifierAsync(): Promise<string> {
@@ -210,7 +216,7 @@ const recentlyAddedSchema = z.object({
         z.object({
           key: z.string(),
           studio: z.string().optional(),
-          type: z.string(), // For example "movie"
+          type: z.string(), // For example "movie", "album"
           title: z.string(),
           summary: z.string().optional(),
           duration: z.number().optional(),
@@ -218,24 +224,30 @@ const recentlyAddedSchema = z.object({
           rating: z.number().optional(),
           tagline: z.string().optional(),
           originallyAvailableAt: z.string().optional(),
-          Media: z.array(
-            z.object({
-              id: z.number(),
-            }),
-          ),
-          Image: z.array(
-            z
-              .object({
-                type: z.string(), // for example "coverPoster" or "background"
-                url: z.string(),
-              })
-              .optional(),
-          ),
-          Genre: z.array(
-            z.object({
-              tag: z.string(),
-            }),
-          ),
+          Media: z
+            .array(
+              z.object({
+                id: z.number(),
+              }),
+            )
+            .optional(),
+          Image: z
+            .array(
+              z
+                .object({
+                  type: z.string(), // for example "coverPoster" or "background"
+                  url: z.string(),
+                })
+                .optional(),
+            )
+            .optional(),
+          Genre: z
+            .array(
+              z.object({
+                tag: z.string(),
+              }),
+            )
+            .optional(),
         }),
       )
       .optional(),
@@ -248,3 +260,14 @@ const identitySchema = z.object({
     machineIdentifier: z.string(),
   }),
 });
+
+const mapType = (type: string): "movie" | "tv" | "unknown" => {
+  switch (type) {
+    case "movie":
+      return "movie";
+    case "tv":
+      return "tv";
+    default:
+      return "unknown";
+  }
+};
