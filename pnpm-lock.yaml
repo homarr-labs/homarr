@@ -254,8 +254,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       dotenv:
-        specifier: ^17.2.0
-        version: 17.2.0
+        specifier: ^17.2.1
+        version: 17.2.1
       flag-icons:
         specifier: ^7.5.0
         version: 7.5.0
@@ -396,8 +396,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       dotenv:
-        specifier: ^17.2.0
-        version: 17.2.0
+        specifier: ^17.2.1
+        version: 17.2.1
       fastify:
         specifier: ^5.4.0
         version: 5.4.0
@@ -466,8 +466,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../packages/validation
       dotenv:
-        specifier: ^17.2.0
-        version: 17.2.0
+        specifier: ^17.2.1
+        version: 17.2.1
       tsx:
         specifier: 4.20.3
         version: 4.20.3
@@ -802,8 +802,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../validation
       dotenv:
-        specifier: ^17.2.0
-        version: 17.2.0
+        specifier: ^17.2.1
+        version: 17.2.1
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1112,8 +1112,8 @@ importers:
         specifier: ^12.2.0
         version: 12.2.0
       dotenv:
-        specifier: ^17.2.0
-        version: 17.2.0
+        specifier: ^17.2.1
+        version: 17.2.1
       drizzle-kit:
         specifier: ^0.31.4
         version: 0.31.4
@@ -6249,8 +6249,8 @@ packages:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
     engines: {node: '>=12'}
 
-  dotenv@17.2.0:
-    resolution: {integrity: sha512-Q4sgBT60gzd0BB0lSyYD3xM4YxrXA9y4uBDof1JNYGzOXrQdQ6yX+7XIAqoFOGQFOTK1D3Hts5OllpxMDZFONQ==}
+  dotenv@17.2.1:
+    resolution: {integrity: sha512-kQhDYKZecqnM0fCnzI5eIv5L4cAe/iRI+HqMbO/hbRdTAeXDG+M9FjipUxNfbARuEg4iHIbhnhs78BCHNbSxEQ==}
     engines: {node: '>=12'}
 
   drange@1.1.1:
@@ -15209,7 +15209,7 @@ snapshots:
 
   dotenv@16.6.1: {}
 
-  dotenv@17.2.0: {}
+  dotenv@17.2.1: {}
 
   drange@1.1.1: {}
 
