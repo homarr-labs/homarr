@@ -5,8 +5,9 @@ import type { AgentOptions } from "node:https";
 import { Agent as HttpsAgent } from "node:https";
 import path from "node:path";
 import { checkServerIdentity, rootCertificates } from "node:tls";
+import { URL } from "url";
 import axios from "axios";
-import { fetch } from "undici";
+import { fetch, RequestInfo, RequestInit, Response } from "undici";
 
 import { env } from "@homarr/common/env";
 import { LoggingAgent } from "@homarr/common/server";
@@ -102,14 +103,18 @@ export const createCustomCheckServerIdentity = (
   };
 };
 
-export const createCertificateAgentAsync = async (override?: {
-  ca: string | string[];
-  checkServerIdentity: typeof checkServerIdentity;
-}) => {
+export const createCertificateAgentAsync = async (
+  override?: {
+    ca: string | string[];
+    checkServerIdentity: typeof checkServerIdentity;
+  },
+  rejectUnauthorized = true,
+) => {
   return new LoggingAgent({
     connect: override ?? {
       ca: await getAllTrustedCertificatesAsync(),
       checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
+      rejectUnauthorized,
     },
   });
 };
@@ -131,8 +136,12 @@ export const createAxiosCertificateInstanceAsync = async (
   });
 };
 
-export const fetchWithTrustedCertificatesAsync: typeof fetch = async (url, options) => {
-  const agent = await createCertificateAgentAsync();
+export const fetchWithTrustedCertificatesAsync = async (
+  url: RequestInfo,
+  options?: RequestInit,
+  rejectUnauthorized = false,
+): Promise<Response> => {
+  const agent = await createCertificateAgentAsync(undefined, rejectUnauthorized);
   return fetch(url, {
     ...options,
     dispatcher: agent,

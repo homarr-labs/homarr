@@ -1770,7 +1770,7 @@ importers:
         version: link:../../tooling/typescript
       eslint:
         specifier: ^9.30.1
-        version: 9.31.0
+        version: 9.32.0
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
