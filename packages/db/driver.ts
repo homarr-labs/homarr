@@ -20,6 +20,7 @@ import * as sqliteSchema from "./schema/sqlite";
 export type HomarrDatabase = BetterSQLite3Database<typeof sqliteSchema>;
 export type HomarrDatabaseMysql = MySql2Database<typeof mysqlSchema>;
 export type HomarrDatabasePostgresql = NodePgDatabase<typeof pgSchema>;
+export type typeOfHomarrDatabase = HomarrDatabase | HomarrDatabaseMysql | HomarrDatabasePostgresql;
 
 const init = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
