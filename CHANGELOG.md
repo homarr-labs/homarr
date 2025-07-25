@@ -1,3 +1,19 @@
+## [1.30.1](https://github.com/homarr-labs/homarr/compare/v1.30.0...v1.30.1) (2025-07-25)
+
+### Bug Fixes
+
+* [#3667](https://github.com/homarr-labs/homarr/issues/3667) plex media releases ([#3682](https://github.com/homarr-labs/homarr/issues/3682)) ([588c134](https://github.com/homarr-labs/homarr/commit/588c134d913f6811f7ed39d1954b586acc294932))
+* [#3678](https://github.com/homarr-labs/homarr/issues/3678) season number badge calendar ([#3681](https://github.com/homarr-labs/homarr/issues/3681)) ([470448e](https://github.com/homarr-labs/homarr/commit/470448e5fc1243dc78539dd8da87a974f504252a))
+* **deps:** update dependency @ctrl/deluge to ^7.1.1 ([#3677](https://github.com/homarr-labs/homarr/issues/3677)) ([04c15de](https://github.com/homarr-labs/homarr/commit/04c15de0c87be963f333ccb6aa1932c445793672))
+* **deps:** update dependency dotenv to ^17.2.1 ([#3684](https://github.com/homarr-labs/homarr/issues/3684)) ([d3fba3e](https://github.com/homarr-labs/homarr/commit/d3fba3eff4fd1fff3e86090436ecfd2fbcd93c28))
+* **deps:** update dependency ldapts to v8.0.8 ([#3665](https://github.com/homarr-labs/homarr/issues/3665)) ([5a28535](https://github.com/homarr-labs/homarr/commit/5a28535f59f6ea1928a941d5c11050752dd3ecc9))
+* **deps:** update dependency typescript-eslint to ^8.38.0 ([#3668](https://github.com/homarr-labs/homarr/issues/3668)) ([50a7d24](https://github.com/homarr-labs/homarr/commit/50a7d24b1b3a7cbfa6195525b10b994709b0beb3))
+* **deps:** update mantine monorepo to ^8.2.1 ([#3666](https://github.com/homarr-labs/homarr/issues/3666)) ([9cdffc7](https://github.com/homarr-labs/homarr/commit/9cdffc7ead2668ed259c1a38c774a3efea5a1f0e))
+* **deps:** update nextjs monorepo to v15.4.3 ([#3672](https://github.com/homarr-labs/homarr/issues/3672)) ([0094ec2](https://github.com/homarr-labs/homarr/commit/0094ec25677ca97f77920018c18f18a4b84812f8))
+* **deps:** update nextjs monorepo to v15.4.4 ([#3683](https://github.com/homarr-labs/homarr/issues/3683)) ([abb011f](https://github.com/homarr-labs/homarr/commit/abb011ff9a7b930dad2c382c4e454fba29633364))
+* **deps:** update testcontainers-node monorepo to ^11.3.2 ([#3671](https://github.com/homarr-labs/homarr/issues/3671)) ([d218170](https://github.com/homarr-labs/homarr/commit/d218170ec28a70b80c521efd1482164087d46e05))
+* **deps:** update testcontainers-node monorepo to ^11.4.0 ([#3679](https://github.com/homarr-labs/homarr/issues/3679)) ([e858bad](https://github.com/homarr-labs/homarr/commit/e858bad2eda8847269c1beee4cfbf957fa318fe4))
+
 ## [1.30.0](https://github.com/homarr-labs/homarr/compare/v1.29.0...v1.30.0) (2025-07-21)
 
 ### Features
