@@ -712,7 +712,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
                   <Stack justify="center" gap="xs">
                     <Group>
                       <Button
-                        leftSection={<IconCopyCheckFilled />}
+                        leftSection={<IconCopyCheckFilled size="1em" />}
                         onClick={() =>
                           setSelectedImages(importRepositories.filter((repository) => !repository.alreadyImported))
                         }
@@ -721,7 +721,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
                         {tRepository("importRepositories.selectAll")}
                       </Button>
                       <Button
-                        leftSection={<IconCopy />}
+                        leftSection={<IconCopy size="1em" />}
                         onClick={() => setSelectedImages([])}
                         size="xs"
                         variant="default"
