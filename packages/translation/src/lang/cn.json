@@ -2079,6 +2079,35 @@
       },
       "globalRatio": "全局比率"
     },
+    "mediaReleases": {
+      "name": "媒体发布",
+      "description": "显示来自不同集成的新添加介质或即将发布的版本",
+      "option": {
+        "layout": {
+          "label": "布局",
+          "option": {
+            "backdrop": {
+              "label": "背景"
+            },
+            "poster": {
+              "label": "海报"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "显示描述提示"
+        },
+        "showType": {
+          "label": "显示媒体类型徽章"
+        },
+        "showSource": {
+          "label": "显示来源集成"
+        }
+      },
+      "length": {
+        "duration": "{length} 分钟"
+      }
+    },
     "mediaRequests-requestList": {
       "name": "媒体请求列表",
       "description": "查看 Overr 或 Jellyseerr 实例中的所有媒体请求列表",
@@ -2309,7 +2338,7 @@
       "openProjectPage": "打开项目页面",
       "openReleasePage": "打开发布页面",
       "releaseDescription": "发布说明",
-      "projectDescription": "",
+      "projectDescription": "项目描述",
       "created": "已创建",
       "error": {
         "label": "错误",
@@ -4202,6 +4231,16 @@
             "message": "无法删除主机名"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "调试",
+        "info": "信息",
+        "warn": "警告",
+        "error": "错误"
       }
     }
   }
