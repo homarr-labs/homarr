@@ -35,7 +35,7 @@
     "bcrypt": "^6.0.0",
     "cookies": "^0.9.1",
     "ldapts": "8.0.8",
-    "next": "15.4.3",
+    "next": "15.4.4",
     "next-auth": "5.0.0-beta.29",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -47,7 +47,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/bcrypt": "5.0.2",
     "@types/cookies": "0.9.1",
-    "eslint": "^9.31.0",
+    "eslint": "^9.32.0",
     "prettier": "^3.6.2",
     "typescript": "^5.8.3"
   }
