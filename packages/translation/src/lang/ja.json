@@ -2079,6 +2079,35 @@
       },
       "globalRatio": "グローバル比"
     },
+    "mediaReleases": {
+      "name": "メディアリリース",
+      "description": "異なる連係機能から、新しく追加されたメディアまたは今後のリリースを表示する",
+      "option": {
+        "layout": {
+          "label": "レイアウト",
+          "option": {
+            "backdrop": {
+              "label": "背景"
+            },
+            "poster": {
+              "label": "ポスター"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "説明ツールチップを表示"
+        },
+        "showType": {
+          "label": "メディアタイプのバッジを表示"
+        },
+        "showSource": {
+          "label": "情報元の連携機能を表示"
+        }
+      },
+      "length": {
+        "duration": "{length} 分"
+      }
+    },
     "mediaRequests-requestList": {
       "name": "メディアリクエストリスト",
       "description": "Overseerr または Jellyseerr からの全てのメディアリクエストのリストを見る",
@@ -2309,7 +2338,7 @@
       "openProjectPage": "プロジェクトページを開く",
       "openReleasePage": "リリースページを開く",
       "releaseDescription": "リリースの説明",
-      "projectDescription": "",
+      "projectDescription": "プロジェクトの説明",
       "created": "作成日",
       "error": {
         "label": "エラー",
@@ -2570,7 +2599,7 @@
         "label": "アイコンの色"
       },
       "clearColor": {
-        "label": ""
+        "label": "色を消去"
       },
       "customCss": {
         "label": "このボードのカスタム CSS",
@@ -4202,6 +4231,16 @@
             "message": "ホスト名を削除できませんでした"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "デバッグ",
+        "info": "情報",
+        "warn": "警告",
+        "error": "エラー"
       }
     }
   }
