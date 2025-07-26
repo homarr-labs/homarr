@@ -278,7 +278,13 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             {options.showDetails && (
               <DetailsDisplay repository={repository} toggleExpandedDisplay={toggleExpandedDisplay} />
             )}
-            {isActive && <ExpandedDisplay repository={repository} hasIconColor={hasIconColor}  toggleExpandedDisplay={toggleExpandedDisplay} />}
+            {isActive && (
+              <ExpandedDisplay
+                repository={repository}
+                hasIconColor={hasIconColor}
+                toggleExpandedDisplay={toggleExpandedDisplay}
+              />
+            )}
             <Divider className="releases-repository-divider" />
           </Stack>
         );
@@ -500,7 +506,7 @@ interface ExtendedDisplayProps {
   toggleExpandedDisplay: (repository: ReleasesRepositoryResponse) => void;
 }
 
-const ExpandedDisplay = ({ repository, hasIconColor,toggleExpandedDisplay }: ExtendedDisplayProps) => {
+const ExpandedDisplay = ({ repository, hasIconColor, toggleExpandedDisplay }: ExtendedDisplayProps) => {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
