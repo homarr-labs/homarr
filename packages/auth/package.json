@@ -45,7 +45,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/bcrypt": "5.0.2",
+    "@types/bcrypt": "6.0.0",
     "@types/cookies": "0.9.1",
     "eslint": "^9.32.0",
     "prettier": "^3.6.2",
