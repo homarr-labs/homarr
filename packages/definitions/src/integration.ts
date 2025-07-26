@@ -210,7 +210,7 @@ export const integrationDefs = {
   linuxServerIO: {
     name: "LinuxServer.io",
     secretKinds: [[]],
-    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/linuxserver-io.svg",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/linuxserver-io.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://api.linuxserver.io",
   },
