@@ -2079,6 +2079,35 @@
       },
       "globalRatio": "Globalt Forhold"
     },
+    "mediaReleases": {
+      "name": "Medieudgivelser",
+      "description": "Vis nyligt tilføjede medier eller kommende udgivelser fra forskellige integrationer",
+      "option": {
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "backdrop": {
+              "label": "Baggrund"
+            },
+            "poster": {
+              "label": "Plakat"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "Vis beskrivelsesværktøjstip"
+        },
+        "showType": {
+          "label": "Vis medietype badge"
+        },
+        "showSource": {
+          "label": "Vis kildeintegration"
+        }
+      },
+      "length": {
+        "duration": "{length}min"
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Medie Forespørgsler Liste",
       "description": "Se en liste over alle medieforespørgsler fra din Overseerr eller Jellyseerr instans",
@@ -2309,7 +2338,7 @@
       "openProjectPage": "Åbn Projektside",
       "openReleasePage": "Åbn Udgivelsesside",
       "releaseDescription": "Udgivelse Beskrivelse",
-      "projectDescription": "",
+      "projectDescription": "Projektbeskrivelse",
       "created": "Oprettet",
       "error": {
         "label": "Fejl",
@@ -4202,6 +4231,16 @@
             "message": "Værtsnavnet kunne ikke fjernes"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Fejlsøg",
+        "info": "Info",
+        "warn": "Advar",
+        "error": "Fejl"
       }
     }
   }

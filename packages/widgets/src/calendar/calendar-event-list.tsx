@@ -53,6 +53,7 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
                   pos={"absolute"}
                   bottom={-6}
                   left={"50%"}
+                  w={"inherit"}
                   className={classes.badge}
                 >{`S${event.mediaInformation.seasonNumber} / E${event.mediaInformation.episodeNumber}`}</Badge>
               )}
@@ -78,9 +79,11 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
                     </Text>
                   </Group>
                 ) : (
-                  <Group gap={3} wrap="nowrap">
+                  <Group gap={3} wrap="nowrap" align={"center"}>
                     <IconClock opacity={0.7} size={"1rem"} />
-                    <Text c={"dimmed"}>{dayjs(event.date).format("HH:mm")}</Text>
+                    <Text c={"dimmed"} size={"sm"}>
+                      {dayjs(event.date).format("HH:mm")}
+                    </Text>
                   </Group>
                 )}
               </Group>
