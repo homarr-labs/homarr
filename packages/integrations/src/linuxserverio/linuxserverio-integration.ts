@@ -71,7 +71,7 @@ export class LinuxServerIOIntegration extends Integration implements ReleasesPro
           error: { code: "noReleasesFound" },
         };
       }
-      
+
       return {
         id: repository.id,
         latestRelease: release.version,
