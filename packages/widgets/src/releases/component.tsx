@@ -198,6 +198,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 className="releases-repository-header-nameVersion-wrapper"
                 gap={5}
                 justify="space-between"
+                miw={0}
                 style={{ flex: 1 }}
               >
                 {!options.showOnlyIcon && (
@@ -227,7 +228,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 </Tooltip>
               </Group>
 
-              <Group className="releases-repository-header-releaseDate-wrapper" gap={5}>
+              <Group className="releases-repository-header-releaseDate-wrapper" gap={5} style={{ flex: "0 0 auto" }}>
                 <Text
                   className="releases-repository-header-releaseDate"
                   size="xs"
