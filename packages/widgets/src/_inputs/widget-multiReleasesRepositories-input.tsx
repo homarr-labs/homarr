@@ -566,7 +566,7 @@ const ImportRepositorySelect = ({
         )}
       </Group>
 
-      <Tooltip label={tRepository("noProvider.tooltip")} disabled={!integration} withArrow>
+      <Tooltip label={tRepository("noProvider.tooltip")} disabled={integration !== undefined} withArrow>
         <Group>
           {integration ? (
             <MaskedImage
@@ -614,29 +614,17 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
     () =>
       docker.data?.containers.reduce<ReleasesRepositoryImport[]>((acc, container) => {
         const [maybeSource, maybeIdentifierAndVersion] = container.image.split(/\/(.*)/);
-        const hasSource = maybeSource && maybeSource in sourceToProviderKind;
+        const hasSource = maybeSource && maybeSource in containerImageToProviderKind;
         const source = hasSource ? maybeSource : "docker.io";
-        const identifierAndVersion = hasSource ? maybeIdentifierAndVersion : container.image;
+        const [identifier, version] =
+          hasSource && maybeIdentifierAndVersion ? maybeIdentifierAndVersion.split(":") : container.image.split(":");
 
-        if (!identifierAndVersion) return acc;
+        if (!identifier) return acc;
 
-        const providerKey = sourceToProviderKind[source];
-        const integrationId = Object.values(innerProps.integrations).find(
-          (integration) => integration.kind === providerKey,
-        )?.id;
+        const providerKeyList = containerImageToProviderKind[source] ?? ["dockerHub"];
+        const integrationId = findIntegrationId(innerProps.integrations, providerKeyList, identifier);
 
-        const [identifier, version] = identifierAndVersion.split(":");
-
-        if (!identifier || !integrationId) return acc;
-
-        if (
-          acc.some(
-            (item) =>
-              item.providerIntegrationId !== undefined &&
-              innerProps.integrations[item.providerIntegrationId]?.kind === providerKey &&
-              item.identifier === identifier,
-          )
-        )
+        if (acc.some((item) => item.providerIntegrationId === integrationId && item.identifier === identifier))
           return acc;
 
         acc.push({
@@ -647,10 +635,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
           name: formatIdentifierName(identifier),
           versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
           alreadyImported: innerProps.repositories.some(
-            (item) =>
-              item.providerIntegrationId !== undefined &&
-              innerProps.integrations[item.providerIntegrationId]?.kind === providerKey &&
-              item.identifier === identifier,
+            (item) => item.providerIntegrationId === integrationId && item.identifier === identifier,
           ),
         });
         return acc;
@@ -774,9 +759,12 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   size: "xl",
 });
 
-const sourceToProviderKind: Record<string, IntegrationKind> = {
-  "ghcr.io": "github",
-  "docker.io": "dockerHub",
+const containerImageToProviderKind: Record<string, IntegrationKind[]> = {
+  // "ghcr.io": ["github", "githubPackages"],
+  "ghcr.io": ["github"],
+  "docker.io": ["dockerHub"],
+  "lscr.io": ["linuxServerIO"],
+  "quay.io": ["quay"],
 };
 
 const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersionFilter | undefined => {
@@ -791,4 +779,35 @@ const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersion
     precision: version.split(".").length,
     suffix,
   };
+};
+
+const findIntegrationId = (
+  integrations: Record<string, Integration>,
+  providerKeyList: IntegrationKind[],
+  identifier: string,
+): string | undefined => {
+  if (providerKeyList.length === 1)
+    return Object.values(integrations).find((integration) => integration.kind === providerKeyList[0])?.id;
+
+  for (const providerKey of providerKeyList) {
+    const integration = Object.values(integrations).find((integration) => integration.kind === providerKey);
+
+    if (!integration?.id) continue;
+
+    const [results] = clientApi.widget.releases.getLatest.useSuspenseQuery({
+      integrationId: integration.id,
+      repositories: [
+        {
+          id: createId(),
+          identifier,
+        },
+      ],
+    });
+
+    if (results.length > 0 && results[0]?.data.latestRelease) {
+      return integration.id;
+    }
+  }
+
+  return undefined;
 };
