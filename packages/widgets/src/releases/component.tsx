@@ -559,7 +559,7 @@ const ExpandedDisplay = ({ repository, hasIconColor,toggleExpandedDisplay }: Ext
 
         <Button
           className="releases-repository-expanded-confirmButton"
-          disabled={repository.complete || !repository.isNewRelease}
+          disabled={repository.complete}
           color="green"
           variant="light"
           onClick={() => {
@@ -569,7 +569,7 @@ const ExpandedDisplay = ({ repository, hasIconColor,toggleExpandedDisplay }: Ext
           }}
         >
           <Group className="releases-repository-expanded-confirmButton-wrapper" gap={5} justify="center" align="center">
-            <IconCheck className="releases-repository-expanded-confirmButton-icon" />
+            <IconCheck className="releases-repository-expanded-confirmButton-icon" size="1.5em" />
             <Text className="releases-repository-expanded-confirmButton-text">{t("complete")}</Text>
           </Group>
         </Button>
@@ -584,7 +584,7 @@ const ExpandedDisplay = ({ repository, hasIconColor,toggleExpandedDisplay }: Ext
             rel="noreferrer"
           >
             <Group className="releases-repository-expanded-openButton-wrapper" gap={5} justify="center" align="center">
-              <IconExternalLink className="releases-repository-expanded-openButton-icon" />
+              <IconExternalLink className="releases-repository-expanded-openButton-icon" size="1.5em" />
               <Text className="releases-repository-expanded-openButton-text">
                 {repository.releaseUrl ? t("openReleasePage") : t("openProjectPage")}
               </Text>
