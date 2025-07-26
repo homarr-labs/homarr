@@ -46,7 +46,7 @@
     "@trpc/server": "^11.4.3",
     "@trpc/tanstack-react-query": "^11.4.3",
     "lodash.clonedeep": "^4.5.0",
-    "next": "15.4.3",
+    "next": "15.4.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "superjson": "2.2.2",
@@ -57,7 +57,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.31.0",
+    "eslint": "^9.32.0",
     "prettier": "^3.6.2",
     "typescript": "^5.8.3"
   }

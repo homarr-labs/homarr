@@ -2079,6 +2079,35 @@
       },
       "globalRatio": "Wskaźnik globalny"
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Lista żądań multimediów",
       "description": "Zobacz listę wszystkich zapytań o media z Twoich instancji Overseerr lub Jellyseerr",
@@ -4202,6 +4231,16 @@
             "message": ""
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

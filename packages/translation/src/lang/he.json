@@ -2079,6 +2079,35 @@
       },
       "globalRatio": "יחס גלובלי"
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "רשימת בקשות מדיה",
       "description": "ראה רשימה של כל בקשות המדיה ממופע Overseerr או Jellyseerr שלך",
@@ -4202,6 +4231,16 @@
             "message": "לא היה ניתן להסיר את שם המארח"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }
