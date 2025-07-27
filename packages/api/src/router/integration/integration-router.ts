@@ -503,6 +503,23 @@ export const integrationRouter = createTRPCRouter({
             );
           });
         },
+        async handlePostgresqlAsync(db, schema) {
+          await ctx.db.transaction(async (transaction) => {
+            await transaction
+              .delete(schema.integrationUserPermissions)
+              .where(eq(schema.integrationUserPermissions.integrationId, input.entityId));
+            if (input.permissions.length === 0) {
+              return;
+            }
+            await transaction.insert(schema.integrationUserPermissions).values(
+              input.permissions.map((permission) => ({
+                userId: permission.principalId,
+                permission: permission.permission,
+                integrationId: input.entityId,
+              })),
+            );
+          });
+        },
         handleSync(db) {
           db.transaction((transaction) => {
             transaction

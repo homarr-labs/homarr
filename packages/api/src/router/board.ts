@@ -1492,6 +1492,21 @@ export const boardRouter = createTRPCRouter({
           );
         });
       },
+      async handlePostgresqlAsync(db, schema) {
+        await db.transaction(async (transaction) => {
+          await transaction.delete(schema.boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId));
+          if (input.permissions.length === 0) {
+            return;
+          }
+          await transaction.insert(schema.boardUserPermissions).values(
+            input.permissions.map((permission) => ({
+              userId: permission.principalId,
+              permission: permission.permission,
+              boardId: input.entityId,
+            })),
+          );
+        });
+      },
       handleSync(db) {
         db.transaction((transaction) => {
           transaction.delete(boardUserPermissions).where(eq(boardUserPermissions.boardId, input.entityId)).run();
@@ -1517,6 +1532,23 @@ export const boardRouter = createTRPCRouter({
 
     await handleTransactionsAsync(ctx.db, {
       async handleAsync(db, schema) {
+        await db.transaction(async (transaction) => {
+          await transaction
+            .delete(schema.boardGroupPermissions)
+            .where(eq(boardGroupPermissions.boardId, input.entityId));
+          if (input.permissions.length === 0) {
+            return;
+          }
+          await transaction.insert(schema.boardGroupPermissions).values(
+            input.permissions.map((permission) => ({
+              groupId: permission.principalId,
+              permission: permission.permission,
+              boardId: input.entityId,
+            })),
+          );
+        });
+      },
+      async handlePostgresqlAsync(db, schema) {
         await db.transaction(async (transaction) => {
           await transaction
             .delete(schema.boardGroupPermissions)
