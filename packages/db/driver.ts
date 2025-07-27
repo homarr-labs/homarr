@@ -24,7 +24,7 @@ export type typeOfHomarrDatabase = HomarrDatabase | HomarrDatabaseMysql | Homarr
 
 const init = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (!connection) {
+  if (database === undefined) {
     switch (env.DB_DRIVER) {
       case "mysql2":
         initMySQL2();
