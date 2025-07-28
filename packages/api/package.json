@@ -47,8 +47,8 @@
     "@trpc/tanstack-react-query": "^11.4.3",
     "lodash.clonedeep": "^4.5.0",
     "next": "15.4.4",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
     "superjson": "2.2.2",
     "trpc-to-openapi": "^2.3.2",
     "zod": "^3.25.76"
