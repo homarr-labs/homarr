@@ -71,7 +71,7 @@
       "tree-sitter-json"
     ],
     "overrides": {
-      "proxmox-api>undici": "7.12.0"
+      "proxmox-api>undici": "7.13.0"
     },
     "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [
