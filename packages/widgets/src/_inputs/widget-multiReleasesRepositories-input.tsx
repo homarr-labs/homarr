@@ -570,7 +570,7 @@ const ImportRepositorySelect = ({
         )}
       </Group>
 
-      <Tooltip label={tRepository("noProvider.tooltip")} disabled={!integration} withArrow>
+      <Tooltip label={tRepository("noProvider.tooltip")} disabled={integration !== undefined} withArrow>
         <Group>
           {integration ? (
             <MaskedImage
@@ -618,29 +618,19 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
     () =>
       docker.data?.containers.reduce<ReleasesRepositoryImport[]>((acc, container) => {
         const [maybeSource, maybeIdentifierAndVersion] = container.image.split(/\/(.*)/);
-        const hasSource = maybeSource && maybeSource in sourceToProviderKind;
+        const hasSource = maybeSource && maybeSource in containerImageToProviderKind;
         const source = hasSource ? maybeSource : "docker.io";
-        const identifierAndVersion = hasSource ? maybeIdentifierAndVersion : container.image;
+        const [identifier, version] =
+          hasSource && maybeIdentifierAndVersion ? maybeIdentifierAndVersion.split(":") : container.image.split(":");
 
-        if (!identifierAndVersion) return acc;
+        if (!identifier) return acc;
 
-        const providerKey = sourceToProviderKind[source];
+        const providerKind = containerImageToProviderKind[source] ?? "dockerHub";
         const integrationId = Object.values(innerProps.integrations).find(
-          (integration) => integration.kind === providerKey,
+          (integration) => integration.kind === providerKind,
         )?.id;
 
-        const [identifier, version] = identifierAndVersion.split(":");
-
-        if (!identifier || !integrationId) return acc;
-
-        if (
-          acc.some(
-            (item) =>
-              item.providerIntegrationId !== undefined &&
-              innerProps.integrations[item.providerIntegrationId]?.kind === providerKey &&
-              item.identifier === identifier,
-          )
-        )
+        if (acc.some((item) => item.providerIntegrationId === integrationId && item.identifier === identifier))
           return acc;
 
         acc.push({
@@ -651,10 +641,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
           name: formatIdentifierName(identifier),
           versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
           alreadyImported: innerProps.repositories.some(
-            (item) =>
-              item.providerIntegrationId !== undefined &&
-              innerProps.integrations[item.providerIntegrationId]?.kind === providerKey &&
-              item.identifier === identifier,
+            (item) => item.providerIntegrationId === integrationId && item.identifier === identifier,
           ),
         });
         return acc;
@@ -811,9 +798,11 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   size: "xl",
 });
 
-const sourceToProviderKind: Record<string, IntegrationKind> = {
+const containerImageToProviderKind: Record<string, IntegrationKind> = {
   "ghcr.io": "github",
   "docker.io": "dockerHub",
+  "lscr.io": "linuxServerIO",
+  "quay.io": "quay",
 };
 
 const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersionFilter | undefined => {

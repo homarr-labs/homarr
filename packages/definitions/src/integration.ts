@@ -207,6 +207,27 @@ export const integrationDefs = {
     category: ["releasesProvider"],
     defaultUrl: "https://codeberg.org",
   },
+  linuxServerIO: {
+    name: "LinuxServer.io",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/linuxserver-io.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://api.linuxserver.io",
+  },
+  githubPackages: {
+    name: "Github Packages",
+    secretKinds: [[], ["personalAccessToken"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/github.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://api.github.com",
+  },
+  quay: {
+    name: "Quay",
+    secretKinds: [[], ["personalAccessToken"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/quay.png",
+    category: ["releasesProvider"],
+    defaultUrl: "https://quay.io",
+  },
   ntfy: {
     name: "ntfy",
     secretKinds: [["topic"], ["topic", "apiKey"]],
