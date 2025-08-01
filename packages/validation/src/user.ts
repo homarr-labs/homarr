@@ -16,7 +16,7 @@ export const passwordRequirements = [
   { check: regexCheck(/[a-z]/), value: "lowercase" },
   { check: regexCheck(/[A-Z]/), value: "uppercase" },
   { check: regexCheck(/\d/), value: "number" },
-  { check: regexCheck(/[$&+,:;=?@#|'<>.^*()%!\-~`"_/\\[\]{} ]/), value: "special" },
+  { check: regexCheck(/[$&+,:;=?@#|'<>.^*()%!\-~`"_/\\[\]{}]/), value: "special" },
 ] satisfies {
   check: (value: string) => boolean;
   value: keyof TranslationObject["user"]["field"]["password"]["requirement"];
