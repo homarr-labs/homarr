@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { Button, Divider, Group, Stack, Text, Title, Tooltip } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import {
   IconArchive,
   IconCheck,
@@ -40,6 +41,11 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const board = useRequiredBoard();
   const [expandedRepositoryId, setExpandedRepositoryId] = useState<string | null>(null);
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
+  const [releasesViewedList, setReleasesViewedList] = useLocalStorage<Record<string, string>>({
+    key: "releases-viewed-versions",
+    defaultValue: {},
+  });
+
   const relativeDateOptions = useMemo(
     () => ({
       newReleaseWithin: formatRelativeDate(options.newReleaseWithin),
@@ -126,7 +132,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             relativeDateOptions.staleReleaseWithin !== "" && response.latestReleaseAt
               ? !isDateWithin(response.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
               : false,
-          complete: localStorage.getItem(`releases-complete-${repository.id}`) === response.latestRelease,
+          viewed: releasesViewedList[repository.id] === response.latestRelease,
         };
       })
       .filter(
@@ -154,12 +160,21 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     options.topReleases,
     relativeDateOptions.newReleaseWithin,
     relativeDateOptions.staleReleaseWithin,
+    releasesViewedList,
   ]);
 
   const toggleExpandedDisplay = useCallback(
     (repository: ReleasesRepositoryResponse) =>
       setExpandedRepositoryId(expandedRepositoryId === repository.id ? null : repository.id),
     [expandedRepositoryId],
+  );
+
+  const markReleaseViewed = useCallback(
+    (repository: ReleasesRepositoryResponse) => {
+      repository.viewed = true;
+      setReleasesViewedList((prev) => ({ ...prev, [repository.id]: repository.latestRelease ?? "" }));
+    },
+    [setReleasesViewedList],
   );
 
   return (
@@ -232,7 +247,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                   className="releases-repository-header-releaseDate"
                   size="xs"
                   c={
-                    repository.complete
+                    repository.viewed
                       ? "green"
                       : repository.isNewRelease
                         ? "primaryColor"
@@ -254,7 +269,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                     size={10}
                     color="var(--mantine-color-red-filled)"
                   />
-                ) : repository.complete ? (
+                ) : repository.viewed ? (
                   <IconCheck
                     className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-confirmed"
                     size={10}
@@ -282,6 +297,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
               <ExpandedDisplay
                 repository={repository}
                 hasIconColor={hasIconColor}
+                markReleaseViewed={markReleaseViewed}
                 toggleExpandedDisplay={toggleExpandedDisplay}
               />
             )}
@@ -503,10 +519,16 @@ const DetailsDisplay = ({ repository, toggleExpandedDisplay }: DetailsDisplayPro
 interface ExtendedDisplayProps {
   repository: ReleasesRepositoryResponse;
   hasIconColor: boolean;
+  markReleaseViewed: (repository: ReleasesRepositoryResponse) => void;
   toggleExpandedDisplay: (repository: ReleasesRepositoryResponse) => void;
 }
 
-const ExpandedDisplay = ({ repository, hasIconColor, toggleExpandedDisplay }: ExtendedDisplayProps) => {
+const ExpandedDisplay = ({
+  repository,
+  hasIconColor,
+  markReleaseViewed,
+  toggleExpandedDisplay,
+}: ExtendedDisplayProps) => {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
@@ -564,19 +586,23 @@ const ExpandedDisplay = ({ repository, hasIconColor, toggleExpandedDisplay }: Ex
         <Divider className="releases-repository-expanded-actions-divider" mx="30%" />
 
         <Button
-          className="releases-repository-expanded-confirmButton"
-          disabled={repository.complete}
+          className="releases-repository-expanded-markViewedButton"
+          disabled={repository.viewed}
           color="green"
           variant="light"
           onClick={() => {
-            repository.complete = true;
-            localStorage.setItem(`releases-complete-${repository.id}`, repository.latestRelease ?? "");
+            markReleaseViewed(repository);
             toggleExpandedDisplay(repository);
           }}
         >
-          <Group className="releases-repository-expanded-confirmButton-wrapper" gap={5} justify="center" align="center">
-            <IconCheck className="releases-repository-expanded-confirmButton-icon" size="1.5em" />
-            <Text className="releases-repository-expanded-confirmButton-text">{t("complete")}</Text>
+          <Group
+            className="releases-repository-expanded-markViewedButton-wrapper"
+            gap={5}
+            justify="center"
+            align="center"
+          >
+            <IconCheck className="releases-repository-expanded-markViewedButton-icon" size="1.5em" />
+            <Text className="releases-repository-expanded-markViewedButton-text">{t("markViewed")}</Text>
           </Group>
         </Button>
 
