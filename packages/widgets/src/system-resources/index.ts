@@ -5,7 +5,7 @@ import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("systemResources", {
   icon: IconGraphFilled,
-  supportedIntegrations: ["dashDot", "openmediavault", "proxmox"],
+  supportedIntegrations: ["dashDot", "openmediavault"],
   createOptions() {
     return optionsBuilder.from(() => ({}));
   },
