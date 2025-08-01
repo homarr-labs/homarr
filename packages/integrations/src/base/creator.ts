@@ -31,6 +31,7 @@ import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { NPMIntegration } from "../npm/npm-integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
+import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
 import { PlexIntegration } from "../plex/plex-integration";
@@ -102,6 +103,7 @@ export const integrationCreators = {
   emby: EmbyIntegration,
   nextcloud: NextcloudIntegration,
   unifiController: UnifiControllerIntegration,
+  opnsense: OPNsenseIntegration,
   github: GithubIntegration,
   dockerHub: DockerHubIntegration,
   gitlab: GitlabIntegration,
