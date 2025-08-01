@@ -214,8 +214,8 @@ export const integrationDefs = {
     category: ["releasesProvider"],
     defaultUrl: "https://api.linuxserver.io",
   },
-  githubPackages: {
-    name: "Github Packages",
+  gitHubContainerRegistry: {
+    name: "GitHub Container Registry",
     secretKinds: [[], ["personalAccessToken"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/github.svg",
     category: ["releasesProvider"],
