@@ -23,7 +23,7 @@ export async function GET(_req: NextRequest, props: { params: Promise<{ id: stri
   headers.set("Content-Type", image.contentType);
   headers.set("Content-Length", image.content.length.toString());
 
-  return new NextResponse(image.content, {
+  return new NextResponse(new Uint8Array(image.content), {
     status: 200,
     headers,
   });
