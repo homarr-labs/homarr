@@ -1769,7 +1769,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       eslint:
-        specifier: ^9.30.1
+        specifier: ^9.32.0
         version: 9.32.0
       typescript:
         specifier: ^5.8.3
