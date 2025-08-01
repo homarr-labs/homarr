@@ -2257,6 +2257,9 @@
         "showDetails": {
           "label": "Show Details"
         },
+        "showOnlyIcon": {
+          "label": "Show Only Icon"
+        },
         "topReleases": {
           "label": "Top Releases",
           "description": "The max number of latest releases to show. Zero means no limit."
