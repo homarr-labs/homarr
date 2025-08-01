@@ -30,6 +30,9 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       showDetails: factory.switch({
         defaultValue: true,
       }),
+      showOnlyIcon: factory.switch({
+        defaultValue: false,
+      }),
       topReleases: factory.number({
         withDescription: true,
         defaultValue: 0,

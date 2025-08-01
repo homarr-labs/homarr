@@ -14,11 +14,13 @@ import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorre
 import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { EmbyIntegration } from "../emby/emby-integration";
+import { GitHubContainerRegistryIntegration } from "../github-container-registry/github-container-registry-integration";
 import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
+import { LinuxServerIOIntegration } from "../linuxserverio/linuxserverio-integration";
 import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
@@ -29,11 +31,13 @@ import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { NPMIntegration } from "../npm/npm-integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
+import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
+import { QuayIntegration } from "../quay/quay-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
@@ -99,11 +103,15 @@ export const integrationCreators = {
   emby: EmbyIntegration,
   nextcloud: NextcloudIntegration,
   unifiController: UnifiControllerIntegration,
+  opnsense: OPNsenseIntegration,
   github: GithubIntegration,
   dockerHub: DockerHubIntegration,
   gitlab: GitlabIntegration,
   npm: NPMIntegration,
   codeberg: CodebergIntegration,
+  linuxServerIO: LinuxServerIOIntegration,
+  gitHubContainerRegistry: GitHubContainerRegistryIntegration,
+  quay: QuayIntegration,
   ntfy: NTFYIntegration,
   mock: MockIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;

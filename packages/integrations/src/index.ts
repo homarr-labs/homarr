@@ -21,13 +21,20 @@ export { PiHoleIntegrationV5 } from "./pi-hole/v5/pi-hole-integration-v5";
 export { PiHoleIntegrationV6 } from "./pi-hole/v6/pi-hole-integration-v6";
 export { PlexIntegration } from "./plex/plex-integration";
 export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
+export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
 export type { DownloadClientJobsAndStatus } from "./interfaces/downloads/download-client-data";
 export type { ExtendedDownloadClientItem } from "./interfaces/downloads/download-client-items";
 export type { ExtendedClientStatus } from "./interfaces/downloads/download-client-status";
-
+export type {
+  FirewallInterface,
+  FirewallCpuSummary,
+  FirewallInterfacesSummary,
+  FirewallVersionSummary,
+  FirewallMemorySummary,
+} from "./interfaces/firewall-summary/firewall-summary-types";
 export type { SystemHealthMonitoring } from "./interfaces/health-monitoring/health-monitoring-types";
 export { MediaRequestStatus } from "./interfaces/media-requests/media-request-types";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request-types";

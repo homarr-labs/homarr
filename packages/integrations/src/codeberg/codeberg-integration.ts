@@ -20,7 +20,7 @@ const localLogger = logger.child({ module: "CodebergIntegration" });
 
 export class CodebergIntegration extends Integration implements ReleasesProviderIntegration {
   private async withHeadersAsync(callback: (headers: RequestInit["headers"]) => Promise<Response>): Promise<Response> {
-    if (!this.hasSecretValue("personalAccessToken")) return await callback({});
+    if (!this.hasSecretValue("personalAccessToken")) return await callback(undefined);
 
     return await callback({
       Authorization: `token ${this.getSecretValue("personalAccessToken")}`,
@@ -61,7 +61,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     const details = await this.getDetailsAsync(owner, name);
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
-      return fetchWithTrustedCertificatesAsync(
+      return await fetchWithTrustedCertificatesAsync(
         this.url(`/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/releases`),
         { headers },
       );

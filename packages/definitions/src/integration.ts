@@ -172,6 +172,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
     category: ["networkController"],
   },
+  opnsense: {
+    name: "OPNsense",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg",
+    category: ["firewall"],
+  },
   github: {
     name: "Github",
     secretKinds: [[], ["personalAccessToken"]],
@@ -206,6 +212,27 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/codeberg.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://codeberg.org",
+  },
+  linuxServerIO: {
+    name: "LinuxServer.io",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/linuxserver-io.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://api.linuxserver.io",
+  },
+  gitHubContainerRegistry: {
+    name: "GitHub Container Registry",
+    secretKinds: [[], ["personalAccessToken"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/github.svg",
+    category: ["releasesProvider"],
+    defaultUrl: "https://api.github.com",
+  },
+  quay: {
+    name: "Quay",
+    secretKinds: [[], ["personalAccessToken"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/quay.png",
+    category: ["releasesProvider"],
+    defaultUrl: "https://quay.io",
   },
   ntfy: {
     name: "ntfy",
@@ -297,6 +324,7 @@ export const integrationCategories = [
   "networkController",
   "releasesProvider",
   "notifications",
+  "firewall",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

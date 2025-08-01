@@ -2079,6 +2079,35 @@
       },
       "globalRatio": "Globales Verhältnis"
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Liste der Medienanfragen",
       "description": "Sehen Sie eine Liste aller Medienanfragen von Ihrer Overseerr- oder Jellyseerr-Instanz",
@@ -4202,6 +4231,16 @@
             "message": "Der Hostname konnte nicht entfernt werden"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

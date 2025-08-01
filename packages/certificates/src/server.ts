@@ -6,6 +6,7 @@ import { Agent as HttpsAgent } from "node:https";
 import path from "node:path";
 import { checkServerIdentity, rootCertificates } from "node:tls";
 import axios from "axios";
+import type { RequestInfo, RequestInit, Response } from "undici";
 import { fetch } from "undici";
 
 import { env } from "@homarr/common/env";
@@ -131,8 +132,8 @@ export const createAxiosCertificateInstanceAsync = async (
   });
 };
 
-export const fetchWithTrustedCertificatesAsync: typeof fetch = async (url, options) => {
-  const agent = await createCertificateAgentAsync();
+export const fetchWithTrustedCertificatesAsync = async (url: RequestInfo, options?: RequestInit): Promise<Response> => {
+  const agent = await createCertificateAgentAsync(undefined);
   return fetch(url, {
     ...options,
     dispatcher: agent,

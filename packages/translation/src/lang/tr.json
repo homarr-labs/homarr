@@ -2079,6 +2079,35 @@
       },
       "globalRatio": "Genel Oran"
     },
+    "mediaReleases": {
+      "name": "Medya yayınları",
+      "description": "Farklı entegrasyonlardan yeni eklenen medyaları veya yakında çıkacak yayınları göster",
+      "option": {
+        "layout": {
+          "label": "Düzen",
+          "option": {
+            "backdrop": {
+              "label": "Arka plan"
+            },
+            "poster": {
+              "label": "Afiş"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "Açıklama ipucunu göster"
+        },
+        "showType": {
+          "label": "Medya türü rozetini göster"
+        },
+        "showSource": {
+          "label": "Kaynak entegrasyonunu göster"
+        }
+      },
+      "length": {
+        "duration": "{length} dk"
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Medya İstekleri Listesi",
       "description": "Overseerr veya Jellyseerr uygulamanızdan gelen tüm medya taleplerinin bir listesini görün",
@@ -4202,6 +4231,16 @@
             "message": "Ana makine adı kaldırılamadı"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Hata ayıklama",
+        "info": "Bilgi",
+        "warn": "Uyarı",
+        "error": "Hata"
       }
     }
   }
