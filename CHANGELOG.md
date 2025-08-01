@@ -1,3 +1,33 @@
+## [1.31.0](https://github.com/homarr-labs/homarr/compare/v1.30.1...v1.31.0) (2025-08-01)
+
+### Features
+
+* OPNsense integration and widget ([#3424](https://github.com/homarr-labs/homarr/issues/3424)) ([1dc1854](https://github.com/homarr-labs/homarr/commit/1dc1854cbfa39f4f22755cb84e1d6882e7e73721))
+* **releases-widget:** add `Mark as read` action to mark releases as seen ([#3676](https://github.com/homarr-labs/homarr/issues/3676)) ([f63e646](https://github.com/homarr-labs/homarr/commit/f63e64627c79004b1e1bbb5a525fdde58f803da7))
+* **releases-widget:** add `Select/Deselect All` to `import from docker` screen ([#3674](https://github.com/homarr-labs/homarr/issues/3674)) ([949c7a4](https://github.com/homarr-labs/homarr/commit/949c7a40d934b2d58a24bf9842f44703e73474ee))
+* **releases-widget:** add new providers, Github Packages, linuxserver.io and Quay ([#3607](https://github.com/homarr-labs/homarr/issues/3607)) ([c92bbd2](https://github.com/homarr-labs/homarr/commit/c92bbd2da062221c3b5464838ad715c31a9d07b0))
+* **releases-widget:** Allow to display only the icon ([#3695](https://github.com/homarr-labs/homarr/issues/3695)) ([03adf53](https://github.com/homarr-labs/homarr/commit/03adf538b03270404956dc16b191069f913e54d1))
+
+### Bug Fixes
+
+* characters are not considered Symbols when entering a new password ([#3689](https://github.com/homarr-labs/homarr/issues/3689)) ([6a819e3](https://github.com/homarr-labs/homarr/commit/6a819e38edca9f95b926a0162abdb6b873ddec08))
+* **deps:** update dependency drizzle-orm to ^0.44.4 ([#3708](https://github.com/homarr-labs/homarr/issues/3708)) ([6126fac](https://github.com/homarr-labs/homarr/commit/6126fac915197c19ea6d448da8c4fc1b06b1383b))
+* **deps:** update dependency ioredis to v5.7.0 ([#3718](https://github.com/homarr-labs/homarr/issues/3718)) ([4f9ecae](https://github.com/homarr-labs/homarr/commit/4f9ecae10406be4f6176947b517706843bd1c06d))
+* **deps:** update dependency ldapts to v8.0.9 ([#3703](https://github.com/homarr-labs/homarr/issues/3703)) ([1aecf4f](https://github.com/homarr-labs/homarr/commit/1aecf4f90d4776bfa93b6f601fca16a7da8ffaba))
+* **deps:** update dependency mysql2 to v3.14.3 ([#3711](https://github.com/homarr-labs/homarr/issues/3711)) ([952d4f7](https://github.com/homarr-labs/homarr/commit/952d4f71c9197cd88fa44ce5dbcf7d89f4c482d3))
+* **deps:** update dependency swagger-ui-react to ^5.27.1 ([#3725](https://github.com/homarr-labs/homarr/issues/3725)) ([ab5e08a](https://github.com/homarr-labs/homarr/commit/ab5e08a4b09845e3aa4818214bc0f9ce830a2942))
+* **deps:** update dependency undici to v7.13.0 ([#3717](https://github.com/homarr-labs/homarr/issues/3717)) ([b0bbd0d](https://github.com/homarr-labs/homarr/commit/b0bbd0d87ad6df7a9be83296060d8b0be6c091e0))
+* **deps:** update mantine monorepo to ^8.2.2 ([#3715](https://github.com/homarr-labs/homarr/issues/3715)) ([1835641](https://github.com/homarr-labs/homarr/commit/183564176c9421faea70dff199d0b6f81325bf70))
+* **deps:** update nextjs monorepo to v15.4.5 ([#3712](https://github.com/homarr-labs/homarr/issues/3712)) ([d0a112c](https://github.com/homarr-labs/homarr/commit/d0a112c7919cbcff9aaf2cc6b2dec8fd562246db))
+* **deps:** update react monorepo to v19.1.1 ([#3706](https://github.com/homarr-labs/homarr/issues/3706)) ([0dc1f7c](https://github.com/homarr-labs/homarr/commit/0dc1f7cf14c0ca49d5eb8d37060773c3dab4834a))
+* **deps:** update tanstack-query monorepo to ^5.83.1 ([#3719](https://github.com/homarr-labs/homarr/issues/3719)) ([f4e3713](https://github.com/homarr-labs/homarr/commit/f4e37134d806dac719012cb4dee19fb7e5daf7f2))
+* **deps:** update tanstack-query monorepo to ^5.84.0 ([#3723](https://github.com/homarr-labs/homarr/issues/3723)) ([e7b2169](https://github.com/homarr-labs/homarr/commit/e7b21697efb0f90c3539152beaea94416cbb6fef))
+* **deps:** update tanstack-query monorepo to ^5.84.1 ([#3729](https://github.com/homarr-labs/homarr/issues/3729)) ([511551a](https://github.com/homarr-labs/homarr/commit/511551aee7d5be9dadb70c596c5addbb646651cb))
+
+### Reverts
+
+* "feat(ping): ignore certificate error and show request durati… ([#3680](https://github.com/homarr-labs/homarr/issues/3680)) ([8eb44c9](https://github.com/homarr-labs/homarr/commit/8eb44c9f23584078b22605dac569387713dcd173))
+
 ## [1.30.1](https://github.com/homarr-labs/homarr/compare/v1.30.0...v1.30.1) (2025-07-25)
 
 ### Bug Fixes
