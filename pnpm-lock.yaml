@@ -630,8 +630,8 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       trpc-to-openapi:
-        specifier: ^2.3.2
-        version: 2.3.2(@trpc/server@11.4.3(typescript@5.9.2))(zod-openapi@2.19.0(zod@3.25.76))(zod@3.25.76)
+        specifier: ^2.4.0
+        version: 2.4.0(@trpc/server@11.4.3(typescript@5.9.2))(zod-openapi@2.19.0(zod@3.25.76))(zod@3.25.76)
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -9091,10 +9091,6 @@ packages:
   pure-rand@6.1.0:
     resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
-  qs@6.13.1:
-    resolution: {integrity: sha512-EJPeIn0CYrGu+hli1xilKAPXODtJ12T0sP63Ijx2/khC2JtuaN3JyNIpvmnkmaEtha9ocbG4A4cMcr+TvqvwQg==}
-    engines: {node: '>=0.6'}
-
   qs@6.14.0:
     resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
     engines: {node: '>=0.6'}
@@ -10218,8 +10214,8 @@ packages:
   trough@2.2.0:
     resolution: {integrity: sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw==}
 
-  trpc-to-openapi@2.3.2:
-    resolution: {integrity: sha512-uDZou+5a+H77yhiqfzVRBXzTSX8/mQUGeFpr8+VtZmpzUBOmv5XYbyEtWpG7fOdGWZkB99wuuKeWUwNwwOGaXQ==}
+  trpc-to-openapi@2.4.0:
+    resolution: {integrity: sha512-B6xrwOC3Ab0q1BWD/QbJzK4OUpCLoT02hAzshSUXEuIZGcJZkMG/OJ4/3gd20dyr8aI+CrFirpWKRIo7JmHbMQ==}
     peerDependencies:
       '@trpc/server': ^11.1.0
       zod: ^3.23.8
@@ -14765,7 +14761,7 @@ snapshots:
     dependencies:
       '@hapi/bourne': 3.0.0
       inflation: 2.1.0
-      qs: 6.13.1
+      qs: 6.14.0
       raw-body: 2.5.2
       type-is: 1.6.18
 
@@ -18529,10 +18525,6 @@ snapshots:
 
   pure-rand@6.1.0: {}
 
-  qs@6.13.1:
-    dependencies:
-      side-channel: 1.1.0
-
   qs@6.14.0:
     dependencies:
       side-channel: 1.1.0
@@ -19939,7 +19931,7 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-openapi@2.3.2(@trpc/server@11.4.3(typescript@5.9.2))(zod-openapi@2.19.0(zod@3.25.76))(zod@3.25.76):
+  trpc-to-openapi@2.4.0(@trpc/server@11.4.3(typescript@5.9.2))(zod-openapi@2.19.0(zod@3.25.76))(zod@3.25.76):
     dependencies:
       '@trpc/server': 11.4.3(typescript@5.9.2)
       co-body: 6.2.0
