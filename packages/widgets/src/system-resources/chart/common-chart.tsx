@@ -27,10 +27,6 @@ export const CommonChart = ({
   const scheme = useMantineColorScheme();
   const board = useRequiredBoard();
 
-  tooltipProps = tooltipProps ?? {};
-  tooltipProps.allowEscapeViewBox = { x: true, y: true };
-  tooltipProps.wrapperStyle = { zIndex: 20 };
-
   const opacity = board.opacity / 100;
   const backgroundColor =
     scheme.colorScheme == "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
@@ -72,6 +68,7 @@ export const CommonChart = ({
           styles={{ root: { padding: 5, borderRadius: theme.radius[board.itemRadius] } }}
           tooltipAnimationDuration={200}
           tooltipProps={tooltipProps}
+          withTooltip={height >= 64}
           yAxisProps={yAxisProps}
         />
       )}
