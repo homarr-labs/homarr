@@ -2257,6 +2257,9 @@
         "showDetails": {
           "label": "Show Details"
         },
+        "showOnlyIcon": {
+          "label": "Show Only Icon"
+        },
         "topReleases": {
           "label": "Top Releases",
           "description": "The max number of latest releases to show. Zero means no limit."
@@ -2273,7 +2276,9 @@
             "listFoundImages": "List of found images",
             "listAlreadyImportedImages": "List of already imported images",
             "allImagesAlreadyImported": "All images already imported",
-            "onlyAdminCanImport": "Only administrators can import from docker"
+            "onlyAdminCanImport": "Only administrators can import from docker",
+            "selectAll": "Select all",
+            "deselectAll": "Deselect all"
           },
           "provider": {
             "label": "Provider"

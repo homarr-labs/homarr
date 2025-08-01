@@ -215,12 +215,15 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 className="releases-repository-header-nameVersion-wrapper"
                 gap={5}
                 justify="space-between"
+                miw={0}
                 style={{ flex: 1 }}
               >
-                <Text className="releases-repository-header-name" size="xs">
-                  {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-                  {repository.name || repository.identifier}
-                </Text>
+                {!options.showOnlyIcon && (
+                  <Text className="releases-repository-header-name" size="xs">
+                    {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+                    {repository.name || repository.identifier}
+                  </Text>
+                )}
 
                 <Tooltip
                   className="releases-repository-header-version-tooltip"
@@ -242,7 +245,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 </Tooltip>
               </Group>
 
-              <Group className="releases-repository-header-releaseDate-wrapper" gap={5}>
+              <Group className="releases-repository-header-releaseDate-wrapper" gap={5} style={{ flex: "0 0 auto" }}>
                 <Text
                   className="releases-repository-header-releaseDate"
                   size="xs"

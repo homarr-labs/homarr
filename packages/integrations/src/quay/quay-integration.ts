@@ -10,15 +10,15 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
-  DetailsProviderResponse,
+  ReleaseProviderResponse,
   ReleasesRepository,
   ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
-import { detailsResponseSchema, releasesResponseSchema } from "./codeberg-schemas";
+import { releasesResponseSchema } from "./quay-schemas";
 
-const localLogger = logger.child({ module: "CodebergIntegration" });
+const localLogger = logger.child({ module: "QuayIntegration" });
 
-export class CodebergIntegration extends Integration implements ReleasesProviderIntegration {
+export class QuayIntegration extends Integration implements ReleasesProviderIntegration {
   private async withHeadersAsync(callback: (headers: RequestInit["headers"]) => Promise<Response>): Promise<Response> {
     if (!this.hasSecretValue("personalAccessToken")) return await callback(undefined);
 
@@ -29,7 +29,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await this.withHeadersAsync(async (headers) => {
-      return await input.fetchAsync(this.url("/version"), {
+      return await input.fetchAsync(this.url("/api/v1/discovery"), {
         headers,
       });
     });
@@ -47,7 +47,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     const [owner, name] = repository.identifier.split("/");
     if (!owner || !name) {
       localLogger.warn(
-        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Codeberg integration`,
+        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with LinuxServerIO integration`,
         {
           identifier: repository.identifier,
         },
@@ -58,12 +58,14 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
       };
     }
 
-    const details = await this.getDetailsAsync(owner, name);
-
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
       return await fetchWithTrustedCertificatesAsync(
-        this.url(`/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/releases`),
-        { headers },
+        this.url(
+          `/api/v1/repository/${encodeURIComponent(owner)}/${encodeURIComponent(name)}?includeTags=true&includeStats=true`,
+        ),
+        {
+          headers,
+        },
       );
     });
 
@@ -81,63 +83,27 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
       return {
         id: repository.id,
         error: {
-          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
+          message: error.message,
         },
       };
     } else {
-      const formattedReleases = data.map((tag) => ({
-        latestRelease: tag.tag_name,
-        latestReleaseAt: tag.published_at,
-        releaseUrl: tag.url,
-        releaseDescription: tag.body,
-        isPreRelease: tag.prerelease,
-      }));
-      return getLatestRelease(formattedReleases, repository, details);
+      const details = {
+        projectDescription: data.description,
+      };
+
+      const releasesProviderResponse = Object.entries(data.tags).reduce<ReleaseProviderResponse[]>((acc, [_, tag]) => {
+        if (!tag.name || !tag.last_modified) return acc;
+
+        acc.push({
+          latestRelease: tag.name,
+          latestReleaseAt: new Date(tag.last_modified),
+          releaseUrl: `https://quay.io/repository/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/tag/${encodeURIComponent(tag.name)}`,
+        });
+
+        return acc;
+      }, []);
+
+      return getLatestRelease(releasesProviderResponse, repository, details);
     }
-  }
-
-  protected async getDetailsAsync(owner: string, name: string): Promise<DetailsProviderResponse | undefined> {
-    const response = await this.withHeadersAsync(async (headers) => {
-      return await fetchWithTrustedCertificatesAsync(
-        this.url(`/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`),
-        {
-          headers,
-        },
-      );
-    });
-
-    if (!response.ok) {
-      localLogger.warn(`Failed to get details response for ${owner}/${name} with Codeberg integration`, {
-        owner,
-        name,
-        error: response.statusText,
-      });
-
-      return undefined;
-    }
-
-    const responseJson = await response.json();
-    const { data, success, error } = detailsResponseSchema.safeParse(responseJson);
-
-    if (!success) {
-      localLogger.warn(`Failed to parse details response for ${owner}/${name} with Codeberg integration`, {
-        owner,
-        name,
-        error,
-      });
-
-      return undefined;
-    }
-
-    return {
-      projectUrl: data.html_url,
-      projectDescription: data.description,
-      isFork: data.fork,
-      isArchived: data.archived,
-      createdAt: data.created_at,
-      starsCount: data.stars_count,
-      openIssues: data.open_issues_count,
-      forksCount: data.forks_count,
-    };
   }
 }

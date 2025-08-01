@@ -44,15 +44,15 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/core": "^8.2.1",
+    "@mantine/core": "^8.2.2",
     "@paralleldrive/cuid2": "^2.2.2",
     "@testcontainers/mysql": "^11.4.0",
     "better-sqlite3": "^12.2.0",
     "dotenv": "^17.2.1",
     "drizzle-kit": "^0.31.4",
-    "drizzle-orm": "^0.44.3",
+    "drizzle-orm": "^0.44.4",
     "drizzle-zod": "^0.7.1",
-    "mysql2": "3.14.2",
+    "mysql2": "3.14.3",
     "superjson": "2.2.2"
   },
   "devDependencies": {

@@ -30,7 +30,8 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
   }
 
   private async withHeadersAsync(callback: (headers: RequestInit["headers"]) => Promise<Response>): Promise<Response> {
-    if (!this.hasSecretValue("username") || !this.hasSecretValue("personalAccessToken")) return await callback({});
+    if (!this.hasSecretValue("username") || !this.hasSecretValue("personalAccessToken"))
+      return await callback(undefined);
 
     const storedSession = await this.sessionStore.getAsync();
 
