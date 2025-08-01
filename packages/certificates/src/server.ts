@@ -103,18 +103,14 @@ export const createCustomCheckServerIdentity = (
   };
 };
 
-export const createCertificateAgentAsync = async (
-  override?: {
-    ca: string | string[];
-    checkServerIdentity: typeof checkServerIdentity;
-  },
-  rejectUnauthorized = true,
-) => {
+export const createCertificateAgentAsync = async (override?: {
+  ca: string | string[];
+  checkServerIdentity: typeof checkServerIdentity;
+}) => {
   return new LoggingAgent({
     connect: override ?? {
       ca: await getAllTrustedCertificatesAsync(),
       checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
-      rejectUnauthorized,
     },
   });
 };
@@ -136,12 +132,8 @@ export const createAxiosCertificateInstanceAsync = async (
   });
 };
 
-export const fetchWithTrustedCertificatesAsync = async (
-  url: RequestInfo,
-  options?: RequestInit,
-  rejectUnauthorized = true,
-): Promise<Response> => {
-  const agent = await createCertificateAgentAsync(undefined, rejectUnauthorized);
+export const fetchWithTrustedCertificatesAsync = async (url: RequestInfo, options?: RequestInit): Promise<Response> => {
+  const agent = await createCertificateAgentAsync(undefined);
   return fetch(url, {
     ...options,
     dispatcher: agent,
