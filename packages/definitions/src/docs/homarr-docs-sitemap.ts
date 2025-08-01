@@ -230,4 +230,3 @@ export type HomarrDocumentationPath =
   | "/docs/widgets/weather"
   | ""
   | "/sitemap.xml";
-  
