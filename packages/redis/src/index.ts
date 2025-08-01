@@ -1,4 +1,4 @@
-import { LogLevel } from "@homarr/log/constants";
+import type { LogLevel } from "@homarr/log/constants";
 
 import { createListChannel, createQueueChannel, createSubPubChannel } from "./lib/channel";
 
@@ -14,6 +14,10 @@ export {
   createGetSetChannel,
 } from "./lib/channel";
 
+export const exampleChannel = createSubPubChannel<{ message: string }>("example");
+export const pingChannel = createSubPubChannel<
+  { url: string; statusCode: number; durationMs: number } | { url: string; error: string }
+>("ping");
 export const pingUrlChannel = createListChannel<string>("ping-url");
 
 export const homeAssistantEntityState = createSubPubChannel<{
