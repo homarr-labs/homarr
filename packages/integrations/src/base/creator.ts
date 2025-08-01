@@ -14,7 +14,7 @@ import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorre
 import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { EmbyIntegration } from "../emby/emby-integration";
-import { GithubPackagesIntegration } from "../github-packages/github-packages-integration";
+import { GitHubContainerRegistryIntegration } from "../github-container-registry/github-container-registry-integration";
 import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
@@ -108,7 +108,7 @@ export const integrationCreators = {
   npm: NPMIntegration,
   codeberg: CodebergIntegration,
   linuxServerIO: LinuxServerIOIntegration,
-  githubPackages: GithubPackagesIntegration,
+  gitHubContainerRegistry: GitHubContainerRegistryIntegration,
   quay: QuayIntegration,
   ntfy: NTFYIntegration,
   mock: MockIntegration,
