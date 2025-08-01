@@ -2,6 +2,7 @@ import { IconTransform } from "@tabler/icons-react";
 import { z } from "zod";
 
 import { capitalize } from "@homarr/common";
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -19,5 +20,5 @@ export const { componentLoader, definition } = createWidgetDefinition("mediaTran
       queuePageSize: factory.number({ defaultValue: 10, validate: z.number().min(1).max(30) }),
     }));
   },
-  supportedIntegrations: ["tdarr"],
+  supportedIntegrations: getIntegrationKindsByCategory("mediaTranscoding"),
 }).withDynamicImport(() => import("./component"));

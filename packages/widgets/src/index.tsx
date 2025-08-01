@@ -21,6 +21,7 @@ import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
 import * as indexerManager from "./indexer-manager";
+import * as mediaReleases from "./media-releases";
 import * as mediaRequestsList from "./media-requests/list";
 import * as mediaRequestsStats from "./media-requests/stats";
 import * as mediaServer from "./media-server";
@@ -71,6 +72,7 @@ export const widgetImports = {
   releases,
   firewall,
   notifications,
+  mediaReleases,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

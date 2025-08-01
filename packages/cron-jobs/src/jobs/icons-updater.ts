@@ -1,8 +1,7 @@
-import { splitToNChunks, Stopwatch } from "@homarr/common";
+import { createId, splitToNChunks, Stopwatch } from "@homarr/common";
 import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
 import type { InferInsertModel } from "@homarr/db";
 import { db, handleTransactionsAsync, inArray, sql } from "@homarr/db";
-import { createId } from "@homarr/db/client";
 import { iconRepositories, icons } from "@homarr/db/schema";
 import { fetchIconsAsync } from "@homarr/icons";
 import { logger } from "@homarr/log";
@@ -38,6 +37,7 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
 
   const newIconRepositories: InferInsertModel<typeof iconRepositories>[] = [];
   const newIcons: InferInsertModel<typeof icons>[] = [];
+  const allDbIcons = databaseIconRepositories.flatMap((group) => group.icons);
 
   for (const repositoryIconGroup of repositoryIconGroups) {
     if (!repositoryIconGroup.success) {
@@ -55,12 +55,10 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
       });
     }
 
+    const dbIconsInRepository = allDbIcons.filter((icon) => icon.iconRepositoryId === iconRepositoryId);
+
     for (const icon of repositoryIconGroup.icons) {
-      if (
-        databaseIconRepositories
-          .flatMap((repository) => repository.icons)
-          .some((dbIcon) => dbIcon.checksum === icon.checksum && dbIcon.iconRepositoryId === iconRepositoryId)
-      ) {
+      if (dbIconsInRepository.some((dbIcon) => dbIcon.checksum === icon.checksum)) {
         skippedChecksums.push(`${iconRepositoryId}.${icon.checksum}`);
         continue;
       }
@@ -76,9 +74,9 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
     }
   }
 
-  const deadIcons = databaseIconRepositories
-    .flatMap((repository) => repository.icons)
-    .filter((icon) => !skippedChecksums.includes(`${icon.iconRepositoryId}.${icon.checksum}`));
+  const deadIcons = allDbIcons.filter(
+    (icon) => !skippedChecksums.includes(`${icon.iconRepositoryId}.${icon.checksum}`),
+  );
 
   const deadIconRepositories = databaseIconRepositories.filter(
     (iconRepository) => !repositoryIconGroups.some((group) => group.slug === iconRepository.slug),

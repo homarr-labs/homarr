@@ -38,7 +38,11 @@ export const PingIndicator = ({ href }: PingIndicatorProps) => {
     <PingDot
       icon={isError ? IconX : IconCheck}
       color={isError ? "red" : "green"}
-      tooltip={"statusCode" in pingResult ? pingResult.statusCode.toString() : pingResult.error}
+      tooltip={
+        "statusCode" in pingResult
+          ? `${pingResult.statusCode} - ${pingResult.durationMs.toFixed(0)}ms`
+          : pingResult.error
+      }
     />
   );
 };

@@ -1,6 +1,6 @@
 import { observable } from "@trpc/server/observable";
 
-import type { HealthMonitoring } from "@homarr/integrations";
+import type { SystemHealthMonitoring } from "@homarr/integrations";
 import type { ProxmoxClusterInfo } from "@homarr/integrations/types";
 import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
 
@@ -9,7 +9,7 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const healthMonitoringRouter = createTRPCRouter({
   getSystemHealthStatus: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot"))
+    .concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot", "mock"))
     .query(async ({ ctx }) => {
       return await Promise.all(
         ctx.integrations.map(async (integration) => {
@@ -26,9 +26,9 @@ export const healthMonitoringRouter = createTRPCRouter({
       );
     }),
   subscribeSystemHealthStatus: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot"))
+    .concat(createManyIntegrationMiddleware("query", "openmediavault", "dashDot", "mock"))
     .subscription(({ ctx }) => {
-      return observable<{ integrationId: string; healthInfo: HealthMonitoring; timestamp: Date }>((emit) => {
+      return observable<{ integrationId: string; healthInfo: SystemHealthMonitoring; timestamp: Date }>((emit) => {
         const unsubscribes: (() => void)[] = [];
         for (const integration of ctx.integrations) {
           const innerHandler = systemInfoRequestHandler.handler(integration, {});
@@ -49,14 +49,14 @@ export const healthMonitoringRouter = createTRPCRouter({
       });
     }),
   getClusterHealthStatus: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "proxmox"))
+    .concat(createOneIntegrationMiddleware("query", "proxmox", "mock"))
     .query(async ({ ctx }) => {
       const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
       const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
       return data;
     }),
   subscribeClusterHealthStatus: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "proxmox"))
+    .concat(createOneIntegrationMiddleware("query", "proxmox", "mock"))
     .subscription(({ ctx }) => {
       return observable<ProxmoxClusterInfo>((emit) => {
         const unsubscribes: (() => void)[] = [];

@@ -6,6 +6,7 @@ import { downloadsRouter } from "./downloads";
 import { firewallRouter } from "./firewall";
 import { healthMonitoringRouter } from "./health-monitoring";
 import { indexerManagerRouter } from "./indexer-manager";
+import { mediaReleaseRouter } from "./media-release";
 import { mediaRequestsRouter } from "./media-requests";
 import { mediaServerRouter } from "./media-server";
 import { mediaTranscodingRouter } from "./media-transcoding";
@@ -28,6 +29,7 @@ export const widgetRouter = createTRPCRouter({
   smartHome: smartHomeRouter,
   stockPrice: stockPriceRouter,
   mediaServer: mediaServerRouter,
+  mediaRelease: mediaReleaseRouter,
   calendar: calendarRouter,
   downloads: downloadsRouter,
   mediaRequests: mediaRequestsRouter,

@@ -6,6 +6,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./constants": "./src/constants.ts",
     "./env": "./src/env.ts"
   },
   "typesVersions": {
@@ -23,17 +24,16 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@homarr/env": "workspace:^0.1.0",
-    "ioredis": "5.6.1",
+    "@homarr/core": "workspace:^0.1.0",
     "superjson": "2.2.2",
     "winston": "3.17.0",
-    "zod": "^3.25.67"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.29.0",
+    "eslint": "^9.32.0",
     "typescript": "^5.8.3"
   }
 }

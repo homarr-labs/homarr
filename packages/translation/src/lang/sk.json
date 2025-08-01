@@ -937,6 +937,10 @@
           "label": "Ríša",
           "newLabel": "Nová ríša"
         },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
         "topic": {
           "label": "",
           "newLabel": ""
@@ -1502,7 +1506,8 @@
         "rows": "Riadky",
         "width": "Šírka",
         "height": "Výška"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -2074,6 +2079,35 @@
       },
       "globalRatio": "Globálny pomer"
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Zoznam mediálnych požiadaviek",
       "description": "Zobrazenie zoznamu všetkých mediálnych požiadaviek z Overseerr alebo Jellyseerr",
@@ -2287,7 +2321,11 @@
           "example": {
             "label": "Príklad"
           },
-          "invalid": "Neplatná definícia úložiska, skontrolujte hodnoty"
+          "invalid": "Neplatná definícia úložiska, skontrolujte hodnoty",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "Nenájdené",
@@ -2300,11 +2338,16 @@
       "openProjectPage": "Otvorte stránku projektu",
       "openReleasePage": "Otvorte stránku vydania",
       "releaseDescription": "Popis vydania",
+      "projectDescription": "",
       "created": "Vytvorené",
       "error": {
         "label": "Chyba",
-        "options": {
-          "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia"
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2554,6 +2597,9 @@
       },
       "iconColor": {
         "label": "Farba ikony"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Vlastné css pre túto nástenku",
@@ -3077,7 +3123,8 @@
           "status": {
             "idle": "Nečinný",
             "running": "Spustené",
-            "error": "Chyba"
+            "error": "Chyba",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3139,6 +3186,21 @@
             },
             "dockerContainers": {
               "label": "Docker kontajnery"
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": ""
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "interval": {
+              "label": ""
             }
           }
         },
@@ -4169,6 +4231,16 @@
             "message": "Názov hostiteľa sa nepodarilo odstrániť"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

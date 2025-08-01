@@ -128,7 +128,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
         return response;
       }
 
-      localLogger.info("Session expired, getting new session", { integrationId: this.integration.id });
+      localLogger.debug("Session expired, getting new session", { integrationId: this.integration.id });
     }
 
     const sessionId = await this.getSessionAsync();

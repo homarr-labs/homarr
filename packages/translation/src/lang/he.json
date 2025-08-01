@@ -937,9 +937,13 @@
           "label": "תחום",
           "newLabel": "תחום חדש"
         },
-        "topic": {
+        "personalAccessToken": {
           "label": "",
           "newLabel": ""
+        },
+        "topic": {
+          "label": "נושא",
+          "newLabel": "נושא חדש"
         }
       }
     },
@@ -1502,7 +1506,8 @@
         "rows": "שורות",
         "width": "רוחב",
         "height": "גובה"
-      }
+      },
+      "placeholder": "התחל לכתוב את ההערות שלך"
     },
     "iframe": {
       "name": "iFrame",
@@ -2074,6 +2079,35 @@
       },
       "globalRatio": "יחס גלובלי"
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "רשימת בקשות מדיה",
       "description": "ראה רשימה של כל בקשות המדיה ממופע Overseerr או Jellyseerr שלך",
@@ -2093,8 +2127,8 @@
         "processing": "מעבד",
         "partiallyAvailable": "חלקי",
         "available": "זמין",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "ברשימה השחורה",
+        "deleted": "נמחק"
       },
       "status": {
         "pending": "ממתין",
@@ -2287,7 +2321,11 @@
           "example": {
             "label": "דוגמא"
           },
-          "invalid": "הגדרת מאגר לא חוקית, אנא בדוק את הערכים"
+          "invalid": "הגדרת מאגר לא חוקית, אנא בדוק את הערכים",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "לא נמצא",
@@ -2300,11 +2338,16 @@
       "openProjectPage": "פתח את דף הפרויקט",
       "openReleasePage": "פתח את דף הגרסאות",
       "releaseDescription": "תיאור הגרסה",
+      "projectDescription": "",
       "created": "נוצר",
       "error": {
         "label": "שגיאה",
-        "options": {
-          "noMatchingVersion": "לא נמצאה גרסה תואמת"
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "לא נמצאה גרסה תואמת",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2365,9 +2408,9 @@
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "התראות",
+      "description": "הצגת היסטוריית התראות מאינטגרציה",
+      "noItems": "אין התראות להצגה.",
       "option": {}
     }
   },
@@ -2554,6 +2597,9 @@
       },
       "iconColor": {
         "label": "צבע סמל"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "עיצוב מותאם אישית עבור הלוח הזה",
@@ -3077,7 +3123,8 @@
           "status": {
             "idle": "ממתין",
             "running": "פועל",
-            "error": "שגיאה"
+            "error": "שגיאה",
+            "disabled": "מושבת"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3135,10 +3182,25 @@
               "label": "בקר רשת"
             },
             "refreshNotifications": {
-              "label": ""
+              "label": "עדכון התראות"
             },
             "dockerContainers": {
               "label": "מכולות דוקר"
+            }
+          },
+          "interval": {
+            "seconds": "כל {interval, plural, =1 {second} other {# seconds}}",
+            "minutes": "כל {interval, plural, =1 {minute} other {# minutes}}",
+            "hours": "כל {interval, plural, =1 {hour} other {# hours}}",
+            "midnight": "כל יום בחצות",
+            "weeklyMonday": "כל שבוע ביום שני"
+          },
+          "settings": {
+            "title": "הגדרות משימה עבור {jobName}"
+          },
+          "field": {
+            "interval": {
+              "label": "מרווח זמן לתזמון"
             }
           }
         },
@@ -4169,6 +4231,16 @@
             "message": "לא היה ניתן להסיר את שם המארח"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

@@ -30,6 +30,9 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
       showDetails: factory.switch({
         defaultValue: true,
       }),
+      showOnlyIcon: factory.switch({
+        defaultValue: false,
+      }),
       topReleases: factory.number({
         withDescription: true,
         defaultValue: 0,
@@ -39,7 +42,7 @@ export const { definition, componentLoader } = createWidgetDefinition("releases"
         defaultValue: [],
         validate: z.array(
           z.object({
-            providerKey: z.string().min(1),
+            providerIntegrationId: z.string().optional(),
             identifier: z.string().min(1),
             name: z.string().optional(),
             versionFilter: z

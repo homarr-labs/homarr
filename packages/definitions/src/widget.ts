@@ -24,6 +24,7 @@ export const widgetKinds = [
   "indexerManager",
   "healthMonitoring",
   "releases",
+  "mediaReleases",
   "dockerContainers",
   "firewall",
   "notifications",

@@ -25,14 +25,15 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
-    "node-cron": "^4.1.1"
+    "@homarr/db": "workspace:^0.1.0",
+    "node-cron": "^4.2.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-cron": "^3.0.11",
-    "eslint": "^9.29.0",
+    "eslint": "^9.32.0",
     "typescript": "^5.8.3"
   }
 }

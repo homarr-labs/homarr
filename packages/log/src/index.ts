@@ -24,7 +24,11 @@ const logTransports: Transport[] = [new transports.Console()];
 
 // Only add the Redis transport if we are not in CI
 if (!(Boolean(process.env.CI) || Boolean(process.env.DISABLE_REDIS_LOGS))) {
-  logTransports.push(new RedisTransport());
+  logTransports.push(
+    new RedisTransport({
+      level: "debug",
+    }),
+  );
 }
 
 const logger = winston.createLogger({
