@@ -5,6 +5,7 @@ import { handleTransactionsAsync } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { logger } from "@homarr/log";
 
+import { typeOfHomarrDatabase } from "../../../db/driver";
 import { analyseOldmarrImportAsync } from "../analyse/analyse-oldmarr-import";
 import { prepareMultipleImports } from "../prepare/prepare-multiple";
 import { createBoardInsertCollection } from "./collections/board-collection";
@@ -38,16 +39,23 @@ export const importInitialOldmarrAsync = async (
   await handleTransactionsAsync(db, {
     async handleAsync(db) {
       await db.transaction(async (transaction) => {
-        await boardInsertCollection.insertAllAsync(transaction);
-        await userInsertCollection.insertAllAsync(transaction);
-        await integrationInsertCollection.insertAllAsync(transaction);
+        await boardInsertCollection.insertAllAsync(transaction as typeOfHomarrDatabase);
+        await userInsertCollection.insertAllAsync(transaction as typeOfHomarrDatabase);
+        await integrationInsertCollection.insertAllAsync(transaction as typeOfHomarrDatabase);
+      });
+    },
+    async handlePostgresqlAsync(db) {
+      await db.transaction(async (transaction) => {
+        await boardInsertCollection.insertAllAsync(transaction as typeOfHomarrDatabase);
+        await userInsertCollection.insertAllAsync(transaction as typeOfHomarrDatabase);
+        await integrationInsertCollection.insertAllAsync(transaction as typeOfHomarrDatabase);
       });
     },
     handleSync(db) {
       db.transaction((transaction) => {
-        boardInsertCollection.insertAll(transaction);
-        userInsertCollection.insertAll(transaction);
-        integrationInsertCollection.insertAll(transaction);
+        boardInsertCollection.insertAll(transaction as typeOfHomarrDatabase);
+        userInsertCollection.insertAll(transaction as typeOfHomarrDatabase);
+        integrationInsertCollection.insertAll(transaction as typeOfHomarrDatabase);
       });
     },
   });

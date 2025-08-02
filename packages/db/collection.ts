@@ -2,7 +2,7 @@ import type { InferInsertModel } from "drizzle-orm";
 
 import { objectEntries } from "@homarr/common";
 
-import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
+import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql, typeOfHomarrDatabase } from "./driver";
 import { env } from "./env";
 import * as schema from "./schema";
 import type * as mysqlSchema from "./schema/mysql";
@@ -67,7 +67,7 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
         }
       });
     },
-    insertAllAsync: async (db: HomarrDatabase) => {
+    insertAllAsync: async (db: typeOfHomarrDatabase) => {
       if (isMysql()) {
         await insertAllMysqlAsync(db as unknown as HomarrDatabaseMysql);
       } else if (isPostgresql()) {
