@@ -14,4 +14,4 @@ runs:
       run: pnpm add -g turbo
 
     - shell: bash
-      run: pnpm install
+      run: pnpm install --frozen-lockfile
