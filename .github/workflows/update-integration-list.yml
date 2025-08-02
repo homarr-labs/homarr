@@ -1,0 +1,16 @@
+name: Update integration list
+
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - packages/definitions/src/integration.ts
+
+jobs:
+  update-readme:
+    concurrency:
+      group: update-integration
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    steps:
+      -
