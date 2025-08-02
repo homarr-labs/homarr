@@ -13,6 +13,9 @@ export const SystemResourceMemoryChart = ({
 }) => {
   const chartData = memoryUsageOverTime.map((usage, index) => ({ index, usage }));
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const percentageUsed = memoryUsageOverTime.length > 0 ? memoryUsageOverTime[memoryUsageOverTime.length - 1]! / totalCapacityInBytes : undefined;
+
   return (
     <CommonChart
       data={chartData}
@@ -20,6 +23,7 @@ export const SystemResourceMemoryChart = ({
       series={[{ name: "usage", color: "red.6" }]}
       title={"RAM"}
       yAxisProps={{ domain: [0, totalCapacityInBytes] }}
+      lastValue={percentageUsed !== undefined ? `${Math.round(percentageUsed * 100)}%` : undefined}
       tooltipProps={{
         content: ({ payload }) => {
           if (!payload) {

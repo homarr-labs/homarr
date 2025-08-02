@@ -17,6 +17,7 @@ export const NetworkTrafficChart = ({ usageOverTime, isUp }: { usageOverTime: nu
       series={[{ name: "usage", color: "yellow.5" }]}
       title={isUp ? "UP" : "DOWN"}
       yAxisProps={{ domain: [0, upperBound] }}
+      lastValue={`${humanFileSize(Math.round(max))}/s`}
       tooltipProps={{
         content: ({ payload }) => {
           if (!payload) {
