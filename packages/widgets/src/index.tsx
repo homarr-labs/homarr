@@ -16,6 +16,7 @@ import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
 import * as dockerContainers from "./docker";
 import * as downloads from "./downloads";
+import * as firewall from "./firewall";
 import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
@@ -69,6 +70,7 @@ export const widgetImports = {
   minecraftServerStatus,
   dockerContainers,
   releases,
+  firewall,
   notifications,
   mediaReleases,
 } satisfies WidgetImportRecord;

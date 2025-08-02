@@ -58,7 +58,6 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     }
 
     const api = this.getApi();
-
     const details = await this.getDetailsAsync(api, owner, name);
 
     try {

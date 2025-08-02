@@ -37,5 +37,7 @@ export interface ReleasesRepositoryResponse extends ReleasesRepository {
     iconUrl?: string;
   };
 
+  viewed: boolean;
+
   error?: { code?: string; message?: string };
 }

@@ -2257,6 +2257,9 @@
         "showDetails": {
           "label": "Details anzeigen"
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "Top Releases",
           "description": "Die maximale Anzahl der neuesten Versionen, die angezeigt werden sollen. Null bedeutet kein Limit."
@@ -2273,7 +2276,9 @@
             "listFoundImages": "Liste der gefundenen Images",
             "listAlreadyImportedImages": "Liste der bereits importierten Images",
             "allImagesAlreadyImported": "Alle Images wurden bereits importiert",
-            "onlyAdminCanImport": "Nur Administratoren können vom Docker importieren"
+            "onlyAdminCanImport": "Nur Administratoren können vom Docker importieren",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": "Anbieter"
@@ -2335,6 +2340,7 @@
       "starsCount": "Sterne",
       "forksCount": "Ableger",
       "issuesCount": "Offene Tickets",
+      "markViewed": "",
       "openProjectPage": "Projektseite öffnen",
       "openReleasePage": "Release Seite öffnen",
       "releaseDescription": "Release Beschreibung",
@@ -2405,6 +2411,35 @@
     "networkController": {
       "error": {
         "internalServerError": "Fehler beim Abrufen der Netzwerk Controller Zusammenfassung"
+      }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
       }
     },
     "notifications": {
@@ -3186,6 +3221,18 @@
             },
             "dockerContainers": {
               "label": "Docker Container"
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
             }
           },
           "interval": {

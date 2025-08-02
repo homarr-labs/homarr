@@ -25,7 +25,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.8",
-    "ioredis": "5.6.1",
+    "ioredis": "5.7.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
@@ -33,6 +33,6 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^9.32.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   }
 }

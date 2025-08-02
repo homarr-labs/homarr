@@ -19,18 +19,19 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import type { CheckboxProps } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
 import { useDebouncedValue } from "@mantine/hooks";
 import {
   IconAlertTriangleFilled,
   IconBrandDocker,
+  IconCopy,
+  IconCopyCheckFilled,
   IconEdit,
+  IconPackageImport,
   IconPlus,
-  IconSquare,
-  IconSquareCheck,
   IconTrash,
   IconTriangleFilled,
+  IconZoomScan,
 } from "@tabler/icons-react";
 import { escapeForRegEx } from "@tiptap/react";
 
@@ -511,33 +512,37 @@ interface ReleasesRepositoryImport extends ReleasesRepository {
 
 interface ImportRepositorySelectProps {
   repository: ReleasesRepositoryImport;
+  checked: boolean;
   integration?: Integration;
   versionFilterPrecisionOptions: string[];
+  disabled: boolean;
   onImageSelectionChanged?: (isSelected: boolean) => void;
 }
 
 const ImportRepositorySelect = ({
   repository,
+  checked,
   integration,
   versionFilterPrecisionOptions,
-  onImageSelectionChanged,
+  disabled = false,
+  onImageSelectionChanged = undefined,
 }: ImportRepositorySelectProps) => {
   const tRepository = useScopedI18n("widget.releases.option.repositories");
-  const checkBoxProps: CheckboxProps = !onImageSelectionChanged
-    ? {
-        disabled: true,
-        checked: true,
-      }
-    : {
-        onChange: (event) => onImageSelectionChanged(event.currentTarget.checked),
-      };
 
   return (
     <Group gap="xl" justify="space-between">
-      <Group gap="md">
+      <Group gap="md" align="center">
         <Checkbox
+          checked={checked}
+          disabled={disabled}
+          readOnly={disabled}
+          onChange={() => {
+            if (onImageSelectionChanged) {
+              onImageSelectionChanged(!checked);
+            }
+          }}
           label={
-            <Group>
+            <Group align="center">
               <Image
                 src={repository.iconUrl}
                 style={{
@@ -548,7 +553,6 @@ const ImportRepositorySelect = ({
               <Text>{repository.identifier}</Text>
             </Group>
           }
-          {...checkBoxProps}
         />
 
         {repository.versionFilter && (
@@ -566,7 +570,7 @@ const ImportRepositorySelect = ({
         )}
       </Group>
 
-      <Tooltip label={tRepository("noProvider.tooltip")} disabled={!integration} withArrow>
+      <Tooltip label={tRepository("noProvider.tooltip")} disabled={integration !== undefined} withArrow>
         <Group>
           {integration ? (
             <MaskedImage
@@ -614,29 +618,19 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
     () =>
       docker.data?.containers.reduce<ReleasesRepositoryImport[]>((acc, container) => {
         const [maybeSource, maybeIdentifierAndVersion] = container.image.split(/\/(.*)/);
-        const hasSource = maybeSource && maybeSource in sourceToProviderKind;
+        const hasSource = maybeSource && maybeSource in containerImageToProviderKind;
         const source = hasSource ? maybeSource : "docker.io";
-        const identifierAndVersion = hasSource ? maybeIdentifierAndVersion : container.image;
+        const [identifier, version] =
+          hasSource && maybeIdentifierAndVersion ? maybeIdentifierAndVersion.split(":") : container.image.split(":");
 
-        if (!identifierAndVersion) return acc;
+        if (!identifier) return acc;
 
-        const providerKey = sourceToProviderKind[source];
+        const providerKind = containerImageToProviderKind[source] ?? "dockerHub";
         const integrationId = Object.values(innerProps.integrations).find(
-          (integration) => integration.kind === providerKey,
+          (integration) => integration.kind === providerKind,
         )?.id;
 
-        const [identifier, version] = identifierAndVersion.split(":");
-
-        if (!identifier || !integrationId) return acc;
-
-        if (
-          acc.some(
-            (item) =>
-              item.providerIntegrationId !== undefined &&
-              innerProps.integrations[item.providerIntegrationId]?.kind === providerKey &&
-              item.identifier === identifier,
-          )
-        )
+        if (acc.some((item) => item.providerIntegrationId === integrationId && item.identifier === identifier))
           return acc;
 
         acc.push({
@@ -647,10 +641,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
           name: formatIdentifierName(identifier),
           versionFilter: version ? parseImageVersionToVersionFilter(version) : undefined,
           alreadyImported: innerProps.repositories.some(
-            (item) =>
-              item.providerIntegrationId !== undefined &&
-              innerProps.integrations[item.providerIntegrationId]?.kind === providerKey &&
-              item.identifier === identifier,
+            (item) => item.providerIntegrationId === integrationId && item.identifier === identifier,
           ),
         });
         return acc;
@@ -693,7 +684,7 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
         <Stack>
           <Accordion defaultValue={!allImagesImported ? "foundImages" : anyImagesImported ? "alreadyImported" : ""}>
             <Accordion.Item value="foundImages">
-              <Accordion.Control disabled={allImagesImported} icon={<IconSquare stroke={1.25} />}>
+              <Accordion.Control disabled={allImagesImported} icon={<IconZoomScan />}>
                 <Group>
                   {tRepository("importRepositories.listFoundImages")}
                   {allImagesImported && (
@@ -704,52 +695,85 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
                 </Group>
               </Accordion.Control>
               <Accordion.Panel>
-                {!allImagesImported &&
-                  importRepositories
-                    .filter((repository) => !repository.alreadyImported)
-                    .map((repository) => {
-                      const integration = repository.providerIntegrationId
-                        ? innerProps.integrations[repository.providerIntegrationId]
-                        : undefined;
+                {!allImagesImported && (
+                  <Stack justify="center" gap="xs">
+                    <Group>
+                      <Button
+                        leftSection={<IconCopyCheckFilled size="1em" />}
+                        onClick={() =>
+                          setSelectedImages(importRepositories.filter((repository) => !repository.alreadyImported))
+                        }
+                        size="xs"
+                      >
+                        {tRepository("importRepositories.selectAll")}
+                      </Button>
+                      <Button
+                        leftSection={<IconCopy size="1em" />}
+                        onClick={() => setSelectedImages([])}
+                        size="xs"
+                        variant="default"
+                        color="gray.5"
+                      >
+                        {tRepository("importRepositories.deselectAll")}
+                      </Button>
+                    </Group>
 
-                      return (
-                        <ImportRepositorySelect
-                          key={repository.id}
-                          repository={repository}
-                          integration={integration}
-                          versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
-                          onImageSelectionChanged={(isSelected) =>
-                            isSelected
-                              ? setSelectedImages([...selectedImages, repository])
-                              : setSelectedImages(selectedImages.filter((img) => img !== repository))
-                          }
-                        />
-                      );
-                    })}
+                    <Divider />
+
+                    {importRepositories
+                      .filter((repository) => !repository.alreadyImported)
+                      .map((repository) => {
+                        const integration = repository.providerIntegrationId
+                          ? innerProps.integrations[repository.providerIntegrationId]
+                          : undefined;
+
+                        return (
+                          <ImportRepositorySelect
+                            key={repository.id}
+                            repository={repository}
+                            checked={selectedImages.includes(repository)}
+                            integration={integration}
+                            versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
+                            disabled={false}
+                            onImageSelectionChanged={(isSelected) =>
+                              isSelected
+                                ? setSelectedImages([...selectedImages, repository])
+                                : setSelectedImages(selectedImages.filter((img) => img !== repository))
+                            }
+                          />
+                        );
+                      })}
+                  </Stack>
+                )}
               </Accordion.Panel>
             </Accordion.Item>
             <Accordion.Item value="alreadyImported">
-              <Accordion.Control disabled={!anyImagesImported} icon={<IconSquareCheck stroke={1.25} />}>
+              <Accordion.Control disabled={!anyImagesImported} icon={<IconPackageImport />}>
                 {tRepository("importRepositories.listAlreadyImportedImages")}
               </Accordion.Control>
               <Accordion.Panel>
-                {anyImagesImported &&
-                  importRepositories
-                    .filter((repository) => repository.alreadyImported)
-                    .map((repository) => {
-                      const integration = repository.providerIntegrationId
-                        ? innerProps.integrations[repository.providerIntegrationId]
-                        : undefined;
+                {anyImagesImported && (
+                  <Stack justify="center" gap="xs">
+                    {importRepositories
+                      .filter((repository) => repository.alreadyImported)
+                      .map((repository) => {
+                        const integration = repository.providerIntegrationId
+                          ? innerProps.integrations[repository.providerIntegrationId]
+                          : undefined;
 
-                      return (
-                        <ImportRepositorySelect
-                          key={repository.id}
-                          repository={repository}
-                          integration={integration}
-                          versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
-                        />
-                      );
-                    })}
+                        return (
+                          <ImportRepositorySelect
+                            key={repository.id}
+                            repository={repository}
+                            integration={integration}
+                            versionFilterPrecisionOptions={innerProps.versionFilterPrecisionOptions}
+                            checked
+                            disabled
+                          />
+                        );
+                      })}
+                  </Stack>
+                )}
               </Accordion.Panel>
             </Accordion.Item>
           </Accordion>
@@ -774,9 +798,11 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
   size: "xl",
 });
 
-const sourceToProviderKind: Record<string, IntegrationKind> = {
+const containerImageToProviderKind: Record<string, IntegrationKind> = {
   "ghcr.io": "github",
   "docker.io": "dockerHub",
+  "lscr.io": "linuxServerIO",
+  "quay.io": "quay",
 };
 
 const parseImageVersionToVersionFilter = (imageVersion: string): ReleasesVersionFilter | undefined => {
