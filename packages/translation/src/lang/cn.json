@@ -2257,6 +2257,9 @@
         "showDetails": {
           "label": "展开详情"
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "热门发布",
           "description": "要显示的最新版本的最大数量。零表示没有限制。"
@@ -2273,7 +2276,9 @@
             "listFoundImages": "找到的映像列表",
             "listAlreadyImportedImages": "已导入的映像列表",
             "allImagesAlreadyImported": "所有映像已导入",
-            "onlyAdminCanImport": "只有管理员才能从 docker 导入"
+            "onlyAdminCanImport": "只有管理员才能从 docker 导入",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": "提供者"
@@ -2335,6 +2340,7 @@
       "starsCount": "星",
       "forksCount": "复刻",
       "issuesCount": "打开问题",
+      "markViewed": "",
       "openProjectPage": "打开项目页面",
       "openReleasePage": "打开发布页面",
       "releaseDescription": "发布说明",
@@ -2405,6 +2411,35 @@
     "networkController": {
       "error": {
         "internalServerError": "获取网络控制器概述失败"
+      }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
       }
     },
     "notifications": {
@@ -3186,6 +3221,18 @@
             },
             "dockerContainers": {
               "label": "Docker 容器"
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
             }
           },
           "interval": {
