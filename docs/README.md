@@ -1,5 +1,5 @@
-<!-- Project Title -->
-[![Banner](./banner.png)](https://homarr.dev/)
+![](img/logo/2340450-2-title.png)
+
 
 <!-- Badges -->
 <p align="center">
@@ -20,10 +20,6 @@
 
 <!-- Links -->
 <p align="center">
-  <a href="https://demo.homarr.dev/">
-    <strong>Demo ✨</strong>
-  </a>
-  •
   <a href="https://homarr.dev/docs/category/installation-1/">
     <strong>Install 💻</strong>
   </a> •
@@ -36,7 +32,7 @@
 </p>
 
 
-[![Features Section](./section-features.png)](https://homarr.dev/)
+![](img/headers/features.png)
 
 - 🖌️ Highly customizable with an extensive drag and drop grid system
 - ✨ Integrates seamlessly with your favorite self-hosted applications
@@ -53,7 +49,7 @@
 <br/>
 <br/>
 
-[![Widgets & Integrations Section](./section-widgets-and-integrations.png)](https://homarr.dev/docs/category/widgets)
+![](img/headers/integrations.png)
 
 <!-- AUTO_GENERATE_INTEGRATION_LIST_START -->
 
@@ -314,9 +310,7 @@
 <br/>
 <br/>
 
-[![Installation Section](./section-installation.png)](https://homarr.dev/docs/category/installation-1)
-
-Since we are updating Homarr very frequently, we recommend reading our official installation guides:
+![](img/headers/installation.png)
 
 <h2>
 <a href="https://homarr.dev/docs/category/installation-1/">
@@ -327,12 +321,15 @@ Since we are updating Homarr very frequently, we recommend reading our official 
 <br/>
 <br/>
 
-[![Contribute Section](./section-contribute.png)](https://opencollective.com/homarr)
+![](img/headers/contribute.png)
 
 <br/>
 
-Homarr is a free to use open source project that is maintained by volunteers and developers from all over the world. We publish under the ``Apache License 2.0`` license which allows commercial usage. We invest multiple hours daily in to providing support, developing Homarr, integrating to third party software and more. We also pay for licensing and server hosting fees.
-Please consider to help us cover these costs to enable the future development of Homarr. Thank you!
+Homarr is a free-to-use open source project maintained by volunteers and developers from all over the world. 
+We publish under the ``Apache License 2.0`` license which allows commercial usage. 
+We invest multiple hours daily in providing support, developing Homarr, integrating to third party software and more.
+We also pay for licensing and server hosting fees.
+Please consider helping us cover these costs to enable the future development of Homarr. Thank you!
 
 <h2>
 <a href="https://opencollective.com/homarr">
@@ -343,7 +340,7 @@ Please consider to help us cover these costs to enable the future development of
 You can also support us by helping with [translating the entire project](https://homarr.dev/docs/community/translations) to as many languages as possible or contributing directly to the code or documentation. Please read our [Contribution Guidelines](/CONTRIBUTING.md). All contributions, regardless of their size or scope, are welcome and highly appreciated! Thank you ❤️
 
 ## Sponsors
-Thanks to your generous sponsors we can continue to build Homarr. Check them out for high quality and easy to use development tools.
+Thanks to your generous sponsors, we can continue to build Homarr. Check them out for high-quality and easy-to-use development tools.
 Feel free to contact us at homarr-labs@proton.me if you wish to become a sponsor.
 
 [![Covered by Argos Visual Testing](https://argos-ci.com/badge-large.svg)](https://argos-ci.com?utm_source=%5Bhomarr%5D&utm_campaign=oss) \

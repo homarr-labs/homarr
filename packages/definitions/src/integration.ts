@@ -1,6 +1,7 @@
 import { objectKeys } from "@homarr/common";
 import type { AtLeastOneOf } from "@homarr/common/types";
-import {createDocumentationLink} from "./docs";
+
+import { createDocumentationLink } from "./docs";
 
 export const integrationSecretKindObject = {
   apiKey: { isPublic: false },
@@ -29,182 +30,182 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/sabnzbd.svg",
     category: ["downloadClient", "usenet"],
-    documentationUrl: createDocumentationLink("/docs/integrations/sabnzbd")
+    documentationUrl: createDocumentationLink("/docs/integrations/sabnzbd"),
   },
   nzbGet: {
     name: "NZBGet",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nzbget.svg",
     category: ["downloadClient", "usenet"],
-    documentationUrl: createDocumentationLink("/docs/integrations/nzbget")
+    documentationUrl: createDocumentationLink("/docs/integrations/nzbget"),
   },
   deluge: {
     name: "Deluge",
     secretKinds: [["password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/deluge.svg",
     category: ["downloadClient", "torrent"],
-    documentationUrl: createDocumentationLink("/docs/integrations/deluge")
+    documentationUrl: createDocumentationLink("/docs/integrations/deluge"),
   },
   transmission: {
     name: "Transmission",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/transmission.svg",
     category: ["downloadClient", "torrent"],
-    documentationUrl: createDocumentationLink("/docs/integrations/transmission")
+    documentationUrl: createDocumentationLink("/docs/integrations/transmission"),
   },
   qBittorrent: {
     name: "qBittorrent",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/qbittorrent.svg",
     category: ["downloadClient", "torrent"],
-    documentationUrl: createDocumentationLink("/docs/integrations/q-bittorent")
+    documentationUrl: createDocumentationLink("/docs/integrations/q-bittorent"),
   },
   aria2: {
     name: "Aria2",
     secretKinds: [[], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus_icons@latest/src/system_downloads_3.svg",
     category: ["downloadClient", "torrent", "miscellaneous"],
-    documentationUrl: createDocumentationLink("/docs/integrations/aria2")
+    documentationUrl: createDocumentationLink("/docs/integrations/aria2"),
   },
   sonarr: {
     name: "Sonarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/sonarr.svg",
     category: ["calendar"],
-    documentationUrl: createDocumentationLink("/docs/integrations/sonarr")
+    documentationUrl: createDocumentationLink("/docs/integrations/sonarr"),
   },
   radarr: {
     name: "Radarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/radarr.svg",
     category: ["calendar"],
-    documentationUrl: createDocumentationLink("/docs/integrations/radarr")
+    documentationUrl: createDocumentationLink("/docs/integrations/radarr"),
   },
   lidarr: {
     name: "Lidarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/lidarr.svg",
     category: ["calendar"],
-    documentationUrl: createDocumentationLink("/docs/integrations/lidarr")
+    documentationUrl: createDocumentationLink("/docs/integrations/lidarr"),
   },
   readarr: {
     name: "Readarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/readarr.svg",
     category: ["calendar"],
-    documentationUrl: createDocumentationLink("/docs/integrations/readarr")
+    documentationUrl: createDocumentationLink("/docs/integrations/readarr"),
   },
   prowlarr: {
     name: "Prowlarr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/prowlarr.svg",
     category: ["indexerManager"],
-    documentationUrl: createDocumentationLink("/docs/integrations/prowlarr")
+    documentationUrl: createDocumentationLink("/docs/integrations/prowlarr"),
   },
   jellyfin: {
     name: "Jellyfin",
     secretKinds: [["username", "password"], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg",
     category: ["mediaService", "mediaRelease"],
-    documentationUrl: createDocumentationLink("/docs/integrations/jellyfin")
+    documentationUrl: createDocumentationLink("/docs/integrations/jellyfin"),
   },
   emby: {
     name: "Emby",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/emby.svg",
     category: ["mediaService", "mediaRelease"],
-    documentationUrl: createDocumentationLink("/docs/integrations/emby")
+    documentationUrl: createDocumentationLink("/docs/integrations/emby"),
   },
   plex: {
     name: "Plex",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/plex.svg",
     category: ["mediaService", "mediaRelease"],
-    documentationUrl: createDocumentationLink("/docs/integrations/plex")
+    documentationUrl: createDocumentationLink("/docs/integrations/plex"),
   },
   jellyseerr: {
     name: "Jellyseerr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyseerr.svg",
     category: ["mediaSearch", "mediaRequest", "search"],
-    documentationUrl: createDocumentationLink("/docs/integrations/jellyseerr")
+    documentationUrl: createDocumentationLink("/docs/integrations/jellyseerr"),
   },
   overseerr: {
     name: "Overseerr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/overseerr.svg",
     category: ["mediaSearch", "mediaRequest", "search"],
-    documentationUrl: createDocumentationLink("/docs/integrations/overseerr")
+    documentationUrl: createDocumentationLink("/docs/integrations/overseerr"),
   },
   piHole: {
     name: "Pi-hole",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/pi-hole.svg",
     category: ["dnsHole"],
-    documentationUrl: createDocumentationLink("/docs/integrations/pi-hole")
+    documentationUrl: createDocumentationLink("/docs/integrations/pi-hole"),
   },
   adGuardHome: {
     name: "AdGuard Home",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/adguard-home.svg",
     category: ["dnsHole"],
-    documentationUrl: createDocumentationLink("/docs/integrations/adguard-home")
+    documentationUrl: createDocumentationLink("/docs/integrations/adguard-home"),
   },
   homeAssistant: {
     name: "Home Assistant",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/home-assistant.svg",
     category: ["smartHomeServer"],
-    documentationUrl: createDocumentationLink("/docs/integrations/home-assistant")
+    documentationUrl: createDocumentationLink("/docs/integrations/home-assistant"),
   },
   openmediavault: {
     name: "OpenMediaVault",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/openmediavault.svg",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/open-media-vault")
+    documentationUrl: createDocumentationLink("/docs/integrations/open-media-vault"),
   },
   dashDot: {
     name: "Dash.",
     secretKinds: [[]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/dashdot.png",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/dash-dot")
+    documentationUrl: createDocumentationLink("/docs/integrations/dash-dot"),
   },
   tdarr: {
     name: "Tdarr",
     secretKinds: [[], ["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/tdarr.png",
     category: ["mediaTranscoding"],
-    documentationUrl: createDocumentationLink("/docs/integrations/tdarr")
+    documentationUrl: createDocumentationLink("/docs/integrations/tdarr"),
   },
   proxmox: {
     name: "Proxmox",
     secretKinds: [["username", "tokenId", "apiKey", "realm"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/proxmox.svg",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/integrations/proxmox")
+    documentationUrl: createDocumentationLink("/docs/integrations/proxmox"),
   },
   nextcloud: {
     name: "Nextcloud",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/nextcloud.svg",
     category: ["calendar"],
-    documentationUrl: createDocumentationLink("/docs/integrations/nextcloud")
+    documentationUrl: createDocumentationLink("/docs/integrations/nextcloud"),
   },
   unifiController: {
     name: "Unifi Controller",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
     category: ["networkController"],
-    documentationUrl: createDocumentationLink("/docs/integrations/unifi-controller")
+    documentationUrl: createDocumentationLink("/docs/integrations/unifi-controller"),
   },
   opnsense: {
     name: "OPNsense",
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg",
     category: ["firewall"],
-    documentationUrl: createDocumentationLink("/docs/integrations/opensense")
+    documentationUrl: createDocumentationLink("/docs/integrations/opensense"),
   },
   github: {
     name: "Github",
@@ -212,7 +213,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/github.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://api.github.com",
-    documentationUrl: createDocumentationLink("/docs/integrations/github")
+    documentationUrl: createDocumentationLink("/docs/integrations/github"),
   },
   dockerHub: {
     name: "Docker Hub",
@@ -220,7 +221,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/docker.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://hub.docker.com",
-    documentationUrl: createDocumentationLink("/docs/integrations/docker-hub")
+    documentationUrl: createDocumentationLink("/docs/integrations/docker-hub"),
   },
   gitlab: {
     name: "Gitlab",
@@ -228,7 +229,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/gitlab.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://gitlab.com",
-    documentationUrl: createDocumentationLink("/docs/integrations/gitlab")
+    documentationUrl: createDocumentationLink("/docs/integrations/gitlab"),
   },
   npm: {
     name: "NPM",
@@ -236,7 +237,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/npm.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://registry.npmjs.org",
-    documentationUrl: createDocumentationLink("/docs/integrations/npm")
+    documentationUrl: createDocumentationLink("/docs/integrations/npm"),
   },
   codeberg: {
     name: "Codeberg",
@@ -244,7 +245,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/codeberg.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://codeberg.org",
-    documentationUrl: createDocumentationLink("/docs/integrations/codeberg")
+    documentationUrl: createDocumentationLink("/docs/integrations/codeberg"),
   },
   linuxServerIO: {
     name: "LinuxServer.io",
@@ -252,7 +253,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/linuxserver-io.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://api.linuxserver.io",
-    documentationUrl: createDocumentationLink("/docs/integrations/linux-server-io")
+    documentationUrl: createDocumentationLink("/docs/integrations/linux-server-io"),
   },
   gitHubContainerRegistry: {
     name: "GitHub Container Registry",
@@ -260,7 +261,7 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/github.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://api.github.com",
-    documentationUrl: createDocumentationLink("/docs/integrations/github")
+    documentationUrl: createDocumentationLink("/docs/integrations/github"),
   },
   quay: {
     name: "Quay",
@@ -268,14 +269,14 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/quay.png",
     category: ["releasesProvider"],
     defaultUrl: "https://quay.io",
-    documentationUrl: createDocumentationLink("/docs/integrations/quay")
+    documentationUrl: createDocumentationLink("/docs/integrations/quay"),
   },
   ntfy: {
     name: "ntfy",
     secretKinds: [["topic"], ["topic", "apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
     category: ["notifications"],
-    documentationUrl: createDocumentationLink("/docs/integrations/ntfy")
+    documentationUrl: createDocumentationLink("/docs/integrations/ntfy"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
@@ -296,7 +297,7 @@ export const integrationDefs = {
       "notifications",
       "smartHomeServer",
     ],
-    documentationUrl: null
+    documentationUrl: null,
   },
 } as const satisfies Record<string, integrationDefinition>;
 
