@@ -80,7 +80,8 @@
       "protobufjs"
     ],
     "patchedDependencies": {
-      "@types/node-unifi": "patches/@types__node-unifi.patch"
+      "@types/node-unifi": "patches/@types__node-unifi.patch",
+      "dns-caching": "patches/dns-caching.patch"
     }
   }
 }
