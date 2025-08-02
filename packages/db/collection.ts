@@ -55,8 +55,8 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
 
   return {
     ...context,
-    insertAll: (db: HomarrDatabase) => {
-      db.transaction((transaction) => {
+    insertAll: (db: typeOfHomarrDatabase) => {
+      (db as HomarrDatabase).transaction((transaction) => {
         for (const [key, values] of objectEntries(context)) {
           if (values.length >= 1) {
             transaction
@@ -86,7 +86,7 @@ export const createDbInsertCollectionWithoutTransaction = <TTableKey extends Tab
 
   return {
     ...collection,
-    insertAllAsync: async (db: HomarrDatabase) => {
+    insertAllAsync: async (db: typeOfHomarrDatabase) => {
       switch (env.DB_DRIVER) {
         case "mysql2":
         case "postgresql":
