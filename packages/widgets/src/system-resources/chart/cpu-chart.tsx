@@ -1,16 +1,18 @@
 import { Paper, Text } from "@mantine/core";
 
 import { CommonChart } from "./common-chart";
+import {useScopedI18n} from "@homarr/translation/client";
 
 export const SystemResourceCPUChart = ({ cpuUsageOverTime }: { cpuUsageOverTime: number[] }) => {
   const chartData = cpuUsageOverTime.map((usage, index) => ({ index, usage }));
+  const t = useScopedI18n('widget.systemResources.card');
 
   return (
     <CommonChart
       data={chartData}
       dataKey={"index"}
       series={[{ name: "usage", color: "blue.5" }]}
-      title={"CPU"}
+      title={t("cpu")}
       lastValue={
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         cpuUsageOverTime.length > 0 ? `${Math.round(cpuUsageOverTime[cpuUsageOverTime.length - 1]!)}%` : undefined
