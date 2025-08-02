@@ -22,6 +22,9 @@ export type HomarrDatabaseMysql = MySql2Database<typeof mysqlSchema>;
 export type HomarrDatabasePostgresql = NodePgDatabase<typeof pgSchema>;
 export type typeOfHomarrDatabase = HomarrDatabase | HomarrDatabaseMysql | HomarrDatabasePostgresql;
 
+export let connection: BetterSqlite3Connection | MysqlConnectionPool;
+export let database: HomarrDatabase;
+
 const init = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (database === undefined) {
@@ -38,9 +41,6 @@ const init = () => {
     }
   }
 };
-
-export let connection: BetterSqlite3Connection | MysqlConnectionPool;
-export let database: HomarrDatabase;
 
 class WinstonDrizzleLogger implements Logger {
   logQuery(query: string, _: unknown[]): void {
