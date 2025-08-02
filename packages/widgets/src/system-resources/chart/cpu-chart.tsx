@@ -11,7 +11,10 @@ export const SystemResourceCPUChart = ({ cpuUsageOverTime }: { cpuUsageOverTime:
       dataKey={"index"}
       series={[{ name: "usage", color: "blue.5" }]}
       title={"CPU"}
-      lastValue={cpuUsageOverTime.length > 0 ? `${Math.round(cpuUsageOverTime[cpuUsageOverTime.length - 1]!)}%` : undefined}
+      lastValue={
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        cpuUsageOverTime.length > 0 ? `${Math.round(cpuUsageOverTime[cpuUsageOverTime.length - 1]!)}%` : undefined
+      }
       yAxisProps={{ domain: [0, 100] }}
       tooltipProps={{
         content: ({ payload }) => {
