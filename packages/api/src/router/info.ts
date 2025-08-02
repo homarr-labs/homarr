@@ -7,7 +7,7 @@ export const infoRouter = createTRPCRouter({
   getInfo: protectedProcedure
     .input(z.void())
     .output(z.object({ version: z.string() }))
-    .meta({ openapi: { method: "GET", path: "/api/info" } })
+    .meta({ openapi: { method: "GET", path: "/api/info", tags: ["info"] } })
     .query(() => {
       return {
         version: packageJson.version,
