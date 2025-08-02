@@ -1,11 +1,12 @@
 import { Paper, Text } from "@mantine/core";
 
+import { useScopedI18n } from "@homarr/translation/client";
+
 import { CommonChart } from "./common-chart";
-import {useScopedI18n} from "@homarr/translation/client";
 
 export const SystemResourceCPUChart = ({ cpuUsageOverTime }: { cpuUsageOverTime: number[] }) => {
   const chartData = cpuUsageOverTime.map((usage, index) => ({ index, usage }));
-  const t = useScopedI18n('widget.systemResources.card');
+  const t = useScopedI18n("widget.systemResources.card");
 
   return (
     <CommonChart

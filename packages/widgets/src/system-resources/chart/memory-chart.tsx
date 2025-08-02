@@ -1,9 +1,9 @@
 import { Paper, Text } from "@mantine/core";
 
 import { humanFileSize } from "@homarr/common";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import { CommonChart } from "./common-chart";
-import {useScopedI18n} from "@homarr/translation/client";
 
 export const SystemResourceMemoryChart = ({
   memoryUsageOverTime,
@@ -13,12 +13,12 @@ export const SystemResourceMemoryChart = ({
   totalCapacityInBytes: number;
 }) => {
   const chartData = memoryUsageOverTime.map((usage, index) => ({ index, usage }));
-  const t = useScopedI18n('widget.systemResources.card');
+  const t = useScopedI18n("widget.systemResources.card");
 
   const percentageUsed =
     memoryUsageOverTime.length > 0
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      ? memoryUsageOverTime[memoryUsageOverTime.length - 1]! / totalCapacityInBytes
+      ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        memoryUsageOverTime[memoryUsageOverTime.length - 1]! / totalCapacityInBytes
       : undefined;
 
   return (

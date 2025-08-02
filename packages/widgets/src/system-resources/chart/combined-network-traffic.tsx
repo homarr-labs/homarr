@@ -1,9 +1,9 @@
 import { Box, Group, Paper, Stack, Text } from "@mantine/core";
 
 import { humanFileSize } from "@homarr/common";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import { CommonChart } from "./common-chart";
-import {useScopedI18n} from "@homarr/translation/client";
 
 export const CombinedNetworkTrafficChart = ({
   usageOverTime,
@@ -14,7 +14,7 @@ export const CombinedNetworkTrafficChart = ({
   }[];
 }) => {
   const chartData = usageOverTime.map((usage, index) => ({ index, up: usage.up, down: usage.down }));
-  const t = useScopedI18n('widget.systemResources.card');
+  const t = useScopedI18n("widget.systemResources.card");
 
   return (
     <CommonChart

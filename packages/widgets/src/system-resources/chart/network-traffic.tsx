@@ -1,13 +1,13 @@
 import { Paper, Text } from "@mantine/core";
 
 import { humanFileSize } from "@homarr/common";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import { CommonChart } from "./common-chart";
-import {useScopedI18n} from "@homarr/translation/client";
 
 export const NetworkTrafficChart = ({ usageOverTime, isUp }: { usageOverTime: number[]; isUp: boolean }) => {
   const chartData = usageOverTime.map((usage, index) => ({ index, usage }));
-  const t = useScopedI18n('widget.systemResources.card');
+  const t = useScopedI18n("widget.systemResources.card");
 
   const max = Math.max(...usageOverTime);
   const upperBound = max + max * 0.2;
