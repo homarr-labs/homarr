@@ -1,5 +1,5 @@
-import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
-import { typeOfHomarrDatabase } from "./driver";
+import { isMysql, isPostgresql } from "./collection";
+import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql, typeOfHomarrDatabase } from "./driver";
 import * as mysqlSchema from "./schema/mysql";
 import * as pgSchema from "./schema/postgresql";
 
@@ -21,11 +21,11 @@ export const handleDiffrentDbDriverOperationsAsync = async (
   db: typeOfHomarrDatabase,
   input: HandleTransactionInput,
 ) => {
-  if (typeOfHomarrDatabase === HomarrDatabaseMysql) {
-    await input.handleAsync(db as unknown as HomarrDatabaseMysql, mysqlSchema);
-  } else if (typeOfHomarrDatabase === HomarrDatabasePostgresql) {
-    await input.handlePostgresqlAsync(db as unknown as HomarrDatabasePostgresql, pgSchema);
+  if (isMysql()) {
+    await input.handleAsync(db as HomarrDatabaseMysql, mysqlSchema);
+  } else if (isPostgresql()) {
+    await input.handlePostgresqlAsync(db as HomarrDatabasePostgresql, pgSchema);
   } else {
-    input.handleSync(db);
+    input.handleSync(db as HomarrDatabase);
   }
 };
