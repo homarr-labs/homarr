@@ -1,0 +1,42 @@
+services:
+
+  db:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      POSTGRES_PASSWORD: Password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: Homarr-db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - type: bind
+        source: ./postgresql_data
+        target: /var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    # if already run PostgreSQL, change port number to use container's service
+    #  - 2345:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
+    depends_on:
+      - db
