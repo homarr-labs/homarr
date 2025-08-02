@@ -2,7 +2,7 @@
 import type {LineChartSeries} from "@mantine/charts";
 import {LineChart} from "@mantine/charts";
 import {Group, Card, Center, Loader, Stack, Text, useMantineColorScheme, useMantineTheme} from "@mantine/core";
-import {useElementSize} from "@mantine/hooks";
+import {useElementSize, useHover, useMergedRef} from "@mantine/hooks";
 import type {TooltipProps, YAxisProps} from "recharts";
 
 import {useRequiredBoard} from "@homarr/boards/context";
@@ -24,10 +24,12 @@ export const CommonChart = ({
   yAxisProps?: Omit<YAxisProps, "ref">;
   lastValue?: string;
 }) => {
-  const {ref, height} = useElementSize();
+  const {ref: elementSizeRef, height} = useElementSize();
   const theme = useMantineTheme();
   const scheme = useMantineColorScheme();
   const board = useRequiredBoard();
+  const { hovered, ref: hoverRef } = useHover();
+  const ref = useMergedRef(elementSizeRef, hoverRef);
 
   const opacity = board.opacity / 100;
   const backgroundColor =
@@ -43,7 +45,7 @@ export const CommonChart = ({
       bg={data.length <= 1 ? backgroundColor : undefined}
       radius={board.itemRadius}
     >
-      {data.length > 1 && height > 40 && (
+      {data.length > 1 && height > 40 && !hovered && (
         <Group pos={"absolute"} top={0} left={0} p={8} pt={6} gap={5} wrap={"nowrap"} style={{ zIndex: 2, pointerEvents: "none" }}>
           <Text c={"dimmed"} size={height > 100 ? "md" : "xs"} fw={"bold"}>
             {title}
