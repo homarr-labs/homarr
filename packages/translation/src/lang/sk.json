@@ -2257,6 +2257,9 @@
         "showDetails": {
           "label": "Zobraziť podrobnosti"
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "Najlepšie vydania",
           "description": "Maximálny počet najnovších vydaní na zobrazenie. Nula znamená žiadny limit."
@@ -2273,7 +2276,9 @@
             "listFoundImages": "Zoznam nájdených obrázkov",
             "listAlreadyImportedImages": "Zoznam už importovaných obrázkov",
             "allImagesAlreadyImported": "Všetky obrázky sú už importované",
-            "onlyAdminCanImport": "Importovať z dockeru môžu iba správcovia"
+            "onlyAdminCanImport": "Importovať z dockeru môžu iba správcovia",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": "Poskytovateľ"
@@ -2335,6 +2340,7 @@
       "starsCount": "Hviezdy",
       "forksCount": "Vidlicový",
       "issuesCount": "Problémy",
+      "markViewed": "",
       "openProjectPage": "Otvorte stránku projektu",
       "openReleasePage": "Otvorte stránku vydania",
       "releaseDescription": "Popis vydania",
@@ -2405,6 +2411,35 @@
     "networkController": {
       "error": {
         "internalServerError": "Nepodarilo sa načítať súhrn sieťového ovládača"
+      }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
       }
     },
     "notifications": {
@@ -3186,6 +3221,18 @@
             },
             "dockerContainers": {
               "label": "Docker kontajnery"
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
             }
           },
           "interval": {
