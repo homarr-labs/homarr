@@ -5,7 +5,7 @@ import { handleTransactionsAsync } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { logger } from "@homarr/log";
 
-import { typeOfHomarrDatabase } from "../../../db/driver";
+import type { typeOfHomarrDatabase } from "../../../db/driver";
 import { analyseOldmarrImportAsync } from "../analyse/analyse-oldmarr-import";
 import { prepareMultipleImports } from "../prepare/prepare-multiple";
 import { createBoardInsertCollection } from "./collections/board-collection";

@@ -3,7 +3,7 @@ import type { Database } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 import type { OldmarrConfig } from "@homarr/old-schema";
 
-import { typeOfHomarrDatabase } from "../../../db/driver";
+import type { typeOfHomarrDatabase } from "../../../db/driver";
 import { doAppsMatch } from "../prepare/prepare-apps";
 import { prepareSingleImport } from "../prepare/prepare-single";
 import type { OldmarrImportConfiguration } from "../settings";
