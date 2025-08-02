@@ -172,6 +172,12 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png",
     category: ["networkController"],
   },
+  opnsense: {
+    name: "OPNsense",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg",
+    category: ["firewall"],
+  },
   github: {
     name: "Github",
     secretKinds: [[], ["personalAccessToken"]],
@@ -214,8 +220,8 @@ export const integrationDefs = {
     category: ["releasesProvider"],
     defaultUrl: "https://api.linuxserver.io",
   },
-  githubPackages: {
-    name: "Github Packages",
+  gitHubContainerRegistry: {
+    name: "GitHub Container Registry",
     secretKinds: [[], ["personalAccessToken"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/github.svg",
     category: ["releasesProvider"],
@@ -318,6 +324,7 @@ export const integrationCategories = [
   "networkController",
   "releasesProvider",
   "notifications",
+  "firewall",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];

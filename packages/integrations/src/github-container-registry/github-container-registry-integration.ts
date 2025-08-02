@@ -16,14 +16,14 @@ import type {
   ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
-const localLogger = logger.child({ module: "GithubPackagesIntegration" });
+const localLogger = logger.child({ module: "GitHubContainerRegistryIntegration" });
 
-export class GithubPackagesIntegration extends Integration implements ReleasesProviderIntegration {
-  private static readonly userAgent = "Homarr-Lab/Homarr:GithubPackagesIntegration";
+export class GitHubContainerRegistryIntegration extends Integration implements ReleasesProviderIntegration {
+  private static readonly userAgent = "Homarr-Lab/Homarr:GitHubContainerRegistryIntegration";
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const headers: RequestInit["headers"] = {
-      "User-Agent": GithubPackagesIntegration.userAgent,
+      "User-Agent": GitHubContainerRegistryIntegration.userAgent,
     };
 
     if (this.hasSecretValue("personalAccessToken"))
@@ -46,7 +46,7 @@ export class GithubPackagesIntegration extends Integration implements ReleasesPr
     const [owner, name] = repository.identifier.split("/");
     if (!owner || !name) {
       localLogger.warn(
-        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Github Packages integration`,
+        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with GitHub Container Registry integration`,
         {
           identifier: repository.identifier,
         },
@@ -86,7 +86,7 @@ export class GithubPackagesIntegration extends Integration implements ReleasesPr
     } catch (error) {
       const errorMessage = error instanceof RequestError ? error.message : String(error);
 
-      localLogger.warn(`Failed to get releases for ${owner}\\${name} with Github Packages integration`, {
+      localLogger.warn(`Failed to get releases for ${owner}\\${name} with GitHub Container Registry integration`, {
         owner,
         name,
         error: errorMessage,
@@ -122,7 +122,7 @@ export class GithubPackagesIntegration extends Integration implements ReleasesPr
         forksCount: response.data.repository?.forks_count,
       };
     } catch (error) {
-      localLogger.warn(`Failed to get details for ${owner}\\${name} with Github Packages integration`, {
+      localLogger.warn(`Failed to get details for ${owner}\\${name} with GitHub Container Registry integration`, {
         owner,
         name,
         error: error instanceof RequestError ? error.message : String(error),
@@ -137,7 +137,7 @@ export class GithubPackagesIntegration extends Integration implements ReleasesPr
       request: {
         fetch: fetchWithTrustedCertificatesAsync,
       },
-      userAgent: GithubPackagesIntegration.userAgent,
+      userAgent: GitHubContainerRegistryIntegration.userAgent,
       throttle: { enabled: false }, // Disable throttling for this integration, Octokit will retry by default after a set time, thus delaying the repsonse to the user in case of errors. Errors will be shown to the user, no need to retry the request.
       ...(this.hasSecretValue("personalAccessToken") ? { auth: this.getSecretValue("personalAccessToken") } : {}),
     });

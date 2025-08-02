@@ -14,7 +14,7 @@ import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorre
 import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { EmbyIntegration } from "../emby/emby-integration";
-import { GithubPackagesIntegration } from "../github-packages/github-packages-integration";
+import { GitHubContainerRegistryIntegration } from "../github-container-registry/github-container-registry-integration";
 import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
@@ -31,6 +31,7 @@ import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { NPMIntegration } from "../npm/npm-integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
+import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
 import { PlexIntegration } from "../plex/plex-integration";
@@ -102,13 +103,14 @@ export const integrationCreators = {
   emby: EmbyIntegration,
   nextcloud: NextcloudIntegration,
   unifiController: UnifiControllerIntegration,
+  opnsense: OPNsenseIntegration,
   github: GithubIntegration,
   dockerHub: DockerHubIntegration,
   gitlab: GitlabIntegration,
   npm: NPMIntegration,
   codeberg: CodebergIntegration,
   linuxServerIO: LinuxServerIOIntegration,
-  githubPackages: GithubPackagesIntegration,
+  gitHubContainerRegistry: GitHubContainerRegistryIntegration,
   quay: QuayIntegration,
   ntfy: NTFYIntegration,
   mock: MockIntegration,

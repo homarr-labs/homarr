@@ -2340,6 +2340,7 @@
       "starsCount": "Stars",
       "forksCount": "Forks",
       "issuesCount": "Open Issues",
+      "markViewed": "Mark as viewed",
       "openProjectPage": "Open Project Page",
       "openReleasePage": "Open Release Page",
       "releaseDescription": "Release Description",
@@ -2410,6 +2411,35 @@
     "networkController": {
       "error": {
         "internalServerError": "Failed to fetch Network Controller Summary"
+      }
+    },
+    "firewall": {
+      "name": "Firewall Monitoring",
+      "description": "Displays a summary of firewalls",
+      "tab": {
+        "system": "System",
+        "interfaces": "Interfaces"
+      },
+      "error": {
+        "internalServerError": "Unable to get data from firewall"
+      },
+      "option": {
+        "interfaces": "Network interfaces to display"
+      },
+      "widget": {
+        "fwname": "Name",
+        "version": "Version",
+        "versiontitle": "Versions",
+        "cputitle": "CPU usage",
+        "memorytitle": "Memory usage",
+        "cpu": "CPU",
+        "memory": "Memory",
+        "interfaces": {
+          "name": "name",
+          "trans": "Transmited",
+          "recv": "Received",
+          "title": "Network Interfaces"
+        }
       }
     },
     "notifications": {
@@ -3203,6 +3233,18 @@
             },
             "dockerContainers": {
               "label": "Docker containers"
+            },
+            "firewallCpu": {
+              "label": "Firewall CPU"
+            },
+            "firewallMemory": {
+              "label": "Firewall Memory"
+            },
+            "firewallVersion": {
+              "label": "Firewall Version"
+            },
+            "firewallInterfaces": {
+              "label": "Firewall Interfaces"
             }
           },
           "interval": {

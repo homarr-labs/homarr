@@ -26,6 +26,7 @@ export const widgetKinds = [
   "releases",
   "mediaReleases",
   "dockerContainers",
+  "firewall",
   "notifications",
   "systemResources",
 ] as const;

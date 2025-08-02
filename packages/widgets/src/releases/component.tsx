@@ -2,8 +2,10 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { Button, Divider, Group, Stack, Text, Title, Tooltip } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import {
   IconArchive,
+  IconCheck,
   IconCircleDot,
   IconCircleFilled,
   IconExternalLink,
@@ -39,6 +41,11 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const board = useRequiredBoard();
   const [expandedRepositoryId, setExpandedRepositoryId] = useState<string | null>(null);
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
+  const [releasesViewedList, setReleasesViewedList] = useLocalStorage<Record<string, string>>({
+    key: "releases-viewed-versions",
+    defaultValue: {},
+  });
+
   const relativeDateOptions = useMemo(
     () => ({
       newReleaseWithin: formatRelativeDate(options.newReleaseWithin),
@@ -125,6 +132,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             relativeDateOptions.staleReleaseWithin !== "" && response.latestReleaseAt
               ? !isDateWithin(response.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
               : false,
+          viewed: releasesViewedList[repository.id] === response.latestRelease,
         };
       })
       .filter(
@@ -152,12 +160,21 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     options.topReleases,
     relativeDateOptions.newReleaseWithin,
     relativeDateOptions.staleReleaseWithin,
+    releasesViewedList,
   ]);
 
-  const toggleExpandedRepository = useCallback(
+  const toggleExpandedDisplay = useCallback(
     (repository: ReleasesRepositoryResponse) =>
-      setExpandedRepositoryId(expandedRepositoryId === repository.id ? "" : repository.id),
+      setExpandedRepositoryId(expandedRepositoryId === repository.id ? null : repository.id),
     [expandedRepositoryId],
+  );
+
+  const markReleaseViewed = useCallback(
+    (repository: ReleasesRepositoryResponse) => {
+      repository.viewed = true;
+      setReleasesViewedList((prev) => ({ ...prev, [repository.id]: repository.latestRelease ?? "" }));
+    },
+    [setReleasesViewedList],
   );
 
   return (
@@ -182,7 +199,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 [classes.active ?? ""]: isActive,
               })}
               p="xs"
-              onClick={() => toggleExpandedRepository(repository)}
+              onClick={() => toggleExpandedDisplay(repository)}
             >
               <MaskedOrNormalImage
                 className="releases-repository-header-icon"
@@ -232,7 +249,15 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 <Text
                   className="releases-repository-header-releaseDate"
                   size="xs"
-                  c={repository.isNewRelease ? "primaryColor" : repository.isStaleRelease ? "secondaryColor" : "dimmed"}
+                  c={
+                    repository.viewed
+                      ? "green"
+                      : repository.isNewRelease
+                        ? "primaryColor"
+                        : repository.isStaleRelease
+                          ? "secondaryColor"
+                          : "dimmed"
+                  }
                 >
                   {repository.latestReleaseAt &&
                     !hasError &&
@@ -241,10 +266,22 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                       style: "narrow",
                     })}
                 </Text>
-                {!hasError ? (
+                {hasError ? (
+                  <IconTriangleFilled
+                    className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-error"
+                    size={10}
+                    color="var(--mantine-color-red-filled)"
+                  />
+                ) : repository.viewed ? (
+                  <IconCheck
+                    className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-confirmed"
+                    size={10}
+                    color="green"
+                  />
+                ) : (
                   (repository.isNewRelease || repository.isStaleRelease) && (
                     <IconCircleFilled
-                      className="releases-repository-header-releaseDate-marker"
+                      className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-marker"
                       size={10}
                       color={
                         repository.isNewRelease
@@ -253,19 +290,20 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                       }
                     />
                   )
-                ) : (
-                  <IconTriangleFilled
-                    className="releases-repository-header-releaseDate-error"
-                    size={10}
-                    color={"var(--mantine-color-red-filled)"}
-                  />
                 )}
               </Group>
             </Group>
             {options.showDetails && (
-              <DetailsDisplay repository={repository} toggleExpandedRepository={toggleExpandedRepository} />
+              <DetailsDisplay repository={repository} toggleExpandedDisplay={toggleExpandedDisplay} />
             )}
-            {isActive && <ExpandedDisplay repository={repository} hasIconColor={hasIconColor} />}
+            {isActive && (
+              <ExpandedDisplay
+                repository={repository}
+                hasIconColor={hasIconColor}
+                markReleaseViewed={markReleaseViewed}
+                toggleExpandedDisplay={toggleExpandedDisplay}
+              />
+            )}
             <Divider className="releases-repository-divider" />
           </Stack>
         );
@@ -276,21 +314,21 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 
 interface DetailsDisplayProps {
   repository: ReleasesRepositoryResponse;
-  toggleExpandedRepository: (repository: ReleasesRepositoryResponse) => void;
+  toggleExpandedDisplay: (repository: ReleasesRepositoryResponse) => void;
 }
 
-const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplayProps) => {
+const DetailsDisplay = ({ repository, toggleExpandedDisplay }: DetailsDisplayProps) => {
   const t = useScopedI18n("widget.releases");
   const formatter = useFormatter();
 
   return (
     <>
-      <Divider className="releases-repository-details-divider" onClick={() => toggleExpandedRepository(repository)} />
+      <Divider className="releases-repository-details-divider" onClick={() => toggleExpandedDisplay(repository)} />
       <Group
         className={combineClasses("releases-repository-details", classes.releasesRepositoryDetails)}
         justify="space-between"
         p={5}
-        onClick={() => toggleExpandedRepository(repository)}
+        onClick={() => toggleExpandedDisplay(repository)}
       >
         <Group className="releases-repository-details-icon-wrapper">
           <Tooltip
@@ -484,9 +522,16 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
 interface ExtendedDisplayProps {
   repository: ReleasesRepositoryResponse;
   hasIconColor: boolean;
+  markReleaseViewed: (repository: ReleasesRepositoryResponse) => void;
+  toggleExpandedDisplay: (repository: ReleasesRepositoryResponse) => void;
 }
 
-const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => {
+const ExpandedDisplay = ({
+  repository,
+  hasIconColor,
+  markReleaseViewed,
+  toggleExpandedDisplay,
+}: ExtendedDisplayProps) => {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
@@ -540,24 +585,48 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             </Text>
           </Text>
         )}
+
+        <Divider className="releases-repository-expanded-actions-divider" mx="30%" />
+
+        <Button
+          className="releases-repository-expanded-markViewedButton"
+          disabled={repository.viewed}
+          color="green"
+          variant="light"
+          onClick={() => {
+            markReleaseViewed(repository);
+            toggleExpandedDisplay(repository);
+          }}
+        >
+          <Group
+            className="releases-repository-expanded-markViewedButton-wrapper"
+            gap={5}
+            justify="center"
+            align="center"
+          >
+            <IconCheck className="releases-repository-expanded-markViewedButton-icon" size="1.5em" />
+            <Text className="releases-repository-expanded-markViewedButton-text">{t("markViewed")}</Text>
+          </Group>
+        </Button>
+
         {(repository.releaseUrl ?? repository.projectUrl) && (
-          <>
-            <Divider className="releases-repository-expanded-openButton-divider" mx="30%" />
-            <Button
-              className="releases-repository-expanded-openButton"
-              variant="light"
-              component="a"
-              href={repository.releaseUrl ?? repository.projectUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <IconExternalLink className="releases-repository-expanded-openButton-icon" />
+          <Button
+            className="releases-repository-expanded-openButton"
+            variant="light"
+            component="a"
+            href={repository.releaseUrl ?? repository.projectUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Group className="releases-repository-expanded-openButton-wrapper" gap={5} justify="center" align="center">
+              <IconExternalLink className="releases-repository-expanded-openButton-icon" size="1.5em" />
               <Text className="releases-repository-expanded-openButton-text">
                 {repository.releaseUrl ? t("openReleasePage") : t("openProjectPage")}
               </Text>
-            </Button>
-          </>
+            </Group>
+          </Button>
         )}
+
         {repository.error && (
           <>
             <Divider className="releases-repository-expanded-error-divider" mx="30%" />

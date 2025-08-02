@@ -2257,6 +2257,9 @@
         "showDetails": {
           "label": "Vis detaljer"
         },
+        "showOnlyIcon": {
+          "label": "Vis kun ikon"
+        },
         "topReleases": {
           "label": "Top Udgivelser",
           "description": "Det maksimale antal seneste udgivelser at vise. Nul betyder ingen grænse."
@@ -2273,7 +2276,9 @@
             "listFoundImages": "Liste over fundne billeder",
             "listAlreadyImportedImages": "Liste over allerede importerede billeder",
             "allImagesAlreadyImported": "Alle billeder allerede importeret",
-            "onlyAdminCanImport": "Kun administratorer kan importere fra docker"
+            "onlyAdminCanImport": "Kun administratorer kan importere fra docker",
+            "selectAll": "Vælg alle",
+            "deselectAll": "Fravælg alle"
           },
           "provider": {
             "label": "Udbyder"
@@ -2335,6 +2340,7 @@
       "starsCount": "Stjerner",
       "forksCount": "Forks",
       "issuesCount": "Åbne Problemer",
+      "markViewed": "Marker som vist",
       "openProjectPage": "Åbn Projektside",
       "openReleasePage": "Åbn Udgivelsesside",
       "releaseDescription": "Udgivelse Beskrivelse",
@@ -2405,6 +2411,35 @@
     "networkController": {
       "error": {
         "internalServerError": "Kunne ikke hente Netværkskontroloversigt"
+      }
+    },
+    "firewall": {
+      "name": "Firewall overvågning",
+      "description": "Viser en oversigt over firewalls",
+      "tab": {
+        "system": "System",
+        "interfaces": "Grænseflader"
+      },
+      "error": {
+        "internalServerError": "Kan ikke hente data fra firewall"
+      },
+      "option": {
+        "interfaces": "Netværksgrænseflader der vises"
+      },
+      "widget": {
+        "fwname": "Navn",
+        "version": "Version",
+        "versiontitle": "Versioner",
+        "cputitle": "CPU-forbrug",
+        "memorytitle": "Hukommelsesforbrug",
+        "cpu": "CPU",
+        "memory": "Hukommelse",
+        "interfaces": {
+          "name": "navn",
+          "trans": "Overført",
+          "recv": "Modtaget",
+          "title": "Netværksgrænseflader"
+        }
       }
     },
     "notifications": {
@@ -3186,6 +3221,18 @@
             },
             "dockerContainers": {
               "label": "Docker containers"
+            },
+            "firewallCpu": {
+              "label": "Firewall CPU"
+            },
+            "firewallMemory": {
+              "label": "Firewall Hukommelse"
+            },
+            "firewallVersion": {
+              "label": "Firewall Version"
+            },
+            "firewallInterfaces": {
+              "label": "Firewall Grænseflader"
             }
           },
           "interval": {

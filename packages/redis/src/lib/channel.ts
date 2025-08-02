@@ -273,7 +273,7 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
     if (length <= maxElements) {
       return;
     }
-    await getSetClient.ltrim(channelName, length - maxElements, length);
+    await getSetClient.ltrim(channelName, 0, maxElements - 1);
   };
 
   return {

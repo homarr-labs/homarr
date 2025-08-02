@@ -37,6 +37,6 @@
     "esbuild": "^0.25.8",
     "eslint": "^9.32.0",
     "prettier": "^3.6.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   }
 }

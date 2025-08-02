@@ -2257,6 +2257,9 @@
         "showDetails": {
           "label": "Ayrıntıları Göster"
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "En İyi Sürümler",
           "description": "Gösterilecek en son sürümlerin maksimum sayısı. Sıfır, sınır olmadığı anlamına gelir."
@@ -2273,7 +2276,9 @@
             "listFoundImages": "Bulunan imajların listesi",
             "listAlreadyImportedImages": "Daha önce içe aktarılan imajların listesi",
             "allImagesAlreadyImported": "Tüm imajlar daha önce içe aktarıldı",
-            "onlyAdminCanImport": "Sadece yöneticiler docker'dan içe aktarabilir"
+            "onlyAdminCanImport": "Sadece yöneticiler docker'dan içe aktarabilir",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": "Sağlayıcı"
@@ -2335,6 +2340,7 @@
       "starsCount": "Yıldızlar",
       "forksCount": "Çatallar",
       "issuesCount": "Sorunları Aç",
+      "markViewed": "",
       "openProjectPage": "Proje Sayfasını Aç",
       "openReleasePage": "Sürüm Sayfasını Aç",
       "releaseDescription": "Sürüm Açıklaması",
@@ -2405,6 +2411,35 @@
     "networkController": {
       "error": {
         "internalServerError": "Ağ Denetleyicisi Özeti alınamadı"
+      }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
       }
     },
     "notifications": {
@@ -3186,6 +3221,18 @@
             },
             "dockerContainers": {
               "label": "Docker konteynerleri"
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
             }
           },
           "interval": {
