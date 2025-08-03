@@ -2258,7 +2258,7 @@
           "label": "Ayrıntıları Göster"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Yalnızca İkon Göster"
         },
         "topReleases": {
           "label": "En İyi Sürümler",
@@ -2277,8 +2277,8 @@
             "listAlreadyImportedImages": "Daha önce içe aktarılan imajların listesi",
             "allImagesAlreadyImported": "Tüm imajlar daha önce içe aktarıldı",
             "onlyAdminCanImport": "Sadece yöneticiler docker'dan içe aktarabilir",
-            "selectAll": "",
-            "deselectAll": ""
+            "selectAll": "Tümünü seç",
+            "deselectAll": "Tüm seçimleri kaldır"
           },
           "provider": {
             "label": "Sağlayıcı"
@@ -2340,7 +2340,7 @@
       "starsCount": "Yıldızlar",
       "forksCount": "Çatallar",
       "issuesCount": "Sorunları Aç",
-      "markViewed": "",
+      "markViewed": "Görüntülenmiş olarak işaretle",
       "openProjectPage": "Proje Sayfasını Aç",
       "openReleasePage": "Sürüm Sayfasını Aç",
       "releaseDescription": "Sürüm Açıklaması",
@@ -2414,31 +2414,31 @@
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "Güvenlik Duvarı İzleme",
+      "description": "Güvenlik duvarlarının özetini gösterir",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "Sistem",
+        "interfaces": "Arayüzler"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Güvenlik duvarından veri alınamıyor"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "Gösterilecek ağ arayüzleri"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
-        "versiontitle": "",
-        "cputitle": "",
-        "memorytitle": "",
-        "cpu": "",
-        "memory": "",
+        "fwname": "İsim",
+        "version": "Sürüm",
+        "versiontitle": "Sürümler",
+        "cputitle": "CPU kullanımı",
+        "memorytitle": "Bellek kullanımı",
+        "cpu": "İşlemci",
+        "memory": "Bellek",
         "interfaces": {
-          "name": "",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "name": "i̇sim",
+          "trans": "Gönderilen",
+          "recv": "Alınan",
+          "title": "Ağ Arayüzleri"
         }
       }
     },
@@ -3223,16 +3223,16 @@
               "label": "Docker konteynerleri"
             },
             "firewallCpu": {
-              "label": ""
+              "label": "Güvenlik Duvarı İşlemcisi"
             },
             "firewallMemory": {
-              "label": ""
+              "label": "Güvenlik Duvarı Belleği"
             },
             "firewallVersion": {
-              "label": ""
+              "label": "Güvenlik Duvarı Sürümü"
             },
             "firewallInterfaces": {
-              "label": ""
+              "label": "Güvenlik Duvarı Arayüzleri"
             }
           },
           "interval": {
