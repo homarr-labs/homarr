@@ -9,6 +9,8 @@ export const integrationSecretKindObject = {
   realm: { isPublic: true },
   personalAccessToken: { isPublic: false },
   topic: { isPublic: true },
+  opnsenseApiKey: { isPublic: false },
+  opnsenseApiSecret: { isPublic: false },
 } satisfies Record<string, { isPublic: boolean }>;
 
 export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
@@ -174,7 +176,7 @@ export const integrationDefs = {
   },
   opnsense: {
     name: "OPNsense",
-    secretKinds: [["username", "password"]],
+    secretKinds: [["opnsenseApiKey", "opnsenseApiSecret"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg",
     category: ["firewall"],
   },
