@@ -548,6 +548,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/cron-job-api':
         specifier: workspace:^0.1.0
         version: link:../cron-job-api
