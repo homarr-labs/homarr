@@ -89,7 +89,7 @@ export const SystemHealthMonitoring = ({
     <Stack h="100%" gap="sm" className="health-monitoring">
       {healthData.map(({ integrationId, integrationName, healthInfo, updatedAt }) => {
         const disksData = matchFileSystemAndSmart(healthInfo.fileSystem, healthInfo.smart);
-        const memoryUsage = formatMemoryUsage(healthInfo.memAvailable, healthInfo.memUsed);
+        const memoryUsage = formatMemoryUsage(healthInfo.memAvailableInBytes, healthInfo.memUsedInBytes);
         return (
           <Stack
             gap="sm"
@@ -176,7 +176,11 @@ export const SystemHealthMonitoring = ({
                 <CpuTempRing fahrenheit={options.fahrenheit} cpuTemp={healthInfo.cpuTemp} isTiny={isTiny} />
               )}
               {options.memory && (
-                <MemoryRing available={healthInfo.memAvailable} used={healthInfo.memUsed} isTiny={isTiny} />
+                <MemoryRing
+                  available={healthInfo.memAvailableInBytes}
+                  used={healthInfo.memUsedInBytes}
+                  isTiny={isTiny}
+                />
               )}
             </Flex>
             {
