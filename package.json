@@ -73,14 +73,14 @@
     "overrides": {
       "proxmox-api>undici": "7.13.0"
     },
+    "patchedDependencies": {
+      "@types/node-unifi": "patches/@types__node-unifi.patch"
+    },
     "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [
       "@scarf/scarf",
       "core-js-pure",
       "protobufjs"
-    ],
-    "patchedDependencies": {
-      "@types/node-unifi": "patches/@types__node-unifi.patch"
-    }
+    ]
   }
 }
