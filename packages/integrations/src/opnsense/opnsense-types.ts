@@ -21,7 +21,7 @@ const interfaceSchema = z.object({
 });
 
 export const opnsenseInterfacesSchema = z.object({
-  interfaces: z.record(interfaceSchema),
+  interfaces: z.record(z.string(), interfaceSchema),
   time: z.number(),
 });
 
