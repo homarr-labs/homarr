@@ -74,7 +74,7 @@
     "dotenv": "^17.2.1",
     "flag-icons": "^7.5.0",
     "glob": "^11.0.3",
-    "jotai": "^2.12.5",
+    "jotai": "^2.13.0",
     "mantine-react-table": "2.0.0-beta.9",
     "next": "15.4.5",
     "postcss-preset-mantine": "^1.18.0",
