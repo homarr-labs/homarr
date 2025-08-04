@@ -1,8 +1,10 @@
 import { escapeForRegEx } from "@tiptap/react";
 import { z } from "zod/v4";
 
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { releasesRequestHandler } from "@homarr/request-handler/releases";
 
+import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const formatVersionFilterRegex = (versionFilter: z.infer<typeof releaseVersionFilterSchema> | undefined) => {
@@ -23,31 +25,31 @@ const releaseVersionFilterSchema = z.object({
 
 export const releasesRouter = createTRPCRouter({
   getLatest: publicProcedure
+    .concat(createOneIntegrationMiddleware("query", ...getIntegrationKindsByCategory("releasesProvider")))
     .input(
       z.object({
         repositories: z.array(
           z.object({
-            providerKey: z.string(),
+            id: z.string(),
             identifier: z.string(),
             versionFilter: releaseVersionFilterSchema.optional(),
           }),
         ),
       }),
     )
-    .query(async ({ input }) => {
-      const result = await Promise.all(
+    .query(async ({ ctx, input }) => {
+      return await Promise.all(
         input.repositories.map(async (repository) => {
-          const innerHandler = releasesRequestHandler.handler({
-            providerKey: repository.providerKey,
+          const innerHandler = releasesRequestHandler.handler(ctx.integration, {
+            id: repository.id,
             identifier: repository.identifier,
             versionRegex: formatVersionFilterRegex(repository.versionFilter),
           });
+
           return await innerHandler.getCachedOrUpdatedDataAsync({
             forceUpdate: false,
           });
         }),
       );
-
-      return result;
     }),
 });

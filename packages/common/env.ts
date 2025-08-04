@@ -1,7 +1,7 @@
 import { randomBytes } from "crypto";
 import { z } from "zod/v4";
 
-import { createEnv } from "@homarr/env";
+import { createEnv } from "@homarr/core/infrastructure/env";
 
 const errorSuffix = `, please generate a 64 character secret in hex format or use the following: "${randomBytes(32).toString("hex")}"`;
 

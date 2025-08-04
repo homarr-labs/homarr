@@ -936,6 +936,14 @@
         "realm": {
           "label": "Ríša",
           "newLabel": "Nová ríša"
+        },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
+        "topic": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1498,7 +1506,8 @@
         "rows": "Riadky",
         "width": "Šírka",
         "height": "Výška"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -2070,6 +2079,35 @@
       },
       "globalRatio": "Globálny pomer"
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Zoznam mediálnych požiadaviek",
       "description": "Zobrazenie zoznamu všetkých mediálnych požiadaviek z Overseerr alebo Jellyseerr",
@@ -2088,7 +2126,9 @@
         "pending": "Čakajúce",
         "processing": "Spracovanie",
         "partiallyAvailable": "Čiastočný",
-        "available": "K dispozícii"
+        "available": "K dispozícii",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "Čakajúce",
@@ -2217,6 +2257,9 @@
         "showDetails": {
           "label": "Zobraziť podrobnosti"
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "Najlepšie vydania",
           "description": "Maximálny počet najnovších vydaní na zobrazenie. Nula znamená žiadny limit."
@@ -2233,7 +2276,9 @@
             "listFoundImages": "Zoznam nájdených obrázkov",
             "listAlreadyImportedImages": "Zoznam už importovaných obrázkov",
             "allImagesAlreadyImported": "Všetky obrázky sú už importované",
-            "onlyAdminCanImport": "Importovať z dockeru môžu iba správcovia"
+            "onlyAdminCanImport": "Importovať z dockeru môžu iba správcovia",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": "Poskytovateľ"
@@ -2281,7 +2326,11 @@
           "example": {
             "label": "Príklad"
           },
-          "invalid": "Neplatná definícia úložiska, skontrolujte hodnoty"
+          "invalid": "Neplatná definícia úložiska, skontrolujte hodnoty",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "Nenájdené",
@@ -2291,14 +2340,20 @@
       "starsCount": "Hviezdy",
       "forksCount": "Vidlicový",
       "issuesCount": "Problémy",
+      "markViewed": "",
       "openProjectPage": "Otvorte stránku projektu",
       "openReleasePage": "Otvorte stránku vydania",
       "releaseDescription": "Popis vydania",
+      "projectDescription": "",
       "created": "Vytvorené",
       "error": {
         "label": "Chyba",
-        "options": {
-          "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia"
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "Nenašla sa žiadna zodpovedajúca verzia",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2357,6 +2412,41 @@
       "error": {
         "internalServerError": "Nepodarilo sa načítať súhrn sieťového ovládača"
       }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -2542,6 +2632,9 @@
       },
       "iconColor": {
         "label": "Farba ikony"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Vlastné css pre túto nástenku",
@@ -3065,7 +3158,8 @@
           "status": {
             "idle": "Nečinný",
             "running": "Spustené",
-            "error": "Chyba"
+            "error": "Chyba",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3122,8 +3216,38 @@
             "networkController": {
               "label": "Sieťový ovládač"
             },
+            "refreshNotifications": {
+              "label": ""
+            },
             "dockerContainers": {
               "label": "Docker kontajnery"
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": ""
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "interval": {
+              "label": ""
             }
           }
         },
@@ -4154,6 +4278,16 @@
             "message": "Názov hostiteľa sa nepodarilo odstrániť"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

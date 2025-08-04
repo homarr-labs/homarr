@@ -936,6 +936,14 @@
         "realm": {
           "label": "Erişim Alanı",
           "newLabel": "Yeni erişim alanı"
+        },
+        "personalAccessToken": {
+          "label": "Kişisel Erişim Anahtarı",
+          "newLabel": "Yeni Kişisel Erişim Anahtarı"
+        },
+        "topic": {
+          "label": "Konu",
+          "newLabel": "Yeni konu"
         }
       }
     },
@@ -1498,7 +1506,8 @@
         "rows": "Satırlar",
         "width": "Genişlik",
         "height": "Yükseklik"
-      }
+      },
+      "placeholder": "Not almaya başlayın"
     },
     "iframe": {
       "name": "iFrame",
@@ -2070,6 +2079,35 @@
       },
       "globalRatio": "Genel Oran"
     },
+    "mediaReleases": {
+      "name": "Medya yayınları",
+      "description": "Farklı entegrasyonlardan yeni eklenen medyaları veya yakında çıkacak yayınları göster",
+      "option": {
+        "layout": {
+          "label": "Düzen",
+          "option": {
+            "backdrop": {
+              "label": "Arka plan"
+            },
+            "poster": {
+              "label": "Afiş"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "Açıklama ipucunu göster"
+        },
+        "showType": {
+          "label": "Medya türü rozetini göster"
+        },
+        "showSource": {
+          "label": "Kaynak entegrasyonunu göster"
+        }
+      },
+      "length": {
+        "duration": "{length} dk"
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Medya İstekleri Listesi",
       "description": "Overseerr veya Jellyseerr uygulamanızdan gelen tüm medya taleplerinin bir listesini görün",
@@ -2088,7 +2126,9 @@
         "pending": "Bekleyen",
         "processing": "İşlemde",
         "partiallyAvailable": "Kısmi",
-        "available": "Mevcut"
+        "available": "Mevcut",
+        "blacklisted": "Engellenenler",
+        "deleted": "Silinen"
       },
       "status": {
         "pending": "Bekleyen",
@@ -2217,6 +2257,9 @@
         "showDetails": {
           "label": "Ayrıntıları Göster"
         },
+        "showOnlyIcon": {
+          "label": "Yalnızca İkon Göster"
+        },
         "topReleases": {
           "label": "En İyi Sürümler",
           "description": "Gösterilecek en son sürümlerin maksimum sayısı. Sıfır, sınır olmadığı anlamına gelir."
@@ -2233,7 +2276,9 @@
             "listFoundImages": "Bulunan imajların listesi",
             "listAlreadyImportedImages": "Daha önce içe aktarılan imajların listesi",
             "allImagesAlreadyImported": "Tüm imajlar daha önce içe aktarıldı",
-            "onlyAdminCanImport": "Sadece yöneticiler docker'dan içe aktarabilir"
+            "onlyAdminCanImport": "Sadece yöneticiler docker'dan içe aktarabilir",
+            "selectAll": "Tümünü seç",
+            "deselectAll": "Tüm seçimleri kaldır"
           },
           "provider": {
             "label": "Sağlayıcı"
@@ -2281,7 +2326,11 @@
           "example": {
             "label": "Örnek"
           },
-          "invalid": "Geçersiz depo tanımı, lütfen değerleri kontrol edin"
+          "invalid": "Geçersiz depo tanımı, lütfen değerleri kontrol edin",
+          "noProvider": {
+            "label": "Sağlayıcı Bulunamadı",
+            "tooltip": "Sağlayıcı çözümlenemedi, lütfen görselleri içe aktardıktan sonra elle ayarlayın"
+          }
         }
       },
       "not-found": "Bulunamadı",
@@ -2291,14 +2340,20 @@
       "starsCount": "Yıldızlar",
       "forksCount": "Çatallar",
       "issuesCount": "Sorunları Aç",
+      "markViewed": "Görüntülenmiş olarak işaretle",
       "openProjectPage": "Proje Sayfasını Aç",
       "openReleasePage": "Sürüm Sayfasını Aç",
       "releaseDescription": "Sürüm Açıklaması",
+      "projectDescription": "Proje Açıklaması",
       "created": "Oluşturuldu",
       "error": {
         "label": "Hata",
-        "options": {
-          "noMatchingVersion": "Eşleşen sürüm bulunamadı"
+        "messages": {
+          "invalidIdentifier": "Geçersiz tanımlayıcı",
+          "noMatchingVersion": "Eşleşen sürüm bulunamadı",
+          "noReleasesFound": "Hiçbir sürüm bulunamadı",
+          "noProviderSeleceted": "Hiçbir sağlayıcı seçilmedi",
+          "noProviderResponse": "Sağlayıcıdan yanıt alınamadı"
         }
       }
     },
@@ -2357,6 +2412,41 @@
       "error": {
         "internalServerError": "Ağ Denetleyicisi Özeti alınamadı"
       }
+    },
+    "firewall": {
+      "name": "Güvenlik Duvarı İzleme",
+      "description": "Güvenlik duvarlarının özetini gösterir",
+      "tab": {
+        "system": "Sistem",
+        "interfaces": "Arayüzler"
+      },
+      "error": {
+        "internalServerError": "Güvenlik duvarından veri alınamıyor"
+      },
+      "option": {
+        "interfaces": "Gösterilecek ağ arayüzleri"
+      },
+      "widget": {
+        "fwname": "İsim",
+        "version": "Sürüm",
+        "versiontitle": "Sürümler",
+        "cputitle": "CPU kullanımı",
+        "memorytitle": "Bellek kullanımı",
+        "cpu": "İşlemci",
+        "memory": "Bellek",
+        "interfaces": {
+          "name": "i̇sim",
+          "trans": "Gönderilen",
+          "recv": "Alınan",
+          "title": "Ağ Arayüzleri"
+        }
+      }
+    },
+    "notifications": {
+      "name": "Bildirimler",
+      "description": "Entegrasyonların bildirim geçmişini görüntüle",
+      "noItems": "Görüntülenecek bildirim yok.",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -2542,6 +2632,9 @@
       },
       "iconColor": {
         "label": "Simge rengi"
+      },
+      "clearColor": {
+        "label": "Rengi Temizle"
       },
       "customCss": {
         "label": "Bu panel için özel css",
@@ -3065,7 +3158,8 @@
           "status": {
             "idle": "Boşta",
             "running": "Çalışıyor",
-            "error": "Hata"
+            "error": "Hata",
+            "disabled": "Pasif"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3122,8 +3216,38 @@
             "networkController": {
               "label": "Ağ Denetleyicisi"
             },
+            "refreshNotifications": {
+              "label": "Bildirim Güncelleyici"
+            },
             "dockerContainers": {
               "label": "Docker konteynerleri"
+            },
+            "firewallCpu": {
+              "label": "Güvenlik Duvarı İşlemcisi"
+            },
+            "firewallMemory": {
+              "label": "Güvenlik Duvarı Belleği"
+            },
+            "firewallVersion": {
+              "label": "Güvenlik Duvarı Sürümü"
+            },
+            "firewallInterfaces": {
+              "label": "Güvenlik Duvarı Arayüzleri"
+            }
+          },
+          "interval": {
+            "seconds": "Her {interval, plural, =1 {saniye} other {# saniyede bir}}",
+            "minutes": "Her {interval, plural, =1 {dakika} other {# dakikada bir}}",
+            "hours": "Her {interval, plural, =1 {saat} other {# saatte bir}}",
+            "midnight": "Her gün gece yarısı",
+            "weeklyMonday": "Her hafta pazartesi günü"
+          },
+          "settings": {
+            "title": "{jobName} için görev ayarları"
+          },
+          "field": {
+            "interval": {
+              "label": "Zamanlama aralığı"
             }
           }
         },
@@ -4154,6 +4278,16 @@
             "message": "Ana makine adı kaldırılamadı"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Hata ayıklama",
+        "info": "Bilgi",
+        "warn": "Uyarı",
+        "error": "Hata"
       }
     }
   }

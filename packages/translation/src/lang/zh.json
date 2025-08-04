@@ -936,6 +936,14 @@
         "realm": {
           "label": "領域",
           "newLabel": "新領域"
+        },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
+        "topic": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1498,7 +1506,8 @@
         "rows": "行數",
         "width": "寬度",
         "height": "高度"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -2070,6 +2079,35 @@
       },
       "globalRatio": "全局速率"
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "多媒體請求列表",
       "description": "查看 Overrseerr 或 Jellyseerr 中所有多媒體請求列表",
@@ -2088,7 +2126,9 @@
         "pending": "等待處理中",
         "processing": "處理中",
         "partiallyAvailable": "部分",
-        "available": "待定"
+        "available": "待定",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "待處理",
@@ -2217,6 +2257,9 @@
         "showDetails": {
           "label": "顯示詳情"
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "",
           "description": ""
@@ -2233,7 +2276,9 @@
             "listFoundImages": "",
             "listAlreadyImportedImages": "",
             "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "onlyAdminCanImport": "",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": "提供者"
@@ -2281,7 +2326,11 @@
           "example": {
             "label": "範例"
           },
-          "invalid": "無效的儲存庫定義，請檢查值的設定"
+          "invalid": "無效的儲存庫定義，請檢查值的設定",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "未找到",
@@ -2291,14 +2340,20 @@
       "starsCount": "星標",
       "forksCount": "分支數",
       "issuesCount": "開放問題",
+      "markViewed": "",
       "openProjectPage": "開啟專案頁面",
       "openReleasePage": "開啟發布葉面",
       "releaseDescription": "版本描述",
+      "projectDescription": "",
       "created": "已創建",
       "error": {
         "label": "錯誤",
-        "options": {
-          "noMatchingVersion": "找不到匹配的版本"
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "找不到匹配的版本",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2357,6 +2412,41 @@
       "error": {
         "internalServerError": "無法獲取網路控制總覽"
       }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -2542,6 +2632,9 @@
       },
       "iconColor": {
         "label": "icon 顏色"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "自定義此面板 CSS html",
@@ -3065,7 +3158,8 @@
           "status": {
             "idle": "空閒",
             "running": "運行中",
-            "error": "錯誤"
+            "error": "錯誤",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3122,7 +3216,37 @@
             "networkController": {
               "label": "網路控制"
             },
+            "refreshNotifications": {
+              "label": ""
+            },
             "dockerContainers": {
+              "label": ""
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": ""
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "interval": {
               "label": ""
             }
           }
@@ -4154,6 +4278,16 @@
             "message": ""
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

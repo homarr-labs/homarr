@@ -13,6 +13,8 @@ fi
 
 # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
 export AUTH_SECRET=$(openssl rand -base64 32)
+# Cron job API key is generated every time the container starts as it is required for communication between nextjs-api and tasks-api
+export CRON_JOB_API_KEY=$(openssl rand -base64 32)
 
 # Start nginx proxy
 # 1. Replace the HOSTNAME in the nginx template file
@@ -23,8 +25,15 @@ envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 nginx -g 'daemon off;' &
 NGINX_PID=$!
 
-redis-server /app/redis.conf &
-REDIS_PID=$!
+if [ $REDIS_IS_EXTERNAL = "true" ]; then
+    echo "Using external Redis server at redis://$REDIS_HOST:$REDIS_PORT"
+else
+    echo "Starting internal Redis server"
+    redis-server /app/redis.conf &
+    REDIS_PID=$!
+fi
+
+
 
 node apps/tasks/tasks.cjs &
 TASKS_PID=$!

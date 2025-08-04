@@ -1,7 +1,6 @@
 import superjson from "superjson";
 
-import { hashObjectBase64 } from "@homarr/common";
-import { createId } from "@homarr/db";
+import { createId, hashObjectBase64 } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
@@ -233,7 +232,7 @@ export const createChannelEventHistory = <TData>(channelName: string, maxElement
     if (length <= maxElements) {
       return;
     }
-    await getSetClient.ltrim(channelName, length - maxElements, length);
+    await getSetClient.ltrim(channelName, 0, maxElements - 1);
   };
 
   return {

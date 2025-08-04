@@ -936,6 +936,14 @@
         "realm": {
           "label": "Realm",
           "newLabel": "Nyt realm"
+        },
+        "personalAccessToken": {
+          "label": "Personlig adgangstoken",
+          "newLabel": "Ny Personlig adgangstoken"
+        },
+        "topic": {
+          "label": "Emne",
+          "newLabel": "Nyt emne"
         }
       }
     },
@@ -1476,7 +1484,7 @@
         "image": "Integrer billede",
         "addTable": "Tilføj tabel",
         "deleteTable": "Slet tabel",
-        "colorCell": "Farvecelle",
+        "colorCell": "Farve Celle",
         "mergeCell": "Slå cellefletning til/fra",
         "addColumnLeft": "Tilføj kolonne før",
         "addColumnRight": "Tilføj kolonne efter",
@@ -1498,7 +1506,8 @@
         "rows": "Rækker",
         "width": "Bredde",
         "height": "Højde"
-      }
+      },
+      "placeholder": "Begynd at skrive dine noter"
     },
     "iframe": {
       "name": "indlejret dokument (iframe)",
@@ -2070,6 +2079,35 @@
       },
       "globalRatio": "Globalt Forhold"
     },
+    "mediaReleases": {
+      "name": "Medieudgivelser",
+      "description": "Vis nyligt tilføjede medier eller kommende udgivelser fra forskellige integrationer",
+      "option": {
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "backdrop": {
+              "label": "Baggrund"
+            },
+            "poster": {
+              "label": "Plakat"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "Vis beskrivelsesværktøjstip"
+        },
+        "showType": {
+          "label": "Vis medietype badge"
+        },
+        "showSource": {
+          "label": "Vis kildeintegration"
+        }
+      },
+      "length": {
+        "duration": "{length}min"
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Medie Forespørgsler Liste",
       "description": "Se en liste over alle medieforespørgsler fra din Overseerr eller Jellyseerr instans",
@@ -2088,7 +2126,9 @@
         "pending": "Afventende",
         "processing": "Behandler",
         "partiallyAvailable": "Delvis",
-        "available": "Tilgængelig"
+        "available": "Tilgængelig",
+        "blacklisted": "Blacklistet",
+        "deleted": "Slettet"
       },
       "status": {
         "pending": "Afventende",
@@ -2217,6 +2257,9 @@
         "showDetails": {
           "label": "Vis detaljer"
         },
+        "showOnlyIcon": {
+          "label": "Vis kun ikon"
+        },
         "topReleases": {
           "label": "Top Udgivelser",
           "description": "Det maksimale antal seneste udgivelser at vise. Nul betyder ingen grænse."
@@ -2227,13 +2270,15 @@
             "label": "Tilføj repository"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "label": "Importer fra docker",
+            "loading": "Indlæser dockerbilleder",
+            "noImagesFound": "Ingen docker billeder fundet",
+            "listFoundImages": "Liste over fundne billeder",
+            "listAlreadyImportedImages": "Liste over allerede importerede billeder",
+            "allImagesAlreadyImported": "Alle billeder allerede importeret",
+            "onlyAdminCanImport": "Kun administratorer kan importere fra docker",
+            "selectAll": "Vælg alle",
+            "deselectAll": "Fravælg alle"
           },
           "provider": {
             "label": "Udbyder"
@@ -2276,12 +2321,16 @@
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Importer fra Docker"
           },
           "example": {
             "label": "Eksempel"
           },
-          "invalid": "Ugyldig repository definition, tjek venligst værdierne"
+          "invalid": "Ugyldig repository definition, tjek venligst værdierne",
+          "noProvider": {
+            "label": "Ingen Udbyder",
+            "tooltip": "Udbyderen kunne ikke fortolkes, angiv venligst det manuelt efter import af billederne"
+          }
         }
       },
       "not-found": "Ikke fundet",
@@ -2291,14 +2340,20 @@
       "starsCount": "Stjerner",
       "forksCount": "Forks",
       "issuesCount": "Åbne Problemer",
+      "markViewed": "Marker som vist",
       "openProjectPage": "Åbn Projektside",
       "openReleasePage": "Åbn Udgivelsesside",
       "releaseDescription": "Udgivelse Beskrivelse",
+      "projectDescription": "Projektbeskrivelse",
       "created": "Oprettet",
       "error": {
         "label": "Fejl",
-        "options": {
-          "noMatchingVersion": "Ingen matchende version fundet"
+        "messages": {
+          "invalidIdentifier": "Ugyldig identifikator",
+          "noMatchingVersion": "Ingen matchende version fundet",
+          "noReleasesFound": "Ingen udgivelser fundet",
+          "noProviderSeleceted": "Ingen udbyder valgt",
+          "noProviderResponse": "Intet svar fra udbyder"
         }
       }
     },
@@ -2357,6 +2412,41 @@
       "error": {
         "internalServerError": "Kunne ikke hente Netværkskontroloversigt"
       }
+    },
+    "firewall": {
+      "name": "Firewall overvågning",
+      "description": "Viser en oversigt over firewalls",
+      "tab": {
+        "system": "System",
+        "interfaces": "Grænseflader"
+      },
+      "error": {
+        "internalServerError": "Kan ikke hente data fra firewall"
+      },
+      "option": {
+        "interfaces": "Netværksgrænseflader der vises"
+      },
+      "widget": {
+        "fwname": "Navn",
+        "version": "Version",
+        "versiontitle": "Versioner",
+        "cputitle": "CPU-forbrug",
+        "memorytitle": "Hukommelsesforbrug",
+        "cpu": "CPU",
+        "memory": "Hukommelse",
+        "interfaces": {
+          "name": "navn",
+          "trans": "Overført",
+          "recv": "Modtaget",
+          "title": "Netværksgrænseflader"
+        }
+      }
+    },
+    "notifications": {
+      "name": "Notifikationer",
+      "description": "Vis notifikationshistorik fra en integration",
+      "noItems": "Ingen notifikationer at vise.",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -2542,6 +2632,9 @@
       },
       "iconColor": {
         "label": "Ikonfarve"
+      },
+      "clearColor": {
+        "label": "Ryd farve"
       },
       "customCss": {
         "label": "Brugerdefineret css for denne tavle",
@@ -3065,7 +3158,8 @@
           "status": {
             "idle": "Inaktiv",
             "running": "Kører",
-            "error": "Fejl"
+            "error": "Fejl",
+            "disabled": "Deaktiveret"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3122,8 +3216,38 @@
             "networkController": {
               "label": "Netværkskontroller"
             },
+            "refreshNotifications": {
+              "label": "Notifikations opdaterer"
+            },
             "dockerContainers": {
               "label": "Docker containers"
+            },
+            "firewallCpu": {
+              "label": "Firewall CPU"
+            },
+            "firewallMemory": {
+              "label": "Firewall Hukommelse"
+            },
+            "firewallVersion": {
+              "label": "Firewall Version"
+            },
+            "firewallInterfaces": {
+              "label": "Firewall Grænseflader"
+            }
+          },
+          "interval": {
+            "seconds": "Hvert {interval, plural, one {}=1 {sekund} other {# sekunder}}",
+            "minutes": "Hvert {interval, plural, one {}=1 {minut} other {# minutter}}",
+            "hours": "Hvert {interval, plural, one {}=1 {time} other {# timer}}",
+            "midnight": "Hver dag ved midnat",
+            "weeklyMonday": "Hver uge om mandagen"
+          },
+          "settings": {
+            "title": "Opgave indstillinger for {jobName}"
+          },
+          "field": {
+            "interval": {
+              "label": "Planlæg interval"
             }
           }
         },
@@ -4154,6 +4278,16 @@
             "message": "Værtsnavnet kunne ikke fjernes"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Fejlsøg",
+        "info": "Info",
+        "warn": "Advar",
+        "error": "Fejl"
       }
     }
   }

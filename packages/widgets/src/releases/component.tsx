@@ -2,8 +2,10 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { Button, Divider, Group, Stack, Text, Title, Tooltip } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import {
   IconArchive,
+  IconCheck,
   IconCircleDot,
   IconCircleFilled,
   IconExternalLink,
@@ -18,14 +20,13 @@ import ReactMarkdown from "react-markdown";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import { isDateWithin, splitToChunksWithNItems } from "@homarr/common";
+import { isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
-import { Providers } from "./releases-providers";
-import type { ReleasesRepositoryResponse } from "./releases-repository";
+import type { ReleasesRepository, ReleasesRepositoryResponse } from "./releases-repository";
 
 const formatRelativeDate = (value: string): string => {
   const isMonths = /\d+m/g.test(value);
@@ -38,8 +39,13 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const now = useNow();
   const formatter = useFormatter();
   const board = useRequiredBoard();
-  const [expandedRepository, setExpandedRepository] = useState({ providerKey: "", identifier: "" });
+  const [expandedRepositoryId, setExpandedRepositoryId] = useState<string | null>(null);
   const hasIconColor = useMemo(() => board.iconColor !== null, [board.iconColor]);
+  const [releasesViewedList, setReleasesViewedList] = useLocalStorage<Record<string, string>>({
+    key: "releases-viewed-versions",
+    defaultValue: {},
+  });
+
   const relativeDateOptions = useMemo(
     () => ({
       newReleaseWithin: formatRelativeDate(options.newReleaseWithin),
@@ -48,12 +54,38 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     [options.newReleaseWithin, options.staleReleaseWithin],
   );
 
-  const batchedRepositories = useMemo(() => splitToChunksWithNItems(options.repositories, 5), [options.repositories]);
+  // Group repositories by integration
+  const groupedRepositories = useMemo(() => {
+    return options.repositories.reduce(
+      (acc, repo) => {
+        const key = repo.providerIntegrationId;
+        if (!key) return acc;
+
+        acc[key] ??= [];
+        acc[key].push(repo);
+
+        return acc;
+      },
+      {} as Record<string, ReleasesRepository[]>,
+    );
+  }, [options.repositories]);
+
+  // For each group, split into chunks of 5
+  const batchedRepositories = useMemo(() => {
+    return Object.entries(groupedRepositories).flatMap(([integrationId, group]) =>
+      splitToChunksWithNItems(group, 5).map((chunk) => ({
+        integrationId,
+        repositories: chunk,
+      })),
+    );
+  }, [groupedRepositories]);
+
   const [results] = clientApi.useSuspenseQueries((t) =>
-    batchedRepositories.flatMap((chunk) =>
+    batchedRepositories.flatMap(({ integrationId, repositories }) =>
       t.widget.releases.getLatest({
-        repositories: chunk.map((repository) => ({
-          providerKey: repository.providerKey,
+        integrationId,
+        repositories: repositories.map((repository) => ({
+          id: repository.id,
           identifier: repository.identifier,
           versionFilter: repository.versionFilter,
         })),
@@ -62,41 +94,57 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   );
 
   const repositories = useMemo(() => {
-    const formattedResults = results
-      .flat()
-      .map(({ data }) => {
-        if (data === undefined) return undefined;
+    const formattedResults = options.repositories
+      .map((repository) => {
+        if (repository.providerIntegrationId === undefined) {
+          return {
+            ...repository,
+            isNewRelease: false,
+            isStaleRelease: false,
+            latestReleaseAt: undefined,
+            error: {
+              code: "noProviderSeleceted",
+            },
+          };
+        }
 
-        const repository = options.repositories.find(
-          (repository) => repository.providerKey === data.providerKey && repository.identifier === data.identifier,
-        );
+        const response = results.flat().find(({ data }) => data.id === repository.id)?.data;
 
-        if (repository === undefined) return undefined;
+        if (response === undefined)
+          return {
+            ...repository,
+            isNewRelease: false,
+            isStaleRelease: false,
+            latestReleaseAt: undefined,
+            error: {
+              code: "noProviderResponse",
+            },
+          };
 
         return {
           ...repository,
-          ...data,
+          ...response,
           isNewRelease:
-            relativeDateOptions.newReleaseWithin !== "" && data.latestReleaseAt
-              ? isDateWithin(data.latestReleaseAt, relativeDateOptions.newReleaseWithin)
+            relativeDateOptions.newReleaseWithin !== "" && response.latestReleaseAt
+              ? isDateWithin(response.latestReleaseAt, relativeDateOptions.newReleaseWithin)
               : false,
           isStaleRelease:
-            relativeDateOptions.staleReleaseWithin !== "" && data.latestReleaseAt
-              ? !isDateWithin(data.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
+            relativeDateOptions.staleReleaseWithin !== "" && response.latestReleaseAt
+              ? !isDateWithin(response.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
               : false,
+          viewed: releasesViewedList[repository.id] === response.latestRelease,
         };
       })
       .filter(
         (repository) =>
-          repository !== undefined &&
-          (repository.error !== undefined ||
-            !options.showOnlyHighlighted ||
-            repository.isNewRelease ||
-            repository.isStaleRelease),
+          repository.error !== undefined ||
+          !options.showOnlyHighlighted ||
+          repository.isNewRelease ||
+          repository.isStaleRelease,
       )
       .sort((repoA, repoB) => {
-        if (repoA?.latestReleaseAt === undefined) return 1;
-        if (repoB?.latestReleaseAt === undefined) return -1;
+        if (repoA.latestReleaseAt === undefined) return -1;
+        if (repoB.latestReleaseAt === undefined) return 1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
       }) as ReleasesRepositoryResponse[];
 
@@ -112,37 +160,36 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
     options.topReleases,
     relativeDateOptions.newReleaseWithin,
     relativeDateOptions.staleReleaseWithin,
+    releasesViewedList,
   ]);
 
-  const toggleExpandedRepository = useCallback(
+  const toggleExpandedDisplay = useCallback(
+    (repository: ReleasesRepositoryResponse) =>
+      setExpandedRepositoryId(expandedRepositoryId === repository.id ? null : repository.id),
+    [expandedRepositoryId],
+  );
+
+  const markReleaseViewed = useCallback(
     (repository: ReleasesRepositoryResponse) => {
-      if (
-        expandedRepository.providerKey === repository.providerKey &&
-        expandedRepository.identifier === repository.identifier
-      ) {
-        setExpandedRepository({ providerKey: "", identifier: "" });
-      } else {
-        setExpandedRepository({ providerKey: repository.providerKey, identifier: repository.identifier });
-      }
+      repository.viewed = true;
+      setReleasesViewedList((prev) => ({ ...prev, [repository.id]: repository.latestRelease ?? "" }));
     },
-    [expandedRepository],
+    [setReleasesViewedList],
   );
 
   return (
     <Stack gap={0} className="releases">
       {repositories.map((repository: ReleasesRepositoryResponse) => {
-        const isActive =
-          expandedRepository.providerKey === repository.providerKey &&
-          expandedRepository.identifier === repository.identifier;
+        const isActive = expandedRepositoryId === repository.id;
         const hasError = repository.error !== undefined;
 
         return (
           <Stack
-            key={`${repository.providerKey}.${repository.identifier}`}
+            key={repository.id}
             className={combineClasses(
               "releases-repository",
               // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              `releases-repository-${repository.providerKey}-${repository.name || repository.identifier.replace(/[^a-zA-Z0-9]/g, "_")}`,
+              `releases-repository-${repository.integration?.name ?? "error"}-${repository.name || repository.identifier.replace(/[^a-zA-Z0-9]/g, "_")}`,
               classes.releasesRepository,
             )}
             gap={0}
@@ -152,11 +199,11 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 [classes.active ?? ""]: isActive,
               })}
               p="xs"
-              onClick={() => toggleExpandedRepository(repository)}
+              onClick={() => toggleExpandedDisplay(repository)}
             >
               <MaskedOrNormalImage
                 className="releases-repository-header-icon"
-                imageUrl={repository.iconUrl ?? Providers[repository.providerKey].iconUrl}
+                imageUrl={repository.iconUrl ?? repository.integration?.iconUrl}
                 hasColor={hasIconColor}
                 style={{
                   width: "1em",
@@ -168,12 +215,15 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 className="releases-repository-header-nameVersion-wrapper"
                 gap={5}
                 justify="space-between"
+                miw={0}
                 style={{ flex: 1 }}
               >
-                <Text className="releases-repository-header-name" size="xs">
-                  {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-                  {repository.name || repository.identifier}
-                </Text>
+                {!options.showOnlyIcon && (
+                  <Text className="releases-repository-header-name" size="xs">
+                    {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+                    {repository.name || repository.identifier}
+                  </Text>
+                )}
 
                 <Tooltip
                   className="releases-repository-header-version-tooltip"
@@ -195,11 +245,19 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                 </Tooltip>
               </Group>
 
-              <Group className="releases-repository-header-releaseDate-wrapper" gap={5}>
+              <Group className="releases-repository-header-releaseDate-wrapper" gap={5} style={{ flex: "0 0 auto" }}>
                 <Text
                   className="releases-repository-header-releaseDate"
                   size="xs"
-                  c={repository.isNewRelease ? "primaryColor" : repository.isStaleRelease ? "secondaryColor" : "dimmed"}
+                  c={
+                    repository.viewed
+                      ? "green"
+                      : repository.isNewRelease
+                        ? "primaryColor"
+                        : repository.isStaleRelease
+                          ? "secondaryColor"
+                          : "dimmed"
+                  }
                 >
                   {repository.latestReleaseAt &&
                     !hasError &&
@@ -208,10 +266,22 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                       style: "narrow",
                     })}
                 </Text>
-                {!hasError ? (
+                {hasError ? (
+                  <IconTriangleFilled
+                    className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-error"
+                    size={10}
+                    color="var(--mantine-color-red-filled)"
+                  />
+                ) : repository.viewed ? (
+                  <IconCheck
+                    className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-confirmed"
+                    size={10}
+                    color="green"
+                  />
+                ) : (
                   (repository.isNewRelease || repository.isStaleRelease) && (
                     <IconCircleFilled
-                      className="releases-repository-header-releaseDate-marker"
+                      className="releases-repository-header-releaseDate-icon releases-repository-header-releaseDate-marker"
                       size={10}
                       color={
                         repository.isNewRelease
@@ -220,19 +290,20 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
                       }
                     />
                   )
-                ) : (
-                  <IconTriangleFilled
-                    className="releases-repository-header-releaseDate-error"
-                    size={10}
-                    color={"var(--mantine-color-red-filled)"}
-                  />
                 )}
               </Group>
             </Group>
             {options.showDetails && (
-              <DetailsDisplay repository={repository} toggleExpandedRepository={toggleExpandedRepository} />
+              <DetailsDisplay repository={repository} toggleExpandedDisplay={toggleExpandedDisplay} />
             )}
-            {isActive && <ExpandedDisplay repository={repository} hasIconColor={hasIconColor} />}
+            {isActive && (
+              <ExpandedDisplay
+                repository={repository}
+                hasIconColor={hasIconColor}
+                markReleaseViewed={markReleaseViewed}
+                toggleExpandedDisplay={toggleExpandedDisplay}
+              />
+            )}
             <Divider className="releases-repository-divider" />
           </Stack>
         );
@@ -243,21 +314,21 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 
 interface DetailsDisplayProps {
   repository: ReleasesRepositoryResponse;
-  toggleExpandedRepository: (repository: ReleasesRepositoryResponse) => void;
+  toggleExpandedDisplay: (repository: ReleasesRepositoryResponse) => void;
 }
 
-const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplayProps) => {
+const DetailsDisplay = ({ repository, toggleExpandedDisplay }: DetailsDisplayProps) => {
   const t = useScopedI18n("widget.releases");
   const formatter = useFormatter();
 
   return (
     <>
-      <Divider className="releases-repository-details-divider" onClick={() => toggleExpandedRepository(repository)} />
+      <Divider className="releases-repository-details-divider" onClick={() => toggleExpandedDisplay(repository)} />
       <Group
         className={combineClasses("releases-repository-details", classes.releasesRepositoryDetails)}
         justify="space-between"
         p={5}
-        onClick={() => toggleExpandedRepository(repository)}
+        onClick={() => toggleExpandedDisplay(repository)}
       >
         <Group className="releases-repository-details-icon-wrapper">
           <Tooltip
@@ -451,9 +522,16 @@ const DetailsDisplay = ({ repository, toggleExpandedRepository }: DetailsDisplay
 interface ExtendedDisplayProps {
   repository: ReleasesRepositoryResponse;
   hasIconColor: boolean;
+  markReleaseViewed: (repository: ReleasesRepositoryResponse) => void;
+  toggleExpandedDisplay: (repository: ReleasesRepositoryResponse) => void;
 }
 
-const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => {
+const ExpandedDisplay = ({
+  repository,
+  hasIconColor,
+  markReleaseViewed,
+  toggleExpandedDisplay,
+}: ExtendedDisplayProps) => {
   const t = useScopedI18n("widget.releases");
   const now = useNow();
   const formatter = useFormatter();
@@ -471,20 +549,27 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             {repository.identifier}
           </Text>
 
-          <Group className="releases-repository-expanded-header-provider-wrapper" gap={5} align="center">
-            <MaskedOrNormalImage
-              className="releases-repository-expanded-header-provider-icon"
-              imageUrl={Providers[repository.providerKey].iconUrl}
-              hasColor={hasIconColor}
-              style={{
-                width: "1em",
-                aspectRatio: "1/1",
-              }}
-            />
-            <Text className="releases-repository-expanded-header-provider-name" size="xs" c="iconColor" ff="monospace">
-              {Providers[repository.providerKey].name}
-            </Text>
-          </Group>
+          {repository.integration && (
+            <Group className="releases-repository-expanded-header-provider-wrapper" gap={5} align="center">
+              <MaskedOrNormalImage
+                className="releases-repository-expanded-header-provider-icon"
+                imageUrl={repository.integration.iconUrl}
+                hasColor={hasIconColor}
+                style={{
+                  width: "1em",
+                  aspectRatio: "1/1",
+                }}
+              />
+              <Text
+                className="releases-repository-expanded-header-provider-name"
+                size="xs"
+                c="iconColor"
+                ff="monospace"
+              >
+                {repository.integration.name}
+              </Text>
+            </Group>
+          )}
         </Group>
 
         {repository.createdAt && (
@@ -500,24 +585,48 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
             </Text>
           </Text>
         )}
+
+        <Divider className="releases-repository-expanded-actions-divider" mx="30%" />
+
+        <Button
+          className="releases-repository-expanded-markViewedButton"
+          disabled={repository.viewed}
+          color="green"
+          variant="light"
+          onClick={() => {
+            markReleaseViewed(repository);
+            toggleExpandedDisplay(repository);
+          }}
+        >
+          <Group
+            className="releases-repository-expanded-markViewedButton-wrapper"
+            gap={5}
+            justify="center"
+            align="center"
+          >
+            <IconCheck className="releases-repository-expanded-markViewedButton-icon" size="1.5em" />
+            <Text className="releases-repository-expanded-markViewedButton-text">{t("markViewed")}</Text>
+          </Group>
+        </Button>
+
         {(repository.releaseUrl ?? repository.projectUrl) && (
-          <>
-            <Divider className="releases-repository-expanded-openButton-divider" mx="30%" />
-            <Button
-              className="releases-repository-expanded-openButton"
-              variant="light"
-              component="a"
-              href={repository.releaseUrl ?? repository.projectUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <IconExternalLink className="releases-repository-expanded-openButton-icon" />
+          <Button
+            className="releases-repository-expanded-openButton"
+            variant="light"
+            component="a"
+            href={repository.releaseUrl ?? repository.projectUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Group className="releases-repository-expanded-openButton-wrapper" gap={5} justify="center" align="center">
+              <IconExternalLink className="releases-repository-expanded-openButton-icon" size="1.5em" />
               <Text className="releases-repository-expanded-openButton-text">
                 {repository.releaseUrl ? t("openReleasePage") : t("openProjectPage")}
               </Text>
-            </Button>
-          </>
+            </Group>
+          </Button>
         )}
+
         {repository.error && (
           <>
             <Divider className="releases-repository-expanded-error-divider" mx="30%" />
@@ -531,27 +640,43 @@ const ExpandedDisplay = ({ repository, hasIconColor }: ExtendedDisplayProps) => 
               c="red"
               style={{ whiteSpace: "pre-wrap" }}
             >
-              {repository.error.code ? t(`error.options.${repository.error.code}` as never) : repository.error.message}
+              {repository.error.code ? t(`error.messages.${repository.error.code}` as never) : repository.error.message}
             </Text>
           </>
         )}
-        {repository.releaseDescription && (
-          <>
-            <Divider className="releases-repository-expanded-description-divider" my={10} mx="30%" />
-            <Title className="releases-repository-expanded-description-title" order={4} ta="center">
-              {t("releaseDescription")}
-            </Title>
-            <Text
-              className={combineClasses("releases-repository-expanded-description-text", classes.releasesDescription)}
-              component="div"
-              size="xs"
-              ff="monospace"
-            >
-              <ReactMarkdown skipHtml>{repository.releaseDescription}</ReactMarkdown>
-            </Text>
-          </>
+
+        {repository.releaseDescription ? (
+          <Description title={t("releaseDescription")} description={repository.releaseDescription} />
+        ) : (
+          <Description title={t("projectDescription")} description={repository.projectDescription ?? null} />
         )}
       </Stack>
+    </>
+  );
+};
+
+interface DescriptionProps {
+  title: string;
+  description: string | null;
+}
+
+const Description = ({ title, description }: DescriptionProps) => {
+  if (isNullOrWhitespace(description)) return null;
+
+  return (
+    <>
+      <Divider className="releases-repository-expanded-description-divider" my={10} mx="30%" />
+      <Title className="releases-repository-expanded-description-title" order={4} ta="center">
+        {title}
+      </Title>
+      <Text
+        className={combineClasses("releases-repository-expanded-description-text", classes.releasesDescription)}
+        component="div"
+        size="xs"
+        ff="monospace"
+      >
+        <ReactMarkdown skipHtml>{description}</ReactMarkdown>
+      </Text>
     </>
   );
 };

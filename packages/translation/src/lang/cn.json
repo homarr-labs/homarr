@@ -936,6 +936,14 @@
         "realm": {
           "label": "领域",
           "newLabel": "新领域"
+        },
+        "personalAccessToken": {
+          "label": "个人访问令牌",
+          "newLabel": "新建个人访问令牌"
+        },
+        "topic": {
+          "label": "主题",
+          "newLabel": "新主题"
         }
       }
     },
@@ -1498,7 +1506,8 @@
         "rows": "行数",
         "width": "宽度",
         "height": "高度"
-      }
+      },
+      "placeholder": "开始写笔记"
     },
     "iframe": {
       "name": "iFrame",
@@ -2070,6 +2079,35 @@
       },
       "globalRatio": "全局比率"
     },
+    "mediaReleases": {
+      "name": "媒体发布",
+      "description": "显示来自不同集成的新添加介质或即将发布的版本",
+      "option": {
+        "layout": {
+          "label": "布局",
+          "option": {
+            "backdrop": {
+              "label": "背景"
+            },
+            "poster": {
+              "label": "海报"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "显示描述提示"
+        },
+        "showType": {
+          "label": "显示媒体类型徽章"
+        },
+        "showSource": {
+          "label": "显示来源集成"
+        }
+      },
+      "length": {
+        "duration": "{length} 分钟"
+      }
+    },
     "mediaRequests-requestList": {
       "name": "媒体请求列表",
       "description": "查看 Overr 或 Jellyseerr 实例中的所有媒体请求列表",
@@ -2088,7 +2126,9 @@
         "pending": "等待处理",
         "processing": "处理中",
         "partiallyAvailable": "部分",
-        "available": "可用"
+        "available": "可用",
+        "blacklisted": "已列入黑名单",
+        "deleted": "已删除"
       },
       "status": {
         "pending": "待处理",
@@ -2217,6 +2257,9 @@
         "showDetails": {
           "label": "展开详情"
         },
+        "showOnlyIcon": {
+          "label": "仅显示图标"
+        },
         "topReleases": {
           "label": "热门发布",
           "description": "要显示的最新版本的最大数量。零表示没有限制。"
@@ -2233,7 +2276,9 @@
             "listFoundImages": "找到的映像列表",
             "listAlreadyImportedImages": "已导入的映像列表",
             "allImagesAlreadyImported": "所有映像已导入",
-            "onlyAdminCanImport": "只有管理员才能从 docker 导入"
+            "onlyAdminCanImport": "只有管理员才能从 docker 导入",
+            "selectAll": "全选",
+            "deselectAll": "反选"
           },
           "provider": {
             "label": "提供者"
@@ -2281,7 +2326,11 @@
           "example": {
             "label": "示例"
           },
-          "invalid": "仓库定义无效，请检查值"
+          "invalid": "仓库定义无效，请检查值",
+          "noProvider": {
+            "label": "没有提供者",
+            "tooltip": "无法解析该提供者，请在导入镜像后手动设置"
+          }
         }
       },
       "not-found": "未找到",
@@ -2291,14 +2340,20 @@
       "starsCount": "星",
       "forksCount": "复刻",
       "issuesCount": "打开问题",
+      "markViewed": "标记已读",
       "openProjectPage": "打开项目页面",
       "openReleasePage": "打开发布页面",
       "releaseDescription": "发布说明",
+      "projectDescription": "项目描述",
       "created": "已创建",
       "error": {
         "label": "错误",
-        "options": {
-          "noMatchingVersion": "没有找到匹配的版本"
+        "messages": {
+          "invalidIdentifier": "无效标识符",
+          "noMatchingVersion": "没有找到匹配的版本",
+          "noReleasesFound": "没有发现发布信息",
+          "noProviderSeleceted": "没有选择提供者",
+          "noProviderResponse": "提供者没有响应"
         }
       }
     },
@@ -2357,6 +2412,41 @@
       "error": {
         "internalServerError": "获取网络控制器概述失败"
       }
+    },
+    "firewall": {
+      "name": "防火墙监测",
+      "description": "显示防火墙摘要",
+      "tab": {
+        "system": "系统",
+        "interfaces": "接口"
+      },
+      "error": {
+        "internalServerError": "无法从防火墙获取数据"
+      },
+      "option": {
+        "interfaces": "要显示的网络接口"
+      },
+      "widget": {
+        "fwname": "名称",
+        "version": "版本",
+        "versiontitle": "版本",
+        "cputitle": "CPU 利用率",
+        "memorytitle": "内存占用率",
+        "cpu": "CPU",
+        "memory": "内存",
+        "interfaces": {
+          "name": "名称",
+          "trans": "已传输",
+          "recv": "已接收",
+          "title": "网络接口"
+        }
+      }
+    },
+    "notifications": {
+      "name": "通知",
+      "description": "在集成中显示通知历史",
+      "noItems": "没有可显示的通知。",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -2542,6 +2632,9 @@
       },
       "iconColor": {
         "label": "图标颜色"
+      },
+      "clearColor": {
+        "label": "清除颜色"
       },
       "customCss": {
         "label": "自定义此面板的 css",
@@ -3065,7 +3158,8 @@
           "status": {
             "idle": "空闲",
             "running": "运行中",
-            "error": "错误"
+            "error": "错误",
+            "disabled": "禁用"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3122,8 +3216,38 @@
             "networkController": {
               "label": "网络控制器"
             },
+            "refreshNotifications": {
+              "label": "更新通知"
+            },
             "dockerContainers": {
               "label": "Docker 容器"
+            },
+            "firewallCpu": {
+              "label": "防火墙 CPU"
+            },
+            "firewallMemory": {
+              "label": "防火墙内存"
+            },
+            "firewallVersion": {
+              "label": "防火墙版本"
+            },
+            "firewallInterfaces": {
+              "label": "防火墙接口"
+            }
+          },
+          "interval": {
+            "seconds": "每 {interval, plural, =1 {秒} other {# 秒}}",
+            "minutes": "每 {interval, plural, =1 {分钟} other {# 分钟}}",
+            "hours": "每 {interval, plural, =1 {小时} other {# 小时}}",
+            "midnight": "每日午夜",
+            "weeklyMonday": "每周一"
+          },
+          "settings": {
+            "title": "{jobName} 任务设置"
+          },
+          "field": {
+            "interval": {
+              "label": "计划时间间隔"
             }
           }
         },
@@ -4154,6 +4278,16 @@
             "message": "无法删除主机名"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "调试",
+        "info": "信息",
+        "warn": "警告",
+        "error": "错误"
       }
     }
   }

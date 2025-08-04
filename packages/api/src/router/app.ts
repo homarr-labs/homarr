@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { asc, createId, eq, inArray, like } from "@homarr/db";
+import { createId } from "@homarr/common";
+import { asc, eq, inArray, like } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
 import { getIconForName } from "@homarr/icons";

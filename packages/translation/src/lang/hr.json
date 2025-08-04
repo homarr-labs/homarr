@@ -936,6 +936,14 @@
         "realm": {
           "label": "",
           "newLabel": ""
+        },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
+        "topic": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1498,7 +1506,8 @@
         "rows": "",
         "width": "Širina",
         "height": "Visina"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "",
@@ -2070,6 +2079,35 @@
       },
       "globalRatio": ""
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "",
       "description": "Pregledajte popis svih zahtjeva za medijima s vaše instance Overseerr ili Jellyseerr",
@@ -2088,7 +2126,9 @@
         "pending": "",
         "processing": "",
         "partiallyAvailable": "",
-        "available": ""
+        "available": "",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "",
@@ -2217,6 +2257,9 @@
         "showDetails": {
           "label": ""
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "",
           "description": ""
@@ -2233,7 +2276,9 @@
             "listFoundImages": "",
             "listAlreadyImportedImages": "",
             "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "onlyAdminCanImport": "",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": ""
@@ -2281,7 +2326,11 @@
           "example": {
             "label": ""
           },
-          "invalid": ""
+          "invalid": "",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "",
@@ -2291,14 +2340,20 @@
       "starsCount": "",
       "forksCount": "",
       "issuesCount": "",
+      "markViewed": "",
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
+      "projectDescription": "",
       "created": "",
       "error": {
         "label": "",
-        "options": {
-          "noMatchingVersion": ""
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2357,6 +2412,41 @@
       "error": {
         "internalServerError": ""
       }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -2541,6 +2631,9 @@
         "label": ""
       },
       "iconColor": {
+        "label": ""
+      },
+      "clearColor": {
         "label": ""
       },
       "customCss": {
@@ -3065,7 +3158,8 @@
           "status": {
             "idle": "",
             "running": "U radu",
-            "error": "Pogreška"
+            "error": "Pogreška",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3122,7 +3216,37 @@
             "networkController": {
               "label": ""
             },
+            "refreshNotifications": {
+              "label": ""
+            },
             "dockerContainers": {
+              "label": ""
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": ""
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "interval": {
               "label": ""
             }
           }
@@ -4154,6 +4278,16 @@
             "message": ""
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

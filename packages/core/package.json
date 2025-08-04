@@ -1,0 +1,38 @@
+{
+  "name": "@homarr/core",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    "./infrastructure/redis": "./src/infrastructure/redis/client.ts",
+    "./infrastructure/env": "./src/infrastructure/env/index.ts",
+    ".": "./src/index.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
+  },
+  "prettier": "@homarr/prettier-config",
+  "dependencies": {
+    "@t3-oss/env-nextjs": "^0.13.8",
+    "ioredis": "5.7.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@homarr/eslint-config": "workspace:^0.2.0",
+    "@homarr/prettier-config": "workspace:^0.1.0",
+    "@homarr/tsconfig": "workspace:^0.1.0",
+    "eslint": "^9.32.0",
+    "typescript": "^5.9.2"
+  }
+}

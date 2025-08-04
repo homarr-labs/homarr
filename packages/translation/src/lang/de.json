@@ -23,7 +23,7 @@
           }
         },
         "importSettings": {
-          "title": "Importeinstellungen",
+          "title": "Einstellungen Importieren",
           "description": "Importverhalten konfigurieren"
         },
         "boardSelection": {
@@ -302,7 +302,7 @@
   "group": {
     "title": "Benutzergruppen",
     "name": "Benutzergruppe",
-    "search": "Finde eine Benutzergruppe",
+    "search": "Gruppe suchen",
     "field": {
       "name": "Name",
       "members": "Mitglieder",
@@ -355,15 +355,15 @@
           },
           "view-all": {
             "label": "Alle Boards anzeigen",
-            "description": "Mitgliedern das Ansehen von Boards erlauben"
+            "description": "Mitgliedern das Ansehen von allen Boards erlauben"
           },
           "modify-all": {
             "label": "Alle Boards ändern",
-            "description": "Erlaube Mitgliedern alle Boards zu ändern (beinhaltet keine Zugangskontrolle und Gefahrenbereich)"
+            "description": "Mitgliedern erlauben, alle Boards zu ändern (beinhaltet keine Zugangskontrolle und Gefahrenbereich)"
           },
           "full-all": {
             "label": "Voller Board Zugriff",
-            "description": "Erlaube Mitgliedern alle Boards (einschließlich Zugriffskontrolle und Gefahrenbereich) anzuzeigen, zu ändern und zu löschen"
+            "description": "Mitgliedern erlauben, alle Boards (einschließlich Zugriffskontrolle und Gefahrenbereich) anzuzeigen, zu ändern und zu löschen"
           }
         }
       },
@@ -376,7 +376,7 @@
           },
           "use-all": {
             "label": "Alle Integrationen nutzen",
-            "description": "Erlaubt Mitgliedern Integrationen zu ihren Boards hinzuzufügen"
+            "description": "Mitgliedern erlauben, alle Integrationen zu ihren Boards hinzuzufügen"
           },
           "interact-all": {
             "label": "Mit jeder Integration interagieren",
@@ -384,7 +384,7 @@
           },
           "full-all": {
             "label": "Voller Zugriff auf Integrationen",
-            "description": "Erlaube Mitgliedern jede Integration zu verwalten, zu nutzen und zu interagieren"
+            "description": "Mitgliedern erlauben, jede Integration zu verwalten, zu nutzen und mit ihnen zu interagieren"
           }
         }
       },
@@ -397,7 +397,7 @@
           },
           "view-all": {
             "label": "Alle Medien anzeigen",
-            "description": "Erlaubt Mitgliedern alle Medien anzusehen"
+            "description": "Mitgliedern erlauben, alle Medien anzuzeigen"
           },
           "full-all": {
             "label": "Vollständiger Medienzugriff",
@@ -410,7 +410,7 @@
         "item": {
           "view-logs": {
             "label": "Logs anzeigen",
-            "description": "Erlaubt Mitgliedern Logs anzusehen"
+            "description": "Mitgliedern erlauben, Logs anzuzeigen"
           }
         }
       },
@@ -453,7 +453,7 @@
       },
       "transfer": {
         "label": "Eigentum übertragen",
-        "description": "Übertrage den Eigentümer dieser Gruppe an einen anderen Benutzer.",
+        "description": "Den Eigentümer dieser Gruppe an einen anderen Benutzer übertragen.",
         "confirm": "Bist du sicher, dass du das Eigentum für die Gruppe {name} an {username} übertragen möchtest?",
         "notification": {
           "success": {
@@ -687,8 +687,8 @@
         "description": "Integration \"{kind}\" kann mit den Suchmaschinen verwendet werden. Wählen Sie dies, um die Suchmaschine automatisch zu konfigurieren."
       },
       "createApp": {
-        "label": "Anwendung erstellen",
-        "description": "Erstelle eine App mit dem gleichen Namen und Symbol wie die Integration. Lassen Sie das Eingabefeld unter leer, um die App mit der Integrations URL zu erstellen."
+        "label": "App erstellen",
+        "description": "Eine App mit dem gleichen Namen und Symbol wie die Integration erstellen. Lassen Sie das Eingabefeld unter leer, um die App mit der Integrations URL zu erstellen."
       },
       "appHref": {
         "placeholder": "Benutzerdefinierte App URL"
@@ -705,12 +705,12 @@
       "error": {
         "common": {
           "cause": {
-            "title": "Fall mit mehr Details"
+            "title": "Mehr Details zur Ursache"
           }
         },
         "unknown": {
           "title": "Unbekannter Fehler",
-          "description": "Ein unbekannter Fehler ist aufgetreten, den Fall unten für mehr Details öffnen"
+          "description": "Ein unbekannter Fehler ist aufgetreten, öffne die Ursache unten, um mehr Details zu sehen"
         },
         "parse": {
           "title": "Fehler beim Parsen",
@@ -721,7 +721,7 @@
           "description": "Die Anfrage wurde nicht autorisiert. Bitte überprüfen Sie, ob die Anmeldedaten korrekt sind und Sie diese mit mit den entsprechenden Berechtigungen konfiguriert haben."
         },
         "statusCode": {
-          "title": "Antwort Fehler",
+          "title": "Antwort-Fehler",
           "description": "Unerwartete {statusCode} ({reason}) Antwort von <url></url>erhalten. Bitte überprüfen Sie, ob die URL auf die Basis-URL der Integration verweist.",
           "otherDescription": "Unerwartete {statusCode} Antwort von <url></url>erhalten. Bitte stellen Sie sicher, dass die URL auf die Basis-URL der Integration zeigt.",
           "reason": {
@@ -936,6 +936,14 @@
         "realm": {
           "label": "Bereich",
           "newLabel": "Neuer Bereich"
+        },
+        "personalAccessToken": {
+          "label": "Persönlicher Zugangs-Token",
+          "newLabel": "Neuer Persönliches Zugangs-Token"
+        },
+        "topic": {
+          "label": "Thema",
+          "newLabel": "Neues Thema erstellen"
         }
       }
     },
@@ -1498,7 +1506,8 @@
         "rows": "Zeilen",
         "width": "Breite",
         "height": "Höhe"
-      }
+      },
+      "placeholder": "Mit dem Schreiben von Notizen beginnen"
     },
     "iframe": {
       "name": "iFrame",
@@ -1758,7 +1767,7 @@
           "label": "Speicher-Info anzeigen"
         },
         "showUptime": {
-          "label": ""
+          "label": "Laufzeit anzeigen"
         },
         "fileSystem": {
           "label": "Dateisystem Info anzeigen"
@@ -1767,7 +1776,7 @@
           "label": "Standard Tab"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Sichtbare Cluster-Abschnitte"
         },
         "sectionIndicatorRequirement": {
           "label": "Anforderung der Sektionsindikatoren"
@@ -1839,11 +1848,11 @@
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Docker Statistiken",
+      "description": "Statistiken Ihrer Container (Dieses Widget kann nur mit Administratorrechten hinzugefügt werden)",
       "option": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Fehler beim Abrufen der Container Statistiken"
       }
     },
     "common": {
@@ -1961,8 +1970,8 @@
           "label": "Filter zur Berechnung des Verhältnisses verwenden"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Elemente pro Integration begrenzen",
+          "description": "Dies begrenzt die Anzahl der Elemente pro Integration, jedoch nicht global"
         }
       },
       "errors": {
@@ -2070,6 +2079,35 @@
       },
       "globalRatio": "Globales Verhältnis"
     },
+    "mediaReleases": {
+      "name": "Medien Veröffentlichungen",
+      "description": "Zeige neu hinzugefügte Medien oder kommende Versionen von verschiedenen Integrationen",
+      "option": {
+        "layout": {
+          "label": "Darstellung",
+          "option": {
+            "backdrop": {
+              "label": "Hintergrund"
+            },
+            "poster": {
+              "label": "Poster"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "Beschreibungs des Tooltips anzeigen"
+        },
+        "showType": {
+          "label": "Medientyp Abzeichen anzeigen"
+        },
+        "showSource": {
+          "label": "Integration der Quelle anzeigen"
+        }
+      },
+      "length": {
+        "duration": "{length}Minuten"
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Liste der Medienanfragen",
       "description": "Sehen Sie eine Liste aller Medienanfragen von Ihrer Overseerr- oder Jellyseerr-Instanz",
@@ -2088,7 +2126,9 @@
         "pending": "Ausstehend",
         "processing": "In Bearbeitung",
         "partiallyAvailable": "Teilweise",
-        "available": "Verfügbar"
+        "available": "Verfügbar",
+        "blacklisted": "Gesperrt",
+        "deleted": "Gelöscht"
       },
       "status": {
         "pending": "Ausstehend",
@@ -2217,6 +2257,9 @@
         "showDetails": {
           "label": "Details anzeigen"
         },
+        "showOnlyIcon": {
+          "label": "Nur Symbole anzeigen"
+        },
         "topReleases": {
           "label": "Top Releases",
           "description": "Die maximale Anzahl der neuesten Versionen, die angezeigt werden sollen. Null bedeutet kein Limit."
@@ -2227,13 +2270,15 @@
             "label": "Repository hinzufügen"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "label": "Von Docker importieren",
+            "loading": "Lade Docker Images",
+            "noImagesFound": "Keine Docker Images gefunden",
+            "listFoundImages": "Liste der gefundenen Images",
+            "listAlreadyImportedImages": "Liste der bereits importierten Images",
+            "allImagesAlreadyImported": "Alle Images wurden bereits importiert",
+            "onlyAdminCanImport": "Nur Administratoren können vom Docker importieren",
+            "selectAll": "Alles auswählen",
+            "deselectAll": "Alle abwählen"
           },
           "provider": {
             "label": "Anbieter"
@@ -2276,12 +2321,16 @@
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Von Docker importieren"
           },
           "example": {
             "label": "Beispiel"
           },
-          "invalid": "Ungültige Repository Definition, bitte überprüfen Sie die Werte"
+          "invalid": "Ungültige Repository Definition, bitte überprüfen Sie die Werte",
+          "noProvider": {
+            "label": "Keine Anbieter",
+            "tooltip": "Der Anbieter konnte nicht festgestellt werden, bitte manuell nach dem Import der Bilder festlegen"
+          }
         }
       },
       "not-found": "Nicht gefunden",
@@ -2291,14 +2340,20 @@
       "starsCount": "Sterne",
       "forksCount": "Ableger",
       "issuesCount": "Offene Tickets",
+      "markViewed": "Als gelesen markieren",
       "openProjectPage": "Projektseite öffnen",
       "openReleasePage": "Release Seite öffnen",
       "releaseDescription": "Release Beschreibung",
+      "projectDescription": "Projektbeschreibung",
       "created": "Erstellt",
       "error": {
         "label": "Fehler",
-        "options": {
-          "noMatchingVersion": "Keine passende Version gefunden"
+        "messages": {
+          "invalidIdentifier": "Ungültige Kennung",
+          "noMatchingVersion": "Keine passende Version gefunden",
+          "noReleasesFound": "Keine Veröffentlichungen gefunden",
+          "noProviderSeleceted": "Kein Anbieter ausgewählt",
+          "noProviderResponse": "Keine Antwort vom Anbieter"
         }
       }
     },
@@ -2357,6 +2412,41 @@
       "error": {
         "internalServerError": "Fehler beim Abrufen der Netzwerk Controller Zusammenfassung"
       }
+    },
+    "firewall": {
+      "name": "Überwachung der Firewall",
+      "description": "Zeigt eine Zusammenfassung der Firewalls an",
+      "tab": {
+        "system": "System",
+        "interfaces": "Schnittstellen"
+      },
+      "error": {
+        "internalServerError": "Daten von der Firewall konnten nicht abgerufen werden"
+      },
+      "option": {
+        "interfaces": "Netzwerkschnittstellen anzeigen"
+      },
+      "widget": {
+        "fwname": "Name",
+        "version": "Version",
+        "versiontitle": "Versionen",
+        "cputitle": "CPU-Nutzung",
+        "memorytitle": "Speichernutzung",
+        "cpu": "CPU",
+        "memory": "Speicher",
+        "interfaces": {
+          "name": "Name",
+          "trans": "Übertragen",
+          "recv": "Empfangen",
+          "title": "Netzwerkschnittstellen"
+        }
+      }
+    },
+    "notifications": {
+      "name": "Benachrichtigungen",
+      "description": "Benachrichtigungshistorie von einer Integration anzeigen",
+      "noItems": "Keine Benachrichtigungen zum Anzeigen.",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -2542,6 +2632,9 @@
       },
       "iconColor": {
         "label": "Symbolfarbe"
+      },
+      "clearColor": {
+        "label": "Farbe entfernen"
       },
       "customCss": {
         "label": "Benutzerdefinierte css für dieses Board",
@@ -3065,7 +3158,8 @@
           "status": {
             "idle": "Inaktiv",
             "running": "Wird ausgeführt",
-            "error": "Fehler"
+            "error": "Fehler",
+            "disabled": "Deaktiviert"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3122,8 +3216,38 @@
             "networkController": {
               "label": "Netzwerk Controller"
             },
+            "refreshNotifications": {
+              "label": "Benachrichtigungs Updater"
+            },
             "dockerContainers": {
-              "label": ""
+              "label": "Docker Container"
+            },
+            "firewallCpu": {
+              "label": "Firewall CPU"
+            },
+            "firewallMemory": {
+              "label": "Firewall Speicher"
+            },
+            "firewallVersion": {
+              "label": "Firewall Version"
+            },
+            "firewallInterfaces": {
+              "label": "Firewall Schnittstellen"
+            }
+          },
+          "interval": {
+            "seconds": "Jeweils {interval, plural, =1 {Sekunde} other {# Sekunden}}",
+            "minutes": "Jeweils {interval, plural, =1 {Minute} other {# Minuten}}",
+            "hours": "Jeweils {interval, plural, =1 {Stunde} other {# Stunden}}",
+            "midnight": "Jeden Tag um Mitternacht",
+            "weeklyMonday": "Jede Woche am Montag"
+          },
+          "settings": {
+            "title": "Einstellungen der Aufgabe für {jobName}"
+          },
+          "field": {
+            "interval": {
+              "label": "Intervall des Zeitplans"
             }
           }
         },
@@ -3189,14 +3313,14 @@
       "updated": "Aktualisiert {when}",
       "search": "{count} Container durchsuchen",
       "selected": "{selectCount} von {totalCount} ausgewählten Containern",
-      "footer": ""
+      "footer": "Insgesamt {count} Container"
     },
     "field": {
       "name": {
         "label": "Name"
       },
       "state": {
-        "label": "Staat",
+        "label": "Status",
         "option": {
           "created": "Erstellt",
           "running": "Aktiv",
@@ -3209,10 +3333,10 @@
       },
       "stats": {
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Speicher"
         }
       },
       "containerImage": {
@@ -3223,7 +3347,7 @@
       }
     },
     "action": {
-      "title": "",
+      "title": "Aktionen",
       "start": {
         "label": "Starten",
         "notification": {
@@ -3576,7 +3700,7 @@
     },
     "action": {
       "saveUser": "Benutzerberechtigung hinzufügen",
-      "saveGroup": "Gruppenberechtigung hinzufügen"
+      "saveGroup": "Gruppenberechtigung speichern"
     }
   },
   "navigationStructure": {
@@ -4154,6 +4278,16 @@
             "message": "Der Hostname konnte nicht entfernt werden"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Debug",
+        "info": "Info",
+        "warn": "Hinweis",
+        "error": "Fehler"
       }
     }
   }

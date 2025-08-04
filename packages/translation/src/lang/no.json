@@ -936,6 +936,14 @@
         "realm": {
           "label": "Område",
           "newLabel": "Nytt område"
+        },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
+        "topic": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1498,7 +1506,8 @@
         "rows": "Rader",
         "width": "Bredde",
         "height": "Høyde"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -2070,6 +2079,35 @@
       },
       "globalRatio": "Global ratio"
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Liste over mediaspillforespørsler",
       "description": "Se en liste over alle medieforespørsler fra din Overseerr eller Jellyseerr instans",
@@ -2088,7 +2126,9 @@
         "pending": "Pågår",
         "processing": "Prosesserer",
         "partiallyAvailable": "Delvis",
-        "available": "Tilgjengelig"
+        "available": "Tilgjengelig",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "Venter",
@@ -2217,6 +2257,9 @@
         "showDetails": {
           "label": ""
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "",
           "description": ""
@@ -2233,7 +2276,9 @@
             "listFoundImages": "",
             "listAlreadyImportedImages": "",
             "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "onlyAdminCanImport": "",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": ""
@@ -2281,7 +2326,11 @@
           "example": {
             "label": ""
           },
-          "invalid": ""
+          "invalid": "",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "",
@@ -2291,14 +2340,20 @@
       "starsCount": "",
       "forksCount": "",
       "issuesCount": "",
+      "markViewed": "",
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
+      "projectDescription": "",
       "created": "",
       "error": {
         "label": "",
-        "options": {
-          "noMatchingVersion": ""
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2357,6 +2412,41 @@
       "error": {
         "internalServerError": ""
       }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -2542,6 +2632,9 @@
       },
       "iconColor": {
         "label": "Ikonfarge"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Tilpasset css for denne tavlen",
@@ -3065,7 +3158,8 @@
           "status": {
             "idle": "Inaktiv",
             "running": "Kjører",
-            "error": "Feil"
+            "error": "Feil",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3122,7 +3216,37 @@
             "networkController": {
               "label": ""
             },
+            "refreshNotifications": {
+              "label": ""
+            },
             "dockerContainers": {
+              "label": ""
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": ""
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "interval": {
               "label": ""
             }
           }
@@ -4154,6 +4278,16 @@
             "message": ""
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

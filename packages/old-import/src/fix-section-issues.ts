@@ -1,4 +1,4 @@
-import { createId } from "@homarr/db";
+import { createId } from "@homarr/common";
 import { logger } from "@homarr/log";
 import type { OldmarrConfig } from "@homarr/old-schema";
 

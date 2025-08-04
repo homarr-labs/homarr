@@ -21,7 +21,13 @@ import { z } from "zod/v4";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
-import { getAllSecretKindOptions, getIconUrl, getIntegrationName, integrationDefs } from "@homarr/definitions";
+import {
+  getAllSecretKindOptions,
+  getIconUrl,
+  getIntegrationDefaultUrl,
+  getIntegrationName,
+  integrationDefs,
+} from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -54,7 +60,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   const form = useZodForm(formSchema, {
     initialValues: {
       name: searchParams.name ?? getIntegrationName(searchParams.kind),
-      url: searchParams.url ?? "",
+      url: searchParams.url ?? getIntegrationDefaultUrl(searchParams.kind) ?? "",
       secrets: secretKinds[0].map((kind) => ({
         kind,
         value: "",

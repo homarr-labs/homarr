@@ -1,4 +1,4 @@
-import { createId } from "@homarr/db";
+import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { sections } from "@homarr/db/schema";
 import { logger } from "@homarr/log";

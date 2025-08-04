@@ -1,8 +1,7 @@
 import { z } from "zod/v4";
 
+import { createBooleanSchema, createDurationSchema, createEnv } from "@homarr/core/infrastructure/env";
 import { supportedAuthProviders } from "@homarr/definitions";
-import { createEnv } from "@homarr/env";
-import { createBooleanSchema, createDurationSchema } from "@homarr/env/schemas";
 
 const authProvidersSchema = z
   .string()

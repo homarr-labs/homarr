@@ -1,15 +1,22 @@
-import { objectKeys } from "@homarr/common";
-import { createDocumentationLink, everyoneGroup } from "@homarr/definitions";
+import { createId, objectKeys } from "@homarr/common";
+import {
+  createDocumentationLink,
+  everyoneGroup,
+  getIntegrationDefaultUrl,
+  getIntegrationName,
+  integrationKinds,
+} from "@homarr/definitions";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database } from "..";
-import { createId, eq } from "..";
+import { eq } from "..";
 import {
   getServerSettingByKeyAsync,
   insertServerSettingByKeyAsync,
   updateServerSettingByKeyAsync,
 } from "../queries/server-setting";
-import { onboarding, searchEngines } from "../schema";
+import { integrations, onboarding, searchEngines } from "../schema";
+import type { Integration } from "../schema";
 import { groups } from "../schema/mysql";
 
 export const seedDataAsync = async (db: Database) => {
@@ -17,6 +24,7 @@ export const seedDataAsync = async (db: Database) => {
   await seedOnboardingAsync(db);
   await seedServerSettingsAsync(db);
   await seedDefaultSearchEnginesAsync(db);
+  await seedDefaultIntegrationsAsync(db);
 };
 
 const seedEveryoneGroupAsync = async (db: Database) => {
@@ -130,4 +138,54 @@ const seedServerSettingsAsync = async (db: Database) => {
     await updateServerSettingByKeyAsync(db, settingsKey, { ...defaultSettings, ...currentSettings });
     console.log(`Updated serverSetting through seed key=${settingsKey}`);
   }
+};
+
+const seedDefaultIntegrationsAsync = async (db: Database) => {
+  const defaultIntegrations = integrationKinds.reduce<Integration[]>((acc, kind) => {
+    const name = getIntegrationName(kind);
+    const defaultUrl = getIntegrationDefaultUrl(kind);
+
+    if (defaultUrl !== undefined) {
+      acc.push({
+        id: "new",
+        name: `${name} Default`,
+        url: defaultUrl,
+        kind,
+      });
+    }
+
+    return acc;
+  }, []);
+
+  if (defaultIntegrations.length === 0) {
+    console.warn("No default integrations found to seed");
+    return;
+  }
+
+  let createdCount = 0;
+  await Promise.all(
+    defaultIntegrations.map(async (integration) => {
+      const existingKind = await db.$count(integrations, eq(integrations.kind, integration.kind));
+
+      if (existingKind > 0) {
+        console.log(`Skipping seeding of default ${integration.kind} integration as one already exists`);
+        return;
+      }
+
+      const newIntegration = {
+        ...integration,
+        id: createId(),
+      };
+
+      await db.insert(integrations).values(newIntegration);
+      createdCount++;
+    }),
+  );
+
+  if (createdCount === 0) {
+    console.log("No default integrations were created as they already exist");
+    return;
+  }
+
+  console.log(`Created ${createdCount} default integrations through seeding process`);
 };

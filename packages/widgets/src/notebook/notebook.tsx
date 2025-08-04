@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActionIcon,
   Box,
@@ -43,6 +43,7 @@ import {
 import { Color } from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
 import Image from "@tiptap/extension-image";
+import Placeholder from "@tiptap/extension-placeholder";
 import Table from "@tiptap/extension-table";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
@@ -65,6 +66,7 @@ import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetComponentProps } from "../definition";
 
+import "@mantine/tiptap/styles.css";
 import "./notebook.css";
 
 import { useSession } from "@homarr/auth/client";
@@ -81,15 +83,15 @@ const controlIconProps = {
   stroke: 1.5,
 };
 
-export function Notebook({ options, isEditMode, boardId, itemId }: WidgetComponentProps<"notebook">) {
+export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: WidgetComponentProps<"notebook">) {
   const [content, setContent] = useState(options.content);
-  const [toSaveContent, setToSaveContent] = useState(content);
+  const previousContentRef = useRef(content);
 
   const board = useRequiredBoard();
   const { data: session } = useSession();
   const { hasChangeAccess } = constructBoardPermissions(board, session);
 
-  const enabled = !isEditMode && hasChangeAccess;
+  const canChange = !isEditMode && hasChangeAccess;
   const [isEditing, setIsEditing] = useState(false);
 
   const { primaryColor } = useMantineTheme();
@@ -103,6 +105,9 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
   const editor = useEditor(
     {
       extensions: [
+        Placeholder.configure({
+          placeholder: `${t("widget.notebook.placeholder")}…`,
+        }),
         Color,
         Highlight.configure({ multicolor: true }),
         Image.extend({
@@ -150,14 +155,14 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
         TaskItem.configure({
           nested: true,
           onReadOnlyChecked: (node, checked) => {
-            if (options.allowReadOnlyCheck && enabled) {
-              const event = new CustomEvent("onReadOnlyCheck", {
-                detail: { node, checked },
-              });
-              dispatchEvent(event);
-              return true;
-            }
-            return false;
+            if (!options.allowReadOnlyCheck) return false;
+            if (!canChange) return false;
+
+            const event = new CustomEvent("onReadOnlyCheck", {
+              detail: { node, checked },
+            });
+            dispatchEvent(event);
+            return true;
           },
         }),
         TaskList.configure({ itemTypeName: "taskItem" }),
@@ -173,7 +178,7 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
         editor.setEditable(false);
       },
     },
-    [toSaveContent],
+    [],
   );
 
   const handleOnReadOnlyCheck = (event: CustomEventInit<{ node: Node; checked: boolean }>) => {
@@ -184,16 +189,14 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
       if (!event.detail) return;
       if (!subnode.eq(event.detail.node)) return;
 
-      if (subnode.eq(event.detail.node)) {
-        const { tr } = editor.state;
-        tr.setNodeMarkup(pos, undefined, {
-          ...event.detail.node.attrs,
-          checked: event.detail.checked,
-        });
-        editor.view.dispatch(tr);
-        setContent(editor.getHTML());
-        handleContentUpdate(editor.getHTML());
-      }
+      const { tr } = editor.state;
+      tr.setNodeMarkup(pos, undefined, {
+        ...event.detail.node.attrs,
+        checked: event.detail.checked,
+      });
+      editor.view.dispatch(tr);
+      setContent(editor.getHTML());
+      handleContentUpdate(editor.getHTML());
     });
   };
 
@@ -201,13 +204,15 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
 
   const handleContentUpdate = useCallback(
     (contentUpdate: string) => {
-      setToSaveContent(contentUpdate);
+      previousContentRef.current = contentUpdate;
+      setOptions({ newOptions: { content: contentUpdate } });
+
       // This is not available in preview mode
       if (boardId && itemId) {
         void mutateAsync({ boardId, itemId, content: contentUpdate });
       }
     },
-    [boardId, itemId, mutateAsync],
+    [boardId, itemId, mutateAsync, setOptions],
   );
 
   const handleEditToggleCallback = useCallback(
@@ -216,7 +221,9 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
       if (!editor) return current;
       editor.setEditable(current);
 
-      handleContentUpdate(content);
+      if (previous) {
+        handleContentUpdate(content);
+      }
 
       return current;
     },
@@ -227,11 +234,11 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
     if (!editor) return false;
     editor.setEditable(false);
 
-    setContent(toSaveContent);
-    editor.commands.setContent(toSaveContent);
+    setContent(previousContentRef.current);
+    editor.commands.setContent(previousContentRef.current);
 
     return false;
-  }, [editor, toSaveContent]);
+  }, [editor]);
 
   const handleEditCancel = useCallback(() => {
     setIsEditing(handleEditCancelCallback);
@@ -242,7 +249,7 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
   }, [setIsEditing, handleEditToggleCallback]);
 
   return (
-    <Box>
+    <Box h="100%">
       <RichTextEditor
         p={0}
         mt={0}
@@ -251,14 +258,12 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
         editor={editor}
         styles={(theme) => ({
           root: {
-            "& .ProseMirror": {
-              padding: "0  !important",
-            },
             backgroundColor: colorScheme === "dark" ? theme.colors.dark[6] : "white",
             border: "none",
             borderRadius: "0.5rem",
             display: "flex",
             flexDirection: "column",
+            height: "100%",
           },
           toolbar: {
             backgroundColor: "transparent",
@@ -267,6 +272,10 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
           content: {
             backgroundColor: "transparent",
             padding: "0.5rem",
+            height: "100%",
+          },
+          typographyStylesProvider: {
+            height: "100%",
           },
         })}
       >
@@ -351,6 +360,11 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
               </>
             )}
           </RichTextEditor.ControlsGroup>
+
+          <RichTextEditor.ControlsGroup>
+            <RichTextEditor.Undo />
+            <RichTextEditor.Redo />
+          </RichTextEditor.ControlsGroup>
         </RichTextEditor.Toolbar>
         {editor && (
           <BubbleMenu editor={editor}>
@@ -362,11 +376,24 @@ export function Notebook({ options, isEditMode, boardId, itemId }: WidgetCompone
           </BubbleMenu>
         )}
 
-        <ScrollArea mih="4rem" offsetScrollbars pl={12} pt={12}>
+        <ScrollArea
+          mih="4rem"
+          offsetScrollbars
+          pl={12}
+          pt={12}
+          styles={{
+            root: {
+              height: "100%",
+            },
+            content: {
+              height: "100%",
+            },
+          }}
+        >
           <RichTextEditor.Content />
         </ScrollArea>
       </RichTextEditor>
-      {enabled && (
+      {canChange && (
         <>
           <ActionIcon
             title={isEditing ? t("common.action.save") : t("common.action.edit")}

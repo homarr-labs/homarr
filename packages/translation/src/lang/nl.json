@@ -613,14 +613,14 @@
         "label": "App selecteren",
         "notFound": "Geen app gevonden",
         "search": "Zoek naar een app",
-        "noResults": "Geen resultaten gevonden voor deze zoekopdracht",
-        "action": "Selecteer {app}",
+        "noResults": "Geen resultaten",
+        "action": "{app} selecteren",
         "title": "Selecteer een app om aan dit bord toe te voegen"
       },
       "create": {
         "title": "Nieuwe app aanmaken",
         "description": "Een nieuwe app aanmaken ",
-        "action": "Open app aanmaken"
+        "action": "App aanmaken openen"
       },
       "add": "Een app toevoegen"
     }
@@ -717,7 +717,7 @@
           "description": ""
         },
         "authorization": {
-          "title": "Fout tijdens het aanmelden",
+          "title": "Autorisatie fout",
           "description": ""
         },
         "statusCode": {
@@ -936,6 +936,14 @@
         "realm": {
           "label": "Realm",
           "newLabel": "Nieuwe Realm"
+        },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
+        "topic": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1498,7 +1506,8 @@
         "rows": "Rijen",
         "width": "Breedte",
         "height": "Hoogte"
-      }
+      },
+      "placeholder": ""
     },
     "iframe": {
       "name": "iFrame",
@@ -2070,6 +2079,35 @@
       },
       "globalRatio": "Globale verhouding"
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Media-aanvragen lijst",
       "description": "Bekijk een lijst met alle media-aanvragen van je Overseerr of Jellyseerr instantie",
@@ -2088,7 +2126,9 @@
         "pending": "In afwachting",
         "processing": "Verwerken",
         "partiallyAvailable": "Gedeeltelijk",
-        "available": "Beschikbaar"
+        "available": "Beschikbaar",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "In afwachting",
@@ -2217,6 +2257,9 @@
         "showDetails": {
           "label": ""
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "",
           "description": ""
@@ -2233,7 +2276,9 @@
             "listFoundImages": "",
             "listAlreadyImportedImages": "",
             "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "onlyAdminCanImport": "",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": ""
@@ -2281,7 +2326,11 @@
           "example": {
             "label": ""
           },
-          "invalid": ""
+          "invalid": "",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "",
@@ -2291,14 +2340,20 @@
       "starsCount": "",
       "forksCount": "",
       "issuesCount": "",
+      "markViewed": "",
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
+      "projectDescription": "",
       "created": "",
       "error": {
         "label": "",
-        "options": {
-          "noMatchingVersion": ""
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2357,6 +2412,41 @@
       "error": {
         "internalServerError": "Netwerkcontroller samenvatting ophalen mislukt"
       }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
     }
   },
   "widgetPreview": {
@@ -2542,6 +2632,9 @@
       },
       "iconColor": {
         "label": "Icoon kleur"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Aangepaste CSS voor dit bord",
@@ -3065,7 +3158,8 @@
           "status": {
             "idle": "Niet actief",
             "running": "Actief",
-            "error": "Fout"
+            "error": "Fout",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3122,7 +3216,37 @@
             "networkController": {
               "label": "Netwerkcontroller"
             },
+            "refreshNotifications": {
+              "label": ""
+            },
             "dockerContainers": {
+              "label": ""
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": ""
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "interval": {
               "label": ""
             }
           }
@@ -3187,7 +3311,7 @@
     "title": "Containers",
     "table": {
       "updated": "{when} bijgewerkt",
-      "search": "Zoek {count} containers",
+      "search": "{count} containers zoeken",
       "selected": "{selectCount} van {totalCount} containers geselecteerd",
       "footer": ""
     },
@@ -4154,6 +4278,16 @@
             "message": ""
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

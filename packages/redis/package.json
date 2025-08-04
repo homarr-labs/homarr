@@ -23,17 +23,18 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^",
+    "@homarr/core": "workspace:^",
     "@homarr/db": "workspace:^",
     "@homarr/definitions": "workspace:^",
     "@homarr/log": "workspace:^",
-    "ioredis": "5.6.1",
+    "ioredis": "5.7.0",
     "superjson": "2.2.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.29.0",
-    "typescript": "^5.8.3"
+    "eslint": "^9.32.0",
+    "typescript": "^5.9.2"
   }
 }

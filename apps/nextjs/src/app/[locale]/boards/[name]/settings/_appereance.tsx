@@ -17,6 +17,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconX } from "@tabler/icons-react";
 
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
@@ -102,12 +103,25 @@ export const ColorSettingsContent = ({ board }: Props) => {
             </InputWrapper>
           </Grid.Col>
           <Grid.Col span={{ sm: 12, md: 6 }}>
-            <ColorInput
-              label={t("board.field.iconColor.label")}
-              format="hex"
-              swatches={Object.values(theme.colors).map((color) => color[6])}
-              {...form.getInputProps("iconColor")}
-            />
+            <Group align="end">
+              <ColorInput
+                label={t("board.field.iconColor.label")}
+                format="hex"
+                swatches={Object.values(theme.colors).map((color) => color[6])}
+                flex={1}
+                {...form.getInputProps("iconColor")}
+              />
+              <Button
+                variant="subtle"
+                leftSection={<IconX />}
+                onClick={() => form.setFieldValue("iconColor", "")}
+                disabled={!form.values.iconColor}
+              >
+                {t("board.field.clearColor.label")}
+              </Button>
+            </Group>
+          </Grid.Col>
+          <Grid.Col span={{ sm: 12, md: 6 }}>
             <Select
               label={t("board.field.itemRadius.label")}
               description={t("board.field.itemRadius.description")}
