@@ -122,7 +122,15 @@ export const userChangeColorSchemeSchema = z.object({
 });
 
 export const userFirstDayOfWeekSchema = z.object({
-  firstDayOfWeek: z.custom<DayOfWeek>((value) => z.number().min(0).max(6).safeParse(value).success),
+  firstDayOfWeek: z
+    .custom<DayOfWeek>((value) => z.number().min(0).max(6).safeParse(value).success)
+    .meta({
+      override: {
+        type: "integer",
+        minimum: 0,
+        maximum: 6,
+      },
+    }),
 });
 
 export const userPingIconsEnabledSchema = z.object({
