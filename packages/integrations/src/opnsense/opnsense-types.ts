@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 // API documentation : https://docs.opnsense.org/development/api.html#core-api
 

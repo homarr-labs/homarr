@@ -1,5 +1,5 @@
 import { parseStringPromise } from "xml2js";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ParseError } from "@homarr/common/server";

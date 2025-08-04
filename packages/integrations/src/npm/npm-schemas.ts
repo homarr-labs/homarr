@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const releasesResponseSchema = z.object({
   time: z.record(z.string().transform((value) => new Date(value))).transform((version) =>
