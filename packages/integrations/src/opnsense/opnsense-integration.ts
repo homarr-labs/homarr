@@ -2,7 +2,6 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ParseError, ResponseError } from "@homarr/common/server";
 
 import { createChannelEventHistoryOld } from "../../../redis/src/lib/channel";
-import { HandleIntegrationErrors } from "../base/errors/decorator";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -22,7 +21,6 @@ import {
   opnsenseSystemSummarySchema,
 } from "./opnsense-types";
 
-@HandleIntegrationErrors([])
 export class OPNsenseIntegration extends Integration implements FirewallSummaryIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/diagnostics/system/system_information"), {
