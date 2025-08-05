@@ -2447,6 +2447,18 @@
       "description": "連携機能からの通知履歴を表示する",
       "noItems": "表示する通知はありません。",
       "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
     }
   },
   "widgetPreview": {

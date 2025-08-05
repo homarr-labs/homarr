@@ -2447,6 +2447,18 @@
       "description": "在集成中显示通知历史",
       "noItems": "没有可显示的通知。",
       "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
     }
   },
   "widgetPreview": {
