@@ -2258,7 +2258,7 @@
           "label": "展开详情"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "仅显示图标"
         },
         "topReleases": {
           "label": "热门发布",
@@ -2277,8 +2277,8 @@
             "listAlreadyImportedImages": "已导入的映像列表",
             "allImagesAlreadyImported": "所有映像已导入",
             "onlyAdminCanImport": "只有管理员才能从 docker 导入",
-            "selectAll": "",
-            "deselectAll": ""
+            "selectAll": "全选",
+            "deselectAll": "反选"
           },
           "provider": {
             "label": "提供者"
@@ -2340,7 +2340,7 @@
       "starsCount": "星",
       "forksCount": "复刻",
       "issuesCount": "打开问题",
-      "markViewed": "",
+      "markViewed": "标记已读",
       "openProjectPage": "打开项目页面",
       "openReleasePage": "打开发布页面",
       "releaseDescription": "发布说明",
@@ -2414,31 +2414,31 @@
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "防火墙监测",
+      "description": "显示防火墙摘要",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "系统",
+        "interfaces": "接口"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "无法从防火墙获取数据"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "要显示的网络接口"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
-        "versiontitle": "",
-        "cputitle": "",
-        "memorytitle": "",
-        "cpu": "",
-        "memory": "",
+        "fwname": "名称",
+        "version": "版本",
+        "versiontitle": "版本",
+        "cputitle": "CPU 利用率",
+        "memorytitle": "内存占用率",
+        "cpu": "CPU",
+        "memory": "内存",
         "interfaces": {
-          "name": "",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "name": "名称",
+          "trans": "已传输",
+          "recv": "已接收",
+          "title": "网络接口"
         }
       }
     },
@@ -2447,6 +2447,18 @@
       "description": "在集成中显示通知历史",
       "noItems": "没有可显示的通知。",
       "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
     }
   },
   "widgetPreview": {
@@ -3223,16 +3235,16 @@
               "label": "Docker 容器"
             },
             "firewallCpu": {
-              "label": ""
+              "label": "防火墙 CPU"
             },
             "firewallMemory": {
-              "label": ""
+              "label": "防火墙内存"
             },
             "firewallVersion": {
-              "label": ""
+              "label": "防火墙版本"
             },
             "firewallInterfaces": {
-              "label": ""
+              "label": "防火墙接口"
             }
           },
           "interval": {

@@ -23,7 +23,7 @@
           }
         },
         "importSettings": {
-          "title": "Importeinstellungen",
+          "title": "Einstellungen Importieren",
           "description": "Importverhalten konfigurieren"
         },
         "boardSelection": {
@@ -302,7 +302,7 @@
   "group": {
     "title": "Benutzergruppen",
     "name": "Benutzergruppe",
-    "search": "Finde eine Benutzergruppe",
+    "search": "Gruppe suchen",
     "field": {
       "name": "Name",
       "members": "Mitglieder",
@@ -355,15 +355,15 @@
           },
           "view-all": {
             "label": "Alle Boards anzeigen",
-            "description": "Mitgliedern das Ansehen von Boards erlauben"
+            "description": "Mitgliedern das Ansehen von allen Boards erlauben"
           },
           "modify-all": {
             "label": "Alle Boards ändern",
-            "description": "Erlaube Mitgliedern alle Boards zu ändern (beinhaltet keine Zugangskontrolle und Gefahrenbereich)"
+            "description": "Mitgliedern erlauben, alle Boards zu ändern (beinhaltet keine Zugangskontrolle und Gefahrenbereich)"
           },
           "full-all": {
             "label": "Voller Board Zugriff",
-            "description": "Erlaube Mitgliedern alle Boards (einschließlich Zugriffskontrolle und Gefahrenbereich) anzuzeigen, zu ändern und zu löschen"
+            "description": "Mitgliedern erlauben, alle Boards (einschließlich Zugriffskontrolle und Gefahrenbereich) anzuzeigen, zu ändern und zu löschen"
           }
         }
       },
@@ -376,7 +376,7 @@
           },
           "use-all": {
             "label": "Alle Integrationen nutzen",
-            "description": "Erlaubt Mitgliedern Integrationen zu ihren Boards hinzuzufügen"
+            "description": "Mitgliedern erlauben, alle Integrationen zu ihren Boards hinzuzufügen"
           },
           "interact-all": {
             "label": "Mit jeder Integration interagieren",
@@ -384,7 +384,7 @@
           },
           "full-all": {
             "label": "Voller Zugriff auf Integrationen",
-            "description": "Erlaube Mitgliedern jede Integration zu verwalten, zu nutzen und zu interagieren"
+            "description": "Mitgliedern erlauben, jede Integration zu verwalten, zu nutzen und mit ihnen zu interagieren"
           }
         }
       },
@@ -397,7 +397,7 @@
           },
           "view-all": {
             "label": "Alle Medien anzeigen",
-            "description": "Erlaubt Mitgliedern alle Medien anzusehen"
+            "description": "Mitgliedern erlauben, alle Medien anzuzeigen"
           },
           "full-all": {
             "label": "Vollständiger Medienzugriff",
@@ -410,7 +410,7 @@
         "item": {
           "view-logs": {
             "label": "Logs anzeigen",
-            "description": "Erlaubt Mitgliedern Logs anzusehen"
+            "description": "Mitgliedern erlauben, Logs anzuzeigen"
           }
         }
       },
@@ -453,7 +453,7 @@
       },
       "transfer": {
         "label": "Eigentum übertragen",
-        "description": "Übertrage den Eigentümer dieser Gruppe an einen anderen Benutzer.",
+        "description": "Den Eigentümer dieser Gruppe an einen anderen Benutzer übertragen.",
         "confirm": "Bist du sicher, dass du das Eigentum für die Gruppe {name} an {username} übertragen möchtest?",
         "notification": {
           "success": {
@@ -687,8 +687,8 @@
         "description": "Integration \"{kind}\" kann mit den Suchmaschinen verwendet werden. Wählen Sie dies, um die Suchmaschine automatisch zu konfigurieren."
       },
       "createApp": {
-        "label": "Anwendung erstellen",
-        "description": "Erstelle eine App mit dem gleichen Namen und Symbol wie die Integration. Lassen Sie das Eingabefeld unter leer, um die App mit der Integrations URL zu erstellen."
+        "label": "App erstellen",
+        "description": "Eine App mit dem gleichen Namen und Symbol wie die Integration erstellen. Lassen Sie das Eingabefeld unter leer, um die App mit der Integrations URL zu erstellen."
       },
       "appHref": {
         "placeholder": "Benutzerdefinierte App URL"
@@ -705,12 +705,12 @@
       "error": {
         "common": {
           "cause": {
-            "title": "Fall mit mehr Details"
+            "title": "Mehr Details zur Ursache"
           }
         },
         "unknown": {
           "title": "Unbekannter Fehler",
-          "description": "Ein unbekannter Fehler ist aufgetreten, den Fall unten für mehr Details öffnen"
+          "description": "Ein unbekannter Fehler ist aufgetreten, öffne die Ursache unten, um mehr Details zu sehen"
         },
         "parse": {
           "title": "Fehler beim Parsen",
@@ -721,7 +721,7 @@
           "description": "Die Anfrage wurde nicht autorisiert. Bitte überprüfen Sie, ob die Anmeldedaten korrekt sind und Sie diese mit mit den entsprechenden Berechtigungen konfiguriert haben."
         },
         "statusCode": {
-          "title": "Antwort Fehler",
+          "title": "Antwort-Fehler",
           "description": "Unerwartete {statusCode} ({reason}) Antwort von <url></url>erhalten. Bitte überprüfen Sie, ob die URL auf die Basis-URL der Integration verweist.",
           "otherDescription": "Unerwartete {statusCode} Antwort von <url></url>erhalten. Bitte stellen Sie sicher, dass die URL auf die Basis-URL der Integration zeigt.",
           "reason": {
@@ -938,8 +938,8 @@
           "newLabel": "Neuer Bereich"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Persönlicher Zugangs-Token",
+          "newLabel": "Neuer Persönliches Zugangs-Token"
         },
         "topic": {
           "label": "Thema",
@@ -2080,32 +2080,32 @@
       "globalRatio": "Globales Verhältnis"
     },
     "mediaReleases": {
-      "name": "",
-      "description": "",
+      "name": "Medien Veröffentlichungen",
+      "description": "Zeige neu hinzugefügte Medien oder kommende Versionen von verschiedenen Integrationen",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Darstellung",
           "option": {
             "backdrop": {
-              "label": ""
+              "label": "Hintergrund"
             },
             "poster": {
-              "label": ""
+              "label": "Poster"
             }
           }
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Beschreibungs des Tooltips anzeigen"
         },
         "showType": {
-          "label": ""
+          "label": "Medientyp Abzeichen anzeigen"
         },
         "showSource": {
-          "label": ""
+          "label": "Integration der Quelle anzeigen"
         }
       },
       "length": {
-        "duration": ""
+        "duration": "{length}Minuten"
       }
     },
     "mediaRequests-requestList": {
@@ -2258,7 +2258,7 @@
           "label": "Details anzeigen"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Nur Symbole anzeigen"
         },
         "topReleases": {
           "label": "Top Releases",
@@ -2277,8 +2277,8 @@
             "listAlreadyImportedImages": "Liste der bereits importierten Images",
             "allImagesAlreadyImported": "Alle Images wurden bereits importiert",
             "onlyAdminCanImport": "Nur Administratoren können vom Docker importieren",
-            "selectAll": "",
-            "deselectAll": ""
+            "selectAll": "Alles auswählen",
+            "deselectAll": "Alle abwählen"
           },
           "provider": {
             "label": "Anbieter"
@@ -2328,8 +2328,8 @@
           },
           "invalid": "Ungültige Repository Definition, bitte überprüfen Sie die Werte",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "Keine Anbieter",
+            "tooltip": "Der Anbieter konnte nicht festgestellt werden, bitte manuell nach dem Import der Bilder festlegen"
           }
         }
       },
@@ -2340,20 +2340,20 @@
       "starsCount": "Sterne",
       "forksCount": "Ableger",
       "issuesCount": "Offene Tickets",
-      "markViewed": "",
+      "markViewed": "Als gelesen markieren",
       "openProjectPage": "Projektseite öffnen",
       "openReleasePage": "Release Seite öffnen",
       "releaseDescription": "Release Beschreibung",
-      "projectDescription": "",
+      "projectDescription": "Projektbeschreibung",
       "created": "Erstellt",
       "error": {
         "label": "Fehler",
         "messages": {
-          "invalidIdentifier": "",
+          "invalidIdentifier": "Ungültige Kennung",
           "noMatchingVersion": "Keine passende Version gefunden",
-          "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noReleasesFound": "Keine Veröffentlichungen gefunden",
+          "noProviderSeleceted": "Kein Anbieter ausgewählt",
+          "noProviderResponse": "Keine Antwort vom Anbieter"
         }
       }
     },
@@ -2414,31 +2414,31 @@
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "Überwachung der Firewall",
+      "description": "Zeigt eine Zusammenfassung der Firewalls an",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "System",
+        "interfaces": "Schnittstellen"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Daten von der Firewall konnten nicht abgerufen werden"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "Netzwerkschnittstellen anzeigen"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
-        "versiontitle": "",
-        "cputitle": "",
-        "memorytitle": "",
-        "cpu": "",
-        "memory": "",
+        "fwname": "Name",
+        "version": "Version",
+        "versiontitle": "Versionen",
+        "cputitle": "CPU-Nutzung",
+        "memorytitle": "Speichernutzung",
+        "cpu": "CPU",
+        "memory": "Speicher",
         "interfaces": {
-          "name": "",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "name": "Name",
+          "trans": "Übertragen",
+          "recv": "Empfangen",
+          "title": "Netzwerkschnittstellen"
         }
       }
     },
@@ -2447,6 +2447,18 @@
       "description": "Benachrichtigungshistorie von einer Integration anzeigen",
       "noItems": "Keine Benachrichtigungen zum Anzeigen.",
       "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
     }
   },
   "widgetPreview": {
@@ -2634,7 +2646,7 @@
         "label": "Symbolfarbe"
       },
       "clearColor": {
-        "label": ""
+        "label": "Farbe entfernen"
       },
       "customCss": {
         "label": "Benutzerdefinierte css für dieses Board",
@@ -3223,31 +3235,31 @@
               "label": "Docker Container"
             },
             "firewallCpu": {
-              "label": ""
+              "label": "Firewall CPU"
             },
             "firewallMemory": {
-              "label": ""
+              "label": "Firewall Speicher"
             },
             "firewallVersion": {
-              "label": ""
+              "label": "Firewall Version"
             },
             "firewallInterfaces": {
-              "label": ""
+              "label": "Firewall Schnittstellen"
             }
           },
           "interval": {
-            "seconds": "Alle(r) {interval, plural, =1 {Sekunde} other {# Sekunden}}",
-            "minutes": "Alle(r) {interval, plural, one {}=1 {Minute} other {# Minuten}}",
-            "hours": "Alle(r) {interval, plural, one {}=1 {Stunde} other {# Stunden}}",
+            "seconds": "Jeweils {interval, plural, =1 {Sekunde} other {# Sekunden}}",
+            "minutes": "Jeweils {interval, plural, =1 {Minute} other {# Minuten}}",
+            "hours": "Jeweils {interval, plural, =1 {Stunde} other {# Stunden}}",
             "midnight": "Jeden Tag um Mitternacht",
             "weeklyMonday": "Jede Woche am Montag"
           },
           "settings": {
-            "title": "Aufgabeneinstellungen für {jobName}"
+            "title": "Einstellungen der Aufgabe für {jobName}"
           },
           "field": {
             "interval": {
-              "label": "Zeitplanintervall"
+              "label": "Intervall des Zeitplans"
             }
           }
         },
@@ -3320,7 +3332,7 @@
         "label": "Name"
       },
       "state": {
-        "label": "Staat",
+        "label": "Status",
         "option": {
           "created": "Erstellt",
           "running": "Aktiv",
@@ -3700,7 +3712,7 @@
     },
     "action": {
       "saveUser": "Benutzerberechtigung hinzufügen",
-      "saveGroup": "Gruppenberechtigung hinzufügen"
+      "saveGroup": "Gruppenberechtigung speichern"
     }
   },
   "navigationStructure": {
@@ -4284,10 +4296,10 @@
   "log": {
     "level": {
       "option": {
-        "debug": "",
-        "info": "",
-        "warn": "",
-        "error": ""
+        "debug": "Debug",
+        "info": "Info",
+        "warn": "Hinweis",
+        "error": "Fehler"
       }
     }
   }

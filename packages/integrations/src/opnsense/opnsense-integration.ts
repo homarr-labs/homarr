@@ -1,6 +1,7 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ParseError, ResponseError } from "@homarr/common/server";
-import { createChannelEventHistory } from "@homarr/redis";
+
+import { createChannelEventHistoryOld } from "../../../redis/src/lib/channel";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -62,7 +63,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
   }
 
   private getInterfacesChannel() {
-    return createChannelEventHistory<FirewallInterface[]>(`integration:${this.integration.id}:interfaces`, 15);
+    return createChannelEventHistoryOld<FirewallInterface[]>(`integration:${this.integration.id}:interfaces`, 15);
   }
 
   public async getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary[]> {

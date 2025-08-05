@@ -224,17 +224,17 @@ importers:
         specifier: ^5.84.1
         version: 5.84.1(@tanstack/react-query@5.84.1(react@19.1.1))(next@15.4.5(@babel/core@7.26.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2))(react@19.1.1)
       '@trpc/client':
-        specifier: ^11.4.3
-        version: 11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2)
+        specifier: ^11.4.4
+        version: 11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2)
       '@trpc/next':
-        specifier: ^11.4.3
-        version: 11.4.3(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2))(@trpc/react-query@11.4.3(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.3(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@trpc/server@11.4.3(typescript@5.9.2))(next@15.4.5(@babel/core@7.26.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
+        specifier: ^11.4.4
+        version: 11.4.4(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2))(@trpc/react-query@11.4.4(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.4(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@trpc/server@11.4.4(typescript@5.9.2))(next@15.4.5(@babel/core@7.26.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
       '@trpc/react-query':
-        specifier: ^11.4.3
-        version: 11.4.3(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.3(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
+        specifier: ^11.4.4
+        version: 11.4.4(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.4(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
       '@trpc/server':
-        specifier: ^11.4.3
-        version: 11.4.3(typescript@5.9.2)
+        specifier: ^11.4.4
+        version: 11.4.4(typescript@5.9.2)
       '@xterm/addon-canvas':
         specifier: ^0.7.0
         version: 0.7.0(@xterm/xterm@5.5.0)
@@ -263,8 +263,8 @@ importers:
         specifier: ^11.0.3
         version: 11.0.3
       jotai:
-        specifier: ^2.12.5
-        version: 2.12.5(@types/react@19.1.9)(react@19.1.1)
+        specifier: ^2.13.0
+        version: 2.13.0(@babel/core@7.26.0)(@babel/template@7.27.2)(@types/react@19.1.9)(react@19.1.1)
       mantine-react-table:
         specifier: 2.0.0-beta.9
         version: 2.0.0-beta.9(@mantine/core@8.2.2(@mantine/hooks@8.2.2(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/dates@8.2.2(@mantine/core@8.2.2(@mantine/hooks@8.2.2(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/hooks@8.2.2(react@19.1.1))(dayjs@1.11.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/hooks@8.2.2(react@19.1.1))(@tabler/icons-react@3.34.1(react@19.1.1))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -603,17 +603,17 @@ importers:
         specifier: ^5.84.1
         version: 5.84.1(react@19.1.1)
       '@trpc/client':
-        specifier: ^11.4.3
-        version: 11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2)
+        specifier: ^11.4.4
+        version: 11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2)
       '@trpc/react-query':
-        specifier: ^11.4.3
-        version: 11.4.3(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.3(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
+        specifier: ^11.4.4
+        version: 11.4.4(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.4(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
       '@trpc/server':
-        specifier: ^11.4.3
-        version: 11.4.3(typescript@5.9.2)
+        specifier: ^11.4.4
+        version: 11.4.4(typescript@5.9.2)
       '@trpc/tanstack-react-query':
-        specifier: ^11.4.3
-        version: 11.4.3(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.3(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
+        specifier: ^11.4.4
+        version: 11.4.4(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.4(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
@@ -631,7 +631,7 @@ importers:
         version: 2.2.2
       trpc-to-openapi:
         specifier: ^2.4.0
-        version: 2.4.0(@trpc/server@11.4.3(typescript@5.9.2))(zod-openapi@2.19.0(zod@3.25.76))(zod@3.25.76)
+        version: 2.4.0(@trpc/server@11.4.4(typescript@5.9.2))(zod-openapi@2.19.0(zod@3.25.76))(zod@3.25.76)
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -925,14 +925,14 @@ importers:
         specifier: ^5.84.1
         version: 5.84.1(react@19.1.1)
       '@trpc/client':
-        specifier: ^11.4.3
-        version: 11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2)
+        specifier: ^11.4.4
+        version: 11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2)
       '@trpc/server':
-        specifier: ^11.4.3
-        version: 11.4.3(typescript@5.9.2)
+        specifier: ^11.4.4
+        version: 11.4.4(typescript@5.9.2)
       '@trpc/tanstack-react-query':
-        specifier: ^11.4.3
-        version: 11.4.3(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.3(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
+        specifier: ^11.4.4
+        version: 11.4.4(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.4(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
       node-cron:
         specifier: ^4.2.1
         version: 4.2.1
@@ -1977,8 +1977,8 @@ importers:
         specifier: ^3.34.1
         version: 3.34.1(react@19.1.1)
       jotai:
-        specifier: ^2.12.5
-        version: 2.12.5(@types/react@19.1.9)(react@19.1.1)
+        specifier: ^2.13.0
+        version: 2.13.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.9)(react@19.1.1)
       next:
         specifier: 15.4.5
         version: 15.4.5(@babel/core@7.28.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2)
@@ -2343,7 +2343,7 @@ importers:
         version: 2.5.5(eslint@9.32.0)(turbo@2.5.5)
       eslint-plugin-import:
         specifier: ^2.32.0
-        version: 2.32.0(@typescript-eslint/parser@8.38.0(eslint@9.32.0)(typescript@5.9.2))(eslint@9.32.0)
+        version: 2.32.0(@typescript-eslint/parser@8.39.0(eslint@9.32.0)(typescript@5.9.2))(eslint@9.32.0)
       eslint-plugin-jsx-a11y:
         specifier: ^6.10.2
         version: 6.10.2(eslint@9.32.0)
@@ -2354,8 +2354,8 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0(eslint@9.32.0)
       typescript-eslint:
-        specifier: ^8.38.0
-        version: 8.38.0(eslint@9.32.0)(typescript@5.9.2)
+        specifier: ^8.39.0
+        version: 8.39.0(eslint@9.32.0)(typescript@5.9.2)
     devDependencies:
       '@homarr/prettier-config':
         specifier: workspace:^0.1.0
@@ -4683,19 +4683,19 @@ packages:
       tree-sitter:
         optional: true
 
-  '@trpc/client@11.4.3':
-    resolution: {integrity: sha512-i2suttUCfColktXT8bqex5kHW5jpT15nwUh0hGSDiW1keN621kSUQKcLJ095blqQAUgB+lsmgSqSMmB4L9shQQ==}
+  '@trpc/client@11.4.4':
+    resolution: {integrity: sha512-86OZl+Y+Xlt9ITGlhCMImERcsWCOrVzpNuzg3XBlsDSmSs9NGsghKjeCpJQlE36XaG3aze+o9pRukiYYvBqxgQ==}
     peerDependencies:
-      '@trpc/server': 11.4.3
+      '@trpc/server': 11.4.4
       typescript: '>=5.7.2'
 
-  '@trpc/next@11.4.3':
-    resolution: {integrity: sha512-/AqPpzlrQy8ylLEdBAemRU1xmdqJVaXrXI/ZUYl3Oz1Id36gvGMdn5uxm0wgKPpZneM2EICvYcrsLSsdtddW4w==}
+  '@trpc/next@11.4.4':
+    resolution: {integrity: sha512-BTmMHv7whqSf6oE7qAKPCHWNZY9kqEi0inWW690bbs8FJ12A7S5nwIAbzyILfA0S5IJfMFTPJ/ueX2lCMYK67A==}
     peerDependencies:
       '@tanstack/react-query': ^5.59.15
-      '@trpc/client': 11.4.3
-      '@trpc/react-query': 11.4.3
-      '@trpc/server': 11.4.3
+      '@trpc/client': 11.4.4
+      '@trpc/react-query': 11.4.4
+      '@trpc/server': 11.4.4
       next: '*'
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -4706,27 +4706,27 @@ packages:
       '@trpc/react-query':
         optional: true
 
-  '@trpc/react-query@11.4.3':
-    resolution: {integrity: sha512-z+jhAiOBD22NNhHtvF0iFp9hO36YFA7M8AiUu/XtNmMxyLd3Y9/d1SMjMwlTdnGqxEGPo41VEWBrdhDUGtUuHg==}
+  '@trpc/react-query@11.4.4':
+    resolution: {integrity: sha512-syXx1JLSERAHWh8BtBZsbv2PIt2nfvO1Sd6C6vHzNO8wAHxpcmq9HyEdrfi+5SfeRfPCJc/ZPCN2wVv98T+big==}
     peerDependencies:
       '@tanstack/react-query': ^5.80.3
-      '@trpc/client': 11.4.3
-      '@trpc/server': 11.4.3
+      '@trpc/client': 11.4.4
+      '@trpc/server': 11.4.4
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
       typescript: '>=5.7.2'
 
-  '@trpc/server@11.4.3':
-    resolution: {integrity: sha512-wnWq3wiLlMOlYkaIZz+qbuYA5udPTLS4GVVRyFkr6aT83xpdCHyVtURT+u4hSoIrOXQM9OPCNXSXsAujWZDdaw==}
+  '@trpc/server@11.4.4':
+    resolution: {integrity: sha512-VkJb2xnb4rCynuwlCvgPBh5aM+Dco6fBBIo6lWAdJJRYVwtyE5bxNZBgUvRRz/cFSEAy0vmzLxF7aABDJfK5Rg==}
     peerDependencies:
       typescript: '>=5.7.2'
 
-  '@trpc/tanstack-react-query@11.4.3':
-    resolution: {integrity: sha512-aYPp12wE9IrakccGWoQU/waZuWr3FLw9RtagsqJmX9NKHpQOVzoDvHA1W0amwyTQSAfL98Bn5rWmD7KTdr5AWg==}
+  '@trpc/tanstack-react-query@11.4.4':
+    resolution: {integrity: sha512-Rf7jhPfwAHqmQdQlxTiMolNRon85bPEsBNa5JGpjSvhrTmiaFu5UEhEwHDF2myL7IRYxuYHLc4H0bQ+19qjdHQ==}
     peerDependencies:
       '@tanstack/react-query': ^5.80.3
-      '@trpc/client': 11.4.3
-      '@trpc/server': 11.4.3
+      '@trpc/client': 11.4.4
+      '@trpc/server': 11.4.4
       react: '>=18.2.0'
       react-dom: '>=18.2.0'
       typescript: '>=5.7.2'
@@ -5002,63 +5002,63 @@ packages:
   '@types/xml2js@0.4.14':
     resolution: {integrity: sha512-4YnrRemBShWRO2QjvUin8ESA41rH+9nQGLUGZV/1IDhi3SL9OhdpNC/MrulTWuptXKwhx/aDxE7toV0f/ypIXQ==}
 
-  '@typescript-eslint/eslint-plugin@8.38.0':
-    resolution: {integrity: sha512-CPoznzpuAnIOl4nhj4tRr4gIPj5AfKgkiJmGQDaq+fQnRJTYlcBjbX3wbciGmpoPf8DREufuPRe1tNMZnGdanA==}
+  '@typescript-eslint/eslint-plugin@8.39.0':
+    resolution: {integrity: sha512-bhEz6OZeUR+O/6yx9Jk6ohX6H9JSFTaiY0v9/PuKT3oGK0rn0jNplLmyFUGV+a9gfYnVNwGDwS/UkLIuXNb2Rw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
-      '@typescript-eslint/parser': ^8.38.0
+      '@typescript-eslint/parser': ^8.39.0
       eslint: ^8.57.0 || ^9.0.0
-      typescript: '>=4.8.4 <5.9.0'
+      typescript: '>=4.8.4 <6.0.0'
 
-  '@typescript-eslint/parser@8.38.0':
-    resolution: {integrity: sha512-Zhy8HCvBUEfBECzIl1PKqF4p11+d0aUJS1GeUiuqK9WmOug8YCmC4h4bjyBvMyAMI9sbRczmrYL5lKg/YMbrcQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-    peerDependencies:
-      eslint: ^8.57.0 || ^9.0.0
-      typescript: '>=4.8.4 <5.9.0'
-
-  '@typescript-eslint/project-service@8.38.0':
-    resolution: {integrity: sha512-dbK7Jvqcb8c9QfH01YB6pORpqX1mn5gDZc9n63Ak/+jD67oWXn3Gs0M6vddAN+eDXBCS5EmNWzbSxsn9SzFWWg==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-    peerDependencies:
-      typescript: '>=4.8.4 <5.9.0'
-
-  '@typescript-eslint/scope-manager@8.38.0':
-    resolution: {integrity: sha512-WJw3AVlFFcdT9Ri1xs/lg8LwDqgekWXWhH3iAF+1ZM+QPd7oxQ6jvtW/JPwzAScxitILUIFs0/AnQ/UWHzbATQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@typescript-eslint/tsconfig-utils@8.38.0':
-    resolution: {integrity: sha512-Lum9RtSE3EroKk/bYns+sPOodqb2Fv50XOl/gMviMKNvanETUuUcC9ObRbzrJ4VSd2JalPqgSAavwrPiPvnAiQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-    peerDependencies:
-      typescript: '>=4.8.4 <5.9.0'
-
-  '@typescript-eslint/type-utils@8.38.0':
-    resolution: {integrity: sha512-c7jAvGEZVf0ao2z+nnz8BUaHZD09Agbh+DY7qvBQqLiz8uJzRgVPj5YvOh8I8uEiH8oIUGIfHzMwUcGVco/SJg==}
+  '@typescript-eslint/parser@8.39.0':
+    resolution: {integrity: sha512-g3WpVQHngx0aLXn6kfIYCZxM6rRJlWzEkVpqEFLT3SgEDsp9cpCbxxgwnE504q4H+ruSDh/VGS6nqZIDynP+vg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
-      typescript: '>=4.8.4 <5.9.0'
+      typescript: '>=4.8.4 <6.0.0'
 
-  '@typescript-eslint/types@8.38.0':
-    resolution: {integrity: sha512-wzkUfX3plUqij4YwWaJyqhiPE5UCRVlFpKn1oCRn2O1bJ592XxWJj8ROQ3JD5MYXLORW84063z3tZTb/cs4Tyw==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@typescript-eslint/typescript-estree@8.38.0':
-    resolution: {integrity: sha512-fooELKcAKzxux6fA6pxOflpNS0jc+nOQEEOipXFNjSlBS6fqrJOVY/whSn70SScHrcJ2LDsxWrneFoWYSVfqhQ==}
+  '@typescript-eslint/project-service@8.39.0':
+    resolution: {integrity: sha512-CTzJqaSq30V/Z2Og9jogzZt8lJRR5TKlAdXmWgdu4hgcC9Kww5flQ+xFvMxIBWVNdxJO7OifgdOK4PokMIWPew==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
-      typescript: '>=4.8.4 <5.9.0'
+      typescript: '>=4.8.4 <6.0.0'
 
-  '@typescript-eslint/utils@8.38.0':
-    resolution: {integrity: sha512-hHcMA86Hgt+ijJlrD8fX0j1j8w4C92zue/8LOPAFioIno+W0+L7KqE8QZKCcPGc/92Vs9x36w/4MPTJhqXdyvg==}
+  '@typescript-eslint/scope-manager@8.39.0':
+    resolution: {integrity: sha512-8QOzff9UKxOh6npZQ/4FQu4mjdOCGSdO3p44ww0hk8Vu+IGbg0tB/H1LcTARRDzGCC8pDGbh2rissBuuoPgH8A==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@typescript-eslint/tsconfig-utils@8.39.0':
+    resolution: {integrity: sha512-Fd3/QjmFV2sKmvv3Mrj8r6N8CryYiCS8Wdb/6/rgOXAWGcFuc+VkQuG28uk/4kVNVZBQuuDHEDUpo/pQ32zsIQ==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      typescript: '>=4.8.4 <6.0.0'
+
+  '@typescript-eslint/type-utils@8.39.0':
+    resolution: {integrity: sha512-6B3z0c1DXVT2vYA9+z9axjtc09rqKUPRmijD5m9iv8iQpHBRYRMBcgxSiKTZKm6FwWw1/cI4v6em35OsKCiN5Q==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
-      typescript: '>=4.8.4 <5.9.0'
+      typescript: '>=4.8.4 <6.0.0'
 
-  '@typescript-eslint/visitor-keys@8.38.0':
-    resolution: {integrity: sha512-pWrTcoFNWuwHlA9CvlfSsGWs14JxfN1TH25zM5L7o0pRLhsoZkDnTsXfQRJBEWJoV5DL0jf+Z+sxiud+K0mq1g==}
+  '@typescript-eslint/types@8.39.0':
+    resolution: {integrity: sha512-ArDdaOllnCj3yn/lzKn9s0pBQYmmyme/v1HbGIGB0GB/knFI3fWMHloC+oYTJW46tVbYnGKTMDK4ah1sC2v0Kg==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@typescript-eslint/typescript-estree@8.39.0':
+    resolution: {integrity: sha512-ndWdiflRMvfIgQRpckQQLiB5qAKQ7w++V4LlCHwp62eym1HLB/kw7D9f2e8ytONls/jt89TEasgvb+VwnRprsw==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      typescript: '>=4.8.4 <6.0.0'
+
+  '@typescript-eslint/utils@8.39.0':
+    resolution: {integrity: sha512-4GVSvNA0Vx1Ktwvf4sFE+exxJ3QGUorQG1/A5mRfRNZtkBT2xrA/BCO2H0eALx/PnvCS6/vmYwRdDA41EoffkQ==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0
+      typescript: '>=4.8.4 <6.0.0'
+
+  '@typescript-eslint/visitor-keys@8.39.0':
+    resolution: {integrity: sha512-ldgiJ+VAhQCfIjeOgu8Kj5nSxds0ktPOSO9p4+0VDH2R2pLvQraaM5Oen2d7NxzMCm+Sn/vJT+mv2H5u6b/3fA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@umami/node@0.4.0':
@@ -7735,13 +7735,19 @@ packages:
   jose@6.0.8:
     resolution: {integrity: sha512-EyUPtOKyTYq+iMOszO42eobQllaIjJnwkZ2U93aJzNyPibCy7CEvT9UQnaCVB51IAd49gbNdCew1c0LcLTCB2g==}
 
-  jotai@2.12.5:
-    resolution: {integrity: sha512-G8m32HW3lSmcz/4mbqx0hgJIQ0ekndKWiYP7kWVKi0p6saLXdSoye+FZiOFyonnd7Q482LCzm8sMDl7Ar1NWDw==}
+  jotai@2.13.0:
+    resolution: {integrity: sha512-H43zXdanNTdpfOEJ4NVbm4hgmrctpXLZagjJNcqAywhUv+sTE7esvFjwm5oBg/ywT9Qw63lIkM6fjrhFuW8UDg==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
+      '@babel/core': '>=7.0.0'
+      '@babel/template': '>=7.0.0'
       '@types/react': '>=17.0.0'
       react: '>=17.0.0'
     peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
       '@types/react':
         optional: true
       react:
@@ -10393,12 +10399,12 @@ packages:
   types-ramda@0.30.1:
     resolution: {integrity: sha512-1HTsf5/QVRmLzcGfldPFvkVsAdi1db1BBKzi7iW3KBUlOICg/nKnFS+jGqDJS3YD8VsWbAh7JiHeBvbsw8RPxA==}
 
-  typescript-eslint@8.38.0:
-    resolution: {integrity: sha512-FsZlrYK6bPDGoLeZRuvx2v6qrM03I0U0SnfCLPs/XCCPCFD80xU9Pg09H/K+XFa68uJuZo7l/Xhs+eDRg2l3hg==}
+  typescript-eslint@8.39.0:
+    resolution: {integrity: sha512-lH8FvtdtzcHJCkMOKnN73LIn6SLTpoojgJqDAxPm1jCR14eWSGPX8ul/gggBdPMk/d5+u9V854vTYQ8T5jF/1Q==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
-      typescript: '>=4.8.4 <5.9.0'
+      typescript: '>=4.8.4 <6.0.0'
 
   typescript@5.9.2:
     resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
@@ -13435,41 +13441,41 @@ snapshots:
       tree-sitter: 0.22.4
     optional: true
 
-  '@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2)':
+  '@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2)':
     dependencies:
-      '@trpc/server': 11.4.3(typescript@5.9.2)
+      '@trpc/server': 11.4.4(typescript@5.9.2)
       typescript: 5.9.2
 
-  '@trpc/next@11.4.3(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2))(@trpc/react-query@11.4.3(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.3(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@trpc/server@11.4.3(typescript@5.9.2))(next@15.4.5(@babel/core@7.26.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)':
+  '@trpc/next@11.4.4(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2))(@trpc/react-query@11.4.4(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.4(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@trpc/server@11.4.4(typescript@5.9.2))(next@15.4.5(@babel/core@7.26.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)':
     dependencies:
-      '@trpc/client': 11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2)
-      '@trpc/server': 11.4.3(typescript@5.9.2)
+      '@trpc/client': 11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2)
+      '@trpc/server': 11.4.4(typescript@5.9.2)
       next: 15.4.5(@babel/core@7.26.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
       typescript: 5.9.2
     optionalDependencies:
       '@tanstack/react-query': 5.84.1(react@19.1.1)
-      '@trpc/react-query': 11.4.3(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.3(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
+      '@trpc/react-query': 11.4.4(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.4(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
 
-  '@trpc/react-query@11.4.3(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.3(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)':
+  '@trpc/react-query@11.4.4(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.4(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)':
     dependencies:
       '@tanstack/react-query': 5.84.1(react@19.1.1)
-      '@trpc/client': 11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2)
-      '@trpc/server': 11.4.3(typescript@5.9.2)
+      '@trpc/client': 11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2)
+      '@trpc/server': 11.4.4(typescript@5.9.2)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
       typescript: 5.9.2
 
-  '@trpc/server@11.4.3(typescript@5.9.2)':
+  '@trpc/server@11.4.4(typescript@5.9.2)':
     dependencies:
       typescript: 5.9.2
 
-  '@trpc/tanstack-react-query@11.4.3(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.3(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)':
+  '@trpc/tanstack-react-query@11.4.4(@tanstack/react-query@5.84.1(react@19.1.1))(@trpc/client@11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.4.4(typescript@5.9.2))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)':
     dependencies:
       '@tanstack/react-query': 5.84.1(react@19.1.1)
-      '@trpc/client': 11.4.3(@trpc/server@11.4.3(typescript@5.9.2))(typescript@5.9.2)
-      '@trpc/server': 11.4.3(typescript@5.9.2)
+      '@trpc/client': 11.4.4(@trpc/server@11.4.4(typescript@5.9.2))(typescript@5.9.2)
+      '@trpc/server': 11.4.4(typescript@5.9.2)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
       typescript: 5.9.2
@@ -13799,14 +13805,14 @@ snapshots:
     dependencies:
       '@types/node': 22.17.0
 
-  '@typescript-eslint/eslint-plugin@8.38.0(@typescript-eslint/parser@8.38.0(eslint@9.32.0)(typescript@5.9.2))(eslint@9.32.0)(typescript@5.9.2)':
+  '@typescript-eslint/eslint-plugin@8.39.0(@typescript-eslint/parser@8.39.0(eslint@9.32.0)(typescript@5.9.2))(eslint@9.32.0)(typescript@5.9.2)':
     dependencies:
       '@eslint-community/regexpp': 4.12.1
-      '@typescript-eslint/parser': 8.38.0(eslint@9.32.0)(typescript@5.9.2)
-      '@typescript-eslint/scope-manager': 8.38.0
-      '@typescript-eslint/type-utils': 8.38.0(eslint@9.32.0)(typescript@5.9.2)
-      '@typescript-eslint/utils': 8.38.0(eslint@9.32.0)(typescript@5.9.2)
-      '@typescript-eslint/visitor-keys': 8.38.0
+      '@typescript-eslint/parser': 8.39.0(eslint@9.32.0)(typescript@5.9.2)
+      '@typescript-eslint/scope-manager': 8.39.0
+      '@typescript-eslint/type-utils': 8.39.0(eslint@9.32.0)(typescript@5.9.2)
+      '@typescript-eslint/utils': 8.39.0(eslint@9.32.0)(typescript@5.9.2)
+      '@typescript-eslint/visitor-keys': 8.39.0
       eslint: 9.32.0
       graphemer: 1.4.0
       ignore: 7.0.4
@@ -13816,41 +13822,41 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@8.38.0(eslint@9.32.0)(typescript@5.9.2)':
+  '@typescript-eslint/parser@8.39.0(eslint@9.32.0)(typescript@5.9.2)':
     dependencies:
-      '@typescript-eslint/scope-manager': 8.38.0
-      '@typescript-eslint/types': 8.38.0
-      '@typescript-eslint/typescript-estree': 8.38.0(typescript@5.9.2)
-      '@typescript-eslint/visitor-keys': 8.38.0
+      '@typescript-eslint/scope-manager': 8.39.0
+      '@typescript-eslint/types': 8.39.0
+      '@typescript-eslint/typescript-estree': 8.39.0(typescript@5.9.2)
+      '@typescript-eslint/visitor-keys': 8.39.0
       debug: 4.4.1
       eslint: 9.32.0
       typescript: 5.9.2
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/project-service@8.38.0(typescript@5.9.2)':
+  '@typescript-eslint/project-service@8.39.0(typescript@5.9.2)':
     dependencies:
-      '@typescript-eslint/tsconfig-utils': 8.38.0(typescript@5.9.2)
-      '@typescript-eslint/types': 8.38.0
+      '@typescript-eslint/tsconfig-utils': 8.39.0(typescript@5.9.2)
+      '@typescript-eslint/types': 8.39.0
       debug: 4.4.1
       typescript: 5.9.2
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/scope-manager@8.38.0':
+  '@typescript-eslint/scope-manager@8.39.0':
     dependencies:
-      '@typescript-eslint/types': 8.38.0
-      '@typescript-eslint/visitor-keys': 8.38.0
+      '@typescript-eslint/types': 8.39.0
+      '@typescript-eslint/visitor-keys': 8.39.0
 
-  '@typescript-eslint/tsconfig-utils@8.38.0(typescript@5.9.2)':
+  '@typescript-eslint/tsconfig-utils@8.39.0(typescript@5.9.2)':
     dependencies:
       typescript: 5.9.2
 
-  '@typescript-eslint/type-utils@8.38.0(eslint@9.32.0)(typescript@5.9.2)':
+  '@typescript-eslint/type-utils@8.39.0(eslint@9.32.0)(typescript@5.9.2)':
     dependencies:
-      '@typescript-eslint/types': 8.38.0
-      '@typescript-eslint/typescript-estree': 8.38.0(typescript@5.9.2)
-      '@typescript-eslint/utils': 8.38.0(eslint@9.32.0)(typescript@5.9.2)
+      '@typescript-eslint/types': 8.39.0
+      '@typescript-eslint/typescript-estree': 8.39.0(typescript@5.9.2)
+      '@typescript-eslint/utils': 8.39.0(eslint@9.32.0)(typescript@5.9.2)
       debug: 4.4.1
       eslint: 9.32.0
       ts-api-utils: 2.1.0(typescript@5.9.2)
@@ -13858,14 +13864,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/types@8.38.0': {}
+  '@typescript-eslint/types@8.39.0': {}
 
-  '@typescript-eslint/typescript-estree@8.38.0(typescript@5.9.2)':
+  '@typescript-eslint/typescript-estree@8.39.0(typescript@5.9.2)':
     dependencies:
-      '@typescript-eslint/project-service': 8.38.0(typescript@5.9.2)
-      '@typescript-eslint/tsconfig-utils': 8.38.0(typescript@5.9.2)
-      '@typescript-eslint/types': 8.38.0
-      '@typescript-eslint/visitor-keys': 8.38.0
+      '@typescript-eslint/project-service': 8.39.0(typescript@5.9.2)
+      '@typescript-eslint/tsconfig-utils': 8.39.0(typescript@5.9.2)
+      '@typescript-eslint/types': 8.39.0
+      '@typescript-eslint/visitor-keys': 8.39.0
       debug: 4.4.1
       fast-glob: 3.3.2
       is-glob: 4.0.3
@@ -13876,20 +13882,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/utils@8.38.0(eslint@9.32.0)(typescript@5.9.2)':
+  '@typescript-eslint/utils@8.39.0(eslint@9.32.0)(typescript@5.9.2)':
     dependencies:
       '@eslint-community/eslint-utils': 4.7.0(eslint@9.32.0)
-      '@typescript-eslint/scope-manager': 8.38.0
-      '@typescript-eslint/types': 8.38.0
-      '@typescript-eslint/typescript-estree': 8.38.0(typescript@5.9.2)
+      '@typescript-eslint/scope-manager': 8.39.0
+      '@typescript-eslint/types': 8.39.0
+      '@typescript-eslint/typescript-estree': 8.39.0(typescript@5.9.2)
       eslint: 9.32.0
       typescript: 5.9.2
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/visitor-keys@8.38.0':
+  '@typescript-eslint/visitor-keys@8.39.0':
     dependencies:
-      '@typescript-eslint/types': 8.38.0
+      '@typescript-eslint/types': 8.39.0
       eslint-visitor-keys: 4.2.1
 
   '@umami/node@0.4.0': {}
@@ -15722,17 +15728,17 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.38.0(eslint@9.32.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.32.0):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.39.0(eslint@9.32.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.32.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
-      '@typescript-eslint/parser': 8.38.0(eslint@9.32.0)(typescript@5.9.2)
+      '@typescript-eslint/parser': 8.39.0(eslint@9.32.0)(typescript@5.9.2)
       eslint: 9.32.0
       eslint-import-resolver-node: 0.3.9
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.38.0(eslint@9.32.0)(typescript@5.9.2))(eslint@9.32.0):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.39.0(eslint@9.32.0)(typescript@5.9.2))(eslint@9.32.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -15743,7 +15749,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.32.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.38.0(eslint@9.32.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.32.0)
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.39.0(eslint@9.32.0)(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.32.0)
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -15755,7 +15761,7 @@ snapshots:
       string.prototype.trimend: 1.0.9
       tsconfig-paths: 3.15.0
     optionalDependencies:
-      '@typescript-eslint/parser': 8.38.0(eslint@9.32.0)(typescript@5.9.2)
+      '@typescript-eslint/parser': 8.39.0(eslint@9.32.0)(typescript@5.9.2)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -17016,8 +17022,17 @@ snapshots:
 
   jose@6.0.8: {}
 
-  jotai@2.12.5(@types/react@19.1.9)(react@19.1.1):
+  jotai@2.13.0(@babel/core@7.26.0)(@babel/template@7.27.2)(@types/react@19.1.9)(react@19.1.1):
     optionalDependencies:
+      '@babel/core': 7.26.0
+      '@babel/template': 7.27.2
+      '@types/react': 19.1.9
+      react: 19.1.1
+
+  jotai@2.13.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.9)(react@19.1.1):
+    optionalDependencies:
+      '@babel/core': 7.28.0
+      '@babel/template': 7.27.2
       '@types/react': 19.1.9
       react: 19.1.1
 
@@ -19931,9 +19946,9 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-openapi@2.4.0(@trpc/server@11.4.3(typescript@5.9.2))(zod-openapi@2.19.0(zod@3.25.76))(zod@3.25.76):
+  trpc-to-openapi@2.4.0(@trpc/server@11.4.4(typescript@5.9.2))(zod-openapi@2.19.0(zod@3.25.76))(zod@3.25.76):
     dependencies:
-      '@trpc/server': 11.4.3(typescript@5.9.2)
+      '@trpc/server': 11.4.4(typescript@5.9.2)
       co-body: 6.2.0
       h3: 1.15.1
       openapi3-ts: 4.4.0
@@ -20131,12 +20146,12 @@ snapshots:
     dependencies:
       ts-toolbelt: 9.6.0
 
-  typescript-eslint@8.38.0(eslint@9.32.0)(typescript@5.9.2):
+  typescript-eslint@8.39.0(eslint@9.32.0)(typescript@5.9.2):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 8.38.0(@typescript-eslint/parser@8.38.0(eslint@9.32.0)(typescript@5.9.2))(eslint@9.32.0)(typescript@5.9.2)
-      '@typescript-eslint/parser': 8.38.0(eslint@9.32.0)(typescript@5.9.2)
-      '@typescript-eslint/typescript-estree': 8.38.0(typescript@5.9.2)
-      '@typescript-eslint/utils': 8.38.0(eslint@9.32.0)(typescript@5.9.2)
+      '@typescript-eslint/eslint-plugin': 8.39.0(@typescript-eslint/parser@8.39.0(eslint@9.32.0)(typescript@5.9.2))(eslint@9.32.0)(typescript@5.9.2)
+      '@typescript-eslint/parser': 8.39.0(eslint@9.32.0)(typescript@5.9.2)
+      '@typescript-eslint/typescript-estree': 8.39.0(typescript@5.9.2)
+      '@typescript-eslint/utils': 8.39.0(eslint@9.32.0)(typescript@5.9.2)
       eslint: 9.32.0
       typescript: 5.9.2
     transitivePeerDependencies:
