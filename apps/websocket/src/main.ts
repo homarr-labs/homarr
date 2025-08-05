@@ -8,7 +8,7 @@ import { db } from "@homarr/db";
 import { logger } from "@homarr/log";
 
 const wss = new WebSocketServer({
-  port: 3001,
+  port: parseInt(process.env.UNSAFE_WEBSOCKET_PORT ?? "3001", 10),
 });
 const handler = applyWSSHandler({
   wss,
@@ -55,7 +55,7 @@ wss.on("connection", (websocket, incomingMessage) => {
     logger.info(`➖ Connection (${wss.clients.size}) ${code} ${reason.toString()}`);
   });
 });
-logger.info("✅ WebSocket Server listening on ws://localhost:3001");
+logger.info(`✅ WebSocket Server listening on ws://localhost:${process.env.UNSAFE_WEBSOCKET_PORT}`);
 
 process.on("SIGTERM", () => {
   logger.info("SIGTERM");

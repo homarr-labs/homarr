@@ -39,7 +39,7 @@ export async function generateMetadata() {
 
 const getHostAsync = async () => {
   if (process.env.HOSTNAME) {
-    return `${process.env.HOSTNAME}:3000`;
+    return `${process.env.HOSTNAME}:${process.env.UNSAFE_WEB_PORT}`;
   }
 
   return (await headers()).get("host");

@@ -23,9 +23,45 @@ export const env = createEnv({
       .regex(/^[0-9a-fA-F]{64}$/, {
         message: `SECRET_ENCRYPTION_KEY must only contain hex characters${errorSuffix}`,
       }),
+    UNSAFE_WEB_PORT: z
+      .number({
+        message: "UNSAFE_WEB_PORT must be a number",
+      })
+      .int({
+        message: "UNSAFE_WEB_PORT must be an integer",
+      })
+      .positive({
+        message: "UNSAFE_WEB_PORT must be a positive integer",
+      })
+      .default(3000),
+    UNSAFE_WEBSOCKET_PORT: z
+      .number({
+        message: "UNSAFE_WEBSOCKET_PORT must be a number",
+      })
+      .int({
+        message: "UNSAFE_WEBSOCKET_PORT must be an integer",
+      })
+      .positive({
+        message: "UNSAFE_WEBSOCKET_PORT must be a positive integer",
+      })
+      .default(3001),
+    UNSAFE_CRON_JOB_PORT: z
+      .number({
+        message: "UNSAFE_WEBSOCKET_PORT must be a number",
+      })
+      .int({
+        message: "UNSAFE_WEBSOCKET_PORT must be an integer",
+      })
+      .positive({
+        message: "UNSAFE_WEBSOCKET_PORT must be a positive integer",
+      })
+      .default(3002),
   },
   runtimeEnv: {
     SECRET_ENCRYPTION_KEY: process.env.SECRET_ENCRYPTION_KEY,
     NODE_ENV: process.env.NODE_ENV,
+    UNSAFE_WEB_PORT: parseInt(process.env.UNSAFE_WEB_PORT ?? "3000", 10),
+    UNSAFE_WEBSOCKET_PORT: parseInt(process.env.UNSAFE_WEBSOCKET_PORT ?? "3001", 10),
+    UNSAFE_CRON_JOB_PORT: parseInt(process.env.UNSAFE_CRON_JOB_PORT ?? "3002", 10),
   },
 });
