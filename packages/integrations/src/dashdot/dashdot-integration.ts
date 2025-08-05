@@ -7,7 +7,7 @@ import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
-import { createChannelEventHistory } from "../../../redis/src/lib/channel";
+import { createChannelEventHistoryOld } from "../../../redis/src/lib/channel";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -32,14 +32,16 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     const cpuLoad = await this.getCurrentCpuLoadAsync();
     const memoryLoad = await this.getCurrentMemoryLoadAsync();
     const storageLoad = await this.getCurrentStorageLoadAsync();
+    const networkLoad = await this.getCurrentNetworkLoadAsync();
 
     const channel = this.getChannel();
     const history = await channel.getSliceUntilTimeAsync(dayjs().subtract(15, "minutes").toDate());
 
     return {
       cpuUtilization: cpuLoad.sumLoad,
-      memUsed: `${memoryLoad.loadInBytes}`,
-      memAvailable: `${info.maxAvailableMemoryBytes - memoryLoad.loadInBytes}`,
+      memUsedInBytes: memoryLoad.loadInBytes,
+      memAvailableInBytes: info.maxAvailableMemoryBytes - memoryLoad.loadInBytes,
+      network: networkLoad,
       fileSystem: info.storage
         .filter((_, index) => storageLoad[index] !== -1) // filter out undermoutned drives, they display as -1 in the load API
         .map((storage, index) => ({
@@ -113,8 +115,13 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
     };
   }
 
+  private async getCurrentNetworkLoadAsync() {
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/load/network"));
+    return await networkLoadApi.parseAsync(await response.json());
+  }
+
   private getChannel() {
-    return createChannelEventHistory<z.infer<typeof cpuLoadPerCoreApiList>>(
+    return createChannelEventHistoryOld<z.infer<typeof cpuLoadPerCoreApiList>>(
       `integration:${this.integration.id}:history:cpu`,
       100,
     );
@@ -128,6 +135,11 @@ const cpuLoadPerCoreApi = z.object({
 
 const memoryLoadApi = z.object({
   load: z.number().min(0),
+});
+
+const networkLoadApi = z.object({
+  up: z.number().min(0),
+  down: z.number().min(0),
 });
 
 const internalServerInfoApi = z.object({
