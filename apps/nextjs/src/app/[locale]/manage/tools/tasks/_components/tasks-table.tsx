@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { ActionIcon, Badge, Button, Group, Select, Text } from "@mantine/core";
