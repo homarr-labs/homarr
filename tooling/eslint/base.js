@@ -46,41 +46,6 @@ export default tseslint.config(
       "no-restricted-syntax": [
         "error",
         {
-          selector: "FunctionDeclaration[async=false][id.name=/Async$/]",
-          message: "Function ending in 'Async' must be declared async",
-        },
-        {
-          selector:
-            "FunctionDeclaration[async=true][id.name=/^[a-z].*$/][id.name=/ ^(?!generateMetadata$)[a-z].*$/][id.name!=/Async$/]",
-          message: "Async function name must end in 'Async' (function declaration)",
-        },
-        {
-          selector: "MethodDefinition[value.async=false][key.name=/Async$/]",
-          message: "Method ending in 'Async' must be declared async",
-        },
-        {
-          selector: "MethodDefinition[value.async=true][key.name!=/Async$/]",
-          message: "Async method name must end in 'Async'",
-        },
-        {
-          selector: "Property[value.type=/FunctionExpression$/][value.async=false][key.name=/Async$/]",
-          message: "Function ending in 'Async' must be declared async",
-        },
-        {
-          selector:
-            "Property[value.type=/FunctionExpression$/][value.async=true][key.name!=/^on(Success|Settled)$/][key.name!=/Async$/]",
-          message: "Async function name must end in 'Async' (property)",
-        },
-        {
-          selector: "VariableDeclarator[init.type=/FunctionExpression$/][init.async=false][id.name=/Async$/]",
-          message: "Function ending in 'Async' must be declared async",
-        },
-        {
-          selector:
-            "VariableDeclarator[init.type=/FunctionExpression$/][init.async=true][id.name=/^[a-z].*$/][id.name!=/Async$/]",
-          message: "Async function name must end in 'Async' (variable declarator)",
-        },
-        {
           // \\u002F is the unicode escape for / and is used because of https://github.com/estools/esquery/issues/68
           selector: "Literal[value=/^https:\\u002F\\u002Fhomarr\\.dev\\u002F.*$/]",
           message: "Links to 'https://homarr.dev/' should be used with createDocumentationLink method",
