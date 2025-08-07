@@ -2449,15 +2449,15 @@
       "option": {}
     },
     "systemResources": {
-      "name": "",
-      "description": "",
+      "name": "Systemressourcen",
+      "description": "CPU, Arbeitsspeicher, Festplatte und andere Hardware-Nutzung Ihres Systems",
       "option": {},
       "card": {
-        "cpu": "",
-        "memory": "",
-        "network": "",
-        "up": "",
-        "down": ""
+        "cpu": "CPU",
+        "memory": "Arbeitsspeicher",
+        "network": "Netzwerk",
+        "up": "OBEN",
+        "down": "UNTEN"
       }
     }
   },
