@@ -5,8 +5,8 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
 
-import { createMetaTitle } from "~/metadata";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
+import { createMetaTitle } from "~/metadata";
 import { TasksTable } from "./_components/tasks-table";
 
 export async function generateMetadata() {
