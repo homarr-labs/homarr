@@ -2305,8 +2305,8 @@ importers:
         specifier: ^2.15.4
         version: 2.15.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       video.js:
-        specifier: ^8.23.3
-        version: 8.23.3
+        specifier: ^8.23.4
+        version: 8.23.4
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -5056,8 +5056,8 @@ packages:
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
 
-  '@videojs/http-streaming@3.17.0':
-    resolution: {integrity: sha512-Ch1P3tvvIEezeZXyK11UfWgp4cWKX4vIhZ30baN/lRinqdbakZ5hiAI3pGjRy3d+q/Epyc8Csz5xMdKNNGYpcw==}
+  '@videojs/http-streaming@3.17.2':
+    resolution: {integrity: sha512-VBQ3W4wnKnVKb/limLdtSD2rAd5cmHN70xoMf4OmuDd0t2kfJX04G+sfw6u2j8oOm2BXYM9E1f4acHruqKnM1g==}
     engines: {node: '>=8', npm: '>=5'}
     peerDependencies:
       video.js: ^8.19.0
@@ -10641,8 +10641,8 @@ packages:
   victory-vendor@36.9.2:
     resolution: {integrity: sha512-PnpQQMuxlwYdocC8fIJqVXvkeViHYzotI+NJrCuav0ZYFoq912ZHBk3mCeuj+5/VpodOjPe1z0Fk2ihgzlXqjQ==}
 
-  video.js@8.23.3:
-    resolution: {integrity: sha512-Toe0VLlDZcUhiaWfcePS1OEdT3ATfktm0hk/PELfD7zUoPDHeT+cJf/wZmCy5M5eGVwtGUg25RWPCj1L/1XufA==}
+  video.js@8.23.4:
+    resolution: {integrity: sha512-qI0VTlYmKzEqRsz1Nppdfcaww4RSxZAq77z2oNSl3cNg2h6do5C8Ffl0KqWQ1OpD8desWXsCrde7tKJ9gGTEyQ==}
 
   videojs-contrib-quality-levels@4.1.0:
     resolution: {integrity: sha512-TfrXJJg1Bv4t6TOCMEVMwF/CoS8iENYsWNKip8zfhB5kTcegiFYezEA0eHAJPU64ZC8NQbxQgOwAsYU8VXbOWA==}
@@ -13866,7 +13866,7 @@ snapshots:
 
   '@ungap/structured-clone@1.3.0': {}
 
-  '@videojs/http-streaming@3.17.0(video.js@8.23.3)':
+  '@videojs/http-streaming@3.17.2(video.js@8.23.4)':
     dependencies:
       '@babel/runtime': 7.25.6
       '@videojs/vhs-utils': 4.1.1
@@ -13875,7 +13875,7 @@ snapshots:
       m3u8-parser: 7.2.0
       mpd-parser: 1.3.1
       mux.js: 7.1.0
-      video.js: 8.23.3
+      video.js: 8.23.4
 
   '@videojs/vhs-utils@4.0.0':
     dependencies:
@@ -20374,10 +20374,10 @@ snapshots:
       d3-time: 3.1.0
       d3-timer: 3.0.1
 
-  video.js@8.23.3:
+  video.js@8.23.4:
     dependencies:
       '@babel/runtime': 7.25.6
-      '@videojs/http-streaming': 3.17.0(video.js@8.23.3)
+      '@videojs/http-streaming': 3.17.2(video.js@8.23.4)
       '@videojs/vhs-utils': 4.1.1
       '@videojs/xhr': 2.7.0
       aes-decrypter: 4.0.2
@@ -20385,14 +20385,14 @@ snapshots:
       m3u8-parser: 7.2.0
       mpd-parser: 1.3.1
       mux.js: 7.1.0
-      videojs-contrib-quality-levels: 4.1.0(video.js@8.23.3)
+      videojs-contrib-quality-levels: 4.1.0(video.js@8.23.4)
       videojs-font: 4.2.0
       videojs-vtt.js: 0.15.5
 
-  videojs-contrib-quality-levels@4.1.0(video.js@8.23.3):
+  videojs-contrib-quality-levels@4.1.0(video.js@8.23.4):
     dependencies:
       global: 4.4.0
-      video.js: 8.23.3
+      video.js: 8.23.4
 
   videojs-font@4.2.0: {}
 
