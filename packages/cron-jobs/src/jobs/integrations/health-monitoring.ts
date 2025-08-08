@@ -15,9 +15,10 @@ export const healthMonitoringJob = createCronJob("healthMonitoring", EVERY_5_SEC
       return clusterInfoRequestHandler.handler({ ...integration, kind }, itemOptions);
     },
     {
-      widgetKinds: ["healthMonitoring"],
+      widgetKinds: ["healthMonitoring", "systemResources"],
       getInput: {
         healthMonitoring: () => ({}),
+        systemResources: () => ({}),
       },
     },
   ),

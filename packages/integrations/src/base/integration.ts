@@ -8,8 +8,6 @@ import { removeTrailingSlash } from "@homarr/common";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 
 import { HandleIntegrationErrors } from "./errors/decorator";
-import { integrationFetchHttpErrorHandler } from "./errors/http";
-import { integrationJsonParseErrorHandler, integrationZodParseErrorHandler } from "./errors/parse";
 import { TestConnectionError } from "./test-connection/test-connection-error";
 import type { TestingResult } from "./test-connection/test-connection-service";
 import { TestConnectionService } from "./test-connection/test-connection-service";
@@ -32,11 +30,7 @@ export interface IntegrationTestingInput {
   };
 }
 
-@HandleIntegrationErrors([
-  integrationZodParseErrorHandler,
-  integrationJsonParseErrorHandler,
-  integrationFetchHttpErrorHandler,
-])
+@HandleIntegrationErrors([])
 export abstract class Integration {
   constructor(protected integration: IntegrationInput) {}
 

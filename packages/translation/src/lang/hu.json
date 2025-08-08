@@ -2257,6 +2257,9 @@
         "showDetails": {
           "label": ""
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "",
           "description": ""
@@ -2273,7 +2276,9 @@
             "listFoundImages": "",
             "listAlreadyImportedImages": "",
             "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "onlyAdminCanImport": "",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": ""
@@ -2335,6 +2340,7 @@
       "starsCount": "",
       "forksCount": "",
       "issuesCount": "",
+      "markViewed": "",
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
@@ -2407,11 +2413,52 @@
         "internalServerError": ""
       }
     },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
     "notifications": {
       "name": "",
       "description": "",
       "noItems": "",
       "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
     }
   },
   "widgetPreview": {
@@ -3185,6 +3232,18 @@
               "label": ""
             },
             "dockerContainers": {
+              "label": ""
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
               "label": ""
             }
           },

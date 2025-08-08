@@ -3,7 +3,7 @@ import { IconBrain } from "@tabler/icons-react";
 
 import { progressColor } from "../system-health";
 
-export const MemoryRing = ({ available, used, isTiny }: { available: string; used: string; isTiny: boolean }) => {
+export const MemoryRing = ({ available, used, isTiny }: { available: number; used: number; isTiny: boolean }) => {
   const memoryUsage = formatMemoryUsage(available, used);
 
   return (
@@ -31,14 +31,12 @@ export const MemoryRing = ({ available, used, isTiny }: { available: string; use
   );
 };
 
-export const formatMemoryUsage = (memFree: string, memUsed: string) => {
-  const memFreeBytes = Number(memFree);
-  const memUsedBytes = Number(memUsed);
-  const totalMemory = memFreeBytes + memUsedBytes;
-  const memFreeGB = (memFreeBytes / 1024 ** 3).toFixed(2);
-  const memUsedGB = (memUsedBytes / 1024 ** 3).toFixed(2);
-  const memFreePercent = Math.round((memFreeBytes / totalMemory) * 100);
-  const memUsedPercent = Math.round((memUsedBytes / totalMemory) * 100);
+export const formatMemoryUsage = (memFree: number, memUsed: number) => {
+  const totalMemory = memFree + memUsed;
+  const memFreeGB = (memFree / 1024 ** 3).toFixed(2);
+  const memUsedGB = (memUsed / 1024 ** 3).toFixed(2);
+  const memFreePercent = Math.round((memFree / totalMemory) * 100);
+  const memUsedPercent = Math.round((memUsed / totalMemory) * 100);
   const memTotalGB = (totalMemory / 1024 ** 3).toFixed(2);
 
   return {

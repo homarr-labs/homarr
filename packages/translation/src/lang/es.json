@@ -7,15 +7,15 @@
         "description": "Para empezar, por favor, seleccione cómo desea configurar su instancia de Homarr.",
         "action": {
           "scratch": "Empezar de cero",
-          "importOldmarr": "Importar de Homarr antes de 1.0"
+          "importOldmarr": "Importar desde Homarr antes de la versión 1.0"
         }
       },
       "import": {
         "title": "Importar datos",
-        "subtitle": "Puede importar datos de una instancia de Homarr existente.",
+        "subtitle": "Puedes importar datos de una instancia de Homarr existente.",
         "dropzone": {
-          "title": "Arrastre el archivo zip aquí o haga clic para navegar",
-          "description": "El zip subido será procesado y podrás seleccionar lo que quieres importar"
+          "title": "Arrastre el archivo ZIP aquí o haga clic para navegar",
+          "description": "El archivo ZIP subido será procesado y podrás seleccionar lo que quieres importar"
         },
         "fileInfo": {
           "action": {
@@ -24,11 +24,11 @@
         },
         "importSettings": {
           "title": "Importar ajustes",
-          "description": ""
+          "description": "Configurar el comportamiento de la importación"
         },
         "boardSelection": {
           "title": "Se encontraron {count} tableros",
-          "description": "",
+          "description": "Elige todos los tableros con el tamaño que deseas para importar",
           "action": {
             "selectAll": "Seleccionar todo",
             "unselectAll": "Deseleccionar todo"
@@ -36,7 +36,7 @@
         },
         "summary": {
           "title": "Resumen de importación",
-          "description": "",
+          "description": "En el resumen de abajo puedes ver qué se importará",
           "action": {
             "import": "Confirmar la importación y continuar"
           },
@@ -57,15 +57,15 @@
           },
           "notification": {
             "error": {
-              "title": "Token invalido",
-              "message": ""
+              "title": "Token inválido",
+              "message": "El código que has introducido no es válido"
             }
           }
         }
       },
       "user": {
         "title": "Usuario administrador",
-        "subtitle": "",
+        "subtitle": "Especifica las credenciales para tu usuario administrador.",
         "notification": {
           "success": {
             "title": "Usuario creado",
@@ -91,14 +91,14 @@
         "subtitle": "Configurar ajustes del servidor."
       },
       "finish": {
-        "title": "",
+        "title": "Finalizar la configuración",
         "subtitle": "",
-        "description": "",
+        "description": "Ha completado el proceso de configuración con éxito. Puede empezar a utilizar Homarr. Seleccione su siguiente paso:",
         "action": {
           "goToBoard": "Ir al tablero {name}",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "createBoard": "Crea tu primer tablero",
+          "inviteUser": "Invite a otros usuarios",
+          "docs": "Consulte la documentación"
         }
       }
     },
@@ -110,12 +110,12 @@
     "page": {
       "login": {
         "title": "Inicia sesión en tu cuenta",
-        "subtitle": ""
+        "subtitle": "¡Bienvenido de nuevo! Por favor introduzca sus credenciales"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Unase a Homarr",
+        "subtitle": "¡Bienvenido a Homarr! Por favor cree su cuenta",
+        "description": "Usted fue invitado por {username}"
       },
       "init": {
         "title": "Nueva instalación de Homarr",
@@ -137,7 +137,7 @@
           "lowercase": "Incluye letra minúscula",
           "uppercase": "Incluye letra mayúscula",
           "number": "Incluye número",
-          "special": ""
+          "special": "Incluye símbolos especiales"
         }
       },
       "passwordConfirm": {
@@ -147,20 +147,20 @@
         "label": "Contraseña anterior"
       },
       "homeBoard": {
-        "label": ""
+        "label": "Tablero principal"
       },
       "pingIconsEnabled": {
         "label": "Usar iconos para pings"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Motor de búsqueda predeterminado"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Abrir los resultados de búsqueda en una nueva pestaña"
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Nombre de usuario en uso"
     },
     "action": {
       "login": {
@@ -302,7 +302,7 @@
   "group": {
     "title": "",
     "name": "",
-    "search": "",
+    "search": "Encontrar un grupo",
     "field": {
       "name": "Nombre",
       "members": "Miembros",
@@ -355,11 +355,11 @@
           },
           "view-all": {
             "label": "",
-            "description": ""
+            "description": "Permitir a los miembros ver todos los tableros"
           },
           "modify-all": {
             "label": "",
-            "description": ""
+            "description": "Permitir a los miembros modificar todos tableros (Esto no incluye los controles de acceso y la zona de peligro)"
           },
           "full-all": {
             "label": "",
@@ -2257,6 +2257,9 @@
         "showDetails": {
           "label": ""
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "",
           "description": ""
@@ -2273,7 +2276,9 @@
             "listFoundImages": "",
             "listAlreadyImportedImages": "",
             "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": ""
+            "onlyAdminCanImport": "",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": ""
@@ -2335,6 +2340,7 @@
       "starsCount": "",
       "forksCount": "",
       "issuesCount": "",
+      "markViewed": "",
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
@@ -2407,11 +2413,52 @@
         "internalServerError": ""
       }
     },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
     "notifications": {
       "name": "",
       "description": "",
       "noItems": "",
       "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
     }
   },
   "widgetPreview": {
@@ -3185,6 +3232,18 @@
               "label": ""
             },
             "dockerContainers": {
+              "label": ""
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
               "label": ""
             }
           },

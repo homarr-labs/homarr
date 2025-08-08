@@ -2257,6 +2257,9 @@
         "showDetails": {
           "label": "詳細を表示"
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "トップリリース",
           "description": "表示する最新リリースの最大数。ゼロは制限なしです。"
@@ -2273,7 +2276,9 @@
             "listFoundImages": "見つかったイメージの一覧",
             "listAlreadyImportedImages": "すでにインポートされたイメージのリスト",
             "allImagesAlreadyImported": "すでにインポートされた全てのイメージ",
-            "onlyAdminCanImport": "管理者のみが Docker からインポートできます"
+            "onlyAdminCanImport": "管理者のみが Docker からインポートできます",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": "プロバイダー"
@@ -2335,6 +2340,7 @@
       "starsCount": "スター数",
       "forksCount": "フォーク数",
       "issuesCount": "未解決の課題数",
+      "markViewed": "",
       "openProjectPage": "プロジェクトページを開く",
       "openReleasePage": "リリースページを開く",
       "releaseDescription": "リリースの説明",
@@ -2407,11 +2413,52 @@
         "internalServerError": "ネットワークコントローラの概要の取得に失敗しました"
       }
     },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
     "notifications": {
       "name": "通知",
       "description": "連携機能からの通知履歴を表示する",
       "noItems": "表示する通知はありません。",
       "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
     }
   },
   "widgetPreview": {
@@ -3186,6 +3233,18 @@
             },
             "dockerContainers": {
               "label": "Docker コンテナ"
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
             }
           },
           "interval": {

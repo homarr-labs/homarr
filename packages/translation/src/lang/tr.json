@@ -2257,6 +2257,9 @@
         "showDetails": {
           "label": "Ayrıntıları Göster"
         },
+        "showOnlyIcon": {
+          "label": "Yalnızca İkon Göster"
+        },
         "topReleases": {
           "label": "En İyi Sürümler",
           "description": "Gösterilecek en son sürümlerin maksimum sayısı. Sıfır, sınır olmadığı anlamına gelir."
@@ -2273,7 +2276,9 @@
             "listFoundImages": "Bulunan imajların listesi",
             "listAlreadyImportedImages": "Daha önce içe aktarılan imajların listesi",
             "allImagesAlreadyImported": "Tüm imajlar daha önce içe aktarıldı",
-            "onlyAdminCanImport": "Sadece yöneticiler docker'dan içe aktarabilir"
+            "onlyAdminCanImport": "Sadece yöneticiler docker'dan içe aktarabilir",
+            "selectAll": "Tümünü seç",
+            "deselectAll": "Tüm seçimleri kaldır"
           },
           "provider": {
             "label": "Sağlayıcı"
@@ -2335,6 +2340,7 @@
       "starsCount": "Yıldızlar",
       "forksCount": "Çatallar",
       "issuesCount": "Sorunları Aç",
+      "markViewed": "Görüntülenmiş olarak işaretle",
       "openProjectPage": "Proje Sayfasını Aç",
       "openReleasePage": "Sürüm Sayfasını Aç",
       "releaseDescription": "Sürüm Açıklaması",
@@ -2407,11 +2413,52 @@
         "internalServerError": "Ağ Denetleyicisi Özeti alınamadı"
       }
     },
+    "firewall": {
+      "name": "Güvenlik Duvarı İzleme",
+      "description": "Güvenlik duvarlarının özetini gösterir",
+      "tab": {
+        "system": "Sistem",
+        "interfaces": "Arayüzler"
+      },
+      "error": {
+        "internalServerError": "Güvenlik duvarından veri alınamıyor"
+      },
+      "option": {
+        "interfaces": "Gösterilecek ağ arayüzleri"
+      },
+      "widget": {
+        "fwname": "İsim",
+        "version": "Sürüm",
+        "versiontitle": "Sürümler",
+        "cputitle": "CPU kullanımı",
+        "memorytitle": "Bellek kullanımı",
+        "cpu": "İşlemci",
+        "memory": "Bellek",
+        "interfaces": {
+          "name": "i̇sim",
+          "trans": "Gönderilen",
+          "recv": "Alınan",
+          "title": "Ağ Arayüzleri"
+        }
+      }
+    },
     "notifications": {
       "name": "Bildirimler",
       "description": "Entegrasyonların bildirim geçmişini görüntüle",
       "noItems": "Görüntülenecek bildirim yok.",
       "option": {}
+    },
+    "systemResources": {
+      "name": "Sistem kaynakları",
+      "description": "Sisteminizin CPU, Bellek, Disk ve diğer donanım kullanımları",
+      "option": {},
+      "card": {
+        "cpu": "İşlemci",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
     }
   },
   "widgetPreview": {
@@ -3186,6 +3233,18 @@
             },
             "dockerContainers": {
               "label": "Docker konteynerleri"
+            },
+            "firewallCpu": {
+              "label": "Güvenlik Duvarı İşlemcisi"
+            },
+            "firewallMemory": {
+              "label": "Güvenlik Duvarı Belleği"
+            },
+            "firewallVersion": {
+              "label": "Güvenlik Duvarı Sürümü"
+            },
+            "firewallInterfaces": {
+              "label": "Güvenlik Duvarı Arayüzleri"
             }
           },
           "interval": {
