@@ -27,7 +27,8 @@
     "test:e2e": "cross-env NODE_ENV=development CI=true vitest e2e",
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --exclude e2e --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
-    "with-env": "dotenv -e .env --"
+    "with-env": "dotenv -e .env --",
+    "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts"
   },
   "prettier": "@homarr/prettier-config",
   "devDependencies": {
