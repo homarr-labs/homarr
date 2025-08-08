@@ -2449,11 +2449,11 @@
       "option": {}
     },
     "systemResources": {
-      "name": "",
-      "description": "",
+      "name": "Sistem kaynakları",
+      "description": "Sisteminizin CPU, Bellek, Disk ve diğer donanım kullanımları",
       "option": {},
       "card": {
-        "cpu": "",
+        "cpu": "İşlemci",
         "memory": "",
         "network": "",
         "up": "",

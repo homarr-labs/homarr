@@ -944,6 +944,14 @@
         "topic": {
           "label": "Topic",
           "newLabel": "New topic"
+        },
+        "opnsenseApiKey": {
+          "label": "API Key (Key)",
+          "newLabel": "New API Key (Key)"
+        },
+        "opnsenseApiSecret": {
+          "label": "API Key (Secret)",
+          "newLabel": "New API Key (Secret)"
         }
       }
     },
