@@ -1,6 +1,5 @@
 ![](img/logo/2340450-2-title.png)
 
-
 <!-- Badges -->
 <p align="center">
 <img src="https://img.shields.io/github/stars/homarr-labs/homarr?label=%E2%AD%90%20Stars&style=flat-square?branch=master&kill_cache=1%22">
@@ -30,7 +29,6 @@
     <strong>Discord 👋</strong>
   </a>
 </p>
-
 
 ![](img/headers/features.png)
 
@@ -197,7 +195,7 @@
 </a>
 </td>
 <td align="center">
-<a href="https://homarr.dev/docs/integrations/opensense" target="_blank" rel="noreferrer noopener">
+<a href="https://homarr.dev/docs/integrations/opnsense" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg" alt="OPNsense" width="90" height="90" />
   <br/>  
   <p align="center">OPNsense</p>
@@ -325,8 +323,8 @@
 
 <br/>
 
-Homarr is a free-to-use open source project maintained by volunteers and developers from all over the world. 
-We publish under the ``Apache License 2.0`` license which allows commercial usage. 
+Homarr is a free-to-use open source project maintained by volunteers and developers from all over the world.
+We publish under the `Apache License 2.0` license which allows commercial usage.
 We invest multiple hours daily in providing support, developing Homarr, integrating to third party software and more.
 We also pay for licensing and server hosting fees.
 Please consider helping us cover these costs to enable the future development of Homarr. Thank you!
@@ -340,9 +338,9 @@ Please consider helping us cover these costs to enable the future development of
 You can also support us by helping with [translating the entire project](https://homarr.dev/docs/community/translations) to as many languages as possible or contributing directly to the code or documentation. Please read our [Contribution Guidelines](/CONTRIBUTING.md). All contributions, regardless of their size or scope, are welcome and highly appreciated! Thank you ❤️
 
 ## Sponsors
+
 Thanks to your generous sponsors, we can continue to build Homarr. Check them out for high-quality and easy-to-use development tools.
 Feel free to contact us at homarr-labs@proton.me if you wish to become a sponsor.
 
 [![Covered by Argos Visual Testing](https://argos-ci.com/badge-large.svg)](https://argos-ci.com?utm_source=%5Bhomarr%5D&utm_campaign=oss) \
 [![Supported by PikaPods](https://www.pikapods.com/static/run-button.svg)](https://www.pikapods.com/pods?run=homarr-v1)
-

@@ -205,7 +205,7 @@ export const integrationDefs = {
     secretKinds: [["username", "password"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg",
     category: ["firewall"],
-    documentationUrl: createDocumentationLink("/docs/integrations/opensense"),
+    documentationUrl: createDocumentationLink("/docs/integrations/opnsense"),
   },
   github: {
     name: "Github",
