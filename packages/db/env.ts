@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { env as commonEnv } from "@homarr/common/env";
 import { createEnv } from "@homarr/core/infrastructure/env";
@@ -42,7 +42,7 @@ export const env = createEnv({
             .regex(/\d+/)
             .transform(Number)
             .refine((number) => number >= 1)
-            .default("3306"),
+            .default(3306),
           DB_USER: z.string(),
           DB_PASSWORD: z.string(),
           DB_NAME: z.string(),

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, CloseButton, ColorInput, Group, Stack, TextInput, useMantineTheme } from "@mantine/core";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";

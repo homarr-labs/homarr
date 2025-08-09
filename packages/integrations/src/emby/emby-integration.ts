@@ -1,5 +1,5 @@
 import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";

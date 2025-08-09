@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";

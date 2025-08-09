@@ -7,10 +7,6 @@
       enabled: false,
     },
     {
-      matchPackagePatterns: ["^zod$", "^drizzle-zod$", "^zod-form-data$"],
-      enabled: false,
-    },
-    {
       matchUpdateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,
     },

@@ -51,7 +51,7 @@
     "dotenv": "^17.2.1",
     "drizzle-kit": "^0.31.4",
     "drizzle-orm": "^0.44.4",
-    "drizzle-zod": "^0.7.1",
+    "drizzle-zod": "^0.8.2",
     "mysql2": "3.14.3",
     "superjson": "2.2.2"
   },

@@ -1,5 +1,5 @@
 import { observable } from "@trpc/server/observable";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { MinecraftServerStatus } from "@homarr/request-handler/minecraft-server-status";
 import { minecraftServerStatusRequestHandler } from "@homarr/request-handler/minecraft-server-status";

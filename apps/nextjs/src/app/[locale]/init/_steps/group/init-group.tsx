@@ -2,7 +2,7 @@
 
 import { Button, Card, Stack, TextInput } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";

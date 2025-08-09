@@ -9,7 +9,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import type { OpenApiMeta } from "trpc-to-openapi";
-import { ZodError } from "zod";
+import { ZodError } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import { FlattenError } from "@homarr/common";

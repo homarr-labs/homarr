@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { Stopwatch } from "@homarr/common";
 import { handleTransactionsAsync } from "@homarr/db";

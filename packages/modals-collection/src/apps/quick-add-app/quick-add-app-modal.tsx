@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import type { MaybePromise } from "@homarr/common/types";

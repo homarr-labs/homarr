@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { XMLParser } from "fast-xml-parser";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { createDocumentationLink } from "./index";
 

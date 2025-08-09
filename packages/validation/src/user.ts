@@ -1,5 +1,5 @@
 import type { DayOfWeek } from "@mantine/dates";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { colorSchemes } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
@@ -38,9 +38,10 @@ export const userPasswordSchema = z
     },
   );
 
-const addConfirmPasswordRefinement = <TObj extends { password: string; confirmPassword: string }>(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  schema: z.ZodObject<any, "strip", z.ZodTypeAny, TObj>,
+const addConfirmPasswordRefinement = <
+  TSchema extends z.ZodObject<{ password: z.core.$ZodString; confirmPassword: z.core.$ZodString }, z.core.$strip>,
+>(
+  schema: TSchema,
 ) => {
   return schema.refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
@@ -55,7 +56,7 @@ export const userBaseCreateSchema = z.object({
   username: usernameSchema,
   password: userPasswordSchema,
   confirmPassword: z.string(),
-  email: z.string().email().or(z.string().length(0).optional()),
+  email: z.string().email().or(z.string().length(0)).optional(),
   groupIds: z.array(z.string()),
 });
 
@@ -121,7 +122,15 @@ export const userChangeColorSchemeSchema = z.object({
 });
 
 export const userFirstDayOfWeekSchema = z.object({
-  firstDayOfWeek: z.custom<DayOfWeek>((value) => z.number().min(0).max(6).safeParse(value).success),
+  firstDayOfWeek: z
+    .custom<DayOfWeek>((value) => z.number().min(0).max(6).safeParse(value).success)
+    .meta({
+      override: {
+        type: "integer",
+        minimum: 0,
+        maximum: 6,
+      },
+    }),
 });
 
 export const userPingIconsEnabledSchema = z.object({

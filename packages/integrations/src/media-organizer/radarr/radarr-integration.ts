@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import type { AtLeastOneOf } from "@homarr/common/types";

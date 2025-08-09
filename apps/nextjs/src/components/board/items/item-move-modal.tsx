@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
 import { Button, Grid, Group, NumberInput, Stack } from "@mantine/core";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { useZodForm } from "@homarr/form";
 import type { GridStack } from "@homarr/gridstack";

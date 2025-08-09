@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { createId } from "@homarr/common";
@@ -1623,7 +1623,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
 const forKind = <T extends WidgetKind>(kind: T) =>
   z.object({
     kind: z.literal(kind),
-    options: z.record(z.unknown()),
+    options: z.record(z.string(), z.unknown()),
   });
 
 const outputItemSchema = zodUnionFromArray(widgetKinds.map((kind) => forKind(kind))).and(sharedItemSchema);
