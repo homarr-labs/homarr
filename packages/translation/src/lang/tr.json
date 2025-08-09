@@ -944,6 +944,14 @@
         "topic": {
           "label": "Konu",
           "newLabel": "Yeni konu"
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },

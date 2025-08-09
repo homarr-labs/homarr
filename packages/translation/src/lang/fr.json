@@ -944,6 +944,14 @@
         "topic": {
           "label": "Sujet",
           "newLabel": "Nouveau sujet"
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
