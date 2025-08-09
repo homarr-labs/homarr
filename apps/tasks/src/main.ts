@@ -1,5 +1,5 @@
 // This import has to be the first import in the file so that the agent is overridden before any other modules are imported.
-import "./undici-log-agent-override";
+import "./overrides";
 
 import type { FastifyTRPCPluginOptions } from "@trpc/server/adapters/fastify";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";

@@ -1,0 +1,13 @@
+diff --git a/dist/esm/index.js b/dist/esm/index.js
+index 5c07da542fc7d599d0c622f2b2454fb99b72c732..28cb80620af2c49e6562888c7befbaa30c4de28e 100644
+--- a/dist/esm/index.js
++++ b/dist/esm/index.js
+@@ -282,7 +282,7 @@ export class DnsCacheManager {
+     }
+     getStaleEntry(hostname) {
+         var _a;
+-        const entry = (_a = this.cache.store.get(hostname)) === null || _a === void 0 ? void 0 : _a.value;
++        const entry = (_a = this.cache.store?.get(hostname)) === null || _a === void 0 ? void 0 : _a.value;
+         if (entry) {
+             if (!entry.addresses && entry.address) {
+                 return {
