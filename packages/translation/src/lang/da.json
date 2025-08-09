@@ -944,6 +944,14 @@
         "topic": {
           "label": "Emne",
           "newLabel": "Nyt emne"
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },

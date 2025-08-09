@@ -944,6 +944,14 @@
         "topic": {
           "label": "",
           "newLabel": ""
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
