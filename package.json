@@ -83,5 +83,11 @@
     "patchedDependencies": {
       "@types/node-unifi": "patches/@types__node-unifi.patch"
     }
+  },
+  "dependencies": {
+    "@react-aria/dialog": "^3.5.28",
+    "@react-aria/focus": "^3.21.0",
+    "@react-aria/interactions": "^3.25.4",
+    "@react-aria/overlays": "^3.28.0"
   }
 }
