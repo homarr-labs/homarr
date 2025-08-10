@@ -1,15 +1,18 @@
 import type { InferSelectModel } from "drizzle-orm";
 
+import { env } from "../env";
 import * as mysqlSchema from "./mysql";
 import * as pgSchema from "./postgresql";
 import * as sqliteSchema from "./sqlite";
 
+export type PostgreSqlSchema = typeof pgSchema;
+export type MySqlSchema = typeof mysqlSchema;
 type Schema = typeof sqliteSchema;
 
 const schema =
-  process.env.DB_DRIVER === "mysql2"
+  env.DB_DRIVER === "mysql2"
     ? (mysqlSchema as unknown as Schema)
-    : process.env.DB_DRIVER === "postgresql"
+    : env.DB_DRIVER === "node-postgres"
       ? (pgSchema as unknown as Schema)
       : sqliteSchema;
 

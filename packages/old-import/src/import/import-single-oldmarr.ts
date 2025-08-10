@@ -3,7 +3,6 @@ import type { Database } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 import type { OldmarrConfig } from "@homarr/old-schema";
 
-import type { typeOfHomarrDatabase } from "../../../db/driver";
 import { doAppsMatch } from "../prepare/prepare-apps";
 import { prepareSingleImport } from "../prepare/prepare-single";
 import type { OldmarrImportConfiguration } from "../settings";
@@ -34,13 +33,10 @@ export const importSingleOldmarrConfigAsync = async (
 
   await handleTransactionsAsync(db, {
     async handleAsync(db) {
-      await boardInsertCollection.insertAllAsync(db as typeOfHomarrDatabase);
-    },
-    async handlePostgresqlAsync(db) {
-      await boardInsertCollection.insertAllAsync(db as typeOfHomarrDatabase);
+      await boardInsertCollection.insertAllAsync(db);
     },
     handleSync(db) {
-      boardInsertCollection.insertAll(db as typeOfHomarrDatabase);
+      boardInsertCollection.insertAll(db);
     },
   });
 };

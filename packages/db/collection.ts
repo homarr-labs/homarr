@@ -2,11 +2,9 @@ import type { InferInsertModel } from "drizzle-orm";
 
 import { objectEntries } from "@homarr/common";
 
-import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql, typeOfHomarrDatabase } from "./driver";
+import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
 import { env } from "./env";
 import * as schema from "./schema";
-import type * as mysqlSchema from "./schema/mysql";
-import type * as postgresqlSchema from "./schema/postgresql";
 
 type TableKey = {
   [K in keyof typeof schema]: (typeof schema)[K] extends { _: { brand: "Table" } } ? K : never;
@@ -17,7 +15,7 @@ export function isMysql(): boolean {
 }
 
 export function isPostgresql(): boolean {
-  return env.DB_DRIVER === "postgresql";
+  return env.DB_DRIVER === "node-postgres";
 }
 
 export const createDbInsertCollectionForTransaction = <TTableKey extends TableKey>(
@@ -30,33 +28,11 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
     },
     {} as { [K in TTableKey]: InferInsertModel<(typeof schema)[K]>[] },
   );
-  async function insertAllMysqlAsync(db: HomarrDatabaseMysql) {
-    await db.transaction(async (transaction) => {
-      for (const [key, values] of objectEntries(context)) {
-        if (values.length >= 1) {
-          // Below is actually the mysqlSchema when the driver is mysql
-          const schemaMySql = schema as unknown as typeof mysqlSchema;
-          await transaction.insert(schemaMySql[key]).values(values as never);
-        }
-      }
-    });
-  }
-  async function insertAllPostgresqlAsync(db: HomarrDatabasePostgresql) {
-    await db.transaction(async (transaction) => {
-      for (const [key, values] of objectEntries(context)) {
-        if (values.length >= 1) {
-          // Below is actually the mysqlSchema when the driver is mysql
-          const schemaPostgreSql = schema as unknown as typeof postgresqlSchema;
-          await transaction.insert(schemaPostgreSql[key]).values(values as never);
-        }
-      }
-    });
-  }
 
   return {
     ...context,
-    insertAll: (db: typeOfHomarrDatabase) => {
-      (db as HomarrDatabase).transaction((transaction) => {
+    insertAll: (db: HomarrDatabase) => {
+      db.transaction((transaction) => {
         for (const [key, values] of objectEntries(context)) {
           if (values.length >= 1) {
             transaction
@@ -67,14 +43,17 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
         }
       });
     },
-    insertAllAsync: async (db: typeOfHomarrDatabase) => {
-      if (isMysql()) {
-        await insertAllMysqlAsync(db as unknown as HomarrDatabaseMysql);
-      } else if (isPostgresql()) {
-        await insertAllPostgresqlAsync(db as unknown as HomarrDatabasePostgresql);
-      } else {
-        throw new Error(`Unsupported DB_DRIVER: ${env.DB_DRIVER}`);
-      }
+    // We allow any database that supports async passed here but then fallback to mysql to prevent typescript errors
+    insertAllAsync: async (db: HomarrDatabaseMysql | HomarrDatabasePostgresql) => {
+      const innerDb = db as HomarrDatabaseMysql;
+      await innerDb.transaction(async (transaction) => {
+        for (const [key, values] of objectEntries(context)) {
+          if (values.length >= 1) {
+            // Below is actually the mysqlSchema when the driver is mysql
+            await transaction.insert(schema[key] as never).values(values as never);
+          }
+        }
+      });
     },
   };
 };
@@ -86,12 +65,12 @@ export const createDbInsertCollectionWithoutTransaction = <TTableKey extends Tab
 
   return {
     ...collection,
-    insertAllAsync: async (db: typeOfHomarrDatabase) => {
+    insertAllAsync: async (db: HomarrDatabase) => {
       switch (env.DB_DRIVER) {
         case "mysql2":
-        case "postgresql":
-          // For mysql2 and postgresql, we can use the async insertAllAsync method
-          await insertAllAsync(db);
+        case "node-postgres":
+          // For mysql2 and node-postgres, we can use the async insertAllAsync method
+          await insertAllAsync(db as unknown as HomarrDatabaseMysql | HomarrDatabasePostgresql);
           return;
         default:
           // For better-sqlite3, we need to use the synchronous insertAll method

@@ -503,23 +503,6 @@ export const integrationRouter = createTRPCRouter({
             );
           });
         },
-        async handlePostgresqlAsync(db, schema) {
-          await ctx.db.transaction(async (transaction) => {
-            await transaction
-              .delete(schema.integrationUserPermissions)
-              .where(eq(schema.integrationUserPermissions.integrationId, input.entityId));
-            if (input.permissions.length === 0) {
-              return;
-            }
-            await transaction.insert(schema.integrationUserPermissions).values(
-              input.permissions.map((permission) => ({
-                userId: permission.principalId,
-                permission: permission.permission,
-                integrationId: input.entityId,
-              })),
-            );
-          });
-        },
         handleSync(db) {
           db.transaction((transaction) => {
             transaction
@@ -550,23 +533,6 @@ export const integrationRouter = createTRPCRouter({
 
       await handleTransactionsAsync(ctx.db, {
         async handleAsync(db, schema) {
-          await db.transaction(async (transaction) => {
-            await transaction
-              .delete(schema.integrationGroupPermissions)
-              .where(eq(schema.integrationGroupPermissions.integrationId, input.entityId));
-            if (input.permissions.length === 0) {
-              return;
-            }
-            await transaction.insert(schema.integrationGroupPermissions).values(
-              input.permissions.map((permission) => ({
-                groupId: permission.principalId,
-                permission: permission.permission,
-                integrationId: input.entityId,
-              })),
-            );
-          });
-        },
-        async handlePostgresqlAsync(db, schema) {
           await db.transaction(async (transaction) => {
             await transaction
               .delete(schema.integrationGroupPermissions)

@@ -9,6 +9,7 @@ import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import type { Pool as MysqlConnectionPool } from "mysql2";
 import mysql from "mysql2";
+import { Pool as PostgresPool } from "pg";
 
 import { logger } from "@homarr/log";
 
@@ -20,17 +21,16 @@ import * as sqliteSchema from "./schema/sqlite";
 export type HomarrDatabase = BetterSQLite3Database<typeof sqliteSchema>;
 export type HomarrDatabaseMysql = MySql2Database<typeof mysqlSchema>;
 export type HomarrDatabasePostgresql = NodePgDatabase<typeof pgSchema>;
-export type typeOfHomarrDatabase = HomarrDatabase | HomarrDatabaseMysql | HomarrDatabasePostgresql;
 
 const init = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (database === undefined) {
+  if (!connection) {
     switch (env.DB_DRIVER) {
       case "mysql2":
         initMySQL2();
         break;
-      case "postgresql":
-        initPostgreSQL();
+      case "node-postgres":
+        initNodePostgres();
         break;
       default:
         initBetterSqlite();
@@ -39,7 +39,7 @@ const init = () => {
   }
 };
 
-export let connection: BetterSqlite3Connection | MysqlConnectionPool;
+export let connection: BetterSqlite3Connection | MysqlConnectionPool | PostgresPool;
 export let database: HomarrDatabase;
 
 class WinstonDrizzleLogger implements Logger {
@@ -81,37 +81,36 @@ const initMySQL2 = () => {
   }) as unknown as HomarrDatabase;
 };
 
-const initPostgreSQL = () => {
-  if (env.DB_URL) {
-    throw new Error(
-      "PostgreSQL does not support DB_URL. Please use DB_HOST, DB_NAME, DB_USER, DB_PASSWORD, and DB_PORT instead.",
-    );
-  } else if (!env.DB_HOST || !env.DB_NAME || !env.DB_USER || !env.DB_PASSWORD || !env.DB_PORT) {
-    throw new Error(
-      "PostgreSQL requires DB_HOST, DB_NAME, DB_USER, DB_PASSWORD, and DB_PORT to be set in the environment variables.",
-    );
-  } else if (env.DB_HOST === "localhost" && env.DB_PORT === 5432) {
-    logger.warn(
-      "Using default PostgreSQL port 5432 on localhost. This is not recommended for production environments.",
-    );
+const initNodePostgres = () => {
+  if (!env.DB_HOST) {
+    connection = new PostgresPool({
+      connectionString: env.DB_URL,
+      max: 0,
+      idleTimeoutMillis: 60000,
+      allowExitOnIdle: false,
+      // TODO: check with enabled (maybe we also need to add a new property for this)
+      ssl: false, // or 'no-verify' if you want to skip certificate verification
+    });
+  } else {
+    connection = new PostgresPool({
+      host: env.DB_HOST,
+      database: env.DB_NAME,
+      port: env.DB_PORT,
+      user: env.DB_USER,
+      password: env.DB_PASSWORD,
+      max: 0,
+      idleTimeoutMillis: 60000,
+      allowExitOnIdle: false,
+      // TODO: check with enabled (maybe we also need to add a new property for this)
+      ssl: false, // or 'no-verify' if you want to skip certificate verification
+    });
   }
 
   database = drizzlePg({
     logger: new WinstonDrizzleLogger(),
     schema: pgSchema,
     casing: "snake_case",
-    connection: {
-      /* (SuperClass) Client Config */
-      user: env.DB_USER,
-      database: env.DB_NAME,
-      password: env.DB_PASSWORD,
-      port: env.DB_PORT,
-      host: env.DB_HOST,
-      keepAlive: true,
-      max: 0,
-      idleTimeoutMillis: 60000,
-      allowExitOnIdle: false,
-    },
+    client: connection,
   }) as unknown as HomarrDatabase;
 };
 

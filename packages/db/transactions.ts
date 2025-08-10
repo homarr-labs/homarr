@@ -1,14 +1,10 @@
 import { isMysql, isPostgresql } from "./collection";
-import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql, typeOfHomarrDatabase } from "./driver";
-import * as mysqlSchema from "./schema/mysql";
-import * as pgSchema from "./schema/postgresql";
-
-type MysqlSchema = typeof mysqlSchema;
-type PostgresqlSchema = typeof pgSchema;
+import type { HomarrDatabase, HomarrDatabaseMysql } from "./driver";
+import type { MySqlSchema } from "./schema";
+import * as schema from "./schema";
 
 interface HandleTransactionInput {
-  handleAsync: (db: HomarrDatabaseMysql, schema: MysqlSchema) => Promise<void>;
-  handlePostgresqlAsync: (db: HomarrDatabasePostgresql, schema: PostgresqlSchema) => Promise<void>;
+  handleAsync: (db: HomarrDatabaseMysql, schema: MySqlSchema) => Promise<void>;
   handleSync: (db: HomarrDatabase) => void;
 }
 
@@ -17,15 +13,11 @@ interface HandleTransactionInput {
  * As better-sqlite3 transactions have to be synchronous, we have to implement them in a different way.
  * But it can also generally be used when dealing with different database drivers.
  */
-export const handleDiffrentDbDriverOperationsAsync = async (
-  db: typeOfHomarrDatabase,
-  input: HandleTransactionInput,
-) => {
-  if (isMysql()) {
-    await input.handleAsync(db as HomarrDatabaseMysql, mysqlSchema);
-  } else if (isPostgresql()) {
-    await input.handlePostgresqlAsync(db as HomarrDatabasePostgresql, pgSchema);
+export const handleDiffrentDbDriverOperationsAsync = async (db: HomarrDatabase, input: HandleTransactionInput) => {
+  if (isMysql() || isPostgresql()) {
+    // Schema type is always the correct one based on env variables
+    await input.handleAsync(db as unknown as HomarrDatabaseMysql, schema as unknown as MySqlSchema);
   } else {
-    input.handleSync(db as HomarrDatabase);
+    input.handleSync(db);
   }
 };

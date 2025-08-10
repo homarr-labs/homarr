@@ -6,13 +6,17 @@ export default {
   dialect: "postgresql",
   schema: "./schema",
   casing: "snake_case",
-  dbCredentials: {
-    host: env.DB_HOST,
-    port: Number(env.DB_PORT) || 5432, // Default PostgreSQL port
-    user: env.DB_USER,
-    password: env.DB_PASSWORD,
-    database: env.DB_NAME,
-    ssl: false, // or 'no-verify' if you want to skip certificate verification
-  },
+
+  dbCredentials: env.DB_URL
+    ? { url: env.DB_URL }
+    : {
+        host: env.DB_HOST,
+        port: env.DB_PORT,
+        user: env.DB_USER,
+        password: env.DB_PASSWORD,
+        database: env.DB_NAME,
+        // TODO: check with enabled (maybe we also need to add a new property for this)
+        ssl: false, // or 'no-verify' if you want to skip certificate verification
+      },
   out: "./migrations/postgresql",
 } satisfies Config;

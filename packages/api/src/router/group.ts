@@ -260,13 +260,6 @@ export const groupRouter = createTRPCRouter({
             }
           });
         },
-        handlePostgresqlAsync: async (db, schema) => {
-          await db.transaction(async (trx) => {
-            for (const { id, position } of positions) {
-              await trx.update(schema.groups).set({ position }).where(eq(groups.id, id));
-            }
-          });
-        },
         handleSync: (db) => {
           db.transaction((trx) => {
             for (const { id, position } of positions) {

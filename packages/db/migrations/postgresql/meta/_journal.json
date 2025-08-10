@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1751493020756,
-      "tag": "0000_busy_sentinels",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1751833597792,
-      "tag": "0001_silent_otto_octavius",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1752463436092,
-      "tag": "0002_small_vanisher",
+      "when": 1754853510707,
+      "tag": "0000_initial",
       "breakpoints": true
     }
   ]

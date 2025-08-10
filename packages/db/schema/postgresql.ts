@@ -257,6 +257,7 @@ export const integrationGroupPermissions = pgTable(
   (table) => ({
     compoundKey: primaryKey({
       columns: [table.integrationId, table.groupId, table.permission],
+      name: "integration_group_permission__pk",
     }),
   }),
 );
