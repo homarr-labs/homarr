@@ -368,7 +368,7 @@
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integraciones",
         "item": {
           "create": {
             "label": "",
@@ -596,7 +596,7 @@
         "label": "Nombre"
       },
       "description": {
-        "label": ""
+        "label": "Descripción"
       },
       "url": {
         "label": ""
@@ -2352,7 +2352,7 @@
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
-      "projectDescription": "",
+      "projectDescription": "Descripción del proyecto",
       "created": "",
       "error": {
         "label": "",

@@ -946,12 +946,12 @@
           "newLabel": "Yeni konu"
         },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API Anahtarı (Anahtar)",
+          "newLabel": "Yeni API Anahtarı (Anahtar)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "API Anahtarı (Gizli Anahtar)",
+          "newLabel": "Yeni API Anahtarı (Gizli Anahtar)"
         }
       }
     },
@@ -2462,10 +2462,10 @@
       "option": {},
       "card": {
         "cpu": "İşlemci",
-        "memory": "",
-        "network": "",
-        "up": "",
-        "down": ""
+        "memory": "BELLEK",
+        "network": "AĞ",
+        "up": "YÜKLEME",
+        "down": "İNDİRME"
       }
     }
   },
