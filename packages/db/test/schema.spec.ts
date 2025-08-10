@@ -11,7 +11,7 @@ import * as mysqlSchema from "../schema/mysql";
 import * as postgresqlSchema from "../schema/postgresql";
 import * as sqliteSchema from "../schema/sqlite";
 
-// We need the following two types as there is currently no support for Buffer in mysql and
+// We need the following three types as there is currently no support for Buffer in mysql & pg and
 // so we use a custom type which results in the config beeing different
 type FixedMysqlConfig = {
   [key in keyof MysqlConfig]: {
@@ -136,8 +136,8 @@ test("schemas should match", () => {
 });
 
 test("schemas should match for postgresql", () => {
-  expectTypeOf<SqliteTables>().toEqualTypeOf<PostgresqlTbale>();
-  expectTypeOf<PostgresqlTbale>().toEqualTypeOf<SqliteTables>();
+  expectTypeOf<SqliteTables>().toEqualTypeOf<PostgresqlTables>();
+  expectTypeOf<PostgresqlTables>().toEqualTypeOf<SqliteTables>();
   expectTypeOf<FixedSqliteConfig>().toEqualTypeOf<FixedPostgresqlConfig>();
   expectTypeOf<FixedPostgresqlConfig>().toEqualTypeOf<FixedSqliteConfig>();
 
@@ -233,7 +233,7 @@ type MysqlTables = {
     : never;
 };
 
-type PostgresqlTbale = {
+type PostgresqlTables = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof postgresqlSchema]: (typeof postgresqlSchema)[K] extends PgTableWithColumns<any>
     ? InferSelectModel<(typeof postgresqlSchema)[K]>
