@@ -221,6 +221,7 @@ export type HomarrDocumentationPath =
   | "/docs/widgets/smart-home-entity-state"
   | "/docs/widgets/smart-home-execute-automation"
   | "/docs/widgets/stock-price"
+  | "/docs/widgets/system-resources"
   | "/docs/widgets/video"
   | "/docs/widgets/weather"
   | ""
