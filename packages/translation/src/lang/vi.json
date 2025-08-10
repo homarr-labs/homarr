@@ -2,77 +2,77 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Chào mừng đến với Homarr",
+        "subtitle": "Hãy bắt đầu cài đặt phiên bản Homarr của bạn.",
+        "description": "Để bắt đầu, hãy chọn cách bạn muốn cài đặt phiên bản Homarr của mình.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "Bắt đầu từ đầu",
+          "importOldmarr": "Nhập từ Homarr trước phiên bản 1.0"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "Nhập dữ liệu",
+        "subtitle": "Bạn có thể nhập dữ liệu từ một phiên bản Homarr có sẵn.",
         "dropzone": {
-          "title": "",
-          "description": ""
+          "title": "Kéo tệp tin zip vào đây hoặc nhấp để chọn",
+          "description": "Tệp tin zip đã tải lên sẽ được xử lý và bạn sẽ có thể chọn những gì bạn muốn nhập"
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "Thay đổi tập tin"
           }
         },
         "importSettings": {
-          "title": "",
-          "description": ""
+          "title": "Nhập cài đặt",
+          "description": "Cấu hình hành vi nhập dữ liệu"
         },
         "boardSelection": {
-          "title": "",
-          "description": "",
+          "title": "Tìm thấy {count} bảng",
+          "description": "Chọn tất cả các bảng với kích thước bạn muốn nhập",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "Chọn tất cả",
+            "unselectAll": "Bỏ chọn tất cả"
           }
         },
         "summary": {
           "title": "",
           "description": "",
           "action": {
-            "import": ""
+            "import": "Xác nhận nhập và tiếp tục"
           },
           "entities": {
             "apps": "Ứng dụng",
             "boards": "Bảng",
-            "integrations": "",
+            "integrations": "Tích hợp",
             "credentialUsers": ""
           }
         },
         "tokenModal": {
-          "title": "",
+          "title": "Nhập token nhập",
           "field": {
             "token": {
               "label": "Mã thông báo",
-              "description": ""
+              "description": "Nhập token nhập được hiển thị từ phiên bản homarr trước đó của bạn"
             }
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Token không hợp lệ",
+              "message": "Token bạn nhập không đúng"
             }
           }
         }
       },
       "user": {
-        "title": "",
+        "title": "Người dùng quản trị",
         "subtitle": "",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đã tạo người dùng",
+            "message": "Người dùng đã được tạo thành công"
           },
           "error": {
-            "title": ""
+            "title": "Tạo người dùng không thành công"
           }
         }
       },
@@ -91,41 +91,41 @@
         "subtitle": ""
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
+        "title": "Hoàn tất cài đặt",
+        "subtitle": "Đã sẵn sàng để tiếp tục!",
         "description": "",
         "action": {
           "goToBoard": "",
           "createBoard": "",
           "inviteUser": "",
-          "docs": ""
+          "docs": "Hãy đọc tài liệu này"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "Trở lại từ đầu"
   },
   "user": {
     "title": "Người dùng",
     "name": "Người dùng",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "Đăng nhập vào tài khoản của bạn",
+        "subtitle": "Chào mừng trở lại! Hãy nhập thông tin đăng nhập của bạn"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Tham gia Homarr",
+        "subtitle": "Chào mừng đến với Homarr! Hãy tạo tài khoản của bạn",
+        "description": "Bạn được mời bởi {username}"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "Cài đặt Homarr mới",
+        "subtitle": "Hãy tạo tài khoản quản trị ban đầu"
       }
     },
     "field": {
       "email": {
         "label": "E-mail",
-        "verified": ""
+        "verified": "Đã xác minh"
       },
       "username": {
         "label": "Tên người dùng"
@@ -133,18 +133,18 @@
       "password": {
         "label": "Mật khẩu",
         "requirement": {
-          "length": "",
+          "length": "Bao gồm ít nhất 8 kí tự",
           "lowercase": "Bao gồm chữ thường",
           "uppercase": "Bao gồm chữ in hoa",
           "number": "Bao gồm số",
-          "special": ""
+          "special": "Bao gồm kí tự đặc biệt"
         }
       },
       "passwordConfirm": {
         "label": "Xác nhận mật khẩu"
       },
       "previousPassword": {
-        "label": ""
+        "label": "Mật khẩu trước đây"
       },
       "homeBoard": {
         "label": ""
@@ -153,31 +153,31 @@
         "label": ""
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Công cụ tìm kiếm mặc định"
       },
       "openSearchInNewTab": {
         "label": ""
       }
     },
     "error": {
-      "usernameTaken": ""
+      "usernameTaken": "Tên người dùng đã được sử dụng"
     },
     "action": {
       "login": {
         "label": "Đăng nhập",
-        "labelWith": "",
+        "labelWith": "Đăng nhập với {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Đăng nhập thành công",
+            "message": "Bạn đã đăng nhập"
           },
           "error": {
-            "title": "",
+            "title": "Đăng nhập không thành công",
             "message": ""
           }
         },
         "forgotPassword": {
-          "label": "",
+          "label": "Quên mật khẩu?",
           "description": ""
         }
       },
@@ -186,23 +186,23 @@
         "notification": {
           "success": {
             "title": "Tài khoản đã được tạo",
-            "message": ""
+            "message": "Vui lòng đăng nhập để tiếp tục"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Tạo tài khoản thất bại",
+            "message": "Tài khoản của bạn không thể được tạo"
           }
         }
       },
       "create": "Tạo người dùng",
       "changePassword": {
-        "label": "",
+        "label": "Thay đổi mật khẩu",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Thay đổi mật khẩu thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể thay đổi mật khẩu"
           }
         }
       },
@@ -219,20 +219,20 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Cài đặt tìm kiếm đã được thay đổi thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể thay đổi cài đặt tìm kiếm"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Ngày đầu tiên của tuần đã được thay đổi thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể thay đổi ngày đầu tiên của tuần"
           }
         }
       },
@@ -248,29 +248,29 @@
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Thay đổi hình ảnh",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Thay đổi hình ảnh thành công"
             },
             "error": {
-              "message": ""
+              "message": "Không thể thay đổi hình ảnh"
             },
             "toLarge": {
-              "title": "",
-              "message": ""
+              "title": "Hình ảnh quá lớn",
+              "message": "Kích thước tối đa của ảnh là {size}"
             }
           }
         },
         "removeImage": {
-          "label": "",
-          "confirm": "",
+          "label": "Xóa ảnh",
+          "confirm": "Bạn có chắc chắn muốn xoá hình ảnh này không?",
           "notification": {
             "success": {
-              "message": ""
+              "message": "Hình ảnh được xóa thành công"
             },
             "error": {
-              "message": ""
+              "message": "Không thể xóa hình ảnh"
             }
           }
         }
@@ -278,34 +278,34 @@
       "editProfile": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Hô sơ được cập nhật thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể cập nhật hồ sơ"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": ""
+        "label": "Xóa người dùng vĩnh viễn",
+        "description": "Xóa người dùng này bao gồm cài đặt của họ. Sẽ không xóa các bảng. Người dùng sẽ không được thông báo.",
+        "confirm": "Bạn có chắc chắn muốn xóa tài khoản {username} cùng với các cài đặt?"
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Chọn tài khoản",
+        "notFound": "Không tìm thấy tài khoản"
       },
       "transfer": {
-        "label": ""
+        "label": "Chọn chủ sở hữu mới"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "Các nhóm",
+    "name": "Nhóm",
+    "search": "Tìm một nhóm",
     "field": {
       "name": "Tên",
-      "members": "",
+      "members": "Thành viên",
       "homeBoard": {
         "label": "",
         "description": ""
@@ -320,8 +320,8 @@
         "title": "Quản trị viên",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Quản trị viên",
+            "description": "Thành viên với quyền này có toàn quyền truy cập vào các tính năng và cài đặt"
           }
         }
       },
@@ -329,11 +329,11 @@
         "title": "Ứng dụng",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Tạo ứng dụng",
+            "description": "Cho phép thành viên tạo ứng dụng"
           },
           "use-all": {
-            "label": "",
+            "label": "Sử dụng tất cả các ứng dụng",
             "description": ""
           },
           "modify-all": {
@@ -342,7 +342,7 @@
           },
           "full-all": {
             "label": "",
-            "description": ""
+            "description": "Cho phép thành viên quản lý, tạo và xóa mọi ứng dụng"
           }
         }
       },
@@ -396,29 +396,29 @@
             "description": ""
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Xem tất cả media",
+            "description": "Cho phép thành viên xem tất cả media"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Toàn quyền truy cập media",
+            "description": "Cho phép thành viên quản lý và xóa mọi media"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Khác",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Xem nhật ký",
+            "description": "Cho phép thành viên xem nhật ký"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Công cụ tìm kiếm",
         "item": {
           "create": {
-            "label": "",
+            "label": "Tạo công cụ tìm kiếm",
             "description": ""
           },
           "modify-all": {
@@ -465,14 +465,14 @@
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Thêm thành viên"
       },
       "removeMember": {
-        "label": "",
+        "label": "Xóa thành viên",
         "confirm": ""
       },
       "delete": {
-        "label": "",
+        "label": "Xóa nhóm",
         "description": "",
         "confirm": "",
         "notification": {
@@ -527,31 +527,31 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Thay đổi vị trí thành công"
           },
           "error": {
-            "message": ""
+            "message": "Không thể thay đổi vị trí"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
+      "name": "Nhóm mặc định",
       "description": ""
     }
   },
   "app": {
-    "search": "",
+    "search": "Tim một ứng dụng",
     "page": {
       "list": {
         "title": "Ứng dụng",
         "noResults": {
           "title": "",
-          "action": ""
+          "action": "Tạo ứng dụng của bạn trước"
         }
       },
       "create": {
-        "title": "",
+        "title": "Ứng dụng mới",
         "notification": {
           "success": {
             "title": "",
@@ -596,25 +596,25 @@
         "label": "Tên"
       },
       "description": {
-        "label": ""
+        "label": "Thông tin chi tiết"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
           "label": "",
-          "description": ""
+          "description": "Hữu ích nếu Homarr có thể truy cập trực tiếp bằng tên máy chủ nội bộ hoặc mạng để tránh sử dụng băng thông của ISP"
         }
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": "",
+        "label": "Chọn ứng dụng",
+        "notFound": "Không tìm thấy ứng dụng",
         "search": "",
-        "noResults": "",
-        "action": "",
+        "noResults": "Không có kết quả",
+        "action": "Chọn {app}",
         "title": ""
       },
       "create": {
@@ -680,14 +680,14 @@
         "label": "Tên"
       },
       "url": {
-        "label": ""
+        "label": "Url"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
+        "label": "Tạo công cụ tìm kiếm",
         "description": ""
       },
       "createApp": {
-        "label": "",
+        "label": "Tạo ứng dụng",
         "description": ""
       },
       "appHref": {
@@ -699,8 +699,8 @@
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Kiểm tra kết nối và tạo",
+        "edit": "Kiểm tra kết nối và lưu"
       },
       "error": {
         "common": {
@@ -709,11 +709,11 @@
           }
         },
         "unknown": {
-          "title": "",
+          "title": "Lỗi không xác định",
           "description": ""
         },
         "parse": {
-          "title": "",
+          "title": "Lỗi cú pháp",
           "description": ""
         },
         "authorization": {
