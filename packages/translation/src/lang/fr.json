@@ -944,6 +944,14 @@
         "topic": {
           "label": "Sujet",
           "newLabel": "Nouveau sujet"
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2447,6 +2455,18 @@
       "description": "Afficher l'historique des notifications à partir d'une intégration",
       "noItems": "Aucune notification à afficher.",
       "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
     }
   },
   "widgetPreview": {

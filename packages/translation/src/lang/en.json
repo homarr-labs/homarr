@@ -944,6 +944,14 @@
         "topic": {
           "label": "Topic",
           "newLabel": "New topic"
+        },
+        "opnsenseApiKey": {
+          "label": "API Key (Key)",
+          "newLabel": "New API Key (Key)"
+        },
+        "opnsenseApiSecret": {
+          "label": "API Key (Secret)",
+          "newLabel": "New API Key (Secret)"
         }
       }
     },
@@ -2447,6 +2455,18 @@
       "description": "Display notification history from an integration",
       "noItems": "No notifications to display.",
       "option": {}
+    },
+    "systemResources": {
+      "name": "System resources",
+      "description": "CPU, Memory, Disk and other hardware usage of your system",
+      "option": {},
+      "card": {
+        "cpu": "CPU",
+        "memory": "MEM",
+        "network": "NET",
+        "up": "UP",
+        "down": "DOWN"
+      }
     }
   },
   "widgetPreview": {

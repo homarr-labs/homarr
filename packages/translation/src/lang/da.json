@@ -944,6 +944,14 @@
         "topic": {
           "label": "Emne",
           "newLabel": "Nyt emne"
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2447,6 +2455,18 @@
       "description": "Vis notifikationshistorik fra en integration",
       "noItems": "Ingen notifikationer at vise.",
       "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
     }
   },
   "widgetPreview": {

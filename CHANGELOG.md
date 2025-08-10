@@ -1,3 +1,32 @@
+## [1.32.0](https://github.com/homarr-labs/homarr/compare/v1.31.0...v1.32.0) (2025-08-08)
+
+### Features
+
+* **api:** add info endpoint ([#3737](https://github.com/homarr-labs/homarr/issues/3737)) ([baa652f](https://github.com/homarr-labs/homarr/commit/baa652f31493aad1490cf8e5d50bb04dc0006da1))
+* system resources widget ([#3538](https://github.com/homarr-labs/homarr/issues/3538)) ([3ee408b](https://github.com/homarr-labs/homarr/commit/3ee408bf53c45f0b2abf04449b3653ed3e9cf225))
+
+### Bug Fixes
+
+* **deps:** update dependency @gitbeaker/rest to ^43.4.0 ([#3806](https://github.com/homarr-labs/homarr/issues/3806)) ([c73ce1f](https://github.com/homarr-labs/homarr/commit/c73ce1f704aa1fcbc6beac4cfa80b080b6800373))
+* **deps:** update dependency @ianvs/prettier-plugin-sort-imports to ^4.6.0 ([#3797](https://github.com/homarr-labs/homarr/issues/3797)) ([a4914d0](https://github.com/homarr-labs/homarr/commit/a4914d09fd6c9fa6a602f9f76b71c096369a34cd))
+* **deps:** update dependency @ianvs/prettier-plugin-sort-imports to ^4.6.1 ([#3809](https://github.com/homarr-labs/homarr/issues/3809)) ([ef40e75](https://github.com/homarr-labs/homarr/commit/ef40e7581896df4371c1f13487f3830bb57f6886))
+* **deps:** update dependency jotai to ^2.13.0 ([#3763](https://github.com/homarr-labs/homarr/issues/3763)) ([c8d59d8](https://github.com/homarr-labs/homarr/commit/c8d59d88e5872783e767156eb063f329901fff6f))
+* **deps:** update dependency sass to ^1.90.0 ([#3794](https://github.com/homarr-labs/homarr/issues/3794)) ([bb681f7](https://github.com/homarr-labs/homarr/commit/bb681f7b5ebb4a0858dac40eacfcc809c04b3d5e))
+* **deps:** update dependency trpc-to-openapi to ^2.4.0 ([#3734](https://github.com/homarr-labs/homarr/issues/3734)) ([e45bef3](https://github.com/homarr-labs/homarr/commit/e45bef317a6ffae05d7a1685b1e6164e2ed09921))
+* **deps:** update dependency typescript-eslint to ^8.39.0 ([#3781](https://github.com/homarr-labs/homarr/issues/3781)) ([1b5ccb5](https://github.com/homarr-labs/homarr/commit/1b5ccb529358836682a1cccd4a3da14f612884b9))
+* **deps:** update dependency video.js to ^8.23.4 ([#3808](https://github.com/homarr-labs/homarr/issues/3808)) ([60accd6](https://github.com/homarr-labs/homarr/commit/60accd66f635ddb2f8c7a73faa865ee47aa40721))
+* **deps:** update mantine monorepo to ^8.2.3 ([#3789](https://github.com/homarr-labs/homarr/issues/3789)) ([e6be8e1](https://github.com/homarr-labs/homarr/commit/e6be8e1db3d843e3d0e5b6d54c64999fd45f103d))
+* **deps:** update mantine monorepo to ^8.2.4 ([#3803](https://github.com/homarr-labs/homarr/issues/3803)) ([ffa6290](https://github.com/homarr-labs/homarr/commit/ffa629064cdf202849d6f9c0ce645c6077c63e49))
+* **deps:** update nextjs monorepo to v15.4.6 ([#3799](https://github.com/homarr-labs/homarr/issues/3799)) ([d327039](https://github.com/homarr-labs/homarr/commit/d32703910e0228a70a55a84ab712d6bd58fe7149))
+* **deps:** update tanstack-query monorepo to ^5.84.2 ([#3810](https://github.com/homarr-labs/homarr/issues/3810)) ([d23196b](https://github.com/homarr-labs/homarr/commit/d23196b43034349d92cb9277633dd06b15ee0b7d))
+* **deps:** update testcontainers-node monorepo to ^11.5.0 ([#3738](https://github.com/homarr-labs/homarr/issues/3738)) ([4bc053c](https://github.com/homarr-labs/homarr/commit/4bc053cc17d5a38db4255f9913e389fe86831676))
+* **deps:** update testcontainers-node monorepo to ^11.5.1 ([#3796](https://github.com/homarr-labs/homarr/issues/3796)) ([ed950e9](https://github.com/homarr-labs/homarr/commit/ed950e9302450f33150d9800bc66e712bf8f6724))
+* **deps:** update trpc monorepo to ^11.4.4 ([#3777](https://github.com/homarr-labs/homarr/issues/3777)) ([cc6d421](https://github.com/homarr-labs/homarr/commit/cc6d421e7db52b994e9e62fa1f828c72b5a20d72))
+* **groups:** saving permissions with none activated causes error ([#3739](https://github.com/homarr-labs/homarr/issues/3739)) ([59c092f](https://github.com/homarr-labs/homarr/commit/59c092f8000f9a4e9fd70bde4176697dabb2e1c9))
+* not hardcode hero banner scroll ([#3741](https://github.com/homarr-labs/homarr/issues/3741)) ([001f7a2](https://github.com/homarr-labs/homarr/commit/001f7a2a165fade9deaafb4cb319aa27926685e5))
+* **opnsense:** switch secrets to api-key key and secret for easier understanding ([#3744](https://github.com/homarr-labs/homarr/issues/3744)) ([7f47468](https://github.com/homarr-labs/homarr/commit/7f474683a5e5b9ada978c055e57cd2b4114e17e0))
+* some integrations handle parse errors wrong ([#3746](https://github.com/homarr-labs/homarr/issues/3746)) ([72e976e](https://github.com/homarr-labs/homarr/commit/72e976ee5ea28e549b7674c71b9a284e905e455b))
+
 ## [1.31.0](https://github.com/homarr-labs/homarr/compare/v1.30.1...v1.31.0) (2025-08-01)
 
 ### Features

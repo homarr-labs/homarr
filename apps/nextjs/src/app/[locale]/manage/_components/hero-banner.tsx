@@ -1,37 +1,16 @@
 import { Box, Grid, GridCol, Group, Image, Stack, Title } from "@mantine/core";
 
 import { splitToNChunks } from "@homarr/common";
+import { integrationDefs } from "@homarr/definitions";
 
 import classes from "./hero-banner.module.css";
 
-const icons = [
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/homarr.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sabnzbd.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/deluge.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radarr.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/sonarr.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/lidarr.svg",
-  "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/assets/pihole.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/dashdot.png",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/overseerr.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyfin.svg",
-  "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/assets/homeassistant.svg",
-  "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/assets/freshrss.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/readarr.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/transmission.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qbittorrent.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/nzbget.png",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/openmediavault.svg",
-  "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/assets/docker.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyseerr.svg",
-  "https://cdn.jsdelivr.net/gh/loganmarchione/homelab-svg-assets/assets/adguardhome.svg",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tdarr.png",
-  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/prowlarr.svg",
-];
+const icons = Object.values(integrationDefs)
+  .filter((int) => int.name !== "Mock")
+  .map((int) => int.iconUrl);
 
 const countIconGroups = 3;
-const animationDurationInSeconds = 12;
+const animationDurationInSeconds = icons.length;
 const arrayInChunks = splitToNChunks(icons, countIconGroups);
 
 export const HeroBanner = () => {
@@ -61,12 +40,26 @@ export const HeroBanner = () => {
                   }}
                 >
                   {arrayInChunks[columnIndex]?.map((icon, index) => (
-                    <Image key={`grid-column-${columnIndex}-scroll-1-${index}`} src={icon} radius="md" w={50} h={50} />
+                    <Image
+                      key={`grid-column-${columnIndex}-scroll-1-${index}`}
+                      src={icon}
+                      radius="md"
+                      fit={"contain"}
+                      w={50}
+                      h={50}
+                    />
                   ))}
 
                   {/* This is used for making the animation seem seamless */}
                   {arrayInChunks[columnIndex]?.map((icon, index) => (
-                    <Image key={`grid-column-${columnIndex}-scroll-2-${index}`} src={icon} radius="md" w={50} h={50} />
+                    <Image
+                      key={`grid-column-${columnIndex}-scroll-2-${index}`}
+                      src={icon}
+                      radius="md"
+                      fit={"contain"}
+                      w={50}
+                      h={50}
+                    />
                   ))}
                 </Stack>
               </GridCol>
