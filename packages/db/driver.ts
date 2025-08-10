@@ -88,8 +88,6 @@ const initNodePostgres = () => {
       max: 0,
       idleTimeoutMillis: 60000,
       allowExitOnIdle: false,
-      // TODO: check with enabled (maybe we also need to add a new property for this)
-      ssl: false, // or 'no-verify' if you want to skip certificate verification
     });
   } else {
     connection = new PostgresPool({
@@ -101,8 +99,6 @@ const initNodePostgres = () => {
       max: 0,
       idleTimeoutMillis: 60000,
       allowExitOnIdle: false,
-      // TODO: check with enabled (maybe we also need to add a new property for this)
-      ssl: false, // or 'no-verify' if you want to skip certificate verification
     });
   }
 
