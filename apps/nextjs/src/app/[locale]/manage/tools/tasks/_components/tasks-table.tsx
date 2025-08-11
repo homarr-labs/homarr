@@ -349,7 +349,7 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
 
   // Utils for refresh functionality
   const utils = clientApi.useUtils();
-  const handleRefresh = async () => {
+  const handleRefreshAsync = async () => {
     try {
       await utils.cronJobs.getJobs.invalidate();
       showSuccessNotification({
@@ -384,7 +384,7 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
     },
     initialState: { density: "xs", showGlobalFilter: true },
     renderTopToolbarCustomActions: () => (
-      <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={handleRefresh}>
+      <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={handleRefreshAsync}>
         {tTasks("action.refresh.label")}
       </Button>
     ),
