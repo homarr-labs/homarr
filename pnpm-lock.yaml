@@ -263,8 +263,8 @@ importers:
         specifier: ^11.0.3
         version: 11.0.3
       jotai:
-        specifier: ^2.13.0
-        version: 2.13.0(@babel/core@7.26.0)(@babel/template@7.27.2)(@types/react@19.1.9)(react@19.1.1)
+        specifier: ^2.13.1
+        version: 2.13.1(@babel/core@7.26.0)(@babel/template@7.27.2)(@types/react@19.1.9)(react@19.1.1)
       mantine-react-table:
         specifier: 2.0.0-beta.9
         version: 2.0.0-beta.9(@mantine/core@8.2.4(@mantine/hooks@8.2.4(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/dates@8.2.4(@mantine/core@8.2.4(@mantine/hooks@8.2.4(react@19.1.1))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/hooks@8.2.4(react@19.1.1))(dayjs@1.11.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/hooks@8.2.4(react@19.1.1))(@tabler/icons-react@3.34.1(react@19.1.1))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -1977,8 +1977,8 @@ importers:
         specifier: ^3.34.1
         version: 3.34.1(react@19.1.1)
       jotai:
-        specifier: ^2.13.0
-        version: 2.13.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.9)(react@19.1.1)
+        specifier: ^2.13.1
+        version: 2.13.1(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.9)(react@19.1.1)
       next:
         specifier: 15.4.6
         version: 15.4.6(@babel/core@7.28.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.90.0)
@@ -7724,8 +7724,8 @@ packages:
   jose@6.0.8:
     resolution: {integrity: sha512-EyUPtOKyTYq+iMOszO42eobQllaIjJnwkZ2U93aJzNyPibCy7CEvT9UQnaCVB51IAd49gbNdCew1c0LcLTCB2g==}
 
-  jotai@2.13.0:
-    resolution: {integrity: sha512-H43zXdanNTdpfOEJ4NVbm4hgmrctpXLZagjJNcqAywhUv+sTE7esvFjwm5oBg/ywT9Qw63lIkM6fjrhFuW8UDg==}
+  jotai@2.13.1:
+    resolution: {integrity: sha512-cRsw6kFeGC9Z/D3egVKrTXRweycZ4z/k7i2MrfCzPYsL9SIWcPXTyqv258/+Ay8VUEcihNiE/coBLE6Kic6b8A==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@babel/core': '>=7.0.0'
@@ -16986,14 +16986,14 @@ snapshots:
 
   jose@6.0.8: {}
 
-  jotai@2.13.0(@babel/core@7.26.0)(@babel/template@7.27.2)(@types/react@19.1.9)(react@19.1.1):
+  jotai@2.13.1(@babel/core@7.26.0)(@babel/template@7.27.2)(@types/react@19.1.9)(react@19.1.1):
     optionalDependencies:
       '@babel/core': 7.26.0
       '@babel/template': 7.27.2
       '@types/react': 19.1.9
       react: 19.1.1
 
-  jotai@2.13.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.9)(react@19.1.1):
+  jotai@2.13.1(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.9)(react@19.1.1):
     optionalDependencies:
       '@babel/core': 7.28.0
       '@babel/template': 7.27.2
