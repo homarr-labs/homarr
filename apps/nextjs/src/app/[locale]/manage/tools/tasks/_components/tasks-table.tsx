@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { ActionIcon, Badge, Button, Group, Select, Text } from "@mantine/core";
@@ -85,7 +84,6 @@ const createColumns = (
   updateIntervalMutation: ReturnType<typeof clientApi.cronJobs.updateJobInterval.useMutation>,
   enableMutation: ReturnType<typeof clientApi.cronJobs.enableJob.useMutation>,
   disableMutation: ReturnType<typeof clientApi.cronJobs.disableJob.useMutation>,
-  utils: ReturnType<typeof clientApi.useUtils>,
   loadingStates: Map<string, { toggle: boolean; trigger: boolean; interval: boolean }>,
 ): MRT_ColumnDef<JobData>[] => [
   {
@@ -111,7 +109,7 @@ const createColumns = (
     header: tTasks("field.interval.label"),
     size: 200,
     Cell({ row }) {
-      const handleIntervalChange = async (newCron: string | null) => {
+      const handleIntervalChange = (newCron: string | null) => {
         if (!newCron || newCron === row.original.cron) return;
 
         const currentStates = loadingStates.get(row.original.name) ?? {
@@ -125,21 +123,9 @@ const createColumns = (
         });
 
         try {
-          await updateIntervalMutation.mutateAsync({
+          updateIntervalMutation.mutate({
             name: row.original.name,
             cron: newCron,
-          });
-
-          await utils.cronJobs.getJobs.invalidate();
-
-          showSuccessNotification({
-            title: tTasks("interval.update.success.title"),
-            message: tTasks("interval.update.success.message"),
-          });
-        } catch (_error) {
-          showErrorNotification({
-            title: tTasks("interval.update.error.title"),
-            message: tTasks("interval.update.error.message"),
           });
         } finally {
           const updatedStates = loadingStates.get(row.original.name) ?? {
@@ -193,7 +179,7 @@ const createColumns = (
     Cell({ row }) {
       const status = jobStatusMap.get(row.original.name);
 
-      const handleToggleEnabled = async () => {
+      const handleToggleEnabled = () => {
         const currentStates = loadingStates.get(row.original.name) ?? {
           toggle: false,
           trigger: false,
@@ -205,26 +191,10 @@ const createColumns = (
         });
         try {
           if (row.original.isEnabled) {
-            await disableMutation.mutateAsync(row.original.name);
-            showSuccessNotification({
-              title: tTasks("disable.success.title"),
-              message: tTasks("disable.success.message"),
-            });
+            disableMutation.mutate(row.original.name);
           } else {
-            await enableMutation.mutateAsync(row.original.name);
-            showSuccessNotification({
-              title: tTasks("enable.success.title"),
-              message: tTasks("enable.success.message"),
-            });
+            enableMutation.mutate(row.original.name);
           }
-
-          // Update the local cache to reflect the change immediately
-          await utils.cronJobs.getJobs.invalidate();
-        } catch (_error) {
-          showErrorNotification({
-            title: tTasks("toggle.error.title"),
-            message: tTasks("toggle.error.message"),
-          });
         } finally {
           const updatedStates = loadingStates.get(row.original.name) ?? {
             toggle: false,
@@ -238,7 +208,7 @@ const createColumns = (
         }
       };
 
-      const handleTrigger = async () => {
+      const handleTrigger = () => {
         if (status?.status === "running") return;
 
         const currentStates = loadingStates.get(row.original.name) ?? {
@@ -251,16 +221,7 @@ const createColumns = (
           trigger: true,
         });
         try {
-          await triggerMutation.mutateAsync(row.original.name);
-          showSuccessNotification({
-            title: tTasks("trigger.success.title"),
-            message: tTasks("trigger.success.message"),
-          });
-        } catch (_error) {
-          showErrorNotification({
-            title: tTasks("trigger.error.title"),
-            message: tTasks("trigger.error.message"),
-          });
+          triggerMutation.mutate(row.original.name);
         } finally {
           const updatedStates = loadingStates.get(row.original.name) ?? {
             toggle: false,
@@ -326,11 +287,65 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
     },
   });
 
-  // Mutations
-  const triggerMutation = clientApi.cronJobs.triggerJob.useMutation();
-  const updateIntervalMutation = clientApi.cronJobs.updateJobInterval.useMutation();
-  const enableMutation = clientApi.cronJobs.enableJob.useMutation();
-  const disableMutation = clientApi.cronJobs.disableJob.useMutation();
+  const triggerMutation = clientApi.cronJobs.triggerJob.useMutation({
+    onError() {
+      showErrorNotification({
+        title: t("common.error"),
+        message: tTasks("trigger.error.message"),
+      });
+    },
+    onSuccess() {
+      showSuccessNotification({
+        title: t("common.success"),
+        message: tTasks("trigger.success.message"),
+      });
+    },
+  });
+  const updateIntervalMutation = clientApi.cronJobs.updateJobInterval.useMutation({
+    onError() {
+      showErrorNotification({
+        title: t("common.error"),
+        message: tTasks("interval.update.error.message"),
+      });
+    },
+    onSuccess: async () => {
+      await utils.cronJobs.getJobs.invalidate();
+      showSuccessNotification({
+        title: t("common.success"),
+        message: tTasks("interval.update.success.message"),
+      });
+    },
+  });
+  const enableMutation = clientApi.cronJobs.enableJob.useMutation({
+    onError() {
+      showErrorNotification({
+        title: t("common.error"),
+        message: tTasks("toggle.error.message"),
+      });
+    },
+    onSuccess: async () => {
+      await utils.cronJobs.getJobs.invalidate();
+      showSuccessNotification({
+        title: t("common.success"),
+        message: tTasks("enable.success.message"),
+      });
+    },
+  });
+  const disableMutation = clientApi.cronJobs.disableJob.useMutation({
+    onError() {
+      showErrorNotification({
+        title: t("common.error"),
+        message: tTasks("toggle.error.message"),
+      });
+    },
+    onSuccess: async () => {
+      await utils.cronJobs.getJobs.invalidate();
+      showSuccessNotification({
+        title: t("common.success"),
+        message: tTasks("disable.success.message"),
+      });
+    },
+  });
 
   // Utils for refresh functionality
   const utils = clientApi.useUtils();
@@ -338,12 +353,12 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
     try {
       await utils.cronJobs.getJobs.invalidate();
       showSuccessNotification({
-        title: tTasks("refresh.success.title"),
+        title: t("common.success"),
         message: tTasks("refresh.success.message"),
       });
-    } catch (_error) {
+    } catch {
       showErrorNotification({
-        title: tTasks("refresh.error.title"),
+        title: t("common.success"),
         message: tTasks("refresh.error.message"),
       });
     }
@@ -381,7 +396,6 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
       updateIntervalMutation,
       enableMutation,
       disableMutation,
-      utils,
       loadingStates,
     ),
   });
