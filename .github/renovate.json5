@@ -20,4 +20,5 @@
   automerge: false,
   baseBranches: ["dev"],
   dependencyDashboard: false,
+  minimumReleaseAge: "5 days",
 }
