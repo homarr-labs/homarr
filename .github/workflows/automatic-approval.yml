@@ -9,7 +9,7 @@ jobs:
     if: github.actor_id == 158783068 || github.actor_id == 190541745 || github.actor_id == 210161987 # Id of renovate bot and crowdin bot see https://api.github.com/users/homarr-renovate%5Bbot%5D and https://api.github.com/users/homarr-crowdin%5Bbot%5D and https://api.github.com/users/homarr-update-contributors%5Bbot%5D
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Obtain token
         id: obtainToken
         uses: tibdex/github-app-token@v2
