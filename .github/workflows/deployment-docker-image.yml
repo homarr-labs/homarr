@@ -53,7 +53,7 @@ jobs:
         with:
           private_key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
           app_id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: env.SKIP_RELEASE == 'false'
         with:
           persist-credentials: false
@@ -110,7 +110,7 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ needs.release.outputs.git_ref }}
 
@@ -149,7 +149,7 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ needs.release.outputs.git_ref }}
 
