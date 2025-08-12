@@ -995,6 +995,7 @@
     }
   },
   "common": {
+    "success": "Success",
     "beta": "Beta",
     "error": "Error",
     "action": {
@@ -3255,11 +3256,9 @@
             "weeklyMonday": "Every week on monday",
             "update": {
               "success": {
-                "title": "Success",
                 "message": "Interval updated successfully"
               },
               "error": {
-                "title": "Error",
                 "message": "Failed to update interval"
               }
             }
@@ -3291,39 +3290,32 @@
           },
           "refresh": {
             "success": {
-              "title": "Success",
               "message": "Tasks refreshed successfully"
             },
             "error": {
-              "title": "Error",
               "message": "Failed to refresh tasks"
             }
           },
           "trigger": {
             "success": {
-              "title": "Success",
               "message": "Task triggered successfully"
             },
             "error": {
-              "title": "Error",
               "message": "Failed to trigger task"
             }
           },
           "enable": {
             "success": {
-              "title": "Success",
               "message": "Task enabled successfully"
             }
           },
           "disable": {
             "success": {
-              "title": "Success",
               "message": "Task disabled successfully"
             }
           },
           "toggle": {
             "error": {
-              "title": "Error",
               "message": "Failed to toggle task status"
             }
           }
