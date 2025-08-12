@@ -358,7 +358,7 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
       });
     } catch {
       showErrorNotification({
-        title: t("common.success"),
+        title: t("common.error"),
         message: tTasks("refresh.error.message"),
       });
     }
