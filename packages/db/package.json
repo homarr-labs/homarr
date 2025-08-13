@@ -61,7 +61,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.13",
     "dotenv-cli": "^10.0.0",
-    "esbuild": "^0.25.8",
+    "esbuild": "^0.25.9",
     "eslint": "^9.33.0",
     "prettier": "^3.6.2",
     "tsx": "4.20.4",
