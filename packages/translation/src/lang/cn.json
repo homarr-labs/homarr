@@ -944,6 +944,14 @@
         "topic": {
           "label": "主题",
           "newLabel": "新主题"
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },

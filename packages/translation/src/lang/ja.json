@@ -944,6 +944,14 @@
         "topic": {
           "label": "トピック",
           "newLabel": "新規トピック"
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },

@@ -25,7 +25,7 @@ jobs:
           private_key: ${{ secrets.HOMARR_UPDATE_CONTRIBUTORS_PRIVATE_KEY }}
           app_id: ${{ vars.HOMARR_UPDATE_CONTRIBUTORS_APP_ID }}
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
       - name: Setup
