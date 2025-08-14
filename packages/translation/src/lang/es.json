@@ -69,15 +69,15 @@
         "notification": {
           "success": {
             "title": "Usuario creado",
-            "message": ""
+            "message": "El usuario se creó con éxito"
           },
           "error": {
-            "title": ""
+            "title": "Error al crear el usuario"
           }
         }
       },
       "group": {
-        "title": "",
+        "title": "Grupo externo",
         "subtitle": "Especifique el grupo que debe ser usado para usuarios externos.",
         "form": {
           "name": {
@@ -92,7 +92,7 @@
       },
       "finish": {
         "title": "Finalizar la configuración",
-        "subtitle": "",
+        "subtitle": "¡Estás listo para empezar!",
         "description": "Ha completado el proceso de configuración con éxito. Puede empezar a utilizar Homarr. Seleccione su siguiente paso:",
         "action": {
           "goToBoard": "Ir al tablero {name}",
