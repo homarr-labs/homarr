@@ -105,7 +105,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
 
   public async getFirewallMemoryAsync(): Promise<FirewallMemorySummary> {
     const responseMemory = await fetchWithTrustedCertificatesAsync(
-      this.url("/api/diagnostics/system/systemResources"),
+      this.url("/api/diagnostics/system/system_resources"),
       {
         headers: {
           Authorization: this.getAuthHeaders(),
