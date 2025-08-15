@@ -52,7 +52,7 @@
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "superjson": "2.2.2",
-    "trpc-to-openapi": "^3.0.0",
+    "trpc-to-openapi": "^3.0.1",
     "zod": "^4.0.14"
   },
   "devDependencies": {
