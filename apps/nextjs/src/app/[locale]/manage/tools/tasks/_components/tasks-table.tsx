@@ -30,6 +30,10 @@ const cronExpressions = [
     label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.seconds", { interval: 20 }),
   },
   {
+    value: "*/30 * * * * *",
+    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.seconds", { interval: 30 }),
+  },
+  {
     value: "* * * * *",
     label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.minutes", { interval: 1 }),
   },
