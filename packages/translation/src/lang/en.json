@@ -1003,6 +1003,7 @@
     }
   },
   "common": {
+    "success": "Success",
     "beta": "Beta",
     "error": "Error",
     "action": {
@@ -3260,14 +3261,70 @@
             "minutes": "Every {interval, plural, =1 {minute} other {# minutes}}",
             "hours": "Every {interval, plural, =1 {hour} other {# hours}}",
             "midnight": "Every day at midnight",
-            "weeklyMonday": "Every week on monday"
+            "weeklyMonday": "Every week on monday",
+            "update": {
+              "success": {
+                "message": "Interval updated successfully"
+              },
+              "error": {
+                "message": "Failed to update interval"
+              }
+            }
           },
           "settings": {
             "title": "Task settings for {jobName}"
           },
           "field": {
+            "name": {
+              "label": "Name"
+            },
             "interval": {
               "label": "Schedule interval"
+            },
+            "lastExecution": {
+              "label": "Last Execution"
+            },
+            "actions": {
+              "label": "Actions"
+            }
+          },
+          "table": {
+            "search": "Search {count} tasks..."
+          },
+          "action": {
+            "refresh": {
+              "label": "Refresh"
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": "Tasks refreshed successfully"
+            },
+            "error": {
+              "message": "Failed to refresh tasks"
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": "Task triggered successfully"
+            },
+            "error": {
+              "message": "Failed to trigger task"
+            }
+          },
+          "enable": {
+            "success": {
+              "message": "Task enabled successfully"
+            }
+          },
+          "disable": {
+            "success": {
+              "message": "Task disabled successfully"
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": "Failed to toggle task status"
             }
           }
         },
@@ -3776,6 +3833,9 @@
       },
       "tools": {
         "label": "Tools",
+        "tasks": {
+          "label": "Tasks"
+        },
         "docker": {
           "label": "Docker"
         },
