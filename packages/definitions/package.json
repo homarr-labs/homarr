@@ -25,14 +25,14 @@
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
     "fast-xml-parser": "^5.2.5",
-    "zod": "^3.25.76"
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.32.0",
-    "tsx": "4.20.3",
+    "eslint": "^9.33.0",
+    "tsx": "4.20.4",
     "typescript": "^5.9.2"
   }
 }

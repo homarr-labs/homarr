@@ -69,15 +69,15 @@
         "notification": {
           "success": {
             "title": "Usuario creado",
-            "message": ""
+            "message": "El usuario se creó con éxito"
           },
           "error": {
-            "title": ""
+            "title": "Error al crear el usuario"
           }
         }
       },
       "group": {
-        "title": "",
+        "title": "Grupo externo",
         "subtitle": "Especifique el grupo que debe ser usado para usuarios externos.",
         "form": {
           "name": {
@@ -92,7 +92,7 @@
       },
       "finish": {
         "title": "Finalizar la configuración",
-        "subtitle": "",
+        "subtitle": "¡Estás listo para empezar!",
         "description": "Ha completado el proceso de configuración con éxito. Puede empezar a utilizar Homarr. Seleccione su siguiente paso:",
         "action": {
           "goToBoard": "Ir al tablero {name}",
@@ -168,12 +168,12 @@
         "labelWith": "Iniciar sesión con {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Inicio de sesión exitoso",
+            "message": "Has iniciado sesión"
           },
           "error": {
             "title": "Inicio de sesión fallido",
-            "message": ""
+            "message": "Error al iniciar sesión"
           }
         },
         "forgotPassword": {
@@ -202,27 +202,27 @@
             "message": "La contraseña ha sido cambiada correctamente"
           },
           "error": {
-            "message": ""
+            "message": "No se puede cambiar la contraseña"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Tablero de inicio cambiado correctamente"
           },
           "error": {
-            "message": ""
+            "message": "No se pudo cambiar el tablero de inicio"
           }
         }
       },
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Preferencias de búsqueda cambiadas con éxito"
           },
           "error": {
-            "message": ""
+            "message": "No se pueden cambiar las preferencias de búsqueda"
           }
         }
       },
@@ -239,7 +239,7 @@
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Iconos de ping cambiados correctamente"
           },
           "error": {
             "message": ""
@@ -368,7 +368,7 @@
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integraciones",
         "item": {
           "create": {
             "label": "",
@@ -596,7 +596,7 @@
         "label": "Nombre"
       },
       "description": {
-        "label": ""
+        "label": "Descripción"
       },
       "url": {
         "label": ""
@@ -942,6 +942,14 @@
           "newLabel": ""
         },
         "topic": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
           "label": "",
           "newLabel": ""
         }
@@ -2344,7 +2352,7 @@
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
-      "projectDescription": "",
+      "projectDescription": "Descripción del proyecto",
       "created": "",
       "error": {
         "label": "",

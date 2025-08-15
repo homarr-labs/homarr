@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import type { Database } from "@homarr/db";
 import { and, eq } from "@homarr/db";

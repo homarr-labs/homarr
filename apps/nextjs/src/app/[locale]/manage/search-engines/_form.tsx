@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { SegmentedControlItem } from "@mantine/core";
 import { Button, Fieldset, Grid, Group, SegmentedControl, Stack, Textarea, TextInput } from "@mantine/core";
 import { WidgetIntegrationSelect } from "node_modules/@homarr/widgets/src/widget-integration-select";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { searchEngineTypes } from "@homarr/definitions";

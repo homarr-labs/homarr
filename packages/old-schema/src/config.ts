@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { oldmarrAppSchema } from "./app";
 import { settingsSchema } from "./setting";

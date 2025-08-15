@@ -1,5 +1,5 @@
 import AdmZip from "adm-zip";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { logger } from "@homarr/log";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
