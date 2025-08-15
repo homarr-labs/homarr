@@ -81,8 +81,18 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
 
   private async getCurrentCpuLoadAsync() {
     const channel = this.getChannel();
-    const cpu = await fetchWithTrustedCertificatesAsync(this.url("/load/cpu"));
-    const data = await cpuLoadPerCoreApiList.parseAsync(await cpu.json());
+    const response = await fetchWithTrustedCertificatesAsync(this.url("/load/cpu"));
+    const result = await response.text();
+
+    // we convert it to text as the response is either valid json or empty if cpu widget is disabled.
+    if (result.length === 0) {
+      return {
+        sumLoad: 0,
+        averageTemperature: 0,
+      };
+    }
+
+    const data = await cpuLoadPerCoreApiList.parseAsync(JSON.parse(result));
     await channel.pushAsync(data);
     return {
       sumLoad: this.getAverageOfCpu(data),
@@ -104,12 +114,27 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
 
   private async getCurrentStorageLoadAsync() {
     const storageLoad = await fetchWithTrustedCertificatesAsync(this.url("/load/storage"));
-    return (await storageLoad.json()) as number[];
+    // we convert it to text as the response is either valid json or empty if storage widget is disabled.
+    const result = await storageLoad.text();
+    if (result.length === 0) {
+      return [];
+    }
+
+    return JSON.parse(result) as number[];
   }
 
   private async getCurrentMemoryLoadAsync() {
     const memoryLoad = await fetchWithTrustedCertificatesAsync(this.url("/load/ram"));
-    const data = await memoryLoadApi.parseAsync(await memoryLoad.json());
+    const result = (await memoryLoad.json()) as object;
+
+    // somehow the response here is not empty and rather an empty json object if the ram widget is disabled.
+    if (Object.keys(result).length === 0) {
+      return {
+        loadInBytes: 0,
+      };
+    }
+
+    const data = await memoryLoadApi.parseAsync(result);
     return {
       loadInBytes: data.load,
     };
@@ -117,7 +142,12 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
 
   private async getCurrentNetworkLoadAsync() {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/load/network"));
-    return await networkLoadApi.parseAsync(await response.json());
+    const result = await response.text();
+
+    // we convert it to text as the response is either valid json or empty if network widget is disabled.
+    if (result.length === 0) return null;
+
+    return await networkLoadApi.parseAsync(JSON.parse(result));
   }
 
   private getChannel() {
