@@ -168,12 +168,12 @@
         "labelWith": "Iniciar sesión con {provider}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Inicio de sesión exitoso",
+            "message": "Has iniciado sesión"
           },
           "error": {
             "title": "Inicio de sesión fallido",
-            "message": ""
+            "message": "Error al iniciar sesión"
           }
         },
         "forgotPassword": {
@@ -202,27 +202,27 @@
             "message": "La contraseña ha sido cambiada correctamente"
           },
           "error": {
-            "message": ""
+            "message": "No se puede cambiar la contraseña"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Tablero de inicio cambiado correctamente"
           },
           "error": {
-            "message": ""
+            "message": "No se pudo cambiar el tablero de inicio"
           }
         }
       },
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Preferencias de búsqueda cambiadas con éxito"
           },
           "error": {
-            "message": ""
+            "message": "No se pueden cambiar las preferencias de búsqueda"
           }
         }
       },
@@ -239,7 +239,7 @@
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Iconos de ping cambiados correctamente"
           },
           "error": {
             "message": ""
