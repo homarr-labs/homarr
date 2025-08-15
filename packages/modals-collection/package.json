@@ -39,7 +39,7 @@
     "next": "15.4.6",
     "react": "19.1.1",
     "react-dom": "19.1.1",
-    "zod": "^3.25.76"
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

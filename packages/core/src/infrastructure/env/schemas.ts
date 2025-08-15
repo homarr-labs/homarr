@@ -1,19 +1,16 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const trueStrings = ["1", "yes", "t", "true"];
 const falseStrings = ["0", "no", "f", "false"];
 
 export const createBooleanSchema = (defaultValue: boolean) =>
   z
-    .string()
-    .default(defaultValue.toString())
-    .transform((value, ctx) => {
-      const normalized = value.trim().toLowerCase();
-      if (trueStrings.includes(normalized)) return true;
-      if (falseStrings.includes(normalized)) return false;
-
-      throw new Error(`Invalid boolean value for ${ctx.path.join(".")}`);
-    });
+    .stringbool({
+      truthy: trueStrings,
+      falsy: falseStrings,
+      case: "insensitive",
+    })
+    .default(defaultValue);
 
 export const createDurationSchema = (defaultValue: `${number}${"s" | "m" | "h" | "d"}`) =>
   z

@@ -1,5 +1,5 @@
 import type { fetch as undiciFetch, Response as UndiciResponse } from "undici";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
