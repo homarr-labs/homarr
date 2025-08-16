@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "Show app name"
         },
-        "showDescriptionTooltip": {
-          "label": "Show description tooltip"
-        },
         "pingEnabled": {
           "label": "Enable status check"
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "Horizontal (reversed)",
             "column": "Vertical",
             "column-reverse": "Vertical (reversed)"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "Description display mode",
+          "description": "Choose how to display the app description",
+          "option": {
+            "normal": "Within widget",
+            "tooltip": "As tooltip during hover",
+            "hidden": "Hidden"
           }
         }
       },

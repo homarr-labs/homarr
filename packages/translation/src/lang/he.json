@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "הצג את שם האפליקציה"
         },
-        "showDescriptionTooltip": {
-          "label": "הצג תיאור"
-        },
         "pingEnabled": {
           "label": "אפשר בדיקת מצב"
         }
