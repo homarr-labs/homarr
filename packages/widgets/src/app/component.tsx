@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { Suspense } from "react";
+import { Fragment, Suspense } from "react";
 import { Flex, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconLoader } from "@tabler/icons-react";
 import combineClasses from "clsx";
@@ -65,7 +65,12 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
       enabled={Boolean(app.href) && !isEditMode}
     >
       <Tooltip.Floating
-        label={app.description}
+        label={app.description?.split("\n").map((line, index) => (
+          <Fragment key={index}>
+            {line}
+            <br />
+          </Fragment>
+        ))}
         position="right-start"
         multiline
         disabled={!options.showDescriptionTooltip || !app.description}

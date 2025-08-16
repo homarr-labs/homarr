@@ -97,7 +97,13 @@ export const AppForm = ({
       <Stack>
         <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
         <IconPicker {...form.getInputProps("iconUrl")} />
-        <Textarea {...form.getInputProps("description")} label={t("app.field.description.label")} />
+        <Textarea
+          {...form.getInputProps("description")}
+          label={t("app.field.description.label")}
+          autosize
+          minRows={2}
+          resize="vertical"
+        />
         <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
 
         <Checkbox
