@@ -32,7 +32,7 @@ const getWebSocketProtocol = () => {
 };
 
 const constructWebsocketUrl = () => {
-  const fallback = `${getWebSocketProtocol()}://localhost:3001/websockets`;
+  const fallback = `${getWebSocketProtocol()}://localhost:${process.env.UNSAFE_WEBSOCKET_PORT ?? 3001}/websockets`;
   if (typeof window === "undefined") {
     return fallback;
   }
