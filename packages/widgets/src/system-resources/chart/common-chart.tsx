@@ -42,7 +42,7 @@ export const CommonChart = ({
       pos={"relative"}
       style={{ overflow: "visible" }}
       p={0}
-      bg={data.length <= 1 ? backgroundColor : undefined}
+      bg={backgroundColor}
       radius={board.itemRadius}
     >
       {data.length > 1 && height > 40 && !hovered && (
