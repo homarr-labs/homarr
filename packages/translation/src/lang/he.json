@@ -1003,6 +1003,7 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "בטא",
     "error": "שגיאה",
     "action": {
@@ -3260,14 +3261,70 @@
             "minutes": "כל {interval, plural, =1 {minute} other {# minutes}}",
             "hours": "כל {interval, plural, =1 {hour} other {# hours}}",
             "midnight": "כל יום בחצות",
-            "weeklyMonday": "כל שבוע ביום שני"
+            "weeklyMonday": "כל שבוע ביום שני",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
           },
           "settings": {
             "title": "הגדרות משימה עבור {jobName}"
           },
           "field": {
+            "name": {
+              "label": ""
+            },
             "interval": {
               "label": "מרווח זמן לתזמון"
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3776,6 +3833,9 @@
       },
       "tools": {
         "label": "כלים",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": "דוקר"
         },
