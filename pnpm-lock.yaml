@@ -1250,8 +1250,8 @@ importers:
         specifier: ^8.2.4
         version: 8.2.4(react@19.1.1)
       mantine-form-zod-resolver:
-        specifier: ^1.2.1
-        version: 1.2.1(@mantine/form@8.2.4(react@19.1.1))(zod@4.0.17)
+        specifier: ^1.3.0
+        version: 1.3.0(@mantine/form@8.2.4(react@19.1.1))(zod@4.0.17)
       zod:
         specifier: ^4.0.17
         version: 4.0.17
@@ -2293,8 +2293,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       mantine-form-zod-resolver:
-        specifier: ^1.2.1
-        version: 1.2.1(@mantine/form@8.2.4(react@19.1.1))(zod@4.0.17)
+        specifier: ^1.3.0
+        version: 1.3.0(@mantine/form@8.2.4(react@19.1.1))(zod@4.0.17)
       mantine-react-table:
         specifier: 2.0.0-beta.9
         version: 2.0.0-beta.9(@mantine/core@8.2.4(@mantine/hooks@8.2.4(react@19.1.1))(@types/react@19.1.10)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/dates@8.2.4(@mantine/core@8.2.4(@mantine/hooks@8.2.4(react@19.1.1))(@types/react@19.1.10)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/hooks@8.2.4(react@19.1.1))(dayjs@1.11.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/hooks@8.2.4(react@19.1.1))(@tabler/icons-react@3.34.1(react@19.1.1))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -8021,8 +8021,8 @@ packages:
   make-error@1.3.6:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
 
-  mantine-form-zod-resolver@1.2.1:
-    resolution: {integrity: sha512-8Y7jX3ybZEhQeLzkbrzCS9gulnCX7sgjM5bCkRDxQHbmal8V5lLM9yZq583UEme8DuM77x/BJNTrBkYZo+JUFw==}
+  mantine-form-zod-resolver@1.3.0:
+    resolution: {integrity: sha512-XlXXkJCYuUuOllW0zedYW+m/lbdFQ/bso1Vz+pJOYkxgjhoGvzN2EXWCS2+0iTOT9Q7WnOwWvHmvpTJN3PxSXw==}
     engines: {node: '>=16.6.0'}
     peerDependencies:
       '@mantine/form': '>=7.0.0'
@@ -17292,7 +17292,7 @@ snapshots:
 
   make-error@1.3.6: {}
 
-  mantine-form-zod-resolver@1.2.1(@mantine/form@8.2.4(react@19.1.1))(zod@4.0.17):
+  mantine-form-zod-resolver@1.3.0(@mantine/form@8.2.4(react@19.1.1))(zod@4.0.17):
     dependencies:
       '@mantine/form': 8.2.4(react@19.1.1)
       zod: 4.0.17
