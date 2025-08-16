@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "Pokaż nazwę aplikacji"
         },
-        "showDescriptionTooltip": {
-          "label": "Pokaż opis podpowiedzi"
-        },
         "pingEnabled": {
           "label": "Włącz prosty ping"
         }

@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "Alkalmazás nevének megjelenítése"
         },
-        "showDescriptionTooltip": {
-          "label": "Leírás elemleírás megjelenítése"
-        },
         "pingEnabled": {
           "label": "Egyszerű ping engedélyezése"
         }

@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "Zobraziť názov aplikácie"
         },
-        "showDescriptionTooltip": {
-          "label": "Zobrazenie nápovedy k popisu"
-        },
         "pingEnabled": {
           "label": "Povoliť jednoduchý ping"
         }
