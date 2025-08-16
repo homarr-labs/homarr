@@ -23,28 +23,28 @@ export const { definition, componentLoader } = createWidgetDefinition("app", {
           options: [
             {
               label(t) {
-                return t(`widget.app.option.layout.option.column`);
+                return t("widget.app.option.layout.option.column");
               },
               value: "column",
               icon: IconLayoutNavbarExpand,
             },
             {
               label(t) {
-                return t(`widget.app.option.layout.option.column-reverse`);
+                return t("widget.app.option.layout.option.column-reverse");
               },
               value: "column-reverse",
               icon: IconLayoutBottombarExpand,
             },
             {
               label(t) {
-                return t(`widget.app.option.layout.option.row`);
+                return t("widget.app.option.layout.option.row");
               },
               value: "row",
               icon: IconLayoutSidebarLeftExpand,
             },
             {
               label(t) {
-                return t(`widget.app.option.layout.option.row-reverse`);
+                return t("widget.app.option.layout.option.row-reverse");
               },
               value: "row-reverse",
               icon: IconLayoutSidebarRightExpand,
