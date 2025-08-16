@@ -39,6 +39,7 @@ export const mapApp = (
       pingEnabled: app.network.enabledStatusChecker,
       showDescriptionTooltip: app.behaviour.tooltipDescription !== "",
       showTitle: app.appearance.appNameStatus === "normal",
+      layout: app.appearance.positionAppName,
     } satisfies WidgetComponentProps<"app">["options"]),
     layouts: boardSizes.map((size) => {
       const shapeForSize = app.shape[size];
