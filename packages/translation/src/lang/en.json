@@ -1271,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": "Enable status check"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "row": "Horizontal",
+            "row-reverse": "Horizontal (reversed)",
+            "column": "Vertical",
+            "column-reverse": "Vertical (reversed)"
+          }
         }
       },
       "error": {
