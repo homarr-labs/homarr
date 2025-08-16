@@ -1003,6 +1003,7 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "",
     "error": "Fel",
     "action": {
@@ -3260,14 +3261,70 @@
             "minutes": "",
             "hours": "",
             "midnight": "Varje dag vid midnatt",
-            "weeklyMonday": "Varje vecka på måndag"
+            "weeklyMonday": "Varje vecka på måndag",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
           },
           "settings": {
             "title": ""
           },
           "field": {
+            "name": {
+              "label": ""
+            },
             "interval": {
               "label": ""
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3776,6 +3833,9 @@
       },
       "tools": {
         "label": "Verktyg",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": ""
         },
