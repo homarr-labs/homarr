@@ -39,7 +39,7 @@
     "dotenv": "^17.2.1",
     "fastify": "^5.5.0",
     "superjson": "2.2.2",
-    "undici": "7.13.0"
+    "undici": "7.14.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
