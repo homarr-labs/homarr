@@ -22,13 +22,14 @@
     "lint:ws": "pnpm dlx sherif@latest",
     "package:new": "turbo gen init",
     "release": "semantic-release",
+    "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
+    "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
     "start": "concurrently \"pnpm with-env node apps/tasks/tasks.cjs\" \"pnpm with-env node apps/websocket/wssServer.cjs\" \"pnpm -F nextjs start\"",
     "test": "cross-env NODE_ENV=development CI=true vitest run --exclude e2e --coverage.enabled ",
     "test:e2e": "cross-env NODE_ENV=development CI=true vitest e2e",
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --exclude e2e --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
-    "with-env": "dotenv -e .env --",
-    "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts"
+    "with-env": "dotenv -e .env --"
   },
   "prettier": "@homarr/prettier-config",
   "devDependencies": {

@@ -37,6 +37,7 @@ yarn-error.log*
 # local env files
 .env
 .env*.local
+.act-env
 
 # vercel
 .vercel
@@ -68,3 +69,5 @@ apps/nextjs/public/images/background.png
 
 # next-intl
 en.d.json.ts
+
+.pnpm-store/
