@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  proxmox-api>undici: 7.13.0
+  proxmox-api>undici: 7.14.0
 
 patchedDependencies:
   '@types/node-unifi':
@@ -10458,6 +10458,10 @@ packages:
     resolution: {integrity: sha512-l+zSMssRqrzDcb3fjMkjjLGmuiiK2pMIcV++mJaAc9vhjSGpvM7h43QgP+OAMb1GImHmbPyG2tBXeuyG5iY4gA==}
     engines: {node: '>=20.18.1'}
 
+  undici@7.14.0:
+    resolution: {integrity: sha512-Vqs8HTzjpQXZeXdpsfChQTlafcMQaaIwnGwLam1wudSSjlJeQ3bw1j+TLPePgrCnCpUXx7Ba5Pdpf5OBih62NQ==}
+    engines: {node: '>=20.18.1'}
+
   unicode-emoji-modifier-base@1.0.0:
     resolution: {integrity: sha512-yLSH4py7oFH3oG/9K+XWrz1pSi3dfUrWEnInbxMfArOfc1+33BlGPQtLsOYwvdMy11AwUBetYuaRxSPqgkq+8g==}
     engines: {node: '>=4'}
@@ -18493,7 +18497,7 @@ snapshots:
 
   proxmox-api@1.1.1:
     dependencies:
-      undici: 7.13.0
+      undici: 7.14.0
 
   proxy-agent@6.5.0:
     dependencies:
@@ -20178,6 +20182,8 @@ snapshots:
   undici-types@6.21.0: {}
 
   undici@7.13.0: {}
+
+  undici@7.14.0: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 
