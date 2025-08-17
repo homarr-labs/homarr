@@ -1,5 +1,6 @@
 import SuperJSON from "superjson";
 
+import { eq } from "../..";
 import type { Database } from "../..";
 import { items } from "../../schema";
 
@@ -26,12 +27,15 @@ export async function migrateAppWidgetShowDescriptionTooltipToDisplayModeAsync(d
   await Promise.all(
     itemsToUpdate.map(async (item) => {
       const { showDescriptionTooltip, ...options } = item.options;
-      await db.update(items).set({
-        options: SuperJSON.stringify({
-          ...options,
-          descriptionDisplayMode: showDescriptionTooltip ? "tooltip" : "hidden",
-        }),
-      });
+      await db
+        .update(items)
+        .set({
+          options: SuperJSON.stringify({
+            ...options,
+            descriptionDisplayMode: showDescriptionTooltip ? "tooltip" : "hidden",
+          }),
+        })
+        .where(eq(items.id, item.id));
     }),
   );
 
