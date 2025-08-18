@@ -1271,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": "Activer la vérification du statut"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
         }
       },
       "error": {

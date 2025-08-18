@@ -1271,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": "Aktiver statustjek"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
         }
       },
       "error": {
