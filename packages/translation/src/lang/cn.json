@@ -1271,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": "启用状态检查"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
         }
       },
       "error": {
