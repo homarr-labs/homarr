@@ -1003,6 +1003,7 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "Beta",
     "error": "エラー",
     "action": {
@@ -1270,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": "ステータスチェックを有効にする"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
         }
       },
       "error": {
@@ -3260,14 +3270,70 @@
             "minutes": "{interval, plural, =1 {分} other {# 分}}周期",
             "hours": "{interval, plural, =1 {時間} other {# 時間}}周期",
             "midnight": "毎日深夜",
-            "weeklyMonday": "毎週月曜日"
+            "weeklyMonday": "毎週月曜日",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
           },
           "settings": {
             "title": "{jobName} の タスク設定"
           },
           "field": {
+            "name": {
+              "label": ""
+            },
             "interval": {
               "label": "スケジュール間隔"
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3776,6 +3842,9 @@
       },
       "tools": {
         "label": "ツール",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": "Docker"
         },

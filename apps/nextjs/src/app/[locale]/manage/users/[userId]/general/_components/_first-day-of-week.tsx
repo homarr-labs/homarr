@@ -4,7 +4,7 @@ import { Button, Group, Radio, Stack } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import dayjs from "dayjs";
 import localeData from "dayjs/plugin/localeData";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

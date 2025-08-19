@@ -1,3 +1,25 @@
+## [1.33.0](https://github.com/homarr-labs/homarr/compare/v1.32.0...v1.33.0) (2025-08-15)
+
+### Features
+
+* **tasks:** replace card layout with table interface for better UX ([#3804](https://github.com/homarr-labs/homarr/issues/3804)) ([9d14fcb](https://github.com/homarr-labs/homarr/commit/9d14fcba3646485d73d20455552e56602a346736))
+
+### Bug Fixes
+
+* **dashdot:** disabled widgets cause parse errors ([#3861](https://github.com/homarr-labs/homarr/issues/3861)) ([b7455d1](https://github.com/homarr-labs/homarr/commit/b7455d18edb3f4a76e9aec35f715cc722b13f0c3))
+* **deps:** update dependency @ianvs/prettier-plugin-sort-imports to ^4.6.2 ([#3854](https://github.com/homarr-labs/homarr/issues/3854)) ([8a4198d](https://github.com/homarr-labs/homarr/commit/8a4198db7e7fcb1e8556cf92c51888779ac6b614))
+* **deps:** update dependency fastify to ^5.5.0 ([#3836](https://github.com/homarr-labs/homarr/issues/3836)) ([ff1e02e](https://github.com/homarr-labs/homarr/commit/ff1e02ec78b31a9cd155828b2f143fbae8e15b88))
+* **deps:** update dependency jotai to ^2.13.1 ([#3834](https://github.com/homarr-labs/homarr/issues/3834)) ([5fe5d6f](https://github.com/homarr-labs/homarr/commit/5fe5d6f64d5c5b4096db8d4b2c7aefeab1fcef31))
+* **deps:** update dependency tsx to v4.20.4 ([#3845](https://github.com/homarr-labs/homarr/issues/3845)) ([7a4961e](https://github.com/homarr-labs/homarr/commit/7a4961e9ad3e58ab09160f5cb7f0d8968f16d73a))
+* **deps:** update dependency typescript-eslint to ^8.39.1 ([#3840](https://github.com/homarr-labs/homarr/issues/3840)) ([433be5e](https://github.com/homarr-labs/homarr/commit/433be5e82cbfb557bc1f69f119505c58f2612d25))
+* **deps:** update tanstack-query monorepo to ^5.85.0 ([#3846](https://github.com/homarr-labs/homarr/issues/3846)) ([7d123b8](https://github.com/homarr-labs/homarr/commit/7d123b83e05a43d86d3822155cd9ed9d5cd4b55d))
+* **deps:** update tanstack-query monorepo to ^5.85.1 ([#3858](https://github.com/homarr-labs/homarr/issues/3858)) ([70ce3e1](https://github.com/homarr-labs/homarr/commit/70ce3e168b0220486f90ef434ade61047de2ccb6))
+* **deps:** update tanstack-query monorepo to ^5.85.2 ([#3859](https://github.com/homarr-labs/homarr/issues/3859)) ([e9cb878](https://github.com/homarr-labs/homarr/commit/e9cb878169b151c6090e2b736f6597be934bf4b5))
+* **deps:** update tanstack-query monorepo to ^5.85.3 ([#3860](https://github.com/homarr-labs/homarr/issues/3860)) ([c72c154](https://github.com/homarr-labs/homarr/commit/c72c154305bc40fbaae728f3bffeeee065ab819d))
+* **deps:** update turbo monorepo to ^2.5.6 ([#3865](https://github.com/homarr-labs/homarr/issues/3865)) ([98d344c](https://github.com/homarr-labs/homarr/commit/98d344c4b7f88fd0b7c6ce508b30cefd47f98ce5))
+* **deps:** upgrade zod to v4 and fix breaking changes ([#3461](https://github.com/homarr-labs/homarr/issues/3461)) ([5c99622](https://github.com/homarr-labs/homarr/commit/5c99622fa86b7b0721384f089862a8405a27a61e))
+* **mysql:** increase max media size restricted from 16kb to 4gb ([#3839](https://github.com/homarr-labs/homarr/issues/3839)) ([7ffcd1a](https://github.com/homarr-labs/homarr/commit/7ffcd1a08ede840cf67da2c74a4ba0965645a673))
+
 ## [1.32.0](https://github.com/homarr-labs/homarr/compare/v1.31.0...v1.32.0) (2025-08-08)
 
 ### Features

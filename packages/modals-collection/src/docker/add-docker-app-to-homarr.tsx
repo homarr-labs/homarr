@@ -1,5 +1,5 @@
 import { Avatar, Button, Group, List, LoadingOverlay, Stack, Text, TextInput } from "@mantine/core";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

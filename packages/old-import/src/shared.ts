@@ -1,2 +1,2 @@
-export { importJsonFileSchema, superRefineJsonImportFile, oldmarrImportConfigurationSchema } from "./settings";
+export { importJsonFileSchema, checkJsonImportFile, oldmarrImportConfigurationSchema } from "./settings";
 export type { OldmarrImportConfiguration } from "./settings";

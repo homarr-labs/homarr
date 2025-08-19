@@ -42,7 +42,7 @@ import type {
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
-    return "BLOB";
+    return "LONGBLOB"; // Has max size of 4GB
   },
 });
 

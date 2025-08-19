@@ -1,5 +1,5 @@
 import { Button, Group, Stack, TextInput } from "@mantine/core";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";

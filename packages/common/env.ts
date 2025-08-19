@@ -1,5 +1,5 @@
 import { randomBytes } from "crypto";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { createEnv } from "@homarr/core/infrastructure/env";
 
@@ -12,7 +12,7 @@ export const env = createEnv({
   server: {
     SECRET_ENCRYPTION_KEY: z
       .string({
-        required_error: `SECRET_ENCRYPTION_KEY is required${errorSuffix}`,
+        error: `SECRET_ENCRYPTION_KEY is required${errorSuffix}`,
       })
       .min(64, {
         message: `SECRET_ENCRYPTION_KEY has to be 64 characters${errorSuffix}`,
