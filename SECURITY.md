@@ -9,20 +9,7 @@ We consider something as a vulnerability if it...
 
 ## Supported Versions
 
-<table>
-    <tr>
-        <th>Version</th>
-        <th>Supported</th>
-    </tr>
-    <tr>
-        <td>&gt;1.33.0</td>
-        <td>✅</td>
-    </tr>
-    <tr>
-        <td>&lt;1.33.0</td>
-        <td>❌</td>
-    </tr>
-</table>
+We only fix security issues in the [latest stable version](https://github.com/homarr-labs/homarr/releases/latest). Meaning security issues in prior versions will not be fixed and users have to upgrade to the latest version to receive them.
 
 ## Reporting a Vulnerability
 
