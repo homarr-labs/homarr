@@ -1273,12 +1273,12 @@
           "label": "Durum denetimini etkinleştir"
         },
         "layout": {
-          "label": "",
+          "label": "Düzen",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Yatay",
+            "row-reverse": "Yatay (ters)",
+            "column": "Dikey",
+            "column-reverse": "Dikey (ters)"
           }
         }
       },
