@@ -24,7 +24,6 @@
     "release": "semantic-release",
     "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
     "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
-    "scripts:update-security-policy": "tsx ./scripts/update-security-policy.mts",
     "start": "concurrently \"pnpm with-env node apps/tasks/tasks.cjs\" \"pnpm with-env node apps/websocket/wssServer.cjs\" \"pnpm -F nextjs start\"",
     "test": "cross-env NODE_ENV=development CI=true vitest run --exclude e2e --coverage.enabled ",
     "test:e2e": "cross-env NODE_ENV=development CI=true vitest e2e",
