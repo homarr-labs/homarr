@@ -4,15 +4,15 @@
       "start": {
         "title": "Bienvenido a Homarr",
         "subtitle": "Comencemos con la configuración de tu instancia de Homarr.",
-        "description": "Para empezar, por favor, seleccione cómo desea configurar su instancia de Homarr.",
+        "description": "Para empezar, por favor, selecciona cómo deseas configurar tu instancia de Homarr.",
         "action": {
           "scratch": "Empezar de cero",
-          "importOldmarr": "Importar desde Homarr antes de la versión 1.0"
+          "importOldmarr": "Importar desde una versión anterior a Homarr 1.0"
         }
       },
       "import": {
         "title": "Importar datos",
-        "subtitle": "Puedes importar datos de una instancia de Homarr existente.",
+        "subtitle": "Puedes importar datos desde una instancia de Homarr existente.",
         "dropzone": {
           "title": "Arrastre el archivo ZIP aquí o haga clic para navegar",
           "description": "El archivo ZIP subido será procesado y podrás seleccionar lo que quieres importar"
@@ -31,12 +31,12 @@
           "description": "Elige todos los tableros con el tamaño que deseas para importar",
           "action": {
             "selectAll": "Seleccionar todo",
-            "unselectAll": "Deseleccionar todo"
+            "unselectAll": "Deshacer selección"
           }
         },
         "summary": {
-          "title": "Resumen de importación",
-          "description": "En el resumen de abajo puedes ver qué se importará",
+          "title": "Resumen de la importación",
+          "description": "En el resumen que se muestra a continuación puedes ver qué se importará",
           "action": {
             "import": "Confirmar la importación y continuar"
           },
@@ -52,13 +52,13 @@
           "field": {
             "token": {
               "label": "Token",
-              "description": "Introduzca el token de importación mostrado de su instancia anterior de homarr"
+              "description": "Introduzca el token de importación mostrado de su anterior instancia de Homarr"
             }
           },
           "notification": {
             "error": {
               "title": "Token inválido",
-              "message": "El código que has introducido no es válido"
+              "message": "El token que has introducido no es válido"
             }
           }
         }
@@ -93,12 +93,12 @@
       "finish": {
         "title": "Finalizar la configuración",
         "subtitle": "¡Estás listo para empezar!",
-        "description": "Ha completado el proceso de configuración con éxito. Puede empezar a utilizar Homarr. Seleccione su siguiente paso:",
+        "description": "Has completado el proceso de configuración inicial con éxito. Puedes empezar a utilizar Homarr. Selecciona tu próxima tarea:",
         "action": {
           "goToBoard": "Ir al tablero {name}",
           "createBoard": "Crea tu primer tablero",
-          "inviteUser": "Invite a otros usuarios",
-          "docs": "Consulte la documentación"
+          "inviteUser": "Invita a otros usuarios",
+          "docs": "Consulta la documentación"
         }
       }
     },
@@ -110,16 +110,16 @@
     "page": {
       "login": {
         "title": "Inicia sesión en tu cuenta",
-        "subtitle": "¡Bienvenido de nuevo! Por favor introduzca sus credenciales"
+        "subtitle": "¡Bienvenido de nuevo! Por favor introduce tus credenciales"
       },
       "invite": {
-        "title": "Unase a Homarr",
-        "subtitle": "¡Bienvenido a Homarr! Por favor cree su cuenta",
-        "description": "Usted fue invitado por {username}"
+        "title": "Únete a Homarr",
+        "subtitle": "¡Bienvenido a Homarr! Por favor crea tu cuenta",
+        "description": "Fuiste invitado por {username}"
       },
       "init": {
         "title": "Nueva instalación de Homarr",
-        "subtitle": "Por favor, cree el usuario administrador principal"
+        "subtitle": "Por favor, crea el usuario administrador principal"
       }
     },
     "field": {
@@ -134,10 +134,10 @@
         "label": "Contraseña",
         "requirement": {
           "length": "Incluye al menos 8 caracteres",
-          "lowercase": "Incluye letra minúscula",
-          "uppercase": "Incluye letra mayúscula",
-          "number": "Incluye número",
-          "special": "Incluye símbolos especiales"
+          "lowercase": "Incluye al menos una letra minúscula",
+          "uppercase": "Incluye al menos una letra mayúscula",
+          "number": "Incluye al menos un número",
+          "special": "Incluye al menos un símbolo especial"
         }
       },
       "passwordConfirm": {
@@ -147,7 +147,7 @@
         "label": "Contraseña anterior"
       },
       "homeBoard": {
-        "label": "Tablero principal"
+        "label": "Tablero de inicio"
       },
       "pingIconsEnabled": {
         "label": "Usar iconos para pings"
@@ -156,7 +156,7 @@
         "label": "Motor de búsqueda predeterminado"
       },
       "openSearchInNewTab": {
-        "label": "Abrir los resultados de búsqueda en una nueva pestaña"
+        "label": "Abrir resultados de búsqueda en una nueva pestaña"
       }
     },
     "error": {
@@ -177,8 +177,8 @@
           }
         },
         "forgotPassword": {
-          "label": "¿Ha olvidado su contraseña?",
-          "description": "Un administrador puede usar el siguiente comando para restablecer su contraseña:"
+          "label": "¿Has olvidado tu contraseña?",
+          "description": "Un administrador puede utilizar el siguiente comando para restablecer tu contraseña:"
         }
       },
       "register": {
@@ -202,75 +202,75 @@
             "message": "La contraseña ha sido cambiada correctamente"
           },
           "error": {
-            "message": "No se puede cambiar la contraseña"
+            "message": "No se pudo cambiar la contraseña"
           }
         }
       },
       "changeHomeBoard": {
         "notification": {
           "success": {
-            "message": "Tablero de inicio cambiado correctamente"
+            "message": "Tablero de inicio modificado con éxito"
           },
           "error": {
-            "message": "No se pudo cambiar el tablero de inicio"
+            "message": "No se pudo modificar el tablero de inicio"
           }
         }
       },
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": "Preferencias de búsqueda cambiadas con éxito"
+            "message": "Preferencias de búsqueda modificadas con éxito"
           },
           "error": {
-            "message": "No se pueden cambiar las preferencias de búsqueda"
+            "message": "No se pudieron modificar las preferencias de búsqueda"
           }
         }
       },
       "changeFirstDayOfWeek": {
         "notification": {
           "success": {
-            "message": "Primer día de la semana cambiado con éxito"
+            "message": "Primer día de la semana modificado con éxito"
           },
           "error": {
-            "message": "No se ha podido cambiar el primer día de la semana"
+            "message": "No se pudo modificar el primer día de la semana"
           }
         }
       },
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": "Iconos de ping cambiados correctamente"
+            "message": "Iconos de ping modificados correctamente"
           },
           "error": {
-            "message": ""
+            "message": "No se pudieron modificar los iconos de ping"
           }
         }
       },
       "manageAvatar": {
         "changeImage": {
-          "label": "",
+          "label": "Cambiar imagen",
           "notification": {
             "success": {
               "message": "La imagen ha sido cambiada con éxito"
             },
             "error": {
-              "message": "No se puede cambiar la imagen"
+              "message": "No se pudo modificar la imagen"
             },
             "toLarge": {
               "title": "La imagen es demasiado grande",
-              "message": "El tamaño máximo de la imagen es {size}"
+              "message": "El tamaño máximo de la imagen es de {size}"
             }
           }
         },
         "removeImage": {
-          "label": "Eliminar imágen",
+          "label": "Eliminar imagen",
           "confirm": "Por favor, confirma que deseas eliminar esta imagen",
           "notification": {
             "success": {
               "message": "Imagen eliminada con éxito"
             },
             "error": {
-              "message": ""
+              "message": "No se puede eliminar la imagen"
             }
           }
         }
@@ -281,38 +281,38 @@
             "message": "Perfil actualizado con éxito"
           },
           "error": {
-            "message": ""
+            "message": "El perfil no ha podido ser actualizado"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "¿Estás seguro de que quieres eliminar el usuario {username} con sus preferencias?"
+        "label": "Eliminar usuario permanentemente",
+        "description": "Elimina este usuario incluyendo sus preferencias. No eliminará ningún tablero. El usuario no será notificado.",
+        "confirm": "¿Estás seguro de que quieres eliminar el usuario {username} junto con sus preferencias?"
       },
       "select": {
         "label": "Seleccionar usuario",
-        "notFound": ""
+        "notFound": "Usuario no encontrado"
       },
       "transfer": {
-        "label": ""
+        "label": "Seleccionar nuevo propietario"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
+    "title": "Grupos",
+    "name": "Grupo",
     "search": "Encontrar un grupo",
     "field": {
       "name": "Nombre",
       "members": "Miembros",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Tablero de inicio",
+        "description": "Solo se pueden seleccionar los tableros accesibles por el grupo"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Tablero móvil",
+        "description": "Solo se pueden seleccionar los tableros accesibles por el grupo"
       }
     },
     "permission": {
@@ -320,8 +320,8 @@
         "title": "Administrador",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Administrador",
+            "description": "Los miembros con este permiso tienen acceso completo a todas las características y ajustes"
           }
         }
       },
@@ -329,20 +329,20 @@
         "title": "Aplicaciones",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Crear aplicaciones",
+            "description": "Permitir a los miembros crear aplicaciones"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Usar todas las aplicaciones",
+            "description": "Permitir a los miembros añadir cualquier aplicación a sus tableros"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modificar todas las aplicaciones",
+            "description": "Permitir a los miembros modificar todas las aplicaciones"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acceso completo a las aplicaciones",
+            "description": "Permitir a los miembros gestionar, usar y eliminar cualquier aplicacion"
           }
         }
       },
@@ -350,20 +350,20 @@
         "title": "Tableros",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Crear tableros",
+            "description": "Permitir a los miembros crear tableros"
           },
           "view-all": {
-            "label": "",
+            "label": "Ver todos los tableros",
             "description": "Permitir a los miembros ver todos los tableros"
           },
           "modify-all": {
-            "label": "",
+            "label": "Modificar todos los tableros",
             "description": "Permitir a los miembros modificar todos tableros (Esto no incluye los controles de acceso y la zona de peligro)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acceso completo al tablero",
+            "description": "Permitir a los miembros ver, modificar y eliminar todos los tableros (Incluyendo los controles de acceso y la zona de peligro)"
           }
         }
       },
@@ -371,155 +371,155 @@
         "title": "Integraciones",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Crear integraciones",
+            "description": "Permitir a los miembros crear integraciones"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Usar todas las integraciones",
+            "description": "Permitir a los miembros añadir cualquier integración a sus tableros"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Interactuar con cualquier integración",
+            "description": "Permitir a los miembros interactuar con cualquier integración"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acceso completo a la integración",
+            "description": "Permitir a los miembros gestionar, usar e interactuar con cualquier integración"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Multimedia",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Subir contenido multimedia",
+            "description": "Permitir a los miembros subir contenido multimedia"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Ver todo el contenido multimedia",
+            "description": "Permitir a los miembros ver todo el contenido multimedia"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acceso completo al contenido multimedia",
+            "description": "Permitir a los miembros gestionar y eliminar cualquier archivo multimedia"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Otros",
         "item": {
           "view-logs": {
-            "label": "",
-            "description": ""
+            "label": "Ver registros",
+            "description": "Permitir a los miembros ver los registros"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Motores de búsqueda",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Crear motores de búsqueda",
+            "description": "Permitir a los miembros crear motores de búsqueda"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modificar todos los motores de búsqueda",
+            "description": "Permitir a los miembros modificar todos los motores de búsqueda"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acceso completo al motor de búsqueda",
+            "description": "Permitir a los miembros gestionar y eliminar cualquier motor de búsqueda"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Algunos miembros pertenecen a proveedores externos y no pueden ser gestionados desde aquí",
+      "external": "Todos los miembros pertenecen a proveedores externos y no pueden ser gestionados desde aquí"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Este grupo está reservado para el uso del sistema y restringe algunas acciones.\n<checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Nuevo grupo",
         "notification": {
           "success": {
-            "message": ""
+            "message": "El grupo fue creado con éxito"
           },
           "error": {
-            "message": ""
+            "message": "El grupo no pudo ser creado"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Transferir la propiedad",
+        "description": "Transferir la propiedad de este grupo a otro usuario.",
+        "confirm": "¿ Estás seguro de que quieres transferir la propiedad del grupo {name} a {username} ?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupo {group} transferido con éxito a {user}"
           },
           "error": {
-            "message": ""
+            "message": "No se pudo transferir la propiedad"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Añadir miembro"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Eliminar miembro",
+        "confirm": "¿ Estás seguro de que deseas eliminar a {user} de este grupo ?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Eliminar grupo",
+        "description": "Una vez que elimines el grupo, no habrá forma de recuperarlo. Por favor, asegúrate de ello.",
+        "confirm": "¿ Estás seguro de que deseas eliminar el grupo {name} ?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Se eliminó con éxito al grupo {name}"
           },
           "error": {
-            "message": ""
+            "message": "No se pudo eliminar al grupo {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Permisos guardados",
+            "message": "Permisos guardados con éxito"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Permisos no guardados",
+            "message": "No se han guardado los permisos"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "El grupo {name} se guardó con éxito"
           },
           "error": {
-            "message": ""
+            "message": "No se pudo guardar el grupo {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Seleccionar grupo",
+        "notFound": "Grupo no encontrado"
       },
       "settings": {
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Ajustes guardados",
+              "message": "Ajustes de tablero guardados con éxito"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Error al guardar los ajustes",
+              "message": "No se pudo guardar la configuración del tablero"
             }
           }
         }
@@ -527,66 +527,66 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Posición cambiada con éxito"
           },
           "error": {
-            "message": ""
+            "message": "No se pudo cambiar la posición"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "Grupo por defecto",
+      "description": "{name} - Todos los usuarios registrados"
     }
   },
   "app": {
-    "search": "",
+    "search": "Buscar una aplicación",
     "page": {
       "list": {
         "title": "Aplicaciones",
         "noResults": {
-          "title": "",
-          "action": ""
+          "title": "Aún no hay aplicaciones",
+          "action": "Crea tu primera aplicación"
         }
       },
       "create": {
-        "title": "",
+        "title": "Nueva aplicación",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Creación exitosa",
+            "message": "La aplicación fue creada con éxito"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "No se ha podido crear",
+            "message": "La aplicación no pudo ser creada"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Editar aplicación",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Cambios aplicados con éxito",
+            "message": "La aplicación se guardó correctamente"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "No se pudieron aplicar los cambios",
+            "message": "La aplicación no se pudo guardar"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Eliminar aplicación",
+        "message": "¿Estás seguro de que deseas eliminar la aplicación {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Eliminada correctamente",
+            "message": "La aplicación fue eliminada con éxito"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Error al eliminar",
+            "message": "No se pudo eliminar la aplicación"
           }
         }
       }
@@ -599,78 +599,78 @@
         "label": "Descripción"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Usar URL diferente para ping",
+          "description": "Útil si Homarr puede acceder directamente utilizando un nombre de host o de red interno para evitar el uso de ancho de banda del ISP"
         }
       }
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": "",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "label": "Seleccionar aplicación",
+        "notFound": "No se encontró la aplicación",
+        "search": "Buscar una aplicación",
+        "noResults": "Sin resultados",
+        "action": "Seleccionar {app}",
+        "title": "Selecciona una aplicación para añadir a este tablero"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "Crear nueva aplicación",
+        "description": "Crear una nueva aplicación ",
+        "action": "Abrir creación de aplicación"
       },
-      "add": ""
+      "add": "Añadir una aplicación"
     }
   },
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Integraciones",
+        "search": "Buscar integraciones",
         "noResults": {
-          "title": ""
+          "title": "Aún no hay integraciones"
         }
       },
       "create": {
-        "title": "",
+        "title": "Nueva integración {name}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Creación exitosa",
+            "message": "La integración fue creada con éxito"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "No se ha podido crear",
+            "message": "La integración no pudo ser creada"
           }
         }
       },
       "edit": {
-        "title": "",
+        "title": "Editar integración {name}",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Cambios aplicados con éxito",
+            "message": "La integración se ha guardado correctamente"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "No se pudieron aplicar los cambios",
+            "message": "La integración no pudo ser creada"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Eliminar integración",
+        "message": "¿Estás seguro de que deseas eliminar la integración {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Eliminación exitosa",
+            "message": "La integración fue eliminada con éxito"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Error al eliminar",
+            "message": "No se pudo eliminar la integración"
           }
         }
       }
@@ -680,95 +680,95 @@
         "label": "Nombre"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Crear motor de búsqueda",
+        "description": "La integración \"{kind}\" se puede utilizar con los motores de búsqueda. Marque esta opción para configurar automáticamente el motor de búsqueda."
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "Crear aplicación",
+        "description": "Crea una aplicación con el mismo nombre e icono que la integración. Deja vacío el campo de entrada de abajo para crear la aplicación con la URL de la integración."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "URL personalizada de aplicación"
       }
     },
     "action": {
-      "create": ""
+      "create": "Nueva integración"
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Probar la conexión y crear",
+        "edit": "Probar la conexión y guardar"
       },
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Causa con más detalles"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Error desconocido",
+          "description": "Se ha producido un error desconocido, abre la causa a continuación para ver más detalles"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Error de análisis",
+          "description": "La respuesta no pudo ser analizada. Por favor verifique que la URL apunta a la URL base del servicio."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "Error de autorización",
+          "description": "La solicitud no fue autorizada. Por favor verifique que las credenciales son correctas y las tiene configuradas con los permisos suficientes."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Error de respuesta",
+          "description": "Se ha recibido una respuesta {statusCode} inesperada ({reason}) de <url></url>. Por favor, verifica que la URL apunta a la URL base de la integración.",
+          "otherDescription": "Se ha recibido una respuesta {statusCode} inesperada de <url></url>. Por favor, verifica que la URL apunta a la URL base de la integración.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "Solicitud incorrecta",
+            "notFound": "No se encuentra",
+            "tooManyRequests": "Demasiadas peticiones",
+            "internalServerError": "Error interno del servidor",
+            "serviceUnavailable": "Servicio no disponible",
+            "gatewayTimeout": "Tiempo de espera de puerta de enlace"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Error de certificado",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "El certificado ha caducado.",
+            "notYetValid": "El certificado aún no es válido.",
+            "untrusted": "El certificado no es de confianza.",
+            "hostnameMismatch": "El nombre de host del certificado no coincide con la URL."
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "No hay suficientes permisos.",
+              "message": "No se le permite confiar en o subir certificados. Por favor, póngase en contacto con su administrador para subir el certificado raíz necesario."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "El nombre de dominio no coincide",
+              "message": "El nombre de host en el certificado no coincide con el nombre de host al que se está conectando. Esto podría indicar un riesgo de seguridad, pero todavía puede optar por confiar en este certificado."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "Extracción del certificado CA fallida",
+              "message": "Sólo los certificados autofirmados sin una cadena se pueden obtener automáticamente. Si estás usando un certificado autofirmado, por favor asegúrate de subir el certificado CA manualmente. Puedes encontrar instrucciones sobre cómo hacer esto <docsLink></docsLink>."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Reintentar la creación"
             },
             "trust": {
-              "label": ""
+              "label": "Confiar en el certificado"
             },
             "upload": {
-              "label": ""
+              "label": "Subir certificado"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
+              "title": "No coincide con el nombre de host de confianza",
               "message": ""
             },
             "notification": {
