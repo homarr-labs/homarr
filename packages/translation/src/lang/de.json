@@ -1003,6 +1003,7 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "Beta",
     "error": "Fehler",
     "action": {
@@ -1270,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": "Statusüberprüfung aktivieren"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
         }
       },
       "error": {
@@ -3260,14 +3270,70 @@
             "minutes": "Jeweils {interval, plural, =1 {Minute} other {# Minuten}}",
             "hours": "Jeweils {interval, plural, =1 {Stunde} other {# Stunden}}",
             "midnight": "Jeden Tag um Mitternacht",
-            "weeklyMonday": "Jede Woche am Montag"
+            "weeklyMonday": "Jede Woche am Montag",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
           },
           "settings": {
             "title": "Einstellungen der Aufgabe für {jobName}"
           },
           "field": {
+            "name": {
+              "label": ""
+            },
             "interval": {
               "label": "Intervall des Zeitplans"
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3776,6 +3842,9 @@
       },
       "tools": {
         "label": "Werkzeuge",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": "Docker"
         },

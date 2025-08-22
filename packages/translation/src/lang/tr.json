@@ -1003,6 +1003,7 @@
     }
   },
   "common": {
+    "success": "Başarılı",
     "beta": "Test",
     "error": "Hata",
     "action": {
@@ -1270,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": "Durum denetimini etkinleştir"
+        },
+        "layout": {
+          "label": "Düzen",
+          "option": {
+            "row": "Yatay",
+            "row-reverse": "Yatay (ters)",
+            "column": "Dikey",
+            "column-reverse": "Dikey (ters)"
+          }
         }
       },
       "error": {
@@ -3260,14 +3270,70 @@
             "minutes": "Her {interval, plural, =1 {dakika} other {# dakikada bir}}",
             "hours": "Her {interval, plural, =1 {saat} other {# saatte bir}}",
             "midnight": "Her gün gece yarısı",
-            "weeklyMonday": "Her hafta pazartesi günü"
+            "weeklyMonday": "Her hafta pazartesi günü",
+            "update": {
+              "success": {
+                "message": "Aralık başarıyla güncellendi"
+              },
+              "error": {
+                "message": "Aralık güncellenemedi"
+              }
+            }
           },
           "settings": {
             "title": "{jobName} için görev ayarları"
           },
           "field": {
+            "name": {
+              "label": "İsim"
+            },
             "interval": {
               "label": "Zamanlama aralığı"
+            },
+            "lastExecution": {
+              "label": "Son Çalıştırma"
+            },
+            "actions": {
+              "label": "Eylemler"
+            }
+          },
+          "table": {
+            "search": "{count} görevi ara..."
+          },
+          "action": {
+            "refresh": {
+              "label": "Yenile"
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": "Görevler başarıyla yenilendi"
+            },
+            "error": {
+              "message": "Görevler yenilenemedi"
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": "Görev başarıyla tetiklendi"
+            },
+            "error": {
+              "message": "Görev tetiklenemedi"
+            }
+          },
+          "enable": {
+            "success": {
+              "message": "Görev başarıyla etkinleştirildi"
+            }
+          },
+          "disable": {
+            "success": {
+              "message": "Görev başarıyla devre dışı bırakıldı"
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": "Görev durumu değiştirilemedi"
             }
           }
         },
@@ -3776,6 +3842,9 @@
       },
       "tools": {
         "label": "Araçlar",
+        "tasks": {
+          "label": "Görevler"
+        },
         "docker": {
           "label": "Docker"
         },

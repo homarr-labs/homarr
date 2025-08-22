@@ -1003,6 +1003,7 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "测试版",
     "error": "错误",
     "action": {
@@ -1270,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": "启用状态检查"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
         }
       },
       "error": {
@@ -3260,14 +3270,70 @@
             "minutes": "每 {interval, plural, =1 {分钟} other {# 分钟}}",
             "hours": "每 {interval, plural, =1 {小时} other {# 小时}}",
             "midnight": "每日午夜",
-            "weeklyMonday": "每周一"
+            "weeklyMonday": "每周一",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
           },
           "settings": {
             "title": "{jobName} 任务设置"
           },
           "field": {
+            "name": {
+              "label": ""
+            },
             "interval": {
               "label": "计划时间间隔"
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3776,6 +3842,9 @@
       },
       "tools": {
         "label": "工具",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": "Docker"
         },

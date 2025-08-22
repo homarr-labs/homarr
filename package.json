@@ -22,13 +22,14 @@
     "lint:ws": "pnpm dlx sherif@latest",
     "package:new": "turbo gen init",
     "release": "semantic-release",
+    "scripts:update-bug-report-template": "tsx ./scripts/update-bug-report-template.mts",
+    "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts",
     "start": "concurrently \"pnpm with-env node apps/tasks/tasks.cjs\" \"pnpm with-env node apps/websocket/wssServer.cjs\" \"pnpm -F nextjs start\"",
     "test": "cross-env NODE_ENV=development CI=true vitest run --exclude e2e --coverage.enabled ",
     "test:e2e": "cross-env NODE_ENV=development CI=true vitest e2e",
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --exclude e2e --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
-    "with-env": "dotenv -e .env --",
-    "scripts:update-readme-integrations": "tsx ./scripts/update-integration-list.mts"
+    "with-env": "dotenv -e .env --"
   },
   "prettier": "@homarr/prettier-config",
   "devDependencies": {
@@ -41,7 +42,7 @@
     "@semantic-release/release-notes-generator": "^14.0.3",
     "@testcontainers/redis": "^11.5.1",
     "@turbo/gen": "^2.5.6",
-    "@vitejs/plugin-react": "^5.0.0",
+    "@vitejs/plugin-react": "^5.0.1",
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
     "conventional-changelog-conventionalcommits": "^9.1.0",
@@ -55,7 +56,7 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.15.0",
   "engines": {
     "node": ">=22.18.0"
   },
@@ -72,7 +73,7 @@
       "tree-sitter-json"
     ],
     "overrides": {
-      "proxmox-api>undici": "7.13.0"
+      "proxmox-api>undici": "7.14.0"
     },
     "patchedDependencies": {
       "@types/node-unifi": "patches/@types__node-unifi.patch"
