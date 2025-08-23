@@ -1958,7 +1958,7 @@
           "label": "Columnas a mostrar"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Habilitar ordenar elementos"
         },
         "defaultSort": {
           "label": ""
