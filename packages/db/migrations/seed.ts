@@ -15,9 +15,8 @@ import {
   insertServerSettingByKeyAsync,
   updateServerSettingByKeyAsync,
 } from "../queries/server-setting";
-import { integrations, onboarding, searchEngines } from "../schema";
+import { groups, integrations, onboarding, searchEngines } from "../schema";
 import type { Integration } from "../schema";
-import { groups } from "../schema/mysql";
 
 export const seedDataAsync = async (db: Database) => {
   await seedEveryoneGroupAsync(db);
