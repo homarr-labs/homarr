@@ -1,7 +1,8 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const entityStateSchema = z.object({
   attributes: z.record(
+    z.string(),
     z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.union([z.string(), z.number()]))]),
   ),
   entity_id: z.string(),

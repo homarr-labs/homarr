@@ -1,8 +1,9 @@
+import type { Agent } from "https";
+import type { RequestInit as NodeFetchRequestInit } from "node-fetch";
 import * as ical from "node-ical";
 import { DAVClient } from "tsdav";
-import type { Dispatcher, RequestInit as UndiciFetchRequestInit } from "undici";
 
-import { createCertificateAgentAsync } from "@homarr/certificates/server";
+import { createHttpsAgentAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
@@ -16,7 +17,7 @@ import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
 @HandleIntegrationErrors([integrationTsdavHttpErrorHandler])
 export class NextcloudIntegration extends Integration implements ICalendarIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const client = await this.createCalendarClientAsync(input.dispatcher);
+    const client = await this.createCalendarClientAsync(await createHttpsAgentAsync(input.options));
     await client.login();
 
     return { success: true };
@@ -80,7 +81,7 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
     });
   }
 
-  private async createCalendarClientAsync(dispatcher?: Dispatcher) {
+  private async createCalendarClientAsync(agent?: Agent) {
     return new DAVClient({
       serverUrl: this.integration.url,
       credentials: {
@@ -90,9 +91,10 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
       authMethod: "Basic",
       defaultAccountType: "caldav",
       fetchOptions: {
-        // We can use the undici options as the global fetch is used instead of the polyfilled.
-        dispatcher: dispatcher ?? (await createCertificateAgentAsync()),
-      } satisfies UndiciFetchRequestInit as RequestInit,
+        // tsdav is using cross-fetch which uses node-fetch for nodejs environments.
+        // There is an agent property that is the same type as the http(s) agents of nodejs
+        agent: agent ?? (await createHttpsAgentAsync()),
+      } satisfies NodeFetchRequestInit as RequestInit,
     });
   }
 }

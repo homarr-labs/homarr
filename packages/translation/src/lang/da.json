@@ -944,6 +944,14 @@
         "topic": {
           "label": "Emne",
           "newLabel": "Nyt emne"
+        },
+        "opnsenseApiKey": {
+          "label": "API-nøgle (Key)",
+          "newLabel": "Ny API-nøgle (Key)"
+        },
+        "opnsenseApiSecret": {
+          "label": "API-nøgle (Secret)",
+          "newLabel": "Ny API-nøgle (Key)"
         }
       }
     },
@@ -995,6 +1003,7 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "Beta",
     "error": "Fejl",
     "action": {
@@ -1262,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": "Aktiver statustjek"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
         }
       },
       "error": {
@@ -2447,6 +2465,18 @@
       "description": "Vis notifikationshistorik fra en integration",
       "noItems": "Ingen notifikationer at vise.",
       "option": {}
+    },
+    "systemResources": {
+      "name": "Systemressourcer",
+      "description": "CPU, Hukommelse, Disk og andet hardwareforbrug af dit system",
+      "option": {},
+      "card": {
+        "cpu": "CPU",
+        "memory": "MEM",
+        "network": "NET",
+        "up": "OP",
+        "down": "NED"
+      }
     }
   },
   "widgetPreview": {
@@ -3240,14 +3270,70 @@
             "minutes": "Hvert {interval, plural, one {}=1 {minut} other {# minutter}}",
             "hours": "Hvert {interval, plural, one {}=1 {time} other {# timer}}",
             "midnight": "Hver dag ved midnat",
-            "weeklyMonday": "Hver uge om mandagen"
+            "weeklyMonday": "Hver uge om mandagen",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
           },
           "settings": {
             "title": "Opgave indstillinger for {jobName}"
           },
           "field": {
+            "name": {
+              "label": ""
+            },
             "interval": {
               "label": "Planlæg interval"
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3756,6 +3842,9 @@
       },
       "tools": {
         "label": "Værktøjer",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": "Docker"
         },

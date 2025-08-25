@@ -19,4 +19,6 @@ export const integrationSecretIcons = {
   tokenId: IconGrid3x3,
   personalAccessToken: IconPasswordUser,
   topic: IconMessage,
+  opnsenseApiKey: IconKey,
+  opnsenseApiSecret: IconPassword,
 } satisfies Record<IntegrationSecretKind, TablerIcon>;

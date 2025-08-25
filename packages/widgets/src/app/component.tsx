@@ -1,7 +1,7 @@
 "use client";
 
 import type { PropsWithChildren } from "react";
-import { Suspense } from "react";
+import { Fragment, Suspense } from "react";
 import { Flex, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconLoader } from "@tabler/icons-react";
 import combineClasses from "clsx";
@@ -56,7 +56,8 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
     [app, options.openInNewTab],
   );
 
-  const tinyText = height < 100 || width < 100;
+  const isTiny = height < 100 || width < 100;
+  const isColumnLayout = options.layout.startsWith("column");
 
   return (
     <AppLink
@@ -65,22 +66,34 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
       enabled={Boolean(app.href) && !isEditMode}
     >
       <Tooltip.Floating
-        label={app.description}
+        label={app.description?.split("\n").map((line, index) => (
+          <Fragment key={index}>
+            {line}
+            <br />
+          </Fragment>
+        ))}
         position="right-start"
         multiline
         disabled={!options.showDescriptionTooltip || !app.description}
         styles={{ tooltip: { maxWidth: 300 } }}
       >
         <Flex
+          p={isTiny ? 4 : "sm"}
           className={combineClasses("app-flex-wrapper", app.name, app.id, app.href && classes.appWithUrl)}
           h="100%"
           w="100%"
-          direction="column"
+          direction={options.layout}
           justify="center"
           align="center"
+          gap={isColumnLayout ? 0 : "sm"}
         >
           {options.showTitle && (
-            <Text className="app-title" fw={700} size={tinyText ? "8px" : "sm"} ta="center">
+            <Text
+              className="app-title"
+              fw={700}
+              size={isTiny ? "8px" : "sm"}
+              ta={isColumnLayout ? "center" : undefined}
+            >
               {app.name}
             </Text>
           )}
@@ -92,6 +105,8 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
             style={{
               height: "100%",
               width: "100%",
+              minWidth: "20%",
+              maxWidth: isColumnLayout ? undefined : "50%",
             }}
           />
         </Flex>

@@ -1,8 +1,7 @@
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ParseError, ResponseError } from "@homarr/common/server";
-import { createChannelEventHistory } from "@homarr/redis";
 
-import { HandleIntegrationErrors } from "../base/errors/decorator";
+import { createChannelEventHistoryOld } from "../../../redis/src/lib/channel";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
@@ -22,7 +21,6 @@ import {
   opnsenseSystemSummarySchema,
 } from "./opnsense-types";
 
-@HandleIntegrationErrors([])
 export class OPNsenseIntegration extends Integration implements FirewallSummaryIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/diagnostics/system/system_information"), {
@@ -39,9 +37,9 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
   }
 
   private getAuthHeaders() {
-    const username = super.getSecretValue("username");
-    const password = super.getSecretValue("password");
-    return `Basic ${btoa(`${username}:${password}`)}`;
+    const key = super.getSecretValue("opnsenseApiKey");
+    const secret = super.getSecretValue("opnsenseApiSecret");
+    return `Basic ${btoa(`${key}:${secret}`)}`;
   }
 
   public async getFirewallVersionAsync(): Promise<FirewallVersionSummary> {
@@ -64,7 +62,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
   }
 
   private getInterfacesChannel() {
-    return createChannelEventHistory<FirewallInterface[]>(`integration:${this.integration.id}:interfaces`, 15);
+    return createChannelEventHistoryOld<FirewallInterface[]>(`integration:${this.integration.id}:interfaces`, 15);
   }
 
   public async getFirewallInterfacesAsync(): Promise<FirewallInterfacesSummary[]> {
@@ -107,7 +105,7 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
 
   public async getFirewallMemoryAsync(): Promise<FirewallMemorySummary> {
     const responseMemory = await fetchWithTrustedCertificatesAsync(
-      this.url("/api/diagnostics/system/systemResources"),
+      this.url("/api/diagnostics/system/system_resources"),
       {
         headers: {
           Authorization: this.getAuthHeaders(),

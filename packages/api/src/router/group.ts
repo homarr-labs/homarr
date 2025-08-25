@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
@@ -277,12 +277,14 @@ export const groupRouter = createTRPCRouter({
 
       await ctx.db.delete(groupPermissions).where(eq(groupPermissions.groupId, input.groupId));
 
-      await ctx.db.insert(groupPermissions).values(
-        input.permissions.map((permission) => ({
-          groupId: input.groupId,
-          permission,
-        })),
-      );
+      if (input.permissions.length > 0) {
+        await ctx.db.insert(groupPermissions).values(
+          input.permissions.map((permission) => ({
+            groupId: input.groupId,
+            permission,
+          })),
+        );
+      }
     }),
   transferOwnership: permissionRequiredProcedure
     .requiresPermission("admin")

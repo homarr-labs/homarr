@@ -944,6 +944,14 @@
         "topic": {
           "label": "",
           "newLabel": ""
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -995,6 +1003,7 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "Béta",
     "error": "Hiba",
     "action": {
@@ -1262,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": "Egyszerű ping engedélyezése"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
         }
       },
       "error": {
@@ -2447,6 +2465,18 @@
       "description": "",
       "noItems": "",
       "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {},
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
+      }
     }
   },
   "widgetPreview": {
@@ -3240,14 +3270,70 @@
             "minutes": "",
             "hours": "",
             "midnight": "",
-            "weeklyMonday": ""
+            "weeklyMonday": "",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
           },
           "settings": {
             "title": ""
           },
           "field": {
+            "name": {
+              "label": ""
+            },
             "interval": {
               "label": ""
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3756,6 +3842,9 @@
       },
       "tools": {
         "label": "Eszközök",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": ""
         },

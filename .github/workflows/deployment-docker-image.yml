@@ -53,14 +53,14 @@ jobs:
         with:
           private_key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
           app_id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: env.SKIP_RELEASE == 'false'
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4
         if: env.SKIP_RELEASE == 'false'
         with:
-          node-version: 22
+          node-version: 22.18.0
       - run: npm i -g pnpm
         if: env.SKIP_RELEASE == 'false'
       - name: Install dependencies
@@ -110,7 +110,7 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ needs.release.outputs.git_ref }}
 
@@ -149,7 +149,7 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ needs.release.outputs.git_ref }}
 
