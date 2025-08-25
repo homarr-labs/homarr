@@ -1,3 +1,6 @@
+// The below import statement initializes dns-caching
+import "./dns";
+
 /**
  * Same as fetch, but with a timeout of 10 seconds.
  * https://stackoverflow.com/questions/46946380/fetch-api-request-timeout

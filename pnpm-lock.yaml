@@ -11,9 +11,6 @@ patchedDependencies:
   '@types/node-unifi':
     hash: 5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5
     path: patches/@types__node-unifi.patch
-  dns-caching:
-    hash: a44b755d1e7236b5779766d2df8899e3da7a53a0d1a97916aea72421c3dc2891
-    path: patches/dns-caching.patch
 
 importers:
 
@@ -401,9 +398,6 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
-      dns-caching:
-        specifier: ^0.2.2
-        version: 0.2.2(patch_hash=a44b755d1e7236b5779766d2df8899e3da7a53a0d1a97916aea72421c3dc2891)
       dotenv:
         specifier: ^17.2.1
         version: 17.2.1
@@ -850,6 +844,9 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
+      dns-caching:
+        specifier: ^0.2.5
+        version: 0.2.5
       next:
         specifier: 15.4.5
         version: 15.4.5(@babel/core@7.28.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.89.2)
@@ -6239,8 +6236,8 @@ packages:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
 
-  dns-caching@0.2.2:
-    resolution: {integrity: sha512-sodaHe4w1hDPSsoh/ULuMP3x7C88fbGlBa6dUkNf5nf5085gxIhDkObpboGC7QnAIPE3O9k6rd6vGWLhBENNUQ==}
+  dns-caching@0.2.5:
+    resolution: {integrity: sha512-1cnB6i/OG4zfYbRnDjWZDT+FGLvOBuJlFIxVZvHBiaa62SCfaGoP4Si50O14HyoHmx1gadeGWigYXdX5LQAFvg==}
 
   docker-compose@1.2.0:
     resolution: {integrity: sha512-wIU1eHk3Op7dFgELRdmOYlPYS4gP8HhH1ZmZa13QZF59y0fblzFDFmKPhyc05phCy2hze9OEvNZAsoljrs+72w==}
@@ -11050,7 +11047,7 @@ snapshots:
       '@csstools/css-color-parser': 3.0.7(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-tokenizer': 3.0.3
-      lru-cache: 11.0.2
+      lru-cache: 11.1.0
 
   '@auth/core@0.40.0':
     dependencies:
@@ -15182,7 +15179,7 @@ snapshots:
     dependencies:
       path-type: 4.0.0
 
-  dns-caching@0.2.2(patch_hash=a44b755d1e7236b5779766d2df8899e3da7a53a0d1a97916aea72421c3dc2891):
+  dns-caching@0.2.5:
     dependencies:
       lru-cache: 11.1.0
 
