@@ -1,4 +1,5 @@
 import { createId, splitToNChunks, Stopwatch } from "@homarr/common";
+import { env } from "@homarr/common/env";
 import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
 import type { InferInsertModel } from "@homarr/db";
 import { db, handleTransactionsAsync, inArray, sql } from "@homarr/db";
@@ -12,6 +13,8 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
   runOnStart: true,
   expectedMaximumDurationInMillis: 10 * 1000,
 }).withCallback(async () => {
+  if (env.UNSAFE_NO_EXTERNAL_CONNECTION) return;
+
   logger.info("Updating icon repository cache...");
   const stopWatch = new Stopwatch();
   const repositoryIconGroups = await fetchIconsAsync();
