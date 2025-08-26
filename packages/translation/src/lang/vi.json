@@ -3,18 +3,18 @@
     "step": {
       "start": {
         "title": "Chào mừng đến với Homarr",
-        "subtitle": "Hãy bắt đầu cài đặt phiên bản Homarr của bạn.",
-        "description": "Để bắt đầu, hãy chọn cách bạn muốn cài đặt phiên bản Homarr của mình.",
+        "subtitle": "Hãy bắt đầu cài đặt ứng dụng Homarr của bạn.",
+        "description": "Để bắt đầu, hãy chọn cách bạn muốn cài đặt ứng dụng Homarr của mình.",
         "action": {
           "scratch": "Bắt đầu từ đầu",
-          "importOldmarr": "Nhập từ Homarr trước phiên bản 1.0"
+          "importOldmarr": "Nhập dữ liệu từ Homarr phiên bản trước 1.0"
         }
       },
       "import": {
         "title": "Nhập dữ liệu",
         "subtitle": "Bạn có thể nhập dữ liệu từ một phiên bản Homarr có sẵn.",
         "dropzone": {
-          "title": "Kéo tệp tin zip vào đây hoặc nhấp để chọn",
+          "title": "Kéo tệp tin zip vào đây hoặc nhấp chuột để chọn",
           "description": "Tệp tin zip đã tải lên sẽ được xử lý và bạn sẽ có thể chọn những gì bạn muốn nhập"
         },
         "fileInfo": {
@@ -92,13 +92,13 @@
       },
       "finish": {
         "title": "Hoàn tất cài đặt",
-        "subtitle": "Đã sẵn sàng để tiếp tục!",
+        "subtitle": "Bạn đã sẵn sàng để tiếp tục!",
         "description": "",
         "action": {
           "goToBoard": "",
           "createBoard": "",
           "inviteUser": "",
-          "docs": "Hãy đọc tài liệu này"
+          "docs": "Đọc tài liệu hướng dẫn"
         }
       }
     },
@@ -156,7 +156,7 @@
         "label": "Công cụ tìm kiếm mặc định"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Mở kết quả tìm kiếm trong thẻ mới"
       }
     },
     "error": {
@@ -169,7 +169,7 @@
         "notification": {
           "success": {
             "title": "Đăng nhập thành công",
-            "message": "Bạn đã đăng nhập"
+            "message": "Bạn đã được đăng nhập"
           },
           "error": {
             "title": "Đăng nhập không thành công",
@@ -177,7 +177,7 @@
           }
         },
         "forgotPassword": {
-          "label": "Quên mật khẩu?",
+          "label": "Bạn đã quên mật khẩu?",
           "description": ""
         }
       },
@@ -189,8 +189,8 @@
             "message": "Vui lòng đăng nhập để tiếp tục"
           },
           "error": {
-            "title": "Tạo tài khoản thất bại",
-            "message": "Tài khoản của bạn không thể được tạo"
+            "title": "Tạo tài khoản không thành công",
+            "message": "Không thể tạo tài khoản bạn được"
           }
         }
       },
@@ -287,7 +287,7 @@
       },
       "delete": {
         "label": "Xóa người dùng vĩnh viễn",
-        "description": "Xóa người dùng này bao gồm cài đặt của họ. Sẽ không xóa các bảng. Người dùng sẽ không được thông báo.",
+        "description": "Xóa người dùng này và những cài đặt cá nhân của họ. Hành động này sẽ không xóa các bảng. Người dùng bị xóa sẽ không nhận thông báo.",
         "confirm": "Bạn có chắc chắn muốn xóa tài khoản {username} cùng với các cài đặt?"
       },
       "select": {
@@ -409,8 +409,8 @@
         "title": "Khác",
         "item": {
           "view-logs": {
-            "label": "Xem nhật ký",
-            "description": "Cho phép thành viên xem nhật ký"
+            "label": "Xem nhật ký máy",
+            "description": "Cho phép thành viên xem nhật ký máy"
           }
         }
       },
@@ -419,11 +419,11 @@
         "item": {
           "create": {
             "label": "Tạo công cụ tìm kiếm",
-            "description": ""
+            "description": "Cho phép thành viên nhóm này tạo công cụ tìm kiếm"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Sửa đổi tất cả công cụ tìm kiếm",
+            "description": "Cho phép thành viên nhóm này sửa đổi tất cả công cụ tìm kiếm"
           },
           "full-all": {
             "label": "",
@@ -441,23 +441,23 @@
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Nhóm mới",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Đã tạo nhóm thành công"
           },
           "error": {
-            "message": ""
+            "message": "Nhóm này không thể tạo được"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Chuyển quyền sở hữu",
+        "description": "Chuyển quyền sở hữu nhóm này cho một người dùng khác",
+        "confirm": "Bạn chắc chắn muốn chuyển quyền sở hữu nhóm {name} cho {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Đã chuyển thành công quyền sở hữu nhóm {group} cho {username}"
           },
           "error": {
             "message": ""
@@ -465,19 +465,19 @@
         }
       },
       "addMember": {
-        "label": "Thêm thành viên"
+        "label": "Thêm thành viên vào nhóm"
       },
       "removeMember": {
-        "label": "Xóa thành viên",
+        "label": "Xóa thành viên khỏi nhóm",
         "confirm": ""
       },
       "delete": {
         "label": "Xóa nhóm",
         "description": "",
-        "confirm": "",
+        "confirm": "Bạn chắc chắn muốn xóa nhóm {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Đã xóa nhóm {name} thành công"
           },
           "error": {
             "message": ""
@@ -537,7 +537,7 @@
     },
     "defaultGroup": {
       "name": "Nhóm mặc định",
-      "description": ""
+      "description": "{name} - Tất cả những người dùng đã đăng nhập"
     }
   },
   "app": {
@@ -546,7 +546,7 @@
       "list": {
         "title": "Ứng dụng",
         "noResults": {
-          "title": "",
+          "title": "Chưa có ứng dụng nào cả",
           "action": "Tạo ứng dụng của bạn trước"
         }
       },
@@ -596,7 +596,7 @@
         "label": "Tên"
       },
       "description": {
-        "label": "Thông tin chi tiết"
+        "label": "Mô tả"
       },
       "url": {
         "label": "Url"
@@ -612,14 +612,14 @@
       "select": {
         "label": "Chọn ứng dụng",
         "notFound": "Không tìm thấy ứng dụng",
-        "search": "",
+        "search": "Tìm một ứng dụng",
         "noResults": "Không có kết quả",
         "action": "Chọn {app}",
         "title": ""
       },
       "create": {
-        "title": "",
-        "description": "",
+        "title": "Tạo ứng dụng mới",
+        "description": "Tạo ứng dụng mới",
         "action": ""
       },
       "add": ""
@@ -887,7 +887,7 @@
           "message": ""
         },
         "invalidJson": {
-          "title": "",
+          "title": "JSON không hợp lệ",
           "message": ""
         },
         "wrongPath": {
@@ -943,7 +943,7 @@
         },
         "topic": {
           "label": "",
-          "newLabel": ""
+          "newLabel": "Chủ đề mới"
         },
         "opnsenseApiKey": {
           "label": "",
@@ -1009,7 +1009,7 @@
     "action": {
       "add": "Thêm",
       "apply": "Áp dụng",
-      "backToOverview": "",
+      "backToOverview": "Trở về mục tổng quan",
       "create": "Tạo nên",
       "createAnother": "",
       "edit": "Sửa",
@@ -1083,7 +1083,7 @@
     "userAvatar": {
       "menu": {
         "switchToDarkMode": "",
-        "switchToLightMode": "",
+        "switchToLightMode": "Đổi qua chế độ nền sáng",
         "management": "",
         "preferences": "Cá nhân hoá",
         "logout": "",
@@ -2856,7 +2856,7 @@
         "boards": "Bảng",
         "apps": "Ứng dụng",
         "integrations": "",
-        "searchEngies": "",
+        "searchEngies": "Công cụ tìm kiếm",
         "medias": "",
         "users": {
           "label": "Người dùng",
@@ -2976,7 +2976,7 @@
                   "mobile": ""
                 }
               },
-              "search": "",
+              "search": "Tìm",
               "firstDayOfWeek": "Ngày đầu tiên trong tuần",
               "accessibility": "Trợ năng"
             }
@@ -3077,7 +3077,7 @@
           },
           "members": {
             "title": "",
-            "search": "",
+            "search": "Tìm một thành viên",
             "notFound": ""
           },
           "permissions": {
@@ -3158,9 +3158,9 @@
             }
           },
           "search": {
-            "title": "",
+            "title": "Tìm",
             "defaultSearchEngine": {
-              "label": "",
+              "label": "Công cụ tìm kiếm mặc định cho toàn hệ thống",
               "description": ""
             }
           },
@@ -3895,7 +3895,7 @@
   },
   "search": {
     "placeholder": "",
-    "nothingFound": "",
+    "nothingFound": "Không tìm được gì cả",
     "error": {
       "fetch": ""
     },
