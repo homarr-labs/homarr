@@ -30,7 +30,6 @@ export default async function ApiPage() {
   if (!session?.user || !session.user.permissions.includes("admin")) {
     notFound();
   }
-
   const document = openApiDocument(extractBaseUrlFromHeaders(await headers()));
   const apiKeys = await api.apiKeys.getAll();
   const t = await getScopedI18n("management.page.tool.api.tab");
