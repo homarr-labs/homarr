@@ -33,19 +33,9 @@ export default async function ApiPage() {
     notFound();
   }
 
-  logger.warn(`Is coerce in zod? ${"coerce" in z}`);
-  let document: ReturnType<typeof openApiDocument> | undefined;
-  try {
-    document = openApiDocument(extractBaseUrlFromHeaders(await headers()));
-  } catch (error) {
-    logger.error(error);
-  }
+  const document = openApiDocument(extractBaseUrlFromHeaders(await headers()));
   const apiKeys = await api.apiKeys.getAll();
   const t = await getScopedI18n("management.page.tool.api.tab");
-
-  if (!document) {
-    return "Failed to generate OpenAPI document";
-  }
 
   return (
     <Stack>

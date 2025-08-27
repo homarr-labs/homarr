@@ -73,8 +73,7 @@
       "tree-sitter-json"
     ],
     "overrides": {
-      "proxmox-api>undici": "7.14.0",
-      "zod": "^4.0.17"
+      "proxmox-api>undici": "7.14.0"
     },
     "patchedDependencies": {
       "@types/node-unifi": "patches/@types__node-unifi.patch",
