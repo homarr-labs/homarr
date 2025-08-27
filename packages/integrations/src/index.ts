@@ -22,6 +22,7 @@ export { PiHoleIntegrationV6 } from "./pi-hole/v6/pi-hole-integration-v6";
 export { PlexIntegration } from "./plex/plex-integration";
 export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
 export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
+export { ICalIntegration } from "./ical/ical-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";

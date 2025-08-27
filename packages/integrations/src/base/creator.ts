@@ -39,6 +39,7 @@ import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { QuayIntegration } from "../quay/quay-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
+import { ICalIntegration } from "../ical/ical-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
 export const createIntegrationAsync = async <TKind extends keyof typeof integrationCreators>(
@@ -111,6 +112,7 @@ export const integrationCreators = {
   codeberg: CodebergIntegration,
   linuxServerIO: LinuxServerIOIntegration,
   gitHubContainerRegistry: GitHubContainerRegistryIntegration,
+  ical: ICalIntegration,
   quay: QuayIntegration,
   ntfy: NTFYIntegration,
   mock: MockIntegration,

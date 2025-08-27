@@ -280,6 +280,14 @@ export const integrationDefs = {
     category: ["notifications"],
     documentationUrl: createDocumentationLink("/docs/integrations/ntfy"),
   },
+  ical: {
+    name: "iCal",
+    secretKinds: [[]],
+    // TODO(nn): valid icon
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ical.svg",
+    category: ["calendar"],
+    documentationUrl: createDocumentationLink("/docs/integrations/ntfy"),
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",
