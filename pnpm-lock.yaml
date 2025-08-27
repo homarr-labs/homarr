@@ -6,11 +6,15 @@ settings:
 
 overrides:
   proxmox-api>undici: 7.14.0
+  zod: ^4.0.17
 
 patchedDependencies:
   '@types/node-unifi':
     hash: 5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5
     path: patches/@types__node-unifi.patch
+  trpc-to-openapi:
+    hash: b99b7a626000e5182c06fe45b25c38355041e714fb567dbb8e8945503f3b0a26
+    path: patches/trpc-to-openapi.patch
 
 importers:
 
@@ -634,7 +638,7 @@ importers:
         version: 2.2.2
       trpc-to-openapi:
         specifier: ^3.0.1
-        version: 3.0.1(@trpc/server@11.4.4(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.0.17))(zod@4.0.17)
+        version: 3.0.1(patch_hash=b99b7a626000e5182c06fe45b25c38355041e714fb567dbb8e8945503f3b0a26)(@trpc/server@11.4.4(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.0.17))(zod@4.0.17)
       zod:
         specifier: ^4.0.17
         version: 4.0.17
@@ -4396,7 +4400,7 @@ packages:
       arktype: ^2.1.0
       typescript: '>=5.0.0'
       valibot: ^1.0.0-beta.7 || ^1.0.0
-      zod: ^3.24.0 || ^4.0.0-beta.0
+      zod: ^4.0.17
     peerDependenciesMeta:
       arktype:
         optional: true
@@ -4413,7 +4417,7 @@ packages:
       arktype: ^2.1.0
       typescript: '>=5.0.0'
       valibot: ^1.0.0-beta.7 || ^1.0.0
-      zod: ^3.24.0 || ^4.0.0-beta.0
+      zod: ^4.0.17
     peerDependenciesMeta:
       arktype:
         optional: true
@@ -6404,7 +6408,7 @@ packages:
     resolution: {integrity: sha512-66yVOuvGhKJnTdiqj1/Xaaz9/qzOdRJADpDa68enqS6g3t0kpNkwNYjUuaeXgZfO/UWuIM9HIhSlJ6C5ZraMww==}
     peerDependencies:
       drizzle-orm: '>=0.36.0'
-      zod: ^3.25.0 || ^4.0.0
+      zod: ^4.0.17
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -8043,7 +8047,7 @@ packages:
     engines: {node: '>=16.6.0'}
     peerDependencies:
       '@mantine/form': '>=7.0.0'
-      zod: '>=3.25.0'
+      zod: ^4.0.17
 
   mantine-react-table@2.0.0-beta.9:
     resolution: {integrity: sha512-ZdfcwebWaPERoDvAuk43VYcBCzamohARVclnbuepT0PHZ0wRcDPMBR+zgaocL+pFy8EXUGwvWTOKNh25ITpjNQ==}
@@ -10250,7 +10254,7 @@ packages:
     resolution: {integrity: sha512-XxQl/DvjrtSUkdkixyv403p+JAi/rKSqjfjQb30gR8hbIR4z2ixD+y3Sl0TJVRrx5dLPNJjt+UU/dfMQeTdfiQ==}
     peerDependencies:
       '@trpc/server': ^11.1.0
-      zod: ^4.0.0
+      zod: ^4.0.17
       zod-openapi: ^5.0.1
 
   ts-api-utils@2.1.0:
@@ -11026,19 +11030,19 @@ packages:
   zod-form-data@3.0.0:
     resolution: {integrity: sha512-jTQbmXQU5wMfI+ERZH6EuATzeD9FEOviPasLL2hCUP+FcLagXLtboUM95PHsSOFseL8Nv91YKlwln3zo1sAS2g==}
     peerDependencies:
-      zod: '>= 3.25.0'
+      zod: ^4.0.17
 
   zod-openapi@5.3.0:
     resolution: {integrity: sha512-hv3DU37kV39v0MEiQ0vcL06NLS9bTHTb7FNtuFk2zhuATsi+UNcNN6y03z7qbI9NdC6LJS+Knk5shOSCUMwsDQ==}
     engines: {node: '>=20'}
     peerDependencies:
-      zod: ^3.25.74 || ^4.0.0
+      zod: ^4.0.17
 
   zod-validation-error@4.0.1:
     resolution: {integrity: sha512-F3rdaCOHs5ViJ5YTz5zzRtfkQdMdIeKudJAoxy7yB/2ZMEHw73lmCAcQw11r7++20MyGl4WV59EVh7A9rNAyog==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      zod: ^3.25.0 || ^4.0.0
+      zod: ^4.0.17
 
   zod@4.0.17:
     resolution: {integrity: sha512-1PHjlYRevNxxdy2JZ8JcNAw7rX8V9P1AKkP+x/xZfxB0K5FYfuV+Ug6P/6NVSR2jHQ+FzDDoDHS04nYUsOIyLQ==}
@@ -19979,7 +19983,7 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-openapi@3.0.1(@trpc/server@11.4.4(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.0.17))(zod@4.0.17):
+  trpc-to-openapi@3.0.1(patch_hash=b99b7a626000e5182c06fe45b25c38355041e714fb567dbb8e8945503f3b0a26)(@trpc/server@11.4.4(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.0.17))(zod@4.0.17):
     dependencies:
       '@trpc/server': 11.4.4(typescript@5.9.2)
       co-body: 6.2.0

@@ -1,11 +1,13 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Stack, Tabs, TabsList, TabsPanel, TabsTab } from "@mantine/core";
+import z from "zod";
 
 import { openApiDocument } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
+import { logger } from "@homarr/log";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { SwaggerUIClient } from "~/app/[locale]/manage/tools/api/components/swagger-ui";
@@ -30,9 +32,20 @@ export default async function ApiPage() {
   if (!session?.user || !session.user.permissions.includes("admin")) {
     notFound();
   }
-  const document = openApiDocument(extractBaseUrlFromHeaders(await headers()));
+
+  logger.warn(`Is coerce in zod? ${"coerce" in z}`);
+  let document: ReturnType<typeof openApiDocument> | undefined;
+  try {
+    document = openApiDocument(extractBaseUrlFromHeaders(await headers()));
+  } catch (error) {
+    logger.error(error);
+  }
   const apiKeys = await api.apiKeys.getAll();
   const t = await getScopedI18n("management.page.tool.api.tab");
+
+  if (!document) {
+    return "Failed to generate OpenAPI document";
+  }
 
   return (
     <Stack>

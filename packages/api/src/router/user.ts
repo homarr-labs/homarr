@@ -179,7 +179,7 @@ export const userRouter = createTRPCRouter({
     }),
   // Is protected because also used in board access / integration access forms
   selectable: protectedProcedure
-    .input(z.object({ excludeExternalProviders: z.boolean().default(false) }).optional())
+    .input(z.object({ excludeExternalProviders: z.enum(["true", "false"]).default("false") }).optional())
     .output(z.array(selectUserSchema.pick({ id: true, name: true, image: true })))
     .meta({ openapi: { method: "GET", path: "/api/users/selectable", tags: ["users"], protect: true } })
     .query(({ ctx, input }) => {
@@ -189,7 +189,7 @@ export const userRouter = createTRPCRouter({
           name: true,
           image: true,
         },
-        where: input?.excludeExternalProviders ? eq(users.provider, "credentials") : undefined,
+        where: input?.excludeExternalProviders === "true" ? eq(users.provider, "credentials") : undefined,
       });
     }),
   search: permissionRequiredProcedure
