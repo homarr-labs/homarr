@@ -1,13 +1,11 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Stack, Tabs, TabsList, TabsPanel, TabsTab } from "@mantine/core";
-import z from "zod";
 
 import { openApiDocument } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
-import { logger } from "@homarr/log";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { SwaggerUIClient } from "~/app/[locale]/manage/tools/api/components/swagger-ui";
