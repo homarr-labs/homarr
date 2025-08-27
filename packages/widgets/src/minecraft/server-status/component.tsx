@@ -54,7 +54,7 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
           <Group gap={5} c="gray.6" align="center">
             <IconUsersGroup size="1rem" />
             <Text size="md">
-              {formatNumber(data.players.online, 1)} / {formatNumber(data.players.max, 1)}
+              {formatNumber(data.players.online, 0)} / {formatNumber(data.players.max, 0)}
             </Text>
           </Group>
         </>
