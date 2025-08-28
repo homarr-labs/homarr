@@ -307,12 +307,12 @@
       "name": "Nazwa",
       "members": "Członkowie",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Tablica główna",
+        "description": "Tylko tablice dostępne dla grupy mogą być wybrane"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Tablica mobilna",
+        "description": "Tylko tablice dostępne dla grupy mogą być wybrane"
       }
     },
     "permission": {
@@ -514,12 +514,12 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Ustawienia zostały zapisane",
+              "message": "Ustawienia tablicy zapisane pomyślnie"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Nie udało się zapisać ustawień",
+              "message": "Nie można zapisać ustawień tablicy"
             }
           }
         }
@@ -527,17 +527,17 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Pozycja zmieniona pomyślnie"
           },
           "error": {
-            "message": ""
+            "message": "Nie można zmienić pozycji"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
-      "description": ""
+      "name": "Domyślna grupa",
+      "description": "{name} - Wszyscy zalogowani użytkownicy"
     }
   },
   "app": {
@@ -603,8 +603,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Użyj innego adresu URL do pingu",
+          "description": "Przydatne, jeśli do Homarr'a można uzyskać bezpośredni dostępny za pomocą wewnętrznej nazwy hosta lub sieci, aby uniknąć wykorzystania przepustowości łącza"
         }
       }
     },
@@ -612,17 +612,17 @@
       "select": {
         "label": "Wybierz aplikację",
         "notFound": "Nie znaleziono aplikacji",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "Znajdź aplikację",
+        "noResults": "Brak wyników",
+        "action": "Wybierz {app}",
+        "title": "Wybierz aplikację do dodania do tej tablicy"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "Stwórz nową aplikację",
+        "description": "Stwórz nową aplikację",
+        "action": "Otwórz tworzenie aplikacji"
       },
-      "add": ""
+      "add": "Dodaj aplikację"
     }
   },
   "integration": {
@@ -687,11 +687,11 @@
         "description": "Integracja \"{kind}\" może być używana z wyszukiwarkami. Zaznacz to, aby automatycznie skonfigurować wyszukiwarkę."
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "Stwórz aplikację",
+        "description": "Utwórz aplikację o tej samej nazwie i ikonie, co integracja. Poniższe pole pozostaw puste, aby utworzyć aplikację z URL integracji."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "Niestandardowy adres URL aplikacji"
       }
     },
     "action": {
@@ -705,75 +705,75 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Więcej szczegółów o przyczynie"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Nieznany błąd",
+          "description": "Wystąpił nieznany błąd, otwórz przyczynę poniżej, aby zobaczyć więcej szczegółów"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Błąd przetwarzania",
+          "description": "Odpowiedź nie mogła zostać przetworzona. Sprawdź, czy adres URL wskazuje na bazowy adres URL usługi."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "Błąd autoryzacji",
+          "description": "Zapytanie nie zostało autoryzowane. Sprawdź, czy dane uwierzytelniające są poprawne i czy mają odpowiednie uprawnienia."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Błąd odpowiedzi",
+          "description": "Otrzymano nieoczekiwaną odpowiedź {statusCode} ({reason}) od <url></url>. Sprawdź, czy adres URL wskazuje na bazowy adres URL integracji.",
+          "otherDescription": "Otrzymano nieoczekiwaną odpowiedź {statusCode} od <url></url>. Sprawdź, czy adres URL wskazuje na bazowy adres URL integracji.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "Błędne zapytanie",
+            "notFound": "Nie znaleziono",
+            "tooManyRequests": "Zbyt wiele zapytań",
+            "internalServerError": "Wewnętrzny błąd serwera",
+            "serviceUnavailable": "Usługa niedostępna",
+            "gatewayTimeout": "Upłynął limit czasu bramki"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Błędny certyfikat",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "Certyfikat stracił ważność",
+            "notYetValid": "Certyfikat nie jest jeszcze ważny",
+            "untrusted": "Certyfikat nie jest zaufany",
+            "hostnameMismatch": "Nazwa hosta certyfikatu nie jest zgodna z adresem URL"
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "Brak wymaganych uprawnień",
+              "message": "Nie masz uprawnień, aby konfigurować certyfikaty. Skontaktuj się z administratorem, aby przesłać wymagany certyfikat główny."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "Nazwa hosta jest niezgodna",
+              "message": "Nazwa hosta w certyfikacie nie pasuje do nazwy hosta, z którą próbujesz się połączyć. Może to wskazywać na zagrożenie bezpieczeństwa, ale nadal możesz zaufać temu certyfikatowi, jeśli chcesz."
             },
             "extract": {
-              "title": "",
+              "title": "Wydobycie certyfikatu CA nie powiodło się",
               "message": ""
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Spróbuj utworzyć ponownie"
             },
             "trust": {
-              "label": ""
+              "label": "Zaufaj certyfikatowi"
             },
             "upload": {
-              "label": ""
+              "label": "Prześlij certyfikat"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Zaufaj mimo niezgodności nazwy hosta",
+              "message": "Czy na pewno chcesz zaufać certyfikatowi z niezgodną nazwą hosta?"
             },
             "notification": {
               "success": {
-                "title": "",
+                "title": "Zaufany certyfikat",
                 "message": ""
               },
               "error": {
@@ -799,7 +799,7 @@
             }
           },
           "details": {
-            "title": "",
+            "title": "Szczegóły",
             "description": "",
             "content": {
               "action": "",
@@ -808,7 +808,7 @@
           }
         },
         "request": {
-          "title": "",
+          "title": "Błąd zapytania",
           "description": {
             "connection": {
               "hostUnreachable": "",
@@ -944,6 +944,14 @@
         "topic": {
           "label": "",
           "newLabel": ""
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -995,6 +1003,7 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "Wersja beta",
     "error": "Błąd",
     "action": {
@@ -1262,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": "Włącz prosty ping"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
         }
       },
       "error": {
@@ -3252,14 +3270,70 @@
             "minutes": "",
             "hours": "",
             "midnight": "",
-            "weeklyMonday": ""
+            "weeklyMonday": "",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
           },
           "settings": {
             "title": ""
           },
           "field": {
+            "name": {
+              "label": ""
+            },
             "interval": {
               "label": ""
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3768,6 +3842,9 @@
       },
       "tools": {
         "label": "Narzędzia",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": ""
         },

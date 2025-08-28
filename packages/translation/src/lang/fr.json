@@ -944,6 +944,14 @@
         "topic": {
           "label": "Sujet",
           "newLabel": "Nouveau sujet"
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -995,6 +1003,7 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "Bêta",
     "error": "Erreur",
     "action": {
@@ -1262,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": "Activer la vérification du statut"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
         }
       },
       "error": {
@@ -3252,14 +3270,70 @@
             "minutes": "Chaque {interval, plural, one {}=1 {minute} other {# minutes}}",
             "hours": "Chaque {interval, plural, one {}=1 {heure} other {# heures}}",
             "midnight": "Chaque jour à minuit",
-            "weeklyMonday": "Chaque semaine le lundi"
+            "weeklyMonday": "Chaque semaine le lundi",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
           },
           "settings": {
             "title": "Paramètres de la tâche pour {jobName}"
           },
           "field": {
+            "name": {
+              "label": ""
+            },
             "interval": {
               "label": "Intervalle de planification"
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3768,6 +3842,9 @@
       },
       "tools": {
         "label": "Outils",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": "Docker"
         },

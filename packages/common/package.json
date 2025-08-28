@@ -9,8 +9,7 @@
     "./types": "./src/types.ts",
     "./server": "./src/server.ts",
     "./client": "./src/client.ts",
-    "./env": "./env.ts",
-    "./env-validation": "./src/env-validation.ts"
+    "./env": "./env.ts"
   },
   "typesVersions": {
     "*": {
@@ -31,18 +30,18 @@
     "@homarr/log": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "dayjs": "^1.11.13",
-    "next": "15.4.6",
+    "next": "15.5.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
-    "undici": "7.13.0",
-    "zod": "^3.25.76",
-    "zod-validation-error": "^3.5.3"
+    "undici": "7.14.0",
+    "zod": "^4.0.17",
+    "zod-validation-error": "^4.0.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.32.0",
+    "eslint": "^9.33.0",
     "typescript": "^5.9.2"
   }
 }

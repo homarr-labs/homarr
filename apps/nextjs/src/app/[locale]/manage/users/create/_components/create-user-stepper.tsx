@@ -17,7 +17,7 @@ import {
 } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
 import { IconPlus, IconUserCheck } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { everyoneGroup, groupPermissions } from "@homarr/definitions";

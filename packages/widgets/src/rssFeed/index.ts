@@ -1,5 +1,5 @@
 import { IconRss } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

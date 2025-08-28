@@ -1,8 +1,9 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconBox, IconPencil } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -98,7 +99,12 @@ const AppCard = async ({ app }: AppCardProps) => {
             </Text>
             {app.description && (
               <Text size="sm" c="gray.6" lineClamp={4}>
-                {app.description}
+                {app.description.split("\n").map((line, index) => (
+                  <Fragment key={index}>
+                    {line}
+                    <br />
+                  </Fragment>
+                ))}
               </Text>
             )}
             {app.href && (

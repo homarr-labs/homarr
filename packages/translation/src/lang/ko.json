@@ -2,40 +2,40 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Homarr에 오신 것을 환영합니다",
+        "subtitle": "Homarr 인스턴스 설정을 시작합니다.",
+        "description": "시작하기 전에, Homarr 인스턴스를 어떻게 설정할지 선택해주세요.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "처음부터 시작하기",
+          "importOldmarr": "1.0 이전의 Homarr에서 불러오기"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "데이터 불러오기",
+        "subtitle": "기존 Homarr 인스턴스에서 데이터를 불러올 수 있습니다.",
         "dropzone": {
-          "title": "",
+          "title": "zip 파일 드롭 또는 클릭해서 찾아보기",
           "description": ""
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "파일 변경"
           }
         },
         "importSettings": {
-          "title": "",
+          "title": "설정 불러오기",
           "description": ""
         },
         "boardSelection": {
-          "title": "",
+          "title": "{count}개의 보드 찾음",
           "description": "",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "모두 선택",
+            "unselectAll": "모두 선택 해제"
           }
         },
         "summary": {
-          "title": "",
+          "title": "불러오기 요약",
           "description": "",
           "action": {
             "import": ""
@@ -57,69 +57,69 @@
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "유효하지 않은 토큰",
+              "message": "입력한 토큰이 유효하지 않습니다"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "관리자",
+        "subtitle": "관리자의 계정 정보를 설정해주세요.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "계정 생성됨",
+            "message": "계정이 성공적으로 생성되었습니다"
           },
           "error": {
-            "title": ""
+            "title": "계정 생성 실패"
           }
         }
       },
       "group": {
-        "title": "",
+        "title": "외부 그룹",
         "subtitle": "",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "그룹 이름",
+            "description": "이름은 외부 제공자의 관리자 그룹과 일치해야 합니다"
           }
         }
       },
       "settings": {
         "title": "설정",
-        "subtitle": ""
+        "subtitle": "서버 설정하기."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "설정 완료",
+        "subtitle": "모든 준비가 끝났습니다!",
+        "description": "설정 과정을 성공적으로 완료했습니다. 이제 Homarr을 사용할 수 있습니다. 다음 작업을 선택해주세요:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "{name} 보드로 가기",
+          "createBoard": "첫 번째 보드 만들기",
+          "inviteUser": "다른 사용자 초대하기",
+          "docs": "문서 읽기"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "시작으로 돌아가기"
   },
   "user": {
     "title": "사용자",
     "name": "사용자",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "내 계정에 로그인",
+        "subtitle": "돌아오신 것을 환영합니다! 계정 정보를 입력해주세요"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Homarr 참여하기",
+        "subtitle": "Homarr에 오신 것을 환영합니다! 계정을 생성해주세요",
+        "description": "{username}가 초대했습니다"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "새로운 Homarr 설치",
+        "subtitle": "초기 관리자 계정을 생성해주세요"
       }
     },
     "field": {
@@ -281,47 +281,47 @@
             "message": ""
           },
           "error": {
-            "message": ""
+            "message": "프로필을 업데이트할 수 없습니다"
           }
         }
       },
       "delete": {
-        "label": "",
+        "label": "사용자 영원히 삭제",
         "description": "",
         "confirm": ""
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "사용자 선택",
+        "notFound": "사용자 찾을 수 없음"
       },
       "transfer": {
-        "label": ""
+        "label": "새로운 소유자 선택하기"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "그룹",
+    "name": "그룹",
+    "search": "그룹 찾기",
     "field": {
       "name": "이름",
-      "members": "",
+      "members": "멤버",
       "homeBoard": {
-        "label": "",
+        "label": "홈 보드",
         "description": ""
       },
       "mobileBoard": {
-        "label": "",
+        "label": "모바일 보드",
         "description": ""
       }
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "관리자",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "관리자",
+            "description": "이 권한을 가진 멤버는 모든 기능과 설정에 대한 접근을 할 수 있습니다"
           }
         }
       },
@@ -329,11 +329,11 @@
         "title": "앱",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "앱 만들기",
+            "description": "멤버가 앱을 만들 수 있도록 허락하기"
           },
           "use-all": {
-            "label": "",
+            "label": "모든 앱 사용",
             "description": ""
           },
           "modify-all": {
@@ -944,6 +944,14 @@
         "topic": {
           "label": "",
           "newLabel": ""
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -995,6 +1003,7 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "",
     "error": "오류",
     "action": {
@@ -1262,6 +1271,15 @@
         },
         "pingEnabled": {
           "label": ""
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
         }
       },
       "error": {
@@ -3252,14 +3270,70 @@
             "minutes": "",
             "hours": "",
             "midnight": "",
-            "weeklyMonday": ""
+            "weeklyMonday": "",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
           },
           "settings": {
             "title": ""
           },
           "field": {
+            "name": {
+              "label": ""
+            },
             "interval": {
               "label": ""
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3768,6 +3842,9 @@
       },
       "tools": {
         "label": "도구",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": ""
         },
