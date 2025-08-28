@@ -1,5 +1,3 @@
-import "@homarr/redis";
-
 import dayjs from "dayjs";
 import z from "zod";
 
