@@ -54,10 +54,10 @@ export class ReadarrIntegration extends Integration implements ICalendarIntegrat
         name: readarrCalendarEvent.title,
         subName: readarrCalendarEvent.author.authorName,
         description: readarrCalendarEvent.overview,
-        thumbnail: this.chooseBestImageAsURL(readarrCalendarEvent),
         date: readarrCalendarEvent.releaseDate,
-        mediaInformation: {
+        metadata: {
           type: "audio",
+          thumbnail: this.chooseBestImageAsURL(readarrCalendarEvent),
         },
         links: this.getLinksForReadarrCalendarEvent(readarrCalendarEvent),
       };

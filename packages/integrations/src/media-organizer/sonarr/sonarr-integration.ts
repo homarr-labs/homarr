@@ -42,7 +42,7 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
         description: sonarCalendarEvent.series.overview,
         thumbnail: this.chooseBestImageAsURL(sonarCalendarEvent),
         date: sonarCalendarEvent.airDateUtc,
-        mediaInformation: {
+        metadata: {
           type: "tv",
           episodeNumber: sonarCalendarEvent.episodeNumber,
           seasonNumber: sonarCalendarEvent.seasonNumber,

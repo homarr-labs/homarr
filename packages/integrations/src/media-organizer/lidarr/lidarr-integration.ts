@@ -50,7 +50,7 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
         description: lidarrCalendarEvent.overview,
         thumbnail: this.chooseBestImageAsURL(lidarrCalendarEvent),
         date: lidarrCalendarEvent.releaseDate,
-        mediaInformation: {
+        metadata: {
           type: "audio",
         },
         links: this.getLinksForLidarrCalendarEvent(lidarrCalendarEvent),

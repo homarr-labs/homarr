@@ -42,11 +42,11 @@ export class RadarrIntegration extends Integration implements ICalendarIntegrati
         name: radarrCalendarEvent.title,
         subName: radarrCalendarEvent.originalTitle,
         description: radarrCalendarEvent.overview,
-        thumbnail: this.chooseBestImageAsURL(radarrCalendarEvent),
         date: dates[0].date,
         dates,
-        mediaInformation: {
+        metadata: {
           type: "movie",
+          thumbnail: this.chooseBestImageAsURL(radarrCalendarEvent),
         },
         links: this.getLinksForRadarrCalendarEvent(radarrCalendarEvent),
       };

@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -8,45 +12,50 @@ import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
 import ICAL from "ical.js";
 
 export class ICalIntegration extends Integration implements ICalendarIntegration {
-
     async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]>  {
         const response = await fetchWithTrustedCertificatesAsync(this.integration.url);
         const result = await response.text();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const jcal = ICAL.parse(result);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        const jcal = ICAL.parse(result)
         const comp = new ICAL.Component(jcal);
-
-        // TODO(nn): reduce instead of filter map
-        return comp.getAllSubcomponents("vevent").filter((vevent) => {
+        
+        return comp.getAllSubcomponents("vevent").reduce((prev, vevent) => {
             const event = new ICAL.Event(vevent);
-            const startA = event.startDate.toJSDate()
-            const endA = event.endDate.toJSDate()
-            console.log('-------------------');
-            console.log(startA, endA);
-            console.log(start, end);
-            console.log(startA >= start && endA <= end);
-            console.log(event.summary, event.location, event.color)
-            console.log('-------------------');
-            return event.startDate.toJSDate() >= start && event.endDate.toJSDate() <= end;
-        }).map((vevent): CalendarEvent => {
-            const event = new ICAL.Event(vevent);
-            console.log('passed filter');
-            return {
-                name: event.summary,
-                subName: '',
-                description: event.location,
-                date: event.startDate.toJSDate(),
-                links: [{
-                    color: '#00aaaa',
-                    notificationColor: '#aaaa00',
-                    href: event.location || '',
-                    isDark: undefined,
-                    logo: '',
-                    name: event.summary || '',
-                }],
-            };
-        });
+            const startDate = event.startDate.toJSDate();
+            const endDate = event.endDate.toJSDate();
+            if (startDate >= start && endDate <= end) {
+                const evn: CalendarEvent = {
+                    name: event.summary,
+                    subName: '',
+                    description: event.description,
+                    date: event.startDate.toJSDate(),
+                    links: [{
+                        color: '#00aaaa',
+                        notificationColor: '#aaaa00',
+                        href: event.location ?? '',
+                        isDark: undefined,
+                        logo: '',
+                        name: event.summary ?? '',
+                    }],
+                    metadata: {
+                        type: 'event',
+                        startDate: event.startDate.toJSDate(),
+                        endDate: event.endDate.toJSDate(),
+                        location: event.location,
+                        organizer: event.organizer,
+                        attendees: event.attendees.map(prop => prop.getValues()?.toString().replace('mailto:', '') ?? ''),
+                        color: event.color,
+                        duration: event.duration.toICALString(),
+                        calendarName: (event.component.parent?.getFirstPropertyValue("x-wr-calname") ?? undefined) as string | undefined,
+                        timezone: (event.component.parent?.getFirstPropertyValue("x-wr-timezone") ?? undefined) as string | undefined
+                    }
+                }
+                console.log(evn);
+                event.attendees.forEach(attendee => console.log(attendee.jCal))
+                // console.log(event.attendees);
+                prev.push(evn);
+            }
+            return prev;
+        }, [] as CalendarEvent[]);
     }
 
     protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

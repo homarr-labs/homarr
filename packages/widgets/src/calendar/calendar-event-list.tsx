@@ -11,9 +11,10 @@ import {
   Text,
   useMantineColorScheme,
 } from "@mantine/core";
-import { IconClock } from "@tabler/icons-react";
+import { IconClock, IconPin } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
+import { isMediaMetadata } from "@homarr/integrations/types";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
@@ -40,24 +41,26 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
       <Stack>
         {events.map((event, eventIndex) => (
           <Group key={`event-${eventIndex}`} align={"stretch"} wrap="nowrap">
-            <Box pos={"relative"} w={70} h={120}>
-              <Image
-                src={event.thumbnail}
-                w={70}
-                h={120}
-                radius={"sm"}
-                fallbackSrc={"https://placehold.co/400x600?text=No%20image"}
-              />
-              {event.mediaInformation?.type === "tv" && (
-                <Badge
-                  pos={"absolute"}
-                  bottom={-6}
-                  left={"50%"}
-                  w={"inherit"}
-                  className={classes.badge}
-                >{`S${event.mediaInformation.seasonNumber} / E${event.mediaInformation.episodeNumber}`}</Badge>
-              )}
-            </Box>
+            {isMediaMetadata(event.metadata) && (
+              <Box pos={"relative"} w={70} h={120}>
+                <Image
+                  src={event.metadata.thumbnail}
+                  w={70}
+                  h={120}
+                  radius={"sm"}
+                  fallbackSrc={"https://placehold.co/400x600?text=No%20image"}
+                />
+                {event.metadata.type === "tv" && (
+                  <Badge
+                    pos={"absolute"}
+                    bottom={-6}
+                    left={"50%"}
+                    w={"inherit"}
+                    className={classes.badge}
+                  >{`S${event.metadata.seasonNumber} / E${event.metadata.episodeNumber}`}</Badge>
+                )}
+              </Box>
+            )}
             <Stack style={{ flexGrow: 1 }} gap={0}>
               <Group justify={"space-between"} align={"start"} mb={"xs"} wrap="nowrap">
                 <Stack gap={0}>
@@ -81,16 +84,44 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
                 ) : (
                   <Group gap={3} wrap="nowrap" align={"center"}>
                     <IconClock opacity={0.7} size={"1rem"} />
-                    <Text c={"dimmed"} size={"sm"}>
-                      {dayjs(event.date).format("HH:mm")}
-                    </Text>
+                    {event.metadata?.type === "event" ? (
+                      <>
+                        <Text c={"dimmed"} size={"sm"}>
+                          {dayjs(event.metadata.startDate).format("HH:mm")}
+                        </Text>
+                        -
+                        <Text c={"dimmed"} size={"sm"}>
+                          {dayjs(event.metadata.endDate).format("HH:mm")}
+                        </Text>
+                      </>
+                    ) : (
+                      <Text c={"dimmed"} size={"sm"}>
+                        {dayjs(event.date).format("HH:mm")}
+                      </Text>
+                    )}
                   </Group>
                 )}
               </Group>
-              {event.description && (
+              {!event.metadata || isMediaMetadata(event.metadata) ? (
                 <Text size={"xs"} c={"dimmed"} lineClamp={2}>
                   {event.description}
                 </Text>
+              ) : (
+                <>
+                  {event.metadata.location !== "" && (
+                    <Group gap={"sm"}>
+                      <IconPin opacity={0.7} size={"1rem"} />
+                      <Text size={"xs"} c={"dimmed"} lineClamp={2}>
+                        {event.metadata.location}
+                      </Text>
+                    </Group>
+                  )}
+                  {event.description !== undefined && event.description !== "" && (
+                    <Text size={"xs"} c={"dimmed"} mt={event.metadata.location !== "" ? "sm" : undefined} lineClamp={2}>
+                      {event.description}
+                    </Text>
+                  )}
+                </>
               )}
               {event.links.length > 0 && (
                 <Group pt={5} gap={5} mt={"auto"} wrap="nowrap">
