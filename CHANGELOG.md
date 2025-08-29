@@ -1,3 +1,17 @@
+## [1.35.0](https://github.com/homarr-labs/homarr/compare/v1.34.0...v1.35.0) (2025-08-29)
+
+### Features
+
+* **app-widget:** show description in widget ([#3876](https://github.com/homarr-labs/homarr/issues/3876)) ([c346167](https://github.com/homarr-labs/homarr/commit/c3461677e82f52bd43bd3c4ecc867b4a6ae2bee8))
+* **db:** support postgresql database ([#3643](https://github.com/homarr-labs/homarr/issues/3643)) ([5168cba](https://github.com/homarr-labs/homarr/commit/5168cba8e4ccfb8a1c348c80706b2e7a987bb152))
+* **env:** improve support for instances without internet connection ([#3915](https://github.com/homarr-labs/homarr/issues/3915)) ([10feaa3](https://github.com/homarr-labs/homarr/commit/10feaa37ce1a3ecd28246db9b2f1b0414d0a75e6))
+
+### Bug Fixes
+
+* **api:** document generation not working with nextjs ([#3920](https://github.com/homarr-labs/homarr/issues/3920)) ([97bc092](https://github.com/homarr-labs/homarr/commit/97bc092aea72dce19f5d1626054ecae69cf01aac))
+* **security:** deepsource issues ([#3919](https://github.com/homarr-labs/homarr/issues/3919)) ([84f1e78](https://github.com/homarr-labs/homarr/commit/84f1e787013468cab7f2f0e2bcdd1f012d4e0747))
+* system resources widget opacity support for transparent backgrounds ([#3835](https://github.com/homarr-labs/homarr/issues/3835)) ([a4aa2ae](https://github.com/homarr-labs/homarr/commit/a4aa2aea904081ff49e9cfc173c35770a019c587))
+
 ## [1.34.0](https://github.com/homarr-labs/homarr/compare/v1.33.0...v1.34.0) (2025-08-22)
 
 ### Features
