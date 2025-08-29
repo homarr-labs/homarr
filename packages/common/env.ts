@@ -1,7 +1,7 @@
 import { randomBytes } from "crypto";
 import { z } from "zod/v4";
 
-import { createEnv } from "@homarr/core/infrastructure/env";
+import { createBooleanSchema, createEnv } from "@homarr/core/infrastructure/env";
 
 const errorSuffix = `, please generate a 64 character secret in hex format or use the following: "${randomBytes(32).toString("hex")}"`;
 
@@ -23,9 +23,11 @@ export const env = createEnv({
       .regex(/^[0-9a-fA-F]{64}$/, {
         message: `SECRET_ENCRYPTION_KEY must only contain hex characters${errorSuffix}`,
       }),
+    NO_EXTERNAL_CONNECTION: createBooleanSchema(false),
   },
   runtimeEnv: {
     SECRET_ENCRYPTION_KEY: process.env.SECRET_ENCRYPTION_KEY,
     NODE_ENV: process.env.NODE_ENV,
+    NO_EXTERNAL_CONNECTION: process.env.NO_EXTERNAL_CONNECTION,
   },
 });
