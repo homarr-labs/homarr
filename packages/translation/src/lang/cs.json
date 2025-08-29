@@ -44,7 +44,7 @@
             "apps": "Aplikace",
             "boards": "Plochy",
             "integrations": "Integrace",
-            "credentialUsers": ""
+            "credentialUsers": "Uživatelské oprávnění"
           }
         },
         "tokenModal": {
@@ -52,7 +52,7 @@
           "field": {
             "token": {
               "label": "Token",
-              "description": ""
+              "description": "Zadejte zobrazený importní token z předchozí instance homarr"
             }
           },
           "notification": {

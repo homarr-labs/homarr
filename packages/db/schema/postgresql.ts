@@ -2,20 +2,19 @@ import type { AdapterAccount } from "@auth/core/adapters";
 import type { MantineSize } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import { relations } from "drizzle-orm";
-import type { AnyMySqlColumn } from "drizzle-orm/mysql-core";
+import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import {
   boolean,
   customType,
   index,
-  int,
-  mysqlTable,
+  integer,
+  pgTable,
   primaryKey,
   smallint,
   text,
   timestamp,
-  tinyint,
   varchar,
-} from "drizzle-orm/mysql-core";
+} from "drizzle-orm/pg-core";
 
 import {
   backgroundImageAttachments,
@@ -42,22 +41,22 @@ import type {
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
-    return "LONGBLOB"; // Has max size of 4GB
+    return "bytea";
   },
 });
 
-export const apiKeys = mysqlTable("apiKey", {
+export const apiKeys = pgTable("apiKey", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   apiKey: text().notNull(),
   salt: text().notNull(),
   userId: varchar({ length: 64 })
     .notNull()
-    .references((): AnyMySqlColumn => users.id, {
+    .references((): AnyPgColumn => users.id, {
       onDelete: "cascade",
     }),
 });
 
-export const users = mysqlTable("user", {
+export const users = pgTable("user", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: text(),
   email: text(),
@@ -66,10 +65,10 @@ export const users = mysqlTable("user", {
   password: text(),
   salt: text(),
   provider: varchar({ length: 64 }).$type<SupportedAuthProvider>().default("credentials").notNull(),
-  homeBoardId: varchar({ length: 64 }).references((): AnyMySqlColumn => boards.id, {
+  homeBoardId: varchar({ length: 64 }).references((): AnyPgColumn => boards.id, {
     onDelete: "set null",
   }),
-  mobileHomeBoardId: varchar({ length: 64 }).references((): AnyMySqlColumn => boards.id, {
+  mobileHomeBoardId: varchar({ length: 64 }).references((): AnyPgColumn => boards.id, {
     onDelete: "set null",
   }),
   defaultSearchEngineId: varchar({ length: 64 }).references(() => searchEngines.id, {
@@ -77,11 +76,11 @@ export const users = mysqlTable("user", {
   }),
   openSearchInNewTab: boolean().default(false).notNull(),
   colorScheme: varchar({ length: 5 }).$type<ColorScheme>().default("dark").notNull(),
-  firstDayOfWeek: tinyint().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
+  firstDayOfWeek: smallint().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: boolean().default(false).notNull(),
 });
 
-export const accounts = mysqlTable(
+export const accounts = pgTable(
   "account",
   {
     userId: varchar({ length: 64 })
@@ -92,7 +91,7 @@ export const accounts = mysqlTable(
     providerAccountId: varchar({ length: 64 }).notNull(),
     refresh_token: text(),
     access_token: text(),
-    expires_at: int(),
+    expires_at: integer(),
     token_type: text(),
     scope: text(),
     id_token: text(),
@@ -106,7 +105,7 @@ export const accounts = mysqlTable(
   }),
 );
 
-export const sessions = mysqlTable(
+export const sessions = pgTable(
   "session",
   {
     sessionToken: varchar({ length: 512 }).notNull().primaryKey(),
@@ -120,7 +119,7 @@ export const sessions = mysqlTable(
   }),
 );
 
-export const verificationTokens = mysqlTable(
+export const verificationTokens = pgTable(
   "verificationToken",
   {
     identifier: varchar({ length: 64 }).notNull(),
@@ -134,7 +133,7 @@ export const verificationTokens = mysqlTable(
   }),
 );
 
-export const groupMembers = mysqlTable(
+export const groupMembers = pgTable(
   "groupMember",
   {
     groupId: varchar({ length: 64 })
@@ -151,7 +150,7 @@ export const groupMembers = mysqlTable(
   }),
 );
 
-export const groups = mysqlTable("group", {
+export const groups = pgTable("group", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: varchar({ length: 64 }).unique().notNull(),
   ownerId: varchar({ length: 64 }).references(() => users.id, {
@@ -166,14 +165,14 @@ export const groups = mysqlTable("group", {
   position: smallint().notNull(),
 });
 
-export const groupPermissions = mysqlTable("groupPermission", {
+export const groupPermissions = pgTable("groupPermission", {
   groupId: varchar({ length: 64 })
     .notNull()
     .references(() => groups.id, { onDelete: "cascade" }),
   permission: text().$type<GroupPermissionKey>().notNull(),
 });
 
-export const invites = mysqlTable("invite", {
+export const invites = pgTable("invite", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   token: varchar({ length: 512 }).notNull().unique(),
   expirationDate: timestamp().notNull(),
@@ -182,17 +181,17 @@ export const invites = mysqlTable("invite", {
     .references(() => users.id, { onDelete: "cascade" }),
 });
 
-export const medias = mysqlTable("media", {
+export const medias = pgTable("media", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: varchar({ length: 512 }).notNull(),
   content: customBlob().notNull(),
   contentType: text().notNull(),
-  size: int().notNull(),
+  size: integer().notNull(),
   createdAt: timestamp({ mode: "date" }).notNull().defaultNow(),
   creatorId: varchar({ length: 64 }).references(() => users.id, { onDelete: "set null" }),
 });
 
-export const integrations = mysqlTable(
+export const integrations = pgTable(
   "integration",
   {
     id: varchar({ length: 64 }).notNull().primaryKey(),
@@ -205,7 +204,7 @@ export const integrations = mysqlTable(
   }),
 );
 
-export const integrationSecrets = mysqlTable(
+export const integrationSecrets = pgTable(
   "integrationSecret",
   {
     kind: varchar({ length: 16 }).$type<IntegrationSecretKind>().notNull(),
@@ -226,7 +225,7 @@ export const integrationSecrets = mysqlTable(
   }),
 );
 
-export const integrationUserPermissions = mysqlTable(
+export const integrationUserPermissions = pgTable(
   "integrationUserPermission",
   {
     integrationId: varchar({ length: 64 })
@@ -244,7 +243,7 @@ export const integrationUserPermissions = mysqlTable(
   }),
 );
 
-export const integrationGroupPermissions = mysqlTable(
+export const integrationGroupPermissions = pgTable(
   "integrationGroupPermissions",
   {
     integrationId: varchar({ length: 64 })
@@ -263,7 +262,7 @@ export const integrationGroupPermissions = mysqlTable(
   }),
 );
 
-export const boards = mysqlTable("board", {
+export const boards = pgTable("board", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: varchar({ length: 256 }).unique().notNull(),
   isPublic: boolean().default(false).notNull(),
@@ -283,14 +282,14 @@ export const boards = mysqlTable("board", {
   backgroundImageSize: text().$type<BackgroundImageSize>().default(backgroundImageSizes.defaultValue).notNull(),
   primaryColor: text().default("#fa5252").notNull(),
   secondaryColor: text().default("#fd7e14").notNull(),
-  opacity: int().default(100).notNull(),
+  opacity: integer().default(100).notNull(),
   customCss: text(),
   iconColor: text(),
   itemRadius: text().$type<MantineSize>().default("lg").notNull(),
   disableStatus: boolean().default(false).notNull(),
 });
 
-export const boardUserPermissions = mysqlTable(
+export const boardUserPermissions = pgTable(
   "boardUserPermission",
   {
     boardId: varchar({ length: 64 })
@@ -308,7 +307,7 @@ export const boardUserPermissions = mysqlTable(
   }),
 );
 
-export const boardGroupPermissions = mysqlTable(
+export const boardGroupPermissions = pgTable(
   "boardGroupPermission",
   {
     boardId: varchar({ length: 64 })
@@ -326,17 +325,17 @@ export const boardGroupPermissions = mysqlTable(
   }),
 );
 
-export const layouts = mysqlTable("layout", {
+export const layouts = pgTable("layout", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: varchar({ length: 32 }).notNull(),
   boardId: varchar({ length: 64 })
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
-  columnCount: tinyint().notNull(),
+  columnCount: smallint().notNull(),
   breakpoint: smallint().notNull().default(0),
 });
 
-export const itemLayouts = mysqlTable(
+export const itemLayouts = pgTable(
   "item_layout",
   {
     itemId: varchar({ length: 64 })
@@ -348,10 +347,10 @@ export const itemLayouts = mysqlTable(
     layoutId: varchar({ length: 64 })
       .notNull()
       .references(() => layouts.id, { onDelete: "cascade" }),
-    xOffset: int().notNull(),
-    yOffset: int().notNull(),
-    width: int().notNull(),
-    height: int().notNull(),
+    xOffset: integer().notNull(),
+    yOffset: integer().notNull(),
+    width: integer().notNull(),
+    height: integer().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
@@ -360,7 +359,7 @@ export const itemLayouts = mysqlTable(
   }),
 );
 
-export const sectionLayouts = mysqlTable(
+export const sectionLayouts = pgTable(
   "section_layout",
   {
     sectionId: varchar({ length: 64 })
@@ -369,13 +368,13 @@ export const sectionLayouts = mysqlTable(
     layoutId: varchar({ length: 64 })
       .notNull()
       .references(() => layouts.id, { onDelete: "cascade" }),
-    parentSectionId: varchar({ length: 64 }).references((): AnyMySqlColumn => sections.id, {
+    parentSectionId: varchar({ length: 64 }).references((): AnyPgColumn => sections.id, {
       onDelete: "cascade",
     }),
-    xOffset: int().notNull(),
-    yOffset: int().notNull(),
-    width: int().notNull(),
-    height: int().notNull(),
+    xOffset: integer().notNull(),
+    yOffset: integer().notNull(),
+    width: integer().notNull(),
+    height: integer().notNull(),
   },
   (table) => ({
     compoundKey: primaryKey({
@@ -384,19 +383,19 @@ export const sectionLayouts = mysqlTable(
   }),
 );
 
-export const sections = mysqlTable("section", {
+export const sections = pgTable("section", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   boardId: varchar({ length: 64 })
     .notNull()
     .references(() => boards.id, { onDelete: "cascade" }),
   kind: text().$type<SectionKind>().notNull(),
-  xOffset: int(),
-  yOffset: int(),
+  xOffset: integer(),
+  yOffset: integer(),
   name: text(),
   options: text().default(emptySuperJSON),
 });
 
-export const sectionCollapseStates = mysqlTable(
+export const sectionCollapseStates = pgTable(
   "section_collapse_state",
   {
     userId: varchar({ length: 64 })
@@ -414,7 +413,7 @@ export const sectionCollapseStates = mysqlTable(
   }),
 );
 
-export const items = mysqlTable("item", {
+export const items = pgTable("item", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   boardId: varchar({ length: 64 })
     .notNull()
@@ -424,7 +423,7 @@ export const items = mysqlTable("item", {
   advancedOptions: text().default(emptySuperJSON).notNull(),
 });
 
-export const apps = mysqlTable("app", {
+export const apps = pgTable("app", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: text().notNull(),
   description: text(),
@@ -433,7 +432,7 @@ export const apps = mysqlTable("app", {
   pingUrl: text(),
 });
 
-export const integrationItems = mysqlTable(
+export const integrationItems = pgTable(
   "integration_item",
   {
     itemId: varchar({ length: 64 })
@@ -450,7 +449,7 @@ export const integrationItems = mysqlTable(
   }),
 );
 
-export const icons = mysqlTable("icon", {
+export const icons = pgTable("icon", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   name: varchar({ length: 250 }).notNull(),
   url: text().notNull(),
@@ -460,12 +459,12 @@ export const icons = mysqlTable("icon", {
     .references(() => iconRepositories.id, { onDelete: "cascade" }),
 });
 
-export const iconRepositories = mysqlTable("iconRepository", {
+export const iconRepositories = pgTable("iconRepository", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   slug: varchar({ length: 150 }).notNull(),
 });
 
-export const serverSettings = mysqlTable("serverSetting", {
+export const serverSettings = pgTable("serverSetting", {
   settingKey: varchar({ length: 64 }).notNull().unique().primaryKey(),
   value: text().default(emptySuperJSON).notNull(),
 });
@@ -477,7 +476,7 @@ export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
   }),
 }));
 
-export const searchEngines = mysqlTable("search_engine", {
+export const searchEngines = pgTable("search_engine", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   iconUrl: text().notNull(),
   name: varchar({ length: 64 }).notNull(),
@@ -488,13 +487,13 @@ export const searchEngines = mysqlTable("search_engine", {
   integrationId: varchar({ length: 64 }).references(() => integrations.id, { onDelete: "cascade" }),
 });
 
-export const onboarding = mysqlTable("onboarding", {
+export const onboarding = pgTable("onboarding", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   step: varchar({ length: 64 }).$type<OnboardingStep>().notNull(),
   previousStep: varchar({ length: 64 }).$type<OnboardingStep>(),
 });
 
-export const trustedCertificateHostnames = mysqlTable(
+export const trustedCertificateHostnames = pgTable(
   "trusted_certificate_hostname",
   {
     hostname: varchar({ length: 256 }).notNull(),
@@ -508,7 +507,7 @@ export const trustedCertificateHostnames = mysqlTable(
   }),
 );
 
-export const cronJobConfigurations = mysqlTable("cron_job_configuration", {
+export const cronJobConfigurations = pgTable("cron_job_configuration", {
   name: varchar({ length: 256 }).notNull().primaryKey(),
   cronExpression: varchar({ length: 32 }).notNull(),
   isEnabled: boolean().default(true).notNull(),
