@@ -9,6 +9,8 @@
     "cli": "pnpm with-env tsx packages/cli/index.ts",
     "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
     "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
+    "db:migration:postgresql:generate": "pnpm -F db migration:postgresql:generate",
+    "db:migration:postgresql:run": "pnpm -F db migration:postgresql:run",
     "db:migration:sqlite:generate": "pnpm -F db migration:sqlite:generate",
     "db:migration:sqlite:run": "pnpm -F db migration:sqlite:run",
     "db:push": "pnpm -F db push:sqlite",
