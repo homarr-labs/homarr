@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Fragment, Suspense } from "react";
-import { Flex, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconLoader } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -92,7 +92,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
               <Text
                 className="app-title"
                 fw={700}
-                size={isTiny ? "8px" : "sm"}
+                size={isTiny ? rem(8) : "sm"}
                 ta={isColumnLayout ? "center" : undefined}
               >
                 {app.name}
@@ -101,7 +101,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
             {options.descriptionDisplayMode === "normal" && (
               <Text
                 className="app-description"
-                size={isTiny ? "8px" : "sm"}
+                size={isTiny ? rem(8) : "sm"}
                 ta={isColumnLayout ? "center" : undefined}
                 c="dimmed"
                 lineClamp={4}
