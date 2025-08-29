@@ -850,6 +850,9 @@ importers:
       next:
         specifier: 15.5.0
         version: 15.5.0(@babel/core@7.28.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.90.0)
+      octokit:
+        specifier: ^5.0.3
+        version: 5.0.3
       react:
         specifier: 19.1.1
         version: 19.1.1
@@ -1433,6 +1436,12 @@ importers:
       '@jellyfin/sdk':
         specifier: ^0.11.0
         version: 0.11.0(axios@1.9.0)
+      '@octokit/app':
+        specifier: ^16.1.0
+        version: 16.1.0
+      '@octokit/auth-app':
+        specifier: ^8.1.0
+        version: 8.1.0
       maria2:
         specifier: ^0.4.1
         version: 0.4.1
@@ -3855,12 +3864,12 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@octokit/app@16.0.1':
-    resolution: {integrity: sha512-kgTeTsWmpUX+s3Fs4EK4w1K+jWCDB6ClxLSWUWTyhlw7+L3jHtuXDR4QtABu2GsmCMdk67xRhruiXotS3ay3Yw==}
+  '@octokit/app@16.1.0':
+    resolution: {integrity: sha512-OdKHnm0CYLk8Setr47CATT4YnRTvWkpTYvE+B/l2B0mjszlfOIit3wqPHVslD2jfc1bD4UbO7Mzh6gjCuMZKsA==}
     engines: {node: '>= 20'}
 
-  '@octokit/auth-app@8.0.1':
-    resolution: {integrity: sha512-P2J5pB3pjiGwtJX4WqJVYCtNkcZ+j5T2Wm14aJAEIC3WJOrv12jvBley3G1U/XI8q9o1A7QMG54LiFED2BiFlg==}
+  '@octokit/auth-app@8.1.0':
+    resolution: {integrity: sha512-6bWhyvLXqCSfHiqlwzn9pScLZ+Qnvh/681GR/UEEPCMIVwfpRDBw0cCzy3/t2Dq8B7W2X/8pBgmw6MOiyE0DXQ==}
     engines: {node: '>= 20'}
 
   '@octokit/auth-oauth-app@9.0.1':
@@ -12361,9 +12370,9 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  '@octokit/app@16.0.1':
+  '@octokit/app@16.1.0':
     dependencies:
-      '@octokit/auth-app': 8.0.1
+      '@octokit/auth-app': 8.1.0
       '@octokit/auth-unauthenticated': 7.0.1
       '@octokit/core': 7.0.2
       '@octokit/oauth-app': 8.0.1
@@ -12371,7 +12380,7 @@ snapshots:
       '@octokit/types': 14.1.0
       '@octokit/webhooks': 14.0.0
 
-  '@octokit/auth-app@8.0.1':
+  '@octokit/auth-app@8.1.0':
     dependencies:
       '@octokit/auth-oauth-app': 9.0.1
       '@octokit/auth-oauth-user': 6.0.0
@@ -12418,7 +12427,7 @@ snapshots:
       '@octokit/graphql': 9.0.1
       '@octokit/request': 10.0.2
       '@octokit/request-error': 7.0.0
-      '@octokit/types': 14.0.0
+      '@octokit/types': 14.1.0
       before-after-hook: 4.0.0
       universal-user-agent: 7.0.2
 
@@ -12477,13 +12486,13 @@ snapshots:
     dependencies:
       '@octokit/core': 7.0.2
       '@octokit/request-error': 7.0.0
-      '@octokit/types': 14.0.0
+      '@octokit/types': 14.1.0
       bottleneck: 2.19.5
 
   '@octokit/plugin-throttling@11.0.1(@octokit/core@7.0.2)':
     dependencies:
       '@octokit/core': 7.0.2
-      '@octokit/types': 14.0.0
+      '@octokit/types': 14.1.0
       bottleneck: 2.19.5
 
   '@octokit/request-error@7.0.0':
@@ -17986,7 +17995,7 @@ snapshots:
 
   octokit@5.0.3:
     dependencies:
-      '@octokit/app': 16.0.1
+      '@octokit/app': 16.1.0
       '@octokit/core': 7.0.2
       '@octokit/oauth-app': 8.0.1
       '@octokit/plugin-paginate-graphql': 6.0.0(@octokit/core@7.0.2)

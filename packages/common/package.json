@@ -31,6 +31,7 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "dayjs": "^1.11.13",
     "next": "15.5.0",
+    "octokit": "^5.0.3",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "undici": "7.14.0",

@@ -1,11 +1,14 @@
-import { Octokit, RequestError } from "octokit";
+import { createAppAuth } from "@octokit/auth-app";
+import { Octokit, RequestError as OctokitRequestError } from "octokit";
+import type { fetch } from "undici";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
+import { HandleIntegrationErrors } from "../base/errors/decorator";
+import { integrationOctokitHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
-import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
@@ -18,23 +21,21 @@ import type {
 
 const localLogger = logger.child({ module: "GithubIntegration" });
 
+@HandleIntegrationErrors([integrationOctokitHttpErrorHandler])
 export class GithubIntegration extends Integration implements ReleasesProviderIntegration {
   private static readonly userAgent = "Homarr-Lab/Homarr:GithubIntegration";
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const headers: RequestInit["headers"] = {
-      "User-Agent": GithubIntegration.userAgent,
-    };
+    const api = this.getApi(input.fetchAsync);
 
-    if (this.hasSecretValue("personalAccessToken"))
-      headers.Authorization = `Bearer ${this.getSecretValue("personalAccessToken")}`;
-
-    const response = await input.fetchAsync(this.url("/octocat"), {
-      headers,
-    });
-
-    if (!response.ok) {
-      return TestConnectionError.StatusResult(response);
+    if (this.hasSecretValue("personalAccessToken")) {
+      await api.rest.users.getAuthenticated();
+    } else if (this.hasSecretValue("githubAppId")) {
+      await api.rest.apps.getInstallation({
+        installation_id: Number(this.getSecretValue("githubInstallationId")),
+      });
+    } else {
+      await api.request("GET /octocat");
     }
 
     return {
@@ -91,7 +92,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
 
       return getLatestRelease(releasesProviderResponse, repository, details);
     } catch (error) {
-      const errorMessage = error instanceof RequestError ? error.message : String(error);
+      const errorMessage = error instanceof OctokitRequestError ? error.message : String(error);
 
       localLogger.warn(`Failed to get releases for ${owner}\\${name} with Github integration`, {
         owner,
@@ -131,21 +132,53 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
       localLogger.warn(`Failed to get details for ${owner}\\${name} with Github integration`, {
         owner,
         name,
-        error: error instanceof RequestError ? error.message : String(error),
+        error: error instanceof OctokitRequestError ? error.message : String(error),
       });
       return undefined;
     }
   }
 
-  private getApi() {
+  private getAuthProperties(): Pick<OctokitOptions, "auth" | "authStrategy"> {
+    if (this.hasSecretValue("personalAccessToken"))
+      return {
+        auth: this.getSecretValue("personalAccessToken"),
+      };
+
+    if (this.hasSecretValue("githubAppId"))
+      return {
+        authStrategy: createAppAuth,
+        auth: {
+          appId: this.getSecretValue("githubAppId"),
+          installationId: this.getSecretValue("githubInstallationId"),
+          privateKey: this.getSecretValue("privateKey"),
+          /*cache: {
+              get(key: string) {
+                return cache.get(key) ?? (null as unknown as string);
+              },
+              set(key: string, value: string) {
+                cache.set(key, value);
+              },
+              
+            },*/
+        } satisfies Parameters<typeof createAppAuth>[0],
+      };
+
+    return {};
+  }
+
+  private getApi(customFetch?: typeof fetch) {
     return new Octokit({
       baseUrl: this.url("/").origin,
       request: {
-        fetch: fetchWithTrustedCertificatesAsync,
+        fetch: customFetch ?? fetchWithTrustedCertificatesAsync,
       },
       userAgent: GithubIntegration.userAgent,
-      throttle: { enabled: false }, // Disable throttling for this integration, Octokit will retry by default after a set time, thus delaying the repsonse to the user in case of errors. Errors will be shown to the user, no need to retry the request.
-      ...(this.hasSecretValue("personalAccessToken") ? { auth: this.getSecretValue("personalAccessToken") } : {}),
+      // Disable throttling for this integration, Octokit will retry by default after a set time,
+      // thus delaying the repsonse to the user in case of errors. Errors will be shown to the user, no need to retry the request.
+      throttle: { enabled: false },
+      ...this.getAuthProperties(),
     });
   }
 }
+
+type OctokitOptions = Exclude<ConstructorParameters<typeof Octokit>[0], undefined>;

@@ -6,9 +6,15 @@ import { createGetSetChannel } from "@homarr/redis";
 
 const localLogger = logger.child({ module: "SessionStore" });
 
-export const createSessionStore = <TValue>(integration: { id: string }) => {
+interface CreateSessionStoreOptions {
+  expireAfterSeconds?: number;
+}
+
+export const createSessionStore = <TValue>(integration: { id: string }, options?: CreateSessionStoreOptions) => {
   const channelName = `session-store:${integration.id}`;
-  const channel = createGetSetChannel<`${string}.${string}`>(channelName);
+  const channel = createGetSetChannel<`${string}.${string}`>(channelName, {
+    expireAfterSeconds: options?.expireAfterSeconds,
+  });
 
   return {
     async getAsync() {

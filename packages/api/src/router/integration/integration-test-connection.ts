@@ -25,15 +25,11 @@ export const testConnectionAsync = async (
     integrationUrl: integration.url,
   });
 
-  const formSecrets = integration.secrets
-    .filter((secret) => secret.value !== null)
-    .map((secret) => ({
-      ...secret,
-      // We ensured above that the value is not null
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      value: secret.value!,
-      source: "form" as const,
-    }));
+  const formSecrets = integration.secrets.map((secret) => ({
+    ...secret,
+    value: secret.value,
+    source: "form" as const,
+  }));
 
   const decryptedDbSecrets = dbSecrets
     .map((secret) => {
@@ -60,7 +56,9 @@ export const testConnectionAsync = async (
 
   const decryptedSecrets = secretKinds
     .map((kind) => {
-      const secrets = sourcedSecrets.filter((secret) => secret.kind === kind);
+      const secrets = sourcedSecrets
+        .filter((secret): secret is SourcedIntegrationSecret<false> => secret.value !== null)
+        .filter((secret) => secret.kind === kind);
       // Will never be undefined because of the check before
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (secrets.length === 1) return secrets[0]!;
@@ -89,13 +87,13 @@ export const testConnectionAsync = async (
   return result;
 };
 
-interface SourcedIntegrationSecret {
+interface SourcedIntegrationSecret<TAllowNull extends boolean> {
   kind: IntegrationSecretKind;
-  value: string;
+  value: TAllowNull extends true ? string | null : string;
   source: "db" | "form";
 }
 
-const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedIntegrationSecret[]) => {
+const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedIntegrationSecret<true>[]) => {
   const matchingSecretKindOptions = getAllSecretKindOptions(kind).filter((secretKinds) =>
     secretKinds.every((kind) => sourcedSecrets.some((secret) => secret.kind === kind)),
   );
@@ -111,7 +109,9 @@ const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedInteg
   }
 
   const onlyFormSecretsKindOptions = matchingSecretKindOptions.filter((secretKinds) =>
-    sourcedSecrets.filter((secret) => secretKinds.includes(secret.kind)).every((secret) => secret.source === "form"),
+    secretKinds.every((secretKind) =>
+      sourcedSecrets.find((secret) => secret.kind === secretKind && secret.source === "form"),
+    ),
   );
 
   if (onlyFormSecretsKindOptions.length >= 1) {

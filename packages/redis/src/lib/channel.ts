@@ -93,11 +93,14 @@ export const createListChannel = <TItem>(name: string) => {
   };
 };
 
+interface CreateSetGetChannelOptions {
+  expireAfterSeconds?: number;
+}
 /**
  * Creates a new redis channel for getting and setting data
  * @param name name of channel
  */
-export const createGetSetChannel = <TData>(name: string) => {
+export const createGetSetChannel = <TData>(name: string, options?: CreateSetGetChannelOptions) => {
   return {
     /**
      * Get data from the channel
@@ -113,6 +116,9 @@ export const createGetSetChannel = <TData>(name: string) => {
      */
     setAsync: async (data: TData) => {
       await getSetClient.set(name, superjson.stringify(data));
+      if (options?.expireAfterSeconds === undefined) return;
+
+      await getSetClient.expire(name, options.expireAfterSeconds);
     },
     /**
      * Remove data from the channel
