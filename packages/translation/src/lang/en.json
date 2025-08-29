@@ -1283,7 +1283,7 @@
           "description": "Choose how to display the app description",
           "option": {
             "normal": "Within widget",
-            "tooltip": "As tooltip during hover",
+            "tooltip": "As tooltip",
             "hidden": "Hidden"
           }
         }
