@@ -72,7 +72,7 @@
     "dayjs": "^1.11.13",
     "mantine-form-zod-resolver": "^1.3.0",
     "mantine-react-table": "2.0.0-beta.9",
-    "next": "15.4.7",
+    "next": "15.5.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-markdown": "^10.1.0",

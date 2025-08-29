@@ -1,3 +1,26 @@
+## [1.34.0](https://github.com/homarr-labs/homarr/compare/v1.33.0...v1.34.0) (2025-08-22)
+
+### Features
+
+* **app-widget:** add layout option ([#3875](https://github.com/homarr-labs/homarr/issues/3875)) ([acd09c8](https://github.com/homarr-labs/homarr/commit/acd09c8c02c13daac6e5b2432bb72640f075cec6))
+* **app-widget:** multiline description ([#3873](https://github.com/homarr-labs/homarr/issues/3873)) ([950636e](https://github.com/homarr-labs/homarr/commit/950636e81d4a934183f27694829dd3af05e5373f))
+
+### Bug Fixes
+
+* **deps:** update dependency drizzle-zod to ^0.8.3 ([#3866](https://github.com/homarr-labs/homarr/issues/3866)) ([dc43a01](https://github.com/homarr-labs/homarr/commit/dc43a015c43d13ae01a0f32be654c756f41eb352))
+* **deps:** update dependency mantine-form-zod-resolver to ^1.3.0 ([#3868](https://github.com/homarr-labs/homarr/issues/3868)) ([72cdba7](https://github.com/homarr-labs/homarr/commit/72cdba79cbbaa03f35c90dd71a3703bacbe57558))
+* **deps:** update dependency trpc-to-openapi to ^3.0.1 ([#3761](https://github.com/homarr-labs/homarr/issues/3761)) ([2457f9e](https://github.com/homarr-labs/homarr/commit/2457f9e4a754221e8674a95d721ffc77573a4633))
+* **deps:** update dependency typescript-eslint to ^8.40.0 ([#3884](https://github.com/homarr-labs/homarr/issues/3884)) ([1a8e40e](https://github.com/homarr-labs/homarr/commit/1a8e40e1f9dbd4dbcf4ec0c54aef3297bc4cea7f))
+* **deps:** update dependency undici to v7.14.0 ([#3879](https://github.com/homarr-labs/homarr/issues/3879)) ([d7b2298](https://github.com/homarr-labs/homarr/commit/d7b2298d1488ef8d38558864cf359fc23bc5bb26))
+* **deps:** update dependency zod to ^4.0.17 ([#3867](https://github.com/homarr-labs/homarr/issues/3867)) ([82fcdae](https://github.com/homarr-labs/homarr/commit/82fcdae7e5cbc326f0051beb56c3a3805623e2a0))
+* **deps:** update dependency zod-validation-error to v4 ([#3670](https://github.com/homarr-labs/homarr/issues/3670)) ([09fdb16](https://github.com/homarr-labs/homarr/commit/09fdb167a76db2caf3f9aa253b516ee28baba3dd))
+* **deps:** update mantine monorepo to ^8.2.5 ([#3874](https://github.com/homarr-labs/homarr/issues/3874)) ([7e700b2](https://github.com/homarr-labs/homarr/commit/7e700b2732e2f0abff13d79191addb04097ca9bc))
+* **deps:** update nextjs monorepo to v15.4.7 ([#3886](https://github.com/homarr-labs/homarr/issues/3886)) ([683e817](https://github.com/homarr-labs/homarr/commit/683e817493eb1b391751fe36b59d9b95a760324c))
+* **deps:** update nextjs monorepo to v15.5.0 ([#3896](https://github.com/homarr-labs/homarr/issues/3896)) ([1451c3c](https://github.com/homarr-labs/homarr/commit/1451c3c41e08945eb31d025d187ff466c5104a05))
+* **deps:** update tanstack-query monorepo to ^5.85.4 ([#3889](https://github.com/homarr-labs/homarr/issues/3889)) ([7685438](https://github.com/homarr-labs/homarr/commit/76854387903b48b3af7be466972cf7b9c165acc5))
+* **deps:** update tanstack-query monorepo to ^5.85.5 ([#3890](https://github.com/homarr-labs/homarr/issues/3890)) ([fad7207](https://github.com/homarr-labs/homarr/commit/fad7207efe553111334b21739717b9813dea0b56))
+* **nextcloud:** integration ignores trusted certificates ([#3893](https://github.com/homarr-labs/homarr/issues/3893)) ([498acdc](https://github.com/homarr-labs/homarr/commit/498acdcdc190de457dc95e5b13f43e1b2c31f624))
+
 ## [1.33.0](https://github.com/homarr-labs/homarr/compare/v1.32.0...v1.33.0) (2025-08-15)
 
 ### Features

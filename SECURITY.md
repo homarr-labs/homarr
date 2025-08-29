@@ -1,18 +1,18 @@
 # Security Policy
+
 This policy is relevant if you found potential vulnerabilities in an audit.
 We consider something as a vulnerability if it...
+
 1. puts users or user data at risk
 2. enables third parties to gain control or access (e.g. [RATs](https://en.wikipedia.org/wiki/Remote_desktop_software#RAT), [privilege escalation](https://en.wikipedia.org/wiki/Privilege_escalation), ...)
 3. abuses the system in an unintended way (e.g. crypto mining, proxy, ...)
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| >1.0.0  | :white_check_mark: |
-| <1.0.0  | :x:                |
+We only fix security issues in the [latest stable version](https://github.com/homarr-labs/homarr/releases/latest). Meaning security issues in prior versions will not be fixed and users have to upgrade to the latest version to receive them.
 
 ## Reporting a Vulnerability
+
 We use [GitHub's system for reporting vulnerabilities](https://docs.github.com/en/enterprise-cloud@latest/code-security/security-advisories/working-with-repository-security-advisories/creating-a-repository-security-advisory).
 Click [**here to report an advisory**](https://github.com/homarr-labs/homarr/security/advisories/new). Our team will get notified and will get back to you within 1-6 business days.
 

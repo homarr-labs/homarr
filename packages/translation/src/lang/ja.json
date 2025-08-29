@@ -946,12 +946,12 @@
           "newLabel": "新規トピック"
         },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API キー (キー)",
+          "newLabel": "新しいAPIキー（キー）"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "API キー (シークレット)",
+          "newLabel": "新しい API キー (シークレット)"
         }
       }
     },
@@ -1003,7 +1003,7 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "成功",
     "beta": "Beta",
     "error": "エラー",
     "action": {
@@ -1273,12 +1273,12 @@
           "label": "ステータスチェックを有効にする"
         },
         "layout": {
-          "label": "",
+          "label": "レイアウト",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "水平方向",
+            "row-reverse": "水平方向（反転）",
+            "column": "垂直方向",
+            "column-reverse": "垂直方向（反転）"
           }
         }
       },
@@ -2276,7 +2276,7 @@
           "label": "詳細を表示"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "アイコンのみ表示"
         },
         "topReleases": {
           "label": "トップリリース",
@@ -2295,8 +2295,8 @@
             "listAlreadyImportedImages": "すでにインポートされたイメージのリスト",
             "allImagesAlreadyImported": "すでにインポートされた全てのイメージ",
             "onlyAdminCanImport": "管理者のみが Docker からインポートできます",
-            "selectAll": "",
-            "deselectAll": ""
+            "selectAll": "すべてを選択",
+            "deselectAll": "選択をすべて解除"
           },
           "provider": {
             "label": "プロバイダー"
@@ -2358,7 +2358,7 @@
       "starsCount": "スター数",
       "forksCount": "フォーク数",
       "issuesCount": "未解決の課題数",
-      "markViewed": "",
+      "markViewed": "閲覧済みにする",
       "openProjectPage": "プロジェクトページを開く",
       "openReleasePage": "リリースページを開く",
       "releaseDescription": "リリースの説明",
@@ -2432,31 +2432,31 @@
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "ファイアウォールの監視",
+      "description": "ファイアウォールの概要を表示する",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "システム",
+        "interfaces": "インターフェース"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "ファイアウォールからデータを取得できません"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "表示するネットワークインターフェイス"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
-        "versiontitle": "",
-        "cputitle": "",
-        "memorytitle": "",
-        "cpu": "",
-        "memory": "",
+        "fwname": "名称",
+        "version": "バージョン",
+        "versiontitle": "バージョン",
+        "cputitle": "CPU 使用率",
+        "memorytitle": "メモリ使用率",
+        "cpu": "CPU",
+        "memory": "メモリ",
         "interfaces": {
-          "name": "",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "name": "名称",
+          "trans": "送信",
+          "recv": "受信",
+          "title": "ネットワークインターフェース"
         }
       }
     },
@@ -2467,15 +2467,15 @@
       "option": {}
     },
     "systemResources": {
-      "name": "",
-      "description": "",
+      "name": "システムリソース",
+      "description": "CPU、メモリ、ディスクなどのシステムハードウェアの使用",
       "option": {},
       "card": {
-        "cpu": "",
-        "memory": "",
-        "network": "",
-        "up": "",
-        "down": ""
+        "cpu": "CPU",
+        "memory": "MEM",
+        "network": "NET",
+        "up": "UP",
+        "down": "DOWN"
       }
     }
   },
@@ -3253,16 +3253,16 @@
               "label": "Docker コンテナ"
             },
             "firewallCpu": {
-              "label": ""
+              "label": "ファイアウォールの CPU"
             },
             "firewallMemory": {
-              "label": ""
+              "label": "ファイアウォールのメモリ"
             },
             "firewallVersion": {
-              "label": ""
+              "label": "ファイアウォールのバージョン"
             },
             "firewallInterfaces": {
-              "label": ""
+              "label": "ファイアウォールのインターフェース"
             }
           },
           "interval": {
@@ -3273,10 +3273,10 @@
             "weeklyMonday": "毎週月曜日",
             "update": {
               "success": {
-                "message": ""
+                "message": "間隔が正常に更新されました"
               },
               "error": {
-                "message": ""
+                "message": "間隔の更新に失敗しました"
               }
             }
           },
@@ -3285,55 +3285,55 @@
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "名称"
             },
             "interval": {
               "label": "スケジュール間隔"
             },
             "lastExecution": {
-              "label": ""
+              "label": "最終実行"
             },
             "actions": {
-              "label": ""
+              "label": "アクション"
             }
           },
           "table": {
-            "search": ""
+            "search": "{count} のタスクを検索..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "更新"
             }
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "タスクは正常に更新されました"
             },
             "error": {
-              "message": ""
+              "message": "タスクの更新に失敗しました"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "タスクが正常にトリガーされました"
             },
             "error": {
-              "message": ""
+              "message": "タスクのトリガーに失敗しました"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "正常にタスクが有効になりました"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "正常にタスクが無効になりました"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "タスクの状態の切り替えに失敗しました"
             }
           }
         },
@@ -3843,7 +3843,7 @@
       "tools": {
         "label": "ツール",
         "tasks": {
-          "label": ""
+          "label": "タスク"
         },
         "docker": {
           "label": "Docker"
