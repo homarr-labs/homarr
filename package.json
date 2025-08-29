@@ -76,7 +76,8 @@
       "proxmox-api>undici": "7.14.0"
     },
     "patchedDependencies": {
-      "@types/node-unifi": "patches/@types__node-unifi.patch"
+      "@types/node-unifi": "patches/@types__node-unifi.patch",
+      "trpc-to-openapi": "patches/trpc-to-openapi.patch"
     },
     "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [
