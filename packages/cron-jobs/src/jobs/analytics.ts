@@ -10,7 +10,7 @@ export const analyticsJob = createCronJob("analytics", EVERY_WEEK, {
   runOnStart: true,
   preventManualExecution: true,
 }).withCallback(async () => {
-  if (env.UNSAFE_NO_EXTERNAL_CONNECTION) return;
+  if (env.NO_EXTERNAL_CONNECTION) return;
   const analyticSetting = await getServerSettingByKeyAsync(db, "analytics");
 
   if (!analyticSetting.enableGeneral) {

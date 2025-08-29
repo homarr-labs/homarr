@@ -23,11 +23,11 @@ export const env = createEnv({
       .regex(/^[0-9a-fA-F]{64}$/, {
         message: `SECRET_ENCRYPTION_KEY must only contain hex characters${errorSuffix}`,
       }),
-    UNSAFE_NO_EXTERNAL_CONNECTION: createBooleanSchema(false),
+    NO_EXTERNAL_CONNECTION: createBooleanSchema(false),
   },
   runtimeEnv: {
     SECRET_ENCRYPTION_KEY: process.env.SECRET_ENCRYPTION_KEY,
     NODE_ENV: process.env.NODE_ENV,
-    UNSAFE_NO_EXTERNAL_CONNECTION: process.env.UNSAFE_NO_EXTERNAL_CONNECTION,
+    NO_EXTERNAL_CONNECTION: process.env.NO_EXTERNAL_CONNECTION,
   },
 });

@@ -14,7 +14,7 @@ export const updateCheckerRequestHandler = createCachedRequestHandler({
   queryKey: "homarr-update-checker",
   cacheDuration: dayjs.duration(1, "hour"),
   async requestAsync(_) {
-    if (env.UNSAFE_NO_EXTERNAL_CONNECTION)
+    if (env.NO_EXTERNAL_CONNECTION)
       return {
         availableUpdates: [],
       };

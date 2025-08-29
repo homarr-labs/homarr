@@ -13,7 +13,7 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
   runOnStart: true,
   expectedMaximumDurationInMillis: 10 * 1000,
 }).withCallback(async () => {
-  if (env.UNSAFE_NO_EXTERNAL_CONNECTION) return;
+  if (env.NO_EXTERNAL_CONNECTION) return;
 
   logger.info("Updating icon repository cache...");
   const stopWatch = new Stopwatch();
