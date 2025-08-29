@@ -1266,6 +1266,9 @@
         "showTitle": {
           "label": "App naam weergeven"
         },
+        "showDescriptionTooltip": {
+          "label": "Beschrijving tooltip weergeven"
+        },
         "pingEnabled": {
           "label": "Statuscontrole inschakelen"
         }

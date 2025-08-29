@@ -1266,6 +1266,9 @@
         "showTitle": {
           "label": "顯示應用程式名稱"
         },
+        "showDescriptionTooltip": {
+          "label": "顯示描述提示"
+        },
         "pingEnabled": {
           "label": "啟用簡單的 Ping"
         }

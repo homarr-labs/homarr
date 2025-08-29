@@ -1266,6 +1266,9 @@
         "showTitle": {
           "label": "アプリ名を表示"
         },
+        "showDescriptionTooltip": {
+          "label": "説明ツールチップを表示"
+        },
         "pingEnabled": {
           "label": "ステータスチェックを有効にする"
         }
