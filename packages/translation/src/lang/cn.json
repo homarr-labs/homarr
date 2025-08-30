@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "显示应用名称"
         },
-        "showDescriptionTooltip": {
-          "label": "显示描述提示"
-        },
         "pingEnabled": {
           "label": "启用状态检查"
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },

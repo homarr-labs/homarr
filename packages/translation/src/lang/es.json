@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "Mostrar el nombre de la aplicación"
         },
-        "showDescriptionTooltip": {
-          "label": "Mostrar descripción"
-        },
         "pingEnabled": {
           "label": "Habilitar comprobación de estado"
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "Horizontal (invertido)",
             "column": "Vertical",
             "column-reverse": "Vertical (invertido)"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },
