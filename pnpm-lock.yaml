@@ -322,8 +322,8 @@ importers:
         specifier: ^1.8.1
         version: 1.8.1(react@19.1.1)
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -654,10 +654,10 @@ importers:
         version: 2.2.2
       trpc-to-openapi:
         specifier: ^3.0.1
-        version: 3.0.1(patch_hash=2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c)(@trpc/server@11.5.0(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.0.17))(zod@4.0.17)
+        version: 3.0.1(patch_hash=2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c)(@trpc/server@11.5.0(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.1.5))(zod@4.1.5)
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -729,8 +729,8 @@ importers:
         specifier: 19.1.1
         version: 19.1.1(react@19.1.1)
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -880,11 +880,11 @@ importers:
         specifier: 7.15.0
         version: 7.15.0
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
       zod-validation-error:
         specifier: ^4.0.1
-        version: 4.0.1(zod@4.0.17)
+        version: 4.0.1(zod@4.1.5)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -906,13 +906,13 @@ importers:
     dependencies:
       '@t3-oss/env-nextjs':
         specifier: ^0.13.8
-        version: 0.13.8(arktype@2.1.20)(typescript@5.9.2)(zod@4.0.17)
+        version: 0.13.8(arktype@2.1.20)(typescript@5.9.2)(zod@4.1.5)
       ioredis:
         specifier: 5.7.0
         version: 5.7.0
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -963,8 +963,8 @@ importers:
         specifier: 19.1.1
         version: 19.1.1
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1157,7 +1157,7 @@ importers:
         version: 0.44.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.3)(pg@8.16.3)
       drizzle-zod:
         specifier: ^0.8.3
-        version: 0.8.3(drizzle-orm@0.44.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.3)(pg@8.16.3))(zod@4.0.17)
+        version: 0.8.3(drizzle-orm@0.44.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.3)(pg@8.16.3))(zod@4.1.5)
       mysql2:
         specifier: 3.14.3
         version: 3.14.3
@@ -1211,8 +1211,8 @@ importers:
         specifier: ^5.2.5
         version: 5.2.5
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1280,10 +1280,10 @@ importers:
         version: 8.2.7(react@19.1.1)
       mantine-form-zod-resolver:
         specifier: ^1.3.0
-        version: 1.3.0(@mantine/form@8.2.7(react@19.1.1))(zod@4.0.17)
+        version: 1.3.0(@mantine/form@8.2.7(react@19.1.1))(zod@4.1.5)
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1331,8 +1331,8 @@ importers:
         specifier: 19.1.1
         version: 19.1.1
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1484,8 +1484,8 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1521,8 +1521,8 @@ importers:
         specifier: 3.17.0
         version: 3.17.0
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1628,8 +1628,8 @@ importers:
         specifier: 19.1.1
         version: 19.1.1(react@19.1.1)
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1732,11 +1732,11 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
       zod-form-data:
         specifier: ^3.0.0
-        version: 3.0.0(zod@4.0.17)
+        version: 3.0.0(zod@4.1.5)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1763,8 +1763,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../common
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -2162,11 +2162,11 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../translation
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
       zod-form-data:
         specifier: ^3.0.0
-        version: 3.0.0(zod@4.0.17)
+        version: 3.0.0(zod@4.1.5)
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -2323,7 +2323,7 @@ importers:
         version: 1.11.13
       mantine-form-zod-resolver:
         specifier: ^1.3.0
-        version: 1.3.0(@mantine/form@8.2.7(react@19.1.1))(zod@4.0.17)
+        version: 1.3.0(@mantine/form@8.2.7(react@19.1.1))(zod@4.1.5)
       mantine-react-table:
         specifier: 2.0.0-beta.9
         version: 2.0.0-beta.9(@mantine/core@8.2.7(@mantine/hooks@8.2.7(react@19.1.1))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/dates@8.2.7(@mantine/core@8.2.7(@mantine/hooks@8.2.7(react@19.1.1))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/hooks@8.2.7(react@19.1.1))(dayjs@1.11.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/hooks@8.2.7(react@19.1.1))(@tabler/icons-react@3.34.1(react@19.1.1))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -2346,8 +2346,8 @@ importers:
         specifier: ^8.23.4
         version: 8.23.4
       zod:
-        specifier: ^4.0.17
-        version: 4.0.17
+        specifier: ^4.1.1
+        version: 4.1.5
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -10720,8 +10720,8 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@4.0.17:
-    resolution: {integrity: sha512-1PHjlYRevNxxdy2JZ8JcNAw7rX8V9P1AKkP+x/xZfxB0K5FYfuV+Ug6P/6NVSR2jHQ+FzDDoDHS04nYUsOIyLQ==}
+  zod@4.1.5:
+    resolution: {integrity: sha512-rcUUZqlLJgBC33IT3PNMgsCq6TzLQEG/Ei/KTCU0PedSWRMAXoOUN+4t/0H+Q8bdnLPdqUYnvboJT0bn/229qg==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -12648,19 +12648,19 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.9.2)(zod@4.0.17)':
+  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.9.2)(zod@4.1.5)':
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.9.2
-      zod: 4.0.17
+      zod: 4.1.5
 
-  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.9.2)(zod@4.0.17)':
+  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.9.2)(zod@4.1.5)':
     dependencies:
-      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.9.2)(zod@4.0.17)
+      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.9.2)(zod@4.1.5)
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.9.2
-      zod: 4.0.17
+      zod: 4.1.5
 
   '@tabler/icons-react@3.34.1(react@19.1.1)':
     dependencies:
@@ -14770,10 +14770,10 @@ snapshots:
       mysql2: 3.14.3
       pg: 8.16.3
 
-  drizzle-zod@0.8.3(drizzle-orm@0.44.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.3)(pg@8.16.3))(zod@4.0.17):
+  drizzle-zod@0.8.3(drizzle-orm@0.44.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.3)(pg@8.16.3))(zod@4.1.5):
     dependencies:
       drizzle-orm: 0.44.4(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.14.3)(pg@8.16.3)
-      zod: 4.0.17
+      zod: 4.1.5
 
   dunder-proto@1.0.1:
     dependencies:
@@ -16750,10 +16750,10 @@ snapshots:
 
   make-error@1.3.6: {}
 
-  mantine-form-zod-resolver@1.3.0(@mantine/form@8.2.7(react@19.1.1))(zod@4.0.17):
+  mantine-form-zod-resolver@1.3.0(@mantine/form@8.2.7(react@19.1.1))(zod@4.1.5):
     dependencies:
       '@mantine/form': 8.2.7(react@19.1.1)
-      zod: 4.0.17
+      zod: 4.1.5
 
   mantine-react-table@2.0.0-beta.9(@mantine/core@8.2.7(@mantine/hooks@8.2.7(react@19.1.1))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/dates@8.2.7(@mantine/core@8.2.7(@mantine/hooks@8.2.7(react@19.1.1))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/hooks@8.2.7(react@19.1.1))(dayjs@1.11.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@mantine/hooks@8.2.7(react@19.1.1))(@tabler/icons-react@3.34.1(react@19.1.1))(clsx@2.1.1)(dayjs@1.11.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
@@ -19428,14 +19428,14 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-openapi@3.0.1(patch_hash=2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c)(@trpc/server@11.5.0(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.0.17))(zod@4.0.17):
+  trpc-to-openapi@3.0.1(patch_hash=2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c)(@trpc/server@11.5.0(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.1.5))(zod@4.1.5):
     dependencies:
       '@trpc/server': 11.5.0(typescript@5.9.2)
       co-body: 6.2.0
       h3: 1.15.1
       openapi3-ts: 4.4.0
-      zod: 4.0.17
-      zod-openapi: 5.3.0(zod@4.0.17)
+      zod: 4.1.5
+      zod-openapi: 5.3.0(zod@4.1.5)
     optionalDependencies:
       '@rollup/rollup-linux-x64-gnu': 4.6.1
 
@@ -20308,19 +20308,19 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.5.2
 
-  zod-form-data@3.0.0(zod@4.0.17):
+  zod-form-data@3.0.0(zod@4.1.5):
     dependencies:
       '@rvf/set-get': 7.0.1
-      zod: 4.0.17
+      zod: 4.1.5
 
-  zod-openapi@5.3.0(zod@4.0.17):
+  zod-openapi@5.3.0(zod@4.1.5):
     dependencies:
-      zod: 4.0.17
+      zod: 4.1.5
 
-  zod-validation-error@4.0.1(zod@4.0.17):
+  zod-validation-error@4.0.1(zod@4.1.5):
     dependencies:
-      zod: 4.0.17
+      zod: 4.1.5
 
-  zod@4.0.17: {}
+  zod@4.1.5: {}
 
   zwitch@2.0.4: {}
