@@ -75,8 +75,8 @@
       "tree-sitter-json"
     ],
     "overrides": {
-      "@babel/helpers@<7.26.10": ">=7.26.10",
-      "@babel/runtime@<7.26.10": ">=7.26.10",
+      "@babel/helpers@<7.26.10": ">=7.28.3",
+      "@babel/runtime@<7.26.10": ">=7.28.3",
       "axios@>=1.0.0 <1.8.2": ">=1.11.0",
       "brace-expansion@>=2.0.0 <=2.0.1": ">=2.0.2",
       "brace-expansion@>=1.0.0 <=1.1.11": ">=4.0.1",
