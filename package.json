@@ -98,6 +98,9 @@
       "@types/node-unifi": "patches/@types__node-unifi.patch",
       "trpc-to-openapi": "patches/trpc-to-openapi.patch"
     },
+    "patchedDependencies": {
+      "@types/node-unifi": "patches/@types__node-unifi.patch"
+    },
     "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [
       "@scarf/scarf",

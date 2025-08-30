@@ -3,6 +3,9 @@ import { Agent } from "undici";
 
 import { logger } from "@homarr/log";
 
+// The below import statement initializes dns-caching
+import "./dns";
+
 export class LoggingAgent extends Agent {
   constructor(...props: ConstructorParameters<typeof Agent>) {
     super(...props);
