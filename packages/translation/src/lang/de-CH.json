@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "App Namen anzeigen"
         },
-        "showDescriptionTooltip": {
-          "label": "Beschreibungs des Tooltips anzeigen"
-        },
         "pingEnabled": {
           "label": "Statusüberprüfung aktivieren"
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },
