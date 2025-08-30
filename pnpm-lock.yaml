@@ -428,8 +428,8 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       undici:
-        specifier: 7.14.0
-        version: 7.14.0
+        specifier: 7.15.0
+        version: 7.15.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -794,8 +794,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../db
       undici:
-        specifier: 7.14.0
-        version: 7.14.0
+        specifier: 7.15.0
+        version: 7.15.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -877,8 +877,8 @@ importers:
         specifier: 19.1.1
         version: 19.1.1(react@19.1.1)
       undici:
-        specifier: 7.14.0
-        version: 7.14.0
+        specifier: 7.15.0
+        version: 7.15.0
       zod:
         specifier: ^4.0.17
         version: 4.0.17
@@ -1449,7 +1449,7 @@ importers:
         version: link:../log
       '@homarr/node-unifi':
         specifier: ^2.6.0
-        version: 2.6.0(undici@7.14.0)
+        version: 2.6.0(undici@7.15.0)
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
@@ -1478,8 +1478,8 @@ importers:
         specifier: ^2.1.5
         version: 2.1.5
       undici:
-        specifier: 7.14.0
-        version: 7.14.0
+        specifier: 7.15.0
+        version: 7.15.0
       xml2js:
         specifier: ^0.6.2
         version: 0.6.2
@@ -1883,8 +1883,8 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       undici:
-        specifier: 7.14.0
-        version: 7.14.0
+        specifier: 7.15.0
+        version: 7.15.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -10146,6 +10146,10 @@ packages:
     resolution: {integrity: sha512-Vqs8HTzjpQXZeXdpsfChQTlafcMQaaIwnGwLam1wudSSjlJeQ3bw1j+TLPePgrCnCpUXx7Ba5Pdpf5OBih62NQ==}
     engines: {node: '>=20.18.1'}
 
+  undici@7.15.0:
+    resolution: {integrity: sha512-7oZJCPvvMvTd0OlqWsIxTuItTpJBpU1tcbVl24FMn3xt3+VSunwUasmfPJRE57oNO1KsZ4PgA1xTdAX4hq8NyQ==}
+    engines: {node: '>=20.18.1'}
+
   unicode-emoji-modifier-base@1.0.0:
     resolution: {integrity: sha512-yLSH4py7oFH3oG/9K+XWrz1pSi3dfUrWEnInbxMfArOfc1+33BlGPQtLsOYwvdMy11AwUBetYuaRxSPqgkq+8g==}
     engines: {node: '>=4'}
@@ -11402,11 +11406,11 @@ snapshots:
 
   '@homarr/gridstack@1.12.0': {}
 
-  '@homarr/node-unifi@2.6.0(undici@7.14.0)':
+  '@homarr/node-unifi@2.6.0(undici@7.15.0)':
     dependencies:
       axios: 1.9.0
       eventemitter2: 6.4.9
-      http-cookie-agent: 6.0.8(tough-cookie@5.1.2)(undici@7.14.0)
+      http-cookie-agent: 6.0.8(tough-cookie@5.1.2)(undici@7.15.0)
       tough-cookie: 5.1.2
       ws: 8.18.3
     transitivePeerDependencies:
@@ -15961,12 +15965,12 @@ snapshots:
 
   html-url-attributes@3.0.1: {}
 
-  http-cookie-agent@6.0.8(tough-cookie@5.1.2)(undici@7.14.0):
+  http-cookie-agent@6.0.8(tough-cookie@5.1.2)(undici@7.15.0):
     dependencies:
       agent-base: 7.1.3
       tough-cookie: 5.1.2
     optionalDependencies:
-      undici: 7.14.0
+      undici: 7.15.0
 
   http-errors@2.0.0:
     dependencies:
@@ -19293,7 +19297,7 @@ snapshots:
       ssh-remote-port-forward: 1.0.4
       tar-fs: 3.1.0
       tmp: 0.2.4
-      undici: 7.14.0
+      undici: 7.15.0
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -19673,6 +19677,8 @@ snapshots:
   undici-types@6.21.0: {}
 
   undici@7.14.0: {}
+
+  undici@7.15.0: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 
