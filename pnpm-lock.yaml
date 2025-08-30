@@ -1141,8 +1141,8 @@ importers:
         specifier: ^11.5.1
         version: 11.5.1
       '@testcontainers/postgresql':
-        specifier: ^11.4.0
-        version: 11.4.0
+        specifier: ^11.5.1
+        version: 11.5.1
       better-sqlite3:
         specifier: ^12.2.0
         version: 12.2.0
@@ -4120,8 +4120,8 @@ packages:
   '@testcontainers/mysql@11.5.1':
     resolution: {integrity: sha512-znonzVMlcCLQ6t7zDH0TOEcbGkz6iwIk5x5ZP5GqEdN0z3GLUu/jEF7yQUtfCY+PbVnCkigRg4WYS4bt6+zhyA==}
 
-  '@testcontainers/postgresql@11.4.0':
-    resolution: {integrity: sha512-WiKsz3Np5twNZGp2kgatqGaE/KqNR271CPwvIgAvFyN7E581P34glQljM4iLfxdv1XpzVYGWRO6PbQAVDbehBQ==}
+  '@testcontainers/postgresql@11.5.1':
+    resolution: {integrity: sha512-6P1QYIKRkktSVwTuwU0Pke5WbXTkvpLleyQcgknJPbZwhaIsCrhnbZlVzj2g/e+Nf9Lmdy1F2OAai+vUrBq0AQ==}
 
   '@testcontainers/redis@11.5.1':
     resolution: {integrity: sha512-ThGaUPUCFW4Vwmx6kfPYhhTQjq/3UXJQrU/xxiYLqgvFJNtvtYlWmzXrwORLhPkkqnoFUnfFaX3u9u1GnrlDkw==}
@@ -9368,9 +9368,6 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
-  shell-quote@1.8.1:
-    resolution: {integrity: sha512-6j1W9l1iAs/4xYBI1SYOVZyFcCis9b4KCLQ8fgAGG07QvzaRLVVRQvAy85yNmmZSjYjg4MWh4gNvlPujU/5LpA==}
-
   shell-quote@1.8.3:
     resolution: {integrity: sha512-ObmnIF4hXNg1BqhnHmgbDETF8dLPCggZWBjkQfhZpbszZnYur5DUljTcCHii5LC3J5E0yeO/1LIMyH+UvHQgyw==}
     engines: {node: '>= 0.4'}
@@ -12725,7 +12722,7 @@ snapshots:
       - bare-buffer
       - supports-color
 
-  '@testcontainers/postgresql@11.4.0':
+  '@testcontainers/postgresql@11.5.1':
     dependencies:
       testcontainers: 11.5.1
     transitivePeerDependencies:
@@ -15647,7 +15644,7 @@ snapshots:
       debug: 4.4.1
       env-paths: 3.0.0
       semver: 7.7.2
-      shell-quote: 1.8.1
+      shell-quote: 1.8.3
       which: 4.0.0
     transitivePeerDependencies:
       - supports-color
@@ -18756,9 +18753,6 @@ snapshots:
       shebang-regex: 3.0.0
 
   shebang-regex@3.0.0: {}
-
-  shell-quote@1.8.1:
-    optional: true
 
   shell-quote@1.8.3: {}
 
