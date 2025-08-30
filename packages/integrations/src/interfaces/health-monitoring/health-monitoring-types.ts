@@ -15,7 +15,7 @@ export interface SystemHealthMonitoring {
     "1min": number;
     "5min": number;
     "15min": number;
-  };
+  } | null;
   rebootRequired: boolean;
   availablePkgUpdates: number;
   cpuTemp: number | undefined;
