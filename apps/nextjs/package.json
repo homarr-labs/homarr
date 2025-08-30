@@ -96,7 +96,7 @@
     "@types/chroma-js": "3.1.1",
     "@types/node": "^22.17.2",
     "@types/prismjs": "^1.26.5",
-    "@types/react": "19.1.10",
+    "@types/react": "19.1.11",
     "@types/react-dom": "19.1.7",
     "@types/swagger-ui-react": "^5.18.0",
     "concurrently": "^9.2.1",
