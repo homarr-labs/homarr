@@ -1141,8 +1141,8 @@ importers:
         specifier: ^11.5.1
         version: 11.5.1
       '@testcontainers/postgresql':
-        specifier: ^11.4.0
-        version: 11.4.0
+        specifier: ^11.5.1
+        version: 11.5.1
       better-sqlite3:
         specifier: ^12.2.0
         version: 12.2.0
@@ -4120,8 +4120,8 @@ packages:
   '@testcontainers/mysql@11.5.1':
     resolution: {integrity: sha512-znonzVMlcCLQ6t7zDH0TOEcbGkz6iwIk5x5ZP5GqEdN0z3GLUu/jEF7yQUtfCY+PbVnCkigRg4WYS4bt6+zhyA==}
 
-  '@testcontainers/postgresql@11.4.0':
-    resolution: {integrity: sha512-WiKsz3Np5twNZGp2kgatqGaE/KqNR271CPwvIgAvFyN7E581P34glQljM4iLfxdv1XpzVYGWRO6PbQAVDbehBQ==}
+  '@testcontainers/postgresql@11.5.1':
+    resolution: {integrity: sha512-6P1QYIKRkktSVwTuwU0Pke5WbXTkvpLleyQcgknJPbZwhaIsCrhnbZlVzj2g/e+Nf9Lmdy1F2OAai+vUrBq0AQ==}
 
   '@testcontainers/redis@11.5.1':
     resolution: {integrity: sha512-ThGaUPUCFW4Vwmx6kfPYhhTQjq/3UXJQrU/xxiYLqgvFJNtvtYlWmzXrwORLhPkkqnoFUnfFaX3u9u1GnrlDkw==}
@@ -12717,7 +12717,7 @@ snapshots:
       - bare-buffer
       - supports-color
 
-  '@testcontainers/postgresql@11.4.0':
+  '@testcontainers/postgresql@11.5.1':
     dependencies:
       testcontainers: 11.5.1
     transitivePeerDependencies:
