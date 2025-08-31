@@ -2255,116 +2255,116 @@
           "label": "Włącz RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Maksymalna liczba linii opisu"
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Limit liczby postów"
         }
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "Wydania",
+      "description": "Wyświetla listę aktualnych wersji podanych repozytoriów na podstawie podanego wyrażenia regularnego wersji.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Nowe wydanie w ciągu",
+          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nowych wydań."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Nieaktualne wydanie w ciągu",
+          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nieaktualnych wydań"
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż tylko wyróżnione",
+          "description": "„Pokaż tylko nowe lub nieaktualne wydania. Zgodnie z powyższymi ustawieniami.”"
         },
         "showDetails": {
-          "label": ""
+          "label": "Pokaż szczegóły"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Pokaż tylko ikonę"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "Najlepsze wydania",
+          "description": "Maksymalna liczba najnowszych wydań do wyświetlenia. Zero oznacza brak limitu."
         },
         "repositories": {
-          "label": "",
+          "label": "Repozytoria",
           "addRepository": {
-            "label": ""
+            "label": "Dodaj repozytorium"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": "",
-            "selectAll": "",
-            "deselectAll": ""
+            "label": "Import z Dockera",
+            "loading": "Wczytywanie obrazów Dockera",
+            "noImagesFound": "Nie znaleziono obrazów Dockera",
+            "listFoundImages": "Lista znalezionych obrazów",
+            "listAlreadyImportedImages": "Lista już zaimportowanych obrazów",
+            "allImagesAlreadyImported": "Wszystkie obrazy zaimportowane",
+            "onlyAdminCanImport": "Tylko administratorzy mogą importować z Dockera",
+            "selectAll": "Zaznacz wszystko",
+            "deselectAll": "Odznacz wszystko"
           },
           "provider": {
-            "label": ""
+            "label": "Dostawca"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "Identyfikator",
+            "placeholder": "Nazwa lub Właściciel/Nazwa"
           },
           "name": {
-            "label": ""
+            "label": "Nazwa"
           },
           "versionFilter": {
-            "label": "",
+            "label": "Filtr wersji",
             "prefix": {
-              "label": ""
+              "label": "Prefiks"
             },
             "precision": {
-              "label": "",
+              "label": "Dokładność",
               "options": {
-                "none": ""
+                "none": "Brak"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "Sufiks"
             },
             "regex": {
-              "label": ""
+              "label": "Wyrażenie regularne"
             }
           },
           "edit": {
-            "label": ""
+            "label": "Edytuj"
           },
           "editForm": {
-            "title": "",
+            "title": "Edytuj repozytorium",
             "cancel": {
-              "label": ""
+              "label": "Anuluj"
             },
             "confirm": {
-              "label": ""
+              "label": "Potwierdź"
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Importuj z Dockera"
           },
           "example": {
-            "label": ""
+            "label": "Przykład"
           },
-          "invalid": "",
+          "invalid": "Nieprawidłowa definicja repozytorium, sprawdź wartości",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "Brak dostawcy",
+            "tooltip": "Nie udało się rozpoznać dostawcy. Ustaw go ręcznie po zaimportowaniu obrazów."
           }
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "markViewed": "",
+      "not-found": "Nie znaleziono",
+      "pre-release": "Wersja wstępna",
+      "archived": "Archiwalny",
+      "forked": "Forkowane",
+      "starsCount": "Gwiazdki",
+      "forksCount": "Forki",
+      "issuesCount": "Otwarte zgłoszenia",
+      "markViewed": "Oznacz jako przeczytane",
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",

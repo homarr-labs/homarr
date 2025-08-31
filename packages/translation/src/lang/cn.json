@@ -2477,7 +2477,7 @@
       "description": "",
       "option": {},
       "card": {
-        "cpu": "",
+        "cpu": "CPU",
         "memory": "",
         "network": "",
         "up": "",
@@ -3849,7 +3849,7 @@
       "tools": {
         "label": "工具",
         "tasks": {
-          "label": ""
+          "label": "任务"
         },
         "docker": {
           "label": "Docker"

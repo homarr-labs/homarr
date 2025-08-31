@@ -1003,7 +1003,7 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "Lykkedes",
     "beta": "Beta",
     "error": "Fejl",
     "action": {
@@ -1270,21 +1270,21 @@
           "label": "Aktiver statustjek"
         },
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Horisontal",
+            "row-reverse": "Horisontal (omvendt)",
+            "column": "Vertikal",
+            "column-reverse": "Vertikal (omvendt)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Visningstilstand for beskrivelse",
+          "description": "Vælg hvordan beskrivelsen af app skal vises",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "Indenfor widget",
+            "tooltip": "Som værktøjstip",
+            "hidden": "Skjult"
           }
         }
       },
@@ -3279,10 +3279,10 @@
             "weeklyMonday": "Hver uge om mandagen",
             "update": {
               "success": {
-                "message": ""
+                "message": "Intervallet blev opdateret"
               },
               "error": {
-                "message": ""
+                "message": "Opdateringsinterval mislykkedes"
               }
             }
           },
@@ -3291,55 +3291,55 @@
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "Navn"
             },
             "interval": {
               "label": "Planlæg interval"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Sidste kørsel"
             },
             "actions": {
-              "label": ""
+              "label": "Handlinger"
             }
           },
           "table": {
-            "search": ""
+            "search": "Søg efter {count} opgaver..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "Opdater"
             }
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "Opgaver opdateret"
             },
             "error": {
-              "message": ""
+              "message": "Kunne ikke genopfriske opgaver"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "Opgave udløst med succes"
             },
             "error": {
-              "message": ""
+              "message": "Mislykkedes at udløse opgave"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "Opgave aktiveret"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "Opgave deaktiveret"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "Kunne ikke skifte opgavestatus"
             }
           }
         },
@@ -3849,7 +3849,7 @@
       "tools": {
         "label": "Værktøjer",
         "tasks": {
-          "label": ""
+          "label": "Opgaver"
         },
         "docker": {
           "label": "Docker"
