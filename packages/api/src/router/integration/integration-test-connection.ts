@@ -25,12 +25,6 @@ export const testConnectionAsync = async (
     integrationUrl: integration.url,
   });
 
-  const formSecrets = integration.secrets.map((secret) => ({
-    ...secret,
-    value: secret.value,
-    source: "form" as const,
-  }));
-
   const decryptedDbSecrets = dbSecrets
     .map((secret) => {
       try {
@@ -51,14 +45,21 @@ export const testConnectionAsync = async (
     })
     .filter((secret) => secret !== null);
 
+  const formSecrets = integration.secrets
+    .map((secret) => ({
+      ...secret,
+      // If the value is not defined in the form (because we only changed other values) we use the existing value from the db if it exists
+      value: secret.value ?? decryptedDbSecrets.find((dbSecret) => dbSecret.kind === secret.kind)?.value ?? null,
+      source: "form" as const,
+    }))
+    .filter((secret): secret is SourcedIntegrationSecret<"form"> => secret.value !== null);
+
   const sourcedSecrets = [...formSecrets, ...decryptedDbSecrets];
   const secretKinds = getSecretKindOption(integration.kind, sourcedSecrets);
 
   const decryptedSecrets = secretKinds
     .map((kind) => {
-      const secrets = sourcedSecrets
-        .filter((secret): secret is SourcedIntegrationSecret<false> => secret.value !== null)
-        .filter((secret) => secret.kind === kind);
+      const secrets = sourcedSecrets.filter((secret) => secret.kind === kind);
       // Will never be undefined because of the check before
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (secrets.length === 1) return secrets[0]!;
@@ -87,13 +88,13 @@ export const testConnectionAsync = async (
   return result;
 };
 
-interface SourcedIntegrationSecret<TAllowNull extends boolean> {
+interface SourcedIntegrationSecret<TSource extends string = "db" | "form"> {
   kind: IntegrationSecretKind;
-  value: TAllowNull extends true ? string | null : string;
-  source: "db" | "form";
+  value: string;
+  source: TSource;
 }
 
-const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedIntegrationSecret<true>[]) => {
+const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedIntegrationSecret[]) => {
   const matchingSecretKindOptions = getAllSecretKindOptions(kind).filter((secretKinds) =>
     secretKinds.every((kind) => sourcedSecrets.some((secret) => secret.kind === kind)),
   );
