@@ -262,7 +262,7 @@ export const integrationDefs = {
   },
   gitHubContainerRegistry: {
     name: "GitHub Container Registry",
-    secretKinds: [[], ["personalAccessToken"]],
+    secretKinds: [[], ["personalAccessToken"], ["githubAppId", "githubInstallationId", "privateKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/github.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://api.github.com",

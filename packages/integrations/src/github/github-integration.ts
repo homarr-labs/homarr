@@ -151,15 +151,6 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
           appId: this.getSecretValue("githubAppId"),
           installationId: this.getSecretValue("githubInstallationId"),
           privateKey: this.getSecretValue("privateKey"),
-          /*cache: {
-              get(key: string) {
-                return cache.get(key) ?? (null as unknown as string);
-              },
-              set(key: string, value: string) {
-                cache.set(key, value);
-              },
-              
-            },*/
         } satisfies Parameters<typeof createAppAuth>[0],
       };
 

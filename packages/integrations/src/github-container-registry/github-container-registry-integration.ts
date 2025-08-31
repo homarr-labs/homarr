@@ -1,11 +1,14 @@
+import { createAppAuth } from "@octokit/auth-app";
 import { Octokit, RequestError } from "octokit";
+import type { fetch } from "undici";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
+import { HandleIntegrationErrors } from "../base/errors/decorator";
+import { integrationOctokitHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
-import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
@@ -18,23 +21,21 @@ import type {
 
 const localLogger = logger.child({ module: "GitHubContainerRegistryIntegration" });
 
+@HandleIntegrationErrors([integrationOctokitHttpErrorHandler])
 export class GitHubContainerRegistryIntegration extends Integration implements ReleasesProviderIntegration {
   private static readonly userAgent = "Homarr-Lab/Homarr:GitHubContainerRegistryIntegration";
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const headers: RequestInit["headers"] = {
-      "User-Agent": GitHubContainerRegistryIntegration.userAgent,
-    };
+    const api = this.getApi(input.fetchAsync);
 
-    if (this.hasSecretValue("personalAccessToken"))
-      headers.Authorization = `Bearer ${this.getSecretValue("personalAccessToken")}`;
-
-    const response = await input.fetchAsync(this.url("/octocat"), {
-      headers,
-    });
-
-    if (!response.ok) {
-      return TestConnectionError.StatusResult(response);
+    if (this.hasSecretValue("personalAccessToken")) {
+      await api.rest.users.getAuthenticated();
+    } else if (this.hasSecretValue("githubAppId")) {
+      await api.rest.apps.getInstallation({
+        installation_id: Number(this.getSecretValue("githubInstallationId")),
+      });
+    } else {
+      await api.request("GET /octocat");
     }
 
     return {
@@ -131,15 +132,38 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
     }
   }
 
-  private getApi() {
+  private getAuthProperties(): Pick<OctokitOptions, "auth" | "authStrategy"> {
+    if (this.hasSecretValue("personalAccessToken"))
+      return {
+        auth: this.getSecretValue("personalAccessToken"),
+      };
+
+    if (this.hasSecretValue("githubAppId"))
+      return {
+        authStrategy: createAppAuth,
+        auth: {
+          appId: this.getSecretValue("githubAppId"),
+          installationId: this.getSecretValue("githubInstallationId"),
+          privateKey: this.getSecretValue("privateKey"),
+        } satisfies Parameters<typeof createAppAuth>[0],
+      };
+
+    return {};
+  }
+
+  private getApi(customFetch?: typeof fetch) {
     return new Octokit({
       baseUrl: this.url("/").origin,
       request: {
-        fetch: fetchWithTrustedCertificatesAsync,
+        fetch: customFetch ?? fetchWithTrustedCertificatesAsync,
       },
       userAgent: GitHubContainerRegistryIntegration.userAgent,
-      throttle: { enabled: false }, // Disable throttling for this integration, Octokit will retry by default after a set time, thus delaying the repsonse to the user in case of errors. Errors will be shown to the user, no need to retry the request.
-      ...(this.hasSecretValue("personalAccessToken") ? { auth: this.getSecretValue("personalAccessToken") } : {}),
+      // Disable throttling for this integration, Octokit will retry by default after a set time,
+      // thus delaying the repsonse to the user in case of errors. Errors will be shown to the user, no need to retry the request.
+      throttle: { enabled: false },
+      ...this.getAuthProperties(),
     });
   }
 }
+
+type OctokitOptions = Exclude<ConstructorParameters<typeof Octokit>[0], undefined>;

@@ -39,6 +39,8 @@ const PublicSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => {
         label={props.label ?? t(`integration.secrets.kind.${kind}.label`)}
         w="100%"
         leftSection={<Icon size={20} stroke={1.5} />}
+        autosize
+        minRows={2}
       />
     );
   }
@@ -66,6 +68,8 @@ const PrivateSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => 
         description={t("integration.secrets.secureNotice")}
         w="100%"
         leftSection={<Icon size={20} stroke={1.5} />}
+        autosize
+        minRows={2}
       />
     );
   }
