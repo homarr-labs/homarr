@@ -15,12 +15,11 @@ jobs:
         env:
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          echo "/repos/${{github.event.repository.owner}}/${{github.event.repository.name}}/statuses/${{github.event.pull_request.head.sha}}"
           gh api \
           --method POST \
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
-          /repos/${{github.event.repository.owner}}/${{github.event.repository.name}}/statuses/${{github.event.pull_request.head.sha}} \
+          /repos/${{github.event.repository.owner.name}}/${{github.event.repository.name}}/statuses/${{github.event.pull_request.head.sha}} \
           -f 'state=success' \
           -f 'target_url=https://docs.renovatebot.com/configuration-options#minimumreleaseage' \
           -f 'description=Skipped for non renovate branches' \
