@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add status check
+        env:
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
           gh api \
           --method POST \
