@@ -17,7 +17,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@next/eslint-plugin-next": "15.5.0",
+    "@next/eslint-plugin-next": "15.5.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-config-turbo": "^2.5.6",
     "eslint-plugin-import": "^2.32.0",
