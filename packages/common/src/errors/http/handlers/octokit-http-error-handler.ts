@@ -14,7 +14,7 @@ export class OctokitHttpErrorHandler extends HttpErrorHandler {
   }
 
   handleResponseError(error: unknown): ResponseError | undefined {
-    if (!(error instanceof OctokitRequestError)) return;
+    if (!(error instanceof OctokitRequestError)) return undefined;
 
     return new ResponseError({
       status: error.status,
