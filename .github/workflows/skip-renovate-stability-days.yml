@@ -15,7 +15,6 @@ jobs:
         env:
           GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
         run: |
-          echo "/repos/${{github.repository}}/statuses/${{github.event.pull_request.head.sha}}"
           gh api \
           --method POST \
           -H "Accept: application/vnd.github+json" \
