@@ -528,6 +528,7 @@ export const userRelations = relations(users, ({ one, many }) => ({
   groups: many(groupMembers),
   ownedGroups: many(groups),
   invites: many(invites),
+  medias: many(medias),
   defaultSearchEngine: one(searchEngines, {
     fields: [users.defaultSearchEngineId],
     references: [searchEngines.id],

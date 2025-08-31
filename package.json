@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "1.34.0",
+  "version": "1.35.0",
   "private": true,
   "scripts": {
     "build": "cross-env CI=true turbo build",
@@ -9,6 +9,8 @@
     "cli": "pnpm with-env tsx packages/cli/index.ts",
     "db:migration:mysql:generate": "pnpm -F db migration:mysql:generate",
     "db:migration:mysql:run": "pnpm -F db migration:mysql:run",
+    "db:migration:postgresql:generate": "pnpm -F db migration:postgresql:generate",
+    "db:migration:postgresql:run": "pnpm -F db migration:postgresql:run",
     "db:migration:sqlite:generate": "pnpm -F db migration:sqlite:generate",
     "db:migration:sqlite:run": "pnpm -F db migration:sqlite:run",
     "db:push": "pnpm -F db push:sqlite",
@@ -58,7 +60,7 @@
   },
   "packageManager": "pnpm@10.15.0",
   "engines": {
-    "node": ">=22.18.0"
+    "node": ">=22.19.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -73,10 +75,28 @@
       "tree-sitter-json"
     ],
     "overrides": {
-      "proxmox-api>undici": "7.14.0"
+      "@babel/helpers@<7.26.10": ">=7.28.3",
+      "@babel/runtime@<7.26.10": ">=7.28.3",
+      "axios@>=1.0.0 <1.8.2": ">=1.11.0",
+      "brace-expansion@>=2.0.0 <=2.0.1": ">=4.0.1",
+      "brace-expansion@>=1.0.0 <=1.1.11": ">=4.0.1",
+      "esbuild@<=0.24.2": ">=0.25.9",
+      "form-data@>=4.0.0 <4.0.4": ">=4.0.4",
+      "hono@<4.6.5": ">=4.9.5",
+      "linkifyjs@<4.3.2": ">=4.3.2",
+      "nanoid@>=4.0.0 <5.0.9": ">=5.1.5",
+      "prismjs@<1.30.0": ">=1.30.0",
+      "proxmox-api>undici": "7.15.0",
+      "rollup@>=4.0.0 <4.22.4": ">=4.49.0",
+      "sha.js@<=2.4.11": ">=2.4.12",
+      "tar-fs@>=3.0.0 <3.0.9": ">=3.1.0",
+      "tar-fs@>=2.0.0 <2.1.3": ">=3.1.0",
+      "tmp@<=0.2.3": ">=0.2.5",
+      "vite@>=5.0.0 <=5.4.18": ">=7.1.3"
     },
     "patchedDependencies": {
-      "@types/node-unifi": "patches/@types__node-unifi.patch"
+      "@types/node-unifi": "patches/@types__node-unifi.patch",
+      "trpc-to-openapi": "patches/trpc-to-openapi.patch"
     },
     "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [

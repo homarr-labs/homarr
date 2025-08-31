@@ -33,7 +33,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/bcrypt": "6.0.0",
-    "eslint": "^9.33.0",
+    "eslint": "^9.34.0",
     "typescript": "^5.9.2"
   }
 }

@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "Vis app navn"
         },
-        "showDescriptionTooltip": {
-          "label": "Vis beskrivelse verktøytips"
-        },
         "pingEnabled": {
           "label": "Aktiver enkel ping"
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },

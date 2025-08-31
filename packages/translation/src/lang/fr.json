@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "Afficher le nom de l'application"
         },
-        "showDescriptionTooltip": {
-          "label": "Afficher l'info-bulle de description"
-        },
         "pingEnabled": {
           "label": "Activer la vérification du statut"
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },

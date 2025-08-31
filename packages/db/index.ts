@@ -7,6 +7,6 @@ export * from "drizzle-orm";
 export const db = database;
 
 export type Database = typeof db;
-export type { HomarrDatabaseMysql } from "./driver";
+export type { HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
 
 export { handleDiffrentDbDriverOperationsAsync as handleTransactionsAsync } from "./transactions";

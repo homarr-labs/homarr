@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "Показувати назву додатка"
         },
-        "showDescriptionTooltip": {
-          "label": ""
-        },
         "pingEnabled": {
           "label": ""
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },

@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "Uygulama adını göster"
         },
-        "showDescriptionTooltip": {
-          "label": "Açıklama ipucunu göster"
-        },
         "pingEnabled": {
           "label": "Durum denetimini etkinleştir"
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "Yatay (ters)",
             "column": "Dikey",
             "column-reverse": "Dikey (ters)"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },
