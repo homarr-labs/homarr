@@ -1465,9 +1465,6 @@ importers:
       '@jellyfin/sdk':
         specifier: ^0.11.0
         version: 0.11.0(axios@1.11.0)
-      '@octokit/app':
-        specifier: ^16.1.0
-        version: 16.1.0
       '@octokit/auth-app':
         specifier: ^8.1.0
         version: 8.1.0
