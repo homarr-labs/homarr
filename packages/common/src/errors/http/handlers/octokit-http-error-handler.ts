@@ -1,7 +1,5 @@
 import { RequestError as OctokitRequestError } from "octokit";
 
-import { logger } from "@homarr/log";
-
 import type { AnyRequestError } from "../request-error";
 import { ResponseError } from "../response-error";
 import { HttpErrorHandler } from "./http-error-handler";
