@@ -18,6 +18,7 @@ import { GitHubContainerRegistryIntegration } from "../github-container-registry
 import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
+import { ICalIntegration } from "../ical/ical-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { LinuxServerIOIntegration } from "../linuxserverio/linuxserverio-integration";
@@ -39,7 +40,6 @@ import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { QuayIntegration } from "../quay/quay-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
-import { ICalIntegration } from "../ical/ical-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
 export const createIntegrationAsync = async <TKind extends keyof typeof integrationCreators>(
