@@ -62,9 +62,7 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    console.log(this.integration.url);
     const response = await input.fetchAsync(this.integration.url);
-    console.log(response);
     if (!response.ok) return TestConnectionError.StatusResult(response);
 
     await response.text();
