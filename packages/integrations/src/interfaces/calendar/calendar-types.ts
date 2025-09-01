@@ -8,16 +8,11 @@ export interface MediaMetadata {
   thumbnail?: string;
 }
 
-
 export interface ICalMetadata {
-  type: 'event'
+  type: "event";
   startDate: Date;
   endDate: Date;
-  color: string;
-  attendees: string[];
-  duration: string;
   location: string;
-  organizer: string;
   calendarName?: string;
   timezone?: string;
 }
@@ -25,18 +20,21 @@ export interface ICalMetadata {
 export type Metadata = MediaMetadata | ICalMetadata;
 
 export const isMediaMetadata = (metadata?: Metadata): metadata is MediaMetadata => {
-  return metadata !== undefined && (metadata.type === 'audio' || metadata.type === 'movie' || metadata.type === 'tv' || metadata.type === 'video')
-}
+  return (
+    metadata !== undefined &&
+    (metadata.type === "audio" || metadata.type === "movie" || metadata.type === "tv" || metadata.type === "video")
+  );
+};
 
 export interface CalendarEvent {
   name: string;
   subName: string;
   date: Date;
   dates?: { type: RadarrReleaseType; date: Date }[];
-  metadata?: Metadata
+  metadata?: Metadata;
   description?: string;
   links: {
-    href: string;
+    href?: string;
     name: string;
     color: string | undefined;
     notificationColor?: string | undefined;

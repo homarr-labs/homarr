@@ -48,10 +48,10 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
         name: lidarrCalendarEvent.title,
         subName: lidarrCalendarEvent.artist.artistName,
         description: lidarrCalendarEvent.overview,
-        thumbnail: this.chooseBestImageAsURL(lidarrCalendarEvent),
         date: lidarrCalendarEvent.releaseDate,
         metadata: {
           type: "audio",
+          thumbnail: this.chooseBestImageAsURL(lidarrCalendarEvent),
         },
         links: this.getLinksForLidarrCalendarEvent(lidarrCalendarEvent),
       };

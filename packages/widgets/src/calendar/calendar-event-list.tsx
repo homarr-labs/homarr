@@ -125,31 +125,33 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
               )}
               {event.links.length > 0 && (
                 <Group pt={5} gap={5} mt={"auto"} wrap="nowrap">
-                  {event.links.map((link) => (
-                    <Button
-                      key={link.href}
-                      component={"a"}
-                      href={link.href.toString()}
-                      target={"_blank"}
-                      size={"xs"}
-                      radius={"xl"}
-                      variant={link.color ? undefined : "default"}
-                      styles={{
-                        root: {
-                          backgroundColor: link.color,
-                          color: link.isDark && colorScheme === "dark" ? "white" : "black",
-                          "&:hover": link.color
-                            ? {
-                                backgroundColor: link.isDark ? lighten(link.color, 0.1) : darken(link.color, 0.1),
-                              }
-                            : undefined,
-                        },
-                      }}
-                      leftSection={link.logo ? <Image src={link.logo} w={20} h={20} /> : undefined}
-                    >
-                      <Text>{link.name}</Text>
-                    </Button>
-                  ))}
+                  {event.links
+                    .filter((link) => link.href)
+                    .map((link) => (
+                      <Button
+                        key={link.href}
+                        component={"a"}
+                        href={link.href?.toString()}
+                        target={"_blank"}
+                        size={"xs"}
+                        radius={"xl"}
+                        variant={link.color ? undefined : "default"}
+                        styles={{
+                          root: {
+                            backgroundColor: link.color,
+                            color: link.isDark && colorScheme === "dark" ? "white" : "black",
+                            "&:hover": link.color
+                              ? {
+                                  backgroundColor: link.isDark ? lighten(link.color, 0.1) : darken(link.color, 0.1),
+                                }
+                              : undefined,
+                          },
+                        }}
+                        leftSection={link.logo ? <Image src={link.logo} w={20} h={20} /> : undefined}
+                      >
+                        <Text>{link.name}</Text>
+                      </Button>
+                    ))}
                 </Group>
               )}
             </Stack>

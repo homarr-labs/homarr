@@ -40,10 +40,10 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
         name: sonarCalendarEvent.title,
         subName: sonarCalendarEvent.series.title,
         description: sonarCalendarEvent.series.overview,
-        thumbnail: this.chooseBestImageAsURL(sonarCalendarEvent),
         date: sonarCalendarEvent.airDateUtc,
         metadata: {
           type: "tv",
+          thumbnail: this.chooseBestImageAsURL(sonarCalendarEvent),
           episodeNumber: sonarCalendarEvent.episodeNumber,
           seasonNumber: sonarCalendarEvent.seasonNumber,
         },
