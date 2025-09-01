@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import ICAL from "ical.js";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
@@ -18,6 +13,7 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
   async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]> {
     const response = await fetchWithTrustedCertificatesAsync(this.integration.url);
     const result = await response.text();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const jcal = ICAL.parse(result);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const comp = new ICAL.Component(jcal);
@@ -36,9 +32,9 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
             {
               color: undefined,
               notificationColor: "red",
-              href: "",
               isDark: undefined,
               logo: "",
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               name: event.summary ?? "",
             },
           ],
@@ -47,9 +43,11 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
             startDate: event.startDate.toJSDate(),
             endDate: event.endDate.toJSDate(),
             location: event.location,
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             calendarName: (event.component.parent?.getFirstPropertyValue("x-wr-calname") ?? undefined) as
               | string
               | undefined,
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             timezone: (event.component.parent?.getFirstPropertyValue("x-wr-timezone") ?? undefined) as
               | string
               | undefined,
