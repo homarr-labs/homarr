@@ -246,6 +246,13 @@
       "when": 1754929897145,
       "tag": "0034_increase-blob-size",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "5",
+      "when": 1756701556908,
+      "tag": "0035_increase-secret-kind-length",
+      "breakpoints": true
     }
   ]
 }
