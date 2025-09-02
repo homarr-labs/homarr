@@ -337,7 +337,7 @@
             "description": "Allow members to add any applications to their boards"
           },
           "modify-all": {
-            "label": "Modify all applciations",
+            "label": "Modify all applications",
             "description": "Allow members to modify applications"
           },
           "full-all": {
@@ -368,7 +368,7 @@
         }
       },
       "integration": {
-        "title": "Integratioons",
+        "title": "Integrations",
         "item": {
           "create": {
             "label": "Create integrations",
@@ -457,7 +457,7 @@
         "confirm": "Are you want to transfer the ownership of the group, {name} to {username}",
         "notification": {
           "success": {
-            "message": "Successfully transfered group, {group} to {user}"
+            "message": "Successfully transferred group, {group} to {user}"
           },
           "error": {
             "message": "Unable to transfer the group's ownership"
