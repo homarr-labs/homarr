@@ -2413,7 +2413,7 @@ importers:
   tooling/prettier:
     dependencies:
       '@ianvs/prettier-plugin-sort-imports':
-        specifier: ^4.6.3
+        specifier: ^4.7.0
         version: 4.7.0(prettier@3.6.2)
       prettier:
         specifier: ^3.6.2
