@@ -28,9 +28,6 @@ patchedDependencies:
   '@types/node-unifi':
     hash: 5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5
     path: patches/@types__node-unifi.patch
-  trpc-to-openapi:
-    hash: 2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c
-    path: patches/trpc-to-openapi.patch
 
 importers:
 
@@ -654,7 +651,7 @@ importers:
         version: 2.2.2
       trpc-to-openapi:
         specifier: ^3.0.1
-        version: 3.0.1(patch_hash=2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c)(@trpc/server@11.5.0(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.1.5))(zod@4.1.5)
+        version: 3.0.1(@trpc/server@11.5.0(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.1.5))(zod@4.1.5)
       zod:
         specifier: ^4.1.5
         version: 4.1.5
@@ -867,6 +864,9 @@ importers:
       dayjs:
         specifier: ^1.11.15
         version: 1.11.18
+      dns-caching:
+        specifier: ^0.2.5
+        version: 0.2.5
       next:
         specifier: 15.5.2
         version: 15.5.2(@babel/core@7.28.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.91.0)
@@ -5864,6 +5864,9 @@ packages:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
 
+  dns-caching@0.2.5:
+    resolution: {integrity: sha512-1cnB6i/OG4zfYbRnDjWZDT+FGLvOBuJlFIxVZvHBiaa62SCfaGoP4Si50O14HyoHmx1gadeGWigYXdX5LQAFvg==}
+
   docker-compose@1.2.0:
     resolution: {integrity: sha512-wIU1eHk3Op7dFgELRdmOYlPYS4gP8HhH1ZmZa13QZF59y0fblzFDFmKPhyc05phCy2hze9OEvNZAsoljrs+72w==}
     engines: {node: '>= 6.0.0'}
@@ -7612,6 +7615,10 @@ packages:
 
   lru-cache@11.0.2:
     resolution: {integrity: sha512-123qHRfJBmo2jXDbo/a5YOQrJoHF/GNQTLzQ5+IdK5pWpceK17yRc6ozlWd25FxvGKQbIUs91fDFkXmDHTKcyA==}
+    engines: {node: 20 || >=22}
+
+  lru-cache@11.1.0:
+    resolution: {integrity: sha512-QIXZUBJUx+2zHUdQujWejBkcD9+cs94tLn0+YL8UrCh+D5sCXZ4c7LaEH48pNwRY3MLDgqUFyhlCyjJPf1WP0A==}
     engines: {node: 20 || >=22}
 
   lru-cache@5.1.1:
@@ -10723,7 +10730,7 @@ snapshots:
       '@csstools/css-color-parser': 3.0.7(@csstools/css-parser-algorithms@3.0.4(@csstools/css-tokenizer@3.0.3))(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-parser-algorithms': 3.0.4(@csstools/css-tokenizer@3.0.3)
       '@csstools/css-tokenizer': 3.0.3
-      lru-cache: 11.0.2
+      lru-cache: 11.1.0
 
   '@auth/core@0.40.0':
     dependencies:
@@ -14628,6 +14635,10 @@ snapshots:
     dependencies:
       path-type: 4.0.0
 
+  dns-caching@0.2.5:
+    dependencies:
+      lru-cache: 11.1.0
+
   docker-compose@1.2.0:
     dependencies:
       yaml: 2.5.1
@@ -16660,6 +16671,8 @@ snapshots:
   lru-cache@10.4.3: {}
 
   lru-cache@11.0.2: {}
+
+  lru-cache@11.1.0: {}
 
   lru-cache@5.1.1:
     dependencies:
@@ -19365,7 +19378,7 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-openapi@3.0.1(patch_hash=2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c)(@trpc/server@11.5.0(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.1.5))(zod@4.1.5):
+  trpc-to-openapi@3.0.1(@trpc/server@11.5.0(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.1.5))(zod@4.1.5):
     dependencies:
       '@trpc/server': 11.5.0(typescript@5.9.2)
       co-body: 6.2.0
