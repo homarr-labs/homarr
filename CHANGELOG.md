@@ -1,3 +1,9 @@
+## [1.35.1](https://github.com/homarr-labs/homarr/compare/v1.35.0...v1.35.1) (2025-09-03)
+
+### Bug Fixes
+
+* **db:** increase integration kind limit from 16 to 64 characters ([8ff29b8](https://github.com/homarr-labs/homarr/commit/8ff29b82e5133ba0b8eaf2cf88de9bca31128a68))
+
 ## [1.35.0](https://github.com/homarr-labs/homarr/compare/v1.34.0...v1.35.0) (2025-08-29)
 
 ### Features
