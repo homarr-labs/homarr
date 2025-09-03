@@ -1279,12 +1279,12 @@
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Açıklama görüntüleme modu",
+          "description": "Uygulama açıklamasının nasıl görüntüleneceğini seçin",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "Widget içinde",
+            "tooltip": "Araç ipucu olarak",
+            "hidden": "Gizli"
           }
         }
       },
