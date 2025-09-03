@@ -12,7 +12,7 @@
       },
       "import": {
         "title": "Import data",
-        "subtitle": "You can import your data from an existing Homarr instance.",
+        "subtitle": "You can import data from an existing Homarr instance.",
         "dropzone": {
           "title": "Drag your ZIP file here or click to browse your files",
           "description": "The ZIP file you uploaded will be processed and you will be able to select what you would like to import"
@@ -65,7 +65,7 @@
       },
       "user": {
         "title": "Administrative user",
-        "subtitle": "Please specify the credentials for your user.",
+        "subtitle": "Please specify the credentials for your administrator user.",
         "notification": {
           "success": {
             "title": "User created",
@@ -186,7 +186,7 @@
         "notification": {
           "success": {
             "title": "Account has been created",
-            "message": "Please log-in to continue"
+            "message": "Please log in to continue"
           },
           "error": {
             "title": "Account creation has failed",
@@ -337,7 +337,7 @@
             "description": "Allow members to add any applications to their boards"
           },
           "modify-all": {
-            "label": "Modify all applciations",
+            "label": "Modify all applications",
             "description": "Allow members to modify applications"
           },
           "full-all": {
@@ -368,7 +368,7 @@
         }
       },
       "integration": {
-        "title": "Integratioons",
+        "title": "Integrations",
         "item": {
           "create": {
             "label": "Create integrations",
@@ -457,7 +457,7 @@
         "confirm": "Are you want to transfer the ownership of the group, {name} to {username}",
         "notification": {
           "success": {
-            "message": "Successfully transfered group, {group} to {user}"
+            "message": "Successfully transferred group {group} to {user}"
           },
           "error": {
             "message": "Unable to transfer the group's ownership"
@@ -1147,7 +1147,7 @@
       },
       "remove": {
         "title": "Remove dynamic section",
-        "message": "Are you certain that you want to remove this dynamic section? All items inside will be moved to the same location inside of the parent section."
+        "message": "Are you certain that you want to remove this dynamic section? All items inside will be moved to the same location within the parent section."
       }
     },
     "category": {
@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": ""
         },
-        "showDescriptionTooltip": {
-          "label": ""
-        },
         "pingEnabled": {
           "label": ""
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },

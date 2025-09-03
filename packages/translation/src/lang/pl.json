@@ -752,7 +752,7 @@
             },
             "extract": {
               "title": "Wydobycie certyfikatu CA nie powiodło się",
-              "message": ""
+              "message": "Automatyczne pobieranie jest możliwe wyłącznie dla certyfikatów samopodpisanych bez dołączonego łańcucha.\nJeśli korzystasz z certyfikatu samopodpisanego, prześlij certyfikat CA ręcznie.\nSzczegółowe instrukcje znajdziesz tutaj: <docsLink></docsLink>."
             }
           },
           "action": {
@@ -774,36 +774,36 @@
             "notification": {
               "success": {
                 "title": "Zaufany certyfikat",
-                "message": ""
+                "message": "Dodano nazwę hosta do listy zaufanych certyfikatów"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Nie udało się dodać certyfikatu do zaufanych",
+                "message": "Nie można zaufać certyfikatowi z niezgodną nazwą hosta."
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Dodaj certyfikat samopodpisany do listy zaufanych",
+              "message": "Czy na pewno chcesz dodać ten certyfikat samopodpisany do listy zaufanych?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Zaufane certyfikaty",
+                "message": "Dodano nazwę hosta do listy zaufanych certyfikatów"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Nie udało się zaufać certyfikatowi",
+                "message": "Nie udało się dodać certyfikatu do listy zaufanych certyfikatów"
               }
             }
           },
           "details": {
             "title": "Szczegóły",
-            "description": "",
+            "description": "Przejrzyj informacje o certyfikacie, zanim zdecydujesz się dodać go do listy zaufanych",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "Pokaż zawartość",
+              "title": "Certyfikat PEM"
             }
           }
         },
@@ -811,19 +811,19 @@
           "title": "Błąd zapytania",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "Nie można połączyć się z serwerem. Zazwyczaj oznacza to, że host jest offline lub niedostępny z Twojej sieci.",
+              "networkUnreachable": "Sieć jest niedostępna. Sprawdź swoje połączenie internetowe lub konfigurację sieci.",
+              "refused": "Serwer odmówił połączenia. Może nie działać lub odrzuca żądania na określonym porcie.",
+              "reset": "Połączenie zostało niespodziewanie zamknięte przez serwer. Może się tak zdarzyć, jeśli serwer jest niestabilny lub został zrestartowany."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "Nie można znaleźć adresu serwera. Sprawdź, czy adres URL nie zawiera literówek lub nieprawidłowej nazwy domeny.",
+              "timeout": "Przekroczono czas oczekiwania na odpowiedź DNS. Może to być tymczasowy problem — spróbuj ponownie później.",
+              "noAnswer": "Serwer DNS nie zwrócił prawidłowej odpowiedzi. Domena może istnieć, ale nie posiada prawidłowych rekordów."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "Żądanie zostało przerwane przed jego zakończeniem. Może to być spowodowane działaniem użytkownika lub przekroczeniem czasu systemu.",
+              "timeout": "Żądanie trwało zbyt długo i przekroczono limit czasu. Sprawdź swoje połączenie sieciowe lub spróbuj ponownie później."
             }
           }
         }
@@ -895,8 +895,8 @@
           "message": "Ścieżka jest prawdopodobnie niepoprawna"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "Zbyt wiele żądań w określonym czasie",
+          "message": "Wystąpiło zbyt wiele żądań. Prawdopodobnie jesteś ograniczony lub odrzucony przez system docelowy"
         }
       }
     },
@@ -934,24 +934,24 @@
           "newLabel": "Nowy token ID"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Domena",
+          "newLabel": "Nowa domena"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Osobisty Token Dostępu",
+          "newLabel": "Nowy osobisty token dostępu"
         },
         "topic": {
-          "label": "",
-          "newLabel": ""
+          "label": "Temat",
+          "newLabel": "Nowy temat"
         },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Klucz API",
+          "newLabel": "Nowy klucz API"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "Klucz API (Secret)",
+          "newLabel": "Nowy klucz API (Secret)"
         }
       }
     },
@@ -998,12 +998,12 @@
         "label": "Kopiuj adres URL"
       },
       "open": {
-        "label": ""
+        "label": "Otwórz media"
       }
     }
   },
   "common": {
-    "success": "",
+    "success": "Sukces",
     "beta": "Wersja beta",
     "error": "Błąd",
     "action": {
@@ -1011,7 +1011,7 @@
       "apply": "Zastosuj",
       "backToOverview": "Powrót do widoku ogólnego",
       "create": "Utwórz",
-      "createAnother": "",
+      "createAnother": "Utwórz i zacznij od nowa",
       "edit": "Edytuj",
       "import": "Importuj",
       "insert": "Wstaw",
@@ -1021,7 +1021,7 @@
       "cancel": "Anuluj",
       "delete": "Usuń",
       "discard": "Odrzuć",
-      "close": "",
+      "close": "Zamknij",
       "confirm": "Potwierdź",
       "continue": "Kontynuuj",
       "previous": "Poprzedni",
@@ -1095,7 +1095,7 @@
     },
     "dangerZone": "Strefa zagrożenia",
     "noResults": "Nie znaleziono żadnych wyników",
-    "unsavedChanges": "",
+    "unsavedChanges": "Masz niezapisane zmiany!",
     "preview": {
       "show": "Pokaż podgląd",
       "hide": "Ukryj podgląd"
@@ -1139,10 +1139,10 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Tytuł"
         },
         "borderColor": {
-          "label": ""
+          "label": "Kolor obramowania"
         }
       },
       "remove": {
@@ -1186,7 +1186,7 @@
       },
       "openAllInNewTabs": {
         "title": "Otwórz wszystkie w kartach",
-        "text": ""
+        "text": "Niektóre przeglądarki mogą blokować masowe otwieranie kart ze względów bezpieczeństwa. Homarr nie był w stanie otworzyć wszystkich okien, ponieważ Twoja przeglądarka zablokowała tę akcję. Proszę zezwolić na \"Otwórz wyskakujące okna\" i spróbować ponownie."
       }
     }
   },
@@ -1237,13 +1237,13 @@
           "label": "Integracje"
         },
         "title": {
-          "label": ""
+          "label": "Tytuł"
         },
         "customCssClasses": {
           "label": "Niestandardowe klasy CSS"
         },
         "borderColor": {
-          "label": ""
+          "label": "Kolor obramowania"
         }
       }
     },
@@ -1255,7 +1255,7 @@
   "widget": {
     "app": {
       "name": "Aplikacja",
-      "description": "Osadza aplikację w płytce.",
+      "description": "Dodaje aplikację do tablicy.",
       "option": {
         "appId": {
           "label": "Wybierz aplikację"
@@ -1266,19 +1266,25 @@
         "showTitle": {
           "label": "Pokaż nazwę aplikacji"
         },
-        "showDescriptionTooltip": {
-          "label": "Pokaż opis podpowiedzi"
-        },
         "pingEnabled": {
           "label": "Włącz prosty ping"
         },
         "layout": {
-          "label": "",
+          "label": "Układ",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Poziomy",
+            "row-reverse": "Poziomy (odwrócony)",
+            "column": "Pionowy",
+            "column-reverse": "Pionowy (odwrócony)"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "Tryb wyświetlania opisu",
+          "description": "Wybierz sposób wyświetlania opisu aplikacji",
+          "option": {
+            "normal": "W widżecie",
+            "tooltip": "Jako podpowiedź",
+            "hidden": "Ukryty"
           }
         }
       },
@@ -1309,18 +1315,18 @@
               "label": "Siatka"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "Siatka pozioma"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "Ukryj tytuł"
         },
         "hideIcon": {
           "label": "Ukryj ikony"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Ukryj nazwy hostów"
         },
         "openNewTab": {
           "label": "Otwórz w nowej karcie"
@@ -1366,7 +1372,7 @@
       "domainsTooltip": "Ze względu na wiele integracji, Homarr nie może obliczyć dokładnej liczby zablokowanych domen"
     },
     "dnsHoleControls": {
-      "name": "Sterowanie dziurami DNS",
+      "name": "Kontrola luk DNS",
       "description": "Kontroluj PiHole lub AdGuard ze swojego pulpitu",
       "option": {
         "layout": {
@@ -1441,8 +1447,8 @@
           "description": "Użyj ISO 8601 do formatu czasu (spowoduje nadpisanie innych opcji)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Niestandardowy format daty",
+          "description": "Użyj ISO 8601 do formatu daty (spowoduje to nadpisanie innych opcji)"
         }
       }
     },
@@ -1525,7 +1531,7 @@
         "width": "Szerokość",
         "height": "Wysokość"
       },
-      "placeholder": ""
+      "placeholder": "Zacznij pisać swoje notatki"
     },
     "iframe": {
       "name": "iFrame",
@@ -1599,76 +1605,76 @@
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Cena akcji",
+      "description": "Wyświetla aktualną cenę akcji firmy",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Symbol akcji"
         },
         "timeRange": {
-          "label": "",
+          "label": "Zakres czasu",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 dzień"
             },
             "5d": {
-              "label": ""
+              "label": "5 dni"
             },
             "1mo": {
-              "label": ""
+              "label": "1 miesiąc"
             },
             "3mo": {
-              "label": ""
+              "label": "3 miesiące"
             },
             "6mo": {
-              "label": ""
+              "label": "6 miesięcy"
             },
             "ytd": {
-              "label": ""
+              "label": "Od początku roku"
             },
             "1y": {
-              "label": ""
+              "label": "1 rok"
             },
             "2y": {
-              "label": ""
+              "label": "2 lata"
             },
             "5y": {
-              "label": ""
+              "label": "5 lat"
             },
             "10y": {
-              "label": ""
+              "label": "10 lat"
             },
             "max": {
-              "label": ""
+              "label": "Maks"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Interwał czasu",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 minut"
             },
             "15m": {
-              "label": ""
+              "label": "15 minut"
             },
             "30m": {
-              "label": ""
+              "label": "30 minut"
             },
             "1h": {
-              "label": ""
+              "label": "1 godzina"
             },
             "1d": {
-              "label": ""
+              "label": "1 dzień"
             },
             "5d": {
-              "label": ""
+              "label": "5 dni"
             },
             "1wk": {
-              "label": ""
+              "label": "1 tydzień"
             },
             "1mo": {
-              "label": ""
+              "label": "1 miesiąc"
             }
           }
         }
@@ -1693,7 +1699,7 @@
           "label": "Koniec o"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "Pokaż niemonitorowane"
         }
       }
     },
@@ -1705,11 +1711,11 @@
           "label": "Temperatura w Fahrenheit"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Wyłącz dziesiętne wartości temperatury"
         },
         "showCurrentWindSpeed": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż aktualną prędkość wiatru",
+          "description": "Tylko dla bieżącej pogody"
         },
         "location": {
           "label": "Lokalizacja pogody"
@@ -1729,12 +1735,12 @@
           "description": "Jak powinna wyglądać data"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} km/h",
       "dailyForecast": {
         "sunrise": "Wschód słońca",
         "sunset": "Zachód słońca",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "maxWindSpeed": "Maksymalna prędkość wiatru: {maxWindSpeed} km/h",
+        "maxWindGusts": "Maksymalne porywy wiatru: {maxWindGusts} km/h"
       },
       "kind": {
         "clear": "Bezchmurnie",
@@ -1772,7 +1778,7 @@
       "description": "Wyświetla informacje o stanie Twojego systemu(ów).",
       "tab": {
         "system": "System",
-        "cluster": ""
+        "cluster": "Klaster"
       },
       "option": {
         "fahrenheit": {
@@ -1785,19 +1791,19 @@
           "label": "Pokaż informacje o pamięci"
         },
         "showUptime": {
-          "label": ""
+          "label": "Pokaż czas pracy"
         },
         "fileSystem": {
           "label": "Pokaż informacje o systemie plików"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Domyślna karta"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Widoczne sekcje klastra"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Wymóg dotyczący wskaźnika sekcji"
         }
       },
       "popover": {
@@ -1806,7 +1812,7 @@
         "memory": "Pamięć: {memory}GiB",
         "memoryAvailable": "Dostępna pamięć {memoryAvailable} GB ({percent}%)",
         "version": "Wersja: {version}",
-        "uptime": "",
+        "uptime": "Czas pracy: {months} mies., {days} dni, {hours} godzin, {minutes} minut",
         "loadAverage": "Średnie obciążenie",
         "minute": "1 minuta",
         "minutes": "{count} minut",
@@ -1825,52 +1831,52 @@
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Węzły"
           },
           "qemu": {
-            "name": ""
+            "name": "Maszyn wirtualnych"
           },
           "lxc": {
-            "name": ""
+            "name": "LXCs"
           },
           "storage": {
-            "name": ""
+            "name": "Pamięć"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
+            "node": "Węzeł",
+            "vmId": "ID maszyny wirtualnej",
             "plugin": "Wtyczka"
           },
           "detail": {
-            "cpu": "",
+            "cpu": "Rdzenie",
             "memory": "Pamięć",
             "storage": "Magazyn",
             "uptime": "Czas pracy",
             "haState": "Stan HA",
             "storageType": {
               "local": "Magazyn lokalny",
-              "shared": ""
+              "shared": "Pamięć współdzielona"
             }
           }
         },
         "table": {
           "header": {
-            "name": "",
-            "cpu": "",
-            "memory": "",
-            "node": ""
+            "name": "Nazwa",
+            "cpu": "CPU",
+            "memory": "RAM",
+            "node": "Węzeł"
           }
         }
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Statystyki Dockera",
+      "description": "Statystyki Twoich kontenerów (ten widżet można dodać tylko z uprawnieniami administratora)",
       "option": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Nie udało się pobrać statystyk kontenerów"
       }
     },
     "common": {
@@ -1903,7 +1909,7 @@
       "app": {
         "noData": "Nie znaleziono aplikacji",
         "description": "Kliknij <here></here> aby utworzyć nową aplikację",
-        "quickCreate": ""
+        "quickCreate": "Utwórz aplikację w locie"
       },
       "error": {
         "noIntegration": "Nie wybrano integracji",
@@ -1939,12 +1945,12 @@
       "description": "Pokaż bieżące strumienie na serwerach multimedialnych",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż tylko aktualnie odtwarzane",
+          "description": "Wyłączenie tej opcji nie zadziała w przypadku Plex"
         }
       },
       "items": {
-        "currentlyPlaying": "",
+        "currentlyPlaying": "Obecnie odtwarzane",
         "user": "Użytkownik",
         "name": "Nazwa",
         "id": "ID"
@@ -1973,7 +1979,7 @@
           "label": "Pokaż wpisy torrent oznaczone jako ukończone"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Pokaż różne wpisy oznaczone jako ukończone"
         },
         "activeTorrentThreshold": {
           "label": "Ukryj ukończony torrent poniżej tego progu (w kiB/s)"
@@ -1988,8 +1994,8 @@
           "label": "Użyj filtra do obliczenia współczynnika"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Limit elementów na integrację",
+          "description": "To ograniczy liczbę wyświetlanych elementów dla każdej integracji, a nie globalnie."
         }
       },
       "errors": {
@@ -2077,8 +2083,8 @@
       "actions": {
         "clients": {
           "modalTitle": "Pobierz listę klientów",
-          "pause": "",
-          "resume": ""
+          "pause": "Zatrzymaj wszystkich klientów/elementy",
+          "resume": "Wznów wszystkich klientów/elementy"
         },
         "client": {
           "pause": "Wstrzymaj klienta",
@@ -2098,32 +2104,32 @@
       "globalRatio": "Wskaźnik globalny"
     },
     "mediaReleases": {
-      "name": "",
-      "description": "",
+      "name": "Wydania mediów",
+      "description": "Wyświetlaj nowo dodane media lub nadchodzące wydania z różnych integracji",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Układ",
           "option": {
             "backdrop": {
-              "label": ""
+              "label": "Tło"
             },
             "poster": {
-              "label": ""
+              "label": "Plakat"
             }
           }
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Pokaż podpowiedź z opisem"
         },
         "showType": {
-          "label": ""
+          "label": "Pokaż odznakę typu mediów"
         },
         "showSource": {
-          "label": ""
+          "label": "Pokaż źródłową integrację"
         }
       },
       "length": {
-        "duration": ""
+        "duration": "{length}min"
       }
     },
     "mediaRequests-requestList": {
@@ -2143,19 +2149,19 @@
         "unknown": "Nieznany",
         "pending": "Oczekujący",
         "processing": "Przetwarzanie",
-        "partiallyAvailable": "",
+        "partiallyAvailable": "Częściowy",
         "available": "Dostępne",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "Zablokowany",
+        "deleted": "Usunięty"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": "",
-        "completed": ""
+        "pending": "Oczekujące",
+        "approved": "Zatwierdzone",
+        "declined": "Odrzucone",
+        "failed": "Niepowodzenie",
+        "completed": "Ukończone"
       },
-      "toBeDetermined": ""
+      "toBeDetermined": "Nieokreślone"
     },
     "mediaRequests-requestStats": {
       "name": "Statystyki zapytań o media",
@@ -2166,199 +2172,199 @@
           "main": "Statystyki mediów",
           "approved": "Zatwierdzone",
           "pending": "Oczekujące na zatwierdzenie",
-          "processing": "",
-          "declined": "",
-          "available": "",
+          "processing": "Trwa przetwarzanie",
+          "declined": "Już odrzucone",
+          "available": "Już dostępne",
           "tv": "Zapytania o seriale",
           "movie": "Zapytania o filmy",
           "total": "Razem"
         },
         "users": {
           "main": "Najaktywniejsi użytkownicy",
-          "requests": ""
+          "requests": "Żądania"
         }
       }
     },
     "mediaTranscoding": {
-      "name": "",
-      "description": "",
+      "name": "Transkodowanie mediów",
+      "description": "Statystyki, bieżąca kolejka i status procesów transkodowania mediów",
       "option": {
         "defaultView": {
           "label": "Domyślny widok"
         },
         "queuePageSize": {
-          "label": ""
+          "label": "Rozmiar strony kolejki"
         }
       },
       "tab": {
-        "workers": "",
+        "workers": "Procesy",
         "queue": "Kolejka",
-        "statistics": ""
+        "statistics": "Statystyki"
       },
       "currentIndex": "{start}-{end} z {total}",
       "healthCheck": {
         "title": "Ocena stanu zdrowia",
         "queued": "W kolejce",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Zdrowy",
+          "unhealthy": "Niezdrowy"
         }
       },
       "panel": {
         "statistics": {
           "empty": "Puste",
-          "transcodes": "",
-          "transcodesCount": "",
-          "healthChecksCount": "",
+          "transcodes": "Transkoduj",
+          "transcodesCount": "Transkoduj",
+          "healthChecksCount": "Kontrola stanu",
           "filesCount": "Pliki: {value}",
-          "savedSpace": "",
-          "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "savedSpace": "Zaoszczędzona przestrzeń",
+          "healthChecks": "Kontrola stanu",
+          "videoCodecs": "Kodeki",
+          "videoContainers": "Kontenery",
+          "videoResolutions": "Rozdzielczość"
         },
         "workers": {
           "empty": "Puste",
           "table": {
-            "file": "",
-            "eta": "",
+            "file": "Plik",
+            "eta": "Przewidywany czas",
             "progress": "Postęp",
-            "transcode": "",
-            "healthCheck": ""
+            "transcode": "Transkoduj",
+            "healthCheck": "Kontrola stanu"
           }
         },
         "queue": {
           "empty": "Puste",
           "table": {
-            "file": "",
+            "file": "Plik",
             "size": "Rozmiar",
-            "transcode": "",
-            "healthCheck": ""
+            "transcode": "Transkoduj",
+            "healthCheck": "Kontrola stanu"
           }
         }
       }
     },
     "rssFeed": {
-      "name": "",
-      "description": "",
+      "name": "Kanały RSS",
+      "description": "Monitoruj i wyświetlaj jeden lub więcej ogólnych kanałów RSS, ATOM lub JSON",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "Adresy URL kanałów"
         },
         "enableRtl": {
-          "label": ""
+          "label": "Włącz RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Maksymalna liczba linii opisu"
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Limit liczby postów"
         }
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "Wydania",
+      "description": "Wyświetla listę aktualnych wersji podanych repozytoriów na podstawie podanego wyrażenia regularnego wersji.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Nowe wydanie w ciągu",
+          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nowych wydań."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Nieaktualne wydanie w ciągu",
+          "description": "Przykład użycia: 1w (1 tydzień), 10M (10 miesięcy). Obsługiwane jednostki: h (godziny), d (dni), w (tygodnie), M (miesiące), y (lata). Pozostaw puste, aby nie wyróżniać nieaktualnych wydań"
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "Pokaż tylko wyróżnione",
+          "description": "„Pokaż tylko nowe lub nieaktualne wydania. Zgodnie z powyższymi ustawieniami.”"
         },
         "showDetails": {
-          "label": ""
+          "label": "Pokaż szczegóły"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Pokaż tylko ikonę"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "Najlepsze wydania",
+          "description": "Maksymalna liczba najnowszych wydań do wyświetlenia. Zero oznacza brak limitu."
         },
         "repositories": {
-          "label": "",
+          "label": "Repozytoria",
           "addRepository": {
-            "label": ""
+            "label": "Dodaj repozytorium"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": "",
-            "selectAll": "",
-            "deselectAll": ""
+            "label": "Import z Dockera",
+            "loading": "Wczytywanie obrazów Dockera",
+            "noImagesFound": "Nie znaleziono obrazów Dockera",
+            "listFoundImages": "Lista znalezionych obrazów",
+            "listAlreadyImportedImages": "Lista już zaimportowanych obrazów",
+            "allImagesAlreadyImported": "Wszystkie obrazy zaimportowane",
+            "onlyAdminCanImport": "Tylko administratorzy mogą importować z Dockera",
+            "selectAll": "Zaznacz wszystko",
+            "deselectAll": "Odznacz wszystko"
           },
           "provider": {
-            "label": ""
+            "label": "Dostawca"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "Identyfikator",
+            "placeholder": "Nazwa lub Właściciel/Nazwa"
           },
           "name": {
-            "label": ""
+            "label": "Nazwa"
           },
           "versionFilter": {
-            "label": "",
+            "label": "Filtr wersji",
             "prefix": {
-              "label": ""
+              "label": "Prefiks"
             },
             "precision": {
-              "label": "",
+              "label": "Dokładność",
               "options": {
-                "none": ""
+                "none": "Brak"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "Sufiks"
             },
             "regex": {
-              "label": ""
+              "label": "Wyrażenie regularne"
             }
           },
           "edit": {
-            "label": ""
+            "label": "Edytuj"
           },
           "editForm": {
-            "title": "",
+            "title": "Edytuj repozytorium",
             "cancel": {
-              "label": ""
+              "label": "Anuluj"
             },
             "confirm": {
-              "label": ""
+              "label": "Potwierdź"
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Importuj z Dockera"
           },
           "example": {
-            "label": ""
+            "label": "Przykład"
           },
-          "invalid": "",
+          "invalid": "Nieprawidłowa definicja repozytorium, sprawdź wartości",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "Brak dostawcy",
+            "tooltip": "Nie udało się rozpoznać dostawcy. Ustaw go ręcznie po zaimportowaniu obrazów."
           }
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "markViewed": "",
+      "not-found": "Nie znaleziono",
+      "pre-release": "Wersja wstępna",
+      "archived": "Archiwalny",
+      "forked": "Forkowane",
+      "starsCount": "Gwiazdki",
+      "forksCount": "Forki",
+      "issuesCount": "Otwarte zgłoszenia",
+      "markViewed": "Oznacz jako przeczytane",
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
@@ -3671,7 +3677,7 @@
           "label": ""
         },
         "applicationType": {
-          "label": ""
+          "label": "Typ aplikacji"
         },
         "status": {
           "label": ""

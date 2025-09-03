@@ -2,7 +2,7 @@
 
 import type { PropsWithChildren } from "react";
 import { Fragment, Suspense } from "react";
-import { Flex, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import { IconLoader } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
@@ -74,7 +74,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
         ))}
         position="right-start"
         multiline
-        disabled={!options.showDescriptionTooltip || !app.description}
+        disabled={options.descriptionDisplayMode !== "tooltip" || !app.description || isEditMode}
         styles={{ tooltip: { maxWidth: 300 } }}
       >
         <Flex
@@ -87,16 +87,34 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
           align="center"
           gap={isColumnLayout ? 0 : "sm"}
         >
-          {options.showTitle && (
-            <Text
-              className="app-title"
-              fw={700}
-              size={isTiny ? "8px" : "sm"}
-              ta={isColumnLayout ? "center" : undefined}
-            >
-              {app.name}
-            </Text>
-          )}
+          <Stack gap={0}>
+            {options.showTitle && (
+              <Text
+                className="app-title"
+                fw={700}
+                size={isTiny ? rem(8) : "sm"}
+                ta={isColumnLayout ? "center" : undefined}
+              >
+                {app.name}
+              </Text>
+            )}
+            {options.descriptionDisplayMode === "normal" && (
+              <Text
+                className="app-description"
+                size={isTiny ? rem(8) : "sm"}
+                ta={isColumnLayout ? "center" : undefined}
+                c="dimmed"
+                lineClamp={4}
+              >
+                {app.description?.split("\n").map((line, index) => (
+                  <Fragment key={index}>
+                    {line}
+                    <br />
+                  </Fragment>
+                ))}
+              </Text>
+            )}
+          </Stack>
           <MaskedOrNormalImage
             imageUrl={app.iconUrl}
             hasColor={board.iconColor !== null}
