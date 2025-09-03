@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "1.35.0",
+  "version": "1.35.1",
   "private": true,
   "scripts": {
     "build": "cross-env CI=true turbo build",
@@ -44,7 +44,7 @@
     "@semantic-release/release-notes-generator": "^14.0.3",
     "@testcontainers/redis": "^11.5.1",
     "@turbo/gen": "^2.5.6",
-    "@vitejs/plugin-react": "^5.0.1",
+    "@vitejs/plugin-react": "^5.0.2",
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
     "conventional-changelog-conventionalcommits": "^9.1.0",
@@ -97,6 +97,9 @@
     "patchedDependencies": {
       "@types/node-unifi": "patches/@types__node-unifi.patch",
       "trpc-to-openapi": "patches/trpc-to-openapi.patch"
+    },
+    "patchedDependencies": {
+      "@types/node-unifi": "patches/@types__node-unifi.patch"
     },
     "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [

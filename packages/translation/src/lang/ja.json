@@ -1279,12 +1279,12 @@
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "説明の表示モード",
+          "description": "アプリの説明を表示する方法を選択します",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "ウィジェット内",
+            "tooltip": "ツールチップ",
+            "hidden": "非表示"
           }
         }
       },

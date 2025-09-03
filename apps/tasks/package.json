@@ -35,7 +35,7 @@
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
-    "dayjs": "^1.11.13",
+    "dayjs": "^1.11.15",
     "dotenv": "^17.2.1",
     "fastify": "^5.5.0",
     "superjson": "2.2.2",
