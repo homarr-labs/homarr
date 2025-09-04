@@ -30,7 +30,7 @@
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "dayjs": "^1.11.15",
+    "dayjs": "^1.11.18",
     "dns-caching": "^0.2.5",
     "next": "15.5.2",
     "react": "19.1.1",

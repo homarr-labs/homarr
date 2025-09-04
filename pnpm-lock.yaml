@@ -268,7 +268,7 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       dayjs:
-        specifier: ^1.11.15
+        specifier: ^1.11.18
         version: 1.11.18
       dotenv:
         specifier: ^17.2.1
@@ -413,7 +413,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../packages/widgets
       dayjs:
-        specifier: ^1.11.15
+        specifier: ^1.11.18
         version: 1.11.18
       dotenv:
         specifier: ^17.2.1
@@ -862,7 +862,7 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       dayjs:
-        specifier: ^1.11.15
+        specifier: ^1.11.18
         version: 1.11.18
       dns-caching:
         specifier: ^0.2.5
@@ -1616,7 +1616,7 @@ importers:
         specifier: ^3.34.1
         version: 3.34.1(react@19.1.1)
       dayjs:
-        specifier: ^1.11.15
+        specifier: ^1.11.18
         version: 1.11.18
       next:
         specifier: 15.5.2
@@ -1874,7 +1874,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../redis
       dayjs:
-        specifier: ^1.11.15
+        specifier: ^1.11.18
         version: 1.11.18
       octokit:
         specifier: ^5.0.3
@@ -2052,7 +2052,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../definitions
       dayjs:
-        specifier: ^1.11.15
+        specifier: ^1.11.18
         version: 1.11.18
       deepmerge:
         specifier: 4.3.1
@@ -2319,7 +2319,7 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       dayjs:
-        specifier: ^1.11.15
+        specifier: ^1.11.18
         version: 1.11.18
       mantine-form-zod-resolver:
         specifier: ^1.3.0
