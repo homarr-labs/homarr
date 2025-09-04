@@ -11,5 +11,6 @@ export type OldmarrRssDefinition = CommonOldmarrWidgetDefinition<
     sortByPublishDateAscending: boolean;
     sortPostsWithoutPublishDateToTheTop: boolean;
     maximumAmountOfPosts: number;
+    hideDescription: boolean;
   }
 >;
