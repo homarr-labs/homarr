@@ -1,0 +1,13 @@
+cat > docker-compose.yml <<'EOF'
+services:
+  homarr:
+    container_name: homarr
+    image: ghcr.io/homarr-labs/homarr:latest
+    restart: unless-stopped
+    ports:
+      - "8097:7575"   # host:container; adjust host port if needed
+    volumes:
+      - ./configs:/app/data/configs
+      - ./icons:/app/public/icons
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+EOF
