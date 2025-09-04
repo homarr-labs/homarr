@@ -6,6 +6,11 @@
       matchPackagePatterns: ["^@homarr/"],
       enabled: false,
     },
+    // Reenable once https://github.com/privatenumber/tsx/issues/737 is fixed
+    {
+      matchPackagePatterns: ["tsx"],
+      enabled: false,
+    },
     {
       matchUpdateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,

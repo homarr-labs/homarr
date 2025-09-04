@@ -453,8 +453,8 @@ importers:
         specifier: ^3.6.2
         version: 3.6.2
       tsx:
-        specifier: 4.20.5
-        version: 4.20.5
+        specifier: 4.20.4
+        version: 4.20.4
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
@@ -489,8 +489,8 @@ importers:
         specifier: ^17.2.1
         version: 17.2.1
       tsx:
-        specifier: 4.20.5
-        version: 4.20.5
+        specifier: 4.20.4
+        version: 4.20.4
       ws:
         specifier: ^8.18.3
         version: 8.18.3
@@ -1196,8 +1196,8 @@ importers:
         specifier: ^3.6.2
         version: 3.6.2
       tsx:
-        specifier: 4.20.5
-        version: 4.20.5
+        specifier: 4.20.4
+        version: 4.20.4
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
@@ -1227,8 +1227,8 @@ importers:
         specifier: ^9.34.0
         version: 9.34.0
       tsx:
-        specifier: 4.20.5
-        version: 4.20.5
+        specifier: 4.20.4
+        version: 4.20.4
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
@@ -9957,6 +9957,11 @@ packages:
   tsscmp@1.0.6:
     resolution: {integrity: sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==}
     engines: {node: '>=0.6.x'}
+
+  tsx@4.20.4:
+    resolution: {integrity: sha512-yyxBKfORQ7LuRt/BQKBXrpcq59ZvSW0XxwfjAt3w2/8PmdxaFzijtMhTawprSHhpzeM5BgU2hXHG3lklIERZXg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
 
   tsx@4.20.5:
     resolution: {integrity: sha512-+wKjMNU9w/EaQayHXb7WA7ZaHY6hN8WgfvHNQ3t1PnU91/7O8TcTnIhCDYTZwnt8JsO9IBqZ30Ln1r7pPF52Aw==}
@@ -19442,12 +19447,20 @@ snapshots:
 
   tsscmp@1.0.6: {}
 
+  tsx@4.20.4:
+    dependencies:
+      esbuild: 0.25.9
+      get-tsconfig: 4.8.1
+    optionalDependencies:
+      fsevents: 2.3.3
+
   tsx@4.20.5:
     dependencies:
       esbuild: 0.25.9
       get-tsconfig: 4.8.1
     optionalDependencies:
       fsevents: 2.3.3
+    optional: true
 
   tunnel-agent@0.6.0:
     dependencies:
