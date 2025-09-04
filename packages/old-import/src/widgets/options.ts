@@ -118,7 +118,7 @@ const optionMapping: OptionMapping = {
     enableRtl: (oldOptions) => oldOptions.enableRtl,
     maximumAmountPosts: (oldOptions) => oldOptions.maximumAmountOfPosts,
     textLinesClamp: (oldOptions) => oldOptions.textLinesClamp,
-    hideDescription: (oldOptions) => oldOptions.hideDescription,
+    hideDescription: (oldOptions) => undefined,
   },
   notebook: {
     allowReadOnlyCheck: (oldOptions) => oldOptions.allowReadOnlyCheck,
