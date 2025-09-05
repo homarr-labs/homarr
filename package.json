@@ -1,6 +1,6 @@
 {
   "name": "homarr",
-  "version": "1.35.1",
+  "version": "1.36.0",
   "private": true,
   "scripts": {
     "build": "cross-env CI=true turbo build",
@@ -93,10 +93,6 @@
       "tar-fs@>=2.0.0 <2.1.3": ">=3.1.0",
       "tmp@<=0.2.3": ">=0.2.5",
       "vite@>=5.0.0 <=5.4.18": ">=7.1.3"
-    },
-    "patchedDependencies": {
-      "@types/node-unifi": "patches/@types__node-unifi.patch",
-      "trpc-to-openapi": "patches/trpc-to-openapi.patch"
     },
     "patchedDependencies": {
       "@types/node-unifi": "patches/@types__node-unifi.patch"
