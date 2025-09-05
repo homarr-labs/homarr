@@ -1424,8 +1424,8 @@ importers:
         specifier: ^9.7.0
         version: 9.7.0
       '@ctrl/transmission':
-        specifier: ^7.2.0
-        version: 7.2.0
+        specifier: ^7.3.0
+        version: 7.3.0
       '@gitbeaker/rest':
         specifier: ^43.4.0
         version: 43.4.0
@@ -2705,8 +2705,8 @@ packages:
     resolution: {integrity: sha512-mC6HdmCrRhhwpthM+OboJvGIywVR05IbdhVSBkfbGslzbQk2xNnx4UOKljV/x2YI2M1DDF3F3o0paIiYd5O0Og==}
     engines: {node: '>=18'}
 
-  '@ctrl/transmission@7.2.0':
-    resolution: {integrity: sha512-l0iPcyWxzu0CadILil8s2UGq6EOjkGsFrJCY++4ndJsU0Dw/Cgej/tUkEIu+eKckjylUvVJ/ojVhMpMB8TEhsA==}
+  '@ctrl/transmission@7.3.0':
+    resolution: {integrity: sha512-dd9vgIjXiN5LYToQ/Nq/d6tuukAE9SpxEjrHlGItMurW7mIruR+l4qQfCVD7O2xh6Pye1AYmwGzrW/8AeBQreQ==}
     engines: {node: '>=18'}
 
   '@dabh/diagnostics@2.0.3':
@@ -10037,10 +10037,6 @@ packages:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
 
-  type-fest@4.30.2:
-    resolution: {integrity: sha512-UJShLPYi1aWqCdq9HycOL/gwsuqda1OISdBO3t8RlXQC4QvtuIz4b5FCfe2dQIWEpmlRExKmcTBfP1r9bhY7ig==}
-    engines: {node: '>=16'}
-
   type-fest@4.41.0:
     resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
     engines: {node: '>=16'}
@@ -10101,9 +10097,6 @@ packages:
 
   uc.micro@2.1.0:
     resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
-
-  ufo@1.5.4:
-    resolution: {integrity: sha512-UsUk3byDzKd04EyoZ7U4DOlxQaD14JUKQl6/P7wiX4FNvUfm3XL246n9W5AmqwW5RSFJ27NAuM0iLscAOYUiGQ==}
 
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
@@ -11066,14 +11059,14 @@ snapshots:
     dependencies:
       uint8array-extras: 1.5.0
 
-  '@ctrl/transmission@7.2.0':
+  '@ctrl/transmission@7.3.0':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
-      '@ctrl/shared-torrent': 6.2.1
+      '@ctrl/shared-torrent': 6.3.0(ofetch@1.4.1)
       ofetch: 1.4.1
-      type-fest: 4.30.2
-      ufo: 1.5.4
-      uint8array-extras: 1.4.0
+      type-fest: 4.41.0
+      ufo: 1.6.1
+      uint8array-extras: 1.5.0
 
   '@dabh/diagnostics@2.0.3':
     dependencies:
@@ -19522,8 +19515,6 @@ snapshots:
 
   type-fest@2.19.0: {}
 
-  type-fest@4.30.2: {}
-
   type-fest@4.41.0: {}
 
   type-is@1.6.18:
@@ -19618,8 +19609,6 @@ snapshots:
   typescript@5.9.2: {}
 
   uc.micro@2.1.0: {}
-
-  ufo@1.5.4: {}
 
   ufo@1.6.1: {}
 
