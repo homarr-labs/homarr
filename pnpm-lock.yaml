@@ -1421,8 +1421,8 @@ importers:
         specifier: ^7.1.1
         version: 7.1.1
       '@ctrl/qbittorrent':
-        specifier: ^9.6.0
-        version: 9.6.0
+        specifier: ^9.7.0
+        version: 9.7.0
       '@ctrl/transmission':
         specifier: ^7.2.0
         version: 7.2.0
@@ -2687,13 +2687,19 @@ packages:
     resolution: {integrity: sha512-wENP7LH4BmCjz+gXVq7Nzz20zMjY/huuG7aDk/yu/LhFdC84e/l8222rCIAo0lwhU451lFcJKLcOmtG6TNrBAQ==}
     engines: {node: '>=18'}
 
-  '@ctrl/qbittorrent@9.6.0':
-    resolution: {integrity: sha512-/8HnjvHEx8tFNhWdtjkPGN+rCpBtNatk0kAFPNe7w4pExKjbpQHsJ3AvItcn1F7j04npn4MzCs5mYP7oBtyYig==}
+  '@ctrl/qbittorrent@9.7.0':
+    resolution: {integrity: sha512-yUBqe6knrK6+vx57D4tpETw0RcPGWLnDR1UNd8rHttmffIyxE4LX7SymyS48TR4Bcx6wE5SqzulV0JXd1aKlXg==}
     engines: {node: '>=18'}
 
   '@ctrl/shared-torrent@6.2.1':
     resolution: {integrity: sha512-0ouXQnBEik6B3LXByiXnDZ6MAj8r9oMEE09q2MkifqSRmGImhZKq7iNbzcGzTn9BI1TU/anwjSOrxjmYV4T5eQ==}
     engines: {node: '>=18'}
+
+  '@ctrl/shared-torrent@6.3.0':
+    resolution: {integrity: sha512-rhgN/tXQFIh6ujFE5wXVj1hBftb2tLmAYt5CVfxncKtS38AlPAqyiwg2VOWrWpq/gL+eRlP0uWTyt5yEohxIzw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      ofetch: ^1.4.1
 
   '@ctrl/torrent-file@4.1.0':
     resolution: {integrity: sha512-mC6HdmCrRhhwpthM+OboJvGIywVR05IbdhVSBkfbGslzbQk2xNnx4UOKljV/x2YI2M1DDF3F3o0paIiYd5O0Og==}
@@ -8053,6 +8059,9 @@ packages:
   node-fetch-native@1.6.6:
     resolution: {integrity: sha512-8Mc2HhqPdlIfedsuZoc3yioPuzp6b+L5jRCRY1QzuWZh2EGJVQrGppC6V6cF0bLdbW0+O2YpqCA25aF/1lvipQ==}
 
+  node-fetch-native@1.6.7:
+    resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
+
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
@@ -10032,10 +10041,6 @@ packages:
     resolution: {integrity: sha512-UJShLPYi1aWqCdq9HycOL/gwsuqda1OISdBO3t8RlXQC4QvtuIz4b5FCfe2dQIWEpmlRExKmcTBfP1r9bhY7ig==}
     engines: {node: '>=16'}
 
-  type-fest@4.40.0:
-    resolution: {integrity: sha512-ABHZ2/tS2JkvH1PEjxFDTUWC8dB5OsIGZP4IFLhR293GqT5Y5qB1WwL2kMPYhQW9DVgVD8Hd7I8gjwPIf5GFkw==}
-    engines: {node: '>=16'}
-
   type-fest@4.41.0:
     resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
     engines: {node: '>=16'}
@@ -10110,6 +10115,10 @@ packages:
 
   uint8array-extras@1.4.0:
     resolution: {integrity: sha512-ZPtzy0hu4cZjv3z5NW9gfKnNLjoz4y6uv4HlelAjDK7sY/xOkKZv9xK/WQpcsBB3jEybChz9DPC2U/+cusjJVQ==}
+    engines: {node: '>=18'}
+
+  uint8array-extras@1.5.0:
+    resolution: {integrity: sha512-rvKSBiC5zqCCiDZ9kAOszZcDvdAHwwIKJG33Ykj43OKcWsnmcBRL09YTU4nOeHZ8Y2a7l1MgTd08SBe9A8Qj6A==}
     engines: {node: '>=18'}
 
   unbox-primitive@1.0.2:
@@ -11035,23 +11044,27 @@ snapshots:
       rfc4648: 1.5.3
       uint8array-extras: 1.4.0
 
-  '@ctrl/qbittorrent@9.6.0':
+  '@ctrl/qbittorrent@9.7.0':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
-      '@ctrl/shared-torrent': 6.2.1
+      '@ctrl/shared-torrent': 6.3.0(ofetch@1.4.1)
       '@ctrl/torrent-file': 4.1.0
       cookie: 1.0.2
-      node-fetch-native: 1.6.6
+      node-fetch-native: 1.6.7
       ofetch: 1.4.1
-      type-fest: 4.40.0
+      type-fest: 4.41.0
       ufo: 1.6.1
-      uint8array-extras: 1.4.0
+      uint8array-extras: 1.5.0
 
   '@ctrl/shared-torrent@6.2.1': {}
 
+  '@ctrl/shared-torrent@6.3.0(ofetch@1.4.1)':
+    dependencies:
+      ofetch: 1.4.1
+
   '@ctrl/torrent-file@4.1.0':
     dependencies:
-      uint8array-extras: 1.4.0
+      uint8array-extras: 1.5.0
 
   '@ctrl/transmission@7.2.0':
     dependencies:
@@ -17231,6 +17244,8 @@ snapshots:
 
   node-fetch-native@1.6.6: {}
 
+  node-fetch-native@1.6.7: {}
+
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
@@ -19509,8 +19524,6 @@ snapshots:
 
   type-fest@4.30.2: {}
 
-  type-fest@4.40.0: {}
-
   type-fest@4.41.0: {}
 
   type-is@1.6.18:
@@ -19614,6 +19627,8 @@ snapshots:
     optional: true
 
   uint8array-extras@1.4.0: {}
+
+  uint8array-extras@1.5.0: {}
 
   unbox-primitive@1.0.2:
     dependencies:
