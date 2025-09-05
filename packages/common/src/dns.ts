@@ -2,6 +2,8 @@ import { DnsCacheManager } from "dns-caching";
 
 import { logger } from "@homarr/log";
 
+import { env } from "../env";
+
 // Add global type augmentation for homarr
 declare global {
   var homarr: {
@@ -19,4 +21,6 @@ global.homarr.dnsCacheManager ??= new DnsCacheManager({
   logger,
 });
 
-global.homarr.dnsCacheManager.initialize();
+if (env.ENABLE_DNS_CACHING) {
+  global.homarr.dnsCacheManager.initialize();
+}
