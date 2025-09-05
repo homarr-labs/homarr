@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "显示应用名称"
         },
-        "showDescriptionTooltip": {
-          "label": "显示描述提示"
-        },
         "pingEnabled": {
           "label": "启用状态检查"
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },
@@ -2253,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "帖子数量限制"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
@@ -2471,7 +2480,7 @@
       "description": "",
       "option": {},
       "card": {
-        "cpu": "",
+        "cpu": "CPU",
         "memory": "",
         "network": "",
         "up": "",
@@ -3843,7 +3852,7 @@
       "tools": {
         "label": "工具",
         "tasks": {
-          "label": ""
+          "label": "任务"
         },
         "docker": {
           "label": "Docker"

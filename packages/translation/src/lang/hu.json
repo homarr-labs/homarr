@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "Alkalmazás nevének megjelenítése"
         },
-        "showDescriptionTooltip": {
-          "label": "Leírás elemleírás megjelenítése"
-        },
         "pingEnabled": {
           "label": "Egyszerű ping engedélyezése"
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },
@@ -2252,6 +2258,9 @@
           "label": ""
         },
         "maximumAmountPosts": {
+          "label": ""
+        },
+        "hideDescription": {
           "label": ""
         }
       }

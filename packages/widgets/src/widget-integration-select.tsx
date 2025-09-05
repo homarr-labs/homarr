@@ -100,7 +100,7 @@ export const WidgetIntegrationSelect = ({
   });
 
   return (
-    <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
+    <Combobox store={combobox} onOptionSubmit={handleValueSelect}>
       <Combobox.DropdownTarget>
         <PillsInput
           inputWrapperOrder={["label", "input", "description", "error"]}

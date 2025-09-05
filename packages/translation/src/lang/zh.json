@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "顯示應用程式名稱"
         },
-        "showDescriptionTooltip": {
-          "label": "顯示描述提示"
-        },
         "pingEnabled": {
           "label": "啟用簡單的 Ping"
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },
@@ -2253,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "帖子數量限制"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },

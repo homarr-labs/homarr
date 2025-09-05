@@ -2259,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "Amount posts limit"
+        },
+        "hideDescription": {
+          "label": "Hide description"
         }
       }
     },

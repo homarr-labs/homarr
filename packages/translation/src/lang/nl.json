@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "App naam weergeven"
         },
-        "showDescriptionTooltip": {
-          "label": "Beschrijving tooltip weergeven"
-        },
         "pingEnabled": {
           "label": "Statuscontrole inschakelen"
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },
@@ -2253,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "Aantal berichtenlimiet"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },

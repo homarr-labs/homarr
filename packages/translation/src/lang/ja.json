@@ -1266,9 +1266,6 @@
         "showTitle": {
           "label": "アプリ名を表示"
         },
-        "showDescriptionTooltip": {
-          "label": "説明ツールチップを表示"
-        },
         "pingEnabled": {
           "label": "ステータスチェックを有効にする"
         },
@@ -1279,6 +1276,15 @@
             "row-reverse": "水平方向（反転）",
             "column": "垂直方向",
             "column-reverse": "垂直方向（反転）"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "説明の表示モード",
+          "description": "アプリの説明を表示する方法を選択します",
+          "option": {
+            "normal": "ウィジェット内",
+            "tooltip": "ツールチップ",
+            "hidden": "非表示"
           }
         }
       },
@@ -2253,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "投稿数の上限"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
