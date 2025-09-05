@@ -27,7 +27,7 @@
   "dependencies": {
     "@ctrl/deluge": "^7.1.1",
     "@ctrl/qbittorrent": "^9.7.0",
-    "@ctrl/transmission": "^7.2.0",
+    "@ctrl/transmission": "^7.3.0",
     "@gitbeaker/rest": "^43.4.0",
     "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
