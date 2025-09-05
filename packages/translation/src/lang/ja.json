@@ -2259,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "投稿数の上限"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },

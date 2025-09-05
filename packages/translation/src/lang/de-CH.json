@@ -2259,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "Limit für Beiträge"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
