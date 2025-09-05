@@ -2259,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "Максимальное количество записей"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },

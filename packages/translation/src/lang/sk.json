@@ -2259,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "Limit počtu príspevkov"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },

@@ -1967,105 +1967,105 @@
           "label": "Habilitar ordenar elementos"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Columna usada para ordenar por defecto"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Invertir orden"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Mostrar entradas de Usenet marcadas como completadas"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Mostrar entradas de Torrent marcadas como completadas"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Mostrar entradas variadas marcadas como completadas"
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "Ocultar Torrent completado bajo este umbral (en kiB/s)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "Categorías/etiquetas para filtrar"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Filtrar como lista blanca"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Utilizar filtro para calcular la relación"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Limitar elementos por integración",
+          "description": "Esto limitará el número de elementos mostrados por integración, no globalmente"
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "Seleccionar Columnas en Artículos",
+        "noCommunications": "No se pueden cargar los datos desde la integración"
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Controles"
         },
         "added": {
-          "columnTitle": "",
+          "columnTitle": "Añadido",
           "detailsTitle": "Fecha Agregada"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Extras",
+          "detailsTitle": "Categorías (O información adicional)"
         },
         "downSpeed": {
           "columnTitle": "Descarga",
           "detailsTitle": "Velocidad de Descarga"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "#",
+          "detailsTitle": "Índice actual dentro del cliente"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "ID"
         },
         "integration": {
           "columnTitle": "Integración"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Nombre de la tarea"
         },
         "progress": {
-          "columnTitle": "Completado %",
-          "detailsTitle": ""
+          "columnTitle": "Progreso",
+          "detailsTitle": "Progreso de Descarga"
         },
         "ratio": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Relación",
+          "detailsTitle": "Relación de Torrent (recibido/enviado)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Descarga total",
+          "detailsTitle": "Total descargado"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Subida total",
+          "detailsTitle": "Total subido"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Tamaño del archivo",
+          "detailsTitle": "Tamaño total de la selección/archivos"
         },
         "state": {
           "columnTitle": "Estado",
-          "detailsTitle": ""
+          "detailsTitle": "Estado de la tarea"
         },
         "time": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Hora de finalización",
+          "detailsTitle": "Tiempo desde/hasta la finalización"
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Tipo",
+          "detailsTitle": "Tipo de cliente de descarga"
         },
         "upSpeed": {
           "columnTitle": "Subida",
-          "detailsTitle": ""
+          "detailsTitle": "Velocidad de Subida"
         }
       },
       "states": {
@@ -2259,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "Cantidad límite de publicaciones"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
