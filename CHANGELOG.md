@@ -1,3 +1,9 @@
+## [1.36.1](https://github.com/homarr-labs/homarr/compare/v1.36.0...v1.36.1) (2025-09-05)
+
+### Bug Fixes
+
+* **dns:** disable caching by default ([#4007](https://github.com/homarr-labs/homarr/issues/4007)) ([10668ee](https://github.com/homarr-labs/homarr/commit/10668ee359940c1e24b543a7a20fe400474e12bf))
+
 ## [1.36.0](https://github.com/homarr-labs/homarr/compare/v1.35.1...v1.36.0) (2025-09-05)
 
 ### Features
