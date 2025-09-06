@@ -119,8 +119,3 @@ const Feed = ({ options }: Pick<WidgetComponentProps<"video">, "options">) => {
     </Group>
   );
 };
-
-/*
-<video className={combineClasses("video-js", classes.video)} ref={videoRef}>
-        <source src={options.feedUrl} />
-      </video>*/
