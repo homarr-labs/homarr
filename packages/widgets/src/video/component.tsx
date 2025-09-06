@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Anchor, Center, Group, Stack, Title } from "@mantine/core";
+import { Anchor, Box, Center, Group, Stack, Title } from "@mantine/core";
 import { IconBrandYoutube, IconDeviceCctvOff } from "@tabler/icons-react";
-import combineClasses from "clsx";
 import videojs from "video.js";
 
 import { useI18n } from "@homarr/translation/client";
@@ -12,6 +11,8 @@ import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 
 import "video.js/dist/video-js.css";
+
+import type Player from "video.js/dist/types/player";
 
 import { createDocumentationLink } from "@homarr/definitions";
 
@@ -55,32 +56,71 @@ const ForYoutubeUseIframe = () => {
 };
 
 const Feed = ({ options }: Pick<WidgetComponentProps<"video">, "options">) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<Player>(null);
 
   useEffect(() => {
-    if (!videoRef.current) {
-      return;
+    if (playerRef.current) return;
+    const videoElement = document.createElement("video-js");
+    videoElement.classList.add("vjs-big-play-centered");
+    if (classes.video) {
+      videoElement.classList.add(classes.video);
     }
+    videoRef.current?.appendChild(videoElement);
 
-    // Initialize Video.js player if it's not already initialized
-    if (!("player" in videoRef.current)) {
-      videojs(
-        videoRef.current,
+    playerRef.current = videojs(videoElement, {
+      autoplay: options.hasAutoPlay,
+      muted: options.isMuted,
+      controls: options.hasControls,
+      sources: [
         {
-          autoplay: options.hasAutoPlay,
-          muted: options.isMuted,
-          controls: options.hasControls,
+          src: options.feedUrl,
         },
-        () => undefined,
-      );
-    }
-  }, [options.hasAutoPlay, options.hasControls, options.isMuted, videoRef]);
+      ],
+    });
+    // All other properties are updated with other useEffect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoRef]);
+
+  useEffect(() => {
+    if (!playerRef.current) return;
+    playerRef.current.src(options.feedUrl);
+  }, [options.feedUrl]);
+
+  useEffect(() => {
+    if (!playerRef.current) return;
+    playerRef.current.autoplay(options.hasAutoPlay);
+  }, [options.hasAutoPlay]);
+
+  useEffect(() => {
+    if (!playerRef.current) return;
+    playerRef.current.muted(options.isMuted);
+  }, [options.isMuted]);
+
+  useEffect(() => {
+    if (!playerRef.current) return;
+    playerRef.current.controls(options.hasControls);
+  }, [options.hasControls]);
+
+  useEffect(() => {
+    const player = playerRef.current;
+
+    return () => {
+      if (player && !player.isDisposed()) {
+        player.dispose();
+        playerRef.current = null;
+      }
+    };
+  }, [playerRef]);
 
   return (
     <Group justify="center" w="100%" h="100%" pos="relative">
-      <video className={combineClasses("video-js", classes.video)} ref={videoRef}>
-        <source src={options.feedUrl} />
-      </video>
+      <Box w="100%" h="100%" ref={videoRef} />
     </Group>
   );
 };
+
+/*
+<video className={combineClasses("video-js", classes.video)} ref={videoRef}>
+        <source src={options.feedUrl} />
+      </video>*/
