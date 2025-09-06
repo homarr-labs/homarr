@@ -12,7 +12,6 @@ export const { definition, componentLoader } = createWidgetDefinition("iframe", 
       allowScrolling: factory.switch({
         defaultValue: true,
       }),
-      allowTransparency: factory.switch(),
       allowPayment: factory.switch(),
       allowAutoPlay: factory.switch(),
       allowMicrophone: factory.switch(),

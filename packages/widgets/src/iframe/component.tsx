@@ -27,6 +27,7 @@ export default function IFrameWidget({ options, isEditMode }: WidgetComponentPro
         src={embedUrl}
         title="widget iframe"
         allow={allowedPermissions.join(" ")}
+        scrolling={options.allowScrolling ? "yes" : "no"}
       >
         <Text>{t("widget.iframe.error.noBrowerSupport")}</Text>
       </iframe>
@@ -71,7 +72,9 @@ const UnsupportedProtocol = () => {
   );
 };
 
-const getAllowedPermissions = (permissions: Omit<WidgetComponentProps<"iframe">["options"], "embedUrl">) => {
+const getAllowedPermissions = (
+  permissions: Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">,
+) => {
   return objectEntries(permissions)
     .filter(([_key, value]) => value)
     .map(([key]) => permissionMapping[key]);
@@ -84,6 +87,4 @@ const permissionMapping = {
   allowGeolocation: "geolocation",
   allowMicrophone: "microphone",
   allowPayment: "payment",
-  allowScrolling: "scrolling",
-  allowTransparency: "transparency",
-} satisfies Record<keyof Omit<WidgetComponentProps<"iframe">["options"], "embedUrl">, string>;
+} satisfies Record<keyof Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">, string>;
