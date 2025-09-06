@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "API Key (Secret)",
           "newLabel": "New API Key (Secret)"
+        },
+        "githubAppId": {
+          "label": "App Id",
+          "newLabel": "New App Id"
+        },
+        "githubInstallationId": {
+          "label": "Installation Id",
+          "newLabel": "New Installation Id"
+        },
+        "privateKey": {
+          "label": "Private key",
+          "newLabel": "New private key"
         }
       }
     },

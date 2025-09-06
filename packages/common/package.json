@@ -33,6 +33,7 @@
     "dayjs": "^1.11.18",
     "dns-caching": "^0.2.5",
     "next": "15.5.2",
+    "octokit": "^5.0.3",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "undici": "7.15.0",

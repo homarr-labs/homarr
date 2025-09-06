@@ -25,16 +25,6 @@ export const testConnectionAsync = async (
     integrationUrl: integration.url,
   });
 
-  const formSecrets = integration.secrets
-    .filter((secret) => secret.value !== null)
-    .map((secret) => ({
-      ...secret,
-      // We ensured above that the value is not null
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      value: secret.value!,
-      source: "form" as const,
-    }));
-
   const decryptedDbSecrets = dbSecrets
     .map((secret) => {
       try {
@@ -54,6 +44,15 @@ export const testConnectionAsync = async (
       }
     })
     .filter((secret) => secret !== null);
+
+  const formSecrets = integration.secrets
+    .map((secret) => ({
+      ...secret,
+      // If the value is not defined in the form (because we only changed other values) we use the existing value from the db if it exists
+      value: secret.value ?? decryptedDbSecrets.find((dbSecret) => dbSecret.kind === secret.kind)?.value ?? null,
+      source: "form" as const,
+    }))
+    .filter((secret): secret is SourcedIntegrationSecret<"form"> => secret.value !== null);
 
   const sourcedSecrets = [...formSecrets, ...decryptedDbSecrets];
   const secretKinds = getSecretKindOption(integration.kind, sourcedSecrets);
@@ -89,10 +88,10 @@ export const testConnectionAsync = async (
   return result;
 };
 
-interface SourcedIntegrationSecret {
+interface SourcedIntegrationSecret<TSource extends string = "db" | "form"> {
   kind: IntegrationSecretKind;
   value: string;
-  source: "db" | "form";
+  source: TSource;
 }
 
 const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedIntegrationSecret[]) => {
@@ -111,7 +110,9 @@ const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedInteg
   }
 
   const onlyFormSecretsKindOptions = matchingSecretKindOptions.filter((secretKinds) =>
-    sourcedSecrets.filter((secret) => secretKinds.includes(secret.kind)).every((secret) => secret.source === "form"),
+    secretKinds.every((secretKind) =>
+      sourcedSecrets.find((secret) => secret.kind === secretKind && secret.source === "form"),
+    ),
   );
 
   if (onlyFormSecretsKindOptions.length >= 1) {
