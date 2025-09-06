@@ -23,7 +23,6 @@ export const statusResponseSchema = z.object({
   dns_addresses: z.array(z.string()),
   dns_port: z.number().positive(),
   http_port: z.number().positive(),
-  protection_disabled_duration: z.number(),
   protection_enabled: z.boolean(),
   dhcp_available: z.boolean(),
   running: z.boolean(),
