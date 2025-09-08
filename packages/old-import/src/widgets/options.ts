@@ -98,7 +98,6 @@ const optionMapping: OptionMapping = {
     allowMicrophone: (oldOptions) => oldOptions.allowMicrophone,
     allowGeolocation: (oldOptions) => oldOptions.allowGeolocation,
     allowScrolling: (oldOptions) => oldOptions.allowScrolling,
-    allowTransparency: (oldOptions) => oldOptions.allowTransparency,
   },
   video: {
     feedUrl: (oldOptions) => oldOptions.FeedUrl,
