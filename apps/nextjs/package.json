@@ -94,7 +94,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/chroma-js": "3.1.1",
-    "@types/node": "^22.18.0",
+    "@types/node": "^22.18.1",
     "@types/prismjs": "^1.26.5",
     "@types/react": "19.1.12",
     "@types/react-dom": "19.1.9",
