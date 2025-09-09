@@ -1853,8 +1853,8 @@ importers:
   packages/request-handler:
     dependencies:
       '@extractus/feed-extractor':
-        specifier: 7.1.6
-        version: 7.1.6
+        specifier: 7.1.7
+        version: 7.1.7
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -2950,9 +2950,9 @@ packages:
     resolution: {integrity: sha512-Z5kJ+wU3oA7MMIqVR9tyZRtjYPr4OC004Q4Rw7pgOKUOKkJfZ3O24nz3WYfGRpMDNmcOi3TwQOmgm7B7Tpii0w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@extractus/feed-extractor@7.1.6':
-    resolution: {integrity: sha512-hgTjb7vHNXPiSSshAJSE6D5w2bMW6jWklj52B2SG5BI5GakkH14PxDiXHzyRZrJgVd2t1BEcA/aaM8eXazUHaA==}
-    engines: {node: '>= 18'}
+  '@extractus/feed-extractor@7.1.7':
+    resolution: {integrity: sha512-eNeddvKK9rBxWSHj5zBo6ODihJqJtq+QzEQdVeadkOK48avmdela+c2JAfMcPEBMFaWcAYV4bUMhI9Tqi8mX2Q==}
+    engines: {node: '>= 20'}
 
   '@fastify/ajv-compiler@4.0.2':
     resolution: {integrity: sha512-Rkiu/8wIjpsf46Rr+Fitd3HRP+VsxUFDDeag0hs9L0ksfnwx2g7SPQQTFL0E8Qv+rfXzQOxBJnjUB9ITUDjfWQ==}
@@ -11251,7 +11251,7 @@ snapshots:
       '@eslint/core': 0.15.2
       levn: 0.4.1
 
-  '@extractus/feed-extractor@7.1.6':
+  '@extractus/feed-extractor@7.1.7':
     dependencies:
       '@ndaidong/bellajs': 12.0.1
       cross-fetch: 4.1.0
