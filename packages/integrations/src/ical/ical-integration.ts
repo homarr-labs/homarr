@@ -11,7 +11,7 @@ import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
 
 export class ICalIntegration extends Integration implements ICalendarIntegration {
   async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]> {
-    const response = await fetchWithTrustedCertificatesAsync(this.integration.url);
+    const response = await fetchWithTrustedCertificatesAsync(super.getSecretValue("url"));
     const result = await response.text();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const jcal = ICAL.parse(result);
@@ -60,7 +60,7 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
   }
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const response = await input.fetchAsync(this.integration.url);
+    const response = await input.fetchAsync(super.getSecretValue("url"));
     if (!response.ok) return TestConnectionError.StatusResult(response);
 
     const result = await response.text();

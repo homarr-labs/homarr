@@ -55,12 +55,18 @@ const formSchema = integrationCreateSchema.omit({ kind: true }).and(
 export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) => {
   const t = useI18n();
   const secretKinds = getAllSecretKindOptions(searchParams.kind);
+  const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
   const router = useRouter();
   const [opened, setOpened] = useState(false);
+
+  let url = searchParams.url ?? getIntegrationDefaultUrl(searchParams.kind) ?? "";
+  if (hasUrlSecret) {
+    url = "http://localhost";
+  }
   const form = useZodForm(formSchema, {
     initialValues: {
       name: searchParams.name ?? getIntegrationName(searchParams.kind),
-      url: searchParams.url ?? getIntegrationDefaultUrl(searchParams.kind) ?? "",
+      url,
       secrets: secretKinds[0].map((kind) => ({
         kind,
         value: "",
@@ -83,10 +89,14 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
 
   const handleSubmitAsync = async (values: FormType) => {
+    const url = hasUrlSecret
+      ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
+      : values.url;
     await createIntegrationAsync(
       {
         kind: searchParams.kind,
         ...values,
+        url,
       },
       {
         async onSuccess(data) {
@@ -114,10 +124,10 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
           await createAppAsync(
             {
               name: values.name,
-              href: hasCustomHref ? values.appHref : values.url,
+              href: hasCustomHref ? values.appHref : url,
               iconUrl: getIconUrl(searchParams.kind),
               description: null,
-              pingUrl: values.url,
+              pingUrl: url,
             },
             {
               async onSettled() {
@@ -149,7 +159,9 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
       <Stack>
         <TextInput withAsterisk label={t("integration.field.name.label")} autoFocus {...form.getInputProps("name")} />
 
-        <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
+        {hasUrlSecret ? null : (
+          <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
+        )}
 
         <Fieldset legend={t("integration.secrets.title")}>
           <Stack gap="sm">

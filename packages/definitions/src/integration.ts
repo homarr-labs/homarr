@@ -5,6 +5,7 @@ import { createDocumentationLink } from "./docs";
 
 export const integrationSecretKindObject = {
   apiKey: { isPublic: false },
+  url: { isPublic: false },
   username: { isPublic: true },
   password: { isPublic: false },
   tokenId: { isPublic: true },
@@ -282,7 +283,7 @@ export const integrationDefs = {
   },
   ical: {
     name: "iCal",
-    secretKinds: [[]],
+    secretKinds: [["url"]],
     // TODO(nn): valid icon
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ical.svg",
     category: ["calendar"],

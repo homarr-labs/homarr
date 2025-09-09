@@ -945,6 +945,10 @@
           "label": "Topic",
           "newLabel": "New topic"
         },
+        "url": {
+          "label": "Url",
+          "newLabel": "New URL"
+        },
         "opnsenseApiKey": {
           "label": "API Key (Key)",
           "newLabel": "New API Key (Key)"
