@@ -2259,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "帖子数量限制"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },

@@ -30,7 +30,7 @@
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "dayjs": "^1.11.15",
+    "dayjs": "^1.11.18",
     "dns-caching": "^0.2.5",
     "next": "15.5.2",
     "octokit": "^5.0.3",
@@ -44,7 +44,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.34.0",
+    "eslint": "^9.35.0",
     "typescript": "^5.9.2"
   }
 }

@@ -2259,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "Aantal berichtenlimiet"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },

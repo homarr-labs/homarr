@@ -98,7 +98,6 @@ const optionMapping: OptionMapping = {
     allowMicrophone: (oldOptions) => oldOptions.allowMicrophone,
     allowGeolocation: (oldOptions) => oldOptions.allowGeolocation,
     allowScrolling: (oldOptions) => oldOptions.allowScrolling,
-    allowTransparency: (oldOptions) => oldOptions.allowTransparency,
   },
   video: {
     feedUrl: (oldOptions) => oldOptions.FeedUrl,
@@ -118,6 +117,7 @@ const optionMapping: OptionMapping = {
     enableRtl: (oldOptions) => oldOptions.enableRtl,
     maximumAmountPosts: (oldOptions) => oldOptions.maximumAmountOfPosts,
     textLinesClamp: (oldOptions) => oldOptions.textLinesClamp,
+    hideDescription: () => undefined,
   },
   notebook: {
     allowReadOnlyCheck: (oldOptions) => oldOptions.allowReadOnlyCheck,

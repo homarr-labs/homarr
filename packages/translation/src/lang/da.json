@@ -2259,6 +2259,9 @@
         },
         "maximumAmountPosts": {
           "label": "Grænse for antal indlæg"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
