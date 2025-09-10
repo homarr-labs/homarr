@@ -1,19 +1,14 @@
 import { env } from "@homarr/auth/env";
-import { NEVER } from "@homarr/cron-jobs-core/expressions";
 import { db, eq, inArray } from "@homarr/db";
 import { sessions, users } from "@homarr/db/schema";
 import { supportedAuthProviders } from "@homarr/definitions";
 import { logger } from "@homarr/log";
 
-import { createCronJob } from "../lib";
-
 /**
  * Deletes sessions for users that have inactive auth providers.
  * Sessions from other providers are deleted so they can no longer be used.
  */
-export const sessionCleanupJob = createCronJob("sessionCleanup", NEVER, {
-  runOnStart: true,
-}).withCallback(async () => {
+export async function cleanupSessionsAsync() {
   const currentAuthProviders = env.AUTH_PROVIDERS;
 
   const inactiveAuthProviders = supportedAuthProviders.filter((provider) => !currentAuthProviders.includes(provider));
@@ -35,4 +30,4 @@ export const sessionCleanupJob = createCronJob("sessionCleanup", NEVER, {
   } else {
     logger.debug("No sessions to delete");
   }
-});
+}

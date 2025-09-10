@@ -72,8 +72,6 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
           where: (cronJobConfigurations, { eq }) => eq(cronJobConfigurations.name, name),
         });
 
-        if (defaultCronExpression === "never") return null;
-
         const scheduledTask = createTask(
           configuration?.cronExpression ?? defaultCronExpression,
           () => void catchingCallbackAsync(),
@@ -120,7 +118,7 @@ export const createCronJobCreator = <TAllowedNames extends string = string>(
     options: CreateCronJobOptions = { runOnStart: false },
   ) => {
     creatorOptions.logger.logDebug(`Validating cron expression '${defaultCronExpression}' for job: ${name}`);
-    if (defaultCronExpression !== "never" && !validate(defaultCronExpression)) {
+    if (!validate(defaultCronExpression)) {
       throw new Error(`Invalid cron expression '${defaultCronExpression}' for job '${name}'`);
     }
     creatorOptions.logger.logDebug(`Cron job expression '${defaultCronExpression}' for job ${name} is valid`);
@@ -132,8 +130,6 @@ export const createCronJobCreator = <TAllowedNames extends string = string>(
     // This is a type guard to check if the cron expression is valid and give the user a type hint
     return returnValue as unknown as ValidateCron<TExpression> extends true
       ? typeof returnValue
-      : TExpression extends "never"
-        ? typeof returnValue
-        : "Invalid cron expression";
+      : "Invalid cron expression";
   };
 };
