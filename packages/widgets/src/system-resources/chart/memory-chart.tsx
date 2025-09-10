@@ -8,9 +8,11 @@ import { CommonChart } from "./common-chart";
 export const SystemResourceMemoryChart = ({
   memoryUsageOverTime,
   totalCapacityInBytes,
+  hasShadow,
 }: {
   memoryUsageOverTime: number[];
   totalCapacityInBytes: number;
+  hasShadow: boolean;
 }) => {
   const chartData = memoryUsageOverTime.map((usage, index) => ({ index, usage }));
   const t = useScopedI18n("widget.systemResources.card");
@@ -29,6 +31,7 @@ export const SystemResourceMemoryChart = ({
       title={t("memory")}
       yAxisProps={{ domain: [0, totalCapacityInBytes] }}
       lastValue={percentageUsed !== undefined ? `${Math.round(percentageUsed * 100)}%` : undefined}
+      chartType={hasShadow ? "area" : "line"}
       tooltipProps={{
         content: ({ payload }) => {
           if (!payload) {

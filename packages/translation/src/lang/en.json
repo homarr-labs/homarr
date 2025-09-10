@@ -2490,7 +2490,11 @@
     "systemResources": {
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": "Enable chart shading"
+        }
+      },
       "card": {
         "cpu": "CPU",
         "memory": "MEM",

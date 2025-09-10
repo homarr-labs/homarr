@@ -4,7 +4,13 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { CommonChart } from "./common-chart";
 
-export const SystemResourceCPUChart = ({ cpuUsageOverTime }: { cpuUsageOverTime: number[] }) => {
+export const SystemResourceCPUChart = ({
+  cpuUsageOverTime,
+  hasShadow,
+}: {
+  cpuUsageOverTime: number[];
+  hasShadow: boolean;
+}) => {
   const chartData = cpuUsageOverTime.map((usage, index) => ({ index, usage }));
   const t = useScopedI18n("widget.systemResources.card");
 
@@ -18,6 +24,7 @@ export const SystemResourceCPUChart = ({ cpuUsageOverTime }: { cpuUsageOverTime:
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         cpuUsageOverTime.length > 0 ? `${Math.round(cpuUsageOverTime[cpuUsageOverTime.length - 1]!)}%` : undefined
       }
+      chartType={hasShadow ? "area" : "line"}
       yAxisProps={{ domain: [0, 100] }}
       tooltipProps={{
         content: ({ payload }) => {

@@ -7,6 +7,8 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
   icon: IconGraphFilled,
   supportedIntegrations: ["dashDot", "openmediavault"],
   createOptions() {
-    return optionsBuilder.from(() => ({}));
+    return optionsBuilder.from((factory) => ({
+      hasShadow: factory.switch({ defaultValue: true }),
+    }));
   },
 }).withDynamicImport(() => import("./component"));

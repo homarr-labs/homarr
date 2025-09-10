@@ -14,7 +14,7 @@ import classes from "./component.module.css";
 
 const MAX_QUEUE_SIZE = 15;
 
-export default function SystemResources({ integrationIds }: WidgetComponentProps<"systemResources">) {
+export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemResources">) {
   const { ref, width } = useElementSize();
 
   const [data] = clientApi.widget.healthMonitoring.getSystemHealthStatus.useSuspenseQuery({
@@ -54,27 +54,39 @@ export default function SystemResources({ integrationIds }: WidgetComponentProps
   return (
     <div ref={ref} className={classes.grid}>
       <div className={classes.colSpanWide}>
-        <SystemResourceCPUChart cpuUsageOverTime={items.map((item) => item.cpu)} />
+        <SystemResourceCPUChart cpuUsageOverTime={items.map((item) => item.cpu)} hasShadow={options.hasShadow} />
       </div>
       <div className={classes.colSpanWide}>
         <SystemResourceMemoryChart
           memoryUsageOverTime={items.map((item) => item.memory)}
           totalCapacityInBytes={memoryCapacityInBytes}
+          hasShadow={options.hasShadow}
         />
       </div>
       {showNetwork &&
         (width > 200 ? (
           <>
-            {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-            <NetworkTrafficChart usageOverTime={items.map((item) => item.network!.down)} isUp={false} />
+            <NetworkTrafficChart
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              usageOverTime={items.map((item) => item.network!.down)}
+              isUp={false}
+              hasShadow={options.hasShadow}
+            />
 
-            {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-            <NetworkTrafficChart usageOverTime={items.map((item) => item.network!.up)} isUp />
+            <NetworkTrafficChart
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              usageOverTime={items.map((item) => item.network!.up)}
+              isUp
+              hasShadow={options.hasShadow}
+            />
           </>
         ) : (
           <div className={classes.colSpanWide}>
-            {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-            <CombinedNetworkTrafficChart usageOverTime={items.map((item) => item.network!)} />
+            <CombinedNetworkTrafficChart
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              usageOverTime={items.map((item) => item.network!)}
+              hasShadow={options.hasShadow}
+            />
           </div>
         ))}
     </div>

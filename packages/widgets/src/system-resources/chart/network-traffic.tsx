@@ -5,7 +5,15 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import { CommonChart } from "./common-chart";
 
-export const NetworkTrafficChart = ({ usageOverTime, isUp }: { usageOverTime: number[]; isUp: boolean }) => {
+export const NetworkTrafficChart = ({
+  usageOverTime,
+  isUp,
+  hasShadow,
+}: {
+  usageOverTime: number[];
+  isUp: boolean;
+  hasShadow: boolean;
+}) => {
   const chartData = usageOverTime.map((usage, index) => ({ index, usage }));
   const t = useScopedI18n("widget.systemResources.card");
 
@@ -20,6 +28,7 @@ export const NetworkTrafficChart = ({ usageOverTime, isUp }: { usageOverTime: nu
       title={isUp ? t("up") : t("down")}
       yAxisProps={{ domain: [0, upperBound] }}
       lastValue={`${humanFileSize(Math.round(max))}/s`}
+      chartType={hasShadow ? "area" : "line"}
       tooltipProps={{
         content: ({ payload }) => {
           if (!payload) {

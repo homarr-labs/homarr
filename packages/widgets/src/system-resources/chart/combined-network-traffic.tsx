@@ -7,11 +7,13 @@ import { CommonChart } from "./common-chart";
 
 export const CombinedNetworkTrafficChart = ({
   usageOverTime,
+  hasShadow,
 }: {
   usageOverTime: {
     up: number;
     down: number;
   }[];
+  hasShadow: boolean;
 }) => {
   const chartData = usageOverTime.map((usage, index) => ({ index, up: usage.up, down: usage.down }));
   const t = useScopedI18n("widget.systemResources.card");
@@ -26,6 +28,7 @@ export const CombinedNetworkTrafficChart = ({
       ]}
       title={t("network")}
       yAxisProps={{ domain: [0, "dataMax"] }}
+      chartType={hasShadow ? "area" : "line"}
       tooltipProps={{
         content: ({ payload }) => {
           if (!payload) {
