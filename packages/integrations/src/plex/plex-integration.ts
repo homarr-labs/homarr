@@ -265,7 +265,9 @@ const mapType = (type: string): "movie" | "tv" | "unknown" => {
   switch (type) {
     case "movie":
       return "movie";
-    case "tv":
+    case "show":
+    case "season":
+    case "episode":
       return "tv";
     default:
       return "unknown";
