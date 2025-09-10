@@ -9,25 +9,29 @@ import { logger } from "@homarr/log";
  * Sessions from other providers are deleted so they can no longer be used.
  */
 export async function cleanupSessionsAsync() {
-  const currentAuthProviders = env.AUTH_PROVIDERS;
+  try {
+    const currentAuthProviders = env.AUTH_PROVIDERS;
 
-  const inactiveAuthProviders = supportedAuthProviders.filter((provider) => !currentAuthProviders.includes(provider));
-  const subQuery = db
-    .select({ id: users.id })
-    .from(users)
-    .where(inArray(users.provider, inactiveAuthProviders))
-    .as("sq");
-  const sessionsWithInactiveProviders = await db
-    .select({ userId: sessions.userId })
-    .from(sessions)
-    .rightJoin(subQuery, eq(sessions.userId, subQuery.id));
+    const inactiveAuthProviders = supportedAuthProviders.filter((provider) => !currentAuthProviders.includes(provider));
+    const subQuery = db
+      .select({ id: users.id })
+      .from(users)
+      .where(inArray(users.provider, inactiveAuthProviders))
+      .as("sq");
+    const sessionsWithInactiveProviders = await db
+      .select({ userId: sessions.userId })
+      .from(sessions)
+      .rightJoin(subQuery, eq(sessions.userId, subQuery.id));
 
-  const userIds = sessionsWithInactiveProviders.map(({ userId }) => userId).filter((value) => value !== null);
-  await db.delete(sessions).where(inArray(sessions.userId, userIds));
+    const userIds = sessionsWithInactiveProviders.map(({ userId }) => userId).filter((value) => value !== null);
+    await db.delete(sessions).where(inArray(sessions.userId, userIds));
 
-  if (sessionsWithInactiveProviders.length > 0) {
-    logger.info(`Deleted sessions for inactive providers count=${userIds.length}`);
-  } else {
-    logger.debug("No sessions to delete");
+    if (sessionsWithInactiveProviders.length > 0) {
+      logger.info(`Deleted sessions for inactive providers count=${userIds.length}`);
+    } else {
+      logger.debug("No sessions to delete");
+    }
+  } catch (error) {
+    logger.error(new Error("Failed to clean up sessions", { cause: error }));
   }
 }
