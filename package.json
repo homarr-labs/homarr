@@ -95,7 +95,8 @@
       "vite@>=5.0.0 <=5.4.18": ">=7.1.5"
     },
     "patchedDependencies": {
-      "@types/node-unifi": "patches/@types__node-unifi.patch"
+      "@types/node-unifi": "patches/@types__node-unifi.patch",
+      "trpc-to-openapi": "patches/trpc-to-openapi.patch"
     },
     "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [

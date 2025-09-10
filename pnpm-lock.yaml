@@ -28,6 +28,9 @@ patchedDependencies:
   '@types/node-unifi':
     hash: 5e6ae51e2a17a7f9729bfa30b0eb3d0842a5810ac6db47603ab4a6efa1ed84c5
     path: patches/@types__node-unifi.patch
+  trpc-to-openapi:
+    hash: 2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c
+    path: patches/trpc-to-openapi.patch
 
 importers:
 
@@ -651,7 +654,7 @@ importers:
         version: 2.2.2
       trpc-to-openapi:
         specifier: ^3.0.1
-        version: 3.0.1(@trpc/server@11.5.1(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.1.5))(zod@4.1.5)
+        version: 3.0.1(patch_hash=2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c)(@trpc/server@11.5.1(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.1.5))(zod@4.1.5)
       zod:
         specifier: ^4.1.5
         version: 4.1.5
@@ -19450,7 +19453,7 @@ snapshots:
 
   trough@2.2.0: {}
 
-  trpc-to-openapi@3.0.1(@trpc/server@11.5.1(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.1.5))(zod@4.1.5):
+  trpc-to-openapi@3.0.1(patch_hash=2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c)(@trpc/server@11.5.1(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.1.5))(zod@4.1.5):
     dependencies:
       '@trpc/server': 11.5.1(typescript@5.9.2)
       co-body: 6.2.0
