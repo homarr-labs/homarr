@@ -1,44 +1,41 @@
 export const radarrReleaseTypes = ["inCinemas", "digitalRelease", "physicalRelease"] as const;
 export type RadarrReleaseType = (typeof radarrReleaseTypes)[number];
 
-export interface MediaMetadata {
-  type: "audio" | "video" | "tv" | "movie";
-  seasonNumber?: number;
-  episodeNumber?: number;
-  thumbnail?: string;
+export interface RadarrMetadata {
+  type: "radarr";
+  releaseType: RadarrReleaseType;
 }
 
-export interface ICalMetadata {
-  type: "event";
-  startDate: Date;
-  endDate: Date;
-  location: string;
-  calendarName?: string;
-  timezone?: string;
+export type CalendarMetadata = RadarrMetadata;
+
+export interface CalendarLink {
+  name: string;
+  isDark: boolean;
+  href: string;
+  color?: string;
+  logo?: string;
 }
 
-export type Metadata = MediaMetadata | ICalMetadata;
+export interface CalendarImageBadge {
+  content: string;
+  color: string;
+}
 
-export const isMediaMetadata = (metadata?: Metadata): metadata is MediaMetadata => {
-  return (
-    metadata !== undefined &&
-    (metadata.type === "audio" || metadata.type === "movie" || metadata.type === "tv" || metadata.type === "video")
-  );
-};
+export interface CalendarImage {
+  src: string;
+  badge?: CalendarImageBadge;
+  aspectRatio?: { width: number; height: number };
+}
 
 export interface CalendarEvent {
-  name: string;
-  subName: string;
-  date: Date;
-  dates?: { type: RadarrReleaseType; date: Date }[];
-  metadata?: Metadata;
-  description?: string;
-  links: {
-    href?: string;
-    name: string;
-    color: string | undefined;
-    notificationColor?: string | undefined;
-    isDark: boolean | undefined;
-    logo: string;
-  }[];
+  title: string;
+  subTitle: string | null;
+  description: string | null;
+  startDate: Date;
+  endDate: Date | null;
+  image: CalendarImage | null;
+  location: string | null;
+  metadata?: CalendarMetadata;
+  indicatorColor: string;
+  links: CalendarLink[];
 }

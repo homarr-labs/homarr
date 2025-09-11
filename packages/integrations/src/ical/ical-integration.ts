@@ -13,49 +13,28 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
   async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]> {
     const response = await fetchWithTrustedCertificatesAsync(super.getSecretValue("url"));
     const result = await response.text();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const jcal = ICAL.parse(result);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const jcal = ICAL.parse(result) as unknown[];
     const comp = new ICAL.Component(jcal);
 
     return comp.getAllSubcomponents("vevent").reduce((prev, vevent) => {
       const event = new ICAL.Event(vevent);
       const startDate = event.startDate.toJSDate();
       const endDate = event.endDate.toJSDate();
-      if (startDate >= start && endDate <= end) {
-        const evn: CalendarEvent = {
-          name: event.summary,
-          subName: "",
-          description: event.description,
-          date: event.startDate.toJSDate(),
-          links: [
-            {
-              color: undefined,
-              notificationColor: "red",
-              isDark: undefined,
-              logo: "",
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              name: event.summary ?? "",
-            },
-          ],
-          metadata: {
-            type: "event",
-            startDate: event.startDate.toJSDate(),
-            endDate: event.endDate.toJSDate(),
-            location: event.location,
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-            calendarName: (event.component.parent?.getFirstPropertyValue("x-wr-calname") ?? undefined) as
-              | string
-              | undefined,
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-            timezone: (event.component.parent?.getFirstPropertyValue("x-wr-timezone") ?? undefined) as
-              | string
-              | undefined,
-          },
-        };
-        prev.push(evn);
-      }
-      return prev;
+
+      if (startDate > end) return prev;
+      if (endDate < start) return prev;
+
+      return prev.concat({
+        title: event.summary,
+        subTitle: null,
+        description: event.description,
+        startDate,
+        endDate,
+        image: null,
+        location: event.location,
+        indicatorColor: "red",
+        links: [],
+      });
     }, [] as CalendarEvent[]);
   }
 
