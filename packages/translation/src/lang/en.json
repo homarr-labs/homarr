@@ -956,6 +956,18 @@
         "opnsenseApiSecret": {
           "label": "API Key (Secret)",
           "newLabel": "New API Key (Secret)"
+        },
+        "githubAppId": {
+          "label": "App Id",
+          "newLabel": "New App Id"
+        },
+        "githubInstallationId": {
+          "label": "Installation Id",
+          "newLabel": "New Installation Id"
+        },
+        "privateKey": {
+          "label": "Private key",
+          "newLabel": "New private key"
         }
       }
     },
@@ -1270,9 +1282,6 @@
         "showTitle": {
           "label": "Show app name"
         },
-        "showDescriptionTooltip": {
-          "label": "Show description tooltip"
-        },
         "pingEnabled": {
           "label": "Enable status check"
         },
@@ -1283,6 +1292,15 @@
             "row-reverse": "Horizontal (reversed)",
             "column": "Vertical",
             "column-reverse": "Vertical (reversed)"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "Description display mode",
+          "description": "Choose how to display the app description",
+          "option": {
+            "normal": "Within widget",
+            "tooltip": "As tooltip",
+            "hidden": "Hidden"
           }
         }
       },
@@ -2257,6 +2275,9 @@
         },
         "maximumAmountPosts": {
           "label": "Amount posts limit"
+        },
+        "hideDescription": {
+          "label": "Hide description"
         }
       }
     },

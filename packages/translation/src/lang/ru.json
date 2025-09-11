@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "",
           "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1266,9 +1278,6 @@
         "showTitle": {
           "label": "Показывать название приложения"
         },
-        "showDescriptionTooltip": {
-          "label": "Показывать всплывающую подсказку с описанием"
-        },
         "pingEnabled": {
           "label": "Включить простую проверку доступности"
         },
@@ -1279,6 +1288,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },
@@ -2253,6 +2271,9 @@
         },
         "maximumAmountPosts": {
           "label": "Максимальное количество записей"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },

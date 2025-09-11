@@ -29,6 +29,9 @@ export const { definition, componentLoader } = createWidgetDefinition("rssFeed",
         defaultValue: 100,
         validate: z.number().min(1).max(9999),
       }),
+      hideDescription: factory.switch({
+        defaultValue: false,
+      }),
     }));
   },
 }).withDynamicImport(() => import("./component"));

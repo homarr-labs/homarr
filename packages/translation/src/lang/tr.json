@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "API Anahtarı (Gizli Anahtar)",
           "newLabel": "Yeni API Anahtarı (Gizli Anahtar)"
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1266,9 +1278,6 @@
         "showTitle": {
           "label": "Uygulama adını göster"
         },
-        "showDescriptionTooltip": {
-          "label": "Açıklama ipucunu göster"
-        },
         "pingEnabled": {
           "label": "Durum denetimini etkinleştir"
         },
@@ -1279,6 +1288,15 @@
             "row-reverse": "Yatay (ters)",
             "column": "Dikey",
             "column-reverse": "Dikey (ters)"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "Açıklama görüntüleme modu",
+          "description": "Uygulama açıklamasının nasıl görüntüleneceğini seçin",
+          "option": {
+            "normal": "Widget içinde",
+            "tooltip": "Araç ipucu olarak",
+            "hidden": "Gizli"
           }
         }
       },
@@ -2253,6 +2271,9 @@
         },
         "maximumAmountPosts": {
           "label": "Gönderi sayısı sınırı"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },

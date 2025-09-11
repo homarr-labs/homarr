@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "",
           "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1266,9 +1278,6 @@
         "showTitle": {
           "label": "Vis app navn"
         },
-        "showDescriptionTooltip": {
-          "label": "Vis beskrivelse verktøytips"
-        },
         "pingEnabled": {
           "label": "Aktiver enkel ping"
         },
@@ -1279,6 +1288,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },
@@ -2253,6 +2271,9 @@
         },
         "maximumAmountPosts": {
           "label": "Antall poster grense"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },

@@ -8,6 +8,7 @@
     ".": "./index.ts",
     "./types": "./src/types.ts",
     "./server": "./src/server.ts",
+    "./init-dns": "./src/dns.ts",
     "./client": "./src/client.ts",
     "./env": "./env.ts"
   },
@@ -29,19 +30,21 @@
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^2.2.2",
-    "dayjs": "^1.11.13",
-    "next": "15.5.0",
+    "dayjs": "^1.11.18",
+    "dns-caching": "^0.2.5",
+    "next": "15.5.2",
+    "octokit": "^5.0.3",
     "react": "19.1.1",
     "react-dom": "19.1.1",
-    "undici": "7.14.0",
-    "zod": "^4.0.17",
+    "undici": "7.15.0",
+    "zod": "^4.1.5",
     "zod-validation-error": "^4.0.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.33.0",
+    "eslint": "^9.35.0",
     "typescript": "^5.9.2"
   }
 }

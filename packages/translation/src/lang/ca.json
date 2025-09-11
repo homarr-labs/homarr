@@ -44,7 +44,7 @@
             "apps": "Aplicacions",
             "boards": "Tauler",
             "integrations": "Integracions",
-            "credentialUsers": ""
+            "credentialUsers": "Credencials d'usuari"
           }
         },
         "tokenModal": {
@@ -82,7 +82,7 @@
         "form": {
           "name": {
             "label": "Nom del grup",
-            "description": ""
+            "description": "El nom ha de coincidir amb el grup d'Administradors del proveïdor extern"
           }
         }
       },
@@ -110,12 +110,12 @@
     "page": {
       "login": {
         "title": "Entreu al vostre compte",
-        "subtitle": ""
+        "subtitle": "Benvingut de nou! Si us plau, introduïu les credencials"
       },
       "invite": {
         "title": "Uneix-te a Homarr",
-        "subtitle": "",
-        "description": ""
+        "subtitle": "Benvingut a Homarr! Si us plau, crea el teu compte",
+        "description": "Has sigut invitat per {username}"
       },
       "init": {
         "title": "Nova instal·lació de Homarr",
@@ -178,7 +178,7 @@
         },
         "forgotPassword": {
           "label": "Heu oblidat la contrasenya?",
-          "description": ""
+          "description": "Un administrador pot utilitzar el següent comandament per reinicialitzar la teva contrasenya"
         }
       },
       "register": {
@@ -239,10 +239,10 @@
       "changePingIconsEnabled": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Icones de ping alternats correctament"
           },
           "error": {
-            "message": ""
+            "message": "Impossible d'alternar les icones de ping"
           }
         }
       },
@@ -307,12 +307,12 @@
       "name": "Nom",
       "members": "Membres",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Panell d'inici",
+        "description": "Només els panells accessibles al grup es pot seleccionar"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Panell mòbil",
+        "description": "Només els panells accessibles al grup es pot seleccionar"
       }
     },
     "permission": {
@@ -384,29 +384,29 @@
           },
           "full-all": {
             "label": "Accés total a les integracions",
-            "description": ""
+            "description": "Permetre que els membres gestionin, utilitzin i interactuïn amb cada integració"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Medis",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Pujar medis",
+            "description": "Permetre als membres puja medis"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Veure medis",
+            "description": "Permet que els membres vegin tots els continguts multimèdia"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Accés complet als medis",
+            "description": "Permet als membres gestionar i esborrar tots els continguts multimèdia"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Altres",
         "item": {
           "view-logs": {
             "label": "Veure registres",
@@ -426,95 +426,95 @@
             "description": "Permet que els membres modifiquin tots els motors de cerca"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Accés complet a la cerca",
+            "description": "Permet als membres gestionar i esborrar els motors de cerca"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Alguns membres de proveïdors externs no es poden gestionar aquí",
+      "external": "Tots els membres de proveïdors externs no es poden gestionar aquí"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Aquest grup està reservat pel sistema i restringeix algunes accions <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Nou grup",
         "notification": {
           "success": {
-            "message": ""
+            "message": "El grup s'ha creat satisfactòriament"
           },
           "error": {
-            "message": ""
+            "message": "El grup no es pot crear"
           }
         }
       },
       "transfer": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Transferir propietari",
+        "description": "Transferir la propietat del grup a altre usuari.",
+        "confirm": "Segur que vols transferir el propietari de {name} a {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Transferència del {group} a {user} satisfactòria"
           },
           "error": {
-            "message": ""
+            "message": "No ha sigut possible transferir la propietat"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Afegir usuari"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Esborrar usuari",
+        "confirm": "Segur que vols esborrar {user} d'aquest grup?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Esborrar grup",
+        "description": "Un cop esborris el grup, no el podràs recuperar. ",
+        "confirm": "Segur que desitges esborrar el grup {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "S'ha esborrat el grup {name}"
           },
           "error": {
-            "message": ""
+            "message": "Impossible esborrar el grup {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Privilegis guardats",
+            "message": "Els privilegis s'han guardat satisfactòriament"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Privilegis no guardats",
+            "message": "Els privilegis no s'han guardat"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "El grup {name} s'ha guardat satisfactòriament"
           },
           "error": {
-            "message": ""
+            "message": "No s'ha pogut guardar el grup {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Seleccionar grup",
+        "notFound": "No s'ha trobat el grup"
       },
       "settings": {
         "board": {
           "notification": {
             "success": {
-              "title": "",
+              "title": "Configuració guardada",
               "message": ""
             },
             "error": {
@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "",
           "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1266,9 +1278,6 @@
         "showTitle": {
           "label": ""
         },
-        "showDescriptionTooltip": {
-          "label": ""
-        },
         "pingEnabled": {
           "label": ""
         },
@@ -1279,6 +1288,15 @@
             "row-reverse": "",
             "column": "",
             "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
           }
         }
       },
@@ -2252,6 +2270,9 @@
           "label": ""
         },
         "maximumAmountPosts": {
+          "label": ""
+        },
+        "hideDescription": {
           "label": ""
         }
       }

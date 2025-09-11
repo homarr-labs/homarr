@@ -208,7 +208,7 @@ export const integrations = mysqlTable(
 export const integrationSecrets = mysqlTable(
   "integrationSecret",
   {
-    kind: varchar({ length: 16 }).$type<IntegrationSecretKind>().notNull(),
+    kind: varchar({ length: 64 }).$type<IntegrationSecretKind>().notNull(),
     value: text().$type<`${string}.${string}`>().notNull(),
     updatedAt: timestamp()
       .$onUpdateFn(() => new Date())
@@ -528,6 +528,7 @@ export const userRelations = relations(users, ({ one, many }) => ({
   groups: many(groupMembers),
   ownedGroups: many(groups),
   invites: many(invites),
+  medias: many(medias),
   defaultSearchEngine: one(searchEngines, {
     fields: [users.defaultSearchEngineId],
     references: [searchEngines.id],
