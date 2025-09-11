@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "Clave API (Credencial)",
           "newLabel": "Nueva clave API (Credencial)"
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1279,12 +1291,12 @@
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Modo de visualización de descripción",
+          "description": "Elige cómo mostrar la descripción de la aplicación",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "Dentro del widget",
+            "tooltip": "Como consejo",
+            "hidden": "Oculto"
           }
         }
       },
@@ -2261,7 +2273,7 @@
           "label": "Cantidad límite de publicaciones"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Ocultar descripción"
         }
       }
     },
@@ -3337,22 +3349,22 @@
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "Tarea desactivada con éxito"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "Error al cambiar el estado de la tarea"
             }
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "",
-              "description": "",
-              "button": ""
+              "title": "Token de API creado",
+              "description": "El token de API fue creado. Ten cuidado, este token está cifrado en la base de datos y nunca será transferido de nuevo a ti. Si pierdes este token, ya no podrás recuperar este token específico.",
+              "button": "Copiar y cerrar"
             }
           },
           "tab": {
@@ -3360,22 +3372,22 @@
               "label": "Documentación"
             },
             "apiKey": {
-              "label": "",
-              "title": "",
+              "label": "Autenticación",
+              "title": "Claves API",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "Crear token de API"
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "Eliminar token de API",
+                  "text": "Esto eliminará permanentemente el token de la API. Los clientes de la API que utilicen este token ya no pueden autenticarse y realizar solicitudes de API. Esta acción no se puede deshacer."
                 }
               },
               "table": {
                 "header": {
-                  "id": "",
-                  "createdBy": "",
-                  "actions": ""
+                  "id": "ID",
+                  "createdBy": "Creado por",
+                  "actions": "Acciones"
                 }
               }
             }
@@ -3383,20 +3395,20 @@
         }
       },
       "about": {
-        "version": "",
-        "text": "",
+        "version": "Versión {version}",
+        "text": "Homarr es un proyecto de código abierto impulsado por la comunidad que está siendo mantenido por voluntarios. Gracias a estas personas, Homarr ha sido un proyecto creciente desde 2021. Nuestro equipo trabaja de forma remota en Homarr desde muchos países en su tiempo libre, sin compensación.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Colaboradores",
+            "subtitle": "{count} manteniendo el código y Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Traductores",
+            "subtitle": "{count} contribuyendo con las traducciones en muchos idiomas"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Librerías",
+            "subtitle": "{count} usadas en el Código de Homarr"
           }
         }
       }
@@ -3405,10 +3417,10 @@
   "docker": {
     "title": "Contenedores",
     "table": {
-      "updated": "",
-      "search": "",
-      "selected": "",
-      "footer": ""
+      "updated": "Actualizado {when}",
+      "search": "Buscar {count} contenedores",
+      "selected": "{selectCount} de {totalCount} contenedores seleccionados",
+      "footer": "{count} contenedores en total"
     },
     "field": {
       "name": {
@@ -3421,17 +3433,17 @@
           "running": "En ejecución",
           "paused": "Pausado",
           "restarting": "Reiniciando",
-          "exited": "",
+          "exited": "Finalizado",
           "removing": "Eliminando",
-          "dead": ""
+          "dead": "Caido"
         }
       },
       "stats": {
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Memoria"
         }
       },
       "containerImage": {
@@ -3442,17 +3454,17 @@
       }
     },
     "action": {
-      "title": "",
+      "title": "Acciones",
       "start": {
         "label": "Iniciar",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Contenedores iniciados",
+            "message": "Los contenedores se iniciaron con éxito"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Contenedores no iniciados",
+            "message": "Los contenedores no se han podido iniciar"
           }
         }
       },
@@ -3460,12 +3472,12 @@
         "label": "Detener",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Contenedores detenidos",
+            "message": "Los contenedores se detuvieron con éxito"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Contenedores no detenidos",
+            "message": "Los contenedores no pudieron ser detenidos"
           }
         }
       },
@@ -3473,12 +3485,12 @@
         "label": "Reiniciar",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Contenedores reiniciados",
+            "message": "Los contenedores se reiniciaron con éxito"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "No se reiniciaron los contenedores",
+            "message": "Los contenedores no se pudieron reiniciar"
           }
         }
       },
@@ -3486,316 +3498,316 @@
         "label": "Eliminar",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Contenedores eliminados",
+            "message": "Los contenedores fueron eliminados con éxito"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Contenedores no eliminados",
+            "message": "Los contenedores no pudieron ser eliminados"
           }
         }
       },
       "refresh": {
-        "label": "",
+        "label": "Actualizar",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Contenedores actualizados",
+            "message": "Ahora estás viendo los datos más recientes"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Contenedores no actualizados",
+            "message": "Algo salió mal mientras se actualizaban los contenedores"
           }
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Añadir a Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Añadido a Homarr",
+            "message": "Las aplicaciones seleccionadas han sido añadidas a Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "No se pudo añadir a Homarr",
+            "message": "Las aplicaciones seleccionadas no se han podido añadir a Homarr"
           }
         },
         "modal": {
-          "title": ""
+          "title": "Añadir contenedor(es) docker a Homarr"
         }
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Fallo al obtener contenedores Docker"
     }
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
-      "label": "",
-      "providers": "",
-      "version": "",
-      "architecture": "",
+      "title": "Panel del Clúster",
+      "label": "Clúster",
+      "providers": "Proveedores",
+      "version": "Versión",
+      "architecture": "Arquitectura",
       "capacity": {
-        "title": "",
+        "title": "Capacidad",
         "resource": {
-          "reserved": "",
-          "used": ""
+          "reserved": "Reservado",
+          "used": "Usado"
         }
       },
       "resources": {
-        "title": "",
-        "nodes": "",
-        "namespaces": "",
-        "ingresses": "",
-        "services": "",
-        "pods": "",
-        "configmaps": "",
-        "secrets": "",
-        "volumes": ""
+        "title": "Recursos",
+        "nodes": "Nodos",
+        "namespaces": "Espacios de nombres",
+        "ingresses": "Ingresos",
+        "services": "Servicios",
+        "pods": "Pods",
+        "configmaps": "ConfigMaps",
+        "secrets": "Credenciales",
+        "volumes": "Volúmenes"
       }
     },
     "nodes": {
-      "label": "",
+      "label": "Nodos",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nombre"
         },
         "state": {
-          "label": "",
+          "label": "Estado",
           "option": {
-            "ready": "",
-            "NotReady": ""
+            "ready": "Listo",
+            "NotReady": "No está listo"
           }
         },
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "RAM"
         },
         "pods": {
-          "label": ""
+          "label": "Pods"
         },
         "operatingSystem": {
-          "label": ""
+          "label": "Sistema Operativo"
         },
         "architecture": {
-          "label": ""
+          "label": "Arquitectura"
         },
         "kubernetesVersion": {
-          "label": ""
+          "label": "Versión de Kubernetes"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Creado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} nodos"
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "Espacios de nombres",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nombre"
         },
         "state": {
-          "label": "",
+          "label": "Estado",
           "option": {
-            "active": "",
-            "terminating": ""
+            "active": "Activo",
+            "terminating": "Terminando"
           }
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Creado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} espacios de nombres"
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "Ingresos",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nombre"
         },
         "namespace": {
-          "label": ""
+          "label": "Espacio de nombre"
         },
         "className": {
-          "label": ""
+          "label": "Nombre de la clase"
         },
         "rulesAndPaths": {
-          "label": ""
+          "label": "Reglas y rutas"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Creado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} ingresos"
       }
     },
     "services": {
-      "label": "",
+      "label": "Servicios",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nombre"
         },
         "namespace": {
-          "label": ""
+          "label": "Espacio de nombre"
         },
         "type": {
-          "label": ""
+          "label": "Tipo"
         },
         "ports": {
-          "label": ""
+          "label": "Puertos"
         },
         "targetPorts": {
-          "label": ""
+          "label": "Puertos de destino"
         },
         "clusterIP": {
-          "label": ""
+          "label": "IP del clúster"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Creado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} servicios"
       }
     },
     "pods": {
-      "label": "",
+      "label": "Pods",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nombre"
         },
         "namespace": {
-          "label": ""
+          "label": "Espacio de nombre"
         },
         "image": {
-          "label": ""
+          "label": "Imagen"
         },
         "applicationType": {
-          "label": ""
+          "label": "Tipo de aplicación"
         },
         "status": {
-          "label": ""
+          "label": "Estado"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Creado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} pods"
       }
     },
     "secrets": {
-      "label": "",
+      "label": "Credenciales",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nombre"
         },
         "namespace": {
-          "label": ""
+          "label": "Espacio de nombre"
         },
         "type": {
-          "label": ""
+          "label": "Tipo"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Creado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} credenciales"
       }
     },
     "configmaps": {
-      "label": "",
+      "label": "ConfigMaps",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nombre"
         },
         "namespace": {
-          "label": ""
+          "label": "Espacio de nombre"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Creado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} configMaps"
       }
     },
     "volumes": {
-      "label": "",
+      "label": "Volúmenes",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nombre"
         },
         "namespace": {
-          "label": ""
+          "label": "Espacio de nombre"
         },
         "accessModes": {
-          "label": ""
+          "label": "Modos de acceso"
         },
         "storage": {
-          "label": ""
+          "label": "Almacenamiento"
         },
         "storageClassName": {
-          "label": ""
+          "label": "Nombre de la clase de almacenamiento"
         },
         "volumeMode": {
-          "label": ""
+          "label": "Modo del volumen"
         },
         "volumeName": {
-          "label": ""
+          "label": "Nombre del volumen"
         },
         "status": {
-          "label": ""
+          "label": "Estado"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Creado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} volúmenes"
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Error al recuperar datos de Kubernetes"
     }
   },
   "permission": {
-    "title": "",
+    "title": "Permisos",
     "userSelect": {
-      "title": ""
+      "title": "Añadir permisos de usuario"
     },
     "groupSelect": {
-      "title": ""
+      "title": "Añadir permisos de grupo"
     },
     "tab": {
       "user": "Usuarios",
-      "group": "",
-      "inherited": ""
+      "group": "Grupos",
+      "inherited": "Grupos heredados"
     },
     "field": {
       "user": {
         "label": "Usuario"
       },
       "group": {
-        "label": ""
+        "label": "Grupo"
       },
       "permission": {
-        "label": ""
+        "label": "Permisos"
       }
     },
     "action": {
-      "saveUser": "",
-      "saveGroup": ""
+      "saveUser": "Guardar permisos de usuario",
+      "saveGroup": "Guardar permisos de grupo"
     }
   },
   "navigationStructure": {
@@ -3805,30 +3817,30 @@
         "label": "Tableros"
       },
       "integrations": {
-        "label": "",
+        "label": "Integraciones",
         "edit": {
           "label": "Editar"
         },
         "new": {
-          "label": ""
+          "label": "Nueva"
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Motores de búsqueda",
         "new": {
-          "label": ""
+          "label": "Nuevo"
         },
         "edit": {
           "label": "Editar"
         }
       },
       "medias": {
-        "label": ""
+        "label": "Imágenes"
       },
       "apps": {
         "label": "Aplicaciones",
         "new": {
-          "label": ""
+          "label": "Nueva"
         },
         "edit": {
           "label": "Editar"
@@ -3839,11 +3851,11 @@
         "create": {
           "label": "Crear"
         },
-        "general": "",
+        "general": "General",
         "security": "Seguridad",
         "board": "Tableros",
         "groups": {
-          "label": ""
+          "label": "Grupos"
         },
         "invites": {
           "label": "Invitaciones"
@@ -3852,33 +3864,33 @@
       "tools": {
         "label": "Herramientas",
         "tasks": {
-          "label": ""
+          "label": "Tareas"
         },
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "kubernetes": {
-          "label": "",
+          "label": "Kubernetes",
           "nodes": {
-            "label": ""
+            "label": "Nodos"
           },
           "namespaces": {
-            "label": ""
+            "label": "Espacios de nombres"
           },
           "ingresses": {
-            "label": ""
+            "label": "Ingresos"
           },
           "services": {
-            "label": ""
+            "label": "Servicios"
           },
           "pods": {
-            "label": ""
+            "label": "Pods"
           },
           "configmaps": {
-            "label": ""
+            "label": "ConfigMaps"
           },
           "secrets": {
-            "label": ""
+            "label": "Credenciales"
           },
           "volumes": {
             "label": ""
@@ -4069,7 +4081,7 @@
                 "label": ""
               },
               "discord": {
-                "label": "Comunidad Discord"
+                "label": "Comunidad de Discord"
               }
             }
           }
