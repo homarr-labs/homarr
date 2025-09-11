@@ -61,6 +61,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
 
   let url = searchParams.url ?? getIntegrationDefaultUrl(searchParams.kind) ?? "";
   if (hasUrlSecret) {
+    // Placeholder Url, replaced with origin of the secret Url on submit
     url = "http://localhost";
   }
   const form = useZodForm(formSchema, {
