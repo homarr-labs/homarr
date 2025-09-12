@@ -31,6 +31,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
 
+      - uses: pnpm/action-setup@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v5
         with:
