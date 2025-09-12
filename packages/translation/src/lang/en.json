@@ -1543,7 +1543,15 @@
         "width": "Width",
         "height": "Height"
       },
-      "placeholder": "Start writing your notes"
+      "placeholder": "Start writing your notes",
+      "dismiss": {
+        "title": "Dismiss changes?",
+        "message": "You have unsaved changes in your notebook. Are you sure you want to discard them?",
+        "action": {
+          "discard": "Discard changes",
+          "keepEditing": "Keep editing"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
