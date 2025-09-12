@@ -54,14 +54,10 @@ jobs:
           private_key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
           app_id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
       - uses: actions/checkout@v5
-        if: env.SKIP_RELEASE == 'false'
         with:
           persist-credentials: false
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10.15.1
       - uses: actions/setup-node@v5
-        if: env.SKIP_RELEASE == 'false'
         with:
           node-version: 22.19.0
           cache: "pnpm"
