@@ -373,6 +373,9 @@ importers:
       '@homarr/analytics':
         specifier: workspace:^0.1.0
         version: link:../../packages/analytics
+      '@homarr/auth':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/auth
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../../packages/common
@@ -406,6 +409,9 @@ importers:
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../../packages/redis
+      '@homarr/request-handler':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/request-handler
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../../packages/server-settings
