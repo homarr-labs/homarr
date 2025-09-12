@@ -183,6 +183,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/sonarr"
   | "/docs/integrations/tdarr"
   | "/docs/integrations/transmission"
+  | "/docs/integrations/truenas"
   | "/docs/integrations/unifi-controller"
   | "/docs/management/api"
   | "/docs/management/apps"
