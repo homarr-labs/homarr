@@ -265,4 +265,77 @@ describe("testConnectionAsync should run test connection of integration", () => 
       ],
     });
   });
+
+  test("with input of existing github app", async () => {
+    // Arrange
+    const factorySpy = vi.spyOn(homarrIntegrations, "createIntegrationAsync");
+    const optionsSpy = vi.spyOn(homarrDefinitions, "getAllSecretKindOptions");
+    factorySpy.mockReturnValue(
+      Promise.resolve({
+        testConnectionAsync: async () => await Promise.resolve({ success: true }),
+      } as homarrIntegrations.PiHoleIntegrationV6),
+    );
+    optionsSpy.mockReturnValue([[], ["githubAppId", "githubInstallationId", "privateKey"]]);
+
+    const integration = {
+      id: "new",
+      name: "GitHub",
+      url: "https://api.github.com",
+      kind: "github" as const,
+      secrets: [
+        {
+          kind: "githubAppId" as const,
+          value: "345",
+        },
+        {
+          kind: "githubInstallationId" as const,
+          value: "456",
+        },
+        {
+          kind: "privateKey" as const,
+          value: null,
+        },
+      ],
+    };
+
+    const dbSecrets = [
+      {
+        kind: "githubAppId" as const,
+        value: "123.encrypted" as const,
+      },
+      {
+        kind: "githubInstallationId" as const,
+        value: "234.encrypted" as const,
+      },
+      {
+        kind: "privateKey" as const,
+        value: "privateKey.encrypted" as const,
+      },
+    ];
+
+    // Act
+    await testConnectionAsync(integration, dbSecrets);
+
+    // Assert
+    expect(factorySpy).toHaveBeenCalledWith({
+      id: "new",
+      name: "GitHub",
+      url: "https://api.github.com",
+      kind: "github" as const,
+      decryptedSecrets: [
+        expect.objectContaining({
+          kind: "githubAppId",
+          value: "345",
+        }),
+        expect.objectContaining({
+          kind: "githubInstallationId",
+          value: "456",
+        }),
+        expect.objectContaining({
+          kind: "privateKey",
+          value: "privateKey",
+        }),
+      ],
+    });
+  });
 });

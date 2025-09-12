@@ -45,7 +45,6 @@ export const createJobGroupCreator = <TAllowedNames extends string = string>(
           }
 
           const scheduledTask = await job.createTaskAsync();
-          if (!scheduledTask) continue;
 
           tasks.set(job.name, scheduledTask);
         }

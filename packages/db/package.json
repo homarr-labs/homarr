@@ -54,11 +54,11 @@
     "@testcontainers/mysql": "^11.5.1",
     "@testcontainers/postgresql": "^11.5.1",
     "better-sqlite3": "^12.2.0",
-    "dotenv": "^17.2.1",
+    "dotenv": "^17.2.2",
     "drizzle-kit": "^0.31.4",
     "drizzle-orm": "^0.44.5",
     "drizzle-zod": "^0.8.3",
-    "mysql2": "3.14.3",
+    "mysql2": "3.14.4",
     "pg": "^8.16.3",
     "superjson": "2.2.2"
   },
@@ -70,7 +70,7 @@
     "@types/pg": "^8.15.5",
     "dotenv-cli": "^10.0.0",
     "esbuild": "^0.25.9",
-    "eslint": "^9.34.0",
+    "eslint": "^9.35.0",
     "prettier": "^3.6.2",
     "tsx": "4.20.4",
     "typescript": "^5.9.2"
