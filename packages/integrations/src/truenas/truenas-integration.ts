@@ -298,7 +298,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
               reason: "aborted",
               code: "ECONNABORTED",
             },
-            { cause: new Error(`Canceled request after 5 seconds`) },
+            { cause: new Error("Canceled request after 5 seconds") },
           ),
         );
       }, 5000);
