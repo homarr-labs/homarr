@@ -3255,9 +3255,6 @@
             "dnsHole": {
               "label": "DNS Holeデータ"
             },
-            "sessionCleanup": {
-              "label": "セッションのクリーンアップ"
-            },
             "updateChecker": {
               "label": "アップデートチェッカー"
             },
