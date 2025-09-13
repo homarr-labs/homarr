@@ -9,9 +9,6 @@ env:
   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
   CROWDIN_TOKEN: "${{ secrets.CROWDIN_UPDATE_CONTRIBUTORS_TOKEN }}"
 
-permissions:
-  contents: write
-
 jobs:
   update-contributors:
     runs-on: ubuntu-latest
@@ -21,10 +18,12 @@ jobs:
     steps:
       - name: Obtain token
         id: obtainToken
-        uses: tibdex/github-app-token@v2
+        uses: actions/create-github-app-token@v2
         with:
-          private_key: ${{ secrets.HOMARR_UPDATE_CONTRIBUTORS_PRIVATE_KEY }}
-          app_id: ${{ vars.HOMARR_UPDATE_CONTRIBUTORS_APP_ID }}
+          private-key: ${{ secrets.HOMARR_UPDATE_CONTRIBUTORS_PRIVATE_KEY }}
+          app-id: ${{ vars.HOMARR_UPDATE_CONTRIBUTORS_APP_ID }}
+          permission-contents: write # required to commit to branch
+          permission-pull-requests: write # required to create pr & enable automerge
 
       - name: Checkout repository
         uses: actions/checkout@v5
