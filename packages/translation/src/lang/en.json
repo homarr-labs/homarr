@@ -2498,7 +2498,17 @@
     "systemResources": {
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",
-      "option": {},
+      "option": {
+        "visibleCharts": {
+          "label": "Visible charts",
+          "description": "Select the charts you want to be visible.",
+          "option": {
+            "cpu": "CPU",
+            "memory": "Memory",
+            "network": "Network"
+          }
+        }
+      },
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
