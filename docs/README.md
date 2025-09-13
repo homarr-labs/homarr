@@ -30,6 +30,8 @@
   </a>
 </p>
 
+<img width="1916" height="947" alt="image" src="https://github.com/user-attachments/assets/2bd1d2a2-6bee-4503-b25c-0efb8f46e797" />
+
 ![](img/headers/features.png)
 
 - 🖌️ Highly customizable with an extensive drag and drop grid system
