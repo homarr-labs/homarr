@@ -61,6 +61,7 @@ jobs:
         run: |
           git config --global user.email "175486441+homarr-releases[bot]@users.noreply.github.com"
           git config --global user.name "Releases Homarr"
+          git checkout -b update-bug-report-template
           git add .
           git commit -m "chore: update bug report template"
 
