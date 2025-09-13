@@ -947,7 +947,7 @@
         },
         "url": {
           "label": "Url",
-          "newLabel": "New URL"
+          "newLabel": "New url"
         },
         "opnsenseApiKey": {
           "label": "API Key (Key)",
