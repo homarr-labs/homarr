@@ -316,8 +316,8 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       swagger-ui-react:
-        specifier: ^5.28.1
-        version: 5.28.1(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: ^5.29.0
+        version: 5.29.0(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       use-deep-compare-effect:
         specifier: ^1.8.1
         version: 1.8.1(react@19.1.1)
@@ -5136,9 +5136,6 @@ packages:
     resolution: {integrity: sha512-Mr2ZakwQ7XUAjp7pAwQWRhhK8mQQ6JAaNWSjmjxil0R8BPioMtQsTLOolGYkji1rcL++3dCqZA3zWqpT+9Ew6g==}
     engines: {node: '>=4'}
 
-  axios@1.11.0:
-    resolution: {integrity: sha512-1Lx3WLFQWm3ooKDYZD1eXmoGO9fxYQjrycfHFC8P0sCfQVXyROp0p9PFWBehewBOdCwHc+f/b8I0fMto5eSfwA==}
-
   axios@1.12.1:
     resolution: {integrity: sha512-Kn4kbSXpkFHCGE6rBFNwIv0GQs4AvDT80jlveJDKFxjbTYMUeB4QtsdPCv6H8Cm19Je7IU6VFtRl2zWZI0rudQ==}
 
@@ -9727,8 +9724,8 @@ packages:
   swagger-client@3.35.5:
     resolution: {integrity: sha512-ayCrpDAgm5jIdq1kmcVWJRfp27cqU9tSRiAfKg3BKeplOmvu3+lKTPPtz4x1uI8v5l5/92Aopvq0EzRkXEr7Rw==}
 
-  swagger-ui-react@5.28.1:
-    resolution: {integrity: sha512-JfLZvbCpsjwUnYKx+Q1YfkrgM7gD6Zb7HnO8/DwFNo5xppwC3MbL27/5MhPkmDyMZ669r6CNiJ0SALiivs7iQg==}
+  swagger-ui-react@5.29.0:
+    resolution: {integrity: sha512-dEDqs3et9cnflzwog0oBMjkrq7Uf6PNPVva4VFB4GICDWMRb6T2C+CzIfqJp9XX9eDvbmiZa/dTcnwvGcDpi5A==}
     peerDependencies:
       react: '>=16.8.0 <20'
       react-dom: '>=16.8.0 <20'
@@ -12625,7 +12622,7 @@ snapshots:
       '@swagger-api/apidom-core': 1.0.0-beta.41
       '@swagger-api/apidom-error': 1.0.0-beta.41
       '@types/ramda': 0.30.2
-      axios: 1.11.0
+      axios: 1.12.1
       minimatch: 7.4.6
       process: 0.11.10
       ramda: 0.30.1
@@ -13951,14 +13948,6 @@ snapshots:
   aws-ssl-profiles@1.1.2: {}
 
   axe-core@4.10.0: {}
-
-  axios@1.11.0:
-    dependencies:
-      follow-redirects: 1.15.9
-      form-data: 4.0.4
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
 
   axios@1.12.1:
     dependencies:
@@ -19205,7 +19194,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  swagger-ui-react@5.28.1(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+  swagger-ui-react@5.29.0(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
       '@babel/runtime-corejs3': 7.27.1
       '@scarf/scarf': 1.4.0
