@@ -30,6 +30,8 @@
   </a>
 </p>
 
+![](img/screenshot.png)
+
 ![](img/headers/features.png)
 
 - 🖌️ Highly customizable with an extensive drag and drop grid system
