@@ -4,16 +4,19 @@ import type { AtLeastOneOf } from "@homarr/common/types";
 import { createDocumentationLink } from "./docs";
 
 export const integrationSecretKindObject = {
-  apiKey: { isPublic: false },
-  username: { isPublic: true },
-  password: { isPublic: false },
-  tokenId: { isPublic: true },
-  realm: { isPublic: true },
-  personalAccessToken: { isPublic: false },
-  topic: { isPublic: true },
-  opnsenseApiKey: { isPublic: false },
-  opnsenseApiSecret: { isPublic: false },
-} satisfies Record<string, { isPublic: boolean }>;
+  apiKey: { isPublic: false, multiline: false },
+  username: { isPublic: true, multiline: false },
+  password: { isPublic: false, multiline: false },
+  tokenId: { isPublic: true, multiline: false },
+  realm: { isPublic: true, multiline: false },
+  personalAccessToken: { isPublic: false, multiline: false },
+  topic: { isPublic: true, multiline: false },
+  opnsenseApiKey: { isPublic: false, multiline: false },
+  opnsenseApiSecret: { isPublic: false, multiline: false },
+  privateKey: { isPublic: false, multiline: true },
+  githubAppId: { isPublic: true, multiline: false },
+  githubInstallationId: { isPublic: true, multiline: false },
+} satisfies Record<string, { isPublic: boolean; multiline: boolean }>;
 
 export const integrationSecretKinds = objectKeys(integrationSecretKindObject);
 
@@ -211,7 +214,7 @@ export const integrationDefs = {
   },
   github: {
     name: "Github",
-    secretKinds: [[], ["personalAccessToken"]],
+    secretKinds: [[], ["personalAccessToken"], ["githubAppId", "githubInstallationId", "privateKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/github.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://api.github.com",
@@ -259,7 +262,7 @@ export const integrationDefs = {
   },
   gitHubContainerRegistry: {
     name: "GitHub Container Registry",
-    secretKinds: [[], ["personalAccessToken"]],
+    secretKinds: [[], ["personalAccessToken"], ["githubAppId", "githubInstallationId", "privateKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/github.svg",
     category: ["releasesProvider"],
     defaultUrl: "https://api.github.com",
@@ -279,6 +282,13 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
     category: ["notifications"],
     documentationUrl: createDocumentationLink("/docs/integrations/ntfy"),
+  },
+  truenas: {
+    name: "TrueNAS",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/truenas.svg",
+    category: ["healthMonitoring"],
+    documentationUrl: createDocumentationLink("/docs/integrations/truenas"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {

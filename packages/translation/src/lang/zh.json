@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "",
           "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2259,6 +2271,9 @@
         },
         "maximumAmountPosts": {
           "label": "帖子數量限制"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
@@ -3239,9 +3254,6 @@
             },
             "dnsHole": {
               "label": "DNS Hole 數據"
-            },
-            "sessionCleanup": {
-              "label": "會話清理"
             },
             "updateChecker": {
               "label": "更新檢查"

@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "",
           "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2259,6 +2271,9 @@
         },
         "maximumAmountPosts": {
           "label": "Nombre maximum de publications"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
@@ -3239,9 +3254,6 @@
             },
             "dnsHole": {
               "label": "Données du puit DNS"
-            },
-            "sessionCleanup": {
-              "label": "Nettoyage de session"
             },
             "updateChecker": {
               "label": "Vérificateur de mise à jour"

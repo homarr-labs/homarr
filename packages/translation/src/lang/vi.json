@@ -81,14 +81,14 @@
         "subtitle": "",
         "form": {
           "name": {
-            "label": "",
+            "label": "Tên nhóm",
             "description": ""
           }
         }
       },
       "settings": {
         "title": "Cài đặt",
-        "subtitle": ""
+        "subtitle": "Cấu hình cài đặt máy chủ."
       },
       "finish": {
         "title": "Hoàn tất cài đặt",
@@ -97,7 +97,7 @@
         "action": {
           "goToBoard": "",
           "createBoard": "",
-          "inviteUser": "",
+          "inviteUser": "Mời người dùng khác",
           "docs": "Đọc tài liệu hướng dẫn"
         }
       }
@@ -173,7 +173,7 @@
           },
           "error": {
             "title": "Đăng nhập không thành công",
-            "message": ""
+            "message": "Đăng nhập thất bại"
           }
         },
         "forgotPassword": {
@@ -950,6 +950,18 @@
           "newLabel": ""
         },
         "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
           "label": "",
           "newLabel": ""
         }
@@ -2259,6 +2271,9 @@
         },
         "maximumAmountPosts": {
           "label": ""
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
@@ -3238,9 +3253,6 @@
               "label": ""
             },
             "dnsHole": {
-              "label": ""
-            },
-            "sessionCleanup": {
               "label": ""
             },
             "updateChecker": {

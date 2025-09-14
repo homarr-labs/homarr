@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "API-nøgle (Secret)",
           "newLabel": "Ny API-nøgle (Key)"
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -2259,6 +2271,9 @@
         },
         "maximumAmountPosts": {
           "label": "Grænse for antal indlæg"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
@@ -3239,9 +3254,6 @@
             },
             "dnsHole": {
               "label": "DNS Hole Data"
-            },
-            "sessionCleanup": {
-              "label": "Sessions Oprydning"
             },
             "updateChecker": {
               "label": "Opdaterings checker"

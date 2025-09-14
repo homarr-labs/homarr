@@ -26,7 +26,6 @@ export class JobManager implements IJobManager {
     logger.info(`Updating cron job interval name="${name}" expression="${cron}"`);
     const job = this.jobGroup.getJobRegistry().get(name);
     if (!job) throw new Error(`Job ${name} not found`);
-    if (job.cronExpression === "never") throw new Error(`Job ${name} cannot be updated as it is set to "never"`);
     if (!validateCron(cron)) {
       throw new Error(`Invalid cron expression: ${cron}`);
     }
@@ -45,7 +44,6 @@ export class JobManager implements IJobManager {
     logger.info(`Disabling cron job name="${name}"`);
     const job = this.jobGroup.getJobRegistry().get(name);
     if (!job) throw new Error(`Job ${name} not found`);
-    if (job.cronExpression === "never") throw new Error(`Job ${name} cannot be disabled as it is set to "never"`);
 
     await this.updateConfigurationAsync(name, { isEnabled: false });
     await this.jobGroup.stopAsync(name);

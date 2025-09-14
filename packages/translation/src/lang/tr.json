@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "API Anahtarı (Gizli Anahtar)",
           "newLabel": "Yeni API Anahtarı (Gizli Anahtar)"
+        },
+        "githubAppId": {
+          "label": "Uygulama Kimliği",
+          "newLabel": "Yeni Uygulama Kimliği"
+        },
+        "githubInstallationId": {
+          "label": "Kurulum Kimliği",
+          "newLabel": "Yeni Kurulum Kimliği"
+        },
+        "privateKey": {
+          "label": "Özel Anahtar",
+          "newLabel": "Yeni özel anahtar"
         }
       }
     },
@@ -1279,12 +1291,12 @@
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Açıklama görüntüleme modu",
+          "description": "Uygulama açıklamasının nasıl görüntüleneceğini seçin",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "Widget içinde",
+            "tooltip": "Araç ipucu olarak",
+            "hidden": "Gizli"
           }
         }
       },
@@ -2259,6 +2271,9 @@
         },
         "maximumAmountPosts": {
           "label": "Gönderi sayısı sınırı"
+        },
+        "hideDescription": {
+          "label": "Açıklamayı gizle"
         }
       }
     },
@@ -3239,9 +3254,6 @@
             },
             "dnsHole": {
               "label": "DNS Çözümleyici Verileri"
-            },
-            "sessionCleanup": {
-              "label": "Oturum Temizleme"
             },
             "updateChecker": {
               "label": "Güncelleme denetleyicisi"

@@ -21,6 +21,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/analytics": "workspace:^0.1.0",
+    "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/cron-job-api": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
@@ -32,12 +33,13 @@
     "@homarr/log": "workspace:^",
     "@homarr/ping": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
+    "@homarr/request-handler": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
-    "dayjs": "^1.11.13",
-    "dotenv": "^17.2.1",
-    "fastify": "^5.5.0",
+    "dayjs": "^1.11.18",
+    "dotenv": "^17.2.2",
+    "fastify": "^5.6.0",
     "superjson": "2.2.2",
     "undici": "7.15.0"
   },
@@ -45,12 +47,12 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^22.18.0",
+    "@types/node": "^22.18.1",
     "dotenv-cli": "^10.0.0",
     "esbuild": "^0.25.9",
-    "eslint": "^9.34.0",
+    "eslint": "^9.35.0",
     "prettier": "^3.6.2",
-    "tsx": "4.20.5",
+    "tsx": "4.20.4",
     "typescript": "^5.9.2"
   }
 }

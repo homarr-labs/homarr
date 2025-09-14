@@ -33,10 +33,10 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^8.2.7",
+    "@mantine/core": "^8.3.1",
     "@tabler/icons-react": "^3.34.1",
-    "dayjs": "^1.11.13",
-    "next": "15.5.0",
+    "dayjs": "^1.11.18",
+    "next": "15.5.2",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "zod": "^4.1.5"
@@ -45,7 +45,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.34.0",
+    "eslint": "^9.35.0",
     "typescript": "^5.9.2"
   }
 }

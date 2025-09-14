@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "API キー (シークレット)",
           "newLabel": "新しい API キー (シークレット)"
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -1279,12 +1291,12 @@
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "説明の表示モード",
+          "description": "アプリの説明を表示する方法を選択します",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "ウィジェット内",
+            "tooltip": "ツールチップ",
+            "hidden": "非表示"
           }
         }
       },
@@ -2259,6 +2271,9 @@
         },
         "maximumAmountPosts": {
           "label": "投稿数の上限"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
@@ -3239,9 +3254,6 @@
             },
             "dnsHole": {
               "label": "DNS Holeデータ"
-            },
-            "sessionCleanup": {
-              "label": "セッションのクリーンアップ"
             },
             "updateChecker": {
               "label": "アップデートチェッカー"
