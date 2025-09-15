@@ -151,21 +151,26 @@ export const SystemHealthMonitoring = ({
                     <List.Item className="health-monitoring-information-uptime" icon={<IconClock size={30} />}>
                       {formatUptime(healthInfo.uptime, t)}
                     </List.Item>
-                    <List.Item className="health-monitoring-information-load-average" icon={<IconCpu size={30} />}>
-                      {t("widget.healthMonitoring.popover.loadAverage")}
-                    </List.Item>
-                    <List m="xs" withPadding center spacing="xs" icon={<IconCpu size={30} />}>
-                      <List.Item className="health-monitoring-information-load-average-1min">
-                        {t("widget.healthMonitoring.popover.minute")} {healthInfo.loadAverage["1min"]}%
-                      </List.Item>
-                      <List.Item className="health-monitoring-information-load-average-5min">
-                        {t("widget.healthMonitoring.popover.minutes", { count: "5" })} {healthInfo.loadAverage["5min"]}%
-                      </List.Item>
-                      <List.Item className="health-monitoring-information-load-average-15min">
-                        {t("widget.healthMonitoring.popover.minutes", { count: "15" })}{" "}
-                        {healthInfo.loadAverage["15min"]}%
-                      </List.Item>
-                    </List>
+                    {healthInfo.loadAverage && (
+                      <>
+                        <List.Item className="health-monitoring-information-load-average" icon={<IconCpu size={30} />}>
+                          {t("widget.healthMonitoring.popover.loadAverage")}
+                        </List.Item>
+                        <List m="xs" withPadding center spacing="xs" icon={<IconCpu size={30} />}>
+                          <List.Item className="health-monitoring-information-load-average-1min">
+                            {t("widget.healthMonitoring.popover.minute")} {healthInfo.loadAverage["1min"]}%
+                          </List.Item>
+                          <List.Item className="health-monitoring-information-load-average-5min">
+                            {t("widget.healthMonitoring.popover.minutes", { count: "5" })}{" "}
+                            {healthInfo.loadAverage["5min"]}%
+                          </List.Item>
+                          <List.Item className="health-monitoring-information-load-average-15min">
+                            {t("widget.healthMonitoring.popover.minutes", { count: "15" })}{" "}
+                            {healthInfo.loadAverage["15min"]}%
+                          </List.Item>
+                        </List>
+                      </>
+                    )}
                   </List>
                 </Stack>
               </Modal>

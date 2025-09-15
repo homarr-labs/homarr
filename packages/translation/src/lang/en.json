@@ -1547,7 +1547,15 @@
         "width": "Width",
         "height": "Height"
       },
-      "placeholder": "Start writing your notes"
+      "placeholder": "Start writing your notes",
+      "dismiss": {
+        "title": "Dismiss changes?",
+        "message": "You have unsaved changes in your notebook. Are you sure you want to discard them?",
+        "action": {
+          "discard": "Discard changes",
+          "keepEditing": "Keep editing"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -2494,7 +2502,17 @@
     "systemResources": {
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",
-      "option": {},
+      "option": {
+        "visibleCharts": {
+          "label": "Visible charts",
+          "description": "Select the charts you want to be visible.",
+          "option": {
+            "cpu": "CPU",
+            "memory": "Memory",
+            "network": "Network"
+          }
+        }
+      },
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
@@ -3258,9 +3276,6 @@
             },
             "dnsHole": {
               "label": "DNS Hole Data"
-            },
-            "sessionCleanup": {
-              "label": "Session Cleanup"
             },
             "updateChecker": {
               "label": "Update checker"

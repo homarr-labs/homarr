@@ -49,10 +49,11 @@ jobs:
           args: "Created a release PR ${{ steps.create-pull-request.outputs.url }} for version ${{ steps.semver.outputs.next }} (new behaviour: ${{ steps.semver.outputs.bump }})"
       - name: Obtain token
         id: obtainApprovalToken
-        uses: tibdex/github-app-token@v2
+        uses: actions/create-github-app-token@v2
         with:
-          private_key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
-          app_id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
+          private-key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
+          app-id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
+          permission-pull-requests: write
       - name: Approve PR
         env:
           GITHUB_TOKEN: ${{ steps.obtainApprovalToken.outputs.token }}
@@ -60,10 +61,12 @@ jobs:
           gh pr review --approve --body "Automatically approved by GitHub Action"
       - name: Obtain token
         id: obtainMergeToken
-        uses: tibdex/github-app-token@v2
+        uses: actions/create-github-app-token@v2
         with:
-          private_key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
-          app_id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
+          app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          permission-contents: write # write to main branch (due to merge)
+          permission-pull-requests: write # merge pull request
       - id: automerge
         if: ${{ steps.semver.outputs.bump != 'major' }}
         name: automerge

@@ -3,11 +3,11 @@ permissions:
 
 on:
   pull_request:
-    branches-ignore: "renovate/*"
     types: [opened, synchronize]
 
 jobs:
   skip-stability-days:
+    if: ${{ !startsWith(github.head_ref, 'renovate/') }}
     name: Skip Stability Days
     runs-on: ubuntu-latest
     steps:

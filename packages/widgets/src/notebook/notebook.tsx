@@ -72,6 +72,7 @@ import "./notebook.css";
 import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { useConfirmModal } from "@homarr/modals";
 
 const iconProps = {
   size: 30,
@@ -240,9 +241,20 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
     return false;
   }, [editor]);
 
+  const { openConfirmModal } = useConfirmModal();
   const handleEditCancel = useCallback(() => {
-    setIsEditing(handleEditCancelCallback);
-  }, [setIsEditing, handleEditCancelCallback]);
+    openConfirmModal({
+      title: t("widget.notebook.dismiss.title"),
+      children: t("widget.notebook.dismiss.message"),
+      labels: {
+        confirm: t("widget.notebook.dismiss.action.discard"),
+        cancel: t("widget.notebook.dismiss.action.keepEditing"),
+      },
+      onConfirm: () => {
+        setIsEditing(handleEditCancelCallback);
+      },
+    });
+  }, [setIsEditing, handleEditCancelCallback, openConfirmModal, t]);
 
   const handleEditToggle = useCallback(() => {
     setIsEditing(handleEditToggleCallback);

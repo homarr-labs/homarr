@@ -24,7 +24,7 @@
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
-    "undici": "7.15.0"
+    "undici": "7.16.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

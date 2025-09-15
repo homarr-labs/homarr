@@ -22,7 +22,7 @@ export const boardNameSchema = z
   .string()
   .min(1)
   .max(255)
-  .regex(/^[A-Za-z0-9-\\_]*$/);
+  .regex(/^[A-Za-z0-9-_]*$/);
 export const boardColumnCountSchema = z.number().min(1).max(24);
 
 export const boardByNameSchema = z.object({

@@ -39,6 +39,7 @@ import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { QuayIntegration } from "../quay/quay-integration";
+import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
@@ -116,6 +117,7 @@ export const integrationCreators = {
   quay: QuayIntegration,
   ntfy: NTFYIntegration,
   mock: MockIntegration,
+  truenas: TrueNasIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

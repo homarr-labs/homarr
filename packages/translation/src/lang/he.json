@@ -3255,9 +3255,6 @@
             "dnsHole": {
               "label": "נתוני חור DNS"
             },
-            "sessionCleanup": {
-              "label": "ניקוי סשן"
-            },
             "updateChecker": {
               "label": "בודק עדכונים"
             },
