@@ -14,7 +14,7 @@ export class LoggingAgent extends Agent {
   dispatch(options: Dispatcher.DispatchOptions, handler: Dispatcher.DispatchHandler): boolean {
     const path = options.path
       .split("/")
-      .map((segment) => (segment.length >= 32 ? "REDACTED" : segment))
+      .map((segment) => (segment.length >= 32 && !segment.startsWith("?") ? "REDACTED" : segment))
       .join("/");
     const url = new URL(`${options.origin as string}${path}`);
 
