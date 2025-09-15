@@ -2507,6 +2507,15 @@
             "memory": "Memory",
             "network": "Network"
           }
+        },
+        "labelDisplayMode": {
+          "label": "Label display mode",
+          "option": {
+            "textWithIcon": "Show text with icon",
+            "text": "Show only text",
+            "icon": "Show only icon",
+            "hidden": "Hide label"
+          }
         }
       },
       "card": {
