@@ -12,6 +12,7 @@ export const redisEnv = createEnv({
     TLS_CA: z.string().optional(),
     USERNAME: z.string().optional(),
     PASSWORD: z.string().optional(),
+    DATABASE_INDEX: z.coerce.number().optional(),
   },
   runtimeEnv: runtimeEnvWithPrefix("REDIS_"),
 });
