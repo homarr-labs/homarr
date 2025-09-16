@@ -94,6 +94,7 @@ export const CommonChart = ({
           tooltipProps={tooltipProps}
           withTooltip={height >= 64}
           yAxisProps={yAxisProps}
+          fillOpacity={0.3}
         />
       )}
     </Card>
