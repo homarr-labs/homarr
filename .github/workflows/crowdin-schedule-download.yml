@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: "0 0 * * *" # every day at midnight
 
+permissions:
+  contents: read # required for code checkout
+
 jobs:
   download-crowdin-translations:
     runs-on: ubuntu-latest
@@ -15,10 +18,12 @@ jobs:
 
       - name: Obtain token
         id: obtainToken
-        uses: tibdex/github-app-token@v2
+        uses: actions/create-github-app-token@v2
         with:
-          private_key: ${{ secrets.CROWDIN_APP_PRIVATE_KEY }}
-          app_id: ${{ secrets.CROWDIN_APP_ID }}
+          private-key: ${{ secrets.CROWDIN_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.CROWDIN_APP_ID }}
+          permission-contents: write # required to commit to crowdin branch
+          permission-pull-requests: write # required to create pull request
 
       - name: Download Crowdin translations
         id: crowdin-download

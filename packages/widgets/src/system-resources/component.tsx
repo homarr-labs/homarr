@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Box, Group, Stack } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
 import { clientApi } from "@homarr/api/client";
@@ -10,7 +11,6 @@ import { CombinedNetworkTrafficChart } from "./chart/combined-network-traffic";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
 import { SystemResourceMemoryChart } from "./chart/memory-chart";
 import { NetworkTrafficChart } from "./chart/network-traffic";
-import classes from "./component.module.css";
 
 const MAX_QUEUE_SIZE = 15;
 
@@ -49,23 +49,29 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
     },
   );
 
-  const showNetwork = items.length === 0 || items.every((item) => item.network !== null);
+  const showNetwork =
+    items.length === 0 || (items.every((item) => item.network !== null) && options.visibleCharts.includes("network"));
+  const rowHeight = `calc((100% - ${(options.visibleCharts.length - 1) * 8}px) / ${options.visibleCharts.length})`;
 
   return (
-    <div ref={ref} className={classes.grid}>
-      <div className={classes.colSpanWide}>
-        <SystemResourceCPUChart cpuUsageOverTime={items.map((item) => item.cpu)} hasShadow={options.hasShadow} />
-      </div>
-      <div className={classes.colSpanWide}>
-        <SystemResourceMemoryChart
-          memoryUsageOverTime={items.map((item) => item.memory)}
-          totalCapacityInBytes={memoryCapacityInBytes}
-          hasShadow={options.hasShadow}
-        />
-      </div>
+    <Stack gap="xs" p="xs" ref={ref} h="100%">
+      {options.visibleCharts.includes("cpu") && (
+        <Box h={rowHeight}>
+          <SystemResourceCPUChart cpuUsageOverTime={items.map((item) => item.cpu)} hasShadow={options.hasShadow} />
+        </Box>
+      )}
+      {options.visibleCharts.includes("memory") && (
+        <Box h={rowHeight}>
+          <SystemResourceMemoryChart
+            memoryUsageOverTime={items.map((item) => item.memory)}
+            totalCapacityInBytes={memoryCapacityInBytes}
+            hasShadow={options.hasShadow}
+          />
+        </Box>
+      )}
       {showNetwork &&
-        (width > 200 ? (
-          <>
+        (width > 256 ? (
+          <Group h={rowHeight} gap="xs" grow>
             <NetworkTrafficChart
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               usageOverTime={items.map((item) => item.network!.down)}
@@ -79,16 +85,16 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
               isUp
               hasShadow={options.hasShadow}
             />
-          </>
+          </Group>
         ) : (
-          <div className={classes.colSpanWide}>
+          <Box h={rowHeight}>
             <CombinedNetworkTrafficChart
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               usageOverTime={items.map((item) => item.network!)}
               hasShadow={options.hasShadow}
             />
-          </div>
+          </Box>
         ))}
-    </div>
+    </Stack>
   );
 }

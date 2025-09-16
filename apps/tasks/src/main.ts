@@ -13,6 +13,7 @@ import { db } from "@homarr/db";
 import { logger } from "@homarr/log";
 
 import { JobManager } from "./job-manager";
+import { onStartAsync } from "./on-start";
 
 const server = fastify({
   maxParamLength: 5000,
@@ -32,6 +33,7 @@ server.register(fastifyTRPCPlugin, {
 });
 
 void (async () => {
+  await onStartAsync();
   await jobGroup.initializeAsync();
   await jobGroup.startAllAsync();
 

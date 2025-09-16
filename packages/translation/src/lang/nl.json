@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "",
           "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -3242,9 +3254,6 @@
             },
             "dnsHole": {
               "label": "DNS-hole gegevens"
-            },
-            "sessionCleanup": {
-              "label": "Sessie opruimen"
             },
             "updateChecker": {
               "label": "Update checker"

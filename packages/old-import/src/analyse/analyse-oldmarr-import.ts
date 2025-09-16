@@ -29,7 +29,7 @@ export const analyseOldmarrImportAsync = async (file: File) => {
     }
 
     return {
-      name: entry.name.replace(".json", ""),
+      name: entry.name.replaceAll(" ", "-").replace(".json", ""),
       config: result.data ?? null,
       isError: !result.success,
     };

@@ -21,6 +21,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/analytics": "workspace:^0.1.0",
+    "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/cron-job-api": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
@@ -32,6 +33,7 @@
     "@homarr/log": "workspace:^",
     "@homarr/ping": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
+    "@homarr/request-handler": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
@@ -39,7 +41,7 @@
     "dotenv": "^17.2.2",
     "fastify": "^5.6.0",
     "superjson": "2.2.2",
-    "undici": "7.15.0"
+    "undici": "7.16.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

@@ -21,7 +21,6 @@ import { refreshNotificationsJob } from "./jobs/integrations/notifications";
 import { minecraftServerStatusJob } from "./jobs/minecraft-server-status";
 import { pingJob } from "./jobs/ping";
 import { rssFeedsJob } from "./jobs/rss-feeds";
-import { sessionCleanupJob } from "./jobs/session-cleanup";
 import { updateCheckerJob } from "./jobs/update-checker";
 import { createCronJobGroup } from "./lib";
 
@@ -39,7 +38,6 @@ export const jobGroup = createCronJobGroup({
   rssFeeds: rssFeedsJob,
   indexerManager: indexerManagerJob,
   healthMonitoring: healthMonitoringJob,
-  sessionCleanup: sessionCleanupJob,
   updateChecker: updateCheckerJob,
   mediaTranscoding: mediaTranscodingJob,
   minecraftServerStatus: minecraftServerStatusJob,

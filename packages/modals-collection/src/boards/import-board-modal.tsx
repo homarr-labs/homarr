@@ -59,7 +59,7 @@ export const ImportBoardModal = createModal(({ actions }) => {
           }
 
           setFileValid(true);
-          form.setFieldValue("configuration.name", result.data.configProperties.name);
+          form.setFieldValue("configuration.name", result.data.configProperties.name.replaceAll(" ", "-"));
         })();
       },
     },

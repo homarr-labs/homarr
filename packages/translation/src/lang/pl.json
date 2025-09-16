@@ -952,6 +952,18 @@
         "opnsenseApiSecret": {
           "label": "Klucz API (Secret)",
           "newLabel": "Nowy klucz API (Secret)"
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -3242,9 +3254,6 @@
             },
             "dnsHole": {
               "label": "Dane DNS Hole"
-            },
-            "sessionCleanup": {
-              "label": "Czyszczenie sesji"
             },
             "updateChecker": {
               "label": "Sprawdzanie aktualizacji"
