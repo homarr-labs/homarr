@@ -27,7 +27,7 @@
     "@homarr/core": "workspace:^0.1.0",
     "superjson": "2.2.2",
     "winston": "3.17.0",
-    "zod": "^4.1.7"
+    "zod": "^4.1.8"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
