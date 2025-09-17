@@ -134,6 +134,13 @@
 </a>
 </td>
 <td align="center">
+<a href="https://homarr.dev/docs/integrations/ical" target="_blank" rel="noreferrer noopener">
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ical.svg" alt="iCal" width="90" height="90" />
+  <br/>  
+  <p align="center">iCal</p>
+</a>
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/jellyfin" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyfin.svg" alt="Jellyfin" width="90" height="90" />
   <br/>  
@@ -146,15 +153,15 @@
   <br/>  
   <p align="center">Jellyseerr</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/lidarr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/lidarr.svg" alt="Lidarr" width="90" height="90" />
   <br/>  
   <p align="center">Lidarr</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/linux-server-io" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/linuxserver-io.svg" alt="LinuxServer.io" width="90" height="90" />
   <br/>  
@@ -195,15 +202,15 @@
   <br/>  
   <p align="center">OpenMediaVault</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/opnsense" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/opnsense.svg" alt="OPNsense" width="90" height="90" />
   <br/>  
   <p align="center">OPNsense</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/overseerr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/overseerr.svg" alt="Overseerr" width="90" height="90" />
   <br/>  
@@ -244,15 +251,15 @@
   <br/>  
   <p align="center">qBittorrent</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/quay" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/quay.png" alt="Quay" width="90" height="90" />
   <br/>  
   <p align="center">Quay</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/radarr" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/radarr.svg" alt="Radarr" width="90" height="90" />
   <br/>  
@@ -293,15 +300,15 @@
   <br/>  
   <p align="center">Transmission</p>
 </a>
-</td>
-<td align="center">
+</td></tr>
+<tr><td align="center">
 <a href="https://homarr.dev/docs/integrations/truenas" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/truenas.svg" alt="TrueNAS" width="90" height="90" />
   <br/>  
   <p align="center">TrueNAS</p>
 </a>
-</td></tr>
-<tr><td align="center">
+</td>
+<td align="center">
 <a href="https://homarr.dev/docs/integrations/unifi-controller" target="_blank" rel="noreferrer noopener">
   <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/unifi.png" alt="Unifi Controller" width="90" height="90" />
   <br/>  
