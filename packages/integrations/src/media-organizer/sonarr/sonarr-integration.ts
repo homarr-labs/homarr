@@ -8,7 +8,7 @@ import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-integration";
-import type { CalendarEvent } from "../../interfaces/calendar/calendar-types";
+import type { CalendarEvent, CalendarLink } from "../../interfaces/calendar/calendar-types";
 import { mediaOrganizerPriorities } from "../media-organizer";
 
 export class SonarrIntegration extends Integration implements ICalendarIntegration {
@@ -33,33 +33,36 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
         "X-Api-Key": super.getSecretValue("apiKey"),
       },
     });
-    const sonarCalendarEvents = await z.array(sonarrCalendarEventSchema).parseAsync(await response.json());
+    const sonarrCalendarEvents = await z.array(sonarrCalendarEventSchema).parseAsync(await response.json());
 
-    return sonarCalendarEvents.map(
-      (sonarCalendarEvent): CalendarEvent => ({
-        name: sonarCalendarEvent.title,
-        subName: sonarCalendarEvent.series.title,
-        description: sonarCalendarEvent.series.overview,
-        thumbnail: this.chooseBestImageAsURL(sonarCalendarEvent),
-        date: sonarCalendarEvent.airDateUtc,
-        mediaInformation: {
-          type: "tv",
-          episodeNumber: sonarCalendarEvent.episodeNumber,
-          seasonNumber: sonarCalendarEvent.seasonNumber,
-        },
-        links: this.getLinksForSonarCalendarEvent(sonarCalendarEvent),
-      }),
-    );
+    return sonarrCalendarEvents.map((event): CalendarEvent => {
+      const imageSrc = this.chooseBestImageAsURL(event);
+      return {
+        title: event.title,
+        subTitle: event.series.title,
+        description: event.series.overview ?? null,
+        startDate: event.airDateUtc,
+        endDate: null,
+        image: imageSrc
+          ? {
+              src: imageSrc,
+              aspectRatio: { width: 7, height: 12 },
+            }
+          : null,
+        location: null,
+        indicatorColor: "blue",
+        links: this.getLinksForSonarrCalendarEvent(event),
+      };
+    });
   }
 
-  private getLinksForSonarCalendarEvent = (event: z.infer<typeof sonarrCalendarEventSchema>) => {
-    const links: CalendarEvent["links"] = [
+  private getLinksForSonarrCalendarEvent = (event: z.infer<typeof sonarrCalendarEventSchema>) => {
+    const links: CalendarLink[] = [
       {
         href: this.url(`/series/${event.series.titleSlug}`).toString(),
         name: "Sonarr",
         logo: "/images/apps/sonarr.svg",
         color: undefined,
-        notificationColor: "blue",
         isDark: true,
       },
     ];

@@ -33,6 +33,8 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
       integration.secrets.every((secret) => secretKinds.includes(secret.kind)),
     ) ?? getDefaultSecretKinds(integration.kind);
 
+  const hasUrlSecret = secretsKinds.includes("url");
+
   const router = useRouter();
   const form = useZodForm(integrationUpdateSchema.omit({ id: true }), {
     initialValues: {
@@ -50,10 +52,14 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const secretsMap = new Map(integration.secrets.map((secret) => [secret.kind, secret]));
 
   const handleSubmitAsync = async (values: FormType) => {
+    const url = hasUrlSecret
+      ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
+      : values.url;
     await mutateAsync(
       {
         id: integration.id,
         ...values,
+        url,
         secrets: values.secrets.map((secret) => ({
           kind: secret.kind,
           value: secret.value === "" ? null : secret.value,
@@ -92,7 +98,9 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
       <Stack>
         <TextInput withAsterisk label={t("integration.field.name.label")} {...form.getInputProps("name")} />
 
-        <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
+        {hasUrlSecret ? null : (
+          <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
+        )}
 
         <Fieldset legend={t("integration.secrets.title")}>
           <Stack gap="sm">

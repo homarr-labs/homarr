@@ -63,17 +63,20 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
       );
 
       return {
-        name: veventObject.summary,
-        date,
-        subName: "",
+        title: veventObject.summary,
+        subTitle: null,
         description: veventObject.description,
+        startDate: date,
+        endDate: veventObject.end,
+        image: null,
+        location: veventObject.location || null,
+        indicatorColor: "#ff8600",
         links: [
           {
             href: url.toString(),
             name: "Nextcloud",
             logo: "/images/apps/nextcloud.svg",
             color: undefined,
-            notificationColor: "#ff8600",
             isDark: true,
           },
         ],

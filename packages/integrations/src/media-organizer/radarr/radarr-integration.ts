@@ -1,15 +1,14 @@
 import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import type { AtLeastOneOf } from "@homarr/common/types";
 import { logger } from "@homarr/log";
 
-import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
+import { Integration } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-integration";
-import type { CalendarEvent } from "../../interfaces/calendar/calendar-types";
+import type { CalendarEvent, CalendarLink } from "../../interfaces/calendar/calendar-types";
 import { radarrReleaseTypes } from "../../interfaces/calendar/calendar-types";
 import { mediaOrganizerPriorities } from "../media-organizer";
 
@@ -34,33 +33,44 @@ export class RadarrIntegration extends Integration implements ICalendarIntegrati
     });
     const radarrCalendarEvents = await z.array(radarrCalendarEventSchema).parseAsync(await response.json());
 
-    return radarrCalendarEvents.map((radarrCalendarEvent): CalendarEvent => {
-      const dates = radarrReleaseTypes
-        .map((type) => (radarrCalendarEvent[type] ? { type, date: radarrCalendarEvent[type] } : undefined))
-        .filter((date) => date) as AtLeastOneOf<Exclude<CalendarEvent["dates"], undefined>[number]>;
-      return {
-        name: radarrCalendarEvent.title,
-        subName: radarrCalendarEvent.originalTitle,
-        description: radarrCalendarEvent.overview,
-        thumbnail: this.chooseBestImageAsURL(radarrCalendarEvent),
-        date: dates[0].date,
-        dates,
-        mediaInformation: {
-          type: "movie",
-        },
-        links: this.getLinksForRadarrCalendarEvent(radarrCalendarEvent),
-      };
+    return radarrCalendarEvents.flatMap((radarrCalendarEvent): CalendarEvent[] => {
+      const imageSrc = this.chooseBestImageAsURL(radarrCalendarEvent);
+
+      return radarrReleaseTypes
+        .map((releaseType) => ({ type: releaseType, date: radarrCalendarEvent[releaseType] }))
+        .filter((item) => item.date !== undefined)
+        .map((item) => ({
+          title: radarrCalendarEvent.title,
+          subTitle: radarrCalendarEvent.originalTitle,
+          description: radarrCalendarEvent.overview ?? null,
+          // Check is done above in the filter
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          startDate: item.date!,
+          endDate: null,
+          image: imageSrc
+            ? {
+                src: imageSrc,
+                aspectRatio: { width: 7, height: 12 },
+              }
+            : null,
+          location: null,
+          metadata: {
+            type: "radarr",
+            releaseType: item.type,
+          },
+          indicatorColor: "yellow",
+          links: this.getLinksForRadarrCalendarEvent(radarrCalendarEvent),
+        }));
     });
   }
 
   private getLinksForRadarrCalendarEvent = (event: z.infer<typeof radarrCalendarEventSchema>) => {
-    const links: CalendarEvent["links"] = [
+    const links: CalendarLink[] = [
       {
         href: this.url(`/movie/${event.titleSlug}`).toString(),
         name: "Radarr",
         logo: "/images/apps/radarr.svg",
         color: undefined,
-        notificationColor: "yellow",
         isDark: true,
       },
     ];

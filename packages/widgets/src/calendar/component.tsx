@@ -10,7 +10,6 @@ import dayjs from "dayjs";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
-import type { CalendarEvent } from "@homarr/integrations/types";
 import { useSettings } from "@homarr/settings";
 
 import type { WidgetComponentProps } from "../definition";
@@ -124,13 +123,11 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
       }}
       renderDay={(tileDate) => {
         const eventsForDate = events
-          .map((event) => ({
-            ...event,
-            date: (event.dates?.filter(({ type }) => options.releaseType.includes(type)) ?? [event]).find(({ date }) =>
-              dayjs(date).isSame(tileDate, "day"),
-            )?.date,
-          }))
-          .filter((event): event is CalendarEvent => Boolean(event.date));
+          .filter((event) => dayjs(event.startDate).isSame(tileDate, "day"))
+          .filter(
+            (event) => event.metadata?.type !== "radarr" || options.releaseType.includes(event.metadata.releaseType),
+          )
+          .sort((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime());
 
         return (
           <CalendarDay
