@@ -57,7 +57,10 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
     <Stack gap="xs" p="xs" ref={ref} h="100%">
       {options.visibleCharts.includes("cpu") && (
         <Box h={rowHeight}>
-          <SystemResourceCPUChart cpuUsageOverTime={items.map((item) => item.cpu)} />
+          <SystemResourceCPUChart
+            cpuUsageOverTime={items.map((item) => item.cpu)}
+            labelDisplayMode={options.labelDisplayMode}
+          />
         </Box>
       )}
       {options.visibleCharts.includes("memory") && (
@@ -65,22 +68,34 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
           <SystemResourceMemoryChart
             memoryUsageOverTime={items.map((item) => item.memory)}
             totalCapacityInBytes={memoryCapacityInBytes}
+            labelDisplayMode={options.labelDisplayMode}
           />
         </Box>
       )}
       {showNetwork &&
         (width > 256 ? (
           <Group h={rowHeight} gap="xs" grow>
-            {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-            <NetworkTrafficChart usageOverTime={items.map((item) => item.network!.down)} isUp={false} />
+            <NetworkTrafficChart
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              usageOverTime={items.map((item) => item.network!.down)}
+              isUp={false}
+              labelDisplayMode={options.labelDisplayMode}
+            />
 
-            {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-            <NetworkTrafficChart usageOverTime={items.map((item) => item.network!.up)} isUp />
+            <NetworkTrafficChart
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              usageOverTime={items.map((item) => item.network!.up)}
+              isUp
+              labelDisplayMode={options.labelDisplayMode}
+            />
           </Group>
         ) : (
           <Box h={rowHeight}>
-            {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
-            <CombinedNetworkTrafficChart usageOverTime={items.map((item) => item.network!)} />
+            <CombinedNetworkTrafficChart
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              usageOverTime={items.map((item) => item.network!)}
+              labelDisplayMode={options.labelDisplayMode}
+            />
           </Box>
         ))}
     </Stack>

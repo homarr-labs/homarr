@@ -1,16 +1,20 @@
 import { Paper, Text } from "@mantine/core";
+import { IconBrain } from "@tabler/icons-react";
 
 import { humanFileSize } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
 
 export const SystemResourceMemoryChart = ({
   memoryUsageOverTime,
   totalCapacityInBytes,
+  labelDisplayMode,
 }: {
   memoryUsageOverTime: number[];
   totalCapacityInBytes: number;
+  labelDisplayMode: LabelDisplayModeOption;
 }) => {
   const chartData = memoryUsageOverTime.map((usage, index) => ({ index, usage }));
   const t = useScopedI18n("widget.systemResources.card");
@@ -27,6 +31,8 @@ export const SystemResourceMemoryChart = ({
       dataKey={"index"}
       series={[{ name: "usage", color: "red.6" }]}
       title={t("memory")}
+      icon={IconBrain}
+      labelDisplayMode={labelDisplayMode}
       yAxisProps={{ domain: [0, totalCapacityInBytes] }}
       lastValue={percentageUsed !== undefined ? `${Math.round(percentageUsed * 100)}%` : undefined}
       tooltipProps={{
