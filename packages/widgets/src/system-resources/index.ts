@@ -17,6 +17,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
   supportedIntegrations: ["dashDot", "openmediavault", "truenas"],
   createOptions() {
     return optionsBuilder.from((factory) => ({
+      hasShadow: factory.switch({ defaultValue: true }),
       visibleCharts: factory.multiSelect({
         options: (["cpu", "memory", "network"] as const).map((key) => ({
           value: key,

@@ -10,10 +10,12 @@ import { CommonChart } from "./common-chart";
 export const SystemResourceMemoryChart = ({
   memoryUsageOverTime,
   totalCapacityInBytes,
+  hasShadow,
   labelDisplayMode,
 }: {
   memoryUsageOverTime: number[];
   totalCapacityInBytes: number;
+  hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
 }) => {
   const chartData = memoryUsageOverTime.map((usage, index) => ({ index, usage }));
@@ -35,6 +37,7 @@ export const SystemResourceMemoryChart = ({
       labelDisplayMode={labelDisplayMode}
       yAxisProps={{ domain: [0, totalCapacityInBytes] }}
       lastValue={percentageUsed !== undefined ? `${Math.round(percentageUsed * 100)}%` : undefined}
+      chartType={hasShadow ? "area" : "line"}
       tooltipProps={{
         content: ({ payload }) => {
           if (!payload) {

@@ -59,6 +59,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
         <Box h={rowHeight}>
           <SystemResourceCPUChart
             cpuUsageOverTime={items.map((item) => item.cpu)}
+            hasShadow={options.hasShadow}
             labelDisplayMode={options.labelDisplayMode}
           />
         </Box>
@@ -68,6 +69,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
           <SystemResourceMemoryChart
             memoryUsageOverTime={items.map((item) => item.memory)}
             totalCapacityInBytes={memoryCapacityInBytes}
+            hasShadow={options.hasShadow}
             labelDisplayMode={options.labelDisplayMode}
           />
         </Box>
@@ -79,6 +81,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               usageOverTime={items.map((item) => item.network!.down)}
               isUp={false}
+              hasShadow={options.hasShadow}
               labelDisplayMode={options.labelDisplayMode}
             />
 
@@ -86,6 +89,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               usageOverTime={items.map((item) => item.network!.up)}
               isUp
+              hasShadow={options.hasShadow}
               labelDisplayMode={options.labelDisplayMode}
             />
           </Group>
@@ -94,6 +98,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
             <CombinedNetworkTrafficChart
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               usageOverTime={items.map((item) => item.network!)}
+              hasShadow={options.hasShadow}
               labelDisplayMode={options.labelDisplayMode}
             />
           </Box>

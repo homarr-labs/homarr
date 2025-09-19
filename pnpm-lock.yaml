@@ -17,6 +17,7 @@ overrides:
   nanoid@>=4.0.0 <5.0.9: '>=5.1.5'
   prismjs@<1.30.0: '>=1.30.0'
   proxmox-api>undici: 7.16.0
+  react-is: ^19.1.1
   rollup@>=4.0.0 <4.22.4: '>=4.50.1'
   sha.js@<=2.4.11: '>=2.4.12'
   tar-fs@>=3.0.0 <3.0.9: '>=3.1.0'
@@ -8897,11 +8898,8 @@ packages:
     peerDependencies:
       react: ^16.8.4 || ^17.0.0 || ^18.0.0
 
-  react-is@16.13.1:
-    resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
-
-  react-is@18.3.1:
-    resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
+  react-is@19.1.1:
+    resolution: {integrity: sha512-tr41fA15Vn8p4X9ntI+yCyeGSf1TlYaY5vlTZfQmeLBrFo3psOPX6HhTDnFNL9uj3EhP0KAQ80cugCl4b4BERA==}
 
   react-markdown@10.1.0:
     resolution: {integrity: sha512-qKxVopLT/TyA6BX3Ue5NwabOsAzm0Q7kAPwq6L+wWDwisYs7R8vZ0nRXqq6rkueboxpkjvLGU9fWifiX/ZZFxQ==}
@@ -17874,7 +17872,7 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
-      react-is: 16.13.1
+      react-is: 19.1.1
 
   proper-lockfile@4.1.2:
     dependencies:
@@ -18133,9 +18131,7 @@ snapshots:
     dependencies:
       react: 19.1.1
 
-  react-is@16.13.1: {}
-
-  react-is@18.3.1: {}
+  react-is@19.1.1: {}
 
   react-markdown@10.1.0(@types/react@19.1.13)(react@19.1.1):
     dependencies:
@@ -18314,7 +18310,7 @@ snapshots:
       lodash: 4.17.21
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
-      react-is: 18.3.1
+      react-is: 19.1.1
       react-smooth: 4.0.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       recharts-scale: 0.4.5
       tiny-invariant: 1.3.3

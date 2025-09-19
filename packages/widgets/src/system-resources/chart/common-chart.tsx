@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ReactNode } from "react";
-import type { LineChartSeries } from "@mantine/charts";
-import { LineChart } from "@mantine/charts";
+import type { AreaChartSeries } from "@mantine/charts";
+import { AreaChart, LineChart } from "@mantine/charts";
 import { Card, Center, Group, Loader, Stack, Text, useMantineColorScheme, useMantineTheme } from "@mantine/core";
 import { useElementSize, useHover, useMergedRef } from "@mantine/hooks";
 import type { TooltipProps, YAxisProps } from "recharts";
@@ -21,16 +21,18 @@ export const CommonChart = ({
   tooltipProps,
   yAxisProps,
   lastValue,
+  chartType = "line",
 }: {
   data: Record<string, any>[];
   dataKey: string;
-  series: LineChartSeries[];
+  series: AreaChartSeries[];
   title: ReactNode;
   icon: TablerIcon;
   labelDisplayMode: LabelDisplayModeOption;
   tooltipProps?: TooltipProps<number, any>;
   yAxisProps?: Omit<YAxisProps, "ref">;
   lastValue?: string;
+  chartType?: "line" | "area";
 }) => {
   const { ref: elementSizeRef, height } = useElementSize();
   const theme = useMantineTheme();
@@ -43,6 +45,7 @@ export const CommonChart = ({
   const backgroundColor =
     scheme.colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
 
+  const ChartComponent = chartType === "line" ? LineChart : AreaChart;
   const showIcon = labelDisplayMode === "icon" || labelDisplayMode === "textWithIcon";
   const showText = labelDisplayMode === "text" || labelDisplayMode === "textWithIcon";
 
@@ -88,7 +91,7 @@ export const CommonChart = ({
           </Stack>
         </Center>
       ) : (
-        <LineChart
+        <ChartComponent
           data={data}
           dataKey={dataKey}
           h={"100%"}
@@ -105,6 +108,7 @@ export const CommonChart = ({
           tooltipProps={tooltipProps}
           withTooltip={height >= 64}
           yAxisProps={yAxisProps}
+          fillOpacity={chartType === "area" ? 0.3 : undefined}
         />
       )}
     </Card>

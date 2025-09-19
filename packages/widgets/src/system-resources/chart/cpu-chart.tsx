@@ -3,14 +3,16 @@ import { IconCpu } from "@tabler/icons-react";
 
 import { useScopedI18n } from "@homarr/translation/client";
 
-import { LabelDisplayModeOption } from "..";
+import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
 
 export const SystemResourceCPUChart = ({
   cpuUsageOverTime,
+  hasShadow,
   labelDisplayMode,
 }: {
   cpuUsageOverTime: number[];
+  hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
 }) => {
   const chartData = cpuUsageOverTime.map((usage, index) => ({ index, usage }));
@@ -27,6 +29,7 @@ export const SystemResourceCPUChart = ({
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         cpuUsageOverTime.length > 0 ? `${Math.round(cpuUsageOverTime[cpuUsageOverTime.length - 1]!)}%` : undefined
       }
+      chartType={hasShadow ? "area" : "line"}
       yAxisProps={{ domain: [0, 100] }}
       labelDisplayMode={labelDisplayMode}
       tooltipProps={{

@@ -10,10 +10,12 @@ import { CommonChart } from "./common-chart";
 export const NetworkTrafficChart = ({
   usageOverTime,
   isUp,
+  hasShadow,
   labelDisplayMode,
 }: {
   usageOverTime: number[];
   isUp: boolean;
+  hasShadow: boolean;
   labelDisplayMode: LabelDisplayModeOption;
 }) => {
   const chartData = usageOverTime.map((usage, index) => ({ index, usage }));
@@ -31,6 +33,7 @@ export const NetworkTrafficChart = ({
       icon={isUp ? IconArrowUp : IconArrowDown}
       yAxisProps={{ domain: [0, upperBound] }}
       lastValue={`${humanFileSize(Math.round(max))}/s`}
+      chartType={hasShadow ? "area" : "line"}
       labelDisplayMode={labelDisplayMode}
       tooltipProps={{
         content: ({ payload }) => {

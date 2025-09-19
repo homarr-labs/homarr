@@ -2503,6 +2503,9 @@
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",
       "option": {
+        "hasShadow": {
+          "label": "Enable chart shading"
+        },
         "visibleCharts": {
           "label": "Visible charts",
           "description": "Select the charts you want to be visible.",
