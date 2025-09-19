@@ -11,9 +11,10 @@ import {
   Text,
   useMantineColorScheme,
 } from "@mantine/core";
-import { IconClock } from "@tabler/icons-react";
+import { IconClock, IconPin } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
+import { isNullOrWhitespace } from "@homarr/common";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
 
@@ -40,85 +41,108 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
       <Stack>
         {events.map((event, eventIndex) => (
           <Group key={`event-${eventIndex}`} align={"stretch"} wrap="nowrap">
-            <Box pos={"relative"} w={70} h={120}>
-              <Image
-                src={event.thumbnail}
-                w={70}
-                h={120}
-                radius={"sm"}
-                fallbackSrc={"https://placehold.co/400x600?text=No%20image"}
-              />
-              {event.mediaInformation?.type === "tv" && (
-                <Badge
-                  pos={"absolute"}
-                  bottom={-6}
-                  left={"50%"}
-                  w={"inherit"}
-                  className={classes.badge}
-                >{`S${event.mediaInformation.seasonNumber} / E${event.mediaInformation.episodeNumber}`}</Badge>
-              )}
-            </Box>
+            {event.image !== null && (
+              <Box pos="relative">
+                <Image
+                  src={event.image.src}
+                  w={70}
+                  mah={150}
+                  style={{
+                    aspectRatio: event.image.aspectRatio
+                      ? `${event.image.aspectRatio.width} / ${event.image.aspectRatio.height}`
+                      : "1/1",
+                  }}
+                  radius="sm"
+                  fallbackSrc="https://placehold.co/400x400?text=No%20image"
+                />
+                {event.image.badge !== undefined && (
+                  <Badge pos="absolute" bottom={-6} left="50%" w="90%" className={classes.badge}>
+                    {event.image.badge.content}
+                  </Badge>
+                )}
+              </Box>
+            )}
             <Stack style={{ flexGrow: 1 }} gap={0}>
-              <Group justify={"space-between"} align={"start"} mb={"xs"} wrap="nowrap">
+              <Group justify="space-between" align="start" mb="xs" wrap="nowrap">
                 <Stack gap={0}>
-                  {event.subName && (
+                  {event.subTitle !== null && (
                     <Text lineClamp={1} size="sm">
-                      {event.subName}
+                      {event.subTitle}
                     </Text>
                   )}
                   <Text fw={"bold"} lineClamp={1} size="sm">
-                    {event.name}
+                    {event.title}
                   </Text>
                 </Stack>
-                {event.dates ? (
+                {event.metadata?.type === "radarr" && (
                   <Group wrap="nowrap">
                     <Text c="dimmed" size="sm">
-                      {t(
-                        `widget.calendar.option.releaseType.options.${event.dates.find(({ date }) => event.date === date)?.type ?? "inCinemas"}`,
-                      )}
-                    </Text>
-                  </Group>
-                ) : (
-                  <Group gap={3} wrap="nowrap" align={"center"}>
-                    <IconClock opacity={0.7} size={"1rem"} />
-                    <Text c={"dimmed"} size={"sm"}>
-                      {dayjs(event.date).format("HH:mm")}
+                      {t(`widget.calendar.option.releaseType.options.${event.metadata.releaseType}`)}
                     </Text>
                   </Group>
                 )}
+
+                <Group gap={3} wrap="nowrap" align={"center"}>
+                  <IconClock opacity={0.7} size={"1rem"} />
+                  <Text c={"dimmed"} size={"sm"}>
+                    {dayjs(event.startDate).format("HH:mm")}
+                  </Text>
+
+                  {event.endDate !== null && (
+                    <>
+                      -{" "}
+                      <Text c={"dimmed"} size={"sm"}>
+                        {dayjs(event.endDate).format("HH:mm")}
+                      </Text>
+                    </>
+                  )}
+                </Group>
               </Group>
-              {event.description && (
+
+              {event.location !== null && (
+                <Group gap={4} mb={isNullOrWhitespace(event.description) ? 0 : "sm"}>
+                  <IconPin opacity={0.7} size={"1rem"} />
+                  <Text size={"xs"} c={"dimmed"} lineClamp={1}>
+                    {event.location}
+                  </Text>
+                </Group>
+              )}
+
+              {!isNullOrWhitespace(event.description) && (
                 <Text size={"xs"} c={"dimmed"} lineClamp={2}>
                   {event.description}
                 </Text>
               )}
+
               {event.links.length > 0 && (
                 <Group pt={5} gap={5} mt={"auto"} wrap="nowrap">
-                  {event.links.map((link) => (
-                    <Button
-                      key={link.href}
-                      component={"a"}
-                      href={link.href.toString()}
-                      target={"_blank"}
-                      size={"xs"}
-                      radius={"xl"}
-                      variant={link.color ? undefined : "default"}
-                      styles={{
-                        root: {
-                          backgroundColor: link.color,
-                          color: link.isDark && colorScheme === "dark" ? "white" : "black",
-                          "&:hover": link.color
-                            ? {
-                                backgroundColor: link.isDark ? lighten(link.color, 0.1) : darken(link.color, 0.1),
-                              }
-                            : undefined,
-                        },
-                      }}
-                      leftSection={link.logo ? <Image src={link.logo} w={20} h={20} /> : undefined}
-                    >
-                      <Text>{link.name}</Text>
-                    </Button>
-                  ))}
+                  {event.links
+                    .filter((link) => link.href)
+                    .map((link) => (
+                      <Button
+                        key={link.href}
+                        component={"a"}
+                        href={link.href.toString()}
+                        target={"_blank"}
+                        size={"xs"}
+                        radius={"xl"}
+                        variant={link.color ? undefined : "default"}
+                        styles={{
+                          root: {
+                            backgroundColor: link.color,
+                            color: link.isDark && colorScheme === "dark" ? "white" : "black",
+                            "&:hover": link.color
+                              ? {
+                                  backgroundColor: link.isDark ? lighten(link.color, 0.1) : darken(link.color, 0.1),
+                                }
+                              : undefined,
+                          },
+                        }}
+                        leftSection={link.logo ? <Image src={link.logo} fit="contain" w={20} h={20} /> : undefined}
+                      >
+                        <Text>{link.name}</Text>
+                      </Button>
+                    ))}
                 </Group>
               )}
             </Stack>

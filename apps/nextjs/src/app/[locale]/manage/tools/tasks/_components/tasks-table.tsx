@@ -18,6 +18,10 @@ import { IconPowerOff } from "@homarr/ui/icons";
 
 const cronExpressions = [
   {
+    value: "*/1 * * * * *",
+    label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.seconds", { interval: 1 }),
+  },
+  {
     value: "*/5 * * * * *",
     label: (t: TranslationFunction) => t("management.page.tool.tasks.interval.seconds", { interval: 5 }),
   },

@@ -3255,9 +3255,6 @@
             "dnsHole": {
               "label": "DNS Hole Data"
             },
-            "sessionCleanup": {
-              "label": "Sessions Oprydning"
-            },
             "updateChecker": {
               "label": "Opdaterings checker"
             },

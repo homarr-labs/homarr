@@ -954,16 +954,16 @@
           "newLabel": "Yeni API Anahtarı (Gizli Anahtar)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Uygulama Kimliği",
+          "newLabel": "Yeni Uygulama Kimliği"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Kurulum Kimliği",
+          "newLabel": "Yeni Kurulum Kimliği"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Özel Anahtar",
+          "newLabel": "Yeni özel anahtar"
         }
       }
     },
@@ -2273,7 +2273,7 @@
           "label": "Gönderi sayısı sınırı"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Açıklamayı gizle"
         }
       }
     },
@@ -3254,9 +3254,6 @@
             },
             "dnsHole": {
               "label": "DNS Çözümleyici Verileri"
-            },
-            "sessionCleanup": {
-              "label": "Oturum Temizleme"
             },
             "updateChecker": {
               "label": "Güncelleme denetleyicisi"

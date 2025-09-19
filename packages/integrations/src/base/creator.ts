@@ -18,6 +18,7 @@ import { GitHubContainerRegistryIntegration } from "../github-container-registry
 import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
+import { ICalIntegration } from "../ical/ical-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { LinuxServerIOIntegration } from "../linuxserverio/linuxserverio-integration";
@@ -112,6 +113,7 @@ export const integrationCreators = {
   codeberg: CodebergIntegration,
   linuxServerIO: LinuxServerIOIntegration,
   gitHubContainerRegistry: GitHubContainerRegistryIntegration,
+  ical: ICalIntegration,
   quay: QuayIntegration,
   ntfy: NTFYIntegration,
   mock: MockIntegration,

@@ -3255,9 +3255,6 @@
             "dnsHole": {
               "label": "Данные DNS-фильтра"
             },
-            "sessionCleanup": {
-              "label": "Очистка сессий"
-            },
             "updateChecker": {
               "label": "Проверка обновлений"
             },

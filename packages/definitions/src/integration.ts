@@ -13,6 +13,7 @@ export const integrationSecretKindObject = {
   topic: { isPublic: true, multiline: false },
   opnsenseApiKey: { isPublic: false, multiline: false },
   opnsenseApiSecret: { isPublic: false, multiline: false },
+  url: { isPublic: false, multiline: false },
   privateKey: { isPublic: false, multiline: true },
   githubAppId: { isPublic: true, multiline: false },
   githubInstallationId: { isPublic: true, multiline: false },
@@ -282,6 +283,13 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ntfy.svg",
     category: ["notifications"],
     documentationUrl: createDocumentationLink("/docs/integrations/ntfy"),
+  },
+  ical: {
+    name: "iCal",
+    secretKinds: [["url"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/ical.svg",
+    category: ["calendar"],
+    documentationUrl: createDocumentationLink("/docs/integrations/ical"),
   },
   truenas: {
     name: "TrueNAS",

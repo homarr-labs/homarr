@@ -32,12 +32,12 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "dayjs": "^1.11.18",
     "dns-caching": "^0.2.5",
-    "next": "15.5.2",
+    "next": "15.5.3",
     "octokit": "^5.0.3",
     "react": "19.1.1",
     "react-dom": "19.1.1",
-    "undici": "7.15.0",
-    "zod": "^4.1.5",
+    "undici": "7.16.0",
+    "zod": "^4.1.8",
     "zod-validation-error": "^4.0.1"
   },
   "devDependencies": {

@@ -24,7 +24,7 @@
   "dependencies": {
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
-    "zod": "^4.1.5",
+    "zod": "^4.1.8",
     "zod-form-data": "^3.0.1"
   },
   "devDependencies": {

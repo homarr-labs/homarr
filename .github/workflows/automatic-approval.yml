@@ -3,6 +3,8 @@ on:
   pull_request:
     types: [opened, synchronize]
 
+permissions: {}
+
 jobs:
   approve-automatic-prs:
     runs-on: ubuntu-latest
@@ -12,10 +14,12 @@ jobs:
         uses: actions/checkout@v5
       - name: Obtain token
         id: obtainToken
-        uses: tibdex/github-app-token@v2
+        uses: actions/create-github-app-token@v2
         with:
-          private_key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
-          app_id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
+          private-key: ${{ secrets.RENOVATE_APPROVE_PRIVATE_KEY }}
+          app-id: ${{ secrets.RENOVATE_APPROVE_APP_ID }}
+          permission-pull-requests: write # required to approve pull request
+
       - name: Install GitHub CLI
         run: sudo apt-get install -y gh
       - name: Approve automatic PRs

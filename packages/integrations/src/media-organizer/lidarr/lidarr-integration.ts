@@ -8,7 +8,7 @@ import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-integration";
-import type { CalendarEvent } from "../../interfaces/calendar/calendar-types";
+import type { CalendarEvent, CalendarLink } from "../../interfaces/calendar/calendar-types";
 import { mediaOrganizerPriorities } from "../media-organizer";
 
 export class LidarrIntegration extends Integration implements ICalendarIntegration {
@@ -44,22 +44,28 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
     const lidarrCalendarEvents = await z.array(lidarrCalendarEventSchema).parseAsync(await response.json());
 
     return lidarrCalendarEvents.map((lidarrCalendarEvent): CalendarEvent => {
+      const imageSrc = this.chooseBestImage(lidarrCalendarEvent);
       return {
-        name: lidarrCalendarEvent.title,
-        subName: lidarrCalendarEvent.artist.artistName,
-        description: lidarrCalendarEvent.overview,
-        thumbnail: this.chooseBestImageAsURL(lidarrCalendarEvent),
-        date: lidarrCalendarEvent.releaseDate,
-        mediaInformation: {
-          type: "audio",
-        },
+        title: lidarrCalendarEvent.title,
+        subTitle: lidarrCalendarEvent.artist.artistName,
+        description: lidarrCalendarEvent.overview ?? null,
+        startDate: lidarrCalendarEvent.releaseDate,
+        endDate: null,
+        image: imageSrc
+          ? {
+              src: imageSrc.remoteUrl,
+              aspectRatio: { width: 7, height: 12 },
+            }
+          : null,
+        location: null,
+        indicatorColor: "cyan",
         links: this.getLinksForLidarrCalendarEvent(lidarrCalendarEvent),
       };
     });
   }
 
   private getLinksForLidarrCalendarEvent = (event: z.infer<typeof lidarrCalendarEventSchema>) => {
-    const links: CalendarEvent["links"] = [];
+    const links: CalendarLink[] = [];
 
     for (const link of event.artist.links) {
       switch (link.name) {
@@ -70,7 +76,6 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
             color: "#f5c518",
             isDark: false,
             logo: "/images/apps/vgmdb.svg",
-            notificationColor: "cyan",
           });
           break;
         case "imdb":
@@ -80,7 +85,6 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
             color: "#f5c518",
             isDark: false,
             logo: "/images/apps/imdb.png",
-            notificationColor: "cyan",
           });
           break;
         case "last":
@@ -90,7 +94,6 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
             color: "#cf222a",
             isDark: false,
             logo: "/images/apps/lastfm.svg",
-            notificationColor: "cyan",
           });
           break;
       }

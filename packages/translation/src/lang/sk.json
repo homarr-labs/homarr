@@ -3255,9 +3255,6 @@
             "dnsHole": {
               "label": "Údaje o dierach DNS"
             },
-            "sessionCleanup": {
-              "label": "Čistenie relácie"
-            },
             "updateChecker": {
               "label": "Kontrola aktualizácií"
             },

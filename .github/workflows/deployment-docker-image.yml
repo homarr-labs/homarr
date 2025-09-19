@@ -49,18 +49,23 @@ jobs:
       - name: Obtain token
         if: env.SKIP_RELEASE == 'false'
         id: obtainToken
-        uses: tibdex/github-app-token@v2
+        uses: actions/create-github-app-token@v2
         with:
-          private_key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
-          app_id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          private-key: ${{ secrets.RENOVATE_MERGE_PRIVATE_KEY }}
+          app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
+          permission-contents: write # required to commit package.json & changelog changes, merge them to dev and publish the release
+
       - uses: actions/checkout@v5
         if: env.SKIP_RELEASE == 'false'
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v4
+        if: env.SKIP_RELEASE == 'false'
+      - uses: actions/setup-node@v5
         if: env.SKIP_RELEASE == 'false'
         with:
           node-version: 22.19.0
+          cache: "pnpm"
       - run: npm i -g pnpm
         if: env.SKIP_RELEASE == 'false'
       - name: Install dependencies

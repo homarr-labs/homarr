@@ -945,6 +945,10 @@
           "label": "Topic",
           "newLabel": "New topic"
         },
+        "url": {
+          "label": "Url",
+          "newLabel": "New url"
+        },
         "opnsenseApiKey": {
           "label": "API Key (Key)",
           "newLabel": "New API Key (Key)"
@@ -1543,7 +1547,15 @@
         "width": "Width",
         "height": "Height"
       },
-      "placeholder": "Start writing your notes"
+      "placeholder": "Start writing your notes",
+      "dismiss": {
+        "title": "Dismiss changes?",
+        "message": "You have unsaved changes in your notebook. Are you sure you want to discard them?",
+        "action": {
+          "discard": "Discard changes",
+          "keepEditing": "Keep editing"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -2490,7 +2502,29 @@
     "systemResources": {
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": "Enable chart shading"
+        },
+        "visibleCharts": {
+          "label": "Visible charts",
+          "description": "Select the charts you want to be visible.",
+          "option": {
+            "cpu": "CPU",
+            "memory": "Memory",
+            "network": "Network"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Label display mode",
+          "option": {
+            "textWithIcon": "Show text with icon",
+            "text": "Show only text",
+            "icon": "Show only icon",
+            "hidden": "Hide label"
+          }
+        }
+      },
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
