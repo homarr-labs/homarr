@@ -8,7 +8,7 @@ import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-integration";
-import type { CalendarEvent } from "../../interfaces/calendar/calendar-types";
+import type { CalendarEvent, CalendarLink } from "../../interfaces/calendar/calendar-types";
 import { mediaOrganizerPriorities } from "../media-organizer";
 
 export class ReadarrIntegration extends Integration implements ICalendarIntegration {
@@ -50,15 +50,22 @@ export class ReadarrIntegration extends Integration implements ICalendarIntegrat
     const readarrCalendarEvents = await z.array(readarrCalendarEventSchema).parseAsync(await response.json());
 
     return readarrCalendarEvents.map((readarrCalendarEvent): CalendarEvent => {
+      const imageSrc = this.chooseBestImageAsURL(readarrCalendarEvent);
+
       return {
-        name: readarrCalendarEvent.title,
-        subName: readarrCalendarEvent.author.authorName,
-        description: readarrCalendarEvent.overview,
-        thumbnail: this.chooseBestImageAsURL(readarrCalendarEvent),
-        date: readarrCalendarEvent.releaseDate,
-        mediaInformation: {
-          type: "audio",
-        },
+        title: readarrCalendarEvent.title,
+        subTitle: readarrCalendarEvent.author.authorName,
+        description: readarrCalendarEvent.overview ?? null,
+        startDate: readarrCalendarEvent.releaseDate,
+        endDate: null,
+        image: imageSrc
+          ? {
+              src: imageSrc,
+              aspectRatio: { width: 7, height: 12 },
+            }
+          : null,
+        location: null,
+        indicatorColor: "#f5c518",
         links: this.getLinksForReadarrCalendarEvent(readarrCalendarEvent),
       };
     });
@@ -72,9 +79,8 @@ export class ReadarrIntegration extends Integration implements ICalendarIntegrat
         isDark: false,
         logo: "/images/apps/readarr.svg",
         name: "Readarr",
-        notificationColor: "#f5c518",
       },
-    ] satisfies CalendarEvent["links"];
+    ] satisfies CalendarLink[];
   };
 
   private chooseBestImage = (

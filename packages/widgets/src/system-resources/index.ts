@@ -1,7 +1,16 @@
-import { IconGraphFilled } from "@tabler/icons-react";
+import { IconAlignLeft, IconEyeOff, IconGraphFilled, IconListDetails, IconPhoto } from "@tabler/icons-react";
+
+import { objectEntries } from "@homarr/common";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
+
+const labelDisplayModeOptions = {
+  textWithIcon: IconListDetails,
+  text: IconAlignLeft,
+  icon: IconPhoto,
+  hidden: IconEyeOff,
+} as const;
 
 export const { definition, componentLoader } = createWidgetDefinition("systemResources", {
   icon: IconGraphFilled,
@@ -17,6 +26,18 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
         defaultValue: ["cpu", "memory", "network"],
         withDescription: true,
       }),
+      labelDisplayMode: factory.select({
+        options: objectEntries(labelDisplayModeOptions).map(([key, icon]) => ({
+          value: key,
+          label: (t) => t(`widget.systemResources.option.labelDisplayMode.option.${key}`),
+          icon,
+        })),
+        defaultValue: "textWithIcon",
+      }),
     }));
   },
 }).withDynamicImport(() => import("./component"));
+
+export type LabelDisplayModeOption = ReturnType<
+  (typeof definition)["createOptions"]
+>["labelDisplayMode"]["options"][number]["value"];

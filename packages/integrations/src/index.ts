@@ -23,6 +23,7 @@ export { PlexIntegration } from "./plex/plex-integration";
 export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
 export { TrueNasIntegration } from "./truenas/truenas-integration";
 export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
+export { ICalIntegration } from "./ical/ical-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";

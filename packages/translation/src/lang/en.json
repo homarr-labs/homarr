@@ -945,6 +945,10 @@
           "label": "Topic",
           "newLabel": "New topic"
         },
+        "url": {
+          "label": "Url",
+          "newLabel": "New url"
+        },
         "opnsenseApiKey": {
           "label": "API Key (Key)",
           "newLabel": "New API Key (Key)"
@@ -2509,6 +2513,15 @@
             "cpu": "CPU",
             "memory": "Memory",
             "network": "Network"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Label display mode",
+          "option": {
+            "textWithIcon": "Show text with icon",
+            "text": "Show only text",
+            "icon": "Show only icon",
+            "hidden": "Hide label"
           }
         }
       },

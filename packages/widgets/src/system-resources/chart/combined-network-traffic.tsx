@@ -1,19 +1,23 @@
 import { Box, Group, Paper, Stack, Text } from "@mantine/core";
+import { IconNetwork } from "@tabler/icons-react";
 
 import { humanFileSize } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
 
+import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
 
 export const CombinedNetworkTrafficChart = ({
   usageOverTime,
   hasShadow,
+  labelDisplayMode,
 }: {
   usageOverTime: {
     up: number;
     down: number;
   }[];
   hasShadow: boolean;
+  labelDisplayMode: LabelDisplayModeOption;
 }) => {
   const chartData = usageOverTime.map((usage, index) => ({ index, up: usage.up, down: usage.down }));
   const t = useScopedI18n("widget.systemResources.card");
@@ -27,8 +31,10 @@ export const CombinedNetworkTrafficChart = ({
         { name: "down", color: "yellow.5" },
       ]}
       title={t("network")}
+      icon={IconNetwork}
       yAxisProps={{ domain: [0, "dataMax"] }}
       chartType={hasShadow ? "area" : "line"}
+      labelDisplayMode={labelDisplayMode}
       tooltipProps={{
         content: ({ payload }) => {
           if (!payload) {

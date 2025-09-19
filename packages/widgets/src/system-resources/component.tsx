@@ -57,7 +57,11 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
     <Stack gap="xs" p="xs" ref={ref} h="100%">
       {options.visibleCharts.includes("cpu") && (
         <Box h={rowHeight}>
-          <SystemResourceCPUChart cpuUsageOverTime={items.map((item) => item.cpu)} hasShadow={options.hasShadow} />
+          <SystemResourceCPUChart
+            cpuUsageOverTime={items.map((item) => item.cpu)}
+            hasShadow={options.hasShadow}
+            labelDisplayMode={options.labelDisplayMode}
+          />
         </Box>
       )}
       {options.visibleCharts.includes("memory") && (
@@ -66,6 +70,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
             memoryUsageOverTime={items.map((item) => item.memory)}
             totalCapacityInBytes={memoryCapacityInBytes}
             hasShadow={options.hasShadow}
+            labelDisplayMode={options.labelDisplayMode}
           />
         </Box>
       )}
@@ -77,6 +82,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
               usageOverTime={items.map((item) => item.network!.down)}
               isUp={false}
               hasShadow={options.hasShadow}
+              labelDisplayMode={options.labelDisplayMode}
             />
 
             <NetworkTrafficChart
@@ -84,6 +90,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
               usageOverTime={items.map((item) => item.network!.up)}
               isUp
               hasShadow={options.hasShadow}
+              labelDisplayMode={options.labelDisplayMode}
             />
           </Group>
         ) : (
@@ -92,6 +99,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               usageOverTime={items.map((item) => item.network!)}
               hasShadow={options.hasShadow}
+              labelDisplayMode={options.labelDisplayMode}
             />
           </Box>
         ))}
