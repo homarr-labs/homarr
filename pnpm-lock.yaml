@@ -1485,8 +1485,8 @@ importers:
         specifier: ^0.4.1
         version: 0.4.1
       node-ical:
-        specifier: ^0.20.1
-        version: 0.20.1
+        specifier: ^0.21.0
+        version: 0.21.0
       octokit:
         specifier: ^5.0.3
         version: 5.0.3
@@ -7940,8 +7940,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  moment-timezone@0.5.47:
-    resolution: {integrity: sha512-UbNt/JAWS0m/NJOebR0QMRHBk0hu03r5dx9GK8Cs0AS3I81yDcOc9k+DytPItgVvBP7J6Mf6U2n3BPAacAV9oA==}
+  moment-timezone@0.6.0:
+    resolution: {integrity: sha512-ldA5lRNm3iJCWZcBCab4pnNL3HSZYXVb/3TYr75/1WCTWYuTqYUb5f/S384pncYjJ88lbO8Z4uPDvmoluHJc8Q==}
 
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
@@ -8129,8 +8129,9 @@ packages:
     resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
     hasBin: true
 
-  node-ical@0.20.1:
-    resolution: {integrity: sha512-NrXgzDJd6XcyX9kDMJVA3xYCZmntY7ghA2BOdBeYr3iu8tydHOAb+68jPQhF9V2CRQ0/386X05XhmLzQUN0+Hw==}
+  node-ical@0.21.0:
+    resolution: {integrity: sha512-69YB4OnngmGJjGKR5PudfiWEDsjFWi6w2dgHsiyDUaFRiR/3uX4VZG0SjkkiaKrvMFcuqwsoUImfRcoLTVr6uQ==}
+    engines: {node: '>=18'}
 
   node-loader@2.1.0:
     resolution: {integrity: sha512-OwjPkyh8+7jW8DMd/iq71uU1Sspufr/C2+c3t0p08J3CrM9ApZ4U53xuisNrDXOHyGi5OYHgtfmmh+aK9zJA6g==}
@@ -17171,7 +17172,7 @@ snapshots:
 
   mkdirp@1.0.4: {}
 
-  moment-timezone@0.5.47:
+  moment-timezone@0.6.0:
     dependencies:
       moment: 2.30.1
 
@@ -17357,14 +17358,10 @@ snapshots:
 
   node-gyp-build@4.8.4: {}
 
-  node-ical@0.20.1:
+  node-ical@0.21.0:
     dependencies:
-      axios: 1.12.2
-      moment-timezone: 0.5.47
+      moment-timezone: 0.6.0
       rrule: 2.8.1
-      uuid: 10.0.0
-    transitivePeerDependencies:
-      - debug
 
   node-loader@2.1.0(webpack@5.94.0):
     dependencies:
