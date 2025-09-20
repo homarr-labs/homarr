@@ -11,13 +11,17 @@ const calculateTimeAgo = (timestamp: Date) => {
 };
 
 export const useTimeAgo = (timestamp: Date, updateFrequency = 1000) => {
-  const [timeAgo, setTimeAgo] = useState(calculateTimeAgo(timestamp));
+  const [timeAgo, setTimeAgo] = useState(() => calculateTimeAgo(timestamp));
+
+  useEffect(() => {
+    setTimeAgo(calculateTimeAgo(timestamp));
+  }, [timestamp]);
 
   useEffect(() => {
     const intervalId = setInterval(() => setTimeAgo(calculateTimeAgo(timestamp)), updateFrequency);
 
     return () => clearInterval(intervalId); // clear interval on hook unmount
-  }, [timestamp]);
+  }, [timestamp, updateFrequency]);
 
   return timeAgo;
 };
