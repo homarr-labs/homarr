@@ -20,7 +20,7 @@ overrides:
   react-is: ^19.1.1
   rollup@>=4.0.0 <4.22.4: '>=4.50.2'
   sha.js@<=2.4.11: '>=2.4.12'
-  tar-fs@>=3.0.0 <3.0.9: '>=3.1.0'
+  tar-fs@>=3.0.0 <3.0.9: '>=3.1.1'
   tar-fs@>=2.0.0 <2.1.3: '>=3.1.1'
   tmp@<=0.2.3: '>=0.2.5'
   vite@>=5.0.0 <=5.4.18: '>=7.1.5'
@@ -11679,7 +11679,7 @@ snapshots:
       rfc4648: 1.5.3
       socks-proxy-agent: 8.0.5
       stream-buffers: 3.0.3
-      tar-fs: 3.1.0
+      tar-fs: 3.1.1
       ws: 8.18.3
     transitivePeerDependencies:
       - bare-buffer
