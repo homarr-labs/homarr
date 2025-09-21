@@ -1431,8 +1431,8 @@ importers:
   packages/integrations:
     dependencies:
       '@ctrl/deluge':
-        specifier: ^7.2.0
-        version: 7.2.0
+        specifier: ^7.3.0
+        version: 7.3.0
       '@ctrl/qbittorrent':
         specifier: ^9.8.0
         version: 9.8.0
@@ -2718,8 +2718,8 @@ packages:
     resolution: {integrity: sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==}
     engines: {node: '>=18'}
 
-  '@ctrl/deluge@7.2.0':
-    resolution: {integrity: sha512-tR3WSpO9n/7yeNXuQHMrh/Itb1eFkoLDMMgv145vpWxRjrDP5RH2kdY9VAyeJrvLyQC9r5tMB93sxFcNanwBzg==}
+  '@ctrl/deluge@7.3.0':
+    resolution: {integrity: sha512-reAAmkCJ/guTh1S/szjz9YAN2JtR37YD9s+PDJ4oo3ZjJ0JjNlfFdQ4ll0oXNAr5Jx9AyxBfzJjn72EU+Hylkg==}
     engines: {node: '>=18'}
 
   '@ctrl/magnet-link@4.0.2':
@@ -11118,7 +11118,7 @@ snapshots:
 
   '@csstools/css-tokenizer@3.0.4': {}
 
-  '@ctrl/deluge@7.2.0':
+  '@ctrl/deluge@7.3.0':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
       '@ctrl/shared-torrent': 6.3.0(ofetch@1.4.1)
