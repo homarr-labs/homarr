@@ -1437,8 +1437,8 @@ importers:
         specifier: ^9.7.0
         version: 9.7.0
       '@ctrl/transmission':
-        specifier: ^7.3.0
-        version: 7.3.0
+        specifier: ^7.4.0
+        version: 7.4.0
       '@gitbeaker/rest':
         specifier: ^43.5.0
         version: 43.5.0
@@ -2740,8 +2740,8 @@ packages:
     resolution: {integrity: sha512-mC6HdmCrRhhwpthM+OboJvGIywVR05IbdhVSBkfbGslzbQk2xNnx4UOKljV/x2YI2M1DDF3F3o0paIiYd5O0Og==}
     engines: {node: '>=18'}
 
-  '@ctrl/transmission@7.3.0':
-    resolution: {integrity: sha512-dd9vgIjXiN5LYToQ/Nq/d6tuukAE9SpxEjrHlGItMurW7mIruR+l4qQfCVD7O2xh6Pye1AYmwGzrW/8AeBQreQ==}
+  '@ctrl/transmission@7.4.0':
+    resolution: {integrity: sha512-Y6+dKaktS33oE/1R2hx+aGU8G35oO+dhOThtUlOm8784eOg/rkXyzwNecPIzp77XuIRXam8sLxO/g+yS7yHSpQ==}
     engines: {node: '>=18'}
 
   '@dabh/diagnostics@2.0.3':
@@ -11151,7 +11151,7 @@ snapshots:
     dependencies:
       uint8array-extras: 1.5.0
 
-  '@ctrl/transmission@7.3.0':
+  '@ctrl/transmission@7.4.0':
     dependencies:
       '@ctrl/magnet-link': 4.0.2
       '@ctrl/shared-torrent': 6.3.0(ofetch@1.4.1)
