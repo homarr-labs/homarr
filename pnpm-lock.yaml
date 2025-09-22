@@ -875,8 +875,8 @@ importers:
         specifier: ^1.11.18
         version: 1.11.18
       dns-caching:
-        specifier: ^0.2.5
-        version: 0.2.5
+        specifier: ^0.2.6
+        version: 0.2.7
       next:
         specifier: 15.5.3
         version: 15.5.3(@babel/core@7.28.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.92.1)
@@ -5923,8 +5923,8 @@ packages:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
 
-  dns-caching@0.2.5:
-    resolution: {integrity: sha512-1cnB6i/OG4zfYbRnDjWZDT+FGLvOBuJlFIxVZvHBiaa62SCfaGoP4Si50O14HyoHmx1gadeGWigYXdX5LQAFvg==}
+  dns-caching@0.2.7:
+    resolution: {integrity: sha512-48fgJWH9aUHPN+TOmbozx1hxX9YoCsEkZzR/wHKRFPFx0NZtmSgtZY3M0Vsl7x/fDcq3mCI3SMgyTKVgZZrogg==}
 
   docker-compose@1.3.0:
     resolution: {integrity: sha512-7Gevk/5eGD50+eMD+XDnFnOrruFkL0kSd7jEG4cjmqweDSUhB7i0g8is/nBdVpl+Bx338SqIB2GLKm32M+Vs6g==}
@@ -14767,7 +14767,7 @@ snapshots:
     dependencies:
       path-type: 4.0.0
 
-  dns-caching@0.2.5:
+  dns-caching@0.2.7:
     dependencies:
       lru-cache: 11.1.0
 
@@ -15725,7 +15725,7 @@ snapshots:
   gel@2.0.0:
     dependencies:
       '@petamoriken/float16': 3.9.1
-      debug: 4.4.1
+      debug: 4.4.3
       env-paths: 3.0.0
       semver: 7.7.2
       shell-quote: 1.8.3
