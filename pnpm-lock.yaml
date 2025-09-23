@@ -875,7 +875,7 @@ importers:
         specifier: ^1.11.18
         version: 1.11.18
       dns-caching:
-        specifier: ^0.2.6
+        specifier: ^0.2.7
         version: 0.2.7
       next:
         specifier: 15.5.3
