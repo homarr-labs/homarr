@@ -69,7 +69,7 @@ const seriesRelease = (start: Date, end: Date): CalendarEvent => ({
     src: "https://image.tmdb.org/t/p/original/sWgBv7LV2PRoQgkxwlibdGXKz1S.jpg",
     aspectRatio: { width: 7, height: 12 },
     badge: {
-      content: "S1:E1",
+      content: "S1/E1",
       color: "red",
     },
   },
