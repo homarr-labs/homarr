@@ -323,7 +323,7 @@ importers:
         specifier: ^1.8.1
         version: 1.8.1(react@19.1.1)
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
@@ -663,7 +663,7 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1(patch_hash=2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c)(@trpc/server@11.5.1(typescript@5.9.2))(zod-openapi@5.3.0(zod@4.1.11))(zod@4.1.11)
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
@@ -736,7 +736,7 @@ importers:
         specifier: 19.1.1
         version: 19.1.1(react@19.1.1)
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
@@ -893,7 +893,7 @@ importers:
         specifier: 7.16.0
         version: 7.16.0
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
       zod-validation-error:
         specifier: ^4.0.2
@@ -924,7 +924,7 @@ importers:
         specifier: 5.7.0
         version: 5.7.0
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
@@ -976,7 +976,7 @@ importers:
         specifier: 19.1.1
         version: 19.1.1
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
@@ -1224,7 +1224,7 @@ importers:
         specifier: ^5.2.5
         version: 5.2.5
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
@@ -1295,7 +1295,7 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0(@mantine/form@8.3.1(react@19.1.1))(zod@4.1.11)
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
@@ -1344,7 +1344,7 @@ importers:
         specifier: 19.1.1
         version: 19.1.1
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
@@ -1503,7 +1503,7 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
@@ -1540,7 +1540,7 @@ importers:
         specifier: 3.17.0
         version: 3.17.0
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
@@ -1647,7 +1647,7 @@ importers:
         specifier: 19.1.1
         version: 19.1.1(react@19.1.1)
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
@@ -1751,7 +1751,7 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
       zod-form-data:
         specifier: ^3.0.1
@@ -1782,7 +1782,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../common
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
@@ -2181,7 +2181,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../translation
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
       zod-form-data:
         specifier: ^3.0.1
@@ -2365,7 +2365,7 @@ importers:
         specifier: ^8.23.4
         version: 8.23.4
       zod:
-        specifier: ^4.1.9
+        specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
