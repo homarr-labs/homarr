@@ -161,7 +161,7 @@ export const integrationDefs = {
     name: "Home Assistant",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/home-assistant.svg",
-    category: ["smartHomeServer"],
+    category: ["smartHomeServer", "calendar"],
     documentationUrl: createDocumentationLink("/docs/integrations/home-assistant"),
   },
   openmediavault: {
