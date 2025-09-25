@@ -26,7 +26,7 @@
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.8",
     "ioredis": "5.7.0",
-    "zod": "^4.1.9"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
