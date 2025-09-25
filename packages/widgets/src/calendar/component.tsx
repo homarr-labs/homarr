@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import type { CalendarEvent } from "@homarr/integrations/types";
 import { useSettings } from "@homarr/settings";
 
 import type { WidgetComponentProps } from "../definition";
@@ -69,6 +70,8 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
   const { ref, width, height } = useElementSize();
   const isSmall = width < 256;
 
+  const normalizedEvents = useMemo(() => splitEvents(events), [events]);
+
   return (
     <Calendar
       defaultDate={new Date()}
@@ -122,7 +125,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
         },
       }}
       renderDay={(tileDate) => {
-        const eventsForDate = events
+        const eventsForDate = normalizedEvents
           .filter((event) => dayjs(event.startDate).isSame(tileDate, "day"))
           .filter(
             (event) => event.metadata?.type !== "radarr" || options.releaseType.includes(event.metadata.releaseType),
@@ -144,4 +147,43 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
       }}
     />
   );
+};
+
+/**
+ * Splits multi-day events into multiple single-day events.
+ * @param events The events to split.
+ * @returns The split events.
+ */
+export const splitEvents = (events: CalendarEvent[]): CalendarEvent[] => {
+  const splitEvents: CalendarEvent[] = [];
+  for (const event of events) {
+    if (!event.endDate) {
+      splitEvents.push(event);
+      continue;
+    }
+
+    if (dayjs(event.startDate).isSame(event.endDate, "day")) {
+      splitEvents.push(event);
+      continue;
+    }
+
+    if (dayjs(event.startDate).isAfter(event.endDate)) {
+      // Invalid event, skip it
+      continue;
+    }
+
+    // Event spans multiple days, split it
+    let currentStart = dayjs(event.startDate);
+
+    while (currentStart.isBefore(event.endDate)) {
+      splitEvents.push({
+        ...event,
+        startDate: currentStart.toDate(),
+        endDate: currentStart.endOf("day").isAfter(event.endDate) ? event.endDate : currentStart.endOf("day").toDate(),
+      });
+
+      currentStart = currentStart.add(1, "day").startOf("day");
+    }
+  }
+  return splitEvents;
 };

@@ -49,7 +49,7 @@
     "tsdav": "^2.1.5",
     "undici": "7.16.0",
     "xml2js": "^0.6.2",
-    "zod": "^4.1.9"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
