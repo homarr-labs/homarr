@@ -84,8 +84,9 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
           title: event.summary,
           subTitle: null,
           description: event.description,
-          startDate: "date" in event.start ? new Date(event.start.date) : new Date(event.start.dateTime),
-          endDate: "date" in event.end ? new Date(event.end.date) : new Date(event.end.dateTime),
+          // If not reseting it to 0 o'clock it uses utc time and therefore shows as 2 o'clock
+          startDate: "date" in event.start ? new Date(`${event.start.date}T00:00:00`) : new Date(event.start.dateTime),
+          endDate: "date" in event.end ? new Date(`${event.end.date}T00:00:00`) : new Date(event.end.dateTime),
           image: null,
           indicatorColor: "#18bcf2",
           links: [],
