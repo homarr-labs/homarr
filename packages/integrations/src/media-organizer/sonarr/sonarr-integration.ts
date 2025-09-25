@@ -47,6 +47,10 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
           ? {
               src: imageSrc,
               aspectRatio: { width: 7, height: 12 },
+              badge: {
+                color: "red",
+                content: `S${event.seasonNumber}/E${event.episodeNumber}`,
+              },
             }
           : null,
         location: null,
