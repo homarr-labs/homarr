@@ -25,9 +25,9 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@ctrl/deluge": "^7.2.0",
-    "@ctrl/qbittorrent": "^9.7.0",
-    "@ctrl/transmission": "^7.3.0",
+    "@ctrl/deluge": "^7.3.0",
+    "@ctrl/qbittorrent": "^9.8.0",
+    "@ctrl/transmission": "^7.4.0",
     "@gitbeaker/rest": "^43.5.0",
     "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
@@ -43,13 +43,13 @@
     "@octokit/auth-app": "^8.1.0",
     "ical.js": "^2.2.1",
     "maria2": "^0.4.1",
-    "node-ical": "^0.20.1",
+    "node-ical": "^0.21.0",
     "octokit": "^5.0.3",
     "proxmox-api": "1.1.1",
     "tsdav": "^2.1.5",
     "undici": "7.16.0",
     "xml2js": "^0.6.2",
-    "zod": "^4.1.8"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -57,7 +57,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-unifi": "^2.5.1",
     "@types/xml2js": "^0.4.14",
-    "eslint": "^9.35.0",
+    "eslint": "^9.36.0",
     "typescript": "^5.9.2"
   }
 }

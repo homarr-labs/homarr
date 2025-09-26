@@ -1707,6 +1707,9 @@
     "calendar": {
       "name": "Calendar",
       "description": "Display events from your integrations in a calendar view within a certain relative time period",
+      "duration": {
+        "allDay": "All day"
+      },
       "option": {
         "releaseType": {
           "label": "Radarr release type",
@@ -3315,6 +3318,9 @@
             },
             "firewallInterfaces": {
               "label": "Firewall Interfaces"
+            },
+            "weather": {
+              "label": "Weather"
             }
           },
           "interval": {
