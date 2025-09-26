@@ -3318,6 +3318,9 @@
             },
             "firewallInterfaces": {
               "label": "Firewall Interfaces"
+            },
+            "weather": {
+              "label": "Weather"
             }
           },
           "interval": {

@@ -1904,6 +1904,9 @@ importers:
       undici:
         specifier: 7.16.0
         version: 7.16.0
+      zod:
+        specifier: ^4.1.11
+        version: 4.1.11
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
