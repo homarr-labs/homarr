@@ -7,7 +7,6 @@ import { Calendar } from "@mantine/dates";
 import { useElementSize } from "@mantine/hooks";
 import dayjs from "dayjs";
 
-import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
@@ -33,28 +32,43 @@ interface FetchCalendarProps extends WidgetComponentProps<"calendar"> {
 }
 
 const FetchCalendar = ({ month, setMonth, isEditMode, integrationIds, options }: FetchCalendarProps) => {
-  const [events] = clientApi.widget.calendar.findAllEvents.useSuspenseQuery(
-    {
-      integrationIds,
-      month: month.getMonth(),
-      year: month.getFullYear(),
-      releaseType: options.releaseType,
-      showUnmonitored: options.showUnmonitored,
+  const input = {
+    integrationIds,
+    month: month.getMonth(),
+    year: month.getFullYear(),
+    releaseType: options.releaseType,
+    showUnmonitored: options.showUnmonitored,
+  };
+  const [data] = clientApi.widget.calendar.findAllEvents.useSuspenseQuery(input, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: false,
+  });
+
+  const utils = clientApi.useUtils();
+  clientApi.widget.calendar.subscribeToEvents.useSubscription(input, {
+    onData(data) {
+      utils.widget.calendar.findAllEvents.setData(input, (old) => {
+        return old?.map((item) => {
+          if (item.integration.id !== data.integration.id) return item;
+          return {
+            ...item,
+            events: data.events,
+          };
+        });
+      });
     },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: false,
-    },
-  );
+  });
+
+  const events = useMemo(() => data.flatMap((item) => item.events), [data]);
 
   return <CalendarBase isEditMode={isEditMode} events={events} month={month} setMonth={setMonth} options={options} />;
 };
 
 interface CalendarBaseProps {
   isEditMode: boolean;
-  events: RouterOutputs["widget"]["calendar"]["findAllEvents"];
+  events: CalendarEvent[];
   month: Date;
   setMonth: (date: Date) => void;
   options: WidgetComponentProps<"calendar">["options"];
