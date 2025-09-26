@@ -16,8 +16,6 @@ export const releasesRequestHandler = createCachedIntegrationRequestHandler<
     versionRegex?: string;
   }
 >({
-  // Type '{ id: string; error: { code: "invalidIdentifier"; message?: undefined; }; }' is missing the following properties from type 'ReleaseProviderResponse':
-  // latestRelease, latestReleaseAt
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
 
@@ -29,36 +27,24 @@ export const releasesRequestHandler = createCachedIntegrationRequestHandler<
       };
     }
 
-    const latestRelease = await integrationInstance.getLatestMatchingReleaseAsync(parsedIdentifier, input.versionRegex);
+    const releaseResponse = await integrationInstance.getLatestMatchingReleaseAsync(parsedIdentifier, input.versionRegex);
 
-    if (!latestRelease && input.versionRegex) {
+    if (!releaseResponse) {
       return {
         id: input.id,
-        error: { code: "noMatchingVersion" },
+        error: { code: input.versionRegex ? "noMatchingVersion" : "noReleasesFound" },
       };
     }
-    if (!latestRelease) {
+    if ("code" in releaseResponse || "message" in releaseResponse) {
       return {
         id: input.id,
-        error: { code: "noReleasesFound" },
-      };
-    }
-    if ("code" in latestRelease) {
-      return {
-        id: input.id,
-        error: { code: latestRelease.code },
-      };
-    }
-    if ("message" in latestRelease) {
-      return {
-        id: input.id,
-        error: { message: latestRelease.message },
+        error: releaseResponse,
       };
     }
 
     return {
       id: input.id,
-      ...latestRelease,
+      ...releaseResponse,
       integration: {
         name: integration.name,
         iconUrl: getIconUrl(integration.kind),

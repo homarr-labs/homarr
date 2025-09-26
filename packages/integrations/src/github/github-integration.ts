@@ -63,10 +63,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     const api = this.getApi();
 
     try {
-      const releasesResponse = await api.rest.repos.listReleases({
-        owner,
-        repo: name,
-      });
+      const releasesResponse = await api.rest.repos.listReleases({ owner, repo: name });
 
       if (releasesResponse.data.length === 0) {
         localLogger.warn(`No releases found, for ${owner}/${name} with Github integration`, {
@@ -93,10 +90,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
 
       const details = await this.getDetailsAsync(api, owner, name);
 
-      return {
-        ...details,
-        ...latestRelease,
-      };
+      return { ...details, ...latestRelease };
     } catch (error) {
       const errorMessage = error instanceof OctokitRequestError ? error.message : String(error);
       localLogger.warn(`Failed to get releases for ${owner}\\${name} with Github integration`, {

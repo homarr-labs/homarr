@@ -137,7 +137,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
       })
       .filter(
         (repository) =>
-          !("error" in repository) ||
+          "error" in repository ||
           !options.showOnlyHighlighted ||
           repository.isNewRelease ||
           repository.isStaleRelease,

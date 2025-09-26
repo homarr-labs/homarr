@@ -43,7 +43,7 @@ export class LinuxServerIOIntegration extends Integration implements ReleasesPro
   public async getLatestMatchingReleaseAsync(
     identifier: ParsedIdentifier,
   ): Promise<DetailedRelease | ErrorResponse | null> {
-    const { owner, name } = identifier;
+    const { name } = identifier;
 
     const releasesResponse = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/images"));
     if (!releasesResponse.ok) {
@@ -59,7 +59,6 @@ export class LinuxServerIOIntegration extends Integration implements ReleasesPro
     const release = data.data.repositories.linuxserver.find((repo) => repo.name === name);
     if (!release) {
       localLogger.warn(`Repository ${name} not found on provider, with LinuxServerIO integration`, {
-        owner,
         name,
       });
       return null;

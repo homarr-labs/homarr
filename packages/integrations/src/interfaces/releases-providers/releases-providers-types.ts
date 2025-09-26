@@ -23,8 +23,8 @@ export interface DetailsProviderResponse {
 }
 
 export interface ReleaseProviderResponse {
-  latestRelease: string; // fix me
-  latestReleaseAt: Date; // fix me
+  latestRelease: string;
+  latestReleaseAt: Date;
   releaseUrl?: string;
   releaseDescription?: string;
   isPreRelease?: boolean;

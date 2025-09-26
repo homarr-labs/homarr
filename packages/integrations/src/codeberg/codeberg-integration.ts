@@ -94,10 +94,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
 
     const details = await this.getDetailsAsync(owner, name);
 
-    return {
-      ...details,
-      ...latestRelease,
-    };
+    return { ...details, ...latestRelease };
   }
 
   protected async getDetailsAsync(owner: string, name: string): Promise<DetailsProviderResponse | undefined> {

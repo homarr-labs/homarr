@@ -54,9 +54,7 @@ export class NPMIntegration extends Integration implements ReleasesProviderInteg
       releaseUrl: `https://www.npmjs.com/package/${encodeURIComponent(data.name)}/v/${encodeURIComponent(tag.latestRelease)}`,
       releaseDescription: data.versions[tag.latestRelease]?.description ?? "",
     }));
-    const latestRelease = getLatestRelease(formattedReleases, versionRegex);
-    if (!latestRelease) return null;
 
-    return latestRelease;
+    return getLatestRelease(formattedReleases, versionRegex);
   }
 }

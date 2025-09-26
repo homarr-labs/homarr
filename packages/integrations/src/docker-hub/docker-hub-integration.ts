@@ -101,13 +101,10 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
 
     for (let page = 0; page <= 5; page++) {
       const response = await this.getLatestMatchingReleaseFromPageAsync(relativeUrl, page, versionRegex);
-      if (response?.latestRelease) {
-        const details = await this.getDetailsAsync(relativeUrl);
-        return {
-          ...details,
-          ...response,
-        };
-      }
+      if (!response) continue;
+      if ("message" in response) return response;
+      const details = await this.getDetailsAsync(relativeUrl);
+      return { ...details, ...response };
     }
     return null;
   }
@@ -116,20 +113,22 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     relativeUrl: `/${string}`,
     page: number,
     versionRegex?: string,
-  ): Promise<ReleaseProviderResponse | null> {
+  ): Promise<ReleaseProviderResponse | ErrorResponse | null> {
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
       return await fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/tags?page_size=100&page=${page}`), {
         headers,
       });
     });
-    if (!releasesResponse.ok) throw new Error(releasesResponse.statusText);
+    if (!releasesResponse.ok) {
+      return { message: releasesResponse.statusText };
+    }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
     const releasesResult = releasesResponseSchema.safeParse(releasesResponseJson);
-
     if (!releasesResult.success) {
-      const error = releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message;
-      throw new Error(error);
+      return {
+        message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
+      };
     }
 
     return getLatestRelease(releasesResult.data.results, versionRegex);
