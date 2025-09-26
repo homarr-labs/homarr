@@ -13,17 +13,20 @@ import type { WidgetComponentProps } from "../definition";
 import { WeatherDescription, WeatherIcon } from "./icon";
 
 export default function WeatherWidget({ isEditMode, options }: WidgetComponentProps<"weather">) {
-  const [weather] = clientApi.widget.weather.atLocation.useSuspenseQuery(
-    {
-      latitude: options.location.latitude,
-      longitude: options.location.longitude,
-    },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  );
+  const input = {
+    latitude: options.location.latitude,
+    longitude: options.location.longitude,
+  };
+  const [weather] = clientApi.widget.weather.atLocation.useSuspenseQuery(input, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const utils = clientApi.useUtils();
+  clientApi.widget.weather.subscribeAtLocation.useSubscription(input, {
+    onData: (data) => utils.widget.weather.atLocation.setData(input, data),
+  });
 
   return (
     <Stack

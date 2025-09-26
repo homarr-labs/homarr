@@ -22,6 +22,7 @@ import { minecraftServerStatusJob } from "./jobs/minecraft-server-status";
 import { pingJob } from "./jobs/ping";
 import { rssFeedsJob } from "./jobs/rss-feeds";
 import { updateCheckerJob } from "./jobs/update-checker";
+import { weatherJob } from "./jobs/weather";
 import { createCronJobGroup } from "./lib";
 
 export const jobGroup = createCronJobGroup({
@@ -48,6 +49,7 @@ export const jobGroup = createCronJobGroup({
   firewallVersion: firewallVersionJob,
   firewallInterfaces: firewallInterfacesJob,
   refreshNotifications: refreshNotificationsJob,
+  weather: weatherJob,
 });
 
 export type JobGroupKeys = ReturnType<(typeof jobGroup)["getKeys"]>[number];
