@@ -1,3 +1,32 @@
+## [1.38.0](https://github.com/homarr-labs/homarr/compare/v1.37.0...v1.38.0) (2025-09-19)
+
+### Features
+
+* **integrations:** add ICal ([#3980](https://github.com/homarr-labs/homarr/issues/3980)) ([fedbff3](https://github.com/homarr-labs/homarr/commit/fedbff3fd162835bd97c3de3a4d3ba676fe13899))
+* **notebook-widget:** add confirmation on dismiss ([#4064](https://github.com/homarr-labs/homarr/issues/4064)) ([cb7a6ab](https://github.com/homarr-labs/homarr/commit/cb7a6abca7b6908d41bf50c71f7fce491af548e6))
+* **redis:** add database index environment variable ([#4092](https://github.com/homarr-labs/homarr/issues/4092)) ([9f2b868](https://github.com/homarr-labs/homarr/commit/9f2b868fcedf440892b3f0f3ee38388daa291f2e))
+* **system-resources-widget:** add has-shadow option ([#4093](https://github.com/homarr-labs/homarr/issues/4093)) ([3c2e6a8](https://github.com/homarr-labs/homarr/commit/3c2e6a852fb8464e98fdb16a58e35b87d5925a1e))
+* **system-resources-widget:** add label display mode option ([#4086](https://github.com/homarr-labs/homarr/issues/4086)) ([312e084](https://github.com/homarr-labs/homarr/commit/312e084e2c731ce1bff9c9dc3e1d8f7a88df5429))
+* **system-resources-widget:** add visible charts option ([#4069](https://github.com/homarr-labs/homarr/issues/4069)) ([b30cc21](https://github.com/homarr-labs/homarr/commit/b30cc21dbe51aef598740b9320675023e4281820))
+* **tasks:** add one second interval ([#4074](https://github.com/homarr-labs/homarr/issues/4074)) ([fe676da](https://github.com/homarr-labs/homarr/commit/fe676daad25e674f95e4fa8b949a77b34d376987))
+
+### Bug Fixes
+
+* **deps:** update dependency dockerode to ^4.0.8 ([#4076](https://github.com/homarr-labs/homarr/issues/4076)) ([43d5a27](https://github.com/homarr-labs/homarr/commit/43d5a27552b9fb89009645e7e711cb62a482e3c7))
+* **deps:** update dependency jotai to ^2.14.0 ([#4066](https://github.com/homarr-labs/homarr/issues/4066)) ([6880d61](https://github.com/homarr-labs/homarr/commit/6880d61d6b6392b10911d35ffada8102d5b0d6f7))
+* **deps:** update dependency mysql2 to v3.14.5 ([#4067](https://github.com/homarr-labs/homarr/issues/4067)) ([cd4c236](https://github.com/homarr-labs/homarr/commit/cd4c236e5e6bf5f38f86e8e70a04cdd29bc484a3))
+* **deps:** update dependency next-intl to v4.3.8 ([#4095](https://github.com/homarr-labs/homarr/issues/4095)) ([2d3af7a](https://github.com/homarr-labs/homarr/commit/2d3af7afca26dac05c602c17d65d31e71d79fb03))
+* **deps:** update dependency swagger-ui-react to ^5.29.0 ([#4081](https://github.com/homarr-labs/homarr/issues/4081)) ([0e563fc](https://github.com/homarr-labs/homarr/commit/0e563fc47f4c894f0df502afdb9818c7361bbae3))
+* **deps:** update dependency typescript-eslint to ^8.43.0 ([#4075](https://github.com/homarr-labs/homarr/issues/4075)) ([809fbd5](https://github.com/homarr-labs/homarr/commit/809fbd51766ae88b814d69043d452f8959bdb98b))
+* **deps:** update dependency undici to v7.16.0 ([#4083](https://github.com/homarr-labs/homarr/issues/4083)) ([4287d17](https://github.com/homarr-labs/homarr/commit/4287d1743b2e90c7957b9c74dcd975ab3d494112))
+* **deps:** update dependency zod to ^4.1.7 ([#4089](https://github.com/homarr-labs/homarr/issues/4089)) ([687cfd4](https://github.com/homarr-labs/homarr/commit/687cfd4cc7da3c99f727432df18ecf1ebc9f2967))
+* **deps:** update dependency zod to ^4.1.8 ([#4090](https://github.com/homarr-labs/homarr/issues/4090)) ([6e31e25](https://github.com/homarr-labs/homarr/commit/6e31e2567162b1ee88ea0a2fbb965064ff81ba23))
+* **deps:** update mantine monorepo to ^8.3.0 ([#4068](https://github.com/homarr-labs/homarr/issues/4068)) ([8c24da8](https://github.com/homarr-labs/homarr/commit/8c24da87320f1d1a54aee5e87254c4bfcc993fb5))
+* **deps:** update mantine monorepo to ^8.3.1 ([#4070](https://github.com/homarr-labs/homarr/issues/4070)) ([1412b6c](https://github.com/homarr-labs/homarr/commit/1412b6c0d3a46d32c764758fc3cc5b29415dd532))
+* **deps:** update nextjs monorepo to v15.5.3 ([#4087](https://github.com/homarr-labs/homarr/issues/4087)) ([94fb9b2](https://github.com/homarr-labs/homarr/commit/94fb9b25028529a7320c18cf82d0cbdc238d4c52))
+* **deps:** update tanstack-query monorepo to ^5.87.4 ([#4071](https://github.com/homarr-labs/homarr/issues/4071)) ([12b2b82](https://github.com/homarr-labs/homarr/commit/12b2b82b4ee34c038e127594fd42216957b41b55))
+* **system-resources-widget:** chart resizing not working well ([#4069](https://github.com/homarr-labs/homarr/issues/4069)) ([6b3672a](https://github.com/homarr-labs/homarr/commit/6b3672a04d66acd80ea71da2c5fff4e31c24c1aa))
+
 ## [1.37.0](https://github.com/homarr-labs/homarr/compare/v1.36.1...v1.37.0) (2025-09-12)
 
 ### Features

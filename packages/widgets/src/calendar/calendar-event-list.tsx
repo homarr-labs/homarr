@@ -84,16 +84,24 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
 
                 <Group gap={3} wrap="nowrap" align={"center"}>
                   <IconClock opacity={0.7} size={"1rem"} />
-                  <Text c={"dimmed"} size={"sm"}>
-                    {dayjs(event.startDate).format("HH:mm")}
-                  </Text>
-
-                  {event.endDate !== null && (
+                  {isAllDay(event) ? (
+                    <Text c={"dimmed"} size={"sm"}>
+                      {t("widget.calendar.duration.allDay")}
+                    </Text>
+                  ) : (
                     <>
-                      -{" "}
                       <Text c={"dimmed"} size={"sm"}>
-                        {dayjs(event.endDate).format("HH:mm")}
+                        {dayjs(event.startDate).format("HH:mm")}
                       </Text>
+
+                      {event.endDate !== null && (
+                        <>
+                          -{" "}
+                          <Text c={"dimmed"} size={"sm"}>
+                            {dayjs(event.endDate).format("HH:mm")}
+                          </Text>
+                        </>
+                      )}
                     </>
                   )}
                 </Group>
@@ -151,4 +159,13 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
       </Stack>
     </ScrollArea>
   );
+};
+
+const isAllDay = (event: Pick<CalendarEvent, "startDate" | "endDate">) => {
+  if (!event.endDate) return false;
+
+  const start = dayjs(event.startDate);
+  const end = dayjs(event.endDate);
+
+  return start.startOf("day").isSame(start) && end.endOf("day").isSame(end);
 };

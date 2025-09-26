@@ -25,13 +25,13 @@
   "dependencies": {
     "@homarr/ui": "workspace:^0.1.0",
     "@mantine/notifications": "^8.3.1",
-    "@tabler/icons-react": "^3.34.1"
+    "@tabler/icons-react": "^3.35.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.35.0",
+    "eslint": "^9.36.0",
     "typescript": "^5.9.2"
   }
 }
