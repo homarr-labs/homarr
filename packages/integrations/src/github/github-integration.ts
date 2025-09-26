@@ -13,10 +13,11 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
+  DetailedRelease,
   DetailsProviderResponse,
+  ErrorResponse,
+  ParsedIdentifier,
   ReleaseProviderResponse,
-  ReleasesRepository,
-  ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
 const localLogger = logger.child({ module: "GithubIntegration" });
@@ -43,23 +44,23 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     };
   }
 
-  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
-    const [owner, name] = repository.identifier.split("/");
+  public parseIdentifier(identifier: string): ParsedIdentifier | null {
+    const [owner, name] = identifier.split("/");
     if (!owner || !name) {
-      localLogger.warn(
-        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Github integration`,
-        {
-          identifier: repository.identifier,
-        },
-      );
-      return {
-        id: repository.id,
-        error: { code: "invalidIdentifier" },
-      };
+      localLogger.warn(`Invalid identifier format. Expected 'owner/name', for ${identifier} with Github integration`, {
+        identifier,
+      });
+      return null;
     }
+    return { owner, name };
+  }
 
+  public async getLatestMatchingReleaseAsync(
+    identifier: ParsedIdentifier,
+    versionRegex?: string,
+  ): Promise<DetailedRelease | ErrorResponse | null> {
+    const { owner, name } = identifier;
     const api = this.getApi();
-    const details = await this.getDetailsAsync(api, owner, name);
 
     try {
       const releasesResponse = await api.rest.repos.listReleases({
@@ -68,13 +69,10 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
       });
 
       if (releasesResponse.data.length === 0) {
-        localLogger.warn(`No releases found, for ${repository.identifier} with Github integration`, {
-          identifier: repository.identifier,
+        localLogger.warn(`No releases found, for ${owner}/${name} with Github integration`, {
+          identifier: `${owner}/${name}`,
         });
-        return {
-          id: repository.id,
-          error: { code: "noReleasesFound" },
-        };
+        return null;
       }
 
       const releasesProviderResponse = releasesResponse.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
@@ -90,20 +88,23 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
         return acc;
       }, []);
 
-      return getLatestRelease(releasesProviderResponse, repository, details);
+      const latestRelease = getLatestRelease(releasesProviderResponse, versionRegex);
+      if (!latestRelease) return null;
+
+      const details = await this.getDetailsAsync(api, owner, name);
+
+      return {
+        ...details,
+        ...latestRelease,
+      };
     } catch (error) {
       const errorMessage = error instanceof OctokitRequestError ? error.message : String(error);
-
       localLogger.warn(`Failed to get releases for ${owner}\\${name} with Github integration`, {
         owner,
         name,
         error: errorMessage,
       });
-
-      return {
-        id: repository.id,
-        error: { message: errorMessage },
-      };
+      return { message: errorMessage };
     }
   }
 

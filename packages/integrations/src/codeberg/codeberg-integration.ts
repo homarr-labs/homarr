@@ -10,9 +10,10 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
+  DetailedRelease,
   DetailsProviderResponse,
-  ReleasesRepository,
-  ReleasesResponse,
+  ErrorResponse,
+  ParsedIdentifier,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { detailsResponseSchema, releasesResponseSchema } from "./codeberg-schemas";
 
@@ -43,22 +44,23 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     };
   }
 
-  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
-    const [owner, name] = repository.identifier.split("/");
+  public parseIdentifier(identifier: string): ParsedIdentifier | null {
+    const [owner, name] = identifier.split("/");
     if (!owner || !name) {
       localLogger.warn(
-        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Codeberg integration`,
-        {
-          identifier: repository.identifier,
-        },
+        `Invalid identifier format. Expected 'owner/name', for ${identifier} with Codeberg integration`,
+        { identifier },
       );
-      return {
-        id: repository.id,
-        error: { code: "invalidIdentifier" },
-      };
+      return null;
     }
+    return { owner, name };
+  }
 
-    const details = await this.getDetailsAsync(owner, name);
+  public async getLatestMatchingReleaseAsync(
+    identifier: ParsedIdentifier,
+    versionRegex?: string,
+  ): Promise<DetailedRelease | ErrorResponse | null> {
+    const { owner, name } = identifier;
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
       return await fetchWithTrustedCertificatesAsync(
@@ -66,12 +68,8 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
         { headers },
       );
     });
-
     if (!releasesResponse.ok) {
-      return {
-        id: repository.id,
-        error: { message: releasesResponse.statusText },
-      };
+      return { message: releasesResponse.statusText };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
@@ -79,21 +77,27 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
 
     if (!success) {
       return {
-        id: repository.id,
-        error: {
-          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
-        },
+        message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
       };
-    } else {
-      const formattedReleases = data.map((tag) => ({
-        latestRelease: tag.tag_name,
-        latestReleaseAt: tag.published_at,
-        releaseUrl: tag.url,
-        releaseDescription: tag.body,
-        isPreRelease: tag.prerelease,
-      }));
-      return getLatestRelease(formattedReleases, repository, details);
     }
+
+    const formattedReleases = data.map((tag) => ({
+      latestRelease: tag.tag_name,
+      latestReleaseAt: tag.published_at,
+      releaseUrl: tag.url,
+      releaseDescription: tag.body,
+      isPreRelease: tag.prerelease,
+    }));
+
+    const latestRelease = getLatestRelease(formattedReleases, versionRegex);
+    if (!latestRelease) return null;
+
+    const details = await this.getDetailsAsync(owner, name);
+
+    return {
+      ...details,
+      ...latestRelease,
+    };
   }
 
   protected async getDetailsAsync(owner: string, name: string): Promise<DetailsProviderResponse | undefined> {

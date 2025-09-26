@@ -1,47 +1,30 @@
 import type {
-  DetailsProviderResponse,
+  DetailedRelease,
+  ErrorResponse,
+  ParsedIdentifier,
   ReleaseProviderResponse,
-  ReleasesRepository,
-  ReleasesResponse,
 } from "./releases-providers-types";
 
 export const getLatestRelease = (
   releases: ReleaseProviderResponse[],
-  repository: ReleasesRepository,
-  details?: DetailsProviderResponse,
-): ReleasesResponse => {
+  versionRegex?: string,
+): ReleaseProviderResponse | null => {
   const validReleases = releases.filter((result) => {
     if (result.latestRelease) {
-      return repository.versionRegex ? new RegExp(repository.versionRegex).test(result.latestRelease) : true;
+      return versionRegex ? new RegExp(versionRegex).test(result.latestRelease) : true;
     }
-
     return true;
   });
 
-  const latest =
-    validReleases.length === 0
-      ? ({
-          id: repository.id,
-          error: { code: "noMatchingVersion" },
-        } as ReleasesResponse)
-      : validReleases.reduce(
-          (latest, result) => {
-            return {
-              ...details,
-              ...(result.latestReleaseAt > latest.latestReleaseAt ? result : latest),
-              id: repository.id,
-            };
-          },
-          {
-            id: "",
-            latestRelease: "",
-            latestReleaseAt: new Date(0),
-          },
-        );
-
-  return latest;
+  return validReleases.length === 0
+    ? null
+    : validReleases.reduce((latest, current) => (current.latestReleaseAt > latest.latestReleaseAt ? current : latest));
 };
 
 export interface ReleasesProviderIntegration {
-  getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse>;
+  parseIdentifier(identifier: string): ParsedIdentifier | null;
+  getLatestMatchingReleaseAsync(
+    identifier: ParsedIdentifier,
+    versionRegex?: string,
+  ): Promise<DetailedRelease | ErrorResponse | null>;
 }

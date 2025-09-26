@@ -125,26 +125,26 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
           ...repository,
           ...response,
           isNewRelease:
-            relativeDateOptions.newReleaseWithin !== "" && response.latestReleaseAt
+            relativeDateOptions.newReleaseWithin !== "" && "latestReleaseAt" in response
               ? isDateWithin(response.latestReleaseAt, relativeDateOptions.newReleaseWithin)
               : false,
           isStaleRelease:
-            relativeDateOptions.staleReleaseWithin !== "" && response.latestReleaseAt
+            relativeDateOptions.staleReleaseWithin !== "" && "latestReleaseAt" in response
               ? !isDateWithin(response.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
               : false,
-          viewed: releasesViewedList[repository.id] === response.latestRelease,
+          viewed: "latestRelease" in response && releasesViewedList[repository.id] === response.latestRelease,
         };
       })
       .filter(
         (repository) =>
-          repository.error !== undefined ||
+          !("error" in repository) ||
           !options.showOnlyHighlighted ||
           repository.isNewRelease ||
           repository.isStaleRelease,
       )
       .sort((repoA, repoB) => {
-        if (repoA.latestReleaseAt === undefined) return -1;
-        if (repoB.latestReleaseAt === undefined) return 1;
+        if (!("latestReleaseAt" in repoA) || !repoA.latestReleaseAt) return -1;
+        if (!("latestReleaseAt" in repoB) || !repoB.latestReleaseAt) return 1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
       }) as ReleasesRepositoryResponse[];
 

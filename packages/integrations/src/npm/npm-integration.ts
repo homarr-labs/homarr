@@ -6,7 +6,11 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
-import type { ReleasesRepository, ReleasesResponse } from "../interfaces/releases-providers/releases-providers-types";
+import type {
+  DetailedRelease,
+  ErrorResponse,
+  ParsedIdentifier,
+} from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./npm-schemas";
 
 export class NPMIntegration extends Integration implements ReleasesProviderIntegration {
@@ -22,35 +26,37 @@ export class NPMIntegration extends Integration implements ReleasesProviderInteg
     };
   }
 
-  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
-    const releasesResponse = await fetchWithTrustedCertificatesAsync(
-      this.url(`/${encodeURIComponent(repository.identifier)}`),
-    );
+  public parseIdentifier(identifier: string): ParsedIdentifier {
+    return { owner: "", name: identifier };
+  }
 
+  public async getLatestMatchingReleaseAsync(
+    identifier: ParsedIdentifier,
+    versionRegex?: string,
+  ): Promise<DetailedRelease | ErrorResponse | null> {
+    const releasesResponse = await fetchWithTrustedCertificatesAsync(
+      this.url(`/${encodeURIComponent(identifier.name)}`),
+    );
     if (!releasesResponse.ok) {
-      return {
-        id: repository.id,
-        error: { message: releasesResponse.statusText },
-      };
+      return { message: releasesResponse.statusText };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
     const { data, success, error } = releasesResponseSchema.safeParse(releasesResponseJson);
-
     if (!success) {
       return {
-        id: repository.id,
-        error: {
-          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
-        },
+        message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
       };
-    } else {
-      const formattedReleases = data.time.map((tag) => ({
-        ...tag,
-        releaseUrl: `https://www.npmjs.com/package/${encodeURIComponent(data.name)}/v/${encodeURIComponent(tag.latestRelease)}`,
-        releaseDescription: data.versions[tag.latestRelease]?.description ?? "",
-      }));
-      return getLatestRelease(formattedReleases, repository);
     }
+
+    const formattedReleases = data.time.map((tag) => ({
+      ...tag,
+      releaseUrl: `https://www.npmjs.com/package/${encodeURIComponent(data.name)}/v/${encodeURIComponent(tag.latestRelease)}`,
+      releaseDescription: data.versions[tag.latestRelease]?.description ?? "",
+    }));
+    const latestRelease = getLatestRelease(formattedReleases, versionRegex);
+    if (!latestRelease) return null;
+
+    return latestRelease;
   }
 }
