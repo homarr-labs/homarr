@@ -11,14 +11,23 @@ import {
   Center,
   Flex,
   Group,
+  Kbd,
   List,
   ListItem,
   Stack,
+  Table,
+  TableTbody,
+  TableTd,
+  TableTh,
+  TableThead,
+  TableTr,
   Text,
   Title,
 } from "@mantine/core";
-import { IconLanguage, IconLibrary, IconUsers } from "@tabler/icons-react";
+import { IconKeyboard, IconLanguage, IconLibrary, IconUsers } from "@tabler/icons-react";
 
+import { capitalize, objectEntries } from "@homarr/common";
+import { hotkeys } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
@@ -147,6 +156,45 @@ export default async function AboutPage() {
                   </ListItem>
                 ))}
             </List>
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem value="hotkeys">
+          <AccordionControl icon={<IconKeyboard size="1rem" />}>
+            <Stack gap={0}>
+              <Text>{t("accordion.hotkeys.title")}</Text>
+              <Text size="sm" c="dimmed">
+                {t("accordion.hotkeys.subtitle")}
+              </Text>
+            </Stack>
+          </AccordionControl>
+          <AccordionPanel>
+            <Table>
+              <TableThead>
+                <TableTr>
+                  <TableTh>{t("accordion.hotkeys.field.shortcut")}</TableTh>
+                  <TableTh>{t("accordion.hotkeys.field.action")}</TableTh>
+                </TableTr>
+              </TableThead>
+              <TableTbody>
+                {objectEntries(hotkeys).map(([key, shortcut]) => (
+                  <TableTr key={key}>
+                    <TableTd>
+                      <Kbd size="md">
+                        {shortcut
+                          .split("+")
+                          .map((key) => capitalize(key.trim()))
+                          .join(" + ")}
+                      </Kbd>
+                    </TableTd>
+                    <TableTd>{t(`accordion.hotkeys.action.${key}`)}</TableTd>
+                  </TableTr>
+                ))}
+              </TableTbody>
+            </Table>
+
+            <Text size="sm" c="dimmed">
+              {t("accordion.hotkeys.note")}
+            </Text>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>

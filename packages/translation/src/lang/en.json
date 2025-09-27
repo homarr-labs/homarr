@@ -3446,6 +3446,21 @@
           "libraries": {
             "title": "Libraries",
             "subtitle": "{count} used in the Code of Homarr"
+          },
+          "hotkeys": {
+            "title": "Hotkeys",
+            "subtitle": "Keyboard shortcuts to enhance your workflow",
+            "field": {
+              "shortcut": "Shortcut",
+              "action": "Action"
+            },
+            "action": {
+              "toggleBoardEdit": "Toggle board edit mode",
+              "toggleColorScheme": "Toggle light/dark mode",
+              "saveNotebook": "Save notebook (only inside notebook widget)",
+              "openSpotlight": "Open search"
+            },
+            "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }
         }
       }

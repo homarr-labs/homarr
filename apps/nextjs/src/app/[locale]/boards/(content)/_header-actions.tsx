@@ -23,6 +23,7 @@ import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
+import { hotkeys } from "@homarr/definitions";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -165,7 +166,7 @@ const EditModeMenu = () => {
     open();
   }, [board, isEditMode, saveBoard, open]);
 
-  useHotkeys([["mod+e", toggle]]);
+  useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
   usePreventLeaveWithDirty(isEditMode);
 
   return (
