@@ -30,18 +30,23 @@ export default function MediaTranscodingWidget({
 }: WidgetComponentProps<"mediaTranscoding">) {
   const [queuePage, setQueuePage] = useState(1);
   const queuePageSize = 10;
-  const [transcodingData] = clientApi.widget.mediaTranscoding.getDataAsync.useSuspenseQuery(
-    {
-      integrationId: integrationIds[0] ?? "",
-      pageSize: queuePageSize,
-      page: queuePage,
+  const input = {
+    integrationId: integrationIds[0] ?? "",
+    pageSize: queuePageSize,
+    page: queuePage,
+  };
+  const [transcodingData] = clientApi.widget.mediaTranscoding.getDataAsync.useSuspenseQuery(input, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const utils = clientApi.useUtils();
+  clientApi.widget.mediaTranscoding.subscribeData.useSubscription(input, {
+    onData(data) {
+      utils.widget.mediaTranscoding.getDataAsync.setData(input, data);
     },
-    {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  );
+  });
 
   const [view, setView] = useState<View>(options.defaultView);
   const totalQueuePages = Math.ceil((transcodingData.data.queue.totalCount || 1) / queuePageSize);
