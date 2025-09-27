@@ -1157,8 +1157,8 @@ importers:
         specifier: ^11.6.0
         version: 11.6.0
       better-sqlite3:
-        specifier: ^12.2.0
-        version: 12.2.0
+        specifier: ^12.3.0
+        version: 12.4.1
       dotenv:
         specifier: ^17.2.2
         version: 17.2.2
@@ -1167,10 +1167,10 @@ importers:
         version: 0.31.4
       drizzle-orm:
         specifier: ^0.44.5
-        version: 0.44.5(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.15.0)(pg@8.16.3)
+        version: 0.44.5(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.4.1)(gel@2.0.0)(mysql2@3.15.0)(pg@8.16.3)
       drizzle-zod:
         specifier: ^0.8.3
-        version: 0.8.3(drizzle-orm@0.44.5(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.15.0)(pg@8.16.3))(zod@4.1.11)
+        version: 0.8.3(drizzle-orm@0.44.5(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.4.1)(gel@2.0.0)(mysql2@3.15.0)(pg@8.16.3))(zod@4.1.11)
       mysql2:
         specifier: 3.15.0
         version: 3.15.0
@@ -5243,8 +5243,8 @@ packages:
   before-after-hook@4.0.0:
     resolution: {integrity: sha512-q6tR3RPqIB1pMiTRMFcZwuG5T8vwp+vUvEG0vuI6B+Rikh5BfPp2fQ82c925FOs+b0lcFQ8CFrL+KbilfZFhOQ==}
 
-  better-sqlite3@12.2.0:
-    resolution: {integrity: sha512-eGbYq2CT+tos1fBwLQ/tkBt9J5M3JEHjku4hbvQUePCckkvVf14xWj+1m7dGoK81M/fOjFT7yM9UMeKT/+vFLQ==}
+  better-sqlite3@12.4.1:
+    resolution: {integrity: sha512-3yVdyZhklTiNrtg+4WqHpJpFDd+WHTg2oM7UcR80GqL05AOV0xEJzc6qNvFYoEtE+hRp1n9MpN6/+4yhlGkDXQ==}
     engines: {node: 20.x || 22.x || 23.x || 24.x}
 
   bidi-js@1.0.3:
@@ -5903,10 +5903,6 @@ packages:
     resolution: {integrity: sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==}
     engines: {node: '>=0.10'}
     hasBin: true
-
-  detect-libc@2.0.3:
-    resolution: {integrity: sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==}
-    engines: {node: '>=8'}
 
   detect-libc@2.0.4:
     resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
@@ -14102,7 +14098,7 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  better-sqlite3@12.2.0:
+  better-sqlite3@12.4.1:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.2
@@ -14774,10 +14770,7 @@ snapshots:
   detect-libc@1.0.3:
     optional: true
 
-  detect-libc@2.0.3: {}
-
-  detect-libc@2.0.4:
-    optional: true
+  detect-libc@2.0.4: {}
 
   detect-newline@4.0.1: {}
 
@@ -14875,19 +14868,19 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.44.5(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.15.0)(pg@8.16.3):
+  drizzle-orm@0.44.5(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.4.1)(gel@2.0.0)(mysql2@3.15.0)(pg@8.16.3):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
       '@types/better-sqlite3': 7.6.13
       '@types/pg': 8.15.5
-      better-sqlite3: 12.2.0
+      better-sqlite3: 12.4.1
       gel: 2.0.0
       mysql2: 3.15.0
       pg: 8.16.3
 
-  drizzle-zod@0.8.3(drizzle-orm@0.44.5(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.15.0)(pg@8.16.3))(zod@4.1.11):
+  drizzle-zod@0.8.3(drizzle-orm@0.44.5(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.4.1)(gel@2.0.0)(mysql2@3.15.0)(pg@8.16.3))(zod@4.1.11):
     dependencies:
-      drizzle-orm: 0.44.5(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.2.0)(gel@2.0.0)(mysql2@3.15.0)(pg@8.16.3)
+      drizzle-orm: 0.44.5(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.5)(better-sqlite3@12.4.1)(gel@2.0.0)(mysql2@3.15.0)(pg@8.16.3)
       zod: 4.1.11
 
   dunder-proto@1.0.1:
@@ -17921,7 +17914,7 @@ snapshots:
 
   prebuild-install@7.1.2:
     dependencies:
-      detect-libc: 2.0.3
+      detect-libc: 2.0.4
       expand-template: 2.0.3
       github-from-package: 0.0.0
       minimist: 1.2.8
