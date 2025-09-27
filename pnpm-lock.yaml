@@ -1157,7 +1157,7 @@ importers:
         specifier: ^11.6.0
         version: 11.6.0
       better-sqlite3:
-        specifier: ^12.3.0
+        specifier: ^12.4.1
         version: 12.4.1
       dotenv:
         specifier: ^17.2.2
