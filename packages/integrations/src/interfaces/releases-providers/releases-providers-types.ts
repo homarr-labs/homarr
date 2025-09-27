@@ -1,5 +1,16 @@
 import type { TranslationObject } from "@homarr/translation";
 
+export interface ParsedIdentifier {
+  owner: string;
+  name: string;
+}
+
+export interface ReleasesRepository {
+  id: string;
+  identifier: string;
+  versionRegex?: string;
+}
+
 export interface DetailsProviderResponse {
   projectUrl?: string;
   projectDescription?: string;
@@ -19,35 +30,10 @@ export interface ReleaseProviderResponse {
   isPreRelease?: boolean;
 }
 
-export interface ReleasesRepository {
-  id: string;
-  identifier: string;
-  versionRegex?: string;
-}
-
 type ReleasesErrorKeys = keyof TranslationObject["widget"]["releases"]["error"]["messages"];
 
-export interface ReleasesResponse {
-  id: string;
-  latestRelease?: string;
-  latestReleaseAt?: Date;
-  releaseUrl?: string;
-  releaseDescription?: string;
-  isPreRelease?: boolean;
-  projectUrl?: string;
-  projectDescription?: string;
-  isFork?: boolean;
-  isArchived?: boolean;
-  createdAt?: Date;
-  starsCount?: number;
-  openIssues?: number;
-  forksCount?: number;
+export type ErrorResponse = { code: ReleasesErrorKeys } | { message: string };
 
-  error?:
-    | {
-        code: ReleasesErrorKeys;
-      }
-    | {
-        message: string;
-      };
-}
+export type DetailedRelease = DetailsProviderResponse & ReleaseProviderResponse;
+
+export type ReleasesResponse = { id: string } & (DetailedRelease | { error: ErrorResponse });

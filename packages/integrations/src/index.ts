@@ -47,7 +47,7 @@ export type {
   TdarrStatistics,
   TdarrWorker,
 } from "./interfaces/media-transcoding/media-transcoding-types";
-export type { ReleasesResponse } from "./interfaces/releases-providers/releases-providers-types";
+export type { ReleasesResponse, DetailedRelease } from "./interfaces/releases-providers/releases-providers-types";
 export type { Notification } from "./interfaces/notifications/notification-types";
 
 // Schemas
