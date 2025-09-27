@@ -72,6 +72,7 @@ import "./notebook.css";
 import { useSession } from "@homarr/auth/client";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { hotkeys } from "@homarr/definitions";
 import { useConfirmModal } from "@homarr/modals";
 
 const iconProps = {
@@ -266,7 +267,7 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
         p={0}
         mt={0}
         h="100%"
-        onKeyDown={isEditing ? getHotkeyHandler([["mod+s", handleEditToggle]]) : undefined}
+        onKeyDown={isEditing ? getHotkeyHandler([[hotkeys.saveNotebook, handleEditToggle]]) : undefined}
         editor={editor}
         styles={(theme) => ({
           root: {
