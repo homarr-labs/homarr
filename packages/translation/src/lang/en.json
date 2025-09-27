@@ -3460,7 +3460,7 @@
               "saveNotebook": "Save notebook (only inside notebook widget)",
               "openSpotlight": "Open search"
             },
-            "note": "Tip: mod refers to both Ctrl key and ⌘ key on macOS"
+            "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }
         }
       }
