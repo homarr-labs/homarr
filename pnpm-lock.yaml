@@ -14,7 +14,7 @@ overrides:
   form-data@>=4.0.0 <4.0.4: '>=4.0.4'
   hono@<4.6.5: '>=4.9.8'
   linkifyjs@<4.3.2: '>=4.3.2'
-  nanoid@>=4.0.0 <5.0.9: '>=5.1.5'
+  nanoid@>=4.0.0 <5.0.9: '>=5.1.6'
   prismjs@<1.30.0: '>=1.30.0'
   proxmox-api>undici: 7.16.0
   react-is: ^19.1.1
@@ -8004,8 +8004,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanoid@5.1.5:
-    resolution: {integrity: sha512-Ir/+ZpE9fDsNH0hQ3C68uyThDXzYcim2EqcZ8zn8Chtt1iylPT9xXJB0kPCnqzgcEGikO9RxSrh63MsmVCU7Fw==}
+  nanoid@5.1.6:
+    resolution: {integrity: sha512-c7+7RQ+dMB5dPwwCp4ee1/iV/q2P6aK1mTZcfr1BTuVlyW9hJYiMPybJCcnBlQtuSmTIWNeazm/zqNoZSSElBg==}
     engines: {node: ^18 || >=20}
     hasBin: true
 
@@ -11826,7 +11826,7 @@ snapshots:
       cli-high: 0.4.3
       diff: 5.2.0
       effect: 3.13.10
-      nanoid: 5.1.5
+      nanoid: 5.1.6
       recast: 0.23.11
       xycolors: 0.1.2
 
@@ -11845,7 +11845,7 @@ snapshots:
       faster-babel-types: 0.1.0(@babel/types@7.26.0)
       hono: 4.9.8
       isomorphic-fetch: 3.0.0
-      nanoid: 5.1.5
+      nanoid: 5.1.6
       ohash: 1.1.4
       pako: 2.1.0
       pathe: 1.1.2
@@ -17255,7 +17255,7 @@ snapshots:
 
   nanoid@3.3.11: {}
 
-  nanoid@5.1.5: {}
+  nanoid@5.1.6: {}
 
   napi-build-utils@1.0.2: {}
 
