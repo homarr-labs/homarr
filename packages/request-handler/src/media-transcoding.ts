@@ -7,7 +7,7 @@ import type { TdarrQueue, TdarrStatistics, TdarrWorker } from "@homarr/integrati
 import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-request-handler";
 
 export const mediaTranscodingRequestHandler = createCachedIntegrationRequestHandler<
-  { queue: TdarrQueue; workers: TdarrWorker[]; statistics: TdarrStatistics },
+  MediaTranscoding,
   IntegrationKindByCategory<"mediaTranscoding">,
   { pageOffset: number; pageSize: number }
 >({
@@ -22,3 +22,9 @@ export const mediaTranscodingRequestHandler = createCachedIntegrationRequestHand
     };
   },
 });
+
+export interface MediaTranscoding {
+  queue: TdarrQueue;
+  workers: TdarrWorker[];
+  statistics: TdarrStatistics;
+}
