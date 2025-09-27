@@ -90,10 +90,7 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
 
       const details = await this.getDetailsAsync(api, owner, name);
 
-      return {
-        ...details,
-        ...latestRelease,
-      };
+      return { ...details, ...latestRelease };
     } catch (error) {
       const errorMessage = error instanceof RequestError ? error.message : String(error);
       localLogger.warn(`Failed to get releases for ${owner}\\${name} with GitHub Container Registry integration`, {

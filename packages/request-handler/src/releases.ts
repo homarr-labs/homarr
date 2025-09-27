@@ -27,7 +27,10 @@ export const releasesRequestHandler = createCachedIntegrationRequestHandler<
       };
     }
 
-    const releaseResponse = await integrationInstance.getLatestMatchingReleaseAsync(parsedIdentifier, input.versionRegex);
+    const releaseResponse = await integrationInstance.getLatestMatchingReleaseAsync(
+      parsedIdentifier,
+      input.versionRegex,
+    );
 
     if (!releaseResponse) {
       return {
