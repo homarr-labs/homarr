@@ -311,7 +311,7 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       sass:
-        specifier: ^1.93.0
+        specifier: ^1.93.1
         version: 1.93.2
       superjson:
         specifier: 2.2.2
