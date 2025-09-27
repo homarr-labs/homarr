@@ -61,6 +61,7 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
             episodeName: mediaElement.$.title ?? null,
             albumName: mediaElement.$.type === "track" ? (mediaElement.$.parentTitle ?? null) : null,
             episodeCount: mediaElement.$.index ?? null,
+            metadata: null,
           },
         };
       })

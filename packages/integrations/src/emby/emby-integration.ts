@@ -117,6 +117,7 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
             episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
             albumName: sessionInfo.NowPlayingItem.Album ?? "",
             episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
+            metadata: null,
           };
         }
 
