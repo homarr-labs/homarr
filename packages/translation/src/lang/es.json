@@ -945,6 +945,10 @@
           "label": "Tema",
           "newLabel": "Nuevo tema"
         },
+        "url": {
+          "label": "URL",
+          "newLabel": "Nueva URL"
+        },
         "opnsenseApiKey": {
           "label": "Clave API (Clave)",
           "newLabel": "Nueva clave API (Clave)"
@@ -1543,7 +1547,15 @@
         "width": "Ancho",
         "height": "Alto"
       },
-      "placeholder": "Comienza a escribir tus notas"
+      "placeholder": "Comienza a escribir tus notas",
+      "dismiss": {
+        "title": "¿Descartar los cambios?",
+        "message": "Tienes cambios sin guardar en tu bloc de notas. ¿Estás seguro de que quieres descartarlos?",
+        "action": {
+          "discard": "Descartar cambios",
+          "keepEditing": "Seguir editando"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1707,9 @@
     "calendar": {
       "name": "Calendario",
       "description": "Mostrar los eventos de tus integraciones en una vista de calendario dentro de un cierto período de tiempo",
+      "duration": {
+        "allDay": "Todo el día"
+      },
       "option": {
         "releaseType": {
           "label": "Tipo de lanzamiento de Radarr",
@@ -2490,7 +2505,29 @@
     "systemResources": {
       "name": "Recursos del sistema",
       "description": "CPU, Memoria, Disco y otro uso de hardware de su sistema",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": "Activar sombreado de gráfico"
+        },
+        "visibleCharts": {
+          "label": "Gráficos visibles",
+          "description": "Selecciona los gráficos que quieres que sean visibles.",
+          "option": {
+            "cpu": "CPU",
+            "memory": "Memoria",
+            "network": "Red"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Modo de visualización de etiqueta",
+          "option": {
+            "textWithIcon": "Mostrar texto con icono",
+            "text": "Mostrar solo el texto",
+            "icon": "Mostrar solo el icono",
+            "hidden": "Ocultar etiqueta"
+          }
+        }
+      },
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
@@ -2925,7 +2962,7 @@
           "boards": "Tableros",
           "resources": "Recursos",
           "authentication": "Autenticación",
-          "authorization": "Autorización"
+          "authorization": "Autenticación"
         }
       },
       "board": {
@@ -3281,6 +3318,9 @@
             },
             "firewallInterfaces": {
               "label": "Interfaces del Firewall"
+            },
+            "weather": {
+              "label": "Tiempo"
             }
           },
           "interval": {

@@ -945,6 +945,10 @@
           "label": "Konu",
           "newLabel": "Yeni konu"
         },
+        "url": {
+          "label": "Url",
+          "newLabel": "Yeni url"
+        },
         "opnsenseApiKey": {
           "label": "API Anahtarı (Anahtar)",
           "newLabel": "Yeni API Anahtarı (Anahtar)"
@@ -1543,7 +1547,15 @@
         "width": "Genişlik",
         "height": "Yükseklik"
       },
-      "placeholder": "Not almaya başlayın"
+      "placeholder": "Not almaya başlayın",
+      "dismiss": {
+        "title": "Değişikliklerden vazgeçilsin mi?",
+        "message": "Defterinizde kaydedilmemiş değişiklikleriniz var. Bunları silmek istediğinizden emin misiniz?",
+        "action": {
+          "discard": "Değişiklileri at",
+          "keepEditing": "Düzenlemeyi sürdür"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1707,9 @@
     "calendar": {
       "name": "Takvim",
       "description": "Entegrasyonlarınızdaki etkinlikleri belirli bir göreli zaman dilimi içinde bir takvim görünümünde görüntüleyin",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Radarr yayın türü",
@@ -2490,7 +2505,29 @@
     "systemResources": {
       "name": "Sistem kaynakları",
       "description": "Sisteminizin CPU, Bellek, Disk ve diğer donanım kullanımları",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": "Grafik gölgelendirmesini etkinleştir"
+        },
+        "visibleCharts": {
+          "label": "Görünür grafikler",
+          "description": "Görünür olmasını istediğiniz grafikleri seçin.",
+          "option": {
+            "cpu": "İşlemci",
+            "memory": "Bellek",
+            "network": "Ağ"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Etiket görüntüleme modu",
+          "option": {
+            "textWithIcon": "Simge ile metni göster",
+            "text": "Yalnızca metni göster",
+            "icon": "Yalnızca simge göster",
+            "hidden": "Etiketi gizle"
+          }
+        }
+      },
       "card": {
         "cpu": "İşlemci",
         "memory": "BELLEK",
@@ -3281,6 +3318,9 @@
             },
             "firewallInterfaces": {
               "label": "Güvenlik Duvarı Arayüzleri"
+            },
+            "weather": {
+              "label": ""
             }
           },
           "interval": {
