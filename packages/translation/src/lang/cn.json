@@ -945,25 +945,29 @@
           "label": "主题",
           "newLabel": "新主题"
         },
+        "url": {
+          "label": "网址",
+          "newLabel": "新网址"
+        },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API 密钥 (Key)",
+          "newLabel": "新 API 密钥 (Key)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "API 密钥 (保密)",
+          "newLabel": "新 API 密钥 (保密)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "应用ID",
+          "newLabel": "新应用ID"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "安装 ID",
+          "newLabel": "新安装 ID"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "私人密钥",
+          "newLabel": "新私人密钥"
         }
       }
     },
@@ -1015,7 +1019,7 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "成功",
     "beta": "测试版",
     "error": "错误",
     "action": {
@@ -1282,21 +1286,21 @@
           "label": "启用状态检查"
         },
         "layout": {
-          "label": "",
+          "label": "界面",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "横向",
+            "row-reverse": "横向 (反转)",
+            "column": "垂直",
+            "column-reverse": "垂直 (反转)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "描述信息显示模式",
+          "description": "选择应用描述的显示方式",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "窗口组件内",
+            "tooltip": "显示为悬停提示",
+            "hidden": "隐藏"
           }
         }
       },
@@ -1543,7 +1547,15 @@
         "width": "宽度",
         "height": "高度"
       },
-      "placeholder": "开始写笔记"
+      "placeholder": "开始写笔记",
+      "dismiss": {
+        "title": "是否放弃修改？",
+        "message": "仍有未保存的更改，确定要丢弃吗？",
+        "action": {
+          "discard": "放弃修改",
+          "keepEditing": "继续编辑"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1707,9 @@
     "calendar": {
       "name": "日历",
       "description": "在日历视图中显示某个相对时间段内的集成事件",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Radarr 发布类型",
@@ -2273,7 +2288,7 @@
           "label": "帖子数量限制"
         },
         "hideDescription": {
-          "label": ""
+          "label": "隐藏描述"
         }
       }
     },
@@ -2488,9 +2503,31 @@
       "option": {}
     },
     "systemResources": {
-      "name": "",
+      "name": "系统资源",
       "description": "",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "network": ""
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
       "card": {
         "cpu": "CPU",
         "memory": "",
@@ -3281,6 +3318,9 @@
             },
             "firewallInterfaces": {
               "label": "防火墙接口"
+            },
+            "weather": {
+              "label": ""
             }
           },
           "interval": {
@@ -3303,7 +3343,7 @@
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "名称"
             },
             "interval": {
               "label": "计划时间间隔"

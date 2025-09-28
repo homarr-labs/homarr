@@ -945,6 +945,10 @@
           "label": "",
           "newLabel": ""
         },
+        "url": {
+          "label": "",
+          "newLabel": ""
+        },
         "opnsenseApiKey": {
           "label": "",
           "newLabel": ""
@@ -1543,7 +1547,15 @@
         "width": "Širina",
         "height": "Višina"
       },
-      "placeholder": ""
+      "placeholder": "",
+      "dismiss": {
+        "title": "",
+        "message": "",
+        "action": {
+          "discard": "",
+          "keepEditing": ""
+        }
+      }
     },
     "iframe": {
       "name": "",
@@ -1695,6 +1707,9 @@
     "calendar": {
       "name": "Koledar",
       "description": "",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Tip sprostitve Radarr",
@@ -2490,7 +2505,29 @@
     "systemResources": {
       "name": "",
       "description": "",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "network": ""
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
       "card": {
         "cpu": "",
         "memory": "",
@@ -3280,6 +3317,9 @@
               "label": ""
             },
             "firewallInterfaces": {
+              "label": ""
+            },
+            "weather": {
               "label": ""
             }
           },
