@@ -945,6 +945,10 @@
           "label": "Emne",
           "newLabel": "Nyt emne"
         },
+        "url": {
+          "label": "Url",
+          "newLabel": "Ny Url"
+        },
         "opnsenseApiKey": {
           "label": "API-nøgle (Key)",
           "newLabel": "Ny API-nøgle (Key)"
@@ -954,16 +958,16 @@
           "newLabel": "Ny API-nøgle (Key)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "App Id",
+          "newLabel": "Nyt App Id"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Installations Id",
+          "newLabel": "Nyt Installations Id"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Privat nøgle",
+          "newLabel": "Ny privat nøgle"
         }
       }
     },
@@ -1543,7 +1547,15 @@
         "width": "Bredde",
         "height": "Højde"
       },
-      "placeholder": "Begynd at skrive dine noter"
+      "placeholder": "Begynd at skrive dine noter",
+      "dismiss": {
+        "title": "Annuller ændringer?",
+        "message": "Du har ugemte ændringer i din notesbog. Er du sikker på, at du vil kassere dem?",
+        "action": {
+          "discard": "Fortryd ændringer",
+          "keepEditing": "Fortsæt redigering"
+        }
+      }
     },
     "iframe": {
       "name": "indlejret dokument (iframe)",
@@ -1695,6 +1707,9 @@
     "calendar": {
       "name": "Kalender",
       "description": "Vis begivenheder fra dine integrationer i en kalendervisning inden for en vis relativ tidsperiode",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Radarr udgivelsestype",
@@ -2273,7 +2288,7 @@
           "label": "Grænse for antal indlæg"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Skjul beskrivelse"
         }
       }
     },
@@ -2490,7 +2505,29 @@
     "systemResources": {
       "name": "Systemressourcer",
       "description": "CPU, Hukommelse, Disk og andet hardwareforbrug af dit system",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": "Aktiver diagramskygge"
+        },
+        "visibleCharts": {
+          "label": "Synlige diagrammer",
+          "description": "Vælg de diagrammer, du ønsker at være synlige.",
+          "option": {
+            "cpu": "CPU",
+            "memory": "Hukommelse",
+            "network": "Netværk"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Label visningstilstand",
+          "option": {
+            "textWithIcon": "Vis tekst med ikon",
+            "text": "Vis kun tekst",
+            "icon": "Vis kun ikonet",
+            "hidden": "Skjul etiket"
+          }
+        }
+      },
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
@@ -3281,6 +3318,9 @@
             },
             "firewallInterfaces": {
               "label": "Firewall Grænseflader"
+            },
+            "weather": {
+              "label": ""
             }
           },
           "interval": {

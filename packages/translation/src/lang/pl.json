@@ -945,6 +945,10 @@
           "label": "Temat",
           "newLabel": "Nowy temat"
         },
+        "url": {
+          "label": "Adres URL",
+          "newLabel": "Nowy adres URL"
+        },
         "opnsenseApiKey": {
           "label": "Klucz API",
           "newLabel": "Nowy klucz API"
@@ -954,16 +958,16 @@
           "newLabel": "Nowy klucz API (Secret)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Identyfikator aplikacji",
+          "newLabel": "Nowy identyfikator aplikacji"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Identyfikator instalacji",
+          "newLabel": "Nowy identyfikator instalacji"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Klucz prywatny",
+          "newLabel": "Nowy klucz prywatny"
         }
       }
     },
@@ -1543,7 +1547,15 @@
         "width": "Szerokość",
         "height": "Wysokość"
       },
-      "placeholder": "Zacznij pisać swoje notatki"
+      "placeholder": "Zacznij pisać swoje notatki",
+      "dismiss": {
+        "title": "Odrzucić zmiany?",
+        "message": "Masz niezapisane zmiany w notatniku. Czy na pewno chcesz je odrzucić?",
+        "action": {
+          "discard": "Odrzuć zmiany",
+          "keepEditing": "Kontynuuj edycję"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1707,9 @@
     "calendar": {
       "name": "Kalendarz",
       "description": "Wyświetlaj zdarzenia z integracji w widoku kalendarza w określonym okresie czasowym",
+      "duration": {
+        "allDay": "Cały dzień"
+      },
       "option": {
         "releaseType": {
           "label": "Rodzaj premiery w Radarr",
@@ -2490,7 +2505,29 @@
     "systemResources": {
       "name": "Zasoby systemowe",
       "description": "Wykorzystanie CPU, pamięci, dysku i innych zasobów sprzętowych system",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": "Włącz cieniowanie wykresu"
+        },
+        "visibleCharts": {
+          "label": "Widoczne wykresy",
+          "description": "Wybierz wykresy, które chcesz, aby były widoczne.",
+          "option": {
+            "cpu": "Procesor",
+            "memory": "Pamięć",
+            "network": "Sieć"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Tryb wyświetlania etykiet",
+          "option": {
+            "textWithIcon": "Pokaż tekst z ikoną",
+            "text": "Pokaż tylko tekst",
+            "icon": "Pokaż tylko ikonę",
+            "hidden": "Ukryj etykietę"
+          }
+        }
+      },
       "card": {
         "cpu": "Procesor",
         "memory": "Pamięć",
@@ -3281,6 +3318,9 @@
             },
             "firewallInterfaces": {
               "label": "Interfejsy firewalla"
+            },
+            "weather": {
+              "label": "Pogoda"
             }
           },
           "interval": {
