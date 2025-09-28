@@ -23,7 +23,7 @@ import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 
 import { Analytics } from "~/components/layout/analytics";
-import { InContextCrowdinTranslation } from "~/components/layout/in-context-crowdin-translation";
+import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import { DayJsLoader } from "./_client-providers/dayjs-loader";
@@ -135,7 +135,7 @@ export default async function Layout(props: {
       <head>
         <Analytics />
         <SearchEngineOptimization />
-        <InContextCrowdinTranslation locale={locale} />
+        <CrowdinLiveTranslation locale={locale} />
       </head>
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <StackedProvider>
