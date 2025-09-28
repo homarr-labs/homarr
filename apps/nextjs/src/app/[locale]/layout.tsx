@@ -23,6 +23,7 @@ import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
 
 import { Analytics } from "~/components/layout/analytics";
+import { InContextCrowdinTranslation } from "~/components/layout/in-context-crowdin-translation";
 import { SearchEngineOptimization } from "~/components/layout/search-engine-optimization";
 import { getCurrentColorSchemeAsync } from "~/theme/color-scheme";
 import { DayJsLoader } from "./_client-providers/dayjs-loader";
@@ -118,10 +119,12 @@ export default async function Layout(props: {
     (innerProps) => <SpotlightProvider {...innerProps} />,
   ]);
 
+  const { locale } = await props.params;
+
   return (
     // Instead of ColorSchemScript we use data-mantine-color-scheme to prevent flickering
     <html
-      lang={(await props.params).locale}
+      lang={locale}
       dir={direction}
       data-mantine-color-scheme={colorScheme}
       style={{
@@ -132,6 +135,7 @@ export default async function Layout(props: {
       <head>
         <Analytics />
         <SearchEngineOptimization />
+        <InContextCrowdinTranslation locale={locale} />
       </head>
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <StackedProvider>

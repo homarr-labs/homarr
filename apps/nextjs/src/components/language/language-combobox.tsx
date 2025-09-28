@@ -6,8 +6,7 @@ import { IconCheck } from "@tabler/icons-react";
 
 import type { SupportedLanguage } from "@homarr/translation";
 import { localeConfigurations, supportedLanguages } from "@homarr/translation";
-
-import classes from "./language-combobox.module.css";
+import { LanguageIcon } from "@homarr/ui";
 
 import "flag-icons/css/flag-icons.min.css";
 
@@ -84,7 +83,7 @@ const OptionItem = ({
   return (
     <Group wrap="nowrap" justify="space-between">
       <Group wrap="nowrap">
-        <span className={`fi fi-${localeConfigurations[localeKey].flagIcon} ${classes.flagIcon}`}></span>
+        <LanguageIcon icon={localeConfigurations[localeKey].icon} />
         <Group wrap="nowrap" gap="xs">
           <Text>{localeConfigurations[localeKey].name}</Text>
           <Text size="xs" c="dimmed" inherit>
