@@ -36,7 +36,7 @@
     "@mantine/core": "^8.3.1",
     "@tabler/icons-react": "^3.35.0",
     "dayjs": "^1.11.18",
-    "next": "15.5.3",
+    "next": "15.5.4",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "zod": "^4.1.11"
