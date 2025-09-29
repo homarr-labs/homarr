@@ -3320,7 +3320,7 @@
               "label": "Firewall Schnittstellen"
             },
             "weather": {
-              "label": ""
+              "label": "Wetter"
             }
           },
           "interval": {
@@ -3343,24 +3343,24 @@
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "Name"
             },
             "interval": {
               "label": "Intervall des Zeitplans"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Letzte Ausführung"
             },
             "actions": {
-              "label": ""
+              "label": "Aktionen"
             }
           },
           "table": {
-            "search": ""
+            "search": "{count} Aufgaben suchen..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "Neu laden"
             }
           },
           "refresh": {
@@ -3901,7 +3901,7 @@
       "tools": {
         "label": "Werkzeuge",
         "tasks": {
-          "label": ""
+          "label": "Aufgaben"
         },
         "docker": {
           "label": "Docker"
