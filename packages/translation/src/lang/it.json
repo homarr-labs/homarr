@@ -723,9 +723,9 @@
         "statusCode": {
           "title": "Errore di risposta",
           "description": "Ricevuta una risposta inattesa {statusCode} ({reason}) da <url></url>. Verificare che l'URL stia puntando all'URL di base dell'integrazione.",
-          "otherDescription": "",
+          "otherDescription": "Ricevuta una risposta inattesa {statusCode} da <url></url>. Verifica che l'URL stia puntando all'URL di base dell'integrazione.",
           "reason": {
-            "badRequest": "",
+            "badRequest": "Richiesta non valida",
             "notFound": "Non trovato",
             "tooManyRequests": "Troppe richieste",
             "internalServerError": "Errore interno del server",
@@ -739,12 +739,12 @@
             "expired": "Il certificato è scaduto.",
             "notYetValid": "Il certificato non è ancora valido.",
             "untrusted": "Il certificato non è sicuro.",
-            "hostnameMismatch": ""
+            "hostnameMismatch": "Il nome host certificato non corrisponde all'URL."
           },
           "alert": {
             "permission": {
               "title": "Autorizzazioni insufficienti",
-              "message": ""
+              "message": "Non è consentito caricare o considerare attendibili i certificati. Contattare l'amministratore per caricare il certificato root necessario."
             },
             "hostnameMismatch": {
               "title": "L' hostname non corrisponde",
@@ -760,7 +760,7 @@
               "label": "Riprova creazione"
             },
             "trust": {
-              "label": ""
+              "label": "Certificato affidabile"
             },
             "upload": {
               "label": "Carica certificato"
@@ -768,23 +768,23 @@
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Il nome host attendibile non corrisponde",
+              "message": "Sei sicuro di voler fidarti del certificato con un nome host non corrispondente?"
             },
             "notification": {
               "success": {
                 "title": "Certificato attendibile",
-                "message": ""
+                "message": "Aggiunto nome host all'elenco di certificati attendibili"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Non è stato possibile fidarsi del certificato",
+                "message": "Il certificato con un nome host non corrispondente non può essere attendibile"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
+              "title": "Certificato autofirmato attendibile",
               "message": "Sei sicuro di voler considerare attendibile questo certificato autofirmato?"
             },
             "notification": {
@@ -793,14 +793,14 @@
                 "message": "Aggiunto certificato all'elenco di certificati attendibili"
               },
               "error": {
-                "title": "",
+                "title": "Non è stato possibile fidarsi del certificato",
                 "message": "Impossibile aggiungere il certificato all'elenco di certificati attendibili"
               }
             }
           },
           "details": {
             "title": "Dettagli",
-            "description": "",
+            "description": "Rivedere le informazioni del certificato prima di decidere di fidarsi.",
             "content": {
               "action": "Mostra contenuto",
               "title": "Certificato PEM"
@@ -907,7 +907,7 @@
         "label": "Nessun valore impostato",
         "tooltip": "Il secret richiesto non è stato ancora impostato"
       },
-      "secureNotice": "",
+      "secureNotice": "Questo segreto non può essere recuperato dopo la creazione",
       "reset": {
         "title": "Resetta segreto",
         "message": "Sei sicuro di voler resettare questo segreto?"
@@ -1432,7 +1432,7 @@
       "option": {
         "customTitleToggle": {
           "label": "Titolo personalizzato/Visualizzazione della città",
-          "description": ""
+          "description": "Mostra un titolo personalizzato o il nome della città/paese sopra l'orologio."
         },
         "customTitle": {
           "label": "Titolo"
@@ -1591,12 +1591,12 @@
       },
       "error": {
         "noUrl": "",
-        "unsupportedProtocol": "",
+        "unsupportedProtocol": "L'URL fornito sta usando un protocollo non supportato. Si prega di utilizzare uno di ({supportedProtocols})",
         "noBrowerSupport": "Il tuo browser non supporta iframes. Aggiorna il tuo browser."
       }
     },
     "smartHome-entityState": {
-      "name": "",
+      "name": "Stato Entità",
       "description": "Visualizza lo stato di un'entità e attivalo facoltativamente",
       "option": {
         "entityId": {
@@ -1606,7 +1606,7 @@
           "label": "Visualizza-nome"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Unità Entità"
         },
         "clickable": {
           "label": "Cliccabile"
@@ -1706,7 +1706,7 @@
     },
     "calendar": {
       "name": "Calendario",
-      "description": "",
+      "description": "Visualizza gli eventi delle tue integrazioni in una vista calendario entro un determinato periodo di tempo",
       "duration": {
         "allDay": "Tutto il giorno"
       },
@@ -1830,7 +1830,7 @@
           "label": "Sezione cluster visibile"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Requisito dell'indicatore di sezione"
         }
       },
       "popover": {
@@ -1849,7 +1849,7 @@
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Impossibile recuperare lo stato di salute"
       },
       "cluster": {
         "summary": {
@@ -1881,7 +1881,7 @@
             "memory": "Memoria",
             "storage": "Spazio di archiviazione",
             "uptime": "Uptime",
-            "haState": "",
+            "haState": "Stato HA",
             "storageType": {
               "local": "Archiviazione locale",
               "shared": "Spazio condiviso"
@@ -1931,7 +1931,7 @@
       },
       "integration": {
         "noData": "Nessuna integrazione trovata",
-        "description": ""
+        "description": "Fare clic su <here></here> per creare una nuova integrazione"
       },
       "app": {
         "noData": "Nessuna app trovata",
@@ -2131,14 +2131,14 @@
       "globalRatio": "Rapporto globale"
     },
     "mediaReleases": {
-      "name": "",
-      "description": "",
+      "name": "Comunicati stampa",
+      "description": "Visualizza i media appena aggiunti o le prossime uscite da diverse integrazioni",
       "option": {
         "layout": {
           "label": "Layout",
           "option": {
             "backdrop": {
-              "label": ""
+              "label": "Sfondo"
             },
             "poster": {
               "label": "Poster"
@@ -2146,13 +2146,13 @@
           }
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Mostra suggerimento descrizione"
         },
         "showType": {
           "label": ""
         },
         "showSource": {
-          "label": ""
+          "label": "Mostra sorgente integrazione"
         }
       },
       "length": {
@@ -2214,13 +2214,13 @@
     },
     "mediaTranscoding": {
       "name": "Transcodifica del media",
-      "description": "",
+      "description": "Statistiche, coda corrente e stato della lavorazione della transcodifica multimediale",
       "option": {
         "defaultView": {
           "label": "Vista predefinita"
         },
         "queuePageSize": {
-          "label": ""
+          "label": "Dimensione della pagina della coda"
         }
       },
       "tab": {
@@ -2228,9 +2228,9 @@
         "queue": "Coda",
         "statistics": "Statistiche"
       },
-      "currentIndex": "",
+      "currentIndex": "{start}-{end} di {total}",
       "healthCheck": {
-        "title": "",
+        "title": "Controllo integrità",
         "queued": "In coda",
         "status": {
           "healthy": "Normale funzionamento",
@@ -2242,10 +2242,10 @@
           "empty": "Vuoto",
           "transcodes": "Transcodifiche",
           "transcodesCount": "Transcodifiche",
-          "healthChecksCount": "",
+          "healthChecksCount": "Controlli integrità",
           "filesCount": "File",
           "savedSpace": "Spazio salvato",
-          "healthChecks": "",
+          "healthChecks": "Controlli integrità",
           "videoCodecs": "Codec",
           "videoContainers": "Containers",
           "videoResolutions": "Risoluzioni"
@@ -2257,7 +2257,7 @@
             "eta": "ETA",
             "progress": "Avanzamento",
             "transcode": "Transcodifica",
-            "healthCheck": ""
+            "healthCheck": "Controllo integrità"
           }
         },
         "queue": {
@@ -2266,7 +2266,7 @@
             "file": "File",
             "size": "Dimensione",
             "transcode": "Transcodifica",
-            "healthCheck": ""
+            "healthCheck": "Controllo integrità"
           }
         }
       }
@@ -2276,7 +2276,7 @@
       "description": "Monitora e visualizza uno o più feed generici RSS, ATOM o JSON",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "Url Feed"
         },
         "enableRtl": {
           "label": "Abilita RTL"
@@ -2285,7 +2285,7 @@
           "label": ""
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Limite di post"
         },
         "hideDescription": {
           "label": "Nascondi descrizione"
@@ -2294,19 +2294,19 @@
     },
     "releases": {
       "name": "Rilasci",
-      "description": "",
+      "description": "Visualizza un elenco della versione corrente dei repository dati con la versione regex specificata.",
       "option": {
         "newReleaseWithin": {
           "label": "",
-          "description": ""
+          "description": "Esempio di utilizzo: 1w (1 settimana), 10M (10 mesi). Tipi di unità accettati h (ore), d (giorni), w (settimane), M (mesi), y (anni). Lasciare vuoto per non evidenziare le nuove versioni."
         },
         "staleReleaseWithin": {
           "label": "",
-          "description": ""
+          "description": "Esempio di utilizzo: 1w (1 settimana), 10M (10 mesi). Tipi di unità accettati h (ore), d (giorni), w (settimane), M (mesi), y (anni). Lasciare vuoto per non evidenziare le release obsolete."
         },
         "showOnlyHighlighted": {
           "label": "Mostra Solo In Evidenza",
-          "description": ""
+          "description": "Mostra solo le versioni nuove o obsolete. Come sopra."
         },
         "showDetails": {
           "label": "Mostra dettagli"
@@ -2469,13 +2469,13 @@
     },
     "firewall": {
       "name": "Monitoraggio Firewall",
-      "description": "",
+      "description": "Visualizza un riepilogo dei firewall",
       "tab": {
         "system": "Sistema",
         "interfaces": "Interfacce"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Impossibile ottenere dati dal firewall"
       },
       "option": {
         "interfaces": "Interfacce di rete da visualizzare"
@@ -2507,7 +2507,7 @@
       "description": "CPU, memoria, disco e altro utilizzo hardware del sistema",
       "option": {
         "hasShadow": {
-          "label": ""
+          "label": "Abilita l'ombreggiatura del grafico"
         },
         "visibleCharts": {
           "label": "Grafici visibili",
@@ -2940,7 +2940,7 @@
           "label": "Aiuto",
           "items": {
             "documentation": "Documentazione",
-            "submitIssue": "",
+            "submitIssue": "Segnala un problema",
             "discord": "Community Discord",
             "sourceCode": "Codice sorgente"
           }
@@ -3299,10 +3299,10 @@
               "label": ""
             },
             "networkController": {
-              "label": ""
+              "label": "Controller di rete"
             },
             "refreshNotifications": {
-              "label": ""
+              "label": "Aggiornamento Notifiche"
             },
             "dockerContainers": {
               "label": "Containers docker"
@@ -4093,7 +4093,7 @@
               },
               "torrent": {
                 "name": "Torrent",
-                "description": ""
+                "description": "Cerca torrent su torrentdownloads.pro"
               },
               "youTube": {
                 "name": "YouTube",
