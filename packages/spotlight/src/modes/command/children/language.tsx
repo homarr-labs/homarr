@@ -3,6 +3,7 @@ import { IconCheck } from "@tabler/icons-react";
 
 import { localeConfigurations, supportedLanguages } from "@homarr/translation";
 import { useChangeLocale, useCurrentLocale, useI18n } from "@homarr/translation/client";
+import { LanguageIcon } from "@homarr/ui";
 
 import { createChildrenOptions } from "../../../lib/children";
 
@@ -34,7 +35,7 @@ export const languageChildrenOptions = createChildrenOptions<Record<string, unkn
           return (
             <Group mx="md" my="sm" wrap="nowrap" justify="space-between" w="100%">
               <Group wrap="nowrap">
-                <span className={`fi fi-${configuration.flagIcon}`} style={{ borderRadius: 4 }}></span>
+                <LanguageIcon icon={localeConfigurations[localeKey].icon} />
                 <Group wrap="nowrap" gap="xs">
                   <Text>{configuration.name}</Text>
                   <Text size="xs" c="dimmed" inherit>
