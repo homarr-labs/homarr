@@ -28,6 +28,7 @@ export class MediaServerMockService implements IMediaServerIntegration {
               episodeName: null,
               albumName: null,
               episodeCount: null,
+              metadata: null,
             }
           : null,
     };
