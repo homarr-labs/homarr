@@ -39,7 +39,7 @@
     "@homarr/widgets": "workspace:^0.1.0",
     "dayjs": "^1.11.18",
     "dotenv": "^17.2.2",
-    "fastify": "^5.6.0",
+    "fastify": "^5.6.1",
     "superjson": "2.2.2",
     "undici": "7.16.0"
   },
@@ -47,7 +47,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^22.18.6",
+    "@types/node": "^22.18.7",
     "dotenv-cli": "^10.0.0",
     "esbuild": "^0.25.10",
     "eslint": "^9.36.0",

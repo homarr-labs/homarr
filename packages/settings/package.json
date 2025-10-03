@@ -26,8 +26,8 @@
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/dates": "^8.3.1",
-    "next": "15.5.3",
+    "@mantine/dates": "^8.3.2",
+    "next": "15.5.4",
     "react": "19.1.1",
     "react-dom": "19.1.1"
   },

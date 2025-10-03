@@ -165,11 +165,14 @@ export const IconPicker = ({
           />
           {session?.user.permissions.includes("media-upload") && (
             <UploadMedia
-              onSuccess={({ url }) => {
+              onSuccess={(medias) => {
+                const first = medias.at(0);
+                if (!first) return;
+
                 startTransition(() => {
-                  setValue(url);
-                  setPreviewUrl(url);
-                  setSearch(url);
+                  setValue(first.url);
+                  setPreviewUrl(first.url);
+                  setSearch(first.url);
                 });
               }}
             >

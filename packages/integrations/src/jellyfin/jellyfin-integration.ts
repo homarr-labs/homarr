@@ -57,6 +57,36 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
             episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
             albumName: sessionInfo.NowPlayingItem.Album ?? "",
             episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
+            metadata: {
+              video: {
+                resolution:
+                  sessionInfo.NowPlayingItem.Width && sessionInfo.NowPlayingItem.Height
+                    ? {
+                        width: sessionInfo.NowPlayingItem.Width,
+                        height: sessionInfo.NowPlayingItem.Height,
+                      }
+                    : null,
+                frameRate: sessionInfo.TranscodingInfo?.Framerate ?? null,
+              },
+              audio: {
+                channelCount: sessionInfo.TranscodingInfo?.AudioChannels ?? null,
+                codec: sessionInfo.TranscodingInfo?.AudioCodec ?? null,
+              },
+              transcoding: {
+                resolution:
+                  sessionInfo.TranscodingInfo?.Width && sessionInfo.TranscodingInfo.Height
+                    ? {
+                        width: sessionInfo.TranscodingInfo.Width,
+                        height: sessionInfo.TranscodingInfo.Height,
+                      }
+                    : null,
+                target: {
+                  audioCodec: sessionInfo.TranscodingInfo?.AudioCodec ?? null,
+                  videoCodec: sessionInfo.TranscodingInfo?.VideoCodec ?? null,
+                },
+                container: sessionInfo.TranscodingInfo?.Container ?? null,
+              },
+            },
           };
         }
 

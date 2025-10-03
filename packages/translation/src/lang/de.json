@@ -945,6 +945,10 @@
           "label": "Thema",
           "newLabel": "Neues Thema erstellen"
         },
+        "url": {
+          "label": "",
+          "newLabel": ""
+        },
         "opnsenseApiKey": {
           "label": "",
           "newLabel": ""
@@ -1543,7 +1547,15 @@
         "width": "Breite",
         "height": "Höhe"
       },
-      "placeholder": "Mit dem Schreiben von Notizen beginnen"
+      "placeholder": "Mit dem Schreiben von Notizen beginnen",
+      "dismiss": {
+        "title": "",
+        "message": "",
+        "action": {
+          "discard": "",
+          "keepEditing": ""
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1707,9 @@
     "calendar": {
       "name": "Kalender",
       "description": "Zeigt Ereignisse aus Ihren Integrationen in einer Kalenderansicht innerhalb eines bestimmten Zeitraums an",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Radarr Veröffentlichungs Typ",
@@ -2490,7 +2505,29 @@
     "systemResources": {
       "name": "Systemressourcen",
       "description": "CPU, Arbeitsspeicher, Festplatte und andere Hardware-Nutzung Ihres Systems",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "network": ""
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
       "card": {
         "cpu": "CPU",
         "memory": "Arbeitsspeicher",
@@ -3281,6 +3318,9 @@
             },
             "firewallInterfaces": {
               "label": "Firewall Schnittstellen"
+            },
+            "weather": {
+              "label": "Wetter"
             }
           },
           "interval": {
@@ -3303,24 +3343,24 @@
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "Name"
             },
             "interval": {
               "label": "Intervall des Zeitplans"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Letzte Ausführung"
             },
             "actions": {
-              "label": ""
+              "label": "Aktionen"
             }
           },
           "table": {
-            "search": ""
+            "search": "{count} Aufgaben suchen..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "Neu laden"
             }
           },
           "refresh": {
@@ -3861,7 +3901,7 @@
       "tools": {
         "label": "Werkzeuge",
         "tasks": {
-          "label": ""
+          "label": "Aufgaben"
         },
         "docker": {
           "label": "Docker"

@@ -945,6 +945,10 @@
           "label": "トピック",
           "newLabel": "新規トピック"
         },
+        "url": {
+          "label": "",
+          "newLabel": ""
+        },
         "opnsenseApiKey": {
           "label": "API キー (キー)",
           "newLabel": "新しいAPIキー（キー）"
@@ -1543,7 +1547,15 @@
         "width": "幅",
         "height": "高さ"
       },
-      "placeholder": "あなたのノートを書き始めましょう"
+      "placeholder": "あなたのノートを書き始めましょう",
+      "dismiss": {
+        "title": "",
+        "message": "",
+        "action": {
+          "discard": "",
+          "keepEditing": ""
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1707,9 @@
     "calendar": {
       "name": "カレンダー",
       "description": "カレンダービューで、特定の相対的な期間内に、連携機能からのイベントを表示します",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Radarr リリースタイプ",
@@ -2490,7 +2505,29 @@
     "systemResources": {
       "name": "システムリソース",
       "description": "CPU、メモリ、ディスクなどのシステムハードウェアの使用",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "network": ""
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
@@ -3281,6 +3318,9 @@
             },
             "firewallInterfaces": {
               "label": "ファイアウォールのインターフェース"
+            },
+            "weather": {
+              "label": ""
             }
           },
           "interval": {
