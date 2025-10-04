@@ -302,7 +302,7 @@
   "group": {
     "title": "Grupos",
     "name": "Grupo",
-    "search": "Encontrar un grupo",
+    "search": "Buscar un grupo...",
     "field": {
       "name": "Nombre",
       "members": "Miembros",
@@ -1043,9 +1043,9 @@
       "previous": "Anterior",
       "next": "Siguiente",
       "checkoutDocs": "Consultar la documentación",
-      "checkLogs": "Comprobar los registros para más detalles",
+      "checkLogs": "Comprueba los registros para más detalles",
       "tryAgain": "Intentar de nuevo",
-      "loading": "Cargar"
+      "loading": "Cargando"
     },
     "here": "aquí",
     "iconPicker": {
@@ -1980,7 +1980,25 @@
         "currentlyPlaying": "Reproducción en curso",
         "user": "Usuario",
         "name": "Nombre",
-        "id": "ID"
+        "id": "ID",
+        "metadata": {
+          "title": "Estadísticas",
+          "video": {
+            "title": "Vídeo",
+            "resolution": "Resolución"
+          },
+          "audio": {
+            "title": "Audio",
+            "channelCount": "Canales de audio",
+            "codec": "Códec de audio"
+          },
+          "transcoding": {
+            "title": "Transcodificación",
+            "container": "Contenedor",
+            "resolution": "Resolución",
+            "target": "Códec de destino"
+          }
+        }
       }
     },
     "downloads": {
@@ -3135,7 +3153,7 @@
           },
           "members": {
             "title": "Miembros",
-            "search": "Buscar un miembro",
+            "search": "Buscar un miembro...",
             "notFound": "No se han encontrado miembros"
           },
           "permissions": {
@@ -3356,7 +3374,7 @@
             }
           },
           "table": {
-            "search": "Buscar {count} tareas..."
+            "search": "Buscar una tarea..."
           },
           "action": {
             "refresh": {
@@ -3446,6 +3464,21 @@
           "libraries": {
             "title": "Librerías",
             "subtitle": "{count} usadas en el Código de Homarr"
+          },
+          "hotkeys": {
+            "title": "Accesos directos",
+            "subtitle": "Accesos directos de teclado para mejorar tu flujo de trabajo",
+            "field": {
+              "shortcut": "Acceso directo",
+              "action": "Acción"
+            },
+            "action": {
+              "toggleBoardEdit": "Cambiar a modo de edición de tablero",
+              "toggleColorScheme": "Cambiar a modo claro/oscuro",
+              "saveNotebook": "Guardar el bloc de notas (solo dentro del widget de bloc de notas)",
+              "openSpotlight": "Abrir búsqueda"
+            },
+            "note": "Sugerencia: Mod se refiere tanto a la tecla CTRL como a la tecla ⌘ en macOS"
           }
         }
       }
@@ -3575,7 +3608,7 @@
       }
     },
     "error": {
-      "internalServerError": "Fallo al obtener contenedores Docker"
+      "internalServerError": "Fallo al obtener los contenedores de Docker"
     }
   },
   "kubernetes": {

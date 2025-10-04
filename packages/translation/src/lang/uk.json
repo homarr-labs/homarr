@@ -1980,7 +1980,25 @@
         "currentlyPlaying": "",
         "user": "Користувач",
         "name": "Назва",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
       }
     },
     "downloads": {
@@ -3446,6 +3464,21 @@
           "libraries": {
             "title": "Бібліотеки",
             "subtitle": "{count} - стільки бібліотек використано в коді Homarr"
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }
