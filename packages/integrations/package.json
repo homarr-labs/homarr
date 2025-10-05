@@ -40,7 +40,7 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@jellyfin/sdk": "^0.11.0",
-    "@octokit/auth-app": "^8.1.0",
+    "@octokit/auth-app": "^8.1.1",
     "ical.js": "^2.2.1",
     "maria2": "^0.4.1",
     "node-ical": "^0.21.0",
