@@ -53,6 +53,6 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/adm-zip": "0.5.7",
     "eslint": "^9.36.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   }
 }

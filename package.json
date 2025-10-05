@@ -54,7 +54,7 @@
     "semantic-release": "^24.2.9",
     "testcontainers": "^11.7.0",
     "turbo": "^2.5.8",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"
   },
