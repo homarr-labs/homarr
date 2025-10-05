@@ -42,7 +42,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-cron": "^3.0.11",
-    "@types/react": "19.1.15",
+    "@types/react": "19.1.16",
     "eslint": "^9.36.0",
     "typescript": "^5.9.2"
   }
