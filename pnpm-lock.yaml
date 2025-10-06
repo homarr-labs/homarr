@@ -1434,8 +1434,8 @@ importers:
         specifier: ^7.4.0
         version: 7.4.0
       '@ctrl/qbittorrent':
-        specifier: ^9.8.0
-        version: 9.8.0
+        specifier: ^9.9.0
+        version: 9.9.1
       '@ctrl/transmission':
         specifier: ^7.4.0
         version: 7.4.0
@@ -2738,8 +2738,8 @@ packages:
     resolution: {integrity: sha512-4pa9hnMWmgoGl+5HJ/B9d5ugIr105AGD3rsTSlE8pTR7d2+xrEhLPCKRp/Y6k/k9Fo6DaJ1FRgwRxdi60vmxtg==}
     engines: {node: '>=18'}
 
-  '@ctrl/qbittorrent@9.8.0':
-    resolution: {integrity: sha512-WuLUnE38hR1cCB2Z/oeTAhf0jycl3XD2cUidFybz7iLrmJdLjFeYO3Mk5n1fqUTnmIyuLqO6vJN+RkAW1vI7pA==}
+  '@ctrl/qbittorrent@9.9.1':
+    resolution: {integrity: sha512-+r90ObHYU8WhjbP96VHkMcNfcDgp439mUUjOFRMmqxIVDRzqbAC86aqO3Jrrod2/Z3vGnq2QfA2Z3wGzjf0zFw==}
     engines: {node: '>=18'}
 
   '@ctrl/shared-torrent@6.3.0':
@@ -2754,8 +2754,8 @@ packages:
     peerDependencies:
       ofetch: ^1.4.1
 
-  '@ctrl/torrent-file@4.1.0':
-    resolution: {integrity: sha512-mC6HdmCrRhhwpthM+OboJvGIywVR05IbdhVSBkfbGslzbQk2xNnx4UOKljV/x2YI2M1DDF3F3o0paIiYd5O0Og==}
+  '@ctrl/torrent-file@4.4.0':
+    resolution: {integrity: sha512-e/AuvVqH6xJxeowZeGD83YtViDDDEtK6LcIrtU7PsxJlDNMvyqPN2wpZsIXYRxPY+NqkiWcpkrpAnHLTPD6dpw==}
     engines: {node: '>=18'}
 
   '@ctrl/transmission@7.4.0':
@@ -11243,15 +11243,15 @@ snapshots:
       rfc4648: 1.5.4
       uint8array-extras: 1.5.0
 
-  '@ctrl/qbittorrent@9.8.0':
+  '@ctrl/qbittorrent@9.9.1':
     dependencies:
-      '@ctrl/magnet-link': 4.0.2
-      '@ctrl/shared-torrent': 6.3.0(ofetch@1.4.1)
-      '@ctrl/torrent-file': 4.1.0
+      '@ctrl/magnet-link': 4.2.0
+      '@ctrl/shared-torrent': 6.5.0(ofetch@1.4.1)
+      '@ctrl/torrent-file': 4.4.0
       cookie: 1.0.2
       node-fetch-native: 1.6.7
       ofetch: 1.4.1
-      type-fest: 4.41.0
+      type-fest: 5.0.1
       ufo: 1.6.1
       uint8array-extras: 1.5.0
 
@@ -11263,7 +11263,7 @@ snapshots:
     dependencies:
       ofetch: 1.4.1
 
-  '@ctrl/torrent-file@4.1.0':
+  '@ctrl/torrent-file@4.4.0':
     dependencies:
       uint8array-extras: 1.5.0
 
