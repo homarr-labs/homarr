@@ -1431,8 +1431,8 @@ importers:
   packages/integrations:
     dependencies:
       '@ctrl/deluge':
-        specifier: ^7.3.0
-        version: 7.3.0
+        specifier: ^7.4.0
+        version: 7.4.0
       '@ctrl/qbittorrent':
         specifier: ^9.8.0
         version: 9.8.0
@@ -2726,12 +2726,16 @@ packages:
     resolution: {integrity: sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==}
     engines: {node: '>=18'}
 
-  '@ctrl/deluge@7.3.0':
-    resolution: {integrity: sha512-reAAmkCJ/guTh1S/szjz9YAN2JtR37YD9s+PDJ4oo3ZjJ0JjNlfFdQ4ll0oXNAr5Jx9AyxBfzJjn72EU+Hylkg==}
+  '@ctrl/deluge@7.4.0':
+    resolution: {integrity: sha512-h0cfxCzshsB+0cmO0BcKYbw/imqAMvPWp8ZHSlfBu8XB7xoEb51jtQp8pjIYNWQ8b/b9p49V28Ned0+sfape8w==}
     engines: {node: '>=18'}
 
   '@ctrl/magnet-link@4.0.2':
     resolution: {integrity: sha512-wENP7LH4BmCjz+gXVq7Nzz20zMjY/huuG7aDk/yu/LhFdC84e/l8222rCIAo0lwhU451lFcJKLcOmtG6TNrBAQ==}
+    engines: {node: '>=18'}
+
+  '@ctrl/magnet-link@4.2.0':
+    resolution: {integrity: sha512-4pa9hnMWmgoGl+5HJ/B9d5ugIr105AGD3rsTSlE8pTR7d2+xrEhLPCKRp/Y6k/k9Fo6DaJ1FRgwRxdi60vmxtg==}
     engines: {node: '>=18'}
 
   '@ctrl/qbittorrent@9.8.0':
@@ -2740,6 +2744,12 @@ packages:
 
   '@ctrl/shared-torrent@6.3.0':
     resolution: {integrity: sha512-rhgN/tXQFIh6ujFE5wXVj1hBftb2tLmAYt5CVfxncKtS38AlPAqyiwg2VOWrWpq/gL+eRlP0uWTyt5yEohxIzw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      ofetch: ^1.4.1
+
+  '@ctrl/shared-torrent@6.5.0':
+    resolution: {integrity: sha512-Wu5XEPLomfmLWUW+UY63yB7g3orZDMgAZVEOYonVJOwajVlMcfT0AkEVtqeOjAhkCC9Q/VKXlHEP9G/xdyW4qA==}
     engines: {node: '>=18'}
     peerDependencies:
       ofetch: ^1.4.1
@@ -9273,6 +9283,9 @@ packages:
   rfc4648@1.5.3:
     resolution: {integrity: sha512-MjOWxM065+WswwnmNONOT+bD1nXzY9Km6u3kzvnx8F8/HXGZdz3T6e6vZJ8Q/RIMUSp/nxqjH3GwvJDy8ijeQQ==}
 
+  rfc4648@1.5.4:
+    resolution: {integrity: sha512-rRg/6Lb+IGfJqO05HZkN50UtY7K/JhxJag1kP23+zyMfrvoB0B7RWv06MbOzoc79RgCdNTiUaNsTT1AJZ7Z+cg==}
+
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
@@ -9837,6 +9850,10 @@ packages:
   tabbable@6.2.0:
     resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
 
+  tagged-tag@1.0.0:
+    resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
+    engines: {node: '>=20'}
+
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
     engines: {node: '>=6'}
@@ -10182,6 +10199,10 @@ packages:
   type-fest@4.41.0:
     resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
     engines: {node: '>=16'}
+
+  type-fest@5.0.1:
+    resolution: {integrity: sha512-9MpwAI52m8H6ssA542UxSLnSiSD2dsC3/L85g6hVubLSXd82wdI80eZwTWhdOfN67NlA+D+oipAs1MlcTcu3KA==}
+    engines: {node: '>=20'}
 
   type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
@@ -11201,20 +11222,25 @@ snapshots:
 
   '@csstools/css-tokenizer@3.0.4': {}
 
-  '@ctrl/deluge@7.3.0':
+  '@ctrl/deluge@7.4.0':
     dependencies:
-      '@ctrl/magnet-link': 4.0.2
-      '@ctrl/shared-torrent': 6.3.0(ofetch@1.4.1)
+      '@ctrl/magnet-link': 4.2.0
+      '@ctrl/shared-torrent': 6.5.0(ofetch@1.4.1)
       node-fetch-native: 1.6.7
       ofetch: 1.4.1
       tough-cookie: 6.0.0
-      type-fest: 4.41.0
+      type-fest: 5.0.1
       ufo: 1.6.1
       uint8array-extras: 1.5.0
 
   '@ctrl/magnet-link@4.0.2':
     dependencies:
       rfc4648: 1.5.3
+      uint8array-extras: 1.5.0
+
+  '@ctrl/magnet-link@4.2.0':
+    dependencies:
+      rfc4648: 1.5.4
       uint8array-extras: 1.5.0
 
   '@ctrl/qbittorrent@9.8.0':
@@ -11230,6 +11256,10 @@ snapshots:
       uint8array-extras: 1.5.0
 
   '@ctrl/shared-torrent@6.3.0(ofetch@1.4.1)':
+    dependencies:
+      ofetch: 1.4.1
+
+  '@ctrl/shared-torrent@6.5.0(ofetch@1.4.1)':
     dependencies:
       ofetch: 1.4.1
 
@@ -18744,6 +18774,8 @@ snapshots:
 
   rfc4648@1.5.3: {}
 
+  rfc4648@1.5.4: {}
+
   rfdc@1.4.1: {}
 
   rimraf@3.0.2:
@@ -19520,6 +19552,8 @@ snapshots:
 
   tabbable@6.2.0: {}
 
+  tagged-tag@1.0.0: {}
+
   tapable@2.2.1: {}
 
   tar-fs@2.1.4:
@@ -19877,6 +19911,10 @@ snapshots:
   type-fest@2.19.0: {}
 
   type-fest@4.41.0: {}
+
+  type-fest@5.0.1:
+    dependencies:
+      tagged-tag: 1.0.0
 
   type-is@1.6.18:
     dependencies:
