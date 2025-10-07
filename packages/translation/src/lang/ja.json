@@ -946,8 +946,8 @@
           "newLabel": "新規トピック"
         },
         "url": {
-          "label": "",
-          "newLabel": ""
+          "label": "URL",
+          "newLabel": "新規URL"
         },
         "opnsenseApiKey": {
           "label": "API キー (キー)",
@@ -958,16 +958,16 @@
           "newLabel": "新しい API キー (シークレット)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "App Id",
+          "newLabel": "新規App Id"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "インストール ID",
+          "newLabel": "新規インストール ID"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "秘密鍵",
+          "newLabel": "新しい秘密鍵"
         }
       }
     },
@@ -1549,11 +1549,11 @@
       },
       "placeholder": "あなたのノートを書き始めましょう",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "変更を放棄しますか？",
+        "message": "ノートブックに保存されていない変更があります。それらを破棄してもよろしいですか？",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "変更を破棄",
+          "keepEditing": "編集を続ける"
         }
       }
     },
@@ -1708,7 +1708,7 @@
       "name": "カレンダー",
       "description": "カレンダービューで、特定の相対的な期間内に、連携機能からのイベントを表示します",
       "duration": {
-        "allDay": ""
+        "allDay": "すべての日"
       },
       "option": {
         "releaseType": {
@@ -1982,21 +1982,21 @@
         "name": "名称",
         "id": "Id",
         "metadata": {
-          "title": "",
+          "title": "詳細統計情報",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "動画",
+            "resolution": "解像度"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "音声",
+            "channelCount": "音声チャンネル",
+            "codec": "オーディオコーデック"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "トランスコーディング",
+            "container": "コンテナー",
+            "resolution": "対応詳細",
+            "target": "ターゲットコーデック"
           }
         }
       }
@@ -2306,7 +2306,7 @@
           "label": "投稿数の上限"
         },
         "hideDescription": {
-          "label": ""
+          "label": "詳細を非表示"
         }
       }
     },
@@ -2525,24 +2525,24 @@
       "description": "CPU、メモリ、ディスクなどのシステムハードウェアの使用",
       "option": {
         "hasShadow": {
-          "label": ""
+          "label": "グラフのシェーディングを有効にする"
         },
         "visibleCharts": {
-          "label": "",
-          "description": "",
+          "label": "グラフの表示",
+          "description": "表示するグラフを選択します。",
           "option": {
-            "cpu": "",
-            "memory": "",
-            "network": ""
+            "cpu": "CPU",
+            "memory": "メモリ",
+            "network": "ネットワーク"
           }
         },
         "labelDisplayMode": {
-          "label": "",
+          "label": "ラベル表示モード",
           "option": {
-            "textWithIcon": "",
-            "text": "",
-            "icon": "",
-            "hidden": ""
+            "textWithIcon": "アイコン付きでテキストを表示",
+            "text": "テキストのみ表示",
+            "icon": "アイコンのみ表示",
+            "hidden": "ラベルを隠す"
           }
         }
       },
@@ -3338,7 +3338,7 @@
               "label": "ファイアウォールのインターフェース"
             },
             "weather": {
-              "label": ""
+              "label": "天気"
             }
           },
           "interval": {
@@ -3466,19 +3466,19 @@
             "subtitle": "{count} 個が Homarr のコードで使用されています"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "ホットキー",
+            "subtitle": "ワークフローを強化するためのキーボードショートカット",
             "field": {
-              "shortcut": "",
-              "action": ""
+              "shortcut": "ショートカット",
+              "action": "アクション"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
-              "openSpotlight": ""
+              "toggleBoardEdit": "ボード編集モードの切り替え",
+              "toggleColorScheme": "ライト/ダークモードの切り替え",
+              "saveNotebook": "ノートブックを保存 (ノートブックウィジェット内のみ)",
+              "openSpotlight": "検索を開く"
             },
-            "note": ""
+            "note": "ヒント：CtrlキーとMacOSの⌘キーの両方を参照します"
           }
         }
       }
