@@ -317,7 +317,7 @@ importers:
         specifier: 2.2.2
         version: 2.2.2
       swagger-ui-react:
-        specifier: ^5.29.2
+        specifier: ^5.29.3
         version: 5.29.3(@types/react@19.2.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       use-deep-compare-effect:
         specifier: ^1.8.1
