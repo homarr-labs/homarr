@@ -59,7 +59,7 @@ importers:
         specifier: ^14.1.0
         version: 14.1.0(semantic-release@24.2.9(typescript@5.9.3))
       '@testcontainers/redis':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1
       '@turbo/gen':
         specifier: ^2.5.8
@@ -89,7 +89,7 @@ importers:
         specifier: ^24.2.9
         version: 24.2.9(typescript@5.9.3)
       testcontainers:
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1
       turbo:
         specifier: ^2.5.8
@@ -1151,10 +1151,10 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       '@testcontainers/mysql':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1
       '@testcontainers/postgresql':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1
       better-sqlite3:
         specifier: ^12.4.1
