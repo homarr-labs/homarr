@@ -1708,7 +1708,7 @@
       "name": "Takvim",
       "description": "Entegrasyonlarınızdaki etkinlikleri belirli bir göreli zaman dilimi içinde bir takvim görünümünde görüntüleyin",
       "duration": {
-        "allDay": ""
+        "allDay": "Bütün gün"
       },
       "option": {
         "releaseType": {
@@ -1982,21 +1982,21 @@
         "name": "İsim",
         "id": "Kimlik",
         "metadata": {
-          "title": "",
+          "title": "Meraklısı için istatistikler",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Video",
+            "resolution": "Çözünürlük"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Ses",
+            "channelCount": "Ses kanalları",
+            "codec": "Ses kodekleri"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "Kod Dönüştürme",
+            "container": "Konteyner",
+            "resolution": "Çözünürlük",
+            "target": "Hedef Kodek"
           }
         }
       }
@@ -3338,7 +3338,7 @@
               "label": "Güvenlik Duvarı Arayüzleri"
             },
             "weather": {
-              "label": ""
+              "label": "Hava Durumu"
             }
           },
           "interval": {
@@ -3466,19 +3466,19 @@
             "subtitle": "Homarr kodlamasında {count} kütüphane kullanılıyor"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "Kısayollar",
+            "subtitle": "İş akışınızı geliştirmek için klavye kısayolları",
             "field": {
-              "shortcut": "",
-              "action": ""
+              "shortcut": "Kısayol",
+              "action": "Eylem"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
-              "openSpotlight": ""
+              "toggleBoardEdit": "Panonun düzenleme modunu değiştir",
+              "toggleColorScheme": "Aydınlık/karanlık mod",
+              "saveNotebook": "Not defterini kaydet (sadece not defteri widget'ının içinde)",
+              "openSpotlight": "Aramayı aç"
             },
-            "note": ""
+            "note": "İpucu: Mod, macOS'ta hem Ctrl tuşunu hem de ⌘ tuşunu ifade eder"
           }
         }
       }
