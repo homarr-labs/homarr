@@ -153,10 +153,10 @@
         "label": "Usar ícone para pings"
       },
       "defaultSearchEngine": {
-        "label": ""
+        "label": "Mecanismo de busca padrão"
       },
       "openSearchInNewTab": {
-        "label": ""
+        "label": "Abrir resultados da busca em uma nova aba"
       }
     },
     "error": {
@@ -219,10 +219,10 @@
       "changeSearchPreferences": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Preferências de busca alteradas com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível alterar as preferências de busca"
           }
         }
       },
