@@ -1,3 +1,34 @@
+## [1.41.0](https://github.com/homarr-labs/homarr/compare/v1.40.0...v1.41.0) (2025-10-10)
+
+### Features
+
+* **dynamic-sections:** add custom css classes option ([#4256](https://github.com/homarr-labs/homarr/issues/4256)) ([4c2e352](https://github.com/homarr-labs/homarr/commit/4c2e352acac62434c840e407887f8fddfc8c426a))
+* **integrations:** allow changing secret kinds of existing integration ([#4254](https://github.com/homarr-labs/homarr/issues/4254)) ([3b708c5](https://github.com/homarr-labs/homarr/commit/3b708c5ebdcfb3425cb0b777f72ff2aaea23386b))
+* **weather-widget:** add imperial windspeed option ([#4253](https://github.com/homarr-labs/homarr/issues/4253)) ([50a23d7](https://github.com/homarr-labs/homarr/commit/50a23d76e3dc14f23a27125297b8901a6724d18a))
+
+### Bug Fixes
+
+* **deps:** update dependency @ctrl/deluge to ^7.4.0 ([#4227](https://github.com/homarr-labs/homarr/issues/4227)) ([cf2977f](https://github.com/homarr-labs/homarr/commit/cf2977f82189d9fa8b896012dd7730a641cc252b))
+* **deps:** update dependency @ctrl/qbittorrent to ^9.9.0 ([#4228](https://github.com/homarr-labs/homarr/issues/4228)) ([ee05137](https://github.com/homarr-labs/homarr/commit/ee051373512fbfb5fb70d78ea45755b2cf370f6a))
+* **deps:** update dependency @kubernetes/client-node to ^1.4.0 ([#4247](https://github.com/homarr-labs/homarr/issues/4247)) ([ec09fb7](https://github.com/homarr-labs/homarr/commit/ec09fb70a950cbef131352f60fdf45553c7fe99f))
+* **deps:** update dependency @octokit/auth-app to ^8.1.1 ([#4217](https://github.com/homarr-labs/homarr/issues/4217)) ([5955ae6](https://github.com/homarr-labs/homarr/commit/5955ae6f8b3c90a7c9b17760650095676303192e))
+* **deps:** update dependency dockerode to ^4.0.9 ([#4214](https://github.com/homarr-labs/homarr/issues/4214)) ([340f8f9](https://github.com/homarr-labs/homarr/commit/340f8f98e452c068c5d26973195ea676d2b3ee6e))
+* **deps:** update dependency dotenv to ^17.2.3 ([#4218](https://github.com/homarr-labs/homarr/issues/4218)) ([af448f0](https://github.com/homarr-labs/homarr/commit/af448f008571562492748986bd7cb2651623130e))
+* **deps:** update dependency drizzle-orm to ^0.44.6 ([#4237](https://github.com/homarr-labs/homarr/issues/4237)) ([3934252](https://github.com/homarr-labs/homarr/commit/3934252053792874c41a6bd545b20acd7ccef4e8))
+* **deps:** update dependency eslint-plugin-react-hooks to v6 ([#4231](https://github.com/homarr-labs/homarr/issues/4231)) ([76bc24b](https://github.com/homarr-labs/homarr/commit/76bc24b06aeec71b53b9f3351b98c076621d69d9))
+* **deps:** update dependency fast-xml-parser to ^5.3.0 ([#4245](https://github.com/homarr-labs/homarr/issues/4245)) ([c35c15c](https://github.com/homarr-labs/homarr/commit/c35c15c635f37d09071b9ccafcd532e1e2e9ccd4))
+* **deps:** update dependency swagger-ui-react to ^5.29.1 ([#4210](https://github.com/homarr-labs/homarr/issues/4210)) ([eb7a3a3](https://github.com/homarr-labs/homarr/commit/eb7a3a31f0ddf135664f5609c39b9d8ee72ef432))
+* **deps:** update dependency swagger-ui-react to ^5.29.2 ([#4212](https://github.com/homarr-labs/homarr/issues/4212)) ([055770c](https://github.com/homarr-labs/homarr/commit/055770c5e8e43dfc035b2a25d650383df865c118))
+* **deps:** update dependency swagger-ui-react to ^5.29.3 ([#4238](https://github.com/homarr-labs/homarr/issues/4238)) ([e726754](https://github.com/homarr-labs/homarr/commit/e7267548fe132d6b32e3ba8379ebe31fa8f16635))
+* **deps:** update dependency typescript-eslint to ^8.45.0 ([#4215](https://github.com/homarr-labs/homarr/issues/4215)) ([e827f66](https://github.com/homarr-labs/homarr/commit/e827f6653f1caabaf4da7d477aa59849e9d023b9))
+* **deps:** update dependency winston to v3.18.0 ([#4219](https://github.com/homarr-labs/homarr/issues/4219)) ([e1162c7](https://github.com/homarr-labs/homarr/commit/e1162c7907b3285f1e8bb9980340ca758786715d))
+* **deps:** update dependency winston to v3.18.1 ([#4220](https://github.com/homarr-labs/homarr/issues/4220)) ([84ace42](https://github.com/homarr-labs/homarr/commit/84ace42aa5eb5f3f8e3351e64b1e1ba6fe747544))
+* **deps:** update dependency winston to v3.18.3 ([#4222](https://github.com/homarr-labs/homarr/issues/4222)) ([d9de969](https://github.com/homarr-labs/homarr/commit/d9de9694c0d7bbb630d40e64c01dee082856ce0f))
+* **deps:** update mantine monorepo to ^8.3.3 ([#4242](https://github.com/homarr-labs/homarr/issues/4242)) ([982a0c9](https://github.com/homarr-labs/homarr/commit/982a0c96a5d40a532d4fa06640f0d35e8125e1f2))
+* **deps:** update react monorepo to v19.2.0 ([#4230](https://github.com/homarr-labs/homarr/issues/4230)) ([35172fa](https://github.com/homarr-labs/homarr/commit/35172fa91007487c6da3f6e0709dadeab20621c6))
+* **deps:** update testcontainers-node monorepo to ^11.7.0 ([#4211](https://github.com/homarr-labs/homarr/issues/4211)) ([a21fbd2](https://github.com/homarr-labs/homarr/commit/a21fbd26dad82427e62a5a6b18f72dc32c00e608))
+* **deps:** update testcontainers-node monorepo to ^11.7.1 ([#4213](https://github.com/homarr-labs/homarr/issues/4213)) ([7e500f7](https://github.com/homarr-labs/homarr/commit/7e500f772d769b30354a73d73e2fee6382fb8811))
+
 ## [1.40.0](https://github.com/homarr-labs/homarr/compare/v1.39.0...v1.40.0) (2025-10-03)
 
 ### Features
