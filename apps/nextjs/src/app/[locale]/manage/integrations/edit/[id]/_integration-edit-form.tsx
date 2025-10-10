@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button, Fieldset, Group, Stack, TextInput } from "@mantine/core";
+import { Alert, Button, Fieldset, Group, Stack, Text, TextInput } from "@mantine/core";
+import { IconInfoCircle } from "@tabler/icons-react";
 import type { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -18,6 +19,7 @@ import { integrationUpdateSchema } from "@homarr/validation/integration";
 
 import { SecretCard } from "../../_components/secrets/integration-secret-card";
 import { IntegrationSecretInput } from "../../_components/secrets/integration-secret-inputs";
+import { SecretKindsSegmentedControl } from "../../_components/secrets/integration-secret-segmented-control";
 import { IntegrationTestConnectionError } from "../../_components/test-connection/integration-test-connection-error";
 import type { AnyMappedTestConnectionError } from "../../_components/test-connection/types";
 
@@ -28,19 +30,21 @@ interface EditIntegrationForm {
 export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const t = useI18n();
   const { openConfirmModal } = useConfirmModal();
-  const secretsKinds =
+  const allSecretKinds = getAllSecretKindOptions(integration.kind);
+
+  const initialSecretsKinds =
     getAllSecretKindOptions(integration.kind).find((secretKinds) =>
       integration.secrets.every((secret) => secretKinds.includes(secret.kind)),
     ) ?? getDefaultSecretKinds(integration.kind);
 
-  const hasUrlSecret = secretsKinds.includes("url");
+  const hasUrlSecret = initialSecretsKinds.includes("url");
 
   const router = useRouter();
   const form = useZodForm(integrationUpdateSchema.omit({ id: true }), {
     initialValues: {
       name: integration.name,
       url: integration.url,
-      secrets: secretsKinds.map((kind) => ({
+      secrets: initialSecretsKinds.map((kind) => ({
         kind,
         value: integration.secrets.find((secret) => secret.kind === kind)?.value ?? "",
       })),
@@ -93,6 +97,10 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
     );
   };
 
+  const isInitialSecretKinds =
+    initialSecretsKinds.every((kind) => form.values.secrets.some((secret) => secret.kind === kind)) &&
+    form.values.secrets.length === initialSecretsKinds.length;
+
   return (
     <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
       <Stack>
@@ -104,36 +112,60 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
 
         <Fieldset legend={t("integration.secrets.title")}>
           <Stack gap="sm">
-            {secretsKinds.map((kind, index) => (
-              <SecretCard
-                key={kind}
-                secret={secretsMap.get(kind) ?? { kind, value: null, updatedAt: null }}
-                onCancel={() =>
-                  new Promise((resolve) => {
-                    // When nothing changed, just close the secret card
-                    if ((form.values.secrets[index]?.value ?? "") === (secretsMap.get(kind)?.value ?? "")) {
-                      return resolve(true);
+            {allSecretKinds.length > 1 && (
+              <SecretKindsSegmentedControl
+                defaultKinds={initialSecretsKinds}
+                secretKinds={allSecretKinds}
+                form={form}
+              />
+            )}
+            {!isInitialSecretKinds
+              ? null
+              : form.values.secrets.map((secret, index) => (
+                  <SecretCard
+                    key={secret.kind}
+                    secret={secretsMap.get(secret.kind) ?? { kind: secret.kind, value: null, updatedAt: null }}
+                    onCancel={() =>
+                      new Promise((resolve) => {
+                        // When nothing changed, just close the secret card
+                        if ((secret.value ?? "") === (secretsMap.get(secret.kind)?.value ?? "")) {
+                          return resolve(true);
+                        }
+                        openConfirmModal({
+                          title: t("integration.secrets.reset.title"),
+                          children: t("integration.secrets.reset.message"),
+                          onCancel: () => resolve(false),
+                          onConfirm: () => {
+                            form.setFieldValue(`secrets.${index}.value`, secretsMap.get(secret.kind)?.value ?? "");
+                            resolve(true);
+                          },
+                        });
+                      })
                     }
-                    openConfirmModal({
-                      title: t("integration.secrets.reset.title"),
-                      children: t("integration.secrets.reset.message"),
-                      onCancel: () => resolve(false),
-                      onConfirm: () => {
-                        form.setFieldValue(`secrets.${index}.value`, secretsMap.get(kind)?.value ?? "");
-                        resolve(true);
-                      },
-                    });
-                  })
-                }
-              >
-                <IntegrationSecretInput
-                  label={t(`integration.secrets.kind.${kind}.newLabel`)}
-                  key={kind}
-                  kind={kind}
-                  {...form.getInputProps(`secrets.${index}.value`)}
-                />
-              </SecretCard>
-            ))}
+                  >
+                    <IntegrationSecretInput
+                      label={t(`integration.secrets.kind.${secret.kind}.newLabel`)}
+                      key={secret.kind}
+                      kind={secret.kind}
+                      {...form.getInputProps(`secrets.${index}.value`)}
+                    />
+                  </SecretCard>
+                ))}
+            {isInitialSecretKinds
+              ? null
+              : form.values.secrets.map(({ kind }, index) => (
+                  <IntegrationSecretInput
+                    withAsterisk
+                    key={kind}
+                    kind={kind}
+                    {...form.getInputProps(`secrets.${index}.value`)}
+                  />
+                ))}
+            {form.values.secrets.length === 0 && (
+              <Alert icon={<IconInfoCircle size={"1rem"} />} color={"blue"}>
+                <Text c={"blue"}>{t("integration.secrets.noSecretsRequired.text")}</Text>
+              </Alert>
+            )}
           </Stack>
         </Fieldset>
 
