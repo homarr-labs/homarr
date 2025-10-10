@@ -1708,7 +1708,7 @@
       "name": "Takvim",
       "description": "Entegrasyonlarınızdaki etkinlikleri belirli bir göreli zaman dilimi içinde bir takvim görünümünde görüntüleyin",
       "duration": {
-        "allDay": ""
+        "allDay": "Bütün gün"
       },
       "option": {
         "releaseType": {
@@ -1980,7 +1980,25 @@
         "currentlyPlaying": "Şuan Oynatılan",
         "user": "Kullanıcı",
         "name": "İsim",
-        "id": "Kimlik"
+        "id": "Kimlik",
+        "metadata": {
+          "title": "Meraklısı için istatistikler",
+          "video": {
+            "title": "Video",
+            "resolution": "Çözünürlük"
+          },
+          "audio": {
+            "title": "Ses",
+            "channelCount": "Ses kanalları",
+            "codec": "Ses kodekleri"
+          },
+          "transcoding": {
+            "title": "Kod Dönüştürme",
+            "container": "Konteyner",
+            "resolution": "Çözünürlük",
+            "target": "Hedef Kodek"
+          }
+        }
       }
     },
     "downloads": {
@@ -3320,7 +3338,7 @@
               "label": "Güvenlik Duvarı Arayüzleri"
             },
             "weather": {
-              "label": ""
+              "label": "Hava Durumu"
             }
           },
           "interval": {
@@ -3446,6 +3464,21 @@
           "libraries": {
             "title": "Kütüphaneler",
             "subtitle": "Homarr kodlamasında {count} kütüphane kullanılıyor"
+          },
+          "hotkeys": {
+            "title": "Kısayollar",
+            "subtitle": "İş akışınızı geliştirmek için klavye kısayolları",
+            "field": {
+              "shortcut": "Kısayol",
+              "action": "Eylem"
+            },
+            "action": {
+              "toggleBoardEdit": "Panonun düzenleme modunu değiştir",
+              "toggleColorScheme": "Aydınlık/karanlık mod",
+              "saveNotebook": "Not defterini kaydet (sadece not defteri widget'ının içinde)",
+              "openSpotlight": "Aramayı aç"
+            },
+            "note": "İpucu: Mod, macOS'ta hem Ctrl tuşunu hem de ⌘ tuşunu ifade eder"
           }
         }
       }

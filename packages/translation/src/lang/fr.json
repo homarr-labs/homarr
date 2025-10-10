@@ -946,24 +946,24 @@
           "newLabel": "Nouveau sujet"
         },
         "url": {
-          "label": "",
-          "newLabel": ""
+          "label": "Url",
+          "newLabel": "Nouvelle url"
         },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Clé API (Key)",
+          "newLabel": "Nouvelle clé API (Key)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "Clé API (secrète)",
+          "newLabel": "Nouvelle clé API (secrète)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Identifiant de l'application",
+          "newLabel": "Nouvel Id de l'Application"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Id d'installation",
+          "newLabel": "Nouvel ID d'installation"
         },
         "privateKey": {
           "label": "",
@@ -1980,7 +1980,25 @@
         "currentlyPlaying": "En cours de lecture",
         "user": "Utilisateur",
         "name": "Nom",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "Résolution",
+            "target": ""
+          }
+        }
       }
     },
     "downloads": {
@@ -2312,7 +2330,7 @@
           "label": "Afficher les détails"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Afficher uniquement l'icône"
         },
         "topReleases": {
           "label": "Meilleures sorties",
@@ -2331,8 +2349,8 @@
             "listAlreadyImportedImages": "Liste des images déjà importées",
             "allImagesAlreadyImported": "Toutes les images déjà importées",
             "onlyAdminCanImport": "Seuls les administrateurs peuvent importer depuis docker",
-            "selectAll": "",
-            "deselectAll": ""
+            "selectAll": "Tout sélectionner",
+            "deselectAll": "Tout déselectionner"
           },
           "provider": {
             "label": "Fournisseur"
@@ -2394,7 +2412,7 @@
       "starsCount": "Étoiles",
       "forksCount": "",
       "issuesCount": "Problèmes ouverts",
-      "markViewed": "",
+      "markViewed": "Marquer comme vu(s)",
       "openProjectPage": "Ouvrir la page du projet",
       "openReleasePage": "Ouvrir la page de publication",
       "releaseDescription": "Description de la publication",
@@ -2468,21 +2486,21 @@
       }
     },
     "firewall": {
-      "name": "",
+      "name": "Surveillance du pare-feu",
       "description": "",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "Système",
+        "interfaces": "Interfaces"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Impossible d'obtenir les données depuis le pare-feu"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "Interfaces réseau à afficher"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
+        "fwname": "Nom",
+        "version": "Version",
         "versiontitle": "",
         "cputitle": "",
         "memorytitle": "",
@@ -3446,6 +3464,21 @@
           "libraries": {
             "title": "Bibliothèques",
             "subtitle": "{count} utilisés dans le Code d'Homarr"
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }

@@ -1,26 +1,15 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Alert,
-  Button,
-  Checkbox,
-  Collapse,
-  Fieldset,
-  Group,
-  SegmentedControl,
-  Stack,
-  Text,
-  TextInput,
-} from "@mantine/core";
+import { Alert, Button, Checkbox, Collapse, Fieldset, Group, Stack, Text, TextInput } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
-import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
 import {
   getAllSecretKindOptions,
   getIconUrl,
@@ -28,14 +17,14 @@ import {
   getIntegrationName,
   integrationDefs,
 } from "@homarr/definitions";
-import type { UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import { appHrefSchema } from "@homarr/validation/app";
 import { integrationCreateSchema } from "@homarr/validation/integration";
 
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
+import { SecretKindsSegmentedControl } from "../_components/secrets/integration-secret-segmented-control";
 import { IntegrationTestConnectionError } from "../_components/test-connection/integration-test-connection-error";
 import type { AnyMappedTestConnectionError } from "../_components/test-connection/types";
 
@@ -216,42 +205,6 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
       </Stack>
     </form>
   );
-};
-
-interface SecretKindsSegmentedControlProps {
-  secretKinds: IntegrationSecretKind[][];
-  form: UseFormReturnType<FormType, (values: FormType) => FormType>;
-}
-
-const SecretKindsSegmentedControl = ({ secretKinds, form }: SecretKindsSegmentedControlProps) => {
-  const t = useScopedI18n("integration.secrets");
-
-  const secretKindGroups = secretKinds.map((kinds) => ({
-    label:
-      kinds.length === 0
-        ? t("noSecretsRequired.segmentTitle")
-        : kinds.map((kind) => t(`kind.${kind}.label`)).join(" & "),
-    value: kinds.length === 0 ? "empty" : kinds.join("-"),
-  }));
-
-  const onChange = useCallback(
-    (value: string) => {
-      if (value === "empty") {
-        form.setFieldValue("secrets", []);
-        return;
-      }
-
-      const kinds = value.split("-") as IntegrationSecretKind[];
-      const secrets = kinds.map((kind) => ({
-        kind,
-        value: "",
-      }));
-      form.setFieldValue("secrets", secrets);
-    },
-    [form],
-  );
-
-  return <SegmentedControl fullWidth data={secretKindGroups} onChange={onChange}></SegmentedControl>;
 };
 
 type FormType = z.infer<typeof formSchema>;

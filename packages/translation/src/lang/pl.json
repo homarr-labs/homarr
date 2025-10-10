@@ -1779,7 +1779,7 @@
         "freezingRain": "Marznący deszcz",
         "snowFall": "Opady śniegu",
         "snowGrains": "Ziarna śniegu",
-        "rainShowers": "Deszczownice",
+        "rainShowers": "Przelotne opady deszczu",
         "snowShowers": "Przelotne opady śniegu",
         "thunderstorm": "Burza",
         "thunderstormWithHail": "Burza z gradem",
@@ -1980,7 +1980,25 @@
         "currentlyPlaying": "Obecnie odtwarzane",
         "user": "Użytkownik",
         "name": "Nazwa",
-        "id": "ID"
+        "id": "ID",
+        "metadata": {
+          "title": "Statystyki dla nerdów",
+          "video": {
+            "title": "Wideo",
+            "resolution": "Rozdzielczość"
+          },
+          "audio": {
+            "title": "Dźwięk",
+            "channelCount": "Kanały audio",
+            "codec": "Kodek audio"
+          },
+          "transcoding": {
+            "title": "Transkodowanie",
+            "container": "Kontener",
+            "resolution": "Rozdzielczość",
+            "target": "Kodek docelowy"
+          }
+        }
       }
     },
     "downloads": {
@@ -3446,6 +3464,21 @@
           "libraries": {
             "title": "Biblioteki",
             "subtitle": "{count} używanych w kodzie Homarr"
+          },
+          "hotkeys": {
+            "title": "Skróty klawiszowe",
+            "subtitle": "Skróty klawiaturowe ułatwiające pracę”",
+            "field": {
+              "shortcut": "Skrót",
+              "action": "Akcja"
+            },
+            "action": {
+              "toggleBoardEdit": "Przełącz tryb edycji tablicy",
+              "toggleColorScheme": "Przełącz tryb jasny/ciemny",
+              "saveNotebook": "Zapisz notatnik (tylko w widżecie notatnika)",
+              "openSpotlight": "Otwórz wyszukiwarkę"
+            },
+            "note": "Wskazówka: Mod odnosi się zarówno do klawisza Ctrl, jak i ⌘ na macOS"
           }
         }
       }

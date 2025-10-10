@@ -1,4 +1,5 @@
 import { Badge, Box, Card } from "@mantine/core";
+import combineClasses from "clsx";
 
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 
@@ -24,7 +25,7 @@ export const BoardDynamicSection = ({ section }: Props) => {
       }}
     >
       <Card
-        className={classes.itemCard}
+        className={combineClasses(classes.itemCard, section.options.customCssClasses.join(" "))}
         w="100%"
         h="100%"
         withBorder

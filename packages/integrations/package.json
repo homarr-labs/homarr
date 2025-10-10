@@ -25,8 +25,8 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@ctrl/deluge": "^7.3.0",
-    "@ctrl/qbittorrent": "^9.8.0",
+    "@ctrl/deluge": "^7.4.0",
+    "@ctrl/qbittorrent": "^9.9.0",
     "@ctrl/transmission": "^7.4.0",
     "@gitbeaker/rest": "^43.5.0",
     "@homarr/certificates": "workspace:^0.1.0",
@@ -40,7 +40,7 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@jellyfin/sdk": "^0.11.0",
-    "@octokit/auth-app": "^8.1.0",
+    "@octokit/auth-app": "^8.1.1",
     "ical.js": "^2.2.1",
     "maria2": "^0.4.1",
     "node-ical": "^0.21.0",
@@ -57,7 +57,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-unifi": "^2.5.1",
     "@types/xml2js": "^0.4.14",
-    "eslint": "^9.36.0",
-    "typescript": "^5.9.2"
+    "eslint": "^9.37.0",
+    "typescript": "^5.9.3"
   }
 }
