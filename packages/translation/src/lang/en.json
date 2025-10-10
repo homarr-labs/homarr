@@ -1157,6 +1157,9 @@
         "title": {
           "label": "Title"
         },
+        "customCssClasses": {
+          "label": "Custom css classes"
+        },
         "borderColor": {
           "label": "Border color"
         }
