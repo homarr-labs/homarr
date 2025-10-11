@@ -1145,6 +1145,12 @@
           "groupNameTaken": "Gruppenavn allerede taget"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1156,6 +1162,9 @@
       "option": {
         "title": {
           "label": "Titel"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "Kantfarve"
@@ -1708,7 +1717,7 @@
       "name": "Kalender",
       "description": "Vis begivenheder fra dine integrationer i en kalendervisning inden for en vis relativ tidsperiode",
       "duration": {
-        "allDay": ""
+        "allDay": "Hele dagen"
       },
       "option": {
         "releaseType": {
@@ -1743,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "Vis aktuel vindhastighed",
           "description": "Kun på nuværende vejr"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Vejr lokation"
@@ -1982,21 +1994,21 @@
         "name": "Navn",
         "id": "Id",
         "metadata": {
-          "title": "",
+          "title": "Statistik for nørder",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Video",
+            "resolution": "Opløsning"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Lyd",
+            "channelCount": "Lyd kanaler",
+            "codec": "Lyd codec"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "Transkoder",
+            "container": "Container",
+            "resolution": "Opløsning",
+            "target": "Mål codec"
           }
         }
       }
@@ -3338,7 +3350,7 @@
               "label": "Firewall Grænseflader"
             },
             "weather": {
-              "label": ""
+              "label": "Vejr"
             }
           },
           "interval": {
@@ -3466,19 +3478,19 @@
             "subtitle": "{count} brugt i koden for Homarr"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "Genvejstaster",
+            "subtitle": "Tastaturgenveje til at forbedre din arbejdsgang",
             "field": {
-              "shortcut": "",
-              "action": ""
+              "shortcut": "Genvej",
+              "action": "Handling"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
-              "openSpotlight": ""
+              "toggleBoardEdit": "Skift tavleredigeringstilstand",
+              "toggleColorScheme": "Slå lys/mørk tilstand til/fra",
+              "saveNotebook": "Gem notesbog (kun inde i notesbog widget)",
+              "openSpotlight": "Åbn søgefunktionen"
             },
-            "note": ""
+            "note": "Tip: Mod refererer til både Ctrl-tasten og -tasten på macOS"
           }
         }
       }

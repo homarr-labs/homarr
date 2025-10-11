@@ -1145,6 +1145,12 @@
           "groupNameTaken": "Имя группы уже занято"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1155,6 +1161,9 @@
       },
       "option": {
         "title": {
+          "label": ""
+        },
+        "customCssClasses": {
           "label": ""
         },
         "borderColor": {
@@ -1743,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "Показать текущую скорость ветра",
           "description": "Только для текущей погоды"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Местоположение"

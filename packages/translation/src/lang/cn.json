@@ -1145,6 +1145,12 @@
           "groupNameTaken": "用户组名称已存在"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1156,6 +1162,9 @@
       "option": {
         "title": {
           "label": "标题"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "边界颜色"
@@ -1743,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "显示当前风速",
           "description": "仅在当前天气时"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "天气位置"
