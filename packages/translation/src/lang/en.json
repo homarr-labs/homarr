@@ -2986,13 +2986,19 @@
           "invite": "Invites",
           "integration": "Integrations",
           "app": "Apps",
-          "group": "Groups"
+          "group": "Groups",
+          "searchEngine": "Search engines",
+          "media": "Medias"
         },
         "statisticLabel": {
           "boards": "Boards",
           "resources": "Resources",
           "authentication": "Authentication",
           "authorization": "Authorization"
+        },
+        "heroBanner": {
+          "title": "Welcome back to your",
+          "subtitle": "{app} Board"
         }
       },
       "board": {
