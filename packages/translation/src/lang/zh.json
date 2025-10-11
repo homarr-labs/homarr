@@ -1145,6 +1145,12 @@
           "groupNameTaken": "用戶組名稱已存在"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1156,6 +1162,9 @@
       "option": {
         "title": {
           "label": "標題"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "邊框顏色"
@@ -1743,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "顯示當前風速",
           "description": "僅限當前天氣"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "天氣位置"

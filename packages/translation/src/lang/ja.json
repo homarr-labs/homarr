@@ -1145,6 +1145,12 @@
           "groupNameTaken": "グループ名は、既に使用されています"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1156,6 +1162,9 @@
       "option": {
         "title": {
           "label": "タイトル"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "境界線の色"
@@ -1743,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "現在の風速を表示",
           "description": "現在の天気のみ表示"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "天候の場所"

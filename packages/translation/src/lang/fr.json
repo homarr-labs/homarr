@@ -1145,6 +1145,12 @@
           "groupNameTaken": "Nom de groupe déjà utilisé"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1156,6 +1162,9 @@
       "option": {
         "title": {
           "label": "Titre"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "Couleur de la bordure"
@@ -1743,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "Afficher la vitesse actuelle du vent",
           "description": "Uniquement sur la météo actuelle"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Lieu de la météo"
