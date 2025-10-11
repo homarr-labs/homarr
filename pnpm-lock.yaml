@@ -1434,7 +1434,7 @@ importers:
         specifier: ^7.4.0
         version: 7.4.0
       '@ctrl/qbittorrent':
-        specifier: ^9.9.0
+        specifier: ^9.9.1
         version: 9.9.1
       '@ctrl/transmission':
         specifier: ^7.4.0
