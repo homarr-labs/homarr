@@ -16,7 +16,5 @@ export const CurrentUserAvatar = async ({ size }: CurrentUserAvatarProps) => {
     email: currentSession?.user.email ?? null,
   };
 
-  if (!user.image && !user.email && user.name) user.image = null;
-
   return <UserAvatar user={user} size={size} />;
 };
