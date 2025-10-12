@@ -2986,13 +2986,19 @@
           "invite": "招待",
           "integration": "連携機能",
           "app": "アプリ",
-          "group": "グループ"
+          "group": "グループ",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "ボード",
           "resources": "リソース",
           "authentication": "認証",
           "authorization": "認可"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

@@ -2986,13 +2986,19 @@
           "invite": "邀请",
           "integration": "集成",
           "app": "应用",
-          "group": "群组"
+          "group": "群组",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "面板",
           "resources": "资源",
           "authentication": "认证",
           "authorization": "认证"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

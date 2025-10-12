@@ -2986,13 +2986,19 @@
           "invite": "Приглашения",
           "integration": "Интеграции",
           "app": "Приложения",
-          "group": "Группы"
+          "group": "Группы",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Панели",
           "resources": "Ресурсы",
           "authentication": "Аутентификация",
           "authorization": "Авторизация"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

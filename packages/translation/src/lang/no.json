@@ -2986,13 +2986,19 @@
           "invite": "Invitasjoner",
           "integration": "Integrasjoner",
           "app": "Apper",
-          "group": "Grupper"
+          "group": "Grupper",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Tavler",
           "resources": "Ressurser",
           "authentication": "Autentisering",
           "authorization": "Autorisasjon"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

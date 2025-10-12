@@ -2986,13 +2986,19 @@
           "invite": "Pozvánky",
           "integration": "",
           "app": "Aplikace",
-          "group": "Skupiny"
+          "group": "Skupiny",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Plochy",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

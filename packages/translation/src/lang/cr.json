@@ -2986,13 +2986,19 @@
           "invite": "crwdns1620:0crwdne1620:0",
           "integration": "crwdns1622:0crwdne1622:0",
           "app": "crwdns1624:0crwdne1624:0",
-          "group": "crwdns1626:0crwdne1626:0"
+          "group": "crwdns1626:0crwdne1626:0",
+          "searchEngine": "crwdns3778:0crwdne3778:0",
+          "media": "crwdns3780:0crwdne3780:0"
         },
         "statisticLabel": {
           "boards": "crwdns1628:0crwdne1628:0",
           "resources": "crwdns1630:0crwdne1630:0",
           "authentication": "crwdns1632:0crwdne1632:0",
           "authorization": "crwdns1634:0crwdne1634:0"
+        },
+        "heroBanner": {
+          "title": "crwdns3782:0crwdne3782:0",
+          "subtitle": "crwdns3784:0{app}crwdne3784:0"
         }
       },
       "board": {

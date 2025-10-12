@@ -2986,13 +2986,19 @@
           "invite": "Uzaicinājumi",
           "integration": "",
           "app": "Lietotnes",
-          "group": ""
+          "group": "",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Dēļi",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

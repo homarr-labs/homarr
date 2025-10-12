@@ -2986,13 +2986,19 @@
           "invite": "Invitationer",
           "integration": "Integrationer",
           "app": "Apps",
-          "group": "Grupper"
+          "group": "Grupper",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Tavler",
           "resources": "Ressourcer",
           "authentication": "Autorisering",
           "authorization": "Autorisation"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
