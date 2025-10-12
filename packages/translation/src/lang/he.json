@@ -2986,13 +2986,19 @@
           "invite": "הזמנות",
           "integration": "אינטגרציות",
           "app": "אפליקציות",
-          "group": "קבוצות"
+          "group": "קבוצות",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "לוחות",
           "resources": "מקורות",
           "authentication": "אימות",
           "authorization": "הרשאה"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

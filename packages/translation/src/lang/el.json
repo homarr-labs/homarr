@@ -2986,13 +2986,19 @@
           "invite": "Προσκλήσεις",
           "integration": "",
           "app": "Εφαρμογές",
-          "group": ""
+          "group": "",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Πίνακες",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

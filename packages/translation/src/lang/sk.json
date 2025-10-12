@@ -2986,13 +2986,19 @@
           "invite": "Pozvánky",
           "integration": "Integrácie",
           "app": "Aplikácie",
-          "group": "Skupiny"
+          "group": "Skupiny",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Dosky",
           "resources": "Zdroje",
           "authentication": "Autentifikácia",
           "authorization": "Autorizácia"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

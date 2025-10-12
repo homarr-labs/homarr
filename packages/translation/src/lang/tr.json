@@ -2986,13 +2986,19 @@
           "invite": "Davetler",
           "integration": "Entegrasyonlar",
           "app": "Uygulamalar",
-          "group": "Gruplar"
+          "group": "Gruplar",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Paneller",
           "resources": "Kaynaklar",
           "authentication": "Kimlik doğrulama",
           "authorization": "Yetkilendirme"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

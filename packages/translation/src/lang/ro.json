@@ -2986,13 +2986,19 @@
           "invite": "Invitații",
           "integration": "",
           "app": "Aplicații",
-          "group": ""
+          "group": "",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Planșe",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

@@ -2986,13 +2986,19 @@
           "invite": "Uitnodigingen",
           "integration": "Integraties",
           "app": "Apps",
-          "group": "Groepen"
+          "group": "Groepen",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Borden",
           "resources": "Bronnen",
           "authentication": "Authenticatie",
           "authorization": "Authorisatie"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

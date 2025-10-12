@@ -2986,13 +2986,19 @@
           "invite": "Meghívók",
           "integration": "Integrációk",
           "app": "Alkalmazások",
-          "group": "Csoportok"
+          "group": "Csoportok",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Táblák",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

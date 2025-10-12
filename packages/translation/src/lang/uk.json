@@ -2986,13 +2986,19 @@
           "invite": "Запрошення",
           "integration": "Інтеграції",
           "app": "Додатки",
-          "group": "Групи"
+          "group": "Групи",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Дошки",
           "resources": "Ресурси",
           "authentication": "Аутентифікація",
           "authorization": "Авторизація"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

@@ -2986,13 +2986,19 @@
           "invite": "Convites",
           "integration": "",
           "app": "Aplicativos",
-          "group": ""
+          "group": "",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Placas",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

@@ -2986,13 +2986,19 @@
           "invite": "",
           "integration": "",
           "app": "",
-          "group": ""
+          "group": "",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

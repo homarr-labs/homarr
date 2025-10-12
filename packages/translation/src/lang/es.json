@@ -2986,13 +2986,19 @@
           "invite": "Invitaciones",
           "integration": "Integraciones",
           "app": "Aplicaciones",
-          "group": "Grupos"
+          "group": "Grupos",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Tableros",
           "resources": "Recursos",
           "authentication": "Autenticación",
           "authorization": "Autenticación"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
