@@ -61,6 +61,7 @@ export const OidcProvider = (headers: ReadonlyHeaders | null): OIDCConfig<Profil
       id: profile.sub,
       name,
       email: profile.email,
+      image: typeof profile.picture === "string" ? profile.picture : null,
       provider: "oidc",
     };
   },
