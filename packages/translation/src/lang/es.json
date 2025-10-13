@@ -2237,7 +2237,7 @@
           "total": "Total"
         },
         "users": {
-          "main": "Mejores usuarios",
+          "main": "Clasificación de usuarios",
           "requests": "Solicitudes"
         }
       }
@@ -4415,7 +4415,7 @@
     "page": {
       "list": {
         "title": "Certificados de confianza",
-        "description": "Utilizado por Homarr para solicitar datos de las integraciones.",
+        "description": "Utilizados por Homarr para solicitar datos de las integraciones.",
         "noResults": {
           "title": "Aún no hay certificados"
         },
