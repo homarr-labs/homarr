@@ -43,7 +43,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@auth/core": "^0.40.0",
+    "@auth/core": "^0.41.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",

@@ -691,8 +691,8 @@ importers:
   packages/auth:
     dependencies:
       '@auth/core':
-        specifier: ^0.40.0
-        version: 0.40.0
+        specifier: ^0.41.0
+        version: 0.41.0
       '@auth/drizzle-adapter':
         specifier: ^1.10.0
         version: 1.10.0
@@ -1130,8 +1130,8 @@ importers:
   packages/db:
     dependencies:
       '@auth/core':
-        specifier: ^0.40.0
-        version: 0.40.0
+        specifier: ^0.41.0
+        version: 0.41.0
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -2483,6 +2483,20 @@ packages:
 
   '@auth/core@0.40.0':
     resolution: {integrity: sha512-n53uJE0RH5SqZ7N1xZoMKekbHfQgjd0sAEyUbE+IYJnmuQkbvuZnXItCU7d+i7Fj8VGOgqvNO7Mw4YfBTlZeQw==}
+    peerDependencies:
+      '@simplewebauthn/browser': ^9.0.1
+      '@simplewebauthn/server': ^9.0.2
+      nodemailer: ^6.8.0
+    peerDependenciesMeta:
+      '@simplewebauthn/browser':
+        optional: true
+      '@simplewebauthn/server':
+        optional: true
+      nodemailer:
+        optional: true
+
+  '@auth/core@0.41.0':
+    resolution: {integrity: sha512-Wd7mHPQ/8zy6Qj7f4T46vg3aoor8fskJm6g2Zyj064oQ3+p0xNZXAV60ww0hY+MbTesfu29kK14Zk5d5JTazXQ==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
@@ -10901,6 +10915,14 @@ snapshots:
   '@asamuzakjp/nwsapi@2.3.9': {}
 
   '@auth/core@0.40.0':
+    dependencies:
+      '@panva/hkdf': 1.2.1
+      jose: 6.0.8
+      oauth4webapi: 3.3.0
+      preact: 10.24.3
+      preact-render-to-string: 6.5.11(preact@10.24.3)
+
+  '@auth/core@0.41.0':
     dependencies:
       '@panva/hkdf': 1.2.1
       jose: 6.0.8
