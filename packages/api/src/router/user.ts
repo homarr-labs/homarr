@@ -146,13 +146,6 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      if (user.provider !== "credentials") {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Profile image can not be changed for users with external providers",
-        });
-      }
-
       await ctx.db
         .update(users)
         .set({
