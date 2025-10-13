@@ -83,7 +83,8 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
             endDate,
             image: null,
             location: veventObject.location || null,
-            indicatorColor: "#ff8600",
+            indicatorColor:
+              "color" in veventObject && typeof veventObject.color === "string" ? veventObject.color : "#ff8600",
             links: [
               {
                 href: this.url(
