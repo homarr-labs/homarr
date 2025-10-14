@@ -1148,8 +1148,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1164,7 +1164,7 @@
           "label": "Título"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Clases CSS personalizadas"
         },
         "borderColor": {
           "label": "Color del borde"
@@ -1754,7 +1754,7 @@
           "description": "Sólo en el tiempo actual"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Usar mph para la velocidad del viento"
         },
         "location": {
           "label": "Ubicación"
@@ -1774,12 +1774,12 @@
           "description": "Cómo debería ser la fecha"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Amanecer",
         "sunset": "Atardecer",
-        "maxWindSpeed": "Velocidad máxima del viento: {maxWindSpeed} km/h",
-        "maxWindGusts": "Máximas ráfagas de viento: {maxWindGusts} km/h"
+        "maxWindSpeed": "Velocidad máxima del viento: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Máximas ráfagas de viento: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Despejado",
@@ -2987,8 +2987,8 @@
           "integration": "Integraciones",
           "app": "Aplicaciones",
           "group": "Grupos",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "Motores de búsqueda",
+          "media": "Imágenes"
         },
         "statisticLabel": {
           "boards": "Tableros",
@@ -2997,8 +2997,8 @@
           "authorization": "Autenticación"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Bienvenido de nuevo a tu",
+          "subtitle": "Tablero de {app}"
         }
       },
       "board": {
@@ -3062,11 +3062,11 @@
           "general": {
             "title": "General",
             "item": {
-              "language": "Idioma y región",
+              "language": "Idioma",
               "board": {
-                "title": "Tablero de inicio",
+                "title": "Tableros",
                 "type": {
-                  "general": "General",
+                  "general": "Escritorio",
                   "mobile": "Móvil"
                 }
               },
@@ -3235,7 +3235,7 @@
           "board": {
             "title": "Tableros",
             "homeBoard": {
-              "label": "Tablero de inicio global",
+              "label": "Tablero de escritorio global",
               "mobileLabel": "Tablero móvil global",
               "description": "Sólo los tableros públicos están disponibles para la selección"
             },
