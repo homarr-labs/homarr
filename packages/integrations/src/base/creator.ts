@@ -4,6 +4,7 @@ import type { Integration as DbIntegration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
+import { BeszelIntegration } from "../beszel/beszel-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { DashDotIntegration } from "../dashdot/dashdot-integration";
 import { DockerHubIntegration } from "../docker-hub/docker-hub-integration";
@@ -118,6 +119,7 @@ export const integrationCreators = {
   ntfy: NTFYIntegration,
   mock: MockIntegration,
   truenas: TrueNasIntegration,
+  beszel: BeszelIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {
