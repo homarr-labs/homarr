@@ -389,7 +389,7 @@
         }
       },
       "media": {
-        "title": "Media",
+        "title": "Multimedia",
         "item": {
           "upload": {
             "label": "Prześlij media",
@@ -978,7 +978,7 @@
     }
   },
   "media": {
-    "plural": "Medias",
+    "plural": "Multimedia",
     "search": "Znajdź media",
     "field": {
       "name": "Nazwa",
@@ -1148,8 +1148,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1164,7 +1164,7 @@
           "label": "Tytuł"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Niestandardowe klasy CSS"
         },
         "borderColor": {
           "label": "Kolor obramowania"
@@ -1754,7 +1754,7 @@
           "description": "Tylko dla bieżącej pogody"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Prędkość wiatru w mph"
         },
         "location": {
           "label": "Lokalizacja pogody"
@@ -2987,8 +2987,8 @@
           "integration": "Integracje",
           "app": "Aplikacje",
           "group": "Grupy",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "Wyszukiwarki",
+          "media": "Multimedia"
         },
         "statisticLabel": {
           "boards": "Tablice",
@@ -2997,8 +2997,8 @@
           "authorization": "Autoryzacja"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Witaj z powrotem w swojej",
+          "subtitle": "{app} tablicy"
         }
       },
       "board": {
