@@ -21,4 +21,6 @@
   automerge: false,
   baseBranches: ["dev"],
   dependencyDashboard: false,
+  // prevent special characters in branch names (otherwise git errors occur on windows)
+  branchNameStrict: true,
 }
