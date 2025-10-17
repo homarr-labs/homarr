@@ -153,7 +153,7 @@
         "label": "Usar ícone para pings"
       },
       "defaultSearchEngine": {
-        "label": "Mecanismo de busca padrão"
+        "label": "Mecanismo de pesquisa padrão"
       },
       "openSearchInNewTab": {
         "label": "Abrir resultados da busca em uma nova aba"
@@ -1145,6 +1145,12 @@
           "groupNameTaken": ""
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1155,6 +1161,9 @@
       },
       "option": {
         "title": {
+          "label": ""
+        },
+        "customCssClasses": {
           "label": ""
         },
         "borderColor": {
@@ -1743,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "",
           "description": ""
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Localização do tempo"
@@ -2974,13 +2986,19 @@
           "invite": "Convites",
           "integration": "",
           "app": "Aplicativos",
-          "group": ""
+          "group": "",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Placas",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

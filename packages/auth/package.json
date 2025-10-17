@@ -23,8 +23,8 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@auth/core": "^0.40.0",
-    "@auth/drizzle-adapter": "^1.10.0",
+    "@auth/core": "^0.41.0",
+    "@auth/drizzle-adapter": "^1.11.0",
     "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",
@@ -39,7 +39,7 @@
     "next-auth": "5.0.0-beta.29",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "zod": "^4.1.11"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

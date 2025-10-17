@@ -35,14 +35,14 @@
     "@trpc/tanstack-react-query": "^11.6.0",
     "node-cron": "^4.2.1",
     "react": "19.2.0",
-    "zod": "^4.1.11"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-cron": "^3.0.11",
-    "@types/react": "19.2.0",
+    "@types/react": "19.2.2",
     "eslint": "^9.37.0",
     "typescript": "^5.9.3"
   }

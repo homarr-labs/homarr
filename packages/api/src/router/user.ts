@@ -114,11 +114,10 @@ export const userRouter = createTRPCRouter({
     .input(
       z.object({
         userId: z.string(),
-        // Max image size of 256KB, only png and jpeg are allowed
         image: z
           .string()
           .regex(/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9/+]+=*$/g)
-          .max(262144)
+          .max(350000) // approximately 256KB in base64 (256 * 1024 * 4 / 3 + prefixes)
           .nullable(),
       }),
     )
@@ -144,13 +143,6 @@ export const userRouter = createTRPCRouter({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "User not found",
-        });
-      }
-
-      if (user.provider !== "credentials") {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Profile image can not be changed for users with external providers",
         });
       }
 

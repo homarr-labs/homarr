@@ -1145,6 +1145,12 @@
           "groupNameTaken": "Назва групи вже зайнята"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1155,6 +1161,9 @@
       },
       "option": {
         "title": {
+          "label": ""
+        },
+        "customCssClasses": {
           "label": ""
         },
         "borderColor": {
@@ -1743,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "Показати поточну швидкість вітру",
           "description": ""
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Погодна локація"
@@ -2974,13 +2986,19 @@
           "invite": "Запрошення",
           "integration": "Інтеграції",
           "app": "Додатки",
-          "group": "Групи"
+          "group": "Групи",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Дошки",
           "resources": "Ресурси",
           "authentication": "Аутентифікація",
           "authorization": "Авторизація"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

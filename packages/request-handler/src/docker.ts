@@ -47,7 +47,7 @@ async function getContainersWithStatsAsync() {
     const instance = dockerInstances.find(({ host }) => host === container.instance)?.instance;
     if (!instance) return null;
 
-    const stats = await instance.getContainer(container.Id).stats({ stream: false });
+    const stats = await instance.getContainer(container.Id).stats({ stream: false, "one-shot": true });
 
     return {
       id: container.Id,
@@ -60,7 +60,8 @@ async function getContainersWithStatsAsync() {
           return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
         })?.url ?? null,
       cpuUsage: calculateCpuUsage(stats),
-      memoryUsage: stats.memory_stats.usage,
+      // memory usage by default includes cache, which should not be shown as it is also not shown with docker stats command
+      memoryUsage: stats.memory_stats.usage - stats.memory_stats.stats.cache,
       image: container.Image,
       ports: container.Ports,
     };

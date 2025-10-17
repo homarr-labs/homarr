@@ -1145,6 +1145,12 @@
           "groupNameTaken": "Názov skupiny je už obsadený"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1156,6 +1162,9 @@
       "option": {
         "title": {
           "label": "Názov"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "Farba okraja"
@@ -1743,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "Zobraziť aktuálnu rýchlosť vetra",
           "description": "Len za aktuálneho počasia"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Poloha počasia"
@@ -2974,13 +2986,19 @@
           "invite": "Pozvánky",
           "integration": "Integrácie",
           "app": "Aplikácie",
-          "group": "Skupiny"
+          "group": "Skupiny",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Dosky",
           "resources": "Zdroje",
           "authentication": "Autentifikácia",
           "authorization": "Autorizácia"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

@@ -1145,6 +1145,12 @@
           "groupNameTaken": "Gruppenavn allerede tatt"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1155,6 +1161,9 @@
       },
       "option": {
         "title": {
+          "label": ""
+        },
+        "customCssClasses": {
           "label": ""
         },
         "borderColor": {
@@ -1743,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "Vis nåværende vindhastighet",
           "description": "Bare på nåværende vær"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Vær plassering"
@@ -2974,13 +2986,19 @@
           "invite": "Invitasjoner",
           "integration": "Integrasjoner",
           "app": "Apper",
-          "group": "Grupper"
+          "group": "Grupper",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Tavler",
           "resources": "Ressurser",
           "authentication": "Autentisering",
           "authorization": "Autorisasjon"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

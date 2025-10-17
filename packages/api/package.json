@@ -40,6 +40,7 @@
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/request-handler": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
+    "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@kubernetes/client-node": "^1.4.0",
     "@tanstack/react-query": "^5.90.2",
@@ -52,8 +53,8 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "superjson": "2.2.2",
-    "trpc-to-openapi": "^3.0.1",
-    "zod": "^4.1.11"
+    "trpc-to-openapi": "^3.1.0",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

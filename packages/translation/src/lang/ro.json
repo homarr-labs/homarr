@@ -1145,6 +1145,12 @@
           "groupNameTaken": ""
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1155,6 +1161,9 @@
       },
       "option": {
         "title": {
+          "label": ""
+        },
+        "customCssClasses": {
           "label": ""
         },
         "borderColor": {
@@ -1743,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "",
           "description": ""
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Locație meteo"
@@ -2974,13 +2986,19 @@
           "invite": "Invitații",
           "integration": "",
           "app": "Aplicații",
-          "group": ""
+          "group": "",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Planșe",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {

@@ -26,7 +26,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@ctrl/deluge": "^7.4.0",
-    "@ctrl/qbittorrent": "^9.9.0",
+    "@ctrl/qbittorrent": "^9.9.1",
     "@ctrl/transmission": "^7.4.0",
     "@gitbeaker/rest": "^43.5.0",
     "@homarr/certificates": "workspace:^0.1.0",
@@ -49,7 +49,7 @@
     "tsdav": "^2.1.5",
     "undici": "7.16.0",
     "xml2js": "^0.6.2",
-    "zod": "^4.1.11"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

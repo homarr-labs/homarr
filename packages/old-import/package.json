@@ -37,14 +37,14 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/core": "^8.3.3",
-    "@mantine/hooks": "^8.3.3",
+    "@mantine/core": "^8.3.4",
+    "@mantine/hooks": "^8.3.4",
     "adm-zip": "0.5.16",
     "next": "15.5.4",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "superjson": "2.2.2",
-    "zod": "^4.1.11",
+    "zod": "^4.1.12",
     "zod-form-data": "^3.0.1"
   },
   "devDependencies": {

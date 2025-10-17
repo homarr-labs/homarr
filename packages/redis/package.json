@@ -27,7 +27,7 @@
     "@homarr/db": "workspace:^",
     "@homarr/definitions": "workspace:^",
     "@homarr/log": "workspace:^",
-    "ioredis": "5.8.0",
+    "ioredis": "5.8.1",
     "superjson": "2.2.2"
   },
   "devDependencies": {
