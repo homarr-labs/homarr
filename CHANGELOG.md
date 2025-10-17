@@ -1,3 +1,32 @@
+## [1.42.0](https://github.com/homarr-labs/homarr/compare/v1.41.0...v1.42.0) (2025-10-17)
+
+### Features
+
+* **nextcloud:** reuse color from event for indicator ([#4270](https://github.com/homarr-labs/homarr/issues/4270)) ([afca800](https://github.com/homarr-labs/homarr/commit/afca8007f1919e0bb8cb17eefb9c41e3f28291cc))
+* **users:** allow profile picture change for external providers ([#4275](https://github.com/homarr-labs/homarr/issues/4275)) ([5c86930](https://github.com/homarr-labs/homarr/commit/5c86930220e97888eeae1c5440572ba7ef2434be))
+
+### Bug Fixes
+
+* **calendar:** recurring events not working ([#4265](https://github.com/homarr-labs/homarr/issues/4265)) ([1b7e67d](https://github.com/homarr-labs/homarr/commit/1b7e67dd9760c159e525cd88face00e28a260d13))
+* **deps:** update dependency @auth/core to ^0.41.0 ([#4282](https://github.com/homarr-labs/homarr/issues/4282)) ([60370a7](https://github.com/homarr-labs/homarr/commit/60370a7e33dc1957aa433cbd6a11ab69661606cc))
+* **deps:** update dependency @auth/drizzle-adapter to ^1.11.0 ([#4283](https://github.com/homarr-labs/homarr/issues/4283)) ([cd5d9c6](https://github.com/homarr-labs/homarr/commit/cd5d9c66ca42687faa9aeeff3d4d74d21a472a92))
+* **deps:** update dependency @ctrl/qbittorrent to ^9.9.1 ([#4229](https://github.com/homarr-labs/homarr/issues/4229)) ([c2b2b09](https://github.com/homarr-labs/homarr/commit/c2b2b098a1ae7df027265dfcd184c01be1831ffc))
+* **deps:** update dependency ioredis to v5.8.1 ([#4259](https://github.com/homarr-labs/homarr/issues/4259)) ([4ffbea3](https://github.com/homarr-labs/homarr/commit/4ffbea3b521b45c3dd52595d4f6824d25a6b4a05))
+* **deps:** update dependency mysql2 to v3.15.2 ([#4280](https://github.com/homarr-labs/homarr/issues/4280)) ([65ccfdf](https://github.com/homarr-labs/homarr/commit/65ccfdfb13e83e78e65585aaf15a07b9d9755697))
+* **deps:** update dependency next-intl to v4.3.10 ([#4271](https://github.com/homarr-labs/homarr/issues/4271)) ([5d402f8](https://github.com/homarr-labs/homarr/commit/5d402f88d29892ddebfc7e9efc902be4c3bbeba1))
+* **deps:** update dependency next-intl to v4.3.11 ([#4273](https://github.com/homarr-labs/homarr/issues/4273)) ([f792b2a](https://github.com/homarr-labs/homarr/commit/f792b2a553f7a5851db36fc6a7ec495e2662dbc0))
+* **deps:** update dependency next-intl to v4.3.12 ([#4274](https://github.com/homarr-labs/homarr/issues/4274)) ([3a7c8d5](https://github.com/homarr-labs/homarr/commit/3a7c8d5e19c28a1e3b084e80eb52a3193a419d7f))
+* **deps:** update dependency swagger-ui-react to ^5.29.4 ([#4293](https://github.com/homarr-labs/homarr/issues/4293)) ([fde68f8](https://github.com/homarr-labs/homarr/commit/fde68f8bcc75aefb9cdb15c0b3b5d12c18a54d35))
+* **deps:** update dependency trpc-to-openapi to ^3.1.0 ([#4268](https://github.com/homarr-labs/homarr/issues/4268)) ([d80f070](https://github.com/homarr-labs/homarr/commit/d80f070ba3dca6bd8af10ee771f7cbd3d24dafa3))
+* **deps:** update dependency typescript-eslint to ^8.46.0 ([#4264](https://github.com/homarr-labs/homarr/issues/4264)) ([0aede0d](https://github.com/homarr-labs/homarr/commit/0aede0dec38016f5df08ce42f4f2e9237aaecaa6))
+* **deps:** update dependency zod to ^4.1.12 ([#4263](https://github.com/homarr-labs/homarr/issues/4263)) ([e887716](https://github.com/homarr-labs/homarr/commit/e8877169f88179fc9a23947c3f34478f851cb66a))
+* **deps:** update mantine monorepo to ^8.3.4 ([#4290](https://github.com/homarr-labs/homarr/issues/4290)) ([94533c6](https://github.com/homarr-labs/homarr/commit/94533c667cd234fdfe8f064b3d4892ad902e74c7))
+* **deps:** update tiptap monorepo to v2.26.3 ([#4292](https://github.com/homarr-labs/homarr/issues/4292)) ([38e368f](https://github.com/homarr-labs/homarr/commit/38e368fdbcf9aba54fbc960031742cb162a72b72))
+* **docker-widget:** memory usage wrong ([#4266](https://github.com/homarr-labs/homarr/issues/4266)) ([cccec5e](https://github.com/homarr-labs/homarr/commit/cccec5e19538aa8df154281f14fa939414bc8190))
+* **management:** improve homepage ([#4260](https://github.com/homarr-labs/homarr/issues/4260)) ([7e5f4e5](https://github.com/homarr-labs/homarr/commit/7e5f4e59a9edcb05dfa8a09919408e93e8d0313f))
+* **plex:** tv show links not working ([#4272](https://github.com/homarr-labs/homarr/issues/4272)) ([a80c5d4](https://github.com/homarr-labs/homarr/commit/a80c5d40e0e944d40dfdfe8e902ee10872e26bc0))
+* **users:** profile picture upload limit wrong ([#4276](https://github.com/homarr-labs/homarr/issues/4276)) ([35a8ac8](https://github.com/homarr-labs/homarr/commit/35a8ac820f084271bc7591834096226639aec0d4))
+
 ## [1.41.0](https://github.com/homarr-labs/homarr/compare/v1.40.0...v1.41.0) (2025-10-10)
 
 ### Features
