@@ -23,4 +23,5 @@
   dependencyDashboard: false,
   // prevent special characters in branch names (otherwise git errors occur on windows)
   branchNameStrict: true,
+  // temporary change (to check validation)
 }

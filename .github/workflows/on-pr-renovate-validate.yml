@@ -1,0 +1,15 @@
+name: "[Renovate] Validate configuration"
+
+on:
+  pull_request:
+    branches: ["*"]
+    paths: [".github/renovate.json5"]
+
+jobs:
+  renovate-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: |
+          npx --yes --package renovate -- \
+              renovate-config-validator --strict renovate.json5
