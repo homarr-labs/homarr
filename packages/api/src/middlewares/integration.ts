@@ -13,7 +13,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import { publicProcedure } from "../trpc";
 
-export type IntegrationAction = "query" | "interact";
+export type IntegrationAction = "query" | "interact" | "use";
 
 /**
  * Creates a middleware that provides the integration in the context that is of the specified kinds
@@ -160,6 +160,18 @@ const throwIfActionIsNotAllowedAsync = async (
     throw new TRPCError({
       code: "FORBIDDEN",
       message: "User does not have permission to interact with at least one of the specified integrations",
+    });
+  }
+
+  if (action === "use") {
+    const haveAllUseAccess = integrations
+      .map((integration) => constructIntegrationPermissions(integration, session))
+      .every(({ hasUseAccess }) => hasUseAccess);
+    if (haveAllUseAccess) return;
+
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "User does not have permission to use at least one of the specified integrations",
     });
   }
 
