@@ -6,7 +6,8 @@ import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, like, not } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups } from "@homarr/db/schema";
-import { everyoneGroup } from "@homarr/definitions";
+import { selectGroupSchema, selectUserSchema } from "@homarr/db/validationSchemas";
+import { everyoneGroup, groupPermissionKeys } from "@homarr/definitions";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import {
   groupCreateSchema,
@@ -22,33 +23,65 @@ import { throwIfCredentialsDisabled } from "./invite/checks";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 
 export const groupRouter = createTRPCRouter({
-  getAll: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
-    const dbGroups = await ctx.db.query.groups.findMany({
-      with: {
-        members: {
-          with: {
-            user: {
-              columns: {
-                id: true,
-                name: true,
-                email: true,
-                image: true,
+  getAll: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .input(z.void())
+    .output(
+      z.array(
+        selectGroupSchema.and(
+          z.object({ members: z.array(selectUserSchema.pick({ id: true, name: true, email: true, image: true })) }),
+        ),
+      ),
+    )
+    .meta({
+      openapi: { method: "GET", path: "/api/groups", tags: ["groups"], protect: true, summary: "Retrieve all groups" },
+    })
+    .query(async ({ ctx }) => {
+      const dbGroups = await ctx.db.query.groups.findMany({
+        with: {
+          members: {
+            with: {
+              user: {
+                columns: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  image: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
 
-    return dbGroups.map((group) => ({
-      ...group,
-      members: group.members.map((member) => member.user),
-    }));
-  }),
+      return dbGroups.map((group) => ({
+        ...group,
+        members: group.members.map((member) => member.user),
+      }));
+    }),
 
   getPaginated: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(paginatedSchema)
+    .output(
+      z.object({
+        items: z.array(
+          selectGroupSchema.and(
+            z.object({ members: z.array(selectUserSchema.pick({ id: true, name: true, email: true, image: true })) }),
+          ),
+        ),
+        totalCount: z.number(),
+      }),
+    )
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/groups/paginated",
+        tags: ["groups"],
+        protect: true,
+        summary: "Retrieve groups with pagination",
+      },
+    })
     .query(async ({ input, ctx }) => {
       const whereQuery = input.search ? like(groups.name, `%${input.search.trim()}%`) : undefined;
       const groupCount = await ctx.db.$count(groups, whereQuery);
@@ -84,6 +117,24 @@ export const groupRouter = createTRPCRouter({
   getById: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(byIdSchema)
+    .output(
+      selectGroupSchema.and(
+        z.object({
+          owner: selectUserSchema.pick({ id: true, name: true, image: true, email: true }).nullable(),
+          members: z.array(selectUserSchema.pick({ id: true, name: true, email: true, image: true, provider: true })),
+          permissions: z.array(z.enum(groupPermissionKeys)),
+        }),
+      ),
+    )
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/api/groups/{id}",
+        tags: ["groups"],
+        protect: true,
+        summary: "Retrieve group details",
+      },
+    })
     .query(async ({ input, ctx }) => {
       const group = await ctx.db.query.groups.findFirst({
         where: eq(groups.id, input.id),
@@ -201,6 +252,10 @@ export const groupRouter = createTRPCRouter({
   createGroup: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupCreateSchema)
+    .output(z.string())
+    .meta({
+      openapi: { method: "POST", path: "/api/groups", tags: ["groups"], protect: true, summary: "Create group" },
+    })
     .mutation(async ({ input, ctx }) => {
       await checkSimilarNameAndThrowAsync(ctx.db, input.name);
 
@@ -219,6 +274,10 @@ export const groupRouter = createTRPCRouter({
   updateGroup: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupUpdateSchema)
+    .output(z.void())
+    .meta({
+      openapi: { method: "PUT", path: "/api/groups/{id}", tags: ["groups"], protect: true, summary: "Update group" },
+    })
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.id);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.id);
@@ -303,6 +362,10 @@ export const groupRouter = createTRPCRouter({
   deleteGroup: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(byIdSchema)
+    .output(z.void())
+    .meta({
+      openapi: { method: "DELETE", path: "/api/groups/{id}", tags: ["groups"], protect: true, summary: "Delete group" },
+    })
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.id);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.id);
@@ -312,6 +375,16 @@ export const groupRouter = createTRPCRouter({
   addMember: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupUserSchema)
+    .output(z.void())
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/api/groups/{groupId}/members/{userId}",
+        tags: ["groups"],
+        protect: true,
+        summary: "Add member to group",
+      },
+    })
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
@@ -328,6 +401,8 @@ export const groupRouter = createTRPCRouter({
         });
       }
 
+      // TODO: Create another pr to only allow adding users with provider=credentials
+
       await ctx.db.insert(groupMembers).values({
         groupId: input.groupId,
         userId: input.userId,
@@ -336,6 +411,16 @@ export const groupRouter = createTRPCRouter({
   removeMember: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(groupUserSchema)
+    .output(z.void())
+    .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/api/groups/{groupId}/members/{userId}",
+        tags: ["groups"],
+        protect: true,
+        summary: "Remove member from group",
+      },
+    })
     .mutation(async ({ input, ctx }) => {
       await throwIfGroupNotFoundAsync(ctx.db, input.groupId);
       await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);

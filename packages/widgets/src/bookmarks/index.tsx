@@ -1,5 +1,6 @@
 import { ActionIcon, Avatar, Group, Stack, Text } from "@mantine/core";
 import { IconBookmark, IconX } from "@tabler/icons-react";
+import z from "zod";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -56,6 +57,7 @@ export const { definition, componentLoader } = createWidgetDefinition("bookmarks
             isLoading,
           };
         },
+        validate: z.array(z.string()),
       }),
     }));
   },
