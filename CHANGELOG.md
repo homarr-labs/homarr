@@ -1,3 +1,12 @@
+## [1.42.1](https://github.com/homarr-labs/homarr/compare/v1.42.0...v1.42.1) (2025-10-18)
+
+### Bug Fixes
+
+* **deps:** update dependency @ctrl/qbittorrent to ^9.10.0 ([#4310](https://github.com/homarr-labs/homarr/issues/4310)) ([3f87bbd](https://github.com/homarr-labs/homarr/commit/3f87bbd42bbe122870ca388e8b52069265cc577f))
+* **deps:** update dependency typescript-eslint to ^8.46.1 ([#4313](https://github.com/homarr-labs/homarr/issues/4313)) ([f78eaa5](https://github.com/homarr-labs/homarr/commit/f78eaa533e9f75cfbdc223d5581e19f73fdb7303))
+* **deps:** update nextjs monorepo to v15.5.5 ([#4312](https://github.com/homarr-labs/homarr/issues/4312)) ([857b46b](https://github.com/homarr-labs/homarr/commit/857b46bc333b5f3d5b3336986bdbe399e28bdc99))
+* **docker:** stats not working ([#4311](https://github.com/homarr-labs/homarr/issues/4311)) ([9aa2d5c](https://github.com/homarr-labs/homarr/commit/9aa2d5ccd8cfa8facea962c5e21efeee7f695c97))
+
 ## [1.42.0](https://github.com/homarr-labs/homarr/compare/v1.41.0...v1.42.0) (2025-10-17)
 
 ### Features
