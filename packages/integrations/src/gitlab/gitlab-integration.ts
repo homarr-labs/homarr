@@ -13,10 +13,11 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
+  DetailedRelease,
   DetailsProviderResponse,
+  ErrorResponse,
+  ParsedIdentifier,
   ReleaseProviderResponse,
-  ReleasesRepository,
-  ReleasesResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
 const localLogger = logger.child({ module: "GitlabIntegration" });
@@ -40,25 +41,27 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
     };
   }
 
-  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
+  public parseIdentifier(identifier: string): ParsedIdentifier | null {
+    return { owner: "", name: identifier };
+  }
+
+  public async getLatestMatchingReleaseAsync(
+    identifier: ParsedIdentifier,
+    versionRegex?: string,
+  ): Promise<DetailedRelease | ErrorResponse | null> {
     const api = this.getApi();
 
-    const details = await this.getDetailsAsync(api, repository.identifier);
-
     try {
-      const releasesResponse = await api.ProjectReleases.all(repository.identifier, {
+      const releasesResponse = await api.ProjectReleases.all(identifier.name, {
         perPage: 100,
       });
 
       if (releasesResponse instanceof Error) {
-        localLogger.warn(`Failed to get releases for ${repository.identifier} with Gitlab integration`, {
-          identifier: repository.identifier,
+        localLogger.warn(`Failed to get releases for ${identifier.name} with Gitlab integration`, {
+          identifier: identifier.name,
           error: releasesResponse.message,
         });
-        return {
-          id: repository.id,
-          error: { code: "noReleasesFound" },
-        };
+        return { code: "noReleasesFound" };
       }
 
       const releasesProviderResponse = releasesResponse.reduce<ReleaseProviderResponse[]>((acc, release) => {
@@ -76,17 +79,22 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
         return acc;
       }, []);
 
-      return getLatestRelease(releasesProviderResponse, repository, details);
-    } catch (error) {
-      localLogger.warn(`Failed to get releases for ${repository.identifier} with Gitlab integration`, {
-        identifier: repository.identifier,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      const latestRelease = getLatestRelease(releasesProviderResponse, versionRegex);
+      if (!latestRelease) return null;
+
+      const details = await this.getDetailsAsync(api, identifier.name);
 
       return {
-        id: repository.id,
-        error: { code: "noReleasesFound" },
+        ...details,
+        ...latestRelease,
       };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      localLogger.warn(`Failed to get releases for ${identifier.name} with Gitlab integration`, {
+        identifier: identifier.name,
+        error: errorMessage,
+      });
+      return { message: errorMessage };
     }
   }
 
