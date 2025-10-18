@@ -1148,8 +1148,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/t",
+        "milesPerHour": "mi/t"
       }
     }
   },
@@ -1164,7 +1164,7 @@
           "label": "Titel"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Brugerdefinerede css-klasser"
         },
         "borderColor": {
           "label": "Kantfarve"
@@ -1754,7 +1754,7 @@
           "description": "Kun på nuværende vejr"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Brug mi/t til vindhastighed"
         },
         "location": {
           "label": "Vejr lokation"
@@ -2987,8 +2987,8 @@
           "integration": "Integrationer",
           "app": "Apps",
           "group": "Grupper",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "Søgemaskiner",
+          "media": "Medier"
         },
         "statisticLabel": {
           "boards": "Tavler",
@@ -2997,8 +2997,8 @@
           "authorization": "Autorisation"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Velkommen tilbage til din",
+          "subtitle": "{app} Tavle"
         }
       },
       "board": {
