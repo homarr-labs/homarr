@@ -61,7 +61,9 @@ async function getContainersWithStatsAsync() {
         })?.url ?? null,
       cpuUsage: calculateCpuUsage(stats),
       // memory usage by default includes cache, which should not be shown as it is also not shown with docker stats command
-      memoryUsage: stats.memory_stats.usage - stats.memory_stats.stats.cache,
+      // The below type is probably wrong, sometimes stats can be null
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      memoryUsage: stats.memory_stats.usage - (stats.memory_stats.stats?.cache ?? 0),
       image: container.Image,
       ports: container.Ports,
     };
