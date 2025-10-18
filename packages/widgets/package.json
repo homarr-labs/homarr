@@ -76,7 +76,7 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-markdown": "^10.1.0",
-    "recharts": "^2.15.4",
+    "recharts": "^3.2.1",
     "video.js": "^8.23.4",
     "zod": "^4.1.12"
   },
