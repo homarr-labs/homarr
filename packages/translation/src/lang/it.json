@@ -1148,8 +1148,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1164,7 +1164,7 @@
           "label": "Titolo"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Classi css personalizzate"
         },
         "borderColor": {
           "label": "Colore del bordo"
