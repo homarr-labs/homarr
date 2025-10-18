@@ -3,6 +3,7 @@ import type { ContainerInfo, ContainerStats } from "dockerode";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
+import { logger } from "@homarr/log";
 
 import type { ContainerState } from "../../docker/src";
 import { DockerSingleton } from "../../docker/src";
@@ -43,11 +44,14 @@ async function getContainersWithStatsAsync() {
         })
       : [];
 
+  const logs: { name: string; stats: unknown }[] = [];
   const containerStatsPromises = containers.map(async (container) => {
     const instance = dockerInstances.find(({ host }) => host === container.instance)?.instance;
     if (!instance) return null;
 
     const stats = await instance.getContainer(container.Id).stats({ stream: false, "one-shot": true });
+
+    logs.push({ name: container.Names[0] ?? "unknown", stats });
 
     return {
       id: container.Id,
@@ -69,7 +73,11 @@ async function getContainersWithStatsAsync() {
     };
   });
 
-  return (await Promise.all(containerStatsPromises)).filter((container) => container !== null);
+  const result = (await Promise.all(containerStatsPromises)).filter((container) => container !== null);
+
+  logger.warn(JSON.stringify(logs));
+
+  return result;
 }
 
 function calculateCpuUsage(stats: ContainerStats): number {
