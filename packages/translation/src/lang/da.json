@@ -1774,12 +1774,12 @@
           "description": "Hvordan datoen skal se ud"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/t",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Solopgang",
         "sunset": "Solnedgang",
-        "maxWindSpeed": "Maks. vindhastighed: {maxWindSpeed} km/t",
-        "maxWindGusts": "Maks. vindstød {maxWindGusts} km/t"
+        "maxWindSpeed": "Maks. vindhastighed: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Maks. vindstød {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Skyfrit",

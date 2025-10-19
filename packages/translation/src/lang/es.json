@@ -2997,8 +2997,8 @@
           "authorization": "Autenticación"
         },
         "heroBanner": {
-          "title": "Bienvenido de nuevo a tu",
-          "subtitle": "Tablero de {app}"
+          "title": "Bienvenido de nuevo a...",
+          "subtitle": "{app} !!!"
         }
       },
       "board": {
