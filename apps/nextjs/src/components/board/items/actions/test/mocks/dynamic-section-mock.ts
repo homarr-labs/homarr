@@ -12,6 +12,7 @@ export class DynamicSectionMockBuilder {
       options: {
         title: "",
         borderColor: "",
+        customCssClasses: [],
       },
       layouts: [],
       ...section,

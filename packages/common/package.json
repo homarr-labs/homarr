@@ -32,19 +32,19 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "dayjs": "^1.11.18",
     "dns-caching": "^0.2.7",
-    "next": "15.5.3",
+    "next": "15.5.5",
     "octokit": "^5.0.3",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "undici": "7.16.0",
-    "zod": "^4.1.11",
+    "zod": "^4.1.12",
     "zod-validation-error": "^4.0.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.36.0",
-    "typescript": "^5.9.2"
+    "eslint": "^9.37.0",
+    "typescript": "^5.9.3"
   }
 }

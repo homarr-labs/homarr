@@ -1145,6 +1145,12 @@
           "groupNameTaken": "Group name already taken"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
+      }
     }
   },
   "section": {
@@ -1156,6 +1162,9 @@
       "option": {
         "title": {
           "label": "Title"
+        },
+        "customCssClasses": {
+          "label": "Custom css classes"
         },
         "borderColor": {
           "label": "Border color"
@@ -1744,6 +1753,9 @@
           "label": "Show current wind speed",
           "description": "Only on current weather"
         },
+        "useImperialSpeed": {
+          "label": "Use mph for windspeed"
+        },
         "location": {
           "label": "Weather location"
         },
@@ -1762,12 +1774,12 @@
           "description": "How the date should look like"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Sunrise",
         "sunset": "Sunset",
-        "maxWindSpeed": "Max wind speed: {maxWindSpeed} km/h",
-        "maxWindGusts": "Max wind gusts: {maxWindGusts} km/h"
+        "maxWindSpeed": "Max wind speed: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Clear",
@@ -1980,7 +1992,25 @@
         "currentlyPlaying": "Currently playing",
         "user": "User",
         "name": "Name",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "Stats for nerds",
+          "video": {
+            "title": "Video",
+            "resolution": "Resolution"
+          },
+          "audio": {
+            "title": "Audio",
+            "channelCount": "Audio channels",
+            "codec": "Audio codec"
+          },
+          "transcoding": {
+            "title": "Transcoding",
+            "container": "Container",
+            "resolution": "Resolution",
+            "target": "Target codec"
+          }
+        }
       }
     },
     "downloads": {
@@ -2956,13 +2986,19 @@
           "invite": "Invites",
           "integration": "Integrations",
           "app": "Apps",
-          "group": "Groups"
+          "group": "Groups",
+          "searchEngine": "Search engines",
+          "media": "Medias"
         },
         "statisticLabel": {
           "boards": "Boards",
           "resources": "Resources",
           "authentication": "Authentication",
           "authorization": "Authorization"
+        },
+        "heroBanner": {
+          "title": "Welcome back to your",
+          "subtitle": "{app} Board"
         }
       },
       "board": {
@@ -3318,6 +3354,9 @@
             },
             "firewallInterfaces": {
               "label": "Firewall Interfaces"
+            },
+            "weather": {
+              "label": "Weather"
             }
           },
           "interval": {
@@ -3443,6 +3482,21 @@
           "libraries": {
             "title": "Libraries",
             "subtitle": "{count} used in the Code of Homarr"
+          },
+          "hotkeys": {
+            "title": "Hotkeys",
+            "subtitle": "Keyboard shortcuts to enhance your workflow",
+            "field": {
+              "shortcut": "Shortcut",
+              "action": "Action"
+            },
+            "action": {
+              "toggleBoardEdit": "Toggle board edit mode",
+              "toggleColorScheme": "Toggle light/dark mode",
+              "saveNotebook": "Save notebook (only inside notebook widget)",
+              "openSpotlight": "Open search"
+            },
+            "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }
         }
       }

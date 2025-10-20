@@ -1,13 +1,14 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useMemo } from "react";
-import { Avatar, Flex, Group, Stack, Text, Title } from "@mantine/core";
+import { Fragment, useMemo } from "react";
+import { Avatar, Divider, Flex, Group, Stack, Text, Title } from "@mantine/core";
 import { IconDeviceTv, IconHeadphones, IconMovie, IconVideo } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 
 import { clientApi } from "@homarr/api/client";
+import { objectEntries } from "@homarr/common";
 import { getIconUrl, integrationDefs } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
 import { createModal, useModalAction } from "@homarr/modals";
@@ -123,7 +124,7 @@ export default function MediaServerWidget({
     [currentStreams],
   );
 
-  const { openModal } = useModalAction(itemInfoModal);
+  const { openModal } = useModalAction(ItemInfoModal);
   const table = useTranslatedMantineReactTable({
     columns,
     data: flatSessions,
@@ -219,9 +220,15 @@ export default function MediaServerWidget({
   );
 }
 
-const itemInfoModal = createModal<{ item: StreamSession }>(({ innerProps }) => {
+const ItemInfoModal = createModal<{ item: StreamSession }>(({ innerProps }) => {
   const t = useScopedI18n("widget.mediaServer.items");
   const Icon = innerProps.item.currentlyPlaying ? mediaTypeIconMap[innerProps.item.currentlyPlaying.type] : null;
+
+  const metadata = useMemo(() => {
+    return innerProps.item.currentlyPlaying?.metadata
+      ? constructMetadata(innerProps.item.currentlyPlaying.metadata)
+      : null;
+  }, [innerProps.item.currentlyPlaying?.metadata]);
 
   return (
     <Stack align="center">
@@ -255,6 +262,32 @@ const itemInfoModal = createModal<{ item: StreamSession }>(({ innerProps }) => {
       />
       <NormalizedLine itemKey={t("name")} value={<Text>{innerProps.item.sessionName}</Text>} />
       <NormalizedLine itemKey={t("id")} value={<Text>{innerProps.item.sessionId}</Text>} />
+
+      {metadata ? (
+        <Stack w="100%" gap={0}>
+          <Divider label={t("metadata.title")} labelPosition="center" mt="lg" mb="sm" />
+
+          <Group align="flex-start">
+            {objectEntries(metadata).map(([key, value], index) => (
+              <Fragment key={key}>
+                {index !== 0 && <Divider key={index} orientation="vertical" />}
+                <Stack gap={4}>
+                  <Text fw="bold">{t(`metadata.${key}.title`)}</Text>
+
+                  {Object.entries(value)
+                    .filter(([_, value]) => Boolean(value))
+                    .map(([innerKey, value]) => (
+                      <Group justify="space-between" w="100%" key={innerKey} wrap="nowrap">
+                        <Text>{t(`metadata.${key}.${innerKey}` as never)}</Text>
+                        <Text>{value}</Text>
+                      </Group>
+                    ))}
+                </Stack>
+              </Fragment>
+            ))}
+          </Group>
+        </Stack>
+      ) : null}
     </Stack>
   );
 }).withOptions({
@@ -280,3 +313,23 @@ const mediaTypeIconMap = {
   video: IconVideo,
   audio: IconHeadphones,
 } satisfies Record<Exclude<StreamSession["currentlyPlaying"], null>["type"], TablerIcon>;
+
+const constructMetadata = (metadata: Exclude<Exclude<StreamSession["currentlyPlaying"], null>["metadata"], null>) => ({
+  video: {
+    resolution: metadata.video.resolution
+      ? `${metadata.video.resolution.width}x${metadata.video.resolution.height}`
+      : null,
+    frameRate: metadata.video.frameRate,
+  },
+  audio: {
+    channelCount: metadata.audio.channelCount,
+    codec: metadata.audio.codec,
+  },
+  transcoding: {
+    container: metadata.transcoding.container,
+    resolution: metadata.transcoding.resolution
+      ? `${metadata.transcoding.resolution.width}x${metadata.transcoding.resolution.height}`
+      : null,
+    target: `${metadata.transcoding.target.videoCodec} ${metadata.transcoding.target.audioCodec}`.trim(),
+  },
+});

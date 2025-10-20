@@ -938,32 +938,36 @@
           "newLabel": "תחום חדש"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "טוקן גישה אישי",
+          "newLabel": "טוקן גישה אישי חדש"
         },
         "topic": {
           "label": "נושא",
           "newLabel": "נושא חדש"
         },
-        "opnsenseApiKey": {
+        "url": {
           "label": "",
           "newLabel": ""
+        },
+        "opnsenseApiKey": {
+          "label": "מפתח API (מפתח)",
+          "newLabel": "מפתח API חדש (מפתח)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "מפתח API (סודי)",
+          "newLabel": "מפתח API חדש (סודי)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "מזהה אפליקציה",
+          "newLabel": "מזהה אפליקציה חדש"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "מזהה התקנה",
+          "newLabel": "מזהה התקנה חדש"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "מפתח פרטי",
+          "newLabel": "מפתח פרטי חדש"
         }
       }
     },
@@ -1015,7 +1019,7 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "הצלחה",
     "beta": "בטא",
     "error": "שגיאה",
     "action": {
@@ -1141,6 +1145,12 @@
           "groupNameTaken": "שם הקבוצה כבר תפוס"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1152,6 +1162,9 @@
       "option": {
         "title": {
           "label": "כותרת"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "צבע מסגרת"
@@ -1282,21 +1295,21 @@
           "label": "אפשר בדיקת מצב"
         },
         "layout": {
-          "label": "",
+          "label": "פריסה",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "אופקי",
+            "row-reverse": "אופקי (היפוך)",
+            "column": "אנכי",
+            "column-reverse": "אנכי (היפוך)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "מצב תצוגת תיאור",
+          "description": "בחר כיצד להציג את תיאור האפליקציה",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "בתוך הווידג'ט",
+            "tooltip": "כתיאור כלים",
+            "hidden": "מוסתר"
           }
         }
       },
@@ -1543,7 +1556,15 @@
         "width": "רוחב",
         "height": "גובה"
       },
-      "placeholder": "התחל לכתוב את ההערות שלך"
+      "placeholder": "התחל לכתוב את ההערות שלך",
+      "dismiss": {
+        "title": "לבטל שינויים?",
+        "message": "יש לך שינויים שלא נשמרו במחברת שלך. האם אתה בטוח שברצונך למחוק אותם?",
+        "action": {
+          "discard": "בטל שינויים",
+          "keepEditing": "המשך לערוך"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1716,9 @@
     "calendar": {
       "name": "לוח שנה",
       "description": "הצג אירועים מהאינטגרציות שלך בתצוגת לוח שנה בתוך פרק זמן יחסי מסוים",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "סוג שחרור של Radarr",
@@ -1728,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "הצגת מהירות רוח נוכחית",
           "description": "רק במזג אוויר נוכחי"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "מיקום מזג האוויר"
@@ -1965,7 +1992,25 @@
         "currentlyPlaying": "מתנגן כרגע",
         "user": "משתמש",
         "name": "שם",
-        "id": "מזהה"
+        "id": "מזהה",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
       }
     },
     "downloads": {
@@ -2116,32 +2161,32 @@
       "globalRatio": "יחס גלובלי"
     },
     "mediaReleases": {
-      "name": "",
-      "description": "",
+      "name": "מדיה משוחררת",
+      "description": "הצגת מדיה שנוספה לאחרונה או מהדורות עתידיות מאינטגרציות שונות",
       "option": {
         "layout": {
-          "label": "",
+          "label": "פריסה",
           "option": {
             "backdrop": {
-              "label": ""
+              "label": "רקע"
             },
             "poster": {
-              "label": ""
+              "label": "פוסטר"
             }
           }
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "הצג תיאור קצר"
         },
         "showType": {
-          "label": ""
+          "label": "הצג תג סוג מדיה"
         },
         "showSource": {
-          "label": ""
+          "label": "הצג שילוב מקורות"
         }
       },
       "length": {
-        "duration": ""
+        "duration": "דקות {length}"
       }
     },
     "mediaRequests-requestList": {
@@ -2273,7 +2318,7 @@
           "label": "הגבלת כמות הודעות"
         },
         "hideDescription": {
-          "label": ""
+          "label": "הסתר תיאור"
         }
       }
     },
@@ -2297,7 +2342,7 @@
           "label": "הצג פרטים"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "הצג רק אייקון"
         },
         "topReleases": {
           "label": "מהדורות מובילות",
@@ -2316,8 +2361,8 @@
             "listAlreadyImportedImages": "רשימת התמונות שכבר יובאו",
             "allImagesAlreadyImported": "כל התמונות כבר יובאו",
             "onlyAdminCanImport": "רק מנהלים יכולים לייבא מדוקר",
-            "selectAll": "",
-            "deselectAll": ""
+            "selectAll": "בחר הכל",
+            "deselectAll": "בטל בחירה של הכל"
           },
           "provider": {
             "label": "ספק"
@@ -2367,8 +2412,8 @@
           },
           "invalid": "הגדרת מאגר לא חוקית, אנא בדוק את הערכים",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "ללא ספק",
+            "tooltip": "לא ניתן היה לנתח את הספק, אנא הגדר אותו ידנית לאחר ייבוא ​​התמונות"
           }
         }
       },
@@ -2379,20 +2424,20 @@
       "starsCount": "כוכבים",
       "forksCount": "פיצולים",
       "issuesCount": "תקלות פתוחות",
-      "markViewed": "",
+      "markViewed": "סמן כנצפה",
       "openProjectPage": "פתח את דף הפרויקט",
       "openReleasePage": "פתח את דף הגרסאות",
       "releaseDescription": "תיאור הגרסה",
-      "projectDescription": "",
+      "projectDescription": "תיאור הפרויקט",
       "created": "נוצר",
       "error": {
         "label": "שגיאה",
         "messages": {
-          "invalidIdentifier": "",
+          "invalidIdentifier": "מזהה לא חוקי",
           "noMatchingVersion": "לא נמצאה גרסה תואמת",
-          "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noReleasesFound": "לא נמצאו שיחרורים",
+          "noProviderSeleceted": "לא נבחר ספק",
+          "noProviderResponse": "אין תשובה מהספק"
         }
       }
     },
@@ -2453,31 +2498,31 @@
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "ניטור חומת אש",
+      "description": "מציג סיכום של חומות אש",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "מערכת",
+        "interfaces": "ממשקים"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "לא ניתן לקבל נתונים מחומת האש"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "ממשקי רשת לתצוגה"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
-        "versiontitle": "",
-        "cputitle": "",
-        "memorytitle": "",
-        "cpu": "",
-        "memory": "",
+        "fwname": "שם",
+        "version": "גרסה",
+        "versiontitle": "גרסאות",
+        "cputitle": "ניצול מעבד",
+        "memorytitle": "ניצול זיכרון",
+        "cpu": "מעבד",
+        "memory": "זיכרון",
         "interfaces": {
-          "name": "",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "name": "שם",
+          "trans": "משודר",
+          "recv": "התקבל",
+          "title": "ממשקי רשת"
         }
       }
     },
@@ -2488,15 +2533,37 @@
       "option": {}
     },
     "systemResources": {
-      "name": "",
-      "description": "",
-      "option": {},
+      "name": "משאבי מערכת",
+      "description": "שימוש במעבד, זיכרון, דיסק וחומרה אחרת של המערכת שלך",
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "תרשימים גלויים",
+          "description": "בחר את התרשימים שברצונך שיהיו גלויים.",
+          "option": {
+            "cpu": "מעבד",
+            "memory": "זיכרון",
+            "network": "רשת"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
       "card": {
-        "cpu": "",
-        "memory": "",
-        "network": "",
-        "up": "",
-        "down": ""
+        "cpu": "מעבד",
+        "memory": "זיכרון",
+        "network": "רשת",
+        "up": "העלאה",
+        "down": "הורדה"
       }
     }
   },
@@ -2685,7 +2752,7 @@
         "label": "צבע סמל"
       },
       "clearColor": {
-        "label": ""
+        "label": "ניקוי צבע"
       },
       "customCss": {
         "label": "עיצוב מותאם אישית עבור הלוח הזה",
@@ -2919,13 +2986,19 @@
           "invite": "הזמנות",
           "integration": "אינטגרציות",
           "app": "אפליקציות",
-          "group": "קבוצות"
+          "group": "קבוצות",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "לוחות",
           "resources": "מקורות",
           "authentication": "אימות",
           "authorization": "הרשאה"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -3271,15 +3344,18 @@
               "label": "מכולות דוקר"
             },
             "firewallCpu": {
-              "label": ""
+              "label": "מעבד חומת האש"
             },
             "firewallMemory": {
-              "label": ""
+              "label": "זיכרון חומת אש"
             },
             "firewallVersion": {
-              "label": ""
+              "label": "גרסת חומת אש"
             },
             "firewallInterfaces": {
+              "label": "ממשקי חומת אש"
+            },
+            "weather": {
               "label": ""
             }
           },
@@ -3291,10 +3367,10 @@
             "weeklyMonday": "כל שבוע ביום שני",
             "update": {
               "success": {
-                "message": ""
+                "message": "המרווח עודכן בהצלחה"
               },
               "error": {
-                "message": ""
+                "message": "נכשל בעדכון מרווח"
               }
             }
           },
@@ -3303,55 +3379,55 @@
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "שם"
             },
             "interval": {
               "label": "מרווח זמן לתזמון"
             },
             "lastExecution": {
-              "label": ""
+              "label": "הרצה אחרונה"
             },
             "actions": {
-              "label": ""
+              "label": "פעולות"
             }
           },
           "table": {
-            "search": ""
+            "search": "חפש {count} משימות..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "רענן"
             }
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "המשימות רעננו בהצלחה"
             },
             "error": {
-              "message": ""
+              "message": "רענון המשימות נכשל"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "המשימה הופעלה בהצלחה"
             },
             "error": {
-              "message": ""
+              "message": "הפעלת המשימה נכשלה"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "המשימה הופעלה בהצלחה"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "המשימה הושבתה בהצלחה"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "נכשל בהחלפת סטטוס המשימה"
             }
           }
         },
@@ -3406,6 +3482,21 @@
           "libraries": {
             "title": "ספריות",
             "subtitle": "{count} בשימוש בקוד של Homarr"
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }
@@ -3861,7 +3952,7 @@
       "tools": {
         "label": "כלים",
         "tasks": {
-          "label": ""
+          "label": "משימות"
         },
         "docker": {
           "label": "דוקר"
@@ -4391,10 +4482,10 @@
   "log": {
     "level": {
       "option": {
-        "debug": "",
-        "info": "",
-        "warn": "",
-        "error": ""
+        "debug": "ניפוי באגים",
+        "info": "מידע",
+        "warn": "אזהרה",
+        "error": "שגיאה"
       }
     }
   }

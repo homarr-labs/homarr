@@ -24,15 +24,15 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
-    "fast-xml-parser": "^5.2.5",
-    "zod": "^4.1.11"
+    "fast-xml-parser": "^5.3.0",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.36.0",
+    "eslint": "^9.37.0",
     "tsx": "4.20.4",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   }
 }

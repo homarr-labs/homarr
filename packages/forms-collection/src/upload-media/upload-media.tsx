@@ -9,27 +9,31 @@ import { supportedMediaUploadFormats } from "@homarr/validation/media";
 
 interface UploadMediaProps {
   children: (props: { onClick: () => void; loading: boolean }) => JSX.Element;
+  multiple?: boolean;
   onSettled?: () => MaybePromise<void>;
-  onSuccess?: (media: { id: string; url: string }) => MaybePromise<void>;
+  onSuccess?: (media: { id: string; url: string }[]) => MaybePromise<void>;
 }
 
-export const UploadMedia = ({ children, onSettled, onSuccess }: UploadMediaProps) => {
+export const UploadMedia = ({ children, onSettled, onSuccess, multiple = false }: UploadMediaProps) => {
   const t = useI18n();
   const { mutateAsync, isPending } = clientApi.media.uploadMedia.useMutation();
 
-  const handleFileUploadAsync = async (file: File | null) => {
-    if (!file) return;
+  const handleFileUploadAsync = async (files: File[] | File | null) => {
+    if (!files || (Array.isArray(files) && files.length === 0)) return;
+    const filesArray: File[] = Array.isArray(files) ? files : [files];
     const formData = new FormData();
-    formData.append("file", file);
+    filesArray.forEach((file) => formData.append("files", file));
     await mutateAsync(formData, {
-      async onSuccess(mediaId) {
+      async onSuccess(mediaIds) {
         showSuccessNotification({
           message: t("media.action.upload.notification.success.message"),
         });
-        await onSuccess?.({
-          id: mediaId,
-          url: `/api/user-medias/${mediaId}`,
-        });
+        await onSuccess?.(
+          mediaIds.map((id) => ({
+            id,
+            url: `/api/user-medias/${id}`,
+          })),
+        );
       },
       onError() {
         showErrorNotification({
@@ -43,7 +47,7 @@ export const UploadMedia = ({ children, onSettled, onSuccess }: UploadMediaProps
   };
 
   return (
-    <FileButton onChange={handleFileUploadAsync} accept={supportedMediaUploadFormats.join(",")}>
+    <FileButton onChange={handleFileUploadAsync} accept={supportedMediaUploadFormats.join(",")} multiple={multiple}>
       {({ onClick }) => children({ onClick, loading: isPending })}
     </FileButton>
   );

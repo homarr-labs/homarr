@@ -19,6 +19,7 @@ import {
 
 import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
+import { hotkeys } from "@homarr/definitions";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 
@@ -34,7 +35,7 @@ interface UserAvatarMenuProps {
 export const UserAvatarMenu = ({ children, availableUpdatesPromise }: UserAvatarMenuProps) => {
   const t = useScopedI18n("common.userAvatar.menu");
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  useHotkeys([["mod+J", toggleColorScheme]]);
+  useHotkeys([[hotkeys.toggleColorScheme, toggleColorScheme]]);
 
   const ColorSchemeIcon = colorScheme === "dark" ? IconSun : IconMoon;
 

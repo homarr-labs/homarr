@@ -302,7 +302,7 @@
   "group": {
     "title": "Grupos",
     "name": "Grupo",
-    "search": "Encontrar un grupo",
+    "search": "Buscar un grupo...",
     "field": {
       "name": "Nombre",
       "members": "Miembros",
@@ -945,6 +945,10 @@
           "label": "Tema",
           "newLabel": "Nuevo tema"
         },
+        "url": {
+          "label": "URL",
+          "newLabel": "Nueva URL"
+        },
         "opnsenseApiKey": {
           "label": "Clave API (Clave)",
           "newLabel": "Nueva clave API (Clave)"
@@ -1039,9 +1043,9 @@
       "previous": "Anterior",
       "next": "Siguiente",
       "checkoutDocs": "Consultar la documentación",
-      "checkLogs": "Comprobar los registros para más detalles",
+      "checkLogs": "Comprueba los registros para más detalles",
       "tryAgain": "Intentar de nuevo",
-      "loading": "Cargar"
+      "loading": "Cargando"
     },
     "here": "aquí",
     "iconPicker": {
@@ -1141,6 +1145,12 @@
           "groupNameTaken": "Nombre del grupo en uso"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
+      }
     }
   },
   "section": {
@@ -1152,6 +1162,9 @@
       "option": {
         "title": {
           "label": "Título"
+        },
+        "customCssClasses": {
+          "label": "Clases CSS personalizadas"
         },
         "borderColor": {
           "label": "Color del borde"
@@ -1543,7 +1556,15 @@
         "width": "Ancho",
         "height": "Alto"
       },
-      "placeholder": "Comienza a escribir tus notas"
+      "placeholder": "Comienza a escribir tus notas",
+      "dismiss": {
+        "title": "¿Descartar los cambios?",
+        "message": "Tienes cambios sin guardar en tu bloc de notas. ¿Estás seguro de que quieres descartarlos?",
+        "action": {
+          "discard": "Descartar cambios",
+          "keepEditing": "Seguir editando"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1716,9 @@
     "calendar": {
       "name": "Calendario",
       "description": "Mostrar los eventos de tus integraciones en una vista de calendario dentro de un cierto período de tiempo",
+      "duration": {
+        "allDay": "Todo el día"
+      },
       "option": {
         "releaseType": {
           "label": "Tipo de lanzamiento de Radarr",
@@ -1729,6 +1753,9 @@
           "label": "Mostrar velocidad del viento actual",
           "description": "Sólo en el tiempo actual"
         },
+        "useImperialSpeed": {
+          "label": "Usar mph para la velocidad del viento"
+        },
         "location": {
           "label": "Ubicación"
         },
@@ -1747,12 +1774,12 @@
           "description": "Cómo debería ser la fecha"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Amanecer",
         "sunset": "Atardecer",
-        "maxWindSpeed": "Velocidad máxima del viento: {maxWindSpeed} km/h",
-        "maxWindGusts": "Máximas ráfagas de viento: {maxWindGusts} km/h"
+        "maxWindSpeed": "Velocidad máxima del viento: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Máximas ráfagas de viento: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Despejado",
@@ -1965,7 +1992,25 @@
         "currentlyPlaying": "Reproducción en curso",
         "user": "Usuario",
         "name": "Nombre",
-        "id": "ID"
+        "id": "ID",
+        "metadata": {
+          "title": "Estadísticas",
+          "video": {
+            "title": "Vídeo",
+            "resolution": "Resolución"
+          },
+          "audio": {
+            "title": "Audio",
+            "channelCount": "Canales de audio",
+            "codec": "Códec de audio"
+          },
+          "transcoding": {
+            "title": "Transcodificación",
+            "container": "Contenedor",
+            "resolution": "Resolución",
+            "target": "Códec de destino"
+          }
+        }
       }
     },
     "downloads": {
@@ -2192,7 +2237,7 @@
           "total": "Total"
         },
         "users": {
-          "main": "Mejores usuarios",
+          "main": "Clasificación de usuarios",
           "requests": "Solicitudes"
         }
       }
@@ -2490,7 +2535,29 @@
     "systemResources": {
       "name": "Recursos del sistema",
       "description": "CPU, Memoria, Disco y otro uso de hardware de su sistema",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": "Activar sombreado de gráfico"
+        },
+        "visibleCharts": {
+          "label": "Gráficos visibles",
+          "description": "Selecciona los gráficos que quieres que sean visibles.",
+          "option": {
+            "cpu": "CPU",
+            "memory": "Memoria",
+            "network": "Red"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Modo de visualización de etiqueta",
+          "option": {
+            "textWithIcon": "Mostrar texto con icono",
+            "text": "Mostrar solo el texto",
+            "icon": "Mostrar solo el icono",
+            "hidden": "Ocultar etiqueta"
+          }
+        }
+      },
       "card": {
         "cpu": "CPU",
         "memory": "MEM",
@@ -2919,13 +2986,19 @@
           "invite": "Invitaciones",
           "integration": "Integraciones",
           "app": "Aplicaciones",
-          "group": "Grupos"
+          "group": "Grupos",
+          "searchEngine": "Motores de búsqueda",
+          "media": "Imágenes"
         },
         "statisticLabel": {
           "boards": "Tableros",
           "resources": "Recursos",
           "authentication": "Autenticación",
-          "authorization": "Autorización"
+          "authorization": "Autenticación"
+        },
+        "heroBanner": {
+          "title": "Bienvenido de nuevo a...",
+          "subtitle": "{app} !!!"
         }
       },
       "board": {
@@ -2989,11 +3062,11 @@
           "general": {
             "title": "General",
             "item": {
-              "language": "Idioma y región",
+              "language": "Idioma",
               "board": {
-                "title": "Tablero de inicio",
+                "title": "Tableros",
                 "type": {
-                  "general": "General",
+                  "general": "Escritorio",
                   "mobile": "Móvil"
                 }
               },
@@ -3098,7 +3171,7 @@
           },
           "members": {
             "title": "Miembros",
-            "search": "Buscar un miembro",
+            "search": "Buscar un miembro...",
             "notFound": "No se han encontrado miembros"
           },
           "permissions": {
@@ -3162,7 +3235,7 @@
           "board": {
             "title": "Tableros",
             "homeBoard": {
-              "label": "Tablero de inicio global",
+              "label": "Tablero de escritorio global",
               "mobileLabel": "Tablero móvil global",
               "description": "Sólo los tableros públicos están disponibles para la selección"
             },
@@ -3281,6 +3354,9 @@
             },
             "firewallInterfaces": {
               "label": "Interfaces del Firewall"
+            },
+            "weather": {
+              "label": "Tiempo"
             }
           },
           "interval": {
@@ -3316,7 +3392,7 @@
             }
           },
           "table": {
-            "search": "Buscar {count} tareas..."
+            "search": "Buscar una tarea..."
           },
           "action": {
             "refresh": {
@@ -3406,6 +3482,21 @@
           "libraries": {
             "title": "Librerías",
             "subtitle": "{count} usadas en el Código de Homarr"
+          },
+          "hotkeys": {
+            "title": "Accesos directos",
+            "subtitle": "Accesos directos de teclado para mejorar tu flujo de trabajo",
+            "field": {
+              "shortcut": "Acceso directo",
+              "action": "Acción"
+            },
+            "action": {
+              "toggleBoardEdit": "Cambiar a modo de edición de tablero",
+              "toggleColorScheme": "Cambiar a modo claro/oscuro",
+              "saveNotebook": "Guardar el bloc de notas (solo dentro del widget de bloc de notas)",
+              "openSpotlight": "Abrir búsqueda"
+            },
+            "note": "Sugerencia: Mod se refiere tanto a la tecla CTRL como a la tecla ⌘ en macOS"
           }
         }
       }
@@ -3535,7 +3626,7 @@
       }
     },
     "error": {
-      "internalServerError": "Fallo al obtener contenedores Docker"
+      "internalServerError": "Fallo al obtener los contenedores de Docker"
     }
   },
   "kubernetes": {
@@ -4324,7 +4415,7 @@
     "page": {
       "list": {
         "title": "Certificados de confianza",
-        "description": "Utilizado por Homarr para solicitar datos de las integraciones.",
+        "description": "Utilizados por Homarr para solicitar datos de las integraciones.",
         "noResults": {
           "title": "Aún no hay certificados"
         },

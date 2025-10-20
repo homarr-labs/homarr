@@ -945,6 +945,10 @@
           "label": "Konu",
           "newLabel": "Yeni konu"
         },
+        "url": {
+          "label": "Url",
+          "newLabel": "Yeni url"
+        },
         "opnsenseApiKey": {
           "label": "API Anahtarı (Anahtar)",
           "newLabel": "Yeni API Anahtarı (Anahtar)"
@@ -1141,6 +1145,12 @@
           "groupNameTaken": "Grup adı zaten alınmış"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1152,6 +1162,9 @@
       "option": {
         "title": {
           "label": "Başlık"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "Kenarlık rengi"
@@ -1543,7 +1556,15 @@
         "width": "Genişlik",
         "height": "Yükseklik"
       },
-      "placeholder": "Not almaya başlayın"
+      "placeholder": "Not almaya başlayın",
+      "dismiss": {
+        "title": "Değişikliklerden vazgeçilsin mi?",
+        "message": "Defterinizde kaydedilmemiş değişiklikleriniz var. Bunları silmek istediğinizden emin misiniz?",
+        "action": {
+          "discard": "Değişiklileri at",
+          "keepEditing": "Düzenlemeyi sürdür"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1716,9 @@
     "calendar": {
       "name": "Takvim",
       "description": "Entegrasyonlarınızdaki etkinlikleri belirli bir göreli zaman dilimi içinde bir takvim görünümünde görüntüleyin",
+      "duration": {
+        "allDay": "Bütün gün"
+      },
       "option": {
         "releaseType": {
           "label": "Radarr yayın türü",
@@ -1728,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "Mevcut rüzgar hızını göster",
           "description": "Yalnızca mevcut hava durumunda"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Hava durumu konumu"
@@ -1965,7 +1992,25 @@
         "currentlyPlaying": "Şuan Oynatılan",
         "user": "Kullanıcı",
         "name": "İsim",
-        "id": "Kimlik"
+        "id": "Kimlik",
+        "metadata": {
+          "title": "Meraklısı için istatistikler",
+          "video": {
+            "title": "Video",
+            "resolution": "Çözünürlük"
+          },
+          "audio": {
+            "title": "Ses",
+            "channelCount": "Ses kanalları",
+            "codec": "Ses kodekleri"
+          },
+          "transcoding": {
+            "title": "Kod Dönüştürme",
+            "container": "Konteyner",
+            "resolution": "Çözünürlük",
+            "target": "Hedef Kodek"
+          }
+        }
       }
     },
     "downloads": {
@@ -2490,7 +2535,29 @@
     "systemResources": {
       "name": "Sistem kaynakları",
       "description": "Sisteminizin CPU, Bellek, Disk ve diğer donanım kullanımları",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": "Grafik gölgelendirmesini etkinleştir"
+        },
+        "visibleCharts": {
+          "label": "Görünür grafikler",
+          "description": "Görünür olmasını istediğiniz grafikleri seçin.",
+          "option": {
+            "cpu": "İşlemci",
+            "memory": "Bellek",
+            "network": "Ağ"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Etiket görüntüleme modu",
+          "option": {
+            "textWithIcon": "Simge ile metni göster",
+            "text": "Yalnızca metni göster",
+            "icon": "Yalnızca simge göster",
+            "hidden": "Etiketi gizle"
+          }
+        }
+      },
       "card": {
         "cpu": "İşlemci",
         "memory": "BELLEK",
@@ -2919,13 +2986,19 @@
           "invite": "Davetler",
           "integration": "Entegrasyonlar",
           "app": "Uygulamalar",
-          "group": "Gruplar"
+          "group": "Gruplar",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Paneller",
           "resources": "Kaynaklar",
           "authentication": "Kimlik doğrulama",
           "authorization": "Yetkilendirme"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -3281,6 +3354,9 @@
             },
             "firewallInterfaces": {
               "label": "Güvenlik Duvarı Arayüzleri"
+            },
+            "weather": {
+              "label": "Hava Durumu"
             }
           },
           "interval": {
@@ -3406,6 +3482,21 @@
           "libraries": {
             "title": "Kütüphaneler",
             "subtitle": "Homarr kodlamasında {count} kütüphane kullanılıyor"
+          },
+          "hotkeys": {
+            "title": "Kısayollar",
+            "subtitle": "İş akışınızı geliştirmek için klavye kısayolları",
+            "field": {
+              "shortcut": "Kısayol",
+              "action": "Eylem"
+            },
+            "action": {
+              "toggleBoardEdit": "Panonun düzenleme modunu değiştir",
+              "toggleColorScheme": "Aydınlık/karanlık mod",
+              "saveNotebook": "Not defterini kaydet (sadece not defteri widget'ının içinde)",
+              "openSpotlight": "Aramayı aç"
+            },
+            "note": "İpucu: Mod, macOS'ta hem Ctrl tuşunu hem de ⌘ tuşunu ifade eder"
           }
         }
       }

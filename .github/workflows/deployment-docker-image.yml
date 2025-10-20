@@ -64,7 +64,7 @@ jobs:
       - uses: actions/setup-node@v5
         if: env.SKIP_RELEASE == 'false'
         with:
-          node-version: 22.19.0
+          node-version: 22.20.0
           cache: "pnpm"
       - run: npm i -g pnpm
         if: env.SKIP_RELEASE == 'false'

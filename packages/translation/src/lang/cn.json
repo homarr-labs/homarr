@@ -945,25 +945,29 @@
           "label": "主题",
           "newLabel": "新主题"
         },
+        "url": {
+          "label": "网址",
+          "newLabel": "新网址"
+        },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API 密钥 (Key)",
+          "newLabel": "新 API 密钥 (Key)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "API 密钥 (保密)",
+          "newLabel": "新 API 密钥 (保密)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "应用ID",
+          "newLabel": "新应用ID"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "安装 ID",
+          "newLabel": "新安装 ID"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "私人密钥",
+          "newLabel": "新私人密钥"
         }
       }
     },
@@ -1015,7 +1019,7 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "成功",
     "beta": "测试版",
     "error": "错误",
     "action": {
@@ -1141,6 +1145,12 @@
           "groupNameTaken": "用户组名称已存在"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1152,6 +1162,9 @@
       "option": {
         "title": {
           "label": "标题"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "边界颜色"
@@ -1282,21 +1295,21 @@
           "label": "启用状态检查"
         },
         "layout": {
-          "label": "",
+          "label": "界面",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "横向",
+            "row-reverse": "横向 (反转)",
+            "column": "垂直",
+            "column-reverse": "垂直 (反转)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "描述信息显示模式",
+          "description": "选择应用描述的显示方式",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "窗口组件内",
+            "tooltip": "显示为悬停提示",
+            "hidden": "隐藏"
           }
         }
       },
@@ -1543,7 +1556,15 @@
         "width": "宽度",
         "height": "高度"
       },
-      "placeholder": "开始写笔记"
+      "placeholder": "开始写笔记",
+      "dismiss": {
+        "title": "是否放弃修改？",
+        "message": "仍有未保存的更改，确定要丢弃吗？",
+        "action": {
+          "discard": "放弃修改",
+          "keepEditing": "继续编辑"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1716,9 @@
     "calendar": {
       "name": "日历",
       "description": "在日历视图中显示某个相对时间段内的集成事件",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Radarr 发布类型",
@@ -1728,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "显示当前风速",
           "description": "仅在当前天气时"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "天气位置"
@@ -1965,7 +1992,25 @@
         "currentlyPlaying": "正在播放",
         "user": "用户",
         "name": "名称",
-        "id": "ID"
+        "id": "ID",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
       }
     },
     "downloads": {
@@ -2273,7 +2318,7 @@
           "label": "帖子数量限制"
         },
         "hideDescription": {
-          "label": ""
+          "label": "隐藏描述"
         }
       }
     },
@@ -2488,9 +2533,31 @@
       "option": {}
     },
     "systemResources": {
-      "name": "",
+      "name": "系统资源",
       "description": "",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "network": ""
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
       "card": {
         "cpu": "CPU",
         "memory": "",
@@ -2919,13 +2986,19 @@
           "invite": "邀请",
           "integration": "集成",
           "app": "应用",
-          "group": "群组"
+          "group": "群组",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "面板",
           "resources": "资源",
           "authentication": "认证",
           "authorization": "认证"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -3281,6 +3354,9 @@
             },
             "firewallInterfaces": {
               "label": "防火墙接口"
+            },
+            "weather": {
+              "label": ""
             }
           },
           "interval": {
@@ -3303,7 +3379,7 @@
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "名称"
             },
             "interval": {
               "label": "计划时间间隔"
@@ -3406,6 +3482,21 @@
           "libraries": {
             "title": "相关的库",
             "subtitle": "{count} 用于 Homarr 代码中"
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }

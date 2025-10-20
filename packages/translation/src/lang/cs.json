@@ -945,6 +945,10 @@
           "label": "",
           "newLabel": ""
         },
+        "url": {
+          "label": "",
+          "newLabel": ""
+        },
         "opnsenseApiKey": {
           "label": "",
           "newLabel": ""
@@ -1141,6 +1145,12 @@
           "groupNameTaken": "Název skupiny je již používán"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1151,6 +1161,9 @@
       },
       "option": {
         "title": {
+          "label": ""
+        },
+        "customCssClasses": {
           "label": ""
         },
         "borderColor": {
@@ -1543,7 +1556,15 @@
         "width": "Šířka",
         "height": "Výška"
       },
-      "placeholder": ""
+      "placeholder": "",
+      "dismiss": {
+        "title": "",
+        "message": "",
+        "action": {
+          "discard": "",
+          "keepEditing": ""
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1716,9 @@
     "calendar": {
       "name": "Kalendář",
       "description": "",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Typ vydání filmu pro Radarr",
@@ -1728,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "",
           "description": ""
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Lokalita pro počasí"
@@ -1965,7 +1992,25 @@
         "currentlyPlaying": "",
         "user": "Uživatel",
         "name": "Jméno",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
       }
     },
     "downloads": {
@@ -2490,7 +2535,29 @@
     "systemResources": {
       "name": "",
       "description": "",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "network": ""
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
       "card": {
         "cpu": "",
         "memory": "",
@@ -2919,13 +2986,19 @@
           "invite": "Pozvánky",
           "integration": "",
           "app": "Aplikace",
-          "group": "Skupiny"
+          "group": "Skupiny",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Plochy",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -3281,6 +3354,9 @@
             },
             "firewallInterfaces": {
               "label": ""
+            },
+            "weather": {
+              "label": ""
             }
           },
           "interval": {
@@ -3406,6 +3482,21 @@
           "libraries": {
             "title": "",
             "subtitle": ""
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }

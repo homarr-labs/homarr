@@ -29,21 +29,21 @@
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
-    "@tanstack/react-query": "^5.89.0",
-    "@trpc/client": "^11.5.1",
-    "@trpc/server": "^11.5.1",
-    "@trpc/tanstack-react-query": "^11.5.1",
+    "@tanstack/react-query": "^5.90.2",
+    "@trpc/client": "^11.6.0",
+    "@trpc/server": "^11.6.0",
+    "@trpc/tanstack-react-query": "^11.6.0",
     "node-cron": "^4.2.1",
-    "react": "19.1.1",
-    "zod": "^4.1.11"
+    "react": "19.2.0",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-cron": "^3.0.11",
-    "@types/react": "19.1.13",
-    "eslint": "^9.36.0",
-    "typescript": "^5.9.2"
+    "@types/react": "19.2.2",
+    "eslint": "^9.37.0",
+    "typescript": "^5.9.3"
   }
 }
