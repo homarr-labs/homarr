@@ -93,7 +93,7 @@
       "tar-fs@>=3.0.0 <3.0.9": ">=3.1.1",
       "tar-fs@>=2.0.0 <2.1.3": ">=3.1.1",
       "tmp@<=0.2.3": ">=0.2.5",
-      "vite@>=5.0.0 <=5.4.18": ">=7.1.10"
+      "vite@>=5.0.0 <=5.4.18": ">=7.1.11"
     },
     "patchedDependencies": {
       "@types/node-unifi": "patches/@types__node-unifi.patch",
