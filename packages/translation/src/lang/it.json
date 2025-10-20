@@ -1754,7 +1754,7 @@
           "description": "Solo sul meteo corrente"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Usa mph per la velocità del vento"
         },
         "location": {
           "label": "Località meteo"
@@ -1996,18 +1996,18 @@
         "metadata": {
           "title": "",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Video",
+            "resolution": "Risoluzione"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Audio",
+            "channelCount": "Canali audio",
+            "codec": "Codec audio"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
+            "title": "Transcodifica",
+            "container": "Container",
+            "resolution": "Risoluzione",
             "target": ""
           }
         }
@@ -2988,7 +2988,7 @@
           "app": "Applicazioni",
           "group": "Gruppi",
           "searchEngine": "",
-          "media": ""
+          "media": "Media"
         },
         "statisticLabel": {
           "boards": "Board",
@@ -3329,7 +3329,7 @@
               "label": ""
             },
             "updateChecker": {
-              "label": ""
+              "label": "Controllo aggiornamenti"
             },
             "mediaTranscoding": {
               "label": ""
@@ -3485,10 +3485,10 @@
           },
           "hotkeys": {
             "title": "",
-            "subtitle": "",
+            "subtitle": "Scorciatoie da tastiera per migliorare il flusso di lavoro",
             "field": {
-              "shortcut": "",
-              "action": ""
+              "shortcut": "Scorciatoia",
+              "action": "Azione"
             },
             "action": {
               "toggleBoardEdit": "",
@@ -3651,7 +3651,7 @@
         "services": "Servizi",
         "pods": "Pods",
         "configmaps": "",
-        "secrets": "",
+        "secrets": "Secrets",
         "volumes": "Volumi"
       }
     },
