@@ -10,10 +10,8 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
-  DetailedRelease,
   DetailsProviderResponse,
-  ErrorResponse,
-  ParsedIdentifier,
+  LatestReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { detailsResponseSchema, releasesResponseSchema } from "./codeberg-schemas";
 
@@ -44,7 +42,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     };
   }
 
-  public parseIdentifier(identifier: string): ParsedIdentifier | null {
+  private parseIdentifier(identifier: string) {
     const [owner, name] = identifier.split("/");
     if (!owner || !name) {
       localLogger.warn(
@@ -57,10 +55,11 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
   }
 
   public async getLatestMatchingReleaseAsync(
-    identifier: ParsedIdentifier,
+    identifier: string,
     versionRegex?: string,
-  ): Promise<DetailedRelease | ErrorResponse | null> {
-    const { owner, name } = identifier;
+  ): Promise<LatestReleaseResponse> {
+    const { owner, name } = this.parseIdentifier(identifier) ?? {};
+    if (!owner || !name) return { error: { code: "invalidIdentifier" } };
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
       return await fetchWithTrustedCertificatesAsync(
@@ -69,7 +68,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
       );
     });
     if (!releasesResponse.ok) {
-      return { message: releasesResponse.statusText };
+      return { error: { message: releasesResponse.statusText }};
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
@@ -77,7 +76,9 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
 
     if (!success) {
       return {
-        message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
+        error: {
+          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
+        },
       };
     }
 
@@ -90,7 +91,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     }));
 
     const latestRelease = getLatestRelease(formattedReleases, versionRegex);
-    if (!latestRelease) return null;
+    if (!latestRelease) return { error: { code: "noMatchingVersion" } };
 
     const details = await this.getDetailsAsync(owner, name);
 

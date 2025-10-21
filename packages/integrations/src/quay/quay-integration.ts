@@ -10,10 +10,8 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
-  DetailedRelease,
-  ErrorResponse,
-  ParsedIdentifier,
   ReleaseProviderResponse,
+  LatestReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./quay-schemas";
 
@@ -44,7 +42,7 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
     };
   }
 
-  public parseIdentifier(identifier: string): ParsedIdentifier | null {
+  private parseIdentifier(identifier: string) {
     const [owner, name] = identifier.split("/");
     if (!owner || !name) {
       localLogger.warn(`Invalid identifier format. Expected 'owner/name', for ${identifier} with Quay integration`, {
@@ -56,10 +54,12 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
   }
 
   public async getLatestMatchingReleaseAsync(
-    identifier: ParsedIdentifier,
+    identifier: string,
     versionRegex?: string,
-  ): Promise<DetailedRelease | ErrorResponse | null> {
-    const { owner, name } = identifier;
+  ): Promise<LatestReleaseResponse> {
+    const parsedIdentifier = this.parseIdentifier(identifier);
+    if (!parsedIdentifier) return { error: { code: "invalidIdentifier" } };
+    const { owner, name } = parsedIdentifier;
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
       return await fetchWithTrustedCertificatesAsync(
@@ -72,13 +72,13 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
       );
     });
     if (!releasesResponse.ok) {
-      return { message: releasesResponse.statusText };
+      return { error: { message: releasesResponse.statusText } };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
     const { data, success, error } = releasesResponseSchema.safeParse(releasesResponseJson);
     if (!success) {
-      return { message: error.message };
+      return { error: { message: error.message } };
     }
 
     const releasesProviderResponse = Object.entries(data.tags).reduce<ReleaseProviderResponse[]>((acc, [_, tag]) => {
@@ -94,7 +94,7 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
     }, []);
 
     const latestRelease = getLatestRelease(releasesProviderResponse, versionRegex);
-    if (!latestRelease) return null;
+    if (!latestRelease) return { error: { code: "noMatchingVersion" } };
 
     return {
       projectDescription: data.description,

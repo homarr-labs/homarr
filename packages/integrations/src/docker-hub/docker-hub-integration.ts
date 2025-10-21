@@ -13,11 +13,8 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
-  DetailedRelease,
   DetailsProviderResponse,
-  ErrorResponse,
-  ParsedIdentifier,
-  ReleaseProviderResponse,
+  LatestReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { accessTokenResponseSchema, detailsResponseSchema, releasesResponseSchema } from "./docker-hub-schemas";
 
@@ -75,7 +72,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     };
   }
 
-  public parseIdentifier(identifier: string): ParsedIdentifier | null {
+  private parseIdentifier(identifier: string) {
     if (!identifier.includes("/")) {
       return { owner: "", name: identifier };
     }
@@ -90,10 +87,12 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
   }
 
   public async getLatestMatchingReleaseAsync(
-    identifier: ParsedIdentifier,
+    identifier: string,
     versionRegex?: string,
-  ): Promise<DetailedRelease | ErrorResponse | null> {
-    const { owner, name } = identifier;
+  ): Promise<LatestReleaseResponse> {
+    const parsedIdentifier = this.parseIdentifier(identifier);
+    if (!parsedIdentifier) return { error: { code: "invalidIdentifier" } };
+    const { owner, name } = parsedIdentifier;
 
     const relativeUrl: `/${string}` = owner
       ? `/v2/namespaces/${encodeURIComponent(owner)}/repositories/${encodeURIComponent(name)}`
@@ -102,32 +101,35 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     for (let page = 0; page <= 5; page++) {
       const response = await this.getLatestMatchingReleaseFromPageAsync(relativeUrl, page, versionRegex);
       if (!response) continue;
-      if ("message" in response) return response;
+      if ("error" in response) return response;
       const details = await this.getDetailsAsync(relativeUrl);
       return { ...details, ...response };
     }
-    return null;
+
+    return { error: { code: "noMatchingVersion" } };
   }
 
   private async getLatestMatchingReleaseFromPageAsync(
     relativeUrl: `/${string}`,
     page: number,
     versionRegex?: string,
-  ): Promise<ReleaseProviderResponse | ErrorResponse | null> {
+  ): Promise<LatestReleaseResponse | null> {
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
       return await fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/tags?page_size=100&page=${page}`), {
         headers,
       });
     });
     if (!releasesResponse.ok) {
-      return { message: releasesResponse.statusText };
+      return { error: { message: releasesResponse.statusText } };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
     const releasesResult = releasesResponseSchema.safeParse(releasesResponseJson);
     if (!releasesResult.success) {
       return {
-        message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
+        error: {
+          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
+        },
       };
     }
 

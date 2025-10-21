@@ -7,9 +7,7 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
-  DetailedRelease,
-  ErrorResponse,
-  ParsedIdentifier,
+  LatestReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./npm-schemas";
 
@@ -26,26 +24,26 @@ export class NPMIntegration extends Integration implements ReleasesProviderInteg
     };
   }
 
-  public parseIdentifier(identifier: string): ParsedIdentifier {
-    return { owner: "", name: identifier };
-  }
-
   public async getLatestMatchingReleaseAsync(
-    identifier: ParsedIdentifier,
+    identifier: string,
     versionRegex?: string,
-  ): Promise<DetailedRelease | ErrorResponse | null> {
+  ): Promise<LatestReleaseResponse> {
+    if (!identifier) return { error: { code: "invalidIdentifier" } };
+
     const releasesResponse = await fetchWithTrustedCertificatesAsync(
-      this.url(`/${encodeURIComponent(identifier.name)}`),
+      this.url(`/${encodeURIComponent(identifier)}`),
     );
     if (!releasesResponse.ok) {
-      return { message: releasesResponse.statusText };
+      return { error: { message: releasesResponse.statusText } };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
     const { data, success, error } = releasesResponseSchema.safeParse(releasesResponseJson);
     if (!success) {
       return {
-        message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
+        error: {
+          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
+        },
       };
     }
 
@@ -55,6 +53,9 @@ export class NPMIntegration extends Integration implements ReleasesProviderInteg
       releaseDescription: data.versions[tag.latestRelease]?.description ?? "",
     }));
 
-    return getLatestRelease(formattedReleases, versionRegex);
+    const latestRelease = getLatestRelease(formattedReleases, versionRegex);
+    if (!latestRelease) return { error: { code: "noMatchingVersion" } };
+
+    return latestRelease;
   }
 }

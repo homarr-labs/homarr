@@ -18,40 +18,17 @@ export const releasesRequestHandler = createCachedIntegrationRequestHandler<
 >({
   async requestAsync(integration, input) {
     const integrationInstance = await createIntegrationAsync(integration);
-
-    const parsedIdentifier = integrationInstance.parseIdentifier(input.identifier);
-    if (!parsedIdentifier) {
-      return {
-        id: input.id,
-        error: { code: "invalidIdentifier" },
-      };
-    }
-
     const releaseResponse = await integrationInstance.getLatestMatchingReleaseAsync(
-      parsedIdentifier,
+      input.identifier,
       input.versionRegex,
     );
-
-    if (!releaseResponse) {
-      return {
-        id: input.id,
-        error: { code: input.versionRegex ? "noMatchingVersion" : "noReleasesFound" },
-      };
-    }
-    if ("code" in releaseResponse || "message" in releaseResponse) {
-      return {
-        id: input.id,
-        error: releaseResponse,
-      };
-    }
-
     return {
       id: input.id,
-      ...releaseResponse,
       integration: {
         name: integration.name,
         iconUrl: getIconUrl(integration.kind),
       },
+      ...releaseResponse,
     };
   },
   cacheDuration: dayjs.duration(5, "minutes"),

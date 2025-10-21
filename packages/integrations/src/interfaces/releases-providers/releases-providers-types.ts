@@ -1,10 +1,5 @@
 import type { TranslationObject } from "@homarr/translation";
 
-export interface ParsedIdentifier {
-  owner: string;
-  name: string;
-}
-
 export interface ReleasesRepository {
   id: string;
   identifier: string;
@@ -36,4 +31,6 @@ export type ErrorResponse = { code: ReleasesErrorKeys } | { message: string };
 
 export type DetailedRelease = DetailsProviderResponse & ReleaseProviderResponse;
 
-export type ReleasesResponse = { id: string } & (DetailedRelease | { error: ErrorResponse });
+export type LatestReleaseResponse = DetailedRelease | { error: ErrorResponse };
+
+export type ReleasesResponse = { id: string } & LatestReleaseResponse;

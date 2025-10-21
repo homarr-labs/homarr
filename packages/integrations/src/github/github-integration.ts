@@ -13,11 +13,9 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
-  DetailedRelease,
   DetailsProviderResponse,
-  ErrorResponse,
-  ParsedIdentifier,
   ReleaseProviderResponse,
+  LatestReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
 const localLogger = logger.child({ module: "GithubIntegration" });
@@ -44,7 +42,8 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     };
   }
 
-  public parseIdentifier(identifier: string): ParsedIdentifier | null {
+
+  private parseIdentifier(identifier: string) {
     const [owner, name] = identifier.split("/");
     if (!owner || !name) {
       localLogger.warn(`Invalid identifier format. Expected 'owner/name', for ${identifier} with Github integration`, {
@@ -56,10 +55,12 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
   }
 
   public async getLatestMatchingReleaseAsync(
-    identifier: ParsedIdentifier,
+    identifier: string,
     versionRegex?: string,
-  ): Promise<DetailedRelease | ErrorResponse | null> {
-    const { owner, name } = identifier;
+  ): Promise<LatestReleaseResponse> {
+    const parsedIdentifier = this.parseIdentifier(identifier);
+    if (!parsedIdentifier) return { error: { code: "invalidIdentifier" } };
+    const { owner, name } = parsedIdentifier;
     const api = this.getApi();
 
     try {
@@ -69,7 +70,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
         localLogger.warn(`No releases found, for ${owner}/${name} with Github integration`, {
           identifier: `${owner}/${name}`,
         });
-        return null;
+        return { error: { code: "noMatchingVersion" } };
       }
 
       const releasesProviderResponse = releasesResponse.data.reduce<ReleaseProviderResponse[]>((acc, release) => {
@@ -86,7 +87,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
       }, []);
 
       const latestRelease = getLatestRelease(releasesProviderResponse, versionRegex);
-      if (!latestRelease) return null;
+      if (!latestRelease) return { error: { code: "noMatchingVersion" } };
 
       const details = await this.getDetailsAsync(api, owner, name);
 
@@ -98,7 +99,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
         name,
         error: errorMessage,
       });
-      return { message: errorMessage };
+      return { error: { message: errorMessage } };
     }
   }
 

@@ -1,7 +1,5 @@
 import type {
-  DetailedRelease,
-  ErrorResponse,
-  ParsedIdentifier,
+  LatestReleaseResponse,
   ReleaseProviderResponse,
 } from "./releases-providers-types";
 
@@ -22,9 +20,5 @@ export const getLatestRelease = (
 };
 
 export interface ReleasesProviderIntegration {
-  parseIdentifier(identifier: string): ParsedIdentifier | null;
-  getLatestMatchingReleaseAsync(
-    identifier: ParsedIdentifier,
-    versionRegex?: string,
-  ): Promise<DetailedRelease | ErrorResponse | null>;
+  getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<LatestReleaseResponse>;
 }

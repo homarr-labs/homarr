@@ -7,9 +7,7 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
-  DetailedRelease,
-  ErrorResponse,
-  ParsedIdentifier,
+  LatestReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./linuxserverio-schemas";
 
@@ -28,7 +26,7 @@ export class LinuxServerIOIntegration extends Integration implements ReleasesPro
     };
   }
 
-  public parseIdentifier(identifier: string): ParsedIdentifier | null {
+  private parseIdentifier(identifier: string) {
     const [owner, name] = identifier.split("/");
     if (!owner || !name) {
       localLogger.warn(
@@ -41,19 +39,20 @@ export class LinuxServerIOIntegration extends Integration implements ReleasesPro
   }
 
   public async getLatestMatchingReleaseAsync(
-    identifier: ParsedIdentifier,
-  ): Promise<DetailedRelease | ErrorResponse | null> {
-    const { name } = identifier;
+    identifier: string,
+  ): Promise<LatestReleaseResponse> {
+    const { name } = this.parseIdentifier(identifier) ?? {};
+    if (!name) return { error: { code: "invalidIdentifier" } };
 
     const releasesResponse = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/images"));
     if (!releasesResponse.ok) {
-      return { message: releasesResponse.statusText };
+      return { error: { message: releasesResponse.statusText } };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
     const { data, success, error } = releasesResponseSchema.safeParse(releasesResponseJson);
     if (!success) {
-      return { message: error.message };
+      return { error: { message: error.message } };
     }
 
     const release = data.data.repositories.linuxserver.find((repo) => repo.name === name);
@@ -61,7 +60,7 @@ export class LinuxServerIOIntegration extends Integration implements ReleasesPro
       localLogger.warn(`Repository ${name} not found on provider, with LinuxServerIO integration`, {
         name,
       });
-      return null;
+      return { error: { code: "noMatchingVersion" } };
     }
 
     return {

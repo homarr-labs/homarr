@@ -13,11 +13,9 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
-  DetailedRelease,
   DetailsProviderResponse,
-  ErrorResponse,
-  ParsedIdentifier,
   ReleaseProviderResponse,
+  LatestReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
 const localLogger = logger.child({ module: "GitHubContainerRegistryIntegration" });
@@ -44,7 +42,8 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
     };
   }
 
-  public parseIdentifier(identifier: string): ParsedIdentifier | null {
+
+  private parseIdentifier(identifier: string) {
     const [owner, name] = identifier.split("/");
     if (!owner || !name) {
       localLogger.warn(
@@ -57,10 +56,12 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
   }
 
   public async getLatestMatchingReleaseAsync(
-    identifier: ParsedIdentifier,
+    identifier: string,
     versionRegex?: string,
-  ): Promise<DetailedRelease | ErrorResponse | null> {
-    const { owner, name } = identifier;
+  ): Promise<LatestReleaseResponse> {
+    const parsedIdentifier = this.parseIdentifier(identifier);
+    if (!parsedIdentifier) return { error: { code: "invalidIdentifier" } };
+    const { owner, name } = parsedIdentifier;
     const api = this.getApi();
 
     try {
@@ -86,7 +87,7 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
       }, []);
 
       const latestRelease = getLatestRelease(releasesProviderResponse, versionRegex);
-      if (!latestRelease) return null;
+      if (!latestRelease) return { error: { code: "noMatchingVersion" } };
 
       const details = await this.getDetailsAsync(api, owner, name);
 
@@ -98,7 +99,7 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
         name,
         error: errorMessage,
       });
-      return { message: errorMessage };
+      return { error: { message: errorMessage } };
     }
   }
 
