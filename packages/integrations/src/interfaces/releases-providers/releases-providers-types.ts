@@ -27,10 +27,8 @@ export interface ReleaseProviderResponse {
 
 type ReleasesErrorKeys = keyof TranslationObject["widget"]["releases"]["error"]["messages"];
 
-export type ErrorResponse = { code: ReleasesErrorKeys } | { message: string };
-
-export type DetailedRelease = DetailsProviderResponse & ReleaseProviderResponse;
-
-export type LatestReleaseResponse = DetailedRelease | { error: ErrorResponse };
+export type LatestReleaseResponse =
+  | (DetailsProviderResponse & ReleaseProviderResponse)
+  | { error: { code: ReleasesErrorKeys } | { message: string } };
 
 export type ReleasesResponse = { id: string } & LatestReleaseResponse;
