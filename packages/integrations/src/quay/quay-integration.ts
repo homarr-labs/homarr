@@ -10,8 +10,8 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
-  ReleaseProviderResponse,
   LatestReleaseResponse,
+  ReleaseProviderResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./quay-schemas";
 

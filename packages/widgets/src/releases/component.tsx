@@ -137,10 +137,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
       })
       .filter(
         (repository) =>
-          "error" in repository ||
-          !options.showOnlyHighlighted ||
-          repository.isNewRelease ||
-          repository.isStaleRelease,
+          "error" in repository || !options.showOnlyHighlighted || repository.isNewRelease || repository.isStaleRelease,
       )
       .sort((repoA, repoB) => {
         if (!("latestReleaseAt" in repoA) || !repoA.latestReleaseAt) return -1;

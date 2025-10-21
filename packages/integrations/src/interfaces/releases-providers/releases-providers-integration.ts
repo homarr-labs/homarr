@@ -1,7 +1,4 @@
-import type {
-  LatestReleaseResponse,
-  ReleaseProviderResponse,
-} from "./releases-providers-types";
+import type { LatestReleaseResponse, ReleaseProviderResponse } from "./releases-providers-types";
 
 export const getLatestRelease = (
   releases: ReleaseProviderResponse[],

@@ -14,8 +14,8 @@ import type { ReleasesProviderIntegration } from "../interfaces/releases-provide
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
   DetailsProviderResponse,
-  ReleaseProviderResponse,
   LatestReleaseResponse,
+  ReleaseProviderResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
 const localLogger = logger.child({ module: "GitHubContainerRegistryIntegration" });
@@ -41,7 +41,6 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
       success: true,
     };
   }
-
 
   private parseIdentifier(identifier: string) {
     const [owner, name] = identifier.split("/");

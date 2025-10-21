@@ -6,9 +6,7 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
-import type {
-  LatestReleaseResponse,
-} from "../interfaces/releases-providers/releases-providers-types";
+import type { LatestReleaseResponse } from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./npm-schemas";
 
 export class NPMIntegration extends Integration implements ReleasesProviderIntegration {
@@ -30,9 +28,7 @@ export class NPMIntegration extends Integration implements ReleasesProviderInteg
   ): Promise<LatestReleaseResponse> {
     if (!identifier) return { error: { code: "invalidIdentifier" } };
 
-    const releasesResponse = await fetchWithTrustedCertificatesAsync(
-      this.url(`/${encodeURIComponent(identifier)}`),
-    );
+    const releasesResponse = await fetchWithTrustedCertificatesAsync(this.url(`/${encodeURIComponent(identifier)}`));
     if (!releasesResponse.ok) {
       return { error: { message: releasesResponse.statusText } };
     }

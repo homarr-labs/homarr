@@ -68,7 +68,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
       );
     });
     if (!releasesResponse.ok) {
-      return { error: { message: releasesResponse.statusText }};
+      return { error: { message: releasesResponse.statusText } };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();

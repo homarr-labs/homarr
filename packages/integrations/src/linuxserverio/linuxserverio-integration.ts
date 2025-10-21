@@ -6,9 +6,7 @@ import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
-import type {
-  LatestReleaseResponse,
-} from "../interfaces/releases-providers/releases-providers-types";
+import type { LatestReleaseResponse } from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./linuxserverio-schemas";
 
 const localLogger = logger.child({ module: "LinuxServerIOsIntegration" });
@@ -38,9 +36,7 @@ export class LinuxServerIOIntegration extends Integration implements ReleasesPro
     return { owner, name };
   }
 
-  public async getLatestMatchingReleaseAsync(
-    identifier: string,
-  ): Promise<LatestReleaseResponse> {
+  public async getLatestMatchingReleaseAsync(identifier: string): Promise<LatestReleaseResponse> {
     const { name } = this.parseIdentifier(identifier) ?? {};
     if (!name) return { error: { code: "invalidIdentifier" } };
 
