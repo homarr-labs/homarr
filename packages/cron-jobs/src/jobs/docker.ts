@@ -21,7 +21,7 @@ export const dockerContainersJob = createCronJob("dockerContainers", EVERY_MINUT
         const innerHandler = dockerContainersRequestHandler.handler(options);
         await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: true });
       } catch (error) {
-        logger.error("Failed to update Docker container status", { item, error });
+        logger.error(new Error(`Failed to update Docker container status id=${item.id}`, { cause: error }));
       }
     }),
   );
