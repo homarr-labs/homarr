@@ -6,6 +6,7 @@ import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
 import { and, asc, eq, handleTransactionsAsync, inArray, like, or } from "@homarr/db";
 import {
+  apps,
   groupMembers,
   groupPermissions,
   integrationGroupPermissions,
@@ -267,12 +268,15 @@ export const integrationRouter = createTRPCRouter({
         };
       }
 
+      const appId = await createAppIfNecessaryAsync(ctx.db, input.app);
+
       const integrationId = createId();
       await ctx.db.insert(integrations).values({
         id: integrationId,
         name: input.name,
         url: input.url,
         kind: input.kind,
+        appId,
       });
 
       if (input.secrets.length >= 1) {
@@ -651,4 +655,31 @@ const addSecretAsync = async (db: Database, input: AddSecretInput) => {
     value: encryptSecret(input.value),
     integrationId: input.integrationId,
   });
+};
+
+const createAppIfNecessaryAsync = async (db: Database, app: z.infer<typeof integrationCreateSchema>["app"]) => {
+  if (!app) return null;
+  if ("id" in app) return app.id;
+
+  logger.info("Creating app", {
+    name: app.name,
+    url: app.href,
+  });
+  const appId = createId();
+  await db.insert(apps).values({
+    id: appId,
+    name: app.name,
+    description: app.description,
+    iconUrl: app.iconUrl,
+    href: app.href,
+    pingUrl: app.pingUrl,
+  });
+
+  logger.info("Created app", {
+    id: appId,
+    name: app.name,
+    url: app.href,
+  });
+
+  return appId;
 };

@@ -185,6 +185,7 @@ export const integrations = sqliteTable(
     name: text().notNull(),
     url: text().notNull(),
     kind: text().$type<IntegrationKind>().notNull(),
+    appId: text().references(() => apps.id, { onDelete: "set null" }),
   },
   (integrations) => ({
     kindIdx: index("integration__kind_idx").on(integrations.kind),

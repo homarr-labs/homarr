@@ -1,10 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Alert, Button, Checkbox, Collapse, Fieldset, Group, Stack, Text, TextInput } from "@mantine/core";
-import { IconInfoCircle } from "@tabler/icons-react";
+import {
+  Alert,
+  Button,
+  Checkbox,
+  Collapse,
+  Fieldset,
+  Group,
+  Loader,
+  SegmentedControl,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
+import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
@@ -17,9 +30,10 @@ import {
   getIntegrationName,
   integrationDefs,
 } from "@homarr/definitions";
-import { useZodForm } from "@homarr/form";
+import { UseFormReturnType, useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { SelectWithDescription } from "@homarr/ui";
 import { appHrefSchema } from "@homarr/validation/app";
 import { integrationCreateSchema } from "@homarr/validation/integration";
 
@@ -34,10 +48,11 @@ interface NewIntegrationFormProps {
   };
 }
 
-const formSchema = integrationCreateSchema.omit({ kind: true }).and(
+const formSchema = integrationCreateSchema.omit({ kind: true, app: true }).and(
   z.object({
-    createApp: z.boolean(),
+    hasApp: z.boolean(),
     appHref: appHrefSchema,
+    appId: z.string().nullable(),
   }),
 );
 
@@ -46,7 +61,6 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   const secretKinds = getAllSecretKindOptions(searchParams.kind);
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
   const router = useRouter();
-  const [opened, setOpened] = useState(false);
 
   let url = searchParams.url ?? getIntegrationDefaultUrl(searchParams.kind) ?? "";
   if (hasUrlSecret) {
@@ -62,31 +76,40 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
         value: "",
       })),
       attemptSearchEngineCreation: true,
-      createApp: false,
-      appHref: "",
-    },
-    onValuesChange(values, previous) {
-      if (values.createApp !== previous.createApp) {
-        setOpened(values.createApp);
-      }
+      hasApp: false,
+      appHref: url,
+      appId: null,
     },
   });
 
-  const { mutateAsync: createIntegrationAsync, isPending: isPendingIntegration } =
-    clientApi.integration.create.useMutation();
-  const { mutateAsync: createAppAsync, isPending: isPendingApp } = clientApi.app.create.useMutation();
-  const isPending = isPendingIntegration || isPendingApp;
+  const { mutateAsync: createIntegrationAsync, isPending } = clientApi.integration.create.useMutation();
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
 
-  const handleSubmitAsync = async (values: FormType) => {
+  const handleSubmitAsync = async ({ appId, appHref, hasApp, ...values }: FormType) => {
     const url = hasUrlSecret
       ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
       : values.url;
+
+    const hasCustomHref = appHref !== null && appHref.trim().length >= 1;
+
+    const app = hasApp
+      ? appId !== null
+        ? { id: appId }
+        : {
+            name: values.name,
+            href: hasCustomHref ? appHref : url,
+            iconUrl: getIconUrl(searchParams.kind),
+            description: null,
+            pingUrl: url,
+          }
+      : undefined;
+
     await createIntegrationAsync(
       {
         kind: searchParams.kind,
         ...values,
         url,
+        app,
       },
       {
         async onSuccess(data) {
@@ -105,32 +128,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
             message: t("integration.page.create.notification.success.message"),
           });
 
-          if (!values.createApp) {
-            await revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
-            return;
-          }
-
-          const hasCustomHref = values.appHref !== null && values.appHref.trim().length >= 1;
-          await createAppAsync(
-            {
-              name: values.name,
-              href: hasCustomHref ? values.appHref : url,
-              iconUrl: getIconUrl(searchParams.kind),
-              description: null,
-              pingUrl: url,
-            },
-            {
-              async onSettled() {
-                await revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
-              },
-              onError() {
-                showErrorNotification({
-                  title: t("app.page.create.notification.error.title"),
-                  message: t("app.page.create.notification.error.message"),
-                });
-              },
-            },
-          );
+          await revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
         },
         onError: () => {
           showErrorNotification({
@@ -184,15 +182,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
           />
         )}
 
-        <Checkbox
-          {...form.getInputProps("createApp", { type: "checkbox" })}
-          label={t("integration.field.createApp.label")}
-          description={t("integration.field.createApp.description")}
-        />
-
-        <Collapse in={opened}>
-          <TextInput placeholder={t("integration.field.appHref.placeholder")} {...form.getInputProps("appHref")} />
-        </Collapse>
+        <AppForm form={form} />
 
         <Group justify="end" align="center">
           <Button variant="default" component={Link} href="/manage/integrations">
@@ -208,3 +198,97 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
 };
 
 type FormType = z.infer<typeof formSchema>;
+
+const AppForm = ({ form }: { form: UseFormReturnType<FormType> }) => {
+  const t = useI18n();
+  const checkboxInputProps = form.getInputProps("hasApp", { type: "checkbox" });
+  const { data, isPending } = clientApi.app.selectable.useQuery();
+  const appMap = new Map(data?.map((app) => [app.id, app] as const) ?? []);
+
+  return (
+    <>
+      <Checkbox
+        {...checkboxInputProps}
+        onChange={(event) => {
+          startTransition(() => {
+            form.setFieldValue("appHref", event.currentTarget.checked ? form.values.url : null);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            checkboxInputProps.onChange(event);
+          });
+        }}
+        label={t("integration.field.createApp.label")}
+        description={t("integration.field.createApp.description")}
+      />
+
+      <Collapse in={form.values.hasApp}>
+        <Fieldset legend="Linked App">
+          <Stack gap="sm">
+            <SegmentedControl
+              data={["New", "Existing"]}
+              value={form.values.appHref === null ? "Existing" : "New"}
+              onChange={(value) => {
+                if (value === "Existing") {
+                  form.setFieldValue("appId", null);
+                  form.setFieldValue("appHref", null);
+                } else {
+                  form.setFieldValue("appId", null);
+                  form.setFieldValue("appHref", form.values.url);
+                }
+              }}
+            />
+
+            {typeof form.values.appHref === "string" ? (
+              <TextInput
+                placeholder={t("integration.field.appHref.placeholder")}
+                withAsterisk
+                label="App url"
+                description="The url the app will open when accessed from the dashboard"
+                {...form.getInputProps("appHref")}
+              />
+            ) : (
+              <Select
+                withAsterisk
+                label="Select existing app"
+                searchable
+                clearable
+                leftSection={
+                  form.values.appId ? (
+                    <img
+                      width={20}
+                      height={20}
+                      src={appMap.get(form.values.appId)?.iconUrl}
+                      alt={appMap.get(form.values.appId)?.name}
+                    />
+                  ) : null
+                }
+                renderOption={({ option, checked }) => (
+                  <Group flex="1" gap="xs">
+                    <img width={20} height={20} src={appMap.get(option.value)?.iconUrl} alt={option.label} />
+                    <Stack gap={0}>
+                      <Text>{option.label}</Text>
+                      <Text size="xs" c="dimmed">
+                        {appMap.get(option.value)?.href}
+                      </Text>
+                    </Stack>
+                    {checked && (
+                      <IconCheck
+                        style={{ marginInlineStart: "auto" }}
+                        stroke={1.5}
+                        color="currentColor"
+                        opacity={0.6}
+                        size={18}
+                      />
+                    )}
+                  </Group>
+                )}
+                {...form.getInputProps("appId")}
+                data={data?.map((app) => ({ value: app.id, label: app.name })) ?? []}
+                rightSection={isPending ? <Loader size="sm" /> : null}
+              />
+            )}
+          </Stack>
+        </Fieldset>
+      </Collapse>
+    </>
+  );
+};

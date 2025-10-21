@@ -198,6 +198,7 @@ export const integrations = pgTable(
     name: text().notNull(),
     url: text().notNull(),
     kind: varchar({ length: 128 }).$type<IntegrationKind>().notNull(),
+    appId: varchar({ length: 128 }).references(() => apps.id, { onDelete: "set null" }),
   },
   (integrations) => ({
     kindIdx: index("integration__kind_idx").on(integrations.kind),

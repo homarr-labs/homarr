@@ -5,7 +5,7 @@ import { getAllSecretKindOptions } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import { logger } from "@homarr/log";
 
-type FormIntegration = Integration & {
+type FormIntegration = Omit<Integration, "appId"> & {
   secrets: {
     kind: IntegrationSecretKind;
     value: string | null;
