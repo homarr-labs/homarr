@@ -96,10 +96,10 @@ const AddMenu = () => {
 
   const handleSelectApp = useCallback(() => {
     openAppSelectModal({
-      onSelect: (appId) => {
+      onSelect: (app) => {
         createItem({
           kind: "app",
-          options: { appId },
+          options: { appId: app.id },
         });
       },
     });

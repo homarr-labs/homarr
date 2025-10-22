@@ -627,11 +627,15 @@ export const boardGroupPermissionRelations = relations(boardGroupPermissions, ({
   }),
 }));
 
-export const integrationRelations = relations(integrations, ({ many }) => ({
+export const integrationRelations = relations(integrations, ({ one, many }) => ({
   secrets: many(integrationSecrets),
   items: many(integrationItems),
   userPermissions: many(integrationUserPermissions),
   groupPermissions: many(integrationGroupPermissions),
+  app: one(apps, {
+    fields: [integrations.appId],
+    references: [apps.id],
+  }),
 }));
 
 export const integrationUserPermissionRelations = relations(integrationUserPermissions, ({ one }) => ({

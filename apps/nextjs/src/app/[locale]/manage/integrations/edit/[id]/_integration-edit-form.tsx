@@ -3,16 +3,17 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Alert, Button, Fieldset, Group, Stack, Text, TextInput } from "@mantine/core";
-import { IconInfoCircle } from "@tabler/icons-react";
-import type { z } from "zod/v4";
+import { Alert, Anchor, Button, ButtonGroup, Fieldset, Group, Stack, Text, TextInput } from "@mantine/core";
+import { IconInfoCircle, IconPencil, IconPlus, IconUnlink } from "@tabler/icons-react";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { getAllSecretKindOptions, getDefaultSecretKinds } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
-import { useConfirmModal } from "@homarr/modals";
+import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { AppSelectModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { integrationUpdateSchema } from "@homarr/validation/integration";
@@ -27,6 +28,19 @@ interface EditIntegrationForm {
   integration: RouterOutputs["integration"]["byId"];
 }
 
+const formSchema = integrationUpdateSchema.omit({ id: true, appId: true }).and(
+  z.object({
+    app: z
+      .object({
+        id: z.string(),
+        name: z.string(),
+        iconUrl: z.string(),
+        href: z.string().nullable(),
+      })
+      .nullable(),
+  }),
+);
+
 export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const t = useI18n();
   const { openConfirmModal } = useConfirmModal();
@@ -40,7 +54,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const hasUrlSecret = initialSecretsKinds.includes("url");
 
   const router = useRouter();
-  const form = useZodForm(integrationUpdateSchema.omit({ id: true }), {
+  const form = useZodForm(formSchema, {
     initialValues: {
       name: integration.name,
       url: integration.url,
@@ -48,6 +62,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
         kind,
         value: integration.secrets.find((secret) => secret.kind === kind)?.value ?? "",
       })),
+      app: integration.app ?? null,
     },
   });
   const { mutateAsync, isPending } = clientApi.integration.update.useMutation();
@@ -55,7 +70,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
 
   const secretsMap = new Map(integration.secrets.map((secret) => [secret.kind, secret]));
 
-  const handleSubmitAsync = async (values: FormType) => {
+  const handleSubmitAsync = async ({ app, ...values }: FormType) => {
     const url = hasUrlSecret
       ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
       : values.url;
@@ -68,6 +83,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
           kind: secret.kind,
           value: secret.value === "" ? null : secret.value,
         })),
+        appId: app?.id ?? null,
       },
       {
         onSuccess: (data) => {
@@ -102,7 +118,7 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
     form.values.secrets.length === initialSecretsKinds.length;
 
   return (
-    <form onSubmit={form.onSubmit((values) => void handleSubmitAsync(values))}>
+    <form onSubmit={form.onSubmit(async (values) => await handleSubmitAsync(values))}>
       <Stack>
         <TextInput withAsterisk label={t("integration.field.name.label")} {...form.getInputProps("name")} />
 
@@ -169,6 +185,8 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
           </Stack>
         </Fieldset>
 
+        <IntegrationLinkApp value={form.values.app} onChange={(app) => form.setFieldValue("app", app)} />
+
         {error !== null && <IntegrationTestConnectionError error={error} url={form.values.url} />}
 
         <Group justify="end" align="center">
@@ -184,4 +202,75 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   );
 };
 
-type FormType = Omit<z.infer<typeof integrationUpdateSchema>, "id">;
+type FormType = z.infer<typeof formSchema>;
+
+interface IntegrationAppSelectProps {
+  value: FormType["app"];
+  onChange: (app: FormType["app"]) => void;
+}
+
+const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
+  const { openModal } = useModalAction(AppSelectModal);
+
+  const handleChange = () =>
+    openModal(
+      {
+        onSelect: onChange,
+      },
+      {
+        title: "Select an app to link",
+      },
+    );
+
+  if (!value) {
+    return (
+      <Button
+        variant="subtle"
+        color="gray"
+        leftSection={<IconPlus size={16} stroke={1.5} />}
+        fullWidth
+        onClick={handleChange}
+      >
+        Link an App
+      </Button>
+    );
+  }
+
+  return (
+    <Fieldset legend="Linked App">
+      <Group justify="space-between">
+        <Group gap="sm">
+          <img src={value.iconUrl} alt={value.name} width={32} height={32} />
+          <Stack gap={0}>
+            <Text size="sm" fw="bold">
+              {value.name}
+            </Text>
+            {value.href !== null && (
+              <Anchor href={value.href} target="_blank" rel="noopener noreferrer" size="sm">
+                {value.href}
+              </Anchor>
+            )}
+          </Stack>
+        </Group>
+        <ButtonGroup>
+          <Button
+            variant="subtle"
+            color="gray"
+            leftSection={<IconUnlink size={16} stroke={1.5} />}
+            onClick={() => onChange(null)}
+          >
+            Unlink
+          </Button>
+          <Button
+            variant="subtle"
+            color="gray"
+            leftSection={<IconPencil size={16} stroke={1.5} />}
+            onClick={handleChange}
+          >
+            Change
+          </Button>
+        </ButtonGroup>
+      </Group>
+    </Fieldset>
+  );
+};

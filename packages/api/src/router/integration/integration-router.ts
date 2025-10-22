@@ -213,6 +213,14 @@ export const integrationRouter = createTRPCRouter({
             updatedAt: true,
           },
         },
+        app: {
+          columns: {
+            id: true,
+            name: true,
+            iconUrl: true,
+            href: true,
+          },
+        },
       },
     });
 
@@ -234,6 +242,7 @@ export const integrationRouter = createTRPCRouter({
         value: integrationSecretKindObject[secret.kind].isPublic ? decryptSecret(secret.value) : null,
         updatedAt: secret.updatedAt,
       })),
+      app: integration.app,
     };
   }),
   create: permissionRequiredProcedure
@@ -362,6 +371,7 @@ export const integrationRouter = createTRPCRouter({
       .set({
         name: input.name,
         url: input.url,
+        appId: input.appId,
       })
       .where(eq(integrations.id, input.id));
 

@@ -172,6 +172,7 @@ describe("byId should return an integration by id", () => {
   });
 });
 
+// TODO: add tests for app linking
 describe("create should create a new integration", () => {
   test("with create integration access should create a new integration", async () => {
     const db = createDb();
@@ -320,6 +321,7 @@ describe("update should update an integration", () => {
         { kind: "password" as const, value: null },
         { kind: "apiKey" as const, value: "1234567890" },
       ],
+      appId: null,
     };
 
     const fakeNow = new Date("2023-07-01T00:00:00Z");
@@ -365,6 +367,7 @@ describe("update should update an integration", () => {
         name: "Pi Hole",
         url: "http://hole.local",
         secrets: [],
+        appId: null,
       });
     await expect(actAsync()).rejects.toThrow("Integration not found");
   });
@@ -385,6 +388,7 @@ describe("update should update an integration", () => {
         name: "Pi Hole",
         url: "http://hole.local",
         secrets: [],
+        appId: null,
       });
 
     // Assert

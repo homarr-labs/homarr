@@ -10,14 +10,12 @@ import {
   Collapse,
   Fieldset,
   Group,
-  Loader,
   SegmentedControl,
-  Select,
   Stack,
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
+import { IconInfoCircle } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
@@ -30,13 +28,14 @@ import {
   getIntegrationName,
   integrationDefs,
 } from "@homarr/definitions";
-import { UseFormReturnType, useZodForm } from "@homarr/form";
+import type { UseFormReturnType } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { SelectWithDescription } from "@homarr/ui";
 import { appHrefSchema } from "@homarr/validation/app";
 import { integrationCreateSchema } from "@homarr/validation/integration";
 
+import { IntegrationAppSelect } from "../_components/app/app-select";
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
 import { SecretKindsSegmentedControl } from "../_components/secrets/integration-secret-segmented-control";
 import { IntegrationTestConnectionError } from "../_components/test-connection/integration-test-connection-error";
@@ -202,8 +201,6 @@ type FormType = z.infer<typeof formSchema>;
 const AppForm = ({ form }: { form: UseFormReturnType<FormType> }) => {
   const t = useI18n();
   const checkboxInputProps = form.getInputProps("hasApp", { type: "checkbox" });
-  const { data, isPending } = clientApi.app.selectable.useQuery();
-  const appMap = new Map(data?.map((app) => [app.id, app] as const) ?? []);
 
   return (
     <>
@@ -246,45 +243,7 @@ const AppForm = ({ form }: { form: UseFormReturnType<FormType> }) => {
                 {...form.getInputProps("appHref")}
               />
             ) : (
-              <Select
-                withAsterisk
-                label="Select existing app"
-                searchable
-                clearable
-                leftSection={
-                  form.values.appId ? (
-                    <img
-                      width={20}
-                      height={20}
-                      src={appMap.get(form.values.appId)?.iconUrl}
-                      alt={appMap.get(form.values.appId)?.name}
-                    />
-                  ) : null
-                }
-                renderOption={({ option, checked }) => (
-                  <Group flex="1" gap="xs">
-                    <img width={20} height={20} src={appMap.get(option.value)?.iconUrl} alt={option.label} />
-                    <Stack gap={0}>
-                      <Text>{option.label}</Text>
-                      <Text size="xs" c="dimmed">
-                        {appMap.get(option.value)?.href}
-                      </Text>
-                    </Stack>
-                    {checked && (
-                      <IconCheck
-                        style={{ marginInlineStart: "auto" }}
-                        stroke={1.5}
-                        color="currentColor"
-                        opacity={0.6}
-                        size={18}
-                      />
-                    )}
-                  </Group>
-                )}
-                {...form.getInputProps("appId")}
-                data={data?.map((app) => ({ value: app.id, label: app.name })) ?? []}
-                rightSection={isPending ? <Loader size="sm" /> : null}
-              />
+              <IntegrationAppSelect {...form.getInputProps("appId")} />
             )}
           </Stack>
         </Fieldset>

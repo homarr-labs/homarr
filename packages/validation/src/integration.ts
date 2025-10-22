@@ -38,6 +38,7 @@ export const integrationUpdateSchema = z.object({
       value: z.string().nullable(),
     }),
   ),
+  appId: z.string().nullable(),
 });
 
 export const integrationSavePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(integrationPermissions));

@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
 import { IconPlus, IconSearch } from "@tabler/icons-react";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
@@ -9,7 +10,7 @@ import { useI18n } from "@homarr/translation/client";
 import { QuickAddAppModal } from "./quick-add-app/quick-add-app-modal";
 
 interface AppSelectModalProps {
-  onSelect?: (appId: string) => void;
+  onSelect?: (app: RouterOutputs["app"]["selectable"][number]) => void;
 }
 
 export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, innerProps }) => {
@@ -26,18 +27,18 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
     [apps, search],
   );
 
-  const handleSelect = (appId: string) => {
+  const handleSelect = (app: RouterOutputs["app"]["selectable"][number]) => {
     if (innerProps.onSelect) {
-      innerProps.onSelect(appId);
+      innerProps.onSelect(app);
     }
     actions.closeModal();
   };
 
   const handleAddNewApp = () => {
     openQuickAddAppModal({
-      onClose(createdAppId) {
+      onClose(app) {
         if (innerProps.onSelect) {
-          innerProps.onSelect(createdAppId);
+          innerProps.onSelect(app);
         }
         actions.closeModal();
       },
@@ -54,7 +55,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
         data-autofocus
         onKeyDown={(event) => {
           if (event.key === "Enter" && filteredApps.length === 1 && filteredApps[0]) {
-            handleSelect(filteredApps[0].id);
+            handleSelect(filteredApps[0]);
           }
         }}
       />
@@ -96,7 +97,7 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
                     {app.description ?? ""}
                   </Text>
                 </Stack>
-                <Button onClick={() => handleSelect(app.id)} variant="light" size="xs" mt="auto" radius="md" fullWidth>
+                <Button onClick={() => handleSelect(app)} variant="light" size="xs" mt="auto" radius="md" fullWidth>
                   {t("app.action.select.action", { app: app.name })}
                 </Button>
               </Stack>
