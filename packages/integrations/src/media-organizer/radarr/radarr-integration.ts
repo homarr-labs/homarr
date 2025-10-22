@@ -67,7 +67,7 @@ export class RadarrIntegration extends Integration implements ICalendarIntegrati
   private getLinksForRadarrCalendarEvent = (event: z.infer<typeof radarrCalendarEventSchema>) => {
     const links: CalendarLink[] = [
       {
-        href: this.url(`/movie/${event.titleSlug}`).toString(),
+        href: this.externalUrl(`/movie/${event.titleSlug}`).toString(),
         name: "Radarr",
         logo: "/images/apps/radarr.svg",
         color: undefined,

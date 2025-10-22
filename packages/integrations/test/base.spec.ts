@@ -43,6 +43,7 @@ class FakeIntegration extends Integration {
       name: "Test",
       url: "https://example.com",
       decryptedSecrets: [],
+      externalUrl: null,
     });
   }
 

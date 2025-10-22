@@ -75,6 +75,7 @@ export const testConnectionAsync = async (
   const integrationInstance = await createIntegrationAsync({
     ...baseIntegration,
     decryptedSecrets,
+    externalUrl: null,
   });
 
   const result = await integrationInstance.testConnectionAsync();
