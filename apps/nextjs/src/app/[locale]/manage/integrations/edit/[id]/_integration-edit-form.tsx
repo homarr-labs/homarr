@@ -211,6 +211,7 @@ interface IntegrationAppSelectProps {
 
 const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
   const { openModal } = useModalAction(AppSelectModal);
+  const t = useI18n();
 
   const handleChange = () =>
     openModal(
@@ -218,7 +219,7 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
         onSelect: onChange,
       },
       {
-        title: "Select an app to link",
+        title: t("integration.page.edit.app.action.select"),
       },
     );
 
@@ -231,15 +232,16 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
         fullWidth
         onClick={handleChange}
       >
-        Link an App
+        {t("integration.page.edit.app.action.add")}
       </Button>
     );
   }
 
   return (
-    <Fieldset legend="Linked App">
+    <Fieldset legend={t("integration.field.app.sectionTitle")}>
       <Group justify="space-between">
         <Group gap="sm">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={value.iconUrl} alt={value.name} width={32} height={32} />
           <Stack gap={0}>
             <Text size="sm" fw="bold">
@@ -259,7 +261,7 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
             leftSection={<IconUnlink size={16} stroke={1.5} />}
             onClick={() => onChange(null)}
           >
-            Unlink
+            {t("integration.page.edit.app.action.remove")}
           </Button>
           <Button
             variant="subtle"
@@ -267,7 +269,7 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
             leftSection={<IconPencil size={16} stroke={1.5} />}
             onClick={handleChange}
           >
-            Change
+            {t("common.action.change")}
           </Button>
         </ButtonGroup>
       </Group>

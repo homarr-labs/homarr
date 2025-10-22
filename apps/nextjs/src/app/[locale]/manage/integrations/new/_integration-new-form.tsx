@@ -10,16 +10,19 @@ import {
   Collapse,
   Fieldset,
   Group,
+  Loader,
   SegmentedControl,
+  Select,
   Stack,
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import type { Modify } from "@homarr/common/types";
 import type { IntegrationKind } from "@homarr/definitions";
 import {
   getAllSecretKindOptions,
@@ -28,14 +31,13 @@ import {
   getIntegrationName,
   integrationDefs,
 } from "@homarr/definitions";
-import type { UseFormReturnType } from "@homarr/form";
+import type { GetInputPropsReturnType, UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { appHrefSchema } from "@homarr/validation/app";
 import { integrationCreateSchema } from "@homarr/validation/integration";
 
-import { IntegrationAppSelect } from "../_components/app/app-select";
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
 import { SecretKindsSegmentedControl } from "../_components/secrets/integration-secret-segmented-control";
 import { IntegrationTestConnectionError } from "../_components/test-connection/integration-test-connection-error";
@@ -218,13 +220,16 @@ const AppForm = ({ form }: { form: UseFormReturnType<FormType> }) => {
       />
 
       <Collapse in={form.values.hasApp}>
-        <Fieldset legend="Linked App">
+        <Fieldset legend={t("integration.field.app.sectionTitle")}>
           <Stack gap="sm">
             <SegmentedControl
-              data={["New", "Existing"]}
-              value={form.values.appHref === null ? "Existing" : "New"}
+              data={(["new", "existing"] as const).map((value) => ({
+                value,
+                label: t(`integration.page.create.app.option.${value}.title`),
+              }))}
+              value={form.values.appHref === null ? "existing" : "new"}
               onChange={(value) => {
-                if (value === "Existing") {
+                if (value === "existing") {
                   form.setFieldValue("appId", null);
                   form.setFieldValue("appHref", null);
                 } else {
@@ -238,8 +243,8 @@ const AppForm = ({ form }: { form: UseFormReturnType<FormType> }) => {
               <TextInput
                 placeholder={t("integration.field.appHref.placeholder")}
                 withAsterisk
-                label="App url"
-                description="The url the app will open when accessed from the dashboard"
+                label={t("integration.page.create.app.option.new.url.label")}
+                description={t("integration.page.create.app.option.new.url.description")}
                 {...form.getInputProps("appHref")}
               />
             ) : (
@@ -249,5 +254,57 @@ const AppForm = ({ form }: { form: UseFormReturnType<FormType> }) => {
         </Fieldset>
       </Collapse>
     </>
+  );
+};
+
+type IntegrationAppSelectProps = Modify<
+  GetInputPropsReturnType,
+  {
+    value?: string | null;
+    onChange: (value: string | null) => void;
+  }
+>;
+
+const IntegrationAppSelect = ({ value, ...props }: IntegrationAppSelectProps) => {
+  const { data, isPending } = clientApi.app.selectable.useQuery();
+  const t = useI18n();
+
+  const appMap = new Map(data?.map((app) => [app.id, app] as const));
+
+  return (
+    <Select
+      withAsterisk
+      label={t("integration.page.create.app.option.existing.label")}
+      searchable
+      clearable
+      leftSection={
+        // eslint-disable-next-line @next/next/no-img-element
+        value ? <img width={20} height={20} src={appMap.get(value)?.iconUrl} alt={appMap.get(value)?.name} /> : null
+      }
+      renderOption={({ option, checked }) => (
+        <Group flex="1" gap="xs">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img width={20} height={20} src={appMap.get(option.value)?.iconUrl} alt={option.label} />
+          <Stack gap={0}>
+            <Text>{option.label}</Text>
+            <Text size="xs" c="dimmed">
+              {appMap.get(option.value)?.href}
+            </Text>
+          </Stack>
+          {checked && (
+            <IconCheck
+              style={{ marginInlineStart: "auto" }}
+              stroke={1.5}
+              color="currentColor"
+              opacity={0.6}
+              size={18}
+            />
+          )}
+        </Group>
+      )}
+      {...props}
+      data={data?.map((app) => ({ value: app.id, label: app.name }))}
+      rightSection={isPending ? <Loader size="sm" /> : null}
+    />
   );
 };
