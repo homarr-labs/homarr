@@ -18,7 +18,16 @@ global.homarr ??= {};
 global.homarr.dnsCacheManager ??= new DnsCacheManager({
   cacheMaxEntries: 1000,
   forceMinTtl: 5 * 60 * 1000, // 5 minutes
-  logger,
+  logger: {
+    debug(message, meta) {
+      logger.warn(`DNS: ${message} ${JSON.stringify(meta)}`);
+      logger.warn(`DNS: current dns cache state: ${JSON.stringify(global.homarr.dnsCacheManager?.getCacheEntries())}`);
+    },
+    error(message, meta) {
+      logger.error(`DNS: ${message} ${JSON.stringify(meta)}`);
+      logger.error(`DNS: current dns cache state: ${JSON.stringify(global.homarr.dnsCacheManager?.getCacheEntries())}`);
+    },
+  },
 });
 
 if (env.ENABLE_DNS_CACHING) {
