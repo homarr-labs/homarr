@@ -255,6 +255,13 @@ export const integrationRouter = createTRPCRouter({
         url: input.url,
       });
 
+      if (input.app && "name" in input.app && !ctx.session.user.permissions.includes("app-create")) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Permission denied",
+        });
+      }
+
       const result = await testConnectionAsync({
         id: "new",
         name: input.name,
