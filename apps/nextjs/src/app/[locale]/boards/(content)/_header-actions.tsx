@@ -19,6 +19,7 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -62,6 +63,7 @@ export const BoardContentHeaderActions = () => {
 };
 
 const AddMenu = () => {
+  const { data: session } = useSession();
   const { openModal: openCategoryEditModal } = useModalAction(CategoryEditModal);
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
   const { openModal: openAppSelectModal } = useModalAction(AppSelectModal);
@@ -102,6 +104,7 @@ const AddMenu = () => {
           options: { appId: app.id },
         });
       },
+      withCreate: session?.user.permissions.includes("app-create") ?? false,
     });
   }, [openAppSelectModal, createItem]);
 

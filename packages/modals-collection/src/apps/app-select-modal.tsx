@@ -11,6 +11,7 @@ import { QuickAddAppModal } from "./quick-add-app/quick-add-app-modal";
 
 interface AppSelectModalProps {
   onSelect?: (app: RouterOutputs["app"]["selectable"][number]) => void;
+  withCreate: boolean;
 }
 
 export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, innerProps }) => {
@@ -61,26 +62,28 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
       />
 
       <Grid>
-        <Grid.Col span={{ xs: 12, sm: 4, md: 3 }}>
-          <Card h="100%">
-            <Stack justify="space-between" h="100%">
-              <Stack gap="xs">
-                <Center>
-                  <IconPlus size={24} />
-                </Center>
-                <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center">
-                  {t("app.action.create.title")}
-                </Text>
-                <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed">
-                  {t("app.action.create.description")}
-                </Text>
+        {innerProps.withCreate && (
+          <Grid.Col span={{ xs: 12, sm: 4, md: 3 }}>
+            <Card h="100%">
+              <Stack justify="space-between" h="100%">
+                <Stack gap="xs">
+                  <Center>
+                    <IconPlus size={24} />
+                  </Center>
+                  <Text lh={1.2} style={{ whiteSpace: "normal" }} ta="center">
+                    {t("app.action.create.title")}
+                  </Text>
+                  <Text lh={1.2} style={{ whiteSpace: "normal" }} size="xs" ta="center" c="dimmed">
+                    {t("app.action.create.description")}
+                  </Text>
+                </Stack>
+                <Button onClick={handleAddNewApp} variant="light" size="xs" mt="auto" radius="md" fullWidth>
+                  {t("app.action.create.action")}
+                </Button>
               </Stack>
-              <Button onClick={handleAddNewApp} variant="light" size="xs" mt="auto" radius="md" fullWidth>
-                {t("app.action.create.action")}
-              </Button>
-            </Stack>
-          </Card>
-        </Grid.Col>
+            </Card>
+          </Grid.Col>
+        )}
 
         {filteredApps.map((app) => (
           <Grid.Col key={app.id} span={{ xs: 12, sm: 4, md: 3 }}>

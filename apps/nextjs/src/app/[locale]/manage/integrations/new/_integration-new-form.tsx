@@ -21,6 +21,7 @@ import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { Modify } from "@homarr/common/types";
 import type { IntegrationKind } from "@homarr/definitions";
@@ -62,6 +63,8 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   const secretKinds = getAllSecretKindOptions(searchParams.kind);
   const hasUrlSecret = secretKinds.some((kinds) => kinds.includes("url"));
   const router = useRouter();
+  const { data: session } = useSession();
+  const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
 
   let url = searchParams.url ?? getIntegrationDefaultUrl(searchParams.kind) ?? "";
   if (hasUrlSecret) {
@@ -183,7 +186,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
           />
         )}
 
-        <AppForm form={form} />
+        <AppForm form={form} canCreateApps={canCreateApps} />
 
         <Group justify="end" align="center">
           <Button variant="default" component={Link} href="/manage/integrations">
@@ -200,7 +203,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
 
 type FormType = z.infer<typeof formSchema>;
 
-const AppForm = ({ form }: { form: UseFormReturnType<FormType> }) => {
+const AppForm = ({ form, canCreateApps }: { form: UseFormReturnType<FormType>; canCreateApps: boolean }) => {
   const t = useI18n();
   const checkboxInputProps = form.getInputProps("hasApp", { type: "checkbox" });
 
@@ -222,24 +225,26 @@ const AppForm = ({ form }: { form: UseFormReturnType<FormType> }) => {
       <Collapse in={form.values.hasApp}>
         <Fieldset legend={t("integration.field.app.sectionTitle")}>
           <Stack gap="sm">
-            <SegmentedControl
-              data={(["new", "existing"] as const).map((value) => ({
-                value,
-                label: t(`integration.page.create.app.option.${value}.title`),
-              }))}
-              value={form.values.appHref === null ? "existing" : "new"}
-              onChange={(value) => {
-                if (value === "existing") {
-                  form.setFieldValue("appId", null);
-                  form.setFieldValue("appHref", null);
-                } else {
-                  form.setFieldValue("appId", null);
-                  form.setFieldValue("appHref", form.values.url);
-                }
-              }}
-            />
+            {canCreateApps && (
+              <SegmentedControl
+                data={(["new", "existing"] as const).map((value) => ({
+                  value,
+                  label: t(`integration.page.create.app.option.${value}.title`),
+                }))}
+                value={form.values.appHref === null ? "existing" : "new"}
+                onChange={(value) => {
+                  if (value === "existing") {
+                    form.setFieldValue("appId", null);
+                    form.setFieldValue("appHref", null);
+                  } else {
+                    form.setFieldValue("appId", null);
+                    form.setFieldValue("appHref", form.values.url);
+                  }
+                }}
+              />
+            )}
 
-            {typeof form.values.appHref === "string" ? (
+            {typeof form.values.appHref === "string" && canCreateApps ? (
               <TextInput
                 placeholder={t("integration.field.appHref.placeholder")}
                 withAsterisk

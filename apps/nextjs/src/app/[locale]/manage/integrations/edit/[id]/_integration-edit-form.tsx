@@ -9,6 +9,7 @@ import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { getAllSecretKindOptions, getDefaultSecretKinds } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
@@ -212,11 +213,14 @@ interface IntegrationAppSelectProps {
 const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
   const { openModal } = useModalAction(AppSelectModal);
   const t = useI18n();
+  const { data: session } = useSession();
+  const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
 
   const handleChange = () =>
     openModal(
       {
         onSelect: onChange,
+        withCreate: canCreateApps,
       },
       {
         title: t("integration.page.edit.app.action.select"),
