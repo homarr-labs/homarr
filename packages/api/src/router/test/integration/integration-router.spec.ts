@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { encryptSecret } from "@homarr/common/server";
-import { integrations, integrationSecrets } from "@homarr/db/schema";
+import { apps, integrations, integrationSecrets } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 
@@ -172,7 +172,6 @@ describe("byId should return an integration by id", () => {
   });
 });
 
-// TODO: add tests for app linking
 describe("create should create a new integration", () => {
   test("with create integration access should create a new integration", async () => {
     const db = createDb();
@@ -252,6 +251,102 @@ describe("create should create a new integration", () => {
     );
   });
 
+  test("with create integration access should create a new integration with new linked app", async () => {
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-create", "app-create"]),
+    });
+    const input = {
+      name: "Jellyfin",
+      kind: "jellyfin" as const,
+      url: "http://jellyfin.local",
+      secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
+      attemptSearchEngineCreation: false,
+      app: {
+        name: "Jellyfin",
+        description: null,
+        pingUrl: "http://jellyfin.local",
+        href: "https://jellyfin.home",
+        iconUrl: "logo.png",
+      },
+    };
+
+    const fakeNow = new Date("2023-07-01T00:00:00Z");
+    vi.useFakeTimers();
+    vi.setSystemTime(fakeNow);
+    await caller.create(input);
+    vi.useRealTimers();
+
+    const dbIntegration = await db.query.integrations.findFirst({
+      with: {
+        app: true,
+      },
+    });
+    const dbSecret = await db.query.integrationSecrets.findFirst();
+    expect(dbIntegration).toBeDefined();
+    expect(dbIntegration!.name).toBe(input.name);
+    expect(dbIntegration!.kind).toBe(input.kind);
+    expect(dbIntegration!.url).toBe(input.url);
+    expect(dbIntegration!.app!.name).toBe(input.app.name);
+    expect(dbIntegration!.app!.pingUrl).toBe(input.app.pingUrl);
+    expect(dbIntegration!.app!.href).toBe(input.app.href);
+    expect(dbIntegration!.app!.iconUrl).toBe(input.app.iconUrl);
+
+    expect(dbSecret!.integrationId).toBe(dbIntegration!.id);
+    expect(dbSecret).toBeDefined();
+    expect(dbSecret!.kind).toBe(input.secrets[0]!.kind);
+    expect(dbSecret!.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
+    expect(dbSecret!.updatedAt).toEqual(fakeNow);
+  });
+
+  test("with create integration access should create a new integration with existing linked app", async () => {
+    const db = createDb();
+    const appId = createId();
+    await db.insert(apps).values({
+      id: appId,
+      name: "Existing Jellyfin",
+      iconUrl: "logo.png",
+    });
+
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-create"]),
+    });
+    const input = {
+      name: "Jellyfin",
+      kind: "jellyfin" as const,
+      url: "http://jellyfin.local",
+      secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
+      attemptSearchEngineCreation: false,
+      app: {
+        id: appId,
+      },
+    };
+
+    const fakeNow = new Date("2023-07-01T00:00:00Z");
+    vi.useFakeTimers();
+    vi.setSystemTime(fakeNow);
+    await caller.create(input);
+    vi.useRealTimers();
+
+    const dbIntegration = await db.query.integrations.findFirst();
+    const dbSecret = await db.query.integrationSecrets.findFirst();
+    expect(dbIntegration).toBeDefined();
+    expect(dbIntegration!.name).toBe(input.name);
+    expect(dbIntegration!.kind).toBe(input.kind);
+    expect(dbIntegration!.url).toBe(input.url);
+    expect(dbIntegration!.appId).toBe(appId);
+
+    expect(dbSecret!.integrationId).toBe(dbIntegration!.id);
+    expect(dbSecret).toBeDefined();
+    expect(dbSecret!.kind).toBe(input.secrets[0]!.kind);
+    expect(dbSecret!.value).toMatch(/^[a-f0-9]+.[a-f0-9]+$/);
+    expect(dbSecret!.updatedAt).toEqual(fakeNow);
+  });
+
   test("without create integration access should throw permission error", async () => {
     // Arrange
     const db = createDb();
@@ -274,6 +369,36 @@ describe("create should create a new integration", () => {
     // Assert
     await expect(actAsync()).rejects.toThrow("Permission denied");
   });
+
+  test("without create app access should throw permission error with new linked app", async () => {
+    // Arrange
+    const db = createDb();
+    const caller = integrationRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSessionWithPermissions(["integration-create"]),
+    });
+    const input = {
+      name: "Jellyfin",
+      kind: "jellyfin" as const,
+      url: "http://jellyfin.local",
+      secrets: [{ kind: "apiKey" as const, value: "1234567890" }],
+      attemptSearchEngineCreation: false,
+      app: {
+        name: "Jellyfin",
+        description: null,
+        href: "https://jellyfin.home",
+        iconUrl: "logo.png",
+        pingUrl: null,
+      },
+    };
+
+    // Act
+    const actAsync = async () => await caller.create(input);
+
+    // Assert
+    await expect(actAsync()).rejects.toThrow("Permission denied");
+  });
 });
 
 describe("update should update an integration", () => {
@@ -286,6 +411,7 @@ describe("update should update an integration", () => {
     });
 
     const lastWeek = new Date("2023-06-24T00:00:00Z");
+    const appId = createId();
     const integrationId = createId();
     const toInsert = {
       id: integrationId,
@@ -294,6 +420,11 @@ describe("update should update an integration", () => {
       url: "http://hole.local",
     };
 
+    await db.insert(apps).values({
+      id: appId,
+      name: "Previous",
+      iconUrl: "logo.png",
+    });
     await db.insert(integrations).values(toInsert);
 
     const usernameToInsert = {
@@ -321,7 +452,7 @@ describe("update should update an integration", () => {
         { kind: "password" as const, value: null },
         { kind: "apiKey" as const, value: "1234567890" },
       ],
-      appId: null,
+      appId,
     };
 
     const fakeNow = new Date("2023-07-01T00:00:00Z");
@@ -337,6 +468,7 @@ describe("update should update an integration", () => {
     expect(dbIntegration!.name).toBe(input.name);
     expect(dbIntegration!.kind).toBe(input.kind);
     expect(dbIntegration!.url).toBe(input.url);
+    expect(dbIntegration!.appId).toBe(appId);
 
     expect(dbSecrets.length).toBe(3);
     const username = expectToBeDefined(dbSecrets.find((secret) => secret.kind === "username"));
