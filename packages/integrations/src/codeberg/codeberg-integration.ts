@@ -11,7 +11,7 @@ import type { ReleasesProviderIntegration } from "../interfaces/releases-provide
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
   DetailsProviderResponse,
-  LatestReleaseResponse,
+  ReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { detailsResponseSchema, releasesResponseSchema } from "./codeberg-schemas";
 
@@ -54,12 +54,9 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     return { owner, name };
   }
 
-  public async getLatestMatchingReleaseAsync(
-    identifier: string,
-    versionRegex?: string,
-  ): Promise<LatestReleaseResponse> {
+  public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
     const { owner, name } = this.parseIdentifier(identifier) ?? {};
-    if (!owner || !name) return { error: { code: "invalidIdentifier" } };
+    if (!owner || !name) return { success: false, error: { code: "invalidIdentifier" } };
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
       return await fetchWithTrustedCertificatesAsync(
@@ -68,7 +65,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
       );
     });
     if (!releasesResponse.ok) {
-      return { error: { message: releasesResponse.statusText } };
+      return { success: false, error: { code: "unexpected", message: releasesResponse.statusText } };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
@@ -76,7 +73,9 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
 
     if (!success) {
       return {
+        success: false,
         error: {
+          code: "unexpected",
           message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
         },
       };
@@ -91,11 +90,11 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     }));
 
     const latestRelease = getLatestRelease(formattedReleases, versionRegex);
-    if (!latestRelease) return { error: { code: "noMatchingVersion" } };
+    if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
 
     const details = await this.getDetailsAsync(owner, name);
 
-    return { ...details, ...latestRelease };
+    return { success: true, data: { ...details, ...latestRelease } };
   }
 
   protected async getDetailsAsync(owner: string, name: string): Promise<DetailsProviderResponse | undefined> {

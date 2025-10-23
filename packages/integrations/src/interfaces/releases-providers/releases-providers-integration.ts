@@ -1,4 +1,4 @@
-import type { LatestReleaseResponse, ReleaseProviderResponse } from "./releases-providers-types";
+import type { ReleaseProviderResponse, ReleaseResponse } from "./releases-providers-types";
 
 export const getLatestRelease = (
   releases: ReleaseProviderResponse[],
@@ -17,5 +17,5 @@ export const getLatestRelease = (
 };
 
 export interface ReleasesProviderIntegration {
-  getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<LatestReleaseResponse>;
+  getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse>;
 }

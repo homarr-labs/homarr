@@ -10,8 +10,8 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
-  LatestReleaseResponse,
   ReleaseProviderResponse,
+  ReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./quay-schemas";
 
@@ -53,12 +53,9 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
     return { owner, name };
   }
 
-  public async getLatestMatchingReleaseAsync(
-    identifier: string,
-    versionRegex?: string,
-  ): Promise<LatestReleaseResponse> {
+  public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
     const parsedIdentifier = this.parseIdentifier(identifier);
-    if (!parsedIdentifier) return { error: { code: "invalidIdentifier" } };
+    if (!parsedIdentifier) return { success: false, error: { code: "invalidIdentifier" } };
     const { owner, name } = parsedIdentifier;
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
@@ -72,13 +69,13 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
       );
     });
     if (!releasesResponse.ok) {
-      return { error: { message: releasesResponse.statusText } };
+      return { success: false, error: { code: "unexpected", message: releasesResponse.statusText } };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
     const { data, success, error } = releasesResponseSchema.safeParse(releasesResponseJson);
     if (!success) {
-      return { error: { message: error.message } };
+      return { success: false, error: { code: "unexpected", message: error.message } };
     }
 
     const releasesProviderResponse = Object.entries(data.tags).reduce<ReleaseProviderResponse[]>((acc, [_, tag]) => {
@@ -94,11 +91,14 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
     }, []);
 
     const latestRelease = getLatestRelease(releasesProviderResponse, versionRegex);
-    if (!latestRelease) return { error: { code: "noMatchingVersion" } };
+    if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
 
     return {
-      projectDescription: data.description,
-      ...latestRelease,
+      success: true,
+      data: {
+        projectDescription: data.description,
+        ...latestRelease,
+      },
     };
   }
 }

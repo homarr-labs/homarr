@@ -14,7 +14,7 @@ import type { ReleasesProviderIntegration } from "../interfaces/releases-provide
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
   DetailsProviderResponse,
-  LatestReleaseResponse,
+  ReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { accessTokenResponseSchema, detailsResponseSchema, releasesResponseSchema } from "./docker-hub-schemas";
 
@@ -86,12 +86,9 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     return { owner, name };
   }
 
-  public async getLatestMatchingReleaseAsync(
-    identifier: string,
-    versionRegex?: string,
-  ): Promise<LatestReleaseResponse> {
+  public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
     const parsedIdentifier = this.parseIdentifier(identifier);
-    if (!parsedIdentifier) return { error: { code: "invalidIdentifier" } };
+    if (!parsedIdentifier) return { success: false, error: { code: "invalidIdentifier" } };
     const { owner, name } = parsedIdentifier;
 
     const relativeUrl: `/${string}` = owner
@@ -101,39 +98,44 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     for (let page = 0; page <= 5; page++) {
       const response = await this.getLatestMatchingReleaseFromPageAsync(relativeUrl, page, versionRegex);
       if (!response) continue;
-      if ("error" in response) return response;
-      const details = await this.getDetailsAsync(relativeUrl);
-      return { ...details, ...response };
+      return response;
     }
 
-    return { error: { code: "noMatchingVersion" } };
+    return { success: false, error: { code: "noMatchingVersion" } };
   }
 
   private async getLatestMatchingReleaseFromPageAsync(
     relativeUrl: `/${string}`,
     page: number,
     versionRegex?: string,
-  ): Promise<LatestReleaseResponse | null> {
+  ): Promise<ReleaseResponse | null> {
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
       return await fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/tags?page_size=100&page=${page}`), {
         headers,
       });
     });
     if (!releasesResponse.ok) {
-      return { error: { message: releasesResponse.statusText } };
+      return { success: false, error: { code: "unexpected", message: releasesResponse.statusText } };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
     const releasesResult = releasesResponseSchema.safeParse(releasesResponseJson);
     if (!releasesResult.success) {
       return {
+        success: false,
         error: {
+          code: "unexpected",
           message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
         },
       };
     }
 
-    return getLatestRelease(releasesResult.data.results, versionRegex);
+    const latestRelease = getLatestRelease(releasesResult.data.results, versionRegex);
+    if (!latestRelease) return null;
+
+    const details = await this.getDetailsAsync(relativeUrl);
+
+    return { success: true, data: { ...details, ...latestRelease } };
   }
 
   private async getDetailsAsync(relativeUrl: `/${string}`): Promise<DetailsProviderResponse | undefined> {

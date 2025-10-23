@@ -14,8 +14,8 @@ import type { ReleasesProviderIntegration } from "../interfaces/releases-provide
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
   DetailsProviderResponse,
-  LatestReleaseResponse,
   ReleaseProviderResponse,
+  ReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
 const localLogger = logger.child({ module: "GitHubContainerRegistryIntegration" });
@@ -54,12 +54,9 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
     return { owner, name };
   }
 
-  public async getLatestMatchingReleaseAsync(
-    identifier: string,
-    versionRegex?: string,
-  ): Promise<LatestReleaseResponse> {
+  public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
     const parsedIdentifier = this.parseIdentifier(identifier);
-    if (!parsedIdentifier) return { error: { code: "invalidIdentifier" } };
+    if (!parsedIdentifier) return { success: false, error: { code: "invalidIdentifier" } };
     const { owner, name } = parsedIdentifier;
     const api = this.getApi();
 
@@ -86,11 +83,11 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
       }, []);
 
       const latestRelease = getLatestRelease(releasesProviderResponse, versionRegex);
-      if (!latestRelease) return { error: { code: "noMatchingVersion" } };
+      if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
 
       const details = await this.getDetailsAsync(api, owner, name);
 
-      return { ...details, ...latestRelease };
+      return { success: true, data: { ...details, ...latestRelease } };
     } catch (error) {
       const errorMessage = error instanceof RequestError ? error.message : String(error);
       localLogger.warn(`Failed to get releases for ${owner}\\${name} with GitHub Container Registry integration`, {
@@ -98,7 +95,7 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
         name,
         error: errorMessage,
       });
-      return { error: { message: errorMessage } };
+      return { success: false, error: { code: "unexpected", message: errorMessage } };
     }
   }
 

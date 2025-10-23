@@ -122,7 +122,18 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             },
           };
 
-        const { data: releaseData, integration } = response;
+        const { data: releaseResponse, integration } = response;
+        if (!releaseResponse.success) {
+          return {
+            ...repository,
+            isNewRelease: false,
+            isStaleRelease: false,
+            latestReleaseAt: undefined,
+            error: releaseResponse.error,
+          };
+        }
+
+        const { data: releaseData } = releaseResponse;
 
         return {
           ...repository,
@@ -132,14 +143,14 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             iconUrl: getIconUrl(integration.kind),
           },
           isNewRelease:
-            relativeDateOptions.newReleaseWithin !== "" && "latestReleaseAt" in releaseData
+            relativeDateOptions.newReleaseWithin !== ""
               ? isDateWithin(releaseData.latestReleaseAt, relativeDateOptions.newReleaseWithin)
               : false,
           isStaleRelease:
-            relativeDateOptions.staleReleaseWithin !== "" && "latestReleaseAt" in releaseData
+            relativeDateOptions.staleReleaseWithin !== ""
               ? !isDateWithin(releaseData.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
               : false,
-          viewed: "latestRelease" in releaseData && releasesViewedList[repository.id] === releaseData.latestRelease,
+          viewed: releasesViewedList[repository.id] === releaseData.latestRelease,
         };
       })
       .filter(
@@ -147,8 +158,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
           "error" in repository || !options.showOnlyHighlighted || repository.isNewRelease || repository.isStaleRelease,
       )
       .sort((repoA, repoB) => {
-        if (!("latestReleaseAt" in repoA) || !repoA.latestReleaseAt) return -1;
-        if (!("latestReleaseAt" in repoB) || !repoB.latestReleaseAt) return 1;
+        if (!repoA.latestReleaseAt) return -1;
+        if (!repoB.latestReleaseAt) return 1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
       }) as ReleasesRepositoryResponse[];
 

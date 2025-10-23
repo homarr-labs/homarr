@@ -14,8 +14,8 @@ import type { ReleasesProviderIntegration } from "../interfaces/releases-provide
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
   DetailsProviderResponse,
-  LatestReleaseResponse,
   ReleaseProviderResponse,
+  ReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
 const localLogger = logger.child({ module: "GitlabIntegration" });
@@ -39,10 +39,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
     };
   }
 
-  public async getLatestMatchingReleaseAsync(
-    identifier: string,
-    versionRegex?: string,
-  ): Promise<LatestReleaseResponse> {
+  public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
     const api = this.getApi();
 
     try {
@@ -55,7 +52,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
           identifier,
           error: releasesResponse.message,
         });
-        return { error: { code: "noReleasesFound" } };
+        return { success: false, error: { code: "noReleasesFound" } };
       }
 
       const releasesProviderResponse = releasesResponse.reduce<ReleaseProviderResponse[]>((acc, release) => {
@@ -74,13 +71,16 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
       }, []);
 
       const latestRelease = getLatestRelease(releasesProviderResponse, versionRegex);
-      if (!latestRelease) return { error: { code: "noMatchingVersion" } };
+      if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
 
       const details = await this.getDetailsAsync(api, identifier);
 
       return {
-        ...details,
-        ...latestRelease,
+        success: true,
+        data: {
+          ...details,
+          ...latestRelease,
+        },
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -88,7 +88,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
         identifier,
         error: errorMessage,
       });
-      return { error: { message: errorMessage } };
+      return { success: false, error: { code: "unexpected", message: errorMessage } };
     }
   }
 
