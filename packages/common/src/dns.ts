@@ -21,11 +21,9 @@ global.homarr.dnsCacheManager ??= new DnsCacheManager({
   logger: {
     debug(message, meta) {
       logger.warn(`DNS: ${message} ${JSON.stringify(meta)}`);
-      logger.warn(`DNS: current dns cache state: ${JSON.stringify(global.homarr.dnsCacheManager?.getCacheEntries())}`);
     },
     error(message, meta) {
       logger.error(`DNS: ${message} ${JSON.stringify(meta)}`);
-      logger.error(`DNS: current dns cache state: ${JSON.stringify(global.homarr.dnsCacheManager?.getCacheEntries())}`);
     },
   },
 });
