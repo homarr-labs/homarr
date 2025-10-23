@@ -1,12 +1,13 @@
 import { run } from "@drizzle-team/brocli";
 
 import { dnsHostnameTest } from "./commands/dns-lookup-test";
+import { dnsRealTest } from "./commands/dns-real-test";
 import { dnsUrlTest } from "./commands/dns-url-test";
 import { fixUsernames } from "./commands/fix-usernames";
 import { recreateAdmin } from "./commands/recreate-admin";
 import { resetPassword } from "./commands/reset-password";
 
-const commands = [resetPassword, fixUsernames, recreateAdmin, dnsUrlTest, dnsHostnameTest];
+const commands = [resetPassword, fixUsernames, recreateAdmin, dnsUrlTest, dnsHostnameTest, dnsRealTest];
 
 void run(commands, {
   name: "homarr-cli",
