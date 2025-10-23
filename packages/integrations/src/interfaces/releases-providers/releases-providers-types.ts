@@ -30,5 +30,3 @@ type ReleasesErrorKeys = keyof TranslationObject["widget"]["releases"]["error"][
 export type LatestReleaseResponse =
   | (DetailsProviderResponse & ReleaseProviderResponse)
   | { error: { code: ReleasesErrorKeys } | { message: string } };
-
-export type ReleasesResponse = { id: string } & LatestReleaseResponse;
