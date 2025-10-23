@@ -21,6 +21,7 @@ import ReactMarkdown from "react-markdown";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } from "@homarr/common";
+import { getIconUrl } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
@@ -108,7 +109,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
           };
         }
 
-        const response = results.flat().find(({ data }) => data.id === repository.id)?.data;
+        const response = results.flat().find(({ id }) => id === repository.id);
 
         if (response === undefined)
           return {
@@ -121,18 +122,24 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
             },
           };
 
+        const { data: releaseData, integration } = response;
+
         return {
           ...repository,
-          ...response,
+          ...releaseData,
+          integration: {
+            ...integration,
+            iconUrl: getIconUrl(integration.kind),
+          },
           isNewRelease:
-            relativeDateOptions.newReleaseWithin !== "" && "latestReleaseAt" in response
-              ? isDateWithin(response.latestReleaseAt, relativeDateOptions.newReleaseWithin)
+            relativeDateOptions.newReleaseWithin !== "" && "latestReleaseAt" in releaseData
+              ? isDateWithin(releaseData.latestReleaseAt, relativeDateOptions.newReleaseWithin)
               : false,
           isStaleRelease:
-            relativeDateOptions.staleReleaseWithin !== "" && "latestReleaseAt" in response
-              ? !isDateWithin(response.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
+            relativeDateOptions.staleReleaseWithin !== "" && "latestReleaseAt" in releaseData
+              ? !isDateWithin(releaseData.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
               : false,
-          viewed: "latestRelease" in response && releasesViewedList[repository.id] === response.latestRelease,
+          viewed: "latestRelease" in releaseData && releasesViewedList[repository.id] === releaseData.latestRelease,
         };
       })
       .filter(
