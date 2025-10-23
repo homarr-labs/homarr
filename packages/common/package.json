@@ -29,7 +29,7 @@
   "dependencies": {
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
-    "@paralleldrive/cuid2": "^2.2.2",
+    "@paralleldrive/cuid2": "^3.1.0",
     "dayjs": "^1.11.18",
     "dns-caching": "^0.2.7",
     "next": "15.5.6",
