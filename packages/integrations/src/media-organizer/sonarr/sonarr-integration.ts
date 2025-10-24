@@ -63,7 +63,7 @@ export class SonarrIntegration extends Integration implements ICalendarIntegrati
   private getLinksForSonarrCalendarEvent = (event: z.infer<typeof sonarrCalendarEventSchema>) => {
     const links: CalendarLink[] = [
       {
-        href: this.url(`/series/${event.series.titleSlug}`).toString(),
+        href: this.externalUrl(`/series/${event.series.titleSlug}`).toString(),
         name: "Sonarr",
         logo: "/images/apps/sonarr.svg",
         color: undefined,

@@ -17,6 +17,7 @@ export interface IntegrationInput {
   id: string;
   name: string;
   url: string;
+  externalUrl: string | null;
   decryptedSecrets: IntegrationSecret[];
 }
 
@@ -54,8 +55,12 @@ export abstract class Integration {
     return this.integration.decryptedSecrets.some((secret) => secret.kind === kind);
   }
 
-  protected url(path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean>) {
-    const baseUrl = removeTrailingSlash(this.integration.url);
+  private createUrl(
+    inputUrl: string,
+    path: `/${string}`,
+    queryParams?: Record<string, string | Date | number | boolean>,
+  ) {
+    const baseUrl = removeTrailingSlash(inputUrl);
     const url = new URL(`${baseUrl}${path}`);
 
     if (queryParams) {
@@ -65,6 +70,13 @@ export abstract class Integration {
     }
 
     return url;
+  }
+  protected url(path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean>) {
+    return this.createUrl(this.integration.url, path, queryParams);
+  }
+
+  protected externalUrl(path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean>) {
+    return this.createUrl(this.integration.externalUrl ?? this.integration.url, path, queryParams);
   }
 
   public async testConnectionAsync(): Promise<TestingResult> {

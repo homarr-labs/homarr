@@ -47,10 +47,10 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^22.18.10",
+    "@types/node": "^22.18.11",
     "dotenv-cli": "^10.0.0",
-    "esbuild": "^0.25.10",
-    "eslint": "^9.37.0",
+    "esbuild": "^0.25.11",
+    "eslint": "^9.38.0",
     "prettier": "^3.6.2",
     "tsx": "4.20.4",
     "typescript": "^5.9.3"

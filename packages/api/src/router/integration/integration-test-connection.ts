@@ -5,7 +5,7 @@ import { getAllSecretKindOptions } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import { logger } from "@homarr/log";
 
-type FormIntegration = Integration & {
+type FormIntegration = Omit<Integration, "appId"> & {
   secrets: {
     kind: IntegrationSecretKind;
     value: string | null;
@@ -75,6 +75,7 @@ export const testConnectionAsync = async (
   const integrationInstance = await createIntegrationAsync({
     ...baseIntegration,
     decryptedSecrets,
+    externalUrl: null,
   });
 
   const result = await integrationInstance.testConnectionAsync();

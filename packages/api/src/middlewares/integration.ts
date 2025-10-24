@@ -32,6 +32,7 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
     const integration = await ctx.db.query.integrations.findFirst({
       where: and(eq(integrations.id, input.integrationId), inArray(integrations.kind, kinds)),
       with: {
+        app: true,
         secrets: true,
         groupPermissions: true,
         userPermissions: true,
@@ -65,6 +66,7 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
       ctx: {
         integration: {
           ...rest,
+          externalUrl: rest.app?.href ?? null,
           kind: kind as TKind,
           decryptedSecrets: secrets.map((secret) => ({
             ...secret,
@@ -96,6 +98,7 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
         ? await ctx.db.query.integrations.findMany({
             where: and(inArray(integrations.id, input.integrationIds), inArray(integrations.kind, kinds)),
             with: {
+              app: true,
               secrets: true,
               items: {
                 with: {
@@ -125,6 +128,7 @@ export const createManyIntegrationMiddleware = <TKind extends IntegrationKind>(
         integrations: dbIntegrations.map(
           ({ secrets, kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest }) => ({
             ...rest,
+            externalUrl: rest.app?.href ?? null,
             kind: kind as TKind,
             decryptedSecrets: secrets.map((secret) => ({
               ...secret,
