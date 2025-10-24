@@ -106,7 +106,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
         const { data: release, integration } = repositoryResult;
 
         const isReleaseWithin = (relativeDate: string) =>
-          !!relativeDate && isDateWithin(release.latestReleaseAt, relativeDate);
+          Boolean(relativeDate) && isDateWithin(release.latestReleaseAt, relativeDate);
 
         return {
           ...repository,
