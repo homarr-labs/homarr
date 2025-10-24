@@ -51,7 +51,6 @@ export class NPMIntegration extends Integration implements ReleasesProviderInteg
     const latestRelease = getLatestRelease(formattedReleases, versionRegex);
     if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
 
-    const dataResult = latestRelease;
-    return { success: true, data: dataResult };
+    return { success: true, data: latestRelease };
   }
 }

@@ -56,6 +56,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
   public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
     const parsedIdentifier = this.parseIdentifier(identifier);
     if (!parsedIdentifier) return { success: false, error: { code: "invalidIdentifier" } };
+
     const { owner, name } = parsedIdentifier;
     const api = this.getApi();
 

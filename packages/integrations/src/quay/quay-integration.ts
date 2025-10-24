@@ -56,6 +56,7 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
   public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
     const parsedIdentifier = this.parseIdentifier(identifier);
     if (!parsedIdentifier) return { success: false, error: { code: "invalidIdentifier" } };
+
     const { owner, name } = parsedIdentifier;
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
@@ -80,25 +81,17 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
 
     const releasesProviderResponse = Object.entries(data.tags).reduce<ReleaseProviderResponse[]>((acc, [_, tag]) => {
       if (!tag.name || !tag.last_modified) return acc;
-
       acc.push({
         latestRelease: tag.name,
         latestReleaseAt: new Date(tag.last_modified),
         releaseUrl: `https://quay.io/repository/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/tag/${encodeURIComponent(tag.name)}`,
       });
-
       return acc;
     }, []);
 
     const latestRelease = getLatestRelease(releasesProviderResponse, versionRegex);
     if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
 
-    return {
-      success: true,
-      data: {
-        projectDescription: data.description,
-        ...latestRelease,
-      },
-    };
+    return { success: true, data: { projectDescription: data.description, ...latestRelease } };
   }
 }

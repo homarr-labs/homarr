@@ -75,13 +75,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
 
       const details = await this.getDetailsAsync(api, identifier);
 
-      return {
-        success: true,
-        data: {
-          ...details,
-          ...latestRelease,
-        },
-      };
+      return { success: true, data: { ...details, ...latestRelease } };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       localLogger.warn(`Failed to get releases for ${identifier} with Gitlab integration`, {

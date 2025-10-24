@@ -73,9 +73,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
   }
 
   private parseIdentifier(identifier: string) {
-    if (!identifier.includes("/")) {
-      return { owner: "", name: identifier };
-    }
+    if (!identifier.includes("/")) return { owner: "", name: identifier };
     const [owner, name] = identifier.split("/");
     if (!owner || !name) {
       localLogger.warn(`Invalid identifier format. Expected 'owner/name' or 'name', for ${identifier} on DockerHub`, {
@@ -89,6 +87,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
   public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
     const parsedIdentifier = this.parseIdentifier(identifier);
     if (!parsedIdentifier) return { success: false, error: { code: "invalidIdentifier" } };
+
     const { owner, name } = parsedIdentifier;
 
     const relativeUrl: `/${string}` = owner
@@ -96,46 +95,38 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
       : `/v2/repositories/library/${encodeURIComponent(name)}`;
 
     for (let page = 0; page <= 5; page++) {
-      const response = await this.getLatestMatchingReleaseFromPageAsync(relativeUrl, page, versionRegex);
-      if (!response) continue;
-      return response;
+      const releasesResponse = await this.withHeadersAsync(async (headers) => {
+        return await fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/tags?page_size=100&page=${page}`), {
+          headers,
+        });
+      });
+      if (!releasesResponse.ok) {
+        return { success: false, error: { code: "unexpected", message: releasesResponse.statusText } };
+      }
+
+      const releasesResponseJson: unknown = await releasesResponse.json();
+      const releasesResult = releasesResponseSchema.safeParse(releasesResponseJson);
+      if (!releasesResult.success) {
+        return {
+          success: false,
+          error: {
+            code: "unexpected",
+            message: releasesResponseJson
+              ? JSON.stringify(releasesResponseJson, null, 2)
+              : releasesResult.error.message,
+          },
+        };
+      }
+
+      const latestRelease = getLatestRelease(releasesResult.data.results, versionRegex);
+      if (!latestRelease) continue;
+
+      const details = await this.getDetailsAsync(relativeUrl);
+
+      return { success: true, data: { ...details, ...latestRelease } };
     }
 
     return { success: false, error: { code: "noMatchingVersion" } };
-  }
-
-  private async getLatestMatchingReleaseFromPageAsync(
-    relativeUrl: `/${string}`,
-    page: number,
-    versionRegex?: string,
-  ): Promise<ReleaseResponse | null> {
-    const releasesResponse = await this.withHeadersAsync(async (headers) => {
-      return await fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/tags?page_size=100&page=${page}`), {
-        headers,
-      });
-    });
-    if (!releasesResponse.ok) {
-      return { success: false, error: { code: "unexpected", message: releasesResponse.statusText } };
-    }
-
-    const releasesResponseJson: unknown = await releasesResponse.json();
-    const releasesResult = releasesResponseSchema.safeParse(releasesResponseJson);
-    if (!releasesResult.success) {
-      return {
-        success: false,
-        error: {
-          code: "unexpected",
-          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
-        },
-      };
-    }
-
-    const latestRelease = getLatestRelease(releasesResult.data.results, versionRegex);
-    if (!latestRelease) return null;
-
-    const details = await this.getDetailsAsync(relativeUrl);
-
-    return { success: true, data: { ...details, ...latestRelease } };
   }
 
   private async getDetailsAsync(relativeUrl: `/${string}`): Promise<DetailsProviderResponse | undefined> {

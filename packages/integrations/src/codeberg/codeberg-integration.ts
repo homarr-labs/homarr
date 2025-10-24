@@ -55,8 +55,10 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
   }
 
   public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
-    const { owner, name } = this.parseIdentifier(identifier) ?? {};
-    if (!owner || !name) return { success: false, error: { code: "invalidIdentifier" } };
+    const parsedIdentifier = this.parseIdentifier(identifier);
+    if (!parsedIdentifier) return { success: false, error: { code: "invalidIdentifier" } };
+
+    const { owner, name } = parsedIdentifier;
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
       return await fetchWithTrustedCertificatesAsync(
@@ -70,7 +72,6 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
 
     const releasesResponseJson: unknown = await releasesResponse.json();
     const { data, success, error } = releasesResponseSchema.safeParse(releasesResponseJson);
-
     if (!success) {
       return {
         success: false,

@@ -57,6 +57,7 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
   public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
     const parsedIdentifier = this.parseIdentifier(identifier);
     if (!parsedIdentifier) return { success: false, error: { code: "invalidIdentifier" } };
+
     const { owner, name } = parsedIdentifier;
     const api = this.getApi();
 

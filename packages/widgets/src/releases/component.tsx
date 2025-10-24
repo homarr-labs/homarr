@@ -97,41 +97,13 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const repositories = useMemo(() => {
     const formattedResults = options.repositories
       .map((repository) => {
-        if (repository.providerIntegrationId === undefined) {
-          return {
-            ...repository,
-            isNewRelease: false,
-            isStaleRelease: false,
-            latestReleaseAt: undefined,
-            error: {
-              code: "noProviderSeleceted",
-            },
-          };
-        }
+        if (!repository.providerIntegrationId) return { ...repository, error: { code: "noProviderSeleceted" } };
 
-        const response = results.flat().find(({ id }) => id === repository.id);
+        const repositoryResult = results.flat().find(({ id }) => id === repository.id);
+        if (!repositoryResult) return { ...repository, error: { code: "noProviderResponse" } };
 
-        if (response === undefined)
-          return {
-            ...repository,
-            isNewRelease: false,
-            isStaleRelease: false,
-            latestReleaseAt: undefined,
-            error: {
-              code: "noProviderResponse",
-            },
-          };
-
-        const { data: releaseResponse, integration } = response;
-        if (!releaseResponse.success) {
-          return {
-            ...repository,
-            isNewRelease: false,
-            isStaleRelease: false,
-            latestReleaseAt: undefined,
-            error: releaseResponse.error,
-          };
-        }
+        const { data: releaseResponse, integration } = repositoryResult;
+        if (!releaseResponse.success) return { ...repository, error: releaseResponse.error };
 
         const { data: releaseData } = releaseResponse;
 
@@ -139,7 +111,7 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
           ...repository,
           ...releaseData,
           integration: {
-            ...integration,
+            name: integration.name,
             iconUrl: getIconUrl(integration.kind),
           },
           isNewRelease:
@@ -158,8 +130,8 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
           "error" in repository || !options.showOnlyHighlighted || repository.isNewRelease || repository.isStaleRelease,
       )
       .sort((repoA, repoB) => {
-        if (!repoA.latestReleaseAt) return -1;
-        if (!repoB.latestReleaseAt) return 1;
+        if ("error" in repoA) return -1;
+        if ("error" in repoB) return 1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
       }) as ReleasesRepositoryResponse[];
 

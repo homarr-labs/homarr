@@ -1,6 +1,6 @@
 import type { TranslationObject } from "@homarr/translation";
 
-export interface ReleasesRepository {
+export interface ReleasesRepository extends Record<string, unknown> {
   id: string;
   identifier: string;
   versionRegex?: string;
