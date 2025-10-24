@@ -145,12 +145,19 @@ const createBeszelAgentContainer = (id: string, port: number) => {
       HUB_URL: `http://host.docker.internal:${port}`,
       TOKEN: token,
       KEY: publicKey,
-    });
+    })
+    .withExtraHosts([
+      {
+        // This enabled the usage of host.docker.internal as hostname in the container
+        host: "host.docker.internal",
+        ipAddress: "host-gateway",
+      },
+    ]);
 };
 
 const createSocketPath = (id: string) => {
-  if (process.env.CI) {
+  /*if (process.env.CI) {
     return join("/tmp", `beszel_socket_${id}`);
-  }
+  }*/
   return join(__dirname, `/volumes/beszel/socket-${id}`);
 };
