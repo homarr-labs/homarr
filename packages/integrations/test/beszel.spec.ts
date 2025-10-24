@@ -66,6 +66,7 @@ describe("Beszel integration", () => {
     const system = await integration.getSystemDetailsAsync(systemId);
 
     // Assert
+    console.log(system);
     expect(system.id).toBe(systemId);
     expect(system.name).toBe("localhost");
     expect(system.agent.connectionType).toBe("webSocket");
