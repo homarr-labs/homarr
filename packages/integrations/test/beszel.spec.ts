@@ -45,6 +45,32 @@ describe("Beszel integration", () => {
     await rmdir(createSocketPath(socketPathId), { recursive: true });
   }, 5_000);
 
+  test("Test connection is successful", async () => {
+    // Arrange
+    const integration = createIntegration(beszelContainer.getMappedPort(8090));
+
+    // Act
+    const result = await integration.testConnectionAsync();
+
+    // Assert
+    expect(result.success).toBe(true);
+  });
+
+  test("Test connection fails with invalid credentials", async () => {
+    // Arrange
+    const integration = createIntegration(beszelContainer.getMappedPort(8090), {
+      password: "wrongpassword",
+    });
+
+    // Act
+    const result = await integration.testConnectionAsync();
+
+    // Assert
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.type).toBe("authorization");
+  });
+
   test("Can get systems", async () => {
     // Arrange
     const integration = createIntegration(beszelContainer.getMappedPort(8090));
@@ -79,11 +105,11 @@ describe("Beszel integration", () => {
   });
 });
 
-const createIntegration = (port: number) =>
+const createIntegration = (port: number, overrides: { hostname?: string; password?: string } = {}) =>
   new BeszelIntegration({
     id: createId(),
     name: "Beszel E2E",
-    url: `http://localhost:${port}`,
+    url: `http://${overrides.hostname ?? "localhost"}:${port}`,
     decryptedSecrets: [
       {
         kind: "username",
@@ -91,7 +117,7 @@ const createIntegration = (port: number) =>
       },
       {
         kind: "password",
-        value: password,
+        value: overrides.password ?? password,
       },
     ],
   });
