@@ -101,28 +101,20 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
 
         const repositoryResult = results.flat().find(({ id }) => id === repository.id);
         if (!repositoryResult) return { ...repository, error: { code: "noProviderResponse" } };
+        if (!repositoryResult.success) return { ...repository, error: repositoryResult.error };
 
-        const { data: releaseResponse, integration } = repositoryResult;
-        if (!releaseResponse.success) return { ...repository, error: releaseResponse.error };
+        const { data: release, integration } = repositoryResult;
 
-        const { data: releaseData } = releaseResponse;
+        const isReleaseWithin = (relativeDate: string) =>
+          !!relativeDate && isDateWithin(release.latestReleaseAt, relativeDate);
 
         return {
           ...repository,
-          ...releaseData,
-          integration: {
-            name: integration.name,
-            iconUrl: getIconUrl(integration.kind),
-          },
-          isNewRelease:
-            relativeDateOptions.newReleaseWithin !== ""
-              ? isDateWithin(releaseData.latestReleaseAt, relativeDateOptions.newReleaseWithin)
-              : false,
-          isStaleRelease:
-            relativeDateOptions.staleReleaseWithin !== ""
-              ? !isDateWithin(releaseData.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
-              : false,
-          viewed: releasesViewedList[repository.id] === releaseData.latestRelease,
+          ...release,
+          integration: { name: integration.name, iconUrl: getIconUrl(integration.kind) },
+          isNewRelease: isReleaseWithin(relativeDateOptions.newReleaseWithin),
+          isStaleRelease: !isReleaseWithin(relativeDateOptions.staleReleaseWithin),
+          viewed: releasesViewedList[repository.id] === release.latestRelease,
         };
       })
       .filter(

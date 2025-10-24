@@ -40,7 +40,7 @@ export const releasesRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await Promise.all(
         input.repositories.map(async (repository) => {
-          const releases = await releasesRequestHandler
+          const response = await releasesRequestHandler
             .handler(ctx.integration, {
               id: repository.id,
               identifier: repository.identifier,
@@ -53,7 +53,8 @@ export const releasesRouter = createTRPCRouter({
           return {
             id: repository.id,
             integration: { name: ctx.integration.name, kind: ctx.integration.kind },
-            ...releases,
+            timestamp: response.timestamp,
+            ...response.data,
           };
         }),
       );
