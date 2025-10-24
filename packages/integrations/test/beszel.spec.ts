@@ -36,7 +36,7 @@ describe("Beszel integration", () => {
     beszelContainer = await createBeszelContainer(socketPathId).start();
     beszelAgentContainer = await createBeszelAgentContainer(socketPathId, beszelContainer.getMappedPort(8090)).start();
 
-    await new Promise((resolve) => setTimeout(resolve, 5_000)); // Wait for Beszel to be ready and have some system_data
+    await new Promise((resolve) => setTimeout(resolve, 10_000)); // Wait for Beszel to be ready and have some system_data
   }, 100_000);
 
   afterAll(async () => {
