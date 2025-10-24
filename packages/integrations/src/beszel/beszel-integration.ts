@@ -4,10 +4,10 @@ import z from "zod";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { SystemUsageCapability } from "../interfaces/system-usage/system-usage-integration";
+import type { ISystemUsageIntegration } from "../interfaces/system-usage/system-usage-integration";
 import type { System, SystemLoadStatus } from "../interfaces/system-usage/system-usage-types";
 
-export class BeszelIntegration extends Integration implements SystemUsageCapability {
+export class BeszelIntegration extends Integration implements ISystemUsageIntegration {
   protected async testingAsync(): Promise<TestingResult> {
     const client = this.createClient();
     return await this.authenticateAsync(client)

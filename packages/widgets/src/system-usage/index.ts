@@ -1,11 +1,12 @@
 import { IconServer } from "@tabler/icons-react";
 
+import { getIntegrationKindsByCategory } from "../../../definitions/src/integration";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("systemUsage", {
   icon: IconServer,
-  supportedIntegrations: ["beszel"],
+  supportedIntegrations: getIntegrationKindsByCategory("systemUsage"),
   integrationsRequired: false,
   createOptions() {
     return optionsBuilder.from((factory) => ({

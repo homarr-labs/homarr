@@ -1,6 +1,7 @@
 import { observable } from "@trpc/server/observable";
 import z from "zod";
 
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { System } from "@homarr/integrations/types";
 import { systemUsageRequestHandler } from "@homarr/request-handler/system-usage";
@@ -8,7 +9,7 @@ import { systemUsageRequestHandler } from "@homarr/request-handler/system-usage"
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
-const supportedIntegrations = ["beszel"] as const;
+const supportedIntegrations = getIntegrationKindsByCategory("systemUsage");
 
 export const systemUsageRouter = createTRPCRouter({
   listSystems: protectedProcedure
