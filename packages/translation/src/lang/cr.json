@@ -1145,6 +1145,12 @@
           "groupNameTaken": "crwdns2366:0crwdne2366:0"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "crwdns3764:0crwdne3764:0",
+        "milesPerHour": "crwdns3766:0crwdne3766:0"
+      }
     }
   },
   "section": {
@@ -1156,6 +1162,9 @@
       "option": {
         "title": {
           "label": "crwdns3103:0crwdne3103:0"
+        },
+        "customCssClasses": {
+          "label": "crwdns3776:0crwdne3776:0"
         },
         "borderColor": {
           "label": "crwdns2839:0crwdne2839:0"
@@ -1744,6 +1753,9 @@
           "label": "crwdns2706:0crwdne2706:0",
           "description": "crwdns2708:0crwdne2708:0"
         },
+        "useImperialSpeed": {
+          "label": "crwdns3768:0crwdne3768:0"
+        },
         "location": {
           "label": "crwdns1018:0crwdne1018:0"
         },
@@ -1762,12 +1774,12 @@
           "description": "crwdns1030:0crwdne1030:0"
         }
       },
-      "currentWindSpeed": "crwdns2710:0{currentWindSpeed}crwdne2710:0",
+      "currentWindSpeed": "crwdns3770:0{currentWindSpeed}crwdnd3770:0{unit}crwdne3770:0",
       "dailyForecast": {
         "sunrise": "crwdns2712:0crwdne2712:0",
         "sunset": "crwdns2714:0crwdne2714:0",
-        "maxWindSpeed": "crwdns2716:0{maxWindSpeed}crwdne2716:0",
-        "maxWindGusts": "crwdns2718:0{maxWindGusts}crwdne2718:0"
+        "maxWindSpeed": "crwdns3772:0{maxWindSpeed}crwdnd3772:0{unit}crwdne3772:0",
+        "maxWindGusts": "crwdns3774:0{maxWindGusts}crwdnd3774:0{unit}crwdne3774:0"
       },
       "kind": {
         "clear": "crwdns1032:0crwdne1032:0",
@@ -1980,7 +1992,25 @@
         "currentlyPlaying": "crwdns2847:0crwdne2847:0",
         "user": "crwdns2476:0crwdne2476:0",
         "name": "crwdns2478:0crwdne2478:0",
-        "id": "crwdns2480:0crwdne2480:0"
+        "id": "crwdns2480:0crwdne2480:0",
+        "metadata": {
+          "title": "crwdns3744:0crwdne3744:0",
+          "video": {
+            "title": "crwdns3746:0crwdne3746:0",
+            "resolution": "crwdns3748:0crwdne3748:0"
+          },
+          "audio": {
+            "title": "crwdns3750:0crwdne3750:0",
+            "channelCount": "crwdns3752:0crwdne3752:0",
+            "codec": "crwdns3754:0crwdne3754:0"
+          },
+          "transcoding": {
+            "title": "crwdns3756:0crwdne3756:0",
+            "container": "crwdns3758:0crwdne3758:0",
+            "resolution": "crwdns3760:0crwdne3760:0",
+            "target": "crwdns3762:0crwdne3762:0"
+          }
+        }
       }
     },
     "downloads": {
@@ -2956,13 +2986,19 @@
           "invite": "crwdns1620:0crwdne1620:0",
           "integration": "crwdns1622:0crwdne1622:0",
           "app": "crwdns1624:0crwdne1624:0",
-          "group": "crwdns1626:0crwdne1626:0"
+          "group": "crwdns1626:0crwdne1626:0",
+          "searchEngine": "crwdns3778:0crwdne3778:0",
+          "media": "crwdns3780:0crwdne3780:0"
         },
         "statisticLabel": {
           "boards": "crwdns1628:0crwdne1628:0",
           "resources": "crwdns1630:0crwdne1630:0",
           "authentication": "crwdns1632:0crwdne1632:0",
           "authorization": "crwdns1634:0crwdne1634:0"
+        },
+        "heroBanner": {
+          "title": "crwdns3782:0crwdne3782:0",
+          "subtitle": "crwdns3784:0{app}crwdne3784:0"
         }
       },
       "board": {
@@ -3446,6 +3482,21 @@
           "libraries": {
             "title": "crwdns1888:0crwdne1888:0",
             "subtitle": "crwdns1890:0{count}crwdne1890:0"
+          },
+          "hotkeys": {
+            "title": "crwdns3726:0crwdne3726:0",
+            "subtitle": "crwdns3728:0crwdne3728:0",
+            "field": {
+              "shortcut": "crwdns3730:0crwdne3730:0",
+              "action": "crwdns3732:0crwdne3732:0"
+            },
+            "action": {
+              "toggleBoardEdit": "crwdns3734:0crwdne3734:0",
+              "toggleColorScheme": "crwdns3736:0crwdne3736:0",
+              "saveNotebook": "crwdns3738:0crwdne3738:0",
+              "openSpotlight": "crwdns3740:0crwdne3740:0"
+            },
+            "note": "crwdns3742:0crwdne3742:0"
           }
         }
       }

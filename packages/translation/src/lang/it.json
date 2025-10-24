@@ -1145,6 +1145,12 @@
           "groupNameTaken": "Nome gruppo già preso"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
+      }
     }
   },
   "section": {
@@ -1156,6 +1162,9 @@
       "option": {
         "title": {
           "label": "Titolo"
+        },
+        "customCssClasses": {
+          "label": "Classi css personalizzate"
         },
         "borderColor": {
           "label": "Colore del bordo"
@@ -1744,6 +1753,9 @@
           "label": "Mostra la velocità attuale del vento",
           "description": "Solo sul meteo corrente"
         },
+        "useImperialSpeed": {
+          "label": "Usa mph per la velocità del vento"
+        },
         "location": {
           "label": "Località meteo"
         },
@@ -1980,7 +1992,25 @@
         "currentlyPlaying": "Attualmente in riproduzione",
         "user": "Utente",
         "name": "Nome",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "Video",
+            "resolution": "Risoluzione"
+          },
+          "audio": {
+            "title": "Audio",
+            "channelCount": "Canali audio",
+            "codec": "Codec audio"
+          },
+          "transcoding": {
+            "title": "Transcodifica",
+            "container": "Container",
+            "resolution": "Risoluzione",
+            "target": ""
+          }
+        }
       }
     },
     "downloads": {
@@ -2956,13 +2986,19 @@
           "invite": "Inviti",
           "integration": "Integrazioni",
           "app": "Applicazioni",
-          "group": "Gruppi"
+          "group": "Gruppi",
+          "searchEngine": "",
+          "media": "Media"
         },
         "statisticLabel": {
           "boards": "Board",
           "resources": "Risorse",
           "authentication": "Autenticazione",
           "authorization": "Autorizzazione"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -3293,7 +3329,7 @@
               "label": ""
             },
             "updateChecker": {
-              "label": ""
+              "label": "Controllo aggiornamenti"
             },
             "mediaTranscoding": {
               "label": ""
@@ -3446,6 +3482,21 @@
           "libraries": {
             "title": "Librerie",
             "subtitle": "{count} utilizzato nel Codice di Homarr"
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "Scorciatoie da tastiera per migliorare il flusso di lavoro",
+            "field": {
+              "shortcut": "Scorciatoia",
+              "action": "Azione"
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }
@@ -3600,7 +3651,7 @@
         "services": "Servizi",
         "pods": "Pods",
         "configmaps": "",
-        "secrets": "",
+        "secrets": "Secrets",
         "volumes": "Volumi"
       }
     },

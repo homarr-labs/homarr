@@ -25,14 +25,14 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.8",
-    "ioredis": "5.8.0",
-    "zod": "^4.1.11"
+    "ioredis": "5.8.1",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.36.0",
-    "typescript": "^5.9.2"
+    "eslint": "^9.38.0",
+    "typescript": "^5.9.3"
   }
 }

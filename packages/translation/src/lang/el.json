@@ -1145,6 +1145,12 @@
           "groupNameTaken": ""
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1155,6 +1161,9 @@
       },
       "option": {
         "title": {
+          "label": ""
+        },
+        "customCssClasses": {
           "label": ""
         },
         "borderColor": {
@@ -1744,6 +1753,9 @@
           "label": "",
           "description": ""
         },
+        "useImperialSpeed": {
+          "label": ""
+        },
         "location": {
           "label": "Τοποθεσία καιρού"
         },
@@ -1980,7 +1992,25 @@
         "currentlyPlaying": "",
         "user": "",
         "name": "",
-        "id": ""
+        "id": "",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
       }
     },
     "downloads": {
@@ -2956,13 +2986,19 @@
           "invite": "Προσκλήσεις",
           "integration": "",
           "app": "Εφαρμογές",
-          "group": ""
+          "group": "",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Πίνακες",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -3446,6 +3482,21 @@
           "libraries": {
             "title": "",
             "subtitle": ""
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }

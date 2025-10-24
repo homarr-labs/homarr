@@ -1145,6 +1145,12 @@
           "groupNameTaken": "Gruppenavn allerede taget"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "km/t",
+        "milesPerHour": "mi/t"
+      }
     }
   },
   "section": {
@@ -1156,6 +1162,9 @@
       "option": {
         "title": {
           "label": "Titel"
+        },
+        "customCssClasses": {
+          "label": "Brugerdefinerede css-klasser"
         },
         "borderColor": {
           "label": "Kantfarve"
@@ -1708,7 +1717,7 @@
       "name": "Kalender",
       "description": "Vis begivenheder fra dine integrationer i en kalendervisning inden for en vis relativ tidsperiode",
       "duration": {
-        "allDay": ""
+        "allDay": "Hele dagen"
       },
       "option": {
         "releaseType": {
@@ -1744,6 +1753,9 @@
           "label": "Vis aktuel vindhastighed",
           "description": "Kun på nuværende vejr"
         },
+        "useImperialSpeed": {
+          "label": "Brug mi/t til vindhastighed"
+        },
         "location": {
           "label": "Vejr lokation"
         },
@@ -1762,12 +1774,12 @@
           "description": "Hvordan datoen skal se ud"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/t",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Solopgang",
         "sunset": "Solnedgang",
-        "maxWindSpeed": "Maks. vindhastighed: {maxWindSpeed} km/t",
-        "maxWindGusts": "Maks. vindstød {maxWindGusts} km/t"
+        "maxWindSpeed": "Maks. vindhastighed: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Maks. vindstød {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Skyfrit",
@@ -1980,7 +1992,25 @@
         "currentlyPlaying": "Afspiller lige nu",
         "user": "Bruger",
         "name": "Navn",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "Statistik for nørder",
+          "video": {
+            "title": "Video",
+            "resolution": "Opløsning"
+          },
+          "audio": {
+            "title": "Lyd",
+            "channelCount": "Lyd kanaler",
+            "codec": "Lyd codec"
+          },
+          "transcoding": {
+            "title": "Transkoder",
+            "container": "Container",
+            "resolution": "Opløsning",
+            "target": "Mål codec"
+          }
+        }
       }
     },
     "downloads": {
@@ -2956,13 +2986,19 @@
           "invite": "Invitationer",
           "integration": "Integrationer",
           "app": "Apps",
-          "group": "Grupper"
+          "group": "Grupper",
+          "searchEngine": "Søgemaskiner",
+          "media": "Medier"
         },
         "statisticLabel": {
           "boards": "Tavler",
           "resources": "Ressourcer",
           "authentication": "Autorisering",
           "authorization": "Autorisation"
+        },
+        "heroBanner": {
+          "title": "Velkommen tilbage til din",
+          "subtitle": "{app} Tavle"
         }
       },
       "board": {
@@ -3320,7 +3356,7 @@
               "label": "Firewall Grænseflader"
             },
             "weather": {
-              "label": ""
+              "label": "Vejr"
             }
           },
           "interval": {
@@ -3446,6 +3482,21 @@
           "libraries": {
             "title": "Biblioteker",
             "subtitle": "{count} brugt i koden for Homarr"
+          },
+          "hotkeys": {
+            "title": "Genvejstaster",
+            "subtitle": "Tastaturgenveje til at forbedre din arbejdsgang",
+            "field": {
+              "shortcut": "Genvej",
+              "action": "Handling"
+            },
+            "action": {
+              "toggleBoardEdit": "Skift tavleredigeringstilstand",
+              "toggleColorScheme": "Slå lys/mørk tilstand til/fra",
+              "saveNotebook": "Gem notesbog (kun inde i notesbog widget)",
+              "openSpotlight": "Åbn søgefunktionen"
+            },
+            "note": "Tip: Mod refererer til både Ctrl-tasten og -tasten på macOS"
           }
         }
       }

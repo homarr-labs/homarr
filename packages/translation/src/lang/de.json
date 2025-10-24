@@ -946,28 +946,28 @@
           "newLabel": "Neues Thema erstellen"
         },
         "url": {
-          "label": "",
-          "newLabel": ""
+          "label": "URL",
+          "newLabel": "Neue URL"
         },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API-Schlüssel (Schlüssel)",
+          "newLabel": "Neuer API-Schlüssel (Schlüssel)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "API-Schlüssel (Secret)",
+          "newLabel": "Neuer API-Schlüssel (Secret)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "App ID",
+          "newLabel": "Neue App ID"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Installations ID",
+          "newLabel": "Neue Installations ID"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Privater Schlüssel",
+          "newLabel": "Neuer privater Schlüssel"
         }
       }
     },
@@ -1019,7 +1019,7 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "Erfolgreich",
     "beta": "Beta",
     "error": "Fehler",
     "action": {
@@ -1145,6 +1145,12 @@
           "groupNameTaken": "Gruppenname bereits vergeben"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1156,6 +1162,9 @@
       "option": {
         "title": {
           "label": "Titel"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "Rahmenfarbe"
@@ -1286,21 +1295,21 @@
           "label": "Statusüberprüfung aktivieren"
         },
         "layout": {
-          "label": "",
+          "label": "Ansicht",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Horizontal",
+            "row-reverse": "Horizontal (invertiert)",
+            "column": "Vertikal",
+            "column-reverse": "Vertikal (invertiert)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Beschreibung des Anzeigemodus",
+          "description": "Wählen Sie, wie die App-Beschreibung angezeigt werden soll",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "Innerhalb des Widgets",
+            "tooltip": "Als Tooltip",
+            "hidden": "Versteckt"
           }
         }
       },
@@ -1549,11 +1558,11 @@
       },
       "placeholder": "Mit dem Schreiben von Notizen beginnen",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Änderungen verwerfen?",
+        "message": "Sie haben ungespeicherte Änderungen in Ihrem Notizbuch. Sind Sie sicher, dass Sie diese verwerfen möchten?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Änderungen verwerfen",
+          "keepEditing": "Bearbeitung fortsetzen"
         }
       }
     },
@@ -1708,7 +1717,7 @@
       "name": "Kalender",
       "description": "Zeigt Ereignisse aus Ihren Integrationen in einer Kalenderansicht innerhalb eines bestimmten Zeitraums an",
       "duration": {
-        "allDay": ""
+        "allDay": "Ganztägig"
       },
       "option": {
         "releaseType": {
@@ -1743,6 +1752,9 @@
         "showCurrentWindSpeed": {
           "label": "Aktuelle Windgeschwindigkeit anzeigen",
           "description": "Nur bei aktuellem Wetter"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Wetterstandort"
@@ -1980,7 +1992,25 @@
         "currentlyPlaying": "Aktuelle Wiedergabe",
         "user": "Benutzer",
         "name": "Name",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "Statistiken für Nerds",
+          "video": {
+            "title": "Video",
+            "resolution": "Auflösung"
+          },
+          "audio": {
+            "title": "Audio",
+            "channelCount": "Audio Kanäle",
+            "codec": "Audio Codec"
+          },
+          "transcoding": {
+            "title": "Transkodierung",
+            "container": "Container",
+            "resolution": "Auflösung",
+            "target": "Ziel Codec"
+          }
+        }
       }
     },
     "downloads": {
@@ -2288,7 +2318,7 @@
           "label": "Limit für Beiträge"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Beschreibung ausblenden"
         }
       }
     },
@@ -2507,24 +2537,24 @@
       "description": "CPU, Arbeitsspeicher, Festplatte und andere Hardware-Nutzung Ihres Systems",
       "option": {
         "hasShadow": {
-          "label": ""
+          "label": "Schattierung der Diagramme aktivieren"
         },
         "visibleCharts": {
-          "label": "",
-          "description": "",
+          "label": "Sichtbare Diagramme",
+          "description": "Wählen Sie die Diagramme aus, die angezeigt werden sollen.",
           "option": {
-            "cpu": "",
-            "memory": "",
-            "network": ""
+            "cpu": "CPU",
+            "memory": "Speicher",
+            "network": "Netzwerk"
           }
         },
         "labelDisplayMode": {
-          "label": "",
+          "label": "Anzeigemodus der Beschriftung",
           "option": {
-            "textWithIcon": "",
-            "text": "",
-            "icon": "",
-            "hidden": ""
+            "textWithIcon": "Text mit Symbol anzeigen",
+            "text": "Nur Text anzeigen",
+            "icon": "Nur das Symbol anzeigen",
+            "hidden": "Beschriftung ausblenden"
           }
         }
       },
@@ -2956,13 +2986,19 @@
           "invite": "Einladungen",
           "integration": "Integrationen",
           "app": "Apps",
-          "group": "Gruppen"
+          "group": "Gruppen",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Boards",
           "resources": "Ressourcen",
           "authentication": "Authentifizierung",
           "authorization": "Autorisierung"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -3331,10 +3367,10 @@
             "weeklyMonday": "Jede Woche am Montag",
             "update": {
               "success": {
-                "message": ""
+                "message": "Intervall erfolgreich aktualisiert"
               },
               "error": {
-                "message": ""
+                "message": "Fehler beim Aktualisieren des Intervalls"
               }
             }
           },
@@ -3365,33 +3401,33 @@
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "Aufgaben erfolgreich aktualisiert"
             },
             "error": {
-              "message": ""
+              "message": "Fehler beim Aktualisieren der Aufgaben"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "Aufgabe erfolgreich ausgelöst"
             },
             "error": {
-              "message": ""
+              "message": "Fehler beim Auslösen der Aufgabe"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "Aufgabe erfolgreich aktiviert"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "Aufgabe erfolgreich deaktiviert"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "Fehler beim Umschalten des Aufgabenstatus"
             }
           }
         },
@@ -3446,6 +3482,21 @@
           "libraries": {
             "title": "Bibliotheken",
             "subtitle": "{count} im Code von Homarr verwendet"
+          },
+          "hotkeys": {
+            "title": "Tastenkürzel",
+            "subtitle": "Tastenkürzel zur Verbesserung Ihres Workflows",
+            "field": {
+              "shortcut": "Verknüpfung",
+              "action": "Aktion"
+            },
+            "action": {
+              "toggleBoardEdit": "Bearbeitungsmodus des Boardes umschalten",
+              "toggleColorScheme": "Hell/Dunkelmodus umschalten",
+              "saveNotebook": "Notizbuch speichern (nur innerhalb des Notizbuch Widgets)",
+              "openSpotlight": "Suche öffnen"
+            },
+            "note": "Tipp: Mod bezieht sich sowohl auf die Strg-Taste als auch auf die ⌘ Taste auf macOS"
           }
         }
       }

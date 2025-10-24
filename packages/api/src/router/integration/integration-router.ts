@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
-import { and, asc, eq, handleTransactionsAsync, inArray, like } from "@homarr/db";
+import { and, asc, eq, handleTransactionsAsync, inArray, like, or } from "@homarr/db";
 import {
   groupMembers,
   groupPermissions,
@@ -384,6 +384,21 @@ export const integrationRouter = createTRPCRouter({
           await updateSecretAsync(ctx.db, secretInput);
         }
       }
+    }
+
+    const removedSecrets = integration.secrets.filter(
+      (dbSecret) => !input.secrets.some((secret) => dbSecret.kind === secret.kind),
+    );
+    if (removedSecrets.length >= 1) {
+      await ctx.db
+        .delete(integrationSecrets)
+        .where(
+          or(
+            ...removedSecrets.map((secret) =>
+              and(eq(integrationSecrets.integrationId, input.id), eq(integrationSecrets.kind, secret.kind)),
+            ),
+          ),
+        );
     }
 
     logger.info("Updated integration", {

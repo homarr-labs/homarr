@@ -88,6 +88,7 @@ const optionMapping: OptionMapping = {
     location: (oldOptions) => oldOptions.location,
     showCity: (oldOptions) => oldOptions.displayCityName,
     dateFormat: (oldOptions) => (oldOptions.dateFormat === "hide" ? undefined : oldOptions.dateFormat),
+    useImperialSpeed: () => undefined,
   },
   iframe: {
     embedUrl: (oldOptions) => oldOptions.embedUrl,

@@ -3,12 +3,12 @@
   extends: ["config:recommended"],
   packageRules: [
     {
-      matchPackagePatterns: ["^@homarr/"],
+      matchPackageNames: ["^@homarr/"],
       enabled: false,
     },
     // Reenable once https://github.com/privatenumber/tsx/issues/737 is fixed
     {
-      matchPackagePatterns: ["tsx"],
+      matchPackageNames: ["tsx"],
       enabled: false,
     },
     {
@@ -21,4 +21,6 @@
   automerge: false,
   baseBranches: ["dev"],
   dependencyDashboard: false,
+  // prevent special characters in branch names (otherwise git errors occur on windows)
+  branchNameStrict: true,
 }

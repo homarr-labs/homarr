@@ -1145,6 +1145,12 @@
           "groupNameTaken": "用戶組名稱已存在"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1156,6 +1162,9 @@
       "option": {
         "title": {
           "label": "標題"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "邊框顏色"
@@ -1744,6 +1753,9 @@
           "label": "顯示當前風速",
           "description": "僅限當前天氣"
         },
+        "useImperialSpeed": {
+          "label": ""
+        },
         "location": {
           "label": "天氣位置"
         },
@@ -1980,7 +1992,25 @@
         "currentlyPlaying": "目前播放中",
         "user": "使用者",
         "name": "名稱",
-        "id": "ID"
+        "id": "ID",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
       }
     },
     "downloads": {
@@ -2956,13 +2986,19 @@
           "invite": "邀請",
           "integration": "集成",
           "app": "應用程式",
-          "group": "群組"
+          "group": "群組",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "面板",
           "resources": "資源",
           "authentication": "認證",
           "authorization": "認證"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -3446,6 +3482,21 @@
           "libraries": {
             "title": "資料庫",
             "subtitle": "{count} 於 Homarr 待碼中使用"
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }
