@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 
 import { integrationKinds, integrationPermissions, integrationSecretKinds } from "@homarr/definitions";
 
+import { appManageSchema } from "./app";
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";
 
@@ -19,6 +20,12 @@ export const integrationCreateSchema = z.object({
     }),
   ),
   attemptSearchEngineCreation: z.boolean(),
+  app: z
+    .object({
+      id: z.string(),
+    })
+    .or(appManageSchema)
+    .optional(),
 });
 
 export const integrationUpdateSchema = z.object({
@@ -31,6 +38,7 @@ export const integrationUpdateSchema = z.object({
       value: z.string().nullable(),
     }),
   ),
+  appId: z.string().nullable(),
 });
 
 export const integrationSavePermissionsSchema = createSavePermissionsSchema(zodEnumFromArray(integrationPermissions));

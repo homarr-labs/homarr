@@ -43,7 +43,7 @@ export class OverseerrIntegration
     return schemaData.results.map((result) => ({
       id: result.id,
       name: "name" in result ? result.name : result.title,
-      link: this.url(`/${result.mediaType}/${result.id}`).toString(),
+      link: this.externalUrl(`/${result.mediaType}/${result.id}`).toString(),
       image: constructSearchResultImage(result),
       text: "overview" in result ? result.overview : undefined,
       type: result.mediaType,
@@ -144,7 +144,7 @@ export class OverseerrIntegration
           availability: request.media.status,
           backdropImageUrl: `https://image.tmdb.org/t/p/original/${information.backdropPath}`,
           posterImagePath: `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${information.posterPath}`,
-          href: this.url(`/${request.type}/${request.media.tmdbId}`).toString(),
+          href: this.externalUrl(`/${request.type}/${request.media.tmdbId}`).toString(),
           type: request.type,
           createdAt: request.createdAt,
           airDate: new Date(information.airDate),
@@ -152,7 +152,7 @@ export class OverseerrIntegration
             ? ({
                 ...request.requestedBy,
                 displayName: request.requestedBy.displayName,
-                link: this.url(`/users/${request.requestedBy.id}`).toString(),
+                link: this.externalUrl(`/users/${request.requestedBy.id}`).toString(),
                 avatar: this.constructAvatarUrl(request.requestedBy.avatar).toString(),
               } satisfies Omit<RequestUser, "requestCount">)
             : undefined,
@@ -180,7 +180,7 @@ export class OverseerrIntegration
     return users.map((user): RequestUser => {
       return {
         ...user,
-        link: this.url(`/users/${user.id}`).toString(),
+        link: this.externalUrl(`/users/${user.id}`).toString(),
         avatar: this.constructAvatarUrl(user.avatar).toString(),
       };
     });
@@ -255,7 +255,7 @@ export class OverseerrIntegration
       return avatar;
     }
 
-    return this.url(`/${avatar}`);
+    return this.externalUrl(`/${avatar}`);
   }
 }
 

@@ -1,7 +1,4 @@
-import { decryptSecret } from "@homarr/common/server";
-import type { Modify } from "@homarr/common/types";
-import type { Integration as DbIntegration } from "@homarr/db/schema";
-import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
@@ -60,20 +57,6 @@ export const createIntegrationAsync = async <TKind extends keyof typeof integrat
   }
 
   return new creator(integration) as IntegrationInstanceOfKind<TKind>;
-};
-
-export const createIntegrationAsyncFromSecrets = <TKind extends keyof typeof integrationCreators>(
-  integration: Modify<DbIntegration, { kind: TKind }> & {
-    secrets: { kind: IntegrationSecretKind; value: `${string}.${string}` }[];
-  },
-) => {
-  return createIntegrationAsync({
-    ...integration,
-    decryptedSecrets: integration.secrets.map((secret) => ({
-      ...secret,
-      value: decryptSecret(secret.value),
-    })),
-  });
 };
 
 type IntegrationInstance = new (integration: IntegrationInput) => Integration;

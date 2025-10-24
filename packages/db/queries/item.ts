@@ -16,6 +16,7 @@ export const getItemsWithIntegrationsAsync = async <TKind extends WidgetKind>(
         with: {
           integration: {
             with: {
+              app: true,
               secrets: {
                 columns: {
                   kind: true,

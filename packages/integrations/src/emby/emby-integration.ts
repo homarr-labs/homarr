@@ -125,7 +125,7 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
           sessionId: `${sessionInfo.Id}`,
           sessionName: `${sessionInfo.Client} (${sessionInfo.DeviceName})`,
           user: {
-            profilePictureUrl: super.url(`/Users/${sessionInfo.UserId}/Images/Primary`).toString(),
+            profilePictureUrl: super.externalUrl(`/Users/${sessionInfo.UserId}/Images/Primary`).toString(),
             userId: sessionInfo.UserId ?? "",
             username: sessionInfo.UserName ?? "",
           },
@@ -169,13 +169,13 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
       description: item.Overview,
       releaseDate: item.PremiereDate ?? item.DateCreated,
       imageUrls: {
-        poster: super.url(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`).toString(),
-        backdrop: super.url(`/Items/${item.Id}/Images/Backdrop/0?maxWidth=960&quality=70`).toString(),
+        poster: super.externalUrl(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`).toString(),
+        backdrop: super.externalUrl(`/Items/${item.Id}/Images/Backdrop/0?maxWidth=960&quality=70`).toString(),
       },
       producer: item.Studios.at(0)?.Name,
       rating: item.CommunityRating?.toFixed(1),
       tags: item.Genres,
-      href: super.url(`/web/index.html#!/item?id=${item.Id}&serverId=${item.ServerId}`).toString(),
+      href: super.externalUrl(`/web/index.html#!/item?id=${item.Id}&serverId=${item.ServerId}`).toString(),
     }));
   }
 
