@@ -47,7 +47,7 @@ export class BeszelIntegration extends Integration implements ISystemUsageIntegr
         diskPercentage: system.info.dp,
         gpuPercentage: system.info.g ?? null,
         load: {
-          status: this.calculateLoadStatus(system.status, system.info.la, system.info.t), // TODO: handle correctly with user settings maybe?
+          status: this.calculateLoadStatus(system.status, system.info.la, system.info.t),
           averages: {
             one: system.info.la[0],
             five: system.info.la[1],
