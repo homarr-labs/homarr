@@ -37,13 +37,13 @@ describe("Beszel integration", () => {
     beszelAgentContainer = await createBeszelAgentContainer(socketPathId, beszelContainer.getMappedPort(8090)).start();
 
     await new Promise((resolve) => setTimeout(resolve, 5_000)); // Wait for Beszel to be ready and have some system_data
-  }, 100_000);
+  }, 20_000);
 
   afterAll(async () => {
     await beszelContainer.stop();
     await beszelAgentContainer.stop();
     await rmdir(createSocketPath(socketPathId), { recursive: true });
-  }, 30_000);
+  }, 5_000);
 
   test("Can get systems", async () => {
     // Arrange
@@ -66,7 +66,6 @@ describe("Beszel integration", () => {
     const system = await integration.getSystemDetailsAsync(systemId);
 
     // Assert
-    console.log(system);
     expect(system.id).toBe(systemId);
     expect(system.name).toBe("localhost");
     expect(system.agent.connectionType).toBe("webSocket");
@@ -115,10 +114,6 @@ const createBeszelContainer = (id: string) => {
         mode: "rw",
       },
     ])
-    .withLogConsumer((stream) => {
-      stream.on("data", (line) => console.log(`[Beszel]: ${line}`));
-      stream.on("error", (err) => console.error(`[Beszel][ERROR]: ${err}`));
-    })
     .withWaitStrategy(Wait.forHttp("/", 8090));
 };
 
@@ -136,10 +131,6 @@ const createBeszelAgentContainer = (id: string, port: number) => {
         mode: "rw",
       },
     ])
-    .withLogConsumer((stream) => {
-      stream.on("data", (line) => console.log(`[Beszel Agent]: ${line}`));
-      stream.on("error", (err) => console.error(`[Beszel Agent][ERROR]: ${err}`));
-    })
     .withEnvironment({
       LISTEN: "/beszel_socket/beszel.sock",
       HUB_URL: `http://host.docker.internal:${port}`,
@@ -155,9 +146,4 @@ const createBeszelAgentContainer = (id: string, port: number) => {
     ]);
 };
 
-const createSocketPath = (id: string) => {
-  /*if (process.env.CI) {
-    return join("/tmp", `beszel_socket_${id}`);
-  }*/
-  return join(__dirname, `/volumes/beszel/socket-${id}`);
-};
+const createSocketPath = (id: string) => join(__dirname, `/volumes/beszel/socket-${id}`);
