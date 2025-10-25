@@ -1,5 +1,7 @@
 import { IconServer } from "@tabler/icons-react";
 
+import { clientApi } from "@homarr/api/client";
+
 import { getIntegrationKindsByCategory } from "../../../definitions/src/integration";
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -10,9 +12,22 @@ export const { definition, componentLoader } = createWidgetDefinition("systemUsa
   integrationsRequired: false,
   createOptions() {
     return optionsBuilder.from((factory) => ({
-      // TODO: add autocomplete with getSystems call from router
-      systemId: factory.select({
-        options: ["xyjcti2b4ocz3j3"],
+      systemId: factory.dynamicSelect({
+        useOptions(query, integrationIds) {
+          return clientApi.widget.systemUsage.listSystems.useQuery(
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            { integrationId: integrationIds[0]! },
+            {
+              enabled: integrationIds.length > 0,
+              select(data) {
+                return data.map((system) => ({
+                  value: system.id,
+                  label: system.name,
+                }));
+              },
+            },
+          );
+        },
       }),
       visibleItems: factory.multiSelect({
         options: (["cpu", "memory", "disk", "gpu", "load", "network", "temperature", "agent"] as const).map((key) => ({

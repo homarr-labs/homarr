@@ -1,9 +1,12 @@
+"use client";
+
 import type { MantineColor } from "@mantine/core";
 import { Box, Divider, Flex, Group, Progress, Stack, Text } from "@mantine/core";
 import {
   IconCpu,
   IconHourglass,
   IconNetwork,
+  IconServerOff,
   IconSquareChevronRight,
   IconThermometer,
   IconWifi,
@@ -12,17 +15,36 @@ import {
 import { clientApi } from "@homarr/api/client";
 import { humanFileSize, objectEntries } from "@homarr/common";
 import type { System, SystemLoadStatus, SystemStatus } from "@homarr/integrations/types";
+import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { IconGpu, IconHardDrive, IconMemoryStick, IconWebsocket } from "@homarr/ui/icons";
 
 import type { WidgetComponentProps } from "../definition";
-import { NoIntegrationSelectedError } from "../errors";
+import { ErrorBoundaryError, NoIntegrationSelectedError } from "../errors";
+
+class NoSystemSelectedError extends ErrorBoundaryError {
+  constructor() {
+    super("No system selected");
+  }
+
+  public getErrorBoundaryData() {
+    return {
+      icon: IconServerOff,
+      message: (t: TranslationFunction) => t("widget.systemUsage.error.noSystem"),
+      showLogsLink: false,
+    };
+  }
+}
 
 export default function SystemUsage({ integrationIds, options }: WidgetComponentProps<"systemUsage">) {
   const integrationId = integrationIds.at(0);
   if (!integrationId) {
     throw new NoIntegrationSelectedError();
+  }
+
+  if (!options.systemId) {
+    throw new NoSystemSelectedError();
   }
 
   return (

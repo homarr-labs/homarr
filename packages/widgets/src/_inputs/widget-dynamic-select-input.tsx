@@ -1,42 +1,37 @@
 "use client";
 
-import { Group, Select } from "@mantine/core";
+import { useState } from "react";
+import { Group, Loader, Select } from "@mantine/core";
+import { useDebouncedValue } from "@mantine/hooks";
 import { IconCheck } from "@tabler/icons-react";
 
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import type { TablerIconProps } from "@homarr/ui";
 
-import type { SelectOption } from "../options";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
+import { getSelectIconFor } from "./widget-select-input";
 
-export const createStringIcon = (src: string) => (props: Pick<TablerIconProps, "size">) => (
-  <img src={src} alt="" width={props.size} height={props.size} />
-);
-
-export const getSelectIconFor = (options: SelectOption[], value: string) => {
-  const current = options.find((option) => (typeof option === "string" ? option : option.value) === value);
-  if (!current) return null;
-  if (typeof current === "string") return null;
-  if (typeof current.icon === "string") {
-    return createStringIcon(current.icon);
-  }
-  return current.icon;
-};
-
-export const WidgetSelectInput = ({ property, kind, options }: CommonWidgetInputProps<"select">) => {
+export const WidgetDynamicSelectInput = ({
+  property,
+  kind,
+  options,
+  integrationIds,
+}: CommonWidgetInputProps<"dynamicSelect">) => {
   const t = useI18n();
   const tWidget = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
   const inputProps = form.getInputProps(`options.${property}`);
-  const CurrentIcon = getSelectIconFor(options.options, inputProps.value as string);
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebouncedValue(search, 300);
+  const { data: selectOptions, isLoading, error } = options.useOptions(debouncedSearch, integrationIds);
+  const CurrentIcon = getSelectIconFor(selectOptions ?? [], inputProps.value as string);
 
   return (
     <Select
       label={tWidget("label")}
-      data={options.options.map((option) =>
+      data={selectOptions?.map((option) =>
         typeof option === "string"
           ? option
           : {
@@ -44,9 +39,13 @@ export const WidgetSelectInput = ({ property, kind, options }: CommonWidgetInput
               label: translateIfNecessary(t, option.label) ?? option.value,
             },
       )}
+      searchValue={search}
+      onSearchChange={setSearch}
       leftSection={CurrentIcon && <CurrentIcon size={16} stroke={1.5} />}
+      rightSection={isLoading ? <Loader size="sm" /> : null}
+      nothingFoundMessage={error ? t("common.unableToLoad") : t("common.noResults")}
       renderOption={({ option, checked }) => {
-        const Icon = getSelectIconFor(options.options, option.value);
+        const Icon = getSelectIconFor(selectOptions ?? [], option.value);
 
         return (
           <Group flex="1" gap="xs">
@@ -65,7 +64,7 @@ export const WidgetSelectInput = ({ property, kind, options }: CommonWidgetInput
         );
       }}
       description={options.withDescription ? tWidget("description") : undefined}
-      searchable={options.searchable}
+      searchable={true}
       {...inputProps}
     />
   );

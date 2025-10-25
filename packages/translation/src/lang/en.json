@@ -1151,7 +1151,8 @@
         "kilometersPerHour": "km/h",
         "milesPerHour": "mph"
       }
-    }
+    },
+    "unableToLoad": "Unable to load data"
   },
   "section": {
     "dynamic": {
@@ -2568,6 +2569,9 @@
         "agent": {
           "label": "Agent"
         }
+      },
+      "error": {
+        "noSystem": "No system selected"
       }
     },
     "systemResources": {
