@@ -64,7 +64,7 @@ export const WidgetDynamicSelectInput = ({
         );
       }}
       description={options.withDescription ? tWidget("description") : undefined}
-      searchable={true}
+      searchable
       {...inputProps}
     />
   );
