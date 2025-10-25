@@ -645,6 +645,21 @@
             "title": "作成失敗",
             "message": "連携機能を作成できません"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "変更の適用失敗",
             "message": "連携機能を保存できません"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "検索エンジンを作成",
         "description": "連携機能 \"{kind}\" は、検索エンジンで使用できます。検索エンジンを自動的に設定するには、これにチェックを入れてください。"
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "アプリの作成",
@@ -1026,6 +1051,7 @@
       "add": "追加",
       "apply": "適用",
       "backToOverview": "概要に戻る",
+      "change": "",
       "create": "作成",
       "createAnother": "作成・新規入力",
       "edit": "編集",

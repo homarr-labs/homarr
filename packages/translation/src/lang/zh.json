@@ -645,6 +645,21 @@
             "title": "創建失敗",
             "message": "此集成無法被創建"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "無法應用變更",
             "message": "集成無法被儲存"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "創建搜尋引擎",
         "description": "集成 {kind} 可以與搜尋引擎共同使用，勾選此選項可自動設定搜尋引擎"
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "創建應用程式",
@@ -1026,6 +1051,7 @@
       "add": "新增",
       "apply": "應用",
       "backToOverview": "返回總覽",
+      "change": "",
       "create": "創建",
       "createAnother": "創建並重新開始",
       "edit": "編輯",

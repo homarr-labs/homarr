@@ -645,6 +645,21 @@
             "title": "创建失败",
             "message": "无法创建组件"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "无法应用更改",
             "message": "无法保存此集成"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "创建搜索引擎",
         "description": "集成“{kind}”可以与搜索引擎一起使用。勾选此项可自动配置搜索引擎。"
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "创建应用",
@@ -1026,6 +1051,7 @@
       "add": "添加",
       "apply": "应用",
       "backToOverview": "返回概览",
+      "change": "",
       "create": "创建",
       "createAnother": "创建并重新开始",
       "edit": "编辑",
