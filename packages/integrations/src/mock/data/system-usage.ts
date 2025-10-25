@@ -30,7 +30,7 @@ export class SystemUsageMockService implements ISystemUsageIntegration {
             fifteen: 0.9,
           },
         },
-        networkBytes: 2 ** 24.5,
+        networkBytes: Math.floor(2 ** 24.5),
         temperature: 55,
       },
     });
