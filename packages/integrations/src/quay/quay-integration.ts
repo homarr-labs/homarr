@@ -11,8 +11,7 @@ import type { ReleasesProviderIntegration } from "../interfaces/releases-provide
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
   ReleaseProviderResponse,
-  ReleasesRepository,
-  ReleasesResponse,
+  ReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./quay-schemas";
 
@@ -43,20 +42,22 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
     };
   }
 
-  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
-    const [owner, name] = repository.identifier.split("/");
+  private parseIdentifier(identifier: string) {
+    const [owner, name] = identifier.split("/");
     if (!owner || !name) {
-      localLogger.warn(
-        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with LinuxServerIO integration`,
-        {
-          identifier: repository.identifier,
-        },
-      );
-      return {
-        id: repository.id,
-        error: { code: "invalidIdentifier" },
-      };
+      localLogger.warn(`Invalid identifier format. Expected 'owner/name', for ${identifier} with Quay integration`, {
+        identifier,
+      });
+      return null;
     }
+    return { owner, name };
+  }
+
+  public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
+    const parsedIdentifier = this.parseIdentifier(identifier);
+    if (!parsedIdentifier) return { success: false, error: { code: "invalidIdentifier" } };
+
+    const { owner, name } = parsedIdentifier;
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
       return await fetchWithTrustedCertificatesAsync(
@@ -68,42 +69,29 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
         },
       );
     });
-
     if (!releasesResponse.ok) {
-      return {
-        id: repository.id,
-        error: { message: releasesResponse.statusText },
-      };
+      return { success: false, error: { code: "unexpected", message: releasesResponse.statusText } };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
     const { data, success, error } = releasesResponseSchema.safeParse(releasesResponseJson);
-
     if (!success) {
-      return {
-        id: repository.id,
-        error: {
-          message: error.message,
-        },
-      };
-    } else {
-      const details = {
-        projectDescription: data.description,
-      };
-
-      const releasesProviderResponse = Object.entries(data.tags).reduce<ReleaseProviderResponse[]>((acc, [_, tag]) => {
-        if (!tag.name || !tag.last_modified) return acc;
-
-        acc.push({
-          latestRelease: tag.name,
-          latestReleaseAt: new Date(tag.last_modified),
-          releaseUrl: `https://quay.io/repository/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/tag/${encodeURIComponent(tag.name)}`,
-        });
-
-        return acc;
-      }, []);
-
-      return getLatestRelease(releasesProviderResponse, repository, details);
+      return { success: false, error: { code: "unexpected", message: error.message } };
     }
+
+    const releasesProviderResponse = Object.entries(data.tags).reduce<ReleaseProviderResponse[]>((acc, [_, tag]) => {
+      if (!tag.name || !tag.last_modified) return acc;
+      acc.push({
+        latestRelease: tag.name,
+        latestReleaseAt: new Date(tag.last_modified),
+        releaseUrl: `https://quay.io/repository/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/tag/${encodeURIComponent(tag.name)}`,
+      });
+      return acc;
+    }, []);
+
+    const latestRelease = getLatestRelease(releasesProviderResponse, versionRegex);
+    if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
+
+    return { success: true, data: { projectDescription: data.description, ...latestRelease } };
   }
 }

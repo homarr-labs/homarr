@@ -6,7 +6,7 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
-import type { ReleasesRepository, ReleasesResponse } from "../interfaces/releases-providers/releases-providers-types";
+import type { ReleaseResponse } from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./npm-schemas";
 
 export class NPMIntegration extends Integration implements ReleasesProviderIntegration {
@@ -22,35 +22,35 @@ export class NPMIntegration extends Integration implements ReleasesProviderInteg
     };
   }
 
-  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
-    const releasesResponse = await fetchWithTrustedCertificatesAsync(
-      this.url(`/${encodeURIComponent(repository.identifier)}`),
-    );
+  public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
+    if (!identifier) return { success: false, error: { code: "invalidIdentifier" } };
 
+    const releasesResponse = await fetchWithTrustedCertificatesAsync(this.url(`/${encodeURIComponent(identifier)}`));
     if (!releasesResponse.ok) {
-      return {
-        id: repository.id,
-        error: { message: releasesResponse.statusText },
-      };
+      return { success: false, error: { code: "unexpected", message: releasesResponse.statusText } };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
     const { data, success, error } = releasesResponseSchema.safeParse(releasesResponseJson);
-
     if (!success) {
       return {
-        id: repository.id,
+        success: false,
         error: {
+          code: "unexpected",
           message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
         },
       };
-    } else {
-      const formattedReleases = data.time.map((tag) => ({
-        ...tag,
-        releaseUrl: `https://www.npmjs.com/package/${encodeURIComponent(data.name)}/v/${encodeURIComponent(tag.latestRelease)}`,
-        releaseDescription: data.versions[tag.latestRelease]?.description ?? "",
-      }));
-      return getLatestRelease(formattedReleases, repository);
     }
+
+    const formattedReleases = data.time.map((tag) => ({
+      ...tag,
+      releaseUrl: `https://www.npmjs.com/package/${encodeURIComponent(data.name)}/v/${encodeURIComponent(tag.latestRelease)}`,
+      releaseDescription: data.versions[tag.latestRelease]?.description ?? "",
+    }));
+
+    const latestRelease = getLatestRelease(formattedReleases, versionRegex);
+    if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
+
+    return { success: true, data: latestRelease };
   }
 }

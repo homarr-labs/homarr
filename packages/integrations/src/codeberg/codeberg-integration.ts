@@ -11,8 +11,7 @@ import type { ReleasesProviderIntegration } from "../interfaces/releases-provide
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
   DetailsProviderResponse,
-  ReleasesRepository,
-  ReleasesResponse,
+  ReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { detailsResponseSchema, releasesResponseSchema } from "./codeberg-schemas";
 
@@ -43,22 +42,23 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     };
   }
 
-  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
-    const [owner, name] = repository.identifier.split("/");
+  private parseIdentifier(identifier: string) {
+    const [owner, name] = identifier.split("/");
     if (!owner || !name) {
       localLogger.warn(
-        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with Codeberg integration`,
-        {
-          identifier: repository.identifier,
-        },
+        `Invalid identifier format. Expected 'owner/name', for ${identifier} with Codeberg integration`,
+        { identifier },
       );
-      return {
-        id: repository.id,
-        error: { code: "invalidIdentifier" },
-      };
+      return null;
     }
+    return { owner, name };
+  }
 
-    const details = await this.getDetailsAsync(owner, name);
+  public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
+    const parsedIdentifier = this.parseIdentifier(identifier);
+    if (!parsedIdentifier) return { success: false, error: { code: "invalidIdentifier" } };
+
+    const { owner, name } = parsedIdentifier;
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
       return await fetchWithTrustedCertificatesAsync(
@@ -66,34 +66,36 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
         { headers },
       );
     });
-
     if (!releasesResponse.ok) {
-      return {
-        id: repository.id,
-        error: { message: releasesResponse.statusText },
-      };
+      return { success: false, error: { code: "unexpected", message: releasesResponse.statusText } };
     }
 
     const releasesResponseJson: unknown = await releasesResponse.json();
     const { data, success, error } = releasesResponseSchema.safeParse(releasesResponseJson);
-
     if (!success) {
       return {
-        id: repository.id,
+        success: false,
         error: {
+          code: "unexpected",
           message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : error.message,
         },
       };
-    } else {
-      const formattedReleases = data.map((tag) => ({
-        latestRelease: tag.tag_name,
-        latestReleaseAt: tag.published_at,
-        releaseUrl: tag.url,
-        releaseDescription: tag.body,
-        isPreRelease: tag.prerelease,
-      }));
-      return getLatestRelease(formattedReleases, repository, details);
     }
+
+    const formattedReleases = data.map((tag) => ({
+      latestRelease: tag.tag_name,
+      latestReleaseAt: tag.published_at,
+      releaseUrl: tag.url,
+      releaseDescription: tag.body,
+      isPreRelease: tag.prerelease,
+    }));
+
+    const latestRelease = getLatestRelease(formattedReleases, versionRegex);
+    if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
+
+    const details = await this.getDetailsAsync(owner, name);
+
+    return { success: true, data: { ...details, ...latestRelease } };
   }
 
   protected async getDetailsAsync(owner: string, name: string): Promise<DetailsProviderResponse | undefined> {
