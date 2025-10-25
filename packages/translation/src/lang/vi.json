@@ -645,6 +645,21 @@
             "title": "",
             "message": ""
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "",
             "message": ""
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "Tạo công cụ tìm kiếm",
         "description": ""
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "Tạo ứng dụng",
@@ -1026,6 +1051,7 @@
       "add": "Thêm",
       "apply": "Áp dụng",
       "backToOverview": "Trở về mục tổng quan",
+      "change": "",
       "create": "Tạo nên",
       "createAnother": "",
       "edit": "Sửa",

@@ -645,6 +645,21 @@
             "title": "Creazione fallita",
             "message": "Non è stato possibile creare l'integrazione"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "Esistente",
+              "label": "Seleziona app esistente"
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "Url app",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "Impossibile applicare le modifiche",
             "message": "Non è stato possibile salvare l'integrazione"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "Crea Motore Di Ricerca",
         "description": "Integrazione \"{kind}\" può essere utilizzato con i motori di ricerca. Selezionare questa opzione per configurare automaticamente il motore di ricerca."
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "Crea app",
@@ -1026,6 +1051,7 @@
       "add": "Aggiungi",
       "apply": "Applica",
       "backToOverview": "Torna alla panoramica",
+      "change": "",
       "create": "Crea",
       "createAnother": "",
       "edit": "Modifica",

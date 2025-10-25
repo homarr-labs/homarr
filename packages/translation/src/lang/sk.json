@@ -645,6 +645,21 @@
             "title": "Vytvorenie zlyhalo",
             "message": "Integráciu nebolo možné vytvoriť"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "Nie je možné použiť zmeny",
             "message": "Integráciu sa nepodarilo uložiť"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "Vytvorte vyhľadávače",
         "description": "Integrácia \"{kind}\" môže byť použitá s vyhľadávačmi.  Toto začiarknite, ak chcete automaticky nakonfigurovať vyhľadávací nástroj."
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "Vytvoriť aplikáciu",
@@ -1026,6 +1051,7 @@
       "add": "Pridať",
       "apply": "Použiť",
       "backToOverview": "Späť na prehľad",
+      "change": "",
       "create": "Vytvoriť",
       "createAnother": "Vytvorte a začnite odznova",
       "edit": "Upraviť",

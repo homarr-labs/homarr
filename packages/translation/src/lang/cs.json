@@ -645,6 +645,21 @@
             "title": "Vytvoření se nezdařilo",
             "message": "Integraci se nepodařilo vytvořit"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "Nepodařilo se uložit změny",
             "message": "Integraci se nepodařilo uložit"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "",
         "description": ""
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "",
@@ -1026,6 +1051,7 @@
       "add": "Přidat",
       "apply": "Použít",
       "backToOverview": "Zpět na přehled",
+      "change": "",
       "create": "Vytvořit",
       "createAnother": "",
       "edit": "Upravit",

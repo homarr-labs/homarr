@@ -645,6 +645,21 @@
             "title": "crwdns346:0crwdne346:0",
             "message": "crwdns348:0crwdne348:0"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "crwdns3786:0crwdne3786:0",
+              "label": "crwdns3788:0crwdne3788:0"
+            },
+            "new": {
+              "title": "crwdns3790:0crwdne3790:0",
+              "url": {
+                "label": "crwdns3792:0crwdne3792:0",
+                "description": "crwdns3794:0crwdne3794:0"
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "crwdns356:0crwdne356:0",
             "message": "crwdns358:0crwdne358:0"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "crwdns3796:0crwdne3796:0",
+            "remove": "crwdns3798:0crwdne3798:0",
+            "select": "crwdns3800:0crwdne3800:0"
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "crwdns2512:0crwdne2512:0",
         "description": "crwdns2514:0{kind}crwdne2514:0"
+      },
+      "app": {
+        "sectionTitle": "crwdns3802:0crwdne3802:0"
       },
       "createApp": {
         "label": "crwdns3050:0crwdne3050:0",
@@ -1026,6 +1051,7 @@
       "add": "crwdns512:0crwdne512:0",
       "apply": "crwdns514:0crwdne514:0",
       "backToOverview": "crwdns516:0crwdne516:0",
+      "change": "crwdns3804:0crwdne3804:0",
       "create": "crwdns518:0crwdne518:0",
       "createAnother": "crwdns2720:0crwdne2720:0",
       "edit": "crwdns520:0crwdne520:0",
