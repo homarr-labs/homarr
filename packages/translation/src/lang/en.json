@@ -3399,6 +3399,9 @@
             },
             "weather": {
               "label": "Weather"
+            },
+            "systemUsage": {
+              "label": "System Usage"
             }
           },
           "interval": {
