@@ -119,6 +119,7 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
                 property={key}
                 options={value as never}
                 initialOptions={innerProps.value.options}
+                integrationIds={form.values.integrationIds}
               />
             );
           })}
