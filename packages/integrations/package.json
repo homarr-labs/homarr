@@ -43,7 +43,7 @@
     "@octokit/auth-app": "^8.1.1",
     "ical.js": "^2.2.1",
     "maria2": "^0.4.1",
-    "node-ical": "^0.22.0",
+    "node-ical": "^0.22.1",
     "octokit": "^5.0.4",
     "proxmox-api": "1.1.1",
     "tsdav": "^2.1.5",
