@@ -50,7 +50,7 @@
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@mantine/core": "^8.3.5",
-    "@paralleldrive/cuid2": "^2.2.2",
+    "@paralleldrive/cuid2": "^3.1.0",
     "@testcontainers/mysql": "^11.7.1",
     "@testcontainers/postgresql": "^11.7.1",
     "better-sqlite3": "^12.4.1",
