@@ -649,14 +649,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Eksisterende",
+              "label": "Vælg eksisterende app"
             },
             "new": {
-              "title": "",
+              "title": "Ny",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "App url",
+                "description": "Webadressen som app'en vil åbne, når den tilgås fra betjeningspanelet"
               }
             }
           }
@@ -676,9 +676,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Link en app",
+            "remove": "Fjern link",
+            "select": "Vælg en app der skal linkes"
           }
         }
       },
@@ -709,7 +709,7 @@
         "description": "Integration \"{kind}\" kan bruges med søgemaskinerne. Markér dette for automatisk at konfigurere søgemaskinen."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Linket App"
       },
       "createApp": {
         "label": "Opret app",
@@ -1051,7 +1051,7 @@
       "add": "Tilføj",
       "apply": "Anvend",
       "backToOverview": "Tilbage til oversigt",
-      "change": "",
+      "change": "Skift",
       "create": "Opret",
       "createAnother": "Opret og start forfra",
       "edit": "Rediger",
