@@ -52,7 +52,7 @@
     "next": "15.5.6",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "superjson": "2.2.2",
+    "superjson": "2.2.3",
     "trpc-to-openapi": "^3.1.0",
     "zod": "^4.1.12"
   },

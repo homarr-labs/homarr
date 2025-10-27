@@ -43,7 +43,7 @@
     "next": "15.5.6",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "superjson": "2.2.2",
+    "superjson": "2.2.3",
     "zod": "^4.1.12",
     "zod-form-data": "^3.0.1"
   },
