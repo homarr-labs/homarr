@@ -649,14 +649,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Istniejąca",
+              "label": "Wybierz istniejącą aplikację"
             },
             "new": {
-              "title": "",
+              "title": "Nowy",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "Adres URL aplikacji",
+                "description": "Adres URL, który zostanie otwarty po kliknięciu aplikacji na pulpicie"
               }
             }
           }
@@ -676,9 +676,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Połącz aplikację",
+            "remove": "Odłącz",
+            "select": "Wybierz aplikację do połączenia"
           }
         }
       },
@@ -709,7 +709,7 @@
         "description": "Integracja \"{kind}\" może być używana z wyszukiwarkami. Zaznacz to, aby automatycznie skonfigurować wyszukiwarkę."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Połączona aplikacja"
       },
       "createApp": {
         "label": "Stwórz aplikację",
@@ -1051,7 +1051,7 @@
       "add": "Dodaj",
       "apply": "Zastosuj",
       "backToOverview": "Powrót do widoku ogólnego",
-      "change": "",
+      "change": "Zmień",
       "create": "Utwórz",
       "createAnother": "Utwórz i zacznij od nowa",
       "edit": "Edytuj",
