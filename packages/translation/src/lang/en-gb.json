@@ -612,17 +612,17 @@
       "select": {
         "label": "Select an application",
         "notFound": "No application found",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "Search for an app",
+        "noResults": "No results",
+        "action": "Select {app}",
+        "title": "Select an app to add to this board"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "Create new app",
+        "description": "Create a new app ",
+        "action": "Open app creation"
       },
-      "add": ""
+      "add": "Add an app"
     }
   },
   "integration": {
@@ -649,14 +649,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Existing",
+              "label": "Select existing app"
             },
             "new": {
-              "title": "",
+              "title": "New",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "App URL",
+                "description": "The URL the app will open when accessed from the dashboard"
               }
             }
           }
@@ -676,9 +676,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Link an app",
+            "remove": "Unlink",
+            "select": "Select an app to link"
           }
         }
       },
@@ -709,7 +709,7 @@
         "description": "Integration, {kind} can be used with the search engine. Please check this to automatically configure the search engine."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Linked App"
       },
       "createApp": {
         "label": "Create application",
@@ -730,30 +730,30 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Cause with more details"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Unknown error",
+          "description": "An unknown error occurred, open the cause below to see more details"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Parse error",
+          "description": "The response could not be parsed. Please verify that the URL is pointing to the base URL of the service."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "Authorisation error",
+          "description": "The request was not authorised. Please verify that the credentials are correct and you have them configured with enough permissions."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Response error",
+          "description": "Received unexpected {statusCode} ({reason}) response from <url></url>. Please verify that the URL is pointing to the base URL of the integration.",
+          "otherDescription": "Received unexpected {statusCode} response from <url></url>. Please verify that the URL is pointing to the base URL of the integration.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
+            "badRequest": "Bad request",
+            "notFound": "Not found",
+            "tooManyRequests": "Too many requests",
+            "internalServerError": "Internal server error",
             "serviceUnavailable": "",
             "gatewayTimeout": ""
           }
