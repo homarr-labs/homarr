@@ -15,8 +15,7 @@ import { getLatestRelease } from "../interfaces/releases-providers/releases-prov
 import type {
   DetailsProviderResponse,
   ReleaseProviderResponse,
-  ReleasesRepository,
-  ReleasesResponse,
+  ReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
 const localLogger = logger.child({ module: "GitHubContainerRegistryIntegration" });
@@ -43,23 +42,24 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
     };
   }
 
-  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
-    const [owner, name] = repository.identifier.split("/");
+  private parseIdentifier(identifier: string) {
+    const [owner, name] = identifier.split("/");
     if (!owner || !name) {
       localLogger.warn(
-        `Invalid identifier format. Expected 'owner/name', for ${repository.identifier} with GitHub Container Registry integration`,
-        {
-          identifier: repository.identifier,
-        },
+        `Invalid identifier format. Expected 'owner/name', for ${identifier} with GitHub Container Registry integration`,
+        { identifier },
       );
-      return {
-        id: repository.id,
-        error: { code: "invalidIdentifier" },
-      };
+      return null;
     }
+    return { owner, name };
+  }
 
+  public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
+    const parsedIdentifier = this.parseIdentifier(identifier);
+    if (!parsedIdentifier) return { success: false, error: { code: "invalidIdentifier" } };
+
+    const { owner, name } = parsedIdentifier;
     const api = this.getApi();
-    const details = await this.getDetailsAsync(api, owner, name);
 
     try {
       const releasesResponse = await api.rest.packages.getAllPackageVersionsForPackageOwnedByUser({
@@ -83,20 +83,20 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
         return acc;
       }, []);
 
-      return getLatestRelease(releasesProviderResponse, repository, details);
+      const latestRelease = getLatestRelease(releasesProviderResponse, versionRegex);
+      if (!latestRelease) return { success: false, error: { code: "noMatchingVersion" } };
+
+      const details = await this.getDetailsAsync(api, owner, name);
+
+      return { success: true, data: { ...details, ...latestRelease } };
     } catch (error) {
       const errorMessage = error instanceof RequestError ? error.message : String(error);
-
       localLogger.warn(`Failed to get releases for ${owner}\\${name} with GitHub Container Registry integration`, {
         owner,
         name,
         error: errorMessage,
       });
-
-      return {
-        id: repository.id,
-        error: { message: errorMessage },
-      };
+      return { success: false, error: { code: "unexpected", message: errorMessage } };
     }
   }
 

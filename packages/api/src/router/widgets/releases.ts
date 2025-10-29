@@ -40,15 +40,22 @@ export const releasesRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await Promise.all(
         input.repositories.map(async (repository) => {
-          const innerHandler = releasesRequestHandler.handler(ctx.integration, {
-            id: repository.id,
-            identifier: repository.identifier,
-            versionRegex: formatVersionFilterRegex(repository.versionFilter),
-          });
+          const response = await releasesRequestHandler
+            .handler(ctx.integration, {
+              id: repository.id,
+              identifier: repository.identifier,
+              versionRegex: formatVersionFilterRegex(repository.versionFilter),
+            })
+            .getCachedOrUpdatedDataAsync({
+              forceUpdate: false,
+            });
 
-          return await innerHandler.getCachedOrUpdatedDataAsync({
-            forceUpdate: false,
-          });
+          return {
+            id: repository.id,
+            integration: { name: ctx.integration.name, kind: ctx.integration.kind },
+            timestamp: response.timestamp,
+            ...response.data,
+          };
         }),
       );
     }),
