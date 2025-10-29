@@ -15,7 +15,7 @@ import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
-import type { IMediaReleasesIntegration, MediaRelease } from "../types";
+import type { IMediaReleasesIntegration, MediaRelease, MediaType } from "../types";
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class JellyfinIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
@@ -122,7 +122,7 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
     return result.data.map((item) => ({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       id: item.Id!,
-      type: item.Type === "Movie" ? "movie" : item.Type === "Series" ? "tv" : "unknown",
+      type: this.mapMediaReleaseType(item.Type),
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       title: item.Name!,
       subtitle: item.Taglines?.at(0),
@@ -138,6 +138,27 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       tags: item.Genres ?? [],
       href: super.externalUrl(`/web/index.html#!/details?id=${item.Id}&serverId=${item.ServerId}`).toString(),
     }));
+  }
+
+  private mapMediaReleaseType(type: BaseItemKind | undefined): MediaType {
+    switch (type) {
+      case "Audio":
+      case "AudioBook":
+      case "MusicAlbum":
+        return "music";
+      case "Book":
+        return "book";
+      case "Episode":
+      case "Series":
+      case "Season":
+        return "tv";
+      case "Movie":
+        return "movie";
+      case "Video":
+        return "video";
+      default:
+        return "unknown";
+    }
   }
 
   /**

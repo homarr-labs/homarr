@@ -11,7 +11,7 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
 import { convertJellyfinType } from "../jellyfin/jellyfin-integration";
-import type { IMediaReleasesIntegration, MediaRelease } from "../types";
+import type { IMediaReleasesIntegration, MediaRelease, MediaType } from "../types";
 
 const sessionSchema = z.object({
   NowPlayingItem: z
@@ -163,7 +163,7 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
 
     return items.map((item) => ({
       id: item.Id,
-      type: item.Type === "Movie" ? "movie" : item.Type === "Series" ? "tv" : "unknown",
+      type: this.mapMediaReleaseType(item.Type),
       title: item.Name,
       subtitle: item.Taglines.at(0),
       description: item.Overview,
@@ -177,6 +177,27 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
       tags: item.Genres,
       href: super.externalUrl(`/web/index.html#!/item?id=${item.Id}&serverId=${item.ServerId}`).toString(),
     }));
+  }
+
+  private mapMediaReleaseType(type: string | undefined): MediaType {
+    switch (type) {
+      case "Audio":
+      case "AudioBook":
+      case "MusicAlbum":
+        return "music";
+      case "Book":
+        return "book";
+      case "Episode":
+      case "Series":
+      case "Season":
+        return "tv";
+      case "Movie":
+        return "movie";
+      case "Video":
+        return "video";
+      default:
+        return "unknown";
+    }
   }
 
   // https://dev.emby.media/reference/RestAPI/UserService/getUsersPublic.html
