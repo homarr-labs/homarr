@@ -1,4 +1,3 @@
-import { escapeForRegEx } from "@tiptap/react";
 import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
@@ -10,9 +9,9 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 const formatVersionFilterRegex = (versionFilter: z.infer<typeof releaseVersionFilterSchema> | undefined) => {
   if (!versionFilter) return undefined;
 
-  const escapedPrefix = versionFilter.prefix ? escapeForRegEx(versionFilter.prefix) : "";
+  const escapedPrefix = versionFilter.prefix ? RegExp.escape(versionFilter.prefix) : "";
   const precision = "[0-9]+\\.".repeat(versionFilter.precision).slice(0, -2);
-  const escapedSuffix = versionFilter.suffix ? escapeForRegEx(versionFilter.suffix) : "";
+  const escapedSuffix = versionFilter.suffix ? RegExp.escape(versionFilter.suffix) : "";
 
   return `^${escapedPrefix}${precision}${escapedSuffix}$`;
 };
