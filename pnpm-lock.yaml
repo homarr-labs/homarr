@@ -32,6 +32,9 @@ patchedDependencies:
   trpc-to-openapi:
     hash: 2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c
     path: patches/trpc-to-openapi.patch
+  vitest:
+    hash: a5d99f7076e7dae0a0ee75cdc9f757a091b06b2d03b7bf9a761535893be7c1ea
+    path: patches/vitest@3.2.4.patch
 
 importers:
 
@@ -102,7 +105,7 @@ importers:
         version: 5.1.4(typescript@5.9.3)(vite@7.1.11(@types/node@24.7.0)(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1))
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
+        version: 3.2.4(patch_hash=a5d99f7076e7dae0a0ee75cdc9f757a091b06b2d03b7bf9a761535893be7c1ea)(@types/debug@4.1.12)(@types/node@24.7.0)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
 
   apps/nextjs:
     dependencies:
@@ -434,9 +437,6 @@ importers:
       superjson:
         specifier: 2.2.2
         version: 2.2.2
-      undici:
-        specifier: 7.16.0
-        version: 7.16.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -803,9 +803,6 @@ importers:
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
-      undici:
-        specifier: 7.16.0
-        version: 7.16.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -892,9 +889,6 @@ importers:
       react-dom:
         specifier: 19.2.0
         version: 19.2.0(react@19.2.0)
-      undici:
-        specifier: 7.16.0
-        version: 7.16.0
       zod:
         specifier: ^4.1.12
         version: 4.1.12
@@ -1465,7 +1459,7 @@ importers:
         version: link:../log
       '@homarr/node-unifi':
         specifier: ^2.6.0
-        version: 2.6.0(undici@7.16.0)
+        version: 2.6.0
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
@@ -1502,9 +1496,6 @@ importers:
       tsdav:
         specifier: ^2.1.5
         version: 2.1.5
-      undici:
-        specifier: 7.16.0
-        version: 7.16.0
       xml2js:
         specifier: ^0.6.2
         version: 0.6.2
@@ -1907,9 +1898,6 @@ importers:
       superjson:
         specifier: 2.2.2
         version: 2.2.2
-      undici:
-        specifier: 7.16.0
-        version: 7.16.0
       zod:
         specifier: ^4.1.12
         version: 4.1.12
@@ -11600,11 +11588,11 @@ snapshots:
 
   '@homarr/gridstack@1.12.0': {}
 
-  '@homarr/node-unifi@2.6.0(undici@7.16.0)':
+  '@homarr/node-unifi@2.6.0':
     dependencies:
       axios: 1.9.0
       eventemitter2: 6.4.9
-      http-cookie-agent: 6.0.8(tough-cookie@5.1.2)(undici@7.16.0)
+      http-cookie-agent: 6.0.8(tough-cookie@5.1.2)
       tough-cookie: 5.1.2
       ws: 8.18.3
     transitivePeerDependencies:
@@ -13734,7 +13722,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
+      vitest: 3.2.4(patch_hash=a5d99f7076e7dae0a0ee75cdc9f757a091b06b2d03b7bf9a761535893be7c1ea)(@types/debug@4.1.12)(@types/node@24.7.0)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -13783,7 +13771,7 @@ snapshots:
       sirv: 3.0.1
       tinyglobby: 0.2.14
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
+      vitest: 3.2.4(patch_hash=a5d99f7076e7dae0a0ee75cdc9f757a091b06b2d03b7bf9a761535893be7c1ea)(@types/debug@4.1.12)(@types/node@24.7.0)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
 
   '@vitest/utils@3.2.4':
     dependencies:
@@ -16246,12 +16234,10 @@ snapshots:
 
   html-url-attributes@3.0.1: {}
 
-  http-cookie-agent@6.0.8(tough-cookie@5.1.2)(undici@7.16.0):
+  http-cookie-agent@6.0.8(tough-cookie@5.1.2):
     dependencies:
       agent-base: 7.1.3
       tough-cookie: 5.1.2
-    optionalDependencies:
-      undici: 7.16.0
 
   http-errors@2.0.0:
     dependencies:
@@ -20290,7 +20276,7 @@ snapshots:
       tsx: 4.20.5
       yaml: 2.5.1
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1):
+  vitest@3.2.4(patch_hash=a5d99f7076e7dae0a0ee75cdc9f757a091b06b2d03b7bf9a761535893be7c1ea)(@types/debug@4.1.12)(@types/node@24.7.0)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4
