@@ -645,6 +645,21 @@
             "title": "Aanmaken mislukt",
             "message": "De integratie kon niet worden aangemaakt"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "Kan wijzigingen niet toepassen",
             "message": "De integratie kon niet worden opgeslagen"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "Zoekmachine aanmaken",
         "description": "Integratie \"{kind}\" kan worden gebruikt met de zoekmachines. Controleer dit om automatisch de zoekmachine te configureren."
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "App aanmaken",
@@ -1026,6 +1051,7 @@
       "add": "Toevoegen",
       "apply": "Toepassen",
       "backToOverview": "Terug naar overzicht",
+      "change": "",
       "create": "Aanmaken",
       "createAnother": "Aanmaken en opnieuw beginnen",
       "edit": "Bewerken",

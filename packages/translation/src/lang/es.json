@@ -645,6 +645,21 @@
             "title": "No se ha podido crear",
             "message": "La integración no pudo ser creada"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "Existente",
+              "label": "Seleccionar aplicación existente"
+            },
+            "new": {
+              "title": "Nueva",
+              "url": {
+                "label": "URL de aplicación",
+                "description": "La URL que abrirá la aplicación cuando se acceda desde el panel de control"
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "No se pudieron aplicar los cambios",
             "message": "La integración no pudo ser creada"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "Vincular una aplicación",
+            "remove": "Desvincular",
+            "select": "Selecciona una aplicación para vincular"
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "Crear motor de búsqueda",
         "description": "La integración \"{kind}\" se puede utilizar con los motores de búsqueda. Marque esta opción para configurar automáticamente el motor de búsqueda."
+      },
+      "app": {
+        "sectionTitle": "Aplicación vinculada"
       },
       "createApp": {
         "label": "Crear aplicación",
@@ -1026,6 +1051,7 @@
       "add": "Añadir",
       "apply": "Aplicar",
       "backToOverview": "Volver a la vista general",
+      "change": "Modificar",
       "create": "Crear",
       "createAnother": "Crear e iniciar de nuevo",
       "edit": "Editar",
