@@ -87,7 +87,7 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
               "color" in veventObject && typeof veventObject.color === "string" ? veventObject.color : "#ff8600",
             links: [
               {
-                href: this.url(
+                href: this.externalUrl(
                   `/apps/calendar/timeGridWeek/now/edit/sidebar/${eventSlug}/${dateInMillis / 1000}`,
                 ).toString(),
                 name: "Nextcloud",

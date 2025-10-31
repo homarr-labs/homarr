@@ -1,3 +1,18 @@
+## [1.43.0](https://github.com/homarr-labs/homarr/compare/v1.42.1...v1.43.0) (2025-10-24)
+
+### Features
+
+* **integrations:** add app linking ([#4338](https://github.com/homarr-labs/homarr/issues/4338)) ([172db0e](https://github.com/homarr-labs/homarr/commit/172db0e3f905839b01e934a121c5bc5e45f3314a))
+
+### Bug Fixes
+
+* **deps:** update dependency @tanstack/react-query to ^5.90.5 ([#4316](https://github.com/homarr-labs/homarr/issues/4316)) ([4cab12b](https://github.com/homarr-labs/homarr/commit/4cab12b80a4a37a20393ed8a3727997e157405d3))
+* **deps:** update dependency node-ical to ^0.22.0 ([#4344](https://github.com/homarr-labs/homarr/issues/4344)) ([7281b4a](https://github.com/homarr-labs/homarr/commit/7281b4ae32f6b86d3a1c6666db84419387b496a5))
+* **deps:** update dependency octokit to ^5.0.4 ([#4340](https://github.com/homarr-labs/homarr/issues/4340)) ([bd98370](https://github.com/homarr-labs/homarr/commit/bd983701b7d4eea15c81e7d6482f1390b98a35fb))
+* **deps:** update dependency swagger-ui-react to ^5.29.5 ([#4335](https://github.com/homarr-labs/homarr/issues/4335)) ([fb4b8f7](https://github.com/homarr-labs/homarr/commit/fb4b8f7ca3cc3c11392dc1665be2ad907d15772e))
+* **deps:** update mantine monorepo to ^8.3.5 ([#4291](https://github.com/homarr-labs/homarr/issues/4291)) ([63c5c9c](https://github.com/homarr-labs/homarr/commit/63c5c9ca9846d6c11cc44372366a68d3d46ee57c))
+* **deps:** update nextjs monorepo to v15.5.6 ([#4314](https://github.com/homarr-labs/homarr/issues/4314)) ([0df6e8f](https://github.com/homarr-labs/homarr/commit/0df6e8fb20e59457e7c12d123ba7f948619062e1))
+
 ## [1.42.1](https://github.com/homarr-labs/homarr/compare/v1.42.0...v1.42.1) (2025-10-18)
 
 ### Bug Fixes

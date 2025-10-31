@@ -55,6 +55,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
           value: "secret",
         }),
       ],
+      externalUrl: null,
     });
   });
 
@@ -104,6 +105,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
           value: "dbSecret",
         }),
       ],
+      externalUrl: null,
     });
   });
 
@@ -153,6 +155,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
           value: "secret",
         }),
       ],
+      externalUrl: null,
     });
   });
 
@@ -206,6 +209,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
           value: "secret",
         }),
       ],
+      externalUrl: null,
     });
   });
 
@@ -263,6 +267,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
           value: "dbPassword",
         }),
       ],
+      externalUrl: null,
     });
   });
 
@@ -336,6 +341,7 @@ describe("testConnectionAsync should run test connection of integration", () => 
           value: "privateKey",
         }),
       ],
+      externalUrl: null,
     });
   });
 });

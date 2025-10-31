@@ -8,6 +8,7 @@ import { IconCheck, IconRocket } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useModalAction } from "@homarr/modals";
 import { QuickAddAppModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
@@ -21,6 +22,8 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
   const tInput = useWidgetInputTranslation(kind, property);
   const form = useFormContext();
   const { data: apps, isPending, refetch } = clientApi.app.selectable.useQuery();
+  const { data: session } = useSession();
+  const canCreateApps = session?.user.permissions.includes("app-create") ?? false;
 
   const { openModal } = useModalAction(QuickAddAppModal);
 
@@ -30,7 +33,7 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
   );
 
   return (
-    <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: "md" }} style={{ alignItems: "center" }}>
+    <SimpleGrid cols={{ base: 1, md: canCreateApps ? 2 : 1 }} spacing={{ base: "md" }} style={{ alignItems: "center" }}>
       <Select
         label={tInput("label")}
         searchable
@@ -59,22 +62,24 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
         styles={{ root: { flex: "1" } }}
         {...form.getInputProps(`options.${property}`)}
       />
-      <Button
-        mt={3}
-        rightSection={<IconRocket size="1.5rem" />}
-        variant="default"
-        onClick={() =>
-          openModal({
-            // eslint-disable-next-line no-restricted-syntax
-            async onClose(createdAppId) {
-              await refetch();
-              form.setFieldValue(`options.${property}`, createdAppId);
-            },
-          })
-        }
-      >
-        {t("widget.common.app.quickCreate")}
-      </Button>
+      {canCreateApps && (
+        <Button
+          mt={3}
+          rightSection={<IconRocket size="1.5rem" />}
+          variant="default"
+          onClick={() =>
+            openModal({
+              // eslint-disable-next-line no-restricted-syntax
+              async onClose(createdAppId) {
+                await refetch();
+                form.setFieldValue(`options.${property}`, createdAppId);
+              },
+            })
+          }
+        >
+          {t("widget.common.app.quickCreate")}
+        </Button>
+      )}
     </SimpleGrid>
   );
 };

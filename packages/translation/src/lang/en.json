@@ -645,6 +645,21 @@
             "title": "Creation failed",
             "message": "The integration could not be created"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "Existing",
+              "label": "Select existing app"
+            },
+            "new": {
+              "title": "New",
+              "url": {
+                "label": "App url",
+                "description": "The url the app will open when accessed from the dashboard"
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "Unable to apply changes",
             "message": "The integration could not be saved"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "Link an app",
+            "remove": "Unlink",
+            "select": "Select an app to link"
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "Create Search Engine",
         "description": "Integration \"{kind}\" can be used with the search engines. Check this to automatically configure the search engine."
+      },
+      "app": {
+        "sectionTitle": "Linked App"
       },
       "createApp": {
         "label": "Create app",
@@ -1026,6 +1051,7 @@
       "add": "Add",
       "apply": "Apply",
       "backToOverview": "Back to overview",
+      "change": "Change",
       "create": "Create",
       "createAnother": "Create and start over",
       "edit": "Edit",

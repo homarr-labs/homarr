@@ -198,6 +198,7 @@ export const integrations = pgTable(
     name: text().notNull(),
     url: text().notNull(),
     kind: varchar({ length: 128 }).$type<IntegrationKind>().notNull(),
+    appId: varchar({ length: 128 }).references(() => apps.id, { onDelete: "set null" }),
   },
   (integrations) => ({
     kindIdx: index("integration__kind_idx").on(integrations.kind),
@@ -626,11 +627,15 @@ export const boardGroupPermissionRelations = relations(boardGroupPermissions, ({
   }),
 }));
 
-export const integrationRelations = relations(integrations, ({ many }) => ({
+export const integrationRelations = relations(integrations, ({ one, many }) => ({
   secrets: many(integrationSecrets),
   items: many(integrationItems),
   userPermissions: many(integrationUserPermissions),
   groupPermissions: many(integrationGroupPermissions),
+  app: one(apps, {
+    fields: [integrations.appId],
+    references: [apps.id],
+  }),
 }));
 
 export const integrationUserPermissionRelations = relations(integrationUserPermissions, ({ one }) => ({

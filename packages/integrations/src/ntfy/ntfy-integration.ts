@@ -54,7 +54,7 @@ export class NTFYIntegration extends Integration implements INotificationsIntegr
     return notifications
       .filter((notification) => notification !== null)
       .map((notification): Notification => {
-        const topicURL = this.url(`/${notification.topic}`);
+        const topicURL = this.externalUrl(`/${notification.topic}`);
         return {
           id: notification.id,
           time: new Date(notification.time * 1000),

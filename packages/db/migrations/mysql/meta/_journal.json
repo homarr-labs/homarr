@@ -253,6 +253,13 @@
       "when": 1756701556908,
       "tag": "0035_increase-secret-kind-length",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "5",
+      "when": 1760968518445,
+      "tag": "0036_add_app_reference_to_integration",
+      "breakpoints": true
     }
   ]
 }

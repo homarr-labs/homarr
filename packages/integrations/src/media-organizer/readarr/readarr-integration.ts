@@ -74,7 +74,7 @@ export class ReadarrIntegration extends Integration implements ICalendarIntegrat
   private getLinksForReadarrCalendarEvent = (event: z.infer<typeof readarrCalendarEventSchema>) => {
     return [
       {
-        href: this.url(`/author/${event.author.foreignAuthorId}`).toString(),
+        href: this.externalUrl(`/author/${event.author.foreignAuthorId}`).toString(),
         color: "#f5c518",
         isDark: false,
         logo: "/images/apps/readarr.svg",
@@ -101,7 +101,7 @@ export class ReadarrIntegration extends Integration implements ICalendarIntegrat
     if (!bestImage) {
       return undefined;
     }
-    return this.url(bestImage.url as `/${string}`).toString();
+    return this.externalUrl(bestImage.url as `/${string}`).toString();
   };
 }
 

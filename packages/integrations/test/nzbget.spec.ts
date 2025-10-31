@@ -177,6 +177,7 @@ const createNzbGetIntegration = (container: StartedTestContainer, username: stri
     ],
     name: "NzbGet",
     url: `http://${container.getHost()}:${container.getMappedPort(6789)}`,
+    externalUrl: null,
   });
 };
 

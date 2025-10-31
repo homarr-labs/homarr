@@ -54,4 +54,4 @@ export type { Notification } from "./interfaces/notifications/notification-types
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";
 
 // Helpers
-export { createIntegrationAsync, createIntegrationAsyncFromSecrets } from "./base/creator";
+export { createIntegrationAsync } from "./base/creator";
