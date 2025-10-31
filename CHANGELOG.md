@@ -1,3 +1,25 @@
+## [1.43.1](https://github.com/homarr-labs/homarr/compare/v1.43.0...v1.43.1) (2025-10-31)
+
+### Bug Fixes
+
+* **deps:** update dependency @auth/core to ^0.41.1 ([#4387](https://github.com/homarr-labs/homarr/issues/4387)) ([747bb92](https://github.com/homarr-labs/homarr/commit/747bb922ccf0508bd00c37faeab29e28876577b1))
+* **deps:** update dependency @auth/drizzle-adapter to ^1.11.1 ([#4388](https://github.com/homarr-labs/homarr/issues/4388)) ([2fe3656](https://github.com/homarr-labs/homarr/commit/2fe36564c26c33ae2625eb22ef4503c6dd8ebcf9))
+* **deps:** update dependency @jellyfin/sdk to ^0.12.0 ([#4359](https://github.com/homarr-labs/homarr/issues/4359)) ([554d19a](https://github.com/homarr-labs/homarr/commit/554d19a458e856141f90e795ecebabf205e945e9))
+* **deps:** update dependency @paralleldrive/cuid2 to v3 ([#4343](https://github.com/homarr-labs/homarr/issues/4343)) ([074d27e](https://github.com/homarr-labs/homarr/commit/074d27e37e3430e7e98cf28e2876afe009811027))
+* **deps:** update dependency drizzle-orm to ^0.44.7 ([#4372](https://github.com/homarr-labs/homarr/issues/4372)) ([8242bfc](https://github.com/homarr-labs/homarr/commit/8242bfc95cd0e67397b1bfc46d65aec3f568c304))
+* **deps:** update dependency ioredis to v5.8.2 ([#4357](https://github.com/homarr-labs/homarr/issues/4357)) ([3c4c26e](https://github.com/homarr-labs/homarr/commit/3c4c26ee214a37193aea31b69ce75322862fc534))
+* **deps:** update dependency mysql2 to v3.15.3 ([#4360](https://github.com/homarr-labs/homarr/issues/4360)) ([6e6c912](https://github.com/homarr-labs/homarr/commit/6e6c9122257934402848d6fdc51e6ccdfc2dcca0))
+* **deps:** update dependency next-auth to v5.0.0-beta.30 [security] ([#4379](https://github.com/homarr-labs/homarr/issues/4379)) ([c544d6e](https://github.com/homarr-labs/homarr/commit/c544d6ec2e426bc4c82db547d7c4a5dc4d6e2a27))
+* **deps:** update dependency next-intl to v4.4.0 ([#4365](https://github.com/homarr-labs/homarr/issues/4365)) ([ce63388](https://github.com/homarr-labs/homarr/commit/ce6338840c20fc46048687ed5566ff12fa4b2502))
+* **deps:** update dependency node-ical to ^0.22.1 ([#4346](https://github.com/homarr-labs/homarr/issues/4346)) ([ef18c58](https://github.com/homarr-labs/homarr/commit/ef18c58f5b09bafd697365a0182ab7bc8719db2b))
+* **deps:** update dependency superjson to v2.2.3 ([#4364](https://github.com/homarr-labs/homarr/issues/4364)) ([18cc04e](https://github.com/homarr-labs/homarr/commit/18cc04e7f2740226f7bc7c75c0b0cdaec7cda6f8))
+* **deps:** update dependency typescript-eslint to ^8.46.2 ([#4352](https://github.com/homarr-labs/homarr/issues/4352)) ([f96cbe0](https://github.com/homarr-labs/homarr/commit/f96cbe06525515112fad466cb8a5f33d74517aba))
+* **deps:** update testcontainers-node monorepo to ^11.7.2 ([#4366](https://github.com/homarr-labs/homarr/issues/4366)) ([7329135](https://github.com/homarr-labs/homarr/commit/7329135fd85906602a16a9bdc16a1ef1cc4607c5))
+* **deps:** update tiptap monorepo to v2.26.4 ([#4371](https://github.com/homarr-labs/homarr/issues/4371)) ([136ed8e](https://github.com/homarr-labs/homarr/commit/136ed8e8b401b801ba16f2079bdfb5aeebe9f57f))
+* **deps:** update trpc monorepo to ^11.7.0 ([#4385](https://github.com/homarr-labs/homarr/issues/4385)) ([24def99](https://github.com/homarr-labs/homarr/commit/24def9982709cd6de1765a7235169fe1ceb3cbea))
+* **media-releases:** support more media type mappings for jellyfin and emby ([#4382](https://github.com/homarr-labs/homarr/issues/4382)) ([6f3b7ec](https://github.com/homarr-labs/homarr/commit/6f3b7ec4915754e183300a915baebc11f264df62))
+* **releases-widget:** Search multiple docker hub pages for releases ([#4158](https://github.com/homarr-labs/homarr/issues/4158)) ([e0526c5](https://github.com/homarr-labs/homarr/commit/e0526c5ea7ee83adcd22d78fbf63334cb59bcf79))
+
 ## [1.43.0](https://github.com/homarr-labs/homarr/compare/v1.42.1...v1.43.0) (2025-10-24)
 
 ### Features
