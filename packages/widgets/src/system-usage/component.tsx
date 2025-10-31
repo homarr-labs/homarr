@@ -1,12 +1,11 @@
 "use client";
 
 import type { MantineColor } from "@mantine/core";
-import { Box, Divider, Flex, Group, Progress, Stack, Text } from "@mantine/core";
+import { Divider, Group, Stack, Text } from "@mantine/core";
 import {
   IconCpu,
   IconHourglass,
   IconNetwork,
-  IconServerOff,
   IconSquareChevronRight,
   IconThermometer,
   IconWifi,
@@ -15,27 +14,14 @@ import {
 import { clientApi } from "@homarr/api/client";
 import { humanFileSize, objectEntries } from "@homarr/common";
 import type { System, SystemLoadStatus, SystemStatus } from "@homarr/integrations/types";
-import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { IconGpu, IconHardDrive, IconMemoryStick, IconWebsocket } from "@homarr/ui/icons";
 
 import type { WidgetComponentProps } from "../definition";
-import { ErrorBoundaryError, NoIntegrationSelectedError } from "../errors";
-
-class NoSystemSelectedError extends ErrorBoundaryError {
-  constructor() {
-    super("No system selected");
-  }
-
-  public getErrorBoundaryData() {
-    return {
-      icon: IconServerOff,
-      message: (t: TranslationFunction) => t("widget.systemUsage.error.noSystem"),
-      showLogsLink: false,
-    };
-  }
-}
+import { NoIntegrationSelectedError } from "../errors";
+import { NoSystemSelectedError } from "./errors/no-system-selected-error";
+import { Dot, Item, ProgressValue } from "./item";
 
 export default function SystemUsage({ integrationIds, options }: WidgetComponentProps<"systemUsage">) {
   const integrationId = integrationIds.at(0);
@@ -113,19 +99,6 @@ const loadStatusColors = {
   unknown: "gray",
 } satisfies Record<SystemLoadStatus, MantineColor>;
 
-const ProgressValue = ({ value }: { value: number }) => (
-  <Group gap="xs" align="center" w="100%" wrap="nowrap">
-    <Text size="xs">{value}%</Text>
-    <Progress value={value} color={progressColor(value)} w="100%" />
-  </Group>
-);
-
-const progressColor = (value: number): MantineColor => {
-  if (value < 50) return "green";
-  if (value < 75) return "yellow";
-  return "red";
-};
-
 const items = {
   cpu: {
     icon: IconCpu,
@@ -198,28 +171,3 @@ const items = {
   string,
   { icon: TablerIcon; component: (props: { system: System }) => React.ReactNode; hidden?: (system: System) => boolean }
 >;
-
-interface DotProps {
-  color: MantineColor;
-}
-
-const Dot = ({ color }: DotProps) => <Box style={{ borderRadius: "100%" }} bg={color} h={8} w={8}></Box>;
-
-interface ItemProps {
-  icon: TablerIcon;
-  label: string;
-  children: React.ReactNode;
-}
-
-const Item = (props: ItemProps) => (
-  <Group justify="space-between" align="center" wrap="nowrap" w="100%">
-    <Group gap="xs" wrap="nowrap">
-      <props.icon size={16} stroke={1.5} />
-      <Text size="xs">{props.label}:</Text>
-    </Group>
-
-    <Flex c="white" justify="end" maw="50%" w="100%">
-      {props.children}
-    </Flex>
-  </Group>
-);
