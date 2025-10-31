@@ -1,8 +1,12 @@
 import PocketBase from "pocketbase";
+import type { fetch as undiciFetch } from "undici";
 import z from "zod";
+
+import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationPocketBaseHttpErrorHandler } from "../base/errors/http";
+import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ISystemUsageIntegration } from "../interfaces/system-usage/system-usage-integration";
@@ -10,8 +14,8 @@ import type { System, SystemLoadStatus } from "../interfaces/system-usage/system
 
 @HandleIntegrationErrors([integrationPocketBaseHttpErrorHandler])
 export class BeszelIntegration extends Integration implements ISystemUsageIntegration {
-  protected async testingAsync(): Promise<TestingResult> {
-    const client = this.createClient();
+  protected async testingAsync({ fetchAsync }: IntegrationTestingInput): Promise<TestingResult> {
+    const client = this.createClient(fetchAsync);
     return await this.authenticateAsync(client).then(() => ({ success: true as const }));
   }
   public async getSystemsAsync() {
@@ -75,8 +79,13 @@ export class BeszelIntegration extends Integration implements ISystemUsageIntegr
     return "good";
   }
 
-  private createClient() {
-    return new PocketBase(this.url("/").toString());
+  private createClient(customFetch: typeof undiciFetch = fetchWithTrustedCertificatesAsync) {
+    const client = new PocketBase(this.url("/").toString());
+    client.beforeSend = (url, options) => {
+      options.fetch = customFetch as typeof fetch;
+      return { url, options };
+    };
+    return client;
   }
 
   private async authenticateAsync(client: PocketBase) {
