@@ -645,6 +645,21 @@
             "title": "היצירה נכשלה",
             "message": "לא ניתן ליצור את האינטגרציה"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "קיים",
+              "label": "בחירת אפליקציה קיימת"
+            },
+            "new": {
+              "title": "חדש",
+              "url": {
+                "label": "כתובת אתר של אפליקציה",
+                "description": "כתובת האתר שהאפליקציה תפתח בעת גישה אליה מלוח המחוונים"
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "לא ניתן להחיל שינויים",
             "message": "לא ניתן היה לשמור את האינטגרציה"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "קישור אפליקציה",
+            "remove": "בטל קישור",
+            "select": "בחר אפליקציה לקישור"
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "יצירת מנוע חיפוש",
         "description": "אינטגרציה {kind} יכולה לשמש עם מנועי חיפוש. סמן עבור הגדרה אוטומטית של מנוע חיפוש."
+      },
+      "app": {
+        "sectionTitle": "אפליקציה מקושרת"
       },
       "createApp": {
         "label": "יצירת אפליקציה",
@@ -946,8 +971,8 @@
           "newLabel": "נושא חדש"
         },
         "url": {
-          "label": "",
-          "newLabel": ""
+          "label": "כתובת אתר",
+          "newLabel": "כתובת אתר חדשה"
         },
         "opnsenseApiKey": {
           "label": "מפתח API (מפתח)",
@@ -1026,6 +1051,7 @@
       "add": "הוסף",
       "apply": "החל",
       "backToOverview": "חזרה לסקירה כללית",
+      "change": "לשנות",
       "create": "צור",
       "createAnother": "צור והתחל מחדש",
       "edit": "עריכה",
@@ -1148,8 +1174,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "קמ\"ש",
+        "milesPerHour": "מייל/שעה"
       }
     }
   },
@@ -1164,7 +1190,7 @@
           "label": "כותרת"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "מחלקות עיצוב מותאמות אישית"
         },
         "borderColor": {
           "label": "צבע מסגרת"
@@ -1717,7 +1743,7 @@
       "name": "לוח שנה",
       "description": "הצג אירועים מהאינטגרציות שלך בתצוגת לוח שנה בתוך פרק זמן יחסי מסוים",
       "duration": {
-        "allDay": ""
+        "allDay": "כל היום"
       },
       "option": {
         "releaseType": {
@@ -1754,7 +1780,7 @@
           "description": "רק במזג אוויר נוכחי"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "השתמש במייל לשעה עבור מהירות הרוח"
         },
         "location": {
           "label": "מיקום מזג האוויר"
@@ -1994,21 +2020,21 @@
         "name": "שם",
         "id": "מזהה",
         "metadata": {
-          "title": "",
+          "title": "סטטיסטיקות לחנונים",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "וידאו",
+            "resolution": "רזולוציה"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "אודיו",
+            "channelCount": "ערוצי אודיו",
+            "codec": "מקודדי אודיו"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "המרה",
+            "container": "מיכל",
+            "resolution": "רזולוציה",
+            "target": "קידוד יעד"
           }
         }
       }
@@ -2537,7 +2563,7 @@
       "description": "שימוש במעבד, זיכרון, דיסק וחומרה אחרת של המערכת שלך",
       "option": {
         "hasShadow": {
-          "label": ""
+          "label": "הפעלת הצללת תרשים"
         },
         "visibleCharts": {
           "label": "תרשימים גלויים",
@@ -2549,12 +2575,12 @@
           }
         },
         "labelDisplayMode": {
-          "label": "",
+          "label": "מצב תצוגת תוויות",
           "option": {
-            "textWithIcon": "",
-            "text": "",
-            "icon": "",
-            "hidden": ""
+            "textWithIcon": "הצג טקסט עם סמל",
+            "text": "הצג רק טקסט",
+            "icon": "הצג רק אייקון",
+            "hidden": "הסתר תוויות"
           }
         }
       },
@@ -2987,8 +3013,8 @@
           "integration": "אינטגרציות",
           "app": "אפליקציות",
           "group": "קבוצות",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "מנועי חיפוש",
+          "media": "מדיה"
         },
         "statisticLabel": {
           "boards": "לוחות",

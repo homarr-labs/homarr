@@ -645,6 +645,21 @@
             "title": "Erstellung fehlgeschlagen",
             "message": "Die Integration konnte nicht erstellt werden"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "Änderungen konnten nicht angewendet werden",
             "message": "Die Integration konnte nicht gespeichert werden"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "Suchmaschinen anlegen",
         "description": "Integration \"{kind}\" kann mit den Suchmaschinen verwendet werden. Wählen Sie dies, um die Suchmaschine automatisch zu konfigurieren."
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "App erstellen",
@@ -1026,6 +1051,7 @@
       "add": "Hinzufügen",
       "apply": "Übernehmen",
       "backToOverview": "Zurück zur Übersicht",
+      "change": "",
       "create": "Erstellen",
       "createAnother": "Erstellen und neu starten",
       "edit": "Bearbeiten",

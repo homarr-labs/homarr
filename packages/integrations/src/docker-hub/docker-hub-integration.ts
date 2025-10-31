@@ -14,8 +14,7 @@ import type { ReleasesProviderIntegration } from "../interfaces/releases-provide
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
 import type {
   DetailsProviderResponse,
-  ReleasesRepository,
-  ReleasesResponse,
+  ReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 import { accessTokenResponseSchema, detailsResponseSchema, releasesResponseSchema } from "./docker-hub-schemas";
 
@@ -73,49 +72,61 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     };
   }
 
-  public async getLatestMatchingReleaseAsync(repository: ReleasesRepository): Promise<ReleasesResponse> {
-    const relativeUrl = this.getRelativeUrl(repository.identifier);
-    if (relativeUrl === "/") {
-      localLogger.warn(
-        `Invalid identifier format. Expected 'owner/name' or 'name', for ${repository.identifier} on DockerHub`,
-        {
-          identifier: repository.identifier,
-        },
-      );
-      return {
-        id: repository.id,
-        error: { code: "invalidIdentifier" },
-      };
-    }
-
-    const details = await this.getDetailsAsync(relativeUrl);
-
-    const releasesResponse = await this.withHeadersAsync(async (headers) => {
-      return await fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/tags?page_size=100`), {
-        headers,
+  private parseIdentifier(identifier: string) {
+    if (!identifier.includes("/")) return { owner: "", name: identifier };
+    const [owner, name] = identifier.split("/");
+    if (!owner || !name) {
+      localLogger.warn(`Invalid identifier format. Expected 'owner/name' or 'name', for ${identifier} on DockerHub`, {
+        identifier,
       });
-    });
+      return null;
+    }
+    return { owner, name };
+  }
 
-    if (!releasesResponse.ok) {
-      return {
-        id: repository.id,
-        error: { message: releasesResponse.statusText },
-      };
+  public async getLatestMatchingReleaseAsync(identifier: string, versionRegex?: string): Promise<ReleaseResponse> {
+    const parsedIdentifier = this.parseIdentifier(identifier);
+    if (!parsedIdentifier) return { success: false, error: { code: "invalidIdentifier" } };
+
+    const { owner, name } = parsedIdentifier;
+
+    const relativeUrl: `/${string}` = owner
+      ? `/v2/namespaces/${encodeURIComponent(owner)}/repositories/${encodeURIComponent(name)}`
+      : `/v2/repositories/library/${encodeURIComponent(name)}`;
+
+    for (let page = 0; page <= 5; page++) {
+      const releasesResponse = await this.withHeadersAsync(async (headers) => {
+        return await fetchWithTrustedCertificatesAsync(this.url(`${relativeUrl}/tags?page_size=100&page=${page}`), {
+          headers,
+        });
+      });
+      if (!releasesResponse.ok) {
+        return { success: false, error: { code: "unexpected", message: releasesResponse.statusText } };
+      }
+
+      const releasesResponseJson: unknown = await releasesResponse.json();
+      const releasesResult = releasesResponseSchema.safeParse(releasesResponseJson);
+      if (!releasesResult.success) {
+        return {
+          success: false,
+          error: {
+            code: "unexpected",
+            message: releasesResponseJson
+              ? JSON.stringify(releasesResponseJson, null, 2)
+              : releasesResult.error.message,
+          },
+        };
+      }
+
+      const latestRelease = getLatestRelease(releasesResult.data.results, versionRegex);
+      if (!latestRelease) continue;
+
+      const details = await this.getDetailsAsync(relativeUrl);
+
+      return { success: true, data: { ...details, ...latestRelease } };
     }
 
-    const releasesResponseJson: unknown = await releasesResponse.json();
-    const releasesResult = releasesResponseSchema.safeParse(releasesResponseJson);
-
-    if (!releasesResult.success) {
-      return {
-        id: repository.id,
-        error: {
-          message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
-        },
-      };
-    } else {
-      return getLatestRelease(releasesResult.data.results, repository, details);
-    }
+    return { success: false, error: { code: "noMatchingVersion" } };
   }
 
   private async getDetailsAsync(relativeUrl: `/${string}`): Promise<DetailsProviderResponse | undefined> {
@@ -152,18 +163,6 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
       createdAt: data.date_registered,
       starsCount: data.star_count,
     };
-  }
-
-  private getRelativeUrl(identifier: string): `/${string}` {
-    if (identifier.indexOf("/") > 0) {
-      const [owner, name] = identifier.split("/");
-      if (!owner || !name) {
-        return "/";
-      }
-      return `/v2/namespaces/${encodeURIComponent(owner)}/repositories/${encodeURIComponent(name)}`;
-    } else {
-      return `/v2/repositories/library/${encodeURIComponent(identifier)}`;
-    }
   }
 
   private async getSessionAsync(fetchAsync: typeof fetch = fetchWithTrustedCertificatesAsync): Promise<string> {

@@ -645,6 +645,21 @@
             "title": "Creació fallida",
             "message": "No s'ha pogut crear la integració"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "No s'han pogut aplicar els canvis",
             "message": "No s'ha pogut desar la integració"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "Crea un motor de cerca",
         "description": "La integració \"{kind}\" es pot utilitzar amb els motors de cerca. Seleccioneu aquesta opció per configurar el motor de cerca automàticament."
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "",
@@ -1026,6 +1051,7 @@
       "add": "",
       "apply": "",
       "backToOverview": "",
+      "change": "",
       "create": "",
       "createAnother": "",
       "edit": "",
