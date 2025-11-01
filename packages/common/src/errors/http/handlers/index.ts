@@ -4,3 +4,4 @@ export * from "./ofetch-http-error-handler";
 export * from "./axios-http-error-handler";
 export * from "./tsdav-http-error-handler";
 export * from "./octokit-http-error-handler";
+export * from "./pocketbase-http-error-handler";

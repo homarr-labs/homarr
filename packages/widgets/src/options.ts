@@ -5,8 +5,9 @@ import { z } from "zod/v4";
 import type { ZodType } from "zod/v4";
 
 import type { IntegrationKind } from "@homarr/definitions";
+import type { stringOrTranslation } from "@homarr/translation";
+import type { TablerIcon } from "@homarr/ui";
 
-import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
 import type { ReleasesRepository } from "./releases/releases-repository";
 
 interface CommonInput<TType> {
@@ -17,6 +18,20 @@ interface CommonInput<TType> {
 interface TextInput extends CommonInput<string> {
   validate?: z.ZodType<string>;
 }
+
+export type SelectOption =
+  | {
+      icon?: TablerIcon | string;
+      value: string;
+      label: stringOrTranslation;
+    }
+  | string;
+
+export type inferSelectOptionValue<TOption extends SelectOption> = TOption extends {
+  value: infer TValue;
+}
+  ? TValue
+  : TOption;
 
 interface MultiSelectInput<TOptions extends SelectOption[]>
   extends CommonInput<inferSelectOptionValue<TOptions[number]>[]> {
@@ -41,6 +56,14 @@ interface SelectInput<TOptions extends readonly SelectOption[]>
   extends CommonInput<inferSelectOptionValue<TOptions[number]>> {
   options: TOptions;
   searchable?: boolean;
+}
+
+interface DynamicSelectInput<TOptions extends SelectOption[]>
+  extends CommonInput<inferSelectOptionValue<TOptions[number]>> {
+  useOptions: (
+    query: string,
+    integrationIds: string[],
+  ) => { data: TOptions | undefined; isLoading: boolean; error: unknown };
 }
 
 interface NumberInput extends CommonInput<number> {
@@ -83,6 +106,12 @@ const optionsFactory = {
     defaultValue: (input.defaultValue ?? input.options[0]) as inferSelectOptionValue<TOptions[number]>,
     options: input.options,
     searchable: input.searchable ?? false,
+    withDescription: input.withDescription ?? false,
+  }),
+  dynamicSelect: <const TOptions extends SelectOption[]>(input: DynamicSelectInput<TOptions>) => ({
+    type: "dynamicSelect" as const,
+    defaultValue: input.defaultValue ?? null,
+    useOptions: input.useOptions,
     withDescription: input.withDescription ?? false,
   }),
   number: (input: NumberInput) => ({

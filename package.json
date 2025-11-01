@@ -97,7 +97,8 @@
     },
     "patchedDependencies": {
       "@types/node-unifi": "patches/@types__node-unifi.patch",
-      "trpc-to-openapi": "patches/trpc-to-openapi.patch"
+      "trpc-to-openapi": "patches/trpc-to-openapi.patch",
+      "vitest": "patches/vitest@3.2.4.patch"
     },
     "allowUnusedPatches": true,
     "ignoredBuiltDependencies": [

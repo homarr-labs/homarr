@@ -298,6 +298,13 @@ export const integrationDefs = {
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/truenas"),
   },
+  beszel: {
+    name: "Beszel",
+    secretKinds: [["username", "password"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/beszel.svg",
+    category: ["systemUsage"],
+    documentationUrl: createDocumentationLink("/docs/integrations/beszel"),
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",
@@ -316,6 +323,7 @@ export const integrationDefs = {
       "networkController",
       "notifications",
       "smartHomeServer",
+      "systemUsage",
     ],
     documentationUrl: null,
   },
@@ -384,6 +392,7 @@ export const integrationCategories = [
   "releasesProvider",
   "notifications",
   "firewall",
+  "systemUsage",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];
