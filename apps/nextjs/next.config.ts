@@ -20,8 +20,7 @@ const withNextIntl = createNextIntlPlugin({
 const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
-  /** We already do linting and typechecking as separate tasks in CI */
-  eslint: { ignoreDuringBuilds: true },
+  /** We already do typechecking as separate tasks in CI */
   typescript: { ignoreBuildErrors: true },
   /**
    * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
