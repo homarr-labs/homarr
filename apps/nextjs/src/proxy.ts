@@ -12,7 +12,7 @@ import { createI18nMiddleware } from "@homarr/translation/middleware";
 
 let isOnboardingFinished = false;
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Redirect to onboarding if it's not finished yet
   const pathname = request.nextUrl.pathname;
 
