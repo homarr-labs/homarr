@@ -68,6 +68,7 @@
     "@xterm/addon-canvas": "^0.7.0",
     "@xterm/addon-fit": "0.10.0",
     "@xterm/xterm": "^5.5.0",
+    "babel-plugin-react-compiler": "^1.0.0",
     "chroma-js": "^3.1.2",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.18",
