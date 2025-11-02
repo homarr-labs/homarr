@@ -1476,8 +1476,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../validation
       '@jellyfin/sdk':
-        specifier: ^0.12.0
-        version: 0.12.0(axios@1.12.2)
+        specifier: ^0.13.0
+        version: 0.13.0(axios@1.12.2)
       '@octokit/auth-app':
         specifier: ^8.1.1
         version: 8.1.1
@@ -3314,8 +3314,8 @@ packages:
     resolution: {integrity: sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==}
     engines: {node: '>=8'}
 
-  '@jellyfin/sdk@0.12.0':
-    resolution: {integrity: sha512-do3cks7TD316Qw27lBMHZQ7ufaS1MC8HMsQF5rFv5/DUInuwEOqWthqVyHl3sIjThOThF1zxQyE6OdpUl0dNUg==}
+  '@jellyfin/sdk@0.13.0':
+    resolution: {integrity: sha512-oiBAOXH6s+dKdReSsYgNktBDzbxtg4JVWhEzIxZSxKcWMdSKmBtK41MhXRO7IWAC40DguKUm3nU/Z493qPAlWA==}
     peerDependencies:
       axios: ^1.12.0
 
@@ -11766,7 +11766,7 @@ snapshots:
 
   '@istanbuljs/schema@0.1.3': {}
 
-  '@jellyfin/sdk@0.12.0(axios@1.12.2)':
+  '@jellyfin/sdk@0.13.0(axios@1.12.2)':
     dependencies:
       axios: 1.12.2
 
