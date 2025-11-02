@@ -245,16 +245,16 @@ importers:
         specifier: ^5.90.2
         version: 5.90.2(@tanstack/react-query@5.90.5(react@19.2.0))(next@15.5.6(@babel/core@7.26.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.93.2))(react@19.2.0)
       '@trpc/client':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)
       '@trpc/next':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1(@tanstack/react-query@5.90.5(react@19.2.0))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/react-query@11.7.1(@tanstack/react-query@5.90.5(react@19.2.0))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(next@15.5.6(@babel/core@7.26.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.93.2))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       '@trpc/react-query':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1(@tanstack/react-query@5.90.5(react@19.2.0))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       '@trpc/server':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1(typescript@5.9.3)
       '@xterm/addon-canvas':
         specifier: ^0.7.0
@@ -636,16 +636,16 @@ importers:
         specifier: ^5.90.5
         version: 5.90.5(react@19.2.0)
       '@trpc/client':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)
       '@trpc/react-query':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1(@tanstack/react-query@5.90.5(react@19.2.0))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       '@trpc/server':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1(typescript@5.9.3)
       '@trpc/tanstack-react-query':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1(@tanstack/react-query@5.90.5(react@19.2.0))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       lodash.clonedeep:
         specifier: ^4.5.0
@@ -964,13 +964,13 @@ importers:
         specifier: ^5.90.5
         version: 5.90.5(react@19.2.0)
       '@trpc/client':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)
       '@trpc/server':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1(typescript@5.9.3)
       '@trpc/tanstack-react-query':
-        specifier: ^11.7.0
+        specifier: ^11.7.1
         version: 11.7.1(@tanstack/react-query@5.90.5(react@19.2.0))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       node-cron:
         specifier: ^4.2.1
