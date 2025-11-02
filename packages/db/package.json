@@ -67,7 +67,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.13",
-    "@types/pg": "^8.15.5",
+    "@types/pg": "^8.15.6",
     "dotenv-cli": "^10.0.0",
     "esbuild": "^0.25.11",
     "eslint": "^9.38.0",
