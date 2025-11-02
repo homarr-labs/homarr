@@ -1,10 +1,11 @@
 "use client";
 
 import { useCallback } from "react";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { PaginationProps } from "@mantine/core";
 import { Pagination } from "@mantine/core";
+
+import { Link } from "@homarr/ui";
 
 interface TablePaginationProps {
   total: number;

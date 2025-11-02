@@ -2,7 +2,6 @@
 
 import type { ChangeEventHandler } from "react";
 import { useEffect, useRef } from "react";
-import Link from "next/link";
 import { Button, Checkbox, Collapse, Group, Stack, Textarea, TextInput } from "@mantine/core";
 import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import type { z } from "zod/v4";
@@ -10,6 +9,7 @@ import type { z } from "zod/v4";
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 import { appManageSchema } from "@homarr/validation/app";
 
 import { IconPicker } from "../icon-picker/icon-picker";

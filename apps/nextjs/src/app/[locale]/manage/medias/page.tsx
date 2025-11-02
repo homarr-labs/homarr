@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   ActionIcon,
@@ -25,7 +24,7 @@ import { humanFileSize } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { createLocalImageUrl } from "@homarr/icons/local";
 import { getI18n } from "@homarr/translation/server";
-import { SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
+import { Link, SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";

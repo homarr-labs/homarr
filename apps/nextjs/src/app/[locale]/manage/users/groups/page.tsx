@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Card, Group, Stack, Text, ThemeIcon, Title, UnstyledButton } from "@mantine/core";
 import { IconChevronRight, IconUsersGroup } from "@tabler/icons-react";
@@ -7,6 +6,7 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { everyoneGroup } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
+import { Link } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";

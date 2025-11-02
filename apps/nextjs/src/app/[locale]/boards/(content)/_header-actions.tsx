@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Group, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
@@ -29,6 +28,7 @@ import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 import { useItemActions } from "~/components/board/items/item-actions";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
