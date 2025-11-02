@@ -32,7 +32,12 @@ const nextConfig: NextConfig = {
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {
-    domains: ["cdn.jsdelivr.net"],
+    localPatterns: [
+      {
+        pathname: "/**",
+        search: "",
+      },
+    ],
   },
   // eslint-disable-next-line @typescript-eslint/require-await,no-restricted-syntax
   async headers() {
