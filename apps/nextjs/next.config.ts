@@ -28,6 +28,7 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["dockerode"],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
+    turbopackFileSystemCacheForDev: true,
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {
