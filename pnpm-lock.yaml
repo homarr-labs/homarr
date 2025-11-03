@@ -1434,8 +1434,8 @@ importers:
   packages/integrations:
     dependencies:
       '@ctrl/deluge':
-        specifier: ^7.4.0
-        version: 7.4.0
+        specifier: ^7.5.0
+        version: 7.5.0
       '@ctrl/qbittorrent':
         specifier: ^9.10.0
         version: 9.10.0
@@ -2755,8 +2755,8 @@ packages:
     resolution: {integrity: sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==}
     engines: {node: '>=18'}
 
-  '@ctrl/deluge@7.4.0':
-    resolution: {integrity: sha512-h0cfxCzshsB+0cmO0BcKYbw/imqAMvPWp8ZHSlfBu8XB7xoEb51jtQp8pjIYNWQ8b/b9p49V28Ned0+sfape8w==}
+  '@ctrl/deluge@7.5.0':
+    resolution: {integrity: sha512-pdJEZBhyoJsPVLuGv4LPHLOdADxuVrEeI02p2tak2CZQF/tH/B0B+PMTIPBRX4knvJM52rZykHhHxHbHFlVXOQ==}
     engines: {node: '>=18'}
 
   '@ctrl/magnet-link@4.0.2':
@@ -5953,6 +5953,9 @@ packages:
   destr@2.0.3:
     resolution: {integrity: sha512-2N3BOUU4gYMpTP24s5rF5iP7BDr7uNTCs4ozw3kf/eKfvWSIu93GEBi5m427YoyJoeOzQ5smuu4nNAPGb8idSQ==}
 
+  destr@2.0.5:
+    resolution: {integrity: sha512-ugFTXCtDZunbzasqBxrK93Ik/DRYsO6S/fedkWEMKqt04xZ4csmnmwGDBAb07QWNaGMAmnTIemsYZCksjATwsA==}
+
   detect-indent@7.0.1:
     resolution: {integrity: sha512-Mc7QhQ8s+cLrnUfU/Ji94vG/r8M26m8f++vyres4ZoojaRDpZ1eSIh/EpzLNwlWuvzSZ3UbDFspjFvTDXe6e/g==}
     engines: {node: '>=12.20'}
@@ -8392,6 +8395,9 @@ packages:
   ofetch@1.4.1:
     resolution: {integrity: sha512-QZj2DfGplQAr2oj9KzceK9Hwz6Whxazmn85yYeVuS3u9XTMOGMRx0kO95MQ+vLsj/S/NwBDMMLU5hpxvI6Tklw==}
 
+  ofetch@1.5.1:
+    resolution: {integrity: sha512-2W4oUZlVaqAPAil6FUg/difl6YhqhUR7x2eZY4bQCko22UXg3hptq9KLQdqFClV+Wu85UX7hNtdGTngi/1BxcA==}
+
   ohash@1.1.4:
     resolution: {integrity: sha512-FlDryZAahJmEF3VR3w1KogSEdWX3WhA5GPakFx4J81kEAiHyLMpdLLElS8n8dfNadMgAne/MywcvmogzscVt4g==}
 
@@ -10198,10 +10204,6 @@ packages:
     resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
     engines: {node: '>=16'}
 
-  type-fest@5.0.1:
-    resolution: {integrity: sha512-9MpwAI52m8H6ssA542UxSLnSiSD2dsC3/L85g6hVubLSXd82wdI80eZwTWhdOfN67NlA+D+oipAs1MlcTcu3KA==}
-    engines: {node: '>=20'}
-
   type-fest@5.1.0:
     resolution: {integrity: sha512-wQ531tuWvB6oK+pchHIu5lHe5f5wpSCqB8Kf4dWQRbOYc9HTge7JL0G4Qd44bh6QuJCccIzL3bugb8GI0MwHrg==}
     engines: {node: '>=20'}
@@ -11265,14 +11267,14 @@ snapshots:
 
   '@csstools/css-tokenizer@3.0.4': {}
 
-  '@ctrl/deluge@7.4.0':
+  '@ctrl/deluge@7.5.0':
     dependencies:
       '@ctrl/magnet-link': 4.2.0
-      '@ctrl/shared-torrent': 6.5.0(ofetch@1.4.1)
+      '@ctrl/shared-torrent': 6.5.0(ofetch@1.5.1)
       node-fetch-native: 1.6.7
-      ofetch: 1.4.1
+      ofetch: 1.5.1
       tough-cookie: 6.0.0
-      type-fest: 5.0.1
+      type-fest: 5.1.0
       ufo: 1.6.1
       uint8array-extras: 1.5.0
 
@@ -11305,6 +11307,10 @@ snapshots:
   '@ctrl/shared-torrent@6.5.0(ofetch@1.4.1)':
     dependencies:
       ofetch: 1.4.1
+
+  '@ctrl/shared-torrent@6.5.0(ofetch@1.5.1)':
+    dependencies:
+      ofetch: 1.5.1
 
   '@ctrl/torrent-file@4.4.0':
     dependencies:
@@ -14917,6 +14923,8 @@ snapshots:
 
   destr@2.0.3: {}
 
+  destr@2.0.5: {}
+
   detect-indent@7.0.1: {}
 
   detect-libc@1.0.3:
@@ -17688,6 +17696,12 @@ snapshots:
       node-fetch-native: 1.6.7
       ufo: 1.6.1
 
+  ofetch@1.5.1:
+    dependencies:
+      destr: 2.0.5
+      node-fetch-native: 1.6.7
+      ufo: 1.6.1
+
   ohash@1.1.4: {}
 
   on-exit-leak-free@2.1.2: {}
@@ -19851,10 +19865,6 @@ snapshots:
   type-fest@2.19.0: {}
 
   type-fest@4.41.0: {}
-
-  type-fest@5.0.1:
-    dependencies:
-      tagged-tag: 1.0.0
 
   type-fest@5.1.0:
     dependencies:
