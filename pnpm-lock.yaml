@@ -339,7 +339,7 @@ importers:
         specifier: 3.1.2
         version: 3.1.2
       '@types/node':
-        specifier: ^24.9.1
+        specifier: ^24.9.2
         version: 24.9.2
       '@types/prismjs':
         specifier: ^1.26.5
@@ -448,7 +448,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/node':
-        specifier: ^24.9.1
+        specifier: ^24.9.2
         version: 24.9.2
       dotenv-cli:
         specifier: ^10.0.0
