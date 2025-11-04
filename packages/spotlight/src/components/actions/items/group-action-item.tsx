@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { Spotlight } from "@mantine/spotlight";
 
 import type { TranslationObject } from "@homarr/translation";
+import { Link } from "@homarr/ui";
 
 import type { SearchGroup } from "../../../lib/group";
 import type { inferSearchInteractionOptions } from "../../../lib/interaction";

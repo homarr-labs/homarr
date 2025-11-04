@@ -1,6 +1,5 @@
 import { Fragment } from "react";
 import type { PropsWithChildren } from "react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
   AccordionControl,
@@ -36,7 +35,7 @@ import { objectEntries } from "@homarr/common";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
-import { CountBadge, IntegrationAvatar } from "@homarr/ui";
+import { CountBadge, IntegrationAvatar, Link } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";

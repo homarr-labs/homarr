@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   ActionIcon,
   Badge,
@@ -21,7 +20,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
-import { UserAvatar } from "@homarr/ui";
+import { Link, UserAvatar } from "@homarr/ui";
 
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { ManageContainer } from "~/components/manage/manage-container";

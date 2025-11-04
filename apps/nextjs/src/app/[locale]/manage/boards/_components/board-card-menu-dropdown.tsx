@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback } from "react";
-import Link from "next/link";
 import { Menu } from "@mantine/core";
 import { IconCopy, IconDeviceMobile, IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
 
@@ -12,6 +11,7 @@ import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { DuplicateBoardModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 import { useBoardPermissions } from "~/components/board/permissions/client";
 

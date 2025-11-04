@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Card, Group, SimpleGrid, Space, Stack, Text } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";
+import { Link } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { createMetaTitle } from "~/metadata";
