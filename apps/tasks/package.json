@@ -48,7 +48,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node": "^24.9.2",
-    "dotenv-cli": "^10.0.0",
+    "dotenv-cli": "^11.0.0",
     "esbuild": "^0.25.11",
     "eslint": "^9.38.0",
     "prettier": "^3.6.2",
