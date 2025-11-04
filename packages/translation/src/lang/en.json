@@ -1177,7 +1177,8 @@
         "kilometersPerHour": "km/h",
         "milesPerHour": "mph"
       }
-    }
+    },
+    "unableToLoad": "Unable to load data"
   },
   "section": {
     "dynamic": {
@@ -2558,6 +2559,47 @@
       "noItems": "No notifications to display.",
       "option": {}
     },
+    "systemUsage": {
+      "name": "System usage",
+      "description": "CPU, Memory, Disk and other hardware usage of your system",
+      "option": {
+        "systemId": {
+          "label": "Choose system"
+        },
+        "visibleItems": {
+          "label": "Visible items"
+        }
+      },
+      "item": {
+        "cpu": {
+          "label": "CPU"
+        },
+        "memory": {
+          "label": "Memory"
+        },
+        "disk": {
+          "label": "Disk"
+        },
+        "gpu": {
+          "label": "GPU"
+        },
+        "load": {
+          "label": "Load Avg"
+        },
+        "network": {
+          "label": "Net"
+        },
+        "temperature": {
+          "label": "Temp"
+        },
+        "agent": {
+          "label": "Agent"
+        }
+      },
+      "error": {
+        "noSystem": "No system selected"
+      }
+    },
     "systemResources": {
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",
@@ -3383,6 +3425,9 @@
             },
             "weather": {
               "label": "Weather"
+            },
+            "systemUsage": {
+              "label": "System Usage"
             }
           },
           "interval": {

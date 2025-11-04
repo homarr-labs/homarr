@@ -32,6 +32,9 @@ patchedDependencies:
   trpc-to-openapi:
     hash: 2ca3c16af0fcca0c736697ad4fe553a14f794524fa9ce0d5c3e8ee4aea76090c
     path: patches/trpc-to-openapi.patch
+  vitest:
+    hash: a5d99f7076e7dae0a0ee75cdc9f757a091b06b2d03b7bf9a761535893be7c1ea
+    path: patches/vitest@3.2.4.patch
 
 importers:
 
@@ -102,7 +105,7 @@ importers:
         version: 5.1.4(typescript@5.9.3)(vite@7.1.12(@types/node@24.9.2)(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1))
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
+        version: 3.2.4(patch_hash=a5d99f7076e7dae0a0ee75cdc9f757a091b06b2d03b7bf9a761535893be7c1ea)(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
 
   apps/nextjs:
     dependencies:
@@ -1499,6 +1502,9 @@ importers:
       octokit:
         specifier: ^5.0.4
         version: 5.0.4
+      pocketbase:
+        specifier: ^0.26.2
+        version: 0.26.2
       proxmox-api:
         specifier: 1.1.1
         version: 1.1.1
@@ -8708,6 +8714,9 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
+  pocketbase@0.26.2:
+    resolution: {integrity: sha512-WA8EOBc3QnSJh8rJ3iYoi9DmmPOMFIgVfAmIGux7wwruUEIzXgvrO4u0W2htfQjGIcyezJkdZOy5Xmh7SxAftw==}
+
   possible-typed-array-names@1.0.0:
     resolution: {integrity: sha512-d7Uw+eZoloe0EHDIYoe+bQ5WXnGMOpmiZFTuMWCwpjzzkL2nTjcKiAk4hh8TjnGye2TwWOk3UXucZ+3rbmBa8Q==}
     engines: {node: '>= 0.4'}
@@ -13714,7 +13723,7 @@ snapshots:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
+      vitest: 3.2.4(patch_hash=a5d99f7076e7dae0a0ee75cdc9f757a091b06b2d03b7bf9a761535893be7c1ea)(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -13763,7 +13772,7 @@ snapshots:
       sirv: 3.0.1
       tinyglobby: 0.2.14
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
+      vitest: 3.2.4(patch_hash=a5d99f7076e7dae0a0ee75cdc9f757a091b06b2d03b7bf9a761535893be7c1ea)(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
 
   '@vitest/utils@3.2.4':
     dependencies:
@@ -18028,6 +18037,8 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.2
 
+  pocketbase@0.26.2: {}
+
   possible-typed-array-names@1.0.0: {}
 
   postcss-js@4.0.1(postcss@8.5.6):
@@ -20283,7 +20294,7 @@ snapshots:
       tsx: 4.20.5
       yaml: 2.5.1
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1):
+  vitest@3.2.4(patch_hash=a5d99f7076e7dae0a0ee75cdc9f757a091b06b2d03b7bf9a761535893be7c1ea)(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@3.2.4)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.4

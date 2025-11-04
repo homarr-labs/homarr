@@ -1,0 +1,54 @@
+diff --git a/dist/chunks/index.CmSc2RE5.js b/dist/chunks/index.CmSc2RE5.js
+index 90004b3064c731a22f584000525e0bff3f423867..7fa0351ff36a5d21640520685420046298b71959 100644
+--- a/dist/chunks/index.CmSc2RE5.js
++++ b/dist/chunks/index.CmSc2RE5.js
+@@ -3,8 +3,6 @@ import { Console } from 'node:console';
+ // SEE https://github.com/jsdom/jsdom/blob/master/lib/jsdom/living/interfaces.js
+ const LIVING_KEYS = [
+ 	"DOMException",
+-	"URL",
+-	"URLSearchParams",
+ 	"EventTarget",
+ 	"NamedNodeMap",
+ 	"Node",
+@@ -161,9 +159,6 @@ const LIVING_KEYS = [
+ 	"ShadowRoot",
+ 	"MutationObserver",
+ 	"MutationRecord",
+-	"Headers",
+-	"AbortController",
+-	"AbortSignal",
+ 	"Uint8Array",
+ 	"Uint16Array",
+ 	"Uint32Array",
+@@ -441,9 +436,6 @@ var jsdom = {
+ 		// https://nodejs.org/dist/latest/docs/api/globals.html
+ 		const globalNames = [
+ 			"structuredClone",
+-			"fetch",
+-			"Request",
+-			"Response",
+ 			"BroadcastChannel",
+ 			"MessageChannel",
+ 			"MessagePort",
+@@ -454,6 +446,20 @@ var jsdom = {
+ 			const value = globalThis[name];
+ 			if (typeof value !== "undefined" && typeof dom.window[name] === "undefined") dom.window[name] = value;
+ 		}
++		const overrideGlobals = [
++			"fetch",
++			"Request",
++			"Response",
++			"Headers",
++			"AbortController",
++			"AbortSignal",
++			"URL",
++			"URLSearchParams",
++		];
++		for (const name of overrideGlobals) {
++			const value = globalThis[name];
++			if (typeof value !== "undefined") dom.window[name] = value;
++		}
+ 		return {
+ 			getVmContext() {
+ 				return dom.getInternalVMContext();

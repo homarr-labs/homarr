@@ -3,6 +3,7 @@ import {
   FetchHttpErrorHandler,
   OctokitHttpErrorHandler,
   OFetchHttpErrorHandler,
+  PocketBaseHttpErrorHandler,
   TsdavHttpErrorHandler,
 } from "@homarr/common/server";
 
@@ -13,3 +14,4 @@ export const integrationOFetchHttpErrorHandler = new IntegrationHttpErrorHandler
 export const integrationAxiosHttpErrorHandler = new IntegrationHttpErrorHandler(new AxiosHttpErrorHandler());
 export const integrationTsdavHttpErrorHandler = new IntegrationHttpErrorHandler(new TsdavHttpErrorHandler());
 export const integrationOctokitHttpErrorHandler = new IntegrationHttpErrorHandler(new OctokitHttpErrorHandler());
+export const integrationPocketBaseHttpErrorHandler = new IntegrationHttpErrorHandler(new PocketBaseHttpErrorHandler());

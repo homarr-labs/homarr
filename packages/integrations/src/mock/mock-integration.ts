@@ -15,6 +15,7 @@ import type { IMediaServerIntegration } from "../interfaces/media-server/media-s
 import type { IMediaTranscodingIntegration } from "../interfaces/media-transcoding/media-transcoding-integration";
 import type { NetworkControllerSummaryIntegration } from "../interfaces/network-controller-summary/network-controller-summary-integration";
 import type { ISmartHomeIntegration } from "../interfaces/smart-home/smart-home-integration";
+import type { ISystemUsageIntegration } from "../interfaces/system-usage/system-usage-integration";
 import { CalendarMockService } from "./data/calendar";
 import { ClusterHealthMonitoringMockService } from "./data/cluster-health-monitoring";
 import { DnsHoleMockService } from "./data/dns-hole";
@@ -28,6 +29,7 @@ import { NetworkControllerSummaryMockService } from "./data/network-controller-s
 import { NotificationsMockService } from "./data/notifications";
 import { SmartHomeMockService } from "./data/smart-home";
 import { SystemHealthMonitoringMockService } from "./data/system-health-monitoring";
+import { SystemUsageMockService } from "./data/system-usage";
 
 export class MockIntegration
   extends Integration
@@ -43,7 +45,8 @@ export class MockIntegration
     IMediaServerIntegration,
     IMediaTranscodingIntegration,
     NetworkControllerSummaryIntegration,
-    ISmartHomeIntegration
+    ISmartHomeIntegration,
+    ISystemUsageIntegration
 {
   private static readonly dnsHole = new DnsHoleMockService();
   private static readonly calendar = new CalendarMockService();
@@ -58,6 +61,7 @@ export class MockIntegration
   private static readonly networkController = new NetworkControllerSummaryMockService();
   private static readonly notifications = new NotificationsMockService();
   private static readonly smartHome = new SmartHomeMockService();
+  private static readonly systemUsage = new SystemUsageMockService();
 
   protected async testingAsync(_: IntegrationTestingInput): Promise<TestingResult> {
     return await Promise.resolve({
@@ -123,4 +127,8 @@ export class MockIntegration
   getEntityStateAsync = MockIntegration.smartHome.getEntityStateAsync.bind(MockIntegration.smartHome);
   triggerAutomationAsync = MockIntegration.smartHome.triggerAutomationAsync.bind(MockIntegration.smartHome);
   triggerToggleAsync = MockIntegration.smartHome.triggerToggleAsync.bind(MockIntegration.smartHome);
+
+  // SystemUsageIntegration
+  getSystemsAsync = MockIntegration.systemUsage.getSystemsAsync.bind(MockIntegration.systemUsage);
+  getSystemDetailsAsync = MockIntegration.systemUsage.getSystemDetailsAsync.bind(MockIntegration.systemUsage);
 }
