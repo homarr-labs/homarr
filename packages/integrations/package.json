@@ -44,7 +44,7 @@
     "ical.js": "^2.2.1",
     "maria2": "^0.4.1",
     "node-ical": "^0.22.1",
-    "octokit": "^5.0.4",
+    "octokit": "^5.0.5",
     "proxmox-api": "1.1.1",
     "tsdav": "^2.1.6",
     "undici": "7.16.0",
