@@ -70,7 +70,7 @@
     "@types/pg": "^8.15.6",
     "dotenv-cli": "^11.0.0",
     "esbuild": "^0.25.11",
-    "eslint": "^9.38.0",
+    "eslint": "^9.39.0",
     "prettier": "^3.6.2",
     "tsx": "4.20.4",
     "typescript": "^5.9.3"
