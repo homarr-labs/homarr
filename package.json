@@ -49,7 +49,7 @@
     "@vitest/ui": "^4.0.5",
     "conventional-changelog-conventionalcommits": "^9.1.0",
     "cross-env": "^10.1.0",
-    "jsdom": "^27.0.1",
+    "jsdom": "^27.1.0",
     "prettier": "^3.6.2",
     "semantic-release": "^25.0.1",
     "testcontainers": "^11.7.2",
