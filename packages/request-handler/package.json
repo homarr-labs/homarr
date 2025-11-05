@@ -29,7 +29,7 @@
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
-    "dayjs": "^1.11.18",
+    "dayjs": "^1.11.19",
     "octokit": "^5.0.4",
     "superjson": "2.2.5",
     "undici": "7.16.0",
