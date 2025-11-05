@@ -80,8 +80,8 @@ importers:
         specifier: ^10.1.0
         version: 10.1.0
       jsdom:
-        specifier: ^27.0.1
-        version: 27.0.1(postcss@8.5.6)
+        specifier: ^27.1.0
+        version: 27.1.0(postcss@8.5.6)
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -102,7 +102,7 @@ importers:
         version: 5.1.4(typescript@5.9.3)(vite@7.1.12(@types/node@24.9.2)(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1))
       vitest:
         specifier: ^4.0.5
-        version: 4.0.7(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@4.0.7)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
+        version: 4.0.7(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@4.0.7)(jsdom@27.1.0(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
 
   apps/nextjs:
     dependencies:
@@ -2464,6 +2464,9 @@ importers:
 
 packages:
 
+  '@acemir/cssom@0.9.19':
+    resolution: {integrity: sha512-Pp2gAQXPZ2o7lt4j0IMwNRXqQ3pagxtDj5wctL5U2Lz4oV0ocDNlkgx4DpxfyKav4S/bePuI+SMqcBSUHLy9kg==}
+
   '@actions/core@1.11.1':
     resolution: {integrity: sha512-hXJCSrkwfA46Vd9Z3q4cpEpHB1rL5NG04+/rbqW9d3+CSvtB1tYe8UTpAlixa1vj0m/ULglfEK2UKxMGxCxv5A==}
 
@@ -2493,8 +2496,8 @@ packages:
   '@asamuzakjp/css-color@4.0.4':
     resolution: {integrity: sha512-cKjSKvWGmAziQWbCouOsFwb14mp1betm8Y7Fn+yglDMUUu3r9DCbJ9iJbeFDenLMqFbIMC0pQP8K+B8LAxX3OQ==}
 
-  '@asamuzakjp/dom-selector@6.7.2':
-    resolution: {integrity: sha512-ccKogJI+0aiDhOahdjANIc9SDixSud1gbwdVrhn7kMopAtLXqsz9MKmQQtIl6Y5aC2IYq+j4dz/oedL2AVMmVQ==}
+  '@asamuzakjp/dom-selector@6.7.4':
+    resolution: {integrity: sha512-buQDjkm+wDPXd6c13534URWZqbz0RP5PAhXZ+LIoa5LgwInT9HVJvGIJivg75vi8I13CxDGdTnz+aY5YUJlIAA==}
 
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
@@ -5777,8 +5780,8 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
-  cssstyle@5.3.1:
-    resolution: {integrity: sha512-g5PC9Aiph9eiczFpcgUhd9S4UUO3F+LHGRIi5NUMZ+4xtoIYbHNZwZnWA2JsFGe8OU8nl4WyaEFiZuGuxlutJQ==}
+  cssstyle@5.3.2:
+    resolution: {integrity: sha512-zDMqXh8Vs1CdRYZQ2M633m/SFgcjlu8RB8b/1h82i+6vpArF507NSYIWJHGlJaTWoS+imcnctmEz43txhbVkOw==}
     engines: {node: '>=20'}
 
   csstype@3.1.3:
@@ -7575,9 +7578,9 @@ packages:
   jsbn@1.1.0:
     resolution: {integrity: sha512-4bYVV3aAMtDTTu4+xsDYa6sy9GyJ69/amsu9sYF2zqjiEoZA5xJi3BrfX3uY+/IekIu7MwdObdbDWpoZdBv3/A==}
 
-  jsdom@27.0.1:
-    resolution: {integrity: sha512-SNSQteBL1IlV2zqhwwolaG9CwhIhTvVHWg3kTss/cLE7H/X4644mtPQqYvCfsSrGQWt9hSZcgOXX8bOZaMN+kA==}
-    engines: {node: '>=20'}
+  jsdom@27.1.0:
+    resolution: {integrity: sha512-Pcfm3eZ+eO4JdZCXthW9tCDT3nF4K+9dmeZ+5X39n+Kqz0DDIABRP5CAEOHRFZk8RGuC2efksTJxrjp8EXCunQ==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
       canvas: ^3.0.0
     peerDependenciesMeta:
@@ -9321,9 +9324,6 @@ packages:
   rrule@2.8.1:
     resolution: {integrity: sha512-hM3dHSBMeaJ0Ktp7W38BJZ7O1zOgaFEsn41PDk+yHoEtfLV+PoJt9E9xAlZiWgf/iqEqionN0ebHFZIDAp+iGw==}
 
-  rrweb-cssom@0.8.0:
-    resolution: {integrity: sha512-guoltQEx+9aMf2gDZ0s62EcV8lsXR+0w8915TC3ITdn2YueuNjdAYh/levpU9nFaoChh9RUS5ZdQMrKfVEN9tw==}
-
   rrweb-player@1.0.0-alpha.4:
     resolution: {integrity: sha512-Wlmn9GZ5Fdqa37vd3TzsYdLl/JWEvXNUrLCrYpnOwEgmY409HwVIvvA5aIo7k582LoKgdRCsB87N+f0oWAR0Kg==}
 
@@ -10903,6 +10903,8 @@ packages:
 
 snapshots:
 
+  '@acemir/cssom@0.9.19': {}
+
   '@actions/core@1.11.1':
     dependencies:
       '@actions/exec': 1.1.1
@@ -10942,7 +10944,7 @@ snapshots:
       '@csstools/css-tokenizer': 3.0.4
       lru-cache: 11.2.2
 
-  '@asamuzakjp/dom-selector@6.7.2':
+  '@asamuzakjp/dom-selector@6.7.4':
     dependencies:
       '@asamuzakjp/nwsapi': 2.3.9
       bidi-js: 1.0.3
@@ -13766,7 +13768,7 @@ snapshots:
       magicast: 0.3.5
       std-env: 3.9.0
       tinyrainbow: 3.0.3
-      vitest: 4.0.7(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@4.0.7)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
+      vitest: 4.0.7(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@4.0.7)(jsdom@27.1.0(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -13813,7 +13815,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vitest: 4.0.7(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@4.0.7)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
+      vitest: 4.0.7(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@4.0.7)(jsdom@27.1.0(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1)
 
   '@vitest/utils@4.0.7':
     dependencies:
@@ -14774,7 +14776,7 @@ snapshots:
 
   cssesc@3.0.0: {}
 
-  cssstyle@5.3.1(postcss@8.5.6):
+  cssstyle@5.3.2(postcss@8.5.6):
     dependencies:
       '@asamuzakjp/css-color': 4.0.4
       '@csstools/css-syntax-patches-for-csstree': 1.0.14(postcss@8.5.6)
@@ -16809,10 +16811,11 @@ snapshots:
 
   jsbn@1.1.0: {}
 
-  jsdom@27.0.1(postcss@8.5.6):
+  jsdom@27.1.0(postcss@8.5.6):
     dependencies:
-      '@asamuzakjp/dom-selector': 6.7.2
-      cssstyle: 5.3.1(postcss@8.5.6)
+      '@acemir/cssom': 0.9.19
+      '@asamuzakjp/dom-selector': 6.7.4
+      cssstyle: 5.3.2(postcss@8.5.6)
       data-urls: 6.0.0
       decimal.js: 10.6.0
       html-encoding-sniffer: 4.0.0
@@ -16820,7 +16823,6 @@ snapshots:
       https-proxy-agent: 7.0.6
       is-potential-custom-element-name: 1.0.1
       parse5: 8.0.0
-      rrweb-cssom: 0.8.0
       saxes: 6.0.0
       symbol-tree: 3.2.4
       tough-cookie: 6.0.0
@@ -18794,8 +18796,6 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  rrweb-cssom@0.8.0: {}
-
   rrweb-player@1.0.0-alpha.4:
     dependencies:
       '@tsconfig/svelte': 1.0.13
@@ -20277,7 +20277,7 @@ snapshots:
       tsx: 4.20.5
       yaml: 2.5.1
 
-  vitest@4.0.7(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@4.0.7)(jsdom@27.0.1(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1):
+  vitest@4.0.7(@types/debug@4.1.12)(@types/node@24.9.2)(@vitest/ui@4.0.7)(jsdom@27.1.0(postcss@8.5.6))(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1):
     dependencies:
       '@vitest/expect': 4.0.7
       '@vitest/mocker': 4.0.7(vite@7.1.12(@types/node@24.9.2)(sass@1.93.2)(sugarss@5.0.0(postcss@8.5.6))(terser@5.39.0)(tsx@4.20.5)(yaml@2.5.1))
@@ -20303,7 +20303,7 @@ snapshots:
       '@types/debug': 4.1.12
       '@types/node': 24.9.2
       '@vitest/ui': 4.0.7(vitest@4.0.7)
-      jsdom: 27.0.1(postcss@8.5.6)
+      jsdom: 27.1.0(postcss@8.5.6)
     transitivePeerDependencies:
       - jiti
       - less
