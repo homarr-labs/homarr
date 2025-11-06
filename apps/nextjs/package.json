@@ -4,12 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm with-env next build",
-    "clean": "git clean -xdf .next .turbo node_modules",
+    "build": "pnpm with-env next build && pnpm build:server",
+    "build:server": "esbuild server.ts --bundle --platform=node --outfile=server.cjs --external:next --external:react --external:react-dom --loader:.scss=text --external:*.node --external:@opentelemetry/api --external:deasync --external:bcrypt",
+    "clean": "git clean -xdf .next .turbo node_modules server.cjs",
     "dev": "pnpm with-env next dev",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "start": "pnpm with-env next start",
+    "start": "pnpm with-env node server.cjs",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
@@ -101,9 +102,11 @@
     "@types/react-dom": "19.2.2",
     "@types/swagger-ui-react": "^5.18.0",
     "concurrently": "^9.2.1",
+    "esbuild": "^0.25.11",
     "eslint": "^9.39.0",
     "node-loader": "^2.1.0",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3"
   }
 }
+
