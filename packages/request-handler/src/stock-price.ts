@@ -23,8 +23,16 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
     if (!data.chart.result[0]) {
       throw new Error("Received invalid data");
     }
+    
+    const result = data.chart.result[0];
+    // Filter out null values from price arrays (Yahoo Finance returns null for missing data points)
+    if (result.indicators.quote[0]) {
+      result.indicators.quote[0].close = result.indicators.quote[0].close.filter(
+        (value): value is number => value !== null && value !== undefined,
+      );
+    }
 
-    return data.chart.result[0];
+    return result;
   },
   cacheDuration: dayjs.duration(5, "minutes"),
 });
