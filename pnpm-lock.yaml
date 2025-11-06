@@ -1449,7 +1449,7 @@ importers:
         specifier: ^7.4.0
         version: 7.4.0
       '@gitbeaker/rest':
-        specifier: ^43.7.0
+        specifier: ^43.8.0
         version: 43.8.0
       '@homarr/certificates':
         specifier: workspace:^0.1.0
