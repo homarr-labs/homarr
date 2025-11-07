@@ -142,6 +142,9 @@ importers:
       '@homarr/cron-job-status':
         specifier: workspace:^0.1.0
         version: link:../../packages/cron-job-status
+      '@homarr/cron-jobs':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/cron-jobs
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
@@ -386,9 +389,6 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../../packages/common
-      '@homarr/cron-job-api':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/cron-job-api
       '@homarr/cron-jobs':
         specifier: workspace:^0.1.0
         version: link:../../packages/cron-jobs
@@ -425,9 +425,6 @@ importers:
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../../packages/validation
-      '@homarr/widgets':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/widgets
       dayjs:
         specifier: ^1.11.19
         version: 1.11.19
@@ -584,9 +581,6 @@ importers:
       '@homarr/core':
         specifier: workspace:^0.1.0
         version: link:../core
-      '@homarr/cron-job-api':
-        specifier: workspace:^0.1.0
-        version: link:../cron-job-api
       '@homarr/cron-job-status':
         specifier: workspace:^0.1.0
         version: link:../cron-job-status
@@ -629,6 +623,9 @@ importers:
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../server-settings
+      '@homarr/tasks':
+        specifier: workspace:^0.1.0
+        version: link:../../apps/tasks
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation
@@ -945,64 +942,6 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
-      eslint:
-        specifier: ^9.39.0
-        version: 9.39.1
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/cron-job-api:
-    dependencies:
-      '@homarr/common':
-        specifier: workspace:^0.1.0
-        version: link:../common
-      '@homarr/core':
-        specifier: workspace:^0.1.0
-        version: link:../core
-      '@homarr/cron-jobs':
-        specifier: workspace:^0.1.0
-        version: link:../cron-jobs
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
-      '@tanstack/react-query':
-        specifier: ^5.90.5
-        version: 5.90.5(react@19.2.0)
-      '@trpc/client':
-        specifier: ^11.7.1
-        version: 11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3)
-      '@trpc/server':
-        specifier: ^11.7.1
-        version: 11.7.1(typescript@5.9.3)
-      '@trpc/tanstack-react-query':
-        specifier: ^11.7.1
-        version: 11.7.1(@tanstack/react-query@5.90.5(react@19.2.0))(@trpc/client@11.7.1(@trpc/server@11.7.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.1(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
-      node-cron:
-        specifier: ^4.2.1
-        version: 4.2.1
-      react:
-        specifier: 19.2.0
-        version: 19.2.0
-      zod:
-        specifier: ^4.1.12
-        version: 4.1.12
-    devDependencies:
-      '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
-        version: link:../../tooling/eslint
-      '@homarr/prettier-config':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/prettier
-      '@homarr/tsconfig':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/typescript
-      '@types/node-cron':
-        specifier: ^3.0.11
-        version: 3.0.11
-      '@types/react':
-        specifier: 19.2.2
-        version: 19.2.2
       eslint:
         specifier: ^9.39.0
         version: 9.39.1

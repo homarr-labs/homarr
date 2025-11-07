@@ -1,32 +1,40 @@
 import { observable } from "@trpc/server/observable";
+import { validate } from "node-cron";
 import z from "zod/v4";
 
-import { cronExpressionSchema, jobGroupKeys, jobNameSchema } from "@homarr/cron-job-api";
-import { cronJobApi } from "@homarr/cron-job-api/client";
 import type { TaskStatus } from "@homarr/cron-job-status";
 import { createCronJobStatusChannel } from "@homarr/cron-job-status";
+import { jobGroup } from "@homarr/cron-jobs";
 import { logger } from "@homarr/log";
+import { JobManager } from "@homarr/tasks";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
+
+export const cronExpressionSchema = z.string().refine((expression) => validate(expression), {
+  error: "Invalid cron expression",
+});
+
+export const jobGroupKeys = jobGroup.getKeys();
+export const jobNameSchema = z.enum(jobGroup.getKeys());
 
 export const cronJobsRouter = createTRPCRouter({
   triggerJob: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(jobNameSchema)
-    .mutation(async ({ input }) => {
-      await cronJobApi.trigger.mutate(input);
+    .mutation(async ({ input, ctx }) => {
+      await new JobManager(ctx.db, jobGroup).triggerAsync(input);
     }),
   startJob: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(jobNameSchema)
-    .mutation(async ({ input }) => {
-      await cronJobApi.start.mutate(input);
+    .mutation(async ({ input, ctx }) => {
+      await new JobManager(ctx.db, jobGroup).startAsync(input);
     }),
   stopJob: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(jobNameSchema)
-    .mutation(async ({ input }) => {
-      await cronJobApi.stop.mutate(input);
+    .mutation(async ({ input, ctx }) => {
+      await new JobManager(ctx.db, jobGroup).stopAsync(input);
     }),
   updateJobInterval: permissionRequiredProcedure
     .requiresPermission("admin")
@@ -36,23 +44,23 @@ export const cronJobsRouter = createTRPCRouter({
         cron: cronExpressionSchema,
       }),
     )
-    .mutation(async ({ input }) => {
-      await cronJobApi.updateInterval.mutate(input);
+    .mutation(async ({ input, ctx }) => {
+      await new JobManager(ctx.db, jobGroup).updateIntervalAsync(input.name, input.cron);
     }),
   disableJob: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(jobNameSchema)
-    .mutation(async ({ input }) => {
-      await cronJobApi.disable.mutate(input);
+    .mutation(async ({ input, ctx }) => {
+      await new JobManager(ctx.db, jobGroup).disableAsync(input);
     }),
   enableJob: permissionRequiredProcedure
     .requiresPermission("admin")
     .input(jobNameSchema)
-    .mutation(async ({ input }) => {
-      await cronJobApi.enable.mutate(input);
+    .mutation(async ({ input, ctx }) => {
+      await new JobManager(ctx.db, jobGroup).enableAsync(input);
     }),
-  getJobs: permissionRequiredProcedure.requiresPermission("admin").query(async () => {
-    return await cronJobApi.getAll.query();
+  getJobs: permissionRequiredProcedure.requiresPermission("admin").query(async ({ ctx }) => {
+    return await new JobManager(ctx.db, jobGroup).getAllAsync();
   }),
   subscribeToStatusUpdates: permissionRequiredProcedure.requiresPermission("admin").subscription(() => {
     return observable<TaskStatus>((emit) => {

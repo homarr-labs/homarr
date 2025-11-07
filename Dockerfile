@@ -1,16 +1,25 @@
 FROM node:24.11.0-alpine AS base
 
-FROM base AS builder
-RUN apk add --no-cache libc6-compat
-RUN apk update
-
-# Set working directory
 WORKDIR /app
 RUN apk add --no-cache libc6-compat curl bash
 RUN apk update
-COPY . .
 
-RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
+FROM base AS deps
+# Files required by pnpm install
+COPY pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+
+# If you patched any package, include patches before install too
+COPY patches patches
+
+RUN corepack enable pnpm && pnpm fetch
+
+#FROM base AS prod-deps
+#RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile --prod
+
+FROM deps AS builder
+
+COPY . .
+RUN pnpm install -r --offline
 
 # Copy static data as it is not part of the build
 COPY static-data ./static-data
@@ -51,7 +60,7 @@ COPY --from=builder /app/packages/db/migrations ./db/migrations
 COPY --from=builder /app/apps/nextjs/.next ./.next
 COPY --from=builder /app/apps/nextjs/public ./public
 COPY --from=builder /app/apps/nextjs/server.cjs ./server.cjs
-COPY --from=builder /app/apps/nextjs/node_modules ./node_modules
+COPY --from=builder /app/node_modules ./node_modules
 COPY scripts/run.sh ./run.sh
 COPY --chmod=777 scripts/entrypoint.sh ./entrypoint.sh
 COPY packages/redis/redis.conf /app/redis.conf

@@ -1,11 +1,20 @@
 import { schedule, validate as validateCron } from "node-cron";
 
-import type { IJobManager } from "@homarr/cron-job-api";
 import type { jobGroup as cronJobGroup, JobGroupKeys } from "@homarr/cron-jobs";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { cronJobConfigurations } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
+
+export interface IJobManager {
+  startAsync(name: JobGroupKeys): Promise<void>;
+  triggerAsync(name: JobGroupKeys): Promise<void>;
+  stopAsync(name: JobGroupKeys): Promise<void>;
+  updateIntervalAsync(name: JobGroupKeys, cron: string): Promise<void>;
+  disableAsync(name: JobGroupKeys): Promise<void>;
+  enableAsync(name: JobGroupKeys): Promise<void>;
+  getAllAsync(): Promise<{ name: JobGroupKeys; cron: string; preventManualExecution: boolean; isEnabled: boolean }[]>;
+}
 
 export class JobManager implements IJobManager {
   constructor(

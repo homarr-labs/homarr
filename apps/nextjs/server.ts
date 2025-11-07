@@ -1,19 +1,21 @@
 // This import has to be the first import in the file so that the agent is overridden before any other modules are imported.
-import "../../tasks/src/overrides";
+import "../tasks/src/overrides";
 
+import { createServer } from "http";
 import { parse } from "url";
 import next from "next";
-import { createServer } from "http";
-import { WebSocketServer } from "ws";
+import { PageNotFoundError } from "next/dist/shared/lib/utils";
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
+import { WebSocketServer } from "ws";
 
 import { appRouter, createTRPCContext } from "@homarr/api/websocket";
 import { getSessionFromToken, sessionTokenCookieName } from "@homarr/auth";
 import { parseCookies } from "@homarr/common";
+import { jobGroup } from "@homarr/cron-jobs";
 import { db } from "@homarr/db";
 import { logger } from "@homarr/log";
-import { jobGroup } from "@homarr/cron-jobs";
-import { onStartAsync } from "../../tasks/src/on-start";
+
+import { onStartAsync } from "../tasks/src/on-start";
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
@@ -28,7 +30,7 @@ let cronJobsInitialized = false;
 
 async function initializeCronJobs() {
   if (cronJobsInitialized) return;
-  
+
   try {
     await onStartAsync();
     await jobGroup.initializeAsync();
@@ -124,4 +126,3 @@ app.prepare().then(async () => {
   process.on("SIGTERM", shutdown);
   process.on("SIGINT", shutdown);
 });
-
