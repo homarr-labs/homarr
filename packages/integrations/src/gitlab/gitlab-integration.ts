@@ -108,7 +108,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
 
       return {
         projectUrl: response.web_url,
-        projectDescription: response.description,
+        projectDescription: response.description ?? undefined,
         isFork: response.forked_from_project !== null,
         isArchived: response.archived,
         createdAt: new Date(response.created_at),

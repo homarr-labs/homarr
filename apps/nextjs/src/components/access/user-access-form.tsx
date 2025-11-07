@@ -1,11 +1,10 @@
 import { useState } from "react";
-import Link from "next/link";
 import { Anchor, Box, Button, Group, Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
 import { useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { UserAvatar } from "@homarr/ui";
+import { Link, UserAvatar } from "@homarr/ui";
 
 import type { AccessQueryData } from "./access-settings";
 import { AccessDisplayRow, AccessSelectRow } from "./access-table-rows";

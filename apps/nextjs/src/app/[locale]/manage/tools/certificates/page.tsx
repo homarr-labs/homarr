@@ -1,5 +1,4 @@
 import { X509Certificate } from "node:crypto";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { IconAlertTriangle, IconCertificate, IconCertificateOff } from "@tabler/icons-react";
@@ -10,6 +9,7 @@ import { loadCustomRootCertificatesAsync } from "@homarr/certificates/server";
 import { getMantineColor } from "@homarr/common";
 import type { SupportedLanguage } from "@homarr/translation";
 import { getI18n } from "@homarr/translation/server";
+import { Link } from "@homarr/ui";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";

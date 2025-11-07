@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import type { DragEndEvent, DraggableAttributes, DragStartEvent } from "@dnd-kit/core";
 import {
   closestCenter,
@@ -41,7 +40,7 @@ import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
-import { UserAvatarGroup } from "@homarr/ui";
+import { Link, UserAvatarGroup } from "@homarr/ui";
 
 interface GroupsTableProps {
   initialGroupIds: string[];

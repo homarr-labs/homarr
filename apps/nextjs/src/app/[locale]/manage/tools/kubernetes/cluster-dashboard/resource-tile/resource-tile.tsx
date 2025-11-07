@@ -1,11 +1,11 @@
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Card, Group, Text } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 
 import type { KubernetesLabelResourceType } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 import classes from "./resource-tile.module.css";
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { startTransition, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Alert,
@@ -36,6 +35,7 @@ import type { GetInputPropsReturnType, UseFormReturnType } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 import { appHrefSchema } from "@homarr/validation/app";
 import { integrationCreateSchema } from "@homarr/validation/integration";
 
