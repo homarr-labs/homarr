@@ -359,12 +359,15 @@ importers:
       concurrently:
         specifier: ^9.2.1
         version: 9.2.1
+      esbuild:
+        specifier: ^0.25.11
+        version: 0.25.11
       eslint:
         specifier: ^9.39.0
         version: 9.39.1
       node-loader:
         specifier: ^2.1.0
-        version: 2.1.0(webpack@5.94.0)
+        version: 2.1.0(webpack@5.94.0(esbuild@0.25.11))
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -17522,10 +17525,10 @@ snapshots:
     dependencies:
       rrule: 2.8.1
 
-  node-loader@2.1.0(webpack@5.94.0):
+  node-loader@2.1.0(webpack@5.94.0(esbuild@0.25.11)):
     dependencies:
       loader-utils: 2.0.4
-      webpack: 5.94.0
+      webpack: 5.94.0(esbuild@0.25.11)
 
   node-mock-http@1.0.2: {}
 
@@ -19490,14 +19493,16 @@ snapshots:
       type-fest: 2.19.0
       unique-string: 3.0.0
 
-  terser-webpack-plugin@5.3.14(webpack@5.94.0):
+  terser-webpack-plugin@5.3.14(esbuild@0.25.11)(webpack@5.94.0(esbuild@0.25.11)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.0
       serialize-javascript: 6.0.2
       terser: 5.39.0
-      webpack: 5.94.0
+      webpack: 5.94.0(esbuild@0.25.11)
+    optionalDependencies:
+      esbuild: 0.25.11
 
   terser@5.39.0:
     dependencies:
@@ -20269,7 +20274,7 @@ snapshots:
 
   webpack-virtual-modules@0.6.2: {}
 
-  webpack@5.94.0:
+  webpack@5.94.0(esbuild@0.25.11):
     dependencies:
       '@types/estree': 1.0.8
       '@webassemblyjs/ast': 1.14.1
@@ -20291,7 +20296,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.14(webpack@5.94.0)
+      terser-webpack-plugin: 5.3.14(esbuild@0.25.11)(webpack@5.94.0(esbuild@0.25.11))
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     transitivePeerDependencies:
