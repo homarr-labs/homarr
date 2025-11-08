@@ -48,7 +48,7 @@ async function getContainersWithStatsAsync() {
     if (!instance) return null;
 
     try {
-    const stats = await instance.getContainer(container.Id).stats({ stream: false, "one-shot": true });
+      const stats = await instance.getContainer(container.Id).stats({ stream: false, "one-shot": true });
 
       // Mark containers with invalid stats as orphaned (orphaned/errored containers)
       // These containers often have null/undefined cpu_stats.online_cpus
@@ -73,16 +73,16 @@ async function getContainersWithStatsAsync() {
       const cpuUsage = calculateCpuUsage(stats);
       const memoryUsage = calculateMemoryUsage(stats);
 
-    return {
-      id: container.Id,
-      name: container.Names[0]?.split("/")[1] ?? "Unknown",
-      state: container.State as ContainerState,
-      iconUrl:
-        dbIcons.find((icon) => {
-          const extractedImage = extractImage(container);
-          if (!extractedImage) return false;
-          return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
-        })?.url ?? null,
+      return {
+        id: container.Id,
+        name: container.Names[0]?.split("/")[1] ?? "Unknown",
+        state: container.State as ContainerState,
+        iconUrl:
+          dbIcons.find((icon) => {
+            const extractedImage = extractImage(container);
+            if (!extractedImage) return false;
+            return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
+          })?.url ?? null,
         cpuUsage,
         memoryUsage,
         image: container.Image,
@@ -102,9 +102,9 @@ async function getContainersWithStatsAsync() {
           })?.url ?? null,
         cpuUsage: 0,
         memoryUsage: 0,
-      image: container.Image,
-      ports: container.Ports,
-    };
+        image: container.Image,
+        ports: container.Ports,
+      };
     }
   });
 
