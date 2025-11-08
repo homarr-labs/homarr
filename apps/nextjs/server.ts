@@ -1,21 +1,11 @@
 // This import has to be the first import in the file so that the agent is overridden before any other modules are imported.
-import "../tasks/src/overrides";
+// import "../tasks/src/overrides";
 
 import { createServer } from "http";
 import { parse } from "url";
 import next from "next";
-import { PageNotFoundError } from "next/dist/shared/lib/utils";
-import { applyWSSHandler } from "@trpc/server/adapters/ws";
-import { WebSocketServer } from "ws";
 
-import { appRouter, createTRPCContext } from "@homarr/api/websocket";
-import { getSessionFromToken, sessionTokenCookieName } from "@homarr/auth";
-import { parseCookies } from "@homarr/common";
-import { jobGroup } from "@homarr/cron-jobs";
-import { db } from "@homarr/db";
 import { logger } from "@homarr/log";
-
-import { onStartAsync } from "../tasks/src/on-start";
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
@@ -25,7 +15,7 @@ const hostname = process.env.HOSTNAME || "localhost";
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
-// Initialize cron jobs and tasks
+/*// Initialize cron jobs and tasks
 let cronJobsInitialized = false;
 
 async function initializeCronJobs() {
@@ -41,11 +31,11 @@ async function initializeCronJobs() {
     logger.error(new Error("Failed to initialize cron jobs", { cause: error }));
     throw error;
   }
-}
+}*/
 
 app.prepare().then(async () => {
   // Initialize cron jobs before starting server
-  await initializeCronJobs();
+  // await initializeCronJobs();
 
   // Create HTTP server
   const server = createServer((req, res) => {
@@ -54,7 +44,7 @@ app.prepare().then(async () => {
   });
 
   // Create WebSocket server attached to HTTP server
-  const wss = new WebSocketServer({
+  /*const wss = new WebSocketServer({
     server,
     path: "/websockets",
   });
@@ -103,7 +93,7 @@ app.prepare().then(async () => {
     websocket.once("close", (code, reason) => {
       logger.info(`➖ WebSocket Connection (${wss.clients.size}) ${code} ${reason.toString()}`);
     });
-  });
+  });*/
 
   // Start server
   server.listen(port, () => {
@@ -114,13 +104,13 @@ app.prepare().then(async () => {
   // Handle graceful shutdown
   const shutdown = () => {
     logger.info("SIGTERM received, shutting down gracefully...");
-    handler.broadcastReconnectNotification();
-    wss.close(() => {
+    //handler.broadcastReconnectNotification();
+    /*wss.close(() => {
       server.close(() => {
         logger.info("Shutdown complete.");
         process.exit(0);
       });
-    });
+    });*/
   };
 
   process.on("SIGTERM", shutdown);
