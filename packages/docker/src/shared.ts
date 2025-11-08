@@ -10,4 +10,5 @@ export const containerStateColorMap = {
   exited: "red",
   removing: "pink",
   dead: "dark",
+  orphaned: "gray",
 } satisfies Record<ContainerState, MantineColor>;

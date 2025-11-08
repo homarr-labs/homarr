@@ -3549,7 +3549,8 @@
           "restarting": "正在重启",
           "exited": "已退出",
           "removing": "删除中",
-          "dead": "废弃"
+          "dead": "废弃",
+          "orphaned": "孤立"
         }
       },
       "stats": {

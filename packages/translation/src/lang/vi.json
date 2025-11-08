@@ -3549,7 +3549,8 @@
           "restarting": "Đang khởi động lại",
           "exited": "",
           "removing": "Đang xoá",
-          "dead": ""
+          "dead": "",
+          "orphaned": "Mồ côi"
         }
       },
       "stats": {

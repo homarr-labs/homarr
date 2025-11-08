@@ -3549,7 +3549,8 @@
           "restarting": "crwdns1910:0crwdne1910:0",
           "exited": "crwdns1912:0crwdne1912:0",
           "removing": "crwdns1914:0crwdne1914:0",
-          "dead": "crwdns1916:0crwdne1916:0"
+          "dead": "crwdns1916:0crwdne1916:0",
+          "orphaned": "crwdns1917:0crwdne1917:0"
         }
       },
       "stats": {

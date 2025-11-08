@@ -3549,7 +3549,8 @@
           "restarting": "Ponovno zaganjam",
           "exited": "",
           "removing": "Odstranjujem",
-          "dead": ""
+          "dead": "",
+          "orphaned": "Osirotelo"
         }
       },
       "stats": {

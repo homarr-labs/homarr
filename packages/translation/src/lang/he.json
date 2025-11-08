@@ -3549,7 +3549,8 @@
           "restarting": "מפעיל מחדש",
           "exited": "נסגר",
           "removing": "מסיר",
-          "dead": "מת"
+          "dead": "מת",
+          "orphaned": "יתום"
         }
       },
       "stats": {

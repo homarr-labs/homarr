@@ -3549,7 +3549,8 @@
           "restarting": "Γίνεται επανεκκίνηση",
           "exited": "",
           "removing": "Αφαιρείται",
-          "dead": ""
+          "dead": "",
+          "orphaned": "Ορφανό"
         }
       },
       "stats": {

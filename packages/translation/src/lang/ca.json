@@ -3549,7 +3549,8 @@
           "restarting": "",
           "exited": "",
           "removing": "",
-          "dead": ""
+          "dead": "",
+          "orphaned": "Orfe"
         }
       },
       "stats": {

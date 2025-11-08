@@ -3549,7 +3549,8 @@
           "restarting": "Yeniden Başlatılıyor",
           "exited": "Durduruldu",
           "removing": "Kaldırılıyor",
-          "dead": "Ölü"
+          "dead": "Ölü",
+          "orphaned": "Yetim"
         }
       },
       "stats": {
