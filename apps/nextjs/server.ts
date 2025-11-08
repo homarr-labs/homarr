@@ -7,40 +7,22 @@ import next from "next";
 
 import { logger } from "@homarr/log";
 
+// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
+// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 const hostname = process.env.HOSTNAME || "localhost";
 
 // Initialize Next.js app
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
-/*// Initialize cron jobs and tasks
-let cronJobsInitialized = false;
-
-async function initializeCronJobs() {
-  if (cronJobsInitialized) return;
-
-  try {
-    await onStartAsync();
-    await jobGroup.initializeAsync();
-    await jobGroup.startAllAsync();
-    cronJobsInitialized = true;
-    logger.info("✅ Cron jobs initialized successfully");
-  } catch (error) {
-    logger.error(new Error("Failed to initialize cron jobs", { cause: error }));
-    throw error;
-  }
-}*/
-
-app.prepare().then(async () => {
-  // Initialize cron jobs before starting server
-  // await initializeCronJobs();
-
+void app.prepare().then(() => {
   // Create HTTP server
   const server = createServer((req, res) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const parsedUrl = parse(req.url!, true);
-    handle(req, res, parsedUrl);
+    void handle(req, res, parsedUrl);
   });
 
   // Create WebSocket server attached to HTTP server
@@ -95,10 +77,14 @@ app.prepare().then(async () => {
     });
   });*/
 
+  // Initialize cron jobs before starting server
+
   // Start server
   server.listen(port, () => {
     logger.info(`✅ Next.js server ready on http://${hostname}:${port}`);
     logger.info(`✅ WebSocket server ready on ws://${hostname}:${port}/websockets`);
+
+    void import("./run");
   });
 
   // Handle graceful shutdown

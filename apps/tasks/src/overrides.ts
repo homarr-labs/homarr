@@ -1,7 +1,7 @@
-import { createRequire } from "module";
+//import { createRequire } from "module";
 // Fix for https://github.com/vercel/turborepo/issues/3319
 
-import { AsyncLocalStorage } from "node:async_hooks";
+//import { AsyncLocalStorage } from "node:async_hooks";
 import { setGlobalDispatcher } from "undici";
 
 import { LoggingAgent } from "@homarr/common/server";
