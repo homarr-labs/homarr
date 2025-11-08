@@ -1,9 +1,9 @@
 // Importing env files here to validate on build
-import "../../packages/auth/env";
-import "../../packages/db/env";
-import "../../packages/common/env";
-import "../../packages/log/src/env";
-import "../../packages/docker/src/env";
+import "@homarr/auth/env";
+import "@homarr/db/env";
+import "@homarr/common/env";
+import "@homarr/log/env";
+import "@homarr/docker/env";
 
 import type { NextConfig } from "next";
 import MillionLint from "@million/lint";
