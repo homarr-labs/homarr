@@ -117,22 +117,15 @@ async function getContainersWithStatsAsync() {
  * or missing cpu_stats/memory_stats entirely.
  */
 function isStatsValid(stats: ContainerStats): boolean {
-  // Check if cpu_stats exists and has valid online_cpus
-  if (!stats.cpu_stats || stats.cpu_stats.online_cpus == null || stats.cpu_stats.online_cpus === 0) {
-    return false;
-  }
-
-  // Check if memory_stats exists
-  if (!stats.memory_stats || stats.memory_stats.usage == null) {
-    return false;
-  }
-
-  // Check if cpu_usage exists
-  if (!stats.cpu_stats.cpu_usage || stats.cpu_stats.cpu_usage.total_usage == null) {
-    return false;
-  }
-
-  return true;
+  return (
+    stats.cpu_stats != null &&
+    stats.cpu_stats.online_cpus != null &&
+    stats.cpu_stats.online_cpus !== 0 &&
+    stats.memory_stats != null &&
+    stats.memory_stats.usage != null &&
+    stats.cpu_stats.cpu_usage != null &&
+    stats.cpu_stats.cpu_usage.total_usage != null
+  );
 }
 
 function calculateCpuUsage(stats: ContainerStats): number {
