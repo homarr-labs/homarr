@@ -4,8 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm with-env next build && pnpm build:server && pnpm build:config",
-    "build:config": "esbuild next.config.ts --bundle --platform=node --outfile=next.config.js",
+    "build": "pnpm with-env next build && pnpm build:server",
     "build:server": "esbuild server.ts --bundle --platform=node --outfile=server.cjs --external:next --external:react --external:react-dom --loader:.scss=text --external:*.node --external:@opentelemetry/api --external:deasync --external:bcrypt",
     "clean": "git clean -xdf .next .turbo node_modules server.cjs",
     "dev": "pnpm with-env next dev",

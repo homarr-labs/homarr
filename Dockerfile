@@ -49,7 +49,6 @@ RUN mkdir -p /var/cache/nginx && \
     touch /run/nginx/nginx.pid && \
     mkdir -p /etc/nginx/templates /etc/nginx/ssl/certs
 
-#COPY --from=builder /app/apps/nextjs/next.config.ts .
 COPY --from=builder /app/apps/nextjs/package.json .
 
 COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
@@ -60,7 +59,6 @@ COPY --from=builder /app/packages/db/migrations ./db/migrations
 COPY --from=builder /app/apps/nextjs/.next ./.next
 COPY --from=builder /app/apps/nextjs/public ./public
 COPY --from=builder /app/apps/nextjs/server.cjs ./server.cjs
-#COPY --from=builder /app/apps/nextjs/next.config.js ./next.config.js
 COPY --from=builder /app/node_modules ./node_modules
 COPY scripts/run.sh ./run.sh
 COPY --chmod=777 scripts/entrypoint.sh ./entrypoint.sh
