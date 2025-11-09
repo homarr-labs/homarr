@@ -1,0 +1,89 @@
+"use client";
+
+import { useState } from "react";
+import { Box, Card, Group, Stack, useMantineColorScheme } from "@mantine/core";
+
+import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
+
+import type { WidgetComponentProps } from "../definition";
+import { NoIntegrationDataError } from "../errors/no-data-integration";
+
+export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemDisks">) {
+  const [data] = clientApi.widget.healthMonitoring.getSystemHealthStatus.useSuspenseQuery({
+    integrationIds,
+  });
+
+  const board = useRequiredBoard();
+  const scheme = useMantineColorScheme();
+
+  const lastItem = data.at(-1);
+
+  if (!lastItem) return null;
+
+  const [disks, setDisks] = useState<{
+    fileSystem: { deviceName: string; used: string; available: string; percentage: number }[];
+    smart: { deviceName: string; temperature: number | null; healthy: boolean }[];
+  }>({
+    fileSystem: lastItem.healthInfo.fileSystem,
+    smart: lastItem.healthInfo.smart,
+  });
+
+  clientApi.widget.healthMonitoring.subscribeSystemHealthStatus.useSubscription(
+    {
+      integrationIds,
+    },
+    {
+      onData(data) {
+        setDisks({
+          fileSystem: data.healthInfo.fileSystem,
+          smart: data.healthInfo.smart,
+        });
+      },
+    },
+  );
+
+  if (disks.fileSystem.length === 0) {
+    throw new NoIntegrationDataError();
+  }
+
+  return (
+    <Stack gap="xs" p="xs" h="100%">
+      {disks.fileSystem.map((item) => {
+        const smart = disks.smart.find((smart) => smart.deviceName === item.deviceName);
+        const healthy = smart?.healthy ?? true; // fall back to healthy if no information is available
+
+        return (
+          <Card
+            radius={board.itemRadius}
+            py={"xs"}
+            bg={scheme.colorScheme === "dark" ? "dark.7" : "gray.1"}
+            key={`disk-${item.deviceName}`}
+            style={{ overflow: "hidden", position: "relative" }}
+          >
+            <Group justify="space-between" style={{ zIndex: 1 }}>
+              <div>
+                <p style={{ margin: 0 }}>
+                  <b>{item.deviceName}</b>
+                </p>
+                <p style={{ margin: 0 }}>
+                  <span>{Math.round(item.percentage)}%</span>
+                  {!healthy && <span style={{ marginLeft: 5 }}>Unhealthy</span>}
+                </p>
+              </div>
+              <div>
+                {smart?.temperature && options.showTemperatureIfAvailable && (
+                  <p style={{ margin: 0 }}>{smart.temperature}°C</p>
+                )}
+              </div>
+            </Group>
+            <Box
+              bg={healthy ? "green" : "red"}
+              style={{ position: "absolute", top: 0, left: 0, width: `${item.percentage}%`, height: "100%", zIndex: 0 }}
+            ></Box>
+          </Card>
+        );
+      })}
+    </Stack>
+  );
+}

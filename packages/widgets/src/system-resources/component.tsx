@@ -4,18 +4,13 @@ import { useState } from "react";
 import { Box, Group, Stack } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 
-
-
 import { clientApi } from "@homarr/api/client";
-
-
 
 import type { WidgetComponentProps } from "../definition";
 import { CombinedNetworkTrafficChart } from "./chart/combined-network-traffic";
 import { SystemResourceCPUChart } from "./chart/cpu-chart";
 import { SystemResourceMemoryChart } from "./chart/memory-chart";
 import { NetworkTrafficChart } from "./chart/network-traffic";
-
 
 const MAX_QUEUE_SIZE = 15;
 
