@@ -7,8 +7,8 @@ mkdir -p /appdata/trusted-certificates
 if [ $DB_MIGRATIONS_DISABLED = "true" ]; then
   echo "DB migrations are disabled, skipping"
 else
-    echo "Running DB migrations"
-    node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
+  echo "Running DB migrations"
+  node ./db/migrations/$DB_DIALECT/migrate.cjs ./db/migrations/$DB_DIALECT
 fi
 
 # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
@@ -35,19 +35,14 @@ fi
 
 
 
-node apps/tasks/tasks.cjs &
-TASKS_PID=$!
-
-node apps/websocket/wssServer.cjs &
-WSS_PID=$!
-
-node apps/nextjs/server.js &
+# Start consolidated Next.js server (includes tasks API and WebSocket)
+node server.cjs &
 NEXTJS_PID=$!
 
 # Function to handle SIGTERM and shut down services
 terminate() {
     echo "Received SIGTERM. Shutting down..."
-    kill -TERM $NGINX_PID $TASKS_PID $WSS_PID $NEXTJS_PID 2>/dev/null
+    kill -TERM $NGINX_PID $NEXTJS_PID 2>/dev/null
     wait
     # kill redis-server last because of logging of other services
     kill -TERM $REDIS_PID 2>/dev/null
@@ -62,3 +57,4 @@ trap terminate TERM INT
 # Wait for all processes
 wait $NEXTJS_PID
 terminate
+

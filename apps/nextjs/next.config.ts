@@ -18,7 +18,8 @@ const withNextIntl = createNextIntlPlugin({
 });
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // Removed standalone mode to enable custom server with WebSocket support
+  // output: "standalone",
   reactStrictMode: true,
   reactCompiler: true,
   /** We already do typechecking as separate tasks in CI */
@@ -72,8 +73,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-// Skip transform is used because of webpack loader, without it for example 'Tooltip.Floating' will not work and show an error
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const withMillionLint = MillionLint.next({ rsc: true, skipTransform: true, telemetry: false });
 
 export default withNextIntl(nextConfig);

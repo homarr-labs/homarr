@@ -43,17 +43,15 @@ RUN mkdir -p /var/cache/nginx && \
 COPY --from=builder /app/apps/nextjs/next.config.ts .
 COPY --from=builder /app/apps/nextjs/package.json .
 
-COPY --from=builder /app/apps/tasks/tasks.cjs ./apps/tasks/tasks.cjs
-COPY --from=builder /app/apps/websocket/wssServer.cjs ./apps/websocket/wssServer.cjs
 COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
 
 COPY --from=builder /app/packages/db/migrations ./db/migrations
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder /app/apps/nextjs/.next/standalone ./
-COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
-COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
+# Copy Next.js build output (no longer using standalone mode)
+COPY --from=builder /app/apps/nextjs/.next ./.next
+COPY --from=builder /app/apps/nextjs/public ./public
+COPY --from=builder /app/apps/nextjs/server.cjs ./server.cjs
+COPY --from=builder /app/apps/nextjs/node_modules ./node_modules
 COPY scripts/run.sh ./run.sh
 COPY --chmod=777 scripts/entrypoint.sh ./entrypoint.sh
 COPY packages/redis/redis.conf /app/redis.conf
@@ -69,3 +67,4 @@ ENV NODE_ENV='production'
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD ["sh", "run.sh"]
+
