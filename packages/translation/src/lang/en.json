@@ -2591,6 +2591,15 @@
         "up": "UP",
         "down": "DOWN"
       }
+    },
+    "systemDisks": {
+      "name": "System disks",
+      "description": "Disk usage of your system",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "Show temperature if available"
+        }
+      }
     }
   },
   "widgetPreview": {
