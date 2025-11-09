@@ -57,6 +57,8 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
   const hasNext = active < stepperMax;
   const hasPrevious = active > 0;
 
+  console.log(active);
+
   const { mutateAsync, isPending } = clientApi.user.create.useMutation({
     onError(error) {
       showErrorNotification({
@@ -115,9 +117,10 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
 
   const allForms = useMemo(() => [generalForm, securityForm, groupsForm], [generalForm, securityForm, groupsForm]);
 
-  const activeForm = allForms[active];
-  const isCurrentFormValid = activeForm ? activeForm.isValid : () => true;
-  const canNavigateToNextStep = isCurrentFormValid();
+  // TypeScript is unable to handle the conversion of 'isValid' and breaks React re-rendering. This is a bandage fix to prevent this from happening.
+  // @ts-expect-error @typescript-eslint/no-unsafe-return
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-return
+  const currentFormValid: boolean = useMemo(() => allForms[active]?.isValid?.(), [allForms, active]);
 
   const controlledGoToNextStep = useCallback(async () => {
     if (active + 1 === stepperMax) {
@@ -218,7 +221,7 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
         </Stepper.Completed>
       </Stepper>
       <StepperNavigationComponent
-        hasNext={hasNext && canNavigateToNextStep}
+        hasNext={hasNext && currentFormValid}
         hasPrevious={hasPrevious}
         isComplete={active === stepperMax}
         isLoadingNextStep={isPending}
