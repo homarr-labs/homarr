@@ -3549,8 +3549,7 @@
           "restarting": "Starter på nytt",
           "exited": "Avsluttet",
           "removing": "Fjerner",
-          "dead": "Død",
-          "orphaned": "Foreldreløs"
+          "dead": "Død"
         }
       },
       "stats": {

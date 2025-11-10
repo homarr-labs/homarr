@@ -3549,8 +3549,7 @@
           "restarting": "Restartování",
           "exited": "",
           "removing": "Odstraňování",
-          "dead": "",
-          "orphaned": "Osamocený"
+          "dead": ""
         }
       },
       "stats": {

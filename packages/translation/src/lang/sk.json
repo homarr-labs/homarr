@@ -3549,8 +3549,7 @@
           "restarting": "Reštartovanie",
           "exited": "Ukončené",
           "removing": "Odstraňujem",
-          "dead": "Mŕtvy",
-          "orphaned": "Osirelý"
+          "dead": "Mŕtvy"
         }
       },
       "stats": {

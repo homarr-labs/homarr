@@ -3549,8 +3549,7 @@
           "restarting": "Paleidžiama iš naujo",
           "exited": "",
           "removing": "Trinamas",
-          "dead": "",
-          "orphaned": "Apleistas"
+          "dead": ""
         }
       },
       "stats": {

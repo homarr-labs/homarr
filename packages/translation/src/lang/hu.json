@@ -3549,8 +3549,7 @@
           "restarting": "Újraindítás",
           "exited": "",
           "removing": "Eltávolítás",
-          "dead": "",
-          "orphaned": "Árva"
+          "dead": ""
         }
       },
       "stats": {

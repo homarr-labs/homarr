@@ -3549,8 +3549,7 @@
           "restarting": "Restarting",
           "exited": "Exited",
           "removing": "Removing",
-          "dead": "Dead",
-          "orphaned": "Orphaned"
+          "dead": "Dead"
         }
       },
       "stats": {

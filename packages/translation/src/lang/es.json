@@ -3549,8 +3549,7 @@
           "restarting": "Reiniciando",
           "exited": "Finalizado",
           "removing": "Eliminando",
-          "dead": "Caido",
-          "orphaned": "Huérfano"
+          "dead": "Caido"
         }
       },
       "stats": {

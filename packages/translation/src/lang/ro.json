@@ -3549,8 +3549,7 @@
           "restarting": "Repornire",
           "exited": "",
           "removing": "Eliminare",
-          "dead": "",
-          "orphaned": "Orfan"
+          "dead": ""
         }
       },
       "stats": {

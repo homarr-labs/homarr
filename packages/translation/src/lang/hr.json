@@ -3549,8 +3549,7 @@
           "restarting": "Ponovno pokretanje",
           "exited": "",
           "removing": "Uklanjam",
-          "dead": "",
-          "orphaned": "Napušten"
+          "dead": ""
         }
       },
       "stats": {

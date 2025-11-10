@@ -3549,8 +3549,7 @@
           "restarting": "Startar om",
           "exited": "",
           "removing": "Tar bort",
-          "dead": "",
-          "orphaned": "Övergiven"
+          "dead": ""
         }
       },
       "stats": {

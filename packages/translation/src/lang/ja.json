@@ -3549,8 +3549,7 @@
           "restarting": "再起動中",
           "exited": "終了",
           "removing": "削除中",
-          "dead": "死亡",
-          "orphaned": "孤立"
+          "dead": "死亡"
         }
       },
       "stats": {

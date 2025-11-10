@@ -3549,8 +3549,7 @@
           "restarting": "Genstarter",
           "exited": "Afsluttet",
           "removing": "Fjerner",
-          "dead": "Død",
-          "orphaned": "Forladt"
+          "dead": "Død"
         }
       },
       "stats": {

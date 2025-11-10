@@ -3549,8 +3549,7 @@
           "restarting": "Restartējas",
           "exited": "",
           "removing": "Noņemšana",
-          "dead": "",
-          "orphaned": "Pamests"
+          "dead": ""
         }
       },
       "stats": {

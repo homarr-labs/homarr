@@ -3549,8 +3549,7 @@
           "restarting": "다시 시작",
           "exited": "",
           "removing": "제거",
-          "dead": "",
-          "orphaned": "고아"
+          "dead": ""
         }
       },
       "stats": {

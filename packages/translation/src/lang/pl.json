@@ -3549,8 +3549,7 @@
           "restarting": "Restartowanie",
           "exited": "Zakończony",
           "removing": "Usuwanie",
-          "dead": "Martwy",
-          "orphaned": "Osierocony"
+          "dead": "Martwy"
         }
       },
       "stats": {
