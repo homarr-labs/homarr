@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useCallback, useMemo, useState } from "react";
+import { startTransition, useCallback, useState } from "react";
 import {
   Badge,
   Button,
@@ -20,9 +20,9 @@ import { IconPlus, IconUserCheck } from "@tabler/icons-react";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
-import { everyoneGroup, groupPermissions } from "@homarr/definitions";
 import type { GroupPermissionKey } from "@homarr/definitions";
-import { useZodForm } from "@homarr/form";
+import { everyoneGroup, groupPermissions } from "@homarr/definitions";
+import { IsValid, useZodForm } from "@homarr/form";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
@@ -56,8 +56,6 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
   const prevStep = useCallback(() => setActive((current) => (current > 0 ? current - 1 : current)), [setActive]);
   const hasNext = active < stepperMax;
   const hasPrevious = active > 0;
-
-  console.log(active);
 
   const { mutateAsync, isPending } = clientApi.user.create.useMutation({
     onError(error) {
@@ -115,12 +113,9 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
     },
   );
 
-  const allForms = useMemo(() => [generalForm, securityForm, groupsForm], [generalForm, securityForm, groupsForm]);
-
-  // TypeScript is unable to handle the conversion of 'isValid' and breaks React re-rendering. This is a bandage fix to prevent this from happening.
-  // @ts-expect-error @typescript-eslint/no-unsafe-return
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-return
-  const currentFormValid: boolean = useMemo(() => allForms[active]?.isValid?.(), [allForms, active]);
+  const allForms = [generalForm, securityForm, groupsForm];
+  const isValidCallback: IsValid<unknown> | undefined = allForms[active]?.isValid;
+  const currentFormValid = isValidCallback?.() ?? true;
 
   const controlledGoToNextStep = useCallback(async () => {
     if (active + 1 === stepperMax) {
