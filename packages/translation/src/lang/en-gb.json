@@ -754,86 +754,86 @@
             "notFound": "Not found",
             "tooManyRequests": "Too many requests",
             "internalServerError": "Internal server error",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "serviceUnavailable": "Service unavailable",
+            "gatewayTimeout": "Gateway timeout"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Certificate error",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "The certificate has expired.",
+            "notYetValid": "The certificate is not yet valid.",
+            "untrusted": "The certificate is not trusted.",
+            "hostnameMismatch": "The certificate hostname does not match the URL."
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "Not enough permissions",
+              "message": "You are not allowed to trust or upload certificates. Please contact your administrator to upload the necessary root certificate."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "Hostname mismatch",
+              "message": "The hostname in the certificate does not match the hostname you are connecting to. This could indicate a security risk, but you can still choose to trust this certificate."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "CA certificate extraction failed",
+              "message": "Only self-signed certificates without a chain can be fetched automatically. If you are using a self-signed certificate, please make sure to upload the CA certificate manually. You can find instructions on how to do this <docsLink></docsLink>."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Retry creation"
             },
             "trust": {
-              "label": ""
+              "label": "Trust certificate"
             },
             "upload": {
-              "label": ""
+              "label": "Upload certificate"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Trust hostname mismatch",
+              "message": "Are you sure you want to trust the certificate with a hostname mismatch?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Trusted certificate",
+                "message": "Added hostname to trusted certificate list"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Failed to trust certificate",
+                "message": "The certificate with a hostname mismatch could not be trusted"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Trust self-signed certificate",
+              "message": "Are you sure you want to trust this self-signed certificate?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Trusted certificate",
+                "message": "Added certificate to trusted certificate list"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Failed to trust certificate",
+                "message": "Failed to add certificate to trusted certificate list"
               }
             }
           },
           "details": {
-            "title": "",
-            "description": "",
+            "title": "Details",
+            "description": "Review the certificate information before deciding to trust it.",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "Show content",
+              "title": "PEM Certificate"
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "Request error",
           "description": {
             "connection": {
               "hostUnreachable": "",
@@ -4456,50 +4456,50 @@
         "title": "",
         "description": "",
         "noResults": {
-          "title": ""
+          "title": "There are no hostnames yet"
         },
-        "toCertificates": ""
+        "toCertificates": "Certificates"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Add certificate",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Certificate added",
+            "message": "The certificate was added successfully"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Failed to add certificate",
+            "message": "The certificate could not be added"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "Remove certificate",
+        "confirm": "Are you sure you want to remove the certificate?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Certificate removed",
+            "message": "The certificate was removed successfully"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Certificate not removed",
+            "message": "The certificate could not be removed"
           }
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "Remove trusted hostname",
+        "confirm": "Are you sure you want to remove this trusted hostname? This can cause some integrations to stop working.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Hostname removed",
+            "message": "The hostname was removed successfully"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Hostname not removed",
+            "message": "The hostname could not be removed"
           }
         }
       }
@@ -4508,10 +4508,10 @@
   "log": {
     "level": {
       "option": {
-        "debug": "",
-        "info": "",
-        "warn": "",
-        "error": ""
+        "debug": "Debug",
+        "info": "Info",
+        "warn": "Warn",
+        "error": "Error"
       }
     }
   }

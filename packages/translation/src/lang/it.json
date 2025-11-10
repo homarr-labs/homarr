@@ -653,10 +653,10 @@
               "label": "Seleziona app esistente"
             },
             "new": {
-              "title": "",
+              "title": "Nuovo",
               "url": {
                 "label": "Url app",
-                "description": ""
+                "description": "L'Url che l'app aprirà quando vi si accede dalla dashboard"
               }
             }
           }
@@ -676,9 +676,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Collega un'app",
+            "remove": "Scollega",
+            "select": "Seleziona un'app da collegare"
           }
         }
       },
@@ -709,7 +709,7 @@
         "description": "Integrazione \"{kind}\" può essere utilizzato con i motori di ricerca. Selezionare questa opzione per configurare automaticamente il motore di ricerca."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "App Collegata"
       },
       "createApp": {
         "label": "Crea app",
@@ -1051,7 +1051,7 @@
       "add": "Aggiungi",
       "apply": "Applica",
       "backToOverview": "Torna alla panoramica",
-      "change": "",
+      "change": "Cambia",
       "create": "Crea",
       "createAnother": "",
       "edit": "Modifica",
@@ -2103,7 +2103,7 @@
         },
         "index": {
           "columnTitle": "#",
-          "detailsTitle": ""
+          "detailsTitle": "Indice corrente all'interno del client"
         },
         "id": {
           "columnTitle": "Id"
@@ -2949,7 +2949,7 @@
       },
       "breakpoint": {
         "label": "",
-        "description": ""
+        "description": "Il layout verrà utilizzato su tutti gli schermi più grandi di questo breakpoint fino al breakpoint più grande successivo."
       }
     }
   },
@@ -3013,7 +3013,7 @@
           "integration": "Integrazioni",
           "app": "Applicazioni",
           "group": "Gruppi",
-          "searchEngine": "",
+          "searchEngine": "Motori di ricerca",
           "media": "Media"
         },
         "statisticLabel": {
@@ -3023,8 +3023,8 @@
           "authorization": "Autorizzazione"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Bentornato sulla tua",
+          "subtitle": "{app} Board"
         }
       },
       "board": {
@@ -3358,7 +3358,7 @@
               "label": "Controllo aggiornamenti"
             },
             "mediaTranscoding": {
-              "label": ""
+              "label": "Transcodifica del media"
             },
             "networkController": {
               "label": "Controller di rete"
@@ -3510,7 +3510,7 @@
             "subtitle": "{count} utilizzato nel Codice di Homarr"
           },
           "hotkeys": {
-            "title": "",
+            "title": "Tasti di scelta rapida",
             "subtitle": "Scorciatoie da tastiera per migliorare il flusso di lavoro",
             "field": {
               "shortcut": "Scorciatoia",
@@ -3520,7 +3520,7 @@
               "toggleBoardEdit": "",
               "toggleColorScheme": "",
               "saveNotebook": "",
-              "openSpotlight": ""
+              "openSpotlight": "Apri ricerca"
             },
             "note": ""
           }

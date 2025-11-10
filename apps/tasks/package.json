@@ -50,7 +50,7 @@
     "@types/node": "^24.10.0",
     "dotenv-cli": "^11.0.0",
     "esbuild": "^0.25.12",
-    "eslint": "^9.39.0",
+    "eslint": "^9.39.1",
     "prettier": "^3.6.2",
     "tsx": "4.20.4",
     "typescript": "^5.9.3"
