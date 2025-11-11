@@ -1443,8 +1443,8 @@ importers:
         specifier: ^7.5.0
         version: 7.5.0
       '@ctrl/qbittorrent':
-        specifier: ^9.10.0
-        version: 9.10.0
+        specifier: ^9.11.0
+        version: 9.11.0
       '@ctrl/transmission':
         specifier: ^7.4.0
         version: 7.4.0
@@ -2776,8 +2776,8 @@ packages:
     resolution: {integrity: sha512-4pa9hnMWmgoGl+5HJ/B9d5ugIr105AGD3rsTSlE8pTR7d2+xrEhLPCKRp/Y6k/k9Fo6DaJ1FRgwRxdi60vmxtg==}
     engines: {node: '>=18'}
 
-  '@ctrl/qbittorrent@9.10.0':
-    resolution: {integrity: sha512-t73xR2NcTj8tOxLEJzX+smCHLUFLtJvdUAPeo2KKLmlPw0cbGDd/qN615t979oJB6F0mxVQ5/wNx5/zYN1SGkw==}
+  '@ctrl/qbittorrent@9.11.0':
+    resolution: {integrity: sha512-mltiPLncdpAHrRbd2H8uy9nTgFhk0urcmkHxCDHcJehRvgd6ta2qnhQ2aO0KI8lgNDvHfmiNh4FAx0yoPBz8Xg==}
     engines: {node: '>=18'}
 
   '@ctrl/shared-torrent@6.3.0':
@@ -10141,6 +10141,10 @@ packages:
     resolution: {integrity: sha512-wQ531tuWvB6oK+pchHIu5lHe5f5wpSCqB8Kf4dWQRbOYc9HTge7JL0G4Qd44bh6QuJCccIzL3bugb8GI0MwHrg==}
     engines: {node: '>=20'}
 
+  type-fest@5.2.0:
+    resolution: {integrity: sha512-xxCJm+Bckc6kQBknN7i9fnP/xobQRsRQxR01CztFkp/h++yfVxUUcmMgfR2HttJx/dpWjS9ubVuyspJv24Q9DA==}
+    engines: {node: '>=20'}
+
   type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
@@ -11224,23 +11228,19 @@ snapshots:
       rfc4648: 1.5.4
       uint8array-extras: 1.5.0
 
-  '@ctrl/qbittorrent@9.10.0':
+  '@ctrl/qbittorrent@9.11.0':
     dependencies:
       '@ctrl/magnet-link': 4.2.0
-      '@ctrl/shared-torrent': 6.5.0(ofetch@1.4.1)
+      '@ctrl/shared-torrent': 6.5.0(ofetch@1.5.1)
       '@ctrl/torrent-file': 4.4.0
       cookie: 1.0.2
       node-fetch-native: 1.6.7
-      ofetch: 1.4.1
-      type-fest: 5.1.0
+      ofetch: 1.5.1
+      type-fest: 5.2.0
       ufo: 1.6.1
       uint8array-extras: 1.5.0
 
   '@ctrl/shared-torrent@6.3.0(ofetch@1.4.1)':
-    dependencies:
-      ofetch: 1.4.1
-
-  '@ctrl/shared-torrent@6.5.0(ofetch@1.4.1)':
     dependencies:
       ofetch: 1.4.1
 
@@ -19729,6 +19729,10 @@ snapshots:
   type-fest@4.41.0: {}
 
   type-fest@5.1.0:
+    dependencies:
+      tagged-tag: 1.0.0
+
+  type-fest@5.2.0:
     dependencies:
       tagged-tag: 1.0.0
 
