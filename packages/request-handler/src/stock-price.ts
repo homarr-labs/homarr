@@ -20,11 +20,19 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
     if (data.chart.result.length !== 1) {
       throw new Error("Received multiple results");
     }
-    if (!data.chart.result[0]) {
+    const firstResult = data.chart.result[0];
+    if (!firstResult) {
       throw new Error("Received invalid data");
     }
-
-    return data.chart.result[0];
+    return {
+      priceHistory:
+        firstResult.indicators.quote[0]?.close.filter(
+          // Filter out null values from price arrays (Yahoo Finance returns null for missing data points)
+          (value) => value !== null && value !== undefined,
+        ) ?? [],
+      symbol: firstResult.meta.symbol,
+      shortName: firstResult.meta.shortName,
+    };
   },
   cacheDuration: dayjs.duration(5, "minutes"),
 });
@@ -43,7 +51,7 @@ const dataSchema = z
             indicators: z.object({
               quote: z.array(
                 z.object({
-                  close: z.array(z.number()),
+                  close: z.array(z.number().nullish()),
                 }),
               ),
             }),
