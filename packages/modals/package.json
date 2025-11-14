@@ -24,15 +24,15 @@
   "dependencies": {
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
-    "@mantine/core": "^8.3.6",
-    "@mantine/hooks": "^8.3.6",
+    "@mantine/core": "^8.3.7",
+    "@mantine/hooks": "^8.3.7",
     "react": "19.2.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.0",
+    "eslint": "^9.39.1",
     "typescript": "^5.9.3"
   }
 }

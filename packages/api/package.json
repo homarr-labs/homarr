@@ -43,7 +43,7 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@kubernetes/client-node": "^1.4.0",
-    "@tanstack/react-query": "^5.90.6",
+    "@tanstack/react-query": "^5.90.7",
     "@trpc/client": "^11.7.1",
     "@trpc/react-query": "^11.7.1",
     "@trpc/server": "^11.7.1",
@@ -60,7 +60,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.0",
+    "eslint": "^9.39.1",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3"
   }

@@ -48,9 +48,9 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/ui": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@mantine/charts": "^8.3.6",
-    "@mantine/core": "^8.3.6",
-    "@mantine/hooks": "^8.3.6",
+    "@mantine/charts": "^8.3.7",
+    "@mantine/core": "^8.3.7",
+    "@mantine/hooks": "^8.3.7",
     "@tabler/icons-react": "^3.35.0",
     "@tiptap/extension-color": "2.27.1",
     "@tiptap/extension-highlight": "2.27.1",
@@ -85,7 +85,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/video.js": "^7.3.58",
-    "eslint": "^9.39.0",
+    "eslint": "^9.39.1",
     "typescript": "^5.9.3"
   }
 }
