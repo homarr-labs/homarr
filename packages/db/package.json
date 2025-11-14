@@ -69,7 +69,7 @@
     "@types/better-sqlite3": "7.6.13",
     "@types/pg": "^8.15.6",
     "dotenv-cli": "^11.0.0",
-    "esbuild": "^0.25.12",
+    "esbuild": "^0.26.0",
     "eslint": "^9.39.1",
     "prettier": "^3.6.2",
     "tsx": "4.20.4",
