@@ -10,7 +10,7 @@ overrides:
   axios@>=1.0.0 <1.8.2: '>=1.13.2'
   brace-expansion@>=2.0.0 <=2.0.1: '>=4.0.1'
   brace-expansion@>=1.0.0 <=1.1.11: '>=4.0.1'
-  esbuild@<=0.24.2: '>=0.25.12'
+  esbuild@<=0.24.2: '>=0.26.0'
   form-data@>=4.0.0 <4.0.4: '>=4.0.4'
   hono@<4.6.5: '>=4.10.4'
   linkifyjs@<4.3.2: '>=4.3.2'
@@ -6538,7 +6538,7 @@ packages:
   esbuild-register@3.6.0:
     resolution: {integrity: sha512-H2/S7Pm8a9CL1uhp9OvjwrBh5Pvx0H8qVOxNu8Wed9Y7qv56MPtq+GGM8RJpq6glYJn9Wspr8uw7l55uyinNeg==}
     peerDependencies:
-      esbuild: '>=0.25.12'
+      esbuild: '>=0.26.0'
 
   esbuild@0.25.12:
     resolution: {integrity: sha512-bbPBYYrtZbkt6Os6FiTLCTFxvq4tt3JKall1vRwshA3fdVztsLAatFaZobhkBC8/BrPetoa0oksYoKXoG4ryJg==}
@@ -12288,7 +12288,7 @@ snapshots:
       '@rrweb/types': 2.0.0-alpha.16
       babel-plugin-syntax-hermes-parser: 0.21.1
       ci-info: 4.0.0
-      esbuild: 0.25.12
+      esbuild: 0.26.0
       faster-babel-types: 0.1.0(@babel/types@7.26.0)
       hono: 4.10.4
       isomorphic-fetch: 3.0.0
