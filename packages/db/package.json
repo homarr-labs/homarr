@@ -49,7 +49,7 @@
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/core": "^8.3.6",
+    "@mantine/core": "^8.3.7",
     "@paralleldrive/cuid2": "^3.1.0",
     "@testcontainers/mysql": "^11.8.0",
     "@testcontainers/postgresql": "^11.8.0",
