@@ -1,3 +1,18 @@
+## [1.43.3](https://github.com/homarr-labs/homarr/compare/v1.43.2...v1.43.3) (2025-11-14)
+
+### Bug Fixes
+
+* **deps:** update dependency @ctrl/qbittorrent to ^9.11.0 ([#4456](https://github.com/homarr-labs/homarr/issues/4456)) ([ddfed18](https://github.com/homarr-labs/homarr/commit/ddfed18acf44596dba15ea0ef56233c4936f9775))
+* **deps:** update dependency @tanstack/react-query to ^5.90.7 ([#4451](https://github.com/homarr-labs/homarr/issues/4451)) ([7bc2f87](https://github.com/homarr-labs/homarr/commit/7bc2f87f31f1babe691fa4a086a3897977f2d871))
+* **deps:** update dependency fast-xml-parser to ^5.3.1 ([#4435](https://github.com/homarr-labs/homarr/issues/4435)) ([65f2e82](https://github.com/homarr-labs/homarr/commit/65f2e825fdb9e5e79b814c9b49f663d1afac784d))
+* **deps:** update dependency fastify to ^5.6.2 ([#4471](https://github.com/homarr-labs/homarr/issues/4471)) ([e7071bf](https://github.com/homarr-labs/homarr/commit/e7071bf2bf6a45ff760cd3e7bd06382d2ed66cdc))
+* **deps:** update dependency next-intl to v4.5.0 ([#4462](https://github.com/homarr-labs/homarr/issues/4462)) ([51ce5da](https://github.com/homarr-labs/homarr/commit/51ce5da45bdccf061e593097ed751cf09d663437))
+* **deps:** update dependency swagger-ui-react to ^5.30.2 ([#4442](https://github.com/homarr-labs/homarr/issues/4442)) ([d3edfcf](https://github.com/homarr-labs/homarr/commit/d3edfcf3dca3d34afd5ef8ec21599cd08fde5092))
+* **deps:** update mantine monorepo to ^8.3.7 ([#4472](https://github.com/homarr-labs/homarr/issues/4472)) ([8a87dba](https://github.com/homarr-labs/homarr/commit/8a87dbad59786fa9789dd3efb8d9424bb950e977))
+* **deps:** update testcontainers-node monorepo to ^11.8.0 ([#4450](https://github.com/homarr-labs/homarr/issues/4450)) ([f648af0](https://github.com/homarr-labs/homarr/commit/f648af0e2b2b5d5f8180402c2734ea0c04559daa))
+* **stock-price:** ignore missing data points in price history ([#4429](https://github.com/homarr-labs/homarr/issues/4429)) ([c30c98b](https://github.com/homarr-labs/homarr/commit/c30c98b153fbec21551e45aedf83e0ae29d6e773))
+* **users:** next button in create form always disabled ([#4443](https://github.com/homarr-labs/homarr/issues/4443)) ([1c1f8a4](https://github.com/homarr-labs/homarr/commit/1c1f8a48d259c65ebeeec6856e1fe339defb4aaf))
+
 ## [1.43.2](https://github.com/homarr-labs/homarr/compare/v1.43.1...v1.43.2) (2025-11-07)
 
 ### Bug Fixes
