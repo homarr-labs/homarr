@@ -42,7 +42,9 @@ export interface WidgetDefinition {
   icon: TablerIcon;
   supportedIntegrations?: IntegrationKind[];
   integrationsRequired?: boolean;
-  createOptions: (settings: SettingsContextProps) => WidgetOptionsRecord;
+  createOptions: (
+    settings: Pick<SettingsContextProps, "enableStatusByDefault" | "firstDayOfWeek" | "forceDisableStatus">,
+  ) => WidgetOptionsRecord;
   errors?: Partial<
     Record<
       DefaultErrorData["code"],
