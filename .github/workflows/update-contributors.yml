@@ -9,6 +9,8 @@ env:
   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
   CROWDIN_TOKEN: "${{ secrets.CROWDIN_UPDATE_CONTRIBUTORS_TOKEN }}"
 
+permissions:
+  contents: read
 jobs:
   update-contributors:
     runs-on: ubuntu-latest

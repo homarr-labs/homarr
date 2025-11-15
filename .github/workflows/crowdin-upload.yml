@@ -1,4 +1,6 @@
 name: "[Crowdin] Upload translations"
+permissions:
+  contents: read
 
 on:
   workflow_dispatch:
