@@ -148,14 +148,10 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
   private async getSessionAsync(
     fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync,
   ): Promise<string | null> {
-    if (!super.hasSecretValue("apiKey")) {
-      return null;
-    }
-
-    const apiKey = super.getSecretValue("apiKey");
+    const apiKey = super.hasSecretValue("apiKey") ? super.getSecretValue("apiKey") : null;
     const response = await fetchAsync(this.url("/api/auth"), {
       method: "POST",
-      body: JSON.stringify({ password: apiKey }),
+      body: JSON.stringify({ password: apiKey ?? "" }),
       headers: {
         "User-Agent": "Homarr",
       },
