@@ -145,7 +145,7 @@ export const integrationDefs = {
   },
   piHole: {
     name: "Pi-hole",
-    secretKinds: [["apiKey"]],
+    secretKinds: [["apiKey"], []],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/pi-hole.svg",
     category: ["dnsHole"],
     documentationUrl: createDocumentationLink("/docs/integrations/pi-hole"),

@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 
 export const sessionResponseSchema = z.object({
   session: z.object({
+    valid: z.boolean(),
     sid: z.string().nullable(),
     message: z.string().nullable(),
   }),
