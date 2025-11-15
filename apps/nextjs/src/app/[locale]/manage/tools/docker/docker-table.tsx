@@ -76,6 +76,7 @@ const createColumns = (
     accessorKey: "ports",
     header: t("docker.field.ports.label"),
     Cell({ cell }) {
+      if (!cell.row.original.ports.length) return null;
       return (
         <OverflowBadge overflowCount={1} data={cell.row.original.ports.map((port) => port.PrivatePort.toString())} />
       );
