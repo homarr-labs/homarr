@@ -59,8 +59,8 @@ importers:
         specifier: ^14.1.0
         version: 14.1.0(semantic-release@25.0.2(typescript@5.9.3))
       '@testcontainers/redis':
-        specifier: ^11.8.0
-        version: 11.8.0
+        specifier: ^11.8.1
+        version: 11.8.1
       '@turbo/gen':
         specifier: ^2.6.1
         version: 2.6.1(@swc/core@1.15.1)(@types/node@24.10.0)(typescript@5.9.3)
@@ -89,8 +89,8 @@ importers:
         specifier: ^25.0.2
         version: 25.0.2(typescript@5.9.3)
       testcontainers:
-        specifier: ^11.8.0
-        version: 11.8.0
+        specifier: ^11.8.1
+        version: 11.8.1
       turbo:
         specifier: ^2.6.1
         version: 2.6.1
@@ -1160,11 +1160,11 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       '@testcontainers/mysql':
-        specifier: ^11.8.0
-        version: 11.8.0
+        specifier: ^11.8.1
+        version: 11.8.1
       '@testcontainers/postgresql':
-        specifier: ^11.8.0
-        version: 11.8.0
+        specifier: ^11.8.1
+        version: 11.8.1
       better-sqlite3:
         specifier: ^12.4.1
         version: 12.4.1
@@ -4467,14 +4467,14 @@ packages:
   '@tanstack/virtual-core@3.11.2':
     resolution: {integrity: sha512-vTtpNt7mKCiZ1pwU9hfKPhpdVO2sVzFQsxoVBGtOSHxlrRRzYr8iQ2TlwbAcRYCcEiZ9ECAM8kBzH0v2+VzfKw==}
 
-  '@testcontainers/mysql@11.8.0':
-    resolution: {integrity: sha512-Tp92zjz04Tcn+JLqLaNCKa7Gfgk08VSl118GhIsZdzm8e/3dPexJ5dr8xFBrmcdKKAsACvQ38j7H+XIb19AcNw==}
+  '@testcontainers/mysql@11.8.1':
+    resolution: {integrity: sha512-FhlaFo2RKhDe0i1EnVwoASZnHm2h1gvliUGv5TTU0cUlAX8fpiFe/o286tm22EGTBwFGJKuyrVK4NLElrZWilA==}
 
-  '@testcontainers/postgresql@11.8.0':
-    resolution: {integrity: sha512-JTMBEoLbi1eYvbsQTqbQlPVED07EB4xhB1tAkmvmirmLsjT0IH6YPKZdZD5y91KKR/FDvSbhPsYmDtByGyGqwg==}
+  '@testcontainers/postgresql@11.8.1':
+    resolution: {integrity: sha512-uPTFk9IY5v9Dm6HcVTOSvZQQ+HrdGiwDk+/LDG+v67yD81kgBlYpH730JJhZoO72d1pJHKwTAJ+5WPOvecl1pw==}
 
-  '@testcontainers/redis@11.8.0':
-    resolution: {integrity: sha512-MCizqK0oaRZi4zW+UCR5u4e3TDWuN+fQITT51VM5BSOXKgbBHL2DRKMFl6y7HRMT0XKFJnVayAeoWTe9rzj3FQ==}
+  '@testcontainers/redis@11.8.1':
+    resolution: {integrity: sha512-mkcOsPkVvdG7AMZjvWpBlfDoncqFJRRur5mTOmlgFpaK7ISpUpOAGcyOmZ7Da8kdHLE5I3iJoT6cHgsD2LjxqA==}
 
   '@tiptap/core@2.27.1':
     resolution: {integrity: sha512-nkerkl8syHj44ZzAB7oA2GPmmZINKBKCa79FuNvmGJrJ4qyZwlkDzszud23YteFZEytbc87kVd/fP76ROS6sLg==}
@@ -10139,8 +10139,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  testcontainers@11.8.0:
-    resolution: {integrity: sha512-kY2DfuUB1NSvmpG7wCpi/aTaIJaHcX53WSAlWHsj0La7E7fPnVFOpooheczE3fH9T+OgD5OB5IeBpFitIqqu6w==}
+  testcontainers@11.8.1:
+    resolution: {integrity: sha512-XeqoHbgVA8lx9ufrgYIKlYV4eubVCn3CL6Dh7sdHT793/hbDu/S7N786MqBxQZjzDG+YRKFSCNPTEwp8lREY9Q==}
 
   text-decoder@1.2.0:
     resolution: {integrity: sha512-n1yg1mOj9DNpk3NeZOx7T6jchTbyJS3i3cucbNN6FcdPriMZx7NsgrGpWWdWZZGxD7ES1XB+3uoqHMgOKaN+fg==}
@@ -13335,23 +13335,23 @@ snapshots:
 
   '@tanstack/virtual-core@3.11.2': {}
 
-  '@testcontainers/mysql@11.8.0':
+  '@testcontainers/mysql@11.8.1':
     dependencies:
-      testcontainers: 11.8.0
+      testcontainers: 11.8.1
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
 
-  '@testcontainers/postgresql@11.8.0':
+  '@testcontainers/postgresql@11.8.1':
     dependencies:
-      testcontainers: 11.8.0
+      testcontainers: 11.8.1
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
 
-  '@testcontainers/redis@11.8.0':
+  '@testcontainers/redis@11.8.1':
     dependencies:
-      testcontainers: 11.8.0
+      testcontainers: 11.8.1
     transitivePeerDependencies:
       - bare-buffer
       - supports-color
@@ -19984,7 +19984,7 @@ snapshots:
       commander: 2.20.3
       source-map-support: 0.5.21
 
-  testcontainers@11.8.0:
+  testcontainers@11.8.1:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@types/dockerode': 3.3.45
