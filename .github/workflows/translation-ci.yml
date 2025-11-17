@@ -1,0 +1,51 @@
+name: Translation CI
+
+on: [push, pull_request]
+
+jobs:
+  validate-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+
+      - name: Validate JSON and Compare Keys
+        run: |
+          # 1. Validate that ru.json is a valid JSON file
+          node -e "try { JSON.parse(require('fs').readFileSync('packages/translation/src/lang/ru.json', 'utf8')); console.log('✅ ru.json is valid JSON.'); } catch (e) { console.error('❌ ru.json is invalid:', e.message); process.exit(1); }"
+
+          # 2. Compare keys between en.json and ru.json
+          node -e "
+            const fs = require('fs');
+            const enPath = 'packages/translation/src/lang/en.json';
+            const ruPath = 'packages/translation/src/lang/ru.json';
+
+            const enKeys = Object.keys(JSON.parse(fs.readFileSync(enPath, 'utf8')));
+            const ruKeys = Object.keys(JSON.parse(fs.readFileSync(ruPath, 'utf8')));
+
+            const enSet = new Set(enKeys);
+            const ruSet = new Set(ruKeys);
+
+            let hasError = false;
+
+            const missingInRu = enKeys.filter(key => !ruSet.has(key));
+            if (missingInRu.length > 0) {
+              console.error('❌ Keys missing in ru.json:', missingInRu.join(', '));
+              hasError = true;
+            }
+
+            const extraInRu = ruKeys.filter(key => !enSet.has(key));
+            if (extraInRu.length > 0) {
+              console.error('❌ Extra keys found in ru.json:', extraInRu.join(', '));
+              hasError = true;
+            }
+
+            if (hasError) {
+              process.exit(1);
+            } else {
+              console.log('✅ All keys in ru.json match en.json.');
+            }
+          "
