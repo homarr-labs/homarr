@@ -44,7 +44,7 @@
     "@semantic-release/release-notes-generator": "^14.1.0",
     "@testcontainers/redis": "^11.8.1",
     "@turbo/gen": "^2.6.1",
-    "@vitejs/plugin-react": "^5.1.0",
+    "@vitejs/plugin-react": "^5.1.1",
     "@vitest/coverage-v8": "^4.0.8",
     "@vitest/ui": "^4.0.8",
     "conventional-changelog-conventionalcommits": "^9.1.0",
