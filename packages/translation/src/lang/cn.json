@@ -649,14 +649,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "现有",
+              "label": "选择现有应用"
             },
             "new": {
-              "title": "",
+              "title": "新建",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "应用网址",
+                "description": "当从面板访问时应用将打开的网址"
               }
             }
           }
@@ -676,9 +676,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "链接应用",
+            "remove": "取消连接",
+            "select": "选择要链接的应用"
           }
         }
       },
@@ -709,7 +709,7 @@
         "description": "集成“{kind}”可以与搜索引擎一起使用。勾选此项可自动配置搜索引擎。"
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "关联的应用"
       },
       "createApp": {
         "label": "创建应用",
@@ -1051,7 +1051,7 @@
       "add": "添加",
       "apply": "应用",
       "backToOverview": "返回概览",
-      "change": "",
+      "change": "更改",
       "create": "创建",
       "createAnother": "创建并重新开始",
       "edit": "编辑",
