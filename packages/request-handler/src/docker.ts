@@ -28,7 +28,7 @@ async function getContainersWithStatsAsync() {
     dockerInstances.map(async ({  instance, host }) => {
       const instanceContainers = await instance.listContainers({ all: true});
       return instanceContainers.map((container) => {
-        if (container.Labels.hasOwnProperty("homarr.hide")) {
+        if (Object.prototype.hasOwnProperty.call(container.Labels, "homarr.hide")) {
           return;
         }
         return ({...container,instance:host,});
