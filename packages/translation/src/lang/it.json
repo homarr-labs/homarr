@@ -3748,7 +3748,7 @@
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "Spazio dei nomi"
         },
         "className": {
           "label": "Nome classe"
