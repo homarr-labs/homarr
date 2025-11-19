@@ -105,5 +105,12 @@
       "core-js-pure",
       "protobufjs"
     ]
+  },
+  "bin": "apps/tasks/tasks.cjs",
+  "pkg": {
+    "scripts": ["apps/tasks/tasks.cjs", "apps/websocket/wssServer.cjs", "apps/nextjs/server.js"],
+    "assets": ["apps/nextjs/public/**/*"],
+    "targets": ["latest-linux-x64"],
+    "outputPath": "dist-pkg"
   }
 }
