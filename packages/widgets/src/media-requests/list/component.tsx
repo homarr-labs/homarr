@@ -200,9 +200,9 @@ const DecisionButtons = ({ requestId, integrationId }: DecisionButtonsProps) => 
   const t = useScopedI18n("widget.mediaRequests-requestList");
   const handleDecision = (answer: RouterInputs["widget"]["mediaRequests"]["answerRequest"]["answer"]) => {
     mutateRequestAnswer({
-      integrationId: integrationId,
-      requestId: requestId,
-      answer: answer,
+      integrationId,
+      requestId,
+      answer,
     });
   };
 
