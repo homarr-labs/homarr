@@ -85,7 +85,13 @@ const getAllowedPermissions = (
 const getSandboxFlags = (
   permissions: Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">,
 ) => {
-  const baseSandbox = ["allow-scripts", "allow-same-origin", "allow-forms", "allow-popups"];
+  const baseSandbox = [
+    "allow-scripts",
+    "allow-same-origin",
+    "allow-forms",
+    "allow-popups",
+    "allow-top-navigation-by-user-activation",
+  ];
 
   if (permissions.allowFullScreen) {
     baseSandbox.push("allow-presentation");
