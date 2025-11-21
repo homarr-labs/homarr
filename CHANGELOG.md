@@ -1,3 +1,26 @@
+## [1.44.0](https://github.com/homarr-labs/homarr/compare/v1.43.3...v1.44.0) (2025-11-21)
+
+### Features
+
+* **pi-hole:** support no-auth ([#4480](https://github.com/homarr-labs/homarr/issues/4480)) ([c89e35e](https://github.com/homarr-labs/homarr/commit/c89e35e13c794bbdf98748c00644b86f7f5dbe68))
+
+### Bug Fixes
+
+* **deps:** update dependency @tanstack/react-query to ^5.90.8 ([#4494](https://github.com/homarr-labs/homarr/issues/4494)) ([a5b6203](https://github.com/homarr-labs/homarr/commit/a5b6203be6ac3c2308614f10ef6a17590917e2c9))
+* **deps:** update dependency @tanstack/react-query to ^5.90.9 ([#4508](https://github.com/homarr-labs/homarr/issues/4508)) ([b3db5d5](https://github.com/homarr-labs/homarr/commit/b3db5d5f7bc2d146f0b2c230a52e7bd4efad3bcb))
+* **deps:** update dependency @tanstack/react-query-next-experimental to ^5.91.0 ([#4505](https://github.com/homarr-labs/homarr/issues/4505)) ([8ea6cff](https://github.com/homarr-labs/homarr/commit/8ea6cffb537ca54a413c583ab8b8fd24a52185be))
+* **deps:** update dependency drizzle-kit to ^0.31.7 ([#4507](https://github.com/homarr-labs/homarr/issues/4507)) ([b4f9fb8](https://github.com/homarr-labs/homarr/commit/b4f9fb8b46a8f74e2d7896dfe98e80618cfbcde4))
+* **deps:** update dependency fast-xml-parser to ^5.3.2 ([#4510](https://github.com/homarr-labs/homarr/issues/4510)) ([5e57a49](https://github.com/homarr-labs/homarr/commit/5e57a4906bcedc53d220e983827293f4a699c425))
+* **deps:** update dependency next-intl to v4.5.1 ([#4484](https://github.com/homarr-labs/homarr/issues/4484)) ([06942ec](https://github.com/homarr-labs/homarr/commit/06942ecbcd245f5540f2960f437ca2955a5ed0c3))
+* **deps:** update dependency next-intl to v4.5.3 ([#4503](https://github.com/homarr-labs/homarr/issues/4503)) ([0642773](https://github.com/homarr-labs/homarr/commit/064277373cacd3309d8da3779d5451d195da7f81))
+* **deps:** update dependency sass to ^1.94.0 ([#4482](https://github.com/homarr-labs/homarr/issues/4482)) ([19ecede](https://github.com/homarr-labs/homarr/commit/19ecedea4370924d47545ca8d9d46a0b7c016cc9))
+* **deps:** update mantine monorepo to ^8.3.8 ([#4516](https://github.com/homarr-labs/homarr/issues/4516)) ([ded4e72](https://github.com/homarr-labs/homarr/commit/ded4e72e5407b0076495a06111f3b04445f27276))
+* **deps:** update nextjs monorepo to v16.0.3 ([#4504](https://github.com/homarr-labs/homarr/issues/4504)) ([7d0c1a1](https://github.com/homarr-labs/homarr/commit/7d0c1a14fdf1731ff44e3d00793cf4cd1c3e9b1f))
+* **deps:** update testcontainers-node monorepo to ^11.8.1 ([#4486](https://github.com/homarr-labs/homarr/issues/4486)) ([64657d8](https://github.com/homarr-labs/homarr/commit/64657d831cbe28a59708b280b07889b9f0232743))
+* **deps:** update turbo monorepo to ^2.6.1 ([#4483](https://github.com/homarr-labs/homarr/issues/4483)) ([cd124d6](https://github.com/homarr-labs/homarr/commit/cd124d6e8392eef5df0092481ec3cc26599f2902))
+* **iframe:** allow clicking links within ([#4521](https://github.com/homarr-labs/homarr/issues/4521)) ([5a418d7](https://github.com/homarr-labs/homarr/commit/5a418d73bdb07cf3d3270983b6881f2de8d58ad7))
+* **media-requests:** incorrect availability mapping ([#4520](https://github.com/homarr-labs/homarr/issues/4520)) ([d9cc35b](https://github.com/homarr-labs/homarr/commit/d9cc35b9859a14f44c4e4b13c6518287f8d18e54))
+
 ## [1.43.3](https://github.com/homarr-labs/homarr/compare/v1.43.2...v1.43.3) (2025-11-14)
 
 ### Bug Fixes
