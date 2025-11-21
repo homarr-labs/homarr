@@ -9,8 +9,17 @@ import type { ISearchableIntegration } from "../base/searchable-integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IMediaRequestIntegration } from "../interfaces/media-requests/media-request-integration";
-import type { MediaRequest, RequestStats, RequestUser } from "../interfaces/media-requests/media-request-types";
-import { MediaAvailability, MediaRequestStatus } from "../interfaces/media-requests/media-request-types";
+import type {
+  MediaAvailability,
+  MediaRequest,
+  MediaRequestStatus,
+  RequestStats,
+  RequestUser,
+} from "../interfaces/media-requests/media-request-types";
+import {
+  UpstreamMediaAvailability,
+  UpstreamMediaRequestStatus,
+} from "../interfaces/media-requests/media-request-types";
 
 interface OverseerrSearchResult {
   id: number;
@@ -128,7 +137,7 @@ export class OverseerrIntegration
 
     if (pendingResults.length > 0 && allResults.length > 0) {
       requests = pendingResults.concat(
-        allResults.filter(({ status }) => status !== MediaRequestStatus.PendingApproval),
+        allResults.filter(({ status }) => status !== UpstreamMediaRequestStatus.PendingApproval),
       );
     } else if (pendingResults.length > 0) requests = pendingResults;
     else if (allResults.length > 0) requests = allResults;
@@ -137,11 +146,15 @@ export class OverseerrIntegration
     return await Promise.all(
       requests.map(async (request): Promise<MediaRequest> => {
         const information = await this.getItemInformationAsync(request.media.tmdbId, request.type);
+
+        // See https://github.com/seerr-team/seerr/blob/af083a3cd5c3e3d5d7917fdf4fdd67fe3f39c46b/src/components/StatusBadge/index.tsx#L40
+        const inProgress = (request.media.downloadStatus ?? []).length >= 1;
+
         return {
           id: request.id,
           name: information.name,
-          status: request.status,
-          availability: request.media.status,
+          status: this.mapRequestStatus(request.status),
+          availability: this.mapAvailability(request.media.status, inProgress),
           backdropImageUrl: `https://image.tmdb.org/t/p/original/${information.backdropPath}`,
           posterImagePath: `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${information.posterPath}`,
           href: this.externalUrl(`/${request.type}/${request.media.tmdbId}`).toString(),
@@ -159,6 +172,42 @@ export class OverseerrIntegration
         };
       }),
     );
+  }
+
+  protected mapRequestStatus(status: UpstreamMediaRequestStatus): MediaRequestStatus {
+    switch (status) {
+      case UpstreamMediaRequestStatus.PendingApproval:
+        return "pending";
+      case UpstreamMediaRequestStatus.Approved:
+        return "approved";
+      case UpstreamMediaRequestStatus.Declined:
+        return "declined";
+      case UpstreamMediaRequestStatus.Failed:
+        return "failed";
+      case UpstreamMediaRequestStatus.Completed:
+        return "completed";
+      default:
+        return "failed";
+    }
+  }
+
+  // See https://github.com/seerr-team/seerr/blob/af083a3cd5c3e3d5d7917fdf4fdd67fe3f39c46b/src/components/StatusBadge/index.tsx#L153-L387
+  protected mapAvailability(availability: UpstreamMediaAvailability, inProgress: boolean): MediaAvailability {
+    switch (availability) {
+      case UpstreamMediaAvailability.Available:
+        return inProgress ? "processing" : "available";
+      case UpstreamMediaAvailability.PartiallyAvailable:
+        return inProgress ? "processing" : "partiallyAvailable";
+      case UpstreamMediaAvailability.Processing:
+        return inProgress ? "processing" : "requested";
+      case UpstreamMediaAvailability.Pending:
+        return "pending";
+      case UpstreamMediaAvailability.JellyseerrBlacklistedOrOverseerrDeleted:
+        return "deleted";
+      case UpstreamMediaAvailability.Unknown:
+      default:
+        return inProgress ? "processing" : "unknown";
+    }
   }
 
   public async getStatsAsync(): Promise<RequestStats> {
@@ -339,11 +388,12 @@ const getRequestsSchema = z.object({
     .array(
       z.object({
         id: z.number(),
-        status: z.nativeEnum(MediaRequestStatus),
+        status: z.enum(UpstreamMediaRequestStatus),
         createdAt: z.string().transform((value) => new Date(value)),
         media: z.object({
-          status: z.nativeEnum(MediaAvailability),
+          status: z.enum(UpstreamMediaAvailability),
           tmdbId: z.number(),
+          downloadStatus: z.array(z.unknown()).optional(),
         }),
         type: z.enum(["movie", "tv"]),
         requestedBy: z

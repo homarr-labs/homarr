@@ -38,7 +38,7 @@ export type {
   FirewallMemorySummary,
 } from "./interfaces/firewall-summary/firewall-summary-types";
 export type { SystemHealthMonitoring } from "./interfaces/health-monitoring/health-monitoring-types";
-export { MediaRequestStatus } from "./interfaces/media-requests/media-request-types";
+export { UpstreamMediaRequestStatus } from "./interfaces/media-requests/media-request-types";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request-types";
 export type { StreamSession } from "./interfaces/media-server/media-server-types";
 export type {

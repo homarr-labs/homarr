@@ -1,8 +1,13 @@
-import { objectEntries } from "@homarr/common";
-
 import type { IMediaRequestIntegration } from "../../interfaces/media-requests/media-request-integration";
-import type { MediaInformation, MediaRequest, RequestStats, RequestUser } from "../../types";
-import { MediaAvailability, MediaRequestStatus } from "../../types";
+import type {
+  MediaAvailability,
+  MediaInformation,
+  MediaRequest,
+  MediaRequestStatus,
+  RequestStats,
+  RequestUser,
+} from "../../types";
+import { mediaAvailabilities, mediaRequestStatuses } from "../../types";
 
 export class MediaRequestMockService implements IMediaRequestIntegration {
   public async getSeriesInformationAsync(mediaType: "movie" | "tv", id: number): Promise<MediaInformation> {
@@ -86,12 +91,10 @@ export class MediaRequestMockService implements IMediaRequestIntegration {
   }
 
   private static randomAvailability(): MediaAvailability {
-    const values = objectEntries(MediaAvailability).filter(([key]) => typeof key === "number");
-    return values[Math.floor(Math.random() * values.length)]?.[1] ?? MediaAvailability.Available;
+    return mediaAvailabilities.at(Math.floor(Math.random() * mediaAvailabilities.length)) ?? "unknown";
   }
 
   private static randomStatus(): MediaRequestStatus {
-    const values = objectEntries(MediaRequestStatus).filter(([key]) => typeof key === "number");
-    return values[Math.floor(Math.random() * values.length)]?.[1] ?? MediaRequestStatus.PendingApproval;
+    return mediaRequestStatuses.at(Math.floor(Math.random() * mediaRequestStatuses.length)) ?? "pending";
   }
 }
