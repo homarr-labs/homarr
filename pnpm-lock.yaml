@@ -236,7 +236,7 @@ importers:
         specifier: ^3.35.0
         version: 3.35.0(react@19.2.0)
       '@tanstack/react-query':
-        specifier: ^5.90.9
+        specifier: ^5.90.10
         version: 5.90.10(react@19.2.0)
       '@tanstack/react-query-devtools':
         specifier: ^5.90.2
@@ -639,7 +639,7 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       '@tanstack/react-query':
-        specifier: ^5.90.9
+        specifier: ^5.90.10
         version: 5.90.10(react@19.2.0)
       '@trpc/client':
         specifier: ^11.7.1
@@ -967,7 +967,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../log
       '@tanstack/react-query':
-        specifier: ^5.90.9
+        specifier: ^5.90.10
         version: 5.90.10(react@19.2.0)
       '@trpc/client':
         specifier: ^11.7.1
