@@ -2,7 +2,7 @@ import { objectEntries } from "@homarr/common";
 
 import type { IMediaRequestIntegration } from "../../interfaces/media-requests/media-request-integration";
 import type { MediaInformation, MediaRequest, RequestStats, RequestUser } from "../../types";
-import { MediaAvailability, MediaRequestStatus } from "../../types";
+import { UpstreamMediaAvailability, UpstreamMediaRequestStatus } from "../../types";
 
 export class MediaRequestMockService implements IMediaRequestIntegration {
   public async getSeriesInformationAsync(mediaType: "movie" | "tv", id: number): Promise<MediaInformation> {
@@ -85,13 +85,13 @@ export class MediaRequestMockService implements IMediaRequestIntegration {
     };
   }
 
-  private static randomAvailability(): MediaAvailability {
-    const values = objectEntries(MediaAvailability).filter(([key]) => typeof key === "number");
-    return values[Math.floor(Math.random() * values.length)]?.[1] ?? MediaAvailability.Available;
+  private static randomAvailability(): UpstreamMediaAvailability {
+    const values = objectEntries(UpstreamMediaAvailability).filter(([key]) => typeof key === "number");
+    return values[Math.floor(Math.random() * values.length)]?.[1] ?? UpstreamMediaAvailability.Available;
   }
 
-  private static randomStatus(): MediaRequestStatus {
-    const values = objectEntries(MediaRequestStatus).filter(([key]) => typeof key === "number");
-    return values[Math.floor(Math.random() * values.length)]?.[1] ?? MediaRequestStatus.PendingApproval;
+  private static randomStatus(): UpstreamMediaRequestStatus {
+    const values = objectEntries(UpstreamMediaRequestStatus).filter(([key]) => typeof key === "number");
+    return values[Math.floor(Math.random() * values.length)]?.[1] ?? UpstreamMediaRequestStatus.PendingApproval;
   }
 }

@@ -1,3 +1,5 @@
+import { objectKeys } from "@homarr/common";
+
 interface SerieSeason {
   id: number;
   seasonNumber: number;
@@ -34,6 +36,64 @@ export interface MediaRequest {
   requestedBy?: Omit<RequestUser, "requestCount">;
 }
 
+export const mediaAvailabilityConfiguration = {
+  available: {
+    color: "green",
+  },
+  partiallyAvailable: {
+    color: "yellow",
+  },
+  processing: {
+    color: "blue",
+  },
+  requested: {
+    color: "violet",
+  },
+  pending: {
+    color: "violet",
+  },
+  unknown: {
+    color: "orange",
+  },
+  deleted: {
+    color: "red",
+  },
+  blacklisted: {
+    color: "gray",
+  },
+} satisfies Record<string, { color: string }>;
+
+export const mediaAvailabilities = objectKeys(mediaAvailabilityConfiguration);
+
+export type MediaAvailability = (typeof mediaAvailabilities)[number];
+
+export const mediaRequestStatusConfiguration = {
+  pending: {
+    color: "blue",
+    position: 1,
+  },
+  approved: {
+    color: "green",
+    position: 2,
+  },
+  declined: {
+    color: "red",
+    position: 3,
+  },
+  failed: {
+    color: "red",
+    position: 4,
+  },
+  completed: {
+    color: "green",
+    position: 5,
+  },
+} satisfies Record<string, { color: string; position: number }>;
+
+export const mediaRequestStatuses = objectKeys(mediaRequestStatusConfiguration);
+
+export type MediaRequestStatus = (typeof mediaRequestStatuses)[number];
+
 export interface MediaRequestList {
   integration: {
     id: string;
@@ -66,7 +126,7 @@ export interface MediaRequestStats {
 }
 
 // https://github.com/fallenbagel/jellyseerr/blob/0fd03f38480f853e7015ad9229ed98160e37602e/server/constants/media.ts#L1
-export enum MediaRequestStatus {
+export enum UpstreamMediaRequestStatus {
   PendingApproval = 1,
   Approved = 2,
   Declined = 3,
@@ -75,12 +135,12 @@ export enum MediaRequestStatus {
 }
 
 // https://github.com/fallenbagel/jellyseerr/blob/0fd03f38480f853e7015ad9229ed98160e37602e/server/constants/media.ts#L14
-export enum MediaAvailability {
+export enum UpstreamMediaAvailability {
   Unknown = 1,
   Pending = 2,
   Processing = 3,
   PartiallyAvailable = 4,
   Available = 5,
-  Blacklisted = 6,
-  Deleted = 7,
+  JellyseerrBlacklistedOrOverseerrDeleted = 6,
+  JellyseerrDeleted = 7,
 }
