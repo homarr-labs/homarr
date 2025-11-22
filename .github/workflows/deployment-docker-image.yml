@@ -146,7 +146,6 @@ jobs:
           outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
         env:
           SKIP_ENV_VALIDATION: true
-
   build-arm64:
     name: Build docker image for arm64
     needs: release
@@ -185,7 +184,6 @@ jobs:
           outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
         env:
           SKIP_ENV_VALIDATION: true
-
   publish:
     name: Complete deployment and notify
     needs: [release, build-amd64, build-arm64]
@@ -228,3 +226,21 @@ jobs:
         uses: Ilshidur/action-discord@master
         with:
           args: "Successfully deployed images for branch **${{ github.ref_name }}**. Tagged as **${{env.NEXT_VERSION}}**."
+  extract-and-publish-static-artifacts:
+    name: Extract artifacts
+    needs:
+      - build-amd64
+      - build-arm64
+      - release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract x64
+        uses: ./.github/actions/setup
+        with:
+          digest: ${{ needs.build-amd64.outputs.digest }}
+          architecture: x64
+      - name: Extract arm64
+        uses: ./.github/actions/setup
+        with:
+          digest: ${{ needs.build-arm64.outputs.digest }}
+          architecture: arm64
