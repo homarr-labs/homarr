@@ -4,7 +4,7 @@ import type { ContainerInfo, ContainerStats } from "dockerode";
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import type { ContainerState } from "@homarr/docker";
-import { DockerSingleton } from "@homarr/docker";
+import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
@@ -28,7 +28,7 @@ async function getContainersWithStatsAsync() {
     dockerInstances.map(async ({ instance, host }) => {
       const instanceContainers = await instance.listContainers({ all: true });
       return instanceContainers
-        .filter((container) => "homarr.hide" in container.Labels === false)
+        .filter((container) => dockerLabels.hide in container.Labels === false)
         .map((container) => ({ ...container, instance: host }));
     }),
   ).then((res) => res.flat());
