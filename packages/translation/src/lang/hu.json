@@ -2232,6 +2232,7 @@
         "unknown": "Ismeretlen",
         "pending": "",
         "processing": "Feldolgozás",
+        "requested": "",
         "partiallyAvailable": "Részleges",
         "available": "Elérhető",
         "blacklisted": "",

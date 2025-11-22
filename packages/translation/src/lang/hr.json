@@ -2232,6 +2232,7 @@
         "unknown": "Nepoznato",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "",
         "available": "",
         "blacklisted": "",

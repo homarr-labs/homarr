@@ -2232,6 +2232,7 @@
         "unknown": "Невідомо",
         "pending": "В очікуванні",
         "processing": "В обробці",
+        "requested": "",
         "partiallyAvailable": "Частково доступно",
         "available": "Доступно",
         "blacklisted": "",

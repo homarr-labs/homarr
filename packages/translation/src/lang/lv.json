@@ -2232,6 +2232,7 @@
         "unknown": "Nezināms",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "Daļējs",
         "available": "Pieejams",
         "blacklisted": "",

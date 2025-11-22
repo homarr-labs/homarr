@@ -2232,6 +2232,7 @@
         "unknown": "Okänd",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "Delmängd",
         "available": "Tillgänglig",
         "blacklisted": "",
