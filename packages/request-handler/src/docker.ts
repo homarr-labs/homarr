@@ -3,9 +3,9 @@ import type { ContainerInfo, ContainerStats } from "dockerode";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
+import type { ContainerState } from "@homarr/docker";
+import { DockerSingleton } from "@homarr/docker";
 
-import type { ContainerState } from "../../docker/src";
-import { DockerSingleton } from "../../docker/src";
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
 export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
@@ -25,7 +25,7 @@ const extractImage = (container: ContainerInfo) => container.Image.split("/").at
 
 async function getContainersWithStatsAsync() {
   const containers = await Promise.all(
-    dockerInstances.map(async ({  instance, host }) => {
+   dockerInstances.map(async ({  instance, host }) => {
       const instanceContainers = await instance.listContainers({ all: true});
       return instanceContainers.map((container) => {
         if (Object.prototype.hasOwnProperty.call(container.Labels, "homarr.hide")) {
