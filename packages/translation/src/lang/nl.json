@@ -2232,6 +2232,7 @@
         "unknown": "Onbekend",
         "pending": "In afwachting",
         "processing": "Verwerken",
+        "requested": "",
         "partiallyAvailable": "Gedeeltelijk",
         "available": "Beschikbaar",
         "blacklisted": "Geblacklist",

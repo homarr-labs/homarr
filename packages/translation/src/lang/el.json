@@ -2232,6 +2232,7 @@
         "unknown": "Άγνωστο",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "Μερικώς",
         "available": "Διαθέσιμο",
         "blacklisted": "",

@@ -2232,6 +2232,7 @@
         "unknown": "",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "",
         "available": "",
         "blacklisted": "",

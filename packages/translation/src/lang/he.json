@@ -2232,6 +2232,7 @@
         "unknown": "לא ידוע",
         "pending": "בהמתנה",
         "processing": "מעבד",
+        "requested": "",
         "partiallyAvailable": "חלקי",
         "available": "זמין",
         "blacklisted": "ברשימה השחורה",

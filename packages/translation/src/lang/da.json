@@ -2232,6 +2232,7 @@
         "unknown": "Ukendt",
         "pending": "Afventende",
         "processing": "Behandler",
+        "requested": "",
         "partiallyAvailable": "Delvis",
         "available": "Tilgængelig",
         "blacklisted": "Blacklistet",
