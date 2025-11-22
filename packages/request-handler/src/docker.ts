@@ -25,14 +25,11 @@ const extractImage = (container: ContainerInfo) => container.Image.split("/").at
 
 async function getContainersWithStatsAsync() {
   const containers = await Promise.all(
-   dockerInstances.map(async ({  instance, host }) => {
-      const instanceContainers = await instance.listContainers({ all: true});
-      return instanceContainers.map((container) => {
-        if (Object.prototype.hasOwnProperty.call(container.Labels, "homarr.hide")) {
-          return;
-        }
-        return ({...container,instance:host,});
-      });
+    dockerInstances.map(async ({ instance, host }) => {
+      const instanceContainers = await instance.listContainers({ all: true });
+      return instanceContainers
+        .filter((container) => "homarr.hide" in container.Labels === false)
+        .map((container) => ({ ...container, instance: host }));
     }),
   ).then((res) => res.flat());
   const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
