@@ -284,7 +284,7 @@ importers:
         specifier: ^7.5.0
         version: 7.5.0
       glob:
-        specifier: ^11.0.3
+        specifier: ^11.1.0
         version: 11.1.0
       isomorphic-dompurify:
         specifier: ^2.32.0
@@ -21047,7 +21047,7 @@ snapshots:
     dependencies:
       ansi-styles: 6.2.1
       string-width: 7.2.0
-      strip-ansi: 7.1.0
+      strip-ansi: 7.1.2
 
   wrappy@1.0.2: {}
 
