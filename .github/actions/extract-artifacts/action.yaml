@@ -1,6 +1,10 @@
 name: extract-artifacts
-author: manuel
+author: manuel-rw
 description: extract-artifacts
+branding:
+  icon: copy
+  name: Extract Artifacts
+  description: Extracts artifacts from an existing Docker image to be used in Proxmox
 inputs:
   digest:
     description: Digest of Docker image to use
@@ -11,12 +15,15 @@ runs:
   using: "composite"
   steps:
     - name: Start docker container for ${{ inputs.architecture }}
-      run: docker run --name homarr-extraction-${{ inputs.architecture }} --rm ${{ inputs.digest }}
+      run: "docker run --name homarr-extraction-${{ inputs.architecture }} --pull always -e \"SECRET_ENCRYPTION_KEY=ccfb0bb973a17b16972b42e715b3c805d4a82cf424643f9e554b3cd234da7bf6\" --detach --rm ${{ inputs.digest }}" # TODO: add --detach
+    - name: Sleep
+      run: sleep 5s
+      shell: bash
     - name: Extract from ${{ inputs.architecture }} container
       run: |
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/apps/* ./extraction/${{ inputs.architecture }}/apps \ # Copy apps (e.g. nextjs, tasks, ...)
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/build/* ./extraction/${{ inputs.architecture }}/build \ # Copy compiled driver for database
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/node_modules/* ./extraction/${{ inputs.architecture }}/node_modules # Copy dependencies, they can be architecture-specific for compiled
+        docker cp homarr-extraction-${{ inputs.architecture }}:/app/apps/* ./extraction/${{ inputs.architecture }}/apps \
+        docker cp homarr-extraction-${{ inputs.architecture }}:/app/build/* ./extraction/${{ inputs.architecture }}/build \
+        docker cp homarr-extraction-${{ inputs.architecture }}:/app/node_modules/* ./extraction/${{ inputs.architecture }}/node_modules
     - name: Copy non-compiled files from host for ${{ inputs.architecture }}
       run: |
         cp /scripts/entrypoint.sh ./extraction/${{ inputs.architecture }}/entrypoint.sh \
@@ -24,4 +31,5 @@ runs:
         cp /scripts/run.sh ./extraction/${{ inputs.architecture }}/run.sh \
         cp /scripts/package.json ./extraction/${{ inputs.architecture }}/package.json
     - name: Stop ${{ inputs.architecture }} container
+      if: always()
       run: docker container remove --force --volumes homarr-extraction-${{ inputs.architecture }}
