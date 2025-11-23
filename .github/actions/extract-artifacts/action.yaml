@@ -1,6 +1,10 @@
 name: extract-artifacts
-author: manuel
+author: manuel-rw
 description: extract-artifacts
+branding:
+  icon: copy
+  name: Extract Artifacts
+  description: Extracts artifacts from an existing Docker image to be used in Proxmox
 inputs:
   digest:
     description: Digest of Docker image to use
@@ -11,7 +15,7 @@ runs:
   using: "composite"
   steps:
     - name: Start docker container for ${{ inputs.architecture }}
-      run: docker run --name homarr-extraction-${{ inputs.architecture }} --rm ${{ inputs.digest }}
+      run: "docker run --name homarr-extraction-${{ inputs.architecture }} --rm ${{ inputs.digest }} --quiet --rm" # TODO: add --detach
     - name: Extract from ${{ inputs.architecture }} container
       run: |
         docker cp homarr-extraction-${{ inputs.architecture }}:/app/apps/* ./extraction/${{ inputs.architecture }}/apps \ # Copy apps (e.g. nextjs, tasks, ...)
@@ -24,4 +28,5 @@ runs:
         cp /scripts/run.sh ./extraction/${{ inputs.architecture }}/run.sh \
         cp /scripts/package.json ./extraction/${{ inputs.architecture }}/package.json
     - name: Stop ${{ inputs.architecture }} container
+      if: always()
       run: docker container remove --force --volumes homarr-extraction-${{ inputs.architecture }}
