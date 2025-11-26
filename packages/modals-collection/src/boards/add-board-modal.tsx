@@ -1,4 +1,15 @@
-import { Button, Group, InputWrapper, Slider, Stack, Switch, TextInput } from "@mantine/core";
+import {
+  Button,
+  Fieldset,
+  Group,
+  InputWrapper,
+  RadioGroup,
+  SimpleGrid,
+  Slider,
+  Stack,
+  Switch,
+  TextInput,
+} from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react";
 
@@ -8,6 +19,7 @@ import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { CustomRadioCard } from "@homarr/ui";
 import { boardColumnCountSchema, boardCreateSchema, boardNameSchema } from "@homarr/validation/board";
 
 export const AddBoardModal = createModal(({ actions }) => {
@@ -64,14 +76,33 @@ export const AddBoardModal = createModal(({ actions }) => {
             ) : null
           }
         />
-        <InputWrapper label={t("board.field.columnCount.label")} {...form.getInputProps("columnCount")}>
-          <Slider
-            min={boardColumnCountSchema.minValue ?? undefined}
-            max={boardColumnCountSchema.maxValue ?? undefined}
-            step={1}
-            {...form.getInputProps("columnCount")}
-          />
-        </InputWrapper>
+
+        <Fieldset legend="Layout">
+          <Stack gap="sm">
+            <RadioGroup>
+              <SimpleGrid cols={{ sm: 2, xs: 1 }} spacing="md">
+                <CustomRadioCard
+                  name="Auto"
+                  description="Position and size of all layouts are calculated from the base layout."
+                  checked
+                />
+                <CustomRadioCard
+                  name="Custom"
+                  description="Position and size must be configured for all layouts separately."
+                />
+              </SimpleGrid>
+            </RadioGroup>
+
+            <InputWrapper label={t("board.field.columnCount.label")} {...form.getInputProps("columnCount")}>
+              <Slider
+                min={boardColumnCountSchema.minValue ?? undefined}
+                max={boardColumnCountSchema.maxValue ?? undefined}
+                step={1}
+                {...form.getInputProps("columnCount")}
+              />
+            </InputWrapper>
+          </Stack>
+        </Fieldset>
 
         <Switch
           label={t("board.field.isPublic.label")}
@@ -92,6 +123,7 @@ export const AddBoardModal = createModal(({ actions }) => {
   );
 }).withOptions({
   defaultTitle: (t) => t("management.page.board.action.new.label"),
+  size: "lg",
 });
 
 export const useBoardNameStatus = (name: string) => {
