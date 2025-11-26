@@ -5,7 +5,7 @@ import clsx from "clsx";
 import classes from "./radio.module.css";
 
 interface CustomRadioCardProps extends RadioCardProps {
-  name: string;
+  label: string;
   description: string;
 }
 
@@ -15,7 +15,7 @@ export const CustomRadioCard = (props: CustomRadioCardProps) => {
       <Group wrap="nowrap" align="flex-start">
         <RadioIndicator />
         <div>
-          <Text className={classes.label}>{props.name}</Text>
+          <Text className={classes.label}>{props.label}</Text>
           <Text className={classes.description}>{props.description}</Text>
         </div>
       </Group>

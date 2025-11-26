@@ -4,6 +4,7 @@ import {
   backgroundImageAttachments,
   backgroundImageRepeats,
   backgroundImageSizes,
+  boardLayoutModes,
   boardPermissions,
 } from "@homarr/definitions";
 
@@ -90,6 +91,7 @@ export const boardSaveSchema = z.object({
 export const boardCreateSchema = z.object({
   name: boardNameSchema,
   columnCount: boardColumnCountSchema,
+  layoutMode: z.enum(boardLayoutModes.values).default(boardLayoutModes.defaultValue),
   isPublic: z.boolean(),
 });
 

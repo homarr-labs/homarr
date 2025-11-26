@@ -15,6 +15,7 @@ import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import { boardLayoutModes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -30,6 +31,7 @@ export const AddBoardModal = createModal(({ actions }) => {
       name: "",
       columnCount: 10,
       isPublic: false,
+      layoutMode: boardLayoutModes.defaultValue,
     },
   });
   const { mutate, isPending } = clientApi.board.createBoard.useMutation({
@@ -77,19 +79,18 @@ export const AddBoardModal = createModal(({ actions }) => {
           }
         />
 
-        <Fieldset legend="Layout">
+        <Fieldset legend={t("board.setting.section.layout.title")}>
           <Stack gap="sm">
-            <RadioGroup>
+            <RadioGroup {...form.getInputProps("layoutMode")}>
               <SimpleGrid cols={{ sm: 2, xs: 1 }} spacing="md">
-                <CustomRadioCard
-                  name="Auto"
-                  description="Position and size of all layouts are calculated from the base layout."
-                  checked
-                />
-                <CustomRadioCard
-                  name="Custom"
-                  description="Position and size must be configured for all layouts separately."
-                />
+                {boardLayoutModes.values.map((mode) => (
+                  <CustomRadioCard
+                    key={mode}
+                    value={mode}
+                    label={t(`board.field.layoutMode.option.${mode}.label`)}
+                    description={t(`board.field.layoutMode.option.${mode}.description`)}
+                  />
+                ))}
               </SimpleGrid>
             </RadioGroup>
 

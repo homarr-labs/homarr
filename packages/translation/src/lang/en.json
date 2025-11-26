@@ -2793,6 +2793,19 @@
         "label": "Disable app status",
         "description": "Disables the status check for all apps on this board"
       },
+      "layoutMode": {
+        "label": "Layout mode",
+        "option": {
+          "auto": {
+            "label": "Auto",
+            "description": "Position and size of all layouts are calculated from the base layout."
+          },
+          "custom": {
+            "label": "Custom",
+            "description": "Position and size must be configured for all layouts separately."
+          }
+        }
+      },
       "columnCount": {
         "label": "Column count"
       },
