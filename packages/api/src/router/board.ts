@@ -279,6 +279,7 @@ export const boardRouter = createTRPCRouter({
         name: input.name,
         isPublic: input.isPublic,
         creatorId: ctx.session.user.id,
+        layoutMode: input.layoutMode,
       });
       createBoardCollection.sections.push({
         id: createId(),
@@ -287,8 +288,9 @@ export const boardRouter = createTRPCRouter({
         yOffset: 0,
         boardId,
       });
+      const baseLayoutId = createId();
       createBoardCollection.layouts.push({
-        id: createId(),
+        id: baseLayoutId,
         name: "Base",
         columnCount: input.columnCount,
         breakpoint: 0,
@@ -296,6 +298,10 @@ export const boardRouter = createTRPCRouter({
       });
 
       await createBoardCollection.insertAllAsync(ctx.db);
+      // Define the base layout (only for automatic layout mode)
+      if (input.layoutMode === "auto") {
+        await ctx.db.update(boards).set({ baseLayoutId }).where(eq(boards.id, boardId));
+      }
 
       if (!user?.homeBoardId) {
         await ctx.db.update(users).set({ homeBoardId: boardId }).where(eq(users.id, ctx.session.user.id));
