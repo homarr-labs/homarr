@@ -50,6 +50,7 @@
     "conventional-changelog-conventionalcommits": "^9.1.0",
     "cross-env": "^10.1.0",
     "jsdom": "^27.2.0",
+    "json5": "^2.2.3",
     "prettier": "^3.6.2",
     "semantic-release": "^25.0.2",
     "testcontainers": "^11.8.1",
