@@ -16,8 +16,7 @@
       automerge: true,
     },
     {
-      name: "onlyBuiltDependencies",
-      description: "disallow automerge for onlyBuiltDependencies",
+      // disallow automerge for onlyBuiltDependencies
       matchPackageNames: [
         "@tree-sitter-grammars/tree-sitter-yaml",
         "bcrypt",
