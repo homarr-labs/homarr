@@ -1,3 +1,21 @@
+## [1.45.0](https://github.com/homarr-labs/homarr/compare/v1.44.0...v1.45.0) (2025-11-28)
+
+### Features
+
+* **docker:** hide containers with label homarr.hide ([#4506](https://github.com/homarr-labs/homarr/issues/4506)) ([60ab98a](https://github.com/homarr-labs/homarr/commit/60ab98ae36abe712c825f7828394d3e3e98c888a))
+
+### Bug Fixes
+
+* Add fallback when no icon in Minecraft Server widget ([#4544](https://github.com/homarr-labs/homarr/issues/4544)) ([#4545](https://github.com/homarr-labs/homarr/issues/4545)) ([99949fe](https://github.com/homarr-labs/homarr/commit/99949fe095ac5a3616c8e9c1964d7eb253c9f826))
+* **deps:** update dependency @tanstack/react-query to ^5.90.10 ([#4523](https://github.com/homarr-labs/homarr/issues/4523)) ([e87170a](https://github.com/homarr-labs/homarr/commit/e87170ae6e56cdbeef52e943353060329c39bdc9))
+* **deps:** update dependency glob to ^11.1.0 ([#4529](https://github.com/homarr-labs/homarr/issues/4529)) ([24c9854](https://github.com/homarr-labs/homarr/commit/24c985424ecc795eb96b56881a9b00c0c37386c1))
+* **deps:** update dependency glob to v12 ([#4530](https://github.com/homarr-labs/homarr/issues/4530)) ([18a6bfd](https://github.com/homarr-labs/homarr/commit/18a6bfd69d86de8c58dbfe6dc8b8fab78b2b5ee6))
+* **deps:** update dependency next-intl to v4.5.4 ([#4540](https://github.com/homarr-labs/homarr/issues/4540)) ([77a86ea](https://github.com/homarr-labs/homarr/commit/77a86ead41c0d098987561249203667ac4d88177))
+* **deps:** update dependency next-intl to v4.5.5 ([#4542](https://github.com/homarr-labs/homarr/issues/4542)) ([2bc6964](https://github.com/homarr-labs/homarr/commit/2bc6964f7efb5203f626d2f07b847dffd53191f0))
+* **deps:** update dependency sass to ^1.94.1 ([#4531](https://github.com/homarr-labs/homarr/issues/4531)) ([292e36f](https://github.com/homarr-labs/homarr/commit/292e36fec5acff9b1d143f19e18ea170c87fa0d0))
+* **deps:** update dependency zod-validation-error to v5 ([#4437](https://github.com/homarr-labs/homarr/issues/4437)) ([9a3feb4](https://github.com/homarr-labs/homarr/commit/9a3feb404c0c284b4f33fce12d87a469741a6ebd))
+* **security:** restrict modification of entrypoint script ([#4555](https://github.com/homarr-labs/homarr/issues/4555)) ([524e1a4](https://github.com/homarr-labs/homarr/commit/524e1a485be56dbebf8f71d4546bc65672737f30))
+
 ## [1.44.0](https://github.com/homarr-labs/homarr/compare/v1.43.3...v1.44.0) (2025-11-21)
 
 ### Features
