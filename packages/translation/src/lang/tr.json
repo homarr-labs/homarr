@@ -2232,6 +2232,7 @@
         "unknown": "Bilinmeyen",
         "pending": "Bekleyen",
         "processing": "İşlemde",
+        "requested": "",
         "partiallyAvailable": "Kısmi",
         "available": "Mevcut",
         "blacklisted": "Engellenenler",

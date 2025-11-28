@@ -3,9 +3,9 @@ import type { ContainerInfo, ContainerStats } from "dockerode";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
+import type { ContainerState } from "@homarr/docker";
+import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
-import type { ContainerState } from "../../docker/src";
-import { DockerSingleton } from "../../docker/src";
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
 export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
@@ -27,13 +27,11 @@ async function getContainersWithStatsAsync() {
   const containers = await Promise.all(
     dockerInstances.map(async ({ instance, host }) => {
       const instanceContainers = await instance.listContainers({ all: true });
-      return instanceContainers.map((container) => ({
-        ...container,
-        instance: host,
-      }));
+      return instanceContainers
+        .filter((container) => dockerLabels.hide in container.Labels === false)
+        .map((container) => ({ ...container, instance: host }));
     }),
   ).then((res) => res.flat());
-
   const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
 
   const dbIcons =

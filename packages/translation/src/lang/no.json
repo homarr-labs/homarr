@@ -2232,6 +2232,7 @@
         "unknown": "Ukjent",
         "pending": "Pågår",
         "processing": "Prosesserer",
+        "requested": "",
         "partiallyAvailable": "Delvis",
         "available": "Tilgjengelig",
         "blacklisted": "",

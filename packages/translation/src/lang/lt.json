@@ -2232,6 +2232,7 @@
         "unknown": "Nežinoma",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "Dalis",
         "available": "Galima",
         "blacklisted": "",

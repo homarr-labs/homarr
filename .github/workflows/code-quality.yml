@@ -1,4 +1,6 @@
 name: "[Quality] Code Analysis"
+permissions:
+  contents: read
 
 on:
   pull_request:

@@ -2232,6 +2232,7 @@
         "unknown": "Neznámý",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "Částečně dostupné",
         "available": "K dispozici",
         "blacklisted": "",

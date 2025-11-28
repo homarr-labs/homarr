@@ -2232,6 +2232,7 @@
         "unknown": "Không rõ",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "Một phần",
         "available": "Khả dụng",
         "blacklisted": "",

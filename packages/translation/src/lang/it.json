@@ -730,7 +730,7 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Causa con più dettagli"
           }
         },
         "unknown": {
@@ -738,7 +738,7 @@
           "description": "Si è verificato un errore sconosciuto, apri la causa sottostante per vedere maggiori dettagli"
         },
         "parse": {
-          "title": "",
+          "title": "Errore di analisi",
           "description": "La risposta non può essere analizzata. Si prega di verificare che l'URL stia puntando all'URL di base del servizio."
         },
         "authorization": {
@@ -959,8 +959,8 @@
           "newLabel": "Nuovo ID token"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Dominio",
+          "newLabel": "Nuovo dominio"
         },
         "personalAccessToken": {
           "label": "Token d'Accesso Personale",
@@ -1053,7 +1053,7 @@
       "backToOverview": "Torna alla panoramica",
       "change": "Cambia",
       "create": "Crea",
-      "createAnother": "",
+      "createAnother": "Crea e ricomincia",
       "edit": "Modifica",
       "import": "Importa",
       "insert": "Inserisci",
@@ -1389,8 +1389,8 @@
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "Riepilogo del filtraggio DNS",
+      "description": "Mostra il riepilogo del tuo filtro DNS",
       "option": {
         "layout": {
           "label": "Layout",
@@ -1411,7 +1411,7 @@
         }
       },
       "error": {
-        "internalServerError": "",
+        "internalServerError": "Impossibile recuperare il riepilogo del filtro DNS",
         "integrationsDisconnected": "Nessun dato disponibile, tutte le integrazioni disconnesse"
       },
       "data": {
@@ -1423,7 +1423,7 @@
       "domainsTooltip": "A causa di più integrazioni, Homarr non può calcolare il numero esatto di domini bloccati"
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "Controlli del filtro DNS",
       "description": "Controlla PiHole o AdGuard dalla tua dashboard",
       "option": {
         "layout": {
@@ -1445,7 +1445,7 @@
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Impossibile controllare il DNS Hole"
       },
       "controls": {
         "enableAll": "Abilita tutto",
@@ -1514,7 +1514,7 @@
           "label": "Indirizzo del server"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Server Bedrock"
         }
       },
       "status": {
@@ -1625,7 +1625,7 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "Nessun URL iFrame fornito",
         "unsupportedProtocol": "L'URL fornito sta usando un protocollo non supportato. Si prega di utilizzare uno di ({supportedProtocols})",
         "noBrowerSupport": "Il tuo browser non supporta iframes. Aggiorna il tuo browser."
       }
@@ -1664,7 +1664,7 @@
       }
     },
     "stockPrice": {
-      "name": "",
+      "name": "Prezzo delle azioni",
       "description": "Visualizza il prezzo attuale delle azioni di una società",
       "option": {
         "stock": {
@@ -1835,7 +1835,7 @@
       "title": "Index manager",
       "testAll": "Prova tutto",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Impossibile recuperare lo stato degli indicizzatori"
       }
     },
     "healthMonitoring": {
@@ -2020,7 +2020,7 @@
         "name": "Nome",
         "id": "Id",
         "metadata": {
-          "title": "",
+          "title": "Statistiche per nerd",
           "video": {
             "title": "Video",
             "resolution": "Risoluzione"
@@ -2034,7 +2034,7 @@
             "title": "Transcodifica",
             "container": "Container",
             "resolution": "Risoluzione",
-            "target": ""
+            "target": "Codec di destinazione"
           }
         }
       }
@@ -2098,7 +2098,7 @@
           "detailsTitle": "Categorie (Informazioni aggiuntive)"
         },
         "downSpeed": {
-          "columnTitle": "",
+          "columnTitle": "Giù",
           "detailsTitle": "Velocità Di Download"
         },
         "index": {
@@ -2112,22 +2112,22 @@
           "columnTitle": "Integrazione"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Nome del job"
         },
         "progress": {
           "columnTitle": "Avanzamento",
-          "detailsTitle": ""
+          "detailsTitle": "Avanzamento del download"
         },
         "ratio": {
           "columnTitle": "Rapporto",
           "detailsTitle": "Rapporto torrent (ricevuti/inviati)"
         },
         "received": {
-          "columnTitle": "",
+          "columnTitle": "Totale fuori servizio",
           "detailsTitle": "Totale scaricati"
         },
         "sent": {
-          "columnTitle": "",
+          "columnTitle": "Totale operativo",
           "detailsTitle": "Totale Caricati"
         },
         "size": {
@@ -2136,7 +2136,7 @@
         },
         "state": {
           "columnTitle": "Stato",
-          "detailsTitle": ""
+          "detailsTitle": "Stato job"
         },
         "time": {
           "columnTitle": "Ora di fine",
@@ -2158,7 +2158,7 @@
         "completed": "Completato",
         "failed": "Non riuscito",
         "processing": "In lavorazione",
-        "leeching": "",
+        "leeching": "Leeching",
         "stalled": "In stallo",
         "unknown": "Sconosciuto",
         "seeding": "Seeding"
@@ -2205,7 +2205,7 @@
           "label": "Mostra suggerimento descrizione"
         },
         "showType": {
-          "label": ""
+          "label": "Mostra il badge del tipo di media"
         },
         "showSource": {
           "label": "Mostra sorgente integrazione"
@@ -2216,7 +2216,7 @@
       }
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "Elenco Richieste Media",
       "description": "Visualizza un elenco di tutte le richieste media dalla tua istanza Overseerr o Jellyseerr",
       "option": {
         "linksTargetNewTab": {
@@ -2232,9 +2232,10 @@
         "unknown": "Sconosciuto",
         "pending": "In sospeso",
         "processing": "In lavorazione",
+        "requested": "Richiesto",
         "partiallyAvailable": "Parziale",
         "available": "Disponibile",
-        "blacklisted": "",
+        "blacklisted": "In blacklist",
         "deleted": "Eliminato"
       },
       "status": {
@@ -2247,7 +2248,7 @@
       "toBeDetermined": "TBD"
     },
     "mediaRequests-requestStats": {
-      "name": "",
+      "name": "Statistiche Richiesta Media",
       "description": "Statistiche sulle richieste dei media",
       "option": {},
       "titles": {
@@ -2338,7 +2339,7 @@
           "label": "Abilita RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Limita le righe della descrizione"
         },
         "maximumAmountPosts": {
           "label": "Limite di post"
@@ -2353,11 +2354,11 @@
       "description": "Visualizza un elenco della versione corrente dei repository dati con la versione regex specificata.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
+          "label": "Nuova versione entro",
           "description": "Esempio di utilizzo: 1w (1 settimana), 10M (10 mesi). Tipi di unità accettati h (ore), d (giorni), w (settimane), M (mesi), y (anni). Lasciare vuoto per non evidenziare le nuove versioni."
         },
         "staleReleaseWithin": {
-          "label": "",
+          "label": "Rilascio obsoleto entro",
           "description": "Esempio di utilizzo: 1w (1 settimana), 10M (10 mesi). Tipi di unità accettati h (ore), d (giorni), w (settimane), M (mesi), y (anni). Lasciare vuoto per non evidenziare le release obsolete."
         },
         "showOnlyHighlighted": {
@@ -2702,7 +2703,7 @@
         "label": "Titolo della pagina"
       },
       "metaTitle": {
-        "label": ""
+        "label": "Meta title"
       },
       "logoImageUrl": {
         "label": "URL immagine del logo"
@@ -2948,7 +2949,7 @@
         "label": "Numero di colonne"
       },
       "breakpoint": {
-        "label": "",
+        "label": "Breakpoint",
         "description": "Il layout verrà utilizzato su tutti gli schermi più grandi di questo breakpoint fino al breakpoint più grande successivo."
       }
     }
@@ -3322,7 +3323,7 @@
               "label": "Analytics"
             },
             "smartHomeEntityState": {
-              "label": ""
+              "label": "Stato dell'entità Smart Home"
             },
             "ping": {
               "label": "Ping"
@@ -3337,10 +3338,10 @@
               "label": "Scaricamenti"
             },
             "mediaRequestStats": {
-              "label": ""
+              "label": "Statistiche richieste media"
             },
             "mediaRequestList": {
-              "label": ""
+              "label": "Elenco richieste media"
             },
             "rssFeeds": {
               "label": "Feeds RSS"
@@ -3349,10 +3350,10 @@
               "label": "Gestione Indicizzatori"
             },
             "healthMonitoring": {
-              "label": ""
+              "label": "Monitoraggio integrità del sistema"
             },
             "dnsHole": {
-              "label": ""
+              "label": "Dati di filtraggio DNS"
             },
             "updateChecker": {
               "label": "Controllo aggiornamenti"
@@ -3435,10 +3436,10 @@
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "Attività attivata con successo"
             },
             "error": {
-              "message": ""
+              "message": "Impossibile attivare l'attività"
             }
           },
           "enable": {
@@ -3453,7 +3454,7 @@
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "Impossibile attivare lo stato dell'attività"
             }
           }
         },
@@ -3517,12 +3518,12 @@
               "action": "Azione"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
+              "toggleBoardEdit": "Attiva la modalità di modifica della board",
+              "toggleColorScheme": "Attiva tema chiaro/scuro",
+              "saveNotebook": "Salva notebook (solo nel widget notebook)",
               "openSpotlight": "Apri ricerca"
             },
-            "note": ""
+            "note": "Suggerimento: 'Mod' si riferisce sia al tasto Ctrl che al tasto ⌘ su macOS"
           }
         }
       }
@@ -3534,7 +3535,7 @@
       "updated": "Aggiornato {when}",
       "search": "Cerca {count} container",
       "selected": "{selectCount} di {totalCount} containers selezionati",
-      "footer": ""
+      "footer": "Totale container {count}"
     },
     "field": {
       "name": {
@@ -3672,11 +3673,11 @@
       "resources": {
         "title": "Risorse",
         "nodes": "Nodi",
-        "namespaces": "",
+        "namespaces": "Spazi dei nomi",
         "ingresses": "Ingressi",
         "services": "Servizi",
         "pods": "Pods",
-        "configmaps": "",
+        "configmaps": "ConfigMaps",
         "secrets": "Secrets",
         "volumes": "Volumi"
       }
@@ -3721,7 +3722,7 @@
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "Spazi dei nomi",
       "field": {
         "name": {
           "label": "Nome"
@@ -3730,7 +3731,7 @@
           "label": "Stato",
           "option": {
             "active": "Attivo",
-            "terminating": ""
+            "terminating": "Terminare"
           }
         },
         "creationTimestamp": {
@@ -3738,7 +3739,7 @@
         }
       },
       "table": {
-        "search": ""
+        "search": "Cerca {count} spazi dei nomi"
       }
     },
     "ingresses": {
@@ -3761,7 +3762,7 @@
         }
       },
       "table": {
-        "search": ""
+        "search": "Cerca {count} ingresses"
       }
     },
     "services": {
@@ -3771,7 +3772,7 @@
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "Spazio del nome"
         },
         "type": {
           "label": "Tipo"
@@ -3800,7 +3801,7 @@
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "Spazio del nome"
         },
         "image": {
           "label": "Immagine"
@@ -3826,7 +3827,7 @@
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "spazio del nome"
         },
         "type": {
           "label": "tipo"
@@ -3836,24 +3837,24 @@
         }
       },
       "table": {
-        "search": ""
+        "search": "Cerca {count} segreti"
       }
     },
     "configmaps": {
-      "label": "",
+      "label": "ConfigMaps",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "namespace"
         },
         "creationTimestamp": {
           "label": "Creato"
         }
       },
       "table": {
-        "search": ""
+        "search": "Cerca {count} ConfigMaps"
       }
     },
     "volumes": {
@@ -3863,7 +3864,7 @@
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "accessModes": {
           "label": "Modalità Di Accesso"
@@ -3872,7 +3873,7 @@
           "label": "Spazio di archiviazione"
         },
         "storageClassName": {
-          "label": ""
+          "label": "Nome Classe Archivio"
         },
         "volumeMode": {
           "label": "Modalità Volume"
@@ -3888,7 +3889,7 @@
         }
       },
       "table": {
-        "search": ""
+        "search": "Cerca {count} volumi"
       }
     },
     "error": {
@@ -3989,7 +3990,7 @@
             "label": "Nodi"
           },
           "namespaces": {
-            "label": ""
+            "label": "Namespaces"
           },
           "ingresses": {
             "label": "Ingressi"
@@ -4001,7 +4002,7 @@
             "label": "pods"
           },
           "configmaps": {
-            "label": ""
+            "label": "ConfigMaps"
           },
           "secrets": {
             "label": "Secrets"
@@ -4092,7 +4093,7 @@
             "option": {
               "colorScheme": {
                 "light": "Passa al tema chiaro",
-                "dark": "Passa alla modalità scura"
+                "dark": "Passa al tema scuro"
               },
               "language": {
                 "label": "Cambia lingua",

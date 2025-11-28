@@ -2232,6 +2232,7 @@
         "unknown": "不明",
         "pending": "保留中",
         "processing": "処理中",
+        "requested": "",
         "partiallyAvailable": "一部",
         "available": "利用可能",
         "blacklisted": "ブラックリスト",
