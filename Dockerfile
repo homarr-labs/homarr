@@ -55,7 +55,7 @@ COPY --from=builder /app/apps/nextjs/.next/standalone ./
 COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
 COPY scripts/run.sh ./run.sh
-COPY --chmod=777 scripts/entrypoint.sh ./entrypoint.sh
+COPY --chmod=755 scripts/entrypoint.sh ./entrypoint.sh
 COPY packages/redis/redis.conf /app/redis.conf
 COPY nginx.conf /etc/nginx/templates/nginx.conf
 
