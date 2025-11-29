@@ -16,6 +16,7 @@ import {
   IconResize,
   IconSettings,
 } from "@tabler/icons-react";
+import { applyAutoLayoutToBoard } from "node_modules/@homarr/api/src/router/board/board-layout";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -165,7 +166,7 @@ const EditModeMenu = () => {
   });
 
   const toggle = useCallback(() => {
-    if (isEditMode) return saveBoard(board);
+    if (isEditMode) return saveBoard(applyAutoLayoutToBoard(board));
     open();
   }, [board, isEditMode, saveBoard, open]);
 

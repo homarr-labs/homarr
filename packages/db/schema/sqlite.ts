@@ -5,16 +5,11 @@ import { relations, sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
 import { blob, index, int, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-import {
-  backgroundImageAttachments,
-  backgroundImageRepeats,
-  backgroundImageSizes,
-  emptySuperJSON,
-} from "@homarr/definitions";
 import type {
   BackgroundImageAttachment,
   BackgroundImageRepeat,
   BackgroundImageSize,
+  BoardLayoutMode,
   BoardPermission,
   ColorScheme,
   GroupPermissionKey,
@@ -26,6 +21,12 @@ import type {
   SectionKind,
   SupportedAuthProvider,
   WidgetKind,
+} from "@homarr/definitions";
+import {
+  backgroundImageAttachments,
+  backgroundImageRepeats,
+  backgroundImageSizes,
+  emptySuperJSON,
 } from "@homarr/definitions";
 
 export const apiKeys = sqliteTable("apiKey", {
@@ -274,6 +275,11 @@ export const boards = sqliteTable("board", {
   iconColor: text(),
   itemRadius: text().$type<MantineSize>().default("lg").notNull(),
   disableStatus: int({ mode: "boolean" }).default(false).notNull(),
+  // This has to be custom as the previous behaviour was custom
+  layoutMode: text().$type<BoardLayoutMode>().default("custom").notNull(),
+  baseLayoutId: text().references((): AnySQLiteColumn => layouts.id, {
+    onDelete: "set null",
+  }),
 });
 
 export const boardUserPermissions = sqliteTable(
@@ -663,6 +669,10 @@ export const boardRelations = relations(boards, ({ many, one }) => ({
   userPermissions: many(boardUserPermissions),
   groupPermissions: many(boardGroupPermissions),
   layouts: many(layouts),
+  baseLayout: one(layouts, {
+    fields: [boards.baseLayoutId],
+    references: [layouts.id],
+  }),
   groupHomes: many(groups, {
     relationName: "groupRelations__board__homeBoardId",
   }),
