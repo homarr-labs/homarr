@@ -600,13 +600,32 @@ export const boardRouter = createTRPCRouter({
     const board = await getFullBoardWithWhereAsync(ctx.db, eq(boards.id, input.id), ctx.session.user.id);
 
     const addedLayouts = filterAddedItems(input.layouts, board.layouts);
+    const removedLayouts = filterRemovedItems(input.layouts, board.layouts);
+
+    if (input.layoutMode === "auto" && input.baseLayoutId === null) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Base layout must be set when using automatic layout mode",
+      });
+    }
+
+    if (removedLayouts.some((layout) => layout.id === input.baseLayoutId)) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Cannot remove base layout",
+      });
+    }
 
     const layoutsToInsert: InferInsertModel<typeof layouts>[] = [];
     const itemSectionLayoutsToInsert: InferInsertModel<typeof itemLayouts>[] = [];
     const sectionLayoutsToInsert: InferInsertModel<typeof sectionLayouts>[] = [];
 
+    let baseLayoutId = input.baseLayoutId;
     for (const addedLayout of addedLayouts) {
       const layoutId = createId();
+      if (addedLayout.id === input.baseLayoutId) {
+        baseLayoutId = layoutId;
+      }
 
       layoutsToInsert.push({
         id: layoutId,
@@ -713,11 +732,18 @@ export const boardRouter = createTRPCRouter({
         .where(eq(layouts.id, updatedLayout.id));
     }
 
-    const removedLayouts = filterRemovedItems(input.layouts, board.layouts);
     const removedLayoutIds = removedLayouts.map((layout) => layout.id);
     if (removedLayoutIds.length > 0) {
       await ctx.db.delete(layouts).where(inArray(layouts.id, removedLayoutIds));
     }
+
+    await ctx.db
+      .update(boards)
+      .set({
+        baseLayoutId,
+        layoutMode: input.layoutMode,
+      })
+      .where(eq(boards.id, input.id));
   }),
   savePartialBoardSettings: protectedProcedure
     .input(boardSavePartialSettingsSchema.and(z.object({ id: z.string() })))

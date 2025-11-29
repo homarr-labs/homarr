@@ -80,6 +80,9 @@ export const boardSaveLayoutsSchema = z.object({
       breakpoint: z.number().min(0).max(32767),
     }),
   ),
+  // If not send it should fallback to the legacy behavior which is "custom"
+  layoutMode: z.enum(boardLayoutModes.values).default("custom"),
+  baseLayoutId: z.string().nullish(),
 });
 
 export const boardSaveSchema = z.object({
