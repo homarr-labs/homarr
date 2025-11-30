@@ -31,4 +31,5 @@ type RouterInputs = inferRouterInputs<AppRouter>;
 type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export { createTRPCContext, appRouter, createCaller, openApiDocument };
+export { applyAutoLayoutToBoard } from "./router/board/board-layout";
 export type { AppRouter, RouterInputs, RouterOutputs };

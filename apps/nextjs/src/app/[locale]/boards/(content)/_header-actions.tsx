@@ -16,8 +16,8 @@ import {
   IconResize,
   IconSettings,
 } from "@tabler/icons-react";
-import { applyAutoLayoutToBoard } from "node_modules/@homarr/api/src/router/board/board-layout";
 
+import { applyAutoLayoutToBoard } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
