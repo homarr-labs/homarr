@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  Badge,
+  Box,
   Button,
   Chip,
   ChipGroup,
@@ -61,12 +63,18 @@ export const LayoutSettingsContent = ({ board }: Props) => {
         <RadioGroup {...form.getInputProps("layoutMode")} label={t("board.field.layoutMode.label")}>
           <SimpleGrid cols={{ sm: 2, xs: 1 }} spacing="md">
             {boardLayoutModes.values.map((layoutMode) => (
-              <CustomRadioCard
-                key={layoutMode}
-                value={layoutMode}
-                label={t(`board.field.layoutMode.option.${layoutMode}.label`)}
-                description={t(`board.field.layoutMode.option.${layoutMode}.description`)}
-              />
+              <Box w="100%" key={layoutMode} pos="relative">
+                <CustomRadioCard
+                  value={layoutMode}
+                  label={t(`board.field.layoutMode.option.${layoutMode}.label`)}
+                  description={t(`board.field.layoutMode.option.${layoutMode}.description`)}
+                />
+                {layoutMode === boardLayoutModes.defaultValue && (
+                  <Badge pos="absolute" top="8px" right="8px" variant="light" size="sm">
+                    {t("common.select.badge.recommended")}
+                  </Badge>
+                )}
+              </Box>
             ))}
           </SimpleGrid>
         </RadioGroup>

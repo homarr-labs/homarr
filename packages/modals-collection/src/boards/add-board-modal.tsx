@@ -1,4 +1,6 @@
 import {
+  Badge,
+  Box,
   Button,
   Fieldset,
   Group,
@@ -84,12 +86,18 @@ export const AddBoardModal = createModal(({ actions }) => {
             <RadioGroup {...form.getInputProps("layoutMode")}>
               <SimpleGrid cols={{ sm: 2, xs: 1 }} spacing="md">
                 {boardLayoutModes.values.map((mode) => (
-                  <CustomRadioCard
-                    key={mode}
-                    value={mode}
-                    label={t(`board.field.layoutMode.option.${mode}.label`)}
-                    description={t(`board.field.layoutMode.option.${mode}.description`)}
-                  />
+                  <Box w="100%" key={mode} pos="relative">
+                    <CustomRadioCard
+                      value={mode}
+                      label={t(`board.field.layoutMode.option.${mode}.label`)}
+                      description={t(`board.field.layoutMode.option.${mode}.description`)}
+                    />
+                    {mode === boardLayoutModes.defaultValue && (
+                      <Badge pos="absolute" top="8px" right="8px" variant="light" size="sm">
+                        {t("common.select.badge.recommended")}
+                      </Badge>
+                    )}
+                  </Box>
                 ))}
               </SimpleGrid>
             </RadioGroup>
