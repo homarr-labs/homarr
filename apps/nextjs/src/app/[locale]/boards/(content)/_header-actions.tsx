@@ -17,8 +17,7 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 
-import { applyAutoLayoutToBoard } from "@homarr/api";
-import { clientApi } from "@homarr/api/client";
+import { applyAutoLayoutToBoard, clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
