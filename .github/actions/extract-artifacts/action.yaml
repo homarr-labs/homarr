@@ -19,11 +19,15 @@ runs:
     - name: Sleep
       run: sleep 5s
       shell: bash
+    - run: ls $(pwd)
+    - run: ls $(pwd)/extraction/
+    - run: ls $(pwd)/extraction/${{ inputs.architecture }}/
+    - run: ls $(pwd)/extraction/${{ inputs.architecture }}/apps
     - name: Extract from ${{ inputs.architecture }} container
       run: |
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/apps/* ./extraction/${{ inputs.architecture }}/apps \
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/build/* ./extraction/${{ inputs.architecture }}/build \
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/node_modules/* ./extraction/${{ inputs.architecture }}/node_modules
+        docker cp homarr-extraction-${{ inputs.architecture }}:/app/apps/. ./extraction/${{ inputs.architecture }}/apps && \
+        docker cp homarr-extraction-${{ inputs.architecture }}:/app/build/. ./extraction/${{ inputs.architecture }}/build && \
+        docker cp homarr-extraction-${{ inputs.architecture }}:/app/node_modules/. ./extraction/${{ inputs.architecture }}/node_modules
     - name: Copy non-compiled files from host for ${{ inputs.architecture }}
       run: |
         cp /scripts/entrypoint.sh ./extraction/${{ inputs.architecture }}/entrypoint.sh \
