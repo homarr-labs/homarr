@@ -19,17 +19,20 @@ runs:
     - name: Sleep
       run: sleep 5s
       shell: bash
+    - run: mkdir -p ${{ runner.temp }}/extraction/${{ inputs.architecture }}/
+    - run: docker exec -it homarr-extraction-${{ inputs.architecture }} "ls" "-lha"
     - name: Extract from ${{ inputs.architecture }} container
       run: |
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/apps/* ./extraction/${{ inputs.architecture }}/apps \
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/build/* ./extraction/${{ inputs.architecture }}/build \
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/node_modules/* ./extraction/${{ inputs.architecture }}/node_modules
-    - name: Copy non-compiled files from host for ${{ inputs.architecture }}
-      run: |
-        cp /scripts/entrypoint.sh ./extraction/${{ inputs.architecture }}/entrypoint.sh \
-        cp /scripts/next.config.ts ./extraction/${{ inputs.architecture }}/next.config.ts \
-        cp /scripts/run.sh ./extraction/${{ inputs.architecture }}/run.sh \
-        cp /scripts/package.json ./extraction/${{ inputs.architecture }}/package.json
+        docker exec homarr-extraction-${{ inputs.architecture }} tar -cf extraction.tar /app && \
+        docker cp homarr-extraction-${{ inputs.architecture }}:/app/extraction.tar ${{ runner.temp }}/extraction/${{ inputs.architecture }}/extraction.tar
+    - run: ls -lha
+    - run: pwd
     - name: Stop ${{ inputs.architecture }} container
       if: always()
       run: docker container remove --force --volumes homarr-extraction-${{ inputs.architecture }}
+    - name: Public Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        path: ${{ runner.temp }}/extraction/
+        if-no-files-found: error
+        name: extraction-${{ inputs.architecture }}
