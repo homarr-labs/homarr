@@ -2232,7 +2232,7 @@
         "unknown": "Desconocido",
         "pending": "Pendiente",
         "processing": "Procesando",
-        "requested": "",
+        "requested": "Solicitado",
         "partiallyAvailable": "Parcial",
         "available": "Disponible",
         "blacklisted": "Lista negra",
