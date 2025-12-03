@@ -34,7 +34,7 @@
     "octokit": "^5.0.5",
     "superjson": "2.2.5",
     "undici": "7.16.0",
-    "zod": "^4.1.12"
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
