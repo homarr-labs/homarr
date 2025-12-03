@@ -35,7 +35,7 @@
     "@mantine/hooks": "^8.3.8",
     "@tabler/icons-react": "^3.35.0",
     "mantine-react-table": "2.0.0-beta.9",
-    "next": "16.0.3",
+    "next": "16.0.5",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "svgson": "^5.3.1"
