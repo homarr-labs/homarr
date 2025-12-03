@@ -1,7 +1,7 @@
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { updateCheckerRequestHandler } from "@homarr/request-handler/update-checker";
 
-const localLogger = logger.child({ module: "invalidateUpdateCheckerCache" });
+const logger = createLogger({ module: "invalidateUpdateCheckerCache" });
 
 /**
  * Invalidates the update checker cache on startup to ensure fresh data.
@@ -11,8 +11,8 @@ export async function invalidateUpdateCheckerCacheAsync() {
   try {
     const handler = updateCheckerRequestHandler.handler({});
     await handler.invalidateAsync();
-    localLogger.debug("Update checker cache invalidated");
+    logger.debug("Update checker cache invalidated");
   } catch (error) {
-    localLogger.error(new Error("Failed to invalidate update checker cache", { cause: error }));
+    logger.error(new Error("Failed to invalidate update checker cache", { cause: error }));
   }
 }

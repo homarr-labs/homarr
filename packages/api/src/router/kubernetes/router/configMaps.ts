@@ -1,11 +1,13 @@
 import { TRPCError } from "@trpc/server";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { KubernetesBaseResource } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
 import { KubernetesClient } from "../kubernetes-client";
+
+const logger = createLogger({ module: "configMapsRouter" });
 
 export const configMapsRouter = createTRPCRouter({
   getConfigMaps: permissionRequiredProcedure
@@ -25,7 +27,6 @@ export const configMapsRouter = createTRPCRouter({
           };
         });
       } catch (error) {
-        logger.error("Unable to retrieve configMaps", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching Kubernetes ConfigMaps",

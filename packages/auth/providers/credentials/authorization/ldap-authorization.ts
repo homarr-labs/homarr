@@ -2,20 +2,22 @@ import { CredentialsSignin } from "@auth/core/errors";
 import { z } from "zod/v4";
 
 import { createId, extractErrorMessage } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
-import { logger } from "@homarr/log";
 import type { userSignInSchema } from "@homarr/validation/user";
 
 import { env } from "../../../env";
 import { LdapClient } from "../ldap-client";
 
+const logger = createLogger({ module: "ldapAuthorization" });
+
 export const authorizeWithLdapCredentialsAsync = async (
   db: Database,
   credentials: z.infer<typeof userSignInSchema>,
 ) => {
-  logger.info(`user ${credentials.name} is trying to log in using LDAP. Connecting to LDAP server...`);
+  logger.info("User is trying to log in using LDAP. Connecting to LDAP server...", { userName: credentials.name });
   const client = new LdapClient();
   await client
     .bindAsync({
@@ -23,8 +25,7 @@ export const authorizeWithLdapCredentialsAsync = async (
       password: env.AUTH_LDAP_BIND_PASSWORD,
     })
     .catch((error) => {
-      logger.error(`Failed to connect to LDAP server ${extractErrorMessage(error)}`);
-      throw new CredentialsSignin();
+      throw new CredentialsSignin("Failed to connect to LDAP server", { cause: error });
     });
 
   logger.info("Connected to LDAP server. Searching for user...");
@@ -41,21 +42,21 @@ export const authorizeWithLdapCredentialsAsync = async (
     .then((entries) => entries.at(0));
 
   if (!ldapUser) {
-    logger.warn(`User ${credentials.name} not found in LDAP`);
-    throw new CredentialsSignin();
+    throw new CredentialsSignin(`User not found in LDAP username="${credentials.name}"`);
   }
 
   // Validate email
   const mailResult = await z.string().email().safeParseAsync(ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE]);
 
   if (!mailResult.success) {
-    logger.error(
-      `User ${credentials.name} found but with invalid or non-existing Email. Not Supported: "${ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE]}"`,
-    );
-    throw new CredentialsSignin();
+    logger.error("User found in LDAP but with invalid or non-existing Email", {
+      userName: credentials.name,
+      emailValue: ldapUser[env.AUTH_LDAP_USER_MAIL_ATTRIBUTE],
+    });
+    throw new CredentialsSignin("User found in LDAP but with invalid or non-existing Email");
   }
 
-  logger.info(`User ${credentials.name} found in LDAP. Logging in...`);
+  logger.info("User found in LDAP. Logging in...", { userName: credentials.name });
 
   // Bind with user credentials to check if the password is correct
   const userClient = new LdapClient();
@@ -65,12 +66,12 @@ export const authorizeWithLdapCredentialsAsync = async (
       password: credentials.password,
     })
     .catch(() => {
-      logger.warn(`Wrong credentials for user ${credentials.name}`);
+      logger.warn("Wrong credentials for user", { userName: credentials.name });
       throw new CredentialsSignin();
     });
   await userClient.disconnectAsync();
 
-  logger.info(`User ${credentials.name} logged in successfully, retrieving user groups...`);
+  logger.info("User credentials are correct. Retrieving user groups...", { userName: credentials.name });
 
   const userGroups = await client
     .searchAsync({
@@ -86,7 +87,7 @@ export const authorizeWithLdapCredentialsAsync = async (
     })
     .then((entries) => entries.map((entry) => entry.cn).filter((group): group is string => group !== undefined));
 
-  logger.info(`Found ${userGroups.length} groups for user ${credentials.name}.`);
+  logger.info("User groups retrieved", { userName: credentials.name, groups: userGroups.length });
 
   await client.disconnectAsync();
 
@@ -104,7 +105,7 @@ export const authorizeWithLdapCredentialsAsync = async (
   });
 
   if (!user) {
-    logger.info(`User ${credentials.name} not found in the database. Creating...`);
+    logger.info("User not found in the database. Creating...", { userName: credentials.name });
 
     const insertUser = {
       id: createId(),
@@ -119,7 +120,7 @@ export const authorizeWithLdapCredentialsAsync = async (
 
     user = insertUser;
 
-    logger.info(`User ${credentials.name} created successfully.`);
+    logger.info("User created successfully", { userName: credentials.name });
   }
 
   return {

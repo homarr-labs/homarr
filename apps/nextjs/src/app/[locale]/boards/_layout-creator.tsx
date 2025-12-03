@@ -6,7 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { auth } from "@homarr/auth/next";
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { MainHeader } from "~/components/layout/header";
 import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
@@ -17,6 +17,8 @@ import type { Params } from "./(content)/_creator";
 import { CustomCss } from "./(content)/_custom-css";
 import { BoardReadyProvider } from "./(content)/_ready-context";
 import { BoardMantineProvider } from "./(content)/_theme";
+
+const logger = createLogger({ module: "createBoardLayout" });
 
 interface CreateBoardLayoutProps<TParams extends Params> {
   headerActions: JSX.Element;

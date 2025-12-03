@@ -4,12 +4,14 @@ import { zfd } from "zod-form-data";
 import { z } from "zod/v4";
 
 import { addCustomRootCertificateAsync, removeCustomRootCertificateAsync } from "@homarr/certificates/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq } from "@homarr/db";
 import { trustedCertificateHostnames } from "@homarr/db/schema";
-import { logger } from "@homarr/log";
 import { certificateValidFileNameSchema, checkCertificateFile } from "@homarr/validation/certificates";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
+
+const logger = createLogger({ module: "certificateRouter" });
 
 export const certificateRouter = createTRPCRouter({
   addCertificate: permissionRequiredProcedure

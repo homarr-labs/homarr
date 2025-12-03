@@ -1,8 +1,10 @@
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { beforeCallbackAsync, onCallbackErrorAsync, onCallbackSuccessAsync } from "@homarr/cron-job-status/publisher";
 import { createCronJobFunctions } from "@homarr/cron-jobs-core";
 import type { Logger } from "@homarr/cron-jobs-core/logger";
-import { logger } from "@homarr/log";
 import type { TranslationObject } from "@homarr/translation";
+
+const logger = createLogger({ module: "cronJobs" });
 
 class WinstonCronJobLogger implements Logger {
   logDebug(message: string) {

@@ -1,11 +1,13 @@
 import { TRPCError } from "@trpc/server";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { KubernetesVolume } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
 import { KubernetesClient } from "../kubernetes-client";
+
+const logger = createLogger({ module: "volumesRouter" });
 
 export const volumesRouter = createTRPCRouter({
   getVolumes: permissionRequiredProcedure
@@ -31,7 +33,6 @@ export const volumesRouter = createTRPCRouter({
           };
         });
       } catch (error) {
-        logger.error("Unable to retrieve volumes", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching Kubernetes Volumes",

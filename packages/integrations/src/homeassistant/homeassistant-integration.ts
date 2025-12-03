@@ -2,7 +2,8 @@ import z from "zod";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -13,13 +14,15 @@ import type { ISmartHomeIntegration } from "../interfaces/smart-home/smart-home-
 import type { CalendarEvent } from "../types";
 import { calendarEventSchema, calendarsSchema, entityStateSchema } from "./homeassistant-types";
 
+const logger = createLogger({ module: "homeAssistantIntegration" });
+
 export class HomeAssistantIntegration extends Integration implements ISmartHomeIntegration, ICalendarIntegration {
   public async getEntityStateAsync(entityId: string) {
     try {
       const response = await this.getAsync(`/api/states/${entityId}`);
       const body = await response.json();
       if (!response.ok) {
-        logger.warn(`Response did not indicate success`);
+        logger.warn("Response did not indicate success");
         return {
           success: false as const,
           error: "Response did not indicate success",
@@ -27,7 +30,7 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
       }
       return entityStateSchema.safeParseAsync(body);
     } catch (err) {
-      logger.error(`Failed to fetch from ${this.url("/")}: ${err as string}`);
+      logger.error(new ErrorWithMetadata("Failed to fetch entity state", { entityId }, { cause: err }));
       return {
         success: false as const,
         error: err,
@@ -43,7 +46,7 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
 
       return response.ok;
     } catch (err) {
-      logger.error(`Failed to fetch from '${this.url("/")}': ${err as string}`);
+      logger.error(new ErrorWithMetadata("Failed to trigger automation", { entityId }, { cause: err }));
       return false;
     }
   }
@@ -62,7 +65,7 @@ export class HomeAssistantIntegration extends Integration implements ISmartHomeI
 
       return response.ok;
     } catch (err) {
-      logger.error(`Failed to fetch from '${this.url("/")}': ${err as string}`);
+      logger.error(new ErrorWithMetadata("Failed to toggle entity", { entityId }, { cause: err }));
       return false;
     }
   }

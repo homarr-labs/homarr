@@ -1,13 +1,15 @@
 import { observable } from "@trpc/server/observable";
 import z from "zod/v4";
 
-import { logger } from "@homarr/log";
-import { logLevels } from "@homarr/log/constants";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { logLevels } from "@homarr/core/infrastructure/logs/constants";
 import type { LoggerMessage } from "@homarr/redis";
 import { loggingChannel } from "@homarr/redis";
 import { zodEnumFromArray } from "@homarr/validation/enums";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
+
+const logger = createLogger({ module: "logRouter" });
 
 export const logRouter = createTRPCRouter({
   subscribe: permissionRequiredProcedure

@@ -7,7 +7,7 @@ import * as ical from "node-ical";
 import { DAVClient } from "tsdav";
 
 import { createHttpsAgentAsync } from "@homarr/certificates/server";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationTsdavHttpErrorHandler } from "../base/errors/http";
@@ -16,6 +16,8 @@ import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
 import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
+
+const logger = createLogger({ module: "nextcloudIntegration" });
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

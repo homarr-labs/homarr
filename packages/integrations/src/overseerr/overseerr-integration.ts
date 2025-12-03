@@ -1,7 +1,8 @@
 import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -20,6 +21,8 @@ import {
   UpstreamMediaAvailability,
   UpstreamMediaRequestStatus,
 } from "../interfaces/media-requests/media-request-types";
+
+const logger = createLogger({ module: "overseerrIntegration" });
 
 interface OverseerrSearchResult {
   id: number;
@@ -236,7 +239,7 @@ export class OverseerrIntegration
   }
 
   public async approveRequestAsync(requestId: number): Promise<void> {
-    logger.info(`Approving media request id='${requestId}' integration='${this.integration.name}'`);
+    logger.info("Approving media request", { requestId, integration: this.integration.name });
     await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/approve`), {
       method: "POST",
       headers: {
@@ -245,16 +248,22 @@ export class OverseerrIntegration
     }).then((response) => {
       if (!response.ok) {
         logger.error(
-          `Failed to approve media request id='${requestId}' integration='${this.integration.name}' reason='${response.status} ${response.statusText}' url='${response.url}'`,
+          new ErrorWithMetadata("Failed to approve media request", {
+            requestId,
+            integration: this.integration.name,
+            reason: `${response.status} ${response.statusText}`,
+            url: response.url,
+          }),
         );
       }
 
-      logger.info(`Successfully approved media request id='${requestId}' integration='${this.integration.name}'`);
+      logger.info("Successfully approved media request", { requestId, integration: this.integration.name });
     });
   }
 
   public async declineRequestAsync(requestId: number): Promise<void> {
-    logger.info(`Declining media request id='${requestId}' integration='${this.integration.name}'`);
+    logger.info("Declining media request", { requestId, integration: this.integration.name });
+
     await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/request/${requestId}/decline`), {
       method: "POST",
       headers: {
@@ -263,11 +272,16 @@ export class OverseerrIntegration
     }).then((response) => {
       if (!response.ok) {
         logger.error(
-          `Failed to decline media request id='${requestId}' integration='${this.integration.name}' reason='${response.status} ${response.statusText}' url='${response.url}'`,
+          new ErrorWithMetadata("Failed to decline media request", {
+            requestId,
+            integration: this.integration.name,
+            reason: `${response.status} ${response.statusText}`,
+            url: response.url,
+          }),
         );
       }
 
-      logger.info(`Successfully declined media request id='${requestId}' integration='${this.integration.name}'`);
+      logger.info("Successfully declined media request", { requestId, integration: this.integration.name });
     });
   }
 

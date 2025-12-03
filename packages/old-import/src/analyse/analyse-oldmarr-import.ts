@@ -1,11 +1,14 @@
 import AdmZip from "adm-zip";
 import { z } from "zod/v4";
 
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
 
 import { oldmarrImportUserSchema } from "../user-schema";
 import type { analyseOldmarrImportInputSchema } from "./input";
+
+const logger = createLogger({ module: "analyseOldmarrImport" });
 
 export const analyseOldmarrImportForRouterAsync = async (input: z.infer<typeof analyseOldmarrImportInputSchema>) => {
   const { configs, checksum, users } = await analyseOldmarrImportAsync(input.file);
@@ -25,7 +28,13 @@ export const analyseOldmarrImportAsync = async (file: File) => {
   const configs = configEntries.map((entry) => {
     const result = oldmarrConfigSchema.safeParse(JSON.parse(entry.getData().toString()));
     if (!result.success) {
-      logger.error(`Failed to parse config ${entry.entryName} with error: ${JSON.stringify(result.error)}`);
+      logger.error(
+        new ErrorWithMetadata(
+          "Failed to parse oldmarr config",
+          { entryName: entry.entryName },
+          { cause: result.error },
+        ),
+      );
     }
 
     return {
@@ -57,7 +66,7 @@ const parseUsers = (entry: AdmZip.IZipEntry | undefined) => {
 
   const result = z.array(oldmarrImportUserSchema).safeParse(JSON.parse(entry.getData().toString()));
   if (!result.success) {
-    logger.error(`Failed to parse users with error: ${JSON.stringify(result.error)}`);
+    logger.error(new Error("Failed to parse users", { cause: result.error }));
   }
 
   return result.data ?? [];

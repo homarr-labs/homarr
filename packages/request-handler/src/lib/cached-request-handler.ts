@@ -1,8 +1,10 @@
 import dayjs from "dayjs";
 import type { Duration } from "dayjs/plugin/duration";
 
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { createChannelWithLatestAndEvents } from "@homarr/redis";
+
+const logger = createLogger({ module: "cachedRequestHandler" });
 
 interface Options<TData, TInput extends Record<string, unknown>> {
   // Unique key for this request handler
@@ -34,9 +36,10 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
           };
 
           if (forceUpdate) {
-            logger.debug(
-              `Cached request handler forced update for channel='${channel.name}' queryKey='${options.queryKey}'`,
-            );
+            logger.debug("Cached request handler forced update", {
+              channel: channel.name,
+              queryKey: options.queryKey,
+            });
             return await requestNewDataAsync();
           }
 
@@ -47,22 +50,27 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
             dayjs().diff(channelData.timestamp, "milliseconds") > options.cacheDuration.asMilliseconds();
 
           if (shouldRequestNewData) {
-            logger.debug(
-              `Cached request handler cache miss for channel='${channel.name}' queryKey='${options.queryKey}' reason='${!channelData ? "no data" : "cache expired"}'`,
-            );
+            logger.debug("Cached request handler cache miss", {
+              channel: channel.name,
+              queryKey: options.queryKey,
+              reason: !channelData ? "no data" : "cache expired",
+            });
             return await requestNewDataAsync();
           }
 
-          logger.debug(
-            `Cached request handler cache hit for channel='${channel.name}' queryKey='${options.queryKey}' expiresAt='${dayjs(channelData.timestamp).add(options.cacheDuration).toISOString()}'`,
-          );
+          logger.debug("Cached request handler cache hit", {
+            channel: channel.name,
+            queryKey: options.queryKey,
+            expiresAt: dayjs(channelData.timestamp).add(options.cacheDuration).toISOString(),
+          });
 
           return channelData;
         },
         async invalidateAsync() {
-          logger.debug(
-            `Cached request handler invalidating cache channel='${channel.name}' queryKey='${options.queryKey}'`,
-          );
+          logger.debug("Cached request handler invalidating cache", {
+            channel: channel.name,
+            queryKey: options.queryKey,
+          });
           await this.getCachedOrUpdatedDataAsync({ forceUpdate: true });
         },
         subscribe(callback: (data: TData) => void) {

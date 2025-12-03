@@ -3,7 +3,7 @@ import { Octokit, RequestError as OctokitRequestError } from "octokit";
 import type { fetch } from "undici";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationOctokitHttpErrorHandler } from "../base/errors/http";
@@ -18,7 +18,7 @@ import type {
   ReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
-const localLogger = logger.child({ module: "GithubIntegration" });
+const logger = createLogger({ module: "githubIntegration" });
 
 @HandleIntegrationErrors([integrationOctokitHttpErrorHandler])
 export class GithubIntegration extends Integration implements ReleasesProviderIntegration {
@@ -45,7 +45,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
   private parseIdentifier(identifier: string) {
     const [owner, name] = identifier.split("/");
     if (!owner || !name) {
-      localLogger.warn(`Invalid identifier format. Expected 'owner/name', for ${identifier} with Github integration`, {
+      logger.warn("Invalid identifier format. Expected 'owner/name' for identifier", {
         identifier,
       });
       return null;
@@ -64,7 +64,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
       const releasesResponse = await api.rest.repos.listReleases({ owner, repo: name });
 
       if (releasesResponse.data.length === 0) {
-        localLogger.warn(`No releases found, for ${owner}/${name} with Github integration`, {
+        logger.warn("No releases found", {
           identifier: `${owner}/${name}`,
         });
         return { success: false, error: { code: "noMatchingVersion" } };
@@ -91,7 +91,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
       return { success: true, data: { ...details, ...latestRelease } };
     } catch (error) {
       const errorMessage = error instanceof OctokitRequestError ? error.message : String(error);
-      localLogger.warn(`Failed to get releases for ${owner}\\${name} with Github integration`, {
+      logger.warn("Failed to get releases", {
         owner,
         name,
         error: errorMessage,
@@ -122,7 +122,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
         forksCount: response.data.forks_count,
       };
     } catch (error) {
-      localLogger.warn(`Failed to get details for ${owner}\\${name} with Github integration`, {
+      logger.warn("Failed to get details", {
         owner,
         name,
         error: error instanceof OctokitRequestError ? error.message : String(error),

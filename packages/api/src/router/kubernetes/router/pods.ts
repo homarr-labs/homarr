@@ -2,12 +2,14 @@ import type { KubeConfig, V1OwnerReference } from "@kubernetes/client-node";
 import { AppsV1Api } from "@kubernetes/client-node";
 import { TRPCError } from "@trpc/server";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { KubernetesPod } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
 import { KubernetesClient } from "../kubernetes-client";
+
+const logger = createLogger({ module: "podsRouter" });
 
 export const podsRouter = createTRPCRouter({
   getPods: permissionRequiredProcedure
@@ -55,7 +57,6 @@ export const podsRouter = createTRPCRouter({
 
         return pods;
       } catch (error) {
-        logger.error("Unable to retrieve pods", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching Kubernetes pods",

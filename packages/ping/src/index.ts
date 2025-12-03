@@ -2,7 +2,10 @@ import { fetch } from "undici";
 
 import { extractErrorMessage } from "@homarr/common";
 import { LoggingAgent } from "@homarr/common/server";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
+
+const logger = createLogger({ module: "ping" });
 
 export const sendPingRequestAsync = async (url: string) => {
   try {
@@ -29,7 +32,7 @@ export const sendPingRequestAsync = async (url: string) => {
         return { statusCode: response.status, durationMs };
       });
   } catch (error) {
-    logger.error(new Error(`Failed to send ping request to "${url}"`, { cause: error }));
+    logger.error(new ErrorWithMetadata("Failed to send ping request", { url }, { cause: error }));
     return {
       error: extractErrorMessage(error),
     };

@@ -2,7 +2,7 @@ import type { Headers, HeadersInit, fetch as undiciFetch, Response as UndiciResp
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -13,7 +13,7 @@ import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-mo
 import type { SystemHealthMonitoring } from "../types";
 import { cpuTempSchema, fileSystemSchema, smartSchema, systemInformationSchema } from "./openmediavault-types";
 
-const localLogger = logger.child({ module: "OpenMediaVaultIntegration" });
+const logger = createLogger({ module: "openMediaVaultIntegration" });
 
 type SessionStoreValue =
   | { type: "header"; sessionId: string }
@@ -151,13 +151,13 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
     const storedSession = await this.sessionStore.getAsync();
 
     if (storedSession) {
-      localLogger.debug("Using stored session for request", { integrationId: this.integration.id });
+      logger.debug("Using stored session for request", { integrationId: this.integration.id });
       const response = await callback(storedSession);
       if (response.status !== 401) {
         return response;
       }
 
-      localLogger.debug("Session expired, getting new session", { integrationId: this.integration.id });
+      logger.debug("Session expired, getting new session", { integrationId: this.integration.id });
     }
 
     const session = await this.getSessionAsync();

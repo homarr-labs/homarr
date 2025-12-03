@@ -1,10 +1,10 @@
 import { env } from "@homarr/auth/env";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db, eq, inArray } from "@homarr/db";
 import { sessions, users } from "@homarr/db/schema";
 import { supportedAuthProviders } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
-const localLogger = logger.child({ module: "sessionCleanup" });
+const logger = createLogger({ module: "sessionCleanup" });
 
 /**
  * Deletes sessions for users that have inactive auth providers.
@@ -29,11 +29,13 @@ export async function cleanupSessionsAsync() {
     await db.delete(sessions).where(inArray(sessions.userId, userIds));
 
     if (sessionsWithInactiveProviders.length > 0) {
-      localLogger.info(`Deleted sessions for inactive providers count=${userIds.length}`);
+      logger.info(`Deleted sessions for inactive providers`, {
+        count: userIds.length,
+      });
     } else {
-      localLogger.debug("No sessions to delete");
+      logger.debug("No sessions to delete");
     }
   } catch (error) {
-    localLogger.error(new Error("Failed to clean up sessions", { cause: error }));
+    logger.error(new Error("Failed to clean up sessions", { cause: error }));
   }
 }

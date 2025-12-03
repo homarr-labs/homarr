@@ -1,15 +1,18 @@
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import type { Indexer } from "@homarr/integrations/types";
-import { logger } from "@homarr/log";
 import { indexerManagerRequestHandler } from "@homarr/request-handler/indexer-manager";
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
+
+const logger = createLogger({ module: "indexerManagerRouter" });
 
 const createIndexerManagerIntegrationMiddleware = (action: IntegrationAction) =>
   createManyIntegrationMiddleware(action, ...getIntegrationKindsByCategory("indexerManager"));
@@ -61,10 +64,10 @@ export const indexerManagerRouter = createTRPCRouter({
         ctx.integrations.map(async (integration) => {
           const client = await createIntegrationAsync(integration);
           await client.testAllAsync().catch((err) => {
-            logger.error("indexer-manager router - ", err);
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
               message: `Failed to test all indexers for ${integration.name} (${integration.id})`,
+              cause: err,
             });
           });
         }),

@@ -11,12 +11,14 @@ import type { Pool as MysqlConnectionPool } from "mysql2";
 import mysql from "mysql2";
 import { Pool as PostgresPool } from "pg";
 
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { env } from "./env";
 import * as mysqlSchema from "./schema/mysql";
 import * as pgSchema from "./schema/postgresql";
 import * as sqliteSchema from "./schema/sqlite";
+
+const logger = createLogger({ module: "dbDriver" });
 
 export type HomarrDatabase = BetterSQLite3Database<typeof sqliteSchema>;
 export type HomarrDatabaseMysql = MySql2Database<typeof mysqlSchema>;
@@ -44,7 +46,7 @@ export let database: HomarrDatabase;
 
 class WinstonDrizzleLogger implements Logger {
   logQuery(query: string, _: unknown[]): void {
-    logger.debug(`Executed SQL query: ${query}`);
+    logger.debug("Executed SQL query", { query });
   }
 }
 

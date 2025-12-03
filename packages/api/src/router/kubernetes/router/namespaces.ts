@@ -1,11 +1,13 @@
 import { TRPCError } from "@trpc/server";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { KubernetesNamespace, KubernetesNamespaceState } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
 import { KubernetesClient } from "../kubernetes-client";
+
+const logger = createLogger({ module: "namespacesRouter" });
 
 export const namespacesRouter = createTRPCRouter({
   getNamespaces: permissionRequiredProcedure
@@ -25,7 +27,6 @@ export const namespacesRouter = createTRPCRouter({
           } satisfies KubernetesNamespace;
         });
       } catch (error) {
-        logger.error("Unable to retrieve namespaces", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching Kubernetes namespaces",
