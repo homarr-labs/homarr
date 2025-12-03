@@ -1,3 +1,22 @@
+## [1.45.1](https://github.com/homarr-labs/homarr/compare/v1.45.0...v1.45.1) (2025-12-03)
+
+### Bug Fixes
+
+* **deps:** update dependency chroma-js to ^3.1.4 ([#4570](https://github.com/homarr-labs/homarr/issues/4570)) ([d6fc46d](https://github.com/homarr-labs/homarr/commit/d6fc46df3b5e2dd79ff6f9a3dd3a3e2050a0eeef))
+* **deps:** update dependency chroma-js to ^3.2.0 ([#4585](https://github.com/homarr-labs/homarr/issues/4585)) ([b2c46d3](https://github.com/homarr-labs/homarr/commit/b2c46d33d6cc769e89e208fd29d3a1d143cf74c7))
+* **deps:** update dependency isomorphic-dompurify to ^2.33.0 ([#4581](https://github.com/homarr-labs/homarr/issues/4581)) ([ca01a31](https://github.com/homarr-labs/homarr/commit/ca01a31fe5cbce53eb0e6bd1a943320c092161ef))
+* **deps:** update dependency next-intl to v4.5.6 ([#4571](https://github.com/homarr-labs/homarr/issues/4571)) ([3062dda](https://github.com/homarr-labs/homarr/commit/3062ddafbe0bc1dbac9259af4036f0fa32d85237))
+* **deps:** update dependency sass to ^1.94.2 ([#4572](https://github.com/homarr-labs/homarr/issues/4572)) ([7a8c50f](https://github.com/homarr-labs/homarr/commit/7a8c50fa4c5224dd74af3c17f56e2e5b8d6a4f43))
+* **deps:** update dependency superjson to v2.2.6 ([#4573](https://github.com/homarr-labs/homarr/issues/4573)) ([deb5e9d](https://github.com/homarr-labs/homarr/commit/deb5e9d96092069e296ba473eaad58367b516f85))
+* **deps:** update dependency swagger-ui-react to ^5.30.3 ([#4574](https://github.com/homarr-labs/homarr/issues/4574)) ([d2c1dc3](https://github.com/homarr-labs/homarr/commit/d2c1dc3cc1dd72fc9fc8ae9613467fa0b0b8d75a))
+* **deps:** update dependency zod to ^4.1.13 ([#4575](https://github.com/homarr-labs/homarr/issues/4575)) ([879a77f](https://github.com/homarr-labs/homarr/commit/879a77ff2a81b0d0a17d1487eaf6d8539a955301))
+* **deps:** update mantine monorepo to ^8.3.9 ([#4576](https://github.com/homarr-labs/homarr/issues/4576)) ([d5d59dd](https://github.com/homarr-labs/homarr/commit/d5d59dd2561f0be2f4f4c689f33c6a9a7840a21c))
+* **deps:** update nextjs monorepo to v16.0.5 ([#4577](https://github.com/homarr-labs/homarr/issues/4577)) ([16f12d9](https://github.com/homarr-labs/homarr/commit/16f12d98e6cdae50fe2989db0911cb1350fcb93b))
+* **deps:** update tanstack-query monorepo ([#4578](https://github.com/homarr-labs/homarr/issues/4578)) ([59bcbc8](https://github.com/homarr-labs/homarr/commit/59bcbc8b4de4a0a8cee8adf6336c7c10477c766a))
+* **deps:** update testcontainers-node monorepo to ^11.9.0 ([#4583](https://github.com/homarr-labs/homarr/issues/4583)) ([10bdd74](https://github.com/homarr-labs/homarr/commit/10bdd74b2b287cb08ec0926147ac0e7fcfd492bb))
+* **deps:** update trpc monorepo to ^11.7.2 ([#4579](https://github.com/homarr-labs/homarr/issues/4579)) ([3453482](https://github.com/homarr-labs/homarr/commit/3453482ed43644025c39dee8e20549e1beb86be0))
+* **security:** rce vulnerability in nextjs ([b40deba](https://github.com/homarr-labs/homarr/commit/b40deba9ff1a3d629b6027565378d9f3ad2f1980))
+
 ## [1.45.0](https://github.com/homarr-labs/homarr/compare/v1.44.0...v1.45.0) (2025-11-28)
 
 ### Features
