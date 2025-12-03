@@ -18,7 +18,7 @@ import * as mysqlSchema from "./schema/mysql";
 import * as pgSchema from "./schema/postgresql";
 import * as sqliteSchema from "./schema/sqlite";
 
-const logger = createLogger({ module: "dbDriver" });
+const logger = createLogger({ module: "db" });
 
 export type HomarrDatabase = BetterSQLite3Database<typeof sqliteSchema>;
 export type HomarrDatabaseMysql = MySql2Database<typeof mysqlSchema>;
