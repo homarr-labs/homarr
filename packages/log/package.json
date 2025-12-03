@@ -25,9 +25,9 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/core": "workspace:^0.1.0",
-    "superjson": "2.2.5",
+    "superjson": "2.2.6",
     "winston": "3.18.3",
-    "zod": "^4.1.12"
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
