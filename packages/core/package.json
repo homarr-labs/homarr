@@ -29,7 +29,7 @@
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.8",
     "ioredis": "5.8.2",
-    "superjson": "2.2.5",
+    "superjson": "2.2.6",
     "winston": "3.18.3",
     "zod": "^4.1.13"
   },
