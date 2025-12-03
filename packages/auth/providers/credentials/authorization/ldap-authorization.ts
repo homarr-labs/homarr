@@ -1,7 +1,7 @@
 import { CredentialsSignin } from "@auth/core/errors";
 import { z } from "zod/v4";
 
-import { createId, extractErrorMessage } from "@homarr/common";
+import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { and, eq } from "@homarr/db";

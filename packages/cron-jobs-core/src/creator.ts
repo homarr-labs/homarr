@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import { createTask, validate } from "node-cron";
 
 import { Stopwatch } from "@homarr/common";

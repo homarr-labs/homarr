@@ -1101,6 +1101,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^
+        version: link:../core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
