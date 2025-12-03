@@ -27,7 +27,7 @@
     "@homarr/db": "workspace:^",
     "@homarr/definitions": "workspace:^",
     "ioredis": "5.8.2",
-    "superjson": "2.2.5"
+    "superjson": "2.2.6"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

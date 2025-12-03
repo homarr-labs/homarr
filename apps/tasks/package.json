@@ -40,7 +40,7 @@
     "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.2",
-    "superjson": "2.2.5",
+    "superjson": "2.2.6",
     "undici": "7.16.0"
   },
   "devDependencies": {
