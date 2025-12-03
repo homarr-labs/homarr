@@ -1,6 +1,5 @@
 import { TRPCError } from "@trpc/server";
 
-import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { KubernetesNode, KubernetesNodeState } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
@@ -8,8 +7,6 @@ import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
 import { KubernetesClient } from "../kubernetes-client";
 import { CpuResourceParser } from "../resource-parser/cpu-resource-parser";
 import { MemoryResourceParser } from "../resource-parser/memory-resource-parser";
-
-const logger = createLogger({ module: "nodesRouter" });
 
 export const nodesRouter = createTRPCRouter({
   getNodes: permissionRequiredProcedure

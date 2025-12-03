@@ -1,13 +1,10 @@
 import { TRPCError } from "@trpc/server";
 
-import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { KubernetesService } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
 import { KubernetesClient } from "../kubernetes-client";
-
-const logger = createLogger({ module: "servicesRouter" });
 
 export const servicesRouter = createTRPCRouter({
   getServices: permissionRequiredProcedure

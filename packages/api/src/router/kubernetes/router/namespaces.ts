@@ -1,13 +1,10 @@
 import { TRPCError } from "@trpc/server";
 
-import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { KubernetesNamespace, KubernetesNamespaceState } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
 import { KubernetesClient } from "../kubernetes-client";
-
-const logger = createLogger({ module: "namespacesRouter" });
 
 export const namespacesRouter = createTRPCRouter({
   getNamespaces: permissionRequiredProcedure

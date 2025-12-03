@@ -1,14 +1,11 @@
 import type { V1HTTPIngressPath, V1Ingress, V1IngressRule } from "@kubernetes/client-node";
 import { TRPCError } from "@trpc/server";
 
-import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { KubernetesIngress, KubernetesIngressPath, KubernetesIngressRuleAndPath } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
 import { KubernetesClient } from "../kubernetes-client";
-
-const logger = createLogger({ module: "ingressesRouter" });
 
 export const ingressesRouter = createTRPCRouter({
   getIngresses: permissionRequiredProcedure
