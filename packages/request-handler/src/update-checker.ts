@@ -48,8 +48,8 @@ export const updateCheckerRequestHandler = createCachedRequestHandler({
       .sort((releaseA, releaseB) => compareSemVer(releaseB.tag_name, releaseA.tag_name));
     if (availableNewerReleases.length > 0) {
       logger.info(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         "Update checker found a new available version",
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         { version: availableReleases[0]!.tag_name, currentVersion },
       );
     } else {
