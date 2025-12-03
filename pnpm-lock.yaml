@@ -290,8 +290,8 @@ importers:
         specifier: ^12.0.0
         version: 12.0.0
       isomorphic-dompurify:
-        specifier: ^2.32.0
-        version: 2.32.0(postcss@8.5.6)
+        specifier: ^2.33.0
+        version: 2.33.0(postcss@8.5.6)
       jotai:
         specifier: ^2.15.1
         version: 2.15.1(@babel/core@7.26.0)(@babel/template@7.27.2)(@types/react@19.2.7)(react@19.2.0)
@@ -7785,8 +7785,8 @@ packages:
     resolution: {integrity: sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==}
     engines: {node: '>=16'}
 
-  isomorphic-dompurify@2.32.0:
-    resolution: {integrity: sha512-4i6G4ICY57wQpiaNd6WcwhHUAqGDAJGWRlfWKLunBchJjtF2HV4eUeJtUupoEddbnnxYUiRhqfd9e4aDYR7ROA==}
+  isomorphic-dompurify@2.33.0:
+    resolution: {integrity: sha512-pXGR3rAHAXb5Bvr56pc5aV0Lh8laubLo7/60F+soOzDFmwks6MtgDhL7p46VoxLnwgIsjgmVhQpUt4mUlL/XEw==}
     engines: {node: '>=20.19.5'}
 
   isomorphic-fetch@3.0.0:
@@ -17236,7 +17236,7 @@ snapshots:
   isexe@3.1.1:
     optional: true
 
-  isomorphic-dompurify@2.32.0(postcss@8.5.6):
+  isomorphic-dompurify@2.33.0(postcss@8.5.6):
     dependencies:
       dompurify: 3.3.0
       jsdom: 27.2.0(postcss@8.5.6)
