@@ -17,7 +17,8 @@
     "./infrastructure/certificates": "./src/infrastructure/certificates/index.ts",
     "./infrastructure/certificates/hostnames/db/sqlite": "./src/infrastructure/certificates/hostnames/db/sqlite.ts",
     "./infrastructure/certificates/hostnames/db/mysql": "./src/infrastructure/certificates/hostnames/db/mysql.ts",
-    "./infrastructure/certificates/hostnames/db/postgresql": "./src/infrastructure/certificates/hostnames/db/postgresql.ts"
+    "./infrastructure/certificates/hostnames/db/postgresql": "./src/infrastructure/certificates/hostnames/db/postgresql.ts",
+    "./infrastructure/dns/init": "./src/infrastructure/dns/init.ts"
   },
   "typesVersions": {
     "*": {
@@ -35,6 +36,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.8",
+    "dns-caching": "^0.2.7",
     "ioredis": "5.8.2",
     "superjson": "2.2.6",
     "winston": "3.18.3",

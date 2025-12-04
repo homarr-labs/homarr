@@ -4,7 +4,7 @@ import { Agent } from "undici";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 // The below import statement initializes dns-caching
-import "./dns";
+import "@homarr/core/infrastructure/dns/init";
 
 const logger = createLogger({ module: "fetchAgent" });
 
