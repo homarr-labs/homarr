@@ -1,7 +1,7 @@
 import type { Headers, HeadersInit, fetch as undiciFetch, Response as UndiciResponse } from "undici";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";

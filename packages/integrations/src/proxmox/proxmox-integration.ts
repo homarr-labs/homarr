@@ -1,7 +1,7 @@
 import type { Proxmox } from "proxmox-api";
 import proxmoxApi from "proxmox-api";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";

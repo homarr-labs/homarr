@@ -1,9 +1,9 @@
 import type { Dispatcher } from "undici";
 import { describe, expect, test, vi } from "vitest";
 
-import * as logs from "@homarr/core/infrastructure/logs";
+import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 
-import { LoggingAgent } from "../fetch-agent";
+import { TestLogger } from "../logs";
 
 vi.mock("undici", () => {
   return {
@@ -16,37 +16,28 @@ vi.mock("undici", () => {
   };
 });
 
-vi.mock("@homarr/core/infrastructure/logs", async () => {
-  const actual: typeof logs = await vi.importActual("@homarr/core/infrastructure/logs");
-  return {
-    ...actual,
-    createLogger: vi.fn().mockReturnValue({
-      debug: vi.fn(),
-    }),
-  };
-});
-
 const REDACTED = "REDACTED";
 
-const loggerMock = logs.createLogger({ module: "test" });
-
-describe("LoggingAgent should log all requests", () => {
+describe("UndiciHttpAgent should log all requests", () => {
   test("should log all requests", () => {
     // Arrange
-    const debugSpy = vi.spyOn(loggerMock, "debug");
-    const agent = new LoggingAgent();
+    const logger = new TestLogger();
+    const agent = new UndiciHttpAgent({ logger });
 
     // Act
     agent.dispatch({ origin: "https://homarr.dev", path: "/", method: "GET" }, {});
 
     // Assert
-    expect(debugSpy).toHaveBeenCalledWith("Dispatching request https://homarr.dev/ (0 headers)");
+    expect(logger.messages).toContainEqual({
+      level: "debug",
+      message: "Dispatching request https://homarr.dev/ (0 headers)",
+    });
   });
 
   test("should show amount of headers", () => {
     // Arrange
-    const debugSpy = vi.spyOn(loggerMock, "debug");
-    const agent = new LoggingAgent();
+    const logger = new TestLogger();
+    const agent = new UndiciHttpAgent({ logger });
 
     // Act
     agent.dispatch(
@@ -63,7 +54,7 @@ describe("LoggingAgent should log all requests", () => {
     );
 
     // Assert
-    expect(debugSpy).toHaveBeenCalledWith(expect.stringContaining("(2 headers)"));
+    expect(logger.messages.at(-1)?.message).toContain("(2 headers)");
   });
 
   test.each([
@@ -81,14 +72,14 @@ describe("LoggingAgent should log all requests", () => {
     [`/${"a".repeat(32)}/?param=123`, `/${REDACTED}/?param=123`],
   ])("should redact sensitive data in url https://homarr.dev%s", (path, expected) => {
     // Arrange
-    const debugSpy = vi.spyOn(loggerMock, "debug");
-    const agent = new LoggingAgent();
+    const logger = new TestLogger();
+    const agent = new UndiciHttpAgent({ logger });
 
     // Act
     agent.dispatch({ origin: "https://homarr.dev", path, method: "GET" }, {});
 
     // Assert
-    expect(debugSpy).toHaveBeenCalledWith(expect.stringContaining(` https://homarr.dev${expected} `));
+    expect(logger.messages.at(-1)?.message).toContain(` https://homarr.dev${expected} `);
   });
   test.each([
     ["empty", "/?empty"],
@@ -100,13 +91,13 @@ describe("LoggingAgent should log all requests", () => {
     ["date times", "/?datetime=2022-01-01T00:00:00.000Z"],
   ])("should not redact values that are %s", (_reason, path) => {
     // Arrange
-    const debugSpy = vi.spyOn(loggerMock, "debug");
-    const agent = new LoggingAgent();
+    const logger = new TestLogger();
+    const agent = new UndiciHttpAgent({ logger });
 
     // Act
     agent.dispatch({ origin: "https://homarr.dev", path, method: "GET" }, {});
 
     // Assert
-    expect(debugSpy).toHaveBeenCalledWith(expect.stringContaining(` https://homarr.dev${path} `));
+    expect(logger.messages.at(-1)?.message).toContain(` https://homarr.dev${path} `);
   });
 });

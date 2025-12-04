@@ -1,4 +1,4 @@
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../base/integration";

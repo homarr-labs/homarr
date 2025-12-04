@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { z } from "zod/v4";
 
-import { fetchWithTimeout } from "@homarr/common";
+import { fetchWithTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
@@ -9,7 +9,7 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
   queryKey: "fetchStockPriceResult",
   widgetKind: "stockPrice",
   async requestAsync(input: { stock: string; timeRange: string; timeInterval: string }) {
-    const response = await fetchWithTimeout(
+    const response = await fetchWithTimeoutAsync(
       `https://query1.finance.yahoo.com/v8/finance/chart/${input.stock}?range=${input.timeRange}&interval=${input.timeInterval}`,
     );
     const data = dataSchema.parse(await response.json());

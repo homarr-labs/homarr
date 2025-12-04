@@ -5,16 +5,17 @@ import axios from "axios";
 import type { RequestInfo, RequestInit, Response } from "undici";
 import { fetch } from "undici";
 
-import { LoggingAgent } from "@homarr/common/server";
 import {
   getAllTrustedCertificatesAsync,
   getTrustedCertificateHostnamesAsync,
 } from "@homarr/core/infrastructure/certificates";
-import type { InferSelectModel } from "@homarr/db";
-import type { trustedCertificateHostnames } from "@homarr/db/schema";
+import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
+
+import type { TrustedCertificateHostname } from "../certificates/hostnames";
+import { withTimeoutAsync } from "./timeout";
 
 export const createCustomCheckServerIdentity = (
-  trustedHostnames: InferSelectModel<typeof trustedCertificateHostnames>[],
+  trustedHostnames: TrustedCertificateHostname[],
 ): typeof checkServerIdentity => {
   return (hostname, peerCertificate) => {
     const matchingTrustedHostnames = trustedHostnames.filter(
@@ -32,7 +33,7 @@ export const createCertificateAgentAsync = async (override?: {
   ca: string | string[];
   checkServerIdentity: typeof checkServerIdentity;
 }) => {
-  return new LoggingAgent({
+  return new UndiciHttpAgent({
     connect: override ?? {
       ca: await getAllTrustedCertificatesAsync(),
       checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
@@ -57,8 +58,23 @@ export const createAxiosCertificateInstanceAsync = async (
   });
 };
 
-export const fetchWithTrustedCertificatesAsync = async (url: RequestInfo, options?: RequestInit): Promise<Response> => {
+export const fetchWithTrustedCertificatesAsync = async (
+  url: RequestInfo,
+  options?: RequestInit & { timeout?: number },
+): Promise<Response> => {
   const agent = await createCertificateAgentAsync(undefined);
+  if (options?.timeout) {
+    return await withTimeoutAsync(
+      async (signal) =>
+        fetch(url, {
+          ...options,
+          signal,
+          dispatcher: agent,
+        }),
+      options.timeout,
+    );
+  }
+
   return fetch(url, {
     ...options,
     dispatcher: agent,

@@ -2,7 +2,7 @@ import { createAppAuth } from "@octokit/auth-app";
 import { Octokit, RequestError as OctokitRequestError } from "octokit";
 import type { fetch } from "undici";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";

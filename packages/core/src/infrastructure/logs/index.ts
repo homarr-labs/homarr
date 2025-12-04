@@ -15,4 +15,12 @@ interface DefaultMetadata {
 }
 
 export const createLogger = (metadata: DefaultMetadata & Record<string, unknown>) => logger.child(metadata);
-export type Logger = winston.Logger;
+
+type LogMethod = ((message: string, metadata?: Record<string, unknown>) => void) | ((error: unknown) => void);
+
+export interface ILogger {
+  debug: LogMethod;
+  info: LogMethod;
+  warn: LogMethod;
+  error: LogMethod;
+}

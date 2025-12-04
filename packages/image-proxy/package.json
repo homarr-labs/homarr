@@ -22,7 +22,6 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",

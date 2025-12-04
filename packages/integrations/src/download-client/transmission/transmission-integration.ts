@@ -2,7 +2,7 @@ import { Transmission } from "@ctrl/transmission";
 import dayjs from "dayjs";
 import type { Dispatcher } from "undici";
 
-import { createCertificateAgentAsync } from "@homarr/certificates/server";
+import { createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
 
 import { HandleIntegrationErrors } from "../../base/errors/decorator";
 import { integrationOFetchHttpErrorHandler } from "../../base/errors/http";

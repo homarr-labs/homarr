@@ -2,8 +2,8 @@ import dayjs from "dayjs";
 import { Octokit } from "octokit";
 import { compareSemVer, isValidSemVer } from "semver-parser";
 
-import { fetchWithTimeout } from "@homarr/common";
 import { env } from "@homarr/common/env";
+import { fetchWithTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createChannelWithLatestAndEvents } from "@homarr/redis";
 import { createCachedRequestHandler } from "@homarr/request-handler/lib/cached-request-handler";
@@ -23,7 +23,7 @@ export const updateCheckerRequestHandler = createCachedRequestHandler({
 
     const octokit = new Octokit({
       request: {
-        fetch: fetchWithTimeout,
+        fetch: fetchWithTimeoutAsync,
       },
     });
     const releases = await octokit.rest.repos.listReleases({

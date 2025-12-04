@@ -1,11 +1,11 @@
-import type { Logger } from "@homarr/core/infrastructure/logs";
+import type { ILogger } from "@homarr/core/infrastructure/logs";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { AnyRequestError } from "../request-error";
 import type { ResponseError } from "../response-error";
 
 export abstract class HttpErrorHandler {
-  protected logger: Logger;
+  protected logger: ILogger;
 
   constructor(type: string) {
     this.logger = createLogger({ module: "httpErrorHandler", type });
