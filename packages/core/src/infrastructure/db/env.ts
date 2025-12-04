@@ -1,7 +1,6 @@
 import { z } from "zod/v4";
 
-import { env as commonEnv } from "@homarr/common/env";
-import { createEnv } from "@homarr/core/infrastructure/env";
+import { createEnv, runtimeEnvWithPrefix } from "@homarr/core/infrastructure/env";
 
 const drivers = {
   betterSqlite3: "better-sqlite3",
@@ -15,40 +14,40 @@ const onlyAllowUrl = isDriver(drivers.betterSqlite3);
 const urlRequired = onlyAllowUrl || !isUsingDbHost;
 const hostRequired = isUsingDbHost && !onlyAllowUrl;
 
-export const env = createEnv({
+export const dbEnv = createEnv({
   /**
    * Specify your server-side environment variables schema here. This way you can ensure the app isn't
    * built with invalid env vars.
    */
   server: {
-    DB_DRIVER: z
+    DRIVER: z
       .union([z.literal(drivers.betterSqlite3), z.literal(drivers.mysql2), z.literal(drivers.nodePostgres)], {
         message: `Invalid database driver, supported are ${Object.keys(drivers).join(", ")}`,
       })
       .default(drivers.betterSqlite3),
     ...(urlRequired
       ? {
-          DB_URL:
+          URL:
             // Fallback to the default sqlite file path in production
-            commonEnv.NODE_ENV === "production" && isDriver("better-sqlite3")
+            /*commonEnv.NODE_ENV === "production" &&*/ isDriver("better-sqlite3")
               ? z.string().default("/appdata/db/db.sqlite")
               : z.string().nonempty(),
         }
       : {}),
     ...(hostRequired
       ? {
-          DB_HOST: z.string(),
-          DB_PORT: z
+          HOST: z.string(),
+          PORT: z
             .string()
             .regex(/\d+/)
             .transform(Number)
             .refine((number) => number >= 1)
             .default(isDriver(drivers.mysql2) ? 3306 : 5432),
-          DB_USER: z.string(),
-          DB_PASSWORD: z.string(),
-          DB_NAME: z.string(),
+          USER: z.string(),
+          PASSWORD: z.string(),
+          NAME: z.string(),
         }
       : {}),
   },
-  experimental__runtimeEnv: process.env,
+  runtimeEnv: runtimeEnvWithPrefix("DB_"),
 });

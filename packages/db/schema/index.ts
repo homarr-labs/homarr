@@ -1,20 +1,19 @@
 import type { InferSelectModel } from "drizzle-orm";
 
-import { env } from "../env";
+import { createSchema } from "@homarr/core/infrastructure/db";
+
 import * as mysqlSchema from "./mysql";
 import * as pgSchema from "./postgresql";
 import * as sqliteSchema from "./sqlite";
 
 export type PostgreSqlSchema = typeof pgSchema;
 export type MySqlSchema = typeof mysqlSchema;
-type Schema = typeof sqliteSchema;
 
-const schema =
-  env.DB_DRIVER === "mysql2"
-    ? (mysqlSchema as unknown as Schema)
-    : env.DB_DRIVER === "node-postgres"
-      ? (pgSchema as unknown as Schema)
-      : sqliteSchema;
+export const schema = createSchema({
+  "better-sqlite3": () => sqliteSchema,
+  mysql2: () => mysqlSchema,
+  "node-postgres": () => pgSchema,
+});
 
 // Sadly we can't use export * from here as we have multiple possible exports
 export const {

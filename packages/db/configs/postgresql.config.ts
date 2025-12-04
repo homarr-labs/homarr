@@ -1,20 +1,21 @@
 import type { Config } from "drizzle-kit";
 
-import { env } from "../env";
+import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
+import { dbEnv } from "@homarr/core/infrastructure/db/env";
 
 export default {
   dialect: "postgresql",
   schema: "./schema",
-  casing: "snake_case",
+  casing: DB_CASING,
 
-  dbCredentials: env.DB_URL
-    ? { url: env.DB_URL }
+  dbCredentials: dbEnv.URL
+    ? { url: dbEnv.URL }
     : {
-        host: env.DB_HOST,
-        port: env.DB_PORT,
-        user: env.DB_USER,
-        password: env.DB_PASSWORD,
-        database: env.DB_NAME,
+        host: dbEnv.HOST,
+        port: dbEnv.PORT,
+        database: dbEnv.NAME,
+        user: dbEnv.USER,
+        password: dbEnv.PASSWORD,
       },
   out: "./migrations/postgresql",
 } satisfies Config;

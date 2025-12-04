@@ -5,6 +5,8 @@ import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Pool } from "pg";
 import { describe, test } from "vitest";
 
+import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
+
 import * as pgSchema from "../schema/postgresql";
 
 describe("PostgreSql Migration", () => {
@@ -26,7 +28,7 @@ describe("PostgreSql Migration", () => {
 
     const database = drizzle({
       schema: pgSchema,
-      casing: "snake_case",
+      casing: DB_CASING,
       client: pool,
     });
 

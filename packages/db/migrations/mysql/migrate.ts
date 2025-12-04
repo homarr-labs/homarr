@@ -1,9 +1,8 @@
-import { drizzle } from "drizzle-orm/mysql2";
 import { migrate } from "drizzle-orm/mysql2/migrator";
-import mysql from "mysql2";
+
+import { createMysqlDb, createSharedDbConfig } from "@homarr/core/infrastructure/db";
 
 import type { Database } from "../..";
-import { env } from "../../env";
 import * as mysqlSchema from "../../schema/mysql";
 import { applyCustomMigrationsAsync } from "../custom";
 import { seedDataAsync } from "../seed";
@@ -11,23 +10,8 @@ import { seedDataAsync } from "../seed";
 const migrationsFolder = process.argv[2] ?? ".";
 
 const migrateAsync = async () => {
-  const mysql2 = mysql.createConnection(
-    env.DB_URL
-      ? { uri: env.DB_URL }
-      : {
-          host: env.DB_HOST,
-          database: env.DB_NAME,
-          port: env.DB_PORT,
-          user: env.DB_USER,
-          password: env.DB_PASSWORD,
-        },
-  );
-
-  const db = drizzle(mysql2, {
-    mode: "default",
-    schema: mysqlSchema,
-    casing: "snake_case",
-  });
+  const config = createSharedDbConfig(mysqlSchema);
+  const db = createMysqlDb(config);
 
   await migrate(db, { migrationsFolder });
   await seedDataAsync(db as unknown as Database);
