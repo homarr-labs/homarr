@@ -3,7 +3,10 @@ import { TRPCError } from "@trpc/server";
 import { zfd } from "zod-form-data";
 import { z } from "zod/v4";
 
-import { addCustomRootCertificateAsync, removeCustomRootCertificateAsync } from "@homarr/certificates/server";
+import {
+  addCustomRootCertificateAsync,
+  removeCustomRootCertificateAsync,
+} from "@homarr/core/infrastructure/certificates";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq } from "@homarr/db";
 import { trustedCertificateHostnames } from "@homarr/db/schema";

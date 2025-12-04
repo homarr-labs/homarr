@@ -45,6 +45,8 @@ const customBlob = customType<{ data: Buffer }>({
   },
 });
 
+export * from "@homarr/core/infrastructure/certificates/hostnames/db/postgresql";
+
 export const apiKeys = pgTable("apiKey", {
   id: varchar({ length: 64 }).notNull().primaryKey(),
   apiKey: text().notNull(),
@@ -493,20 +495,6 @@ export const onboarding = pgTable("onboarding", {
   step: varchar({ length: 64 }).$type<OnboardingStep>().notNull(),
   previousStep: varchar({ length: 64 }).$type<OnboardingStep>(),
 });
-
-export const trustedCertificateHostnames = pgTable(
-  "trusted_certificate_hostname",
-  {
-    hostname: varchar({ length: 256 }).notNull(),
-    thumbprint: varchar({ length: 128 }).notNull(),
-    certificate: text().notNull(),
-  },
-  (table) => ({
-    compoundKey: primaryKey({
-      columns: [table.hostname, table.thumbprint],
-    }),
-  }),
-);
 
 export const cronJobConfigurations = pgTable("cron_job_configuration", {
   name: varchar({ length: 256 }).notNull().primaryKey(),

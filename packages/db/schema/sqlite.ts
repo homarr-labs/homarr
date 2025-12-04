@@ -28,6 +28,8 @@ import type {
   WidgetKind,
 } from "@homarr/definitions";
 
+export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
+
 export const apiKeys = sqliteTable("apiKey", {
   id: text().notNull().primaryKey(),
   apiKey: text().notNull(),
@@ -479,20 +481,6 @@ export const onboarding = sqliteTable("onboarding", {
   step: text().$type<OnboardingStep>().notNull(),
   previousStep: text().$type<OnboardingStep>(),
 });
-
-export const trustedCertificateHostnames = sqliteTable(
-  "trusted_certificate_hostname",
-  {
-    hostname: text().notNull(),
-    thumbprint: text().notNull(),
-    certificate: text().notNull(),
-  },
-  (table) => ({
-    compoundKey: primaryKey({
-      columns: [table.hostname, table.thumbprint],
-    }),
-  }),
-);
 
 export const cronJobConfigurations = sqliteTable("cron_job_configuration", {
   name: text().notNull().primaryKey(),
