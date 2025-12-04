@@ -10,8 +10,7 @@
     "./schema": "./schema/index.ts",
     "./test": "./test/index.ts",
     "./queries": "./queries/index.ts",
-    "./validationSchemas": "./validationSchemas.ts",
-    "./env": "./env.ts"
+    "./validationSchemas": "./validationSchemas.ts"
   },
   "main": "./index.ts",
   "types": "./index.ts",

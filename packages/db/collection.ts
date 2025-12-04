@@ -1,9 +1,9 @@
 import type { InferInsertModel } from "drizzle-orm";
 
 import { objectEntries } from "@homarr/common";
+import { dbEnv } from "@homarr/core/infrastructure/db/env";
 
 import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
-import { env } from "./env";
 import * as schema from "./schema";
 
 type TableKey = {
@@ -11,11 +11,11 @@ type TableKey = {
 }[keyof typeof schema];
 
 export function isMysql(): boolean {
-  return env.DB_DRIVER === "mysql2";
+  return dbEnv.DRIVER === "mysql2";
 }
 
 export function isPostgresql(): boolean {
-  return env.DB_DRIVER === "node-postgres";
+  return dbEnv.DRIVER === "node-postgres";
 }
 
 export const createDbInsertCollectionForTransaction = <TTableKey extends TableKey>(
@@ -66,7 +66,7 @@ export const createDbInsertCollectionWithoutTransaction = <TTableKey extends Tab
   return {
     ...collection,
     insertAllAsync: async (db: HomarrDatabase) => {
-      switch (env.DB_DRIVER) {
+      switch (dbEnv.DRIVER) {
         case "mysql2":
         case "node-postgres":
           // For mysql2 and node-postgres, we can use the async insertAllAsync method

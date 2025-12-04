@@ -1,7 +1,7 @@
 import { applyCustomMigrationsAsync } from ".";
-import { database } from "../../driver";
+import { db } from "../../";
 
-applyCustomMigrationsAsync(database)
+applyCustomMigrationsAsync(db)
   .then(() => {
     console.log("Custom migrations applied successfully");
     process.exit(0);

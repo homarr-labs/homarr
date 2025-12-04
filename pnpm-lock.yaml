@@ -924,8 +924,8 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
       superjson:
-        specifier: 2.2.5
-        version: 2.2.5
+        specifier: 2.2.6
+        version: 2.2.6
       winston:
         specifier: 3.18.3
         version: 3.18.3
@@ -10081,10 +10081,6 @@ packages:
   super-regex@1.0.0:
     resolution: {integrity: sha512-CY8u7DtbvucKuquCmOFEKhr9Besln7n9uN8eFbwcoGYWXOMW07u2o8njWaiXt11ylS3qoGF55pILjRmPlbodyg==}
     engines: {node: '>=18'}
-
-  superjson@2.2.5:
-    resolution: {integrity: sha512-zWPTX96LVsA/eVYnqOM2+ofcdPqdS1dAF1LN4TS2/MWuUpfitd9ctTa87wt4xrYnZnkLtS69xpBdSxVBP5Rm6w==}
-    engines: {node: '>=16'}
 
   superjson@2.2.6:
     resolution: {integrity: sha512-H+ue8Zo4vJmV2nRjpx86P35lzwDT3nItnIsocgumgr0hHMQ+ZGq5vrERg9kJBo5AWGmxZDhzDo+WVIJqkB0cGA==}
@@ -19928,10 +19924,6 @@ snapshots:
     dependencies:
       function-timeout: 1.0.2
       time-span: 5.1.0
-
-  superjson@2.2.5:
-    dependencies:
-      copy-anything: 4.0.5
 
   superjson@2.2.6:
     dependencies:

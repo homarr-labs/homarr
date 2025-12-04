@@ -10,7 +10,10 @@
     "./infrastructure/logs": "./src/infrastructure/logs/index.ts",
     "./infrastructure/logs/constants": "./src/infrastructure/logs/constants.ts",
     "./infrastructure/logs/env": "./src/infrastructure/logs/env.ts",
-    "./infrastructure/logs/error": "./src/infrastructure/logs/error.ts"
+    "./infrastructure/logs/error": "./src/infrastructure/logs/error.ts",
+    "./infrastructure/db": "./src/infrastructure/db/index.ts",
+    "./infrastructure/db/env": "./src/infrastructure/db/env.ts",
+    "./infrastructure/db/constants": "./src/infrastructure/db/constants.ts"
   },
   "typesVersions": {
     "*": {
