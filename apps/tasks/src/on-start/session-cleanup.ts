@@ -29,7 +29,7 @@ export async function cleanupSessionsAsync() {
     await db.delete(sessions).where(inArray(sessions.userId, userIds));
 
     if (sessionsWithInactiveProviders.length > 0) {
-      logger.info(`Deleted sessions for inactive providers`, {
+      logger.info("Deleted sessions for inactive providers", {
         count: userIds.length,
       });
     } else {

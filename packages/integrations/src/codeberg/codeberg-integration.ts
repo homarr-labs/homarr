@@ -108,7 +108,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     });
 
     if (!response.ok) {
-      logger.warn(`Failed to get details`, {
+      logger.warn("Failed to get details", {
         owner,
         name,
         error: response.statusText,
@@ -121,7 +121,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     const { data, success, error } = detailsResponseSchema.safeParse(responseJson);
 
     if (!success) {
-      logger.warn(`Failed to parse details`, {
+      logger.warn("Failed to parse details", {
         owner,
         name,
         error,
