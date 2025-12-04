@@ -133,9 +133,6 @@ importers:
       '@homarr/boards':
         specifier: workspace:^0.1.0
         version: link:../../packages/boards
-      '@homarr/certificates':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/certificates
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../../packages/common
@@ -575,9 +572,6 @@ importers:
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../auth
-      '@homarr/certificates':
-        specifier: workspace:^0.1.0
-        version: link:../certificates
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -699,9 +693,6 @@ importers:
       '@auth/drizzle-adapter':
         specifier: ^1.11.1
         version: 1.11.1
-      '@homarr/certificates':
-        specifier: workspace:^0.1.0
-        version: link:../certificates
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -778,37 +769,6 @@ importers:
       react-dom:
         specifier: 19.2.0
         version: 19.2.0(react@19.2.0)
-    devDependencies:
-      '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
-        version: link:../../tooling/eslint
-      '@homarr/prettier-config':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/prettier
-      '@homarr/tsconfig':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/typescript
-      eslint:
-        specifier: ^9.39.1
-        version: 9.39.1
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/certificates:
-    dependencies:
-      '@homarr/common':
-        specifier: workspace:^0.1.0
-        version: link:../common
-      '@homarr/core':
-        specifier: workspace:^0.1.0
-        version: link:../core
-      '@homarr/db':
-        specifier: workspace:^0.1.0
-        version: link:../db
-      undici:
-        specifier: 7.16.0
-        version: 7.16.0
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1420,9 +1380,6 @@ importers:
 
   packages/image-proxy:
     dependencies:
-      '@homarr/certificates':
-        specifier: workspace:^0.1.0
-        version: link:../certificates
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1469,9 +1426,6 @@ importers:
       '@gitbeaker/rest':
         specifier: ^43.8.0
         version: 43.8.0
-      '@homarr/certificates':
-        specifier: workspace:^0.1.0
-        version: link:../certificates
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
@@ -1799,9 +1753,6 @@ importers:
 
   packages/ping:
     dependencies:
-      '@homarr/certificates':
-        specifier: workspace:^0.1.0
-        version: link:../certificates
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
