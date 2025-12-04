@@ -66,7 +66,7 @@ export class JobManager implements IJobManager {
       where: (table, { eq }) => eq(table.name, name),
     });
 
-    logger.debug(`Updating cron job configuration`, {
+    logger.debug("Updating cron job configuration", {
       name,
       configuration: JSON.stringify(configuration),
       exists: Boolean(existingConfig),
@@ -78,7 +78,7 @@ export class JobManager implements IJobManager {
         // prevent updating the name, as it is the primary key
         .set({ ...configuration, name: undefined })
         .where(eq(cronJobConfigurations.name, name));
-      logger.debug(`Cron job configuration updated`, {
+      logger.debug("Cron job configuration updated", {
         name,
         configuration: JSON.stringify(configuration),
       });
@@ -93,7 +93,7 @@ export class JobManager implements IJobManager {
       cronExpression: configuration.cronExpression ?? job.cronExpression,
       isEnabled: configuration.isEnabled ?? true,
     });
-    logger.debug(`Cron job configuration updated`, {
+    logger.debug("Cron job configuration updated", {
       name,
       configuration: JSON.stringify(configuration),
     });
