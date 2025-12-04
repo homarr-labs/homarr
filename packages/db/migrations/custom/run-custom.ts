@@ -1,5 +1,5 @@
 import { applyCustomMigrationsAsync } from ".";
-import { db } from "../../";
+import { db } from "../..";
 
 applyCustomMigrationsAsync(db)
   .then(() => {
