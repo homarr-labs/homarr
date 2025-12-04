@@ -36,8 +36,12 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.8",
+    "better-sqlite3": "^12.4.1",
     "dns-caching": "^0.2.7",
+    "drizzle-orm": "^0.44.7",
     "ioredis": "5.8.2",
+    "mysql2": "3.15.3",
+    "pg": "^8.16.3",
     "superjson": "2.2.6",
     "winston": "3.18.3",
     "zod": "^4.1.13"
@@ -46,6 +50,8 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
+    "@types/better-sqlite3": "7.6.13",
+    "@types/pg": "^8.15.6",
     "eslint": "^9.39.1",
     "typescript": "^5.9.3"
   }

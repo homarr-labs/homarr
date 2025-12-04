@@ -920,12 +920,24 @@ importers:
       '@t3-oss/env-nextjs':
         specifier: ^0.13.8
         version: 0.13.8(arktype@2.1.20)(typescript@5.9.3)(zod@4.1.13)
+      better-sqlite3:
+        specifier: ^12.4.1
+        version: 12.4.1
       dns-caching:
         specifier: ^0.2.7
         version: 0.2.7
+      drizzle-orm:
+        specifier: ^0.44.7
+        version: 0.44.7(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.15.6)(better-sqlite3@12.4.1)(gel@2.0.0)(mysql2@3.15.3)(pg@8.16.3)
       ioredis:
         specifier: 5.8.2
         version: 5.8.2
+      mysql2:
+        specifier: 3.15.3
+        version: 3.15.3
+      pg:
+        specifier: ^8.16.3
+        version: 8.16.3
       superjson:
         specifier: 2.2.6
         version: 2.2.6
@@ -945,6 +957,12 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/better-sqlite3':
+        specifier: 7.6.13
+        version: 7.6.13
+      '@types/pg':
+        specifier: ^8.15.6
+        version: 8.15.6
       eslint:
         specifier: ^9.39.1
         version: 9.39.1
@@ -6235,10 +6253,6 @@ packages:
     resolution: {integrity: sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==}
     engines: {node: '>=0.10'}
     hasBin: true
-
-  detect-libc@2.0.4:
-    resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
-    engines: {node: '>=8'}
 
   detect-libc@2.1.2:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
@@ -15401,10 +15415,7 @@ snapshots:
   detect-libc@1.0.3:
     optional: true
 
-  detect-libc@2.0.4: {}
-
-  detect-libc@2.1.2:
-    optional: true
+  detect-libc@2.1.2: {}
 
   detect-newline@4.0.1: {}
 
@@ -18612,7 +18623,7 @@ snapshots:
 
   prebuild-install@7.1.2:
     dependencies:
-      detect-libc: 2.0.4
+      detect-libc: 2.1.2
       expand-template: 2.0.3
       github-from-package: 0.0.0
       minimist: 1.2.8
