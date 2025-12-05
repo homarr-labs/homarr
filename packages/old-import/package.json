@@ -27,10 +27,10 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/core": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/form": "workspace:^0.1.0",
-    "@homarr/log": "workspace:^0.1.0",
     "@homarr/modals": "workspace:^0.1.0",
     "@homarr/notifications": "workspace:^0.1.0",
     "@homarr/old-schema": "workspace:^0.1.0",

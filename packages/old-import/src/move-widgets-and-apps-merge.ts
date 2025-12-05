@@ -1,10 +1,12 @@
 import { objectEntries } from "@homarr/common";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { BoardSize, OldmarrApp, OldmarrConfig, OldmarrWidget } from "@homarr/old-schema";
 import { boardSizes } from "@homarr/old-schema";
 
 import { mapColumnCount } from "./mappers/map-column-count";
 import type { OldmarrImportConfiguration } from "./settings";
+
+const logger = createLogger({ module: "moveWidgetsAndAppsMerge" });
 
 export const moveWidgetsAndAppsIfMerge = (
   old: OldmarrConfig,
@@ -26,7 +28,7 @@ export const moveWidgetsAndAppsIfMerge = (
     ]),
   );
 
-  logger.debug(`Merging wrappers at the end of the board count=${wrapperIdsToMerge.length}`);
+  logger.debug("Merging wrappers at the end of the board", { count: wrapperIdsToMerge.length });
 
   const offsets = boardSizes.reduce(
     (previous, screenSize) => {

@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
@@ -11,6 +11,8 @@ import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-in
 import type { CalendarEvent, CalendarLink } from "../../interfaces/calendar/calendar-types";
 import { radarrReleaseTypes } from "../../interfaces/calendar/calendar-types";
 import { mediaOrganizerPriorities } from "../media-organizer";
+
+const logger = createLogger({ module: "radarrIntegration" });
 
 export class RadarrIntegration extends Integration implements ICalendarIntegration {
   /**

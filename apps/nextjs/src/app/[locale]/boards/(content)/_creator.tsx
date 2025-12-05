@@ -11,8 +11,9 @@ import { IntegrationProvider } from "@homarr/auth/client";
 import { auth } from "@homarr/auth/next";
 import { getIntegrationsWithPermissionsAsync } from "@homarr/auth/server";
 import { isNullOrWhitespace } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { WidgetKind } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 import { getI18n } from "@homarr/translation/server";
 import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
 
@@ -21,6 +22,8 @@ import { createBoardLayout } from "../_layout-creator";
 import type { Board, Item } from "../_types";
 import { DynamicClientBoard } from "./_dynamic-client";
 import { BoardContentHeaderActions } from "./_header-actions";
+
+const logger = createLogger({ module: "createBoardContentPage" });
 
 export type Params = Record<string, unknown>;
 
@@ -57,7 +60,13 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
 
       for (const [kind, items] of itemsMap) {
         await prefetchForKindAsync(kind, queryClient, items).catch((error) => {
-          logger.error(new Error("Failed to prefetch widget", { cause: error }));
+          logger.error(
+            new ErrorWithMetadata(
+              "Failed to prefetch widget",
+              { widgetKind: kind, itemCount: items.length },
+              { cause: error },
+            ),
+          );
         });
       }
 

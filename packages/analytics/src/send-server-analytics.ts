@@ -1,14 +1,16 @@
 import type { UmamiEventData } from "@umami/node";
 import { Umami } from "@umami/node";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { count, db } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import { integrations, items, users } from "@homarr/db/schema";
-import { logger } from "@homarr/log";
 import type { defaultServerSettings } from "@homarr/server-settings";
 
 import { Stopwatch } from "../../common/src";
 import { UMAMI_HOST_URL, UMAMI_WEBSITE_ID } from "./constants";
+
+const logger = createLogger({ module: "analytics" });
 
 export const sendServerAnalyticsAsync = async () => {
   const stopWatch = new Stopwatch();

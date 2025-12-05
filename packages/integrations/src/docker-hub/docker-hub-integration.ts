@@ -2,7 +2,7 @@ import type { fetch, RequestInit, Response } from "undici";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -18,7 +18,7 @@ import type {
 } from "../interfaces/releases-providers/releases-providers-types";
 import { accessTokenResponseSchema, detailsResponseSchema, releasesResponseSchema } from "./docker-hub-schemas";
 
-const localLogger = logger.child({ module: "DockerHubIntegration" });
+const logger = createLogger({ module: "dockerHubIntegration" });
 
 export class DockerHubIntegration extends Integration implements ReleasesProviderIntegration {
   private readonly sessionStore: SessionStore<string>;
@@ -35,7 +35,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     const storedSession = await this.sessionStore.getAsync();
 
     if (storedSession) {
-      localLogger.debug("Using stored session for request", { integrationId: this.integration.id });
+      logger.debug("Using stored session for request", { integrationId: this.integration.id });
       const response = await callback({
         Authorization: `Bearer ${storedSession}`,
       });
@@ -43,7 +43,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
         return response;
       }
 
-      localLogger.debug("Session expired, getting new session", { integrationId: this.integration.id });
+      logger.debug("Session expired, getting new session", { integrationId: this.integration.id });
     }
 
     const accessToken = await this.getSessionAsync();
@@ -57,10 +57,10 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     const hasAuth = this.hasSecretValue("username") && this.hasSecretValue("personalAccessToken");
 
     if (hasAuth) {
-      localLogger.debug("Testing DockerHub connection with authentication", { integrationId: this.integration.id });
+      logger.debug("Testing DockerHub connection with authentication", { integrationId: this.integration.id });
       await this.getSessionAsync(input.fetchAsync);
     } else {
-      localLogger.debug("Testing DockerHub connection without authentication", { integrationId: this.integration.id });
+      logger.debug("Testing DockerHub connection without authentication", { integrationId: this.integration.id });
       const response = await input.fetchAsync(this.url("/v2/repositories/library"));
       if (!response.ok) {
         return TestConnectionError.StatusResult(response);
@@ -76,7 +76,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     if (!identifier.includes("/")) return { owner: "", name: identifier };
     const [owner, name] = identifier.split("/");
     if (!owner || !name) {
-      localLogger.warn(`Invalid identifier format. Expected 'owner/name' or 'name', for ${identifier} on DockerHub`, {
+      logger.warn("Invalid identifier format. Expected 'owner/name' or 'name', for identifier", {
         identifier,
       });
       return null;
@@ -137,7 +137,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     });
 
     if (!response.ok) {
-      localLogger.warn(`Failed to get details response for ${relativeUrl} with DockerHub integration`, {
+      logger.warn("Failed to get details response", {
         relativeUrl,
         error: response.statusText,
       });
@@ -149,7 +149,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
     const { data, success, error } = detailsResponseSchema.safeParse(responseJson);
 
     if (!success) {
-      localLogger.warn(`Failed to parse details response for ${relativeUrl} with DockerHub integration`, {
+      logger.warn("Failed to parse details response", {
         relativeUrl,
         error,
       });
@@ -183,7 +183,7 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
       throw new ResponseError({ status: 401, url: response.url });
     }
 
-    localLogger.info("Received session successfully", { integrationId: this.integration.id });
+    logger.info("Received session successfully", { integrationId: this.integration.id });
 
     return result.access_token;
   }

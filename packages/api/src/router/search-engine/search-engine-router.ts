@@ -2,17 +2,19 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { asc, eq, like } from "@homarr/db";
 import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "@homarr/db/queries";
 import { searchEngines, users } from "@homarr/db/schema";
 import { createIntegrationAsync } from "@homarr/integrations";
-import { logger } from "@homarr/log";
 import { byIdSchema, paginatedSchema, searchSchema } from "@homarr/validation/common";
 import { searchEngineEditSchema, searchEngineManageSchema } from "@homarr/validation/search-engine";
 import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
+
+const logger = createLogger({ module: "searchEngineRouter" });
 
 export const searchEngineRouter = createTRPCRouter({
   getPaginated: protectedProcedure.input(paginatedSchema).query(async ({ input, ctx }) => {

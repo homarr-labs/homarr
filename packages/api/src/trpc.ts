@@ -14,11 +14,13 @@ import { ZodError } from "zod/v4";
 import type { Session } from "@homarr/auth";
 import { FlattenError } from "@homarr/common";
 import { userAgent } from "@homarr/common/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 import { getOnboardingOrFallbackAsync } from "./router/onboard/onboard-queries";
+
+const logger = createLogger({ module: "trpc" });
 
 /**
  * 1. CONTEXT
@@ -36,7 +38,7 @@ export const createTRPCContext = (opts: { headers: Headers; session: Session | n
   const session = opts.session;
   const source = opts.headers.get("x-trpc-source") ?? "unknown";
 
-  logger.info(`tRPC request from ${source} by user '${session?.user.name} (${session?.user.id})'`, session?.user);
+  logger.info("Received tRPC request", { source, userId: session?.user.id, userName: session?.user.name });
 
   return {
     session,

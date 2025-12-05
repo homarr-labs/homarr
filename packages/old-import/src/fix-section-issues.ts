@@ -1,6 +1,8 @@
 import { createId } from "@homarr/common";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { OldmarrConfig } from "@homarr/old-schema";
+
+const logger = createLogger({ module: "fixSectionIssues" });
 
 export const fixSectionIssues = (old: OldmarrConfig) => {
   const wrappers = old.wrappers.sort((wrapperA, wrapperB) => wrapperA.position - wrapperB.position);
@@ -9,9 +11,10 @@ export const fixSectionIssues = (old: OldmarrConfig) => {
   const neededSectionCount = categories.length * 2 + 1;
   const hasToMuchEmptyWrappers = wrappers.length > categories.length + 1;
 
-  logger.debug(
-    `Fixing section issues neededSectionCount=${neededSectionCount} hasToMuchEmptyWrappers=${hasToMuchEmptyWrappers}`,
-  );
+  logger.debug("Fixing section issues", {
+    neededSectionCount,
+    hasToMuchEmptyWrappers,
+  });
 
   for (let position = 0; position < neededSectionCount; position++) {
     const index = Math.floor(position / 2);
@@ -38,7 +41,7 @@ export const fixSectionIssues = (old: OldmarrConfig) => {
   wrappers.splice(categories.length + 1);
 
   if (wrapperIdsToMerge.length >= 2) {
-    logger.debug(`Found wrappers to merge count=${wrapperIdsToMerge.length}`);
+    logger.debug("Found wrappers to merge", { count: wrapperIdsToMerge.length });
   }
 
   return {

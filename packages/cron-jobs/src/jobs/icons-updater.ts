@@ -1,13 +1,15 @@
 import { createId, splitToNChunks, Stopwatch } from "@homarr/common";
 import { env } from "@homarr/common/env";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
 import type { InferInsertModel } from "@homarr/db";
 import { db, handleTransactionsAsync, inArray, sql } from "@homarr/db";
 import { iconRepositories, icons } from "@homarr/db/schema";
 import { fetchIconsAsync } from "@homarr/icons";
-import { logger } from "@homarr/log";
 
 import { createCronJob } from "../lib";
+
+const logger = createLogger({ module: "iconsUpdaterJobs" });
 
 export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
   runOnStart: true,
@@ -21,9 +23,11 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
   const countIcons = repositoryIconGroups
     .map((group) => group.icons.length)
     .reduce((partialSum, arrayLength) => partialSum + arrayLength, 0);
-  logger.info(
-    `Successfully fetched ${countIcons} icons from ${repositoryIconGroups.length} repositories within ${stopWatch.getElapsedInHumanWords()}`,
-  );
+  logger.info("Fetched icons from repositories", {
+    repositoryCount: repositoryIconGroups.length,
+    iconCount: countIcons,
+    duration: stopWatch.getElapsedInHumanWords(),
+  });
 
   const databaseIconRepositories = await db.query.iconRepositories.findMany({
     with: {
@@ -162,5 +166,9 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
     },
   });
 
-  logger.info(`Updated database within ${stopWatch.getElapsedInHumanWords()} (-${countDeleted}, +${countInserted})`);
+  logger.info("Updated icons in database", {
+    duration: stopWatch.getElapsedInHumanWords(),
+    added: countInserted,
+    deleted: countDeleted,
+  });
 });

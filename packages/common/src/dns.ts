@@ -1,6 +1,6 @@
 import { DnsCacheManager } from "dns-caching";
 
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { env } from "../env";
 
@@ -11,6 +11,8 @@ declare global {
     // add other properties if needed
   };
 }
+
+const logger = createLogger({ module: "dns" });
 
 // Initialize global.homarr if not present
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

@@ -7,7 +7,7 @@ import "@xterm/xterm/css/xterm.css";
 import { notFound } from "next/navigation";
 
 import { auth } from "@homarr/auth/next";
-import { env } from "@homarr/log/env";
+import { logsEnv } from "@homarr/core/infrastructure/logs/env";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { fullHeightWithoutHeaderAndFooter } from "~/constants";
@@ -35,7 +35,7 @@ export default async function LogsManagementPage() {
   }
 
   return (
-    <LogContextProvider defaultLevel={env.LOG_LEVEL}>
+    <LogContextProvider defaultLevel={logsEnv.LEVEL}>
       <Group justify="space-between" align="center" wrap="nowrap">
         <DynamicBreadcrumb />
         <LogLevelSelection />

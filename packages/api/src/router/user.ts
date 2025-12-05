@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import { createId } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { and, eq, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
@@ -10,7 +11,6 @@ import { boards, groupMembers, groupPermissions, groups, invites, users } from "
 import { selectUserSchema } from "@homarr/db/validationSchemas";
 import { credentialsAdminGroup } from "@homarr/definitions";
 import type { SupportedAuthProvider } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 import { byIdSchema } from "@homarr/validation/common";
 import type { userBaseCreateSchema } from "@homarr/validation/user";
 import {
@@ -38,6 +38,8 @@ import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
 import { changeSearchPreferencesAsync, changeSearchPreferencesInputSchema } from "./user/change-search-preferences";
+
+const logger = createLogger({ module: "userRouter" });
 
 export const userRouter = createTRPCRouter({
   initUser: onboardingProcedure
@@ -364,9 +366,11 @@ export const userRouter = createTRPCRouter({
       // Admins can change the password of other users without providing the previous password
       const isPreviousPasswordRequired = ctx.session.user.id === input.userId;
 
-      logger.info(
-        `User ${user.id} is changing password for user ${input.userId}, previous password is required: ${isPreviousPasswordRequired}`,
-      );
+      logger.info("Changing user password", {
+        actorId: ctx.session.user.id,
+        targetUserId: input.userId,
+        previousPasswordRequired: isPreviousPasswordRequired,
+      });
 
       if (isPreviousPasswordRequired) {
         const previousPasswordHash = await hashPasswordAsync(input.previousPassword, dbUser.salt ?? "");

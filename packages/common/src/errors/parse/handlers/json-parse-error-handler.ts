@@ -1,13 +1,15 @@
-import { logger } from "@homarr/log";
-
 import { ParseError } from "../parse-error";
 import { ParseErrorHandler } from "./parse-error-handler";
 
 export class JsonParseErrorHandler extends ParseErrorHandler {
+  constructor() {
+    super("json");
+  }
+
   handleParseError(error: unknown): ParseError | undefined {
     if (!(error instanceof SyntaxError)) return undefined;
 
-    logger.debug("Received JSON parse error", {
+    this.logParseError({
       message: error.message,
     });
 

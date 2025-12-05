@@ -1,6 +1,6 @@
 import { createId } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createDbInsertCollectionForTransaction } from "@homarr/db/collection";
-import { logger } from "@homarr/log";
 import type { BoardSize, OldmarrConfig } from "@homarr/old-schema";
 import { boardSizes, getBoardSizeName } from "@homarr/old-schema";
 
@@ -14,6 +14,8 @@ import { prepareItems } from "../../prepare/prepare-items";
 import type { prepareMultipleImports } from "../../prepare/prepare-multiple";
 import { prepareSections } from "../../prepare/prepare-sections";
 import type { InitialOldmarrImportSettings } from "../../settings";
+
+const logger = createLogger({ module: "boardCollection" });
 
 export const createBoardInsertCollection = (
   { preparedApps, preparedBoards }: Omit<ReturnType<typeof prepareMultipleImports>, "preparedIntegrations">,
@@ -50,12 +52,12 @@ export const createBoardInsertCollection = (
   }
 
   if (settings.onlyImportApps) {
-    logger.info(
-      `Skipping boards and sections import due to onlyImportApps setting appCount=${insertCollection.apps.length}`,
-    );
+    logger.info("Skipping boards and sections import due to onlyImportApps setting", {
+      appCount: insertCollection.apps.length,
+    });
     return insertCollection;
   }
-  logger.debug(`Added apps to board insert collection count=${insertCollection.apps.length}`);
+  logger.debug("Added apps to board insert collection", { count: insertCollection.apps.length });
 
   preparedBoards.forEach((board) => {
     if (!hasEnoughItemShapes(board.config)) {
@@ -71,10 +73,10 @@ export const createBoardInsertCollection = (
       name: board.name,
     });
 
-    logger.debug(`Fixed issues with sections and item positions fileName=${board.name}`);
+    logger.debug("Fixed issues with sections and item positions", { fileName: board.name });
 
     const mappedBoard = mapBoard(board);
-    logger.debug(`Mapped board fileName=${board.name} boardId=${mappedBoard.id}`);
+    logger.debug("Mapped board", { fileName: board.name, boardId: mappedBoard.id });
     insertCollection.boards.push(mappedBoard);
 
     const layoutMapping = boardSizes.reduce(
@@ -100,7 +102,7 @@ export const createBoardInsertCollection = (
     for (const section of preparedSections.values()) {
       insertCollection.sections.push(section);
     }
-    logger.debug(`Added sections to board insert collection count=${insertCollection.sections.length}`);
+    logger.debug("Added sections to board insert collection", { count: insertCollection.sections.length });
 
     const preparedItems = prepareItems(
       {
@@ -117,12 +119,15 @@ export const createBoardInsertCollection = (
       insertCollection.items.push(item);
       insertCollection.itemLayouts.push(...layouts);
     });
-    logger.debug(`Added items to board insert collection count=${insertCollection.items.length}`);
+    logger.debug("Added items to board insert collection", { count: insertCollection.items.length });
   });
 
-  logger.info(
-    `Board collection prepared boardCount=${insertCollection.boards.length} sectionCount=${insertCollection.sections.length} itemCount=${insertCollection.items.length} appCount=${insertCollection.apps.length}`,
-  );
+  logger.info("Board collection prepared", {
+    boardCount: insertCollection.boards.length,
+    sectionCount: insertCollection.sections.length,
+    itemCount: insertCollection.items.length,
+    appCount: insertCollection.apps.length,
+  });
 
   return insertCollection;
 };

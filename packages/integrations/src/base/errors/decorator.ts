@@ -1,5 +1,5 @@
 import { isFunction } from "@homarr/common";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { Integration } from "../integration";
 import type { IIntegrationErrorHandler } from "./handler";
@@ -8,9 +8,7 @@ import { IntegrationError } from "./integration-error";
 import { IntegrationUnknownError } from "./integration-unknown-error";
 import { integrationJsonParseErrorHandler, integrationZodParseErrorHandler } from "./parse";
 
-const localLogger = logger.child({
-  module: "HandleIntegrationErrors",
-});
+const logger = createLogger({ module: "handleIntegrationErrors" });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-explicit-any
 type AbstractConstructor<T = {}> = abstract new (...args: any[]) => T;
@@ -59,7 +57,7 @@ export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[
                 }
 
                 // If the error was handled and should be thrown again, throw it
-                localLogger.debug("Unhandled error in integration", {
+                logger.debug("Unhandled error in integration", {
                   error: error instanceof Error ? `${error.name}: ${error.message}` : undefined,
                   integrationName: this.publicIntegration.name,
                 });

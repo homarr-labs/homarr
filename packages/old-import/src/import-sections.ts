@@ -1,8 +1,10 @@
 import { createId } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { sections } from "@homarr/db/schema";
-import { logger } from "@homarr/log";
 import type { OldmarrConfig } from "@homarr/old-schema";
+
+const logger = createLogger({ module: "importSections" });
 
 export const insertSectionsAsync = async (
   db: Database,
@@ -10,9 +12,7 @@ export const insertSectionsAsync = async (
   wrappers: OldmarrConfig["wrappers"],
   boardId: string,
 ) => {
-  logger.info(
-    `Importing old homarr sections boardId=${boardId} categories=${categories.length} wrappers=${wrappers.length}`,
-  );
+  logger.info("Importing old homarr sections", { boardId, categories: categories.length, wrappers: wrappers.length });
 
   const wrapperIds = wrappers.map((section) => section.id);
   const categoryIds = categories.map((section) => section.id);
@@ -45,7 +45,7 @@ export const insertSectionsAsync = async (
     await db.insert(sections).values(categoriesToInsert);
   }
 
-  logger.info(`Imported sections count=${wrappersToInsert.length + categoriesToInsert.length}`);
+  logger.info("Imported sections", { count: wrappersToInsert.length + categoriesToInsert.length });
 
   return idMaps;
 };

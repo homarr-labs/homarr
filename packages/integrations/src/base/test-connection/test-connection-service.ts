@@ -7,7 +7,7 @@ import {
   getTrustedCertificateHostnamesAsync,
 } from "@homarr/certificates/server";
 import { getPortFromUrl } from "@homarr/common";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationRequestErrorOfType } from "../errors/http/integration-request-error";
 import { IntegrationRequestError } from "../errors/http/integration-request-error";
@@ -15,8 +15,8 @@ import { IntegrationError } from "../errors/integration-error";
 import type { AnyTestConnectionError } from "./test-connection-error";
 import { TestConnectionError } from "./test-connection-error";
 
-const localLogger = logger.child({
-  module: "TestConnectionService",
+const logger = createLogger({
+  module: "testConnectionService",
 });
 
 export type TestingResult =
@@ -36,7 +36,7 @@ export class TestConnectionService {
   constructor(private url: URL) {}
 
   public async handleAsync(testingCallbackAsync: AsyncTestingCallback) {
-    localLogger.debug("Testing connection", {
+    logger.debug("Testing connection", {
       url: this.url.toString(),
     });
 
@@ -72,14 +72,14 @@ export class TestConnectionService {
       });
 
     if (testingResult.success) {
-      localLogger.debug("Testing connection succeeded", {
+      logger.debug("Testing connection succeeded", {
         url: this.url.toString(),
       });
 
       return testingResult;
     }
 
-    localLogger.debug("Testing connection failed", {
+    logger.debug("Testing connection failed", {
       url: this.url.toString(),
       error: `${testingResult.error.name}: ${testingResult.error.message}`,
     });
@@ -124,7 +124,7 @@ export class TestConnectionService {
     const x509 = socket.getPeerX509Certificate();
     socket.destroy();
 
-    localLogger.debug("Fetched certificate", {
+    logger.debug("Fetched certificate", {
       url: this.url.toString(),
       subject: x509?.subject,
       issuer: x509?.issuer,

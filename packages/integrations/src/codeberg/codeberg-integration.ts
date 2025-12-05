@@ -1,7 +1,7 @@
 import type { RequestInit, Response } from "undici";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -15,7 +15,7 @@ import type {
 } from "../interfaces/releases-providers/releases-providers-types";
 import { detailsResponseSchema, releasesResponseSchema } from "./codeberg-schemas";
 
-const localLogger = logger.child({ module: "CodebergIntegration" });
+const logger = createLogger({ module: "codebergIntegration" });
 
 export class CodebergIntegration extends Integration implements ReleasesProviderIntegration {
   private async withHeadersAsync(callback: (headers: RequestInit["headers"]) => Promise<Response>): Promise<Response> {
@@ -45,10 +45,9 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
   private parseIdentifier(identifier: string) {
     const [owner, name] = identifier.split("/");
     if (!owner || !name) {
-      localLogger.warn(
-        `Invalid identifier format. Expected 'owner/name', for ${identifier} with Codeberg integration`,
-        { identifier },
-      );
+      logger.warn("Invalid identifier format. Expected 'owner/name', for identifier", {
+        identifier,
+      });
       return null;
     }
     return { owner, name };
@@ -109,7 +108,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     });
 
     if (!response.ok) {
-      localLogger.warn(`Failed to get details response for ${owner}/${name} with Codeberg integration`, {
+      logger.warn("Failed to get details", {
         owner,
         name,
         error: response.statusText,
@@ -122,7 +121,7 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
     const { data, success, error } = detailsResponseSchema.safeParse(responseJson);
 
     if (!success) {
-      localLogger.warn(`Failed to parse details response for ${owner}/${name} with Codeberg integration`, {
+      logger.warn("Failed to parse details", {
         owner,
         name,
         error,

@@ -2,7 +2,6 @@ import type { V1HTTPIngressPath, V1Ingress, V1IngressRule } from "@kubernetes/cl
 import { TRPCError } from "@trpc/server";
 
 import type { KubernetesIngress, KubernetesIngressPath, KubernetesIngressRuleAndPath } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
@@ -43,7 +42,6 @@ export const ingressesRouter = createTRPCRouter({
 
         return ingresses.items.map(mapIngress);
       } catch (error) {
-        logger.error("Unable to retrieve ingresses", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An error occurred while fetching Kubernetes ingresses",

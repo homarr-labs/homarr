@@ -6,9 +6,12 @@ import { appRouter, createTRPCContext } from "@homarr/api";
 import type { Session } from "@homarr/auth";
 import { hashPasswordAsync } from "@homarr/auth";
 import { createSessionAsync } from "@homarr/auth/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db, eq } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema";
-import { logger } from "@homarr/log";
+
+const logger = createLogger({ module: "trpcOpenApiRoute" });
 
 const handlerAsync = async (req: NextRequest) => {
   const apiKeyHeaderValue = req.headers.get("ApiKey");
@@ -27,7 +30,7 @@ const handlerAsync = async (req: NextRequest) => {
     router: appRouter,
     createContext: () => createTRPCContext({ session, headers: req.headers }),
     onError({ error, path, type }) {
-      logger.error(new Error(`tRPC Error with ${type} on '${path}'`, { cause: error.cause }));
+      logger.error(new ErrorWithMetadata("tRPC Error occured", { path, type }, { cause: error }));
     },
   });
 };
@@ -48,9 +51,10 @@ const getSessionOrDefaultFromHeadersAsync = async (
   const [apiKeyId, apiKey] = apiKeyHeaderValue.split(".");
 
   if (!apiKeyId || !apiKey) {
-    logger.warn(
-      `An attempt to authenticate over API has failed due to invalid API key format ip='${ipAdress}' userAgent='${userAgent}'`,
-    );
+    logger.warn("An attempt to authenticate over API has failed due to invalid API key format", {
+      ipAdress,
+      userAgent,
+    });
     return null;
   }
 
@@ -74,18 +78,21 @@ const getSessionOrDefaultFromHeadersAsync = async (
   });
 
   if (!apiKeyFromDb) {
-    logger.warn(`An attempt to authenticate over API has failed ip='${ipAdress}' userAgent='${userAgent}'`);
+    logger.warn("An attempt to authenticate over API has failed", { ipAdress, userAgent });
     return null;
   }
 
   const hashedApiKey = await hashPasswordAsync(apiKey, apiKeyFromDb.salt);
 
   if (apiKeyFromDb.apiKey !== hashedApiKey) {
-    logger.warn(`An attempt to authenticate over API has failed ip='${ipAdress}' userAgent='${userAgent}'`);
+    logger.warn("An attempt to authenticate over API has failed", { ipAdress, userAgent });
     return null;
   }
 
-  logger.info(`Read session from API request and found user ${apiKeyFromDb.user.name} (${apiKeyFromDb.user.id})`);
+  logger.info("Read session from API request and found user", {
+    name: apiKeyFromDb.user.name,
+    id: apiKeyFromDb.user.id,
+  });
   return await createSessionAsync(db, apiKeyFromDb.user);
 };
 

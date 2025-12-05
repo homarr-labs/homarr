@@ -1,7 +1,5 @@
 import { FetchError } from "node-fetch";
 
-import { logger } from "@homarr/log";
-
 import { RequestError } from "../request-error";
 import type { AnyRequestError } from "../request-error";
 import type { ResponseError } from "../response-error";
@@ -15,14 +13,14 @@ import { HttpErrorHandler } from "./http-error-handler";
  */
 export class NodeFetchHttpErrorHandler extends HttpErrorHandler {
   constructor(private type = "node-fetch") {
-    super();
+    super(type);
   }
 
   handleRequestError(error: unknown): AnyRequestError | undefined {
     if (!(error instanceof FetchError)) return undefined;
     if (error.code === undefined) return undefined;
 
-    logger.debug(`Received ${this.type} request error`, {
+    this.logRequestError({
       code: error.code,
       message: error.message,
     });

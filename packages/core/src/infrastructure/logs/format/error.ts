@@ -1,4 +1,9 @@
+import { logsEnv } from "../env";
 import { formatMetadata } from "./metadata";
+
+const ERROR_OBJECT_PRUNE_DEPTH = logsEnv.LEVEL === "debug" ? 10 : 3;
+const ERROR_STACK_LINE_LIMIT = logsEnv.LEVEL === "debug" ? undefined : 5;
+const ERROR_CAUSE_DEPTH = logsEnv.LEVEL === "debug" ? 10 : 5;
 
 /**
  * Formats the cause of an error in the format
@@ -10,7 +15,7 @@ import { formatMetadata } from "./metadata";
  */
 export const formatErrorCause = (cause: unknown, iteration = 0): string => {
   // Prevent infinite recursion
-  if (iteration > 5) {
+  if (iteration > ERROR_CAUSE_DEPTH) {
     return "";
   }
 
@@ -22,8 +27,12 @@ export const formatErrorCause = (cause: unknown, iteration = 0): string => {
     return `\ncaused by ${formatErrorTitle(cause)}\n${formatErrorStack(cause.stack)}${formatErrorCause(cause.cause, iteration + 1)}`;
   }
 
-  if (cause instanceof Object) {
-    return `\ncaused by ${JSON.stringify(cause)}`;
+  if (typeof cause === "object" && cause !== null) {
+    if ("cause" in cause) {
+      const { cause: innerCause, ...rest } = cause;
+      return `\ncaused by ${JSON.stringify(prune(rest, ERROR_OBJECT_PRUNE_DEPTH))}${formatErrorCause(innerCause, iteration + 1)}`;
+    }
+    return `\ncaused by ${JSON.stringify(prune(cause, ERROR_OBJECT_PRUNE_DEPTH))}`;
   }
 
   return `\ncaused by ${cause as string}`;
@@ -50,5 +59,28 @@ export const formatErrorTitle = (error: Error) => {
  * @param stack stack trace
  * @returns formatted stack trace
  */
-export const formatErrorStack = (stack: string | undefined) => (stack ? removeFirstLine(stack) : "");
-const removeFirstLine = (stack: string) => stack.split("\n").slice(1).join("\n");
+export const formatErrorStack = (stack: string | undefined) =>
+  stack
+    ?.split("\n")
+    .slice(1, ERROR_STACK_LINE_LIMIT ? ERROR_STACK_LINE_LIMIT + 1 : undefined)
+    .join("\n") ?? "";
+
+/**
+ * Removes nested properties from an object beyond a certain depth
+ */
+const prune = (value: unknown, depth: number): unknown => {
+  if (typeof value !== "object" || value === null) {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    if (depth === 0) return [];
+    return value.map((item) => prune(item, depth - 1));
+  }
+
+  if (depth === 0) {
+    return {};
+  }
+
+  return Object.fromEntries(Object.entries(value).map(([key, val]) => [key, prune(val, depth - 1)]));
+};

@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 
 import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { and, asc, eq, handleTransactionsAsync, inArray, like, or } from "@homarr/db";
 import {
@@ -26,7 +27,6 @@ import {
   integrationSecretKindObject,
 } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
-import { logger } from "@homarr/log";
 import { byIdSchema } from "@homarr/validation/common";
 import {
   integrationCreateSchema,
@@ -39,6 +39,8 @@ import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publ
 import { throwIfActionForbiddenAsync } from "./integration-access";
 import { MissingSecretError, testConnectionAsync } from "./integration-test-connection";
 import { mapTestConnectionError } from "./map-test-connection-error";
+
+const logger = createLogger({ module: "integrationRouter" });
 
 export const integrationRouter = createTRPCRouter({
   all: publicProcedure.query(async ({ ctx }) => {

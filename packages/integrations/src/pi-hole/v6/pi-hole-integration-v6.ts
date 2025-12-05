@@ -3,7 +3,7 @@ import type { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
@@ -14,7 +14,7 @@ import type { DnsHoleSummaryIntegration } from "../../interfaces/dns-hole-summar
 import type { DnsHoleSummary } from "../../types";
 import { dnsBlockingGetSchema, sessionResponseSchema, statsSummaryGetSchema } from "./pi-hole-schemas-v6";
 
-const localLogger = logger.child({ module: "PiHoleIntegrationV6" });
+const logger = createLogger({ module: "piHoleIntegration", version: "v6" });
 
 export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIntegration {
   private readonly sessionStore: SessionStore<{ sid: string | null }>;
@@ -126,13 +126,13 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     const storedSession = await this.sessionStore.getAsync();
 
     if (storedSession) {
-      localLogger.debug("Using stored session for request", { integrationId: this.integration.id });
+      logger.debug("Using stored session for request", { integrationId: this.integration.id });
       const response = await callback(storedSession.sid);
       if (response.status !== 401) {
         return response;
       }
 
-      localLogger.debug("Session expired, getting new session", { integrationId: this.integration.id });
+      logger.debug("Session expired, getting new session", { integrationId: this.integration.id });
     }
 
     const sessionId = await this.getSessionAsync();
@@ -171,7 +171,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
       );
     }
 
-    localLogger.info("Received session id successfully", { integrationId: this.integration.id });
+    logger.info("Received session id successfully", { integrationId: this.integration.id });
 
     return result.session.sid;
   }
@@ -185,7 +185,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync,
   ) {
     if (!sessionId) {
-      localLogger.debug("No session id to clear");
+      logger.debug("No session id to clear");
       return;
     }
 
@@ -197,7 +197,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
     });
 
     if (!response.ok) {
-      localLogger.warn("Failed to clear session", { statusCode: response.status, content: await response.text() });
+      logger.warn("Failed to clear session", { statusCode: response.status, content: await response.text() });
     }
 
     logger.debug("Cleared session successfully");

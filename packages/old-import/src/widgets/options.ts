@@ -1,9 +1,11 @@
 import { objectEntries } from "@homarr/common";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { WidgetComponentProps } from "../../../widgets/src/definition";
 import type { InversedWidgetMapping, OldmarrWidgetDefinitions, WidgetMapping } from "./definitions";
 import { mapKind } from "./definitions";
+
+const logger = createLogger({ module: "mapOptions" });
 
 // This type enforces, that for all widget mappings there is a corresponding option mapping,
 // each option of newmarr can be mapped from the value of the oldmarr options
@@ -192,7 +194,7 @@ export const mapOptions = <K extends OldmarrWidgetDefinitions["id"]>(
   oldOptions: Extract<OldmarrWidgetDefinitions, { id: K }>["options"],
   appsMap: Map<string, string>,
 ) => {
-  logger.debug(`Mapping old homarr options for widget type=${type} options=${JSON.stringify(oldOptions)}`);
+  logger.debug("Mapping old homarr options for widget", { type, options: JSON.stringify(oldOptions) });
   const kind = mapKind(type);
   if (!kind) {
     return null;
@@ -202,7 +204,7 @@ export const mapOptions = <K extends OldmarrWidgetDefinitions["id"]>(
   return objectEntries(mapping).reduce(
     (acc, [key, value]: [string, (oldOptions: Record<string, unknown>, appsMap: Map<string, string>) => unknown]) => {
       const newValue = value(oldOptions, appsMap);
-      logger.debug(`Mapping old homarr option kind=${kind} key=${key} newValue=${newValue as string}`);
+      logger.debug("Mapping old homarr option", { kind, key, newValue });
       if (newValue !== undefined) {
         acc[key] = newValue;
       }

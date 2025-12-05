@@ -1,4 +1,4 @@
-import type { LogLevel } from "@homarr/log/constants";
+import type { LogLevel } from "@homarr/core/infrastructure/logs/constants";
 
 import { createListChannel, createQueueChannel, createSubPubChannel } from "./lib/channel";
 

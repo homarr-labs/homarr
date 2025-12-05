@@ -1,9 +1,11 @@
 import { encryptSecret } from "@homarr/common/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createDbInsertCollectionForTransaction } from "@homarr/db/collection";
-import { logger } from "@homarr/log";
 
 import { mapAndDecryptIntegrations } from "../../mappers/map-integration";
 import type { PreparedIntegration } from "../../prepare/prepare-integrations";
+
+const logger = createLogger({ module: "integrationCollection" });
 
 export const createIntegrationInsertCollection = (
   preparedIntegrations: PreparedIntegration[],
@@ -15,7 +17,7 @@ export const createIntegrationInsertCollection = (
     return insertCollection;
   }
 
-  logger.info(`Preparing integrations for insert collection count=${preparedIntegrations.length}`);
+  logger.info("Preparing integrations for insert collection", { count: preparedIntegrations.length });
 
   if (encryptionToken === null || encryptionToken === undefined) {
     logger.debug("Skipping integration decryption due to missing token");
@@ -44,9 +46,10 @@ export const createIntegrationInsertCollection = (
       });
   });
 
-  logger.info(
-    `Added integrations and secrets to insert collection integrationCount=${insertCollection.integrations.length} secretCount=${insertCollection.integrationSecrets.length}`,
-  );
+  logger.info("Added integrations and secrets to insert collection", {
+    integrationCount: insertCollection.integrations.length,
+    secretCount: insertCollection.integrationSecrets.length,
+  });
 
   return insertCollection;
 };

@@ -1,8 +1,8 @@
 import superjson from "superjson";
 import Transport from "winston-transport";
 
-import type { RedisClient } from "@homarr/core/infrastructure/redis";
-import { createRedisClient } from "@homarr/core/infrastructure/redis";
+import type { RedisClient } from "../../redis/client";
+import { createRedisClient } from "../../redis/client";
 
 const messageSymbol = Symbol.for("message");
 const levelSymbol = Symbol.for("level");
@@ -13,6 +13,7 @@ const levelSymbol = Symbol.for("level");
 //
 export class RedisTransport extends Transport {
   private redis: RedisClient | null = null;
+  public static readonly publishChannel = "pubSub:logging";
 
   /**
    * Log the info to the Redis channel
@@ -27,7 +28,7 @@ export class RedisTransport extends Transport {
 
     this.redis
       .publish(
-        "pubSub:logging",
+        RedisTransport.publishChannel,
         superjson.stringify({
           message: info[messageSymbol],
           level: info[levelSymbol],

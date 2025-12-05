@@ -4,9 +4,11 @@ import dayjs from "dayjs";
 import { z } from "zod/v4";
 
 import type { Modify } from "@homarr/common/types";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
+
+const logger = createLogger({ module: "rssFeedsRequestHandler" });
 
 export const rssFeedsRequestHandler = createCachedWidgetRequestHandler({
   queryKey: "rssFeedList",

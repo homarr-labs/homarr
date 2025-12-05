@@ -1,10 +1,12 @@
 import type { Dispatcher } from "undici";
 import { Agent } from "undici";
 
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 // The below import statement initializes dns-caching
 import "./dns";
+
+const logger = createLogger({ module: "fetchAgent" });
 
 export class LoggingAgent extends Agent {
   constructor(...props: ConstructorParameters<typeof Agent>) {

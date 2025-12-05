@@ -1,7 +1,5 @@
 import { AxiosError } from "axios";
 
-import { logger } from "@homarr/log";
-
 import type { AnyRequestError } from "../request-error";
 import { RequestError } from "../request-error";
 import { ResponseError } from "../response-error";
@@ -9,11 +7,15 @@ import { matchErrorCode } from "./fetch-http-error-handler";
 import { HttpErrorHandler } from "./http-error-handler";
 
 export class AxiosHttpErrorHandler extends HttpErrorHandler {
+  constructor() {
+    super("axios");
+  }
+
   handleRequestError(error: unknown): AnyRequestError | undefined {
     if (!(error instanceof AxiosError)) return undefined;
     if (error.code === undefined) return undefined;
 
-    logger.debug("Received Axios request error", {
+    this.logRequestError({
       code: error.code,
       message: error.message,
     });
@@ -28,8 +30,7 @@ export class AxiosHttpErrorHandler extends HttpErrorHandler {
   handleResponseError(error: unknown): ResponseError | undefined {
     if (!(error instanceof AxiosError)) return undefined;
     if (error.response === undefined) return undefined;
-
-    logger.debug("Received Axios response error", {
+    this.logResponseError({
       status: error.response.status,
       url: error.response.config.url,
       message: error.message,
