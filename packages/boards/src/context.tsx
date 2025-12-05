@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 
+import { useEditMode } from "./edit-mode";
 import { updateBoardName } from "./updater";
 
 const BoardContext = createContext<{
@@ -83,10 +84,12 @@ export const getCurrentLayout = (board: RouterOutputs["board"]["getBoardByName"]
 export const useCurrentLayout = () => {
   const board = useRequiredBoard();
   const [currentLayout, setCurrentLayout] = useState(getCurrentLayout(board));
+  const [isEditMode] = useEditMode();
 
   const onResize = useCallback(() => {
+    if (isEditMode && board.layoutMode === "auto") return;
     setCurrentLayout(getCurrentLayout(board));
-  }, [board]);
+  }, [board, isEditMode]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -96,6 +99,10 @@ export const useCurrentLayout = () => {
       window.removeEventListener("resize", onResize);
     };
   }, [onResize]);
+
+  if (board.layoutMode === "auto" && isEditMode && board.baseLayoutId !== null) {
+    return board.baseLayoutId;
+  }
 
   return currentLayout;
 };

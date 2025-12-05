@@ -56,8 +56,7 @@ export const generateResponsiveGridFor = ({
     dynamicSectionHeightMap.set(dynamicSection.id, result.height);
   }
 
-  // Return same positions for items in the current section
-  if (width >= previousWidth) {
+  if (width === previousWidth) {
     return {
       height: Math.max(...itemsOfCurrentSection.map((item) => item.yOffset + item.height)),
       items: newItems.concat(normalizedItems),
