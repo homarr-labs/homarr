@@ -115,7 +115,7 @@ export type inferSupportedIntegrationsStrict<TKind extends WidgetKind> = (Widget
 
 export const reduceWidgetOptionsWithDefaultValues = (
   kind: WidgetKind,
-  settings: SettingsContextProps,
+  settings: Pick<SettingsContextProps, "enableStatusByDefault" | "firstDayOfWeek" | "forceDisableStatus">,
   currentValue: Record<string, unknown> = {},
 ) => {
   const definition = widgetImports[kind].definition;
