@@ -1,3 +1,10 @@
+## [1.45.2](https://github.com/homarr-labs/homarr/compare/v1.45.1...v1.45.2) (2025-12-05)
+
+### Bug Fixes
+
+* add ipv6 support for internal nginx proxy ([2c48b18](https://github.com/homarr-labs/homarr/commit/2c48b18968a74cb7150c246ebb2505d07764f109))
+* disable react-compiler due to issue with mantine-react-table data updates ([#4593](https://github.com/homarr-labs/homarr/issues/4593)) ([10572ca](https://github.com/homarr-labs/homarr/commit/10572ca962081961fb63b3ad9f164c610edf35e4))
+
 ## [1.45.1](https://github.com/homarr-labs/homarr/compare/v1.45.0...v1.45.1) (2025-12-03)
 
 ### Bug Fixes
