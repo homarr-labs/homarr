@@ -124,12 +124,17 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
         },
         monthCell: {
           textAlign: "center",
+          position: "relative"
         },
         day: {
           borderRadius: actualItemRadius,
           width: "100%",
           height: "100%",
-          position: "relative",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0
         },
         month: {
           height: "100%",
@@ -137,6 +142,9 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
         weekday: {
           padding: 0,
         },
+        weekdaysRow: {
+          height: 22
+        }
       }}
       renderDay={(tileDate) => {
         const eventsForDate = normalizedEvents
