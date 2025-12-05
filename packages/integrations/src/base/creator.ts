@@ -38,6 +38,7 @@ import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { QuayIntegration } from "../quay/quay-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
+import { UnraidIntegration } from "../unraid/unraid-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
 export const createIntegrationAsync = async <TKind extends keyof typeof integrationCreators>(
@@ -101,6 +102,7 @@ export const integrationCreators = {
   ntfy: NTFYIntegration,
   mock: MockIntegration,
   truenas: TrueNasIntegration,
+  unraid: UnraidIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {
