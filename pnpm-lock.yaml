@@ -2104,8 +2104,8 @@ importers:
         specifier: 16.0.7
         version: 16.0.7(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.94.2)
       next-intl:
-        specifier: 4.5.6
-        version: 4.5.6(next@16.0.7(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.94.2))(react@19.2.0)(typescript@5.9.3)
+        specifier: 4.5.7
+        version: 4.5.7(next@16.0.7(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.94.2))(react@19.2.0)(typescript@5.9.3)
       react:
         specifier: 19.2.0
         version: 19.2.0
@@ -8442,11 +8442,11 @@ packages:
       nodemailer:
         optional: true
 
-  next-intl-swc-plugin-extractor@4.5.6:
-    resolution: {integrity: sha512-ApB3wGYqni8lks90UuaslnCK4a+q8I6ajEafSpknN6RDrs2hUwNuWVrjKhOuhLqNLn4kBKl+Zi5c0WKpL968ag==}
+  next-intl-swc-plugin-extractor@4.5.8:
+    resolution: {integrity: sha512-hscCKUv+5GQ0CCNbvqZ8gaxnAGToCgDTbL++jgCq8SCk/ljtZDEeQZcMk46Nm6Ynn49Q/JKF4Npo/Sq1mpbusA==}
 
-  next-intl@4.5.6:
-    resolution: {integrity: sha512-LD1mM9HL44NGqDus3cpIE8wqRU87GWf7rdy1g7UHceT9KJvvjER/jlmIRt3GHaoOiln16K4IbHpO2ZI6jiqiDQ==}
+  next-intl@4.5.7:
+    resolution: {integrity: sha512-7iT9rBEFZvsJI5uLoOLgI1kAieg1k7zCwbuby6ylKRbpvt08I1vkZ5FJnIBey1M+r1jam/wANlnqRYeJagjL2Q==}
     peerDependencies:
       next: ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc <19.0.0 || ^19.0.0
@@ -10749,8 +10749,8 @@ packages:
     peerDependencies:
       react: '>=16.13'
 
-  use-intl@4.5.6:
-    resolution: {integrity: sha512-SzxrUH/X3LatVcgWVqz8ifoBK01LC3fzc8Y29Vj0QfrjLIXfGwxvJ3aapyWumBIIHsZmCR0Rx5FpKDWCc9JiOg==}
+  use-intl@4.5.8:
+    resolution: {integrity: sha512-rWPV2Sirw55BQbA/7ndUBtsikh8WXwBrUkZJ1mD35+emj/ogPPqgCZdv1DdrEFK42AjF1g5w8d3x8govhqPH6Q==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || >=19.0.0-rc <19.0.0 || ^19.0.0
 
@@ -18007,18 +18007,18 @@ snapshots:
       next: 16.0.7(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.94.2)
       react: 19.2.0
 
-  next-intl-swc-plugin-extractor@4.5.6: {}
+  next-intl-swc-plugin-extractor@4.5.8: {}
 
-  next-intl@4.5.6(next@16.0.7(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.94.2))(react@19.2.0)(typescript@5.9.3):
+  next-intl@4.5.7(next@16.0.7(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.94.2))(react@19.2.0)(typescript@5.9.3):
     dependencies:
       '@formatjs/intl-localematcher': 0.5.5
       '@swc/core': 1.15.3
       negotiator: 1.0.0
       next: 16.0.7(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.94.2)
-      next-intl-swc-plugin-extractor: 4.5.6
+      next-intl-swc-plugin-extractor: 4.5.8
       po-parser: 1.0.2
       react: 19.2.0
-      use-intl: 4.5.6(react@19.2.0)
+      use-intl: 4.5.8(react@19.2.0)
     optionalDependencies:
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -20711,7 +20711,7 @@ snapshots:
       dequal: 2.0.3
       react: 19.2.0
 
-  use-intl@4.5.6(react@19.2.0):
+  use-intl@4.5.8(react@19.2.0):
     dependencies:
       '@formatjs/fast-memoize': 2.2.1
       '@schummar/icu-type-parser': 1.21.5
