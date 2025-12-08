@@ -29,10 +29,10 @@ export const ImportTokenModal = createModal<InnerProps>(({ actions, innerProps }
     mutate(
       { checksum: innerProps.checksum, token: values.token },
       {
-        async onSuccess(isValid) {
+        onSuccess(isValid) {
           if (isValid) {
             actions.closeModal();
-            await innerProps.onSuccessAsync(values.token);
+            void innerProps.onSuccessAsync(values.token);
           } else {
             showErrorNotification({
               title: tTokenModal("notification.error.title"),
