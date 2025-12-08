@@ -6,7 +6,7 @@ mkdir -p /appdata/redis
 mkdir -p /appdata/trusted-certificates
 
 # Run migrations
-if [ $DB_MIGRATIONS_DISABLED = "true" ]; then
+if [ "$DB_MIGRATIONS_DISABLED" = "true" ]; then
   echo "DB migrations are disabled, skipping"
 else
     echo "Running DB migrations"
