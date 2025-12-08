@@ -29,6 +29,7 @@ NGINX_PID=$!
 
 if [ "$REDIS_IS_EXTERNAL" = "true" ]; then
     echo "Using external Redis server at redis://$REDIS_HOST:$REDIS_PORT"
+    REDIS_PID=""
 else
     echo "Starting internal Redis server"
     redis-server /app/redis.conf &
@@ -51,9 +52,11 @@ terminate() {
     echo "Received SIGTERM. Shutting down..."
     kill -TERM $NGINX_PID $TASKS_PID $WSS_PID $NEXTJS_PID 2>/dev/null
     wait
-    # kill redis-server last because of logging of other services
-    kill -TERM $REDIS_PID 2>/dev/null
-    wait
+    # kill redis-server last because of logging of other services and only if $REDIS_PID is set
+    if [ -n "$REDIS_PID" ]; then
+        kill -TERM $REDIS_PID 2>/dev/null
+        wait
+    fi
     echo "Shutdown complete."
     exit 0
 }
