@@ -34,8 +34,8 @@
     "mantine-react-table": "2.0.0-beta.9",
     "next": "16.0.7",
     "next-intl": "4.5.8",
-    "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react": "19.2.1",
+    "react-dom": "19.2.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
