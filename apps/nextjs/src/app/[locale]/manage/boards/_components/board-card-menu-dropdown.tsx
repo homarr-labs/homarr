@@ -84,9 +84,6 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
         id: board.id,
         name: board.name,
       },
-      onSuccess: async () => {
-        await revalidatePathActionAsync("/manage/boards");
-      },
     });
   }, [board.id, board.name, openDuplicateModal]);
 

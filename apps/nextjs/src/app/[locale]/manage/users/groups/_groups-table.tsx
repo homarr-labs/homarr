@@ -56,16 +56,19 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
     () => initialGroupIds.some((groupId, index) => groupIds.indexOf(groupId) !== index),
     [groupIds, initialGroupIds],
   );
-  const { mutateAsync, isPending } = clientApi.group.savePositions.useMutation();
+  const { mutateAsync, isPending } = clientApi.group.savePositions.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync("/manage/users/groups");
+    },
+  });
   const handleSavePositionsAsync = async () => {
     await mutateAsync(
       { positions: groupIds },
       {
-        async onSuccess() {
+        onSuccess() {
           showSuccessNotification({
             message: t("group.action.changePosition.notification.success.message"),
           });
-          await revalidatePathActionAsync("/manage/users/groups");
         },
         onError() {
           showSuccessNotification({

@@ -18,7 +18,12 @@ interface UserProfileAvatarForm {
 }
 
 export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
-  const { mutate } = clientApi.user.setProfileImage.useMutation();
+  const { mutate } = clientApi.user.setProfileImage.useMutation({
+    async onSuccess() {
+            // Revalidate all as the avatar is used in multiple places
+            await revalidatePathActionAsync("/");
+    },
+  });
   const [opened, { toggle }] = useDisclosure(false);
   const { openConfirmModal } = useConfirmModal();
   const t = useI18n();
@@ -38,9 +43,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
           image: base64Url,
         },
         {
-          async onSuccess() {
-            // Revalidate all as the avatar is used in multiple places
-            await revalidatePathActionAsync("/");
+          onSuccess() {
             showSuccessNotification({
               message: tManageAvatar("changeImage.notification.success.message"),
             });
@@ -74,9 +77,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
             image: null,
           },
           {
-            async onSuccess() {
-              // Revalidate all as the avatar is used in multiple places
-              await revalidatePathActionAsync("/");
+            onSuccess() {
               showSuccessNotification({
                 message: tManageAvatar("removeImage.notification.success.message"),
               });
