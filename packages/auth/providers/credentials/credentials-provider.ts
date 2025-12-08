@@ -1,7 +1,7 @@
 import type Credentials from "@auth/core/providers/credentials";
 
 import type { Database } from "@homarr/db";
-import { userSignInSchema } from "@homarr/validation/user";
+import { ldapSignInSchema, userSignInSchema } from "@homarr/validation/user";
 
 import { authorizeWithBasicCredentialsAsync } from "./authorization/basic-authorization";
 import { authorizeWithLdapCredentialsAsync } from "./authorization/ldap-authorization";
@@ -28,7 +28,7 @@ export const createLdapConfiguration = (db: Database) =>
     name: "Ldap",
     // eslint-disable-next-line no-restricted-syntax
     async authorize(credentials) {
-      const data = await userSignInSchema.parseAsync(credentials);
+      const data = await ldapSignInSchema.parseAsync(credentials);
       return await authorizeWithLdapCredentialsAsync(db, data).catch(() => null);
     },
   }) satisfies CredentialsConfiguration;
