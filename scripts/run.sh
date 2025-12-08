@@ -22,6 +22,7 @@ export CRON_JOB_API_KEY=$(openssl rand -base64 32)
 # 1. Replace the HOSTNAME in the nginx template file
 # 2. Create the nginx configuration file from the template
 # 3. Start the nginx server
+export HOSTNAME
 envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 # Start services in the background and store their PIDs
 nginx -g 'daemon off;' &
