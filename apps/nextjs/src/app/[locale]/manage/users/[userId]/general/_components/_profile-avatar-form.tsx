@@ -20,8 +20,8 @@ interface UserProfileAvatarForm {
 export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
   const { mutate } = clientApi.user.setProfileImage.useMutation({
     async onSuccess() {
-            // Revalidate all as the avatar is used in multiple places
-            await revalidatePathActionAsync("/");
+      // Revalidate all as the avatar is used in multiple places
+      await revalidatePathActionAsync("/");
     },
   });
   const [opened, { toggle }] = useDisclosure(false);

@@ -67,7 +67,7 @@ export const ImportBoardModal = createModal(({ actions }) => {
 
   const { mutateAsync, isPending } = clientApi.board.importOldmarrConfig.useMutation({
     async onSuccess() {
-        await revalidatePathActionAsync("/manage/boards");
+      await revalidatePathActionAsync("/manage/boards");
     },
   });
   const boardNameStatus = useBoardNameStatus(form.values.configuration.name);

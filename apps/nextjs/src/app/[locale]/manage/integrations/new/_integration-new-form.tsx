@@ -88,7 +88,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
 
   const { mutateAsync: createIntegrationAsync, isPending } = clientApi.integration.create.useMutation({
     async onSuccess() {
-      await revalidatePathActionAsync("/manage/integrations")
+      await revalidatePathActionAsync("/manage/integrations");
     },
   });
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
@@ -136,7 +136,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
             message: t("integration.page.create.notification.success.message"),
           });
 
-          router.push("/manage/integrations")
+          router.push("/manage/integrations");
         },
         onError: () => {
           showErrorNotification({

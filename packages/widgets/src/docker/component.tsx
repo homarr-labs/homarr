@@ -115,9 +115,9 @@ const createColumns = (
       const onSettled = async () => {
         await utils.docker.getContainers.invalidate();
       };
-      const { mutateAsync: startContainer } = clientApi.docker.startAll.useMutation({onSettled});
-      const { mutateAsync: stopContainer } = clientApi.docker.stopAll.useMutation({onSettled});
-      const { mutateAsync: restartContainer } = clientApi.docker.restartAll.useMutation({onSettled});
+      const { mutateAsync: startContainer } = clientApi.docker.startAll.useMutation({ onSettled });
+      const { mutateAsync: stopContainer } = clientApi.docker.stopAll.useMutation({ onSettled });
+      const { mutateAsync: restartContainer } = clientApi.docker.restartAll.useMutation({ onSettled });
 
       const handleActionAsync = async (action: "start" | "stop" | "restart") => {
         const mutation = action === "start" ? startContainer : action === "stop" ? stopContainer : restartContainer;
