@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Create sub directories in volume
 mkdir -p /appdata/db
 mkdir -p /appdata/redis
@@ -25,7 +27,7 @@ envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 nginx -g 'daemon off;' &
 NGINX_PID=$!
 
-if [ $REDIS_IS_EXTERNAL = "true" ]; then
+if [ "$REDIS_IS_EXTERNAL" = "true" ]; then
     echo "Using external Redis server at redis://$REDIS_HOST:$REDIS_PORT"
 else
     echo "Starting internal Redis server"
