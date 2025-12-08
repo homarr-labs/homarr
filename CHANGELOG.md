@@ -1,3 +1,14 @@
+## [1.45.3](https://github.com/homarr-labs/homarr/compare/v1.45.2...v1.45.3) (2025-12-08)
+
+### Bug Fixes
+
+* **deps:** update dependency glob to v13 ([#4584](https://github.com/homarr-labs/homarr/issues/4584)) ([020cbd7](https://github.com/homarr-labs/homarr/commit/020cbd72d387c9f50f4eddcbc2685829cf7787de))
+* **deps:** update dependency jotai to ^2.15.2 ([#4597](https://github.com/homarr-labs/homarr/issues/4597)) ([ed638d4](https://github.com/homarr-labs/homarr/commit/ed638d47679594eab3cc19a12473722644ebf694))
+* **deps:** update dependency next-intl to v4.5.7 ([#4598](https://github.com/homarr-labs/homarr/issues/4598)) ([6b28aa8](https://github.com/homarr-labs/homarr/commit/6b28aa86d0bad29e4806592079a7f5d2e22b5ade))
+* **deps:** update dependency next-intl to v4.5.8 ([#4606](https://github.com/homarr-labs/homarr/issues/4606)) ([4f92e52](https://github.com/homarr-labs/homarr/commit/4f92e5265a40c636f303406e728e88cc056da23c))
+* **deps:** update dependency prettier to ^3.7.4 ([#4582](https://github.com/homarr-labs/homarr/issues/4582)) ([5480982](https://github.com/homarr-labs/homarr/commit/54809823e9edeacc245b560747b622aba683b3bf))
+* **deps:** update dependency typescript-eslint to ^8.48.1 ([#4438](https://github.com/homarr-labs/homarr/issues/4438)) ([d88c602](https://github.com/homarr-labs/homarr/commit/d88c6027fe3accf7a6872ada8aa2724d30bf691c))
+
 ## [1.45.2](https://github.com/homarr-labs/homarr/compare/v1.45.1...v1.45.2) (2025-12-05)
 
 ### Bug Fixes
