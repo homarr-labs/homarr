@@ -747,7 +747,7 @@
         },
         "statusCode": {
           "title": "Antwoord fout",
-          "description": "",
+          "description": "Onverwachte {statusCode} ({reason}) reactie van <url></url>. Controleer of de URL wijst naar de basis-URL van de integratie.",
           "otherDescription": "",
           "reason": {
             "badRequest": "Onjuist verzoek",
@@ -2232,7 +2232,7 @@
         "unknown": "Onbekend",
         "pending": "In afwachting",
         "processing": "Verwerken",
-        "requested": "",
+        "requested": "Aangevraagd",
         "partiallyAvailable": "Gedeeltelijk",
         "available": "Beschikbaar",
         "blacklisted": "Geblacklist",

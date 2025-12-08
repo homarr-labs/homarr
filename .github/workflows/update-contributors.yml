@@ -28,7 +28,7 @@ jobs:
           permission-pull-requests: write # required to create pr & enable automerge
 
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
 

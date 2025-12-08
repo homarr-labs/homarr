@@ -16,7 +16,19 @@ interface UploadMediaProps {
 
 export const UploadMedia = ({ children, onSettled, onSuccess, multiple = false }: UploadMediaProps) => {
   const t = useI18n();
-  const { mutateAsync, isPending } = clientApi.media.uploadMedia.useMutation();
+  const { mutateAsync, isPending } = clientApi.media.uploadMedia.useMutation({
+    async onSuccess(mediaIds) {
+      await onSuccess?.(
+        mediaIds.map((id) => ({
+          id,
+          url: `/api/user-medias/${id}`,
+        })),
+      );
+    },
+    async onSettled() {
+      await onSettled?.();
+    },
+  });
 
   const handleFileUploadAsync = async (files: File[] | File | null) => {
     if (!files || (Array.isArray(files) && files.length === 0)) return;
@@ -24,24 +36,15 @@ export const UploadMedia = ({ children, onSettled, onSuccess, multiple = false }
     const formData = new FormData();
     filesArray.forEach((file) => formData.append("files", file));
     await mutateAsync(formData, {
-      async onSuccess(mediaIds) {
+      onSuccess() {
         showSuccessNotification({
           message: t("media.action.upload.notification.success.message"),
         });
-        await onSuccess?.(
-          mediaIds.map((id) => ({
-            id,
-            url: `/api/user-medias/${id}`,
-          })),
-        );
       },
       onError() {
         showErrorNotification({
           message: t("media.action.upload.notification.error.message"),
         });
-      },
-      async onSettled() {
-        await onSettled?.();
       },
     });
   };

@@ -27,7 +27,11 @@ export const AddCertificateModal = createModal<InnerProps>(({ actions, innerProp
       },
     },
   );
-  const { mutateAsync } = clientApi.certificates.addCertificate.useMutation();
+  const { mutateAsync } = clientApi.certificates.addCertificate.useMutation({
+    async onSuccess() {
+      await innerProps.onSuccess?.();
+    },
+  });
 
   return (
     <form
@@ -35,12 +39,11 @@ export const AddCertificateModal = createModal<InnerProps>(({ actions, innerProp
         const formData = new FormData();
         formData.set("file", values.file);
         await mutateAsync(formData, {
-          async onSuccess() {
+          onSuccess() {
             showSuccessNotification({
               title: t("certificate.action.create.notification.success.title"),
               message: t("certificate.action.create.notification.success.message"),
             });
-            await innerProps.onSuccess?.();
             actions.closeModal();
           },
           onError() {
