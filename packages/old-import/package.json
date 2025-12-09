@@ -41,8 +41,8 @@
     "@mantine/hooks": "^8.3.9",
     "adm-zip": "0.5.16",
     "next": "16.0.7",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
     "superjson": "2.2.6",
     "zod": "^4.1.13",
     "zod-form-data": "^3.0.1"
