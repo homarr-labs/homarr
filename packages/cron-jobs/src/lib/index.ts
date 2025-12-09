@@ -15,6 +15,8 @@ class WinstonCronJobLogger implements Logger {
     logger.info(message, metadata);
   }
 
+  logError(message: string, metadata?: Record<string, unknown>): void;
+  logError(error: unknown): void;
   logError(messageOrError: string | unknown, metadata?: Record<string, unknown>) {
     if (typeof messageOrError === "string") {
       logger.error(messageOrError, metadata);
