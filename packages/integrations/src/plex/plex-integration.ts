@@ -169,7 +169,7 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const token = super.getSecretValue("apiKey");
 
-    const response = await input.fetchAsync(super.url("/identity"), {
+    const response = await input.fetchAsync(super.url("/prefs"), {
       headers: {
         "X-Plex-Token": token,
         Accept: "application/json",
@@ -177,15 +177,6 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
     });
 
     if (!response.ok) return TestConnectionError.StatusResult(response);
-
-    const result = await identitySchema.safeParseAsync(await response.json());
-    if (!result.success) {
-      // If the format is unexpected, return a 404 status to indicate failure as the url is likely incorrect
-      return TestConnectionError.StatusResult({
-        status: 404,
-        url: response.url,
-      });
-    }
 
     return { success: true };
   }
