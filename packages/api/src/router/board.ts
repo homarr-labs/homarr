@@ -57,7 +57,6 @@ import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { generateResponsiveGridFor } from "./board/grid-algorithm";
-import { boardItemsRouter } from "./board/items/item-router";
 
 export const boardRouter = createTRPCRouter({
   exists: permissionRequiredProcedure
@@ -1326,7 +1325,6 @@ export const boardRouter = createTRPCRouter({
       const oldmarr = oldmarrConfigSchema.parse(JSON.parse(content));
       await importOldmarrAsync(ctx.db, oldmarr, input.configuration);
     }),
-  items: boardItemsRouter,
 });
 
 /**

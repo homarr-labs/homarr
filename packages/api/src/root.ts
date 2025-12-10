@@ -11,6 +11,7 @@ import { importRouter } from "./router/import/import-router";
 import { infoRouter } from "./router/info";
 import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
+import { itemsRouter } from "./router/item/item-router";
 import { kubernetesRouter } from "./router/kubernetes/router/kubernetes-router";
 import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
@@ -49,6 +50,7 @@ export const appRouter = createTRPCRouter({
   updateChecker: updateCheckerRouter,
   certificates: certificateRouter,
   info: infoRouter,
+  item: itemsRouter,
 });
 
 // export type definition of API

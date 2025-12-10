@@ -17,6 +17,7 @@ export const throwIfActionForbiddenAsync = async (
   ctx: { db: Database; session: Session | null },
   boardWhere: SQL<unknown>,
   permission: BoardPermission,
+  error?: TRPCError,
 ) => {
   const { db, session } = ctx;
   const groupsOfCurrentUser = await db.query.groupMembers.findMany({
@@ -40,7 +41,7 @@ export const throwIfActionForbiddenAsync = async (
   });
 
   if (!board) {
-    notAllowed();
+    notAllowed(error);
   }
 
   const { hasViewAccess, hasChangeAccess, hasFullAccess } = constructBoardPermissions(board, session);
@@ -57,14 +58,18 @@ export const throwIfActionForbiddenAsync = async (
     return; // As view access is required and user has view access, allow
   }
 
-  notAllowed();
+  notAllowed(error);
 };
 
 /**
  * This method returns NOT_FOUND to prevent snooping on board existence
  * A function is used to use the method without return statement
  */
-function notAllowed(): never {
+function notAllowed(error?: TRPCError): never {
+  if (error) {
+    throw error;
+  }
+
   throw new TRPCError({
     code: "NOT_FOUND",
     message: "Board not found",
