@@ -6,7 +6,7 @@ import { createId, objectEntries } from "@homarr/common";
 import type { InferInsertModel } from "@homarr/db";
 import { and, eq, handleTransactionsAsync } from "@homarr/db";
 import { createDbInsertCollectionWithoutTransaction } from "@homarr/db/collection";
-import { itemLayouts, items } from "@homarr/db/schema";
+import { boards, itemLayouts, items } from "@homarr/db/schema";
 import { selectItemLayoutSchema, selectitemSchema } from "@homarr/db/validationSchemas";
 import type { WidgetKind } from "@homarr/definitions";
 import { widgetKinds } from "@homarr/definitions";
@@ -98,7 +98,7 @@ export const itemsRouter = createTRPCRouter({
       });
 
       if (!board) throw error;
-      await throwIfActionForbiddenAsync(ctx, eq(items.boardId, board.id), "view", error);
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.boardId), "view", error);
 
       return board.items.map((item) => ({
         ...item,
@@ -139,7 +139,7 @@ export const itemsRouter = createTRPCRouter({
       });
 
       if (!board) throw error;
-      await throwIfActionForbiddenAsync(ctx, eq(items.boardId, board.id), "modify", error);
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, board.id), "modify", error);
 
       const itemOptionsSchema = createItemOptionsSchema(input.kind);
       const fullOptions = reduceWidgetOptionsWithDefaultValues(
@@ -179,7 +179,6 @@ export const itemsRouter = createTRPCRouter({
       insertCollection.itemLayouts.push(...layoutInserts);
       await insertCollection.insertAllAsync(ctx.db);
 
-      // TODO: Add validations
       return {
         ...item,
         layouts: layoutInserts,
@@ -211,7 +210,7 @@ export const itemsRouter = createTRPCRouter({
       });
 
       if (!item) throw error;
-      await throwIfActionForbiddenAsync(ctx, eq(items.boardId, item.boardId), "view", error);
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "view", error);
 
       return {
         ...item,
@@ -254,7 +253,7 @@ export const itemsRouter = createTRPCRouter({
       });
       if (!item) throw error;
 
-      await throwIfActionForbiddenAsync(ctx, eq(items.boardId, item.boardId), "modify", error);
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "modify", error);
 
       const previousOptions = SuperJSON.parse<Record<string, unknown>>(item.options);
       const combinedOptions = {
@@ -360,7 +359,7 @@ export const itemsRouter = createTRPCRouter({
       });
       if (!item) throw error;
 
-      await throwIfActionForbiddenAsync(ctx, eq(items.boardId, item.boardId), "modify", error);
+      await throwIfActionForbiddenAsync(ctx, eq(boards.id, item.boardId), "modify", error);
 
       await ctx.db.delete(items).where(eq(items.id, input.id));
     }),
