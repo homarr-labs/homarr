@@ -733,8 +733,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       ldapts:
-        specifier: 8.0.12
-        version: 8.0.12
+        specifier: 8.0.13
+        version: 8.0.13
       next:
         specifier: 16.0.7
         version: 16.0.7(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.94.2)
@@ -7964,8 +7964,8 @@ packages:
     resolution: {integrity: sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw==}
     engines: {node: '>= 0.6.3'}
 
-  ldapts@8.0.12:
-    resolution: {integrity: sha512-jk/OfBiXQFsYzvIxmgKwUzft94YMkVIOkf2P+qrrlLNgvWVP/F2TxYj5j6nLAyRtU/KVm87e15k9hMg1c3D25Q==}
+  ldapts@8.0.13:
+    resolution: {integrity: sha512-uE2fLwEzVC2l3l2snSzoU55yuRZA6R0JmIRj36pf4DHp6IYAeC+Kgn9JuqFeBMcmKkJBDwASfIQ4VpK+Bz11Cw==}
     engines: {node: '>=20'}
 
   levn@0.4.1:
@@ -10779,10 +10779,6 @@ packages:
 
   uuid@10.0.0:
     resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
-    hasBin: true
-
-  uuid@13.0.0:
-    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
     hasBin: true
 
   uuid@8.3.2:
@@ -17416,13 +17412,12 @@ snapshots:
     dependencies:
       readable-stream: 2.3.8
 
-  ldapts@8.0.12:
+  ldapts@8.0.13:
     dependencies:
       '@types/asn1': 0.2.4
       asn1: 0.2.6
       debug: 4.4.3
       strict-event-emitter-types: 2.0.0
-      uuid: 13.0.0
       whatwg-url: 15.1.0
     transitivePeerDependencies:
       - supports-color
@@ -20713,8 +20708,6 @@ snapshots:
   util-deprecate@1.0.2: {}
 
   uuid@10.0.0: {}
-
-  uuid@13.0.0: {}
 
   uuid@8.3.2: {}
 
