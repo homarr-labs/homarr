@@ -32,12 +32,12 @@ jobs:
   release:
     name: Create tag and release
     runs-on: ubuntu-latest
-    if: ${{ !github.event.act }} # skip during local actions testing
     env:
       SKIP_RELEASE: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'dev' }}
     outputs:
       version: ${{ steps.read-semver.outputs.version || steps.version-fallback.outputs.version }}
       git_ref: ${{ steps.read-git-ref.outputs.ref || github.ref }}
+      skipped: ${{ env.SKIP_RELEASE }}
     steps:
       - run: echo "Skipping release for workflow_dispatch event"
         if: env.SKIP_RELEASE == 'true'
@@ -150,7 +150,6 @@ jobs:
     name: Build docker image for arm64
     needs: release
     runs-on: ubuntu-24.04-arm
-    if: ${{ !github.event.act }} # skip during local actions testing
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
@@ -185,11 +184,39 @@ jobs:
           outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
         env:
           SKIP_ENV_VALIDATION: true
+  extract-asset-amd64:
+    name: Extract amd64 asset from docker image
+    needs: [release, build-amd64]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract amd64
+        if: needs.release.outputs.skipped == 'false'
+        uses: homarr-labs/homarr/.github/actions/extract-source-artifact@dev
+        with:
+          digest: "${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }}"
+          architecture: amd64
+          release-tag: ${{ needs.release.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+
+  extract-asset-arm64:
+    name: Extract arm64 asset from docker image
+    needs: [release, build-arm64]
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Extract arm64
+        if: needs.release.outputs.skipped == 'false'
+        uses: homarr-labs/homarr/.github/actions/extract-source-artifact@dev
+        with:
+          digest: "${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}"
+          architecture: arm64
+          release-tag: ${{ needs.release.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
   publish:
     name: Complete deployment and notify
-    needs: [release, build-amd64, build-arm64]
+    needs: [release, build-amd64, build-arm64, extract-asset-amd64, extract-asset-arm64]
     runs-on: ubuntu-latest
-    if: ${{ !github.event.act }} # skip during local actions testing
     env:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}
@@ -222,6 +249,13 @@ jobs:
             ${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }} \
             ${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}
 
+      - name: Publish release
+        if: needs.release.outputs.skipped == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release edit --repo ${{ github.repository }} ${{ needs.release.outputs.version }} --draft=false
+
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
@@ -230,10 +264,10 @@ jobs:
           args: "Successfully deployed images for branch **${{ github.ref_name }}**. Tagged as **${{env.NEXT_VERSION}}**."
   extract-and-publish-static-artifacts:
     name: Extract artifacts
-#    needs:
-#      - build-amd64
-#      - build-arm64
-#      - release
+    #    needs:
+    #      - build-amd64
+    #      - build-arm64
+    #      - release
     runs-on: ubuntu-latest
     steps:
       - name: Extract x64

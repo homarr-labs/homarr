@@ -1,0 +1,42 @@
+name: Extract Source Artifact
+description: Extracts artifacts from an existing Docker image to be used for from source installation
+inputs:
+  digest:
+    description: Digest of Docker image to use
+    required: true
+  architecture:
+    description: Name of architecture, will be used to create directories (e.g. amd64, arm64)
+    required: true
+  release-tag:
+    description: Tag of the release to which the artifact will be attached
+    required: true
+  repository:
+    description: Repository to which the release belongs, e.g. owner/repo
+    required: true
+  token:
+    description: GitHub token with permissions to upload release assets
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Start docker container for ${{ inputs.architecture }}
+      run: |
+        docker run --name homarr-extraction-${{ inputs.architecture }} \
+          -e "SECRET_ENCRYPTION_KEY=0000000000000000000000000000000000000000000000000000000000000000" \
+          --detach --rm ${{ inputs.digest }}
+      shell: bash
+    - name: Extract source from ${{ inputs.architecture }} container
+      run: |
+        docker exec homarr-extraction-${{ inputs.architecture }} tar -cf extraction.tar /app && \
+        mkdir -p ${{ runner.temp }}/extraction/${{ inputs.architecture }} && \
+        docker cp homarr-extraction-${{ inputs.architecture }}:/app/extraction.tar ${{ runner.temp }}/extraction/${{ inputs.architecture }}/source-${{ inputs.architecture }}.tar
+      shell: bash
+    - name: Stop ${{ inputs.architecture }} container
+      if: always()
+      run: docker container remove --force --volumes homarr-extraction-${{ inputs.architecture }}
+      shell: bash
+    - name: Add source archive to release
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+      run: gh release upload --repo ${{ inputs.repository }} ${{ inputs.release-tag }} ${{ runner.temp }}/extraction/${{ inputs.architecture }}/source-${{ inputs.architecture }}.tar --clobber
+      shell: bash
