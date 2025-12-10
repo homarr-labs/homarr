@@ -195,7 +195,7 @@ export default function DownloadClientsWidget({
                 ...item,
                 category: item.category !== undefined && item.category.length > 0 ? item.category : undefined,
                 received,
-                ratio: item.sent !== undefined ? item.sent / (received || 1) : undefined,
+                ratio: item.sent !== undefined ? item.sent / item.size : undefined,
                 //Only add if permission to use mutations
                 actions: integrationsWithInteractions.includes(pair.integration.id)
                   ? {
