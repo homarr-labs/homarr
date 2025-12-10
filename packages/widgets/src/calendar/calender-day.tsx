@@ -79,7 +79,7 @@ interface NotificationIndicatorProps {
 }
 
 const NotificationIndicator = ({ events, isSmall }: NotificationIndicatorProps) => {
-  const notificationEvents = [...new Set(events.map((event) => event.links[0]?.notificationColor))].filter(String);
+  const notificationEvents = [...new Set(events.map((event) => event.indicatorColor))].filter(String);
   /* position bottom is lower when small to not be on top of number*/
   return (
     <Flex w="75%" pos={"absolute"} bottom={isSmall ? 4 : 10} left={"12.5%"} p={0} direction={"row"} justify={"center"}>

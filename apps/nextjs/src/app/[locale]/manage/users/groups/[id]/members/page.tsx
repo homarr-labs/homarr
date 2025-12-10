@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Alert, Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableTr, Text, Title } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
@@ -10,7 +9,7 @@ import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { everyoneGroup } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
-import { SearchInput, UserAvatar } from "@homarr/ui";
+import { Link, SearchInput, UserAvatar } from "@homarr/ui";
 
 import { ReservedGroupAlert } from "../_reserved-group-alert";
 import { AddGroupMember } from "./_add-group-member";

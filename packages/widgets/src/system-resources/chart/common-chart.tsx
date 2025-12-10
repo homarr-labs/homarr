@@ -1,28 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { LineChartSeries } from "@mantine/charts";
-import { LineChart } from "@mantine/charts";
+import type { ReactNode } from "react";
+import type { AreaChartSeries } from "@mantine/charts";
+import { AreaChart, LineChart } from "@mantine/charts";
 import { Card, Center, Group, Loader, Stack, Text, useMantineColorScheme, useMantineTheme } from "@mantine/core";
 import { useElementSize, useHover, useMergedRef } from "@mantine/hooks";
 import type { TooltipProps, YAxisProps } from "recharts";
 
 import { useRequiredBoard } from "@homarr/boards/context";
+import type { TablerIcon } from "@homarr/ui";
+
+import type { LabelDisplayModeOption } from "..";
 
 export const CommonChart = ({
   data,
   dataKey,
   series,
   title,
+  icon: Icon,
+  labelDisplayMode,
   tooltipProps,
   yAxisProps,
   lastValue,
+  chartType = "line",
 }: {
   data: Record<string, any>[];
   dataKey: string;
-  series: LineChartSeries[];
-  title: string;
+  series: AreaChartSeries[];
+  title: ReactNode;
+  icon: TablerIcon;
+  labelDisplayMode: LabelDisplayModeOption;
   tooltipProps?: TooltipProps<number, any>;
   yAxisProps?: Omit<YAxisProps, "ref">;
   lastValue?: string;
+  chartType?: "line" | "area";
 }) => {
   const { ref: elementSizeRef, height } = useElementSize();
   const theme = useMantineTheme();
@@ -34,6 +44,10 @@ export const CommonChart = ({
   const opacity = board.opacity / 100;
   const backgroundColor =
     scheme.colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
+
+  const ChartComponent = chartType === "line" ? LineChart : AreaChart;
+  const showIcon = labelDisplayMode === "icon" || labelDisplayMode === "textWithIcon";
+  const showText = labelDisplayMode === "text" || labelDisplayMode === "textWithIcon";
 
   return (
     <Card
@@ -55,10 +69,14 @@ export const CommonChart = ({
           gap={5}
           wrap={"nowrap"}
           style={{ zIndex: 2, pointerEvents: "none" }}
+          align="center"
         >
-          <Text c={"dimmed"} size={height > 100 ? "md" : "xs"} fw={"bold"}>
-            {title}
-          </Text>
+          {showIcon && <Icon color={"var(--mantine-color-dimmed)"} size={height > 100 ? 20 : 14} stroke={1.5} />}
+          {showText && (
+            <Text c={"dimmed"} size={height > 100 ? "md" : "xs"} fw={"bold"}>
+              {title}
+            </Text>
+          )}
           {lastValue && (
             <Text c={"dimmed"} size={height > 100 ? "md" : "xs"} lineClamp={1}>
               {lastValue}
@@ -73,7 +91,7 @@ export const CommonChart = ({
           </Stack>
         </Center>
       ) : (
-        <LineChart
+        <ChartComponent
           data={data}
           dataKey={dataKey}
           h={"100%"}
@@ -90,6 +108,7 @@ export const CommonChart = ({
           tooltipProps={tooltipProps}
           withTooltip={height >= 64}
           yAxisProps={yAxisProps}
+          fillOpacity={chartType === "area" ? 0.3 : undefined}
         />
       )}
     </Card>

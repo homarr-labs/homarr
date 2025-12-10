@@ -11,7 +11,7 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
 import { convertJellyfinType } from "../jellyfin/jellyfin-integration";
-import type { IMediaReleasesIntegration, MediaRelease } from "../types";
+import type { IMediaReleasesIntegration, MediaRelease, MediaType } from "../types";
 
 const sessionSchema = z.object({
   NowPlayingItem: z
@@ -117,6 +117,7 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
             episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
             albumName: sessionInfo.NowPlayingItem.Album ?? "",
             episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
+            metadata: null,
           };
         }
 
@@ -124,7 +125,7 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
           sessionId: `${sessionInfo.Id}`,
           sessionName: `${sessionInfo.Client} (${sessionInfo.DeviceName})`,
           user: {
-            profilePictureUrl: super.url(`/Users/${sessionInfo.UserId}/Images/Primary`).toString(),
+            profilePictureUrl: super.externalUrl(`/Users/${sessionInfo.UserId}/Images/Primary`).toString(),
             userId: sessionInfo.UserId ?? "",
             username: sessionInfo.UserName ?? "",
           },
@@ -162,20 +163,41 @@ export class EmbyIntegration extends Integration implements IMediaServerIntegrat
 
     return items.map((item) => ({
       id: item.Id,
-      type: item.Type === "Movie" ? "movie" : item.Type === "Series" ? "tv" : "unknown",
+      type: this.mapMediaReleaseType(item.Type),
       title: item.Name,
       subtitle: item.Taglines.at(0),
       description: item.Overview,
       releaseDate: item.PremiereDate ?? item.DateCreated,
       imageUrls: {
-        poster: super.url(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`).toString(),
-        backdrop: super.url(`/Items/${item.Id}/Images/Backdrop/0?maxWidth=960&quality=70`).toString(),
+        poster: super.externalUrl(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`).toString(),
+        backdrop: super.externalUrl(`/Items/${item.Id}/Images/Backdrop/0?maxWidth=960&quality=70`).toString(),
       },
       producer: item.Studios.at(0)?.Name,
       rating: item.CommunityRating?.toFixed(1),
       tags: item.Genres,
-      href: super.url(`/web/index.html#!/item?id=${item.Id}&serverId=${item.ServerId}`).toString(),
+      href: super.externalUrl(`/web/index.html#!/item?id=${item.Id}&serverId=${item.ServerId}`).toString(),
     }));
+  }
+
+  private mapMediaReleaseType(type: string | undefined): MediaType {
+    switch (type) {
+      case "Audio":
+      case "AudioBook":
+      case "MusicAlbum":
+        return "music";
+      case "Book":
+        return "book";
+      case "Episode":
+      case "Series":
+      case "Season":
+        return "tv";
+      case "Movie":
+        return "movie";
+      case "Video":
+        return "video";
+      default:
+        return "unknown";
+    }
   }
 
   // https://dev.emby.media/reference/RestAPI/UserService/getUsersPublic.html

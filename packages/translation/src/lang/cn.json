@@ -645,6 +645,21 @@
             "title": "创建失败",
             "message": "无法创建组件"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "现有",
+              "label": "选择现有应用"
+            },
+            "new": {
+              "title": "新建",
+              "url": {
+                "label": "应用网址",
+                "description": "当从面板访问时应用将打开的网址"
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "无法应用更改",
             "message": "无法保存此集成"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "链接应用",
+            "remove": "取消连接",
+            "select": "选择要链接的应用"
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "创建搜索引擎",
         "description": "集成“{kind}”可以与搜索引擎一起使用。勾选此项可自动配置搜索引擎。"
+      },
+      "app": {
+        "sectionTitle": "关联的应用"
       },
       "createApp": {
         "label": "创建应用",
@@ -945,25 +970,29 @@
           "label": "主题",
           "newLabel": "新主题"
         },
+        "url": {
+          "label": "网址",
+          "newLabel": "新建网址"
+        },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API 密钥 (密钥)",
+          "newLabel": "新建API密钥（密钥）"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "API 密钥 (机密)",
+          "newLabel": "新建API密钥（机密）"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "应用 ID",
+          "newLabel": "新应用 ID"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "安装 Id",
+          "newLabel": "新建安装ID"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "私钥",
+          "newLabel": "新建私钥"
         }
       }
     },
@@ -1015,13 +1044,14 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "成功",
     "beta": "测试版",
     "error": "错误",
     "action": {
       "add": "添加",
       "apply": "应用",
       "backToOverview": "返回概览",
+      "change": "更改",
       "create": "创建",
       "createAnother": "创建并重新开始",
       "edit": "编辑",
@@ -1141,6 +1171,12 @@
           "groupNameTaken": "用户组名称已存在"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "千米/时",
+        "milesPerHour": "英里/时"
+      }
     }
   },
   "section": {
@@ -1152,6 +1188,9 @@
       "option": {
         "title": {
           "label": "标题"
+        },
+        "customCssClasses": {
+          "label": "自定义 CSS 类"
         },
         "borderColor": {
           "label": "边界颜色"
@@ -1282,21 +1321,21 @@
           "label": "启用状态检查"
         },
         "layout": {
-          "label": "",
+          "label": "布局",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "水平",
+            "row-reverse": "水平(反向)",
+            "column": "垂直",
+            "column-reverse": "垂直(反向)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "描述显示模式",
+          "description": "选择应用描述的显示方式",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "窗口组件内",
+            "tooltip": "在工具提示中显示",
+            "hidden": "隐藏"
           }
         }
       },
@@ -1543,7 +1582,15 @@
         "width": "宽度",
         "height": "高度"
       },
-      "placeholder": "开始写笔记"
+      "placeholder": "开始写笔记",
+      "dismiss": {
+        "title": "放弃更改？",
+        "message": "您的笔记中有未保存的更改。确定要放弃这些更改吗？",
+        "action": {
+          "discard": "放弃修改",
+          "keepEditing": "继续编辑"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1742,9 @@
     "calendar": {
       "name": "日历",
       "description": "在日历视图中显示某个相对时间段内的集成事件",
+      "duration": {
+        "allDay": "全天"
+      },
       "option": {
         "releaseType": {
           "label": "Radarr 发布类型",
@@ -1729,6 +1779,9 @@
           "label": "显示当前风速",
           "description": "仅在当前天气时"
         },
+        "useImperialSpeed": {
+          "label": "风速使用英里/时"
+        },
         "location": {
           "label": "天气位置"
         },
@@ -1747,12 +1800,12 @@
           "description": "日期应该是什么样的"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "日出",
         "sunset": "日落",
-        "maxWindSpeed": "最大风速：{maxWindSpeed} km/h",
-        "maxWindGusts": "最大阵风：{maxWindGusts} km/h"
+        "maxWindSpeed": "最大风速：{maxWindSpeed} {unit}",
+        "maxWindGusts": "最大阵风：{maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "晴朗",
@@ -1965,7 +2018,25 @@
         "currentlyPlaying": "正在播放",
         "user": "用户",
         "name": "名称",
-        "id": "ID"
+        "id": "ID",
+        "metadata": {
+          "title": "技术统计",
+          "video": {
+            "title": "视频",
+            "resolution": "分辨率"
+          },
+          "audio": {
+            "title": "音频",
+            "channelCount": "音频声道",
+            "codec": "音频编码"
+          },
+          "transcoding": {
+            "title": "转码",
+            "container": "容器",
+            "resolution": "分辨率",
+            "target": "目标编解码器"
+          }
+        }
       }
     },
     "downloads": {
@@ -2161,6 +2232,7 @@
         "unknown": "未知",
         "pending": "等待处理",
         "processing": "处理中",
+        "requested": "",
         "partiallyAvailable": "部分",
         "available": "可用",
         "blacklisted": "已列入黑名单",
@@ -2273,7 +2345,7 @@
           "label": "帖子数量限制"
         },
         "hideDescription": {
-          "label": ""
+          "label": "隐藏描述"
         }
       }
     },
@@ -2488,15 +2560,37 @@
       "option": {}
     },
     "systemResources": {
-      "name": "",
-      "description": "",
-      "option": {},
+      "name": "系统资源",
+      "description": "您系统的 CPU、内存、磁盘及其他硬件使用情况",
+      "option": {
+        "hasShadow": {
+          "label": "启用图表阴影"
+        },
+        "visibleCharts": {
+          "label": "可见图表",
+          "description": "选择您希望显示的图表。",
+          "option": {
+            "cpu": "CPU",
+            "memory": "内存",
+            "network": "网络"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "标签显示模式",
+          "option": {
+            "textWithIcon": "显示图标和文本",
+            "text": "仅显示文本",
+            "icon": "仅显示图标",
+            "hidden": "隐藏标签"
+          }
+        }
+      },
       "card": {
         "cpu": "CPU",
-        "memory": "",
-        "network": "",
-        "up": "",
-        "down": ""
+        "memory": "内存",
+        "network": "网络",
+        "up": "上传",
+        "down": "下载"
       }
     }
   },
@@ -2919,13 +3013,19 @@
           "invite": "邀请",
           "integration": "集成",
           "app": "应用",
-          "group": "群组"
+          "group": "群组",
+          "searchEngine": "搜索引擎",
+          "media": "媒体"
         },
         "statisticLabel": {
           "boards": "面板",
           "resources": "资源",
           "authentication": "认证",
           "authorization": "认证"
+        },
+        "heroBanner": {
+          "title": "欢迎回到您的",
+          "subtitle": "{app} 面板"
         }
       },
       "board": {
@@ -3281,6 +3381,9 @@
             },
             "firewallInterfaces": {
               "label": "防火墙接口"
+            },
+            "weather": {
+              "label": "天气"
             }
           },
           "interval": {
@@ -3291,10 +3394,10 @@
             "weeklyMonday": "每周一",
             "update": {
               "success": {
-                "message": ""
+                "message": "间隔已成功更新"
               },
               "error": {
-                "message": ""
+                "message": "更新间隔失败"
               }
             }
           },
@@ -3303,55 +3406,55 @@
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "名称"
             },
             "interval": {
               "label": "计划时间间隔"
             },
             "lastExecution": {
-              "label": ""
+              "label": "上次执行"
             },
             "actions": {
-              "label": ""
+              "label": "操作"
             }
           },
           "table": {
-            "search": ""
+            "search": "在 {count} 个任务中搜索……"
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "刷新"
             }
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "任务已成功刷新"
             },
             "error": {
-              "message": ""
+              "message": "刷新任务失败"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "任务已成功触发"
             },
             "error": {
-              "message": ""
+              "message": "触发任务失败"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "任务已成功启用"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "任务已成功禁用"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "切换任务状态失败"
             }
           }
         },
@@ -3406,6 +3509,21 @@
           "libraries": {
             "title": "相关的库",
             "subtitle": "{count} 用于 Homarr 代码中"
+          },
+          "hotkeys": {
+            "title": "快捷键",
+            "subtitle": "用于增强工作流的键盘快捷键",
+            "field": {
+              "shortcut": "快捷键",
+              "action": "操作"
+            },
+            "action": {
+              "toggleBoardEdit": "切换面板编辑模式",
+              "toggleColorScheme": "切换 亮色/暗色 模式",
+              "saveNotebook": "保存笔记（仅在笔记小工具内有效）",
+              "openSpotlight": "打开搜索"
+            },
+            "note": "提示：Mod 键在 macOS 上指 Ctrl 键和 ⌘ 键"
           }
         }
       }

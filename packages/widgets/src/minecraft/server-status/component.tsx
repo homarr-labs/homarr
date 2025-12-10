@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Flex, Group, Text, Tooltip } from "@mantine/core";
-import { IconUsersGroup } from "@tabler/icons-react";
+import { IconCube, IconUsersGroup } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
@@ -44,13 +44,25 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
       </Group>
       {data.online && (
         <>
-          {!options.isBedrockServer && (
-            <img
-              style={{ flex: 1, transform: "scale(0.8)", objectFit: "contain" }}
-              alt={`minecraft icon ${options.domain}`}
-              src={data.icon}
-            />
-          )}
+          {!options.isBedrockServer &&
+            (data.icon ? (
+              <img
+                style={{ flex: 1, transform: "scale(0.8)", objectFit: "contain" }}
+                alt={`minecraft icon ${options.domain}`}
+                src={data.icon}
+              />
+            ) : (
+              <Box
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <IconCube size="3rem" color="var(--mantine-color-gray-5)" />
+              </Box>
+            ))}
           <Group gap={5} c="gray.6" align="center">
             <IconUsersGroup size="1rem" />
             <Text size="md">

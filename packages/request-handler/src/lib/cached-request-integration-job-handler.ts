@@ -91,6 +91,7 @@ export const createRequestIntegrationJobHandler = <
             ...integration,
             kind: integration.kind as TIntegrationKind,
             decryptedSecrets,
+            externalUrl: integration.app?.href ?? null,
           },
           input,
         );

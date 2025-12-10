@@ -19,14 +19,17 @@ interface TextInput extends CommonInput<string> {
   validate?: z.ZodType<string>;
 }
 
-interface MultiSelectInput<TOptions extends SelectOption[]>
-  extends CommonInput<inferSelectOptionValue<TOptions[number]>[]> {
+interface MultiSelectInput<TOptions extends SelectOption[]> extends CommonInput<
+  inferSelectOptionValue<TOptions[number]>[]
+> {
   options: TOptions;
   searchable?: boolean;
 }
 
-export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentifier>
-  extends Omit<CommonInput<TOptionValue[]>, "withDescription"> {
+export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentifier> extends Omit<
+  CommonInput<TOptionValue[]>,
+  "withDescription"
+> {
   AddButton: (props: { addItem: (item: TItem) => void; values: TOptionValue[] }) => React.ReactNode;
   ItemComponent: (props: {
     item: TItem;
@@ -39,8 +42,9 @@ export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentif
   validate: z.ZodArray<z.ZodType>;
 }
 
-interface SelectInput<TOptions extends readonly SelectOption[]>
-  extends CommonInput<inferSelectOptionValue<TOptions[number]>> {
+interface SelectInput<TOptions extends readonly SelectOption[]> extends CommonInput<
+  inferSelectOptionValue<TOptions[number]>
+> {
   options: TOptions;
   searchable?: boolean;
 }

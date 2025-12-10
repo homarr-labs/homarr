@@ -23,6 +23,7 @@ export { PlexIntegration } from "./plex/plex-integration";
 export { ProwlarrIntegration } from "./prowlarr/prowlarr-integration";
 export { TrueNasIntegration } from "./truenas/truenas-integration";
 export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
+export { ICalIntegration } from "./ical/ical-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
@@ -37,7 +38,7 @@ export type {
   FirewallMemorySummary,
 } from "./interfaces/firewall-summary/firewall-summary-types";
 export type { SystemHealthMonitoring } from "./interfaces/health-monitoring/health-monitoring-types";
-export { MediaRequestStatus } from "./interfaces/media-requests/media-request-types";
+export { UpstreamMediaRequestStatus } from "./interfaces/media-requests/media-request-types";
 export type { MediaRequestList, MediaRequestStats } from "./interfaces/media-requests/media-request-types";
 export type { StreamSession } from "./interfaces/media-server/media-server-types";
 export type {
@@ -46,11 +47,11 @@ export type {
   TdarrStatistics,
   TdarrWorker,
 } from "./interfaces/media-transcoding/media-transcoding-types";
-export type { ReleasesResponse } from "./interfaces/releases-providers/releases-providers-types";
+export type { ReleasesRepository, ReleaseResponse } from "./interfaces/releases-providers/releases-providers-types";
 export type { Notification } from "./interfaces/notifications/notification-types";
 
 // Schemas
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";
 
 // Helpers
-export { createIntegrationAsync, createIntegrationAsyncFromSecrets } from "./base/creator";
+export { createIntegrationAsync } from "./base/creator";

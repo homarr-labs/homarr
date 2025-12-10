@@ -20,19 +20,27 @@ const withNextIntl = createNextIntlPlugin({
 const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
-  /** We already do linting and typechecking as separate tasks in CI */
-  eslint: { ignoreDuringBuilds: true },
+  // react compiler breaks mantine-react-table, so disabled for now
+  //reactCompiler: true,
+  /** We already do typechecking as separate tasks in CI */
   typescript: { ignoreBuildErrors: true },
   /**
    * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
+   * isomorphic-dompurify and jsdom are required, see https://github.com/kkomelin/isomorphic-dompurify/issues/356
    */
-  serverExternalPackages: ["dockerode"],
+  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom"],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
+    turbopackFileSystemCacheForDev: true,
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {
-    domains: ["cdn.jsdelivr.net"],
+    localPatterns: [
+      {
+        pathname: "/**",
+        search: "",
+      },
+    ],
   },
   // eslint-disable-next-line @typescript-eslint/require-await,no-restricted-syntax
   async headers() {

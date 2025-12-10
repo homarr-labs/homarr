@@ -15,7 +15,7 @@ import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IMediaServerIntegration } from "../interfaces/media-server/media-server-integration";
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
-import type { IMediaReleasesIntegration, MediaRelease } from "../types";
+import type { IMediaReleasesIntegration, MediaRelease, MediaType } from "../types";
 
 @HandleIntegrationErrors([integrationAxiosHttpErrorHandler])
 export class JellyfinIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
@@ -57,6 +57,36 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
             episodeName: sessionInfo.NowPlayingItem.EpisodeTitle,
             albumName: sessionInfo.NowPlayingItem.Album ?? "",
             episodeCount: sessionInfo.NowPlayingItem.EpisodeCount,
+            metadata: {
+              video: {
+                resolution:
+                  sessionInfo.NowPlayingItem.Width && sessionInfo.NowPlayingItem.Height
+                    ? {
+                        width: sessionInfo.NowPlayingItem.Width,
+                        height: sessionInfo.NowPlayingItem.Height,
+                      }
+                    : null,
+                frameRate: sessionInfo.TranscodingInfo?.Framerate ?? null,
+              },
+              audio: {
+                channelCount: sessionInfo.TranscodingInfo?.AudioChannels ?? null,
+                codec: sessionInfo.TranscodingInfo?.AudioCodec ?? null,
+              },
+              transcoding: {
+                resolution:
+                  sessionInfo.TranscodingInfo?.Width && sessionInfo.TranscodingInfo.Height
+                    ? {
+                        width: sessionInfo.TranscodingInfo.Width,
+                        height: sessionInfo.TranscodingInfo.Height,
+                      }
+                    : null,
+                target: {
+                  audioCodec: sessionInfo.TranscodingInfo?.AudioCodec ?? null,
+                  videoCodec: sessionInfo.TranscodingInfo?.VideoCodec ?? null,
+                },
+                container: sessionInfo.TranscodingInfo?.Container ?? null,
+              },
+            },
           };
         }
 
@@ -64,7 +94,7 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
           sessionId: `${sessionInfo.Id}`,
           sessionName: `${sessionInfo.Client} (${sessionInfo.DeviceName})`,
           user: {
-            profilePictureUrl: this.url(`/Users/${sessionInfo.UserId}/Images/Primary`).toString(),
+            profilePictureUrl: this.externalUrl(`/Users/${sessionInfo.UserId}/Images/Primary`).toString(),
             userId: sessionInfo.UserId ?? "",
             username: sessionInfo.UserName ?? "",
           },
@@ -92,7 +122,7 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
     return result.data.map((item) => ({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       id: item.Id!,
-      type: item.Type === "Movie" ? "movie" : item.Type === "Series" ? "tv" : "unknown",
+      type: this.mapMediaReleaseType(item.Type),
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       title: item.Name!,
       subtitle: item.Taglines?.at(0),
@@ -100,14 +130,35 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       releaseDate: new Date(item.PremiereDate ?? item.DateCreated!),
       imageUrls: {
-        poster: super.url(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`).toString(),
-        backdrop: super.url(`/Items/${item.Id}/Images/Backdrop/0?maxWidth=960&quality=70`).toString(),
+        poster: super.externalUrl(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`).toString(),
+        backdrop: super.externalUrl(`/Items/${item.Id}/Images/Backdrop/0?maxWidth=960&quality=70`).toString(),
       },
       producer: item.Studios?.at(0)?.Name ?? undefined,
       rating: item.CommunityRating?.toFixed(1),
       tags: item.Genres ?? [],
-      href: super.url(`/web/index.html#!/details?id=${item.Id}&serverId=${item.ServerId}`).toString(),
+      href: super.externalUrl(`/web/index.html#!/details?id=${item.Id}&serverId=${item.ServerId}`).toString(),
     }));
+  }
+
+  private mapMediaReleaseType(type: BaseItemKind | undefined): MediaType {
+    switch (type) {
+      case "Audio":
+      case "AudioBook":
+      case "MusicAlbum":
+        return "music";
+      case "Book":
+        return "book";
+      case "Episode":
+      case "Series":
+      case "Season":
+        return "tv";
+      case "Movie":
+        return "movie";
+      case "Video":
+        return "video";
+      default:
+        return "unknown";
+    }
   }
 
   /**

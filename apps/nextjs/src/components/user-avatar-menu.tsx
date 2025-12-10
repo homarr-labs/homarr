@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import { useCallback, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Center, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import { useHotkeys, useTimeout } from "@mantine/hooks";
@@ -19,8 +18,10 @@ import {
 
 import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
+import { hotkeys } from "@homarr/definitions";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
 import { CurrentLanguageCombobox } from "./language/current-language-combobox";
@@ -34,7 +35,7 @@ interface UserAvatarMenuProps {
 export const UserAvatarMenu = ({ children, availableUpdatesPromise }: UserAvatarMenuProps) => {
   const t = useScopedI18n("common.userAvatar.menu");
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  useHotkeys([["mod+J", toggleColorScheme]]);
+  useHotkeys([[hotkeys.toggleColorScheme, toggleColorScheme]]);
 
   const ColorSchemeIcon = colorScheme === "dark" ? IconSun : IconMoon;
 

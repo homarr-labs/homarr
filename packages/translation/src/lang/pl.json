@@ -389,7 +389,7 @@
         }
       },
       "media": {
-        "title": "Media",
+        "title": "Multimedia",
         "item": {
           "upload": {
             "label": "Prześlij media",
@@ -645,6 +645,21 @@
             "title": "Nie udało się utworzyć",
             "message": "Integracja nie może zostać utworzona"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "Istniejąca",
+              "label": "Wybierz istniejącą aplikację"
+            },
+            "new": {
+              "title": "Nowy",
+              "url": {
+                "label": "Adres URL aplikacji",
+                "description": "Adres URL, który zostanie otwarty po kliknięciu aplikacji na pulpicie"
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "Nie można wprowadzić zmian",
             "message": "Integracja nie mogła zostać zapisana"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "Połącz aplikację",
+            "remove": "Odłącz",
+            "select": "Wybierz aplikację do połączenia"
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "Utwórz wyszukiwarkę",
         "description": "Integracja \"{kind}\" może być używana z wyszukiwarkami. Zaznacz to, aby automatycznie skonfigurować wyszukiwarkę."
+      },
+      "app": {
+        "sectionTitle": "Połączona aplikacja"
       },
       "createApp": {
         "label": "Stwórz aplikację",
@@ -945,6 +970,10 @@
           "label": "Temat",
           "newLabel": "Nowy temat"
         },
+        "url": {
+          "label": "Adres URL",
+          "newLabel": "Nowy adres URL"
+        },
         "opnsenseApiKey": {
           "label": "Klucz API",
           "newLabel": "Nowy klucz API"
@@ -954,16 +983,16 @@
           "newLabel": "Nowy klucz API (Secret)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Identyfikator aplikacji",
+          "newLabel": "Nowy identyfikator aplikacji"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Identyfikator instalacji",
+          "newLabel": "Nowy identyfikator instalacji"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Klucz prywatny",
+          "newLabel": "Nowy klucz prywatny"
         }
       }
     },
@@ -974,7 +1003,7 @@
     }
   },
   "media": {
-    "plural": "Medias",
+    "plural": "Multimedia",
     "search": "Znajdź media",
     "field": {
       "name": "Nazwa",
@@ -1022,6 +1051,7 @@
       "add": "Dodaj",
       "apply": "Zastosuj",
       "backToOverview": "Powrót do widoku ogólnego",
+      "change": "Zmień",
       "create": "Utwórz",
       "createAnother": "Utwórz i zacznij od nowa",
       "edit": "Edytuj",
@@ -1141,6 +1171,12 @@
           "groupNameTaken": "Nazwa użytkownika jest już zajęta"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
+      }
     }
   },
   "section": {
@@ -1152,6 +1188,9 @@
       "option": {
         "title": {
           "label": "Tytuł"
+        },
+        "customCssClasses": {
+          "label": "Niestandardowe klasy CSS"
         },
         "borderColor": {
           "label": "Kolor obramowania"
@@ -1543,7 +1582,15 @@
         "width": "Szerokość",
         "height": "Wysokość"
       },
-      "placeholder": "Zacznij pisać swoje notatki"
+      "placeholder": "Zacznij pisać swoje notatki",
+      "dismiss": {
+        "title": "Odrzucić zmiany?",
+        "message": "Masz niezapisane zmiany w notatniku. Czy na pewno chcesz je odrzucić?",
+        "action": {
+          "discard": "Odrzuć zmiany",
+          "keepEditing": "Kontynuuj edycję"
+        }
+      }
     },
     "iframe": {
       "name": "iFrame",
@@ -1695,6 +1742,9 @@
     "calendar": {
       "name": "Kalendarz",
       "description": "Wyświetlaj zdarzenia z integracji w widoku kalendarza w określonym okresie czasowym",
+      "duration": {
+        "allDay": "Cały dzień"
+      },
       "option": {
         "releaseType": {
           "label": "Rodzaj premiery w Radarr",
@@ -1728,6 +1778,9 @@
         "showCurrentWindSpeed": {
           "label": "Pokaż aktualną prędkość wiatru",
           "description": "Tylko dla bieżącej pogody"
+        },
+        "useImperialSpeed": {
+          "label": "Prędkość wiatru w mph"
         },
         "location": {
           "label": "Lokalizacja pogody"
@@ -1764,7 +1817,7 @@
         "freezingRain": "Marznący deszcz",
         "snowFall": "Opady śniegu",
         "snowGrains": "Ziarna śniegu",
-        "rainShowers": "Deszczownice",
+        "rainShowers": "Przelotne opady deszczu",
         "snowShowers": "Przelotne opady śniegu",
         "thunderstorm": "Burza",
         "thunderstormWithHail": "Burza z gradem",
@@ -1965,7 +2018,25 @@
         "currentlyPlaying": "Obecnie odtwarzane",
         "user": "Użytkownik",
         "name": "Nazwa",
-        "id": "ID"
+        "id": "ID",
+        "metadata": {
+          "title": "Statystyki dla nerdów",
+          "video": {
+            "title": "Wideo",
+            "resolution": "Rozdzielczość"
+          },
+          "audio": {
+            "title": "Dźwięk",
+            "channelCount": "Kanały audio",
+            "codec": "Kodek audio"
+          },
+          "transcoding": {
+            "title": "Transkodowanie",
+            "container": "Kontener",
+            "resolution": "Rozdzielczość",
+            "target": "Kodek docelowy"
+          }
+        }
       }
     },
     "downloads": {
@@ -2161,6 +2232,7 @@
         "unknown": "Nieznany",
         "pending": "Oczekujący",
         "processing": "Przetwarzanie",
+        "requested": "Żądanie",
         "partiallyAvailable": "Częściowy",
         "available": "Dostępne",
         "blacklisted": "Zablokowany",
@@ -2490,7 +2562,29 @@
     "systemResources": {
       "name": "Zasoby systemowe",
       "description": "Wykorzystanie CPU, pamięci, dysku i innych zasobów sprzętowych system",
-      "option": {},
+      "option": {
+        "hasShadow": {
+          "label": "Włącz cieniowanie wykresu"
+        },
+        "visibleCharts": {
+          "label": "Widoczne wykresy",
+          "description": "Wybierz wykresy, które chcesz, aby były widoczne.",
+          "option": {
+            "cpu": "Procesor",
+            "memory": "Pamięć",
+            "network": "Sieć"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Tryb wyświetlania etykiet",
+          "option": {
+            "textWithIcon": "Pokaż tekst z ikoną",
+            "text": "Pokaż tylko tekst",
+            "icon": "Pokaż tylko ikonę",
+            "hidden": "Ukryj etykietę"
+          }
+        }
+      },
       "card": {
         "cpu": "Procesor",
         "memory": "Pamięć",
@@ -2919,13 +3013,19 @@
           "invite": "Zaproszenia",
           "integration": "Integracje",
           "app": "Aplikacje",
-          "group": "Grupy"
+          "group": "Grupy",
+          "searchEngine": "Wyszukiwarki",
+          "media": "Multimedia"
         },
         "statisticLabel": {
           "boards": "Tablice",
           "resources": "Zasoby",
           "authentication": "Uwierzytelnianie",
           "authorization": "Autoryzacja"
+        },
+        "heroBanner": {
+          "title": "Witaj z powrotem w swojej",
+          "subtitle": "{app} tablicy"
         }
       },
       "board": {
@@ -3281,6 +3381,9 @@
             },
             "firewallInterfaces": {
               "label": "Interfejsy firewalla"
+            },
+            "weather": {
+              "label": "Pogoda"
             }
           },
           "interval": {
@@ -3406,6 +3509,21 @@
           "libraries": {
             "title": "Biblioteki",
             "subtitle": "{count} używanych w kodzie Homarr"
+          },
+          "hotkeys": {
+            "title": "Skróty klawiszowe",
+            "subtitle": "Skróty klawiaturowe ułatwiające pracę”",
+            "field": {
+              "shortcut": "Skrót",
+              "action": "Akcja"
+            },
+            "action": {
+              "toggleBoardEdit": "Przełącz tryb edycji tablicy",
+              "toggleColorScheme": "Przełącz tryb jasny/ciemny",
+              "saveNotebook": "Zapisz notatnik (tylko w widżecie notatnika)",
+              "openSpotlight": "Otwórz wyszukiwarkę"
+            },
+            "note": "Wskazówka: Mod odnosi się zarówno do klawisza Ctrl, jak i ⌘ na macOS"
           }
         }
       }

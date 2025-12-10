@@ -645,6 +645,21 @@
             "title": "Creation failed",
             "message": "The integration could not be created"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "Existing",
+              "label": "Select existing app"
+            },
+            "new": {
+              "title": "New",
+              "url": {
+                "label": "App url",
+                "description": "The url the app will open when accessed from the dashboard"
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "Unable to apply changes",
             "message": "The integration could not be saved"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "Link an app",
+            "remove": "Unlink",
+            "select": "Select an app to link"
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "Create Search Engine",
         "description": "Integration \"{kind}\" can be used with the search engines. Check this to automatically configure the search engine."
+      },
+      "app": {
+        "sectionTitle": "Linked App"
       },
       "createApp": {
         "label": "Create app",
@@ -945,6 +970,10 @@
           "label": "Topic",
           "newLabel": "New topic"
         },
+        "url": {
+          "label": "Url",
+          "newLabel": "New url"
+        },
         "opnsenseApiKey": {
           "label": "API Key (Key)",
           "newLabel": "New API Key (Key)"
@@ -1022,6 +1051,7 @@
       "add": "Add",
       "apply": "Apply",
       "backToOverview": "Back to overview",
+      "change": "Change",
       "create": "Create",
       "createAnother": "Create and start over",
       "edit": "Edit",
@@ -1141,6 +1171,12 @@
           "groupNameTaken": "Group name already taken"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
+      }
     }
   },
   "section": {
@@ -1152,6 +1188,9 @@
       "option": {
         "title": {
           "label": "Title"
+        },
+        "customCssClasses": {
+          "label": "Custom css classes"
         },
         "borderColor": {
           "label": "Border color"
@@ -1703,6 +1742,9 @@
     "calendar": {
       "name": "Calendar",
       "description": "Display events from your integrations in a calendar view within a certain relative time period",
+      "duration": {
+        "allDay": "All day"
+      },
       "option": {
         "releaseType": {
           "label": "Radarr release type",
@@ -1737,6 +1779,9 @@
           "label": "Show current wind speed",
           "description": "Only on current weather"
         },
+        "useImperialSpeed": {
+          "label": "Use mph for windspeed"
+        },
         "location": {
           "label": "Weather location"
         },
@@ -1755,12 +1800,12 @@
           "description": "How the date should look like"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Sunrise",
         "sunset": "Sunset",
-        "maxWindSpeed": "Max wind speed: {maxWindSpeed} km/h",
-        "maxWindGusts": "Max wind gusts: {maxWindGusts} km/h"
+        "maxWindSpeed": "Max wind speed: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Clear",
@@ -1973,7 +2018,25 @@
         "currentlyPlaying": "Currently playing",
         "user": "User",
         "name": "Name",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "Stats for nerds",
+          "video": {
+            "title": "Video",
+            "resolution": "Resolution"
+          },
+          "audio": {
+            "title": "Audio",
+            "channelCount": "Audio channels",
+            "codec": "Audio codec"
+          },
+          "transcoding": {
+            "title": "Transcoding",
+            "container": "Container",
+            "resolution": "Resolution",
+            "target": "Target codec"
+          }
+        }
       }
     },
     "downloads": {
@@ -2169,6 +2232,7 @@
         "unknown": "Unknown",
         "pending": "Pending",
         "processing": "Processing",
+        "requested": "Requested",
         "partiallyAvailable": "Partial",
         "available": "Available",
         "blacklisted": "Blacklisted",
@@ -2499,6 +2563,9 @@
       "name": "System resources",
       "description": "CPU, Memory, Disk and other hardware usage of your system",
       "option": {
+        "hasShadow": {
+          "label": "Enable chart shading"
+        },
         "visibleCharts": {
           "label": "Visible charts",
           "description": "Select the charts you want to be visible.",
@@ -2506,6 +2573,15 @@
             "cpu": "CPU",
             "memory": "Memory",
             "network": "Network"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Label display mode",
+          "option": {
+            "textWithIcon": "Show text with icon",
+            "text": "Show only text",
+            "icon": "Show only icon",
+            "hidden": "Hide label"
           }
         }
       },
@@ -2937,13 +3013,19 @@
           "invite": "Invites",
           "integration": "Integrations",
           "app": "Apps",
-          "group": "Groups"
+          "group": "Groups",
+          "searchEngine": "Search engines",
+          "media": "Medias"
         },
         "statisticLabel": {
           "boards": "Boards",
           "resources": "Resources",
           "authentication": "Authentication",
           "authorization": "Authorization"
+        },
+        "heroBanner": {
+          "title": "Welcome back to your",
+          "subtitle": "{app} Board"
         }
       },
       "board": {
@@ -3299,6 +3381,9 @@
             },
             "firewallInterfaces": {
               "label": "Firewall Interfaces"
+            },
+            "weather": {
+              "label": "Weather"
             }
           },
           "interval": {
@@ -3424,6 +3509,21 @@
           "libraries": {
             "title": "Libraries",
             "subtitle": "{count} used in the Code of Homarr"
+          },
+          "hotkeys": {
+            "title": "Hotkeys",
+            "subtitle": "Keyboard shortcuts to enhance your workflow",
+            "field": {
+              "shortcut": "Shortcut",
+              "action": "Action"
+            },
+            "action": {
+              "toggleBoardEdit": "Toggle board edit mode",
+              "toggleColorScheme": "Toggle light/dark mode",
+              "saveNotebook": "Save notebook (only inside notebook widget)",
+              "openSpotlight": "Open search"
+            },
+            "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }
         }
       }

@@ -1,7 +1,4 @@
-import { decryptSecret } from "@homarr/common/server";
-import type { Modify } from "@homarr/common/types";
-import type { Integration as DbIntegration } from "@homarr/db/schema";
-import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
@@ -18,6 +15,7 @@ import { GitHubContainerRegistryIntegration } from "../github-container-registry
 import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
+import { ICalIntegration } from "../ical/ical-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { LinuxServerIOIntegration } from "../linuxserverio/linuxserverio-integration";
@@ -61,20 +59,6 @@ export const createIntegrationAsync = async <TKind extends keyof typeof integrat
   return new creator(integration) as IntegrationInstanceOfKind<TKind>;
 };
 
-export const createIntegrationAsyncFromSecrets = <TKind extends keyof typeof integrationCreators>(
-  integration: Modify<DbIntegration, { kind: TKind }> & {
-    secrets: { kind: IntegrationSecretKind; value: `${string}.${string}` }[];
-  },
-) => {
-  return createIntegrationAsync({
-    ...integration,
-    decryptedSecrets: integration.secrets.map((secret) => ({
-      ...secret,
-      value: decryptSecret(secret.value),
-    })),
-  });
-};
-
 type IntegrationInstance = new (integration: IntegrationInput) => Integration;
 
 // factories are an array, to differentiate in js between class constructors and functions
@@ -112,6 +96,7 @@ export const integrationCreators = {
   codeberg: CodebergIntegration,
   linuxServerIO: LinuxServerIOIntegration,
   gitHubContainerRegistry: GitHubContainerRegistryIntegration,
+  ical: ICalIntegration,
   quay: QuayIntegration,
   ntfy: NTFYIntegration,
   mock: MockIntegration,

@@ -120,11 +120,14 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
               />
               {session?.user.permissions.includes("media-upload") && (
                 <UploadMedia
-                  onSuccess={({ url }) =>
+                  onSuccess={(medias) => {
+                    const first = medias.at(0);
+                    if (!first) return;
+
                     startTransition(() => {
-                      form.setFieldValue("backgroundImageUrl", url);
-                    })
-                  }
+                      form.setFieldValue("backgroundImageUrl", first.url);
+                    });
+                  }}
                 >
                   {({ onClick, loading }) => (
                     <ActionIcon onClick={onClick} loading={loading} mt={24} size={36} variant="default">

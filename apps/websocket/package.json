@@ -25,7 +25,7 @@
     "@homarr/log": "workspace:^",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "dotenv": "^17.2.2",
+    "dotenv": "^17.2.3",
     "tsx": "4.20.4",
     "ws": "^8.18.3"
   },
@@ -34,9 +34,9 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/ws": "^8.18.1",
-    "esbuild": "^0.25.9",
-    "eslint": "^9.35.0",
-    "prettier": "^3.6.2",
-    "typescript": "^5.9.2"
+    "esbuild": "^0.27.1",
+    "eslint": "^9.39.1",
+    "prettier": "^3.7.4",
+    "typescript": "^5.9.3"
   }
 }

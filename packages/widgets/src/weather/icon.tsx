@@ -15,6 +15,7 @@ import {
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 
+import { metricToImperial } from "@homarr/common";
 import type { TranslationObject } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
@@ -40,6 +41,7 @@ export const WeatherIcon = ({ code, size = 50 }: WeatherIconProps) => {
 
 interface WeatherDescriptionProps {
   weatherOnly?: boolean;
+  useImperialSpeed?: boolean;
   dateFormat?: WidgetProps<"weather">["options"]["dateFormat"];
   time?: string;
   weatherCode: number;
@@ -66,6 +68,7 @@ interface WeatherDescriptionProps {
  */
 export const WeatherDescription = ({
   weatherOnly,
+  useImperialSpeed,
   dateFormat,
   time,
   weatherCode,
@@ -96,12 +99,18 @@ export const WeatherDescription = ({
         <List.Item icon={<IconMoon size={15} />}>{`${t("dailyForecast.sunset")}: ${sunset}`}</List.Item>
         {maxWindSpeed !== undefined && (
           <List.Item icon={<IconWind size={15} />}>
-            {t("dailyForecast.maxWindSpeed", { maxWindSpeed: String(maxWindSpeed) })}
+            {t("dailyForecast.maxWindSpeed", {
+              maxWindSpeed: (useImperialSpeed ? metricToImperial(maxWindSpeed) : maxWindSpeed).toFixed(1),
+              unit: useImperialSpeed ? tCommon("unit.speed.milesPerHour") : tCommon("unit.speed.kilometersPerHour"),
+            })}
           </List.Item>
         )}
         {maxWindGusts !== undefined && (
           <List.Item icon={<IconWind size={15} />}>
-            {t("dailyForecast.maxWindGusts", { maxWindGusts: String(maxWindGusts) })}
+            {t("dailyForecast.maxWindGusts", {
+              maxWindGusts: (useImperialSpeed ? metricToImperial(maxWindGusts) : maxWindGusts).toFixed(1),
+              unit: useImperialSpeed ? tCommon("unit.speed.milesPerHour") : tCommon("unit.speed.kilometersPerHour"),
+            })}
           </List.Item>
         )}
       </List>

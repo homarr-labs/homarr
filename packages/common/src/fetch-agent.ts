@@ -12,7 +12,11 @@ export class LoggingAgent extends Agent {
   }
 
   dispatch(options: Dispatcher.DispatchOptions, handler: Dispatcher.DispatchHandler): boolean {
-    const url = new URL(`${options.origin as string}${options.path}`);
+    const path = options.path
+      .split("/")
+      .map((segment) => (segment.length >= 32 && !segment.startsWith("?") ? "REDACTED" : segment))
+      .join("/");
+    const url = new URL(`${options.origin as string}${path}`);
 
     // The below code should prevent sensitive data from being logged as
     // some integrations use query parameters for auth

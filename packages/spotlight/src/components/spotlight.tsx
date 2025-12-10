@@ -6,6 +6,7 @@ import { ActionIcon, Center, Group, Kbd } from "@mantine/core";
 import { Spotlight as MantineSpotlight } from "@mantine/spotlight";
 import { IconQuestionMark, IconSearch, IconX } from "@tabler/icons-react";
 
+import { hotkeys } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 
@@ -49,6 +50,7 @@ const SpotlightWithActiveMode = ({ modeState, activeMode }: SpotlightWithActiveM
 
   return (
     <MantineSpotlight.Root
+      shortcut={hotkeys.openSpotlight}
       yOffset={8}
       onSpotlightClose={() => {
         setMode(defaultMode);

@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
 import { Anchor, Button, Group, Text, Title, Tooltip } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 import type { MRT_ColumnDef } from "mantine-react-table";
@@ -10,7 +9,7 @@ import { MantineReactTable } from "mantine-react-table";
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { UserAvatar } from "@homarr/ui";
+import { Link, UserAvatar } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
 interface UserListComponentProps {

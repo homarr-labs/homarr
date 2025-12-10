@@ -55,16 +55,16 @@ jobs:
           app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
           permission-contents: write # required to commit package.json & changelog changes, merge them to dev and publish the release
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         if: env.SKIP_RELEASE == 'false'
         with:
           persist-credentials: false
       - uses: pnpm/action-setup@v4
         if: env.SKIP_RELEASE == 'false'
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         if: env.SKIP_RELEASE == 'false'
         with:
-          node-version: 22.19.0
+          node-version: 24.11.1
           cache: "pnpm"
       - run: npm i -g pnpm
         if: env.SKIP_RELEASE == 'false'
@@ -115,7 +115,7 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ needs.release.outputs.git_ref }}
 
@@ -154,7 +154,7 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ needs.release.outputs.git_ref }}
 

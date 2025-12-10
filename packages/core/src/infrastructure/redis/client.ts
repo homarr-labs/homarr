@@ -15,6 +15,7 @@ export const createRedisClient = () =>
         ...defaultRedisOptions,
         host: redisEnv.HOST,
         port: redisEnv.PORT,
+        db: redisEnv.DATABASE_INDEX,
         tls: redisEnv.TLS_CA
           ? {
               ca: redisEnv.TLS_CA,

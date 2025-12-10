@@ -1,5 +1,4 @@
 import { Fragment } from "react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconBox, IconPencil } from "@tabler/icons-react";
@@ -10,7 +9,7 @@ import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
-import { SearchInput, TablePagination } from "@homarr/ui";
+import { Link, SearchInput, TablePagination } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";

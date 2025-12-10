@@ -150,6 +150,7 @@ const seedDefaultIntegrationsAsync = async (db: Database) => {
         name: `${name} Default`,
         url: defaultUrl,
         kind,
+        appId: null,
       });
     }
 

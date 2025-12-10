@@ -9,6 +9,8 @@ env:
   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
   CROWDIN_TOKEN: "${{ secrets.CROWDIN_UPDATE_CONTRIBUTORS_TOKEN }}"
 
+permissions:
+  contents: read
 jobs:
   update-contributors:
     runs-on: ubuntu-latest
@@ -26,13 +28,13 @@ jobs:
           permission-pull-requests: write # required to create pr & enable automerge
 
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
 
       - uses: pnpm/action-setup@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"

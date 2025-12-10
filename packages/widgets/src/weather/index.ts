@@ -13,6 +13,7 @@ export const { definition, componentLoader } = createWidgetDefinition("weather",
         isFormatFahrenheit: factory.switch(),
         disableTemperatureDecimals: factory.switch(),
         showCurrentWindSpeed: factory.switch({ withDescription: true }),
+        useImperialSpeed: factory.switch(),
         location: factory.location({
           defaultValue: {
             name: "Paris",

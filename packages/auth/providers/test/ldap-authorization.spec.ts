@@ -23,12 +23,11 @@ describe("authorizeWithLdapCredentials", () => {
   test("should fail when wrong ldap base credentials", async () => {
     // Arrange
     const spy = vi.spyOn(ldapClient, "LdapClient");
-    spy.mockImplementation(
-      () =>
-        ({
-          bindAsync: vi.fn(() => Promise.reject(new Error("bindAsync"))),
-        }) as unknown as ldapClient.LdapClient,
-    );
+    spy.mockImplementation(function () {
+      return {
+        bindAsync: vi.fn(() => Promise.reject(new Error("bindAsync"))),
+      } as unknown as ldapClient.LdapClient;
+    });
 
     // Act
     const act = () =>
@@ -44,13 +43,12 @@ describe("authorizeWithLdapCredentials", () => {
   test("should fail when user not found", async () => {
     // Arrange
     const spy = vi.spyOn(ldapClient, "LdapClient");
-    spy.mockImplementation(
-      () =>
-        ({
-          bindAsync: vi.fn(() => Promise.resolve()),
-          searchAsync: vi.fn(() => Promise.resolve([])),
-        }) as unknown as ldapClient.LdapClient,
-    );
+    spy.mockImplementation(function () {
+      return {
+        bindAsync: vi.fn(() => Promise.resolve()),
+        searchAsync: vi.fn(() => Promise.resolve([])),
+      } as unknown as ldapClient.LdapClient;
+    });
 
     // Act
     const act = () =>
@@ -66,20 +64,19 @@ describe("authorizeWithLdapCredentials", () => {
   test("should fail when user has invalid email", async () => {
     // Arrange
     const spy = vi.spyOn(ldapClient, "LdapClient");
-    spy.mockImplementation(
-      () =>
-        ({
-          bindAsync: vi.fn(() => Promise.resolve()),
-          searchAsync: vi.fn(() =>
-            Promise.resolve([
-              {
-                dn: "test",
-                mail: "test",
-              },
-            ]),
-          ),
-        }) as unknown as ldapClient.LdapClient,
-    );
+    spy.mockImplementation(function () {
+      return {
+        bindAsync: vi.fn(() => Promise.resolve()),
+        searchAsync: vi.fn(() =>
+          Promise.resolve([
+            {
+              dn: "test",
+              mail: "test",
+            },
+          ]),
+        ),
+      } as unknown as ldapClient.LdapClient;
+    });
 
     // Act
     const act = () =>
@@ -103,15 +100,14 @@ describe("authorizeWithLdapCredentials", () => {
       ]),
     );
     const spy = vi.spyOn(ldapClient, "LdapClient");
-    spy.mockImplementation(
-      () =>
-        ({
-          bindAsync: vi.fn((props: ldapClient.BindOptions) =>
-            props.distinguishedName === "test" ? Promise.reject(new Error("bindAsync")) : Promise.resolve(),
-          ),
-          searchAsync: searchSpy,
-        }) as unknown as ldapClient.LdapClient,
-    );
+    spy.mockImplementation(function () {
+      return {
+        bindAsync: vi.fn((props: ldapClient.BindOptions) =>
+          props.distinguishedName === "test" ? Promise.reject(new Error("bindAsync")) : Promise.resolve(),
+        ),
+        searchAsync: searchSpy,
+      } as unknown as ldapClient.LdapClient;
+    });
 
     // Act
     const act = () =>
@@ -129,21 +125,20 @@ describe("authorizeWithLdapCredentials", () => {
     // Arrange
     const db = createDb();
     const spy = vi.spyOn(ldapClient, "LdapClient");
-    spy.mockImplementation(
-      () =>
-        ({
-          bindAsync: vi.fn(() => Promise.resolve()),
-          searchAsync: vi.fn(() =>
-            Promise.resolve([
-              {
-                dn: "test",
-                mail: "test@gmail.com",
-              },
-            ]),
-          ),
-          disconnectAsync: vi.fn(),
-        }) as unknown as ldapClient.LdapClient,
-    );
+    spy.mockImplementation(function () {
+      return {
+        bindAsync: vi.fn(() => Promise.resolve()),
+        searchAsync: vi.fn(() =>
+          Promise.resolve([
+            {
+              dn: "test",
+              mail: "test@gmail.com",
+            },
+          ]),
+        ),
+        disconnectAsync: vi.fn(),
+      } as unknown as ldapClient.LdapClient;
+    });
 
     // Act
     const result = await authorizeWithLdapCredentialsAsync(db, {
@@ -168,21 +163,20 @@ describe("authorizeWithLdapCredentials", () => {
     // Arrange
     const db = createDb();
     const spy = vi.spyOn(ldapClient, "LdapClient");
-    spy.mockImplementation(
-      () =>
-        ({
-          bindAsync: vi.fn(() => Promise.resolve()),
-          searchAsync: vi.fn(() =>
-            Promise.resolve([
-              {
-                dn: "test",
-                mail: "test@gmail.com",
-              },
-            ]),
-          ),
-          disconnectAsync: vi.fn(),
-        }) as unknown as ldapClient.LdapClient,
-    );
+    spy.mockImplementation(function () {
+      return {
+        bindAsync: vi.fn(() => Promise.resolve()),
+        searchAsync: vi.fn(() =>
+          Promise.resolve([
+            {
+              dn: "test",
+              mail: "test@gmail.com",
+            },
+          ]),
+        ),
+        disconnectAsync: vi.fn(),
+      } as unknown as ldapClient.LdapClient;
+    });
     await db.insert(users).values({
       id: createId(),
       name: "test",
@@ -220,21 +214,20 @@ describe("authorizeWithLdapCredentials", () => {
   test("should authorize user with correct credentials and return updated name", async () => {
     // Arrange
     const spy = vi.spyOn(ldapClient, "LdapClient");
-    spy.mockImplementation(
-      () =>
-        ({
-          bindAsync: vi.fn(() => Promise.resolve()),
-          searchAsync: vi.fn(() =>
-            Promise.resolve([
-              {
-                dn: "test55",
-                mail: "test@gmail.com",
-              },
-            ]),
-          ),
-          disconnectAsync: vi.fn(),
-        }) as unknown as ldapClient.LdapClient,
-    );
+    spy.mockImplementation(function () {
+      return {
+        bindAsync: vi.fn(() => Promise.resolve()),
+        searchAsync: vi.fn(() =>
+          Promise.resolve([
+            {
+              dn: "test55",
+              mail: "test@gmail.com",
+            },
+          ]),
+        ),
+        disconnectAsync: vi.fn(),
+      } as unknown as ldapClient.LdapClient;
+    });
 
     const userId = createId();
     const db = createDb();
@@ -268,27 +261,26 @@ describe("authorizeWithLdapCredentials", () => {
   test("should authorize user with correct credentials and return his groups", async () => {
     // Arrange
     const spy = vi.spyOn(ldapClient, "LdapClient");
-    spy.mockImplementation(
-      () =>
-        ({
-          bindAsync: vi.fn(() => Promise.resolve()),
-          searchAsync: vi.fn((argument: { options: { filter: string } }) =>
-            argument.options.filter.includes("group")
-              ? Promise.resolve([
-                  {
-                    cn: "homarr_example",
-                  },
-                ])
-              : Promise.resolve([
-                  {
-                    dn: "test55",
-                    mail: "test@gmail.com",
-                  },
-                ]),
-          ),
-          disconnectAsync: vi.fn(),
-        }) as unknown as ldapClient.LdapClient,
-    );
+    spy.mockImplementation(function () {
+      return {
+        bindAsync: vi.fn(() => Promise.resolve()),
+        searchAsync: vi.fn((argument: { options: { filter: string } }) =>
+          argument.options.filter.includes("group")
+            ? Promise.resolve([
+                {
+                  cn: "homarr_example",
+                },
+              ])
+            : Promise.resolve([
+                {
+                  dn: "test55",
+                  mail: "test@gmail.com",
+                },
+              ]),
+        ),
+        disconnectAsync: vi.fn(),
+      } as unknown as ldapClient.LdapClient;
+    });
     const db = createDb();
     const userId = createId();
     await db.insert(users).values({

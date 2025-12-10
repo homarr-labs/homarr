@@ -13,3 +13,4 @@ export * from "./cookie";
 export * from "./search-engine";
 export * from "./onboarding";
 export * from "./emptysuperjson";
+export * from "./hotkeys";

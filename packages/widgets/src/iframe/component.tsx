@@ -11,8 +11,9 @@ import classes from "./component.module.css";
 
 export default function IFrameWidget({ options, isEditMode }: WidgetComponentProps<"iframe">) {
   const t = useI18n();
-  const { embedUrl, ...permissions } = options;
+  const { embedUrl, allowScrolling, ...permissions } = options;
   const allowedPermissions = getAllowedPermissions(permissions);
+  const sandboxFlags = getSandboxFlags(permissions);
 
   if (embedUrl.trim() === "") return <NoUrl />;
   if (!isSupportedProtocol(embedUrl)) {
@@ -27,7 +28,8 @@ export default function IFrameWidget({ options, isEditMode }: WidgetComponentPro
         src={embedUrl}
         title="widget iframe"
         allow={allowedPermissions.join(" ")}
-        scrolling={options.allowScrolling ? "yes" : "no"}
+        scrolling={allowScrolling ? "yes" : "no"}
+        sandbox={sandboxFlags.join(" ")}
       >
         <Text>{t("widget.iframe.error.noBrowerSupport")}</Text>
       </iframe>
@@ -78,6 +80,28 @@ const getAllowedPermissions = (
   return objectEntries(permissions)
     .filter(([_key, value]) => value)
     .map(([key]) => permissionMapping[key]);
+};
+
+const getSandboxFlags = (
+  permissions: Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">,
+) => {
+  const baseSandbox = [
+    "allow-scripts",
+    "allow-same-origin",
+    "allow-forms",
+    "allow-popups",
+    "allow-top-navigation-by-user-activation",
+  ];
+
+  if (permissions.allowFullScreen) {
+    baseSandbox.push("allow-presentation");
+  }
+
+  if (permissions.allowPayment) {
+    baseSandbox.push("allow-popups-to-escape-sandbox");
+  }
+
+  return baseSandbox;
 };
 
 const permissionMapping = {
