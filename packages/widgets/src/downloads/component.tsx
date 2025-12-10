@@ -36,6 +36,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import type { MRT_ColumnDef, MRT_VisibilityState } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 
@@ -47,6 +48,8 @@ import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/i
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+
+dayjs.extend(relativeTime);
 
 interface QuickFilter {
   integrationKinds: string[];
@@ -188,14 +191,14 @@ export default function DownloadClientsWidget({
             )
             //Add extrapolated data and actions if user is allowed interaction
             .map((item): ExtendedDownloadClientItem => {
-              const received = Math.floor(item.size * item.progress);
+              const received = item.received ?? Math.floor(item.size * item.progress);
               const integrationIds = [pair.integration.id];
               return {
                 integration: pair.integration,
                 ...item,
                 category: item.category !== undefined && item.category.length > 0 ? item.category : undefined,
                 received,
-                ratio: item.sent !== undefined ? item.sent / (received || 1) : undefined,
+                ratio: item.sent !== undefined ? item.sent / item.size : undefined,
                 //Only add if permission to use mutations
                 actions: integrationsWithInteractions.includes(pair.integration.id)
                   ? {
@@ -714,7 +717,10 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
           />
           {item.type !== "miscellaneous" && <NormalizedLine itemKey="ratio" values={item.ratio} />}
           <NormalizedLine itemKey="added" values={item.added === undefined ? "unknown" : dayjs(item.added).format()} />
-          <NormalizedLine itemKey="time" values={item.time !== 0 ? dayjs().add(item.time).format() : "∞"} />
+          <NormalizedLine
+            itemKey="time"
+            values={item.time !== 0 ? dayjs().add(item.time, "milliseconds").fromNow() : "∞"}
+          />
           <NormalizedLine itemKey="category" values={item.category} />
         </Stack>
       )}
