@@ -2,40 +2,40 @@
   "init": {
     "step": {
       "start": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "Homarr에 오신 것을 환영합니다",
+        "subtitle": "Homarr 인스턴스 설정을 시작합니다.",
+        "description": "시작하기 전에, Homarr 인스턴스를 어떻게 설정할지 선택해주세요.",
         "action": {
-          "scratch": "",
-          "importOldmarr": ""
+          "scratch": "처음부터 시작하기",
+          "importOldmarr": "1.0 이전의 Homarr에서 불러오기"
         }
       },
       "import": {
-        "title": "",
-        "subtitle": "",
+        "title": "데이터 불러오기",
+        "subtitle": "기존 Homarr 인스턴스에서 데이터를 불러올 수 있습니다.",
         "dropzone": {
-          "title": "",
+          "title": "zip 파일 드롭 또는 클릭해서 찾아보기",
           "description": ""
         },
         "fileInfo": {
           "action": {
-            "change": ""
+            "change": "파일 변경"
           }
         },
         "importSettings": {
-          "title": "",
+          "title": "설정 불러오기",
           "description": ""
         },
         "boardSelection": {
-          "title": "",
+          "title": "{count}개의 보드 찾음",
           "description": "",
           "action": {
-            "selectAll": "",
-            "unselectAll": ""
+            "selectAll": "모두 선택",
+            "unselectAll": "모두 선택 해제"
           }
         },
         "summary": {
-          "title": "",
+          "title": "불러오기 요약",
           "description": "",
           "action": {
             "import": ""
@@ -57,69 +57,69 @@
           },
           "notification": {
             "error": {
-              "title": "",
-              "message": ""
+              "title": "유효하지 않은 토큰",
+              "message": "입력한 토큰이 유효하지 않습니다"
             }
           }
         }
       },
       "user": {
-        "title": "",
-        "subtitle": "",
+        "title": "관리자",
+        "subtitle": "관리자의 계정 정보를 설정해주세요.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "계정 생성됨",
+            "message": "계정이 성공적으로 생성되었습니다"
           },
           "error": {
-            "title": ""
+            "title": "계정 생성 실패"
           }
         }
       },
       "group": {
-        "title": "",
+        "title": "외부 그룹",
         "subtitle": "",
         "form": {
           "name": {
-            "label": "",
-            "description": ""
+            "label": "그룹 이름",
+            "description": "이름은 외부 제공자의 관리자 그룹과 일치해야 합니다"
           }
         }
       },
       "settings": {
         "title": "설정",
-        "subtitle": ""
+        "subtitle": "서버 설정하기."
       },
       "finish": {
-        "title": "",
-        "subtitle": "",
-        "description": "",
+        "title": "설정 완료",
+        "subtitle": "모든 준비가 끝났습니다!",
+        "description": "설정 과정을 성공적으로 완료했습니다. 이제 Homarr을 사용할 수 있습니다. 다음 작업을 선택해주세요:",
         "action": {
-          "goToBoard": "",
-          "createBoard": "",
-          "inviteUser": "",
-          "docs": ""
+          "goToBoard": "{name} 보드로 가기",
+          "createBoard": "첫 번째 보드 만들기",
+          "inviteUser": "다른 사용자 초대하기",
+          "docs": "문서 읽기"
         }
       }
     },
-    "backToStart": ""
+    "backToStart": "시작으로 돌아가기"
   },
   "user": {
     "title": "사용자",
     "name": "사용자",
     "page": {
       "login": {
-        "title": "",
-        "subtitle": ""
+        "title": "내 계정에 로그인",
+        "subtitle": "돌아오신 것을 환영합니다! 계정 정보를 입력해주세요"
       },
       "invite": {
-        "title": "",
-        "subtitle": "",
-        "description": ""
+        "title": "Homarr 참여하기",
+        "subtitle": "Homarr에 오신 것을 환영합니다! 계정을 생성해주세요",
+        "description": "{username}가 초대했습니다"
       },
       "init": {
-        "title": "",
-        "subtitle": ""
+        "title": "새로운 Homarr 설치",
+        "subtitle": "초기 관리자 계정을 생성해주세요"
       }
     },
     "field": {
@@ -281,47 +281,47 @@
             "message": ""
           },
           "error": {
-            "message": ""
+            "message": "프로필을 업데이트할 수 없습니다"
           }
         }
       },
       "delete": {
-        "label": "",
+        "label": "사용자 영원히 삭제",
         "description": "",
         "confirm": ""
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "사용자 선택",
+        "notFound": "사용자 찾을 수 없음"
       },
       "transfer": {
-        "label": ""
+        "label": "새로운 소유자 선택하기"
       }
     }
   },
   "group": {
-    "title": "",
-    "name": "",
-    "search": "",
+    "title": "그룹",
+    "name": "그룹",
+    "search": "그룹 찾기",
     "field": {
       "name": "이름",
-      "members": "",
+      "members": "멤버",
       "homeBoard": {
-        "label": "",
+        "label": "홈 보드",
         "description": ""
       },
       "mobileBoard": {
-        "label": "",
+        "label": "모바일 보드",
         "description": ""
       }
     },
     "permission": {
       "admin": {
-        "title": "",
+        "title": "관리자",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "관리자",
+            "description": "이 권한을 가진 멤버는 모든 기능과 설정에 대한 접근을 할 수 있습니다"
           }
         }
       },
@@ -329,11 +329,11 @@
         "title": "앱",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "앱 만들기",
+            "description": "멤버가 앱을 만들 수 있도록 허락하기"
           },
           "use-all": {
-            "label": "",
+            "label": "모든 앱 사용",
             "description": ""
           },
           "modify-all": {
@@ -645,6 +645,21 @@
             "title": "",
             "message": ""
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "",
             "message": ""
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "",
         "description": ""
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "",
@@ -936,6 +961,38 @@
         "realm": {
           "label": "",
           "newLabel": ""
+        },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
+        "topic": {
+          "label": "",
+          "newLabel": ""
+        },
+        "url": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -987,12 +1044,14 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "",
     "error": "오류",
     "action": {
       "add": "추가",
       "apply": "",
       "backToOverview": "",
+      "change": "",
       "create": "만들기",
       "createAnother": "",
       "edit": "수정",
@@ -1112,6 +1171,12 @@
           "groupNameTaken": ""
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1122,6 +1187,9 @@
       },
       "option": {
         "title": {
+          "label": ""
+        },
+        "customCssClasses": {
           "label": ""
         },
         "borderColor": {
@@ -1249,11 +1317,26 @@
         "showTitle": {
           "label": ""
         },
-        "showDescriptionTooltip": {
-          "label": ""
-        },
         "pingEnabled": {
           "label": ""
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
+          }
         }
       },
       "error": {
@@ -1498,6 +1581,15 @@
         "rows": "",
         "width": "너비",
         "height": "높이"
+      },
+      "placeholder": "",
+      "dismiss": {
+        "title": "",
+        "message": "",
+        "action": {
+          "discard": "",
+          "keepEditing": ""
+        }
       }
     },
     "iframe": {
@@ -1650,6 +1742,9 @@
     "calendar": {
       "name": "캘린더",
       "description": "",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "레이더 릴리스 유형",
@@ -1683,6 +1778,9 @@
         "showCurrentWindSpeed": {
           "label": "",
           "description": ""
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "날씨 위치"
@@ -1757,10 +1855,16 @@
         "memory": {
           "label": ""
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": ""
         },
         "defaultTab": {
+          "label": ""
+        },
+        "visibleClusterSections": {
           "label": ""
         },
         "sectionIndicatorRequirement": {
@@ -1914,7 +2018,25 @@
         "currentlyPlaying": "",
         "user": "",
         "name": "",
-        "id": ""
+        "id": "",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
       }
     },
     "downloads": {
@@ -1953,6 +2075,10 @@
         },
         "applyFilterToRatio": {
           "label": ""
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -2060,6 +2186,35 @@
       },
       "globalRatio": ""
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "",
       "description": "오버서 또는 젤리서 인스턴스의 모든 미디어 요청 목록 보기",
@@ -2077,8 +2232,11 @@
         "unknown": "알 수 없음",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "",
-        "available": ""
+        "available": "",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "",
@@ -2185,6 +2343,9 @@
         },
         "maximumAmountPosts": {
           "label": ""
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
@@ -2207,14 +2368,28 @@
         "showDetails": {
           "label": ""
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "",
           "description": ""
         },
         "repositories": {
           "label": "",
-          "addRRepository": {
+          "addRepository": {
             "label": ""
+          },
+          "importRepositories": {
+            "label": "",
+            "loading": "",
+            "noImagesFound": "",
+            "listFoundImages": "",
+            "listAlreadyImportedImages": "",
+            "allImagesAlreadyImported": "",
+            "onlyAdminCanImport": "",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": ""
@@ -2256,10 +2431,17 @@
               "label": ""
             }
           },
+          "importForm": {
+            "title": ""
+          },
           "example": {
             "label": ""
           },
-          "invalid": ""
+          "invalid": "",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "",
@@ -2269,14 +2451,20 @@
       "starsCount": "",
       "forksCount": "",
       "issuesCount": "",
+      "markViewed": "",
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
+      "projectDescription": "",
       "created": "",
       "error": {
         "label": "",
-        "options": {
-          "noMatchingVersion": ""
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2334,6 +2522,75 @@
     "networkController": {
       "error": {
         "internalServerError": ""
+      }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "network": ""
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
       }
     }
   },
@@ -2519,6 +2776,9 @@
         "label": ""
       },
       "iconColor": {
+        "label": ""
+      },
+      "clearColor": {
         "label": ""
       },
       "customCss": {
@@ -2753,13 +3013,19 @@
           "invite": "초대",
           "integration": "",
           "app": "앱",
-          "group": ""
+          "group": "",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "보드",
           "resources": "",
           "authentication": "",
           "authorization": ""
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -3043,7 +3309,8 @@
           "status": {
             "idle": "",
             "running": "실행 중",
-            "error": "오류"
+            "error": "오류",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3088,9 +3355,6 @@
             "dnsHole": {
               "label": ""
             },
-            "sessionCleanup": {
-              "label": ""
-            },
             "updateChecker": {
               "label": ""
             },
@@ -3100,8 +3364,97 @@
             "networkController": {
               "label": ""
             },
+            "refreshNotifications": {
+              "label": ""
+            },
             "dockerContainers": {
               "label": ""
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
+            },
+            "weather": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": "",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "name": {
+              "label": ""
+            },
+            "interval": {
+              "label": ""
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3156,6 +3509,21 @@
           "libraries": {
             "title": "",
             "subtitle": ""
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }
@@ -3610,6 +3978,9 @@
       },
       "tools": {
         "label": "도구",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": ""
         },
@@ -4132,6 +4503,16 @@
             "message": ""
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

@@ -1,7 +1,6 @@
-import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import { z } from "zod/v4";
 
-import { shouldSkipEnvValidation } from "@homarr/common/env-validation";
+import { createEnv } from "@homarr/core/infrastructure/env";
 
 export const env = createEnv({
   server: {
@@ -10,6 +9,4 @@ export const env = createEnv({
   runtimeEnv: {
     KUBERNETES_SERVICE_ACCOUNT_NAME: process.env.KUBERNETES_SERVICE_ACCOUNT_NAME,
   },
-  skipValidation: shouldSkipEnvValidation(),
-  emptyStringAsUndefined: true,
 });

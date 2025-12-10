@@ -232,6 +232,34 @@
       "when": 1746821770071,
       "tag": "0032_add_trusted_certificate_hostnames",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "5",
+      "when": 1750013953833,
+      "tag": "0033_add_cron_job_configuration",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "5",
+      "when": 1754929897145,
+      "tag": "0034_increase-blob-size",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "5",
+      "when": 1756701556908,
+      "tag": "0035_increase-secret-kind-length",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "5",
+      "when": 1760968518445,
+      "tag": "0036_add_app_reference_to_integration",
+      "breakpoints": true
     }
   ]
 }

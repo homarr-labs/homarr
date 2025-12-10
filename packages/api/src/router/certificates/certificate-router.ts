@@ -1,13 +1,13 @@
 import { X509Certificate } from "node:crypto";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 import { zfd } from "zod-form-data";
+import { z } from "zod/v4";
 
 import { addCustomRootCertificateAsync, removeCustomRootCertificateAsync } from "@homarr/certificates/server";
 import { and, eq } from "@homarr/db";
 import { trustedCertificateHostnames } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
-import { certificateValidFileNameSchema, superRefineCertificateFile } from "@homarr/validation/certificates";
+import { certificateValidFileNameSchema, checkCertificateFile } from "@homarr/validation/certificates";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 
@@ -16,7 +16,7 @@ export const certificateRouter = createTRPCRouter({
     .requiresPermission("admin")
     .input(
       zfd.formData({
-        file: zfd.file().superRefine(superRefineCertificateFile),
+        file: zfd.file().check(checkCertificateFile),
       }),
     )
     .mutation(async ({ input }) => {

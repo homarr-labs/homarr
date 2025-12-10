@@ -49,36 +49,43 @@ export const BoardItemMenu = ({
   if (!isEditMode || isPending) return null;
 
   const openEditModal = () => {
-    openModal({
-      kind: item.kind,
-      value: {
-        advancedOptions: item.advancedOptions,
-        options: item.options,
-        integrationIds: item.integrationIds,
+    openModal(
+      {
+        kind: item.kind,
+        value: {
+          advancedOptions: item.advancedOptions,
+          options: item.options,
+          integrationIds: item.integrationIds,
+        },
+        onSuccessfulEdit: ({ options, integrationIds, advancedOptions }) => {
+          updateItemOptions({
+            itemId: item.id,
+            newOptions: options,
+          });
+          updateItemAdvancedOptions({
+            itemId: item.id,
+            newAdvancedOptions: advancedOptions,
+          });
+          updateItemIntegrations({
+            itemId: item.id,
+            newIntegrations: integrationIds,
+          });
+          refResetErrorBoundaryOnNextRender.current = true;
+        },
+        integrationData: (integrationData ?? []).filter(
+          (integration) =>
+            "supportedIntegrations" in currentDefinition &&
+            (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
+        ),
+        integrationSupport: "supportedIntegrations" in currentDefinition,
+        settings,
       },
-      onSuccessfulEdit: ({ options, integrationIds, advancedOptions }) => {
-        updateItemOptions({
-          itemId: item.id,
-          newOptions: options,
-        });
-        updateItemAdvancedOptions({
-          itemId: item.id,
-          newAdvancedOptions: advancedOptions,
-        });
-        updateItemIntegrations({
-          itemId: item.id,
-          newIntegrations: integrationIds,
-        });
-        refResetErrorBoundaryOnNextRender.current = true;
+      {
+        title(t) {
+          return `${t("item.edit.title")} - ${t(`widget.${item.kind}.name`)}`;
+        },
       },
-      integrationData: (integrationData ?? []).filter(
-        (integration) =>
-          "supportedIntegrations" in currentDefinition &&
-          (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
-      ),
-      integrationSupport: "supportedIntegrations" in currentDefinition,
-      settings,
-    });
+    );
   };
 
   const openRemoveModal = () => {

@@ -1,13 +1,19 @@
+import z from "zod";
+
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
+import { ResponseError } from "@homarr/common/server";
 import { logger } from "@homarr/log";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import { entityStateSchema } from "./homeassistant-types";
+import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
+import type { ISmartHomeIntegration } from "../interfaces/smart-home/smart-home-integration";
+import type { CalendarEvent } from "../types";
+import { calendarEventSchema, calendarsSchema, entityStateSchema } from "./homeassistant-types";
 
-export class HomeAssistantIntegration extends Integration {
+export class HomeAssistantIntegration extends Integration implements ISmartHomeIntegration, ICalendarIntegration {
   public async getEntityStateAsync(entityId: string) {
     try {
       const response = await this.getAsync(`/api/states/${entityId}`);
@@ -15,6 +21,7 @@ export class HomeAssistantIntegration extends Integration {
       if (!response.ok) {
         logger.warn(`Response did not indicate success`);
         return {
+          success: false as const,
           error: "Response did not indicate success",
         };
       }
@@ -60,6 +67,35 @@ export class HomeAssistantIntegration extends Integration {
     }
   }
 
+  public async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]> {
+    const calendarsResponse = await this.getAsync("/api/calendars");
+    if (!calendarsResponse.ok) throw new ResponseError(calendarsResponse);
+    const calendars = await calendarsSchema.parseAsync(await calendarsResponse.json());
+
+    return await Promise.all(
+      calendars.map(async (calendar) => {
+        const response = await this.getAsync(`/api/calendars/${calendar.entity_id}`, { start, end });
+        if (!response.ok) throw new ResponseError(response);
+        return await z.array(calendarEventSchema).parseAsync(await response.json());
+      }),
+    ).then((events) =>
+      events.flat().map(
+        (event): CalendarEvent => ({
+          title: event.summary,
+          subTitle: null,
+          description: event.description,
+          // If not reseting it to 0 o'clock it uses utc time and therefore shows as 2 o'clock
+          startDate: "date" in event.start ? new Date(`${event.start.date}T00:00:00`) : new Date(event.start.dateTime),
+          endDate: "date" in event.end ? new Date(`${event.end.date}T00:00:00`) : new Date(event.end.dateTime),
+          image: null,
+          indicatorColor: "#18bcf2",
+          links: [],
+          location: event.location,
+        }),
+      ),
+    );
+  }
+
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/config"), {
       headers: this.getAuthHeaders(),
@@ -80,8 +116,8 @@ export class HomeAssistantIntegration extends Integration {
    * @param path full path to the API endpoint
    * @returns the response from the API
    */
-  private async getAsync(path: `/api/${string}`) {
-    return await fetchWithTrustedCertificatesAsync(this.url(path), {
+  private async getAsync(path: `/api/${string}`, queryParams?: Record<string, string | Date | number | boolean>) {
+    return await fetchWithTrustedCertificatesAsync(this.url(path, queryParams), {
       headers: this.getAuthHeaders(),
     });
   }

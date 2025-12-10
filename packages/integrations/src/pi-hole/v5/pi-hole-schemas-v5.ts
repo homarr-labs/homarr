@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const summaryResponseSchema = z.object({
   status: z.enum(["enabled", "disabled"]),

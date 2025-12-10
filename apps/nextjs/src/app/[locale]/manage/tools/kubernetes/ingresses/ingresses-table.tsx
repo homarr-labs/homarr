@@ -10,7 +10,7 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { createId } from "@homarr/db/client";
+import { createId } from "@homarr/common";
 import type { KubernetesIngress } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";

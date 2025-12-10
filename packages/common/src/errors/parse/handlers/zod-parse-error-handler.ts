@@ -1,5 +1,5 @@
-import { ZodError } from "zod";
 import { fromError } from "zod-validation-error";
+import { ZodError } from "zod/v4";
 
 import { logger } from "@homarr/log";
 

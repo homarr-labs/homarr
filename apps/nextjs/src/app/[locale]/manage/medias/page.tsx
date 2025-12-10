@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   ActionIcon,
@@ -16,7 +15,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { IconExternalLink } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -25,7 +24,7 @@ import { humanFileSize } from "@homarr/common";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { createLocalImageUrl } from "@homarr/icons/local";
 import { getI18n } from "@homarr/translation/server";
-import { SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
+import { Link, SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";

@@ -61,6 +61,10 @@ const getBoardAndPermissionsAsync = async (params: Awaited<Props["params"]>) => 
       notFound();
     }
 
+    if (error instanceof TRPCError && error.code === "BAD_REQUEST") {
+      notFound();
+    }
+
     throw error;
   }
 };

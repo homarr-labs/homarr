@@ -46,7 +46,7 @@ describe("Aria2 integration", () => {
 
     // Acts
     const actAsync = async () => await aria2Integration.pauseQueueAsync();
-    const getAsync = async () => await aria2Integration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await aria2Integration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(actAsync()).resolves.not.toThrow();
@@ -62,7 +62,7 @@ describe("Aria2 integration", () => {
     const aria2Integration = createAria2Intergration(startedContainer, API_KEY);
 
     // Act
-    const getAsync = async () => await aria2Integration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await aria2Integration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(getAsync()).resolves.not.toThrow();
@@ -81,7 +81,7 @@ describe("Aria2 integration", () => {
     await aria2AddItemAsync(startedContainer, API_KEY, aria2Integration);
 
     // Act
-    const getAsync = async () => await aria2Integration.getClientJobsAndStatusAsync();
+    const getAsync = async () => await aria2Integration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
     await expect(getAsync()).resolves.not.toThrow();
@@ -104,7 +104,7 @@ describe("Aria2 integration", () => {
     await expect(actAsync()).resolves.not.toThrow();
     // NzbGet is slow and we wait for a second before querying the items. Test was flaky without this.
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    const result = await aria2Integration.getClientJobsAndStatusAsync();
+    const result = await aria2Integration.getClientJobsAndStatusAsync({ limit: 99 });
     expect(result.items).toHaveLength(0);
 
     // Cleanup
@@ -135,6 +135,7 @@ const createAria2Intergration = (container: StartedTestContainer, apikey: string
     ],
     name: "Aria2",
     url: `http://${container.getHost()}:${container.getMappedPort(8080)}`,
+    externalUrl: null,
   });
 };
 
@@ -153,7 +154,7 @@ const aria2AddItemAsync = async (container: StartedTestContainer, apiKey: string
 
   const {
     items: [item],
-  } = await integration.getClientJobsAndStatusAsync();
+  } = await integration.getClientJobsAndStatusAsync({ limit: 99 });
 
   if (!item) {
     throw new Error("No item found");

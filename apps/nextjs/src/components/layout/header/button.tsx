@@ -1,8 +1,9 @@
 import type { ForwardedRef, ReactNode } from "react";
 import { forwardRef } from "react";
-import Link from "next/link";
 import type { ActionIconProps } from "@mantine/core";
 import { ActionIcon } from "@mantine/core";
+
+import { Link } from "@homarr/ui";
 
 type HeaderButtonProps = (
   | {

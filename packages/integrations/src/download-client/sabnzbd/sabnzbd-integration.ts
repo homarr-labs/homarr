@@ -5,27 +5,32 @@ import type { fetch as undiciFetch } from "undici";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
 
+import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
-import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
+import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
 import { historySchema, queueSchema } from "./sabnzbd-schema";
 
 dayjs.extend(duration);
 
-export class SabnzbdIntegration extends DownloadClientIntegration {
+export class SabnzbdIntegration extends Integration implements IDownloadClientIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     //This is the one call that uses the least amount of data while requiring the api key
     await this.sabNzbApiCallWithCustomFetchAsync(input.fetchAsync, "translate", { value: "ping" });
     return { success: true };
   }
 
-  public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
-    const { queue } = await queueSchema.parseAsync(await this.sabNzbApiCallAsync("queue"));
-    const { history } = await historySchema.parseAsync(await this.sabNzbApiCallAsync("history"));
+    const { queue } = await queueSchema.parseAsync(
+      await this.sabNzbApiCallAsync("queue", { limit: input.limit.toString() }),
+    );
+    const { history } = await historySchema.parseAsync(
+      await this.sabNzbApiCallAsync("history", { limit: input.limit.toString() }),
+    );
     const status: DownloadClientStatus = {
       paused: queue.paused,
       rates: { down: Math.floor(Number(queue.kbpersec) * 1024) }, //Actually rounded kiBps ()
@@ -73,7 +78,8 @@ export class SabnzbdIntegration extends DownloadClientIntegration {
             category: slot.category,
           };
         }),
-      );
+      )
+      .slice(0, input.limit);
     return { status, items };
   }
 

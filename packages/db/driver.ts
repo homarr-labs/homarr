@@ -5,17 +5,22 @@ import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import { drizzle as drizzleSqlite } from "drizzle-orm/better-sqlite3";
 import type { MySql2Database } from "drizzle-orm/mysql2";
 import { drizzle as drizzleMysql } from "drizzle-orm/mysql2";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import type { Pool as MysqlConnectionPool } from "mysql2";
 import mysql from "mysql2";
+import { Pool as PostgresPool } from "pg";
 
 import { logger } from "@homarr/log";
 
 import { env } from "./env";
 import * as mysqlSchema from "./schema/mysql";
+import * as pgSchema from "./schema/postgresql";
 import * as sqliteSchema from "./schema/sqlite";
 
 export type HomarrDatabase = BetterSQLite3Database<typeof sqliteSchema>;
 export type HomarrDatabaseMysql = MySql2Database<typeof mysqlSchema>;
+export type HomarrDatabasePostgresql = NodePgDatabase<typeof pgSchema>;
 
 const init = () => {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -24,6 +29,9 @@ const init = () => {
       case "mysql2":
         initMySQL2();
         break;
+      case "node-postgres":
+        initNodePostgres();
+        break;
       default:
         initBetterSqlite();
         break;
@@ -31,7 +39,7 @@ const init = () => {
   }
 };
 
-export let connection: BetterSqlite3Connection | MysqlConnectionPool;
+export let connection: BetterSqlite3Connection | MysqlConnectionPool | PostgresPool;
 export let database: HomarrDatabase;
 
 class WinstonDrizzleLogger implements Logger {
@@ -70,6 +78,35 @@ const initMySQL2 = () => {
     mode: "default",
     logger: new WinstonDrizzleLogger(),
     casing: "snake_case",
+  }) as unknown as HomarrDatabase;
+};
+
+const initNodePostgres = () => {
+  if (!env.DB_HOST) {
+    connection = new PostgresPool({
+      connectionString: env.DB_URL,
+      max: 0,
+      idleTimeoutMillis: 60000,
+      allowExitOnIdle: false,
+    });
+  } else {
+    connection = new PostgresPool({
+      host: env.DB_HOST,
+      database: env.DB_NAME,
+      port: env.DB_PORT,
+      user: env.DB_USER,
+      password: env.DB_PASSWORD,
+      max: 0,
+      idleTimeoutMillis: 60000,
+      allowExitOnIdle: false,
+    });
+  }
+
+  database = drizzlePg({
+    logger: new WinstonDrizzleLogger(),
+    schema: pgSchema,
+    casing: "snake_case",
+    client: connection,
   }) as unknown as HomarrDatabase;
 };
 

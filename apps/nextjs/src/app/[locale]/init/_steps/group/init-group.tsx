@@ -2,7 +2,7 @@
 
 import { Button, Card, Stack, TextInput } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -12,7 +12,11 @@ import { groupCreateSchema } from "@homarr/validation/group";
 
 export const InitGroup = () => {
   const t = useI18n();
-  const { mutateAsync } = clientApi.group.createInitialExternalGroup.useMutation();
+  const { mutateAsync } = clientApi.group.createInitialExternalGroup.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync("/init");
+    },
+  });
   const form = useZodForm(groupCreateSchema, {
     initialValues: {
       name: "",
@@ -21,9 +25,6 @@ export const InitGroup = () => {
 
   const handleSubmitAsync = async (values: z.infer<typeof groupCreateSchema>) => {
     await mutateAsync(values, {
-      async onSuccess() {
-        await revalidatePathActionAsync("/init");
-      },
       onError(error) {
         if (error.data?.code === "CONFLICT") {
           form.setErrors({ name: t("common.zod.errors.custom.groupNameTaken") });

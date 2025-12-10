@@ -3,8 +3,10 @@ import { logger } from "@homarr/log";
 
 import type { Integration } from "../integration";
 import type { IIntegrationErrorHandler } from "./handler";
+import { integrationFetchHttpErrorHandler } from "./http";
 import { IntegrationError } from "./integration-error";
 import { IntegrationUnknownError } from "./integration-unknown-error";
+import { integrationJsonParseErrorHandler, integrationZodParseErrorHandler } from "./parse";
 
 const localLogger = logger.child({
   module: "HandleIntegrationErrors",
@@ -13,7 +15,14 @@ const localLogger = logger.child({
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-explicit-any
 type AbstractConstructor<T = {}> = abstract new (...args: any[]) => T;
 
+const defaultErrorHandlers: IIntegrationErrorHandler[] = [
+  integrationZodParseErrorHandler,
+  integrationJsonParseErrorHandler,
+  integrationFetchHttpErrorHandler,
+];
+
 export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[]) => {
+  const combinedErrorHandlers = [...defaultErrorHandlers, ...errorHandlers];
   return <T extends AbstractConstructor<Integration>>(IntegrationBaseClass: T): T => {
     abstract class ErrorHandledIntegration extends IntegrationBaseClass {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,7 +51,7 @@ export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[
                   throw error;
                 }
 
-                for (const handler of errorHandlers) {
+                for (const handler of combinedErrorHandlers) {
                   const handledError = handler.handleError(error, this.publicIntegration);
                   if (!handledError) continue;
 

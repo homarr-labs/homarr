@@ -5,7 +5,8 @@ export interface ReleasesVersionFilter {
 }
 
 export interface ReleasesRepository {
-  providerKey: string;
+  id: string;
+  providerIntegrationId?: string;
   identifier: string;
   name?: string;
   versionFilter?: ReleasesVersionFilter;
@@ -30,6 +31,13 @@ export interface ReleasesRepositoryResponse extends ReleasesRepository {
   starsCount?: number;
   forksCount?: number;
   openIssues?: number;
+
+  integration?: {
+    name: string;
+    iconUrl?: string;
+  };
+
+  viewed: boolean;
 
   error?: { code?: string; message?: string };
 }

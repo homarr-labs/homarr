@@ -645,6 +645,21 @@
             "title": "創建失敗",
             "message": "此集成無法被創建"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "無法應用變更",
             "message": "集成無法被儲存"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "創建搜尋引擎",
         "description": "集成 {kind} 可以與搜尋引擎共同使用，勾選此選項可自動設定搜尋引擎"
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "創建應用程式",
@@ -936,6 +961,38 @@
         "realm": {
           "label": "領域",
           "newLabel": "新領域"
+        },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
+        "topic": {
+          "label": "",
+          "newLabel": ""
+        },
+        "url": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -987,12 +1044,14 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "測試版",
     "error": "錯誤",
     "action": {
       "add": "新增",
       "apply": "應用",
       "backToOverview": "返回總覽",
+      "change": "",
       "create": "創建",
       "createAnother": "創建並重新開始",
       "edit": "編輯",
@@ -1112,6 +1171,12 @@
           "groupNameTaken": "用戶組名稱已存在"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1123,6 +1188,9 @@
       "option": {
         "title": {
           "label": "標題"
+        },
+        "customCssClasses": {
+          "label": ""
         },
         "borderColor": {
           "label": "邊框顏色"
@@ -1249,11 +1317,26 @@
         "showTitle": {
           "label": "顯示應用程式名稱"
         },
-        "showDescriptionTooltip": {
-          "label": "顯示描述提示"
-        },
         "pingEnabled": {
           "label": "啟用簡單的 Ping"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
+          }
         }
       },
       "error": {
@@ -1498,6 +1581,15 @@
         "rows": "行數",
         "width": "寬度",
         "height": "高度"
+      },
+      "placeholder": "",
+      "dismiss": {
+        "title": "",
+        "message": "",
+        "action": {
+          "discard": "",
+          "keepEditing": ""
+        }
       }
     },
     "iframe": {
@@ -1650,6 +1742,9 @@
     "calendar": {
       "name": "日曆",
       "description": "在特定的相對時間範圍內，將來自您的集成事件以日曆視圖顯示",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Radarr 發行類型",
@@ -1683,6 +1778,9 @@
         "showCurrentWindSpeed": {
           "label": "顯示當前風速",
           "description": "僅限當前天氣"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "天氣位置"
@@ -1757,11 +1855,17 @@
         "memory": {
           "label": "顯示記憶體訊息"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "顯示檔案系統訊息"
         },
         "defaultTab": {
           "label": "預設頁面"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "部分指示需求"
@@ -1914,7 +2018,25 @@
         "currentlyPlaying": "目前播放中",
         "user": "使用者",
         "name": "名稱",
-        "id": "ID"
+        "id": "ID",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
       }
     },
     "downloads": {
@@ -1953,6 +2075,10 @@
         },
         "applyFilterToRatio": {
           "label": "使用篩選器來計算速率"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -2060,6 +2186,35 @@
       },
       "globalRatio": "全局速率"
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "多媒體請求列表",
       "description": "查看 Overrseerr 或 Jellyseerr 中所有多媒體請求列表",
@@ -2077,8 +2232,11 @@
         "unknown": "未知",
         "pending": "等待處理中",
         "processing": "處理中",
+        "requested": "",
         "partiallyAvailable": "部分",
-        "available": "待定"
+        "available": "待定",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "待處理",
@@ -2185,6 +2343,9 @@
         },
         "maximumAmountPosts": {
           "label": "帖子數量限制"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
@@ -2207,14 +2368,28 @@
         "showDetails": {
           "label": "顯示詳情"
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "",
           "description": ""
         },
         "repositories": {
           "label": "儲存庫",
-          "addRRepository": {
+          "addRepository": {
             "label": "新增儲存庫"
+          },
+          "importRepositories": {
+            "label": "",
+            "loading": "",
+            "noImagesFound": "",
+            "listFoundImages": "",
+            "listAlreadyImportedImages": "",
+            "allImagesAlreadyImported": "",
+            "onlyAdminCanImport": "",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": "提供者"
@@ -2256,10 +2431,17 @@
               "label": "確認"
             }
           },
+          "importForm": {
+            "title": ""
+          },
           "example": {
             "label": "範例"
           },
-          "invalid": "無效的儲存庫定義，請檢查值的設定"
+          "invalid": "無效的儲存庫定義，請檢查值的設定",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "未找到",
@@ -2269,14 +2451,20 @@
       "starsCount": "星標",
       "forksCount": "分支數",
       "issuesCount": "開放問題",
+      "markViewed": "",
       "openProjectPage": "開啟專案頁面",
       "openReleasePage": "開啟發布葉面",
       "releaseDescription": "版本描述",
+      "projectDescription": "",
       "created": "已創建",
       "error": {
         "label": "錯誤",
-        "options": {
-          "noMatchingVersion": "找不到匹配的版本"
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "找不到匹配的版本",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2334,6 +2522,75 @@
     "networkController": {
       "error": {
         "internalServerError": "無法獲取網路控制總覽"
+      }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "network": ""
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
       }
     }
   },
@@ -2520,6 +2777,9 @@
       },
       "iconColor": {
         "label": "icon 顏色"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "自定義此面板 CSS html",
@@ -2753,13 +3013,19 @@
           "invite": "邀請",
           "integration": "集成",
           "app": "應用程式",
-          "group": "群組"
+          "group": "群組",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "面板",
           "resources": "資源",
           "authentication": "認證",
           "authorization": "認證"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -3043,7 +3309,8 @@
           "status": {
             "idle": "空閒",
             "running": "運行中",
-            "error": "錯誤"
+            "error": "錯誤",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3088,9 +3355,6 @@
             "dnsHole": {
               "label": "DNS Hole 數據"
             },
-            "sessionCleanup": {
-              "label": "會話清理"
-            },
             "updateChecker": {
               "label": "更新檢查"
             },
@@ -3100,8 +3364,97 @@
             "networkController": {
               "label": "網路控制"
             },
+            "refreshNotifications": {
+              "label": ""
+            },
             "dockerContainers": {
               "label": ""
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
+            },
+            "weather": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": "",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "name": {
+              "label": ""
+            },
+            "interval": {
+              "label": ""
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3156,6 +3509,21 @@
           "libraries": {
             "title": "資料庫",
             "subtitle": "{count} 於 Homarr 待碼中使用"
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }
@@ -3610,6 +3978,9 @@
       },
       "tools": {
         "label": "工具",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": "Docker"
         },
@@ -4132,6 +4503,16 @@
             "message": ""
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

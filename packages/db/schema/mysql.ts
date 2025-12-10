@@ -42,7 +42,7 @@ import type {
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
-    return "BLOB";
+    return "LONGBLOB"; // Has max size of 4GB
   },
 });
 
@@ -199,6 +199,7 @@ export const integrations = mysqlTable(
     name: text().notNull(),
     url: text().notNull(),
     kind: varchar({ length: 128 }).$type<IntegrationKind>().notNull(),
+    appId: varchar({ length: 128 }).references(() => apps.id, { onDelete: "set null" }),
   },
   (integrations) => ({
     kindIdx: index("integration__kind_idx").on(integrations.kind),
@@ -208,7 +209,7 @@ export const integrations = mysqlTable(
 export const integrationSecrets = mysqlTable(
   "integrationSecret",
   {
-    kind: varchar({ length: 16 }).$type<IntegrationSecretKind>().notNull(),
+    kind: varchar({ length: 64 }).$type<IntegrationSecretKind>().notNull(),
     value: text().$type<`${string}.${string}`>().notNull(),
     updatedAt: timestamp()
       .$onUpdateFn(() => new Date())
@@ -508,6 +509,12 @@ export const trustedCertificateHostnames = mysqlTable(
   }),
 );
 
+export const cronJobConfigurations = mysqlTable("cron_job_configuration", {
+  name: varchar({ length: 256 }).notNull().primaryKey(),
+  cronExpression: varchar({ length: 32 }).notNull(),
+  isEnabled: boolean().default(true).notNull(),
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -522,6 +529,7 @@ export const userRelations = relations(users, ({ one, many }) => ({
   groups: many(groupMembers),
   ownedGroups: many(groups),
   invites: many(invites),
+  medias: many(medias),
   defaultSearchEngine: one(searchEngines, {
     fields: [users.defaultSearchEngineId],
     references: [searchEngines.id],
@@ -620,11 +628,15 @@ export const boardGroupPermissionRelations = relations(boardGroupPermissions, ({
   }),
 }));
 
-export const integrationRelations = relations(integrations, ({ many }) => ({
+export const integrationRelations = relations(integrations, ({ one, many }) => ({
   secrets: many(integrationSecrets),
   items: many(integrationItems),
   userPermissions: many(integrationUserPermissions),
   groupPermissions: many(integrationGroupPermissions),
+  app: one(apps, {
+    fields: [integrations.appId],
+    references: [apps.id],
+  }),
 }));
 
 export const integrationUserPermissionRelations = relations(integrationUserPermissions, ({ one }) => ({

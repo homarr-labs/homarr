@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { Alert, Anchor } from "@mantine/core";
 import { IconExclamationCircle } from "@tabler/icons-react";
 
 import { createDocumentationLink } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 export const ReservedGroupAlert = () => {
   const t = useI18n();

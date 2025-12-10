@@ -1,8 +1,6 @@
 "use client";
 
-import type { MouseEvent } from "react";
 import { useCallback, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Group, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
@@ -20,14 +18,17 @@ import {
 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
+import { hotkeys } from "@homarr/definitions";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { AppSelectModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 import { useItemActions } from "~/components/board/items/item-actions";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
@@ -62,6 +63,7 @@ export const BoardContentHeaderActions = () => {
 };
 
 const AddMenu = () => {
+  const { data: session } = useSession();
   const { openModal: openCategoryEditModal } = useModalAction(CategoryEditModal);
   const { openModal: openItemSelectModal } = useModalAction(ItemSelectModal);
   const { openModal: openAppSelectModal } = useModalAction(AppSelectModal);
@@ -96,12 +98,13 @@ const AddMenu = () => {
 
   const handleSelectApp = useCallback(() => {
     openAppSelectModal({
-      onSelect: (appId) => {
+      onSelect: (app) => {
         createItem({
           kind: "app",
-          options: { appId },
+          options: { appId: app.id },
         });
       },
+      withCreate: session?.user.permissions.includes("app-create") ?? false,
     });
   }, [openAppSelectModal, createItem]);
 
@@ -166,7 +169,7 @@ const EditModeMenu = () => {
     open();
   }, [board, isEditMode, saveBoard, open]);
 
-  useHotkeys([["mod+e", toggle]]);
+  useHotkeys([[hotkeys.toggleBoardEdit, toggle]]);
   usePreventLeaveWithDirty(isEditMode);
 
   return (
@@ -204,17 +207,22 @@ const SelectBoardsMenu = () => {
   );
 };
 
+const anchorSelector = "a[href]:not([target='_blank'])";
 const usePreventLeaveWithDirty = (isDirty: boolean) => {
   const t = useI18n();
   const { openConfirmModal } = useConfirmModal();
   const router = useRouter();
 
   useEffect(() => {
-    const handleClick = (event: MouseEvent<HTMLElement>) => {
+    if (!isDirty) return;
+
+    const handleClick = (event: Event) => {
       const target = (event.target as HTMLElement).closest("a");
 
-      if (!target) return;
-      if (!isDirty) return;
+      if (!target) {
+        console.warn("No anchor element found for click event", event);
+        return;
+      }
 
       event.preventDefault();
 
@@ -231,33 +239,29 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
     };
 
     const handlePopState = (event: Event) => {
-      if (isDirty) {
-        window.history.pushState(null, document.title, window.location.href);
-        event.preventDefault();
-      } else {
-        window.history.back();
-      }
+      window.history.pushState(null, document.title, window.location.href);
+      event.preventDefault();
     };
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (!isDirty) return;
       if (env.NODE_ENV === "development") return; // Allow to reload in development
 
       event.preventDefault();
       event.returnValue = true;
     };
 
-    document.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", handleClick as never);
+    const anchors = document.querySelectorAll(anchorSelector);
+    anchors.forEach((link) => {
+      link.addEventListener("click", handleClick);
     });
     window.addEventListener("popstate", handlePopState);
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      document.querySelectorAll("a").forEach((link) => {
-        link.removeEventListener("click", handleClick as never);
-        window.removeEventListener("popstate", handlePopState);
+      anchors.forEach((link) => {
+        link.removeEventListener("click", handleClick);
       });
+      window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

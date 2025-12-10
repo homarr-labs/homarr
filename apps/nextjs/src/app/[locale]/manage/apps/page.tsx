@@ -1,15 +1,15 @@
-import Link from "next/link";
+import { Fragment } from "react";
 import { redirect } from "next/navigation";
 import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
 import { IconBox, IconPencil } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
-import { SearchInput, TablePagination } from "@homarr/ui";
+import { Link, SearchInput, TablePagination } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
@@ -98,7 +98,12 @@ const AppCard = async ({ app }: AppCardProps) => {
             </Text>
             {app.description && (
               <Text size="sm" c="gray.6" lineClamp={4}>
-                {app.description}
+                {app.description.split("\n").map((line, index) => (
+                  <Fragment key={index}>
+                    {line}
+                    <br />
+                  </Fragment>
+                ))}
               </Text>
             )}
             {app.href && (

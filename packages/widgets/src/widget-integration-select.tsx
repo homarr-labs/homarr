@@ -1,7 +1,6 @@
 "use client";
 
 import type { FocusEventHandler } from "react";
-import Link from "next/link";
 import {
   Anchor,
   Avatar,
@@ -20,6 +19,7 @@ import {
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIconUrl } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 import classes from "./widget-integration-select.module.css";
 
@@ -100,12 +100,12 @@ export const WidgetIntegrationSelect = ({
   });
 
   return (
-    <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
+    <Combobox store={combobox} onOptionSubmit={handleValueSelect}>
       <Combobox.DropdownTarget>
         <PillsInput
           inputWrapperOrder={["label", "input", "description", "error"]}
           description={
-            <Text size="xs">
+            <Text size="xs" span>
               {t.rich("widget.common.integration.description", {
                 here: () => (
                   <Anchor size="xs" component={Link} target="_blank" href="/manage/integrations">

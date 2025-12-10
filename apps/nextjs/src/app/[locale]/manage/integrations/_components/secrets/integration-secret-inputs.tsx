@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChangeEventHandler, FocusEventHandler } from "react";
-import { PasswordInput, TextInput } from "@mantine/core";
+import { PasswordInput, Textarea, TextInput } from "@mantine/core";
 
 import { integrationSecretKindObject } from "@homarr/definitions";
 import type { IntegrationSecretKind } from "@homarr/definitions";
@@ -14,9 +14,9 @@ interface IntegrationSecretInputProps {
   label?: string;
   kind: IntegrationSecretKind;
   value?: string;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-  onFocus?: FocusEventHandler<HTMLInputElement>;
-  onBlur?: FocusEventHandler<HTMLInputElement>;
+  onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  onFocus?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  onBlur?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   error?: string;
 }
 
@@ -31,6 +31,19 @@ export const IntegrationSecretInput = (props: IntegrationSecretInputProps) => {
 const PublicSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => {
   const t = useI18n();
   const Icon = integrationSecretIcons[kind];
+  const { multiline } = integrationSecretKindObject[kind];
+  if (multiline) {
+    return (
+      <Textarea
+        {...props}
+        label={props.label ?? t(`integration.secrets.kind.${kind}.label`)}
+        w="100%"
+        leftSection={<Icon size={20} stroke={1.5} />}
+        autosize
+        minRows={2}
+      />
+    );
+  }
 
   return (
     <TextInput
@@ -45,6 +58,21 @@ const PublicSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => {
 const PrivateSecretInput = ({ kind, ...props }: IntegrationSecretInputProps) => {
   const t = useI18n();
   const Icon = integrationSecretIcons[kind];
+  const { multiline } = integrationSecretKindObject[kind];
+
+  if (multiline) {
+    return (
+      <Textarea
+        {...props}
+        label={props.label ?? t(`integration.secrets.kind.${kind}.label`)}
+        description={t("integration.secrets.secureNotice")}
+        w="100%"
+        leftSection={<Icon size={20} stroke={1.5} />}
+        autosize
+        minRows={2}
+      />
+    );
+  }
 
   return (
     <PasswordInput

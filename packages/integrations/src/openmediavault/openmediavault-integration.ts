@@ -9,7 +9,8 @@ import { Integration } from "../base/integration";
 import type { SessionStore } from "../base/session-store";
 import { createSessionStore } from "../base/session-store";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { HealthMonitoring } from "../types";
+import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
+import type { SystemHealthMonitoring } from "../types";
 import { cpuTempSchema, fileSystemSchema, smartSchema, systemInformationSchema } from "./openmediavault-types";
 
 const localLogger = logger.child({ module: "OpenMediaVaultIntegration" });
@@ -18,7 +19,7 @@ type SessionStoreValue =
   | { type: "header"; sessionId: string }
   | { type: "cookie"; loginToken: string; sessionId: string };
 
-export class OpenMediaVaultIntegration extends Integration {
+export class OpenMediaVaultIntegration extends Integration implements ISystemHealthMonitoringIntegration {
   private readonly sessionStore: SessionStore<SessionStoreValue>;
 
   constructor(integration: IntegrationInput) {
@@ -26,7 +27,7 @@ export class OpenMediaVaultIntegration extends Integration {
     this.sessionStore = createSessionStore(integration);
   }
 
-  public async getSystemInfoAsync(): Promise<HealthMonitoring> {
+  public async getSystemInfoAsync(): Promise<SystemHealthMonitoring> {
     const systemResponses = await this.makeAuthenticatedRpcCallAsync("system", "getInformation");
     const fileSystemResponse = await this.makeAuthenticatedRpcCallAsync(
       "filesystemmgmt",
@@ -66,11 +67,13 @@ export class OpenMediaVaultIntegration extends Integration {
 
     return {
       version: systemResult.data.response.version,
-      cpuModelName: systemResult.data.response.cpuModelName,
+      cpuModelName: systemResult.data.response.cpuModelName ?? "Unknown CPU",
       cpuUtilization: systemResult.data.response.cpuUtilization,
-      memUsed: systemResult.data.response.memUsed,
-      memAvailable: systemResult.data.response.memAvailable,
+      memUsedInBytes: Number(systemResult.data.response.memUsed),
+      memAvailableInBytes: Number(systemResult.data.response.memAvailable),
       uptime: systemResult.data.response.uptime,
+      /* real-time traffic monitoring is not available over the RPC API from OMV */
+      network: null,
       loadAverage: {
         "1min": systemResult.data.response.loadAverage["1min"],
         "5min": systemResult.data.response.loadAverage["5min"],
@@ -154,7 +157,7 @@ export class OpenMediaVaultIntegration extends Integration {
         return response;
       }
 
-      localLogger.info("Session expired, getting new session", { integrationId: this.integration.id });
+      localLogger.debug("Session expired, getting new session", { integrationId: this.integration.id });
     }
 
     const session = await this.getSessionAsync();

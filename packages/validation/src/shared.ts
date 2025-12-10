@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { integrationKinds, widgetKinds } from "@homarr/definitions";
 
@@ -40,7 +40,7 @@ export const sharedItemSchema = z.object({
 export const commonItemSchema = z
   .object({
     kind: zodEnumFromArray(widgetKinds),
-    options: z.record(z.unknown()),
+    options: z.record(z.string(), z.unknown()),
   })
   .and(sharedItemSchema);
 
@@ -62,6 +62,7 @@ const emptySectionSchema = z.object({
 
 export const dynamicSectionOptionsSchema = z.object({
   title: z.string().max(20).default(""),
+  customCssClasses: z.array(z.string()).default([]),
   borderColor: z.string().default(""),
 });
 

@@ -5,13 +5,13 @@ runs:
   using: composite
   steps:
     - uses: pnpm/action-setup@v4
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v6
       with:
-        node-version: 22
+        node-version: 24.11.1
         cache: "pnpm"
 
     - shell: bash
       run: pnpm add -g turbo
 
     - shell: bash
-      run: pnpm install
+      run: pnpm install --frozen-lockfile

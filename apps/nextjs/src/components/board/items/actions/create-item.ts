@@ -1,6 +1,6 @@
 import { getBoardLayouts } from "@homarr/boards/context";
+import { createId } from "@homarr/common";
 import type { Modify } from "@homarr/common/types";
-import { createId } from "@homarr/db/client";
 import type { WidgetKind } from "@homarr/definitions";
 
 import type { Board, EmptySection, Item, ItemLayout } from "~/app/[locale]/boards/_types";

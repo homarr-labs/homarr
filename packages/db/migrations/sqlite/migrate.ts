@@ -4,6 +4,7 @@ import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
 import { env } from "../../env";
 import * as sqliteSchema from "../../schema/sqlite";
+import { applyCustomMigrationsAsync } from "../custom";
 import { seedDataAsync } from "../seed";
 
 const migrationsFolder = process.argv[2] ?? ".";
@@ -16,6 +17,7 @@ const migrateAsync = async () => {
   migrate(db, { migrationsFolder });
 
   await seedDataAsync(db);
+  await applyCustomMigrationsAsync(db);
 };
 
 migrateAsync()

@@ -8,9 +8,9 @@
     ".": "./index.ts",
     "./types": "./src/types.ts",
     "./server": "./src/server.ts",
+    "./init-dns": "./src/dns.ts",
     "./client": "./src/client.ts",
-    "./env": "./env.ts",
-    "./env-validation": "./src/env-validation.ts"
+    "./env": "./env.ts"
   },
   "typesVersions": {
     "*": {
@@ -27,21 +27,24 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@homarr/env": "workspace:^0.1.0",
+    "@homarr/core": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
-    "dayjs": "^1.11.13",
-    "next": "15.3.2",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "undici": "7.10.0",
-    "zod": "^3.25.28",
-    "zod-validation-error": "^3.4.1"
+    "@paralleldrive/cuid2": "^3.1.0",
+    "dayjs": "^1.11.19",
+    "dns-caching": "^0.2.7",
+    "next": "16.0.7",
+    "octokit": "^5.0.5",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "undici": "7.16.0",
+    "zod": "^4.1.13",
+    "zod-validation-error": "^5.0.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.27.0",
-    "typescript": "^5.8.3"
+    "eslint": "^9.39.1",
+    "typescript": "^5.9.3"
   }
 }

@@ -184,12 +184,23 @@ function getProviders(versionInfo: VersionInfo, nodes: V1NodeList) {
   if (versionInfo.gitVersion.includes("aks")) providers.add("AKS");
 
   nodes.items.forEach((node) => {
-    const nodeProviderLabel =
-      node.metadata?.labels?.["node.kubernetes.io/instance-type"] ?? node.metadata?.labels?.provider ?? "";
+    const labels = node.metadata?.labels ?? {};
+    const nodeProviderLabel = labels["node.kubernetes.io/instance-type"] ?? labels.provider ?? "";
+
     if (nodeProviderLabel.includes("aws")) providers.add("EKS");
     if (nodeProviderLabel.includes("azure")) providers.add("AKS");
     if (nodeProviderLabel.includes("gce")) providers.add("GKE");
     if (nodeProviderLabel.includes("k3s")) providers.add("k3s");
+
+    const nodeInfo = node.status?.nodeInfo;
+    if (nodeInfo) {
+      const osImage = nodeInfo.osImage.toLowerCase();
+      const kernelVersion = nodeInfo.kernelVersion.toLowerCase();
+
+      if (osImage.includes("talos") || kernelVersion.includes("talos")) {
+        providers.add("Talos");
+      }
+    }
   });
 
   return Array.from(providers).join(", ");

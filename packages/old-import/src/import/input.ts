@@ -1,6 +1,6 @@
 import SuperJSON from "superjson";
-import { z } from "zod";
 import { zfd } from "zod-form-data";
+import { z } from "zod/v4";
 
 import { initialOldmarrImportSettings } from "../settings";
 

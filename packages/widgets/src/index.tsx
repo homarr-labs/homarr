@@ -16,10 +16,12 @@ import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
 import * as dockerContainers from "./docker";
 import * as downloads from "./downloads";
+import * as firewall from "./firewall";
 import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
 import * as indexerManager from "./indexer-manager";
+import * as mediaReleases from "./media-releases";
 import * as mediaRequestsList from "./media-requests/list";
 import * as mediaRequestsStats from "./media-requests/stats";
 import * as mediaServer from "./media-server";
@@ -28,12 +30,14 @@ import * as minecraftServerStatus from "./minecraft/server-status";
 import * as networkControllerStatus from "./network-controller/network-status";
 import * as networkControllerSummary from "./network-controller/summary";
 import * as notebook from "./notebook";
+import * as notifications from "./notifications";
 import type { WidgetOptionDefinition } from "./options";
 import * as releases from "./releases";
 import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as stockPrice from "./stocks";
+import * as systemResources from "./system-resources";
 import * as video from "./video";
 import * as weather from "./weather";
 
@@ -67,6 +71,10 @@ export const widgetImports = {
   minecraftServerStatus,
   dockerContainers,
   releases,
+  firewall,
+  notifications,
+  mediaReleases,
+  systemResources,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

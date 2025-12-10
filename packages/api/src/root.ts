@@ -8,6 +8,7 @@ import { groupRouter } from "./router/group";
 import { homeRouter } from "./router/home";
 import { iconsRouter } from "./router/icons";
 import { importRouter } from "./router/import/import-router";
+import { infoRouter } from "./router/info";
 import { integrationRouter } from "./router/integration/integration-router";
 import { inviteRouter } from "./router/invite";
 import { kubernetesRouter } from "./router/kubernetes/router/kubernetes-router";
@@ -47,6 +48,7 @@ export const appRouter = createTRPCRouter({
   media: mediaRouter,
   updateChecker: updateCheckerRouter,
   certificates: certificateRouter,
+  info: infoRouter,
 });
 
 // export type definition of API

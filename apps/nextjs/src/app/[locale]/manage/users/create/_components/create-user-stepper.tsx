@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useCallback, useMemo, useState } from "react";
+import { startTransition, useCallback, useState } from "react";
 import {
   Badge,
   Button,
@@ -17,11 +17,12 @@ import {
 } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
 import { IconPlus, IconUserCheck } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
-import { everyoneGroup, groupPermissions } from "@homarr/definitions";
 import type { GroupPermissionKey } from "@homarr/definitions";
+import { everyoneGroup, groupPermissions } from "@homarr/definitions";
+import type { IsValid } from "@homarr/form";
 import { useZodForm } from "@homarr/form";
 import { useModalAction } from "@homarr/modals";
 import { showErrorNotification } from "@homarr/notifications";
@@ -113,11 +114,9 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
     },
   );
 
-  const allForms = useMemo(() => [generalForm, securityForm, groupsForm], [generalForm, securityForm, groupsForm]);
-
-  const activeForm = allForms[active];
-  const isCurrentFormValid = activeForm ? activeForm.isValid : () => true;
-  const canNavigateToNextStep = isCurrentFormValid();
+  const allForms = [generalForm, securityForm, groupsForm];
+  const isValidCallback: IsValid<unknown> | undefined = allForms[active]?.isValid;
+  const currentFormValid = isValidCallback?.() ?? true;
 
   const controlledGoToNextStep = useCallback(async () => {
     if (active + 1 === stepperMax) {
@@ -218,7 +217,7 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
         </Stepper.Completed>
       </Stepper>
       <StepperNavigationComponent
-        hasNext={hasNext && canNavigateToNextStep}
+        hasNext={hasNext && currentFormValid}
         hasPrevious={hasPrevious}
         isComplete={active === stepperMax}
         isLoadingNextStep={isPending}

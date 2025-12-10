@@ -41,7 +41,7 @@ describe("ping should call sendPingRequestAsync with url and return result", () 
       deviceType: undefined,
       session: null,
     });
-    spy.mockImplementation(() => Promise.resolve({ statusCode: 200 }));
+    spy.mockImplementation(() => Promise.resolve({ statusCode: 200, durationMs: 123 }));
 
     // Act
     const result = await caller.ping({ url });

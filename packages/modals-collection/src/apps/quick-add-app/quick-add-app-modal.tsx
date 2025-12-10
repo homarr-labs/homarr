@@ -1,7 +1,7 @@
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
+import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import type { MaybePromise } from "@homarr/common/types";
 import { AppForm } from "@homarr/forms-collection";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -9,7 +9,7 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";
 
 interface QuickAddAppModalProps {
-  onClose: (createdAppId: string) => MaybePromise<void>;
+  onClose: (createdApp: Omit<RouterOutputs["app"]["create"], "appId">) => void;
 }
 
 export const QuickAddAppModal = createModal<QuickAddAppModalProps>(({ actions, innerProps }) => {
@@ -27,13 +27,13 @@ export const QuickAddAppModal = createModal<QuickAddAppModalProps>(({ actions, i
 
   const handleSubmit = (values: z.infer<typeof appManageSchema>) => {
     mutate(values, {
-      async onSuccess({ appId }) {
+      onSuccess(app) {
         showSuccessNotification({
           title: tScoped("success.title"),
           message: tScoped("success.message"),
         });
 
-        await innerProps.onClose(appId);
+        innerProps.onClose(app);
         actions.closeModal();
       },
     });

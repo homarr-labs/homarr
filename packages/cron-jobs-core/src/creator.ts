@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
-import type { ScheduledTask } from "node-cron";
-import { schedule, validate } from "node-cron";
+import { createTask, validate } from "node-cron";
 
 import { Stopwatch } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
+import { db } from "@homarr/db";
 
 import type { Logger } from "./logger";
 import type { ValidateCron } from "./validation";
@@ -18,13 +18,14 @@ export interface CreateCronJobCreatorOptions<TAllowedNames extends string> {
 
 interface CreateCronJobOptions {
   runOnStart?: boolean;
+  preventManualExecution?: boolean;
   expectedMaximumDurationInMillis?: number;
   beforeStart?: () => MaybePromise<void>;
 }
 
 const createCallback = <TAllowedNames extends string, TName extends TAllowedNames>(
   name: TName,
-  cronExpression: string,
+  defaultCronExpression: string,
   options: CreateCronJobOptions,
   creatorOptions: CreateCronJobCreatorOptions<TAllowedNames>,
 ) => {
@@ -63,25 +64,28 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
       }
     };
 
-    /**
-     * We are not using the runOnInit method as we want to run the job only once we start the cron job schedule manually.
-     * This allows us to always run it once we start it. Additionally, it will not run the callback if only the cron job file is imported.
-     */
-    let scheduledTask: ScheduledTask | null = null;
-    if (cronExpression !== "never") {
-      scheduledTask = schedule(cronExpression, () => void catchingCallbackAsync(), {
-        name,
-        timezone: creatorOptions.timezone,
-      });
-      creatorOptions.logger.logDebug(
-        `The cron job '${name}' was created with expression ${cronExpression} in timezone ${creatorOptions.timezone} and runOnStart ${options.runOnStart}`,
-      );
-    }
-
     return {
       name,
-      cronExpression,
-      scheduledTask,
+      cronExpression: defaultCronExpression,
+      async createTaskAsync() {
+        const configuration = await db.query.cronJobConfigurations.findFirst({
+          where: (cronJobConfigurations, { eq }) => eq(cronJobConfigurations.name, name),
+        });
+
+        const scheduledTask = createTask(
+          configuration?.cronExpression ?? defaultCronExpression,
+          () => void catchingCallbackAsync(),
+          {
+            name,
+            timezone: creatorOptions.timezone,
+          },
+        );
+        creatorOptions.logger.logDebug(
+          `The cron job '${name}' was created with expression ${defaultCronExpression} in timezone ${creatorOptions.timezone} and runOnStart ${options.runOnStart}`,
+        );
+
+        return scheduledTask;
+      },
       async onStartAsync() {
         if (options.beforeStart) {
           creatorOptions.logger.logDebug(`Running beforeStart for job: ${name}`);
@@ -93,6 +97,10 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
         creatorOptions.logger.logDebug(`The cron job '${name}' is running because runOnStart is set to true`);
         await catchingCallbackAsync();
       },
+      async executeAsync() {
+        await catchingCallbackAsync();
+      },
+      preventManualExecution: options.preventManualExecution ?? false,
     };
   };
 };
@@ -106,24 +114,22 @@ export const createCronJobCreator = <TAllowedNames extends string = string>(
 ) => {
   return <TName extends TAllowedNames, TExpression extends string>(
     name: TName,
-    cronExpression: TExpression,
+    defaultCronExpression: TExpression,
     options: CreateCronJobOptions = { runOnStart: false },
   ) => {
-    creatorOptions.logger.logDebug(`Validating cron expression '${cronExpression}' for job: ${name}`);
-    if (cronExpression !== "never" && !validate(cronExpression)) {
-      throw new Error(`Invalid cron expression '${cronExpression}' for job '${name}'`);
+    creatorOptions.logger.logDebug(`Validating cron expression '${defaultCronExpression}' for job: ${name}`);
+    if (!validate(defaultCronExpression)) {
+      throw new Error(`Invalid cron expression '${defaultCronExpression}' for job '${name}'`);
     }
-    creatorOptions.logger.logDebug(`Cron job expression '${cronExpression}' for job ${name} is valid`);
+    creatorOptions.logger.logDebug(`Cron job expression '${defaultCronExpression}' for job ${name} is valid`);
 
     const returnValue = {
-      withCallback: createCallback<TAllowedNames, TName>(name, cronExpression, options, creatorOptions),
+      withCallback: createCallback<TAllowedNames, TName>(name, defaultCronExpression, options, creatorOptions),
     };
 
     // This is a type guard to check if the cron expression is valid and give the user a type hint
     return returnValue as unknown as ValidateCron<TExpression> extends true
       ? typeof returnValue
-      : TExpression extends "never"
-        ? typeof returnValue
-        : "Invalid cron expression";
+      : "Invalid cron expression";
   };
 };

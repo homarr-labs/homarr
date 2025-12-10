@@ -1,10 +1,10 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 // Schema for system information
 export const systemInformationSchema = z.object({
   response: z.object({
     version: z.string(),
-    cpuModelName: z.string(),
+    cpuModelName: z.string().nullable(),
     cpuUtilization: z.number(),
     memUsed: z.string(),
     memAvailable: z.string(),

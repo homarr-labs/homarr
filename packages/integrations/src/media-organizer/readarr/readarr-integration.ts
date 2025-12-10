@@ -1,15 +1,17 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
+import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
-import type { CalendarEvent } from "../../calendar-types";
-import { MediaOrganizerIntegration } from "../media-organizer-integration";
+import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-integration";
+import type { CalendarEvent, CalendarLink } from "../../interfaces/calendar/calendar-types";
+import { mediaOrganizerPriorities } from "../media-organizer";
 
-export class ReadarrIntegration extends MediaOrganizerIntegration {
+export class ReadarrIntegration extends Integration implements ICalendarIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api"), {
       headers: { "X-Api-Key": super.getSecretValue("apiKey") },
@@ -48,15 +50,22 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
     const readarrCalendarEvents = await z.array(readarrCalendarEventSchema).parseAsync(await response.json());
 
     return readarrCalendarEvents.map((readarrCalendarEvent): CalendarEvent => {
+      const imageSrc = this.chooseBestImageAsURL(readarrCalendarEvent);
+
       return {
-        name: readarrCalendarEvent.title,
-        subName: readarrCalendarEvent.author.authorName,
-        description: readarrCalendarEvent.overview,
-        thumbnail: this.chooseBestImageAsURL(readarrCalendarEvent),
-        date: readarrCalendarEvent.releaseDate,
-        mediaInformation: {
-          type: "audio",
-        },
+        title: readarrCalendarEvent.title,
+        subTitle: readarrCalendarEvent.author.authorName,
+        description: readarrCalendarEvent.overview ?? null,
+        startDate: readarrCalendarEvent.releaseDate,
+        endDate: null,
+        image: imageSrc
+          ? {
+              src: imageSrc,
+              aspectRatio: { width: 7, height: 12 },
+            }
+          : null,
+        location: null,
+        indicatorColor: "#f5c518",
         links: this.getLinksForReadarrCalendarEvent(readarrCalendarEvent),
       };
     });
@@ -65,14 +74,13 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
   private getLinksForReadarrCalendarEvent = (event: z.infer<typeof readarrCalendarEventSchema>) => {
     return [
       {
-        href: this.url(`/author/${event.author.foreignAuthorId}`).toString(),
+        href: this.externalUrl(`/author/${event.author.foreignAuthorId}`).toString(),
         color: "#f5c518",
         isDark: false,
         logo: "/images/apps/readarr.svg",
         name: "Readarr",
-        notificationColor: "#f5c518",
       },
-    ] satisfies CalendarEvent["links"];
+    ] satisfies CalendarLink[];
   };
 
   private chooseBestImage = (
@@ -81,7 +89,8 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
     const flatImages = [...event.images];
 
     const sortedImages = flatImages.sort(
-      (imageA, imageB) => this.priorities.indexOf(imageA.coverType) - this.priorities.indexOf(imageB.coverType),
+      (imageA, imageB) =>
+        mediaOrganizerPriorities.indexOf(imageA.coverType) - mediaOrganizerPriorities.indexOf(imageB.coverType),
     );
     logger.debug(`Sorted images to [${sortedImages.map((image) => image.coverType).join(",")}]`);
     return sortedImages[0];
@@ -92,7 +101,7 @@ export class ReadarrIntegration extends MediaOrganizerIntegration {
     if (!bestImage) {
       return undefined;
     }
-    return this.url(bestImage.url as `/${string}`).toString();
+    return this.externalUrl(bestImage.url as `/${string}`).toString();
   };
 }
 

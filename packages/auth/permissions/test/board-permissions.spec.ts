@@ -286,4 +286,22 @@ describe("constructBoardPermissions", () => {
     expect(result.hasChangeAccess).toBe(false);
     expect(result.hasViewAccess).toBe(true);
   });
+  test("should return all false when creator is null and session is null", () => {
+    // Arrange
+    const board = {
+      creator: null,
+      userPermissions: [],
+      groupPermissions: [],
+      isPublic: false,
+    };
+    const session = null;
+
+    // Act
+    const result = constructBoardPermissions(board, session);
+
+    // Assert
+    expect(result.hasFullAccess).toBe(false);
+    expect(result.hasChangeAccess).toBe(false);
+    expect(result.hasViewAccess).toBe(false);
+  });
 });

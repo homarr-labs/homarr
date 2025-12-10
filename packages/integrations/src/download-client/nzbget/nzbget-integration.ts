@@ -4,15 +4,16 @@ import type { fetch as undiciFetch } from "undici";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
 
+import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
-import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
+import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
 import type { NzbGetClient } from "./nzbget-types";
 
-export class NzbGetIntegration extends DownloadClientIntegration {
+export class NzbGetIntegration extends Integration implements IDownloadClientIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     await this.nzbGetApiCallWithCustomFetchAsync(input.fetchAsync, "version");
     return {
@@ -20,7 +21,7 @@ export class NzbGetIntegration extends DownloadClientIntegration {
     };
   }
 
-  public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
     const queue = await this.nzbGetApiCallAsync("listgroups");
     const history = await this.nzbGetApiCallAsync("history");
@@ -65,7 +66,8 @@ export class NzbGetIntegration extends DownloadClientIntegration {
             category: file.Category,
           };
         }),
-      );
+      )
+      .slice(0, input.limit);
     return { status, items };
   }
 

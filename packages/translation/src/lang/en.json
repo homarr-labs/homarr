@@ -645,6 +645,21 @@
             "title": "Creation failed",
             "message": "The integration could not be created"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "Existing",
+              "label": "Select existing app"
+            },
+            "new": {
+              "title": "New",
+              "url": {
+                "label": "App url",
+                "description": "The url the app will open when accessed from the dashboard"
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "Unable to apply changes",
             "message": "The integration could not be saved"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "Link an app",
+            "remove": "Unlink",
+            "select": "Select an app to link"
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "Create Search Engine",
         "description": "Integration \"{kind}\" can be used with the search engines. Check this to automatically configure the search engine."
+      },
+      "app": {
+        "sectionTitle": "Linked App"
       },
       "createApp": {
         "label": "Create app",
@@ -936,6 +961,38 @@
         "realm": {
           "label": "Realm",
           "newLabel": "New realm"
+        },
+        "personalAccessToken": {
+          "label": "Personal Access Token",
+          "newLabel": "New Personal Access Token"
+        },
+        "topic": {
+          "label": "Topic",
+          "newLabel": "New topic"
+        },
+        "url": {
+          "label": "Url",
+          "newLabel": "New url"
+        },
+        "opnsenseApiKey": {
+          "label": "API Key (Key)",
+          "newLabel": "New API Key (Key)"
+        },
+        "opnsenseApiSecret": {
+          "label": "API Key (Secret)",
+          "newLabel": "New API Key (Secret)"
+        },
+        "githubAppId": {
+          "label": "App Id",
+          "newLabel": "New App Id"
+        },
+        "githubInstallationId": {
+          "label": "Installation Id",
+          "newLabel": "New Installation Id"
+        },
+        "privateKey": {
+          "label": "Private key",
+          "newLabel": "New private key"
         }
       }
     },
@@ -987,12 +1044,14 @@
     }
   },
   "common": {
+    "success": "Success",
     "beta": "Beta",
     "error": "Error",
     "action": {
       "add": "Add",
       "apply": "Apply",
       "backToOverview": "Back to overview",
+      "change": "Change",
       "create": "Create",
       "createAnother": "Create and start over",
       "edit": "Edit",
@@ -1112,6 +1171,12 @@
           "groupNameTaken": "Group name already taken"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
+      }
     }
   },
   "section": {
@@ -1123,6 +1188,9 @@
       "option": {
         "title": {
           "label": "Title"
+        },
+        "customCssClasses": {
+          "label": "Custom css classes"
         },
         "borderColor": {
           "label": "Border color"
@@ -1249,11 +1317,26 @@
         "showTitle": {
           "label": "Show app name"
         },
-        "showDescriptionTooltip": {
-          "label": "Show description tooltip"
-        },
         "pingEnabled": {
           "label": "Enable status check"
+        },
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "row": "Horizontal",
+            "row-reverse": "Horizontal (reversed)",
+            "column": "Vertical",
+            "column-reverse": "Vertical (reversed)"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "Description display mode",
+          "description": "Choose how to display the app description",
+          "option": {
+            "normal": "Within widget",
+            "tooltip": "As tooltip",
+            "hidden": "Hidden"
+          }
         }
       },
       "error": {
@@ -1498,6 +1581,15 @@
         "rows": "Rows",
         "width": "Width",
         "height": "Height"
+      },
+      "placeholder": "Start writing your notes",
+      "dismiss": {
+        "title": "Dismiss changes?",
+        "message": "You have unsaved changes in your notebook. Are you sure you want to discard them?",
+        "action": {
+          "discard": "Discard changes",
+          "keepEditing": "Keep editing"
+        }
       }
     },
     "iframe": {
@@ -1650,6 +1742,9 @@
     "calendar": {
       "name": "Calendar",
       "description": "Display events from your integrations in a calendar view within a certain relative time period",
+      "duration": {
+        "allDay": "All day"
+      },
       "option": {
         "releaseType": {
           "label": "Radarr release type",
@@ -1684,6 +1779,9 @@
           "label": "Show current wind speed",
           "description": "Only on current weather"
         },
+        "useImperialSpeed": {
+          "label": "Use mph for windspeed"
+        },
         "location": {
           "label": "Weather location"
         },
@@ -1702,12 +1800,12 @@
           "description": "How the date should look like"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Sunrise",
         "sunset": "Sunset",
-        "maxWindSpeed": "Max wind speed: {maxWindSpeed} km/h",
-        "maxWindGusts": "Max wind gusts: {maxWindGusts} km/h"
+        "maxWindSpeed": "Max wind speed: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Max wind gusts: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Clear",
@@ -1757,11 +1855,17 @@
         "memory": {
           "label": "Show Memory Info"
         },
+        "showUptime": {
+          "label": "Show Uptime"
+        },
         "fileSystem": {
           "label": "Show Filesystem Info"
         },
         "defaultTab": {
           "label": "Default tab"
+        },
+        "visibleClusterSections": {
+          "label": "Visible cluster sections"
         },
         "sectionIndicatorRequirement": {
           "label": "Section indicator requirement"
@@ -1914,7 +2018,25 @@
         "currentlyPlaying": "Currently playing",
         "user": "User",
         "name": "Name",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "Stats for nerds",
+          "video": {
+            "title": "Video",
+            "resolution": "Resolution"
+          },
+          "audio": {
+            "title": "Audio",
+            "channelCount": "Audio channels",
+            "codec": "Audio codec"
+          },
+          "transcoding": {
+            "title": "Transcoding",
+            "container": "Container",
+            "resolution": "Resolution",
+            "target": "Target codec"
+          }
+        }
       }
     },
     "downloads": {
@@ -1953,6 +2075,10 @@
         },
         "applyFilterToRatio": {
           "label": "Use filter to calculate Ratio"
+        },
+        "limitPerIntegration": {
+          "label": "Limit items per integration",
+          "description": "This will limit the number of items shown per integration, not globally"
         }
       },
       "errors": {
@@ -2060,6 +2186,35 @@
       },
       "globalRatio": "Global Ratio"
     },
+    "mediaReleases": {
+      "name": "Media releases",
+      "description": "Display newly added medias or upcoming releases from different integrations",
+      "option": {
+        "layout": {
+          "label": "Layout",
+          "option": {
+            "backdrop": {
+              "label": "Backdrop"
+            },
+            "poster": {
+              "label": "Poster"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "Show description tooltip"
+        },
+        "showType": {
+          "label": "Show media type badge"
+        },
+        "showSource": {
+          "label": "Show source integration"
+        }
+      },
+      "length": {
+        "duration": "{length}min"
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Media Requests List",
       "description": "See a list of all media requests from your Overseerr or Jellyseerr instance",
@@ -2077,8 +2232,11 @@
         "unknown": "Unknown",
         "pending": "Pending",
         "processing": "Processing",
+        "requested": "Requested",
         "partiallyAvailable": "Partial",
-        "available": "Available"
+        "available": "Available",
+        "blacklisted": "Blacklisted",
+        "deleted": "Deleted"
       },
       "status": {
         "pending": "Pending",
@@ -2185,6 +2343,9 @@
         },
         "maximumAmountPosts": {
           "label": "Amount posts limit"
+        },
+        "hideDescription": {
+          "label": "Hide description"
         }
       }
     },
@@ -2207,14 +2368,28 @@
         "showDetails": {
           "label": "Show Details"
         },
+        "showOnlyIcon": {
+          "label": "Show Only Icon"
+        },
         "topReleases": {
           "label": "Top Releases",
           "description": "The max number of latest releases to show. Zero means no limit."
         },
         "repositories": {
           "label": "Repositories",
-          "addRRepository": {
+          "addRepository": {
             "label": "Add repository"
+          },
+          "importRepositories": {
+            "label": "Import from docker",
+            "loading": "Loading docker images",
+            "noImagesFound": "No docker images found",
+            "listFoundImages": "List of found images",
+            "listAlreadyImportedImages": "List of already imported images",
+            "allImagesAlreadyImported": "All images already imported",
+            "onlyAdminCanImport": "Only administrators can import from docker",
+            "selectAll": "Select all",
+            "deselectAll": "Deselect all"
           },
           "provider": {
             "label": "Provider"
@@ -2256,10 +2431,17 @@
               "label": "Confirm"
             }
           },
+          "importForm": {
+            "title": "Import from Docker"
+          },
           "example": {
             "label": "Example"
           },
-          "invalid": "Invalid repository definition, please check the values"
+          "invalid": "Invalid repository definition, please check the values",
+          "noProvider": {
+            "label": "No Provider",
+            "tooltip": "The provider could not be parsed, please manually set it after importing the images"
+          }
         }
       },
       "not-found": "Not Found",
@@ -2269,14 +2451,20 @@
       "starsCount": "Stars",
       "forksCount": "Forks",
       "issuesCount": "Open Issues",
+      "markViewed": "Mark as viewed",
       "openProjectPage": "Open Project Page",
       "openReleasePage": "Open Release Page",
       "releaseDescription": "Release Description",
+      "projectDescription": "Project Description",
       "created": "Created",
       "error": {
         "label": "Error",
-        "options": {
-          "noMatchingVersion": "No matching version found"
+        "messages": {
+          "invalidIdentifier": "Invalid identifier",
+          "noMatchingVersion": "No matching version found",
+          "noReleasesFound": "No releases found",
+          "noProviderSeleceted": "No provider selected",
+          "noProviderResponse": "No response from provider"
         }
       }
     },
@@ -2334,6 +2522,75 @@
     "networkController": {
       "error": {
         "internalServerError": "Failed to fetch Network Controller Summary"
+      }
+    },
+    "firewall": {
+      "name": "Firewall Monitoring",
+      "description": "Displays a summary of firewalls",
+      "tab": {
+        "system": "System",
+        "interfaces": "Interfaces"
+      },
+      "error": {
+        "internalServerError": "Unable to get data from firewall"
+      },
+      "option": {
+        "interfaces": "Network interfaces to display"
+      },
+      "widget": {
+        "fwname": "Name",
+        "version": "Version",
+        "versiontitle": "Versions",
+        "cputitle": "CPU usage",
+        "memorytitle": "Memory usage",
+        "cpu": "CPU",
+        "memory": "Memory",
+        "interfaces": {
+          "name": "name",
+          "trans": "Transmited",
+          "recv": "Received",
+          "title": "Network Interfaces"
+        }
+      }
+    },
+    "notifications": {
+      "name": "Notifications",
+      "description": "Display notification history from an integration",
+      "noItems": "No notifications to display.",
+      "option": {}
+    },
+    "systemResources": {
+      "name": "System resources",
+      "description": "CPU, Memory, Disk and other hardware usage of your system",
+      "option": {
+        "hasShadow": {
+          "label": "Enable chart shading"
+        },
+        "visibleCharts": {
+          "label": "Visible charts",
+          "description": "Select the charts you want to be visible.",
+          "option": {
+            "cpu": "CPU",
+            "memory": "Memory",
+            "network": "Network"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Label display mode",
+          "option": {
+            "textWithIcon": "Show text with icon",
+            "text": "Show only text",
+            "icon": "Show only icon",
+            "hidden": "Hide label"
+          }
+        }
+      },
+      "card": {
+        "cpu": "CPU",
+        "memory": "MEM",
+        "network": "NET",
+        "up": "UP",
+        "down": "DOWN"
       }
     }
   },
@@ -2520,6 +2777,9 @@
       },
       "iconColor": {
         "label": "Icon color"
+      },
+      "clearColor": {
+        "label": "Clear color"
       },
       "customCss": {
         "label": "Custom css for this board",
@@ -2753,13 +3013,19 @@
           "invite": "Invites",
           "integration": "Integrations",
           "app": "Apps",
-          "group": "Groups"
+          "group": "Groups",
+          "searchEngine": "Search engines",
+          "media": "Medias"
         },
         "statisticLabel": {
           "boards": "Boards",
           "resources": "Resources",
           "authentication": "Authentication",
           "authorization": "Authorization"
+        },
+        "heroBanner": {
+          "title": "Welcome back to your",
+          "subtitle": "{app} Board"
         }
       },
       "board": {
@@ -3043,7 +3309,8 @@
           "status": {
             "idle": "Idle",
             "running": "Running",
-            "error": "Error"
+            "error": "Error",
+            "disabled": "Disabled"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3088,9 +3355,6 @@
             "dnsHole": {
               "label": "DNS Hole Data"
             },
-            "sessionCleanup": {
-              "label": "Session Cleanup"
-            },
             "updateChecker": {
               "label": "Update checker"
             },
@@ -3100,8 +3364,97 @@
             "networkController": {
               "label": "Network Controller"
             },
+            "refreshNotifications": {
+              "label": "Notification Updater"
+            },
             "dockerContainers": {
               "label": "Docker containers"
+            },
+            "firewallCpu": {
+              "label": "Firewall CPU"
+            },
+            "firewallMemory": {
+              "label": "Firewall Memory"
+            },
+            "firewallVersion": {
+              "label": "Firewall Version"
+            },
+            "firewallInterfaces": {
+              "label": "Firewall Interfaces"
+            },
+            "weather": {
+              "label": "Weather"
+            }
+          },
+          "interval": {
+            "seconds": "Every {interval, plural, =1 {second} other {# seconds}}",
+            "minutes": "Every {interval, plural, =1 {minute} other {# minutes}}",
+            "hours": "Every {interval, plural, =1 {hour} other {# hours}}",
+            "midnight": "Every day at midnight",
+            "weeklyMonday": "Every week on monday",
+            "update": {
+              "success": {
+                "message": "Interval updated successfully"
+              },
+              "error": {
+                "message": "Failed to update interval"
+              }
+            }
+          },
+          "settings": {
+            "title": "Task settings for {jobName}"
+          },
+          "field": {
+            "name": {
+              "label": "Name"
+            },
+            "interval": {
+              "label": "Schedule interval"
+            },
+            "lastExecution": {
+              "label": "Last Execution"
+            },
+            "actions": {
+              "label": "Actions"
+            }
+          },
+          "table": {
+            "search": "Search {count} tasks..."
+          },
+          "action": {
+            "refresh": {
+              "label": "Refresh"
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": "Tasks refreshed successfully"
+            },
+            "error": {
+              "message": "Failed to refresh tasks"
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": "Task triggered successfully"
+            },
+            "error": {
+              "message": "Failed to trigger task"
+            }
+          },
+          "enable": {
+            "success": {
+              "message": "Task enabled successfully"
+            }
+          },
+          "disable": {
+            "success": {
+              "message": "Task disabled successfully"
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": "Failed to toggle task status"
             }
           }
         },
@@ -3156,6 +3509,21 @@
           "libraries": {
             "title": "Libraries",
             "subtitle": "{count} used in the Code of Homarr"
+          },
+          "hotkeys": {
+            "title": "Hotkeys",
+            "subtitle": "Keyboard shortcuts to enhance your workflow",
+            "field": {
+              "shortcut": "Shortcut",
+              "action": "Action"
+            },
+            "action": {
+              "toggleBoardEdit": "Toggle board edit mode",
+              "toggleColorScheme": "Toggle light/dark mode",
+              "saveNotebook": "Save notebook (only inside notebook widget)",
+              "openSpotlight": "Open search"
+            },
+            "note": "Tip: Mod refers to both Ctrl key and ⌘ key on macOS"
           }
         }
       }
@@ -3610,6 +3978,9 @@
       },
       "tools": {
         "label": "Tools",
+        "tasks": {
+          "label": "Tasks"
+        },
         "docker": {
           "label": "Docker"
         },
@@ -4132,6 +4503,16 @@
             "message": "The hostname could not be removed"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Debug",
+        "info": "Info",
+        "warn": "Warn",
+        "error": "Error"
       }
     }
   }

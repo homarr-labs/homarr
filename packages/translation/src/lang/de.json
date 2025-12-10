@@ -23,7 +23,7 @@
           }
         },
         "importSettings": {
-          "title": "Importeinstellungen",
+          "title": "Einstellungen Importieren",
           "description": "Importverhalten konfigurieren"
         },
         "boardSelection": {
@@ -302,7 +302,7 @@
   "group": {
     "title": "Benutzergruppen",
     "name": "Benutzergruppe",
-    "search": "Finde eine Benutzergruppe",
+    "search": "Gruppe suchen",
     "field": {
       "name": "Name",
       "members": "Mitglieder",
@@ -355,15 +355,15 @@
           },
           "view-all": {
             "label": "Alle Boards anzeigen",
-            "description": "Mitgliedern das Ansehen von Boards erlauben"
+            "description": "Mitgliedern das Ansehen von allen Boards erlauben"
           },
           "modify-all": {
             "label": "Alle Boards ändern",
-            "description": "Erlaube Mitgliedern alle Boards zu ändern (beinhaltet keine Zugangskontrolle und Gefahrenbereich)"
+            "description": "Mitgliedern erlauben, alle Boards zu ändern (beinhaltet keine Zugangskontrolle und Gefahrenbereich)"
           },
           "full-all": {
             "label": "Voller Board Zugriff",
-            "description": "Erlaube Mitgliedern alle Boards (einschließlich Zugriffskontrolle und Gefahrenbereich) anzuzeigen, zu ändern und zu löschen"
+            "description": "Mitgliedern erlauben, alle Boards (einschließlich Zugriffskontrolle und Gefahrenbereich) anzuzeigen, zu ändern und zu löschen"
           }
         }
       },
@@ -376,7 +376,7 @@
           },
           "use-all": {
             "label": "Alle Integrationen nutzen",
-            "description": "Erlaubt Mitgliedern Integrationen zu ihren Boards hinzuzufügen"
+            "description": "Mitgliedern erlauben, alle Integrationen zu ihren Boards hinzuzufügen"
           },
           "interact-all": {
             "label": "Mit jeder Integration interagieren",
@@ -384,7 +384,7 @@
           },
           "full-all": {
             "label": "Voller Zugriff auf Integrationen",
-            "description": "Erlaube Mitgliedern jede Integration zu verwalten, zu nutzen und zu interagieren"
+            "description": "Mitgliedern erlauben, jede Integration zu verwalten, zu nutzen und mit ihnen zu interagieren"
           }
         }
       },
@@ -397,7 +397,7 @@
           },
           "view-all": {
             "label": "Alle Medien anzeigen",
-            "description": "Erlaubt Mitgliedern alle Medien anzusehen"
+            "description": "Mitgliedern erlauben, alle Medien anzuzeigen"
           },
           "full-all": {
             "label": "Vollständiger Medienzugriff",
@@ -410,7 +410,7 @@
         "item": {
           "view-logs": {
             "label": "Logs anzeigen",
-            "description": "Erlaubt Mitgliedern Logs anzusehen"
+            "description": "Mitgliedern erlauben, Logs anzuzeigen"
           }
         }
       },
@@ -453,7 +453,7 @@
       },
       "transfer": {
         "label": "Eigentum übertragen",
-        "description": "Übertrage den Eigentümer dieser Gruppe an einen anderen Benutzer.",
+        "description": "Den Eigentümer dieser Gruppe an einen anderen Benutzer übertragen.",
         "confirm": "Bist du sicher, dass du das Eigentum für die Gruppe {name} an {username} übertragen möchtest?",
         "notification": {
           "success": {
@@ -645,6 +645,21 @@
             "title": "Erstellung fehlgeschlagen",
             "message": "Die Integration konnte nicht erstellt werden"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "Vorhanden",
+              "label": "Vorhandene App auswählen"
+            },
+            "new": {
+              "title": "Neu",
+              "url": {
+                "label": "App URL",
+                "description": "Die URL, welche die App öffnet, sobald sie vom Dashboard aus aufgerufen wird"
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "Änderungen konnten nicht angewendet werden",
             "message": "Die Integration konnte nicht gespeichert werden"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "Eine App verknüpfen",
+            "remove": "Verknüpfung aufheben",
+            "select": "Wählen Sie eine App zum Verknüpfen aus"
           }
         }
       },
@@ -686,9 +708,12 @@
         "label": "Suchmaschinen anlegen",
         "description": "Integration \"{kind}\" kann mit den Suchmaschinen verwendet werden. Wählen Sie dies, um die Suchmaschine automatisch zu konfigurieren."
       },
+      "app": {
+        "sectionTitle": "Verknüpfte App"
+      },
       "createApp": {
-        "label": "Anwendung erstellen",
-        "description": "Erstelle eine App mit dem gleichen Namen und Symbol wie die Integration. Lassen Sie das Eingabefeld unter leer, um die App mit der Integrations URL zu erstellen."
+        "label": "App erstellen",
+        "description": "Eine App mit dem gleichen Namen und Symbol wie die Integration erstellen. Lassen Sie das Eingabefeld unter leer, um die App mit der Integrations URL zu erstellen."
       },
       "appHref": {
         "placeholder": "Benutzerdefinierte App URL"
@@ -705,12 +730,12 @@
       "error": {
         "common": {
           "cause": {
-            "title": "Fall mit mehr Details"
+            "title": "Mehr Details zur Ursache"
           }
         },
         "unknown": {
           "title": "Unbekannter Fehler",
-          "description": "Ein unbekannter Fehler ist aufgetreten, den Fall unten für mehr Details öffnen"
+          "description": "Ein unbekannter Fehler ist aufgetreten, öffne die Ursache unten, um mehr Details zu sehen"
         },
         "parse": {
           "title": "Fehler beim Parsen",
@@ -721,7 +746,7 @@
           "description": "Die Anfrage wurde nicht autorisiert. Bitte überprüfen Sie, ob die Anmeldedaten korrekt sind und Sie diese mit mit den entsprechenden Berechtigungen konfiguriert haben."
         },
         "statusCode": {
-          "title": "Antwort Fehler",
+          "title": "Antwort-Fehler",
           "description": "Unerwartete {statusCode} ({reason}) Antwort von <url></url>erhalten. Bitte überprüfen Sie, ob die URL auf die Basis-URL der Integration verweist.",
           "otherDescription": "Unerwartete {statusCode} Antwort von <url></url>erhalten. Bitte stellen Sie sicher, dass die URL auf die Basis-URL der Integration zeigt.",
           "reason": {
@@ -936,6 +961,38 @@
         "realm": {
           "label": "Bereich",
           "newLabel": "Neuer Bereich"
+        },
+        "personalAccessToken": {
+          "label": "Persönlicher Zugangs-Token",
+          "newLabel": "Neuer Persönliches Zugangs-Token"
+        },
+        "topic": {
+          "label": "Thema",
+          "newLabel": "Neues Thema erstellen"
+        },
+        "url": {
+          "label": "URL",
+          "newLabel": "Neue URL"
+        },
+        "opnsenseApiKey": {
+          "label": "API-Schlüssel (Schlüssel)",
+          "newLabel": "Neuer API-Schlüssel (Schlüssel)"
+        },
+        "opnsenseApiSecret": {
+          "label": "API-Schlüssel (Secret)",
+          "newLabel": "Neuer API-Schlüssel (Secret)"
+        },
+        "githubAppId": {
+          "label": "App ID",
+          "newLabel": "Neue App ID"
+        },
+        "githubInstallationId": {
+          "label": "Installations ID",
+          "newLabel": "Neue Installations ID"
+        },
+        "privateKey": {
+          "label": "Privater Schlüssel",
+          "newLabel": "Neuer privater Schlüssel"
         }
       }
     },
@@ -987,12 +1044,14 @@
     }
   },
   "common": {
+    "success": "Erfolgreich",
     "beta": "Beta",
     "error": "Fehler",
     "action": {
       "add": "Hinzufügen",
       "apply": "Übernehmen",
       "backToOverview": "Zurück zur Übersicht",
+      "change": "Verändern",
       "create": "Erstellen",
       "createAnother": "Erstellen und neu starten",
       "edit": "Bearbeiten",
@@ -1112,6 +1171,12 @@
           "groupNameTaken": "Gruppenname bereits vergeben"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
+      }
     }
   },
   "section": {
@@ -1123,6 +1188,9 @@
       "option": {
         "title": {
           "label": "Titel"
+        },
+        "customCssClasses": {
+          "label": "Benutzerdefinierte CSS Klassen"
         },
         "borderColor": {
           "label": "Rahmenfarbe"
@@ -1249,11 +1317,26 @@
         "showTitle": {
           "label": "App Namen anzeigen"
         },
-        "showDescriptionTooltip": {
-          "label": "Beschreibungs des Tooltips anzeigen"
-        },
         "pingEnabled": {
           "label": "Statusüberprüfung aktivieren"
+        },
+        "layout": {
+          "label": "Ansicht",
+          "option": {
+            "row": "Horizontal",
+            "row-reverse": "Horizontal (invertiert)",
+            "column": "Vertikal",
+            "column-reverse": "Vertikal (invertiert)"
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "Beschreibung des Anzeigemodus",
+          "description": "Wählen Sie, wie die App-Beschreibung angezeigt werden soll",
+          "option": {
+            "normal": "Innerhalb des Widgets",
+            "tooltip": "Als Tooltip",
+            "hidden": "Versteckt"
+          }
         }
       },
       "error": {
@@ -1498,6 +1581,15 @@
         "rows": "Zeilen",
         "width": "Breite",
         "height": "Höhe"
+      },
+      "placeholder": "Mit dem Schreiben von Notizen beginnen",
+      "dismiss": {
+        "title": "Änderungen verwerfen?",
+        "message": "Sie haben ungespeicherte Änderungen in Ihrem Notizbuch. Sind Sie sicher, dass Sie diese verwerfen möchten?",
+        "action": {
+          "discard": "Änderungen verwerfen",
+          "keepEditing": "Bearbeitung fortsetzen"
+        }
       }
     },
     "iframe": {
@@ -1650,6 +1742,9 @@
     "calendar": {
       "name": "Kalender",
       "description": "Zeigt Ereignisse aus Ihren Integrationen in einer Kalenderansicht innerhalb eines bestimmten Zeitraums an",
+      "duration": {
+        "allDay": "Ganztägig"
+      },
       "option": {
         "releaseType": {
           "label": "Radarr Veröffentlichungs Typ",
@@ -1684,6 +1779,9 @@
           "label": "Aktuelle Windgeschwindigkeit anzeigen",
           "description": "Nur bei aktuellem Wetter"
         },
+        "useImperialSpeed": {
+          "label": "Verwende miles per hour für die Windgeschwindigkeit"
+        },
         "location": {
           "label": "Wetterstandort"
         },
@@ -1702,12 +1800,12 @@
           "description": "Wie das Datum aussehen sollte"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Sonnenaufgang",
         "sunset": "Sonnenuntergang",
-        "maxWindSpeed": "Maximale Windgeschwindigkeit: {maxWindSpeed} km/h",
-        "maxWindGusts": "Maximale Windböen: {maxWindGusts} km/h"
+        "maxWindSpeed": "Maximale Windgeschwindigkeit: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Maximale Windböen: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Klar",
@@ -1757,11 +1855,17 @@
         "memory": {
           "label": "Speicher-Info anzeigen"
         },
+        "showUptime": {
+          "label": "Laufzeit anzeigen"
+        },
         "fileSystem": {
           "label": "Dateisystem Info anzeigen"
         },
         "defaultTab": {
           "label": "Standard Tab"
+        },
+        "visibleClusterSections": {
+          "label": "Sichtbare Cluster-Abschnitte"
         },
         "sectionIndicatorRequirement": {
           "label": "Anforderung der Sektionsindikatoren"
@@ -1833,11 +1937,11 @@
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Docker Statistiken",
+      "description": "Statistiken Ihrer Container (Dieses Widget kann nur mit Administratorrechten hinzugefügt werden)",
       "option": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Fehler beim Abrufen der Container Statistiken"
       }
     },
     "common": {
@@ -1914,7 +2018,25 @@
         "currentlyPlaying": "Aktuelle Wiedergabe",
         "user": "Benutzer",
         "name": "Name",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "Statistiken für Nerds",
+          "video": {
+            "title": "Video",
+            "resolution": "Auflösung"
+          },
+          "audio": {
+            "title": "Audio",
+            "channelCount": "Audio Kanäle",
+            "codec": "Audio Codec"
+          },
+          "transcoding": {
+            "title": "Transkodierung",
+            "container": "Container",
+            "resolution": "Auflösung",
+            "target": "Ziel Codec"
+          }
+        }
       }
     },
     "downloads": {
@@ -1953,6 +2075,10 @@
         },
         "applyFilterToRatio": {
           "label": "Filter zur Berechnung des Verhältnisses verwenden"
+        },
+        "limitPerIntegration": {
+          "label": "Elemente pro Integration begrenzen",
+          "description": "Dies begrenzt die Anzahl der Elemente pro Integration, jedoch nicht global"
         }
       },
       "errors": {
@@ -2060,6 +2186,35 @@
       },
       "globalRatio": "Globales Verhältnis"
     },
+    "mediaReleases": {
+      "name": "Medien Veröffentlichungen",
+      "description": "Zeige neu hinzugefügte Medien oder kommende Versionen von verschiedenen Integrationen",
+      "option": {
+        "layout": {
+          "label": "Darstellung",
+          "option": {
+            "backdrop": {
+              "label": "Hintergrund"
+            },
+            "poster": {
+              "label": "Poster"
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": "Beschreibungs des Tooltips anzeigen"
+        },
+        "showType": {
+          "label": "Medientyp Abzeichen anzeigen"
+        },
+        "showSource": {
+          "label": "Integration der Quelle anzeigen"
+        }
+      },
+      "length": {
+        "duration": "{length}Minuten"
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Liste der Medienanfragen",
       "description": "Sehen Sie eine Liste aller Medienanfragen von Ihrer Overseerr- oder Jellyseerr-Instanz",
@@ -2077,8 +2232,11 @@
         "unknown": "Unbekannt",
         "pending": "Ausstehend",
         "processing": "In Bearbeitung",
+        "requested": "",
         "partiallyAvailable": "Teilweise",
-        "available": "Verfügbar"
+        "available": "Verfügbar",
+        "blacklisted": "Gesperrt",
+        "deleted": "Gelöscht"
       },
       "status": {
         "pending": "Ausstehend",
@@ -2185,6 +2343,9 @@
         },
         "maximumAmountPosts": {
           "label": "Limit für Beiträge"
+        },
+        "hideDescription": {
+          "label": "Beschreibung ausblenden"
         }
       }
     },
@@ -2207,14 +2368,28 @@
         "showDetails": {
           "label": "Details anzeigen"
         },
+        "showOnlyIcon": {
+          "label": "Nur Symbole anzeigen"
+        },
         "topReleases": {
           "label": "Top Releases",
           "description": "Die maximale Anzahl der neuesten Versionen, die angezeigt werden sollen. Null bedeutet kein Limit."
         },
         "repositories": {
           "label": "Repositories",
-          "addRRepository": {
+          "addRepository": {
             "label": "Repository hinzufügen"
+          },
+          "importRepositories": {
+            "label": "Von Docker importieren",
+            "loading": "Lade Docker Images",
+            "noImagesFound": "Keine Docker Images gefunden",
+            "listFoundImages": "Liste der gefundenen Images",
+            "listAlreadyImportedImages": "Liste der bereits importierten Images",
+            "allImagesAlreadyImported": "Alle Images wurden bereits importiert",
+            "onlyAdminCanImport": "Nur Administratoren können vom Docker importieren",
+            "selectAll": "Alles auswählen",
+            "deselectAll": "Alle abwählen"
           },
           "provider": {
             "label": "Anbieter"
@@ -2256,10 +2431,17 @@
               "label": "Bestätigen"
             }
           },
+          "importForm": {
+            "title": "Von Docker importieren"
+          },
           "example": {
             "label": "Beispiel"
           },
-          "invalid": "Ungültige Repository Definition, bitte überprüfen Sie die Werte"
+          "invalid": "Ungültige Repository Definition, bitte überprüfen Sie die Werte",
+          "noProvider": {
+            "label": "Keine Anbieter",
+            "tooltip": "Der Anbieter konnte nicht festgestellt werden, bitte manuell nach dem Import der Bilder festlegen"
+          }
         }
       },
       "not-found": "Nicht gefunden",
@@ -2269,14 +2451,20 @@
       "starsCount": "Sterne",
       "forksCount": "Ableger",
       "issuesCount": "Offene Tickets",
+      "markViewed": "Als gelesen markieren",
       "openProjectPage": "Projektseite öffnen",
       "openReleasePage": "Release Seite öffnen",
       "releaseDescription": "Release Beschreibung",
+      "projectDescription": "Projektbeschreibung",
       "created": "Erstellt",
       "error": {
         "label": "Fehler",
-        "options": {
-          "noMatchingVersion": "Keine passende Version gefunden"
+        "messages": {
+          "invalidIdentifier": "Ungültige Kennung",
+          "noMatchingVersion": "Keine passende Version gefunden",
+          "noReleasesFound": "Keine Veröffentlichungen gefunden",
+          "noProviderSeleceted": "Kein Anbieter ausgewählt",
+          "noProviderResponse": "Keine Antwort vom Anbieter"
         }
       }
     },
@@ -2334,6 +2522,75 @@
     "networkController": {
       "error": {
         "internalServerError": "Fehler beim Abrufen der Netzwerk Controller Zusammenfassung"
+      }
+    },
+    "firewall": {
+      "name": "Überwachung der Firewall",
+      "description": "Zeigt eine Zusammenfassung der Firewalls an",
+      "tab": {
+        "system": "System",
+        "interfaces": "Schnittstellen"
+      },
+      "error": {
+        "internalServerError": "Daten von der Firewall konnten nicht abgerufen werden"
+      },
+      "option": {
+        "interfaces": "Netzwerkschnittstellen anzeigen"
+      },
+      "widget": {
+        "fwname": "Name",
+        "version": "Version",
+        "versiontitle": "Versionen",
+        "cputitle": "CPU-Nutzung",
+        "memorytitle": "Speichernutzung",
+        "cpu": "CPU",
+        "memory": "Speicher",
+        "interfaces": {
+          "name": "Name",
+          "trans": "Übertragen",
+          "recv": "Empfangen",
+          "title": "Netzwerkschnittstellen"
+        }
+      }
+    },
+    "notifications": {
+      "name": "Benachrichtigungen",
+      "description": "Benachrichtigungshistorie von einer Integration anzeigen",
+      "noItems": "Keine Benachrichtigungen zum Anzeigen.",
+      "option": {}
+    },
+    "systemResources": {
+      "name": "Systemressourcen",
+      "description": "CPU, Arbeitsspeicher, Festplatte und andere Hardware-Nutzung Ihres Systems",
+      "option": {
+        "hasShadow": {
+          "label": "Schattierung der Diagramme aktivieren"
+        },
+        "visibleCharts": {
+          "label": "Sichtbare Diagramme",
+          "description": "Wählen Sie die Diagramme aus, die angezeigt werden sollen.",
+          "option": {
+            "cpu": "CPU",
+            "memory": "Speicher",
+            "network": "Netzwerk"
+          }
+        },
+        "labelDisplayMode": {
+          "label": "Anzeigemodus der Beschriftung",
+          "option": {
+            "textWithIcon": "Text mit Symbol anzeigen",
+            "text": "Nur Text anzeigen",
+            "icon": "Nur das Symbol anzeigen",
+            "hidden": "Beschriftung ausblenden"
+          }
+        }
+      },
+      "card": {
+        "cpu": "CPU",
+        "memory": "Arbeitsspeicher",
+        "network": "Netzwerk",
+        "up": "OBEN",
+        "down": "UNTEN"
       }
     }
   },
@@ -2520,6 +2777,9 @@
       },
       "iconColor": {
         "label": "Symbolfarbe"
+      },
+      "clearColor": {
+        "label": "Farbe entfernen"
       },
       "customCss": {
         "label": "Benutzerdefinierte css für dieses Board",
@@ -2753,13 +3013,19 @@
           "invite": "Einladungen",
           "integration": "Integrationen",
           "app": "Apps",
-          "group": "Gruppen"
+          "group": "Gruppen",
+          "searchEngine": "Suchmaschinen",
+          "media": "Medien"
         },
         "statisticLabel": {
           "boards": "Boards",
           "resources": "Ressourcen",
           "authentication": "Authentifizierung",
           "authorization": "Autorisierung"
+        },
+        "heroBanner": {
+          "title": "Willkommen zurück zu Ihrem",
+          "subtitle": "{app} Board"
         }
       },
       "board": {
@@ -3043,7 +3309,8 @@
           "status": {
             "idle": "Inaktiv",
             "running": "Wird ausgeführt",
-            "error": "Fehler"
+            "error": "Fehler",
+            "disabled": "Deaktiviert"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3088,9 +3355,6 @@
             "dnsHole": {
               "label": "DNS Hole Daten"
             },
-            "sessionCleanup": {
-              "label": "Sitzung bereinigen"
-            },
             "updateChecker": {
               "label": "Updateprüfer"
             },
@@ -3100,8 +3364,97 @@
             "networkController": {
               "label": "Netzwerk Controller"
             },
+            "refreshNotifications": {
+              "label": "Benachrichtigungs Updater"
+            },
             "dockerContainers": {
-              "label": ""
+              "label": "Docker Container"
+            },
+            "firewallCpu": {
+              "label": "Firewall CPU"
+            },
+            "firewallMemory": {
+              "label": "Firewall Speicher"
+            },
+            "firewallVersion": {
+              "label": "Firewall Version"
+            },
+            "firewallInterfaces": {
+              "label": "Firewall Schnittstellen"
+            },
+            "weather": {
+              "label": "Wetter"
+            }
+          },
+          "interval": {
+            "seconds": "Jeweils {interval, plural, =1 {Sekunde} other {# Sekunden}}",
+            "minutes": "Jeweils {interval, plural, =1 {Minute} other {# Minuten}}",
+            "hours": "Jeweils {interval, plural, =1 {Stunde} other {# Stunden}}",
+            "midnight": "Jeden Tag um Mitternacht",
+            "weeklyMonday": "Jede Woche am Montag",
+            "update": {
+              "success": {
+                "message": "Intervall erfolgreich aktualisiert"
+              },
+              "error": {
+                "message": "Fehler beim Aktualisieren des Intervalls"
+              }
+            }
+          },
+          "settings": {
+            "title": "Einstellungen der Aufgabe für {jobName}"
+          },
+          "field": {
+            "name": {
+              "label": "Name"
+            },
+            "interval": {
+              "label": "Intervall des Zeitplans"
+            },
+            "lastExecution": {
+              "label": "Letzte Ausführung"
+            },
+            "actions": {
+              "label": "Aktionen"
+            }
+          },
+          "table": {
+            "search": "{count} Aufgaben suchen..."
+          },
+          "action": {
+            "refresh": {
+              "label": "Neu laden"
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": "Aufgaben erfolgreich aktualisiert"
+            },
+            "error": {
+              "message": "Fehler beim Aktualisieren der Aufgaben"
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": "Aufgabe erfolgreich ausgelöst"
+            },
+            "error": {
+              "message": "Fehler beim Auslösen der Aufgabe"
+            }
+          },
+          "enable": {
+            "success": {
+              "message": "Aufgabe erfolgreich aktiviert"
+            }
+          },
+          "disable": {
+            "success": {
+              "message": "Aufgabe erfolgreich deaktiviert"
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": "Fehler beim Umschalten des Aufgabenstatus"
             }
           }
         },
@@ -3156,6 +3509,21 @@
           "libraries": {
             "title": "Bibliotheken",
             "subtitle": "{count} im Code von Homarr verwendet"
+          },
+          "hotkeys": {
+            "title": "Tastenkürzel",
+            "subtitle": "Tastenkürzel zur Verbesserung Ihres Workflows",
+            "field": {
+              "shortcut": "Verknüpfung",
+              "action": "Aktion"
+            },
+            "action": {
+              "toggleBoardEdit": "Bearbeitungsmodus des Boardes umschalten",
+              "toggleColorScheme": "Hell/Dunkelmodus umschalten",
+              "saveNotebook": "Notizbuch speichern (nur innerhalb des Notizbuch Widgets)",
+              "openSpotlight": "Suche öffnen"
+            },
+            "note": "Tipp: Mod bezieht sich sowohl auf die Strg-Taste als auch auf die ⌘ Taste auf macOS"
           }
         }
       }
@@ -3167,14 +3535,14 @@
       "updated": "Aktualisiert {when}",
       "search": "{count} Container durchsuchen",
       "selected": "{selectCount} von {totalCount} ausgewählten Containern",
-      "footer": ""
+      "footer": "Insgesamt {count} Container"
     },
     "field": {
       "name": {
         "label": "Name"
       },
       "state": {
-        "label": "Staat",
+        "label": "Status",
         "option": {
           "created": "Erstellt",
           "running": "Aktiv",
@@ -3187,10 +3555,10 @@
       },
       "stats": {
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Speicher"
         }
       },
       "containerImage": {
@@ -3201,7 +3569,7 @@
       }
     },
     "action": {
-      "title": "",
+      "title": "Aktionen",
       "start": {
         "label": "Starten",
         "notification": {
@@ -3554,7 +3922,7 @@
     },
     "action": {
       "saveUser": "Benutzerberechtigung hinzufügen",
-      "saveGroup": "Gruppenberechtigung hinzufügen"
+      "saveGroup": "Gruppenberechtigung speichern"
     }
   },
   "navigationStructure": {
@@ -3610,6 +3978,9 @@
       },
       "tools": {
         "label": "Werkzeuge",
+        "tasks": {
+          "label": "Aufgaben"
+        },
         "docker": {
           "label": "Docker"
         },
@@ -4132,6 +4503,16 @@
             "message": "Der Hostname konnte nicht entfernt werden"
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "Debug",
+        "info": "Info",
+        "warn": "Hinweis",
+        "error": "Fehler"
       }
     }
   }

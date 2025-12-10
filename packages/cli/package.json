@@ -28,14 +28,14 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "dotenv": "^16.5.0"
+    "dotenv": "^17.2.3"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "esbuild": "^0.25.4",
-    "eslint": "^9.27.0",
-    "typescript": "^5.8.3"
+    "esbuild": "^0.27.1",
+    "eslint": "^9.39.1",
+    "typescript": "^5.9.3"
   }
 }

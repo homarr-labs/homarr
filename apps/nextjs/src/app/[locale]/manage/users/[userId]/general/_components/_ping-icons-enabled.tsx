@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Group, Stack, Switch } from "@mantine/core";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

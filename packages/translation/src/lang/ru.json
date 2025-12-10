@@ -645,6 +645,21 @@
             "title": "Не удалось создать",
             "message": "Не удалось создать интеграцию"
           }
+        },
+        "app": {
+          "option": {
+            "existing": {
+              "title": "",
+              "label": ""
+            },
+            "new": {
+              "title": "",
+              "url": {
+                "label": "",
+                "description": ""
+              }
+            }
+          }
         }
       },
       "edit": {
@@ -657,6 +672,13 @@
           "error": {
             "title": "Не удалось сохранить",
             "message": "Не удалось сохранить интеграцию"
+          }
+        },
+        "app": {
+          "action": {
+            "add": "",
+            "remove": "",
+            "select": ""
           }
         }
       },
@@ -685,6 +707,9 @@
       "attemptSearchEngineCreation": {
         "label": "Создать поисковую систему",
         "description": "Интеграцию \"{kind}\" можно использовать с поисковыми системами. Включите эту опцию для автоматической настройки поисковой системы."
+      },
+      "app": {
+        "sectionTitle": ""
       },
       "createApp": {
         "label": "",
@@ -936,6 +961,38 @@
         "realm": {
           "label": "Область",
           "newLabel": "Новая область"
+        },
+        "personalAccessToken": {
+          "label": "",
+          "newLabel": ""
+        },
+        "topic": {
+          "label": "",
+          "newLabel": ""
+        },
+        "url": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiKey": {
+          "label": "",
+          "newLabel": ""
+        },
+        "opnsenseApiSecret": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubAppId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "githubInstallationId": {
+          "label": "",
+          "newLabel": ""
+        },
+        "privateKey": {
+          "label": "",
+          "newLabel": ""
         }
       }
     },
@@ -987,12 +1044,14 @@
     }
   },
   "common": {
+    "success": "",
     "beta": "Бета",
     "error": "Ошибка",
     "action": {
       "add": "Добавить",
       "apply": "Применить",
       "backToOverview": "Вернуться к обзору",
+      "change": "",
       "create": "Создать",
       "createAnother": "Создать и начать заново",
       "edit": "Редактировать",
@@ -1112,6 +1171,12 @@
           "groupNameTaken": "Имя группы уже занято"
         }
       }
+    },
+    "unit": {
+      "speed": {
+        "kilometersPerHour": "",
+        "milesPerHour": ""
+      }
     }
   },
   "section": {
@@ -1122,6 +1187,9 @@
       },
       "option": {
         "title": {
+          "label": ""
+        },
+        "customCssClasses": {
           "label": ""
         },
         "borderColor": {
@@ -1249,11 +1317,26 @@
         "showTitle": {
           "label": "Показывать название приложения"
         },
-        "showDescriptionTooltip": {
-          "label": "Показывать всплывающую подсказку с описанием"
-        },
         "pingEnabled": {
           "label": "Включить простую проверку доступности"
+        },
+        "layout": {
+          "label": "",
+          "option": {
+            "row": "",
+            "row-reverse": "",
+            "column": "",
+            "column-reverse": ""
+          }
+        },
+        "descriptionDisplayMode": {
+          "label": "",
+          "description": "",
+          "option": {
+            "normal": "",
+            "tooltip": "",
+            "hidden": ""
+          }
         }
       },
       "error": {
@@ -1498,6 +1581,15 @@
         "rows": "Строки",
         "width": "Ширина",
         "height": "Высота"
+      },
+      "placeholder": "",
+      "dismiss": {
+        "title": "",
+        "message": "",
+        "action": {
+          "discard": "",
+          "keepEditing": ""
+        }
       }
     },
     "iframe": {
@@ -1650,6 +1742,9 @@
     "calendar": {
       "name": "Календарь",
       "description": "Отображает события из ваших интеграций в календаре в определённом временном периоде",
+      "duration": {
+        "allDay": ""
+      },
       "option": {
         "releaseType": {
           "label": "Тип релиза Radarr",
@@ -1683,6 +1778,9 @@
         "showCurrentWindSpeed": {
           "label": "Показать текущую скорость ветра",
           "description": "Только для текущей погоды"
+        },
+        "useImperialSpeed": {
+          "label": ""
         },
         "location": {
           "label": "Местоположение"
@@ -1757,11 +1855,17 @@
         "memory": {
           "label": "Показать информацию о памяти"
         },
+        "showUptime": {
+          "label": ""
+        },
         "fileSystem": {
           "label": "Показать информацию о файловой системе"
         },
         "defaultTab": {
           "label": "Вкладка по умолчанию"
+        },
+        "visibleClusterSections": {
+          "label": ""
         },
         "sectionIndicatorRequirement": {
           "label": "Пороговое значение индикатора раздела"
@@ -1914,7 +2018,25 @@
         "currentlyPlaying": "",
         "user": "Пользователь",
         "name": "Название",
-        "id": "Id"
+        "id": "Id",
+        "metadata": {
+          "title": "",
+          "video": {
+            "title": "",
+            "resolution": ""
+          },
+          "audio": {
+            "title": "",
+            "channelCount": "",
+            "codec": ""
+          },
+          "transcoding": {
+            "title": "",
+            "container": "",
+            "resolution": "",
+            "target": ""
+          }
+        }
       }
     },
     "downloads": {
@@ -1953,6 +2075,10 @@
         },
         "applyFilterToRatio": {
           "label": "Использовать фильтр при расчёте рейтинга"
+        },
+        "limitPerIntegration": {
+          "label": "",
+          "description": ""
         }
       },
       "errors": {
@@ -2060,6 +2186,35 @@
       },
       "globalRatio": "Общий рейтинг"
     },
+    "mediaReleases": {
+      "name": "",
+      "description": "",
+      "option": {
+        "layout": {
+          "label": "",
+          "option": {
+            "backdrop": {
+              "label": ""
+            },
+            "poster": {
+              "label": ""
+            }
+          }
+        },
+        "showDescriptionTooltip": {
+          "label": ""
+        },
+        "showType": {
+          "label": ""
+        },
+        "showSource": {
+          "label": ""
+        }
+      },
+      "length": {
+        "duration": ""
+      }
+    },
     "mediaRequests-requestList": {
       "name": "Запросы медиаконтента",
       "description": "Список всех запросов на добавление медиаконтента из вашего экземпляра Overseerr или Jellyseerr",
@@ -2077,8 +2232,11 @@
         "unknown": "Неизвестно",
         "pending": "В ожидании",
         "processing": "Обработка",
+        "requested": "",
         "partiallyAvailable": "Частично доступно",
-        "available": "Доступно"
+        "available": "Доступно",
+        "blacklisted": "",
+        "deleted": ""
       },
       "status": {
         "pending": "В ожидании",
@@ -2185,6 +2343,9 @@
         },
         "maximumAmountPosts": {
           "label": "Максимальное количество записей"
+        },
+        "hideDescription": {
+          "label": ""
         }
       }
     },
@@ -2207,14 +2368,28 @@
         "showDetails": {
           "label": ""
         },
+        "showOnlyIcon": {
+          "label": ""
+        },
         "topReleases": {
           "label": "",
           "description": ""
         },
         "repositories": {
           "label": "",
-          "addRRepository": {
+          "addRepository": {
             "label": ""
+          },
+          "importRepositories": {
+            "label": "",
+            "loading": "",
+            "noImagesFound": "",
+            "listFoundImages": "",
+            "listAlreadyImportedImages": "",
+            "allImagesAlreadyImported": "",
+            "onlyAdminCanImport": "",
+            "selectAll": "",
+            "deselectAll": ""
           },
           "provider": {
             "label": ""
@@ -2256,10 +2431,17 @@
               "label": ""
             }
           },
+          "importForm": {
+            "title": ""
+          },
           "example": {
             "label": ""
           },
-          "invalid": ""
+          "invalid": "",
+          "noProvider": {
+            "label": "",
+            "tooltip": ""
+          }
         }
       },
       "not-found": "",
@@ -2269,14 +2451,20 @@
       "starsCount": "",
       "forksCount": "",
       "issuesCount": "",
+      "markViewed": "",
       "openProjectPage": "",
       "openReleasePage": "",
       "releaseDescription": "",
+      "projectDescription": "",
       "created": "",
       "error": {
         "label": "",
-        "options": {
-          "noMatchingVersion": ""
+        "messages": {
+          "invalidIdentifier": "",
+          "noMatchingVersion": "",
+          "noReleasesFound": "",
+          "noProviderSeleceted": "",
+          "noProviderResponse": ""
         }
       }
     },
@@ -2334,6 +2522,75 @@
     "networkController": {
       "error": {
         "internalServerError": ""
+      }
+    },
+    "firewall": {
+      "name": "",
+      "description": "",
+      "tab": {
+        "system": "",
+        "interfaces": ""
+      },
+      "error": {
+        "internalServerError": ""
+      },
+      "option": {
+        "interfaces": ""
+      },
+      "widget": {
+        "fwname": "",
+        "version": "",
+        "versiontitle": "",
+        "cputitle": "",
+        "memorytitle": "",
+        "cpu": "",
+        "memory": "",
+        "interfaces": {
+          "name": "",
+          "trans": "",
+          "recv": "",
+          "title": ""
+        }
+      }
+    },
+    "notifications": {
+      "name": "",
+      "description": "",
+      "noItems": "",
+      "option": {}
+    },
+    "systemResources": {
+      "name": "",
+      "description": "",
+      "option": {
+        "hasShadow": {
+          "label": ""
+        },
+        "visibleCharts": {
+          "label": "",
+          "description": "",
+          "option": {
+            "cpu": "",
+            "memory": "",
+            "network": ""
+          }
+        },
+        "labelDisplayMode": {
+          "label": "",
+          "option": {
+            "textWithIcon": "",
+            "text": "",
+            "icon": "",
+            "hidden": ""
+          }
+        }
+      },
+      "card": {
+        "cpu": "",
+        "memory": "",
+        "network": "",
+        "up": "",
+        "down": ""
       }
     }
   },
@@ -2520,6 +2777,9 @@
       },
       "iconColor": {
         "label": "Цвет значка"
+      },
+      "clearColor": {
+        "label": ""
       },
       "customCss": {
         "label": "Пользовательский CSS для этой панели",
@@ -2753,13 +3013,19 @@
           "invite": "Приглашения",
           "integration": "Интеграции",
           "app": "Приложения",
-          "group": "Группы"
+          "group": "Группы",
+          "searchEngine": "",
+          "media": ""
         },
         "statisticLabel": {
           "boards": "Панели",
           "resources": "Ресурсы",
           "authentication": "Аутентификация",
           "authorization": "Авторизация"
+        },
+        "heroBanner": {
+          "title": "",
+          "subtitle": ""
         }
       },
       "board": {
@@ -3043,7 +3309,8 @@
           "status": {
             "idle": "Ожидание",
             "running": "Выполняется",
-            "error": "Ошибка"
+            "error": "Ошибка",
+            "disabled": ""
           },
           "job": {
             "minecraftServerStatus": {
@@ -3088,9 +3355,6 @@
             "dnsHole": {
               "label": "Данные DNS-фильтра"
             },
-            "sessionCleanup": {
-              "label": "Очистка сессий"
-            },
             "updateChecker": {
               "label": "Проверка обновлений"
             },
@@ -3100,8 +3364,97 @@
             "networkController": {
               "label": ""
             },
+            "refreshNotifications": {
+              "label": ""
+            },
             "dockerContainers": {
               "label": ""
+            },
+            "firewallCpu": {
+              "label": ""
+            },
+            "firewallMemory": {
+              "label": ""
+            },
+            "firewallVersion": {
+              "label": ""
+            },
+            "firewallInterfaces": {
+              "label": ""
+            },
+            "weather": {
+              "label": ""
+            }
+          },
+          "interval": {
+            "seconds": "",
+            "minutes": "",
+            "hours": "",
+            "midnight": "",
+            "weeklyMonday": "",
+            "update": {
+              "success": {
+                "message": ""
+              },
+              "error": {
+                "message": ""
+              }
+            }
+          },
+          "settings": {
+            "title": ""
+          },
+          "field": {
+            "name": {
+              "label": ""
+            },
+            "interval": {
+              "label": ""
+            },
+            "lastExecution": {
+              "label": ""
+            },
+            "actions": {
+              "label": ""
+            }
+          },
+          "table": {
+            "search": ""
+          },
+          "action": {
+            "refresh": {
+              "label": ""
+            }
+          },
+          "refresh": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "trigger": {
+            "success": {
+              "message": ""
+            },
+            "error": {
+              "message": ""
+            }
+          },
+          "enable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "disable": {
+            "success": {
+              "message": ""
+            }
+          },
+          "toggle": {
+            "error": {
+              "message": ""
             }
           }
         },
@@ -3156,6 +3509,21 @@
           "libraries": {
             "title": "Библиотеки",
             "subtitle": "{count} используются в коде Homarr"
+          },
+          "hotkeys": {
+            "title": "",
+            "subtitle": "",
+            "field": {
+              "shortcut": "",
+              "action": ""
+            },
+            "action": {
+              "toggleBoardEdit": "",
+              "toggleColorScheme": "",
+              "saveNotebook": "",
+              "openSpotlight": ""
+            },
+            "note": ""
           }
         }
       }
@@ -3610,6 +3978,9 @@
       },
       "tools": {
         "label": "Инструменты",
+        "tasks": {
+          "label": ""
+        },
         "docker": {
           "label": "Docker"
         },
@@ -4132,6 +4503,16 @@
             "message": ""
           }
         }
+      }
+    }
+  },
+  "log": {
+    "level": {
+      "option": {
+        "debug": "",
+        "info": "",
+        "warn": "",
+        "error": ""
       }
     }
   }

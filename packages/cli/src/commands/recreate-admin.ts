@@ -1,8 +1,9 @@
 import { command, string } from "@drizzle-team/brocli";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
+import { createId } from "@homarr/common";
 import { generateSecureRandomToken } from "@homarr/common/server";
-import { and, count, createId, db, eq } from "@homarr/db";
+import { and, count, db, eq } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
 import { usernameSchema } from "@homarr/validation/user";
@@ -24,7 +25,7 @@ export const recreateAdmin = command({
 
     if (!result.success) {
       console.error("Invalid username:");
-      console.error(result.error.errors.map((error) => `- ${error.message}`).join("\n"));
+      console.error(result.error.issues.map((error) => `- ${error.message}`).join("\n"));
       return;
     }
 

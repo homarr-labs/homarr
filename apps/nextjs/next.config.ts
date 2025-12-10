@@ -17,37 +17,30 @@ const withNextIntl = createNextIntlPlugin({
   requestConfig: "../../packages/translation/src/request.ts",
 });
 
-interface WebpackConfig {
-  module: {
-    rules: {
-      test: RegExp;
-      loader: string;
-    }[];
-  };
-}
-
 const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
-  /** We already do linting and typechecking as separate tasks in CI */
-  eslint: { ignoreDuringBuilds: true },
+  // react compiler breaks mantine-react-table, so disabled for now
+  //reactCompiler: true,
+  /** We already do typechecking as separate tasks in CI */
   typescript: { ignoreBuildErrors: true },
-  webpack: (config: WebpackConfig, { isServer }) => {
-    if (isServer) {
-      config.module.rules.push({
-        test: /\.node$/,
-        loader: "node-loader",
-      });
-    }
-
-    return config;
-  },
+  /**
+   * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
+   * isomorphic-dompurify and jsdom are required, see https://github.com/kkomelin/isomorphic-dompurify/issues/356
+   */
+  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom"],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
+    turbopackFileSystemCacheForDev: true,
   },
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
   images: {
-    domains: ["cdn.jsdelivr.net"],
+    localPatterns: [
+      {
+        pathname: "/**",
+        search: "",
+      },
+    ],
   },
   // eslint-disable-next-line @typescript-eslint/require-await,no-restricted-syntax
   async headers() {
@@ -57,16 +50,20 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
+            // worker-src / media-src with blob: is necessary for video.js, see https://github.com/homarr-labs/homarr/issues/3912 and https://stackoverflow.com/questions/65792855/problem-with-video-js-and-content-security-policy-csp
             value: `
               default-src 'self';
               script-src * 'unsafe-inline' 'unsafe-eval';
+              worker-src * blob:;
               base-uri 'self';
               connect-src *;
-              style-src 'self' 'unsafe-inline'; 
+              style-src * 'unsafe-inline'; 
               frame-ancestors *;
               frame-src *;
               form-action 'self';
               img-src * data:;
+              font-src * data:;
+              media-src * data: blob:;
             `
               .replace(/\s{2,}/g, " ")
               .trim(),

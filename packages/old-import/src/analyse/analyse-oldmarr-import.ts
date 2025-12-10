@@ -1,5 +1,5 @@
 import AdmZip from "adm-zip";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { logger } from "@homarr/log";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
@@ -29,7 +29,7 @@ export const analyseOldmarrImportAsync = async (file: File) => {
     }
 
     return {
-      name: entry.name.replace(".json", ""),
+      name: entry.name.replaceAll(" ", "-").replace(".json", ""),
       config: result.data ?? null,
       isError: !result.success,
     };

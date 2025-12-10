@@ -185,6 +185,7 @@ export const integrations = sqliteTable(
     name: text().notNull(),
     url: text().notNull(),
     kind: text().$type<IntegrationKind>().notNull(),
+    appId: text().references(() => apps.id, { onDelete: "set null" }),
   },
   (integrations) => ({
     kindIdx: index("integration__kind_idx").on(integrations.kind),
@@ -493,6 +494,12 @@ export const trustedCertificateHostnames = sqliteTable(
   }),
 );
 
+export const cronJobConfigurations = sqliteTable("cron_job_configuration", {
+  name: text().notNull().primaryKey(),
+  cronExpression: text().notNull(),
+  isEnabled: int({ mode: "boolean" }).default(true).notNull(),
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -606,11 +613,15 @@ export const boardGroupPermissionRelations = relations(boardGroupPermissions, ({
   }),
 }));
 
-export const integrationRelations = relations(integrations, ({ many }) => ({
+export const integrationRelations = relations(integrations, ({ one, many }) => ({
   secrets: many(integrationSecrets),
   items: many(integrationItems),
   userPermissions: many(integrationUserPermissions),
   groupPermissions: many(integrationGroupPermissions),
+  app: one(apps, {
+    fields: [integrations.appId],
+    references: [apps.id],
+  }),
 }));
 
 export const integrationUserPermissionRelations = relations(integrationUserPermissions, ({ one }) => ({

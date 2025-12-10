@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { tileBaseSchema } from "./tile";
 
@@ -33,7 +33,7 @@ export const oldmarrWidgetSchema = z
   .object({
     id: z.string(),
     type: z.enum(oldmarrWidgetKinds),
-    properties: z.record(z.unknown()),
+    properties: z.record(z.string(), z.unknown()),
   })
   .and(tileBaseSchema);
 

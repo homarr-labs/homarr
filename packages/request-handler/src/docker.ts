@@ -3,9 +3,9 @@ import type { ContainerInfo, ContainerStats } from "dockerode";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
+import type { ContainerState } from "@homarr/docker";
+import { dockerLabels, DockerSingleton } from "@homarr/docker";
 
-import type { ContainerState } from "../../docker/src";
-import { DockerSingleton } from "../../docker/src";
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
 export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
@@ -27,13 +27,11 @@ async function getContainersWithStatsAsync() {
   const containers = await Promise.all(
     dockerInstances.map(async ({ instance, host }) => {
       const instanceContainers = await instance.listContainers({ all: true });
-      return instanceContainers.map((container) => ({
-        ...container,
-        instance: host,
-      }));
+      return instanceContainers
+        .filter((container) => dockerLabels.hide in container.Labels === false)
+        .map((container) => ({ ...container, instance: host }));
     }),
   ).then((res) => res.flat());
-
   const likeQueries = containers.map((container) => like(icons.name, `%${extractImage(container)}%`));
 
   const dbIcons =
@@ -47,7 +45,7 @@ async function getContainersWithStatsAsync() {
     const instance = dockerInstances.find(({ host }) => host === container.instance)?.instance;
     if (!instance) return null;
 
-    const stats = await instance.getContainer(container.Id).stats({ stream: false });
+    const stats = await instance.getContainer(container.Id).stats({ stream: false, "one-shot": true });
 
     return {
       id: container.Id,
@@ -60,7 +58,18 @@ async function getContainersWithStatsAsync() {
           return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
         })?.url ?? null,
       cpuUsage: calculateCpuUsage(stats),
-      memoryUsage: stats.memory_stats.usage,
+      // memory usage by default includes cache, which should not be shown as it is also not shown with docker stats command
+      // The below type is probably wrong, sometimes stats can be undefined
+      // See https://docs.docker.com/reference/cli/docker/container/stats/ how it is / was calculated
+      memoryUsage:
+        stats.memory_stats.usage -
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        (stats.memory_stats.stats?.cache ??
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          stats.memory_stats.stats?.total_inactive_file ??
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          stats.memory_stats.stats?.inactive_file ??
+          0),
       image: container.Image,
       ports: container.Ports,
     };
@@ -70,11 +79,10 @@ async function getContainersWithStatsAsync() {
 }
 
 function calculateCpuUsage(stats: ContainerStats): number {
-  const cpuDelta = stats.cpu_stats.cpu_usage.total_usage - stats.precpu_stats.cpu_usage.total_usage;
-  const systemDelta = stats.cpu_stats.system_cpu_usage - stats.precpu_stats.system_cpu_usage;
   const numberOfCpus = stats.cpu_stats.online_cpus || 1;
 
-  if (systemDelta === 0) return 0;
+  const usage = stats.cpu_stats.system_cpu_usage;
+  if (usage === 0) return 0;
 
-  return (cpuDelta / systemDelta) * numberOfCpus * 100;
+  return (stats.cpu_stats.cpu_usage.total_usage / usage) * numberOfCpus * 100;
 }

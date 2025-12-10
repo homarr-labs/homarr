@@ -45,6 +45,10 @@ export const createBoardLayout = <TParams extends Params>({
         notFound();
       }
 
+      if (error instanceof TRPCError && error.code === "BAD_REQUEST") {
+        notFound();
+      }
+
       throw error;
     });
     const colorScheme = await getCurrentColorSchemeAsync();

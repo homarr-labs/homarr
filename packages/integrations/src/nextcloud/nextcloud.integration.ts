@@ -1,11 +1,12 @@
+import type { Agent } from "https";
 import dayjs from "dayjs";
-import objectSupport from "dayjs/plugin/objectSupport";
+import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import type { RequestInit as NodeFetchRequestInit } from "node-fetch";
 import * as ical from "node-ical";
 import { DAVClient } from "tsdav";
-import type { Dispatcher, RequestInit as UndiciFetchRequestInit } from "undici";
 
-import { createCertificateAgentAsync } from "@homarr/certificates/server";
+import { createHttpsAgentAsync } from "@homarr/certificates/server";
 import { logger } from "@homarr/log";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
@@ -13,21 +14,22 @@ import { integrationTsdavHttpErrorHandler } from "../base/errors/http";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { CalendarEvent } from "../calendar-types";
+import type { ICalendarIntegration } from "../interfaces/calendar/calendar-integration";
+import type { CalendarEvent } from "../interfaces/calendar/calendar-types";
 
 dayjs.extend(utc);
-dayjs.extend(objectSupport);
+dayjs.extend(timezone);
 
 @HandleIntegrationErrors([integrationTsdavHttpErrorHandler])
-export class NextcloudIntegration extends Integration {
+export class NextcloudIntegration extends Integration implements ICalendarIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const client = await this.createCalendarClientAsync(input.dispatcher);
+    const client = await this.createCalendarClientAsync(await createHttpsAgentAsync(input.options));
     await client.login();
 
     return { success: true };
   }
 
-  public async getCalendarEventsAsync(start: Date, end: Date): Promise<CalendarEvent[]> {
+  public async getCalendarEventsAsync(start: Date, end: Date, _showUnmonitored?: boolean): Promise<CalendarEvent[]> {
     const client = await this.createCalendarClientAsync();
     await client.login();
 
@@ -45,54 +47,62 @@ export class NextcloudIntegration extends Integration {
       )
     ).flat();
 
-    return calendarEvents.map((event): CalendarEvent => {
-      // @ts-expect-error the typescript definitions for this package are wrong
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-      const icalData = ical.default.parseICS(event.data) as ical.CalendarResponse;
-      const veventObject = Object.values(icalData).find((data) => data.type === "VEVENT");
+    return calendarEvents
+      .map((event) => {
+        // @ts-expect-error the typescript definitions for this package are wrong
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+        const icalData = ical.default.parseICS(event.data) as ical.CalendarResponse;
+        const veventObject = Object.values(icalData).find((data) => data.type === "VEVENT");
 
-      if (!veventObject) {
-        throw new Error(`Invalid event data object: ${JSON.stringify(event.data)}. Unable to process the calendar.`);
-      }
+        if (!veventObject) {
+          throw new Error(`Invalid event data object: ${JSON.stringify(event.data)}. Unable to process the calendar.`);
+        }
 
-      logger.debug(`Converting VEVENT event to ${event.etag} from Nextcloud: ${JSON.stringify(veventObject)}`);
+        logger.debug(`Converting VEVENT event to ${event.etag} from Nextcloud: ${JSON.stringify(veventObject)}`);
 
-      const date = dayjs.utc({
-        days: veventObject.start.getDay(),
-        month: veventObject.start.getMonth(),
-        year: veventObject.start.getFullYear(),
-        hours: veventObject.start.getHours(),
-        minutes: veventObject.start.getMinutes(),
-        seconds: veventObject.start.getSeconds(),
-      });
+        const eventUrlWithoutHost = new URL(event.url).pathname;
+        const eventSlug = Buffer.from(eventUrlWithoutHost).toString("base64url");
 
-      const eventUrlWithoutHost = new URL(event.url).pathname;
-      const dateInMillis = veventObject.start.valueOf();
+        const startDates = veventObject.rrule ? veventObject.rrule.between(start, end) : [veventObject.start];
 
-      const url = this.url(
-        `/apps/calendar/timeGridWeek/now/edit/sidebar/${Buffer.from(eventUrlWithoutHost).toString("base64url")}/${dateInMillis / 1000}`,
-      );
+        const durationMs = veventObject.end.getTime() - veventObject.start.getTime();
 
-      return {
-        name: veventObject.summary,
-        date: date.toDate(),
-        subName: "",
-        description: veventObject.description,
-        links: [
-          {
-            href: url.toString(),
-            name: "Nextcloud",
-            logo: "/images/apps/nextcloud.svg",
-            color: undefined,
-            notificationColor: "#ff8600",
-            isDark: true,
-          },
-        ],
-      };
-    });
+        return startDates.map((startDate) => {
+          const timezoneOffsetMinutes = veventObject.rrule?.origOptions.tzid
+            ? dayjs(startDate).tz(veventObject.rrule.origOptions.tzid).utcOffset()
+            : 0;
+          const utcStartDate = new Date(startDate.getTime() - timezoneOffsetMinutes * 60 * 1000);
+          const endDate = new Date(utcStartDate.getTime() + durationMs);
+          const dateInMillis = utcStartDate.valueOf();
+
+          return {
+            title: veventObject.summary,
+            subTitle: null,
+            description: veventObject.description,
+            startDate: utcStartDate,
+            endDate,
+            image: null,
+            location: veventObject.location || null,
+            indicatorColor:
+              "color" in veventObject && typeof veventObject.color === "string" ? veventObject.color : "#ff8600",
+            links: [
+              {
+                href: this.externalUrl(
+                  `/apps/calendar/timeGridWeek/now/edit/sidebar/${eventSlug}/${dateInMillis / 1000}`,
+                ).toString(),
+                name: "Nextcloud",
+                logo: "/images/apps/nextcloud.svg",
+                color: undefined,
+                isDark: true,
+              },
+            ],
+          };
+        });
+      })
+      .flat();
   }
 
-  private async createCalendarClientAsync(dispatcher?: Dispatcher) {
+  private async createCalendarClientAsync(agent?: Agent) {
     return new DAVClient({
       serverUrl: this.integration.url,
       credentials: {
@@ -102,9 +112,10 @@ export class NextcloudIntegration extends Integration {
       authMethod: "Basic",
       defaultAccountType: "caldav",
       fetchOptions: {
-        // We can use the undici options as the global fetch is used instead of the polyfilled.
-        dispatcher: dispatcher ?? (await createCertificateAgentAsync()),
-      } satisfies UndiciFetchRequestInit as RequestInit,
+        // tsdav is using cross-fetch which uses node-fetch for nodejs environments.
+        // There is an agent property that is the same type as the http(s) agents of nodejs
+        agent: agent ?? (await createHttpsAgentAsync()),
+      } satisfies NodeFetchRequestInit as RequestInit,
     });
   }
 }

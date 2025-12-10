@@ -6,15 +6,16 @@ import { createCertificateAgentAsync } from "@homarr/certificates/server";
 
 import { HandleIntegrationErrors } from "../../base/errors/decorator";
 import { integrationOFetchHttpErrorHandler } from "../../base/errors/http";
+import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
-import { DownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
+import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
 import type { DownloadClientItem } from "../../interfaces/downloads/download-client-items";
 import type { DownloadClientStatus } from "../../interfaces/downloads/download-client-status";
 
 @HandleIntegrationErrors([integrationOFetchHttpErrorHandler])
-export class TransmissionIntegration extends DownloadClientIntegration {
+export class TransmissionIntegration extends Integration implements IDownloadClientIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const client = await this.getClientAsync(input.dispatcher);
     await client.getSession();
@@ -23,9 +24,10 @@ export class TransmissionIntegration extends DownloadClientIntegration {
     };
   }
 
-  public async getClientJobsAndStatusAsync(): Promise<DownloadClientJobsAndStatus> {
+  public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const type = "torrent";
     const client = await this.getClientAsync();
+    // Currently there is no way to limit the number of returned torrents
     const { torrents } = (await client.listTorrents()).arguments;
     const rates = torrents.reduce(
       ({ down, up }, { rateDownload, rateUpload }) => ({ down: down + rateDownload, up: up + rateUpload }),
@@ -34,28 +36,30 @@ export class TransmissionIntegration extends DownloadClientIntegration {
     const paused =
       torrents.find(({ status }) => TransmissionIntegration.getTorrentState(status) !== "paused") === undefined;
     const status: DownloadClientStatus = { paused, rates, types: [type] };
-    const items = torrents.map((torrent): DownloadClientItem => {
-      const state = TransmissionIntegration.getTorrentState(torrent.status);
-      return {
-        type,
-        id: torrent.hashString,
-        index: torrent.queuePosition,
-        name: torrent.name,
-        size: torrent.totalSize,
-        sent: torrent.uploadedEver,
-        received: torrent.downloadedEver,
-        downSpeed: torrent.percentDone !== 1 ? torrent.rateDownload : undefined,
-        upSpeed: torrent.rateUpload,
-        time:
-          torrent.percentDone === 1
-            ? Math.min(torrent.doneDate * 1000 - dayjs().valueOf(), -1)
-            : Math.max(torrent.eta * 1000, 0),
-        added: torrent.addedDate * 1000,
-        state,
-        progress: torrent.percentDone,
-        category: torrent.labels,
-      };
-    });
+    const items = torrents
+      .map((torrent): DownloadClientItem => {
+        const state = TransmissionIntegration.getTorrentState(torrent.status);
+        return {
+          type,
+          id: torrent.hashString,
+          index: torrent.queuePosition,
+          name: torrent.name,
+          size: torrent.totalSize,
+          sent: torrent.uploadedEver,
+          received: torrent.downloadedEver,
+          downSpeed: torrent.percentDone !== 1 ? torrent.rateDownload : undefined,
+          upSpeed: torrent.rateUpload,
+          time:
+            torrent.percentDone === 1
+              ? Math.min(torrent.doneDate * 1000 - dayjs().valueOf(), -1)
+              : Math.max(torrent.eta * 1000, 0),
+          added: torrent.addedDate * 1000,
+          state,
+          progress: torrent.percentDone,
+          category: torrent.labels,
+        };
+      })
+      .slice(0, input.limit);
     return { status, items };
   }
 

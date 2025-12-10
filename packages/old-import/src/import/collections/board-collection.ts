@@ -1,4 +1,4 @@
-import { createId } from "@homarr/db";
+import { createId } from "@homarr/common";
 import { createDbInsertCollectionForTransaction } from "@homarr/db/collection";
 import { logger } from "@homarr/log";
 import type { BoardSize, OldmarrConfig } from "@homarr/old-schema";

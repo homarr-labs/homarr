@@ -49,13 +49,13 @@ export default function RssFeed({ options }: WidgetComponentProps<"rssFeed">) {
               <Text dir={languageDir} fz="sm" lh="sm" lineClamp={2}>
                 {feedEntry.title}
               </Text>
-              {feedEntry.description && (
+              {!options.hideDescription && feedEntry.description && (
                 <Text
                   className={feedEntry.description}
                   dir={languageDir}
                   c="dimmed"
                   size="sm"
-                  lineClamp={options.textLinesClamp as number}
+                  lineClamp={options.textLinesClamp}
                   dangerouslySetInnerHTML={{ __html: feedEntry.description }}
                 />
               )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { signIn } from "@homarr/auth/client";
@@ -26,19 +26,19 @@ export const InitUserForm = () => {
 
   const handleSubmitAsync = async (values: FormType) => {
     await mutateAsync(values, {
-      async onSuccess() {
+      onSuccess() {
         showSuccessNotification({
           title: tUser("notification.success.title"),
           message: tUser("notification.success.message"),
         });
 
-        await signIn("credentials", {
+        void signIn("credentials", {
           name: values.username,
           password: values.password,
           redirect: false,
+        }).then(async () => {
+          await revalidatePathActionAsync("/init");
         });
-
-        await revalidatePathActionAsync("/init");
       },
       onError: (error) => {
         showErrorNotification({

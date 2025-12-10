@@ -66,3 +66,7 @@
 .tiptap[contenteditable="false"].resize-cursor {
   pointer-events: none;
 }
+
+.ProseMirror {
+  height: 100%;
+}

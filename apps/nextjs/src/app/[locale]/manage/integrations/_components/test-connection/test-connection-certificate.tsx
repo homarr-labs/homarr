@@ -4,8 +4,7 @@ import { IconAlertTriangle, IconCheck, IconCopy, IconExclamationCircle, IconRepe
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
-import { getMantineColor } from "@homarr/common";
-import { createId } from "@homarr/db/client";
+import { createId, getMantineColor } from "@homarr/common";
 import { createDocumentationLink } from "@homarr/definitions";
 import { createModal, useConfirmModal, useModalAction } from "@homarr/modals";
 import { AddCertificateModal } from "@homarr/modals-collection";
@@ -29,6 +28,8 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
   const { openConfirmModal } = useConfirmModal();
   const { mutateAsync: trustHostnameAsync } = clientApi.certificates.trustHostnameMismatch.useMutation();
   const { mutateAsync: addCertificateAsync } = clientApi.certificates.addCertificate.useMutation();
+
+  const rootCertificate = getHeighestCertificate(error.data.certificate);
 
   const handleTrustHostname = () => {
     const { hostname } = new URL(url);
@@ -72,7 +73,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
         const formData = new FormData();
         formData.append(
           "file",
-          new File([error.data.certificate.pem], `${hostname}-${createId()}.crt`, {
+          new File([rootCertificate.pem], `${hostname}-${createId()}.crt`, {
             type: "application/x-x509-ca-cert",
           }),
         );
@@ -110,11 +111,11 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
     <>
       {description}
 
-      <CertificateDetailsCard certificate={error.data.certificate} />
+      <CertificateDetailsCard certificate={rootCertificate} />
 
       {error.data.reason === "hostnameMismatch" && <HostnameMismatchAlert />}
 
-      {!error.data.certificate.isSelfSigned && error.data.reason === "untrusted" && <CertificateExtractAlert />}
+      {!rootCertificate.isSelfSigned && error.data.reason === "untrusted" && <CertificateExtractAlert />}
 
       {showRetryButton && (
         <Button
@@ -127,7 +128,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
         </Button>
       )}
 
-      {(error.data.reason === "untrusted" && error.data.certificate.isSelfSigned) ||
+      {(error.data.reason === "untrusted" && rootCertificate.isSelfSigned) ||
       error.data.reason === "hostnameMismatch" ? (
         <Button
           variant="default"
@@ -137,7 +138,7 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
           {tError("certificate.action.trust.label")}
         </Button>
       ) : null}
-      {error.data.reason === "untrusted" && !error.data.certificate.isSelfSigned ? (
+      {error.data.reason === "untrusted" && !rootCertificate.isSelfSigned ? (
         <Button
           variant="default"
           fullWidth
@@ -325,3 +326,8 @@ const PemContentModal = createModal<{ content: string }>(({ actions, innerProps 
   },
   size: "lg",
 });
+
+const getHeighestCertificate = (certificate: MappedCertificate): MappedCertificate => {
+  if (certificate.issuerCertificate) return getHeighestCertificate(certificate.issuerCertificate);
+  return certificate;
+};

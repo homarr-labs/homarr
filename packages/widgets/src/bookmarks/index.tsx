@@ -1,5 +1,5 @@
 import { ActionIcon, Avatar, Group, Stack, Text } from "@mantine/core";
-import { IconClock, IconX } from "@tabler/icons-react";
+import { IconBookmark, IconX } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -9,7 +9,7 @@ import { optionsBuilder } from "../options";
 import { BookmarkAddButton } from "./add-button";
 
 export const { definition, componentLoader } = createWidgetDefinition("bookmarks", {
-  icon: IconClock,
+  icon: IconBookmark,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       title: factory.text(),

@@ -1,7 +1,7 @@
 import SuperJSON from "superjson";
 
+import { createId } from "@homarr/common";
 import type { InferInsertModel } from "@homarr/db";
-import { createId } from "@homarr/db";
 import type { itemLayouts, items } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
 import type { BoardSize, OldmarrApp, OldmarrWidget } from "@homarr/old-schema";
@@ -37,8 +37,9 @@ export const mapApp = (
       appId: appsMap.get(app.id)?.id!,
       openInNewTab: app.behaviour.isOpeningNewTab,
       pingEnabled: app.network.enabledStatusChecker,
-      showDescriptionTooltip: app.behaviour.tooltipDescription !== "",
       showTitle: app.appearance.appNameStatus === "normal",
+      layout: app.appearance.positionAppName,
+      descriptionDisplayMode: app.behaviour.tooltipDescription !== "" ? "tooltip" : "hidden",
     } satisfies WidgetComponentProps<"app">["options"]),
     layouts: boardSizes.map((size) => {
       const shapeForSize = app.shape[size];

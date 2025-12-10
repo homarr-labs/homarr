@@ -1,10 +1,9 @@
-import { decryptSecret } from "@homarr/common/server";
-import type { Modify } from "@homarr/common/types";
-import type { Integration as DbIntegration } from "@homarr/db/schema";
-import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
+import { CodebergIntegration } from "../codeberg/codeberg-integration";
 import { DashDotIntegration } from "../dashdot/dashdot-integration";
+import { DockerHubIntegration } from "../docker-hub/docker-hub-integration";
 import { Aria2Integration } from "../download-client/aria2/aria2-integration";
 import { DelugeIntegration } from "../download-client/deluge/deluge-integration";
 import { NzbGetIntegration } from "../download-client/nzbget/nzbget-integration";
@@ -12,21 +11,32 @@ import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorre
 import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { EmbyIntegration } from "../emby/emby-integration";
+import { GitHubContainerRegistryIntegration } from "../github-container-registry/github-container-registry-integration";
+import { GithubIntegration } from "../github/github-integration";
+import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
+import { ICalIntegration } from "../ical/ical-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
+import { LinuxServerIOIntegration } from "../linuxserverio/linuxserverio-integration";
 import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
 import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
+import { MockIntegration } from "../mock/mock-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
+import { NPMIntegration } from "../npm/npm-integration";
+import { NTFYIntegration } from "../ntfy/ntfy-integration";
 import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
+import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
 import { OverseerrIntegration } from "../overseerr/overseerr-integration";
 import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
 import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
+import { QuayIntegration } from "../quay/quay-integration";
+import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
@@ -47,20 +57,6 @@ export const createIntegrationAsync = async <TKind extends keyof typeof integrat
   }
 
   return new creator(integration) as IntegrationInstanceOfKind<TKind>;
-};
-
-export const createIntegrationAsyncFromSecrets = <TKind extends keyof typeof integrationCreators>(
-  integration: Modify<DbIntegration, { kind: TKind }> & {
-    secrets: { kind: IntegrationSecretKind; value: `${string}.${string}` }[];
-  },
-) => {
-  return createIntegrationAsync({
-    ...integration,
-    decryptedSecrets: integration.secrets.map((secret) => ({
-      ...secret,
-      value: decryptSecret(secret.value),
-    })),
-  });
 };
 
 type IntegrationInstance = new (integration: IntegrationInput) => Integration;
@@ -92,6 +88,19 @@ export const integrationCreators = {
   emby: EmbyIntegration,
   nextcloud: NextcloudIntegration,
   unifiController: UnifiControllerIntegration,
+  opnsense: OPNsenseIntegration,
+  github: GithubIntegration,
+  dockerHub: DockerHubIntegration,
+  gitlab: GitlabIntegration,
+  npm: NPMIntegration,
+  codeberg: CodebergIntegration,
+  linuxServerIO: LinuxServerIOIntegration,
+  gitHubContainerRegistry: GitHubContainerRegistryIntegration,
+  ical: ICalIntegration,
+  quay: QuayIntegration,
+  ntfy: NTFYIntegration,
+  mock: MockIntegration,
+  truenas: TrueNasIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

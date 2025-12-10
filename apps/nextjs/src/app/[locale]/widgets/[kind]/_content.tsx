@@ -10,7 +10,7 @@ import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useSettings } from "@homarr/settings";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
@@ -31,7 +31,7 @@ interface WidgetPreviewPageContentProps {
 
 export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPreviewPageContentProps) => {
   const settings = useSettings();
-  const t = useScopedI18n("widgetPreview");
+  const t = useI18n();
   const { openModal: openWidgetEditModal } = useModalAction(WidgetEditModal);
   const { openModal: openPreviewDimensionsModal } = useModalAction(PreviewDimensionsModal);
   const currentDefinition = useMemo(() => widgetImports[kind].definition, [kind]);
@@ -55,20 +55,27 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
   });
 
   const handleOpenEditWidgetModal = useCallback(() => {
-    openWidgetEditModal({
-      kind,
-      value: state,
-      onSuccessfulEdit: (value) => {
-        setState(value);
+    openWidgetEditModal(
+      {
+        kind,
+        value: state,
+        onSuccessfulEdit: (value) => {
+          setState(value);
+        },
+        integrationData: integrationData.filter(
+          (integration) =>
+            "supportedIntegrations" in currentDefinition &&
+            (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
+        ),
+        integrationSupport: "supportedIntegrations" in currentDefinition,
+        settings,
       },
-      integrationData: integrationData.filter(
-        (integration) =>
-          "supportedIntegrations" in currentDefinition &&
-          (currentDefinition.supportedIntegrations as string[]).some((kind) => kind === integration.kind),
-      ),
-      integrationSupport: "supportedIntegrations" in currentDefinition,
-      settings,
-    });
+      {
+        title(t) {
+          return `${t("item.edit.title")} - ${t(`widget.${kind}.name`)}`;
+        },
+      },
+    );
   }, [currentDefinition, integrationData, kind, openWidgetEditModal, settings, state]);
 
   const Comp = loadWidgetDynamic(kind);
@@ -76,7 +83,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
   const toggleEditMode = useCallback(() => {
     setEditMode((editMode) => !editMode);
     showSuccessNotification({
-      message: editMode ? t("toggle.disabled") : t("toggle.enabled"),
+      message: editMode ? t("widgetPreview.toggle.disabled") : t("widgetPreview.toggle.enabled"),
     });
   }, [editMode, t]);
 

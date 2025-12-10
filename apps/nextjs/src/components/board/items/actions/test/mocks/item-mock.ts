@@ -1,4 +1,4 @@
-import { createId } from "@homarr/db";
+import { createId } from "@homarr/common";
 
 import type { Item } from "~/app/[locale]/boards/_types";
 

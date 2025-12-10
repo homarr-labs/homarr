@@ -1,5 +1,5 @@
 import { IconDownload } from "@tabler/icons-react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { ExtendedDownloadClientItem } from "@homarr/integrations";
@@ -81,6 +81,11 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
         }),
         applyFilterToRatio: factory.switch({
           defaultValue: true,
+        }),
+        limitPerIntegration: factory.number({
+          defaultValue: 50,
+          validate: z.number().min(1),
+          withDescription: true,
         }),
       }),
       {

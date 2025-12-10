@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { and, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema";

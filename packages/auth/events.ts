@@ -20,6 +20,7 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
       where: eq(users.id, user.id),
       columns: {
         name: true,
+        image: true,
         colorScheme: true,
       },
     });
@@ -58,6 +59,15 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
         logger.info(
           `Username for user of oidc provider has changed. user=${user.id} old='${dbUser.name}' new='${profileUsername}'`,
         );
+      }
+
+      if (
+        typeof profile.picture === "string" &&
+        dbUser.image !== profile.picture &&
+        !dbUser.image?.startsWith("data:")
+      ) {
+        await db.update(users).set({ image: profile.picture }).where(eq(users.id, user.id));
+        logger.info(`Profile picture for user of oidc provider has changed. user=${user.id}'`);
       }
     }
 

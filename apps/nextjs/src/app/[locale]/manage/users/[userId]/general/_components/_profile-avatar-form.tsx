@@ -18,7 +18,12 @@ interface UserProfileAvatarForm {
 }
 
 export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
-  const { mutate } = clientApi.user.setProfileImage.useMutation();
+  const { mutate } = clientApi.user.setProfileImage.useMutation({
+    async onSuccess() {
+      // Revalidate all as the avatar is used in multiple places
+      await revalidatePathActionAsync("/");
+    },
+  });
   const [opened, { toggle }] = useDisclosure(false);
   const { openConfirmModal } = useConfirmModal();
   const t = useI18n();
@@ -38,9 +43,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
           image: base64Url,
         },
         {
-          async onSuccess() {
-            // Revalidate all as the avatar is used in multiple places
-            await revalidatePathActionAsync("/");
+          onSuccess() {
             showSuccessNotification({
               message: tManageAvatar("changeImage.notification.success.message"),
             });
@@ -74,9 +77,7 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
             image: null,
           },
           {
-            async onSuccess() {
-              // Revalidate all as the avatar is used in multiple places
-              await revalidatePathActionAsync("/");
+            onSuccess() {
               showSuccessNotification({
                 message: tManageAvatar("removeImage.notification.success.message"),
               });
@@ -92,38 +93,24 @@ export const UserProfileAvatarForm = ({ user }: UserProfileAvatarForm) => {
     });
   }, [mutate, user.id, openConfirmModal, tManageAvatar]);
 
-  const isCredentialsUser = user.provider === "credentials";
-
   return (
     <Box pos="relative">
-      <Menu
-        opened={opened}
-        keepMounted
-        onChange={isCredentialsUser ? toggle : undefined}
-        position="bottom-start"
-        withArrow
-      >
+      <Menu opened={opened} keepMounted onChange={toggle} position="bottom-start" withArrow>
         <Menu.Target>
-          <UnstyledButton
-            component={isCredentialsUser ? undefined : "div"}
-            style={{ cursor: !isCredentialsUser ? "default" : undefined }}
-            onClick={isCredentialsUser ? toggle : undefined}
-          >
+          <UnstyledButton onClick={toggle}>
             <UserAvatar user={user} size={200} />
-            {isCredentialsUser && (
-              <Button
-                component="div"
-                pos="absolute"
-                bottom={0}
-                left={0}
-                size="compact-md"
-                fw="normal"
-                variant="default"
-                leftSection={<IconPencil size={18} stroke={1.5} />}
-              >
-                {t("common.action.edit")}
-              </Button>
-            )}
+            <Button
+              component="div"
+              pos="absolute"
+              bottom={0}
+              left={0}
+              size="compact-md"
+              fw="normal"
+              variant="default"
+              leftSection={<IconPencil size={18} stroke={1.5} />}
+            >
+              {t("common.action.edit")}
+            </Button>
           </UnstyledButton>
         </Menu.Target>
         <Menu.Dropdown>

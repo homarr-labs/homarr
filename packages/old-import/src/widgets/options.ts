@@ -77,6 +77,7 @@ const optionMapping: OptionMapping = {
     descendingDefaultSort: () => false,
     showCompletedUsenet: () => true,
     showCompletedHttp: () => true,
+    limitPerIntegration: () => undefined,
   },
   weather: {
     forecastDayCount: (oldOptions) => oldOptions.forecastDays,
@@ -87,6 +88,7 @@ const optionMapping: OptionMapping = {
     location: (oldOptions) => oldOptions.location,
     showCity: (oldOptions) => oldOptions.displayCityName,
     dateFormat: (oldOptions) => (oldOptions.dateFormat === "hide" ? undefined : oldOptions.dateFormat),
+    useImperialSpeed: () => undefined,
   },
   iframe: {
     embedUrl: (oldOptions) => oldOptions.embedUrl,
@@ -97,7 +99,6 @@ const optionMapping: OptionMapping = {
     allowMicrophone: (oldOptions) => oldOptions.allowMicrophone,
     allowGeolocation: (oldOptions) => oldOptions.allowGeolocation,
     allowScrolling: (oldOptions) => oldOptions.allowScrolling,
-    allowTransparency: (oldOptions) => oldOptions.allowTransparency,
   },
   video: {
     feedUrl: (oldOptions) => oldOptions.FeedUrl,
@@ -117,6 +118,7 @@ const optionMapping: OptionMapping = {
     enableRtl: (oldOptions) => oldOptions.enableRtl,
     maximumAmountPosts: (oldOptions) => oldOptions.maximumAmountOfPosts,
     textLinesClamp: (oldOptions) => oldOptions.textLinesClamp,
+    hideDescription: () => undefined,
   },
   notebook: {
     allowReadOnlyCheck: (oldOptions) => oldOptions.allowReadOnlyCheck,
@@ -156,6 +158,21 @@ const optionMapping: OptionMapping = {
     defaultTab: (oldOptions) => ("defaultTabState" in oldOptions ? oldOptions.defaultTabState : undefined),
     sectionIndicatorRequirement: (oldOptions) =>
       "sectionIndicatorColor" in oldOptions ? oldOptions.sectionIndicatorColor : undefined,
+    showUptime: () => undefined,
+    visibleClusterSections: (oldOptions) => {
+      if (!("showNode" in oldOptions)) return undefined;
+
+      const oldKeys = {
+        showNode: "node" as const,
+        showLXCs: "lxc" as const,
+        showVM: "qemu" as const,
+        showStorage: "storage" as const,
+      } satisfies Partial<Record<keyof typeof oldOptions, string>>;
+
+      return objectEntries(oldKeys)
+        .filter(([key]) => oldOptions[key])
+        .map(([_, section]) => section);
+    },
   },
   mediaTranscoding: {
     defaultView: (oldOptions) => oldOptions.defaultView,

@@ -6,7 +6,7 @@ export const localeConfigurations = {
   ca: {
     name: "Català",
     translatedName: "Catalan",
-    flagIcon: "es-ct",
+    icon: flagIcon("es-ct"),
     importMrtLocalization() {
       return import("./mantine-react-table/ca.json");
     },
@@ -17,7 +17,7 @@ export const localeConfigurations = {
   cn: {
     name: "中文",
     translatedName: "Chinese (Simplified)",
-    flagIcon: "cn",
+    icon: flagIcon("cn"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/zh-Hans/index.esm.mjs").then(
         (module) => module.MRT_Localization_ZH_HANS,
@@ -27,10 +27,24 @@ export const localeConfigurations = {
       return import("dayjs/locale/zh-cn").then((module) => module.default);
     },
   },
+  cr: {
+    name: "Crowdin",
+    translatedName: "Live translation",
+    icon: {
+      type: "custom" as const,
+      url: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/crowdin.svg",
+    },
+    importMrtLocalization() {
+      return import("mantine-react-table/locales/en/index.esm.mjs").then((module) => module.MRT_Localization_EN);
+    },
+    importDayJsLocale() {
+      return import("dayjs/locale/en-gb").then((module) => module.default);
+    },
+  },
   cs: {
     name: "Čeština",
     translatedName: "Czech",
-    flagIcon: "cz",
+    icon: flagIcon("cz"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/cs/index.esm.mjs").then((module) => module.MRT_Localization_CS);
     },
@@ -41,7 +55,7 @@ export const localeConfigurations = {
   da: {
     name: "Dansk",
     translatedName: "Danish",
-    flagIcon: "dk",
+    icon: flagIcon("dk"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/da/index.esm.mjs").then((module) => module.MRT_Localization_DA);
     },
@@ -52,7 +66,7 @@ export const localeConfigurations = {
   de: {
     name: "Deutsch",
     translatedName: "German",
-    flagIcon: "de",
+    icon: flagIcon("de"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/de/index.esm.mjs").then((module) => module.MRT_Localization_DE);
     },
@@ -63,7 +77,7 @@ export const localeConfigurations = {
   "de-CH": {
     name: "Deutsch (Schweiz)",
     translatedName: "German (Swiss)",
-    flagIcon: "ch",
+    icon: flagIcon("ch"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/de/index.esm.mjs").then((module) => module.MRT_Localization_DE);
     },
@@ -74,7 +88,7 @@ export const localeConfigurations = {
   "en-gb": {
     name: "English (UK)",
     translatedName: "English (UK)",
-    flagIcon: "gb",
+    icon: flagIcon("gb"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/en/index.esm.mjs").then((module) => module.MRT_Localization_EN);
     },
@@ -85,7 +99,7 @@ export const localeConfigurations = {
   en: {
     name: "English (US)",
     translatedName: "English (US)",
-    flagIcon: "us",
+    icon: flagIcon("us"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/en/index.esm.mjs").then((module) => module.MRT_Localization_EN);
     },
@@ -96,7 +110,7 @@ export const localeConfigurations = {
   el: {
     name: "Ελληνικά",
     translatedName: "Greek",
-    flagIcon: "gr",
+    icon: flagIcon("gr"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/el/index.esm.mjs").then((module) => module.MRT_Localization_EL);
     },
@@ -107,7 +121,7 @@ export const localeConfigurations = {
   es: {
     name: "Español",
     translatedName: "Spanish",
-    flagIcon: "es",
+    icon: flagIcon("es"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/es/index.esm.mjs").then((module) => module.MRT_Localization_ES);
     },
@@ -118,7 +132,7 @@ export const localeConfigurations = {
   et: {
     name: "Eesti",
     translatedName: "Estonian",
-    flagIcon: "ee",
+    icon: flagIcon("ee"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/et/index.esm.mjs").then((module) => module.MRT_Localization_ET);
     },
@@ -129,7 +143,7 @@ export const localeConfigurations = {
   fr: {
     name: "Français",
     translatedName: "French",
-    flagIcon: "fr",
+    icon: flagIcon("fr"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/fr/index.esm.mjs").then((module) => module.MRT_Localization_FR);
     },
@@ -140,7 +154,7 @@ export const localeConfigurations = {
   he: {
     name: "עברית",
     translatedName: "Hebrew",
-    flagIcon: "il",
+    icon: flagIcon("il"),
     isRTL: true,
     importMrtLocalization() {
       return import("mantine-react-table/locales/he/index.esm.mjs").then((module) => module.MRT_Localization_HE);
@@ -152,7 +166,7 @@ export const localeConfigurations = {
   hr: {
     name: "Hrvatski",
     translatedName: "Croatian",
-    flagIcon: "hr",
+    icon: flagIcon("hr"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/hr/index.esm.mjs").then((module) => module.MRT_Localization_HR);
     },
@@ -163,7 +177,7 @@ export const localeConfigurations = {
   hu: {
     name: "Magyar",
     translatedName: "Hungarian",
-    flagIcon: "hu",
+    icon: flagIcon("hu"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/hu/index.esm.mjs").then((module) => module.MRT_Localization_HU);
     },
@@ -174,7 +188,7 @@ export const localeConfigurations = {
   it: {
     name: "Italiano",
     translatedName: "Italian",
-    flagIcon: "it",
+    icon: flagIcon("it"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/it/index.esm.mjs").then((module) => module.MRT_Localization_IT);
     },
@@ -185,7 +199,7 @@ export const localeConfigurations = {
   ja: {
     name: "日本語",
     translatedName: "Japanese",
-    flagIcon: "jp",
+    icon: flagIcon("jp"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/ja/index.esm.mjs").then((module) => module.MRT_Localization_JA);
     },
@@ -196,7 +210,7 @@ export const localeConfigurations = {
   ko: {
     name: "한국어",
     translatedName: "Korean",
-    flagIcon: "kr",
+    icon: flagIcon("kr"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/ko/index.esm.mjs").then((module) => module.MRT_Localization_KO);
     },
@@ -207,7 +221,7 @@ export const localeConfigurations = {
   lt: {
     name: "Lietuvių",
     translatedName: "Lithuanian",
-    flagIcon: "lt",
+    icon: flagIcon("lt"),
     importMrtLocalization() {
       return import("./mantine-react-table/lt.json");
     },
@@ -218,7 +232,7 @@ export const localeConfigurations = {
   lv: {
     name: "Latviešu",
     translatedName: "Latvian",
-    flagIcon: "lv",
+    icon: flagIcon("lv"),
     importMrtLocalization() {
       return import("./mantine-react-table/lv.json");
     },
@@ -229,7 +243,7 @@ export const localeConfigurations = {
   nl: {
     name: "Nederlands",
     translatedName: "Dutch",
-    flagIcon: "nl",
+    icon: flagIcon("nl"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/nl/index.esm.mjs").then((module) => module.MRT_Localization_NL);
     },
@@ -240,7 +254,7 @@ export const localeConfigurations = {
   no: {
     name: "Norsk",
     translatedName: "Norwegian",
-    flagIcon: "no",
+    icon: flagIcon("no"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/no/index.esm.mjs").then((module) => module.MRT_Localization_NO);
     },
@@ -251,7 +265,7 @@ export const localeConfigurations = {
   pl: {
     name: "Polski",
     translatedName: "Polish",
-    flagIcon: "pl",
+    icon: flagIcon("pl"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/pl/index.esm.mjs").then((module) => module.MRT_Localization_PL);
     },
@@ -262,7 +276,7 @@ export const localeConfigurations = {
   pt: {
     name: "Português",
     translatedName: "Portuguese",
-    flagIcon: "pt",
+    icon: flagIcon("pt"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/pt/index.esm.mjs").then((module) => module.MRT_Localization_PT);
     },
@@ -273,7 +287,7 @@ export const localeConfigurations = {
   ro: {
     name: "Românesc",
     translatedName: "Romanian",
-    flagIcon: "ro",
+    icon: flagIcon("ro"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/ro/index.esm.mjs").then((module) => module.MRT_Localization_RO);
     },
@@ -284,7 +298,7 @@ export const localeConfigurations = {
   ru: {
     name: "Русский",
     translatedName: "Russian",
-    flagIcon: "ru",
+    icon: flagIcon("ru"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/ru/index.esm.mjs").then((module) => module.MRT_Localization_RU);
     },
@@ -295,7 +309,7 @@ export const localeConfigurations = {
   sk: {
     name: "Slovenčina",
     translatedName: "Slovak",
-    flagIcon: "sk",
+    icon: flagIcon("sk"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/sk/index.esm.mjs").then((module) => module.MRT_Localization_SK);
     },
@@ -306,7 +320,7 @@ export const localeConfigurations = {
   sl: {
     name: "Slovenščina",
     translatedName: "Slovenian",
-    flagIcon: "si",
+    icon: flagIcon("si"),
     importMrtLocalization() {
       return import("./mantine-react-table/sl.json");
     },
@@ -317,7 +331,7 @@ export const localeConfigurations = {
   sv: {
     name: "Svenska",
     translatedName: "Swedish",
-    flagIcon: "se",
+    icon: flagIcon("se"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/sv/index.esm.mjs").then((module) => module.MRT_Localization_SV);
     },
@@ -328,7 +342,7 @@ export const localeConfigurations = {
   tr: {
     name: "Türkçe",
     translatedName: "Turkish",
-    flagIcon: "tr",
+    icon: flagIcon("tr"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/tr/index.esm.mjs").then((module) => module.MRT_Localization_TR);
     },
@@ -339,7 +353,7 @@ export const localeConfigurations = {
   zh: {
     name: "中文",
     translatedName: "Chinese (Traditional)",
-    flagIcon: "tw",
+    icon: flagIcon("tw"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/zh-Hant/index.esm.mjs").then(
         (module) => module.MRT_Localization_ZH_HANT,
@@ -352,7 +366,7 @@ export const localeConfigurations = {
   uk: {
     name: "Українська",
     translatedName: "Ukrainian",
-    flagIcon: "ua",
+    icon: flagIcon("ua"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/uk/index.esm.mjs").then((module) => module.MRT_Localization_UK);
     },
@@ -363,7 +377,7 @@ export const localeConfigurations = {
   vi: {
     name: "Tiếng Việt",
     translatedName: "Vietnamese",
-    flagIcon: "vn",
+    icon: flagIcon("vn"),
     importMrtLocalization() {
       return import("mantine-react-table/locales/vi/index.esm.mjs").then((module) => module.MRT_Localization_VI);
     },
@@ -376,12 +390,26 @@ export const localeConfigurations = {
   {
     name: string;
     translatedName: string;
-    flagIcon: string;
+    icon: LanguageIconDefinition;
     importMrtLocalization: () => Promise<MRT_Localization>;
     importDayJsLocale: () => Promise<ILocale>;
     isRTL?: boolean;
   }
 >;
+
+function flagIcon<TCode extends string>(flag: TCode) {
+  return { type: "flag" as const, flag };
+}
+
+export type LanguageIconDefinition =
+  | {
+      type: "flag";
+      flag: string;
+    }
+  | {
+      type: "custom";
+      url: string;
+    };
 
 export const supportedLanguages = objectKeys(localeConfigurations);
 export type SupportedLanguage = (typeof supportedLanguages)[number];

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const getStatisticsSchema = z.object({
   pieStats: z.object({

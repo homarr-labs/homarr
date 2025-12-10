@@ -1,5 +1,5 @@
 import { Button, Group, PasswordInput, Stack } from "@mantine/core";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
@@ -29,10 +29,10 @@ export const ImportTokenModal = createModal<InnerProps>(({ actions, innerProps }
     mutate(
       { checksum: innerProps.checksum, token: values.token },
       {
-        async onSuccess(isValid) {
+        onSuccess(isValid) {
           if (isValid) {
             actions.closeModal();
-            await innerProps.onSuccessAsync(values.token);
+            void innerProps.onSuccessAsync(values.token);
           } else {
             showErrorNotification({
               title: tTokenModal("notification.error.title"),

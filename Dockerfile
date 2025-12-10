@@ -1,4 +1,4 @@
-FROM node:22.16.0-alpine AS base
+FROM node:24.11.1-alpine AS base
 
 FROM base AS builder
 RUN apk add --no-cache libc6-compat
@@ -10,8 +10,6 @@ RUN apk add --no-cache libc6-compat curl bash
 RUN apk update
 COPY . .
 
-# Install working version of corepack (See https://github.com/nodejs/corepack/issues/612)
-RUN npm install -g corepack@0.31.0 && corepack --version
 RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
 
 # Copy static data as it is not part of the build
@@ -19,8 +17,7 @@ COPY static-data ./static-data
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
 ARG DISABLE_REDIS_LOGS='true'
-# Install working version of corepack (See https://github.com/nodejs/corepack/issues/612)
-RUN npm install -g corepack@0.31.0 && corepack --version
+
 RUN corepack enable pnpm && pnpm build
 
 FROM base AS runner
@@ -58,7 +55,7 @@ COPY --from=builder /app/apps/nextjs/.next/standalone ./
 COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
 COPY scripts/run.sh ./run.sh
-COPY --chmod=777 scripts/entrypoint.sh ./entrypoint.sh
+COPY --chmod=755 scripts/entrypoint.sh ./entrypoint.sh
 COPY packages/redis/redis.conf /app/redis.conf
 COPY nginx.conf /etc/nginx/templates/nginx.conf
 
@@ -67,6 +64,7 @@ ENV DB_URL='/appdata/db/db.sqlite'
 ENV DB_DIALECT='sqlite'
 ENV DB_DRIVER='better-sqlite3'
 ENV AUTH_PROVIDERS='credentials'
+ENV REDIS_IS_EXTERNAL='false'
 ENV NODE_ENV='production'
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]

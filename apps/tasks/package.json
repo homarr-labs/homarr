@@ -10,7 +10,7 @@
   "main": "./src/main.ts",
   "types": "./src/main.ts",
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --platform=node --loader:.scss=text --external:*.node --external:@opentelemetry/api --external:deasync --outfile=tasks.cjs",
+    "build": "esbuild src/main.ts --bundle --platform=node --loader:.scss=text --external:*.node --external:@opentelemetry/api --external:deasync --external:bcrypt --outfile=tasks.cjs",
     "clean": "rm -rf .turbo node_modules",
     "dev": "pnpm with-env tsx ./src/main.ts",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -21,8 +21,9 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/analytics": "workspace:^0.1.0",
+    "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
-    "@homarr/cron-job-runner": "workspace:^0.1.0",
+    "@homarr/cron-job-api": "workspace:^0.1.0",
     "@homarr/cron-jobs": "workspace:^0.1.0",
     "@homarr/cron-jobs-core": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
@@ -32,24 +33,26 @@
     "@homarr/log": "workspace:^",
     "@homarr/ping": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
+    "@homarr/request-handler": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@homarr/widgets": "workspace:^0.1.0",
-    "dayjs": "^1.11.13",
-    "dotenv": "^16.5.0",
-    "superjson": "2.2.2",
-    "undici": "7.10.0"
+    "dayjs": "^1.11.19",
+    "dotenv": "^17.2.3",
+    "fastify": "^5.6.2",
+    "superjson": "2.2.6",
+    "undici": "7.16.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "@types/node": "^22.15.21",
-    "dotenv-cli": "^8.0.0",
-    "esbuild": "^0.25.4",
-    "eslint": "^9.27.0",
-    "prettier": "^3.5.3",
-    "tsx": "4.19.4",
-    "typescript": "^5.8.3"
+    "@types/node": "^24.10.1",
+    "dotenv-cli": "^11.0.0",
+    "esbuild": "^0.27.1",
+    "eslint": "^9.39.1",
+    "prettier": "^3.7.4",
+    "tsx": "4.20.4",
+    "typescript": "^5.9.3"
   }
 }

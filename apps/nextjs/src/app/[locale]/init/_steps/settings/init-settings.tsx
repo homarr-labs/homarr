@@ -3,7 +3,7 @@
 import { startTransition } from "react";
 import { Button, Card, Group, Stack, Switch, Text } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -17,7 +17,11 @@ import { settingsInitSchema } from "@homarr/validation/settings";
 export const InitSettings = () => {
   const tSection = useScopedI18n("management.page.settings.section");
   const t = useI18n();
-  const { mutateAsync } = clientApi.serverSettings.initSettings.useMutation();
+  const { mutateAsync } = clientApi.serverSettings.initSettings.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync("/init");
+    },
+  });
   const form = useZodForm(settingsInitSchema, { initialValues: defaultServerSettings });
 
   form.watch("analytics.enableGeneral", ({ value }) => {
@@ -31,11 +35,7 @@ export const InitSettings = () => {
   });
 
   const handleSubmitAsync = async (values: z.infer<typeof settingsInitSchema>) => {
-    await mutateAsync(values, {
-      async onSuccess() {
-        await revalidatePathActionAsync("/init");
-      },
-    });
+    await mutateAsync(values);
   };
 
   return (

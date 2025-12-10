@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const regexEncryptedSchema = z.string().regex(/^[a-f0-9]+\.[a-f0-9]+$/g);
 

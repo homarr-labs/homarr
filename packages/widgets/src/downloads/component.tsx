@@ -87,6 +87,7 @@ export default function DownloadClientsWidget({
   const [currentItems] = clientApi.widget.downloads.getJobsAndStatuses.useSuspenseQuery(
     {
       integrationIds,
+      limitPerIntegration: options.limitPerIntegration,
     },
     {
       refetchOnMount: false,
@@ -126,22 +127,26 @@ export default function DownloadClientsWidget({
   clientApi.widget.downloads.subscribeToJobsAndStatuses.useSubscription(
     {
       integrationIds,
+      limitPerIntegration: options.limitPerIntegration,
     },
     {
       onData: (data) => {
-        utils.widget.downloads.getJobsAndStatuses.setData({ integrationIds }, (prevData) => {
-          return prevData?.map((item) => {
-            if (item.integration.id !== data.integration.id) return item;
+        utils.widget.downloads.getJobsAndStatuses.setData(
+          { integrationIds, limitPerIntegration: options.limitPerIntegration },
+          (prevData) => {
+            return prevData?.map((item) => {
+              if (item.integration.id !== data.integration.id) return item;
 
-            return {
-              data: data.data,
-              integration: {
-                ...data.integration,
-                updatedAt: new Date(),
-              },
-            };
-          });
-        });
+              return {
+                data: data.data,
+                integration: {
+                  ...data.integration,
+                  updatedAt: new Date(),
+                },
+              };
+            });
+          },
+        );
       },
     },
   );
@@ -536,7 +541,7 @@ export default function DownloadClientsWidget({
         sortUndefined: "last",
         Cell: ({ cell }) => {
           const upSpeed = cell.getValue<ExtendedDownloadClientItem["upSpeed"]>();
-          return upSpeed && <Text>{humanFileSize(upSpeed, "/s")}</Text>;
+          return upSpeed && <Text size="xs">{humanFileSize(upSpeed, "/s")}</Text>;
         },
       },
     ],

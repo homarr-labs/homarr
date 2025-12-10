@@ -1,6 +1,6 @@
 import { IconCloud } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -13,6 +13,7 @@ export const { definition, componentLoader } = createWidgetDefinition("weather",
         isFormatFahrenheit: factory.switch(),
         disableTemperatureDecimals: factory.switch(),
         showCurrentWindSpeed: factory.switch({ withDescription: true }),
+        useImperialSpeed: factory.switch(),
         location: factory.location({
           defaultValue: {
             name: "Paris",

@@ -1,11 +1,12 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
-import { objectEntries } from "@homarr/common";
+import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
-import { and, asc, createId, eq, handleTransactionsAsync, inArray, like } from "@homarr/db";
+import { and, asc, eq, handleTransactionsAsync, inArray, like, or } from "@homarr/db";
 import {
+  apps,
   groupMembers,
   groupPermissions,
   integrationGroupPermissions,
@@ -19,6 +20,7 @@ import {
   getIconUrl,
   getIntegrationKindsByCategory,
   getPermissionsWithParents,
+  integrationCategories,
   integrationDefs,
   integrationKinds,
   integrationSecretKindObject,
@@ -129,6 +131,57 @@ export const integrationRouter = createTRPCRouter({
           integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
       );
   }),
+  allOfGivenCategory: publicProcedure
+    .input(
+      z.object({
+        category: z.enum(integrationCategories),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+      });
+
+      const intergrationKinds = getIntegrationKindsByCategory(input.category);
+
+      const integrationsFromDb = await ctx.db.query.integrations.findMany({
+        with: {
+          userPermissions: {
+            where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
+          },
+          groupPermissions: {
+            where: inArray(
+              integrationGroupPermissions.groupId,
+              groupsOfCurrentUser.map((group) => group.groupId),
+            ),
+          },
+        },
+        where: inArray(integrations.kind, intergrationKinds),
+      });
+      return integrationsFromDb
+        .map((integration) => {
+          const permissions = integration.userPermissions
+            .map(({ permission }) => permission)
+            .concat(integration.groupPermissions.map(({ permission }) => permission));
+
+          return {
+            id: integration.id,
+            name: integration.name,
+            kind: integration.kind,
+            url: integration.url,
+            permissions: {
+              hasUseAccess:
+                permissions.includes("use") || permissions.includes("interact") || permissions.includes("full"),
+              hasInteractAccess: permissions.includes("interact") || permissions.includes("full"),
+              hasFullAccess: permissions.includes("full"),
+            },
+          };
+        })
+        .sort(
+          (integrationA, integrationB) =>
+            integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
+        );
+    }),
   search: protectedProcedure
     .input(z.object({ query: z.string(), limit: z.number().min(1).max(100).default(10) }))
     .query(async ({ ctx, input }) => {
@@ -160,6 +213,14 @@ export const integrationRouter = createTRPCRouter({
             updatedAt: true,
           },
         },
+        app: {
+          columns: {
+            id: true,
+            name: true,
+            iconUrl: true,
+            href: true,
+          },
+        },
       },
     });
 
@@ -181,6 +242,7 @@ export const integrationRouter = createTRPCRouter({
         value: integrationSecretKindObject[secret.kind].isPublic ? decryptSecret(secret.value) : null,
         updatedAt: secret.updatedAt,
       })),
+      app: integration.app,
     };
   }),
   create: permissionRequiredProcedure
@@ -192,6 +254,13 @@ export const integrationRouter = createTRPCRouter({
         kind: input.kind,
         url: input.url,
       });
+
+      if (input.app && "name" in input.app && !ctx.session.user.permissions.includes("app-create")) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Permission denied",
+        });
+      }
 
       const result = await testConnectionAsync({
         id: "new",
@@ -215,12 +284,15 @@ export const integrationRouter = createTRPCRouter({
         };
       }
 
+      const appId = await createAppIfNecessaryAsync(ctx.db, input.app);
+
       const integrationId = createId();
       await ctx.db.insert(integrations).values({
         id: integrationId,
         name: input.name,
         url: input.url,
         kind: input.kind,
+        appId,
       });
 
       if (input.secrets.length >= 1) {
@@ -306,6 +378,7 @@ export const integrationRouter = createTRPCRouter({
       .set({
         name: input.name,
         url: input.url,
+        appId: input.appId,
       })
       .where(eq(integrations.id, input.id));
 
@@ -332,6 +405,21 @@ export const integrationRouter = createTRPCRouter({
           await updateSecretAsync(ctx.db, secretInput);
         }
       }
+    }
+
+    const removedSecrets = integration.secrets.filter(
+      (dbSecret) => !input.secrets.some((secret) => dbSecret.kind === secret.kind),
+    );
+    if (removedSecrets.length >= 1) {
+      await ctx.db
+        .delete(integrationSecrets)
+        .where(
+          or(
+            ...removedSecrets.map((secret) =>
+              and(eq(integrationSecrets.integrationId, input.id), eq(integrationSecrets.kind, secret.kind)),
+            ),
+          ),
+        );
     }
 
     logger.info("Updated integration", {
@@ -584,4 +672,31 @@ const addSecretAsync = async (db: Database, input: AddSecretInput) => {
     value: encryptSecret(input.value),
     integrationId: input.integrationId,
   });
+};
+
+const createAppIfNecessaryAsync = async (db: Database, app: z.infer<typeof integrationCreateSchema>["app"]) => {
+  if (!app) return null;
+  if ("id" in app) return app.id;
+
+  logger.info("Creating app", {
+    name: app.name,
+    url: app.href,
+  });
+  const appId = createId();
+  await db.insert(apps).values({
+    id: appId,
+    name: app.name,
+    description: app.description,
+    iconUrl: app.iconUrl,
+    href: app.href,
+    pingUrl: app.pingUrl,
+  });
+
+  logger.info("Created app", {
+    id: appId,
+    name: app.name,
+    url: app.href,
+  });
+
+  return appId;
 };

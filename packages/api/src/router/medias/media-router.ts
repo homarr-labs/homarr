@@ -1,8 +1,9 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
+import { createId } from "@homarr/common";
 import type { InferInsertModel } from "@homarr/db";
-import { and, createId, desc, eq, like } from "@homarr/db";
+import { and, desc, eq, like } from "@homarr/db";
 import { iconRepositories, icons, medias } from "@homarr/db/schema";
 import { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG, mapMediaToIcon } from "@homarr/icons/local";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
@@ -54,34 +55,47 @@ export const mediaRouter = createTRPCRouter({
     .requiresPermission("media-upload")
     .input(mediaUploadSchema)
     .mutation(async ({ ctx, input }) => {
-      const content = Buffer.from(await input.file.arrayBuffer());
-      const id = createId();
-      const media = {
-        id,
-        creatorId: ctx.session.user.id,
-        content,
-        size: input.file.size,
-        contentType: input.file.type,
-        name: input.file.name,
-      } satisfies InferInsertModel<typeof medias>;
-      await ctx.db.insert(medias).values(media);
+      const files = await Promise.all(
+        input.files.map(async (file) => ({
+          id: createId(),
+          meta: file,
+          content: Buffer.from(await file.arrayBuffer()),
+        })),
+      );
+      const insertMedias = files.map(
+        (file): InferInsertModel<typeof medias> => ({
+          id: file.id,
+          creatorId: ctx.session.user.id,
+          content: file.content,
+          size: file.meta.size,
+          contentType: file.meta.type,
+          name: file.meta.name,
+        }),
+      );
+      await ctx.db.insert(medias).values(insertMedias);
 
       const localIconRepository = await ctx.db.query.iconRepositories.findFirst({
         where: eq(iconRepositories.slug, LOCAL_ICON_REPOSITORY_SLUG),
       });
 
-      if (!localIconRepository) return id;
+      const ids = files.map((file) => file.id);
+      if (!localIconRepository) return ids;
 
-      const icon = mapMediaToIcon(media);
-      await ctx.db.insert(icons).values({
-        id: createId(),
-        checksum: icon.checksum,
-        name: icon.fileNameWithExtension,
-        url: icon.imageUrl,
-        iconRepositoryId: localIconRepository.id,
-      });
+      await ctx.db.insert(icons).values(
+        insertMedias.map((media) => {
+          const icon = mapMediaToIcon(media);
 
-      return id;
+          return {
+            id: createId(),
+            checksum: icon.checksum,
+            name: icon.fileNameWithExtension,
+            url: icon.imageUrl,
+            iconRepositoryId: localIconRepository.id,
+          };
+        }),
+      );
+
+      return ids;
     }),
   deleteMedia: protectedProcedure.input(byIdSchema).mutation(async ({ ctx, input }) => {
     const dbMedia = await ctx.db.query.medias.findFirst({
