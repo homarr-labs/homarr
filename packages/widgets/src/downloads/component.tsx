@@ -36,6 +36,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import type { MRT_ColumnDef, MRT_VisibilityState } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 
@@ -47,6 +48,8 @@ import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/i
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+
+dayjs.extend(relativeTime);
 
 interface QuickFilter {
   integrationKinds: string[];
@@ -714,7 +717,10 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
           />
           {item.type !== "miscellaneous" && <NormalizedLine itemKey="ratio" values={item.ratio} />}
           <NormalizedLine itemKey="added" values={item.added === undefined ? "unknown" : dayjs(item.added).format()} />
-          <NormalizedLine itemKey="time" values={item.time !== 0 ? dayjs().add(item.time).format() : "∞"} />
+          <NormalizedLine
+            itemKey="time"
+            values={item.time !== 0 ? dayjs().add(item.time, "milliseconds").fromNow() : "∞"}
+          />
           <NormalizedLine itemKey="category" values={item.category} />
         </Stack>
       )}
