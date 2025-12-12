@@ -262,21 +262,3 @@ jobs:
         uses: Ilshidur/action-discord@master
         with:
           args: "Successfully deployed images for branch **${{ github.ref_name }}**. Tagged as **${{env.NEXT_VERSION}}**."
-  extract-and-publish-static-artifacts:
-    name: Extract artifacts
-    #    needs:
-    #      - build-amd64
-    #      - build-arm64
-    #      - release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Extract x64
-        uses: homarr-labs/homarr/.github/actions/extract-artifacts@experiment/distribute-bare-metal-amd64-bin
-        with:
-          digest: ghcr.io/homarr-labs/homarr:latest # ${{ needs.build-amd64.outputs.digest }}
-          architecture: x64
-      - name: Extract arm64
-        uses: homarr-labs/homarr/.github/actions/extract-artifacts@experiment/distribute-bare-metal-amd64-bin
-        with:
-          digest: ghcr.io/homarr-labs/homarr:latest # ${{ needs.build-arm64.outputs.digest }}
-          architecture: arm64
