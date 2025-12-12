@@ -191,7 +191,7 @@ jobs:
     steps:
       - name: Extract amd64
         if: needs.release.outputs.skipped == 'false'
-        uses: homarr-labs/homarr/.github/actions/extract-source-artifact@dev
+        uses: homarr-labs/homarr/.github/actions/extract-build-artifact@dev
         with:
           digest: "${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }}"
           architecture: amd64
@@ -206,7 +206,7 @@ jobs:
     steps:
       - name: Extract arm64
         if: needs.release.outputs.skipped == 'false'
-        uses: homarr-labs/homarr/.github/actions/extract-source-artifact@dev
+        uses: homarr-labs/homarr/.github/actions/extract-build-artifact@dev
         with:
           digest: "${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}"
           architecture: arm64
