@@ -64,16 +64,23 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
     <Stack gap="xl">
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="lg">
-          <TextInput label={t("field.username.label")} autoComplete="off" {...form.getInputProps("username")} />
+          <TextInput
+            label={t("field.username.label")}
+            id="username"
+            autoComplete="username"
+            {...form.getInputProps("username")}
+          />
           <CustomPasswordInput
             withPasswordRequirements
             label={t("field.password.label")}
+            id="password"
             autoComplete="new-password"
             {...form.getInputProps("password")}
           />
 
           <PasswordInput
             label={t("field.passwordConfirm.label")}
+            id="password-confirm"
             autoComplete="new-password"
             {...form.getInputProps("confirmPassword")}
           />
