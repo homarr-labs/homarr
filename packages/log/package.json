@@ -26,7 +26,7 @@
   "dependencies": {
     "@homarr/core": "workspace:^0.1.0",
     "superjson": "2.2.6",
-    "winston": "3.18.3",
+    "winston": "3.19.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {
