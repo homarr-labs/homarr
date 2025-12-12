@@ -30,7 +30,7 @@ runs:
         docker exec homarr cp /etc/nginx/templates/nginx.conf /app && \
         docker exec homarr tar -czf extraction.tar.gz -C /app . && \
         mkdir -p ${{ runner.temp }}/extraction/${{ inputs.architecture }} && \
-        docker cp homarr-extraction-${{ inputs.architecture }}:/app/extraction.tar.gz ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-${{ inputs.architecture }}.tar.gz
+        docker cp homarr:/app/extraction.tar.gz ${{ runner.temp }}/extraction/${{ inputs.architecture }}/build-${{ inputs.architecture }}.tar.gz
       shell: bash
     - name: Stop ${{ inputs.architecture }} container
       if: always()
