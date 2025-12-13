@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Docker istatistikleri",
       "description": "Konteynerlerinizin istatistikleri (Bu widget yalnızca yönetici ayrıcalıklarıyla eklenebilir)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": "Konteyner istatistikleri alınamadı"
       }
