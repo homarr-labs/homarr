@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "",
       "description": "",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": ""
       }
@@ -2232,6 +2248,7 @@
         "unknown": "Nepoznato",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "",
         "available": "",
         "blacklisted": "",

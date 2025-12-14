@@ -144,6 +144,7 @@ export type HomarrDocumentationPath =
   | "/docs/getting-started/installation/proxmox"
   | "/docs/getting-started/installation/qnap"
   | "/docs/getting-started/installation/railway"
+  | "/docs/getting-started/installation/runtipi"
   | "/docs/getting-started/installation/saltbox"
   | "/docs/getting-started/installation/source"
   | "/docs/getting-started/installation/synology"

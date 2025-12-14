@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Statystyki Dockera",
       "description": "Statystyki Twoich kontenerów (ten widżet można dodać tylko z uprawnieniami administratora)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": "Nie udało się pobrać statystyk kontenerów"
       }
@@ -2232,6 +2248,7 @@
         "unknown": "Nieznany",
         "pending": "Oczekujący",
         "processing": "Przetwarzanie",
+        "requested": "Żądanie",
         "partiallyAvailable": "Częściowy",
         "available": "Dostępne",
         "blacklisted": "Zablokowany",

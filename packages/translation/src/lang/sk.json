@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Docker stav",
       "description": "Štatistiky vašich kontajnerov (Túto miniaplikáciu je možné pridať iba s oprávneniami správcu)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": "Nepodarilo sa načítať štatistiky kontajnerov"
       }
@@ -2232,6 +2248,7 @@
         "unknown": "Neznámy",
         "pending": "Čakajúce",
         "processing": "Spracovanie",
+        "requested": "",
         "partiallyAvailable": "Čiastočný",
         "available": "K dispozícii",
         "blacklisted": "",

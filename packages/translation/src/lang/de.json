@@ -649,14 +649,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Vorhanden",
+              "label": "Vorhandene App auswählen"
             },
             "new": {
-              "title": "",
+              "title": "Neu",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "App URL",
+                "description": "Die URL, welche die App öffnet, sobald sie vom Dashboard aus aufgerufen wird"
               }
             }
           }
@@ -676,9 +676,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Eine App verknüpfen",
+            "remove": "Verknüpfung aufheben",
+            "select": "Wählen Sie eine App zum Verknüpfen aus"
           }
         }
       },
@@ -709,7 +709,7 @@
         "description": "Integration \"{kind}\" kann mit den Suchmaschinen verwendet werden. Wählen Sie dies, um die Suchmaschine automatisch zu konfigurieren."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Verknüpfte App"
       },
       "createApp": {
         "label": "App erstellen",
@@ -1051,7 +1051,7 @@
       "add": "Hinzufügen",
       "apply": "Übernehmen",
       "backToOverview": "Zurück zur Übersicht",
-      "change": "",
+      "change": "Verändern",
       "create": "Erstellen",
       "createAnother": "Erstellen und neu starten",
       "edit": "Bearbeiten",
@@ -1174,8 +1174,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1190,7 +1190,7 @@
           "label": "Titel"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Benutzerdefinierte CSS Klassen"
         },
         "borderColor": {
           "label": "Rahmenfarbe"
@@ -1780,7 +1780,7 @@
           "description": "Nur bei aktuellem Wetter"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Verwende miles per hour für die Windgeschwindigkeit"
         },
         "location": {
           "label": "Wetterstandort"
@@ -1800,12 +1800,12 @@
           "description": "Wie das Datum aussehen sollte"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/h",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Sonnenaufgang",
         "sunset": "Sonnenuntergang",
-        "maxWindSpeed": "Maximale Windgeschwindigkeit: {maxWindSpeed} km/h",
-        "maxWindGusts": "Maximale Windböen: {maxWindGusts} km/h"
+        "maxWindSpeed": "Maximale Windgeschwindigkeit: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Maximale Windböen: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Klar",
@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Docker Statistiken",
       "description": "Statistiken Ihrer Container (Dieses Widget kann nur mit Administratorrechten hinzugefügt werden)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": "Fehler beim Abrufen der Container Statistiken"
       }
@@ -2232,6 +2248,7 @@
         "unknown": "Unbekannt",
         "pending": "Ausstehend",
         "processing": "In Bearbeitung",
+        "requested": "",
         "partiallyAvailable": "Teilweise",
         "available": "Verfügbar",
         "blacklisted": "Gesperrt",
@@ -3013,8 +3030,8 @@
           "integration": "Integrationen",
           "app": "Apps",
           "group": "Gruppen",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "Suchmaschinen",
+          "media": "Medien"
         },
         "statisticLabel": {
           "boards": "Boards",
@@ -3023,8 +3040,8 @@
           "authorization": "Autorisierung"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Willkommen zurück zu Ihrem",
+          "subtitle": "{app} Board"
         }
       },
       "board": {

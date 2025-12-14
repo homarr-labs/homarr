@@ -21,6 +21,7 @@ import ReactMarkdown from "react-markdown";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { isDateWithin, isNullOrWhitespace, splitToChunksWithNItems } from "@homarr/common";
+import { getIconUrl } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
 
@@ -96,55 +97,33 @@ export default function ReleasesWidget({ options }: WidgetComponentProps<"releas
   const repositories = useMemo(() => {
     const formattedResults = options.repositories
       .map((repository) => {
-        if (repository.providerIntegrationId === undefined) {
-          return {
-            ...repository,
-            isNewRelease: false,
-            isStaleRelease: false,
-            latestReleaseAt: undefined,
-            error: {
-              code: "noProviderSeleceted",
-            },
-          };
-        }
+        if (!repository.providerIntegrationId) return { ...repository, error: { code: "noProviderSeleceted" } };
 
-        const response = results.flat().find(({ data }) => data.id === repository.id)?.data;
+        const repositoryResult = results.flat().find(({ id }) => id === repository.id);
+        if (!repositoryResult) return { ...repository, error: { code: "noProviderResponse" } };
+        if (!repositoryResult.success) return { ...repository, error: repositoryResult.error };
 
-        if (response === undefined)
-          return {
-            ...repository,
-            isNewRelease: false,
-            isStaleRelease: false,
-            latestReleaseAt: undefined,
-            error: {
-              code: "noProviderResponse",
-            },
-          };
+        const { data: release, integration } = repositoryResult;
+
+        const isReleaseWithin = (relativeDate: string) =>
+          Boolean(relativeDate) && isDateWithin(release.latestReleaseAt, relativeDate);
 
         return {
           ...repository,
-          ...response,
-          isNewRelease:
-            relativeDateOptions.newReleaseWithin !== "" && response.latestReleaseAt
-              ? isDateWithin(response.latestReleaseAt, relativeDateOptions.newReleaseWithin)
-              : false,
-          isStaleRelease:
-            relativeDateOptions.staleReleaseWithin !== "" && response.latestReleaseAt
-              ? !isDateWithin(response.latestReleaseAt, relativeDateOptions.staleReleaseWithin)
-              : false,
-          viewed: releasesViewedList[repository.id] === response.latestRelease,
+          ...release,
+          integration: { name: integration.name, iconUrl: getIconUrl(integration.kind) },
+          isNewRelease: isReleaseWithin(relativeDateOptions.newReleaseWithin),
+          isStaleRelease: !isReleaseWithin(relativeDateOptions.staleReleaseWithin),
+          viewed: releasesViewedList[repository.id] === release.latestRelease,
         };
       })
       .filter(
         (repository) =>
-          repository.error !== undefined ||
-          !options.showOnlyHighlighted ||
-          repository.isNewRelease ||
-          repository.isStaleRelease,
+          "error" in repository || !options.showOnlyHighlighted || repository.isNewRelease || repository.isStaleRelease,
       )
       .sort((repoA, repoB) => {
-        if (repoA.latestReleaseAt === undefined) return -1;
-        if (repoB.latestReleaseAt === undefined) return 1;
+        if ("error" in repoA) return -1;
+        if ("error" in repoB) return 1;
         return repoA.latestReleaseAt > repoB.latestReleaseAt ? -1 : 1;
       }) as ReleasesRepositoryResponse[];
 

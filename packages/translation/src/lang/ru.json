@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "",
       "description": "",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": ""
       }
@@ -2232,6 +2248,7 @@
         "unknown": "Неизвестно",
         "pending": "В ожидании",
         "processing": "Обработка",
+        "requested": "",
         "partiallyAvailable": "Частично доступно",
         "available": "Доступно",
         "blacklisted": "",

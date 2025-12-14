@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { MantineColor } from "@mantine/core";
 import { Button, Card, Stack, Text } from "@mantine/core";
 import { IconBook2, IconCategoryPlus, IconLayoutDashboard, IconMailForward } from "@tabler/icons-react";
@@ -8,6 +7,7 @@ import { getMantineColor } from "@homarr/common";
 import { db } from "@homarr/db";
 import { createDocumentationLink } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
+import { Link } from "@homarr/ui";
 import type { TablerIcon } from "@homarr/ui";
 
 export const InitFinish = async () => {

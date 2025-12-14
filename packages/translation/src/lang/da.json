@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Docker statistik",
       "description": "Statistik for dine containere (Denne widget kan kun tilføjes med administratorrettigheder)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": "Kunne ikke hente containerstatistik"
       }
@@ -2232,6 +2248,7 @@
         "unknown": "Ukendt",
         "pending": "Afventende",
         "processing": "Behandler",
+        "requested": "Anmodet",
         "partiallyAvailable": "Delvis",
         "available": "Tilgængelig",
         "blacklisted": "Blacklistet",

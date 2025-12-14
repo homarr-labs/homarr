@@ -1,7 +1,6 @@
 "use client";
 
 import { memo, useMemo } from "react";
-import Link from "next/link";
 import type { SelectProps } from "@mantine/core";
 import { Anchor, Button, Group, Loader, Select, SimpleGrid, Text } from "@mantine/core";
 import { IconCheck, IconRocket } from "@tabler/icons-react";
@@ -12,6 +11,7 @@ import { useSession } from "@homarr/auth/client";
 import { useModalAction } from "@homarr/modals";
 import { QuickAddAppModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -69,10 +69,10 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
           variant="default"
           onClick={() =>
             openModal({
-              // eslint-disable-next-line no-restricted-syntax
-              async onClose(createdAppId) {
-                await refetch();
-                form.setFieldValue(`options.${property}`, createdAppId);
+              onClose(createdAppId) {
+                void refetch().then(() => {
+                  form.setFieldValue(`options.${property}`, createdAppId);
+                });
               },
             })
           }

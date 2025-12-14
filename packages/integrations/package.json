@@ -25,10 +25,10 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@ctrl/deluge": "^7.4.0",
-    "@ctrl/qbittorrent": "^9.10.0",
+    "@ctrl/deluge": "^7.5.0",
+    "@ctrl/qbittorrent": "^9.11.0",
     "@ctrl/transmission": "^7.4.0",
-    "@gitbeaker/rest": "^43.5.0",
+    "@gitbeaker/rest": "^43.8.0",
     "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
@@ -39,17 +39,17 @@
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
-    "@jellyfin/sdk": "^0.12.0",
-    "@octokit/auth-app": "^8.1.1",
+    "@jellyfin/sdk": "^0.13.0",
+    "@octokit/auth-app": "^8.1.2",
     "ical.js": "^2.2.1",
     "maria2": "^0.4.1",
     "node-ical": "^0.22.1",
-    "octokit": "^5.0.4",
+    "octokit": "^5.0.5",
     "proxmox-api": "1.1.1",
-    "tsdav": "^2.1.5",
+    "tsdav": "^2.1.6",
     "undici": "7.16.0",
     "xml2js": "^0.6.2",
-    "zod": "^4.1.12"
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
@@ -57,7 +57,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/node-unifi": "^2.5.1",
     "@types/xml2js": "^0.4.14",
-    "eslint": "^9.38.0",
+    "eslint": "^9.39.1",
     "typescript": "^5.9.3"
   }
 }

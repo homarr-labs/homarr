@@ -25,15 +25,15 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/core": "workspace:^0.1.0",
-    "superjson": "2.2.3",
-    "winston": "3.18.3",
-    "zod": "^4.1.12"
+    "superjson": "2.2.6",
+    "winston": "3.19.0",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.38.0",
+    "eslint": "^9.39.1",
     "typescript": "^5.9.3"
   }
 }

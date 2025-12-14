@@ -37,7 +37,7 @@ jobs:
     outputs:
       version: ${{ steps.read-semver.outputs.version || steps.version-fallback.outputs.version }}
       git_ref: ${{ steps.read-git-ref.outputs.ref || github.ref }}
-
+      skipped: ${{ env.SKIP_RELEASE }}
     steps:
       - run: echo "Skipping release for workflow_dispatch event"
         if: env.SKIP_RELEASE == 'true'
@@ -55,16 +55,16 @@ jobs:
           app-id: ${{ secrets.RENOVATE_MERGE_APP_ID }}
           permission-contents: write # required to commit package.json & changelog changes, merge them to dev and publish the release
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         if: env.SKIP_RELEASE == 'false'
         with:
           persist-credentials: false
       - uses: pnpm/action-setup@v4
         if: env.SKIP_RELEASE == 'false'
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         if: env.SKIP_RELEASE == 'false'
         with:
-          node-version: 24.10.0
+          node-version: 24.11.1
           cache: "pnpm"
       - run: npm i -g pnpm
         if: env.SKIP_RELEASE == 'false'
@@ -115,7 +115,7 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ needs.release.outputs.git_ref }}
 
@@ -146,7 +146,6 @@ jobs:
           outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
         env:
           SKIP_ENV_VALIDATION: true
-
   build-arm64:
     name: Build docker image for arm64
     needs: release
@@ -154,7 +153,7 @@ jobs:
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ needs.release.outputs.git_ref }}
 
@@ -185,10 +184,38 @@ jobs:
           outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
         env:
           SKIP_ENV_VALIDATION: true
+  extract-asset-amd64:
+    name: Extract amd64 asset from docker image
+    needs: [release, build-amd64]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract amd64
+        if: needs.release.outputs.skipped == 'false'
+        uses: homarr-labs/homarr/.github/actions/extract-build-artifact@dev
+        with:
+          digest: "${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }}"
+          architecture: amd64
+          release-tag: ${{ needs.release.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
 
+  extract-asset-arm64:
+    name: Extract arm64 asset from docker image
+    needs: [release, build-arm64]
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Extract arm64
+        if: needs.release.outputs.skipped == 'false'
+        uses: homarr-labs/homarr/.github/actions/extract-build-artifact@dev
+        with:
+          digest: "${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}"
+          architecture: arm64
+          release-tag: ${{ needs.release.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
   publish:
     name: Complete deployment and notify
-    needs: [release, build-amd64, build-arm64]
+    needs: [release, build-amd64, build-arm64, extract-asset-amd64, extract-asset-arm64]
     runs-on: ubuntu-latest
     env:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
@@ -221,6 +248,13 @@ jobs:
           docker buildx imagetools create -t ${{ env.GHCR_REPO }}:${{ env.NEXT_VERSION }} \
             ${{ env.GHCR_REPO }}@${{ needs.build-amd64.outputs.digest }} \
             ${{ env.GHCR_REPO }}@${{ needs.build-arm64.outputs.digest }}
+
+      - name: Publish release
+        if: needs.release.outputs.skipped == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release edit --repo ${{ github.repository }} ${{ needs.release.outputs.version }} --draft=false
 
       - name: Discord notification
         env:

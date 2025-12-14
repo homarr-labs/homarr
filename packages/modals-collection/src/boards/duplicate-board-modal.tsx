@@ -1,7 +1,7 @@
 import { Button, Group, Stack, Text, TextInput } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
-import type { MaybePromise } from "@homarr/common/types";
+import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
@@ -15,7 +15,6 @@ interface InnerProps {
     id: string;
     name: string;
   };
-  onSuccess: () => MaybePromise<void>;
 }
 
 export const DuplicateBoardModal = createModal<InnerProps>(({ actions, innerProps }) => {
@@ -27,7 +26,11 @@ export const DuplicateBoardModal = createModal<InnerProps>(({ actions, innerProp
     },
   });
   const boardNameStatus = useBoardNameStatus(form.values.name);
-  const { mutateAsync, isPending } = clientApi.board.duplicateBoard.useMutation();
+  const { mutateAsync, isPending } = clientApi.board.duplicateBoard.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync("/manage/boards");
+    },
+  });
 
   return (
     <form
@@ -40,13 +43,12 @@ export const DuplicateBoardModal = createModal<InnerProps>(({ actions, innerProp
             id: innerProps.board.id,
           },
           {
-            async onSuccess() {
+            onSuccess() {
               actions.closeModal();
               showSuccessNotification({
                 title: t("board.action.duplicate.notification.success.title"),
                 message: t("board.action.duplicate.notification.success.message"),
               });
-              await innerProps.onSuccess();
             },
             onError() {
               showErrorNotification({

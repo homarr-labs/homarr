@@ -649,14 +649,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "既存",
+              "label": "既存のアプリを選択"
             },
             "new": {
-              "title": "",
+              "title": "新規作成",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "アプリURL",
+                "description": "ダッシュボードからアクセスしたときにアプリが開くURL"
               }
             }
           }
@@ -676,9 +676,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "アプリにリンクする",
+            "remove": "リンクを解除する",
+            "select": "リンクするアプリを選択する"
           }
         }
       },
@@ -709,7 +709,7 @@
         "description": "連携機能 \"{kind}\" は、検索エンジンで使用できます。検索エンジンを自動的に設定するには、これにチェックを入れてください。"
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "リンクされたアプリ"
       },
       "createApp": {
         "label": "アプリの作成",
@@ -1051,7 +1051,7 @@
       "add": "追加",
       "apply": "適用",
       "backToOverview": "概要に戻る",
-      "change": "",
+      "change": "変更する",
       "create": "作成",
       "createAnother": "作成・新規入力",
       "edit": "編集",
@@ -1174,8 +1174,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1190,7 +1190,7 @@
           "label": "タイトル"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "カスタム css クラス"
         },
         "borderColor": {
           "label": "境界線の色"
@@ -1780,7 +1780,7 @@
           "description": "現在の天気のみ表示"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "風速にmphを使用する"
         },
         "location": {
           "label": "天候の場所"
@@ -1800,12 +1800,12 @@
           "description": "日付がどのように見えるか"
         }
       },
-      "currentWindSpeed": "時速 {currentWindSpeed} km",
+      "currentWindSpeed": "時速 {currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "日出",
         "sunset": "日没",
-        "maxWindSpeed": "最大風速： {maxWindSpeed} km/h",
-        "maxWindGusts": "最大瞬間風速： {maxWindGusts} km/h"
+        "maxWindSpeed": "最大風速： {maxWindSpeed} {unit}",
+        "maxWindGusts": "最大瞬間風速： {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "晴れ",
@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Dockerのステータス",
       "description": "あなたのコンテナの統計（このウィジェットは管理者権限でのみ追加できます）",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": "コンテナステータスの取得に失敗しました"
       }
@@ -2232,6 +2248,7 @@
         "unknown": "不明",
         "pending": "保留中",
         "processing": "処理中",
+        "requested": "",
         "partiallyAvailable": "一部",
         "available": "利用可能",
         "blacklisted": "ブラックリスト",
@@ -3013,8 +3030,8 @@
           "integration": "連携機能",
           "app": "アプリ",
           "group": "グループ",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "検索エンジン",
+          "media": "メディア"
         },
         "statisticLabel": {
           "boards": "ボード",
@@ -3023,8 +3040,8 @@
           "authorization": "認可"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "おかえりなさい",
+          "subtitle": "{app} ボード"
         }
       },
       "board": {

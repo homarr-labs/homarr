@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "סטטיסטיקות דוקר",
       "description": "סטטיסטיקות של המכולות שלך (ניתן להוסיף ווידג'ט זה רק עם הרשאות מנהל)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": "נכשל באחזור סטטיסטיקות המכולות"
       }
@@ -2232,6 +2248,7 @@
         "unknown": "לא ידוע",
         "pending": "בהמתנה",
         "processing": "מעבד",
+        "requested": "",
         "partiallyAvailable": "חלקי",
         "available": "זמין",
         "blacklisted": "ברשימה השחורה",

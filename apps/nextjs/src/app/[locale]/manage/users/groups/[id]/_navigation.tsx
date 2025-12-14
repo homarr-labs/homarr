@@ -1,9 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavLink } from "@mantine/core";
+
+import { Link } from "@homarr/ui";
 
 interface NavigationLinkProps {
   href: string;

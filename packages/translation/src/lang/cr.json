@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "crwdns3424:0crwdne3424:0",
       "description": "crwdns3426:0crwdne3426:0",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": "crwdns3808:0crwdne3808:0"
+        },
+        "defaultSort": {
+          "label": "crwdns3810:0crwdne3810:0",
+          "option": {
+            "name": "crwdns3812:0crwdne3812:0",
+            "state": "crwdns3814:0crwdne3814:0",
+            "cpuUsage": "crwdns3816:0crwdne3816:0",
+            "memoryUsage": "crwdns3818:0crwdne3818:0"
+          }
+        },
+        "descendingDefaultSort": {
+          "label": "crwdns3820:0crwdne3820:0"
+        }
+      },
       "error": {
         "internalServerError": "crwdns3428:0crwdne3428:0"
       }
@@ -2232,6 +2248,7 @@
         "unknown": "crwdns1314:0crwdne1314:0",
         "pending": "crwdns1316:0crwdne1316:0",
         "processing": "crwdns1318:0crwdne1318:0",
+        "requested": "crwdns3806:0crwdne3806:0",
         "partiallyAvailable": "crwdns1320:0crwdne1320:0",
         "available": "crwdns1322:0crwdne1322:0",
         "blacklisted": "crwdns3468:0crwdne3468:0",

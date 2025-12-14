@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Estadísticas de Docker",
       "description": "Estadísticas de tus contenedores (Este widget sólo puede ser añadido con privilegios de administrador)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": "No se pudo obtener las estadísticas de los contenedores"
       }
@@ -2232,6 +2248,7 @@
         "unknown": "Desconocido",
         "pending": "Pendiente",
         "processing": "Procesando",
+        "requested": "Solicitado",
         "partiallyAvailable": "Parcial",
         "available": "Disponible",
         "blacklisted": "Lista negra",
