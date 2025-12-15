@@ -1941,19 +1941,19 @@
       "description": "Statistiche dei tuoi contenitori (questo widget può essere aggiunto solo con privilegi di amministratore)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Abilita l'ordinamento degli elementi"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Colonna utilizzata per l'ordinamento predefinito",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Nome",
+            "state": "Stato",
+            "cpuUsage": "Uso della CPU",
+            "memoryUsage": "Uso della memoria"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Inverti ordinamento"
         }
       },
       "error": {
