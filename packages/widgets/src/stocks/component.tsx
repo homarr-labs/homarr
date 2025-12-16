@@ -13,12 +13,12 @@ function round(value: number) {
   return Math.round(value * 100) / 100;
 }
 
-function calculateChange(valueA: number, valueB: number) {
-  return valueA - valueB;
+function calculateChange(currentPrice: number, previousClose: number) {
+  return currentPrice - previousClose;
 }
 
-function calculateChangePercentage(valueA: number, valueB: number) {
-  return 100 * ((valueA - valueB) / valueA);
+function calculateChangePercentage(currentPrice: number, previousClose: number) {
+  return 100 * ((currentPrice - previousClose) / previousClose);
 }
 
 export default function StockPriceWidget({ options, width, height }: WidgetComponentProps<"stockPrice">) {
@@ -26,9 +26,9 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
   const theme = useMantineTheme();
   const [{ data }] = clientApi.widget.stockPrice.getPriceHistory.useSuspenseQuery(options);
 
-  const stockValuesChange = round(calculateChange(data.priceHistory.at(-1) ?? 0, data.priceHistory[0] ?? 0));
+  const stockValuesChange = round(calculateChange(data.priceHistory.at(-1) ?? 0, data.previousClose));
   const stockValuesChangePercentage = round(
-    calculateChangePercentage(data.priceHistory.at(-1) ?? 0, data.priceHistory[0] ?? 0),
+    calculateChangePercentage(data.priceHistory.at(-1) ?? 0, data.previousClose),
   );
 
   const stockValuesMin = Math.min(...data.priceHistory);
