@@ -206,15 +206,16 @@ const ContainerActionBarButton = (props: ContainerActionBarButtonProps) => {
   const t = useScopedI18n("docker.action");
   const utils = clientApi.useUtils();
 
-  const { mutateAsync, isPending } = clientApi.docker[`${props.action}All`].useMutation();
+  const { mutateAsync, isPending } = clientApi.docker[`${props.action}All`].useMutation({
+    async onSettled() {
+      await utils.docker.getContainers.invalidate();
+    },
+  });
 
   const handleClickAsync = async () => {
     await mutateAsync(
       { ids: props.selectedIds },
       {
-        async onSettled() {
-          await utils.docker.getContainers.invalidate();
-        },
         onSuccess() {
           showSuccessNotification({
             title: t(`${props.action}.notification.success.title`),

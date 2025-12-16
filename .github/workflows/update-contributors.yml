@@ -9,6 +9,8 @@ env:
   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
   CROWDIN_TOKEN: "${{ secrets.CROWDIN_UPDATE_CONTRIBUTORS_TOKEN }}"
 
+permissions:
+  contents: read
 jobs:
   update-contributors:
     runs-on: ubuntu-latest
@@ -26,7 +28,7 @@ jobs:
           permission-pull-requests: write # required to create pr & enable automerge
 
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         env:
           GITHUB_TOKEN: ${{ steps.obtainToken.outputs.token }}
 
@@ -51,7 +53,7 @@ jobs:
 
       - name: Create Pull Request
         id: create-pull-request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ steps.obtainToken.outputs.token }}
           branch: update-contributors

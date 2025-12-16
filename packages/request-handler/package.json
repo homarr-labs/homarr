@@ -26,14 +26,15 @@
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
+    "@homarr/docker": "workspace:^0.1.0",
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/log": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "dayjs": "^1.11.19",
     "octokit": "^5.0.5",
-    "superjson": "2.2.5",
+    "superjson": "2.2.6",
     "undici": "7.16.0",
-    "zod": "^4.1.12"
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

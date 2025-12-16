@@ -1,4 +1,6 @@
 name: "[Crowdin] Upload translations"
+permissions:
+  contents: read
 
 on:
   workflow_dispatch:
@@ -15,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Upload Crowdin translations
         uses: crowdin/github-action@v2

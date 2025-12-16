@@ -6,14 +6,14 @@ import type { Database, InferInsertModel } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
 import { logger } from "@homarr/log";
-import type { userSignInSchema } from "@homarr/validation/user";
+import type { ldapSignInSchema } from "@homarr/validation/user";
 
 import { env } from "../../../env";
 import { LdapClient } from "../ldap-client";
 
 export const authorizeWithLdapCredentialsAsync = async (
   db: Database,
-  credentials: z.infer<typeof userSignInSchema>,
+  credentials: z.infer<typeof ldapSignInSchema>,
 ) => {
   logger.info(`user ${credentials.name} is trying to log in using LDAP. Connecting to LDAP server...`);
   const client = new LdapClient();
@@ -38,7 +38,14 @@ export const authorizeWithLdapCredentialsAsync = async (
         attributes: [env.AUTH_LDAP_USERNAME_ATTRIBUTE, env.AUTH_LDAP_USER_MAIL_ATTRIBUTE],
       },
     })
-    .then((entries) => entries.at(0));
+    .then((entries) => {
+      if (entries.length > 1) {
+        logger.warn(`Multiple LDAP users found for ${credentials.name}, expected only one.`);
+        throw new CredentialsSignin();
+      }
+
+      return entries.at(0);
+    });
 
   if (!ldapUser) {
     logger.warn(`User ${credentials.name} not found in LDAP`);

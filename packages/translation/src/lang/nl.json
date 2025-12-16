@@ -747,7 +747,7 @@
         },
         "statusCode": {
           "title": "Antwoord fout",
-          "description": "",
+          "description": "Onverwachte {statusCode} ({reason}) reactie van <url></url>. Controleer of de URL wijst naar de basis-URL van de integratie.",
           "otherDescription": "",
           "reason": {
             "badRequest": "Onjuist verzoek",
@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Docker statistieken",
       "description": "",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": ""
       }
@@ -2232,6 +2248,7 @@
         "unknown": "Onbekend",
         "pending": "In afwachting",
         "processing": "Verwerken",
+        "requested": "Aangevraagd",
         "partiallyAvailable": "Gedeeltelijk",
         "available": "Beschikbaar",
         "blacklisted": "Geblacklist",

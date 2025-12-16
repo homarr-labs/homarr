@@ -169,17 +169,15 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const token = super.getSecretValue("apiKey");
 
-    const response = await input.fetchAsync(this.url("/"), {
+    const response = await input.fetchAsync(super.url("/prefs"), {
       headers: {
         "X-Plex-Token": token,
+        Accept: "application/json",
       },
     });
 
     if (!response.ok) return TestConnectionError.StatusResult(response);
 
-    const result = await response.text();
-
-    await PlexIntegration.parseXmlAsync<PlexResponse>(result);
     return { success: true };
   }
 

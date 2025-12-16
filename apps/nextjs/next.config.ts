@@ -20,13 +20,15 @@ const withNextIntl = createNextIntlPlugin({
 const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
-  reactCompiler: true,
+  // react compiler breaks mantine-react-table, so disabled for now
+  //reactCompiler: true,
   /** We already do typechecking as separate tasks in CI */
   typescript: { ignoreBuildErrors: true },
   /**
    * dockerode is required in the external server packages because of https://github.com/homarr-labs/homarr/issues/612
+   * isomorphic-dompurify and jsdom are required, see https://github.com/kkomelin/isomorphic-dompurify/issues/356
    */
-  serverExternalPackages: ["dockerode"],
+  serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom"],
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForDev: true,

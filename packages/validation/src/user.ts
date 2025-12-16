@@ -69,6 +69,17 @@ export const userSignInSchema = z.object({
   password: z.string().min(1),
 });
 
+export const ldapSignInSchema = z.object({
+  name: z
+    .string()
+    .min(1)
+    // Prevent special characters that could lead to LDAP injection attacks
+    .regex(/^[^\\,+<>;"=)(*|!&]+$/, {
+      message: "Invalid characters in ldap username",
+    }),
+  password: z.string().min(1),
+});
+
 export const userRegistrationSchema = addConfirmPasswordRefinement(
   z.object({
     username: usernameSchema,

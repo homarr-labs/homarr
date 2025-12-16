@@ -7,7 +7,7 @@
         "description": "Para começar, por favor selecione como você deseja configurar sua instância Homarr.",
         "action": {
           "scratch": "Começar do zero",
-          "importOldmarr": "Importe de uma instância Homarr anterior a 1,0"
+          "importOldmarr": "Importe de uma instância Homarr anterior a 1.0"
         }
       },
       "import": {
@@ -307,12 +307,12 @@
       "name": "Nome",
       "members": "Membros",
       "homeBoard": {
-        "label": "",
-        "description": ""
+        "label": "Quadro inicial",
+        "description": "Somente quadros acessíveis ao grupo podem ser selecionados"
       },
       "mobileBoard": {
-        "label": "",
-        "description": ""
+        "label": "Quadro para celular",
+        "description": "Somente quadros acessíveis ao grupo podem ser selecionados"
       }
     },
     "permission": {
@@ -320,8 +320,8 @@
         "title": "Administrador",
         "item": {
           "admin": {
-            "label": "",
-            "description": ""
+            "label": "Administrador",
+            "description": "Membros com essa permissão têm acesso total a todos os recursos e configurações"
           }
         }
       },
@@ -329,19 +329,19 @@
         "title": "Aplicativos",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Criar aplicativo",
+            "description": "Permitir que membros criem aplicativos"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Usar todas aplicações",
+            "description": "Permitir que os membros adicionem qualquer aplicativo aos seus quadros"
           },
           "modify-all": {
-            "label": "",
+            "label": "Modificar todos os aplicativos",
             "description": ""
           },
           "full-all": {
-            "label": "",
+            "label": "Acesso completo a aplicativos",
             "description": ""
           }
         }
@@ -410,7 +410,7 @@
         "item": {
           "view-logs": {
             "label": "",
-            "description": ""
+            "description": "Permitir que os membros visualizem os registros"
           }
         }
       },
@@ -419,7 +419,7 @@
         "item": {
           "create": {
             "label": "",
-            "description": ""
+            "description": "Permitir que os membros criem mecanismos de busca"
           },
           "modify-all": {
             "label": "",
@@ -547,19 +547,19 @@
         "title": "Aplicativos",
         "noResults": {
           "title": "",
-          "action": ""
+          "action": "Crie seu primeiro aplicativo"
         }
       },
       "create": {
-        "title": "",
+        "title": "Novo Aplicativo",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Criado com sucesso",
+            "message": "O aplicativo foi criado com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Falha ao criar",
+            "message": "Não foi possível criar o aplicativo"
           }
         }
       },
@@ -618,9 +618,9 @@
         "title": ""
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "Criar  aplicativo",
+        "description": "Criar um aplicativo",
+        "action": "Abrir criação de aplicativo"
       },
       "add": ""
     }
@@ -649,14 +649,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Existente",
+              "label": "Selecione um aplicativo existente"
             },
             "new": {
-              "title": "",
+              "title": "Novo",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "URL da aplicação",
+                "description": "A URL do aplicativo será aberta quando acessada a partir do painel de controle"
               }
             }
           }
@@ -712,8 +712,8 @@
         "sectionTitle": ""
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "Criar aplicativo",
+        "description": "Crie um aplicativo com o mesmo nome e ícone da integração. Deixe o campo de entrada abaixo vazio para criar o aplicativo com a URL de integração."
       },
       "appHref": {
         "placeholder": ""
@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "",
       "description": "",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": ""
       }
@@ -1973,8 +1989,8 @@
       },
       "app": {
         "noData": "",
-        "description": "",
-        "quickCreate": ""
+        "description": "Clique <here></here> para criar um aplicativo",
+        "quickCreate": "Criar aplicativo em tempo real"
       },
       "error": {
         "noIntegration": "",
@@ -2232,6 +2248,7 @@
         "unknown": "Desconhecido",
         "pending": "",
         "processing": "",
+        "requested": "",
         "partiallyAvailable": "Parcial",
         "available": "Disponível",
         "blacklisted": "",
@@ -2659,7 +2676,7 @@
             },
             "onlyImportApps": {
               "label": "",
-              "description": ""
+              "description": "Só adiciona os aplicativos, o quadro precisa ser recriado manualmente"
             }
           },
           "name": {
@@ -2692,8 +2709,8 @@
       },
       "quickCreateApp": {
         "modal": {
-          "title": "",
-          "createAndUse": ""
+          "title": "Criar aplicativo em tempo real",
+          "createAndUse": "Criar e utilizar"
         }
       }
     },
@@ -2911,7 +2928,7 @@
         "title": "",
         "description": "",
         "link": "",
-        "notice": ""
+        "notice": "Para fazer esta página desaparecer, crie um quadro e defina-o como quadro inicial"
       },
       "notFound": {
         "title": "",
@@ -4109,7 +4126,7 @@
                 "label": ""
               },
               "newApp": {
-                "label": ""
+                "label": "Criar aplicativo"
               },
               "newIntegration": {
                 "label": "",
