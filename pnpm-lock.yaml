@@ -326,8 +326,8 @@ importers:
         specifier: 2.2.6
         version: 2.2.6
       swagger-ui-react:
-        specifier: ^5.30.3
-        version: 5.30.3(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        specifier: ^5.31.0
+        version: 5.31.0(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       use-deep-compare-effect:
         specifier: ^1.8.1
         version: 1.8.1(react@19.2.1)
@@ -10148,8 +10148,8 @@ packages:
   swagger-client@3.36.0:
     resolution: {integrity: sha512-9fkjxGHXuKy20jj8zwE6RwgFSOGKAyOD5U7aKgW/+/futtHZHOdZeqiEkb97sptk2rdBv7FEiUQDNlWZR186RA==}
 
-  swagger-ui-react@5.30.3:
-    resolution: {integrity: sha512-QIy32nPql6yiV2NVwbww1P7f6HEOAuYrnk8VEJkzPC/p6Xc5Xnz9hhmSHzXTuM70fDbVw/qPzCJ0mZMMultpiw==}
+  swagger-ui-react@5.31.0:
+    resolution: {integrity: sha512-E/sTgKADThzpVksaGXbhED0pQCYdajiBNOzvSAan+RhV7pdoi2qvdwWhZsIo8nRvHk9UXJ0nkuxrud854ICr7A==}
     peerDependencies:
       react: '>=16.8.0 <20'
       react-dom: '>=16.8.0 <20'
@@ -15180,7 +15180,7 @@ snapshots:
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.0
-      js-yaml: 4.1.0
+      js-yaml: 4.1.1
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.9.3
@@ -19986,7 +19986,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  swagger-ui-react@5.30.3(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1):
+  swagger-ui-react@5.31.0(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1):
     dependencies:
       '@babel/runtime-corejs3': 7.27.1
       '@scarf/scarf': 1.4.0
