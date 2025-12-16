@@ -116,8 +116,18 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
           <>
             <form onSubmit={form.onSubmit((credentials) => void signInAsync(credentials.provider, credentials))}>
               <Stack gap="lg">
-                <TextInput label={t("field.username.label")} {...form.getInputProps("name")} />
-                <PasswordInput label={t("field.password.label")} {...form.getInputProps("password")} />
+                <TextInput
+                  label={t("field.username.label")}
+                  id="username"
+                  autoComplete="username"
+                  {...form.getInputProps("name")}
+                />
+                <PasswordInput
+                  label={t("field.password.label")}
+                  id="password"
+                  autoComplete="current-password"
+                  {...form.getInputProps("password")}
+                />
 
                 {providers.includes("credentials") && (
                   <Stack gap="sm">

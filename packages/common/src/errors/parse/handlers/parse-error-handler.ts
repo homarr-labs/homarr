@@ -1,4 +1,5 @@
-import { createLogger, Logger } from "@homarr/core/infrastructure/logs";
+import type { Logger } from "@homarr/core/infrastructure/logs";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { ParseError } from "../parse-error";
 

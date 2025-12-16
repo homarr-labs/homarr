@@ -37,7 +37,7 @@
     "mysql2": "3.15.3",
     "pg": "^8.16.3",
     "superjson": "2.2.6",
-    "winston": "3.18.3",
+    "winston": "3.19.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {
