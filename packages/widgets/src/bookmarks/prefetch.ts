@@ -1,9 +1,11 @@
 import { trpc } from "@homarr/api/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db, inArray } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
-import { logger } from "@homarr/log";
 
 import type { Prefetch } from "../definition";
+
+const logger = createLogger({ module: "bookmarksWidgetPrefetch" });
 
 const prefetchAllAsync: Prefetch<"bookmarks"> = async (queryClient, items) => {
   const appIds = items.flatMap((item) => item.options.items);
@@ -24,7 +26,7 @@ const prefetchAllAsync: Prefetch<"bookmarks"> = async (queryClient, items) => {
     );
   }
 
-  logger.info(`Successfully prefetched ${dbApps.length} apps for bookmarks`);
+  logger.info("Successfully prefetched apps for bookmarks", { count: dbApps.length });
 };
 
 export default prefetchAllAsync;

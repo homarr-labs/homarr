@@ -7,7 +7,10 @@
   "exports": {
     "./infrastructure/redis": "./src/infrastructure/redis/client.ts",
     "./infrastructure/env": "./src/infrastructure/env/index.ts",
-    ".": "./src/index.ts"
+    "./infrastructure/logs": "./src/infrastructure/logs/index.ts",
+    "./infrastructure/logs/constants": "./src/infrastructure/logs/constants.ts",
+    "./infrastructure/logs/env": "./src/infrastructure/logs/env.ts",
+    "./infrastructure/logs/error": "./src/infrastructure/logs/error.ts"
   },
   "typesVersions": {
     "*": {
@@ -26,6 +29,8 @@
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.8",
     "ioredis": "5.8.2",
+    "superjson": "2.2.6",
+    "winston": "3.19.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {

@@ -1,11 +1,13 @@
 import superjson from "superjson";
 
 import { createId, hashObjectBase64 } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { WidgetKind } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
 import { createRedisConnection } from "./connection";
+
+const logger = createLogger({ module: "redisChannel" });
 
 const publisher = createRedisConnection();
 const lastDataClient = createRedisConnection();

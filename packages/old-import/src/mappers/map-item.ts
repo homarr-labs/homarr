@@ -1,15 +1,17 @@
 import SuperJSON from "superjson";
 
 import { createId } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { InferInsertModel } from "@homarr/db";
 import type { itemLayouts, items } from "@homarr/db/schema";
-import { logger } from "@homarr/log";
 import type { BoardSize, OldmarrApp, OldmarrWidget } from "@homarr/old-schema";
 import { boardSizes } from "@homarr/old-schema";
 
 import type { WidgetComponentProps } from "../../../widgets/src/definition";
 import { mapKind } from "../widgets/definitions";
 import { mapOptions } from "../widgets/options";
+
+const logger = createLogger({ module: "mapItem" });
 
 export const mapApp = (
   app: OldmarrApp,
@@ -22,7 +24,10 @@ export const mapApp = (
 
   const sectionId = sectionMap.get(app.area.properties.id)?.id;
   if (!sectionId) {
-    logger.warn(`Failed to find section for app appId='${app.id}' sectionId='${app.area.properties.id}'. Removing app`);
+    logger.warn("Failed to find section for app. Removing app", {
+      appId: app.id,
+      sectionId: app.area.properties.id,
+    });
     return null;
   }
 
@@ -71,15 +76,19 @@ export const mapWidget = (
 
   const kind = mapKind(widget.type);
   if (!kind) {
-    logger.warn(`Failed to map widget type='${widget.type}'. It's no longer supported`);
+    logger.warn("Failed to map widget type. It's no longer supported", {
+      widgetId: widget.id,
+      widgetType: widget.type,
+    });
     return null;
   }
 
   const sectionId = sectionMap.get(widget.area.properties.id)?.id;
   if (!sectionId) {
-    logger.warn(
-      `Failed to find section for widget widgetId='${widget.id}' sectionId='${widget.area.properties.id}'. Removing widget`,
-    );
+    logger.warn("Failed to find section for widget. Removing widget", {
+      widgetId: widget.id,
+      sectionId: widget.area.properties.id,
+    });
     return null;
   }
 

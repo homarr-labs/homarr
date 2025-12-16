@@ -172,9 +172,6 @@ importers:
       '@homarr/integrations':
         specifier: workspace:^0.1.0
         version: link:../../packages/integrations
-      '@homarr/log':
-        specifier: workspace:^
-        version: link:../../packages/log
       '@homarr/modals':
         specifier: workspace:^0.1.0
         version: link:../../packages/modals
@@ -389,6 +386,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../../packages/common
+      '@homarr/core':
+        specifier: workspace:^
+        version: link:../../packages/core
       '@homarr/cron-job-api':
         specifier: workspace:^0.1.0
         version: link:../../packages/cron-job-api
@@ -410,9 +410,6 @@ importers:
       '@homarr/integrations':
         specifier: workspace:^0.1.0
         version: link:../../packages/integrations
-      '@homarr/log':
-        specifier: workspace:^
-        version: link:../../packages/log
       '@homarr/ping':
         specifier: workspace:^0.1.0
         version: link:../../packages/ping
@@ -489,15 +486,15 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../../packages/common
+      '@homarr/core':
+        specifier: workspace:^
+        version: link:../../packages/core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../../packages/definitions
-      '@homarr/log':
-        specifier: workspace:^
-        version: link:../../packages/log
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../../packages/redis
@@ -541,12 +538,12 @@ importers:
 
   packages/analytics:
     dependencies:
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../server-settings
@@ -611,9 +608,6 @@ importers:
       '@homarr/integrations':
         specifier: workspace:^0.1.0
         version: link:../integrations
-      '@homarr/log':
-        specifier: workspace:^
-        version: link:../log
       '@homarr/old-import':
         specifier: workspace:^0.1.0
         version: link:../old-import
@@ -720,9 +714,6 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
       '@homarr/validation':
         specifier: workspace:^0.1.0
         version: link:../validation
@@ -877,9 +868,6 @@ importers:
       '@homarr/core':
         specifier: workspace:^0.1.0
         version: link:../core
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
       '@paralleldrive/cuid2':
         specifier: ^3.1.0
         version: 3.1.0
@@ -935,6 +923,12 @@ importers:
       ioredis:
         specifier: 5.8.2
         version: 5.8.2
+      superjson:
+        specifier: 2.2.6
+        version: 2.2.6
+      winston:
+        specifier: 3.19.0
+        version: 3.19.0
       zod:
         specifier: ^4.1.13
         version: 4.1.13
@@ -966,9 +960,6 @@ importers:
       '@homarr/cron-jobs':
         specifier: workspace:^0.1.0
         version: link:../cron-jobs
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
       '@tanstack/react-query':
         specifier: ^5.90.12
         version: 5.90.12(react@19.2.2)
@@ -1046,6 +1037,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/cron-job-status':
         specifier: workspace:^0.1.0
         version: link:../cron-job-status
@@ -1064,9 +1058,6 @@ importers:
       '@homarr/integrations':
         specifier: workspace:^0.1.0
         version: link:../integrations
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
       '@homarr/ping':
         specifier: workspace:^0.1.0
         version: link:../ping
@@ -1110,6 +1101,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^
+        version: link:../core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
@@ -1150,9 +1144,6 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../server-settings
@@ -1383,12 +1374,12 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1414,9 +1405,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
-      '@homarr/log':
+      '@homarr/core':
         specifier: workspace:^0.1.0
-        version: link:../log
+        version: link:../core
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
@@ -1463,6 +1454,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
@@ -1472,9 +1466,6 @@ importers:
       '@homarr/image-proxy':
         specifier: workspace:^0.1.0
         version: link:../image-proxy
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
       '@homarr/node-unifi':
         specifier: ^2.6.0
         version: 2.6.0(undici@7.16.0)
@@ -1536,37 +1527,6 @@ importers:
       '@types/xml2js':
         specifier: ^0.4.14
         version: 0.4.14
-      eslint:
-        specifier: ^9.39.1
-        version: 9.39.1
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/log:
-    dependencies:
-      '@homarr/core':
-        specifier: workspace:^0.1.0
-        version: link:../core
-      superjson:
-        specifier: 2.2.6
-        version: 2.2.6
-      winston:
-        specifier: 3.19.0
-        version: 3.19.0
-      zod:
-        specifier: ^4.1.13
-        version: 4.1.13
-    devDependencies:
-      '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
-        version: link:../../tooling/eslint
-      '@homarr/prettier-config':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/prettier
-      '@homarr/tsconfig':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/typescript
       eslint:
         specifier: ^9.39.1
         version: 9.39.1
@@ -1714,6 +1674,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
@@ -1723,9 +1686,6 @@ importers:
       '@homarr/form':
         specifier: workspace:^0.1.0
         version: link:../form
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
       '@homarr/modals':
         specifier: workspace:^0.1.0
         version: link:../modals
@@ -1824,9 +1784,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
-      '@homarr/log':
+      '@homarr/core':
         specifier: workspace:^0.1.0
-        version: link:../log
+        version: link:../core
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -1858,9 +1818,6 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^
         version: link:../definitions
-      '@homarr/log':
-        specifier: workspace:^
-        version: link:../log
       ioredis:
         specifier: 5.8.2
         version: 5.8.2
@@ -1892,6 +1849,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
@@ -1904,9 +1864,6 @@ importers:
       '@homarr/integrations':
         specifier: workspace:^0.1.0
         version: link:../integrations
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../redis
@@ -2137,9 +2094,6 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation
@@ -2244,6 +2198,9 @@ importers:
       '@homarr/common':
         specifier: workspace:^0.1.0
         version: link:../common
+      '@homarr/core':
+        specifier: workspace:^0.1.0
+        version: link:../core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
@@ -2262,9 +2219,6 @@ importers:
       '@homarr/integrations':
         specifier: workspace:^0.1.0
         version: link:../integrations
-      '@homarr/log':
-        specifier: workspace:^0.1.0
-        version: link:../log
       '@homarr/modals':
         specifier: workspace:^0.1.0
         version: link:../modals

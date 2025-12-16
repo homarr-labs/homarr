@@ -3,7 +3,7 @@ import z from "zod";
 
 import { createId } from "@homarr/common";
 import { RequestError, ResponseError } from "@homarr/common/server";
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -11,7 +11,7 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type { ISystemHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
 import type { SystemHealthMonitoring } from "../interfaces/health-monitoring/health-monitoring-types";
 
-const localLogger = logger.child({ module: "TrueNasIntegration" });
+const logger = createLogger({ module: "trueNasIntegration" });
 
 const NETWORK_MULTIPLIER = 100;
 
@@ -45,14 +45,14 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
    * @see https://www.truenas.com/docs/api/scale_websocket_api.html
    */
   private async connectWebSocketAsync(): Promise<WebSocket> {
-    localLogger.debug("Connecting to websocket server", {
+    logger.debug("Connecting to websocket server", {
       url: this.wsUrl(),
     });
     const webSocket = new WebSocket(this.wsUrl());
 
     return new Promise((resolve, reject) => {
       webSocket.onopen = () => {
-        localLogger.debug("Connected to websocket server", {
+        logger.debug("Connected to websocket server", {
           url: this.wsUrl(),
         });
         resolve(webSocket);
@@ -97,7 +97,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
    * @see https://www.truenas.com/docs/api/scale_websocket_api.html#websocket_protocol
    */
   private async authenticateWebSocketAsync(webSocket?: WebSocket): Promise<void> {
-    localLogger.debug("Authenticating with username and password", {
+    logger.debug("Authenticating with username and password", {
       url: this.wsUrl(),
     });
     const response = await this.requestAsync(
@@ -107,7 +107,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     );
     const result = await z.boolean().parseAsync(response);
     if (!result) throw new ResponseError({ status: 401 });
-    localLogger.debug("Authenticated successfully with username and password", {
+    logger.debug("Authenticated successfully with username and password", {
       url: this.wsUrl(),
     });
   }
@@ -117,7 +117,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
    * @see https://www.truenas.com/docs/api/scale_websocket_api.html#reporting
    */
   private async getReportingAsync(): Promise<ReportingItem[]> {
-    localLogger.debug("Retrieving reporting data", {
+    logger.debug("Retrieving reporting data", {
       url: this.wsUrl(),
     });
 
@@ -141,7 +141,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     ]);
     const result = await z.array(reportingItemSchema).parseAsync(response);
 
-    localLogger.debug("Retrieved reporting data", {
+    logger.debug("Retrieved reporting data", {
       url: this.wsUrl(),
       count: result.length,
     });
@@ -153,7 +153,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
    * @see https://www.truenas.com/docs/core/13.0/api/core_websocket_api.html#interface
    */
   private async getNetworkInterfacesAsync(): Promise<z.infer<typeof networkInterfaceSchema>> {
-    localLogger.debug("Retrieving available network-interfaces", {
+    logger.debug("Retrieving available network-interfaces", {
       url: this.wsUrl(),
     });
 
@@ -163,7 +163,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     ]);
     const result = await networkInterfaceSchema.parseAsync(response);
 
-    localLogger.debug("Retrieved available network-interfaces", {
+    logger.debug("Retrieved available network-interfaces", {
       url: this.wsUrl(),
       count: result.length,
     });
@@ -177,7 +177,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
   private async getReportingNetdataAsync(): Promise<z.infer<typeof reportingNetDataSchema>> {
     const networkInterfaces = await this.getNetworkInterfacesAsync();
 
-    localLogger.debug("Retrieving reporting network data", {
+    logger.debug("Retrieving reporting network data", {
       url: this.wsUrl(),
     });
 
@@ -193,7 +193,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     ]);
     const result = await reportingNetDataSchema.parseAsync(response);
 
-    localLogger.debug("Retrieved reporting-network-data", {
+    logger.debug("Retrieved reporting-network-data", {
       url: this.wsUrl(),
       count: result.length,
     });
@@ -205,14 +205,14 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
    * @see https://www.truenas.com/docs/api/scale_websocket_api.html#system
    */
   private async getSystemInformationAsync(): Promise<z.infer<typeof systemInfoSchema>> {
-    localLogger.debug("Retrieving system-information", {
+    logger.debug("Retrieving system-information", {
       url: this.wsUrl(),
     });
 
     const response = await this.requestAsync("system.info");
     const result = await systemInfoSchema.parseAsync(response);
 
-    localLogger.debug("Retrieved system-information", {
+    logger.debug("Retrieved system-information", {
       url: this.wsUrl(),
     });
     return result;
@@ -262,7 +262,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
   private async requestAsync(method: string, params: unknown[] = [], webSocketOverride?: WebSocket) {
     let webSocket = webSocketOverride ?? this.webSocket;
     if (!webSocket || webSocket.readyState !== WebSocket.OPEN) {
-      localLogger.debug("Connecting to websocket", {
+      logger.debug("Connecting to websocket", {
         url: this.wsUrl(),
       });
       // We can only land here with static webSocket
@@ -282,7 +282,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
 
         clearTimeout(timeoutId);
         webSocket.removeEventListener("message", handler);
-        localLogger.debug("Received method response", {
+        logger.debug("Received method response", {
           id,
           method,
           url: this.wsUrl(),
@@ -305,7 +305,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
 
       webSocket.addEventListener("message", handler);
 
-      localLogger.debug("Sending method request", {
+      logger.debug("Sending method request", {
         id,
         method,
         url: this.wsUrl(),

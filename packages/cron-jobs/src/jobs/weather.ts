@@ -1,13 +1,16 @@
 import SuperJSON from "superjson";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { EVERY_10_MINUTES } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema";
-import { logger } from "@homarr/log";
 import { weatherRequestHandler } from "@homarr/request-handler/weather";
 
 import type { WidgetComponentProps } from "../../../widgets";
 import { createCronJob } from "../lib";
+
+const logger = createLogger({ module: "weatherJobs" });
 
 export const weatherJob = createCronJob("weather", EVERY_10_MINUTES).withCallback(async () => {
   const weatherItems = await db.query.items.findMany({
@@ -27,7 +30,7 @@ export const weatherJob = createCronJob("weather", EVERY_10_MINUTES).withCallbac
       });
       await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: true });
     } catch (error) {
-      logger.error("Failed to update weather", { id: item.id, error });
+      logger.error(new ErrorWithMetadata("Failed to update weather", { id: item.id }, { cause: error }));
     }
   }
 });
