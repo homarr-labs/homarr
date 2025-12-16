@@ -1941,19 +1941,19 @@
       "description": "סטטיסטיקות של המכולות שלך (ניתן להוסיף ווידג'ט זה רק עם הרשאות מנהל)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "אפשר מיון פריטים"
         },
         "defaultSort": {
-          "label": "",
+          "label": "עמודה המשמשת למיון כברירת מחדל",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "שם",
+            "state": "מצב",
+            "cpuUsage": "ניצול מעבד",
+            "memoryUsage": "ניצול זיכרון"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "מיון הפוך"
         }
       },
       "error": {
@@ -2248,7 +2248,7 @@
         "unknown": "לא ידוע",
         "pending": "בהמתנה",
         "processing": "מעבד",
-        "requested": "",
+        "requested": "נדרש",
         "partiallyAvailable": "חלקי",
         "available": "זמין",
         "blacklisted": "ברשימה השחורה",
@@ -3040,8 +3040,8 @@
           "authorization": "הרשאה"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "ברוך שובך ל-",
+          "subtitle": "לוח {app}"
         }
       },
       "board": {
@@ -3399,7 +3399,7 @@
               "label": "ממשקי חומת אש"
             },
             "weather": {
-              "label": ""
+              "label": "מזג אוויר"
             }
           },
           "interval": {
@@ -3527,19 +3527,19 @@
             "subtitle": "{count} בשימוש בקוד של Homarr"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "מקשי קיצור",
+            "subtitle": "קיצורי מקלדת לשיפור זרימת העבודה שלך",
             "field": {
-              "shortcut": "",
-              "action": ""
+              "shortcut": "קיצור דרך",
+              "action": "פעולה"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
-              "openSpotlight": ""
+              "toggleBoardEdit": "הפעל/י מצב עריכת לוח",
+              "toggleColorScheme": "החלפת מצב בהיר/כהה",
+              "saveNotebook": "שמירת מחברת (רק בתוך ווידג'ט המחברת)",
+              "openSpotlight": "פתח חיפוש"
             },
-            "note": ""
+            "note": "טיפ: Mod מתייחס גם למקש Ctrl וגם למקש ⌘ ב-macOS"
           }
         }
       }
