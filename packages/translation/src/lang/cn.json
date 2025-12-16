@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Docker 状态",
       "description": "您的容器状态 (这个小部件只能用管理员权限添加)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": "获取容器统计信息失败"
       }

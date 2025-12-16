@@ -7,52 +7,73 @@ export const getStatisticsSchema = z.object({
     sizeDiff: z.number(),
     totalHealthCheckCount: z.number(),
     status: z.object({
-      transcode: z.array(
-        z.object({
-          name: z.string(),
-          value: z.number(),
-        }),
-      ),
-      healthcheck: z.array(
-        z.object({
-          name: z.string(),
-          value: z.number(),
-        }),
-      ),
+      transcode: z
+        .array(
+          z.object({
+            name: z.string(),
+            value: z.number(),
+          }),
+        )
+        .optional()
+        .transform((arr) => arr ?? []),
+      healthcheck: z
+        .array(
+          z.object({
+            name: z.string(),
+            value: z.number(),
+          }),
+        )
+        .optional()
+        .transform((arr) => arr ?? []),
     }),
     video: z.object({
-      codecs: z.array(
-        z.object({
-          name: z.string(),
-          value: z.number(),
-        }),
-      ),
-      containers: z.array(
-        z.object({
-          name: z.string(),
-          value: z.number(),
-        }),
-      ),
-      resolutions: z.array(
-        z.object({
-          name: z.string(),
-          value: z.number(),
-        }),
-      ),
+      codecs: z
+        .array(
+          z.object({
+            name: z.string(),
+            value: z.number(),
+          }),
+        )
+        .optional()
+        .transform((arr) => arr ?? []),
+      containers: z
+        .array(
+          z.object({
+            name: z.string(),
+            value: z.number(),
+          }),
+        )
+        .optional()
+        .transform((arr) => arr ?? []),
+      resolutions: z
+        .array(
+          z.object({
+            name: z.string(),
+            value: z.number(),
+          }),
+        )
+        .optional()
+        .transform((arr) => arr ?? []),
     }),
     audio: z.object({
-      codecs: z.array(
-        z.object({
-          name: z.string(),
-          value: z.number(),
-        }),
-      ),
-      containers: z.array(
-        z.object({
-          name: z.string(),
-          value: z.number(),
-        }),
-      ),
+      codecs: z
+        .array(
+          z.object({
+            name: z.string(),
+            value: z.number(),
+          }),
+        )
+        .optional()
+        .transform((arr) => arr ?? []),
+      containers: z
+        .array(
+          z.object({
+            name: z.string(),
+            value: z.number(),
+          }),
+        )
+        .optional()
+        .transform((arr) => arr ?? []),
     }),
   }),
 });

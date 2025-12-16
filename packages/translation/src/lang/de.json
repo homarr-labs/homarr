@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Docker Statistiken",
       "description": "Statistiken Ihrer Container (Dieses Widget kann nur mit Administratorrechten hinzugefügt werden)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": "Fehler beim Abrufen der Container Statistiken"
       }

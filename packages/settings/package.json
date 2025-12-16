@@ -26,10 +26,10 @@
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/dates": "^8.3.9",
-    "next": "16.0.7",
-    "react": "19.2.1",
-    "react-dom": "19.2.1"
+    "@mantine/dates": "^8.3.10",
+    "next": "16.0.10",
+    "react": "19.2.2",
+    "react-dom": "19.2.2"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
