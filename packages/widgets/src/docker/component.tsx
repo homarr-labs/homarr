@@ -56,6 +56,7 @@ const createColumns = (
   t: ReturnType<typeof useScopedI18n<"docker">>,
 ): MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["containers"][number]>[] => [
   {
+    id: "name",
     accessorKey: "name",
     header: t("field.name.label"),
     Cell({ renderedCellValue, row }) {
@@ -70,6 +71,7 @@ const createColumns = (
     },
   },
   {
+    id: "state",
     accessorKey: "state",
     size: 100,
     header: t("field.state.label"),
@@ -78,6 +80,13 @@ const createColumns = (
     },
   },
   {
+    id: "cpuUsage",
+    sortingFn: (rowA, rowB) => {
+      const cpuUsageA = safeValue(rowA.original.cpuUsage);
+      const cpuUsageB = safeValue(rowB.original.cpuUsage);
+
+      return cpuUsageA - cpuUsageB;
+    },
     accessorKey: "cpuUsage",
     size: 80,
     header: t("field.stats.cpu.label"),
@@ -92,6 +101,13 @@ const createColumns = (
     },
   },
   {
+    id: "memoryUsage",
+    sortingFn: (rowA, rowB) => {
+      const memoryUsageA = safeValue(rowA.original.memoryUsage);
+      const memoryUsageB = safeValue(rowB.original.memoryUsage);
+
+      return memoryUsageA - memoryUsageB;
+    },
     accessorKey: "memoryUsage",
     size: 80,
     header: t("field.stats.memory.label"),
@@ -106,14 +122,20 @@ const createColumns = (
     },
   },
   {
+    id: "actions",
     accessorKey: "actions",
     size: 80,
     header: t("action.title"),
+    enableSorting: false,
     Cell({ row }) {
       const utils = clientApi.useUtils();
-      const { mutateAsync: startContainer } = clientApi.docker.startAll.useMutation();
-      const { mutateAsync: stopContainer } = clientApi.docker.stopAll.useMutation();
-      const { mutateAsync: restartContainer } = clientApi.docker.restartAll.useMutation();
+      // eslint-disable-next-line no-restricted-syntax
+      const onSettled = async () => {
+        await utils.docker.getContainers.invalidate();
+      };
+      const { mutateAsync: startContainer } = clientApi.docker.startAll.useMutation({ onSettled });
+      const { mutateAsync: stopContainer } = clientApi.docker.stopAll.useMutation({ onSettled });
+      const { mutateAsync: restartContainer } = clientApi.docker.restartAll.useMutation({ onSettled });
 
       const handleActionAsync = async (action: "start" | "stop" | "restart") => {
         const mutation = action === "start" ? startContainer : action === "stop" ? stopContainer : restartContainer;
@@ -121,9 +143,6 @@ const createColumns = (
         await mutation(
           { ids: [row.original.id] },
           {
-            async onSettled() {
-              await utils.docker.getContainers.invalidate();
-            },
             onSuccess() {
               showSuccessNotification({
                 title: t(`action.${action}.notification.success.title`),
@@ -167,7 +186,7 @@ const createColumns = (
   },
 ];
 
-export default function DockerWidget({ width }: WidgetComponentProps<"dockerContainers">) {
+export default function DockerWidget({ options, width, isEditMode }: WidgetComponentProps<"dockerContainers">) {
   const t = useScopedI18n("docker");
   const isTiny = width <= 256;
 
@@ -191,8 +210,8 @@ export default function DockerWidget({ width }: WidgetComponentProps<"dockerCont
     enablePagination: false,
     enableTopToolbar: false,
     enableBottomToolbar: false,
-    enableSorting: false,
     enableColumnActions: false,
+    enableSorting: options.enableRowSorting && !isEditMode,
     enableStickyHeader: false,
     enableColumnOrdering: false,
     enableRowSelection: false,
@@ -202,6 +221,7 @@ export default function DockerWidget({ width }: WidgetComponentProps<"dockerCont
     enableFilters: false,
     enableHiding: false,
     initialState: {
+      sorting: [{ id: options.defaultSort, desc: options.descendingDefaultSort }],
       density: "xs",
     },
     mantinePaperProps: {

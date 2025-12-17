@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Dockerのステータス",
       "description": "あなたのコンテナの統計（このウィジェットは管理者権限でのみ追加できます）",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": "コンテナステータスの取得に失敗しました"
       }

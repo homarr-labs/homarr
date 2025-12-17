@@ -7,20 +7,23 @@ import type { TranslationObject } from "@homarr/translation";
 const logger = createLogger({ module: "cronJobs" });
 
 class WinstonCronJobLogger implements Logger {
-  logDebug(message: string) {
-    logger.debug(message);
+  logDebug(message: string, metadata?: Record<string, unknown>): void {
+    logger.debug(message, metadata);
   }
-
-  logInfo(message: string) {
-    logger.info(message);
+  logInfo(message: string, metadata?: Record<string, unknown>): void {
+    logger.info(message, metadata);
   }
-
-  logError(error: unknown) {
-    logger.error(error);
+  logError(message: string, metadata?: Record<string, unknown>): void;
+  logError(error: unknown): void;
+  logError(messageOrError: unknown, metadata?: Record<string, unknown>): void {
+    if (typeof messageOrError === "string") {
+      logger.error(messageOrError, metadata);
+      return;
+    }
+    logger.error(messageOrError);
   }
-
-  logWarning(message: string) {
-    logger.warn(message);
+  logWarning(message: string, metadata?: Record<string, unknown>): void {
+    logger.warn(message, metadata);
   }
 }
 
