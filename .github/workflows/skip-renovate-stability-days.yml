@@ -10,6 +10,7 @@ jobs:
     if: ${{ !startsWith(github.head_ref, 'renovate/') }}
     name: Skip Stability Days
     runs-on: ubuntu-latest
+    timeout-minutes: 1
     steps:
       - name: Add status check
         env:
