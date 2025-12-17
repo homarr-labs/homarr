@@ -17,6 +17,7 @@ jobs:
       group: update-integration
       cancel-in-progress: false
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Obtain token
         id: obtainToken

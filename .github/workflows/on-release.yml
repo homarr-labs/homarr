@@ -8,6 +8,7 @@ jobs:
   trigger-docs-release:
     name: Trigger Documentation Release
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
       - name: Obtain token
         id: obtainToken
@@ -39,6 +40,7 @@ jobs:
   update-bug-report-template:
     name: Update Bug Report Template
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Obtain token
         id: obtainToken
