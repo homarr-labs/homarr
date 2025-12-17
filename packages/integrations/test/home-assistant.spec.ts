@@ -17,6 +17,17 @@ vi.mock("@homarr/db", async (importActual) => {
   };
 });
 
+vi.mock("@homarr/core/infrastructure/certificates", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const actual = await importActual<typeof import("@homarr/core/infrastructure/certificates")>();
+  return {
+    ...actual,
+    getTrustedCertificateHostnamesAsync: vi.fn().mockImplementation(() => {
+      return Promise.resolve([]);
+    }),
+  };
+});
+
 const DEFAULT_API_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkNjQwY2VjNDFjOGU0NGM5YmRlNWQ4ZmFjMjUzYWViZiIsImlhdCI6MTcxODQ3MTE1MSwiZXhwIjoyMDMzODMxMTUxfQ.uQCZ5FZTokipa6N27DtFhLHkwYEXU1LZr0fsVTryL2Q";
 const IMAGE_NAME = "ghcr.io/home-assistant/home-assistant:stable";
