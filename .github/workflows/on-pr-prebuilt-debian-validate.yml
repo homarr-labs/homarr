@@ -6,7 +6,7 @@ permissions:
 on:
   pull_request:
     branches: ["*"]
-    paths: [".github/prebuilt-debian/**", "deployments/prebuilt-debian/**"]
+    paths: [".github/actions/prebuilt-debian/**", "deployments/prebuilt-debian/**"]
 
 jobs:
   prebuilt-debian-validate-amd64:
