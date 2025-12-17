@@ -44,7 +44,7 @@ export const BoardContentHeaderActions = () => {
   const { hasChangeAccess } = useBoardPermissions(board);
 
   if (!hasChangeAccess) {
-    return <SelectBoardsMenu />; // Hide actions for user without access
+    return <SelectBoardsMenu />; // Hide change actions for users without access
   }
 
   return (
