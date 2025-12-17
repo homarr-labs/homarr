@@ -86,7 +86,11 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
     },
   });
 
-  const { mutateAsync: createIntegrationAsync, isPending } = clientApi.integration.create.useMutation();
+  const { mutateAsync: createIntegrationAsync, isPending } = clientApi.integration.create.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync("/manage/integrations");
+    },
+  });
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
 
   const handleSubmitAsync = async ({ appId, appHref, hasApp, ...values }: FormType) => {
@@ -116,7 +120,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
         app,
       },
       {
-        async onSuccess(data) {
+        onSuccess(data) {
           // We do it this way as we are unable to send a typesafe error through onError
           if (data?.error) {
             setError(data.error);
@@ -132,7 +136,7 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
             message: t("integration.page.create.notification.success.message"),
           });
 
-          await revalidatePathActionAsync("/manage/integrations").then(() => router.push("/manage/integrations"));
+          router.push("/manage/integrations");
         },
         onError: () => {
           showErrorNotification({

@@ -41,21 +41,21 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { Color } from "@tiptap/extension-color";
-import Highlight from "@tiptap/extension-highlight";
-import Image from "@tiptap/extension-image";
-import Placeholder from "@tiptap/extension-placeholder";
-import Table from "@tiptap/extension-table";
-import TableCell from "@tiptap/extension-table-cell";
-import TableHeader from "@tiptap/extension-table-header";
-import TableRow from "@tiptap/extension-table-row";
-import TaskItem from "@tiptap/extension-task-item";
-import TaskList from "@tiptap/extension-task-list";
-import TextAlign from "@tiptap/extension-text-align";
-import TextStyle from "@tiptap/extension-text-style";
-import Underline from "@tiptap/extension-underline";
+import { Highlight } from "@tiptap/extension-highlight";
+import { Image } from "@tiptap/extension-image";
+import { Placeholder } from "@tiptap/extension-placeholder";
+import { Table } from "@tiptap/extension-table";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TaskItem } from "@tiptap/extension-task-item";
+import { TaskList } from "@tiptap/extension-task-list";
+import { TextAlign } from "@tiptap/extension-text-align";
+import { TextStyle } from "@tiptap/extension-text-style";
 import type { Editor } from "@tiptap/react";
-import { BubbleMenu, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import { useEditor } from "@tiptap/react";
+import { BubbleMenu } from "@tiptap/react/menus";
+import { StarterKit } from "@tiptap/starter-kit";
 import type { Node } from "prosemirror-model";
 
 import { clientApi } from "@homarr/api/client";
@@ -133,7 +133,8 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
             };
           },
         }),
-        StarterKit,
+        // we use a custom link implementation from mantine
+        StarterKit.configure({ link: false }),
         Table.configure({
           resizable: true,
           lastColumnResizable: false,
@@ -170,8 +171,9 @@ export function Notebook({ options, setOptions, isEditMode, boardId, itemId }: W
         TaskList.configure({ itemTypeName: "taskItem" }),
         TextAlign.configure({ types: ["heading", "paragraph"] }),
         TextStyle,
-        Underline,
       ],
+      shouldRerenderOnTransaction: true,
+      immediatelyRender: false,
       content,
       onUpdate: ({ editor }) => {
         setContent(editor.getHTML());

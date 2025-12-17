@@ -10,8 +10,10 @@ interface BaseSelectItem {
   label: string;
 }
 
-export interface SelectWithCustomItemsProps<TSelectItem extends BaseSelectItem>
-  extends Pick<SelectProps, "label" | "error" | "defaultValue" | "value" | "onChange" | "placeholder" | "clearable"> {
+export interface SelectWithCustomItemsProps<TSelectItem extends BaseSelectItem> extends Pick<
+  SelectProps,
+  "label" | "error" | "defaultValue" | "value" | "onChange" | "placeholder" | "clearable"
+> {
   data: TSelectItem[];
   description?: string;
   withAsterisk?: boolean;

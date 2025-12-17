@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Docker stats",
       "description": "Stats of your containers (This widget can only be added with administrator privileges)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": "Enable items sorting"
+        },
+        "defaultSort": {
+          "label": "Column used for sorting by default",
+          "option": {
+            "name": "Name",
+            "state": "State",
+            "cpuUsage": "CPU usage",
+            "memoryUsage": "Memory usage"
+          }
+        },
+        "descendingDefaultSort": {
+          "label": "Invert sorting"
+        }
+      },
       "error": {
         "internalServerError": "Failed to fetch containers stats"
       }
