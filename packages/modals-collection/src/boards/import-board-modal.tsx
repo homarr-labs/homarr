@@ -65,7 +65,11 @@ export const ImportBoardModal = createModal(({ actions }) => {
     },
   );
 
-  const { mutateAsync, isPending } = clientApi.board.importOldmarrConfig.useMutation();
+  const { mutateAsync, isPending } = clientApi.board.importOldmarrConfig.useMutation({
+    async onSuccess() {
+      await revalidatePathActionAsync("/manage/boards");
+    },
+  });
   const boardNameStatus = useBoardNameStatus(form.values.configuration.name);
 
   const handleSubmitAsync = async (values: { file: File; configuration: OldmarrImportConfiguration }) => {
@@ -74,9 +78,8 @@ export const ImportBoardModal = createModal(({ actions }) => {
     formData.set("configuration", JSON.stringify(values.configuration));
 
     await mutateAsync(formData, {
-      async onSuccess() {
+      onSuccess() {
         actions.closeModal();
-        await revalidatePathActionAsync("/manage/boards");
         showSuccessNotification({
           title: tOldImport("notification.success.title"),
           message: tOldImport("notification.success.message"),

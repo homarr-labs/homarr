@@ -24,12 +24,16 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
     if (!firstResult) {
       throw new Error("Received invalid data");
     }
+
+    const priceHistory =
+      firstResult.indicators.quote[0]?.close.filter(
+        // Filter out null values from price arrays (Yahoo Finance returns null for missing data points)
+        (value) => value !== null && value !== undefined,
+      ) ?? [];
+
     return {
-      priceHistory:
-        firstResult.indicators.quote[0]?.close.filter(
-          // Filter out null values from price arrays (Yahoo Finance returns null for missing data points)
-          (value) => value !== null && value !== undefined,
-        ) ?? [],
+      priceHistory,
+      previousClose: firstResult.meta.previousClose ?? priceHistory[0] ?? 1,
       symbol: firstResult.meta.symbol,
       shortName: firstResult.meta.shortName,
     };
@@ -58,6 +62,7 @@ const dataSchema = z
             meta: z.object({
               symbol: z.string(),
               shortName: z.string(),
+              previousClose: z.number().optional(),
             }),
           }),
         ),

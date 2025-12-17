@@ -20,7 +20,8 @@ const withNextIntl = createNextIntlPlugin({
 const nextConfig: NextConfig = {
   output: "standalone",
   reactStrictMode: true,
-  reactCompiler: true,
+  // react compiler breaks mantine-react-table, so disabled for now
+  //reactCompiler: true,
   /** We already do typechecking as separate tasks in CI */
   typescript: { ignoreBuildErrors: true },
   /**

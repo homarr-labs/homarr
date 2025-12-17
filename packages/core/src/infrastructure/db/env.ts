@@ -29,7 +29,7 @@ export const dbEnv = createEnv({
       ? {
           URL:
             // Fallback to the default sqlite file path in production
-            /*commonEnv.NODE_ENV === "production" &&*/ isDriver("better-sqlite3")
+            process.env.NODE_ENV === "production" && isDriver("better-sqlite3")
               ? z.string().default("/appdata/db/db.sqlite")
               : z.string().nonempty(),
         }

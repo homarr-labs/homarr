@@ -341,7 +341,7 @@
             "description": ""
           },
           "full-all": {
-            "label": "",
+            "label": "Acesso completo a aplicativos",
             "description": ""
           }
         }
@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "",
       "description": "",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": ""
+        },
+        "defaultSort": {
+          "label": "",
+          "option": {
+            "name": "",
+            "state": "",
+            "cpuUsage": "",
+            "memoryUsage": ""
+          }
+        },
+        "descendingDefaultSort": {
+          "label": ""
+        }
+      },
       "error": {
         "internalServerError": ""
       }
