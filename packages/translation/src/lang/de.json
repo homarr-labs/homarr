@@ -1941,19 +1941,19 @@
       "description": "Statistiken Ihrer Container (Dieses Widget kann nur mit Administratorrechten hinzugefügt werden)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Sortierung von Elementen aktivieren"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Standardmäßig verwendete Spalte zur Sortierung",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Name",
+            "state": "Status",
+            "cpuUsage": "CPU-Auslastung",
+            "memoryUsage": "Speicherverbrauch"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Sortierung umkehren"
         }
       },
       "error": {
@@ -2248,7 +2248,7 @@
         "unknown": "Unbekannt",
         "pending": "Ausstehend",
         "processing": "In Bearbeitung",
-        "requested": "",
+        "requested": "Angefordert",
         "partiallyAvailable": "Teilweise",
         "available": "Verfügbar",
         "blacklisted": "Gesperrt",
