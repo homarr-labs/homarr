@@ -1,11 +1,12 @@
 import type { Config } from "drizzle-kit";
 
-import { env } from "../env";
+import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
+import { dbEnv } from "@homarr/core/infrastructure/db/env";
 
 export default {
   dialect: "sqlite",
   schema: "./schema",
-  casing: "snake_case",
-  dbCredentials: { url: env.DB_URL },
+  casing: DB_CASING,
+  dbCredentials: { url: dbEnv.URL },
   out: "./migrations/sqlite",
 } satisfies Config;

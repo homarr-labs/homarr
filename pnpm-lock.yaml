@@ -920,9 +920,21 @@ importers:
       '@t3-oss/env-nextjs':
         specifier: ^0.13.8
         version: 0.13.8(arktype@2.1.20)(typescript@5.9.3)(zod@4.1.13)
+      better-sqlite3:
+        specifier: ^12.5.0
+        version: 12.5.0
+      drizzle-orm:
+        specifier: ^0.45.1
+        version: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.5.0)(gel@2.0.0)(mysql2@3.15.3)(pg@8.16.3)
       ioredis:
         specifier: 5.8.2
         version: 5.8.2
+      mysql2:
+        specifier: 3.15.3
+        version: 3.15.3
+      pg:
+        specifier: ^8.16.3
+        version: 8.16.3
       superjson:
         specifier: 2.2.6
         version: 2.2.6
@@ -942,6 +954,12 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/better-sqlite3':
+        specifier: 7.6.13
+        version: 7.6.13
+      '@types/pg':
+        specifier: ^8.16.0
+        version: 8.16.0
       eslint:
         specifier: ^9.39.1
         version: 9.39.1
