@@ -63,7 +63,7 @@
     "@trpc/client": "^11.7.2",
     "@trpc/next": "^11.7.2",
     "@trpc/react-query": "^11.7.2",
-    "@trpc/server": "^11.7.2",
+    "@trpc/server": "^11.8.0",
     "@xterm/addon-canvas": "^0.7.0",
     "@xterm/addon-fit": "0.10.0",
     "@xterm/xterm": "^5.5.0",
