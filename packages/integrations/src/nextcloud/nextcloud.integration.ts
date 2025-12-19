@@ -6,7 +6,7 @@ import type { RequestInit as NodeFetchRequestInit } from "node-fetch";
 import * as ical from "node-ical";
 import { DAVClient } from "tsdav";
 
-import { createHttpsAgentAsync } from "@homarr/certificates/server";
+import { createHttpsAgentAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";

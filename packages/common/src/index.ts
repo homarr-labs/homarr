@@ -9,7 +9,6 @@ export * from "./id";
 export * from "./url";
 export * from "./number";
 export * from "./error";
-export * from "./fetch-with-timeout";
 export * from "./theme";
 export * from "./function";
 export * from "./id";

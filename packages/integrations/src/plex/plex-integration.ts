@@ -1,8 +1,8 @@
 import { parseStringPromise } from "xml2js";
 import { z } from "zod/v4";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ParseError } from "@homarr/common/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ImageProxy } from "@homarr/image-proxy";
 

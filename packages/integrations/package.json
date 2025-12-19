@@ -29,7 +29,6 @@
     "@ctrl/qbittorrent": "^9.11.0",
     "@ctrl/transmission": "^7.4.0",
     "@gitbeaker/rest": "^43.8.0",
-    "@homarr/certificates": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",

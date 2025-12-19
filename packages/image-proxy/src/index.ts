@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { createId } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createGetSetChannel } from "@homarr/redis";

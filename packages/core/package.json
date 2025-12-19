@@ -18,7 +18,9 @@
     "./infrastructure/certificates/hostnames/db/sqlite": "./src/infrastructure/certificates/hostnames/db/sqlite.ts",
     "./infrastructure/certificates/hostnames/db/mysql": "./src/infrastructure/certificates/hostnames/db/mysql.ts",
     "./infrastructure/certificates/hostnames/db/postgresql": "./src/infrastructure/certificates/hostnames/db/postgresql.ts",
-    "./infrastructure/dns/init": "./src/infrastructure/dns/init.ts"
+    "./infrastructure/dns/init": "./src/infrastructure/dns/init.ts",
+    "./infrastructure/http": "./src/infrastructure/http/index.ts",
+    "./infrastructure/http/timeout": "./src/infrastructure/http/timeout.ts"
   },
   "typesVersions": {
     "*": {

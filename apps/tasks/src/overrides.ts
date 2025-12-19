@@ -1,6 +1,5 @@
 import { setGlobalDispatcher } from "undici";
 
-import { LoggingAgent } from "@homarr/common/server";
+import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 
-const agent = new LoggingAgent();
-setGlobalDispatcher(agent);
+setGlobalDispatcher(new UndiciHttpAgent());
