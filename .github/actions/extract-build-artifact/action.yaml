@@ -20,7 +20,7 @@ runs:
   using: "composite"
   steps:
     - name: Prebuilt debian dependencies
-      uses: ./.github/actions/prebuilt-debian@dev
+      uses: homarr-labs/homarr/.github/actions/prebuilt-debian@dev
       id: prebuilt-debian
       with:
         architecture: ${{ inputs.architecture }}
