@@ -5,7 +5,7 @@ import { createId } from "@homarr/common";
 import { asc, eq, inArray, like } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 import { selectAppSchema } from "@homarr/db/validationSchemas";
-import { getIconForName } from "@homarr/icons";
+import { getIconForNameAsync } from "@homarr/icons";
 import { appCreateManySchema, appEditSchema, appManageSchema } from "@homarr/validation/app";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 
@@ -141,13 +141,15 @@ export const appRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(apps).values(
-        input.map((app) => ({
-          id: createId(),
-          name: app.name,
-          description: app.description,
-          iconUrl: app.iconUrl ?? getIconForName(ctx.db, app.name).sync()?.url ?? defaultIcon,
-          href: app.href,
-        })),
+        await Promise.all(
+          input.map(async (app) => ({
+            id: createId(),
+            name: app.name,
+            description: app.description,
+            iconUrl: app.iconUrl ?? (await getIconForNameAsync(ctx.db, app.name))?.url ?? defaultIcon,
+            href: app.href,
+          })),
+        ),
       );
     }),
   update: permissionRequiredProcedure

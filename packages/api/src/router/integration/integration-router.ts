@@ -541,27 +541,6 @@ export const integrationRouter = createTRPCRouter({
             );
           });
         },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            transaction
-              .delete(integrationUserPermissions)
-              .where(eq(integrationUserPermissions.integrationId, input.entityId))
-              .run();
-            if (input.permissions.length === 0) {
-              return;
-            }
-            transaction
-              .insert(integrationUserPermissions)
-              .values(
-                input.permissions.map((permission) => ({
-                  userId: permission.principalId,
-                  permission: permission.permission,
-                  integrationId: input.entityId,
-                })),
-              )
-              .run();
-          });
-        },
       });
     }),
   saveGroupIntegrationPermissions: protectedProcedure
@@ -585,27 +564,6 @@ export const integrationRouter = createTRPCRouter({
                 integrationId: input.entityId,
               })),
             );
-          });
-        },
-        handleSync(db) {
-          db.transaction((transaction) => {
-            transaction
-              .delete(integrationGroupPermissions)
-              .where(eq(integrationGroupPermissions.integrationId, input.entityId))
-              .run();
-            if (input.permissions.length === 0) {
-              return;
-            }
-            transaction
-              .insert(integrationGroupPermissions)
-              .values(
-                input.permissions.map((permission) => ({
-                  groupId: permission.principalId,
-                  permission: permission.permission,
-                  integrationId: input.entityId,
-                })),
-              )
-              .run();
           });
         },
       });

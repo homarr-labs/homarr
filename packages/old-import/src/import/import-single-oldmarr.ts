@@ -35,8 +35,5 @@ export const importSingleOldmarrConfigAsync = async (
     async handleAsync(db) {
       await boardInsertCollection.insertAllAsync(db);
     },
-    handleSync(db) {
-      boardInsertCollection.insertAll(db);
-    },
   });
 };

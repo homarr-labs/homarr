@@ -260,13 +260,6 @@ export const groupRouter = createTRPCRouter({
             }
           });
         },
-        handleSync: (db) => {
-          db.transaction((trx) => {
-            for (const { id, position } of positions) {
-              trx.update(groups).set({ position }).where(eq(groups.id, id)).run();
-            }
-          });
-        },
       });
     }),
   savePermissions: permissionRequiredProcedure

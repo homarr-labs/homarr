@@ -68,7 +68,6 @@
     "onlyBuiltDependencies": [
       "@tree-sitter-grammars/tree-sitter-yaml",
       "bcrypt",
-      "better-sqlite3",
       "cpu-features",
       "esbuild",
       "sharp",

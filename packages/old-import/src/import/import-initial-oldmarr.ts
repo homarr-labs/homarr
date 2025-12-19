@@ -45,13 +45,6 @@ export const importInitialOldmarrAsync = async (
         await integrationInsertCollection.insertAllAsync(transaction);
       });
     },
-    handleSync(db) {
-      db.transaction((transaction) => {
-        boardInsertCollection.insertAll(transaction);
-        userInsertCollection.insertAll(transaction);
-        integrationInsertCollection.insertAll(transaction);
-      });
-    },
   });
 
   logger.info("Import successful", { duration: stopwatch.getElapsedInHumanWords() });

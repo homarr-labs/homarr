@@ -31,20 +31,8 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
 
   return {
     ...context,
-    insertAll: (db: HomarrDatabase) => {
-      db.transaction((transaction) => {
-        for (const [key, values] of objectEntries(context)) {
-          if (values.length >= 1) {
-            transaction
-              .insert(schema[key])
-              .values(values as never)
-              .run();
-          }
-        }
-      });
-    },
     // We allow any database that supports async passed here but then fallback to mysql to prevent typescript errors
-    insertAllAsync: async (db: HomarrDatabaseMysql | HomarrDatabasePostgresql) => {
+    insertAllAsync: async (db: HomarrDatabaseMysql | HomarrDatabasePostgresql | HomarrDatabase) => {
       const innerDb = db as HomarrDatabaseMysql;
       await innerDb.transaction(async (transaction) => {
         for (const [key, values] of objectEntries(context)) {
@@ -61,7 +49,7 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
 export const createDbInsertCollectionWithoutTransaction = <TTableKey extends TableKey>(
   tablesInInsertOrder: TTableKey[],
 ) => {
-  const { insertAll, insertAllAsync, ...collection } = createDbInsertCollectionForTransaction(tablesInInsertOrder);
+  const { insertAllAsync, ...collection } = createDbInsertCollectionForTransaction(tablesInInsertOrder);
 
   return {
     ...collection,
@@ -75,7 +63,7 @@ export const createDbInsertCollectionWithoutTransaction = <TTableKey extends Tab
         default:
           // For better-sqlite3, we need to use the synchronous insertAll method
           // default assumes better-sqlite3. It's original implementation.
-          insertAll(db);
+          await insertAllAsync(db);
           break;
       }
     },

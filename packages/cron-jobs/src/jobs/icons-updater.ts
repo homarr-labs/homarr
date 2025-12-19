@@ -124,46 +124,6 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
         countDeleted += deadIcons.length;
       });
     },
-    handleSync() {
-      db.transaction((transaction) => {
-        if (newIconRepositories.length >= 1) {
-          transaction.insert(iconRepositories).values(newIconRepositories).run();
-        }
-
-        if (newIcons.length >= 1) {
-          // We only insert 5000 icons at a time to avoid SQLite limitations
-          for (const chunck of splitToNChunks(newIcons, Math.ceil(newIcons.length / 5000))) {
-            transaction.insert(icons).values(chunck).run();
-          }
-        }
-        if (deadIcons.length >= 1) {
-          transaction
-            .delete(icons)
-            .where(
-              inArray(
-                // Combine iconRepositoryId and checksum to allow same icons on different repositories
-                sql`concat(${icons.iconRepositoryId}, '.', ${icons.checksum})`,
-                deadIcons.map((icon) => `${icon.iconRepositoryId}.${icon.checksum}`),
-              ),
-            )
-            .run();
-        }
-
-        if (deadIconRepositories.length >= 1) {
-          transaction
-            .delete(iconRepositories)
-            .where(
-              inArray(
-                iconRepositories.id,
-                deadIconRepositories.map((iconRepository) => iconRepository.id),
-              ),
-            )
-            .run();
-        }
-
-        countDeleted += deadIcons.length;
-      });
-    },
   });
 
   logger.info("Updated icons in database", {
