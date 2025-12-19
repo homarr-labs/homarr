@@ -3,16 +3,19 @@ import SuperJSON from "superjson";
 import { hashObjectBase64, Stopwatch } from "@homarr/common";
 import { decryptSecret } from "@homarr/common/server";
 import type { MaybeArray } from "@homarr/common/types";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db } from "@homarr/db";
 import { getItemsWithIntegrationsAsync, getServerSettingsAsync } from "@homarr/db/queries";
 import type { WidgetKind } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 // This imports are done that way to avoid circular dependencies.
 import type { inferSupportedIntegrationsStrict } from "../../../widgets/src";
 import { reduceWidgetOptionsWithDefaultValues } from "../../../widgets/src";
 import type { WidgetComponentProps } from "../../../widgets/src/definition";
 import type { createCachedIntegrationRequestHandler } from "./cached-integration-request-handler";
+
+const logger = createLogger({ module: "cachedRequestIntegrationJobHandler" });
 
 export const createRequestIntegrationJobHandler = <
   TWidgetKind extends WidgetKind,
@@ -37,9 +40,10 @@ export const createRequestIntegrationJobHandler = <
       kinds: widgetKinds,
     });
 
-    logger.debug(
-      `Found items for integration widgetKinds='${widgetKinds.join(",")}' count=${itemsForIntegration.length}`,
-    );
+    logger.debug("Found items for integration", {
+      widgetKinds: widgetKinds.join(","),
+      count: itemsForIntegration.length,
+    });
 
     const distinctIntegrations: {
       integrationId: string;
@@ -97,14 +101,14 @@ export const createRequestIntegrationJobHandler = <
         );
         const stopWatch = new Stopwatch();
         await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: true });
-        logger.debug(
-          `Ran integration job integration=${integrationId} inputHash='${inputHash}' elapsed=${stopWatch.getElapsedInHumanWords()}`,
-        );
+        logger.debug("Ran integration job", {
+          integration: integrationId,
+          inputHash,
+          elapsed: stopWatch.getElapsedInHumanWords(),
+        });
       } catch (error) {
         logger.error(
-          new Error(`Failed to run integration job integration=${integrationId} inputHash='${inputHash}'`, {
-            cause: error,
-          }),
+          new ErrorWithMetadata("Failed to run integration job", { integrationId, inputHash }, { cause: error }),
         );
       }
     }

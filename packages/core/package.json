@@ -7,7 +7,20 @@
   "exports": {
     "./infrastructure/redis": "./src/infrastructure/redis/client.ts",
     "./infrastructure/env": "./src/infrastructure/env/index.ts",
-    ".": "./src/index.ts"
+    "./infrastructure/logs": "./src/infrastructure/logs/index.ts",
+    "./infrastructure/logs/constants": "./src/infrastructure/logs/constants.ts",
+    "./infrastructure/logs/env": "./src/infrastructure/logs/env.ts",
+    "./infrastructure/logs/error": "./src/infrastructure/logs/error.ts",
+    "./infrastructure/db": "./src/infrastructure/db/index.ts",
+    "./infrastructure/db/env": "./src/infrastructure/db/env.ts",
+    "./infrastructure/db/constants": "./src/infrastructure/db/constants.ts",
+    "./infrastructure/certificates": "./src/infrastructure/certificates/index.ts",
+    "./infrastructure/certificates/hostnames/db/sqlite": "./src/infrastructure/certificates/hostnames/db/sqlite.ts",
+    "./infrastructure/certificates/hostnames/db/mysql": "./src/infrastructure/certificates/hostnames/db/mysql.ts",
+    "./infrastructure/certificates/hostnames/db/postgresql": "./src/infrastructure/certificates/hostnames/db/postgresql.ts",
+    "./infrastructure/dns/init": "./src/infrastructure/dns/init.ts",
+    "./infrastructure/http": "./src/infrastructure/http/index.ts",
+    "./infrastructure/http/timeout": "./src/infrastructure/http/timeout.ts"
   },
   "typesVersions": {
     "*": {
@@ -25,14 +38,23 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.8",
+    "better-sqlite3": "^12.5.0",
+    "dns-caching": "^0.2.9",
+    "drizzle-orm": "^0.45.1",
     "ioredis": "5.8.2",
+    "mysql2": "3.15.3",
+    "pg": "^8.16.3",
+    "superjson": "2.2.6",
+    "winston": "3.19.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.1",
+    "@types/better-sqlite3": "7.6.13",
+    "@types/pg": "^8.16.0",
+    "eslint": "^9.39.2",
     "typescript": "^5.9.3"
   }
 }

@@ -11,6 +11,7 @@ on:
 jobs:
   renovate-validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
       - uses: actions/checkout@v6
       - run: |

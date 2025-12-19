@@ -1,9 +1,8 @@
-import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { Pool } from "pg";
+
+import { createPostgresDb, createSharedDbConfig } from "@homarr/core/infrastructure/db";
 
 import type { Database } from "../..";
-import { env } from "../../env";
 import * as pgSchema from "../../schema/postgresql";
 import { applyCustomMigrationsAsync } from "../custom";
 import { seedDataAsync } from "../seed";
@@ -11,23 +10,8 @@ import { seedDataAsync } from "../seed";
 const migrationsFolder = process.argv[2] ?? ".";
 
 const migrateAsync = async () => {
-  const pool = new Pool(
-    env.DB_URL
-      ? { connectionString: env.DB_URL }
-      : {
-          host: env.DB_HOST,
-          database: env.DB_NAME,
-          port: env.DB_PORT,
-          user: env.DB_USER,
-          password: env.DB_PASSWORD,
-        },
-  );
-
-  const db = drizzle({
-    schema: pgSchema,
-    casing: "snake_case",
-    client: pool,
-  });
+  const config = createSharedDbConfig(pgSchema);
+  const db = createPostgresDb(config);
 
   await migrate(db, { migrationsFolder });
   await seedDataAsync(db as unknown as Database);

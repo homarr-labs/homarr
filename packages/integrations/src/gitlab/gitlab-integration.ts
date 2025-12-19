@@ -3,8 +3,8 @@ import { createRequesterFn, defaultOptionsHandler } from "@gitbeaker/requester-u
 import type { FormattedResponse, RequestOptions, ResourceOptions } from "@gitbeaker/requester-utils";
 import { Gitlab } from "@gitbeaker/rest";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { logger } from "@homarr/log";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -18,7 +18,7 @@ import type {
   ReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
-const localLogger = logger.child({ module: "GitlabIntegration" });
+const logger = createLogger({ module: "gitlabIntegration" });
 
 export class GitlabIntegration extends Integration implements ReleasesProviderIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -48,7 +48,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
       });
 
       if (releasesResponse instanceof Error) {
-        localLogger.warn(`Failed to get releases for ${identifier} with Gitlab integration`, {
+        logger.warn("No releases found", {
           identifier,
           error: releasesResponse.message,
         });
@@ -78,7 +78,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
       return { success: true, data: { ...details, ...latestRelease } };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      localLogger.warn(`Failed to get releases for ${identifier} with Gitlab integration`, {
+      logger.warn("Failed to get releases", {
         identifier,
         error: errorMessage,
       });
@@ -91,7 +91,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
       const response = await api.Projects.show(identifier);
 
       if (response instanceof Error) {
-        localLogger.warn(`Failed to get details for ${identifier} with Gitlab integration`, {
+        logger.warn("Failed to get details", {
           identifier,
           error: response.message,
         });
@@ -100,7 +100,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
       }
 
       if (!response.web_url) {
-        localLogger.warn(`No web URL found for ${identifier} with Gitlab integration`, {
+        logger.warn("No web URL found", {
           identifier,
         });
         return undefined;
@@ -117,7 +117,7 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
         forksCount: response.forks_count,
       };
     } catch (error) {
-      localLogger.warn(`Failed to get details for ${identifier} with Gitlab integration`, {
+      logger.warn("Failed to get details", {
         identifier,
         error: error instanceof Error ? error.message : String(error),
       });

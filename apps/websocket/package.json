@@ -20,9 +20,9 @@
     "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
+    "@homarr/core": "workspace:^",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
-    "@homarr/log": "workspace:^",
     "@homarr/redis": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "dotenv": "^17.2.3",
@@ -35,7 +35,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/ws": "^8.18.1",
     "esbuild": "^0.27.1",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3"
   }

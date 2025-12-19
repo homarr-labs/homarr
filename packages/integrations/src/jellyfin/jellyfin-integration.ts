@@ -6,7 +6,7 @@ import { getUserApi } from "@jellyfin/sdk/lib/utils/api/user-api";
 import { getUserLibraryApi } from "@jellyfin/sdk/lib/utils/api/user-library-api";
 import type { AxiosInstance } from "axios";
 
-import { createAxiosCertificateInstanceAsync } from "@homarr/certificates/server";
+import { createAxiosCertificateInstanceAsync } from "@homarr/core/infrastructure/http";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationAxiosHttpErrorHandler } from "../base/errors/http";

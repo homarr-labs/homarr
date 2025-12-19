@@ -1,5 +1,5 @@
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { removeTrailingSlash } from "@homarr/common";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import type { IntegrationInput } from "../base/integration";
 import { PiHoleIntegrationV5 } from "./v5/pi-hole-integration-v5";

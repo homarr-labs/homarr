@@ -1,7 +1,7 @@
 import type { RequestInit, Response } from "undici";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { logger } from "@homarr/log";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -15,7 +15,7 @@ import type {
 } from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./quay-schemas";
 
-const localLogger = logger.child({ module: "QuayIntegration" });
+const logger = createLogger({ module: "quayIntegration" });
 
 export class QuayIntegration extends Integration implements ReleasesProviderIntegration {
   private async withHeadersAsync(callback: (headers: RequestInit["headers"]) => Promise<Response>): Promise<Response> {
@@ -45,7 +45,7 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
   private parseIdentifier(identifier: string) {
     const [owner, name] = identifier.split("/");
     if (!owner || !name) {
-      localLogger.warn(`Invalid identifier format. Expected 'owner/name', for ${identifier} with Quay integration`, {
+      logger.warn("Invalid identifier format. Expected 'owner/name' for identifier", {
         identifier,
       });
       return null;

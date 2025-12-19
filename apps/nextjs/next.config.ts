@@ -1,8 +1,8 @@
 // Importing env files here to validate on build
 import "@homarr/auth/env";
-import "@homarr/db/env";
+import "@homarr/core/infrastructure/db/env";
 import "@homarr/common/env";
-import "@homarr/log/env";
+import "@homarr/core/infrastructure/logs/env";
 import "@homarr/docker/env";
 
 import type { NextConfig } from "next";

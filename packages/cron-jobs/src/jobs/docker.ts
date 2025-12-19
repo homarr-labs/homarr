@@ -1,13 +1,16 @@
 import SuperJSON from "superjson";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
 import { db, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema";
-import { logger } from "@homarr/log";
 import { dockerContainersRequestHandler } from "@homarr/request-handler/docker";
 
 import type { WidgetComponentProps } from "../../../widgets";
 import { createCronJob } from "../lib";
+
+const logger = createLogger({ module: "dockerJobs" });
 
 export const dockerContainersJob = createCronJob("dockerContainers", EVERY_MINUTE).withCallback(async () => {
   const dockerItems = await db.query.items.findMany({
@@ -21,7 +24,7 @@ export const dockerContainersJob = createCronJob("dockerContainers", EVERY_MINUT
         const innerHandler = dockerContainersRequestHandler.handler(options);
         await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: true });
       } catch (error) {
-        logger.error("Failed to update Docker container status", { item, error });
+        logger.error(new ErrorWithMetadata("Failed to update Docker container status", { item }, { cause: error }));
       }
     }),
   );

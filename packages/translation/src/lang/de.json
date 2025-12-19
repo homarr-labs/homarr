@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Docker Statistiken",
       "description": "Statistiken Ihrer Container (Dieses Widget kann nur mit Administratorrechten hinzugefügt werden)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": "Sortierung von Elementen aktivieren"
+        },
+        "defaultSort": {
+          "label": "Standardmäßig verwendete Spalte zur Sortierung",
+          "option": {
+            "name": "Name",
+            "state": "Status",
+            "cpuUsage": "CPU-Auslastung",
+            "memoryUsage": "Speicherverbrauch"
+          }
+        },
+        "descendingDefaultSort": {
+          "label": "Sortierung umkehren"
+        }
+      },
       "error": {
         "internalServerError": "Fehler beim Abrufen der Container Statistiken"
       }
@@ -2232,7 +2248,7 @@
         "unknown": "Unbekannt",
         "pending": "Ausstehend",
         "processing": "In Bearbeitung",
-        "requested": "",
+        "requested": "Angefordert",
         "partiallyAvailable": "Teilweise",
         "available": "Verfügbar",
         "blacklisted": "Gesperrt",

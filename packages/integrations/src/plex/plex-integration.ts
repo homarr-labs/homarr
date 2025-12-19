@@ -1,10 +1,10 @@
 import { parseStringPromise } from "xml2js";
 import { z } from "zod/v4";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ParseError } from "@homarr/common/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ImageProxy } from "@homarr/image-proxy";
-import { logger } from "@homarr/log";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -14,6 +14,8 @@ import type { IMediaServerIntegration } from "../interfaces/media-server/media-s
 import type { CurrentSessionsInput, StreamSession } from "../interfaces/media-server/media-server-types";
 import type { IMediaReleasesIntegration, MediaRelease } from "../types";
 import type { PlexResponse } from "./interface";
+
+const logger = createLogger({ module: "plexIntegration" });
 
 export class PlexIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
   public async getCurrentSessionsAsync(_options: CurrentSessionsInput): Promise<StreamSession[]> {

@@ -1,9 +1,9 @@
 import type { z } from "zod/v4";
 
 import { Stopwatch } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { handleTransactionsAsync } from "@homarr/db";
 import type { Database } from "@homarr/db";
-import { logger } from "@homarr/log";
 
 import { analyseOldmarrImportAsync } from "../analyse/analyse-oldmarr-import";
 import { prepareMultipleImports } from "../prepare/prepare-multiple";
@@ -12,6 +12,8 @@ import { createIntegrationInsertCollection } from "./collections/integration-col
 import { createUserInsertCollection } from "./collections/user-collection";
 import type { importInitialOldmarrInputSchema } from "./input";
 import { ensureValidTokenOrThrow } from "./validate-token";
+
+const logger = createLogger({ module: "importInitialOldmarr" });
 
 export const importInitialOldmarrAsync = async (
   db: Database,
@@ -52,5 +54,5 @@ export const importInitialOldmarrAsync = async (
     },
   });
 
-  logger.info(`Import successful (in ${stopwatch.getElapsedInHumanWords()})`);
+  logger.info("Import successful", { duration: stopwatch.getElapsedInHumanWords() });
 };

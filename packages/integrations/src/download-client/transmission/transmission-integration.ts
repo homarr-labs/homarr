@@ -2,7 +2,7 @@ import { Transmission } from "@ctrl/transmission";
 import dayjs from "dayjs";
 import type { Dispatcher } from "undici";
 
-import { createCertificateAgentAsync } from "@homarr/certificates/server";
+import { createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
 
 import { HandleIntegrationErrors } from "../../base/errors/decorator";
 import { integrationOFetchHttpErrorHandler } from "../../base/errors/http";
@@ -46,6 +46,7 @@ export class TransmissionIntegration extends Integration implements IDownloadCli
           name: torrent.name,
           size: torrent.totalSize,
           sent: torrent.uploadedEver,
+          received: torrent.downloadedEver,
           downSpeed: torrent.percentDone !== 1 ? torrent.rateDownload : undefined,
           upSpeed: torrent.rateUpload,
           time:

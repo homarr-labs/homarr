@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { z } from "zod/v4";
 
-import { fetchWithTimeout } from "@homarr/common";
+import { fetchWithTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
@@ -9,7 +9,7 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
   queryKey: "fetchStockPriceResult",
   widgetKind: "stockPrice",
   async requestAsync(input: { stock: string; timeRange: string; timeInterval: string }) {
-    const response = await fetchWithTimeout(
+    const response = await fetchWithTimeoutAsync(
       `https://query1.finance.yahoo.com/v8/finance/chart/${input.stock}?range=${input.timeRange}&interval=${input.timeInterval}`,
     );
     const data = dataSchema.parse(await response.json());
@@ -24,12 +24,16 @@ export const fetchStockPriceHandler = createCachedWidgetRequestHandler({
     if (!firstResult) {
       throw new Error("Received invalid data");
     }
+
+    const priceHistory =
+      firstResult.indicators.quote[0]?.close.filter(
+        // Filter out null values from price arrays (Yahoo Finance returns null for missing data points)
+        (value) => value !== null && value !== undefined,
+      ) ?? [];
+
     return {
-      priceHistory:
-        firstResult.indicators.quote[0]?.close.filter(
-          // Filter out null values from price arrays (Yahoo Finance returns null for missing data points)
-          (value) => value !== null && value !== undefined,
-        ) ?? [],
+      priceHistory,
+      previousClose: firstResult.meta.previousClose ?? priceHistory[0] ?? 1,
       symbol: firstResult.meta.symbol,
       shortName: firstResult.meta.shortName,
     };
@@ -58,6 +62,7 @@ const dataSchema = z
             meta: z.object({
               symbol: z.string(),
               shortName: z.string(),
+              previousClose: z.number().optional(),
             }),
           }),
         ),

@@ -1,5 +1,5 @@
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ParseError, ResponseError } from "@homarr/common/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import { createChannelEventHistoryOld } from "../../../redis/src/lib/channel";
 import type { IntegrationTestingInput } from "../base/integration";

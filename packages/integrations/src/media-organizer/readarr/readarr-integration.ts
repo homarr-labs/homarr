@@ -1,7 +1,7 @@
 import { z } from "zod/v4";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { logger } from "@homarr/log";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
@@ -10,6 +10,8 @@ import type { TestingResult } from "../../base/test-connection/test-connection-s
 import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-integration";
 import type { CalendarEvent, CalendarLink } from "../../interfaces/calendar/calendar-types";
 import { mediaOrganizerPriorities } from "../media-organizer";
+
+const logger = createLogger({ module: "readarrIntegration" });
 
 export class ReadarrIntegration extends Integration implements ICalendarIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

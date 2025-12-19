@@ -3,8 +3,8 @@ import type { AxiosInstance } from "axios";
 import type { Dispatcher } from "undici";
 import { fetch as undiciFetch } from "undici";
 
-import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/certificates/server";
 import { removeTrailingSlash } from "@homarr/common";
+import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
 import type { IntegrationSecretKind } from "@homarr/definitions";
 
 import { HandleIntegrationErrors } from "./errors/decorator";

@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   download-crowdin-translations:
+    timeout-minutes: 5
     runs-on: ubuntu-latest
 
     steps:

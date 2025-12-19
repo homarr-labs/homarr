@@ -1,9 +1,12 @@
 import { decryptSecret } from "@homarr/common/server";
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKind, IntegrationSecretKind } from "@homarr/definitions";
 import { getAllSecretKindOptions } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
-import { logger } from "@homarr/log";
+
+const logger = createLogger({ module: "integrationTestConnection" });
 
 type FormIntegration = Omit<Integration, "appId"> & {
   secrets: {
@@ -35,8 +38,13 @@ export const testConnectionAsync = async (
         };
       } catch (error) {
         logger.warn(
-          new Error(
-            `Failed to decrypt secret from database integration="${integration.name}" secretKind="${secret.kind}"`,
+          new ErrorWithMetadata(
+            "Failed to decrypt secret from database",
+            {
+              integrationName: integration.name,
+              integrationKind: integration.kind,
+              secretKind: secret.kind,
+            },
             { cause: error },
           ),
         );
