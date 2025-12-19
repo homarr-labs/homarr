@@ -16,7 +16,7 @@ import {
 import { IconCertificateOff } from "@tabler/icons-react";
 
 import { auth } from "@homarr/auth/next";
-import { getTrustedCertificateHostnamesAsync } from "@homarr/certificates/server";
+import { getTrustedCertificateHostnamesAsync } from "@homarr/core/infrastructure/certificates";
 import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
 

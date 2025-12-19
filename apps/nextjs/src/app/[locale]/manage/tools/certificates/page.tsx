@@ -5,8 +5,8 @@ import { IconAlertTriangle, IconCertificate, IconCertificateOff } from "@tabler/
 import dayjs from "dayjs";
 
 import { auth } from "@homarr/auth/next";
-import { loadCustomRootCertificatesAsync } from "@homarr/certificates/server";
 import { getMantineColor } from "@homarr/common";
+import { loadCustomRootCertificatesAsync } from "@homarr/core/infrastructure/certificates";
 import type { SupportedLanguage } from "@homarr/translation";
 import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
