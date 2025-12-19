@@ -14,7 +14,9 @@ import { ApiKeysManagement } from "./components/api-keys";
 
 import "@scalar/api-reference-react/style.css";
 
-export async function generateMetadata() {
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
   const session = await auth();
   if (!session?.user || !session.user.permissions.includes("admin")) {
     return {};
@@ -59,6 +61,7 @@ export default async function ApiPage() {
               authentication: {
                 preferredSecurityScheme: "apikey",
               },
+              hideSearch: true,
             }}
           />
         </TabsPanel>
