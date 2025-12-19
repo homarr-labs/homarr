@@ -32,6 +32,7 @@ jobs:
   release:
     name: Create tag and release
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     env:
       SKIP_RELEASE: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'dev' }}
     outputs:
@@ -64,7 +65,7 @@ jobs:
       - uses: actions/setup-node@v6
         if: env.SKIP_RELEASE == 'false'
         with:
-          node-version: 24.11.1
+          node-version: 24.12.0
           cache: "pnpm"
       - run: npm i -g pnpm
         if: env.SKIP_RELEASE == 'false'
@@ -112,6 +113,7 @@ jobs:
     name: Build docker image for amd64
     needs: release
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
@@ -150,6 +152,7 @@ jobs:
     name: Build docker image for arm64
     needs: release
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
     outputs:
       digest: ${{ steps.build.outputs.digest }}
     steps:
@@ -188,6 +191,7 @@ jobs:
     name: Extract amd64 asset from docker image
     needs: [release, build-amd64]
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
       - name: Extract amd64
         if: needs.release.outputs.skipped == 'false'
@@ -203,6 +207,7 @@ jobs:
     name: Extract arm64 asset from docker image
     needs: [release, build-arm64]
     runs-on: ubuntu-24.04-arm
+    timeout-minutes: 2
     steps:
       - name: Extract arm64
         if: needs.release.outputs.skipped == 'false'
@@ -217,6 +222,7 @@ jobs:
     name: Complete deployment and notify
     needs: [release, build-amd64, build-arm64, extract-asset-amd64, extract-asset-arm64]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     env:
       NEXT_VERSION: ${{ needs.release.outputs.version }}
       DEPLOY_LATEST: ${{ github.ref_name == 'main' }}

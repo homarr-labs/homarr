@@ -8,7 +8,6 @@
     ".": "./index.ts",
     "./types": "./src/types.ts",
     "./server": "./src/server.ts",
-    "./init-dns": "./src/dns.ts",
     "./client": "./src/client.ts",
     "./env": "./env.ts"
   },
@@ -28,14 +27,12 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/core": "workspace:^0.1.0",
-    "@homarr/log": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^3.1.0",
     "dayjs": "^1.11.19",
-    "dns-caching": "^0.2.7",
     "next": "16.0.10",
     "octokit": "^5.0.5",
-    "react": "19.2.1",
-    "react-dom": "19.2.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "undici": "7.16.0",
     "zod": "^4.1.13",
     "zod-validation-error": "^5.0.0"
@@ -44,7 +41,7 @@
     "@homarr/eslint-config": "workspace:^0.2.0",
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "typescript": "^5.9.3"
   }
 }

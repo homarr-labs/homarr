@@ -2,8 +2,8 @@ import { createAppAuth } from "@octokit/auth-app";
 import { Octokit, RequestError } from "octokit";
 import type { fetch } from "undici";
 
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { logger } from "@homarr/log";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationOctokitHttpErrorHandler } from "../base/errors/http";
@@ -18,7 +18,7 @@ import type {
   ReleaseResponse,
 } from "../interfaces/releases-providers/releases-providers-types";
 
-const localLogger = logger.child({ module: "GitHubContainerRegistryIntegration" });
+const logger = createLogger({ module: "githubContainerRegistryIntegration" });
 
 @HandleIntegrationErrors([integrationOctokitHttpErrorHandler])
 export class GitHubContainerRegistryIntegration extends Integration implements ReleasesProviderIntegration {
@@ -45,10 +45,7 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
   private parseIdentifier(identifier: string) {
     const [owner, name] = identifier.split("/");
     if (!owner || !name) {
-      localLogger.warn(
-        `Invalid identifier format. Expected 'owner/name', for ${identifier} with GitHub Container Registry integration`,
-        { identifier },
-      );
+      logger.warn("Invalid identifier format. Expected 'owner/name', for identifier", { identifier });
       return null;
     }
     return { owner, name };
@@ -91,7 +88,7 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
       return { success: true, data: { ...details, ...latestRelease } };
     } catch (error) {
       const errorMessage = error instanceof RequestError ? error.message : String(error);
-      localLogger.warn(`Failed to get releases for ${owner}\\${name} with GitHub Container Registry integration`, {
+      logger.warn("Failed to get releases", {
         owner,
         name,
         error: errorMessage,
@@ -123,7 +120,7 @@ export class GitHubContainerRegistryIntegration extends Integration implements R
         forksCount: response.data.repository?.forks_count,
       };
     } catch (error) {
-      localLogger.warn(`Failed to get details for ${owner}\\${name} with GitHub Container Registry integration`, {
+      logger.warn("Failed to get details", {
         owner,
         name,
         error: error instanceof RequestError ? error.message : String(error),

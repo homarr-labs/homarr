@@ -5,6 +5,8 @@ import { migrate } from "drizzle-orm/mysql2/migrator";
 import mysql from "mysql2";
 import { describe, test } from "vitest";
 
+import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
+
 import * as mysqlSchema from "../schema/mysql";
 
 describe("Mysql Migration", () => {
@@ -22,7 +24,7 @@ describe("Mysql Migration", () => {
     const database = drizzle(connection, {
       schema: mysqlSchema,
       mode: "default",
-      casing: "snake_case",
+      casing: DB_CASING,
     });
 
     // Run migrations and check if it works

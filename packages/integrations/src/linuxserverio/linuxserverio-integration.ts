@@ -1,5 +1,5 @@
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
-import { logger } from "@homarr/log";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -9,7 +9,7 @@ import type { ReleasesProviderIntegration } from "../interfaces/releases-provide
 import type { ReleaseResponse } from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./linuxserverio-schemas";
 
-const localLogger = logger.child({ module: "LinuxServerIOsIntegration" });
+const logger = createLogger({ module: "linuxServerIOIntegration" });
 
 export class LinuxServerIOIntegration extends Integration implements ReleasesProviderIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -27,10 +27,7 @@ export class LinuxServerIOIntegration extends Integration implements ReleasesPro
   private parseIdentifier(identifier: string) {
     const [owner, name] = identifier.split("/");
     if (!owner || !name) {
-      localLogger.warn(
-        `Invalid identifier format. Expected 'owner/name', for ${identifier} with LinuxServerIO integration`,
-        { identifier },
-      );
+      logger.warn("Invalid identifier format. Expected 'owner/name' for identifier", { identifier });
       return null;
     }
     return { owner, name };
@@ -53,7 +50,7 @@ export class LinuxServerIOIntegration extends Integration implements ReleasesPro
 
     const release = data.data.repositories.linuxserver.find((repo) => repo.name === name);
     if (!release) {
-      localLogger.warn(`Repository ${name} not found on provider, with LinuxServerIO integration`, {
+      logger.warn("Repository not found on provider", {
         name,
       });
       return { success: false, error: { code: "noMatchingVersion" } };

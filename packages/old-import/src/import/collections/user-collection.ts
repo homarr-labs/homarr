@@ -1,10 +1,12 @@
 import { createId } from "@homarr/common";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createDbInsertCollectionForTransaction } from "@homarr/db/collection";
 import { credentialsAdminGroup } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 import { mapAndDecryptUsers } from "../../mappers/map-user";
 import type { OldmarrImportUser } from "../../user-schema";
+
+const logger = createLogger({ module: "userCollection" });
 
 export const createUserInsertCollection = (
   importUsers: OldmarrImportUser[],
@@ -21,7 +23,7 @@ export const createUserInsertCollection = (
     return insertCollection;
   }
 
-  logger.info(`Preparing users for insert collection count=${importUsers.length}`);
+  logger.info("Preparing users for insert collection", { count: importUsers.length });
 
   if (encryptionToken === null || encryptionToken === undefined) {
     logger.debug("Skipping user decryption due to missing token");
@@ -30,7 +32,7 @@ export const createUserInsertCollection = (
 
   const preparedUsers = mapAndDecryptUsers(importUsers, encryptionToken);
   preparedUsers.forEach((user) => insertCollection.users.push(user));
-  logger.debug(`Added users to insert collection count=${insertCollection.users.length}`);
+  logger.debug("Added users to insert collection", { count: insertCollection.users.length });
 
   if (!preparedUsers.some((user) => user.isAdmin)) {
     logger.warn("No admin users found, skipping admin group creation");
@@ -58,9 +60,10 @@ export const createUserInsertCollection = (
     });
   });
 
-  logger.info(
-    `Added admin group and permissions to insert collection adminGroupId=${adminGroupId} adminUsersCount=${admins.length}`,
-  );
+  logger.info("Added admin group and permissions to insert collection", {
+    adminGroupId,
+    adminUsersCount: admins.length,
+  });
 
   return insertCollection;
 };

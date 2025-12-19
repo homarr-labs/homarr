@@ -18,6 +18,17 @@ vi.mock("@homarr/db", async (importActual) => {
   };
 });
 
+vi.mock("@homarr/core/infrastructure/certificates", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const actual = await importActual<typeof import("@homarr/core/infrastructure/certificates")>();
+  return {
+    ...actual,
+    getTrustedCertificateHostnamesAsync: vi.fn().mockImplementation(() => {
+      return Promise.resolve([]);
+    }),
+  };
+});
+
 const DEFAULT_API_KEY = "8r45mfes43s3iw7x3oecto6dl9ilxnf9";
 const IMAGE_NAME = "linuxserver/sabnzbd:latest";
 

@@ -2,14 +2,16 @@ import { cookies } from "next/headers";
 import dayjs from "dayjs";
 import type { NextAuthConfig } from "next-auth";
 
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { groupMembers, groups, users } from "@homarr/db/schema";
 import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
-import { logger } from "@homarr/log";
 
 import { env } from "./env";
 import { extractProfileName } from "./providers/oidc/oidc-provider";
+
+const logger = createLogger({ module: "authEvents" });
 
 export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["events"], undefined>["signIn"] => {
   return async ({ user, profile }) => {
@@ -43,9 +45,11 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
 
     if (dbUser.name !== user.name) {
       await db.update(users).set({ name: user.name }).where(eq(users.id, user.id));
-      logger.info(
-        `Username for user of credentials provider has changed. user=${user.id} old=${dbUser.name} new=${user.name}`,
-      );
+      logger.info("Username for user of credentials provider has changed.", {
+        userId: user.id,
+        oldName: dbUser.name,
+        newName: user.name,
+      });
     }
 
     if (profile) {
@@ -56,9 +60,11 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
 
       if (dbUser.name !== profileUsername) {
         await db.update(users).set({ name: profileUsername }).where(eq(users.id, user.id));
-        logger.info(
-          `Username for user of oidc provider has changed. user=${user.id} old='${dbUser.name}' new='${profileUsername}'`,
-        );
+        logger.info("Username for user of oidc provider has changed.", {
+          userId: user.id,
+          oldName: dbUser.name,
+          newName: profileUsername,
+        });
       }
 
       if (
@@ -67,11 +73,13 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
         !dbUser.image?.startsWith("data:")
       ) {
         await db.update(users).set({ image: profile.picture }).where(eq(users.id, user.id));
-        logger.info(`Profile picture for user of oidc provider has changed. user=${user.id}'`);
+        logger.info("Profile picture for user of oidc provider has changed.", {
+          userId: user.id,
+        });
       }
     }
 
-    logger.info(`User '${dbUser.name}' logged in at ${dayjs().format()}`);
+    logger.info("User logged in", { userId: user.id, userName: dbUser.name, timestamp: dayjs().format() });
 
     // We use a cookie as localStorage is not shared with server (otherwise flickering would occur)
     (await cookies()).set(colorSchemeCookieKey, dbUser.colorScheme, {
@@ -96,7 +104,7 @@ const addUserToEveryoneGroupIfNotMemberAsync = async (db: Database, userId: stri
       userId,
       groupId: dbEveryoneGroup.id,
     });
-    logger.info(`Added user to everyone group. user=${userId}`);
+    logger.info("Added user to everyone group.", { userId });
   }
 };
 
@@ -118,9 +126,10 @@ const synchronizeGroupsWithExternalForUserAsync = async (db: Database, userId: s
   );
 
   if (missingExternalGroupsForUser.length > 0) {
-    logger.debug(
-      `Homarr does not have the user in certain groups. user=${userId} count=${missingExternalGroupsForUser.length}`,
-    );
+    logger.debug("Homarr does not have the user in certain groups.", {
+      user: userId,
+      count: missingExternalGroupsForUser.length,
+    });
 
     const groupIds = await db.query.groups.findMany({
       columns: {
@@ -129,7 +138,10 @@ const synchronizeGroupsWithExternalForUserAsync = async (db: Database, userId: s
       where: inArray(groups.name, missingExternalGroupsForUser),
     });
 
-    logger.debug(`Homarr has found groups in the database user is not in. user=${userId} count=${groupIds.length}`);
+    logger.debug("Homarr has found groups in the database user is not in.", {
+      user: userId,
+      count: groupIds.length,
+    });
 
     if (groupIds.length > 0) {
       await db.insert(groupMembers).values(
@@ -139,9 +151,9 @@ const synchronizeGroupsWithExternalForUserAsync = async (db: Database, userId: s
         })),
       );
 
-      logger.info(`Added user to groups successfully. user=${userId} count=${groupIds.length}`);
+      logger.info("Added user to groups successfully.", { user: userId, count: groupIds.length });
     } else {
-      logger.debug(`User is already in all groups of Homarr. user=${userId}`);
+      logger.debug("User is already in all groups of Homarr.", { user: userId });
     }
   }
 
@@ -154,9 +166,10 @@ const synchronizeGroupsWithExternalForUserAsync = async (db: Database, userId: s
   );
 
   if (groupsUserIsNoLongerMemberOfExternally.length > 0) {
-    logger.debug(
-      `Homarr has the user in certain groups that LDAP does not have. user=${userId} count=${groupsUserIsNoLongerMemberOfExternally.length}`,
-    );
+    logger.debug("Homarr has the user in certain groups that LDAP does not have.", {
+      user: userId,
+      count: groupsUserIsNoLongerMemberOfExternally.length,
+    });
 
     await db.delete(groupMembers).where(
       and(
@@ -168,8 +181,9 @@ const synchronizeGroupsWithExternalForUserAsync = async (db: Database, userId: s
       ),
     );
 
-    logger.info(
-      `Removed user from groups successfully. user=${userId} count=${groupsUserIsNoLongerMemberOfExternally.length}`,
-    );
+    logger.info("Removed user from groups successfully.", {
+      user: userId,
+      count: groupsUserIsNoLongerMemberOfExternally.length,
+    });
   }
 };

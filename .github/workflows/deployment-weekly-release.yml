@@ -18,6 +18,7 @@ permissions:
 jobs:
   create-and-merge-pr:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
       - name: Discord notification
         if: ${{ github.events.inputs.send-notifications }}

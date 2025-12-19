@@ -1,4 +1,4 @@
-import { logger } from "@homarr/log";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { BoardSize, OldmarrApp, OldmarrConfig, OldmarrWidget, SizedShape } from "@homarr/old-schema";
 import { boardSizes } from "@homarr/old-schema";
 
@@ -6,6 +6,8 @@ import type { GridAlgorithmItem } from "../../../api/src/router/board/grid-algor
 import { generateResponsiveGridFor } from "../../../api/src/router/board/grid-algorithm";
 import { mapColumnCount } from "../mappers/map-column-count";
 import { mapApp, mapWidget } from "../mappers/map-item";
+
+const logger = createLogger({ module: "prepareItems" });
 
 export const prepareItems = (
   { apps, widgets, settings }: Pick<OldmarrConfig, "apps" | "widgets" | "settings">,
@@ -25,15 +27,17 @@ export const prepareItems = (
   );
 
   if (incompleteSizes.length > 0) {
-    logger.warn(
-      `Found items with incomplete sizes board=${boardId} count=${incompleteSizes.length} sizes=${incompleteSizes.join(", ")}\nHomarr will automatically generate missing sizes`,
-    );
+    logger.warn("Found items with incomplete sizes. Generating missing sizes.", {
+      boardId,
+      count: incompleteSizes.length,
+      sizes: incompleteSizes.join(", "),
+    });
 
     incompleteSizes.forEach((size) => {
       const columnCount = mapColumnCount(settings.customization.gridstack, size);
       const previousSize = !incompleteSizes.includes("lg") ? "lg" : incompleteSizes.includes("sm") ? "md" : "sm";
       const previousWidth = mapColumnCount(settings.customization.gridstack, previousSize);
-      logger.info(`Generating missing size boardId=${boardId} from=${previousSize} to=${size}`);
+      logger.info("Generating missing size", { boardId, from: previousSize, to: size });
 
       const items = widgets
         .map((item) => mapItemForGridAlgorithm(item, previousSize))

@@ -14,6 +14,7 @@ jobs:
     # Don't run this action if the downloaded translations are being pushed
     if: "!contains(github.event.head_commit.message, 'chore(lang)')"
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - name: Checkout

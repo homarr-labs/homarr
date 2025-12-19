@@ -1,5 +1,5 @@
-import { fetchWithTrustedCertificatesAsync } from "@homarr/certificates/server";
 import { ResponseError } from "@homarr/common/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import { Integration } from "../base/integration";
 import type { IntegrationTestingInput } from "../base/integration";

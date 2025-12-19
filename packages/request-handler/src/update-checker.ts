@@ -2,13 +2,15 @@ import dayjs from "dayjs";
 import { Octokit } from "octokit";
 import { compareSemVer, isValidSemVer } from "semver-parser";
 
-import { fetchWithTimeout } from "@homarr/common";
 import { env } from "@homarr/common/env";
-import { logger } from "@homarr/log";
+import { fetchWithTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createChannelWithLatestAndEvents } from "@homarr/redis";
 import { createCachedRequestHandler } from "@homarr/request-handler/lib/cached-request-handler";
 
 import packageJson from "../../../package.json";
+
+const logger = createLogger({ module: "updateCheckerRequestHandler" });
 
 export const updateCheckerRequestHandler = createCachedRequestHandler({
   queryKey: "homarr-update-checker",
@@ -21,7 +23,7 @@ export const updateCheckerRequestHandler = createCachedRequestHandler({
 
     const octokit = new Octokit({
       request: {
-        fetch: fetchWithTimeout,
+        fetch: fetchWithTimeoutAsync,
       },
     });
     const releases = await octokit.rest.repos.listReleases({
@@ -34,7 +36,7 @@ export const updateCheckerRequestHandler = createCachedRequestHandler({
 
     for (const release of releases.data) {
       if (!isValidSemVer(release.tag_name)) {
-        logger.warn(`Unable to parse semantic tag '${release.tag_name}'. Update check might not work.`);
+        logger.warn("Unable to parse semantic tag. Update check might not work.", { tagName: release.tag_name });
         continue;
       }
 
@@ -46,11 +48,12 @@ export const updateCheckerRequestHandler = createCachedRequestHandler({
       .sort((releaseA, releaseB) => compareSemVer(releaseB.tag_name, releaseA.tag_name));
     if (availableNewerReleases.length > 0) {
       logger.info(
+        "Update checker found a new available version",
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        `Update checker found a new available version: ${availableReleases[0]!.tag_name}. Current version is ${currentVersion}`,
+        { version: availableReleases[0]!.tag_name, currentVersion },
       );
     } else {
-      logger.debug(`Update checker did not find any available updates. Current version is ${currentVersion}`);
+      logger.debug("Update checker did not find any available updates", { currentVersion });
     }
 
     return {

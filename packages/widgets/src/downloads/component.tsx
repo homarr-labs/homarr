@@ -473,13 +473,16 @@ export default function DownloadClientsWidget({
           return (
             <Group align="center" gap="xs" wrap="nowrap" w="100%">
               <Text size="xs">
-                {new Intl.NumberFormat("en", { style: "percent", notation: "compact", unitDisplay: "narrow" }).format(
-                  progress,
-                )}
+                {new Intl.NumberFormat("en", {
+                  style: "percent",
+                  notation: "compact",
+                  unitDisplay: "narrow",
+                  roundingMode: "floor",
+                }).format(progress)}
               </Text>
               <Progress
                 w="100%"
-                value={progress * 100}
+                value={Math.floor(progress * 100)}
                 color={row.original.state === "paused" ? "yellow" : progress === 1 ? "green" : "blue"}
                 radius="lg"
               />

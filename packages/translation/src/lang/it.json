@@ -1939,7 +1939,23 @@
     "dockerContainers": {
       "name": "Statistiche del docker",
       "description": "Statistiche dei tuoi contenitori (questo widget può essere aggiunto solo con privilegi di amministratore)",
-      "option": {},
+      "option": {
+        "enableRowSorting": {
+          "label": "Abilita l'ordinamento degli elementi"
+        },
+        "defaultSort": {
+          "label": "Colonna utilizzata per l'ordinamento predefinito",
+          "option": {
+            "name": "Nome",
+            "state": "Stato",
+            "cpuUsage": "Uso della CPU",
+            "memoryUsage": "Uso della memoria"
+          }
+        },
+        "descendingDefaultSort": {
+          "label": "Inverti ordinamento"
+        }
+      },
       "error": {
         "internalServerError": "Recupero statistiche container non riuscito"
       }

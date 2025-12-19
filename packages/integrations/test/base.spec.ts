@@ -16,6 +16,17 @@ vi.mock("@homarr/db", async (importActual) => {
   };
 });
 
+vi.mock("@homarr/core/infrastructure/certificates", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  const actual = await importActual<typeof import("@homarr/core/infrastructure/certificates")>();
+  return {
+    ...actual,
+    getTrustedCertificateHostnamesAsync: vi.fn().mockImplementation(() => {
+      return Promise.resolve([]);
+    }),
+  };
+});
+
 describe("Base integration", () => {
   test("testConnectionAsync should handle errors", async () => {
     const responseError = new ResponseError({ status: 500, url: "https://example.com" });
