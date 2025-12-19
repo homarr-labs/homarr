@@ -2,8 +2,8 @@
 * @homarr-labs/maintainers
 
 # Exempt Renovate‑managed files (no owners)
-package.json          @none
-package-lock.json     @none
-pnpm-lock.yaml        @none
-Dockerfile            @none
-docker-compose.yml    @none
+package.json          @homarr-labs/none
+package-lock.json     @homarr-labs/none
+pnpm-lock.yaml        @homarr-labs/none
+Dockerfile            @homarr-labs/none
+docker-compose.yml    @homarr-labs/none
