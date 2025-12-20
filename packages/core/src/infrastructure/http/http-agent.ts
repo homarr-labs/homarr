@@ -1,5 +1,5 @@
 import type { Dispatcher } from "undici";
-import { Agent } from "undici";
+import { EnvHttpProxyAgent } from "undici";
 
 import type { ILogger } from "@homarr/core/infrastructure/logs";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -7,16 +7,15 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 // The below import statement initializes dns-caching
 import "@homarr/core/infrastructure/dns/init";
 
-interface HttpAgentOptions extends Agent.Options {
+interface HttpAgentOptions extends EnvHttpProxyAgent.Options {
   logger?: ILogger;
 }
 
-export class UndiciHttpAgent extends Agent {
+export class UndiciHttpAgent extends EnvHttpProxyAgent {
   private logger: ILogger;
 
   constructor(props?: HttpAgentOptions) {
     super(props);
-
     this.logger = props?.logger ?? createLogger({ module: "httpAgent" });
   }
 
