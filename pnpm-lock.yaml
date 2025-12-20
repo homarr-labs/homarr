@@ -23,7 +23,7 @@ overrides:
   tar-fs@>=3.0.0 <3.0.9: '>=3.1.1'
   tar-fs@>=2.0.0 <2.1.3: '>=3.1.1'
   tmp@<=0.2.3: '>=0.2.5'
-  vite@>=5.0.0 <=5.4.18: '>=7.2.7'
+  vite@>=5.0.0 <=5.4.18: '>=7.3.0'
 
 patchedDependencies:
   '@types/node-unifi':
@@ -5079,7 +5079,7 @@ packages:
     resolution: {integrity: sha512-EcA07pHJouywpzsoTUqNh5NwGayl2PPVEJKUSinGGSxFGYn+shYbqMGBg6FXDqgXum9Ou/ecb+411ssw8HImJQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
-      vite: '>=7.2.7'
+      vite: '>=7.3.0'
 
   '@vitest/coverage-v8@4.0.15':
     resolution: {integrity: sha512-FUJ+1RkpTFW7rQITdgTi93qOCWJobWhBirEPCeXh2SW2wsTlFxy51apDz5gzG+ZEYt/THvWeNmhdAoS9DTwpCw==}
@@ -10749,7 +10749,7 @@ packages:
   vite-tsconfig-paths@5.1.4:
     resolution: {integrity: sha512-cYj0LRuLV2c2sMqhqhGpaO3LretdtMn/BVX4cPLanIZuwwrkVl+lK84E/miEXkCHWXuq65rhNN4rXsBcOB3S4w==}
     peerDependencies:
-      vite: '>=7.2.7'
+      vite: '>=7.3.0'
     peerDependenciesMeta:
       vite:
         optional: true
