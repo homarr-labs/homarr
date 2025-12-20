@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Stack, Tabs, TabsList, TabsPanel, TabsTab } from "@mantine/core";
+import { ApiReferenceReact } from "@scalar/api-reference-react";
 
 import { openApiDocument } from "@homarr/api";
 import { api } from "@homarr/api/server";
@@ -8,11 +9,14 @@ import { auth } from "@homarr/auth/next";
 import { extractBaseUrlFromHeaders } from "@homarr/common";
 import { getScopedI18n } from "@homarr/translation/server";
 
-import { SwaggerUIClient } from "~/app/[locale]/manage/tools/api/components/swagger-ui";
 import { createMetaTitle } from "~/metadata";
 import { ApiKeysManagement } from "./components/api-keys";
 
-export async function generateMetadata() {
+import "@scalar/api-reference-react/style.css";
+
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
   const session = await auth();
   if (!session?.user || !session.user.permissions.includes("admin")) {
     return {};
@@ -45,7 +49,21 @@ export default async function ApiPage() {
           <ApiKeysManagement apiKeys={apiKeys} />
         </TabsPanel>
         <TabsPanel value={"documentation"}>
-          <SwaggerUIClient document={document} />
+          <ApiReferenceReact
+            configuration={{
+              content: document,
+              layout: "classic",
+              showSidebar: false,
+              hideDarkModeToggle: true,
+              showDeveloperTools: "never",
+              hiddenClients: true,
+              darkMode: session.user.colorScheme === "dark",
+              authentication: {
+                preferredSecurityScheme: "apikey",
+              },
+              hideSearch: true,
+            }}
+          />
         </TabsPanel>
       </Tabs>
     </Stack>

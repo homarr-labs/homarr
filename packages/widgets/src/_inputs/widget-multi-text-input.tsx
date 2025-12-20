@@ -27,24 +27,13 @@ export const WidgetMultiTextInput = ({ property, kind, options }: CommonWidgetIn
   };
 
   const currentValidationResult = React.useMemo(() => {
-    if (!options.validate) {
-      return {
-        success: false,
-        result: null,
-      };
-    }
-
-    const validationResult = options.validate.safeParse(search);
-    return {
-      success: validationResult.success,
-      result: validationResult,
-    };
+    return options.validate.safeParse(search);
   }, [options.validate, search]);
 
   const error = React.useMemo(() => {
     /* hide the error when nothing is being typed since "" is not valid but is not an explicit error */
-    if (!currentValidationResult.success && currentValidationResult.result && search.length !== 0) {
-      return currentValidationResult.result.error?.issues[0]?.message;
+    if (!currentValidationResult.success && search.length !== 0) {
+      return currentValidationResult.error.issues[0]?.message;
     }
     return null;
   }, [currentValidationResult, search]);

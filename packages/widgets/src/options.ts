@@ -5,6 +5,7 @@ import { z } from "zod/v4";
 import type { ZodType } from "zod/v4";
 
 import type { IntegrationKind } from "@homarr/definitions";
+import { zodEnumFromArray } from "@homarr/validation/enums";
 
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
 import type { ReleasesRepository } from "./releases/releases-repository";
@@ -38,6 +39,7 @@ export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentif
   }) => React.ReactNode;
   uniqueIdentifier: (item: TItem) => TOptionValue;
   useData: (values: TOptionValue[]) => { data: TItem[] | undefined; isLoading: boolean; error: unknown };
+  validate: z.ZodArray<z.ZodType>;
 }
 
 interface SelectInput<TOptions extends readonly SelectOption[]> extends CommonInput<
@@ -68,12 +70,13 @@ const optionsFactory = {
     type: "switch" as const,
     defaultValue: input?.defaultValue ?? false,
     withDescription: input?.withDescription ?? false,
+    validate: z.boolean(),
   }),
   text: (input?: TextInput) => ({
     type: "text" as const,
     defaultValue: input?.defaultValue ?? "",
     withDescription: input?.withDescription ?? false,
-    validate: input?.validate,
+    validate: input?.validate ?? z.string(),
   }),
   multiSelect: <const TOptions extends SelectOption[]>(input: MultiSelectInput<TOptions>) => ({
     type: "multiSelect" as const,
@@ -81,6 +84,9 @@ const optionsFactory = {
     options: input.options,
     searchable: input.searchable ?? false,
     withDescription: input.withDescription ?? false,
+    validate: z.array(
+      zodEnumFromArray(input.options.map((option) => (typeof option === "string" ? option : option.value))),
+    ),
   }),
   select: <const TOptions extends SelectOption[]>(input: SelectInput<TOptions>) => ({
     type: "select" as const,
@@ -88,6 +94,7 @@ const optionsFactory = {
     options: input.options,
     searchable: input.searchable ?? false,
     withDescription: input.withDescription ?? false,
+    validate: zodEnumFromArray(input.options.map((option) => (typeof option === "string" ? option : option.value))),
   }),
   number: (input: NumberInput) => ({
     type: "number" as const,
@@ -122,19 +129,20 @@ const optionsFactory = {
     defaultValue: input?.defaultValue ?? [],
     withDescription: input?.withDescription ?? false,
     values: [] as string[],
-    validate: input?.validate,
+    validate: input?.validate ?? z.array(z.string()),
   }),
-  multiReleasesRepositories: (input?: CommonInput<ReleasesRepository[]> & { validate?: ZodType }) => ({
+  multiReleasesRepositories: (input: CommonInput<ReleasesRepository[]> & { validate: ZodType }) => ({
     type: "multiReleasesRepositories" as const,
-    defaultValue: input?.defaultValue ?? [],
-    withDescription: input?.withDescription ?? false,
+    defaultValue: input.defaultValue ?? [],
+    withDescription: input.withDescription ?? false,
     values: [] as ReleasesRepository[],
-    validate: input?.validate,
+    validate: input.validate,
   }),
   app: () => ({
     type: "app" as const,
     defaultValue: "",
     withDescription: false,
+    validate: z.string(),
   }),
   sortableItemList: <const TItem, const TOptionValue extends UniqueIdentifier>(
     input: SortableItemListInput<TItem, TOptionValue>,
@@ -146,6 +154,7 @@ const optionsFactory = {
     uniqueIdentifier: input.uniqueIdentifier,
     useData: input.useData,
     withDescription: false,
+    validate: input.validate,
   }),
 };
 
