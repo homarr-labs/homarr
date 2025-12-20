@@ -1,5 +1,6 @@
+import { and, eq } from "drizzle-orm";
+
 import type { Database } from "../..";
-import { and, eq } from "../..";
 import { integrationSecrets } from "../../schema";
 
 /**

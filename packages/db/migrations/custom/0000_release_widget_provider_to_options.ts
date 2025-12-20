@@ -1,10 +1,10 @@
+import { eq } from "drizzle-orm";
 import SuperJSON from "superjson";
 
 import { createId } from "@homarr/common";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
-import { eq } from "../..";
 import type { Database } from "../..";
 import { items } from "../../schema";
 

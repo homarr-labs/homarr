@@ -1,3 +1,5 @@
+import { eq } from "drizzle-orm";
+
 import { createId, objectKeys } from "@homarr/common";
 import {
   createDocumentationLink,
@@ -9,7 +11,6 @@ import {
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database } from "..";
-import { eq } from "..";
 import {
   getServerSettingByKeyAsync,
   insertServerSettingByKeyAsync,

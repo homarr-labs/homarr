@@ -1,6 +1,6 @@
+import { eq } from "drizzle-orm";
 import SuperJSON from "superjson";
 
-import { eq } from "../..";
 import type { Database } from "../..";
 import { items } from "../../schema";
 
