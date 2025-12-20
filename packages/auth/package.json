@@ -37,7 +37,7 @@
     "next-auth": "5.0.0-beta.30",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "zod": "^4.1.13"
+    "zod": "^4.2.0"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
