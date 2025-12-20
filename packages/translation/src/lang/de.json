@@ -2639,7 +2639,7 @@
         "notification": {
           "success": {
             "title": "Änderungen erfolgreich angewendet",
-            "message": "Das Board wurde erfolgreich dupliziert"
+            "message": "Das Board wurde erfolgreich gespeichert"
           },
           "error": {
             "title": "Änderungen konnten nicht angewendet werden",
