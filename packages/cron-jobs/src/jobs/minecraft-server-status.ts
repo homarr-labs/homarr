@@ -1,7 +1,8 @@
+import { eq } from "drizzle-orm";
 import SuperJSON from "superjson";
 
 import { EVERY_5_MINUTES } from "@homarr/cron-jobs-core/expressions";
-import { db, eq } from "@homarr/db";
+import { db } from "@homarr/db";
 import { items } from "@homarr/db/schema";
 import { minecraftServerStatusRequestHandler } from "@homarr/request-handler/minecraft-server-status";
 

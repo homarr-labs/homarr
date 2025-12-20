@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
 import dayjs from "dayjs";
+import { and, eq, inArray } from "drizzle-orm";
 import type { NextAuthConfig } from "next-auth";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { and, eq, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { groupMembers, groups, users } from "@homarr/db/schema";
 import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";

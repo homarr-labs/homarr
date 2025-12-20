@@ -1,5 +1,6 @@
 import { X509Certificate } from "node:crypto";
 import { TRPCError } from "@trpc/server";
+import { and, eq } from "drizzle-orm";
 import { zfd } from "zod-form-data";
 import { z } from "zod/v4";
 
@@ -8,7 +9,6 @@ import {
   removeCustomRootCertificateAsync,
 } from "@homarr/core/infrastructure/certificates";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { and, eq } from "@homarr/db";
 import { trustedCertificateHostnames } from "@homarr/db/schema";
 import { certificateValidFileNameSchema, checkCertificateFile } from "@homarr/validation/certificates";
 

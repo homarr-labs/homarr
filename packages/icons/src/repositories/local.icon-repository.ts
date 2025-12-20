@@ -1,6 +1,6 @@
 import { createHash } from "crypto";
+import type { InferSelectModel } from "drizzle-orm";
 
-import type { InferSelectModel } from "@homarr/db";
 import { db } from "@homarr/db";
 import type { medias } from "@homarr/db/schema";
 

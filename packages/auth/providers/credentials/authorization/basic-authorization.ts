@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
+import { and, eq } from "drizzle-orm";
 import type { z } from "zod/v4";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
-import { and, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
 import type { userSignInSchema } from "@homarr/validation/user";
 

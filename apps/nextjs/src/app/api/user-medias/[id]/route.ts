@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { eq } from "drizzle-orm";
 import DOMPurify from "isomorphic-dompurify";
 
-import { db, eq } from "@homarr/db";
+import { db } from "@homarr/db";
 import { medias } from "@homarr/db/schema";
 
 export async function GET(_req: NextRequest, props: { params: Promise<{ id: string }> }) {

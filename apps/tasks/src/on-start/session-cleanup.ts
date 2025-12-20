@@ -1,6 +1,8 @@
+import { eq, inArray } from "drizzle-orm";
+
 import { env } from "@homarr/auth/env";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { db, eq, inArray } from "@homarr/db";
+import { db } from "@homarr/db";
 import { sessions, users } from "@homarr/db/schema";
 import { supportedAuthProviders } from "@homarr/definitions";
 

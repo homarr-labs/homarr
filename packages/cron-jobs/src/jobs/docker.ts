@@ -1,9 +1,10 @@
+import { eq } from "drizzle-orm";
 import SuperJSON from "superjson";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
-import { db, eq } from "@homarr/db";
+import { db } from "@homarr/db";
 import { items } from "@homarr/db/schema";
 import { dockerContainersRequestHandler } from "@homarr/request-handler/docker";
 

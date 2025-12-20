@@ -1,8 +1,8 @@
+import type { InferInsertModel } from "drizzle-orm";
 import SuperJSON from "superjson";
 
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { InferInsertModel } from "@homarr/db";
 import type { itemLayouts, items } from "@homarr/db/schema";
 import type { BoardSize, OldmarrApp, OldmarrWidget } from "@homarr/old-schema";
 import { boardSizes } from "@homarr/old-schema";

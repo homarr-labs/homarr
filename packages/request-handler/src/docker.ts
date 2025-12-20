@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import type { ContainerInfo, ContainerStats } from "dockerode";
+import { like, or } from "drizzle-orm";
 
-import { db, like, or } from "@homarr/db";
+import { db } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import type { ContainerState } from "@homarr/docker";
 import { dockerLabels, DockerSingleton } from "@homarr/docker";

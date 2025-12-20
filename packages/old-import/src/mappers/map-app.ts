@@ -1,4 +1,5 @@
-import type { InferSelectModel } from "@homarr/db";
+import type { InferSelectModel } from "drizzle-orm";
+
 import type { apps } from "@homarr/db/schema";
 import type { OldmarrApp } from "@homarr/old-schema";
 

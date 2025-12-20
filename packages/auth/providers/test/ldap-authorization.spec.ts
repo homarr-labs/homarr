@@ -1,9 +1,9 @@
 import { CredentialsSignin } from "@auth/core/errors";
+import { and, eq } from "drizzle-orm";
 import { describe, expect, test, vi } from "vitest";
 
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
-import { and, eq } from "@homarr/db";
 import { groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 

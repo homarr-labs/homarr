@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { userAgent } from "next/server";
+import { eq } from "drizzle-orm";
 import { createOpenApiFetchHandler } from "trpc-to-openapi";
 
 import { appRouter, createTRPCContext } from "@homarr/api";
@@ -8,7 +9,7 @@ import { hashPasswordAsync } from "@homarr/auth";
 import { createSessionAsync } from "@homarr/auth/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import { db, eq } from "@homarr/db";
+import { db } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema";
 
 const logger = createLogger({ module: "trpcOpenApiRoute" });

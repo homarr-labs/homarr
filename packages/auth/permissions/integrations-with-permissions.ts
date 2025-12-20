@@ -1,6 +1,7 @@
+import { eq, inArray } from "drizzle-orm";
 import type { Session } from "next-auth";
 
-import { db, eq, inArray } from "@homarr/db";
+import { db } from "@homarr/db";
 import { groupMembers, integrationGroupPermissions, integrationUserPermissions } from "@homarr/db/schema";
 
 import { constructIntegrationPermissions } from "./integration-permissions";

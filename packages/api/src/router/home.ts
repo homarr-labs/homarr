@@ -1,5 +1,7 @@
+import { eq, inArray, or } from "drizzle-orm";
+
 import { isProviderEnabled } from "@homarr/auth/server";
-import { db, eq, inArray, or } from "@homarr/db";
+import { db } from "@homarr/db";
 import {
   apps,
   boards,

@@ -1,8 +1,8 @@
 import type { Adapter } from "@auth/core/adapters";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { and, eq } from "drizzle-orm";
 
 import type { Database } from "@homarr/db";
-import { and, eq } from "@homarr/db";
 import { accounts, sessions, users } from "@homarr/db/schema";
 import type { SupportedAuthProvider } from "@homarr/definitions";
 

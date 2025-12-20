@@ -1,6 +1,7 @@
 import { command } from "@drizzle-team/brocli";
+import { eq } from "drizzle-orm";
 
-import { db, eq } from "@homarr/db";
+import { db } from "@homarr/db";
 import { users } from "@homarr/db/schema";
 
 export const fixUsernames = command({

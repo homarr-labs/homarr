@@ -1,6 +1,8 @@
+import { inArray } from "drizzle-orm";
+
 import { trpc } from "@homarr/api/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { db, inArray } from "@homarr/db";
+import { db } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 
 import type { Prefetch } from "../definition";

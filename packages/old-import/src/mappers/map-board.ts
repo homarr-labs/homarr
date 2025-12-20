@@ -1,5 +1,6 @@
+import type { InferInsertModel } from "drizzle-orm";
+
 import { createId } from "@homarr/common";
-import type { InferInsertModel } from "@homarr/db";
 import type { boards } from "@homarr/db/schema";
 
 import type { prepareMultipleImports } from "../prepare/prepare-multiple";

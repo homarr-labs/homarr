@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod/v4";
 
-import { and, eq } from "@homarr/db";
 import { items } from "@homarr/db/schema";
 import type { WidgetKind } from "@homarr/definitions";
 

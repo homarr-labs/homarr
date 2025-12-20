@@ -1,8 +1,9 @@
 import { command, string } from "@drizzle-team/brocli";
+import { and, eq } from "drizzle-orm";
 
 import { hashPasswordAsync } from "@homarr/auth";
 import { generateSecureRandomToken } from "@homarr/common/server";
-import { and, db, eq } from "@homarr/db";
+import { db } from "@homarr/db";
 import { sessions, users } from "@homarr/db/schema";
 
 export const resetPassword = command({

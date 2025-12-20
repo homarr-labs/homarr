@@ -31,6 +31,7 @@
     "@homarr/integrations": "workspace:^0.1.0",
     "@homarr/redis": "workspace:^0.1.0",
     "dayjs": "^1.11.19",
+    "drizzle-orm": "^0.45.1",
     "octokit": "^5.0.5",
     "superjson": "2.2.6",
     "undici": "7.16.0",

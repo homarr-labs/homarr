@@ -1,5 +1,6 @@
+import { like } from "drizzle-orm";
+
 import type { Database } from "@homarr/db";
-import { like } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 
 export const getIconForName = (db: Database, name: string) => {

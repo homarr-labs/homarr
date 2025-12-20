@@ -1,7 +1,7 @@
+import { and, eq, inArray, or } from "drizzle-orm";
 import type { Session } from "next-auth";
 
 import type { Database } from "@homarr/db";
-import { and, eq, inArray, or } from "@homarr/db";
 import { boards, boardUserPermissions, groupMembers } from "@homarr/db/schema";
 import type { IntegrationPermission } from "@homarr/definitions";
 

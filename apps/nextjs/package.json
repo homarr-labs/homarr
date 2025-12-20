@@ -71,6 +71,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.45.1",
     "flag-icons": "^7.5.0",
     "glob": "^13.0.0",
     "isomorphic-dompurify": "^2.34.0",

@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
+import { asc, eq, like } from "drizzle-orm";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { asc, eq, like } from "@homarr/db";
 import { getServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "@homarr/db/queries";
 import { searchEngines, users } from "@homarr/db/schema";
 import { createIntegrationAsync } from "@homarr/integrations";

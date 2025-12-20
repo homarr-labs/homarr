@@ -1,4 +1,5 @@
-import { and, like } from "@homarr/db";
+import { and, like } from "drizzle-orm";
+
 import { icons } from "@homarr/db/schema";
 import { iconsFindSchema } from "@homarr/validation/icons";
 

@@ -1,9 +1,10 @@
 import { TRPCError } from "@trpc/server";
+import type { SQL } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 import type { Session } from "@homarr/auth";
 import { constructBoardPermissions } from "@homarr/auth/shared";
-import type { Database, SQL } from "@homarr/db";
-import { eq, inArray } from "@homarr/db";
+import type { Database } from "@homarr/db";
 import { boardGroupPermissions, boardUserPermissions, groupMembers } from "@homarr/db/schema";
 import type { BoardPermission } from "@homarr/definitions";
 

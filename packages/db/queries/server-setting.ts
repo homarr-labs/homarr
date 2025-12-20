@@ -1,10 +1,10 @@
+import { eq } from "drizzle-orm";
 import SuperJSON from "superjson";
 
 import type { ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import type { Database } from "..";
-import { eq } from "..";
 import { serverSettings } from "../schema";
 
 export const getServerSettingsAsync = async (db: Database) => {

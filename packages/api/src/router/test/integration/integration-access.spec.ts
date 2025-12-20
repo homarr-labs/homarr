@@ -1,8 +1,8 @@
+import { eq } from "drizzle-orm";
 import { describe, expect, test, vi } from "vitest";
 
 import * as authShared from "@homarr/auth/shared";
 import { createId } from "@homarr/common";
-import { eq } from "@homarr/db";
 import { integrations, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 

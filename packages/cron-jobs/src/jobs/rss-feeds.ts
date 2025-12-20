@@ -1,9 +1,10 @@
+import { eq } from "drizzle-orm";
 import SuperJSON from "superjson";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { EVERY_10_MINUTES } from "@homarr/cron-jobs-core/expressions";
-import { db, eq } from "@homarr/db";
+import { db } from "@homarr/db";
 import { items } from "@homarr/db/schema";
 // This import is done that way to avoid circular dependencies.
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";

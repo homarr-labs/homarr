@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import { Card, Center, Stack, Text, Title } from "@mantine/core";
+import { and, eq } from "drizzle-orm";
 
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
-import { and, db, eq } from "@homarr/db";
+import { db } from "@homarr/db";
 import { invites } from "@homarr/db/schema";
 import { getScopedI18n } from "@homarr/translation/server";
 

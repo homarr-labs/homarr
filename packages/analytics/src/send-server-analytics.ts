@@ -1,8 +1,9 @@
 import type { UmamiEventData } from "@umami/node";
 import { Umami } from "@umami/node";
+import { count } from "drizzle-orm";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { count, db } from "@homarr/db";
+import { db } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import { integrations, items, users } from "@homarr/db/schema";
 import type { defaultServerSettings } from "@homarr/server-settings";

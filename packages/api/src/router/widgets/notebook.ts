@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
+import { eq } from "drizzle-orm";
 import SuperJSON from "superjson";
 import { z } from "zod/v4";
 
-import { eq } from "@homarr/db";
 import { boards, items } from "@homarr/db/schema";
 
 import { createTRPCRouter, protectedProcedure } from "../../trpc";

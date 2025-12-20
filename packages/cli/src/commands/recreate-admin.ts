@@ -1,9 +1,10 @@
 import { command, string } from "@drizzle-team/brocli";
+import { and, count, eq } from "drizzle-orm";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { generateSecureRandomToken } from "@homarr/common/server";
-import { and, count, db, eq } from "@homarr/db";
+import { db } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
 import { usernameSchema } from "@homarr/validation/user";

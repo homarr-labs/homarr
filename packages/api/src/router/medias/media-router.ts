@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
+import type { InferInsertModel } from "drizzle-orm";
+import { and, desc, eq, like } from "drizzle-orm";
 import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
-import type { InferInsertModel } from "@homarr/db";
-import { and, desc, eq, like } from "@homarr/db";
 import { iconRepositories, icons, medias } from "@homarr/db/schema";
 import { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG, mapMediaToIcon } from "@homarr/icons/local";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";

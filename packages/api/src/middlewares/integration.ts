@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { and, eq, inArray } from "drizzle-orm";
 import { z } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
@@ -7,7 +8,6 @@ import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import { decryptSecret } from "@homarr/common/server";
 import type { AtLeastOneOf } from "@homarr/common/types";
 import type { Database } from "@homarr/db";
-import { and, eq, inArray } from "@homarr/db";
 import { integrations } from "@homarr/db/schema";
 import type { IntegrationKind } from "@homarr/definitions";
 

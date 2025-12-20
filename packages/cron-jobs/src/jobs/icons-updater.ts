@@ -1,9 +1,11 @@
+import type { InferInsertModel } from "drizzle-orm";
+import { inArray, sql } from "drizzle-orm";
+
 import { createId, splitToNChunks, Stopwatch } from "@homarr/common";
 import { env } from "@homarr/common/env";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
-import type { InferInsertModel } from "@homarr/db";
-import { db, handleTransactionsAsync, inArray, sql } from "@homarr/db";
+import { db, handleTransactionsAsync } from "@homarr/db";
 import { iconRepositories, icons } from "@homarr/db/schema";
 import { fetchIconsAsync } from "@homarr/icons";
 

@@ -1,11 +1,12 @@
 import { TRPCError } from "@trpc/server";
+import { and, asc, eq, inArray, like, or } from "drizzle-orm";
 import { z } from "zod/v4";
 
 import { createId, objectEntries } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { handleTransactionsAsync } from "@homarr/db";
 import type { Database } from "@homarr/db";
-import { and, asc, eq, handleTransactionsAsync, inArray, like, or } from "@homarr/db";
 import {
   apps,
   groupMembers,

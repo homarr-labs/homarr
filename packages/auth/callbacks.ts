@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
+import { eq, inArray } from "drizzle-orm";
 import type { NextAuthConfig } from "next-auth";
 
 import type { Session } from "@homarr/auth";
 import type { Database } from "@homarr/db";
-import { eq, inArray } from "@homarr/db";
 import { groupMembers, groupPermissions, users } from "@homarr/db/schema";
 import { getPermissionsWithChildren } from "@homarr/definitions";
 
