@@ -1,7 +1,9 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+import { userAgent } from "next/server";
 
 import { appRouter, createTRPCContext } from "@homarr/api";
 import { trpcPath } from "@homarr/api/shared";
+import { getSessionFromApiKeyAsync } from "@homarr/auth";
 import { auth } from "@homarr/auth/next";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
@@ -28,11 +30,19 @@ export function OPTIONS() {
 }
 
 const handler = auth(async (req) => {
+  // Try API key auth first, fall back to session cookie
+  const apiKeyHeader = req.headers.get("ApiKey");
+  const ipAddress = req.headers.get("x-forwarded-for");
+  const { ua } = userAgent(req);
+
+  const apiKeySession = await getSessionFromApiKeyAsync(apiKeyHeader, ipAddress, ua);
+  const session = apiKeySession ?? req.auth;
+
   const response = await fetchRequestHandler({
     endpoint: trpcPath,
     router: appRouter,
     req,
-    createContext: () => createTRPCContext({ session: req.auth, headers: req.headers }),
+    createContext: () => createTRPCContext({ session, headers: req.headers }),
     onError({ error, path, type }) {
       logger.error(new ErrorWithMetadata("tRPC Error occured", { path, type }, { cause: error }));
     },

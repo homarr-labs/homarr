@@ -24,3 +24,4 @@ export const createHandlersAsync = async (provider: SupportedAuthProvider | "unk
   createConfiguration(provider, await headers(), useSecureCookies);
 
 export { getSessionFromTokenAsync as getSessionFromToken, sessionTokenCookieName } from "./session";
+export { getSessionFromApiKeyAsync } from "./api-key";
