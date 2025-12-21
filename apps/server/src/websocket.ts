@@ -1,4 +1,3 @@
-import { writeHeapSnapshot } from "v8";
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
 import { WebSocketServer } from "ws";
 
@@ -59,9 +58,6 @@ wss.on("connection", (websocket, incomingMessage) => {
   });
 });
 logger.info("✅ WebSocket Server listening on ws://localhost:3001");
-setTimeout(() => {
-  writeHeapSnapshot("/app/websocket.heapsnapshot");
-}, 10000);
 
 process.on("SIGTERM", () => {
   logger.info("SIGTERM");

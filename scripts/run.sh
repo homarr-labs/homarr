@@ -40,11 +40,8 @@ fi
 
 
 
-node apps/tasks/tasks.cjs &
-TASKS_PID=$!
-
-node apps/websocket/wssServer.cjs &
-WSS_PID=$!
+node apps/server/server.cjs &
+SERVER_PID=$!
 
 node apps/nextjs/server.js &
 NEXTJS_PID=$!
@@ -52,7 +49,7 @@ NEXTJS_PID=$!
 # Function to handle SIGTERM and shut down services
 terminate() {
     echo "Received SIGTERM. Shutting down..."
-    kill -TERM $NGINX_PID $TASKS_PID $WSS_PID $NEXTJS_PID 2>/dev/null
+    kill -TERM $NGINX_PID $SERVER_PID $NEXTJS_PID 2>/dev/null
     wait
     # kill redis-server last because of logging of other services and only if $REDIS_PID is set
     if [ -n "$REDIS_PID" ]; then

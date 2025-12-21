@@ -372,11 +372,11 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  apps/tasks:
+  apps/server:
     dependencies:
-      '@homarr/analytics':
+      '@homarr/api':
         specifier: workspace:^0.1.0
-        version: link:../../packages/analytics
+        version: link:../../packages/api
       '@homarr/auth':
         specifier: workspace:^0.1.0
         version: link:../../packages/auth
@@ -392,54 +392,33 @@ importers:
       '@homarr/cron-jobs':
         specifier: workspace:^0.1.0
         version: link:../../packages/cron-jobs
-      '@homarr/cron-jobs-core':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/cron-jobs-core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../../packages/definitions
-      '@homarr/icons':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/icons
-      '@homarr/integrations':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/integrations
-      '@homarr/ping':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/ping
-      '@homarr/redis':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/redis
       '@homarr/request-handler':
         specifier: workspace:^0.1.0
         version: link:../../packages/request-handler
-      '@homarr/server-settings':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/server-settings
-      '@homarr/validation':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/validation
-      '@homarr/widgets':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/widgets
-      dayjs:
-        specifier: ^1.11.19
-        version: 1.11.19
+      '@trpc/server':
+        specifier: ''
+        version: 11.8.0(typescript@5.9.3)
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
       fastify:
         specifier: ^5.6.2
         version: 5.6.2
-      superjson:
-        specifier: 2.2.6
-        version: 2.2.6
+      node-cron:
+        specifier: ^4.2.1
+        version: 4.2.1
       undici:
         specifier: 7.16.0
         version: 7.16.0
+      ws:
+        specifier: ^8.18.3
+        version: 8.18.3
     devDependencies:
       '@homarr/eslint-config':
         specifier: workspace:^0.2.0
@@ -453,6 +432,12 @@ importers:
       '@types/node':
         specifier: ^24.10.4
         version: 24.10.4
+      '@types/node-cron':
+        specifier: ^3.0.11
+        version: 3.0.11
+      '@types/ws':
+        specifier: ^8.18.1
+        version: 8.18.1
       dotenv-cli:
         specifier: ^11.0.0
         version: 11.0.0
@@ -468,67 +453,6 @@ importers:
       tsx:
         specifier: 4.20.4
         version: 4.20.4
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  apps/websocket:
-    dependencies:
-      '@homarr/api':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/api
-      '@homarr/auth':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/auth
-      '@homarr/common':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/common
-      '@homarr/core':
-        specifier: workspace:^
-        version: link:../../packages/core
-      '@homarr/db':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/db
-      '@homarr/definitions':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/definitions
-      '@homarr/redis':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/redis
-      '@homarr/validation':
-        specifier: workspace:^0.1.0
-        version: link:../../packages/validation
-      dotenv:
-        specifier: ^17.2.3
-        version: 17.2.3
-      tsx:
-        specifier: 4.20.4
-        version: 4.20.4
-      ws:
-        specifier: ^8.18.3
-        version: 8.18.3
-    devDependencies:
-      '@homarr/eslint-config':
-        specifier: workspace:^0.2.0
-        version: link:../../tooling/eslint
-      '@homarr/prettier-config':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/prettier
-      '@homarr/tsconfig':
-        specifier: workspace:^0.1.0
-        version: link:../../tooling/typescript
-      '@types/ws':
-        specifier: ^8.18.1
-        version: 8.18.1
-      esbuild:
-        specifier: ^0.27.1
-        version: 0.27.1
-      eslint:
-        specifier: ^9.39.2
-        version: 9.39.2
-      prettier:
-        specifier: ^3.7.4
-        version: 3.7.4
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -7071,9 +6995,6 @@ packages:
 
   get-tsconfig@4.13.0:
     resolution: {integrity: sha512-1VKTZJCwBrvbd+Wn3AOgQP/2Av+TfTCOlE4AcRJE72W1ksZXbAx8PPBR9RzgTeSPzlPMHrbANMH3LbltH73wxQ==}
-
-  get-tsconfig@4.8.1:
-    resolution: {integrity: sha512-k9PN+cFBmaLWtVz29SkUoqU5O0slLuHJXt/2P+tMVFT+phsSGXGkp9t3rQIqdz0e+06EHNGs3oM6ZX1s2zHxRg==}
 
   get-uri@6.0.3:
     resolution: {integrity: sha512-BzUrJBS9EcUb4cFol8r4W3v1cPsSyajLSthNkz5BxbpDcHN5tIrM10E2eNvfnvBn3DaT3DUgx0OpsBKkaOpanw==}
@@ -16209,7 +16130,7 @@ snapshots:
       process-warning: 5.0.0
       rfdc: 1.4.1
       secure-json-parse: 4.0.0
-      semver: 7.7.2
+      semver: 7.7.3
       toad-cache: 3.7.0
 
   fastq@1.17.1:
@@ -16460,10 +16381,6 @@ snapshots:
       get-intrinsic: 1.3.0
 
   get-tsconfig@4.13.0:
-    dependencies:
-      resolve-pkg-maps: 1.0.0
-
-  get-tsconfig@4.8.1:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
@@ -20252,7 +20169,7 @@ snapshots:
   tsx@4.20.4:
     dependencies:
       esbuild: 0.25.12
-      get-tsconfig: 4.8.1
+      get-tsconfig: 4.13.0
     optionalDependencies:
       fsevents: 2.3.3
 
