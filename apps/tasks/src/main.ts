@@ -1,6 +1,7 @@
 // This import has to be the first import in the file so that the agent is overridden before any other modules are imported.
 import "./overrides";
 
+import { writeHeapSnapshot } from "v8";
 import type { FastifyTRPCPluginOptions } from "@trpc/server/adapters/fastify";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import fastify from "fastify";
@@ -43,6 +44,9 @@ void (async () => {
   try {
     await server.listen({ port: CRON_JOB_API_PORT });
     logger.info("Tasks web server started successfully", { port: CRON_JOB_API_PORT });
+    setTimeout(() => {
+      writeHeapSnapshot("/app/tasks.heapsnapshot");
+    }, 10000);
   } catch (err) {
     logger.error(
       new ErrorWithMetadata("Failed to start tasks web server", { port: CRON_JOB_API_PORT }, { cause: err }),
