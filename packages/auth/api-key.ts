@@ -1,21 +1,26 @@
+import type { Database } from "@homarr/db";
+import { eq } from "@homarr/db";
+import { apiKeys } from "@homarr/db/schema";
+
+import { createLogger } from "@homarr/core/infrastructure/logs";
+
 import type { Session } from "./index";
 import { hashPasswordAsync } from "./index";
 import { createSessionAsync } from "./server";
-import { createLogger } from "@homarr/core/infrastructure/logs";
-import { db, eq } from "@homarr/db";
-import { apiKeys } from "@homarr/db/schema";
 
 const logger = createLogger({ module: "apiKeyAuth" });
 
 /**
  * Validate an API key from the request header and return a session if valid.
  *
+ * @param db - The database instance
  * @param apiKeyHeaderValue - The value of the ApiKey header (format: "id.token")
  * @param ipAddress - The IP address of the request (for logging)
  * @param userAgent - The user agent of the request (for logging)
  * @returns A session if the API key is valid, null otherwise
  */
 export const getSessionFromApiKeyAsync = async (
+  db: Database,
   apiKeyHeaderValue: string | null,
   ipAddress: string | null,
   userAgent: string,

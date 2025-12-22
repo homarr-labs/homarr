@@ -7,6 +7,7 @@ import { getSessionFromApiKeyAsync } from "@homarr/auth";
 import { auth } from "@homarr/auth/next";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
+import { db } from "@homarr/db";
 
 const logger = createLogger({ module: "trpcRoute" });
 
@@ -35,7 +36,7 @@ const handler = auth(async (req) => {
   const ipAddress = req.headers.get("x-forwarded-for");
   const { ua } = userAgent(req);
 
-  const apiKeySession = await getSessionFromApiKeyAsync(apiKeyHeader, ipAddress, ua);
+  const apiKeySession = await getSessionFromApiKeyAsync(db, apiKeyHeader, ipAddress, ua);
   const session = apiKeySession ?? req.auth;
 
   const response = await fetchRequestHandler({

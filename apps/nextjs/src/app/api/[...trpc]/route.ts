@@ -6,6 +6,7 @@ import { appRouter, createTRPCContext } from "@homarr/api";
 import { getSessionFromApiKeyAsync } from "@homarr/auth";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
+import { db } from "@homarr/db";
 
 const logger = createLogger({ module: "trpcOpenApiRoute" });
 
@@ -18,7 +19,7 @@ const handlerAsync = async (req: NextRequest) => {
     `Creating OpenAPI fetch handler for user ${apiKeyHeaderValue ? "with an api key" : "without an api key"}`,
   );
 
-  const session = await getSessionFromApiKeyAsync(apiKeyHeaderValue, ipAddress, ua);
+  const session = await getSessionFromApiKeyAsync(db, apiKeyHeaderValue, ipAddress, ua);
 
   // Fallback to JSON if no content type is set
   if (!req.headers.has("Content-Type")) {
