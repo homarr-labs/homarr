@@ -312,7 +312,7 @@
       },
       "mobileBoard": {
         "label": "Mobiles Board",
-        "description": "Nur Boards welche für die Gruppe zugänglich sind, können ausgewählt werden"
+        "description": "Nur Boards, welche für die Gruppe zugänglich sind, können ausgewählt werden"
       }
     },
     "permission": {
@@ -355,7 +355,7 @@
           },
           "view-all": {
             "label": "Alle Boards anzeigen",
-            "description": "Mitgliedern das Ansehen von allen Boards erlauben"
+            "description": "Mitgliedern das Ansehen von Boards erlauben"
           },
           "modify-all": {
             "label": "Alle Boards ändern",
@@ -743,7 +743,7 @@
         },
         "authorization": {
           "title": "Autorisierungsfehler",
-          "description": "Die Anfrage wurde nicht autorisiert. Bitte überprüfen Sie, ob die Anmeldedaten korrekt sind und Sie diese mit mit den entsprechenden Berechtigungen konfiguriert haben."
+          "description": "Die Anfrage wurde nicht autorisiert. Bitte überprüfen Sie, ob die Anmeldedaten korrekt sind und Sie diese mit den entsprechenden Berechtigungen konfiguriert haben."
         },
         "statusCode": {
           "title": "Antwort-Fehler",
@@ -964,7 +964,7 @@
         },
         "personalAccessToken": {
           "label": "Persönlicher Zugangs-Token",
-          "newLabel": "Neuer Persönliches Zugangs-Token"
+          "newLabel": "Neuer persönlicher Zugangs-Token"
         },
         "topic": {
           "label": "Thema",
@@ -1237,7 +1237,7 @@
       },
       "openAllInNewTabs": {
         "title": "Alle in tabs öffnen",
-        "text": "Einige Browser können aus Sicherheitsgründen das Öffnen von mehreren Tabs aufeinmal blockieren. Homarr konnte nicht alle Fenster öffnen, weil Ihr Browser diese Aktion blockiert hat. Bitte erlauben Sie \"Pop-up Fenster öffnen\" und versuchen Sie es erneut."
+        "text": "Einige Browser können aus Sicherheitsgründen das gleichzeitige Öffnen von mehreren Tabs blockieren. Homarr konnte nicht alle Fenster öffnen, weil Ihr Browser diese Aktion blockiert hat. Bitte erlauben Sie \"Pop-up Fenster öffnen\" und versuchen Sie es erneut."
       }
     }
   },
@@ -1949,7 +1949,7 @@
             "name": "Name",
             "state": "Status",
             "cpuUsage": "CPU-Auslastung",
-            "memoryUsage": "Speicherverbrauch"
+            "memoryUsage": "Speichernutzung"
           }
         },
         "descendingDefaultSort": {
@@ -2639,7 +2639,7 @@
         "notification": {
           "success": {
             "title": "Änderungen erfolgreich angewendet",
-            "message": "Das Board wurde erfolgreich dupliziert"
+            "message": "Das Board wurde erfolgreich gespeichert"
           },
           "error": {
             "title": "Änderungen konnten nicht angewendet werden",
@@ -2676,7 +2676,7 @@
             },
             "onlyImportApps": {
               "label": "Nur Apps importieren",
-              "description": "Fügt nur die Apps hinzu, das Board muss manuell neu erstellt werden"
+              "description": "Fügt nur die Apps hinzu. Das Board selbst muss manuell neu erstellt werden"
             }
           },
           "name": {
@@ -2926,7 +2926,7 @@
     "error": {
       "noBoard": {
         "title": "Willkommen bei Homarr",
-        "description": "Ein schlankens, modernes Dashboard, das alle Ihre Apps und Dienste bereit stellt.",
+        "description": "Ein schlankes, modernes Dashboard, das alle Ihre Apps und Dienste bereitstellt.",
         "link": "Erstellen Sie Ihr erstes Board",
         "notice": "Um diese Seite verschwinden zu lassen, erstellen Sie ein Board und setzen es als Home Board"
       },
@@ -3366,7 +3366,7 @@
               "label": "Index Manager"
             },
             "healthMonitoring": {
-              "label": "Überwachung des Gesundheit"
+              "label": "Überwachung des Zustandes"
             },
             "dnsHole": {
               "label": "DNS Hole Daten"
@@ -3512,7 +3512,7 @@
       },
       "about": {
         "version": "Version {version}",
-        "text": "Homarr ist ein gemeinschaftsorientiertes Open-Source Projekt, das von Freiwilligen betreut wird. Dank dieser Menschen ist Homarr seit 2021 ein wachsendes Projekt. Unser Team, sitzhaft mit ihren Migliedern in vielen verschiedenen Ländern, arbeitet in ihrer Freizeit ohne Vergütung.",
+        "text": "Homarr ist ein gemeinschaftsorientiertes Open-Source-Projekt, das von Freiwilligen betreut wird. Dank dieser Menschen ist Homarr seit 2021 ein wachsendes Projekt. Unser Team, dessen Mitglieder in vielen verschiedenen Ländern ansässig sind, arbeitet in seiner Freizeit und ohne Vergütung.",
         "accordion": {
           "contributors": {
             "title": "Mitwirkende",
@@ -4395,7 +4395,7 @@
           "configControl": "Konfiguration",
           "searchEngineType": {
             "generic": "Allgemein",
-            "fromIntegration": "Aus den Integration"
+            "fromIntegration": "Aus der Integration"
           }
         },
         "delete": {
@@ -4498,7 +4498,7 @@
         "notification": {
           "success": {
             "title": "Zertifikat entfernt",
-            "message": "Das Zertifikat wurde erfolgreich entfern"
+            "message": "Das Zertifikat wurde erfolgreich entfernt"
           },
           "error": {
             "title": "Zertifikat nicht entfernt",
