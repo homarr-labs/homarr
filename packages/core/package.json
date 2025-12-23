@@ -42,7 +42,7 @@
     "dns-caching": "^0.2.9",
     "drizzle-orm": "^0.45.1",
     "ioredis": "5.8.2",
-    "mysql2": "3.15.3",
+    "mysql2": "3.16.0",
     "pg": "^8.16.3",
     "superjson": "2.2.6",
     "winston": "3.19.0",
