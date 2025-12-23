@@ -1,3 +1,4 @@
+import { env } from "./env";
 import { isMysql, isPostgresql } from "./collection";
 import type { HomarrDatabase, HomarrDatabaseMysql } from "./driver";
 import type { MySqlSchema } from "./schema";
@@ -10,14 +11,18 @@ interface HandleTransactionInput {
 
 /**
  * The below method is mostly used to handle transactions in different database drivers.
- * As better-sqlite3 transactions have to be synchronous, we have to implement them in a different way.
- * But it can also generally be used when dealing with different database drivers.
+ * - libsql, mysql2, and node-postgres use async transactions
+ * - better-sqlite3 uses synchronous transactions (legacy support)
  */
 export const handleDiffrentDbDriverOperationsAsync = async (db: HomarrDatabase, input: HandleTransactionInput) => {
-  if (isMysql() || isPostgresql()) {
+  const isLibsql = env.DB_DRIVER === "libsql";
+  
+  if (isLibsql || isMysql() || isPostgresql()) {
+    // libsql, MySQL, and PostgreSQL all use async transactions
     // Schema type is always the correct one based on env variables
     await input.handleAsync(db as unknown as HomarrDatabaseMysql, schema as unknown as MySqlSchema);
   } else {
+    // better-sqlite3 (legacy) uses synchronous transactions
     input.handleSync(db);
   }
 };

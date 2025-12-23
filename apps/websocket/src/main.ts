@@ -52,9 +52,14 @@ const handler = applyWSSHandler({
 });
 
 wss.on("connection", (websocket, incomingMessage) => {
-  logger.info(`➕ Connection (${wss.clients.size}) ${incomingMessage.method} ${incomingMessage.url}`);
+  // Only log in development to reduce memory overhead
+  if (process.env.NODE_ENV === "development") {
+    logger.debug(`➕ Connection (${wss.clients.size}) ${incomingMessage.method} ${incomingMessage.url}`);
+  }
   websocket.once("close", (code, reason) => {
-    logger.info(`➖ Connection (${wss.clients.size}) ${code} ${reason.toString()}`);
+    if (process.env.NODE_ENV === "development") {
+      logger.debug(`➖ Connection (${wss.clients.size}) ${code} ${reason.toString()}`);
+    }
   });
 });
 logger.info("✅ WebSocket Server listening on ws://localhost:3001");

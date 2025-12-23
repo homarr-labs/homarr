@@ -10,13 +10,16 @@ RUN apk add --no-cache libc6-compat curl bash
 RUN apk update
 COPY . .
 
-RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile
+RUN corepack enable pnpm && pnpm install --recursive --no-frozen-lockfile
 
 # Copy static data as it is not part of the build
 COPY static-data ./static-data
 ARG SKIP_ENV_VALIDATION='true'
 ARG CI='true'
 ARG DISABLE_REDIS_LOGS='true'
+
+# Create database directory for build-time database access
+RUN mkdir -p /appdata/db && touch /appdata/db/db.sqlite
 
 RUN corepack enable pnpm && pnpm build
 
@@ -43,8 +46,10 @@ RUN mkdir -p /var/cache/nginx && \
 COPY --from=builder /app/apps/nextjs/next.config.ts .
 COPY --from=builder /app/apps/nextjs/package.json .
 
-COPY --from=builder /app/apps/tasks/tasks.cjs ./apps/tasks/tasks.cjs
-COPY --from=builder /app/apps/websocket/wssServer.cjs ./apps/websocket/wssServer.cjs
+# Tasks worker and WebSocket are now merged into Next.js server, so no separate builds needed
+# COPY --from=builder /app/apps/tasks/tasks.cjs ./apps/tasks/tasks.cjs
+# COPY --from=builder /app/apps/websocket/wssServer.cjs ./apps/websocket/wssServer.cjs
+COPY --from=builder /app/apps/nextjs/server.js ./apps/nextjs/server.js
 COPY --from=builder /app/node_modules/better-sqlite3/build/Release/better_sqlite3.node /app/build/better_sqlite3.node
 
 COPY --from=builder /app/packages/db/migrations ./db/migrations
@@ -62,7 +67,7 @@ COPY nginx.conf /etc/nginx/templates/nginx.conf
 
 ENV DB_URL='/appdata/db/db.sqlite'
 ENV DB_DIALECT='sqlite'
-ENV DB_DRIVER='better-sqlite3'
+ENV DB_DRIVER='libsql'
 ENV AUTH_PROVIDERS='credentials'
 ENV REDIS_IS_EXTERNAL='false'
 ENV NODE_ENV='production'

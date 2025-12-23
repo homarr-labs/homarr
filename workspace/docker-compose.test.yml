@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  homarr-test:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: homarr-libsql-test
+    environment:
+      - DB_DRIVER=libsql
+      - DB_URL=/appdata/db/db.sqlite
+      - NODE_ENV=production
+      - AUTH_PROVIDERS=credentials
+      - REDIS_IS_EXTERNAL=false
+      - SKIP_ENV_VALIDATION=true
+    volumes:
+      - ./test-data:/appdata
+    ports:
+      - "3000:3000"
+    networks:
+      - homarr-test-network
+
+  redis-test:
+    image: redis:7-alpine
+    container_name: homarr-redis-test
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data
+    networks:
+      - homarr-test-network
+
+networks:
+  homarr-test-network:
+    driver: bridge
+
+volumes:
+  test-data:
+  redis-data:
+
