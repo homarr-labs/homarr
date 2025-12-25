@@ -56,6 +56,7 @@ COPY --from=builder /app/packages/db/migrations ./db/migrations
 COPY --from=builder /app/apps/nextjs/.next/standalone ./
 COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
+COPY --from=builder /app/node_modules ./node_modules
 COPY scripts/run.sh ./run.sh
 COPY --chmod=755 scripts/entrypoint.sh ./entrypoint.sh
 COPY packages/redis/redis.conf /app/redis.conf
