@@ -1,6 +1,7 @@
 import { parse } from "path";
 
-import { fetchWithTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
 import type { IconRepositoryLicense } from "../types/icon-repository-license";
 import type { RepositoryIconGroup } from "../types/repository-icon-group";
@@ -19,7 +20,9 @@ export class JsdelivrIconRepository extends IconRepository {
   }
 
   protected async getAllIconsInternalAsync(): Promise<RepositoryIconGroup> {
-    const response = await fetchWithTimeoutAsync(this.repositoryIndexingUrl);
+    const response = await withTimeoutAsync(async (signal) =>
+      fetchWithTrustedCertificatesAsync(this.repositoryIndexingUrl, { signal }),
+    );
     const listOfFiles = (await response.json()) as JsdelivrApiResponse;
 
     return {

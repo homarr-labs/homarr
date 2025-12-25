@@ -42,12 +42,13 @@ export const createCertificateAgentAsync = async (override?: {
 };
 
 export const createHttpsAgentAsync = async (override?: Pick<AgentOptions, "ca" | "checkServerIdentity">) => {
-  return new HttpsAgent(
-    override ?? {
-      ca: await getAllTrustedCertificatesAsync(),
-      checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
-    },
-  );
+  return new HttpsAgent({
+    ca: await getAllTrustedCertificatesAsync(),
+    checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
+    // Override the ca and checkServerIdentity if provided
+    ...override,
+    proxyEnv: process.env,
+  });
 };
 
 export const createAxiosCertificateInstanceAsync = async (

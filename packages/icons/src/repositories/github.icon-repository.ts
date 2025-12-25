@@ -1,6 +1,7 @@
 import { parse } from "path";
 
-import { fetchWithTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
 import type { IconRepositoryLicense } from "../types/icon-repository-license";
 import type { RepositoryIconGroup } from "../types/repository-icon-group";
@@ -19,11 +20,12 @@ export class GitHubIconRepository extends IconRepository {
   }
 
   protected async getAllIconsInternalAsync(): Promise<RepositoryIconGroup> {
-    if (!this.repositoryIndexingUrl || !this.repositoryBlobUrlTemplate) {
+    const url = this.repositoryIndexingUrl;
+    if (!url || !this.repositoryBlobUrlTemplate) {
       throw new Error("Repository URLs are required for this repository");
     }
 
-    const response = await fetchWithTimeoutAsync(this.repositoryIndexingUrl);
+    const response = await withTimeoutAsync(async (signal) => fetchWithTrustedCertificatesAsync(url, { signal }));
     const listOfFiles = (await response.json()) as GitHubApiResponse;
 
     return {
