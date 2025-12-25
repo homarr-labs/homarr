@@ -7,4 +7,5 @@ export const schema = createSchema({
   "better-sqlite3": () => sqlite,
   mysql2: () => mysql,
   "node-postgres": () => postgresql,
+  libsql: () => sqlite,
 });

@@ -5,7 +5,7 @@ import reactConfig from "@homarr/eslint-config/react";
 /** @type {import('typescript-eslint').Config} */
 export default [
   {
-    ignores: [".next/**"],
+    ignores: [".next/**", "server.mjs"],
   },
   ...baseConfig,
   ...reactConfig,

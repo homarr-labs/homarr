@@ -2,7 +2,6 @@ import type { Adapter } from "@auth/core/adapters";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
 import type { Database } from "@homarr/db";
-import { getAuthDatabase } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import { accounts, sessions, users } from "@homarr/db/schema";
 import type { SupportedAuthProvider } from "@homarr/definitions";
@@ -14,10 +13,9 @@ export const createAdapter = (db: Database, provider: SupportedAuthProvider | "u
   // Get the actual database instance (not the proxy) for DrizzleAdapter
   // DrizzleAdapter needs to inspect the database type, so it needs the real instance
   // This is called at runtime when adapter is created, not at module load
-  const actualAuthDb = getAuthDatabase();
-  
+
   // Use actualAuthDb (better-sqlite3) for DrizzleAdapter - it doesn't support libsql
-  const drizzleAdapter = DrizzleAdapter(actualAuthDb, { usersTable: users, sessionsTable: sessions, accountsTable: accounts });
+  const drizzleAdapter = DrizzleAdapter(db, { usersTable: users, sessionsTable: sessions, accountsTable: accounts });
 
   return {
     ...drizzleAdapter,

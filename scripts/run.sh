@@ -47,7 +47,7 @@ fi
 NODE_OPTS="--optimize-for-size --max-old-space-size=300 --expose-gc"
 
 # Tasks worker and WebSocket are now merged into Next.js server, so only one process needed
-node $NODE_OPTS apps/nextjs/server.js &
+node $NODE_OPTS apps/nextjs/server.mjs &
 NEXTJS_PID=$!
 
 # Function to handle SIGTERM and shut down services

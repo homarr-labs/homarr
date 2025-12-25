@@ -17,8 +17,6 @@ import { filterProviders } from "./providers/filter-providers";
 import { OidcProvider } from "./providers/oidc/oidc-provider";
 import { createRedirectUri } from "./redirect";
 import { expireDateAfter, generateSessionToken, sessionTokenCookieName } from "./session";
-import { getAuthDatabase } from "@homarr/db";
-import { sessions } from "@homarr/db/schema";
 
 const logger = createLogger({ module: "authConfiguration" });
 
@@ -68,26 +66,17 @@ export const createConfiguration = (
         }
 
         if (!adapter.createSession || !user.id) {
-          logger.warn("Cannot create session: adapter.createSession missing or user.id missing");
           return false;
         }
 
         const expires = expireDateAfter(env.AUTH_SESSION_EXPIRY_TIME);
         const sessionToken = generateSessionToken();
-        
-        try {
-          // DrizzleAdapter expects expires as a number (timestamp_ms), not a Date object
-          // The schema defines expires as int({ mode: "timestamp_ms" })
-          await adapter.createSession({
-            sessionToken,
-            expires: expires.getTime(), // Convert Date to milliseconds timestamp
-            userId: user.id,
-          });
-          logger.info(`Session created successfully for user ${user.id}`);
-        } catch (error) {
-          logger.error(new Error(`Failed to create session for user ${user.id}`, { cause: error }));
-          return false;
-        }
+
+        await adapter.createSession({
+          sessionToken,
+          expires: expires,
+          userId: user.id,
+        });
 
         (await cookies()).set(sessionTokenCookieName, sessionToken, {
           path: "/",

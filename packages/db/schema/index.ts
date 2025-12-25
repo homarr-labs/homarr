@@ -13,6 +13,7 @@ export const schema = createSchema({
   "better-sqlite3": () => sqliteSchema,
   mysql2: () => mysqlSchema,
   "node-postgres": () => pgSchema,
+  libsql: () => sqliteSchema,
 });
 
 // Sadly we can't use export * from here as we have multiple possible exports

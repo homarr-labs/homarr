@@ -10,7 +10,6 @@ export const resetPassword = command({
   desc: "Reset password for a user",
   options: {
     username: string("username").required().alias("u").desc("Name of the user"),
-    password: string("password").optional().alias("p").desc("New password (if not provided, a random one will be generated)"),
   },
   // eslint-disable-next-line no-restricted-syntax
   handler: async (options) => {
@@ -28,8 +27,8 @@ export const resetPassword = command({
       return;
     }
 
-    // Use provided password or generate a random one
-    const newPassword = options.password ?? generateSecureRandomToken(24);
+    // Generates a new password with 48 characters
+    const newPassword = generateSecureRandomToken(24);
 
     await db
       .update(users)
@@ -42,10 +41,6 @@ export const resetPassword = command({
     console.log(`All sessions for user ${options.username} have been deleted`);
 
     console.log("You can now login with the new password");
-    if (options.password) {
-      console.log(`Password for user ${options.username} has been set to the provided value`);
-    } else {
-      console.log(`New password for user ${options.username}: ${newPassword}`);
-    }
+    console.log(`New password for user ${options.username}: ${newPassword}`);
   },
 });

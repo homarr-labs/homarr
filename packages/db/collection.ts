@@ -18,6 +18,10 @@ export function isPostgresql(): boolean {
   return dbEnv.DRIVER === "node-postgres";
 }
 
+export function isLibsql(): boolean {
+  return dbEnv.DRIVER === "libsql";
+}
+
 export const createDbInsertCollectionForTransaction = <TTableKey extends TableKey>(
   tablesInInsertOrder: TTableKey[],
 ) => {

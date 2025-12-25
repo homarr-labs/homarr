@@ -32,20 +32,8 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
     turbopackFileSystemCacheForDev: true,
-    // Reduce memory usage by limiting concurrent requests
-    serverActions: {
-      bodySizeLimit: "1mb",
-    },
-    // Reduce memory usage by limiting worker threads
-    workerThreads: false,
-    // Optimize memory usage
-    memoryBasedWorkersCount: true,
   },
-  // Reduce memory usage in production
-  compress: true,
-  poweredByHeader: false,
   transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
-  // Reduce memory by limiting image optimization
   images: {
     localPatterns: [
       {
@@ -53,10 +41,6 @@ const nextConfig: NextConfig = {
         search: "",
       },
     ],
-    minimumCacheTTL: 60,
-    dangerouslyAllowSVG: true,
-    contentDispositionType: "attachment",
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   // eslint-disable-next-line @typescript-eslint/require-await,no-restricted-syntax
   async headers() {
