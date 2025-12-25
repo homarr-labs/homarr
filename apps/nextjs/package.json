@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "pnpm with-env next build && pnpm build:server",
-    "build:server": "pnpm esbuild server.ts --bundle --outfile=server.mjs --platform=node --packages=external --format=esm --minify",
+    "build:server": "pnpm esbuild server.ts --bundle --outfile=server.mjs --external:*.node --external:@opentelemetry/api --external:critters --external:*.scss --external:*.css --external:next --platform=node --format=esm --minify",
     "clean": "git clean -xdf .next .turbo node_modules",
     "dev": "pnpm with-env next dev",
     "format": "prettier --check . --ignore-path ../../.gitignore",
