@@ -32,12 +32,12 @@
     "@homarr/validation": "workspace:^0.1.0",
     "bcrypt": "^6.0.0",
     "cookies": "^0.9.1",
-    "ldapts": "8.0.23",
-    "next": "16.0.10",
+    "ldapts": "8.0.30",
+    "next": "16.1.0",
     "next-auth": "5.0.0-beta.30",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "zod": "^4.1.13"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",

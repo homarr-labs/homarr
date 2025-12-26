@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import { z } from "zod";
 
-import { fetchWithTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
@@ -9,9 +10,12 @@ export const weatherRequestHandler = createCachedWidgetRequestHandler({
   queryKey: "weatherAtLocation",
   widgetKind: "weather",
   async requestAsync(input: { latitude: number; longitude: number }) {
-    const res = await fetchWithTimeoutAsync(
-      `https://api.open-meteo.com/v1/forecast?latitude=${input.latitude}&longitude=${input.longitude}&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,wind_speed_10m_max,wind_gusts_10m_max&current_weather=true&timezone=auto`,
-    );
+    const res = await withTimeoutAsync(async (signal) => {
+      return await fetchWithTrustedCertificatesAsync(
+        `https://api.open-meteo.com/v1/forecast?latitude=${input.latitude}&longitude=${input.longitude}&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,wind_speed_10m_max,wind_gusts_10m_max&current_weather=true&timezone=auto`,
+        { signal },
+      );
+    });
     const json: unknown = await res.json();
     const weather = await atLocationOutput.parseAsync(json);
     return {

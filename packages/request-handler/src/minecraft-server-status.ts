@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import { z } from "zod/v4";
 
-import { fetchWithTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
@@ -11,7 +12,9 @@ export const minecraftServerStatusRequestHandler = createCachedWidgetRequestHand
   async requestAsync(input: { domain: string; isBedrockServer: boolean }) {
     const path = `${input.isBedrockServer ? "/bedrock" : ""}/3/${input.domain}`;
 
-    const response = await fetchWithTimeoutAsync(`https://api.mcsrvstat.us${path}`);
+    const response = await withTimeoutAsync(async (signal) =>
+      fetchWithTrustedCertificatesAsync(`https://api.mcsrvstat.us${path}`, { signal }),
+    );
     return responseSchema.parse(await response.json());
   },
   cacheDuration: dayjs.duration(5, "minutes"),
