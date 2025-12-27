@@ -8,7 +8,9 @@ export const backgroundImageRepeats = createDefinition(["repeat", "repeat-x", "r
 export const backgroundImageSizes = createDefinition(["cover", "contain"], {
   defaultValue: "cover",
 });
+export const boardLayoutModes = createDefinition(["auto", "custom"], { defaultValue: "auto" });
 
 export type BackgroundImageAttachment = inferDefinitionType<typeof backgroundImageAttachments>;
 export type BackgroundImageRepeat = inferDefinitionType<typeof backgroundImageRepeats>;
 export type BackgroundImageSize = inferDefinitionType<typeof backgroundImageSizes>;
+export type BoardLayoutMode = inferDefinitionType<typeof boardLayoutModes>;

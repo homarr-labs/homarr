@@ -17,3 +17,5 @@ export const fetchApi = createTRPCClient<AppRouter>({
     }),
   ],
 });
+
+export { applyAutoLayoutToBoard } from "./router/board/board-layout";

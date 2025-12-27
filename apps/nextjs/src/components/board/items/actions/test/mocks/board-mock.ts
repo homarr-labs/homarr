@@ -10,6 +10,7 @@ export class BoardMockBuilder {
   private readonly board: Board;
 
   constructor(board?: Partial<Omit<Board, "groupPermissions" | "userPermissions" | "sections" | "items" | "layouts">>) {
+    const baseLayoutId = createId();
     this.board = {
       id: createId(),
       backgroundImageRepeat: "no-repeat",
@@ -41,12 +42,14 @@ export class BoardMockBuilder {
       items: [],
       layouts: [
         {
-          id: createId(),
+          id: baseLayoutId,
           name: "Base",
           columnCount: 12,
           breakpoint: 0,
         },
       ],
+      baseLayoutId,
+      layoutMode: "auto",
       ...board,
     };
   }
