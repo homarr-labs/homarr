@@ -22,6 +22,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
   });
   const memoryCapacityInBytes =
     (data[0]?.healthInfo.memAvailableInBytes ?? 0) + (data[0]?.healthInfo.memUsedInBytes ?? 0);
+
   const [items, setItems] = useState<{ cpu: number; memory: number; network: { up: number; down: number } | null }[]>(
     data.map((item) => ({
       cpu: item.healthInfo.cpuUtilization,
