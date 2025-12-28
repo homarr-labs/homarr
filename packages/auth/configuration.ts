@@ -17,8 +17,6 @@ import { filterProviders } from "./providers/filter-providers";
 import { OidcProvider } from "./providers/oidc/oidc-provider";
 import { createRedirectUri } from "./redirect";
 import { expireDateAfter, generateSessionToken, sessionTokenCookieName } from "./session";
-import { getAuthDatabase } from "@homarr/db";
-import { sessions } from "@homarr/db/schema";
 
 const logger = createLogger({ module: "authConfiguration" });
 
