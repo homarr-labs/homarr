@@ -715,8 +715,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       ldapts:
-        specifier: 8.0.31
-        version: 8.0.31
+        specifier: 8.0.32
+        version: 8.0.32
       next:
         specifier: 16.1.1
         version: 16.1.1(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.97.1)
@@ -7888,8 +7888,8 @@ packages:
     resolution: {integrity: sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw==}
     engines: {node: '>= 0.6.3'}
 
-  ldapts@8.0.31:
-    resolution: {integrity: sha512-K94othr7KqHWADzcuVN8B0INMR3NZ4ndU3uZGOwRa/tprtZB2JNOwpYGiWkQ4BYgpsRHlX/zYE87E9E0eEpGsw==}
+  ldapts@8.0.32:
+    resolution: {integrity: sha512-b47qEPqU98MNWp3bH1GxXgW0WGBIeWyaCORN9T7KaAEwvsfOqfshZz4Iw2RvOEaVTbvT+fa6ck81BJgdLaCWTg==}
     engines: {node: '>=20'}
 
   levn@0.4.1:
@@ -10881,6 +10881,7 @@ packages:
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-fetch@3.6.20:
     resolution: {integrity: sha512-EqhiFU6daOA8kpjOWTL0olhVOF3i7OrFzSYiGsEMB8GcXS+RrzauAERX65xMeNWVqxA6HXH2m69Z9LaKKdisfg==}
@@ -17339,7 +17340,7 @@ snapshots:
     dependencies:
       readable-stream: 2.3.8
 
-  ldapts@8.0.31:
+  ldapts@8.0.32:
     dependencies:
       '@types/asn1': 0.2.4
       asn1: 0.2.6
