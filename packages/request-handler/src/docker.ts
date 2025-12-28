@@ -12,9 +12,7 @@ export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
   queryKey: "dockerContainersResult",
   widgetKind: "dockerContainers",
   async requestAsync() {
-    const containers = await getContainersWithStatsAsync();
-
-    return containers;
+    return await getContainersWithStatsAsync();
   },
   cacheDuration: dayjs.duration(20, "seconds"),
 });
@@ -28,7 +26,7 @@ async function getContainersWithStatsAsync() {
     dockerInstances.map(async ({ instance, host }) => {
       const instanceContainers = await instance.listContainers({ all: true });
       return instanceContainers
-        .filter((container) => dockerLabels.hide in container.Labels === false)
+        .filter((container) => !(dockerLabels.hide in container.Labels))
         .map((container) => ({ ...container, instance: host }));
     }),
   ).then((res) => res.flat());
@@ -45,7 +43,21 @@ async function getContainersWithStatsAsync() {
     const instance = dockerInstances.find(({ host }) => host === container.instance)?.instance;
     if (!instance) return null;
 
-    const stats = await instance.getContainer(container.Id).stats({ stream: false, "one-shot": true });
+    // Get stats, falling back to an empty stats object if fetch fails
+    // calculateCpuUsage and calculateMemoryUsage will return 0 for invalid/missing stats
+    const stats = await instance
+      .getContainer(container.Id)
+      .stats({ stream: false, "one-shot": true })
+      .catch(
+        () =>
+          ({
+            cpu_stats: { online_cpus: 0, cpu_usage: { total_usage: 0 }, system_cpu_usage: 0 },
+            memory_stats: { usage: 0 },
+          }) as ContainerStats,
+      );
+
+    const cpuUsage = calculateCpuUsage(stats);
+    const memoryUsage = calculateMemoryUsage(stats);
 
     return {
       id: container.Id,
@@ -57,19 +69,8 @@ async function getContainersWithStatsAsync() {
           if (!extractedImage) return false;
           return icon.name.toLowerCase().includes(extractedImage.toLowerCase());
         })?.url ?? null,
-      cpuUsage: calculateCpuUsage(stats),
-      // memory usage by default includes cache, which should not be shown as it is also not shown with docker stats command
-      // The below type is probably wrong, sometimes stats can be undefined
-      // See https://docs.docker.com/reference/cli/docker/container/stats/ how it is / was calculated
-      memoryUsage:
-        stats.memory_stats.usage -
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        (stats.memory_stats.stats?.cache ??
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          stats.memory_stats.stats?.total_inactive_file ??
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          stats.memory_stats.stats?.inactive_file ??
-          0),
+      cpuUsage,
+      memoryUsage,
       image: container.Image,
       ports: container.Ports,
     };
@@ -79,10 +80,36 @@ async function getContainersWithStatsAsync() {
 }
 
 function calculateCpuUsage(stats: ContainerStats): number {
-  const numberOfCpus = stats.cpu_stats.online_cpus || 1;
+  // Handle containers with missing or invalid stats (e.g., exited, dead containers)
+  if (!stats.cpu_stats.online_cpus || stats.cpu_stats.online_cpus === 0 || !stats.cpu_stats.cpu_usage.total_usage) {
+    return 0;
+  }
 
+  const numberOfCpus = stats.cpu_stats.online_cpus;
   const usage = stats.cpu_stats.system_cpu_usage;
-  if (usage === 0) return 0;
+  if (!usage || usage === 0) {
+    return 0;
+  }
 
   return (stats.cpu_stats.cpu_usage.total_usage / usage) * numberOfCpus * 100;
+}
+
+function calculateMemoryUsage(stats: ContainerStats): number {
+  // Handle containers with missing or invalid stats (e.g., exited, dead containers)
+  if (!stats.memory_stats.usage) {
+    return 0;
+  }
+
+  // memory usage by default includes cache, which should not be shown as it is also not shown with docker stats command
+  // See https://docs.docker.com/reference/cli/docker/container/stats/ how it is / was calculated
+  return (
+    stats.memory_stats.usage -
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    (stats.memory_stats.stats?.cache ??
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      stats.memory_stats.stats?.total_inactive_file ??
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      stats.memory_stats.stats?.inactive_file ??
+      0)
+  );
 }
