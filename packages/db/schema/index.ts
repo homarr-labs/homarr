@@ -20,6 +20,7 @@ export const {
   accounts,
   apiKeys,
   apps,
+  backups,
   boardGroupPermissions,
   boardUserPermissions,
   boards,

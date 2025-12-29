@@ -3006,7 +3006,8 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          }
+          },
+          "backups": "백업"
         },
         "settings": "설정",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "게시판 삭제",
               "description": ""
+            }
+          },
+          "export": {
+            "label": "JSON으로 내보내기",
+            "success": {
+              "title": "게시판 내보내기 완료",
+              "message": "게시판이 성공적으로 내보내졌습니다"
+            },
+            "error": {
+              "title": "내보내기 실패",
+              "message": "게시판을 내보낼 수 없습니다"
+            }
+          },
+          "importJson": {
+            "label": "JSON에서 가져오기",
+            "description": "이전에 Homarr에서 내보낸 JSON 파일에서 게시판을 가져옵니다.",
+            "warning": "같은 이름의 게시판이 이미 있으면 가져온 게시판의 이름이 변경됩니다.",
+            "form": {
+              "file": {
+                "label": "게시판 JSON 파일",
+                "placeholder": ".json 파일 선택",
+                "invalidError": "유효한 JSON 파일을 선택하세요",
+                "invalidJsonError": "파일에 유효한 JSON이 없습니다"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "게시판 가져오기 완료",
+                "message": "성공적으로 가져왔습니다"
+              },
+              "error": {
+                "title": "가져오기 실패",
+                "message": "게시판을 가져올 수 없습니다"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": ""
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

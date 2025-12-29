@@ -3005,7 +3005,8 @@
             "logs": "Logs",
             "api": "API",
             "certificates": "Zertifikate",
-            "tasks": "Aufgaben"
+            "tasks": "Aufgaben",
+            "backups": "Sicherungen"
           }
         },
         "settings": "Einstellungen",
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "Board löschen",
               "description": "Sind Sie sicher, dass Sie das Board {name} löschen möchten?"
+            }
+          },
+          "export": {
+            "label": "Als JSON exportieren",
+            "success": {
+              "title": "Board exportiert",
+              "message": "Das Board wurde erfolgreich exportiert"
+            },
+            "error": {
+              "title": "Export fehlgeschlagen",
+              "message": "Das Board konnte nicht exportiert werden"
+            }
+          },
+          "importJson": {
+            "label": "Aus JSON importieren",
+            "description": "Importieren Sie ein Board aus einer JSON-Datei, die zuvor aus Homarr exportiert wurde.",
+            "warning": "Wenn ein Board mit demselben Namen bereits existiert, wird das importierte Board umbenannt.",
+            "form": {
+              "file": {
+                "label": "Board-JSON-Datei",
+                "placeholder": "Wählen Sie eine .json-Datei",
+                "invalidError": "Bitte wählen Sie eine gültige JSON-Datei",
+                "invalidJsonError": "Die Datei enthält kein gültiges JSON"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Board importiert",
+                "message": "wurde erfolgreich importiert"
+              },
+              "error": {
+                "title": "Import fehlgeschlagen",
+                "message": "Das Board konnte nicht importiert werden"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": "Hostnamen"
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

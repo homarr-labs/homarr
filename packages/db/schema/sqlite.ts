@@ -488,6 +488,18 @@ export const cronJobConfigurations = sqliteTable("cron_job_configuration", {
   isEnabled: int({ mode: "boolean" }).default(true).notNull(),
 });
 
+export const backups = sqliteTable("backup", {
+  id: text().notNull().primaryKey(),
+  name: text().notNull(),
+  type: text({ enum: ["manual", "auto"] }).notNull(),
+  filePath: text().notNull(),
+  fileSize: int().notNull(),
+  checksum: text().notNull(),
+  status: text({ enum: ["completed", "failed"] }).notNull(),
+  createdBy: text().references(() => users.id, { onDelete: "set null" }),
+  createdAt: int({ mode: "timestamp" }).notNull(),
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -750,5 +762,12 @@ export const layoutRelations = relations(layouts, ({ one, many }) => ({
   board: one(boards, {
     fields: [layouts.boardId],
     references: [boards.id],
+  }),
+}));
+
+export const backupRelations = relations(backups, ({ one }) => ({
+  creator: one(users, {
+    fields: [backups.createdBy],
+    references: [users.id],
   }),
 }));

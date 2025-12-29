@@ -3005,7 +3005,8 @@
             "logs": "Registros",
             "api": "API",
             "certificates": "Certificados",
-            "tasks": "Tareas"
+            "tasks": "Tareas",
+            "backups": "Copias de seguridad"
           }
         },
         "settings": "Ajustes",
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "Eliminar tablero",
               "description": "¿Estás seguro de que deseas eliminar el tablero {name}?"
+            }
+          },
+          "export": {
+            "label": "Exportar como JSON",
+            "success": {
+              "title": "Tablero exportado",
+              "message": "El tablero se ha exportado correctamente"
+            },
+            "error": {
+              "title": "Error al exportar",
+              "message": "No se pudo exportar el tablero"
+            }
+          },
+          "importJson": {
+            "label": "Importar desde JSON",
+            "description": "Importa un tablero desde un archivo JSON que fue previamente exportado desde Homarr.",
+            "warning": "Si ya existe un tablero con el mismo nombre, el tablero importado será renombrado.",
+            "form": {
+              "file": {
+                "label": "Archivo JSON del tablero",
+                "placeholder": "Selecciona un archivo .json",
+                "invalidError": "Por favor selecciona un archivo JSON válido",
+                "invalidJsonError": "El archivo no contiene JSON válido"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Tablero importado",
+                "message": "se ha importado correctamente"
+              },
+              "error": {
+                "title": "Error al importar",
+                "message": "No se pudo importar el tablero"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": "Nombres de host"
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

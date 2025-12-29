@@ -3006,7 +3006,8 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          }
+          },
+          "backups": "Backups"
         },
         "settings": "Configurações",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "Excluir quadro",
               "description": ""
+            }
+          },
+          "export": {
+            "label": "Exportar como JSON",
+            "success": {
+              "title": "Quadro exportado",
+              "message": "O quadro foi exportado com sucesso"
+            },
+            "error": {
+              "title": "Falha na exportação",
+              "message": "Não foi possível exportar o quadro"
+            }
+          },
+          "importJson": {
+            "label": "Importar de JSON",
+            "description": "Importe um quadro de um arquivo JSON que foi previamente exportado do Homarr.",
+            "warning": "Se já existir um quadro com o mesmo nome, o quadro importado será renomeado.",
+            "form": {
+              "file": {
+                "label": "Arquivo JSON do quadro",
+                "placeholder": "Selecione um arquivo .json",
+                "invalidError": "Por favor, selecione um arquivo JSON válido",
+                "invalidJsonError": "O arquivo não contém JSON válido"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Quadro importado",
+                "message": "foi importado com sucesso"
+              },
+              "error": {
+                "title": "Falha na importação",
+                "message": "Não foi possível importar o quadro"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": ""
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

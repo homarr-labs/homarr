@@ -3006,7 +3006,8 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          }
+          },
+          "backups": "Sao lưu"
         },
         "settings": "Cài đặt",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "Xóa bảng",
               "description": ""
+            }
+          },
+          "export": {
+            "label": "Xuất dưới dạng JSON",
+            "success": {
+              "title": "Đã xuất bảng",
+              "message": "Bảng đã được xuất thành công"
+            },
+            "error": {
+              "title": "Xuất thất bại",
+              "message": "Không thể xuất bảng"
+            }
+          },
+          "importJson": {
+            "label": "Nhập từ JSON",
+            "description": "Nhập một bảng từ tệp JSON đã được xuất trước đó từ Homarr.",
+            "warning": "Nếu bảng có cùng tên đã tồn tại, bảng được nhập sẽ được đổi tên.",
+            "form": {
+              "file": {
+                "label": "Tệp JSON bảng",
+                "placeholder": "Chọn tệp .json",
+                "invalidError": "Vui lòng chọn tệp JSON hợp lệ",
+                "invalidJsonError": "Tệp không chứa JSON hợp lệ"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Đã nhập bảng",
+                "message": "đã được nhập thành công"
+              },
+              "error": {
+                "title": "Nhập thất bại",
+                "message": "Không thể nhập bảng"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": ""
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

@@ -7,7 +7,17 @@
         "description": "To get started, please select how you want to set up your Homarr instance.",
         "action": {
           "scratch": "Start from scratch",
-          "importOldmarr": "Import from Homarr before 1.0"
+          "importOldmarr": "Import from Homarr before 1.0",
+          "restoreBackup": "Restore from backup"
+        },
+        "restore": {
+          "title": "Restore from backup",
+          "description": "Upload a Homarr backup file (.zip) to restore your data. This will restore all boards, integrations, users, and settings from the backup.",
+          "confirm": "Restore backup",
+          "success": {
+            "title": "Restore completed",
+            "message": "Backup restored successfully. Redirecting to login..."
+          }
         }
       },
       "import": {
@@ -3005,7 +3015,8 @@
             "logs": "Logs",
             "api": "API",
             "certificates": "Certificates",
-            "tasks": "Tasks"
+            "tasks": "Tasks",
+            "backups": "Backups"
           }
         },
         "settings": "Settings",
@@ -3078,6 +3089,40 @@
             "confirm": {
               "title": "Delete board",
               "description": "Are you sure you want to delete the {name} board?"
+            }
+          },
+          "export": {
+            "label": "Export as JSON",
+            "success": {
+              "title": "Board exported",
+              "message": "The board has been exported successfully"
+            },
+            "error": {
+              "title": "Export failed",
+              "message": "Failed to export the board"
+            }
+          },
+          "importJson": {
+            "label": "Import from JSON",
+            "description": "Import a board from a JSON file that was previously exported from Homarr.",
+            "warning": "If a board with the same name already exists, the imported board will be renamed.",
+            "form": {
+              "file": {
+                "label": "Board JSON file",
+                "placeholder": "Select a .json file",
+                "invalidError": "Please select a valid JSON file",
+                "invalidJsonError": "The file does not contain valid JSON"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Board imported",
+                "message": "has been imported successfully"
+              },
+              "error": {
+                "title": "Import failed",
+                "message": "Failed to import the board"
+              }
             }
           }
         },
@@ -4042,6 +4087,9 @@
           "hostnames": {
             "label": "Hostnames"
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {
@@ -4536,6 +4584,106 @@
         "info": "Info",
         "warn": "Warn",
         "error": "Error"
+      }
+    }
+  },
+  "backup": {
+    "title": "Backups",
+    "description": "Manage system backups and restore data",
+    "noBackups": "No backups found",
+    "field": {
+      "name": "Name",
+      "type": "Type",
+      "size": "Size",
+      "status": "Status",
+      "createdAt": "Created",
+      "creator": "Created by"
+    },
+    "type": {
+      "manual": "Manual",
+      "auto": "Automatic"
+    },
+    "status": {
+      "completed": "Completed",
+      "failed": "Failed"
+    },
+    "action": {
+      "create": {
+        "label": "Create Backup",
+        "namePlaceholder": "Enter backup name (optional)",
+        "confirm": "Create Backup",
+        "success": {
+          "title": "Backup created",
+          "message": "Backup {fileName} was created successfully"
+        },
+        "error": {
+          "title": "Backup failed",
+          "message": "Failed to create backup"
+        }
+      },
+      "download": {
+        "label": "Download"
+      },
+      "delete": {
+        "label": "Delete",
+        "confirm": "Are you sure you want to delete the backup \"{name}\"?",
+        "success": {
+          "title": "Backup deleted",
+          "message": "The backup was deleted successfully"
+        },
+        "error": {
+          "title": "Delete failed",
+          "message": "Failed to delete backup"
+        }
+      },
+      "restore": {
+        "label": "Restore",
+        "step": {
+          "upload": "Upload",
+          "validate": "Validate",
+          "configure": "Configure"
+        },
+        "dropzone": {
+          "title": "Drop backup file here",
+          "description": "Drop a .zip backup file or click to select"
+        },
+        "validation": {
+          "valid": "Backup file is valid and ready to restore",
+          "invalid": "Backup file validation failed",
+          "errors": "Errors",
+          "warnings": "Warnings",
+          "summary": "Summary",
+          "summaryDetails": "{boards} boards, {integrations} integrations, {users} users, {groups} groups",
+          "error": {
+            "title": "Validation failed",
+            "message": "Failed to validate backup file"
+          }
+        },
+        "mode": {
+          "label": "Restore Mode",
+          "merge": {
+            "label": "Merge",
+            "description": "Add new items without removing existing data"
+          },
+          "full": {
+            "label": "Full Restore",
+            "description": "Replace all data with backup contents",
+            "warning": "Warning: Full restore will delete all existing data! This action cannot be undone.",
+            "sessionWarning": "You will be logged out after restore. Make sure you have credentials for an admin user in the backup, or you will need to use the CLI to recreate admin access."
+          }
+        },
+        "createBackupFirst": "Create backup before restoring",
+        "confirm": "Restore Backup",
+        "success": {
+          "title": "Restore completed",
+          "message": "Backup was restored successfully",
+          "redirectLogin": "Backup restored. Redirecting to login page...",
+          "redirectOnboarding": "Backup restored. No admin user found. Redirecting to setup..."
+        },
+        "error": {
+          "title": "Restore failed",
+          "message": "Failed to restore backup"
+        }
       }
     }
   }

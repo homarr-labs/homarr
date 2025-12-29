@@ -3006,7 +3006,8 @@
             "api": "ממשק API",
             "certificates": "אישורי אבטחה",
             "tasks": "משימות"
-          }
+          },
+          "backups": "גיבויים"
         },
         "settings": "הגדרות",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "מחיקת לוח",
               "description": "האם את/ה בטוח/ה שברצונך למחוק את הלוח {name}?"
+            }
+          },
+          "export": {
+            "label": "ייצוא כ-JSON",
+            "success": {
+              "title": "הלוח יוצא",
+              "message": "הלוח יוצא בהצלחה"
+            },
+            "error": {
+              "title": "הייצוא נכשל",
+              "message": "לא ניתן לייצא את הלוח"
+            }
+          },
+          "importJson": {
+            "label": "ייבוא מ-JSON",
+            "description": "ייבא לוח מקובץ JSON שיוצא בעבר מ-Homarr.",
+            "warning": "אם כבר קיים לוח עם אותו שם, הלוח המיובא ישונה שמו.",
+            "form": {
+              "file": {
+                "label": "קובץ JSON של הלוח",
+                "placeholder": "בחר קובץ .json",
+                "invalidError": "אנא בחר קובץ JSON תקין",
+                "invalidJsonError": "הקובץ אינו מכיל JSON תקין"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "הלוח יובא",
+                "message": "יובא בהצלחה"
+              },
+              "error": {
+                "title": "הייבוא נכשל",
+                "message": "לא ניתן לייבא את הלוח"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": "שמות מארחים"
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

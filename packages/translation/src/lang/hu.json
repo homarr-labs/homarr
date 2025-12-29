@@ -3006,7 +3006,8 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          }
+          },
+          "backups": "Biztonsági mentések"
         },
         "settings": "Beállítások",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "Tábla törlése",
               "description": ""
+            }
+          },
+          "export": {
+            "label": "Exportálás JSON-ként",
+            "success": {
+              "title": "Tábla exportálva",
+              "message": "A tábla sikeresen exportálva"
+            },
+            "error": {
+              "title": "Exportálás sikertelen",
+              "message": "Nem sikerült exportálni a táblát"
+            }
+          },
+          "importJson": {
+            "label": "Importálás JSON-ból",
+            "description": "Importáljon egy táblát egy korábban Homarr-ból exportált JSON fájlból.",
+            "warning": "Ha már létezik azonos nevű tábla, az importált tábla átnevezésre kerül.",
+            "form": {
+              "file": {
+                "label": "Tábla JSON fájl",
+                "placeholder": "Válasszon .json fájlt",
+                "invalidError": "Kérjük, válasszon érvényes JSON fájlt",
+                "invalidJsonError": "A fájl nem tartalmaz érvényes JSON-t"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Tábla importálva",
+                "message": "sikeresen importálva"
+              },
+              "error": {
+                "title": "Importálás sikertelen",
+                "message": "Nem sikerült importálni a táblát"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": ""
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {
