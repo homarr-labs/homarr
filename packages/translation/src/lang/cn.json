@@ -3006,7 +3006,8 @@
             "api": "API",
             "certificates": "证书",
             "tasks": "任务"
-          }
+          },
+          "backups": "备份"
         },
         "settings": "设置",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "删除面板",
               "description": "确认删除面板 {name} 吗?"
+            }
+          },
+          "export": {
+            "label": "导出为 JSON",
+            "success": {
+              "title": "面板已导出",
+              "message": "面板已成功导出"
+            },
+            "error": {
+              "title": "导出失败",
+              "message": "无法导出面板"
+            }
+          },
+          "importJson": {
+            "label": "从 JSON 导入",
+            "description": "从之前从 Homarr 导出的 JSON 文件导入面板。",
+            "warning": "如果已存在同名面板，导入的面板将被重命名。",
+            "form": {
+              "file": {
+                "label": "面板 JSON 文件",
+                "placeholder": "选择 .json 文件",
+                "invalidError": "请选择有效的 JSON 文件",
+                "invalidJsonError": "文件不包含有效的 JSON"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "面板已导入",
+                "message": "已成功导入"
+              },
+              "error": {
+                "title": "导入失败",
+                "message": "无法导入面板"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": "主机名"
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

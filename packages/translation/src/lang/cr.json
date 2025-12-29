@@ -3006,7 +3006,8 @@
             "api": "crwdns1598:0crwdne1598:0",
             "certificates": "crwdns2594:0crwdne2594:0",
             "tasks": "crwdns1600:0crwdne1600:0"
-          }
+          },
+          "backups": "Sigurnosne kopije"
         },
         "settings": "crwdns1602:0crwdne1602:0",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "crwdns1652:0crwdne1652:0",
               "description": "crwdns1654:0{name}crwdne1654:0"
+            }
+          },
+          "export": {
+            "label": "Export as JSON",
+            "success": {
+              "title": "Board exported",
+              "message": "The board has been exported successfully"
+            },
+            "error": {
+              "title": "Export failed",
+              "message": "Failed to export the board"
+            }
+          },
+          "importJson": {
+            "label": "Import from JSON",
+            "description": "Import a board from a JSON file that was previously exported from Homarr.",
+            "warning": "If a board with the same name already exists, the imported board will be renamed.",
+            "form": {
+              "file": {
+                "label": "Board JSON file",
+                "placeholder": "Select a .json file",
+                "invalidError": "Please select a valid JSON file",
+                "invalidJsonError": "The file does not contain valid JSON"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Board imported",
+                "message": "has been imported successfully"
+              },
+              "error": {
+                "title": "Import failed",
+                "message": "Failed to import the board"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": "crwdns3386:0crwdne3386:0"
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

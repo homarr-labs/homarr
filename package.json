@@ -66,6 +66,7 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@swc/core",
       "@tree-sitter-grammars/tree-sitter-yaml",
       "bcrypt",
       "better-sqlite3",

@@ -3006,7 +3006,8 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          }
+          },
+          "backups": "Atsarginės kopijos"
         },
         "settings": "Nustatymai",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "Ištrinti lentą",
               "description": ""
+            }
+          },
+          "export": {
+            "label": "Eksportuoti kaip JSON",
+            "success": {
+              "title": "Lenta eksportuota",
+              "message": "Lenta buvo sėkmingai eksportuota"
+            },
+            "error": {
+              "title": "Eksportavimas nepavyko",
+              "message": "Nepavyko eksportuoti lentos"
+            }
+          },
+          "importJson": {
+            "label": "Importuoti iš JSON",
+            "description": "Importuokite lentą iš JSON failo, kuris anksčiau buvo eksportuotas iš Homarr.",
+            "warning": "Jei lenta su tokiu pačiu pavadinimu jau egzistuoja, importuota lenta bus pervadinta.",
+            "form": {
+              "file": {
+                "label": "Lentos JSON failas",
+                "placeholder": "Pasirinkite .json failą",
+                "invalidError": "Pasirinkite tinkamą JSON failą",
+                "invalidJsonError": "Failas neturi tinkamo JSON formato"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Lenta importuota",
+                "message": "buvo sėkmingai importuota"
+              },
+              "error": {
+                "title": "Importavimas nepavyko",
+                "message": "Nepavyko importuoti lentos"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": ""
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

@@ -3006,7 +3006,8 @@
             "api": "API",
             "certificates": "証明書",
             "tasks": "タスク"
-          }
+          },
+          "backups": "バックアップ"
         },
         "settings": "設定",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "ボードの削除",
               "description": "{name} ボードを削除してもよろしいですか？"
+            }
+          },
+          "export": {
+            "label": "JSONとしてエクスポート",
+            "success": {
+              "title": "ボードをエクスポートしました",
+              "message": "ボードは正常にエクスポートされました"
+            },
+            "error": {
+              "title": "エクスポートに失敗しました",
+              "message": "ボードをエクスポートできませんでした"
+            }
+          },
+          "importJson": {
+            "label": "JSONからインポート",
+            "description": "以前HomarrからエクスポートしたJSONファイルからボードをインポートします。",
+            "warning": "同じ名前のボードが既に存在する場合、インポートされるボードの名前が変更されます。",
+            "form": {
+              "file": {
+                "label": "ボードJSONファイル",
+                "placeholder": ".jsonファイルを選択",
+                "invalidError": "有効なJSONファイルを選択してください",
+                "invalidJsonError": "ファイルには有効なJSONが含まれていません"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "ボードをインポートしました",
+                "message": "正常にインポートされました"
+              },
+              "error": {
+                "title": "インポートに失敗しました",
+                "message": "ボードをインポートできませんでした"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": "ホスト名"
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

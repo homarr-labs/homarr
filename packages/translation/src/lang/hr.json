@@ -3006,7 +3006,8 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          }
+          },
+          "backups": "Sigurnosne kopije"
         },
         "settings": "Postavke",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "Izbriši ploču",
               "description": ""
+            }
+          },
+          "export": {
+            "label": "Izvezi kao JSON",
+            "success": {
+              "title": "Ploča izvezena",
+              "message": "Ploča je uspješno izvezena"
+            },
+            "error": {
+              "title": "Izvoz nije uspio",
+              "message": "Nije moguće izvesti ploču"
+            }
+          },
+          "importJson": {
+            "label": "Uvezi iz JSON-a",
+            "description": "Uvezite ploču iz JSON datoteke koja je prethodno izvezena iz Homarr-a.",
+            "warning": "Ako ploča s istim imenom već postoji, uvezena ploča će biti preimenovana.",
+            "form": {
+              "file": {
+                "label": "JSON datoteka ploče",
+                "placeholder": "Odaberite .json datoteku",
+                "invalidError": "Molimo odaberite valjanu JSON datoteku",
+                "invalidJsonError": "Datoteka ne sadrži valjan JSON"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Ploča uvezena",
+                "message": "je uspješno uvezena"
+              },
+              "error": {
+                "title": "Uvoz nije uspio",
+                "message": "Nije moguće uvesti ploču"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": ""
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

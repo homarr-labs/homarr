@@ -3006,7 +3006,8 @@
             "api": "API",
             "certificates": "Certifikáty",
             "tasks": "Úlohy"
-          }
+          },
+          "backups": "Zálohy"
         },
         "settings": "Nastavenia",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "Odstrániť dosku",
               "description": "Naozaj chcete odstrániť nástenku {name} ?"
+            }
+          },
+          "export": {
+            "label": "Exportovať ako JSON",
+            "success": {
+              "title": "Nástenka exportovaná",
+              "message": "Nástenka bola úspešne exportovaná"
+            },
+            "error": {
+              "title": "Export zlyhal",
+              "message": "Nepodarilo sa exportovať nástenku"
+            }
+          },
+          "importJson": {
+            "label": "Importovať z JSON",
+            "description": "Importujte nástenku zo súboru JSON, ktorý bol predtým exportovaný z Homarr.",
+            "warning": "Ak nástenka s rovnakým názvom už existuje, importovaná nástenka bude premenovaná.",
+            "form": {
+              "file": {
+                "label": "JSON súbor nástenky",
+                "placeholder": "Vyberte súbor .json",
+                "invalidError": "Prosím, vyberte platný súbor JSON",
+                "invalidJsonError": "Súbor neobsahuje platný JSON"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Nástenka importovaná",
+                "message": "bola úspešne importovaná"
+              },
+              "error": {
+                "title": "Import zlyhal",
+                "message": "Nepodarilo sa importovať nástenku"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": "Názvy hostiteľov"
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

@@ -3006,7 +3006,8 @@
             "api": "API",
             "certificates": "Certificaten",
             "tasks": "Taken"
-          }
+          },
+          "backups": "Backups"
         },
         "settings": "Instellingen",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "Bord verwijderen",
               "description": "Weet je zeker dat je het {name} bord wilt verwijderen?"
+            }
+          },
+          "export": {
+            "label": "Exporteren als JSON",
+            "success": {
+              "title": "Bord geëxporteerd",
+              "message": "Het bord is succesvol geëxporteerd"
+            },
+            "error": {
+              "title": "Export mislukt",
+              "message": "Kan het bord niet exporteren"
+            }
+          },
+          "importJson": {
+            "label": "Importeren uit JSON",
+            "description": "Importeer een bord uit een JSON-bestand dat eerder uit Homarr is geëxporteerd.",
+            "warning": "Als er al een bord met dezelfde naam bestaat, wordt het geïmporteerde bord hernoemd.",
+            "form": {
+              "file": {
+                "label": "Bord JSON-bestand",
+                "placeholder": "Selecteer een .json-bestand",
+                "invalidError": "Selecteer een geldig JSON-bestand",
+                "invalidJsonError": "Het bestand bevat geen geldige JSON"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Bord geïmporteerd",
+                "message": "is succesvol geïmporteerd"
+              },
+              "error": {
+                "title": "Import mislukt",
+                "message": "Kan het bord niet importeren"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": "Hostnamen"
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {

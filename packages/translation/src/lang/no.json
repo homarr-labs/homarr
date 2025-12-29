@@ -3006,7 +3006,8 @@
             "api": "API",
             "certificates": "Sertifikater",
             "tasks": "Oppgaver"
-          }
+          },
+          "backups": "Backuper"
         },
         "settings": "Innstillinger",
         "help": {
@@ -3078,6 +3079,40 @@
             "confirm": {
               "title": "Slett tavle",
               "description": "Er du sikker på at du vil slette tavlen {name}?"
+            }
+          },
+          "export": {
+            "label": "Eksporter som JSON",
+            "success": {
+              "title": "Tavle eksportert",
+              "message": "Tavlen har blitt eksportert"
+            },
+            "error": {
+              "title": "Eksport mislyktes",
+              "message": "Kunne ikke eksportere tavlen"
+            }
+          },
+          "importJson": {
+            "label": "Importer fra JSON",
+            "description": "Importer en tavle fra en JSON-fil som tidligere ble eksportert fra Homarr.",
+            "warning": "Hvis en tavle med samme navn allerede finnes, vil den importerte tavlen bli omdøpt.",
+            "form": {
+              "file": {
+                "label": "Tavle JSON-fil",
+                "placeholder": "Velg en .json-fil",
+                "invalidError": "Vennligst velg en gyldig JSON-fil",
+                "invalidJsonError": "Filen inneholder ikke gyldig JSON"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Tavle importert",
+                "message": "har blitt importert"
+              },
+              "error": {
+                "title": "Import mislyktes",
+                "message": "Kunne ikke importere tavlen"
+              }
             }
           }
         },
@@ -4042,6 +4077,9 @@
           "hostnames": {
             "label": "Vertsnavn"
           }
+        },
+        "backups": {
+          "label": "Backups"
         }
       },
       "settings": {
