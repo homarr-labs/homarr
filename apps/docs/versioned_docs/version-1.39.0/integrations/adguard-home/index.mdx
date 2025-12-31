@@ -1,0 +1,37 @@
+---
+title: 'AdGuard Home'
+description: "AdGuard Home is a network-wide software for blocking ads and trackers, providing a safer and faster internet experience."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
+import { IconAd, IconDeviceGamepad } from "@tabler/icons-react";
+import { adguardHomeIntegration } from '.';
+import { dnsHoleSummaryWidget } from '@site/docs/widgets/dns-hole-summary';
+import { dnsHoleControlsWidget } from '@site/docs/widgets/dns-hole-controls';
+
+<IntegrationHeader
+    integration={adguardHomeIntegration}
+    categories={['DNS Hole']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+        widget: dnsHoleSummaryWidget,
+    },{
+        widget: dnsHoleControlsWidget
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['username', 'password'],
+    steps: []
+}]} />

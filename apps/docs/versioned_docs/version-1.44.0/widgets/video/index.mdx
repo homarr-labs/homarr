@@ -1,0 +1,38 @@
+---
+title: 'Video Stream'
+description: 'Embed a video stream or video from a camera or a website.'
+hide_title: true
+---
+
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { videoWidget } from '.';
+
+
+<WidgetHeader
+  widget={videoWidget}
+  categories={["Video", "Surveillance"]}
+/>
+
+Do you run surveilance cameras? Or maybe you have a favourite video?
+The video widget enables you to integrate both seamlessly into your dashboard.
+This widget uses [video.js](https://videojs.com/) to play HLS or DASH video natively.
+
+DRM content is not yet supported. More info here:
+https://videojs.com/guides/faqs/#q-what-is-videojs
+
+
+You can use the following URL to test:
+http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
+
+### Screenshots
+
+![video big-buck-bunny](./img/bunny.png)
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={videoWidget.configuration} />

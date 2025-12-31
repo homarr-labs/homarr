@@ -27,6 +27,9 @@
     "enabled": true,
     "rules": {
       "recommended": false,
+      "performance": {
+        "noImgElement": "off"
+      },
       "suspicious": {
         "useAwait": "warn"
       },
@@ -354,7 +357,7 @@
       "linter": {
         "rules": {
           "performance": {
-            "noImgElement": "warn",
+            "noImgElement": "off",
             "noUnwantedPolyfillio": "warn",
             "useGoogleFontPreconnect": "warn"
           },

@@ -1,0 +1,10 @@
+{
+  "label": "Integrations",
+  "collapsed": true,
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "title": "Integrations",
+    "description": "Integration are a principal part of homarr, it's where you can connect your other apps to interact with them with widgets or other capabilities, Homarr currently integrates with the following applications:"
+  }
+}

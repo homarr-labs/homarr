@@ -1,0 +1,44 @@
+---
+title: 'Pi-hole'
+description: "Pi-hole is a network-wide ad blocker that acts as a DNS sinkhole, blocking unwanted content and improving your browsing experience."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { IconAd, IconDeviceGamepad } from "@tabler/icons-react";
+import Alert from '@theme/Admonition';
+import { dnsHoleSummaryWidget } from '@site/docs/widgets/dns-hole-summary';
+import { dnsHoleControlsWidget } from '@site/docs/widgets/dns-hole-controls';
+import { piHoleIntegration } from '.';
+
+
+<IntegrationHeader
+    integration={piHoleIntegration}
+    categories={['DNS Hole']}
+/>
+
+<Alert type="note" className='my-2'>
+    Homarr supports both Pi-hole v5 and v6. It automatically detects the version and uses the correct API.
+</Alert>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+        widget: dnsHoleSummaryWidget,
+    },{
+        widget: dnsHoleControlsWidget
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: [],
+    body: "Please note, that in v6 of Pi-hole you no longer specify an API key, but instead either a password or application password. We suggest to use the application password when possible."
+}]} />

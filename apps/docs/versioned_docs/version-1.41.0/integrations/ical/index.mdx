@@ -1,0 +1,38 @@
+---
+title: 'iCal'
+description: "iCal is a standard for calendar data exchange, allowing users to share and manage calendar events across different platforms."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
+import { IconZoomQuestion, IconChartBar, IconSearch } from "@tabler/icons-react";
+import { icalIntegration } from '.';
+import { calendarWidget } from '@site/docs/widgets/calendar';
+
+<IntegrationHeader
+  integration={icalIntegration}
+  categories={['Calendar']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+      widget: calendarWidget
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['url'],
+    steps: []
+}]} />
+
+## Using the iCal integration
+
+The iCal integration allows you to add external calendars to Homarr. Any calendar that provides a public iCal URL can be integrated, such as Google Calendar, Apple Calendar, or Outlook.

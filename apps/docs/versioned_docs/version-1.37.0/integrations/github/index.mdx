@@ -1,0 +1,41 @@
+---
+title: 'GitHub'
+description: "GitHub is a web-based platform for version control and collaboration."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { githubIntegration } from '.';
+import { releasesWidget } from '@site/docs/widgets/releases';
+
+
+<IntegrationHeader
+    integration={githubIntegration}
+    categories={['Version Control', 'Software']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+        widget: releasesWidget
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: [],
+    steps: []
+}, {
+    credentials: ['personalAccessToken'],
+    steps: []
+}, {
+    tabLabel: "GitHub App",
+    credentials: ['githubAppId', 'githubInstallationId', 'privateKey'],
+    steps: ['Create GitHub App', 'Create a private key for it', 'Install it to your organization / user']
+}]} />

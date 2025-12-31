@@ -1,0 +1,44 @@
+---
+title: Prerequisites
+sidebar_position: 1
+tags:
+  - Getting Started
+  - Installation
+  - Docker
+  - Unraid
+---
+
+import Link from '@docusaurus/Link';
+import { IconArrowRight } from '@tabler/icons-react';
+
+Before you try to install Homarr, please review if your device meets the requirements.
+Installing on an unsupported device may lead to unstable behaviour and no support will be provided.
+
+## Hardware
+- At least 500MB RAM
+- At least 600MB of free disk space for the Docker image. SSD is preferred.
+- Single or dual core CPU
+- Stable network connection, Wi-Fi use is not recommended
+
+## Architecture
+
+We build Homarr for a bunch of different architectures, including ARM. Please ensure that your device architecture is supported by Homarr. We won't be able to provide support for unusual or outdated architectures.
+
+| Architecture | Supported       |
+|--------------|-----------------|
+| linux/amd64  | ✅ Supported     |
+| linux/arm64  | ✅ Supported     |
+| linux/arm/v7 | ❌ Not supported |
+
+## Getting started with installation
+
+<Link
+  data-umami-event="Go to installation"
+  className={'button button--secondary button--lg rounded-3xl dark:border-zinc-600 dark:bg-zinc-800'}
+  to="/docs/category/installation-1"
+>
+  <div className={'flex items-center gap-3'}>
+    <span className={"dark:text-gray-200"}>Go to Installation</span>
+    <IconArrowRight className={"dark:text-gray-200"} size={20} />
+  </div>
+</Link>

@@ -1,0 +1,87 @@
+name: "Homarr API spec"
+
+on:
+  schedule:
+    # Run it every day at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: {}
+  push:
+    paths:
+      - 'apps/docs/**'
+      - '.github/workflows/docs-update-homarr-openapi.yaml'
+
+permissions:
+  contents: write
+
+jobs:
+  start-homarr-and-export-api-spec:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24]
+    steps:
+      - uses: actions/checkout@v6
+        name: "Checkout app source repository"
+        with:
+          repository: homarr-labs/homarr
+      - uses: pnpm/action-setup@v2
+        name: "Install pnpm"
+      - name: "Use Node.js ${{ matrix.node-version }}"
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - run: pnpm install
+        name: "Install dependencies"
+      - run: pnpm dev > server.log 2>&1 &
+        working-directory: apps/nextjs
+        env:
+          TURBO_TELEMETRY_DISABLED: 1
+          DISABLE_TELEMETRY: 1
+        name: "Start development server in background"
+      - name: "Wait for server to be ready"
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost:3000/api/openapi -o /dev/null; then
+              echo "Server is up!"
+              break
+            fi
+            echo "Waiting for server to start..."
+            sleep 3
+          done
+
+          if [ "$i" -eq 30 ]; then
+            echo "Server failed to start within timeout."
+            cat docker.log
+            exit 1
+          fi
+      - name: "Fetch OpenAPI specification from development server"
+        run: wget http://localhost:3000/api/openapi
+      - name: "Rename OpenAPI spec"
+        run: mv openapi openapi.json
+      - uses: actions/upload-artifact@master
+        with:
+          name: api-specification
+          path: openapi.json
+
+  update-api-spec:
+    runs-on: ubuntu-latest
+    needs: start-homarr-and-export-api-spec
+    steps:
+      - uses: actions/checkout@v6
+        name: "Checkout documentation source repository"
+        with:
+          repository: homarr-labs/documentation
+      - uses: actions/download-artifact@master
+        with:
+          name: api-specification
+          path: api-specification
+      - name: "Move file to target directory"
+        run: mv api-specification/openapi.json ./static/api/open-api-schema.json
+      - uses: EndBug/add-and-commit@v9
+        with:
+          add: './static/api/'
+          default_author: github_actor
+          message: 'chore(api-spec): update OpenAPI spec'
+          push: true
+

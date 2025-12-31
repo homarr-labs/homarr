@@ -1,0 +1,38 @@
+---
+title: 'Date and time'
+description: 'Displays the current date and time.'
+hide_title: true
+---
+
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { clockWidget } from '.';
+
+
+<WidgetHeader
+  widget={clockWidget}
+  categories={['Time']}
+/>
+
+The clock widget displays the current date and time in a customizable format.
+
+### Screenshots
+
+import localClock from './img/local.png';
+import londonClock from './img/london-with-seconds.png';
+import tokyoClock from './img/tokyo-12-hour.png';
+
+<div className='flex gap-1'>
+    <img src={localClock} alt="clock format-24-hours timezone-local" width={128} height={128} />
+    <img src={londonClock} alt="clock format-24-hours with-seconds timezone-london" width={256} height={128} />
+    <img src={tokyoClock} alt="clock format-12-hours timezone-tokyo" width={256} height={128} />
+</div>
+
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={clockWidget.configuration} />

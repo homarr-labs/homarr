@@ -1,0 +1,48 @@
+---
+title: 'RSS Feed'
+description: 'Monitor and display one or more generic RSS, ATOM or JSON feeds.'
+hide_title: true
+---
+
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { rssFeedWidget } from '.';
+
+
+<WidgetHeader
+  widget={rssFeedWidget}
+  categories={['Feeds']}
+/>
+
+Using the RSS standard, you can integrate most News websites, applications and more on your dashboard.
+
+### Screenshots
+
+import screenshot from './img/screenshot.png';
+
+<img src={screenshot} alt="rss-feed noted-lol" width={128 * 4} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={rssFeedWidget.configuration} />
+
+### Examples
+Here's a small collection of examples, that you can use for testing or actual use (in no particular order):
+- https://noted.lol/rss/
+- https://blog.google/products/chrome/rss/
+- https://www.w3.org/blog/feed/
+- https://partner-feeds.beta.20min.ch/rss/20minuten
+- http://rss.cnn.com/rss/money_topstories.rss
+- https://www.wired.com/rss/
+- http://www.chinadaily.com.cn/rss/world_rss.xml
+- https://www.srf.ch/news/bnf/rss/1646
+- https://torrentfreak.com/feed/
+- http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml
+- http://feeds.foxnews.com/foxnews/latest
+
+There is a good list of feeds here:
+https://github.com/greysonp/rss-feeds/blob/master/feeds.json

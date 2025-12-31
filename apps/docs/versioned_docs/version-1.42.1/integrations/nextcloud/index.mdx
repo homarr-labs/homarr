@@ -1,0 +1,38 @@
+---
+title: 'Nextcloud'
+description: "Nextcloud is a self-hosted productivity platform that provides file storage, collaboration tools, and more."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
+import { IconCalendar } from "@tabler/icons-react";
+import Alert from '@theme/Admonition';
+import { nextcloudIntegration } from '.';
+import { calendarWidget } from '@site/docs/widgets/calendar';
+
+<IntegrationHeader
+  integration={nextcloudIntegration}
+  categories={['Calendar']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+      widget: calendarWidget
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['username', 'password'],
+    steps: [],
+    header: <Alert type="info">
+      Currently, 2FA will break this integration because Homarr can't authenticate with username and password in that case. Disable 2FA as a workaround.
+    </Alert>,
+}]} />

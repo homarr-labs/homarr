@@ -1,0 +1,38 @@
+---
+title: 'Aria2'
+description: "Lightweight multiprotocol & multi-source command-line download utility. It supports HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink"
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { aria2Integration } from '.';
+import { downloadsWidget } from '@site/docs/widgets/downloads';
+
+<IntegrationHeader
+  integration={aria2Integration}
+  categories={['Download', 'Multiprotocol', 'Multi-source']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+  items={[{
+    widget: downloadsWidget,
+  }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[
+  {
+    credentials: ['apiKey'],
+    steps: []
+  },
+  {
+    credentials: [],
+    steps: []
+  }]} />

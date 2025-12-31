@@ -1,0 +1,25 @@
+# Home Assistant Add-on
+
+:::caution
+Home Assistant Add-on is now updated to 1.0. Please add the new repository to your Add-on store. Also make sure to follow the [migration guide](https://homarr.dev/blog/2025/01/19/migration-guide-1.0/) so you don't lose your existing setup.
+:::
+
+Homarr can be seamlessly integrated into your Home Assistant setup with this add-on. This is perfect for users who rely on Home Assistant as their primary server and don't have a separate device for hosting.
+
+## Prerequisites
+
+- [Home Assistant](https://www.home-assistant.io/getting-started/)
+- Add-ons are only available if you've used the Home Assistant Operating System or Home Assistant Supervised installation method.
+
+## Installation
+
+1. **Add Repository**: Navigate to your Home Assistant Supervisor panel, and go to the Add-on Store. Add the following repository URL: `https://github.com/Wiggen94/ha-homarr-v1-server` or click this button
+[![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FWiggen94%2Fha-homarr-v1-server)
+
+2. **Install the Add-on**: Search for "Homarr Server" in the Add-on Store and select it. Click on "Install" to start the installation process.
+
+3. **Start the Add-on**: Once installed and configured, start the Homarr Server add-on from the Home Assistant Supervisor panel.
+
+4. **Access Homarr**: Homarr will be available at `http://<your-home-assistant-ip>:7575`. Open this address in your browser to access your Homarr dashboard.
+
+Your configuration, data and icons will be saved at /shares

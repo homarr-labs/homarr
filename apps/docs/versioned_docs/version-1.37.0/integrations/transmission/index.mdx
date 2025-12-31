@@ -1,0 +1,34 @@
+---
+title: 'Transmission'
+description: "A Fast, Easy and Free Bittorrent Client."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import { IntegrationSecrets } from '@site/src/components/integrations/secrets';
+import { IconDownload } from "@tabler/icons-react";
+import { transmissionIntegration } from '.';
+import Alert from '@theme/Admonition';
+import { downloadsWidget } from '@site/docs/widgets/downloads';
+
+
+<IntegrationHeader
+  integration={transmissionIntegration}
+  categories={['Torrent client']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{ widget: downloadsWidget }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['username', 'password'],
+    steps: [],
+}]} />

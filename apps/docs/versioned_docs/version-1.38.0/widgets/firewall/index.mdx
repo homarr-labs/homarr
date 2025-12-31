@@ -1,0 +1,33 @@
+---
+title: 'Firewall Monitoring'
+description: 'Displays a summary of firewalls.'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { firewallWidget } from '.';
+import { opnsenseIntegration } from '../../integrations/opnsense';
+
+
+<WidgetHeader
+  widget={firewallWidget}
+  categories={['Firewall']}
+/>
+
+### Screenshots
+
+![Firewall Widget](img/firewall_widget.png)
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: opnsenseIntegration,
+}]} />
+
+### Adding the widget
+
+<AddingWidget />

@@ -1,0 +1,67 @@
+---
+title: 'Download Client'
+description: 'Allows you to view and manage your Downloads from both Torrent and Usenet clients.'
+hide_title: true
+---
+
+import { delugeIntegration } from '@site/docs/integrations/deluge';
+import { nzbgetIntegration } from '@site/docs/integrations/nzbget';
+import { qBittorentIntegration } from '@site/docs/integrations/q-bittorent';
+import { sabnzbdIntegration } from '@site/docs/integrations/sabnzbd';
+import { transmissionIntegration } from '@site/docs/integrations/transmission';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { IconAd } from "@tabler/icons-react";
+import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
+import { downloadsWidget } from '.';
+
+
+<WidgetHeader
+  widget={downloadsWidget}
+  categories={['Torrent client', 'Usenet client', 'Downloads']}
+/>
+
+This widget displays a list of torrents or usenet-articles that are currently being downloaded, along with their progress and other relevant information.
+
+### Screenshots
+
+import downloadsCard from './img/screenshot.png';
+
+<div>
+    <img src={downloadsCard} alt="downloads" width={128 * 4} />
+</div>
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: sabnzbdIntegration,
+  note: "Usenet client"
+}, {
+  integration: nzbgetIntegration,
+  note: "Usenet client"
+}, {
+  integration: delugeIntegration,
+  note: "Torrent client"
+}, {
+  integration: transmissionIntegration,
+  note: "Torrent client"
+}, {
+  integration: qBittorentIntegration,
+  note: "Torrent client"
+}]} />
+
+### Interactions
+
+- Pause / Resume one download by clicking on the according icon.
+- Delete one download by clicking on the trash icon. (Can also delete the files)
+- Pause / Resume all downloads by using the bottom button.
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={downloadsWidget.configuration} />

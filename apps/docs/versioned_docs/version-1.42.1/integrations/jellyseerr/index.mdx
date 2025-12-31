@@ -1,0 +1,45 @@
+---
+title: 'Jellyseerr'
+description: "Jellyseerr is a self-hosted media request management system that integrates with Jellyfin and other media servers."
+hide_title: true
+---
+
+import { IntegrationHeader } from '@site/src/components/integrations/header';
+import { IntegrationCapabilites } from '@site/src/components/integrations/widgets';
+import { AddingIntegration } from '@site/src/components/integrations/adding';
+import {IntegrationSecrets} from '@site/src/components/integrations/secrets';
+import { IconZoomQuestion, IconChartBar, IconSearch } from "@tabler/icons-react";
+import { jellyseerrIntegration } from '.';
+import { mediaRequestListWidget } from '@site/docs/widgets/media-request-list';
+import { mediaRequestStatsWidget } from '@site/docs/widgets/media-request-stats';
+
+
+<IntegrationHeader
+  integration={jellyseerrIntegration}
+  categories={['Media requests']}
+/>
+
+### Widgets & Capabilities
+<IntegrationCapabilites
+    items={[{
+        widget: mediaRequestListWidget,
+    },{
+        widget: mediaRequestStatsWidget,
+    }, {
+        capability: {
+            icon: IconSearch,
+            name: "Search",
+            description: "Search for media and request it",
+            path: "../../management/search-engines/#integration"
+        }
+    }]}
+/>
+
+### Adding the integration
+<AddingIntegration />
+
+### Secrets
+<IntegrationSecrets secrets={[{
+    credentials: ['apiKey'],
+    steps: []
+}]} />

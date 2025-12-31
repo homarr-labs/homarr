@@ -1,0 +1,67 @@
+---
+title: 'Entity State'
+description: 'Display the state of an entity and toggle it optionally'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { IconAd } from "@tabler/icons-react";
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { smartHomeEntityStateWidget } from '.';
+import { homeAssistantIntegration } from '@site/docs/integrations/home-assistant';
+
+
+<WidgetHeader
+  widget={smartHomeEntityStateWidget}
+  categories={['Smart home']}
+/>
+
+The entity state enables you to display the current state of an entity.
+This works with most entities and enables you display almost any data. 
+It is recommended that you transform data on the integration as much as possible since Homarr's capabilities in transformation are very limited.
+
+### Screenshots
+
+import sun from './img/sun.png';
+import lightSwitch from './img/light-switch.png';
+import temperature from './img/temperature.png';
+
+<img src={sun} alt="smart-home-entity-state sun" width={128 * 1.5} height={128 * 1.5} />
+<img src={lightSwitch} alt="smart-home-entity-state light-switch" width={128 * 1.5} height={128 * 1.5} />
+<img src={temperature} alt="smart-home-entity-state temperature" width={128 * 1.5} height={128 * 1.5} />
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: homeAssistantIntegration,
+}]} />
+
+### Interactions
+
+- Toggle entity state by clicking on the entity (only when clickable enabled).
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={smartHomeEntityStateWidget.configuration} />
+
+### How to find the entity ID
+
+To find the entity ID in Home Assistant, follow these steps:
+1. Open Home Assistant and go to the **Developer Tools** section (usually found in the sidebar).
+2. Click on the **States** tab.
+3. In the list of entities, find the entity you want to use.
+4. The entity ID will be displayed in the format `domain.object_id` (e.g., `light.living_room_light`).
+5. Copy the entity ID and paste it into the widget configuration in Homarr. It will then show the State that is visible in Home Assistant.
+
+import retrieveEntityId from './img/retrieve-entity-id.png';
+
+<div>
+  <img src={retrieveEntityId} alt="homeassistant retrieve-entity-id" width={256 * 2} />
+</div>

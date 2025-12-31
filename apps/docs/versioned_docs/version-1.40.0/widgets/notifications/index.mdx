@@ -1,0 +1,39 @@
+---
+title: 'Notifications'
+description: 'Display notification history from an integration'
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { IconAd } from "@tabler/icons-react";
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { notificationsWidget } from '.';
+import { ntfyIntegration } from '@site/docs/integrations/ntfy';
+
+
+<WidgetHeader
+  widget={notificationsWidget}
+  categories={['Notifications', "Messaging"]}
+/>
+
+The notifications widget allows you to display notifications from various integrations in a unified view.
+
+### Screenshots
+
+import notificationsScreenshot from './img/notifications.png';
+
+<img src={notificationsScreenshot} alt="notifications" width={256} height={256} />
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: ntfyIntegration,
+}]} />
+
+### Adding the widget
+
+<AddingWidget />

@@ -1,0 +1,43 @@
+---
+tags:
+  - Background
+  - Jobs
+  - Tasks
+---
+
+# Tasks
+
+Homarr has background jobs for various tasks, most of them are for realtime widget updates.
+The tasks page allows you to run background jobs manually and configure them.
+
+![Tasks page](./img/tasks.png)
+
+## Opening the tasks page
+
+Navigate to `Management` > `Tools` > `Tasks`.
+The page is only accessible to users with admin permission.
+
+## Changing interval
+
+In the column `Schedule interval` you can change the interval in which the task runs.
+Different intervals are available, such as `1 minute`, `5 minutes`, `10 minutes`, `30 minutes`, and `1 hour`.
+All intervals are cron expressions, which means it will run the next time the cron expression matches the current time.
+
+## Actions
+
+You can find different actions for each task on the right side of a task item.
+
+### Run Manually
+
+To run a task manually, click the "Play" button, which will execute the task immediately.
+During the exection the badge will show `Running`.
+
+### Disabling / Enabling
+
+You can disable a task by clicking the "Power" button, which will change it to a "Power-Off" button.
+When a task is disabled, it will not run automatically according to its schedule.
+You can enable it again by clicking the "Power-Off" button, which will change it back to a "Power" button.
+Running a task manually is still possible when it is disabled.
+
+
+
