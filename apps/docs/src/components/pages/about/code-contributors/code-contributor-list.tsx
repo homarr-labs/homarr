@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-type Contributor = {
+interface Contributor {
   login: string;
   avatar_url: string;
-};
+}
 
 // do not add any real users here
 const blacklistedUsernames = ["deepsource-autofix[bot]", "deepsource-io[bot]", "renovate[bot]", "dependabot[bot]"];

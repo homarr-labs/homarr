@@ -1,5 +1,4 @@
 import Layout from "@theme/Layout";
-import React from "react";
 import { CodeContributorList } from "@site/src/components/pages/about/code-contributors/code-contributor-list";
 import { TranslationContributorList } from "@site/src/components/pages/about/translations-contributors/translation-constributor-list";
 

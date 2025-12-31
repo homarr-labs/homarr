@@ -119,7 +119,7 @@ export function CarbonCoverStrict() {
     // Reset possible global handle
     try {
       delete (window as any)._carbonads;
-    // biome-ignore lint/suspicious/noEmptyBlockStatements: <we want to catch the error>
+      // biome-ignore lint/suspicious/noEmptyBlockStatements: <we want to catch the error>
     } catch {}
 
     // Inject fresh cover script into our container

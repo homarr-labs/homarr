@@ -1,5 +1,5 @@
-import React from "react";
-import { IconAccessible, IconAdjustments, IconDragDrop, IconIcons, IconKey, IconLanguage, IconPlug, TablerIcon } from "@tabler/icons-react";
+
+import { IconAdjustments, IconDragDrop, IconIcons, IconKey, IconLanguage, IconPlug, TablerIcon } from "@tabler/icons-react";
 
 interface Feature {
   icon: TablerIcon;

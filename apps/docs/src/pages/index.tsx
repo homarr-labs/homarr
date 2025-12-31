@@ -1,5 +1,4 @@
 /** biome-ignore-all lint/style/noCommonJs: <explanation> */
-import React from "react";
 
 import Layout from "@theme/Layout";
 
@@ -10,7 +9,6 @@ import HomeHero from "../components/pages/home/hero/hero";
 import styles from "./index.module.css";
 import BrowserOnly from "@docusaurus/BrowserOnly";
 import { SectionContainer } from "@site/src/components/pages/home/container/section-container";
-import { DataflowVisualizationComponent } from "@site/src/components/pages/home/dataflow/dataflow";
 import { DragAndDropShowcase } from "@site/src/components/pages/home/drag-and-drop/drag-and-drop-showcase";
 import { AvailableIntegrations } from "@site/src/components/pages/home/integrations/available-integrations";
 

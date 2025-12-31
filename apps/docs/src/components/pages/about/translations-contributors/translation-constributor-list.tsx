@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-type Contributor = {
+interface Contributor {
   username: string;
   avatarUrl: string;
-};
+}
 
 export const TranslationContributorList = () => {
   const [contributors, setContributors] = useState<Contributor[]>([]);
