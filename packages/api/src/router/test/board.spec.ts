@@ -1372,10 +1372,12 @@ describe("saveLayouts should save layout changes", () => {
     const layout = await db.query.layouts.findFirst({
       where: not(eq(layouts.id, layoutId)),
     });
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await expectLayoutForRootLayoutAsync(db, sectionId, layout!.id, {
       ...assignments.inRoot,
       a: itemId,
     });
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await expectLayoutForDynamicSectionAsync(db, assignments.inRoot.f, layout!.id, assignments.inDynamicSection);
   });
   test("should update layout when present in input", async () => {

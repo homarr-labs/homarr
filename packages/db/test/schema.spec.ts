@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { objectEntries } from "@homarr/common";
 import type { Column, InferSelectModel } from "drizzle-orm";
@@ -204,26 +204,31 @@ test("schemas should match for postgresql", () => {
 });
 
 type SqliteTables = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof sqliteSchema]: (typeof sqliteSchema)[K] extends SQLiteTableWithColumns<any>
     ? InferSelectModel<(typeof sqliteSchema)[K]>
     : never;
 };
 type MysqlTables = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof mysqlSchema]: (typeof mysqlSchema)[K] extends MySqlTableWithColumns<any>
     ? InferSelectModel<(typeof mysqlSchema)[K]>
     : never;
 };
 
 type PostgresqlTables = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof postgresqlSchema]: (typeof postgresqlSchema)[K] extends PgTableWithColumns<any>
     ? InferSelectModel<(typeof postgresqlSchema)[K]>
     : never;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type InferColumnConfig<T extends Column<any, object>> =
   T extends Column<infer C, object> ? Omit<C, "columnType" | "enumValues" | "driverParam"> : never;
 
 type SqliteConfig = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof sqliteSchema]: (typeof sqliteSchema)[K] extends SQLiteTableWithColumns<any>
     ? {
         [C in keyof (typeof sqliteSchema)[K]["_"]["config"]["columns"]]: InferColumnConfig<
@@ -234,6 +239,7 @@ type SqliteConfig = {
 };
 
 type MysqlConfig = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof mysqlSchema]: (typeof mysqlSchema)[K] extends MySqlTableWithColumns<any>
     ? {
         [C in keyof (typeof mysqlSchema)[K]["_"]["config"]["columns"]]: InferColumnConfig<
@@ -244,6 +250,7 @@ type MysqlConfig = {
 };
 
 type PostgreisqlConfig = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof postgresqlSchema]: (typeof postgresqlSchema)[K] extends PgTableWithColumns<any>
     ? {
         [C in keyof (typeof postgresqlSchema)[K]["_"]["config"]["columns"]]: InferColumnConfig<

@@ -15,6 +15,7 @@ describe("splitEvents should split multi-day events into multiple single-day eve
     expect(result[1]?.startDate).toEqual(new Date(2025, 0, 2));
     // Because we want to end the event on the previous day, we have not the same endDate.
     // Otherwise there would be three single-day events, with the last being from 0:00 - 0:00
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(result[1]?.endDate).toEqual(new Date(event.endDate!.getTime() - 1));
   });
   test("2 day partial event should be split up into two events", () => {

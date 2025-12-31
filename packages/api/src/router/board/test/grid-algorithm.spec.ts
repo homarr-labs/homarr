@@ -289,8 +289,10 @@ const generateInputFromText = (text: string) => {
   const lines = text.split("\n").slice(1); // Remove first empty row
   const items: GridAlgorithmItem[] = [];
   for (let yOffset = 0; yOffset < lines.length; yOffset++) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const line = lines[yOffset]!;
     for (let xOffset = 0; xOffset < line.length; xOffset++) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const char = line[xOffset]!;
       if (char === " ") continue;
       if (items.some((item) => item.id === char)) continue;
@@ -349,6 +351,7 @@ const addItemToOccupied = (occupied2d: string[][], item: GridAlgorithmItem, posi
     if (!row) {
       addRow(occupied2d, columnCount);
       // After adding it, it must exist
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       row = occupied2d[position.y + yOffset]!;
     }
 

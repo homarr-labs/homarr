@@ -18,6 +18,7 @@ vi.mock("../env", () => {
     },
   };
 });
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 type HeadersExport = typeof import("next/headers");
 vi.mock("next/headers", async (importOriginal) => {
   const mod = await importOriginal<HeadersExport>();
