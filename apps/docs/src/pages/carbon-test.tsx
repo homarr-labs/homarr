@@ -1,4 +1,4 @@
-import React from "react";
+
 import Layout from "@theme/Layout";
 import { CarbonCoverStrict, CarbonCoverObserver, CarbonCoverCssOnlySecond } from "../components/carbon";
 

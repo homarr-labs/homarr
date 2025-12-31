@@ -1,4 +1,4 @@
-import { useColorMode } from "@docusaurus/theme-common";
+
 import clsx from "clsx";
 import { ReactNode } from "react";
 

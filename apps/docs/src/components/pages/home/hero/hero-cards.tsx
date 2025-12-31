@@ -1,7 +1,5 @@
-import clsx from "clsx";
-import { CSSProperties, ReactNode } from "react";
+
 import { AppWidget } from "./widgets/app-widget";
-import { WidgetCard } from "./widgets/card";
 import { ClockWidget } from "./widgets/clock-widget";
 import { DownloadsWidget } from "./widgets/downloads-widget";
 import { WeatherWidget } from "./widgets/weather-widget";
