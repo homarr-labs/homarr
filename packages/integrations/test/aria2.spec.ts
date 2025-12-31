@@ -6,6 +6,7 @@ import { beforeAll, describe, expect, test, vi } from "vitest";
 import { Aria2Integration } from "../src";
 
 vi.mock("@homarr/db", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = await importActual<typeof import("@homarr/db")>();
   return {
     ...actual,
@@ -13,6 +14,7 @@ vi.mock("@homarr/db", async (importActual) => {
   };
 });
 vi.mock("@homarr/core/infrastructure/certificates", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = await importActual<typeof import("@homarr/core/infrastructure/certificates")>();
   return {
     ...actual,

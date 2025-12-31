@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
 import fs from "fs/promises";
 import json5 from "json5";
 import { join } from "path";

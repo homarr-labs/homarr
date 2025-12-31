@@ -25,6 +25,7 @@ vi.mock("@homarr/request-handler/docker", () => ({
 }));
 vi.mock("@homarr/redis", () => ({
   createCacheChannel: () => ({
+    // eslint-disable-next-line @typescript-eslint/require-await
     consumeAsync: async () => ({
       timestamp: new Date().toISOString(),
       data: { containers: [] },

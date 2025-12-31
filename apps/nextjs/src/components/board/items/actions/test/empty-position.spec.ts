@@ -66,6 +66,7 @@ describe("get first empty position", () => {
   ])("should return the first empty position", (layout, size, expectedX, expectedY) => {
     const elements = createElementsFromLayout(layout);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const result = getFirstEmptyPosition(elements, layout[0]!.length, undefined, { width: size[0]!, height: size[1]! });
 
     expect(result).toEqual({ xOffset: expectedX, yOffset: expectedY });
@@ -100,6 +101,7 @@ describe("get first empty position", () => {
   ])("should return the first empty position with limited rows", (layout, size, expectedX, expectedY, rowCount) => {
     const elements = createElementsFromLayout(layout);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const result = getFirstEmptyPosition(elements, layout[0]!.length, rowCount, { width: size[0]!, height: size[1]! });
 
     expect(result).toEqual(expectedX !== undefined ? { xOffset: expectedX, yOffset: expectedY } : undefined);

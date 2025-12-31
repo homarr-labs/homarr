@@ -21,6 +21,7 @@ describe("i18n", () => {
     const result = schema.safeParse(null);
     expect(result.success).toBe(false);
     if (result.success) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expectError(result.error.issues[0]!, "required");
   });
   test("should return required error for empty string", () => {
@@ -28,6 +29,7 @@ describe("i18n", () => {
     const result = schema.safeParse("");
     expect(result.success).toBe(false);
     if (result.success) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expectError(result.error.issues[0]!, "required");
   });
   test("should return invalid email error", () => {
@@ -35,6 +37,7 @@ describe("i18n", () => {
     const result = schema.safeParse("invalid-email");
     expect(result.success).toBe(false);
     if (result.success) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expectError(result.error.issues[0]!, "invalidEmail");
   });
   test("should return startsWith error", () => {
@@ -42,6 +45,7 @@ describe("i18n", () => {
     const result = schema.safeParse("invalid");
     expect(result.success).toBe(false);
     if (result.success) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expectError(result.error.issues[0]!, "startsWith");
   });
   test("should return endsWith error", () => {
@@ -49,6 +53,7 @@ describe("i18n", () => {
     const result = schema.safeParse("invalid");
     expect(result.success).toBe(false);
     if (result.success) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expectError(result.error.issues[0]!, "endsWith");
   });
   test("should return includes error", () => {
@@ -56,6 +61,7 @@ describe("i18n", () => {
     const result = schema.safeParse("invalid");
     expect(result.success).toBe(false);
     if (result.success) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expectError(result.error.issues[0]!, "includes");
   });
   test("should return tooSmall error for string", () => {
@@ -63,6 +69,7 @@ describe("i18n", () => {
     const result = schema.safeParse("test");
     expect(result.success).toBe(false);
     if (result.success) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expectError(result.error.issues[0]!, "tooSmall.string");
   });
   test("should return tooSmall error for number", () => {
@@ -70,6 +77,7 @@ describe("i18n", () => {
     const result = schema.safeParse(3);
     expect(result.success).toBe(false);
     if (result.success) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expectError(result.error.issues[0]!, "tooSmall.number");
   });
   test("should return tooBig error for string", () => {
@@ -77,6 +85,7 @@ describe("i18n", () => {
     const result = schema.safeParse("too long");
     expect(result.success).toBe(false);
     if (result.success) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expectError(result.error.issues[0]!, "tooBig.string");
   });
   test("should return tooBig error for number", () => {
@@ -84,6 +93,7 @@ describe("i18n", () => {
     const result = schema.safeParse(10);
     expect(result.success).toBe(false);
     if (result.success) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expectError(result.error.issues[0]!, "tooBig.number");
   });
   test("should return custom error", () => {
@@ -97,6 +107,7 @@ describe("i18n", () => {
     const result = schema.safeParse("invalid");
     expect(result.success).toBe(false);
     if (result.success) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expectError(result.error.issues[0]!, "boardAlreadyExists");
   });
 });

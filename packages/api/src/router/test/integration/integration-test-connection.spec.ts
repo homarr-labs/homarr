@@ -5,6 +5,7 @@ import { describe, expect, test, vi } from "vitest";
 import { testConnectionAsync } from "../../integration/integration-test-connection";
 
 vi.mock("@homarr/common/server", async (importActual) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = await importActual<typeof import("@homarr/common/server")>();
 
   return {
