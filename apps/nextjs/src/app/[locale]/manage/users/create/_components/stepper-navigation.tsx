@@ -1,7 +1,8 @@
-import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
 import { Button, Card, Group } from "@mantine/core";
 import { IconArrowBackUp, IconArrowLeft, IconArrowRight, IconRotate } from "@tabler/icons-react";
+
+import { useI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 
 interface StepperNavigationComponentProps {
   hasPrevious: boolean;
@@ -27,7 +28,11 @@ export const StepperNavigationComponent = ({
     <Card shadow="md" withBorder>
       {!isComplete ? (
         <Group justify="space-between" wrap="nowrap">
-          <Button leftSection={<IconArrowLeft size="1rem" />} disabled={!hasPrevious || isLoadingNextStep} onClick={prevStep}>
+          <Button
+            leftSection={<IconArrowLeft size="1rem" />}
+            disabled={!hasPrevious || isLoadingNextStep}
+            onClick={prevStep}
+          >
             {t("common.action.previous")}
           </Button>
           <Button

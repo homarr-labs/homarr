@@ -1,17 +1,26 @@
 "use client";
 
+import type { PropsWithChildren } from "react";
+import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+import {
+  createWSClient,
+  httpBatchStreamLink,
+  httpLink,
+  isNonJsonSerializable,
+  loggerLink,
+  splitLink,
+  wsLink,
+} from "@trpc/client";
+import superjson from "superjson";
+import type { SuperJSONResult } from "superjson";
+
 import type { AppRouter } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { createHeadersCallbackForSource, getTrpcUrl } from "@homarr/api/shared";
 import { env } from "@homarr/common/env";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
-import { createWSClient, httpBatchStreamLink, httpLink, isNonJsonSerializable, loggerLink, splitLink, wsLink } from "@trpc/client";
-import type { PropsWithChildren } from "react";
-import { useState } from "react";
-import type { SuperJSONResult } from "superjson";
-import superjson from "superjson";
 
 const getWebSocketProtocol = () => {
   // window is not defined on server side
@@ -55,7 +64,8 @@ export function TRPCReactProvider(props: PropsWithChildren) {
     return clientApi.createClient({
       links: [
         loggerLink({
-          enabled: (opts) => env.NODE_ENV === "development" || (opts.direction === "down" && opts.result instanceof Error),
+          enabled: (opts) =>
+            env.NODE_ENV === "development" || (opts.direction === "down" && opts.result instanceof Error),
         }),
         splitLink({
           condition: ({ type }) => type === "subscription",

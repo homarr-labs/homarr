@@ -1,5 +1,6 @@
-import * as boardContext from "@homarr/boards/context";
 import { describe, expect, test, vi } from "vitest";
+
+import * as boardContext from "@homarr/boards/context";
 
 import { moveAndResizeItemCallback } from "../move-and-resize-item";
 import { BoardMockBuilder } from "./mocks/board-mock";
@@ -30,8 +31,12 @@ describe("moveItemToSectionCallback should move item in section", () => {
     expect(updatedBoard.items).toHaveLength(3);
     const movedItem = updatedBoard.items.find((item) => item.id === itemToMove);
     expect(movedItem).not.toBeUndefined();
-    expect(movedItem?.layouts.find((layout) => layout.layoutId === layoutId)).toEqual(expect.objectContaining(newPosition));
-    const otherItemLayouts = updatedBoard.items.filter((item) => item.id !== itemToMove).flatMap((item) => item.layouts);
+    expect(movedItem?.layouts.find((layout) => layout.layoutId === layoutId)).toEqual(
+      expect.objectContaining(newPosition),
+    );
+    const otherItemLayouts = updatedBoard.items
+      .filter((item) => item.id !== itemToMove)
+      .flatMap((item) => item.layouts);
     expect(otherItemLayouts).not.toContainEqual(expect.objectContaining(newPosition));
   });
   test("should not move item if item not found", () => {

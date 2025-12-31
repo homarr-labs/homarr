@@ -1,7 +1,8 @@
+import { Suspense } from "react";
+import { UnstyledButton } from "@mantine/core";
+
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
-import { UnstyledButton } from "@mantine/core";
-import { Suspense } from "react";
 
 import { CurrentUserAvatar } from "~/components/user-avatar";
 import { UserAvatarMenu } from "~/components/user-avatar-menu";

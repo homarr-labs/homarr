@@ -6,9 +6,10 @@ import Editor from "react-simple-code-editor";
 
 import "~/styles/prismjs.scss";
 
+import { IconInfoCircle } from "@tabler/icons-react";
+
 import { useForm } from "@homarr/form";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { IconInfoCircle } from "@tabler/icons-react";
 
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";

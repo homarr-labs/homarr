@@ -1,9 +1,6 @@
 "use client";
 
-import { useEditMode } from "@homarr/boards/edit-mode";
-import type { MaybePromise } from "@homarr/common/types";
-import { useScopedI18n } from "@homarr/translation/client";
-import type { TablerIcon } from "@homarr/ui";
+import React, { useMemo } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
 import {
   IconDotsVertical,
@@ -15,7 +12,11 @@ import {
   IconTransitionTop,
   IconTrash,
 } from "@tabler/icons-react";
-import React, { useMemo } from "react";
+
+import { useEditMode } from "@homarr/boards/edit-mode";
+import type { MaybePromise } from "@homarr/common/types";
+import { useScopedI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
 import { useCategoryMenuActions } from "./category-menu-actions";
@@ -60,11 +61,15 @@ const useActions = (category: CategorySection) => {
   const editModeActions = useEditModeActions(category);
   const nonEditModeActions = useNonEditModeActions(category);
 
-  return useMemo(() => (isEditMode ? editModeActions : nonEditModeActions), [isEditMode, editModeActions, nonEditModeActions]);
+  return useMemo(
+    () => (isEditMode ? editModeActions : nonEditModeActions),
+    [isEditMode, editModeActions, nonEditModeActions],
+  );
 };
 
 const useEditModeActions = (category: CategorySection) => {
-  const { addCategoryAbove, addCategoryBelow, moveCategoryUp, moveCategoryDown, edit, remove } = useCategoryMenuActions(category);
+  const { addCategoryAbove, addCategoryBelow, moveCategoryUp, moveCategoryDown, edit, remove } =
+    useCategoryMenuActions(category);
 
   return [
     {

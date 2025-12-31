@@ -1,16 +1,20 @@
 "use client";
 
+import type { PropsWithChildren } from "react";
+import type { MantineColorScheme, MantineColorSchemeManager } from "@mantine/core";
+import { createTheme, DirectionProvider, MantineProvider } from "@mantine/core";
+import dayjs from "dayjs";
+
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { parseCookies, setClientCookie } from "@homarr/common";
 import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemeCookieKey } from "@homarr/definitions";
-import type { MantineColorScheme, MantineColorSchemeManager } from "@mantine/core";
-import { createTheme, DirectionProvider, MantineProvider } from "@mantine/core";
-import dayjs from "dayjs";
-import type { PropsWithChildren } from "react";
 
-export const CustomMantineProvider = ({ children, defaultColorScheme }: PropsWithChildren<{ defaultColorScheme: ColorScheme }>) => {
+export const CustomMantineProvider = ({
+  children,
+  defaultColorScheme,
+}: PropsWithChildren<{ defaultColorScheme: ColorScheme }>) => {
   const manager = useColorSchemeManager();
   return (
     <DirectionProvider>

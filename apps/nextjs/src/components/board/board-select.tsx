@@ -1,7 +1,8 @@
-import type { SelectWithCustomItemsProps } from "@homarr/ui";
-import { SelectWithCustomItems } from "@homarr/ui";
 import { Group, Text } from "@mantine/core";
 import { IconLayoutDashboard } from "@tabler/icons-react";
+
+import type { SelectWithCustomItemsProps } from "@homarr/ui";
+import { SelectWithCustomItems } from "@homarr/ui";
 
 import type { Board } from "~/app/[locale]/boards/_types";
 
@@ -20,7 +21,7 @@ export const BoardSelect = ({ boards, ...props }: BoardSelectProps) => {
       }))}
       SelectOption={({ label, image }: { value: string; label: string; image: string | null }) => (
         <Group>
-          {/** biome-ignore lint/performance/noImgElement: <We need it for the image> */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           {image ? <img width={16} height={16} src={image} alt={label} /> : <IconLayoutDashboard size={16} />}
           <Text fz="sm" fw={500}>
             {label}

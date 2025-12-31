@@ -1,5 +1,8 @@
 "use client";
 
+import { useCallback } from "react";
+import { Button, Group, Stack, TextInput } from "@mantine/core";
+
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -7,8 +10,6 @@ import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { userEditProfileSchema } from "@homarr/validation/user";
-import { Button, Group, Stack, TextInput } from "@mantine/core";
-import { useCallback } from "react";
 
 interface UserProfileFormProps {
   user: RouterOutputs["user"]["getById"];
@@ -33,7 +34,9 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
     },
     onError(error) {
       const message =
-        error.data?.code === "CONFLICT" ? t("user.error.usernameTaken") : t("user.action.editProfile.notification.error.message");
+        error.data?.code === "CONFLICT"
+          ? t("user.error.usernameTaken")
+          : t("user.action.editProfile.notification.error.message");
       showErrorNotification({
         title: t("common.notification.update.error"),
         message,
@@ -64,8 +67,17 @@ export const UserProfileForm = ({ user }: UserProfileFormProps) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
-        <TextInput disabled={!isProviderCredentials} label={t("user.field.username.label")} withAsterisk {...form.getInputProps("name")} />
-        <TextInput disabled={!isProviderCredentials} label={t("user.field.email.label")} {...form.getInputProps("email")} />
+        <TextInput
+          disabled={!isProviderCredentials}
+          label={t("user.field.username.label")}
+          withAsterisk
+          {...form.getInputProps("name")}
+        />
+        <TextInput
+          disabled={!isProviderCredentials}
+          label={t("user.field.email.label")}
+          {...form.getInputProps("email")}
+        />
 
         {isProviderCredentials && (
           <Group justify="end">

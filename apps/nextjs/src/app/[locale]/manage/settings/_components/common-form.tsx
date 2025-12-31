@@ -1,11 +1,12 @@
 "use client";
 
+import { Button, Group, Stack } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { ServerSettings } from "@homarr/server-settings";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { Button, Group, Stack } from "@mantine/core";
 
 export const CommonSettingsForm = <TKey extends keyof ServerSettings>({
   settingKey,

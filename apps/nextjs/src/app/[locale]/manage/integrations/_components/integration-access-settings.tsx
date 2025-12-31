@@ -1,10 +1,11 @@
 "use client";
 
+import { IconPlayerPlay, IconSelector, IconSettings } from "@tabler/icons-react";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { integrationPermissions, integrationPermissionsMap } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
-import { IconPlayerPlay, IconSelector, IconSettings } from "@tabler/icons-react";
 
 import { AccessSettings } from "~/components/access/access-settings";
 

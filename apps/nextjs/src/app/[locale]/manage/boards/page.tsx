@@ -1,8 +1,3 @@
-import type { RouterOutputs } from "@homarr/api";
-import { api } from "@homarr/api/server";
-import { auth } from "@homarr/auth/next";
-import { getScopedI18n } from "@homarr/translation/server";
-import { Link, UserAvatar } from "@homarr/ui";
 import {
   ActionIcon,
   Badge,
@@ -20,6 +15,12 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { IconDeviceMobile, IconDotsVertical, IconHomeFilled, IconLock, IconWorld } from "@tabler/icons-react";
+
+import type { RouterOutputs } from "@homarr/api";
+import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
+import { getScopedI18n } from "@homarr/translation/server";
+import { Link, UserAvatar } from "@homarr/ui";
 
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { ManageContainer } from "~/components/manage/manage-container";
@@ -106,7 +107,13 @@ const BoardCard = async ({ board }: BoardCardProps) => {
 
       <CardSection>
         <Group gap={0} wrap="nowrap">
-          <Button style={{ border: "none", borderRadius: 0 }} component={Link} href={`/boards/${board.name}`} variant="default" fullWidth>
+          <Button
+            style={{ border: "none", borderRadius: 0 }}
+            component={Link}
+            href={`/boards/${board.name}`}
+            variant="default"
+            fullWidth
+          >
             {t("action.open.label")}
           </Button>
           {isMenuVisible && (

@@ -7,7 +7,11 @@ describe("removeItemCallback should remove item from board", () => {
   test("should remove correct item from board", () => {
     // Arrange
     const itemIdToRemove = "2";
-    const board = new BoardMockBuilder().addItem({ id: "1" }).addItem({ id: itemIdToRemove }).addItem({ id: "3" }).build();
+    const board = new BoardMockBuilder()
+      .addItem({ id: "1" })
+      .addItem({ id: itemIdToRemove })
+      .addItem({ id: "3" })
+      .build();
 
     // Act
     const updatedBoard = removeItemCallback({ itemId: itemIdToRemove })(board);

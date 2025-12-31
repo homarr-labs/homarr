@@ -1,12 +1,13 @@
 "use client";
 
+import { ActionIcon, Tooltip } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { ActionIcon, Tooltip } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
 
 interface DeleteMediaProps {
   media: RouterOutputs["media"]["getPaginated"]["items"][number];

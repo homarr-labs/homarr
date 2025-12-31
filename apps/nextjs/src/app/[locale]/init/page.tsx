@@ -1,9 +1,10 @@
+import type { JSX } from "react";
+import { Box, Center, Stack, Text, Title } from "@mantine/core";
+
 import { api } from "@homarr/api/server";
 import type { MaybePromise } from "@homarr/common/types";
 import type { OnboardingStep } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
-import { Box, Center, Stack, Text, Title } from "@mantine/core";
-import type { JSX } from "react";
 
 import { CurrentColorSchemeCombobox } from "~/components/color-scheme/current-color-scheme-combobox";
 import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";

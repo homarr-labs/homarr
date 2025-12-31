@@ -1,9 +1,10 @@
+import { notFound } from "next/navigation";
+import { Alert, Stack, Title } from "@mantine/core";
+import { IconExclamationCircle } from "@tabler/icons-react";
+
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
-import { Alert, Stack, Title } from "@mantine/core";
-import { IconExclamationCircle } from "@tabler/icons-react";
-import { notFound } from "next/navigation";
 
 import { GroupHomeBoards } from "./_group-home-boards";
 

@@ -1,5 +1,6 @@
-import { getScopedI18n } from "@homarr/translation/server";
 import { IconLayoutOff } from "@tabler/icons-react";
+
+import { getScopedI18n } from "@homarr/translation/server";
 
 import { BoardNotFound } from "~/components/board/not-found";
 

@@ -1,14 +1,18 @@
 "use client";
 
-import { useRequiredBoard } from "@homarr/boards/context";
-import type { ColorScheme } from "@homarr/definitions";
+import type { PropsWithChildren } from "react";
 import type { MantineColorsTuple } from "@mantine/core";
 import { colorsTuple, createTheme, darken, lighten, MantineProvider, rem } from "@mantine/core";
-import type { PropsWithChildren } from "react";
+
+import { useRequiredBoard } from "@homarr/boards/context";
+import type { ColorScheme } from "@homarr/definitions";
 
 import { useColorSchemeManager } from "../../_client-providers/mantine";
 
-export const BoardMantineProvider = ({ children, defaultColorScheme }: PropsWithChildren<{ defaultColorScheme: ColorScheme }>) => {
+export const BoardMantineProvider = ({
+  children,
+  defaultColorScheme,
+}: PropsWithChildren<{ defaultColorScheme: ColorScheme }>) => {
   const board = useRequiredBoard();
   const colorSchemeManager = useColorSchemeManager();
 

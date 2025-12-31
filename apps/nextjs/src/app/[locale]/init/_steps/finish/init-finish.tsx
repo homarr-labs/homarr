@@ -1,13 +1,14 @@
+import type { MantineColor } from "@mantine/core";
+import { Button, Card, Stack, Text } from "@mantine/core";
+import { IconBook2, IconCategoryPlus, IconLayoutDashboard, IconMailForward } from "@tabler/icons-react";
+
 import { isProviderEnabled } from "@homarr/auth/server";
 import { getMantineColor } from "@homarr/common";
 import { db } from "@homarr/db";
 import { createDocumentationLink } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
-import type { TablerIcon } from "@homarr/ui";
 import { Link } from "@homarr/ui";
-import type { MantineColor } from "@mantine/core";
-import { Button, Card, Stack, Text } from "@mantine/core";
-import { IconBook2, IconCategoryPlus, IconLayoutDashboard, IconMailForward } from "@tabler/icons-react";
+import type { TablerIcon } from "@homarr/ui";
 
 export const InitFinish = async () => {
   const firstBoard = await db.query.boards.findFirst({ columns: { name: true } });
@@ -26,13 +27,19 @@ export const InitFinish = async () => {
             {tFinish("action.goToBoard", { name: firstBoard.name })}
           </InternalLinkButton>
         ) : (
-          <InternalLinkButton href="/auth/login?callbackUrl=/manage/boards" iconProps={{ icon: IconCategoryPlus, color: "blue" }}>
+          <InternalLinkButton
+            href="/auth/login?callbackUrl=/manage/boards"
+            iconProps={{ icon: IconCategoryPlus, color: "blue" }}
+          >
             {tFinish("action.createBoard")}
           </InternalLinkButton>
         )}
 
         {isProviderEnabled("credentials") && (
-          <InternalLinkButton href="/auth/login?callbackUrl=/manage/users/invites" iconProps={{ icon: IconMailForward, color: "pink" }}>
+          <InternalLinkButton
+            href="/auth/login?callbackUrl=/manage/users/invites"
+            iconProps={{ icon: IconMailForward, color: "pink" }}
+          >
             {tFinish("action.inviteUser")}
           </InternalLinkButton>
         )}

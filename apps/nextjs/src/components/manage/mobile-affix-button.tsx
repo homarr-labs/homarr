@@ -1,6 +1,6 @@
+import { forwardRef } from "react";
 import type { ButtonProps } from "@mantine/core";
 import { Affix, Button, createPolymorphicComponent } from "@mantine/core";
-import { forwardRef } from "react";
 
 type MobileAffixButtonProps = Omit<ButtonProps, "visibleFrom" | "hiddenFrom">;
 

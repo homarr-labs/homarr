@@ -15,7 +15,7 @@
     "db:migration:sqlite:run": "pnpm -F db migration:sqlite:run",
     "db:push": "pnpm -F db push:sqlite",
     "db:studio": "pnpm -F db studio",
-    "dev": "turbo dev --parallel --filter='!docs'",
+    "dev": "turbo dev --parallel",
     "docker:dev": "docker compose -f ./development/development.docker-compose.yml up",
     "format": "biome format",
     "format:fix": "biome format --write",
@@ -39,13 +39,6 @@
     "test:e2e": "cross-env NODE_ENV=development CI=true vitest e2e",
     "test:ui": "cross-env NODE_ENV=development CI=true vitest --exclude e2e --ui --coverage.enabled",
     "typecheck": "turbo typecheck",
-    "docs:dev": "pnpm -F docs dev",
-    "docs:build": "pnpm -F docs build",
-    "docs:serve": "pnpm -F docs serve",
-    "docs:clear": "pnpm -F docs clear",
-    "docs:typecheck": "pnpm -F docs typecheck",
-    "docs:write-translations": "pnpm -F docs write-translations",
-    "docs:write-heading-ids": "pnpm -F docs write-heading-ids",
     "with-env": "dotenv -e .env --"
   },
   "devDependencies": {

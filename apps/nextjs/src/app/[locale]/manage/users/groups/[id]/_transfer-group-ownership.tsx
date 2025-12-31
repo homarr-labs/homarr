@@ -1,12 +1,13 @@
 "use client";
 
+import { useCallback, useState } from "react";
+import { Button, useMatches } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { Button, useMatches } from "@mantine/core";
-import { useCallback, useState } from "react";
 
 import { UserSelectModal } from "~/components/access/user-select-modal";
 

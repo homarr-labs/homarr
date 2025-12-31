@@ -1,22 +1,25 @@
 "use client";
 
-import type { RouterOutputs } from "@homarr/api";
-import type { IntegrationSecretKind } from "@homarr/definitions";
-import { integrationSecretKindObject } from "@homarr/definitions";
-import { useI18n } from "@homarr/translation/client";
+import { useState } from "react";
 import { ActionIcon, Avatar, Badge, Button, Card, Collapse, Group, Kbd, Stack, Text, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useState } from "react";
+
+import type { RouterOutputs } from "@homarr/api";
+import type { IntegrationSecretKind } from "@homarr/definitions";
+import { integrationSecretKindObject } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 
 import { integrationSecretIcons } from "./integration-secret-icons";
 
 dayjs.extend(relativeTime);
 
 interface SecretCardProps {
-  secret: RouterOutputs["integration"]["byId"]["secrets"][number] | { kind: IntegrationSecretKind; value: null; updatedAt: null };
+  secret:
+    | RouterOutputs["integration"]["byId"]["secrets"][number]
+    | { kind: IntegrationSecretKind; value: null; updatedAt: null };
   children: React.ReactNode;
   onCancel: () => Promise<boolean>;
 }

@@ -1,10 +1,5 @@
-import { api } from "@homarr/api/server";
-import { capitalize } from "@homarr/common";
-import { db } from "@homarr/db";
-import { getServerSettingByKeyAsync } from "@homarr/db/queries";
-import type { TranslationObject } from "@homarr/translation";
-import { getScopedI18n } from "@homarr/translation/server";
-import type { TablerIcon } from "@homarr/ui";
+import type { PropsWithChildren } from "react";
+import { notFound } from "next/navigation";
 import { AccordionControl, AccordionItem, AccordionPanel, Container, Stack, Text, Title } from "@mantine/core";
 import {
   IconAlertTriangle,
@@ -17,8 +12,14 @@ import {
   IconUser,
 } from "@tabler/icons-react";
 import { TRPCError } from "@trpc/server";
-import { notFound } from "next/navigation";
-import type { PropsWithChildren } from "react";
+
+import { api } from "@homarr/api/server";
+import { capitalize } from "@homarr/common";
+import { db } from "@homarr/db";
+import { getServerSettingByKeyAsync } from "@homarr/db/queries";
+import type { TranslationObject } from "@homarr/translation";
+import { getScopedI18n } from "@homarr/translation/server";
+import type { TablerIcon } from "@homarr/ui";
 
 import { getBoardPermissionsAsync } from "~/components/board/permissions/server";
 import { ActiveTabAccordion } from "../../../../../components/active-tab-accordion";
@@ -110,7 +111,9 @@ export default async function BoardSettingsPage(props: Props) {
               </AccordionItemFor>
               <AccordionItemFor value="dangerZone" icon={IconAlertTriangle} danger noPadding>
                 <DangerZoneSettingsContent
-                  hideVisibility={boardSettings.homeBoardId === board.id || boardSettings.mobileHomeBoardId === board.id}
+                  hideVisibility={
+                    boardSettings.homeBoardId === board.id || boardSettings.mobileHomeBoardId === board.id
+                  }
                 />
               </AccordionItemFor>
             </>
@@ -149,7 +152,9 @@ const AccordionItemFor = async ({ value, children, icon: Icon, danger, noPadding
           {t(`${value}.title`)}
         </Text>
       </AccordionControl>
-      <AccordionPanel styles={noPadding ? { content: { paddingRight: 0, paddingLeft: 0 } } : undefined}>{children}</AccordionPanel>
+      <AccordionPanel styles={noPadding ? { content: { paddingRight: 0, paddingLeft: 0 } } : undefined}>
+        {children}
+      </AccordionPanel>
     </AccordionItem>
   );
 };

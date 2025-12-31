@@ -1,5 +1,11 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Alert, Anchor, Button, ButtonGroup, Fieldset, Group, Stack, Text, TextInput } from "@mantine/core";
+import { IconInfoCircle, IconPencil, IconPlus, IconUnlink } from "@tabler/icons-react";
+import { z } from "zod/v4";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -12,11 +18,6 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { integrationUpdateSchema } from "@homarr/validation/integration";
-import { Alert, Anchor, Button, ButtonGroup, Fieldset, Group, Stack, Text, TextInput } from "@mantine/core";
-import { IconInfoCircle, IconPencil, IconPlus, IconUnlink } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { z } from "zod/v4";
 
 import { SecretCard } from "../../_components/secrets/integration-secret-card";
 import { IntegrationSecretInput } from "../../_components/secrets/integration-secret-inputs";
@@ -71,7 +72,9 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
   const secretsMap = new Map(integration.secrets.map((secret) => [secret.kind, secret]));
 
   const handleSubmitAsync = async ({ app, ...values }: FormType) => {
-    const url = hasUrlSecret ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin : values.url;
+    const url = hasUrlSecret
+      ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
+      : values.url;
     await mutateAsync(
       {
         id: integration.id,
@@ -120,12 +123,18 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
       <Stack>
         <TextInput withAsterisk label={t("integration.field.name.label")} {...form.getInputProps("name")} />
 
-        {hasUrlSecret ? null : <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />}
+        {hasUrlSecret ? null : (
+          <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
+        )}
 
         <Fieldset legend={t("integration.secrets.title")}>
           <Stack gap="sm">
             {allSecretKinds.length > 1 && (
-              <SecretKindsSegmentedControl defaultKinds={initialSecretsKinds} secretKinds={allSecretKinds} form={form} />
+              <SecretKindsSegmentedControl
+                defaultKinds={initialSecretsKinds}
+                secretKinds={allSecretKinds}
+                form={form}
+              />
             )}
             {!isInitialSecretKinds
               ? null
@@ -162,7 +171,12 @@ export const EditIntegrationForm = ({ integration }: EditIntegrationForm) => {
             {isInitialSecretKinds
               ? null
               : form.values.secrets.map(({ kind }, index) => (
-                  <IntegrationSecretInput withAsterisk key={kind} kind={kind} {...form.getInputProps(`secrets.${index}.value`)} />
+                  <IntegrationSecretInput
+                    withAsterisk
+                    key={kind}
+                    kind={kind}
+                    {...form.getInputProps(`secrets.${index}.value`)}
+                  />
                 ))}
             {form.values.secrets.length === 0 && (
               <Alert icon={<IconInfoCircle size={"1rem"} />} color={"blue"}>
@@ -215,7 +229,13 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
 
   if (!value) {
     return (
-      <Button variant="subtle" color="gray" leftSection={<IconPlus size={16} stroke={1.5} />} fullWidth onClick={handleChange}>
+      <Button
+        variant="subtle"
+        color="gray"
+        leftSection={<IconPlus size={16} stroke={1.5} />}
+        fullWidth
+        onClick={handleChange}
+      >
         {t("integration.page.edit.app.action.add")}
       </Button>
     );
@@ -239,10 +259,20 @@ const IntegrationLinkApp = ({ value, onChange }: IntegrationAppSelectProps) => {
           </Stack>
         </Group>
         <ButtonGroup>
-          <Button variant="subtle" color="gray" leftSection={<IconUnlink size={16} stroke={1.5} />} onClick={() => onChange(null)}>
+          <Button
+            variant="subtle"
+            color="gray"
+            leftSection={<IconUnlink size={16} stroke={1.5} />}
+            onClick={() => onChange(null)}
+          >
             {t("integration.page.edit.app.action.remove")}
           </Button>
-          <Button variant="subtle" color="gray" leftSection={<IconPencil size={16} stroke={1.5} />} onClick={handleChange}>
+          <Button
+            variant="subtle"
+            color="gray"
+            leftSection={<IconPencil size={16} stroke={1.5} />}
+            onClick={handleChange}
+          >
             {t("common.action.change")}
           </Button>
         </ButtonGroup>

@@ -1,13 +1,14 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { Button, Grid, Group, Loader, Stack, TextInput } from "@mantine/core";
+import { useDebouncedValue, useDocumentTitle, useFavicon } from "@mantine/hooks";
+
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { useZodForm } from "@homarr/form";
 import { IconPicker } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
 import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
-import { Button, Grid, Group, Loader, Stack, TextInput } from "@mantine/core";
-import { useDebouncedValue, useDocumentTitle, useFavicon } from "@mantine/hooks";
-import { useEffect, useRef } from "react";
 
 import { createMetaTitle } from "~/metadata";
 import type { Board } from "../../_types";
@@ -83,7 +84,11 @@ export const GeneralSettingsContent = ({ board }: Props) => {
       <Stack>
         <Grid>
           <Grid.Col span={{ xs: 12, md: 6 }}>
-            <TextInput label={t("board.field.pageTitle.label")} placeholder="Homarr" {...form.getInputProps("pageTitle")} />
+            <TextInput
+              label={t("board.field.pageTitle.label")}
+              placeholder="Homarr"
+              {...form.getInputProps("pageTitle")}
+            />
           </Grid.Col>
           <Grid.Col span={{ xs: 12, md: 6 }}>
             <TextInput

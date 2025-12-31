@@ -38,7 +38,10 @@ export const moveCategoryCallback =
           };
         }
 
-        if (section.yOffset === currentCategory.yOffset + offset || section.yOffset === currentCategory.yOffset + offset + 1) {
+        if (
+          section.yOffset === currentCategory.yOffset + offset ||
+          section.yOffset === currentCategory.yOffset + offset + 1
+        ) {
           return {
             ...section,
             yOffset: section.yOffset - offset,

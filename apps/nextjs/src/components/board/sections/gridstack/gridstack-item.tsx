@@ -1,10 +1,11 @@
-import type { SectionKind, WidgetKind } from "@homarr/definitions";
-import type { GridItemHTMLElement } from "@homarr/gridstack";
+import { useEffect } from "react";
+import type { PropsWithChildren } from "react";
 import type { BoxProps } from "@mantine/core";
 import { Box } from "@mantine/core";
 import combineClasses from "clsx";
-import type { PropsWithChildren } from "react";
-import { useEffect } from "react";
+
+import type { SectionKind, WidgetKind } from "@homarr/definitions";
+import type { GridItemHTMLElement } from "@homarr/gridstack";
 
 interface Props extends BoxProps {
   id: string;

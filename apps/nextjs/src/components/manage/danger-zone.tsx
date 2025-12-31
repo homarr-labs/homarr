@@ -1,6 +1,7 @@
-import { getI18n } from "@homarr/translation/server";
-import { Card, CardSection, Divider, Group, Stack, Text, Title } from "@mantine/core";
 import { Fragment } from "react";
+import { Card, CardSection, Divider, Group, Stack, Text, Title } from "@mantine/core";
+
+import { getI18n } from "@homarr/translation/server";
 
 interface DangerZoneRootProps {
   children: React.ReactNode[] | React.ReactNode;

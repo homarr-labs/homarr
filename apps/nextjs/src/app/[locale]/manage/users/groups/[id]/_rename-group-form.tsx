@@ -1,13 +1,14 @@
 "use client";
 
+import { useCallback } from "react";
+import { Button, Group, Stack, TextInput } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { groupUpdateSchema } from "@homarr/validation/group";
-import { Button, Group, Stack, TextInput } from "@mantine/core";
-import { useCallback } from "react";
 
 interface RenameGroupFormProps {
   group: {

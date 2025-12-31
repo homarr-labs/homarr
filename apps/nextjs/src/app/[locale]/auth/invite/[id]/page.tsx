@@ -1,10 +1,11 @@
+import { notFound } from "next/navigation";
+import { Card, Center, Stack, Text, Title } from "@mantine/core";
+
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { and, db, eq } from "@homarr/db";
 import { invites } from "@homarr/db/schema";
 import { getScopedI18n } from "@homarr/translation/server";
-import { Card, Center, Stack, Text, Title } from "@mantine/core";
-import { notFound } from "next/navigation";
 
 import { HomarrLogoWithTitle } from "~/components/layout/logo/homarr-logo";
 import { RegistrationForm } from "./_registration-form";

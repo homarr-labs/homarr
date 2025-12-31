@@ -1,6 +1,7 @@
+import { notFound } from "next/navigation";
+
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/docker/env";
-import { notFound } from "next/navigation";
 
 import { ClusterDashboard } from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/cluster-dashboard";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";

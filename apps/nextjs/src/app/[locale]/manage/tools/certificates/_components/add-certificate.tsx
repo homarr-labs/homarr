@@ -1,10 +1,11 @@
 "use client";
 
+import { Button } from "@mantine/core";
+
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useModalAction } from "@homarr/modals";
 import { AddCertificateModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
-import { Button } from "@mantine/core";
 
 export const AddCertificateButton = () => {
   const { openModal } = useModalAction(AddCertificateModal);

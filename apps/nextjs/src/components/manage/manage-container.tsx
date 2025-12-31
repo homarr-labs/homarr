@@ -1,6 +1,6 @@
+import type { PropsWithChildren } from "react";
 import type { MantineSize } from "@mantine/core";
 import { Container } from "@mantine/core";
-import type { PropsWithChildren } from "react";
 
 export const ManageContainer = ({ children, size }: PropsWithChildren<{ size?: MantineSize }>) => {
   return (

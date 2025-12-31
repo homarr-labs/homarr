@@ -1,14 +1,15 @@
 import { X509Certificate } from "node:crypto";
+import { notFound } from "next/navigation";
+import { Button, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { IconAlertTriangle, IconCertificate, IconCertificateOff } from "@tabler/icons-react";
+import dayjs from "dayjs";
+
 import { auth } from "@homarr/auth/next";
 import { getMantineColor } from "@homarr/common";
 import { loadCustomRootCertificatesAsync } from "@homarr/core/infrastructure/certificates";
 import type { SupportedLanguage } from "@homarr/translation";
 import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
-import { Button, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import { IconAlertTriangle, IconCertificate, IconCertificateOff } from "@tabler/icons-react";
-import dayjs from "dayjs";
-import { notFound } from "next/navigation";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
@@ -72,14 +73,21 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
           </Group>
         </Group>
 
-        {x509Certificates.length === 0 && <NoResults icon={IconCertificateOff} title={t("certificate.page.list.noResults.title")} />}
+        {x509Certificates.length === 0 && (
+          <NoResults icon={IconCertificateOff} title={t("certificate.page.list.noResults.title")} />
+        )}
 
         <SimpleGrid cols={{ sm: 1, lg: 2, xl: 3 }} spacing="lg">
           {x509Certificates.map((cert) => (
             <Card key={cert.fileName} withBorder>
               <Group wrap="nowrap">
                 {cert.isError ? (
-                  <IconAlertTriangle color={getMantineColor("red", 6)} style={{ minWidth: 32 }} size={32} stroke={1.5} />
+                  <IconAlertTriangle
+                    color={getMantineColor("red", 6)}
+                    style={{ minWidth: 32 }}
+                    size={32}
+                    stroke={1.5}
+                  />
                 ) : (
                   <IconCertificate
                     color={getMantineColor(iconColor(cert.x509.validToDate), 6)}
@@ -105,7 +113,10 @@ export default async function CertificatesPage({ params }: CertificatesPageProps
                     ) : (
                       <Text size="sm" c="gray.6" title={cert.x509.validToDate.toISOString()}>
                         {t("certificate.page.list.expires", {
-                          when: new Intl.RelativeTimeFormat(locale).format(dayjs(cert.x509.validToDate).diff(dayjs(), "days"), "days"),
+                          when: new Intl.RelativeTimeFormat(locale).format(
+                            dayjs(cert.x509.validToDate).diff(dayjs(), "days"),
+                            "days",
+                          ),
                         })}
                       </Text>
                     )}

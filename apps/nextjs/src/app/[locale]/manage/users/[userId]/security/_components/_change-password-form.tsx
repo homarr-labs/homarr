@@ -1,5 +1,7 @@
 "use client";
 
+import { Button, Fieldset, Group, PasswordInput, Stack } from "@mantine/core";
+
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -9,7 +11,6 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useI18n } from "@homarr/translation/client";
 import { CustomPasswordInput } from "@homarr/ui";
 import { userChangePasswordSchema } from "@homarr/validation/user";
-import { Button, Fieldset, Group, PasswordInput, Stack } from "@mantine/core";
 
 interface ChangePasswordFormProps {
   user: RouterOutputs["user"]["getById"];
@@ -63,7 +64,11 @@ export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
           <Stack gap="xs">
             {/* Require previous password if the current user want's to change his password */}
             {session?.user.id === user.id && (
-              <PasswordInput withAsterisk label={t("user.field.previousPassword.label")} {...form.getInputProps("previousPassword")} />
+              <PasswordInput
+                withAsterisk
+                label={t("user.field.previousPassword.label")}
+                {...form.getInputProps("previousPassword")}
+              />
             )}
 
             <CustomPasswordInput
@@ -73,7 +78,11 @@ export const ChangePasswordForm = ({ user }: ChangePasswordFormProps) => {
               {...form.getInputProps("password")}
             />
 
-            <PasswordInput withAsterisk label={t("user.field.passwordConfirm.label")} {...form.getInputProps("confirmPassword")} />
+            <PasswordInput
+              withAsterisk
+              label={t("user.field.passwordConfirm.label")}
+              {...form.getInputProps("confirmPassword")}
+            />
 
             <Group justify="end">
               <Button type="submit" loading={isPending}>

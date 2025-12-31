@@ -1,12 +1,13 @@
 "use client";
 
+import React from "react";
+import { Card, LoadingOverlay, Stack, Text, Title } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useForm } from "@homarr/form";
 import type { defaultServerSettings } from "@homarr/server-settings";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Card, LoadingOverlay, Stack, Text, Title } from "@mantine/core";
-import React from "react";
 
 import { SwitchSetting } from "~/app/[locale]/manage/settings/_components/setting-switch";
 
@@ -48,7 +49,12 @@ export const CrawlingAndIndexingSettings = ({ initialData }: CrawlingAndIndexing
         <Stack>
           <SwitchSetting form={form} formKey="noIndex" title={t("noIndex.title")} text={t("noIndex.text")} />
           <SwitchSetting form={form} formKey="noFollow" title={t("noFollow.title")} text={t("noFollow.text")} />
-          <SwitchSetting form={form} formKey="noTranslate" title={t("noTranslate.title")} text={t("noTranslate.text")} />
+          <SwitchSetting
+            form={form}
+            formKey="noTranslate"
+            title={t("noTranslate.title")}
+            text={t("noTranslate.text")}
+          />
           <SwitchSetting
             form={form}
             formKey="noSiteLinksSearchBox"

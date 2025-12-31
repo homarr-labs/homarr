@@ -1,10 +1,11 @@
 "use client";
 
+import { useCallback, useRef } from "react";
+import { Box, LoadingOverlay, Stack } from "@mantine/core";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
-import { Box, LoadingOverlay, Stack } from "@mantine/core";
-import { useCallback, useRef } from "react";
 
 import { BoardCategorySection } from "~/components/board/sections/category-section";
 import { BoardEmptySection } from "~/components/board/sections/empty-section";
@@ -28,7 +29,9 @@ export const useUpdateBoard = () => {
       if (!boardName) {
         throw new Error("Board name is not set");
       }
-      utils.board.getBoardByName.setData({ name: boardName }, (previous) => (previous ? updaterWithoutUndefined(previous) : previous));
+      utils.board.getBoardByName.setData({ name: boardName }, (previous) =>
+        previous ? updaterWithoutUndefined(previous) : previous,
+      );
     },
     [utils],
   );

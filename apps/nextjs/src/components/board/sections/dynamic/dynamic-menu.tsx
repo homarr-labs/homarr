@@ -1,8 +1,9 @@
+import { ActionIcon, Menu } from "@mantine/core";
+import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
+
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { ActionIcon, Menu } from "@mantine/core";
-import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
 
 import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
 import { useDynamicSectionActions } from "./dynamic-actions";

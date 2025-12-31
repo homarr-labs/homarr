@@ -1,5 +1,12 @@
 "use client";
 
+import type { PropsWithChildren } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Anchor, Button, Card, Code, Collapse, Divider, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { z } from "zod/v4";
+
 import { signIn } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { useForm } from "@homarr/form";
@@ -7,12 +14,6 @@ import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { userSignInSchema } from "@homarr/validation/user";
-import { Anchor, Button, Card, Code, Collapse, Divider, PasswordInput, Stack, Text, TextInput } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { useRouter, useSearchParams } from "next/navigation";
-import type { PropsWithChildren } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { z } from "zod/v4";
 
 type Provider = "credentials" | "ldap" | "oidc";
 
@@ -115,7 +116,12 @@ export const LoginForm = ({ providers, oidcClientName, isOidcAutoLoginEnabled, c
           <>
             <form onSubmit={form.onSubmit((credentials) => void signInAsync(credentials.provider, credentials))}>
               <Stack gap="lg">
-                <TextInput label={t("field.username.label")} id="username" autoComplete="username" {...form.getInputProps("name")} />
+                <TextInput
+                  label={t("field.username.label")}
+                  id="username"
+                  autoComplete="username"
+                  {...form.getInputProps("name")}
+                />
                 <PasswordInput
                   label={t("field.password.label")}
                   id="password"

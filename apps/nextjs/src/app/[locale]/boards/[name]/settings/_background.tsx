@@ -1,5 +1,10 @@
 "use client";
 
+import { startTransition } from "react";
+import { ActionIcon, Autocomplete, Button, Center, Grid, Group, Popover, Stack, Text } from "@mantine/core";
+import { useDebouncedValue } from "@mantine/hooks";
+import { IconPhotoOff, IconUpload } from "@tabler/icons-react";
+
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes } from "@homarr/definitions";
@@ -10,10 +15,6 @@ import { useI18n } from "@homarr/translation/client";
 import type { SelectItemWithDescriptionBadge } from "@homarr/ui";
 import { SelectWithDescriptionBadge } from "@homarr/ui";
 import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
-import { ActionIcon, Autocomplete, Button, Center, Grid, Group, Popover, Stack, Text } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
-import { IconPhotoOff, IconUpload } from "@tabler/icons-react";
-import { startTransition } from "react";
 
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";
@@ -44,7 +45,10 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
   const images = medias.data?.items.filter((media) => media.contentType.startsWith("image/")) ?? [];
   const imageMap = new Map(images.map((image) => [`/api/user-medias/${image.id}`, image]));
 
-  const backgroundImageAttachmentData = useBackgroundOptionData("backgroundImageAttachment", backgroundImageAttachments);
+  const backgroundImageAttachmentData = useBackgroundOptionData(
+    "backgroundImageAttachment",
+    backgroundImageAttachments,
+  );
   const backgroundImageSizeData = useBackgroundOptionData("backgroundImageSize", backgroundImageSizes);
   const backgroundImageRepeatData = useBackgroundOptionData("backgroundImageRepeat", backgroundImageRepeats);
 
@@ -101,11 +105,15 @@ export const BackgroundSettingsContent = ({ board }: Props) => {
                 data={[
                   {
                     group: t("board.field.backgroundImageUrl.group.your"),
-                    items: images.filter((media) => media.creatorId === session?.user.id).map((media) => `/api/user-medias/${media.id}`),
+                    items: images
+                      .filter((media) => media.creatorId === session?.user.id)
+                      .map((media) => `/api/user-medias/${media.id}`),
                   },
                   {
                     group: t("board.field.backgroundImageUrl.group.other"),
-                    items: images.filter((media) => media.creatorId !== session?.user.id).map((media) => `/api/user-medias/${media.id}`),
+                    items: images
+                      .filter((media) => media.creatorId !== session?.user.id)
+                      .map((media) => `/api/user-medias/${media.id}`),
                   },
                 ]}
                 {...form.getInputProps("backgroundImageUrl")}
@@ -182,7 +190,10 @@ type BackgroundImageKey = "backgroundImageAttachment" | "backgroundImageSize" | 
 
 type inferOptions<TKey extends BackgroundImageKey> = TranslationObject["board"]["field"][TKey]["option"];
 
-const useBackgroundOptionData = <TKey extends BackgroundImageKey, TOptions extends inferOptions<TKey> = inferOptions<TKey>>(
+const useBackgroundOptionData = <
+  TKey extends BackgroundImageKey,
+  TOptions extends inferOptions<TKey> = inferOptions<TKey>,
+>(
   key: TKey,
   data: {
     values: (keyof TOptions)[];

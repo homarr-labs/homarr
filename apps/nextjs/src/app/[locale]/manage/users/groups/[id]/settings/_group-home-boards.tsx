@@ -1,11 +1,12 @@
 "use client";
 
+import { Button, Group, Stack } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { groupSettingsSchema } from "@homarr/validation/group";
-import { Button, Group, Stack } from "@mantine/core";
 
 import { BoardSelect } from "~/components/board/board-select";
 

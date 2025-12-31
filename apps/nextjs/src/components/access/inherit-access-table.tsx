@@ -1,7 +1,8 @@
+import { Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine/core";
+
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { getPermissionsWithChildren } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine/core";
 
 import type { AccessQueryData } from "./access-settings";
 import { AccessDisplayRow } from "./access-table-rows";
@@ -41,7 +42,13 @@ export const InheritAccessTable = <TPermission extends string>({
               return null;
             }
 
-            return <AccessDisplayRow key={group.id} itemContent={<GroupItemContent group={group} />} permission={entityPermission} />;
+            return (
+              <AccessDisplayRow
+                key={group.id}
+                itemContent={<GroupItemContent group={group} />}
+                permission={entityPermission}
+              />
+            );
           })}
         </TableTbody>
       </Table>

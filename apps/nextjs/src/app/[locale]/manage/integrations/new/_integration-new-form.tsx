@@ -1,18 +1,7 @@
 "use client";
 
-import { clientApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
-import { revalidatePathActionAsync } from "@homarr/common/client";
-import type { Modify } from "@homarr/common/types";
-import type { IntegrationKind } from "@homarr/definitions";
-import { getAllSecretKindOptions, getIconUrl, getIntegrationDefaultUrl, getIntegrationName, integrationDefs } from "@homarr/definitions";
-import type { GetInputPropsReturnType, UseFormReturnType } from "@homarr/form";
-import { useZodForm } from "@homarr/form";
-import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
-import { appHrefSchema } from "@homarr/validation/app";
-import { integrationCreateSchema } from "@homarr/validation/integration";
+import { startTransition, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Alert,
   Button,
@@ -28,9 +17,27 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
-import { startTransition, useState } from "react";
 import { z } from "zod/v4";
+
+import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
+import type { Modify } from "@homarr/common/types";
+import type { IntegrationKind } from "@homarr/definitions";
+import {
+  getAllSecretKindOptions,
+  getIconUrl,
+  getIntegrationDefaultUrl,
+  getIntegrationName,
+  integrationDefs,
+} from "@homarr/definitions";
+import type { GetInputPropsReturnType, UseFormReturnType } from "@homarr/form";
+import { useZodForm } from "@homarr/form";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { useI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
+import { appHrefSchema } from "@homarr/validation/app";
+import { integrationCreateSchema } from "@homarr/validation/integration";
 
 import { IntegrationSecretInput } from "../_components/secrets/integration-secret-inputs";
 import { SecretKindsSegmentedControl } from "../_components/secrets/integration-secret-segmented-control";
@@ -87,7 +94,9 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
   const [error, setError] = useState<null | AnyMappedTestConnectionError>(null);
 
   const handleSubmitAsync = async ({ appId, appHref, hasApp, ...values }: FormType) => {
-    const url = hasUrlSecret ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin : values.url;
+    const url = hasUrlSecret
+      ? new URL(values.secrets.find((secret) => secret.kind === "url")?.value ?? values.url).origin
+      : values.url;
 
     const hasCustomHref = appHref !== null && appHref.trim().length >= 1;
 
@@ -146,13 +155,20 @@ export const NewIntegrationForm = ({ searchParams }: NewIntegrationFormProps) =>
       <Stack>
         <TextInput withAsterisk label={t("integration.field.name.label")} autoFocus {...form.getInputProps("name")} />
 
-        {hasUrlSecret ? null : <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />}
+        {hasUrlSecret ? null : (
+          <TextInput withAsterisk label={t("integration.field.url.label")} {...form.getInputProps("url")} />
+        )}
 
         <Fieldset legend={t("integration.secrets.title")}>
           <Stack gap="sm">
             {secretKinds.length > 1 && <SecretKindsSegmentedControl secretKinds={secretKinds} form={form} />}
             {form.values.secrets.map(({ kind }, index) => (
-              <IntegrationSecretInput withAsterisk key={kind} kind={kind} {...form.getInputProps(`secrets.${index}.value`)} />
+              <IntegrationSecretInput
+                withAsterisk
+                key={kind}
+                kind={kind}
+                {...form.getInputProps(`secrets.${index}.value`)}
+              />
             ))}
             {form.values.secrets.length === 0 && (
               <Alert icon={<IconInfoCircle size={"1rem"} />} color={"blue"}>
@@ -284,7 +300,15 @@ const IntegrationAppSelect = ({ value, ...props }: IntegrationAppSelectProps) =>
               {appMap.get(option.value)?.href}
             </Text>
           </Stack>
-          {checked && <IconCheck style={{ marginInlineStart: "auto" }} stroke={1.5} color="currentColor" opacity={0.6} size={18} />}
+          {checked && (
+            <IconCheck
+              style={{ marginInlineStart: "auto" }}
+              stroke={1.5}
+              color="currentColor"
+              opacity={0.6}
+              size={18}
+            />
+          )}
         </Group>
       )}
       {...props}

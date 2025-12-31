@@ -1,7 +1,8 @@
+import { notFound } from "next/navigation";
+
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
-import { notFound } from "next/navigation";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { InviteListComponent } from "./_components/invite-list";

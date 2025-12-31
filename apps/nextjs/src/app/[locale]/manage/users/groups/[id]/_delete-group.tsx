@@ -1,13 +1,14 @@
 "use client";
 
+import { useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { Button, useMatches } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { Button, useMatches } from "@mantine/core";
-import { useRouter } from "next/navigation";
-import { useCallback } from "react";
 
 interface DeleteGroupProps {
   group: {

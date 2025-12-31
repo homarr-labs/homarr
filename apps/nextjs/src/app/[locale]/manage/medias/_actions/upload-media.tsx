@@ -1,10 +1,11 @@
 "use client";
 
+import { Button } from "@mantine/core";
+import { IconUpload } from "@tabler/icons-react";
+
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { UploadMedia } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
-import { Button } from "@mantine/core";
-import { IconUpload } from "@tabler/icons-react";
 
 export const UploadMediaButton = () => {
   const t = useI18n();

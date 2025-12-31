@@ -1,9 +1,10 @@
+import { notFound } from "next/navigation";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import DOMPurify from "isomorphic-dompurify";
+
 import { db, eq } from "@homarr/db";
 import { medias } from "@homarr/db/schema";
-import DOMPurify from "isomorphic-dompurify";
-import { notFound } from "next/navigation";
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
 
 export async function GET(_req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;

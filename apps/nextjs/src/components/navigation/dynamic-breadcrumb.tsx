@@ -1,10 +1,11 @@
 "use client";
 
-import type { TranslationKeys } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
+import { usePathname } from "next/navigation";
 import { Anchor, Badge, Breadcrumbs, Text } from "@mantine/core";
 import { IconHomeFilled } from "@tabler/icons-react";
-import { usePathname } from "next/navigation";
+
+import type { TranslationKeys } from "@homarr/translation";
+import { useScopedI18n } from "@homarr/translation/client";
 
 interface DynamicBreadcrumbProps {
   customHome?: string | null;

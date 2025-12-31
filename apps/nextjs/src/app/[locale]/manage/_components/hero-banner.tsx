@@ -1,7 +1,8 @@
+import { Box, Grid, GridCol, Group, Image, Stack, Title } from "@mantine/core";
+
 import { splitToNChunks } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
-import { Box, Grid, GridCol, Group, Image, Stack, Title } from "@mantine/core";
 
 import classes from "./hero-banner.module.css";
 
@@ -41,12 +42,26 @@ export const HeroBanner = async () => {
                   }}
                 >
                   {arrayInChunks[columnIndex]?.map((icon, index) => (
-                    <Image key={`grid-column-${columnIndex}-scroll-1-${index}`} src={icon} radius="md" fit={"contain"} w={50} h={50} />
+                    <Image
+                      key={`grid-column-${columnIndex}-scroll-1-${index}`}
+                      src={icon}
+                      radius="md"
+                      fit={"contain"}
+                      w={50}
+                      h={50}
+                    />
                   ))}
 
                   {/* This is used for making the animation seem seamless */}
                   {arrayInChunks[columnIndex]?.map((icon, index) => (
-                    <Image key={`grid-column-${columnIndex}-scroll-2-${index}`} src={icon} radius="md" fit={"contain"} w={50} h={50} />
+                    <Image
+                      key={`grid-column-${columnIndex}-scroll-2-${index}`}
+                      src={icon}
+                      radius="md"
+                      fit={"contain"}
+                      w={50}
+                      h={50}
+                    />
                   ))}
                 </Stack>
               </GridCol>

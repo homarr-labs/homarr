@@ -1,14 +1,15 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
+import type { z } from "zod/v4";
+
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { CustomPasswordInput } from "@homarr/ui";
 import { userRegistrationSchema } from "@homarr/validation/user";
-import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
-import { useRouter } from "next/navigation";
-import type { z } from "zod/v4";
 
 interface RegistrationFormProps {
   invite: {
@@ -45,7 +46,10 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
           router.push("/auth/login");
         },
         onError(error) {
-          const message = error.data?.code === "CONFLICT" ? t("error.usernameTaken") : t("action.register.notification.error.message");
+          const message =
+            error.data?.code === "CONFLICT"
+              ? t("error.usernameTaken")
+              : t("action.register.notification.error.message");
 
           showErrorNotification({
             title: t("action.register.notification.error.title"),
@@ -60,7 +64,12 @@ export const RegistrationForm = ({ invite }: RegistrationFormProps) => {
     <Stack gap="xl">
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="lg">
-          <TextInput label={t("field.username.label")} id="username" autoComplete="username" {...form.getInputProps("username")} />
+          <TextInput
+            label={t("field.username.label")}
+            id="username"
+            autoComplete="username"
+            {...form.getInputProps("username")}
+          />
           <CustomPasswordInput
             withPasswordRequirements
             label={t("field.password.label")}

@@ -1,11 +1,12 @@
 "use client";
 
+import React from "react";
+import { Combobox, Group, InputBase, Loader, ScrollArea, Text, useCombobox } from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
+
 import type { SupportedLanguage } from "@homarr/translation";
 import { localeConfigurations, supportedLanguages } from "@homarr/translation";
 import { LanguageIcon } from "@homarr/ui";
-import { Combobox, Group, InputBase, Loader, ScrollArea, Text, useCombobox } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
-import React from "react";
 
 import "flag-icons/css/flag-icons.min.css";
 

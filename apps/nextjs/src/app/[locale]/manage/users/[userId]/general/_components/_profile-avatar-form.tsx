@@ -1,5 +1,10 @@
 "use client";
 
+import { useCallback } from "react";
+import { Box, Button, FileButton, Menu, UnstyledButton } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconPencil, IconPhotoEdit, IconPhotoX } from "@tabler/icons-react";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -7,10 +12,6 @@ import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
-import { Box, Button, FileButton, Menu, UnstyledButton } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconPencil, IconPhotoEdit, IconPhotoX } from "@tabler/icons-react";
-import { useCallback } from "react";
 
 interface UserProfileAvatarForm {
   user: RouterOutputs["user"]["getById"];

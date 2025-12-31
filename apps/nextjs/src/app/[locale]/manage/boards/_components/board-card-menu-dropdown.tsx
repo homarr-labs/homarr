@@ -1,5 +1,9 @@
 "use client";
 
+import { useCallback } from "react";
+import { Menu } from "@mantine/core";
+import { IconCopy, IconDeviceMobile, IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -8,9 +12,6 @@ import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { DuplicateBoardModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
-import { Menu } from "@mantine/core";
-import { IconCopy, IconDeviceMobile, IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
-import { useCallback } from "react";
 
 import { useBoardPermissions } from "~/components/board/permissions/client";
 
@@ -102,7 +103,11 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
       {hasChangeAccess && (
         <>
           <Menu.Divider />
-          <Menu.Item component={Link} href={`/boards/${board.name}/settings`} leftSection={<IconSettings {...iconProps} />}>
+          <Menu.Item
+            component={Link}
+            href={`/boards/${board.name}/settings`}
+            leftSection={<IconSettings {...iconProps} />}
+          >
             {t("settings.label")}
           </Menu.Item>
         </>
@@ -111,7 +116,12 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
         <>
           <Menu.Divider />
           <Menu.Label c="red.7">{tCommon("dangerZone")}</Menu.Label>
-          <Menu.Item c="red.7" leftSection={<IconTrash {...iconProps} />} onClick={handleDeletion} disabled={deleteBoardMutation.isPending}>
+          <Menu.Item
+            c="red.7"
+            leftSection={<IconTrash {...iconProps} />}
+            onClick={handleDeletion}
+            disabled={deleteBoardMutation.isPending}
+          >
             {t("delete.label")}
           </Menu.Item>
         </>

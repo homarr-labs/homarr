@@ -1,6 +1,7 @@
+import { Card, Flex, Text, ThemeIcon } from "@mantine/core";
+
 import { isLocaleRTL } from "@homarr/translation";
 import { useCurrentLocale, useI18n } from "@homarr/translation/client";
-import { Card, Flex, Text, ThemeIcon } from "@mantine/core";
 
 import { HeaderIcon } from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/header-card/header-icon";
 import classes from "./header-card.module.css";

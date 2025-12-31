@@ -1,6 +1,7 @@
+import type { RefObject } from "react";
+
 import type { GridItemHTMLElement } from "@homarr/gridstack";
 import { GridStack } from "@homarr/gridstack";
-import type { RefObject } from "react";
 
 import type { Section } from "~/app/[locale]/boards/_types";
 

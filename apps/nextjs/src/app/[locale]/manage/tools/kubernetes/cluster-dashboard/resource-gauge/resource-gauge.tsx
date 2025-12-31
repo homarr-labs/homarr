@@ -1,8 +1,9 @@
+import React from "react";
+import { Group, Paper, Progress, Text, ThemeIcon } from "@mantine/core";
+
 import type { KubernetesCapacity } from "@homarr/definitions";
 import { isLocaleRTL } from "@homarr/translation";
 import { useCurrentLocale, useI18n } from "@homarr/translation/client";
-import { Group, Paper, Progress, Text, ThemeIcon } from "@mantine/core";
-import React from "react";
 
 import { ResourceIcon } from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/resource-gauge/resource-icon";
 import classes from "./resource-gauge.module.css";
@@ -28,7 +29,9 @@ export function ResourceGauge(props: KubernetesResourceGaugeProps) {
 
       {props.kubernetesCapacity.resourcesStats.map((stat) => {
         const isReserved = stat.type === "Reserved";
-        const labelKey = isReserved ? "kubernetes.cluster.capacity.resource.reserved" : "kubernetes.cluster.capacity.resource.used";
+        const labelKey = isReserved
+          ? "kubernetes.cluster.capacity.resource.reserved"
+          : "kubernetes.cluster.capacity.resource.used";
 
         return (
           <div key={stat.percentageValue}>

@@ -66,7 +66,8 @@ export const removeCategoryCallback =
                 ...section,
                 layouts: section.layouts.map((layout) => {
                   const aboveYOffset = aboveYOffsets.find(({ layoutId }) => layout.layoutId === layoutId)?.yOffset ?? 0;
-                  const categoryYOffset = categoryYOffsets.find(({ layoutId }) => layout.layoutId === layoutId)?.yOffset ?? 0;
+                  const categoryYOffset =
+                    categoryYOffsets.find(({ layoutId }) => layout.layoutId === layoutId)?.yOffset ?? 0;
 
                   if (layout.parentSectionId === currentCategory.id) {
                     return {
@@ -134,7 +135,10 @@ const calculateYHeightWithOffsetForDynamicSectionLayouts = (
     }, 0);
 };
 
-const calculateYHeightWithOffsetForItemLayouts = (board: Board, { sectionId, layoutId }: { sectionId: string; layoutId: string }) =>
+const calculateYHeightWithOffsetForItemLayouts = (
+  board: Board,
+  { sectionId, layoutId }: { sectionId: string; layoutId: string },
+) =>
   board.items
     .map((item) => item.layouts.find((layout) => layout.layoutId === layoutId))
     .filter((layout) => layout !== undefined)

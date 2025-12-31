@@ -1,5 +1,5 @@
-import type { TablerIcon } from "@tabler/icons-react";
 import { createContext, useContext } from "react";
+import type { TablerIcon } from "@tabler/icons-react";
 
 const AccessContext = createContext<{
   permissions: readonly string[];
@@ -17,7 +17,8 @@ export const useAccessContext = <TPermission extends string>() => {
 
   return {
     icons: context.icons as Record<TPermission, TablerIcon>,
-    getSelectData: () => context.permissions.map((permission) => ({ value: permission, label: context.translate(permission) })),
+    getSelectData: () =>
+      context.permissions.map((permission) => ({ value: permission, label: context.translate(permission) })),
     permissions: context.permissions as readonly TPermission[],
     translate: context.translate as (key: TPermission) => string,
     defaultPermission: context.defaultPermission as TPermission,

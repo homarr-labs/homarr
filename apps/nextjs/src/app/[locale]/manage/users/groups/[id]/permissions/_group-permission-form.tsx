@@ -1,5 +1,9 @@
 "use client";
 
+import type { PropsWithChildren } from "react";
+import { useCallback } from "react";
+import { Button, Card, Group, Switch, Text, Transition } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import { objectEntries } from "@homarr/common";
 import type { GroupPermissionKey } from "@homarr/definitions";
@@ -7,9 +11,6 @@ import { groupPermissionKeys } from "@homarr/definitions";
 import { createFormContext } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { Button, Card, Group, Switch, Text, Transition } from "@mantine/core";
-import type { PropsWithChildren } from "react";
-import { useCallback } from "react";
 
 const [FormProvider, useFormContext, useForm] = createFormContext<FormType>();
 
@@ -28,7 +29,10 @@ export const PermissionForm = ({ children, initialPermissions }: PropsWithChildr
         .filter(([_key, value]) => Boolean(value))
         .map(([key]) => key);
 
-      if (currentKeys.every((key) => initialPermissions.includes(key)) && initialPermissions.every((key) => currentKeys.includes(key))) {
+      if (
+        currentKeys.every((key) => initialPermissions.includes(key)) &&
+        initialPermissions.every((key) => currentKeys.includes(key))
+      ) {
         form.resetDirty(); // Reset dirty state if all keys are the same as initial
       }
     },

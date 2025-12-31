@@ -1,9 +1,10 @@
 "use client";
 
+import { Button } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useI18n } from "@homarr/translation/client";
-import { Button } from "@mantine/core";
 
 export const BackToStart = () => {
   const t = useI18n();

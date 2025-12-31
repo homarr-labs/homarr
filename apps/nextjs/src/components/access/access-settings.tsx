@@ -1,10 +1,11 @@
+import { useState } from "react";
+import { Group, Stack, Tabs } from "@mantine/core";
+import { IconUser, IconUserDown, IconUsersGroup } from "@tabler/icons-react";
+
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { CountBadge } from "@homarr/ui";
-import { Group, Stack, Tabs } from "@mantine/core";
-import { IconUser, IconUserDown, IconUsersGroup } from "@tabler/icons-react";
-import { useState } from "react";
 
 import { AccessProvider } from "./context";
 import type { AccessFormType } from "./form";

@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { ActionIcon, Alert, Anchor, Button, Card, CopyButton, Group, SimpleGrid, Stack, Text } from "@mantine/core";
+import { IconAlertTriangle, IconCheck, IconCopy, IconExclamationCircle, IconRepeat } from "@tabler/icons-react";
+
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { createId, getMantineColor } from "@homarr/common";
@@ -6,9 +10,6 @@ import { createModal, useConfirmModal, useModalAction } from "@homarr/modals";
 import { AddCertificateModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useCurrentLocale, useI18n, useScopedI18n } from "@homarr/translation/client";
-import { ActionIcon, Alert, Anchor, Button, Card, CopyButton, Group, SimpleGrid, Stack, Text } from "@mantine/core";
-import { IconAlertTriangle, IconCheck, IconCopy, IconExclamationCircle, IconRepeat } from "@tabler/icons-react";
-import { useState } from "react";
 
 import type { MappedCertificate, MappedTestConnectionCertificateError } from "./types";
 
@@ -127,7 +128,8 @@ export const CertificateErrorDetails = ({ error, url }: CertificateErrorDetailsP
         </Button>
       )}
 
-      {(error.data.reason === "untrusted" && rootCertificate.isSelfSigned) || error.data.reason === "hostnameMismatch" ? (
+      {(error.data.reason === "untrusted" && rootCertificate.isSelfSigned) ||
+      error.data.reason === "hostnameMismatch" ? (
         <Button
           variant="default"
           fullWidth
@@ -191,7 +193,10 @@ const CertificateExtractAlert = () => {
     >
       {t.rich("integration.testConnection.error.certificate.alert.extract.message", {
         docsLink: () => (
-          <Anchor href={createDocumentationLink("/docs/management/certificates", "#obtaining-certificates")} target="_blank">
+          <Anchor
+            href={createDocumentationLink("/docs/management/certificates", "#obtaining-certificates")}
+            target="_blank"
+          >
             {t("common.here")}
           </Anchor>
         ),
@@ -217,7 +222,13 @@ export const CertificateDetailsCard = ({ certificate }: CertificateDetailsProps)
         <Text size="sm" c="dimmed">
           {tDetails("description")}
         </Text>
-        <Anchor size="sm" ta="start" component="button" type="button" onClick={() => openModal({ content: certificate.pem })}>
+        <Anchor
+          size="sm"
+          ta="start"
+          component="button"
+          type="button"
+          onClick={() => openModal({ content: certificate.pem })}
+        >
           {tDetails("content.action")}
         </Anchor>
       </Group>
@@ -294,7 +305,11 @@ const PemContentModal = createModal<{ content: string }>(({ actions, innerProps 
         <CopyButton value={innerProps.content}>
           {({ copy, copied }) => (
             <ActionIcon onClick={copy} pos="absolute" top={8} right={8} variant="default">
-              {copied ? <IconCheck size={16} stroke={1.5} color={getMantineColor("green", 6)} /> : <IconCopy size={16} stroke={1.5} />}
+              {copied ? (
+                <IconCheck size={16} stroke={1.5} color={getMantineColor("green", 6)} />
+              ) : (
+                <IconCopy size={16} stroke={1.5} />
+              )}
             </ActionIcon>
           )}
         </CopyButton>

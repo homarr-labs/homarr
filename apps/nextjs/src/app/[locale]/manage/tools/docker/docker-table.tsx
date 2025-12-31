@@ -1,5 +1,18 @@
 "use client";
 
+import type { MantineColor } from "@mantine/core";
+import { Avatar, Badge, Box, Button, Group, Text } from "@mantine/core";
+import {
+  IconCategoryPlus,
+  IconPlayerPlay,
+  IconPlayerStop,
+  IconRefresh,
+  IconRotateClockwise,
+  IconTrash,
+} from "@tabler/icons-react";
+import type { MRT_ColumnDef } from "mantine-react-table";
+import { MantineReactTable } from "mantine-react-table";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
@@ -13,20 +26,23 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
-import type { MantineColor } from "@mantine/core";
-import { Avatar, Badge, Box, Button, Group, Text } from "@mantine/core";
-import { IconCategoryPlus, IconPlayerPlay, IconPlayerStop, IconRefresh, IconRotateClockwise, IconTrash } from "@tabler/icons-react";
-import type { MRT_ColumnDef } from "mantine-react-table";
-import { MantineReactTable } from "mantine-react-table";
 
-const createColumns = (t: TranslationFunction): MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["containers"][number]>[] => [
+const createColumns = (
+  t: TranslationFunction,
+): MRT_ColumnDef<RouterOutputs["docker"]["getContainers"]["containers"][number]>[] => [
   {
     accessorKey: "name",
     header: t("docker.field.name.label"),
     Cell({ renderedCellValue, row }) {
       return (
         <Group gap="xs">
-          <Avatar variant="outline" radius="lg" size="md" styles={{ image: { objectFit: "contain" } }} src={row.original.iconUrl}>
+          <Avatar
+            variant="outline"
+            radius="lg"
+            size="md"
+            styles={{ image: { objectFit: "contain" } }}
+            src={row.original.iconUrl}
+          >
             {row.original.name.at(0)?.toUpperCase()}
           </Avatar>
           <Text>{renderedCellValue}</Text>
@@ -61,7 +77,9 @@ const createColumns = (t: TranslationFunction): MRT_ColumnDef<RouterOutputs["doc
     header: t("docker.field.ports.label"),
     Cell({ cell }) {
       if (!cell.row.original.ports.length) return null;
-      return <OverflowBadge overflowCount={1} data={cell.row.original.ports.map((port) => port.PrivatePort.toString())} />;
+      return (
+        <OverflowBadge overflowCount={1} data={cell.row.original.ports.map((port) => port.PrivatePort.toString())} />
+      );
     },
   },
 ];
@@ -113,7 +131,12 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
       });
 
       return (
-        <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={() => mutate()} loading={isPending}>
+        <Button
+          variant="default"
+          rightSection={<IconRefresh size="1rem" />}
+          onClick={() => mutate()}
+          loading={isPending}
+        >
           {tDocker("action.refresh.label")}
         </Button>
       );
@@ -211,7 +234,14 @@ const ContainerActionBarButton = (props: ContainerActionBarButtonProps) => {
   };
 
   return (
-    <Button leftSection={<props.icon />} color={props.color} onClick={handleClickAsync} loading={isPending} variant="light" radius="md">
+    <Button
+      leftSection={<props.icon />}
+      color={props.color}
+      onClick={handleClickAsync}
+      loading={isPending}
+      variant="light"
+      radius="md"
+    >
       {t(`${props.action}.label`)}
     </Button>
   );

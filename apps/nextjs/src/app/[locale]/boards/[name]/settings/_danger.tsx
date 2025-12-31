@@ -1,12 +1,13 @@
 "use client";
 
+import { useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { Button, Divider, Group, Stack, Text } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Button, Divider, Group, Stack, Text } from "@mantine/core";
-import { useRouter } from "next/navigation";
-import { useCallback } from "react";
 
 import { BoardRenameModal } from "~/components/board/modals/board-rename-modal";
 import classes from "./danger.module.css";
@@ -17,7 +18,8 @@ export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: 
   const router = useRouter();
   const { openConfirmModal } = useConfirmModal();
   const { openModal } = useModalAction(BoardRenameModal);
-  const { mutate: changeVisibility, isPending: isChangeVisibilityPending } = clientApi.board.changeBoardVisibility.useMutation();
+  const { mutate: changeVisibility, isPending: isChangeVisibilityPending } =
+    clientApi.board.changeBoardVisibility.useMutation();
   const { mutate: deleteBoard, isPending: isDeletePending } = clientApi.board.deleteBoard.useMutation();
   const utils = clientApi.useUtils();
   const visibility = board.isPublic ? "public" : "private";
@@ -51,7 +53,16 @@ export const DangerZoneSettingsContent = ({ hideVisibility }: { hideVisibility: 
         );
       },
     });
-  }, [board.id, board.name, changeVisibility, t, utils.board.getBoardByName, utils.board.getHomeBoard, visibility, openConfirmModal]);
+  }, [
+    board.id,
+    board.name,
+    changeVisibility,
+    t,
+    utils.board.getBoardByName,
+    utils.board.getHomeBoard,
+    visibility,
+    openConfirmModal,
+  ]);
 
   const onDeleteClick = useCallback(() => {
     openConfirmModal({

@@ -1,11 +1,12 @@
 "use client";
 
-import { useI18n } from "@homarr/translation/client";
-import type { SwitchProps } from "@mantine/core";
-import { Switch } from "@mantine/core";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { ChangeEvent } from "react";
 import { useState } from "react";
+import type { ChangeEvent } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Switch } from "@mantine/core";
+import type { SwitchProps } from "@mantine/core";
+
+import { useI18n } from "@homarr/translation/client";
 
 type ShowAllSwitchProps = Pick<SwitchProps, "defaultChecked">;
 
@@ -25,6 +26,11 @@ export const IncludeFromAllUsersSwitch = ({ defaultChecked }: ShowAllSwitchProps
   };
 
   return (
-    <Switch defaultChecked={defaultChecked} checked={checked} label={t("management.page.media.includeFromAllUsers")} onChange={onChange} />
+    <Switch
+      defaultChecked={defaultChecked}
+      checked={checked}
+      label={t("management.page.media.includeFromAllUsers")}
+      onChange={onChange}
+    />
   );
 };

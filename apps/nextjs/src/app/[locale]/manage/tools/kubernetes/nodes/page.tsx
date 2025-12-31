@@ -1,9 +1,10 @@
+import { notFound } from "next/navigation";
+import { Stack, Title } from "@mantine/core";
+
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { env } from "@homarr/docker/env";
 import { getScopedI18n } from "@homarr/translation/server";
-import { Stack, Title } from "@mantine/core";
-import { notFound } from "next/navigation";
 
 import { NodesTable } from "~/app/[locale]/manage/tools/kubernetes/nodes/nodes-table";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";

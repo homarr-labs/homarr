@@ -1,5 +1,13 @@
 "use client";
 
+import React from "react";
+import { Anchor, Flex } from "@mantine/core";
+import { IconArrowRight } from "@tabler/icons-react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import type { MRT_ColumnDef } from "mantine-react-table";
+import { MantineReactTable } from "mantine-react-table";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
@@ -7,13 +15,6 @@ import type { KubernetesIngress } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
-import { Anchor, Flex } from "@mantine/core";
-import { IconArrowRight } from "@tabler/icons-react";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import type { MRT_ColumnDef } from "mantine-react-table";
-import { MantineReactTable } from "mantine-react-table";
-import React from "react";
 
 dayjs.extend(relativeTime);
 
@@ -41,7 +42,8 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.ingresses">): MR
     accessorKey: "rulesAndPaths",
     header: t("field.rulesAndPaths.label"),
     Cell({ cell }) {
-      const getAbsoluteUrl = (host: string) => (host.startsWith("http://") || host.startsWith("https://") ? host : `https://${host}`);
+      const getAbsoluteUrl = (host: string) =>
+        host.startsWith("http://") || host.startsWith("https://") ? host : `https://${host}`;
       return (
         <>
           {cell.row.original.rulesAndPaths.map((ruleAndPaths) => (

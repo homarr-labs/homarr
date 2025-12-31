@@ -1,8 +1,9 @@
+import { notFound } from "next/navigation";
+import { Stack, Title } from "@mantine/core";
+
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n } from "@homarr/translation/server";
-import { Stack, Title } from "@mantine/core";
-import { notFound } from "next/navigation";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";

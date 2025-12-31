@@ -1,5 +1,6 @@
-import { widgetImports } from "@homarr/widgets";
 import type { PropsWithChildren } from "react";
+
+import { widgetImports } from "@homarr/widgets";
 
 import { MainNavigation } from "~/components/layout/navigation";
 import { ClientShell } from "~/components/layout/shell";

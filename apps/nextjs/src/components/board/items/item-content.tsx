@@ -1,14 +1,15 @@
-import { useRequiredBoard } from "@homarr/boards/context";
-import { useEditMode } from "@homarr/boards/edit-mode";
-import { useSettings } from "@homarr/settings";
-import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
-import { WidgetError } from "@homarr/widgets/errors";
 import { Badge, Card } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import combineClasses from "clsx";
 import { NoIntegrationSelectedError } from "node_modules/@homarr/widgets/src/errors";
 import { ErrorBoundary } from "react-error-boundary";
+
+import { useRequiredBoard } from "@homarr/boards/context";
+import { useEditMode } from "@homarr/boards/edit-mode";
+import { useSettings } from "@homarr/settings";
+import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
+import { WidgetError } from "@homarr/widgets/errors";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import classes from "../sections/item.module.css";
@@ -94,8 +95,10 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
   const options = reduceWidgetOptionsWithDefaultValues(item.kind, settings, item.options);
   const newItem = { ...item, options };
   const { updateItemOptions } = useItemActions();
-  const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) => updateItemOptions({ itemId: item.id, newOptions });
-  const widgetSupportsIntegrations = "supportedIntegrations" in definition && definition.supportedIntegrations.length >= 1;
+  const updateOptions = ({ newOptions }: { newOptions: Record<string, unknown> }) =>
+    updateItemOptions({ itemId: item.id, newOptions });
+  const widgetSupportsIntegrations =
+    "supportedIntegrations" in definition && definition.supportedIntegrations.length >= 1;
 
   return (
     <QueryErrorResetBoundary>
@@ -114,6 +117,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
             when={
               widgetSupportsIntegrations &&
               item.integrationIds.length === 0 &&
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               (!("integrationsRequired" in definition) || definition.integrationsRequired !== false)
             }
           />

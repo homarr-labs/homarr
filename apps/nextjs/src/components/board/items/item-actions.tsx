@@ -1,6 +1,7 @@
+import { useCallback } from "react";
+
 import { useUpdateBoard } from "@homarr/boards/updater";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
-import { useCallback } from "react";
 
 import type { CreateItemInput } from "./actions/create-item";
 import { createItemCallback } from "./actions/create-item";
@@ -59,7 +60,9 @@ export const useItemActions = () => {
     ({ itemId, newAdvancedOptions }: UpdateItemAdvancedOptions) => {
       updateBoard((previous) => ({
         ...previous,
-        items: previous.items.map((item) => (item.id !== itemId ? item : { ...item, advancedOptions: newAdvancedOptions })),
+        items: previous.items.map((item) =>
+          item.id !== itemId ? item : { ...item, advancedOptions: newAdvancedOptions },
+        ),
       }));
     },
     [updateBoard],

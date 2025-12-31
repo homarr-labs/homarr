@@ -1,11 +1,12 @@
 "use client";
 
-import { clientApi } from "@homarr/api/client";
+import { useEffect, useRef } from "react";
 import { Box } from "@mantine/core";
 import { CanvasAddon } from "@xterm/addon-canvas";
 import { FitAddon } from "@xterm/addon-fit";
 import { Terminal } from "@xterm/xterm";
-import { useEffect, useRef } from "react";
+
+import { clientApi } from "@homarr/api/client";
 
 import { useLogContext } from "./log-context";
 import classes from "./terminal.module.css";

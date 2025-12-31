@@ -1,10 +1,11 @@
 "use client";
 
+import type { PropsWithChildren, ReactNode } from "react";
+import { Button } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import type { OnboardingStep } from "@homarr/definitions";
-import { Button } from "@mantine/core";
-import type { PropsWithChildren, ReactNode } from "react";
 
 interface InitStartButtonProps {
   icon: ReactNode;

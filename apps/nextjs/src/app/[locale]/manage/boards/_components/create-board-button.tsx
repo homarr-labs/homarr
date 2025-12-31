@@ -1,10 +1,11 @@
 "use client";
 
+import { Affix, Button, Menu } from "@mantine/core";
+import { IconCategoryPlus, IconChevronDown, IconFileImport } from "@tabler/icons-react";
+
 import { useModalAction } from "@homarr/modals";
 import { AddBoardModal, ImportBoardModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
-import { Affix, Button, Menu } from "@mantine/core";
-import { IconCategoryPlus, IconChevronDown, IconFileImport } from "@tabler/icons-react";
 
 export const CreateBoardButton = () => {
   const t = useI18n();

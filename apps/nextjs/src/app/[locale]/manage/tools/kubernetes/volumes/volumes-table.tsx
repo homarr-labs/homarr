@@ -1,16 +1,17 @@
 "use client";
 
+import React from "react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import type { MRT_ColumnDef } from "mantine-react-table";
+import { MantineReactTable } from "mantine-react-table";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { KubernetesVolume } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import type { MRT_ColumnDef } from "mantine-react-table";
-import { MantineReactTable } from "mantine-react-table";
-import React from "react";
 
 dayjs.extend(relativeTime);
 

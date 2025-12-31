@@ -1,17 +1,22 @@
 "use client";
 
+import type { ReactNode } from "react";
+import { useMemo, useState } from "react";
 import type { DragEndEvent, DraggableAttributes, DragStartEvent } from "@dnd-kit/core";
-import { closestCenter, DndContext, DragOverlay, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import {
+  closestCenter,
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import type { RouterOutputs } from "@homarr/api";
-import { clientApi } from "@homarr/api/client";
-import { revalidatePathActionAsync } from "@homarr/common/client";
-import { showSuccessNotification } from "@homarr/notifications";
-import { useI18n } from "@homarr/translation/client";
-import { Link, UserAvatarGroup } from "@homarr/ui";
 import {
   Anchor,
   Box,
@@ -29,8 +34,13 @@ import {
   Transition,
 } from "@mantine/core";
 import { IconGripVertical } from "@tabler/icons-react";
-import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+
+import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
+import { revalidatePathActionAsync } from "@homarr/common/client";
+import { showSuccessNotification } from "@homarr/notifications";
+import { useI18n } from "@homarr/translation/client";
+import { Link, UserAvatarGroup } from "@homarr/ui";
 
 interface GroupsTableProps {
   initialGroupIds: string[];
@@ -42,7 +52,10 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
   const t = useI18n();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [groupIds, setGroupIds] = useState(groups.map((group) => group.id));
-  const isDirty = useMemo(() => initialGroupIds.some((groupId, index) => groupIds.indexOf(groupId) !== index), [groupIds, initialGroupIds]);
+  const isDirty = useMemo(
+    () => initialGroupIds.some((groupId, index) => groupIds.indexOf(groupId) !== index),
+    [groupIds, initialGroupIds],
+  );
   const { mutateAsync, isPending } = clientApi.group.savePositions.useMutation({
     async onSuccess() {
       await revalidatePathActionAsync("/manage/users/groups");
@@ -137,7 +150,12 @@ export const GroupsTable = ({ groups, initialGroupIds, hasFilter }: GroupsTableP
           )}
         </DragOverlay>
       </DndContext>
-      <SaveAffix visible={isDirty} onDiscard={() => setGroupIds(initialGroupIds)} isPending={isPending} onSave={handleSavePositionsAsync} />
+      <SaveAffix
+        visible={isDirty}
+        onDiscard={() => setGroupIds(initialGroupIds)}
+        isPending={isPending}
+        onSave={handleSavePositionsAsync}
+      />
     </>
   );
 };
@@ -213,7 +231,15 @@ const DragHandle = ({ attributes, listeners, active, disabled }: DragHandleProps
   }
 
   return (
-    <Flex align="center" justify="center" h="100%" w={40} style={{ cursor: active ? "grabbing" : "grab" }} {...attributes} {...listeners}>
+    <Flex
+      align="center"
+      justify="center"
+      h="100%"
+      w={40}
+      style={{ cursor: active ? "grabbing" : "grab" }}
+      {...attributes}
+      {...listeners}
+    >
       <IconGripVertical size={18} stroke={1.5} />
     </Flex>
   );

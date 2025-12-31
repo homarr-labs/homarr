@@ -1,11 +1,12 @@
+import type { JSX, PropsWithChildren } from "react";
+import { notFound, redirect } from "next/navigation";
+import { AppShellMain } from "@mantine/core";
+import { TRPCError } from "@trpc/server";
+
 import { auth } from "@homarr/auth/next";
 import { BoardProvider } from "@homarr/boards/context";
 import { EditModeProvider } from "@homarr/boards/edit-mode";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { AppShellMain } from "@mantine/core";
-import { TRPCError } from "@trpc/server";
-import { notFound, redirect } from "next/navigation";
-import type { JSX, PropsWithChildren } from "react";
 
 import { MainHeader } from "~/components/layout/header";
 import { BoardLogoWithTitle } from "~/components/layout/logo/board-logo";
@@ -61,7 +62,11 @@ export const createBoardLayout = <TParams extends Params>({
             <BoardMantineProvider defaultColorScheme={colorScheme}>
               <CustomCss />
               <ClientShell hasNavigation={false}>
-                <MainHeader logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />} actions={headerActions} hasNavigation={false} />
+                <MainHeader
+                  logo={<BoardLogoWithTitle size="md" hideTitleOnMobile />}
+                  actions={headerActions}
+                  hasNavigation={false}
+                />
                 <AppShellMain>{children}</AppShellMain>
               </ClientShell>
             </BoardMantineProvider>

@@ -1,12 +1,13 @@
+import { notFound } from "next/navigation";
+import { Container, Group, Stack, Title } from "@mantine/core";
+import { z } from "zod/v4";
+
 import { auth } from "@homarr/auth/next";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { IntegrationAvatar } from "@homarr/ui";
 import type { integrationCreateSchema } from "@homarr/validation/integration";
-import { Container, Group, Stack, Title } from "@mantine/core";
-import { notFound } from "next/navigation";
-import { z } from "zod/v4";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NewIntegrationForm } from "./_integration-new-form";

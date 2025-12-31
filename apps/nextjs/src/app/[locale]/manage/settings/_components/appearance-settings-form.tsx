@@ -1,12 +1,13 @@
 "use client";
 
+import { Group, Text } from "@mantine/core";
+import { IconMoon, IconSun } from "@tabler/icons-react";
+
 import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemes } from "@homarr/definitions";
 import type { ServerSettings } from "@homarr/server-settings";
 import { useScopedI18n } from "@homarr/translation/client";
 import { SelectWithCustomItems } from "@homarr/ui";
-import { Group, Text } from "@mantine/core";
-import { IconMoon, IconSun } from "@tabler/icons-react";
 
 import { CommonSettingsForm } from "./common-form";
 
