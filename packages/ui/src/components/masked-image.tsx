@@ -1,8 +1,8 @@
-import React from "react";
-import { getThemeColor, useMantineTheme } from "@mantine/core";
 import type { MantineColor } from "@mantine/core";
+import { getThemeColor, useMantineTheme } from "@mantine/core";
 import combineClasses from "clsx";
 import type { Property } from "csstype";
+import React from "react";
 
 import classes from "./masked-image.module.css";
 

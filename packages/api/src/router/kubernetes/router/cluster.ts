@@ -1,7 +1,6 @@
+import type { ClusterResourceCount, KubernetesCluster } from "@homarr/definitions";
 import type { V1NodeList, VersionInfo } from "@kubernetes/client-node";
 import { TRPCError } from "@trpc/server";
-
-import type { ClusterResourceCount, KubernetesCluster } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
@@ -135,41 +134,39 @@ export const clusterRouter = createTRPCRouter({
         });
       }
     }),
-  getClusterResourceCounts: permissionRequiredProcedure
-    .requiresPermission("admin")
-    .query(async (): Promise<ClusterResourceCount[]> => {
-      const { coreApi, networkingApi } = KubernetesClient.getInstance();
+  getClusterResourceCounts: permissionRequiredProcedure.requiresPermission("admin").query(async (): Promise<ClusterResourceCount[]> => {
+    const { coreApi, networkingApi } = KubernetesClient.getInstance();
 
-      try {
-        const [pods, ingresses, services, configMaps, namespaces, nodes, secrets, volumes] = await Promise.all([
-          coreApi.listPodForAllNamespaces(),
-          networkingApi.listIngressForAllNamespaces(),
-          coreApi.listServiceForAllNamespaces(),
-          coreApi.listConfigMapForAllNamespaces(),
-          coreApi.listNamespace(),
-          coreApi.listNode(),
-          coreApi.listSecretForAllNamespaces(),
-          coreApi.listPersistentVolumeClaimForAllNamespaces(),
-        ]);
+    try {
+      const [pods, ingresses, services, configMaps, namespaces, nodes, secrets, volumes] = await Promise.all([
+        coreApi.listPodForAllNamespaces(),
+        networkingApi.listIngressForAllNamespaces(),
+        coreApi.listServiceForAllNamespaces(),
+        coreApi.listConfigMapForAllNamespaces(),
+        coreApi.listNamespace(),
+        coreApi.listNode(),
+        coreApi.listSecretForAllNamespaces(),
+        coreApi.listPersistentVolumeClaimForAllNamespaces(),
+      ]);
 
-        return [
-          { label: "nodes", count: nodes.items.length },
-          { label: "namespaces", count: namespaces.items.length },
-          { label: "ingresses", count: ingresses.items.length },
-          { label: "services", count: services.items.length },
-          { label: "pods", count: pods.items.length },
-          { label: "secrets", count: secrets.items.length },
-          { label: "configmaps", count: configMaps.items.length },
-          { label: "volumes", count: volumes.items.length },
-        ];
-      } catch (error) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "An error occurred while fetching Kubernetes resources count",
-          cause: error,
-        });
-      }
-    }),
+      return [
+        { label: "nodes", count: nodes.items.length },
+        { label: "namespaces", count: namespaces.items.length },
+        { label: "ingresses", count: ingresses.items.length },
+        { label: "services", count: services.items.length },
+        { label: "pods", count: pods.items.length },
+        { label: "secrets", count: secrets.items.length },
+        { label: "configmaps", count: configMaps.items.length },
+        { label: "volumes", count: volumes.items.length },
+      ];
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "An error occurred while fetching Kubernetes resources count",
+        cause: error,
+      });
+    }
+  }),
 });
 
 function getProviders(versionInfo: VersionInfo, nodes: V1NodeList) {

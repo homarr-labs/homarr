@@ -1,24 +1,5 @@
 "use client";
 
-import { startTransition, useCallback, useState } from "react";
-import {
-  Badge,
-  Button,
-  Card,
-  Group,
-  PasswordInput,
-  Stack,
-  Stepper,
-  Table,
-  Text,
-  TextInput,
-  Title,
-  Tooltip,
-} from "@mantine/core";
-import { useListState } from "@mantine/hooks";
-import { IconPlus, IconUserCheck } from "@tabler/icons-react";
-import { z } from "zod/v4";
-
 import { clientApi } from "@homarr/api/client";
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { everyoneGroup, groupPermissions } from "@homarr/definitions";
@@ -30,6 +11,11 @@ import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { CustomPasswordInput, UserAvatar } from "@homarr/ui";
 import { createCustomErrorParams } from "@homarr/validation/form/i18n";
 import { userPasswordSchema } from "@homarr/validation/user";
+import { Badge, Button, Card, Group, PasswordInput, Stack, Stepper, Table, Text, TextInput, Title, Tooltip } from "@mantine/core";
+import { useListState } from "@mantine/hooks";
+import { IconPlus, IconUserCheck } from "@tabler/icons-react";
+import { startTransition, useCallback, useState } from "react";
+import { z } from "zod/v4";
 
 import { GroupSelectModal } from "~/components/access/group-select-modal";
 import { StepperNavigationComponent } from "./stepper-navigation";
@@ -50,10 +36,7 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
 
   const stepperMax = 4;
   const [active, setActive] = useState(0);
-  const nextStep = useCallback(
-    () => setActive((current) => (current < stepperMax ? current + 1 : current)),
-    [setActive],
-  );
+  const nextStep = useCallback(() => setActive((current) => (current < stepperMax ? current + 1 : current)), [setActive]);
   const prevStep = useCallback(() => setActive((current) => (current > 0 ? current - 1 : current)), [setActive]);
   const hasNext = active < stepperMax;
   const hasPrevious = active > 0;
@@ -151,12 +134,7 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
           <form>
             <Card p="xl" shadow="md" withBorder>
               <Stack gap="md">
-                <TextInput
-                  label={tUserField("username.label")}
-                  variant="filled"
-                  withAsterisk
-                  {...generalForm.getInputProps("username")}
-                />
+                <TextInput label={tUserField("username.label")} variant="filled" withAsterisk {...generalForm.getInputProps("username")} />
 
                 <TextInput label={tUserField("email.label")} variant="filled" {...generalForm.getInputProps("email")} />
               </Stack>
@@ -188,9 +166,7 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
           <Card p="xl" shadow="md" withBorder>
             <GroupsForm
               initialGroups={initialGroups}
-              addGroup={(groupId) =>
-                groupsForm.setValues((value) => ({ groups: value.groups?.concat(groupId) ?? [groupId] }))
-              }
+              addGroup={(groupId) => groupsForm.setValues((value) => ({ groups: value.groups?.concat(groupId) ?? [groupId] }))}
               removeGroup={(groupId) => {
                 groupsForm.setValues((value) => ({ groups: value.groups?.filter((group) => group !== groupId) ?? [] }));
               }}
@@ -270,12 +246,7 @@ const GroupsForm = ({ addGroup, removeGroup, initialGroups }: GroupsFormProps) =
               {t("management.page.user.create.step.groups.description", { everyoneGroup })}
             </Text>
           </Stack>
-          <Button
-            variant="subtle"
-            color="gray"
-            leftSection={<IconPlus size={16} stroke={1.5} />}
-            onClick={handleAddClick}
-          >
+          <Button variant="subtle" color="gray" leftSection={<IconPlus size={16} stroke={1.5} />} onClick={handleAddClick}>
             {t("common.action.add")}
           </Button>
         </Group>
@@ -295,14 +266,10 @@ const GroupsForm = ({ addGroup, removeGroup, initialGroups }: GroupsFormProps) =
                   <Group gap="xs">
                     {Object.entries(groupPermissions)
                       .flatMap(([key, values]) =>
-                        Array.isArray(values)
-                          ? values.map((value) => ({ key, value: value as string }))
-                          : [{ key, value: key }],
+                        Array.isArray(values) ? values.map((value) => ({ key, value: value as string })) : [{ key, value: key }],
                       )
                       .filter(({ key, value }) =>
-                        group.permissions.some(
-                          (permission) => permission === (key === value ? key : `${key}-${value}`),
-                        ),
+                        group.permissions.some((permission) => permission === (key === value ? key : `${key}-${value}`)),
                       )
                       .map(({ key, value }) => (
                         <PermissionBadge key={`${key}-${value}`} category={key} value={value} />

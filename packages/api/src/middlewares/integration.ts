@@ -1,6 +1,3 @@
-import { TRPCError } from "@trpc/server";
-import { z } from "zod/v4";
-
 import type { Session } from "@homarr/auth";
 import { hasQueryAccessToIntegrationsAsync } from "@homarr/auth/server";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
@@ -10,6 +7,8 @@ import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
 import { integrations } from "@homarr/db/schema";
 import type { IntegrationKind } from "@homarr/definitions";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod/v4";
 
 import { publicProcedure } from "../trpc";
 
@@ -53,14 +52,7 @@ export const createOneIntegrationMiddleware = <TKind extends IntegrationKind>(
 
     await throwIfActionIsNotAllowedAsync(action, ctx.db, [integration], ctx.session);
 
-    const {
-      secrets,
-      kind,
-      items: _ignore1,
-      groupPermissions: _ignore2,
-      userPermissions: _ignore3,
-      ...rest
-    } = integration;
+    const { secrets, kind, items: _ignore1, groupPermissions: _ignore2, userPermissions: _ignore3, ...rest } = integration;
 
     return next({
       ctx: {

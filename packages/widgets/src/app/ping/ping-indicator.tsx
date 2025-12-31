@@ -1,8 +1,7 @@
-import { useState } from "react";
-import { IconCheck, IconX } from "@tabler/icons-react";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { IconCheck, IconX } from "@tabler/icons-react";
+import { useState } from "react";
 
 import { PingDot } from "./ping-dot";
 
@@ -38,11 +37,7 @@ export const PingIndicator = ({ href }: PingIndicatorProps) => {
     <PingDot
       icon={isError ? IconX : IconCheck}
       color={isError ? "red" : "green"}
-      tooltip={
-        "statusCode" in pingResult
-          ? `${pingResult.statusCode} - ${pingResult.durationMs.toFixed(0)}ms`
-          : pingResult.error
-      }
+      tooltip={"statusCode" in pingResult ? `${pingResult.statusCode} - ${pingResult.durationMs.toFixed(0)}ms` : pingResult.error}
     />
   );
 };

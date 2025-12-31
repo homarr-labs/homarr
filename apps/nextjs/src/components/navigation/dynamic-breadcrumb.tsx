@@ -1,11 +1,10 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { Anchor, Badge, Breadcrumbs, Text } from "@mantine/core";
-import { IconHomeFilled } from "@tabler/icons-react";
-
 import type { TranslationKeys } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Anchor, Badge, Breadcrumbs, Text } from "@mantine/core";
+import { IconHomeFilled } from "@tabler/icons-react";
+import { usePathname } from "next/navigation";
 
 interface DynamicBreadcrumbProps {
   customHome?: string | null;

@@ -1,9 +1,8 @@
+import { humanFileSize } from "@homarr/common";
+import { useScopedI18n } from "@homarr/translation/client";
 import { ActionIcon, Button, Card, Group, Text } from "@mantine/core";
 import type { FileWithPath } from "@mantine/dropzone";
 import { IconPencil } from "@tabler/icons-react";
-
-import { humanFileSize } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
 
 interface FileInfoCardProps {
   file: FileWithPath;
@@ -23,13 +22,7 @@ export const FileInfoCard = ({ file, onRemove }: FileInfoCardProps) => {
             {humanFileSize(file.size)}
           </Text>
         </Group>
-        <Button
-          variant="subtle"
-          color="gray"
-          rightSection={<IconPencil size={16} stroke={1.5} />}
-          onClick={onRemove}
-          visibleFrom="md"
-        >
+        <Button variant="subtle" color="gray" rightSection={<IconPencil size={16} stroke={1.5} />} onClick={onRemove} visibleFrom="md">
           {tFileInfo("action.change")}
         </Button>
         <ActionIcon size="sm" variant="subtle" color="gray" hiddenFrom="md" onClick={onRemove}>

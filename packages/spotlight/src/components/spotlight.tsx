@@ -1,14 +1,13 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
-import { useMemo, useRef, useState } from "react";
-import { ActionIcon, Center, Group, Kbd } from "@mantine/core";
-import { Spotlight as MantineSpotlight } from "@mantine/spotlight";
-import { IconQuestionMark, IconSearch, IconX } from "@tabler/icons-react";
-
 import { hotkeys } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
+import { ActionIcon, Center, Group, Kbd } from "@mantine/core";
+import { Spotlight as MantineSpotlight } from "@mantine/spotlight";
+import { IconQuestionMark, IconSearch, IconX } from "@tabler/icons-react";
+import type { Dispatch, SetStateAction } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import type { inferSearchInteractionOptions } from "../lib/interaction";
 import type { SearchMode } from "../lib/mode";
@@ -131,11 +130,7 @@ const SpotlightWithActiveMode = ({ modeState, activeMode }: SpotlightWithActiveM
 
       <MantineSpotlight.ActionsList>
         {childrenOptions ? (
-          <SpotlightChildrenActions
-            childrenOptions={childrenOptions}
-            query={query}
-            setChildrenOptions={setChildrenOptions}
-          />
+          <SpotlightChildrenActions childrenOptions={childrenOptions} query={query} setChildrenOptions={setChildrenOptions} />
         ) : (
           <SpotlightActionGroups
             setMode={(mode) => {

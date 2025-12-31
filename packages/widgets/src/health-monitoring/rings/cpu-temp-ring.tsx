@@ -3,15 +3,7 @@ import { IconCpu } from "@tabler/icons-react";
 
 import { progressColor } from "../system-health";
 
-export const CpuTempRing = ({
-  fahrenheit,
-  cpuTemp,
-  isTiny,
-}: {
-  fahrenheit: boolean;
-  cpuTemp: number | undefined;
-  isTiny: boolean;
-}) => {
+export const CpuTempRing = ({ fahrenheit, cpuTemp, isTiny }: { fahrenheit: boolean; cpuTemp: number | undefined; isTiny: boolean }) => {
   if (!cpuTemp) {
     return null;
   }

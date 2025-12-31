@@ -1,8 +1,7 @@
+import { capitalize } from "@homarr/common";
 import type { IconNode } from "@tabler/icons-react";
 import { createReactComponent } from "@tabler/icons-react";
 import { parseSync } from "svgson";
-
-import { capitalize } from "@homarr/common";
 
 interface CustomIconOptions {
   name: string;

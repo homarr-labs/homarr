@@ -13,7 +13,6 @@ export const createAdapter = (db: Database, provider: SupportedAuthProvider | "u
     ...drizzleAdapter,
     // We override the default implementation as we want to have a provider
     // flag in the user instead of the account to not intermingle users from different providers
-    // eslint-disable-next-line no-restricted-syntax
     getUserByEmail: async (email) => {
       if (provider === "unknown") {
         throw new Error("Unable to get user by email for unknown provider");
@@ -37,7 +36,6 @@ export const createAdapter = (db: Database, provider: SupportedAuthProvider | "u
       return {
         ...user,
         // We allow null as email for credentials provider
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         email: user.email!,
       };
     },

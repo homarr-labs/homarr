@@ -1,9 +1,8 @@
-import { observable } from "@trpc/server/observable";
-import { z } from "zod/v4";
-
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { StreamSession } from "@homarr/integrations";
 import { mediaServerRequestHandler } from "@homarr/request-handler/media-server";
+import { observable } from "@trpc/server/observable";
+import { z } from "zod/v4";
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";

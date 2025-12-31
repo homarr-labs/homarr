@@ -1,9 +1,8 @@
 import "server-only";
 
-import { notFound, redirect } from "next/navigation";
-import { TRPCError } from "@trpc/server";
-
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { TRPCError } from "@trpc/server";
+import { notFound, redirect } from "next/navigation";
 
 const logger = createLogger({ module: "trpcCatchError" });
 

@@ -1,15 +1,11 @@
 import type tls from "node:tls";
-import axios from "axios";
-import { HttpCookieAgent, HttpsCookieAgent } from "http-cookie-agent/http";
-
 import { getPortFromUrl } from "@homarr/common";
-import {
-  getAllTrustedCertificatesAsync,
-  getTrustedCertificateHostnamesAsync,
-} from "@homarr/core/infrastructure/certificates";
+import { getAllTrustedCertificatesAsync, getTrustedCertificateHostnamesAsync } from "@homarr/core/infrastructure/certificates";
 import { createCustomCheckServerIdentity } from "@homarr/core/infrastructure/http";
 import type { SiteStats } from "@homarr/node-unifi";
 import Unifi from "@homarr/node-unifi";
+import axios from "axios";
+import { HttpCookieAgent, HttpsCookieAgent } from "http-cookie-agent/http";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
@@ -57,10 +53,7 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     return { success: true };
   }
 
-  private async createControllerClientAsync(options?: {
-    ca: string | string[];
-    checkServerIdentity: typeof tls.checkServerIdentity;
-  }) {
+  private async createControllerClientAsync(options?: { ca: string | string[]; checkServerIdentity: typeof tls.checkServerIdentity }) {
     const url = new URL(this.integration.url);
     const certificateOptions = options ?? {
       ca: await getAllTrustedCertificatesAsync(),
@@ -97,10 +90,12 @@ export class UnifiControllerIntegration extends Integration implements NetworkCo
     return this.getBooleanValueOverAllSites(data, subsystem, selectCallback) ? "enabled" : "disabled";
   }
 
-  private getNumericValueOverAllSites<
-    S extends HealthSubsystem,
-    T extends Extract<SiteStats["health"][number], { subsystem: S }>,
-  >(data: SiteStats[], subsystem: S, selectCallback: (obj: T) => number, strategy: "average" | "sum" | "max"): number {
+  private getNumericValueOverAllSites<S extends HealthSubsystem, T extends Extract<SiteStats["health"][number], { subsystem: S }>>(
+    data: SiteStats[],
+    subsystem: S,
+    selectCallback: (obj: T) => number,
+    strategy: "average" | "sum" | "max",
+  ): number {
     const values = data.map((site) => selectCallback(this.getSubsystem(site.health, subsystem) as T));
 
     if (strategy === "sum") {

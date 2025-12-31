@@ -1,8 +1,7 @@
-import { z } from "zod/v4";
-
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
+import { z } from "zod/v4";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -17,10 +16,7 @@ import type {
   RequestStats,
   RequestUser,
 } from "../interfaces/media-requests/media-request-types";
-import {
-  UpstreamMediaAvailability,
-  UpstreamMediaRequestStatus,
-} from "../interfaces/media-requests/media-request-types";
+import { UpstreamMediaAvailability, UpstreamMediaRequestStatus } from "../interfaces/media-requests/media-request-types";
 
 const logger = createLogger({ module: "overseerrIntegration" });
 
@@ -36,10 +32,7 @@ interface OverseerrSearchResult {
 /**
  * Overseerr Integration. See https://api-docs.overseerr.dev
  */
-export class OverseerrIntegration
-  extends Integration
-  implements IMediaRequestIntegration, ISearchableIntegration<OverseerrSearchResult>
-{
+export class OverseerrIntegration extends Integration implements IMediaRequestIntegration, ISearchableIntegration<OverseerrSearchResult> {
   public async searchAsync(query: string) {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/search", { query }), {
       headers: {
@@ -116,14 +109,11 @@ export class OverseerrIntegration
 
   public async getRequestsAsync(): Promise<MediaRequest[]> {
     //Ensure to get all pending request first
-    const pendingRequests = await fetchWithTrustedCertificatesAsync(
-      this.url("/api/v1/request", { take: -1, filter: "pending" }),
-      {
-        headers: {
-          "X-Api-Key": this.getSecretValue("apiKey"),
-        },
+    const pendingRequests = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request", { take: -1, filter: "pending" }), {
+      headers: {
+        "X-Api-Key": this.getSecretValue("apiKey"),
       },
-    );
+    });
 
     //Change 20 to integration setting (set to -1 for all)
     const allRequests = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/request", { take: 20 }), {
@@ -139,9 +129,7 @@ export class OverseerrIntegration
     let requests;
 
     if (pendingResults.length > 0 && allResults.length > 0) {
-      requests = pendingResults.concat(
-        allResults.filter(({ status }) => status !== UpstreamMediaRequestStatus.PendingApproval),
-      );
+      requests = pendingResults.concat(allResults.filter(({ status }) => status !== UpstreamMediaRequestStatus.PendingApproval));
     } else if (pendingResults.length > 0) requests = pendingResults;
     else if (allResults.length > 0) requests = allResults;
     else return Promise.all([]);
@@ -475,8 +463,6 @@ const getResultImagePath = (result: Exclude<z.infer<typeof searchSchema>["result
     case "movie":
       return result.posterPath;
     default:
-      throw new Error(
-        `Unable to get search result image from media type '${(result as { mediaType: string }).mediaType}'`,
-      );
+      throw new Error(`Unable to get search result image from media type '${(result as { mediaType: string }).mediaType}'`);
   }
 };

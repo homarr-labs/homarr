@@ -1,7 +1,3 @@
-import type { NextRequest } from "next/server";
-import { userAgent } from "next/server";
-import { createOpenApiFetchHandler } from "trpc-to-openapi";
-
 import { appRouter, createTRPCContext } from "@homarr/api";
 import type { Session } from "@homarr/auth";
 import { hashPasswordAsync } from "@homarr/auth";
@@ -10,6 +6,9 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db, eq } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema";
+import type { NextRequest } from "next/server";
+import { userAgent } from "next/server";
+import { createOpenApiFetchHandler } from "trpc-to-openapi";
 
 const logger = createLogger({ module: "trpcOpenApiRoute" });
 
@@ -40,9 +39,7 @@ const getSessionOrDefaultFromHeadersAsync = async (
   ipAdress: string | null,
   userAgent: string,
 ): Promise<Session | null> => {
-  logger.info(
-    `Creating OpenAPI fetch handler for user ${apiKeyHeaderValue ? "with an api key" : "without an api key"}`,
-  );
+  logger.info(`Creating OpenAPI fetch handler for user ${apiKeyHeaderValue ? "with an api key" : "without an api key"}`);
 
   if (apiKeyHeaderValue === null) {
     return null;
@@ -96,10 +93,4 @@ const getSessionOrDefaultFromHeadersAsync = async (
   return await createSessionAsync(db, apiKeyFromDb.user);
 };
 
-export {
-  handlerAsync as DELETE,
-  handlerAsync as GET,
-  handlerAsync as PATCH,
-  handlerAsync as POST,
-  handlerAsync as PUT,
-};
+export { handlerAsync as DELETE, handlerAsync as GET, handlerAsync as PATCH, handlerAsync as POST, handlerAsync as PUT };

@@ -1,7 +1,6 @@
+import type { SearchEngineType } from "@homarr/definitions";
 import type { ZodTypeAny } from "zod/v4";
 import { z } from "zod/v4";
-
-import type { SearchEngineType } from "@homarr/definitions";
 
 const genericSearchEngine = z.object({
   type: z.literal("generic" satisfies SearchEngineType),
@@ -20,12 +19,8 @@ const baseSearchEngineManageSchema = z.object({
   description: z.string().max(512).nullable(),
 });
 
-const createManageSearchEngineSchema = <T extends ZodTypeAny>(
-  callback: (schema: typeof baseSearchEngineManageSchema) => T,
-) =>
-  z
-    .discriminatedUnion("type", [genericSearchEngine, fromIntegrationSearchEngine])
-    .and(callback(baseSearchEngineManageSchema));
+const createManageSearchEngineSchema = <T extends ZodTypeAny>(callback: (schema: typeof baseSearchEngineManageSchema) => T) =>
+  z.discriminatedUnion("type", [genericSearchEngine, fromIntegrationSearchEngine]).and(callback(baseSearchEngineManageSchema));
 
 export const searchEngineManageSchema = createManageSearchEngineSchema((schema) => schema);
 

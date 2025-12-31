@@ -1,11 +1,11 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
-import { useCallback } from "react";
-import { usePathname } from "next/navigation";
 import type { AccordionProps } from "@mantine/core";
 import { Accordion } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
+import { usePathname } from "next/navigation";
+import type { PropsWithChildren } from "react";
+import { useCallback } from "react";
 
 type ActiveTabAccordionProps = PropsWithChildren<Omit<AccordionProps<false>, "onChange">>;
 

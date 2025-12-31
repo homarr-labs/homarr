@@ -1,24 +1,11 @@
 import { X509Certificate } from "node:crypto";
-import { notFound } from "next/navigation";
-import {
-  Button,
-  Group,
-  Stack,
-  Table,
-  TableTbody,
-  TableTd,
-  TableTh,
-  TableThead,
-  TableTr,
-  Text,
-  Title,
-} from "@mantine/core";
-import { IconCertificateOff } from "@tabler/icons-react";
-
 import { auth } from "@homarr/auth/next";
 import { getTrustedCertificateHostnamesAsync } from "@homarr/core/infrastructure/certificates";
 import { getI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
+import { Button, Group, Stack, Table, TableTbody, TableTd, TableTh, TableThead, TableTr, Text, Title } from "@mantine/core";
+import { IconCertificateOff } from "@tabler/icons-react";
+import { notFound } from "next/navigation";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
@@ -63,9 +50,7 @@ export default async function TrustedHostnamesPage() {
           </Button>
         </Group>
 
-        {trustedHostnames.length === 0 && (
-          <NoResults icon={IconCertificateOff} title={t("certificate.page.hostnames.noResults.title")} />
-        )}
+        {trustedHostnames.length === 0 && <NoResults icon={IconCertificateOff} title={t("certificate.page.hostnames.noResults.title")} />}
 
         {trustedHostnames.length >= 1 && (
           <Table>

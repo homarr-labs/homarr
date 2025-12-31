@@ -1,8 +1,7 @@
-import dayjs from "dayjs";
-import { z } from "zod/v4";
-
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
+import dayjs from "dayjs";
+import { z } from "zod/v4";
 
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 

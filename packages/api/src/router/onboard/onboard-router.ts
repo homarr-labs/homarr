@@ -1,8 +1,7 @@
-import { z } from "zod/v4";
-
 import { onboarding } from "@homarr/db/schema";
 import { onboardingSteps } from "@homarr/definitions";
 import { zodEnumFromArray } from "@homarr/validation/enums";
+import { z } from "zod/v4";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { getOnboardingOrFallbackAsync, nextOnboardingStepAsync } from "./onboard-queries";

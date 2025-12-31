@@ -1,7 +1,6 @@
-import type { Config } from "drizzle-kit";
-
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
+import type { Config } from "drizzle-kit";
 
 export default {
   dialect: "sqlite",

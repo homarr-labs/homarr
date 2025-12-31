@@ -1,11 +1,9 @@
-import SuperJSON from "superjson";
-
 import { createId } from "@homarr/common";
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-
-import { eq } from "../..";
+import SuperJSON from "superjson";
 import type { Database } from "../..";
+import { eq } from "../..";
 import { items } from "../../schema";
 
 export async function migrateReleaseWidgetProviderToOptionsAsync(db: Database) {

@@ -1,20 +1,10 @@
 "use client";
 
-import {
-  ActionIcon,
-  Box,
-  Card,
-  Divider,
-  Flex,
-  Group,
-  Indicator,
-  List,
-  Modal,
-  Progress,
-  Stack,
-  Text,
-  Tooltip,
-} from "@mantine/core";
+import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
+import type { TranslationFunction } from "@homarr/translation";
+import { useI18n } from "@homarr/translation/client";
+import { ActionIcon, Box, Card, Divider, Flex, Group, Indicator, List, Modal, Progress, Stack, Text, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconBrain,
@@ -31,11 +21,6 @@ import combineClasses from "clsx";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 
-import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
-import type { TranslationFunction } from "@homarr/translation";
-import { useI18n } from "@homarr/translation/client";
-
 import type { WidgetComponentProps } from "../definition";
 import { CpuRing } from "./rings/cpu-ring";
 import { CpuTempRing } from "./rings/cpu-temp-ring";
@@ -44,11 +29,7 @@ import classes from "./system-health.module.css";
 
 dayjs.extend(duration);
 
-export const SystemHealthMonitoring = ({
-  options,
-  integrationIds,
-  width,
-}: WidgetComponentProps<"healthMonitoring">) => {
+export const SystemHealthMonitoring = ({ options, integrationIds, width }: WidgetComponentProps<"healthMonitoring">) => {
   const t = useI18n();
   const [healthData] = clientApi.widget.healthMonitoring.getSystemHealthStatus.useSuspenseQuery(
     {
@@ -74,9 +55,7 @@ export const SystemHealthMonitoring = ({
             return undefined;
           }
           return prevData.map((item) =>
-            item.integrationId === data.integrationId
-              ? { ...item, healthInfo: data.healthInfo, updatedAt: data.timestamp }
-              : item,
+            item.integrationId === data.integrationId ? { ...item, healthInfo: data.healthInfo, updatedAt: data.timestamp } : item,
           );
         });
       },
@@ -121,13 +100,7 @@ export const SystemHealthMonitoring = ({
                   <IconInfoCircle className="health-monitoring-information-icon" size={30} onClick={open} />
                 </ActionIcon>
               </Indicator>
-              <Modal
-                opened={opened}
-                onClose={close}
-                size="auto"
-                title={t("widget.healthMonitoring.popover.information")}
-                centered
-              >
+              <Modal opened={opened} onClose={close} size="auto" title={t("widget.healthMonitoring.popover.information")} centered>
                 <Stack gap="10px" className="health-monitoring-modal-stack">
                   <Divider />
                   <List className="health-monitoring-information-list" center spacing="xs">
@@ -161,12 +134,10 @@ export const SystemHealthMonitoring = ({
                             {t("widget.healthMonitoring.popover.minute")} {healthInfo.loadAverage["1min"]}%
                           </List.Item>
                           <List.Item className="health-monitoring-information-load-average-5min">
-                            {t("widget.healthMonitoring.popover.minutes", { count: "5" })}{" "}
-                            {healthInfo.loadAverage["5min"]}%
+                            {t("widget.healthMonitoring.popover.minutes", { count: "5" })} {healthInfo.loadAverage["5min"]}%
                           </List.Item>
                           <List.Item className="health-monitoring-information-load-average-15min">
-                            {t("widget.healthMonitoring.popover.minutes", { count: "15" })}{" "}
-                            {healthInfo.loadAverage["15min"]}%
+                            {t("widget.healthMonitoring.popover.minutes", { count: "15" })} {healthInfo.loadAverage["15min"]}%
                           </List.Item>
                         </List>
                       </>
@@ -177,16 +148,8 @@ export const SystemHealthMonitoring = ({
             </Box>
             <Flex className="health-monitoring-information-card-elements" justify="center" align="center" wrap="wrap">
               {options.cpu && <CpuRing cpuUtilization={healthInfo.cpuUtilization} isTiny={isTiny} />}
-              {options.cpu && (
-                <CpuTempRing fahrenheit={options.fahrenheit} cpuTemp={healthInfo.cpuTemp} isTiny={isTiny} />
-              )}
-              {options.memory && (
-                <MemoryRing
-                  available={healthInfo.memAvailableInBytes}
-                  used={healthInfo.memUsedInBytes}
-                  isTiny={isTiny}
-                />
-              )}
+              {options.cpu && <CpuTempRing fahrenheit={options.fahrenheit} cpuTemp={healthInfo.cpuTemp} isTiny={isTiny} />}
+              {options.memory && <MemoryRing available={healthInfo.memAvailableInBytes} used={healthInfo.memUsedInBytes} isTiny={isTiny} />}
             </Flex>
             {
               <Text className="health-monitoring-status-update-time" c="dimmed" size="xs" ta="center">
@@ -197,23 +160,14 @@ export const SystemHealthMonitoring = ({
               disksData.map((disk) => {
                 return (
                   <Card
-                    className={combineClasses(
-                      `health-monitoring-disk-card health-monitoring-disk-card-${integrationName}`,
-                      classes.card,
-                    )}
+                    className={combineClasses(`health-monitoring-disk-card health-monitoring-disk-card-${integrationName}`, classes.card)}
                     style={{ overflow: "visible" }}
                     key={disk.deviceName}
                     radius={board.itemRadius}
                     p="xs"
                   >
                     <Stack gap="sm">
-                      <Group
-                        className="health-monitoring-disk-status"
-                        justify="space-between"
-                        align="center"
-                        wrap="wrap"
-                        gap={8}
-                      >
+                      <Group className="health-monitoring-disk-status" justify="space-between" align="center" wrap="wrap" gap={8}>
                         <Group gap={4} wrap="nowrap">
                           <IconServer className="health-monitoring-disk-icon" size="1rem" />
                           <Text className="dihealth-monitoring-disk-name" size="xs">
@@ -223,9 +177,7 @@ export const SystemHealthMonitoring = ({
                         <Group gap={4} wrap="nowrap">
                           <IconTemperature className="health-monitoring-disk-temperature-icon" size="1rem" />
                           <Text className="health-monitoring-disk-temperature-value" size="xs">
-                            {options.fahrenheit
-                              ? `${(disk.temperature * 1.8 + 32).toFixed(1)}°F`
-                              : `${disk.temperature}°C`}
+                            {options.fahrenheit ? `${(disk.temperature * 1.8 + 32).toFixed(1)}°F` : `${disk.temperature}°C`}
                           </Text>
                         </Group>
                         <Group gap={4} wrap="nowrap">

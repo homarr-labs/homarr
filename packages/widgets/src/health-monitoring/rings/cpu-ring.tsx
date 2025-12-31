@@ -12,10 +12,7 @@ export const CpuRing = ({ cpuUtilization, isTiny }: { cpuUtilization: number; is
       thickness={isTiny ? 4 : 8}
       label={
         <Center style={{ flexDirection: "column" }}>
-          <Text
-            className="health-monitoring-cpu-utilization-value"
-            size={isTiny ? "8px" : "xs"}
-          >{`${cpuUtilization.toFixed(2)}%`}</Text>
+          <Text className="health-monitoring-cpu-utilization-value" size={isTiny ? "8px" : "xs"}>{`${cpuUtilization.toFixed(2)}%`}</Text>
           <IconCpu className="health-monitoring-cpu-utilization-icon" size={isTiny ? 8 : 16} />
         </Center>
       }

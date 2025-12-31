@@ -1,13 +1,12 @@
-import { useMemo, useState } from "react";
-import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
-
 import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { widgetImports } from "@homarr/widgets";
+import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
+import { IconSearch } from "@tabler/icons-react";
+import { useMemo, useState } from "react";
 
 import { useItemActions } from "./item-actions";
 
@@ -29,10 +28,7 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
     [t],
   );
 
-  const filteredItems = useMemo(
-    () => items.filter((item) => item.name.toLowerCase().includes(search.toLowerCase())),
-    [items, search],
-  );
+  const filteredItems = useMemo(() => items.filter((item) => item.name.toLowerCase().includes(search.toLowerCase())), [items, search]);
 
   const handleAdd = (kind: WidgetKind) => {
     createItem({ kind });
@@ -50,7 +46,6 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
         onKeyDown={(event) => {
           // Add item if there is only one item in the list and user presses Enter
           if (event.key === "Enter" && filteredItems.length === 1) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             handleAdd(filteredItems[0]!.kind);
           }
         }}

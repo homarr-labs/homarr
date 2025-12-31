@@ -1,11 +1,10 @@
-import type { ComponentType } from "react";
-import type { Loader } from "next/dynamic";
-import dynamic from "next/dynamic";
-import { Center, Loader as UiLoader } from "@mantine/core";
-
 import { objectEntries } from "@homarr/common";
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { SettingsContextProps } from "@homarr/settings/creator";
+import { Center, Loader as UiLoader } from "@mantine/core";
+import type { Loader } from "next/dynamic";
+import dynamic from "next/dynamic";
+import type { ComponentType } from "react";
 
 import * as app from "./app";
 import * as bookmarks from "./bookmarks";

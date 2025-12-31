@@ -29,7 +29,6 @@ const optionMapping: OptionMapping = {
     title: (oldOptions) => oldOptions.name,
     // It's safe to assume that the app exists, because the app is always created before the widget
     // And the mapping is created in insertAppsAsync
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     items: (oldOptions, appsMap) => oldOptions.items.map((item) => appsMap.get(item.id)!),
     layout: (oldOptions) => {
       const mappedLayouts: Record<typeof oldOptions.layout, WidgetComponentProps<"bookmarks">["options"]["layout"]> = {
@@ -66,14 +65,11 @@ const optionMapping: OptionMapping = {
   downloads: {
     activeTorrentThreshold: (oldOptions) =>
       "speedLimitOfActiveTorrents" in oldOptions ? oldOptions.speedLimitOfActiveTorrents : undefined,
-    applyFilterToRatio: (oldOptions) =>
-      "displayRatioWithFilter" in oldOptions ? oldOptions.displayRatioWithFilter : undefined,
+    applyFilterToRatio: (oldOptions) => ("displayRatioWithFilter" in oldOptions ? oldOptions.displayRatioWithFilter : undefined),
     categoryFilter: (oldOptions) => ("labelFilter" in oldOptions ? oldOptions.labelFilter : undefined),
-    filterIsWhitelist: (oldOptions) =>
-      "labelFilterIsWhitelist" in oldOptions ? oldOptions.labelFilterIsWhitelist : undefined,
+    filterIsWhitelist: (oldOptions) => ("labelFilterIsWhitelist" in oldOptions ? oldOptions.labelFilterIsWhitelist : undefined),
     enableRowSorting: (oldOptions) => ("rowSorting" in oldOptions ? oldOptions.rowSorting : undefined),
-    showCompletedTorrent: (oldOptions) =>
-      "displayCompletedTorrents" in oldOptions ? oldOptions.displayCompletedTorrents : undefined,
+    showCompletedTorrent: (oldOptions) => ("displayCompletedTorrents" in oldOptions ? oldOptions.displayCompletedTorrents : undefined),
     columns: () => ["integration", "name", "progress", "time", "actions"],
     defaultSort: () => "type",
     descendingDefaultSort: () => false,
@@ -145,21 +141,16 @@ const optionMapping: OptionMapping = {
   },
   healthMonitoring: {
     cpu: (oldOptions) =>
-      "cpu" in oldOptions
-        ? oldOptions.cpu
-        : oldOptions.graphsOrder.some((graph) => graph.key === "cpu" && graph.subValues.enabled),
+      "cpu" in oldOptions ? oldOptions.cpu : oldOptions.graphsOrder.some((graph) => graph.key === "cpu" && graph.subValues.enabled),
     memory: (oldOptions) =>
-      "memory" in oldOptions
-        ? oldOptions.memory
-        : oldOptions.graphsOrder.some((graph) => graph.key === "ram" && graph.subValues.enabled),
+      "memory" in oldOptions ? oldOptions.memory : oldOptions.graphsOrder.some((graph) => graph.key === "ram" && graph.subValues.enabled),
     fahrenheit: (oldOptions) => ("fahrenheit" in oldOptions ? oldOptions.fahrenheit : undefined),
     fileSystem: (oldOptions) =>
       "fileSystem" in oldOptions
         ? oldOptions.fileSystem
         : oldOptions.graphsOrder.some((graph) => graph.key === "storage" && graph.subValues.enabled),
     defaultTab: (oldOptions) => ("defaultTabState" in oldOptions ? oldOptions.defaultTabState : undefined),
-    sectionIndicatorRequirement: (oldOptions) =>
-      "sectionIndicatorColor" in oldOptions ? oldOptions.sectionIndicatorColor : undefined,
+    sectionIndicatorRequirement: (oldOptions) => ("sectionIndicatorColor" in oldOptions ? oldOptions.sectionIndicatorColor : undefined),
     showUptime: () => undefined,
     visibleClusterSections: (oldOptions) => {
       if (!("showNode" in oldOptions)) return undefined;

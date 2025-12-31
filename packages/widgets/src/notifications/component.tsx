@@ -1,13 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
-import { Card, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
-import { IconClock } from "@tabler/icons-react";
-
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useTimeAgo } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Card, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
+import { IconClock } from "@tabler/icons-react";
+import { useMemo } from "react";
 
 import type { WidgetComponentProps } from "../definition";
 

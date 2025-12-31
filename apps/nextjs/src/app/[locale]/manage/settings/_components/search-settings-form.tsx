@@ -1,10 +1,9 @@
 "use client";
 
-import { Select } from "@mantine/core";
-
 import { clientApi } from "@homarr/api/client";
 import type { ServerSettings } from "@homarr/server-settings";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Select } from "@mantine/core";
 
 import { CommonSettingsForm } from "./common-form";
 

@@ -25,7 +25,6 @@ export class DockerSingleton {
 
     return hostnames.map((host, i) => {
       // Check above ensures that ports[i] is not undefined
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const port = ports[i]!;
 
       return {

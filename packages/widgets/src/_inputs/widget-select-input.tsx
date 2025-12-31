@@ -1,12 +1,11 @@
 "use client";
 
-import { Group, Select } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
-
-import { translateIfNecessary } from "@homarr/translation";
 import type { stringOrTranslation } from "@homarr/translation";
+import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
+import { Group, Select } from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -59,15 +58,7 @@ export const WidgetSelectInput = ({ property, kind, options }: CommonWidgetInput
           <Group flex="1" gap="xs">
             {Icon && <Icon color="currentColor" opacity={0.6} size={18} stroke={1.5} />}
             {option.label}
-            {checked && (
-              <IconCheck
-                style={{ marginInlineStart: "auto" }}
-                color="currentColor"
-                opacity={0.6}
-                size={18}
-                stroke={1.5}
-              />
-            )}
+            {checked && <IconCheck style={{ marginInlineStart: "auto" }} color="currentColor" opacity={0.6} size={18} stroke={1.5} />}
           </Group>
         );
       }}

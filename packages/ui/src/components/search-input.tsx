@@ -1,11 +1,11 @@
 "use client";
 
-import type { ChangeEvent } from "react";
-import { useCallback, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Loader, TextInput } from "@mantine/core";
 import { useDebouncedCallback } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import type { ChangeEvent } from "react";
+import { useCallback, useState } from "react";
 
 interface SearchInputProps {
   defaultValue?: string;
@@ -14,7 +14,6 @@ interface SearchInputProps {
 }
 
 export const SearchInput = ({ placeholder, defaultValue, flexExpand = false }: SearchInputProps) => {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
   const { replace } = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();

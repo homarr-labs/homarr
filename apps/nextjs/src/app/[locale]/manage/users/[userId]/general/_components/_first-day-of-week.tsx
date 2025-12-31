@@ -1,11 +1,5 @@
 "use client";
 
-import { Button, Group, Radio, Stack } from "@mantine/core";
-import type { DayOfWeek } from "@mantine/dates";
-import dayjs from "dayjs";
-import localeData from "dayjs/plugin/localeData";
-import type { z } from "zod/v4";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -13,6 +7,11 @@ import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { userFirstDayOfWeekSchema } from "@homarr/validation/user";
+import { Button, Group, Radio, Stack } from "@mantine/core";
+import type { DayOfWeek } from "@mantine/dates";
+import dayjs from "dayjs";
+import localeData from "dayjs/plugin/localeData";
+import type { z } from "zod/v4";
 
 dayjs.extend(localeData);
 

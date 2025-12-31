@@ -20,17 +20,10 @@ interface GridAlgorithmOutput {
   items: GridAlgorithmItem[];
 }
 
-export const generateResponsiveGridFor = ({
-  items,
-  previousWidth,
-  width,
-  sectionId,
-}: GridAlgorithmInput): GridAlgorithmOutput => {
+export const generateResponsiveGridFor = ({ items, previousWidth, width, sectionId }: GridAlgorithmInput): GridAlgorithmOutput => {
   const itemsOfCurrentSection = items
     .filter((item) => item.sectionId === sectionId)
-    .sort((itemA, itemB) =>
-      itemA.yOffset === itemB.yOffset ? itemA.xOffset - itemB.xOffset : itemA.yOffset - itemB.yOffset,
-    );
+    .sort((itemA, itemB) => (itemA.yOffset === itemB.yOffset ? itemA.xOffset - itemB.xOffset : itemA.yOffset - itemB.yOffset));
   const normalizedItems = normalizeItems(itemsOfCurrentSection, width);
 
   if (itemsOfCurrentSection.length === 0) {
@@ -103,18 +96,12 @@ const normalizeItems = (items: GridAlgorithmItem[], columnCount: number) => {
  * @param item item to place
  * @param position position to place the item
  */
-const addItemToOccupied = (
-  occupied2d: boolean[][],
-  item: GridAlgorithmItem,
-  position: { x: number; y: number },
-  columnCount: number,
-) => {
+const addItemToOccupied = (occupied2d: boolean[][], item: GridAlgorithmItem, position: { x: number; y: number }, columnCount: number) => {
   for (let yOffset = 0; yOffset < item.height; yOffset++) {
     let row = occupied2d[position.y + yOffset];
     if (!row) {
       addRow(occupied2d, columnCount);
       // After adding it, it must exist
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       row = occupied2d[position.y + yOffset]!;
     }
 

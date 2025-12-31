@@ -19,7 +19,6 @@ export const insertSectionsAsync = async (
   const idMaps = new Map<string, string>([...wrapperIds, ...categoryIds].map((id) => [id, createId()]));
 
   const wrappersToInsert = wrappers.map((section) => ({
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     id: idMaps.get(section.id)!,
     boardId,
     xOffset: 0,
@@ -28,7 +27,6 @@ export const insertSectionsAsync = async (
   }));
 
   const categoriesToInsert = categories.map((section) => ({
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     id: idMaps.get(section.id)!,
     boardId,
     xOffset: 0,

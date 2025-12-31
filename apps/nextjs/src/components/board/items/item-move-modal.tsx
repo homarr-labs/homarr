@@ -1,11 +1,10 @@
-import { useCallback, useRef } from "react";
-import { Button, Grid, Group, NumberInput, Stack } from "@mantine/core";
-import { z } from "zod/v4";
-
 import { useZodForm } from "@homarr/form";
 import type { GridStack } from "@homarr/gridstack";
 import { createModal } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { Button, Grid, Group, NumberInput, Stack } from "@mantine/core";
+import { useCallback, useRef } from "react";
+import { z } from "zod/v4";
 
 import type { Item, SectionItem } from "~/app/[locale]/boards/_types";
 
@@ -48,9 +47,7 @@ export const ItemMoveModal = createModal<InnerProps>(({ actions, innerProps }) =
 
   const handleSubmit = useCallback(
     (values: Pick<Item["layouts"][number], "height" | "width" | "xOffset" | "yOffset">) => {
-      const gridItem = innerProps.gridStack
-        .getGridItems()
-        .find((item) => item.getAttribute("data-id") === innerProps.item.id);
+      const gridItem = innerProps.gridStack.getGridItems().find((item) => item.getAttribute("data-id") === innerProps.item.id);
       if (!gridItem) return;
       innerProps.gridStack.update(gridItem, {
         h: values.height,

@@ -1,8 +1,7 @@
-import { escapeForRegEx } from "@tiptap/react";
-import { z } from "zod/v4";
-
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { releasesRequestHandler } from "@homarr/request-handler/releases";
+import { escapeForRegEx } from "@tiptap/react";
+import { z } from "zod/v4";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";

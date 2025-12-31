@@ -1,13 +1,11 @@
-import { Box, Group } from "@mantine/core";
-
 import { getScopedI18n } from "@homarr/translation/server";
+import { Box, Group } from "@mantine/core";
 
 import "@xterm/xterm/css/xterm.css";
 
-import { notFound } from "next/navigation";
-
 import { auth } from "@homarr/auth/next";
 import { logsEnv } from "@homarr/core/infrastructure/logs/env";
+import { notFound } from "next/navigation";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { fullHeightWithoutHeaderAndFooter } from "~/constants";

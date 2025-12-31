@@ -1,19 +1,18 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
-import { ActionIcon, Button, Title } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import type { MRT_ColumnDef, MRT_Row } from "mantine-react-table";
-import { MantineReactTable } from "mantine-react-table";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { InviteCreateModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+import { ActionIcon, Button, Title } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import type { MRT_ColumnDef, MRT_Row } from "mantine-react-table";
+import { MantineReactTable } from "mantine-react-table";
+import { useCallback, useMemo } from "react";
 
 dayjs.extend(relativeTime);
 

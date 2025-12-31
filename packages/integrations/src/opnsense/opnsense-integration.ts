@@ -14,12 +14,7 @@ import type {
   FirewallMemorySummary,
   FirewallVersionSummary,
 } from "../interfaces/firewall-summary/firewall-summary-types";
-import {
-  opnsenseCPUSchema,
-  opnsenseInterfacesSchema,
-  opnsenseMemorySchema,
-  opnsenseSystemSummarySchema,
-} from "./opnsense-types";
+import { opnsenseCPUSchema, opnsenseInterfacesSchema, opnsenseMemorySchema, opnsenseSystemSummarySchema } from "./opnsense-types";
 
 export class OPNsenseIntegration extends Integration implements FirewallSummaryIntegration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -43,14 +38,11 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
   }
 
   public async getFirewallVersionAsync(): Promise<FirewallVersionSummary> {
-    const responseVersion = await fetchWithTrustedCertificatesAsync(
-      this.url("/api/diagnostics/system/system_information"),
-      {
-        headers: {
-          Authorization: this.getAuthHeaders(),
-        },
+    const responseVersion = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/system/system_information"), {
+      headers: {
+        Authorization: this.getAuthHeaders(),
       },
-    );
+    });
     if (!responseVersion.ok) {
       throw new ResponseError(responseVersion);
     }
@@ -104,14 +96,11 @@ export class OPNsenseIntegration extends Integration implements FirewallSummaryI
   }
 
   public async getFirewallMemoryAsync(): Promise<FirewallMemorySummary> {
-    const responseMemory = await fetchWithTrustedCertificatesAsync(
-      this.url("/api/diagnostics/system/system_resources"),
-      {
-        headers: {
-          Authorization: this.getAuthHeaders(),
-        },
+    const responseMemory = await fetchWithTrustedCertificatesAsync(this.url("/api/diagnostics/system/system_resources"), {
+      headers: {
+        Authorization: this.getAuthHeaders(),
       },
-    );
+    });
     if (!responseMemory.ok) {
       throw new ResponseError(responseMemory);
     }

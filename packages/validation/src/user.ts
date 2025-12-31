@@ -1,8 +1,7 @@
-import type { DayOfWeek } from "@mantine/dates";
-import { z } from "zod/v4";
-
 import { colorSchemes } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";
+import type { DayOfWeek } from "@mantine/dates";
+import { z } from "zod/v4";
 
 import { zodEnumFromArray } from "./enums";
 import { createCustomErrorParams } from "./form/i18n";

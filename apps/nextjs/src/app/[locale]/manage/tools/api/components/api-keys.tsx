@@ -1,17 +1,16 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
-import { ActionIcon, Button, Group, Stack, Text, Title } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
-import type { MRT_ColumnDef } from "mantine-react-table";
-import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
+import { ActionIcon, Button, Group, Stack, Text, Title } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
+import type { MRT_ColumnDef } from "mantine-react-table";
+import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
+import { useCallback, useMemo } from "react";
 
 import { CopyApiKeyModal } from "~/app/[locale]/manage/tools/api/components/copy-api-key-modal";
 

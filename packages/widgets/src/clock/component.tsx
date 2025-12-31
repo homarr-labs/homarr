@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
 import { Stack, Text, Title } from "@mantine/core";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import timezones from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { WidgetComponentProps } from "../definition";
 
@@ -32,15 +32,11 @@ export default function ClockWidget({ options, width }: WidgetComponentProps<"cl
         </Text>
       )}
       <Title className="clock-time-text" fw={700} order={sizing === "md" ? 2 : sizing === "sm" ? 4 : 6} lh="1">
-        {options.customTimeFormat
-          ? dayjs(time).tz(timezone).format(customTimeFormat)
-          : dayjs(time).tz(timezone).format(timeFormat)}
+        {options.customTimeFormat ? dayjs(time).tz(timezone).format(customTimeFormat) : dayjs(time).tz(timezone).format(timeFormat)}
       </Title>
       {options.showDate && (
         <Text className="clock-date-text" size={sizing} lineClamp={1}>
-          {options.customDateFormat
-            ? dayjs(time).tz(timezone).format(customDateFormat)
-            : dayjs(time).tz(timezone).format(dateFormat)}
+          {options.customDateFormat ? dayjs(time).tz(timezone).format(customDateFormat) : dayjs(time).tz(timezone).format(dateFormat)}
         </Text>
       )}
     </Stack>

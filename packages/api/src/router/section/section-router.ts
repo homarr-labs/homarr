@@ -1,8 +1,7 @@
-import { TRPCError } from "@trpc/server";
-import { z } from "zod/v4";
-
 import { and, eq } from "@homarr/db";
 import { sectionCollapseStates, sections } from "@homarr/db/schema";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod/v4";
 
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
@@ -45,8 +44,6 @@ export const sectionRouter = createTRPCRouter({
         .set({
           collapsed: input.collapsed,
         })
-        .where(
-          and(eq(sectionCollapseStates.sectionId, section.id), eq(sectionCollapseStates.userId, ctx.session.user.id)),
-        );
+        .where(and(eq(sectionCollapseStates.sectionId, section.id), eq(sectionCollapseStates.userId, ctx.session.user.id)));
     }),
 });

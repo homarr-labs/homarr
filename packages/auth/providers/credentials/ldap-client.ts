@@ -1,7 +1,6 @@
+import { objectEntries } from "@homarr/common";
 import type { Entry, SearchOptions as LdapSearchOptions } from "ldapts";
 import { Client } from "ldapts";
-
-import { objectEntries } from "@homarr/common";
 
 import { env } from "../../env";
 

@@ -1,8 +1,7 @@
-import { observable } from "@trpc/server/observable";
-
 import type { SystemHealthMonitoring } from "@homarr/integrations";
 import type { ProxmoxClusterInfo } from "@homarr/integrations/types";
 import { clusterInfoRequestHandler, systemInfoRequestHandler } from "@homarr/request-handler/health-monitoring";
+import { observable } from "@trpc/server/observable";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
@@ -48,13 +47,11 @@ export const healthMonitoringRouter = createTRPCRouter({
         };
       });
     }),
-  getClusterHealthStatus: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "proxmox", "mock"))
-    .query(async ({ ctx }) => {
-      const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
-      const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
-      return data;
-    }),
+  getClusterHealthStatus: publicProcedure.concat(createOneIntegrationMiddleware("query", "proxmox", "mock")).query(async ({ ctx }) => {
+    const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
+    const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+    return data;
+  }),
   subscribeClusterHealthStatus: publicProcedure
     .concat(createOneIntegrationMiddleware("query", "proxmox", "mock"))
     .subscription(({ ctx }) => {

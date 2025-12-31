@@ -1,8 +1,8 @@
 "use client";
 
+import { useDisclosure } from "@mantine/hooks";
 import type { PropsWithChildren } from "react";
 import { createContext, useContext } from "react";
-import { useDisclosure } from "@mantine/hooks";
 
 const EditModeContext = createContext<ReturnType<typeof useDisclosure> | null>(null);
 

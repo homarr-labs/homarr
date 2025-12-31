@@ -1,14 +1,13 @@
-import { useState } from "react";
-import type { SelectProps } from "@mantine/core";
-import { Button, Group, Loader, Select, Stack } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
+import type { SelectProps } from "@mantine/core";
+import { Button, Group, Loader, Select, Stack } from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
+import { useState } from "react";
 
 interface InnerProps {
   presentUserIds: string[];
@@ -53,9 +52,7 @@ export const UserSelectModal = createModal<InnerProps>(({ actions, innerProps })
           label={t("user.action.select.label")}
           searchable
           clearable
-          leftSection={
-            isPending ? <Loader size="xs" /> : currentUser ? <UserAvatar user={currentUser} size="xs" /> : undefined
-          }
+          leftSection={isPending ? <Loader size="xs" /> : currentUser ? <UserAvatar user={currentUser} size="xs" /> : undefined}
           nothingFoundMessage={t("user.action.select.notFound")}
           renderOption={createRenderOption(users ?? [])}
           limit={5}

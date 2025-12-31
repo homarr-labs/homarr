@@ -9,11 +9,7 @@ export const contextSpecificSearchGroups = createGroup<ContextSpecificItem>({
   keyPath: "id",
   Component(option) {
     const icon =
-      typeof option.icon !== "string" ? (
-        <option.icon size={24} />
-      ) : (
-        <img width={24} height={24} src={option.icon} alt={option.name} />
-      );
+      typeof option.icon !== "string" ? <option.icon size={24} /> : <img width={24} height={24} src={option.icon} alt={option.name} />;
 
     return (
       <Group w="100%" wrap="nowrap" align="center" px="md" py="xs">

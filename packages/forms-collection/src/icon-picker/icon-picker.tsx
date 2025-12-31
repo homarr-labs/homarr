@@ -1,5 +1,6 @@
-import type { FocusEventHandler } from "react";
-import { startTransition } from "react";
+import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { useScopedI18n } from "@homarr/translation/client";
 import {
   ActionIcon,
   Box,
@@ -19,10 +20,8 @@ import {
 } from "@mantine/core";
 import { useDebouncedValue, useUncontrolled } from "@mantine/hooks";
 import { IconUpload } from "@tabler/icons-react";
-
-import { clientApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import type { FocusEventHandler } from "react";
+import { startTransition } from "react";
 
 import { UploadMedia } from "../upload-media/upload-media";
 import classes from "./icon-picker.module.css";

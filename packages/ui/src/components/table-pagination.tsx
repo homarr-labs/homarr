@@ -1,18 +1,16 @@
 "use client";
 
-import { useCallback } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Link } from "@homarr/ui";
 import type { PaginationProps } from "@mantine/core";
 import { Pagination } from "@mantine/core";
-
-import { Link } from "@homarr/ui";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 
 interface TablePaginationProps {
   total: number;
 }
 
 export const TablePagination = ({ total }: TablePaginationProps) => {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
   const { replace } = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
@@ -47,9 +45,7 @@ export const TablePagination = ({ total }: TablePaginationProps) => {
     [pathName, replace, searchParams],
   );
 
-  return (
-    <Pagination total={total} getItemProps={getItemProps} getControlProps={getControlProps} onChange={handleChange} />
-  );
+  return <Pagination total={total} getItemProps={getItemProps} getControlProps={getControlProps} onChange={handleChange} />;
 };
 
 type ControlType = Parameters<Exclude<PaginationProps["getControlProps"], undefined>>[0];

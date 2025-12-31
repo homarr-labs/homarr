@@ -1,5 +1,3 @@
-import { Button, Group, Stack, TextInput } from "@mantine/core";
-
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
@@ -7,6 +5,7 @@ import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { groupCreateSchema } from "@homarr/validation/group";
+import { Button, Group, Stack, TextInput } from "@mantine/core";
 
 export const AddGroupModal = createModal<void>(({ actions }) => {
   const t = useI18n();

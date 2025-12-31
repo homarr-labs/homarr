@@ -1,22 +1,18 @@
 import { CredentialsSignin } from "@auth/core/errors";
-import { z } from "zod/v4";
-
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
 import type { ldapSignInSchema } from "@homarr/validation/user";
+import { z } from "zod/v4";
 
 import { env } from "../../../env";
 import { LdapClient } from "../ldap-client";
 
 const logger = createLogger({ module: "ldapAuthorization" });
 
-export const authorizeWithLdapCredentialsAsync = async (
-  db: Database,
-  credentials: z.infer<typeof ldapSignInSchema>,
-) => {
+export const authorizeWithLdapCredentialsAsync = async (db: Database, credentials: z.infer<typeof ldapSignInSchema>) => {
   logger.info("User is trying to log in using LDAP. Connecting to LDAP server...", { userName: credentials.name });
   const client = new LdapClient();
   await client

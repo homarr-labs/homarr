@@ -1,7 +1,6 @@
-import type { Duration } from "dayjs/plugin/duration";
-
 import type { WidgetKind } from "@homarr/definitions";
 import { createWidgetOptionsChannel } from "@homarr/redis";
+import type { Duration } from "dayjs/plugin/duration";
 
 import { createCachedRequestHandler } from "./cached-request-handler";
 
@@ -13,11 +12,7 @@ interface Options<TData, TKind extends WidgetKind, TInput extends Record<string,
   widgetKind: TKind;
 }
 
-export const createCachedWidgetRequestHandler = <
-  TData,
-  TKind extends WidgetKind,
-  TInput extends Record<string, unknown>,
->(
+export const createCachedWidgetRequestHandler = <TData, TKind extends WidgetKind, TInput extends Record<string, unknown>>(
   requestHandlerOptions: Options<TData, TKind, TInput>,
 ) => {
   return {

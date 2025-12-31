@@ -1,6 +1,7 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
 import fs from "fs/promises";
-import { join } from "path";
 import json5 from "json5";
+import { join } from "path";
 import { describe, test } from "vitest";
 
 describe("Renovate configuration tests", () => {

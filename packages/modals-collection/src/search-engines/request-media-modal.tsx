@@ -1,13 +1,12 @@
-import { useMemo } from "react";
-import { Button, Group, Image, LoadingOverlay, Stack, Text } from "@mantine/core";
-import type { MRT_ColumnDef } from "mantine-react-table";
-import { MRT_Table } from "mantine-react-table";
-
 import { clientApi } from "@homarr/api/client";
 import { createModal } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+import { Button, Group, Image, LoadingOverlay, Stack, Text } from "@mantine/core";
+import type { MRT_ColumnDef } from "mantine-react-table";
+import { MRT_Table } from "mantine-react-table";
+import { useMemo } from "react";
 
 interface RequestMediaModalProps {
   integrationId: string;
@@ -86,12 +85,7 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
       <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
       {data && (
         <Group wrap="nowrap" align="start">
-          <Image
-            src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${data.posterPath}`}
-            alt="poster"
-            w={100}
-            radius="md"
-          />
+          <Image src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${data.posterPath}`} alt="poster" w={100} radius="md" />
           <Text c="dimmed" style={{ flex: "1" }}>
             {data.overview}
           </Text>

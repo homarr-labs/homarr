@@ -1,8 +1,7 @@
-import dayjs from "dayjs";
-
 import { EVERY_MINUTE } from "@homarr/cron-jobs-core/expressions";
 import { calendarMonthRequestHandler } from "@homarr/request-handler/calendar";
 import { createRequestIntegrationJobHandler } from "@homarr/request-handler/lib/cached-request-integration-job-handler";
+import dayjs from "dayjs";
 
 import { createCronJob } from "../../lib";
 

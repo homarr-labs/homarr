@@ -1,11 +1,10 @@
 "use client";
 
-import { IconEye, IconPencil, IconSettings } from "@tabler/icons-react";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { boardPermissions, boardPermissionsMap } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
+import { IconEye, IconPencil, IconSettings } from "@tabler/icons-react";
 
 import { AccessSettings } from "~/components/access/access-settings";
 import type { Board } from "../../_types";

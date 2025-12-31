@@ -1,8 +1,7 @@
-import type { ReactNode } from "react";
-import { AppShellHeader, Group, UnstyledButton } from "@mantine/core";
-
 import { Spotlight } from "@homarr/spotlight";
 import { Link } from "@homarr/ui";
+import { AppShellHeader, Group, UnstyledButton } from "@mantine/core";
+import type { ReactNode } from "react";
 
 import { ClientBurger } from "./header/burger";
 import { DesktopSearchInput, MobileSearchButton } from "./header/search";

@@ -1,10 +1,9 @@
 import type { FeedData, FeedEntry } from "@extractus/feed-extractor";
 import { extract } from "@extractus/feed-extractor";
-import dayjs from "dayjs";
-import { z } from "zod/v4";
-
 import type { Modify } from "@homarr/common/types";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import dayjs from "dayjs";
+import { z } from "zod/v4";
 
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
@@ -50,9 +49,7 @@ const getImageFromStringAsFallback = (feedUrl: string, content: string) => {
     return null;
   }
 
-  console.debug(
-    `Falling back to regex image search for '${feedUrl}'. Found ${result.length} matches in content: ${content}`,
-  );
+  console.debug(`Falling back to regex image search for '${feedUrl}'. Found ${result.length} matches in content: ${content}`);
   return result[0];
 };
 
@@ -87,7 +84,6 @@ const getFirstMediaProperty = (feedObject: object) => {
       if (!propertyEntry) {
         break;
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const [_, propertyEntryValue] = propertyEntry;
       objectAtPath = propertyEntryValue as object;
       propertyIndex++;

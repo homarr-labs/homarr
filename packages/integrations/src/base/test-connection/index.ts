@@ -1,6 +1,6 @@
 export type {
-  TestConnectionError,
   AnyTestConnectionError,
+  TestConnectionError,
   TestConnectionErrorDataOfType,
   TestConnectionErrorType,
 } from "./test-connection-error";

@@ -1,5 +1,5 @@
-import * as fs from "fs";
 import { CoreV1Api, KubeConfig, Metrics, NetworkingV1Api, VersionApi } from "@kubernetes/client-node";
+import * as fs from "fs";
 
 import { env } from "../../env";
 

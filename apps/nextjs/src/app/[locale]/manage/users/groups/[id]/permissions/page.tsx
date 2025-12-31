@@ -1,13 +1,12 @@
-import React from "react";
-import { notFound } from "next/navigation";
-import { Card, CardSection, Divider, Group, Stack, Text, Title } from "@mantine/core";
-
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { objectKeys } from "@homarr/common";
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { groupPermissions } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
+import { Card, CardSection, Divider, Group, Stack, Text, Title } from "@mantine/core";
+import { notFound } from "next/navigation";
+import React from "react";
 
 import { PermissionForm, PermissionSwitch, SaveAffix } from "./_group-permission-form";
 

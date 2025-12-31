@@ -1,14 +1,12 @@
-import { describe, expect, test, vi } from "vitest";
-
 import { ResponseError } from "@homarr/common/server";
 import { createDb } from "@homarr/db/test";
+import { describe, expect, test, vi } from "vitest";
 
 import type { IntegrationTestingInput } from "../src/base/integration";
 import { Integration } from "../src/base/integration";
 import type { TestingResult } from "../src/base/test-connection/test-connection-service";
 
 vi.mock("@homarr/db", async (importActual) => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = await importActual<typeof import("@homarr/db")>();
   return {
     ...actual,
@@ -17,7 +15,6 @@ vi.mock("@homarr/db", async (importActual) => {
 });
 
 vi.mock("@homarr/core/infrastructure/certificates", async (importActual) => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = await importActual<typeof import("@homarr/core/infrastructure/certificates")>();
   return {
     ...actual,
@@ -58,7 +55,6 @@ class FakeIntegration extends Integration {
     });
   }
 
-  // eslint-disable-next-line no-restricted-syntax
   protected testingAsync(_: IntegrationTestingInput): Promise<TestingResult> {
     if (this.error) {
       return Promise.reject(this.error);

@@ -1,7 +1,6 @@
-import { useCallback } from "react";
-
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { createId } from "@homarr/common";
+import { useCallback } from "react";
 
 import type { CategorySection, EmptySection, Section } from "~/app/[locale]/boards/_types";
 import type { MoveCategoryInput } from "./actions/move-category";
@@ -31,9 +30,7 @@ export const useCategoryActions = () => {
         ...previous,
         sections: [
           // Place sections before the new category
-          ...previous.sections.filter(
-            (section) => (section.kind === "category" || section.kind === "empty") && section.yOffset < yOffset,
-          ),
+          ...previous.sections.filter((section) => (section.kind === "category" || section.kind === "empty") && section.yOffset < yOffset),
           {
             id: createId(),
             name,
@@ -68,10 +65,7 @@ export const useCategoryActions = () => {
     ({ name }: { name: string }) => {
       updateBoard((previous) => {
         const lastSection = previous.sections
-          .filter(
-            (section): section is CategorySection | EmptySection =>
-              section.kind === "empty" || section.kind === "category",
-          )
+          .filter((section): section is CategorySection | EmptySection => section.kind === "empty" || section.kind === "category")
           .sort((sectionA, sectionB) => sectionB.yOffset - sectionA.yOffset)
           .at(0);
 

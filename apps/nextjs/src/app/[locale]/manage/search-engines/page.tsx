@@ -1,14 +1,13 @@
-import { redirect } from "next/navigation";
-import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
-import { IconPencil, IconSearch } from "@tabler/icons-react";
-import { z } from "zod/v4";
-
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination } from "@homarr/ui";
+import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
+import { IconPencil, IconSearch } from "@tabler/icons-react";
+import { redirect } from "next/navigation";
+import { z } from "zod/v4";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
@@ -125,9 +124,7 @@ const SearchEngineCard = async ({ searchEngine }: SearchEngineCardProps) => {
                 <IconPencil size={16} stroke={1.5} />
               </ActionIcon>
             )}
-            {session?.user.permissions.includes("search-engine-full-all") && (
-              <SearchEngineDeleteButton searchEngine={searchEngine} />
-            )}
+            {session?.user.permissions.includes("search-engine-full-all") && <SearchEngineDeleteButton searchEngine={searchEngine} />}
           </ActionIconGroup>
         </Group>
       </Group>

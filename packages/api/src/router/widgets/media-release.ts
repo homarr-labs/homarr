@@ -1,11 +1,10 @@
-import { observable } from "@trpc/server/observable";
-
 import type { Modify } from "@homarr/common/types";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKindByCategory } from "@homarr/definitions";
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { MediaRelease } from "@homarr/integrations/types";
 import { mediaReleaseRequestHandler } from "@homarr/request-handler/media-release";
+import { observable } from "@trpc/server/observable";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";

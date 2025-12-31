@@ -1,11 +1,10 @@
-import path from "path";
+import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 import { MySqlContainer } from "@testcontainers/mysql";
 import { drizzle } from "drizzle-orm/mysql2";
 import { migrate } from "drizzle-orm/mysql2/migrator";
 import mysql from "mysql2";
+import path from "path";
 import { describe, test } from "vitest";
-
-import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 
 import * as mysqlSchema from "../schema/mysql";
 

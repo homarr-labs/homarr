@@ -1,6 +1,5 @@
-import { notFound } from "next/navigation";
-
 import { ImageProxy } from "@homarr/image-proxy";
+import { notFound } from "next/navigation";
 
 export const GET = async (_request: Request, props: { params: Promise<{ id: string }> }) => {
   const { id } = await props.params;

@@ -1,4 +1,11 @@
-import { notFound } from "next/navigation";
+import type { RouterOutputs } from "@homarr/api";
+import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
+import { humanFileSize } from "@homarr/common";
+import type { inferSearchParamsFromSchema } from "@homarr/common/types";
+import { createLocalImageUrl } from "@homarr/icons/local";
+import { getI18n } from "@homarr/translation/server";
+import { Link, SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
 import {
   ActionIcon,
   Anchor,
@@ -15,16 +22,8 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { IconExternalLink } from "@tabler/icons-react";
+import { notFound } from "next/navigation";
 import { z } from "zod/v4";
-
-import type { RouterOutputs } from "@homarr/api";
-import { api } from "@homarr/api/server";
-import { auth } from "@homarr/auth/next";
-import { humanFileSize } from "@homarr/common";
-import type { inferSearchParamsFromSchema } from "@homarr/common/types";
-import { createLocalImageUrl } from "@homarr/icons/local";
-import { getI18n } from "@homarr/translation/server";
-import { Link, SearchInput, TablePagination, UserAvatar } from "@homarr/ui";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -139,13 +138,7 @@ const Row = async ({ media }: RowProps) => {
         <Group wrap="nowrap" gap="xs">
           <CopyMedia media={media} />
           <Tooltip label={t("media.action.open.label")} openDelay={500}>
-            <ActionIcon
-              component="a"
-              href={createLocalImageUrl(media.id)}
-              target="_blank"
-              color="gray"
-              variant="subtle"
-            >
+            <ActionIcon component="a" href={createLocalImageUrl(media.id)} target="_blank" color="gray" variant="subtle">
               <IconExternalLink size={16} stroke={1.5} />
             </ActionIcon>
           </Tooltip>

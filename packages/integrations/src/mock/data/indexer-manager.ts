@@ -3,9 +3,7 @@ import type { Indexer } from "../../types";
 
 export class IndexerManagerMockService implements IIndexerManagerIntegration {
   public async getIndexersAsync(): Promise<Indexer[]> {
-    return await Promise.resolve(
-      Array.from({ length: 10 }, (_, index) => IndexerManagerMockService.createIndexer(index + 1)),
-    );
+    return await Promise.resolve(Array.from({ length: 10 }, (_, index) => IndexerManagerMockService.createIndexer(index + 1)));
   }
   public async testAllAsync(): Promise<void> {
     await Promise.resolve();

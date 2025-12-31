@@ -1,5 +1,6 @@
-import { headers } from "next/headers";
-import Image from "next/image";
+import { capitalize, objectEntries } from "@homarr/common";
+import { hotkeys } from "@homarr/definitions";
+import { getScopedI18n } from "@homarr/translation/server";
 import {
   Accordion,
   AccordionControl,
@@ -25,10 +26,8 @@ import {
   Title,
 } from "@mantine/core";
 import { IconKeyboard, IconLanguage, IconLibrary, IconUsers } from "@tabler/icons-react";
-
-import { capitalize, objectEntries } from "@homarr/common";
-import { hotkeys } from "@homarr/definitions";
-import { getScopedI18n } from "@homarr/translation/server";
+import { headers } from "next/headers";
+import Image from "next/image";
 
 import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -148,11 +147,7 @@ export default async function AboutPage() {
                 .sort(([key1], [key2]) => key1.localeCompare(key2))
                 .map(([key, value]) => (
                   <ListItem key={key}>
-                    {value.includes("workspace:") ? (
-                      <Text>{key}</Text>
-                    ) : (
-                      <a href={`https://www.npmjs.com/package/${key}`}>{key}</a>
-                    )}
+                    {value.includes("workspace:") ? <Text>{key}</Text> : <a href={`https://www.npmjs.com/package/${key}`}>{key}</a>}
                   </ListItem>
                 ))}
             </List>
