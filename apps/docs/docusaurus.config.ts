@@ -78,12 +78,7 @@ const config: Config = {
           filename: "sitemap.xml",
           createSitemapItems: async (params) => {
             const { defaultCreateSitemapItems, ...rest } = params;
-            const items = await defaultCreateSitemapItems(rest);
-            const filteredItems = items.filter((item) => {
-              // Remove all versions except the latest one (all the /docs/{numbers}/* and /docus/next/*)
-              return !/\/docs\/(\d+(\.\d+)*|next)\//.test(new URL(item.url).pathname);
-            });
-            return filteredItems;
+            return await defaultCreateSitemapItems(rest);
           },
         },
       } satisfies Preset.Options,
@@ -98,12 +93,6 @@ const config: Config = {
         src: "img/logo.png",
       },
       items: [
-        {
-          type: "docsVersionDropdown",
-          position: "left",
-          dropdownActiveClassDisabled: true,
-          includeCurrentVersion: false,
-        },
         {
           label: "Documentation",
           type: "doc",

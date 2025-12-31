@@ -34,16 +34,4 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
       - run: pnpm install
-      - run: |
-          RAW_TAG="${{ github.event.client_payload.tag }}"
-          CLEAN_TAG="${RAW_TAG#v}"
-          pnpm -F docs docusaurus docs:version $CLEAN_TAG
-      - uses: EndBug/add-and-commit@v9
-        with:
-          message: 'docs: add version ${{ github.event.client_payload.tag }}'
-          push: true
-          author_name: "Docs Releases Homarr"
-          author_email: "204403377+homarr-docs-releases[bot]@users.noreply.github.com"
-          committer_name:  "Docs Releases Homarr"
-          committer_email: "204403377+homarr-docs-releases[bot]@users.noreply.github.com"
 
