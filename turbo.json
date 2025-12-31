@@ -58,12 +58,10 @@
       "cache": false
     },
     "format": {
-      "outputs": ["node_modules/.cache/.prettiercache"],
       "outputLogs": "new-only"
     },
     "lint": {
-      "dependsOn": ["^topo"],
-      "outputs": ["node_modules/.cache/.eslintcache"]
+      "dependsOn": ["^topo"]
     },
     "typecheck": {
       "dependsOn": ["^topo"],
