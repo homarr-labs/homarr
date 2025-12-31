@@ -1,0 +1,53 @@
+---
+title: 'DNS Hole Summary'
+description: "Displays the summary of your DNS Hole."
+hide_title: true
+---
+
+import { WidgetHeader } from '@site/src/components/widgets/header';
+import { AddingWidget } from '@site/src/components/widgets/adding';
+import { WidgetConfig } from '@site/src/components/widgets/configuration';
+import { WidgetIntegrations } from '@site/src/components/widgets/integrations';
+import { IconAd } from "@tabler/icons-react";
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { dnsHoleSummaryWidget } from '.';
+
+
+<WidgetHeader
+  widget={dnsHoleSummaryWidget}
+  categories={['DNS Hole']}
+/>
+
+This widget allows you to display statistics about your DNS Hole like total queries, blocked queries, and more.
+
+### Screenshots
+
+import gridLayout from './img/grid.png';
+import verticalLayout from './img/vertical.png';
+import horizontalLayout from './img/horizontal.png';
+import { adguardHomeIntegration } from '@site/docs/integrations/adguard-home';
+import { piHoleIntegration } from '@site/docs/integrations/pi-hole';
+
+<div className='flex gap-2'>
+  <img src={gridLayout} alt="grid-layout pi-hole-colors" width={256 + 8} height={256 + 8} />
+  <div className='flex flex-col gap-2'>
+    <img src={verticalLayout} alt="vertical-layout no-colors" width={128} height={128} />
+    <img src={horizontalLayout} alt="horizontal-layout pi-hole-colors" width={128 * 3} height={128} />
+  </div>
+</div>
+
+### Supported Integrations
+
+<WidgetIntegrations items={[{
+  integration: adguardHomeIntegration,
+}, {
+  integration: piHoleIntegration,
+}]} />
+
+### Adding the widget
+
+<AddingWidget />
+
+### Configuration
+<WidgetConfig configuration={dnsHoleSummaryWidget.configuration} />

@@ -1,0 +1,42 @@
+name: Dump API data
+
+on:
+  schedule:
+    - cron: "0 12 * * FRI" # At 12:00 on Friday.
+  workflow_dispatch: {}
+  push:
+    paths:
+      - 'apps/docs/**'
+      - '.github/workflows/docs-dump-api-data.yaml'
+
+env:
+  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  HOMARR_CROWDIN_TOKEN: "${{ secrets.HOMARR_CROWDIN_TOKEN }}"
+  HOMARR_LABS_CROWDIN_TOKEN: "${{ secrets.HOMARR_LABS_CROWDIN_TOKEN }}"
+
+permissions:
+  contents: write
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm -F docs api-dump-contributors
+      - uses: EndBug/add-and-commit@v9
+        with:
+          add: './apps/docs/static'
+          default_author: github_actor
+          message: '(chore): update contributors'
+          push: true
+

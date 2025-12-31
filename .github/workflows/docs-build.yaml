@@ -1,0 +1,64 @@
+# For more details, read this: https://coolify.io/docs/github-actions
+name: Build Static Image
+on:
+  push:
+    branches: ["master"]
+    paths:
+      - 'apps/docs/**'
+      - '.github/workflows/docs-build.yaml'
+  workflow_dispatch:
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+permissions:
+  contents: read # for checkout repository
+  actions: read # for fetching base branch bundle stats
+  pull-requests: write # for comments
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24]
+    permissions:
+      packages: write
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm docs:build
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: 'apps/docs/build'
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+

@@ -1,0 +1,39 @@
+---
+authors:
+  - meierschlumpf
+---
+
+# Open Beta 1.0
+
+We are proud to announce the open beta of Homarr 1.0. This is a major milestone for us and we are excited to share it with you.
+The open beta allows us to polish the last rough edges and gather feedback from you.
+We are looking forward to your feedback and hope you enjoy the new features.
+Let us know throgh discord or a [github issues](https://github.com/homarr-labs/homarr/issues/new/choose) if you encounter any issues.
+
+<!-- truncate -->
+
+## How to use the beta with docker
+
+To use the beta with docker you can use the following docker-compose.yml configuration:
+
+```yml title="docker-compose.yml"
+#---------------------------------------------------------------------#
+#     Homarr - A simple, yet powerful dashboard for your server.      #
+#---------------------------------------------------------------------#
+services:
+  homarr:
+    container_name: homarr
+    image: ghcr.io/homarr-labs/homarr:beta
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - ./homarr/appdata:/appdata
+    environment:
+      - SECRET_ENCRYPTION_KEY=your_64_character_hex_string # <--- can be generated with `openssl rand -hex 32`
+    ports:
+      - '7575:7575'
+```
+
+Then, run `docker compose up -d` in the same directory. This will start the Homarr container in the background.
+Please note that the mounts have changed and it's not backwards compatible with versions before 1.0.0-beta.1.
+You can find a list of all breaking changes [here](/blog/2024/09/23/version-1.0)
