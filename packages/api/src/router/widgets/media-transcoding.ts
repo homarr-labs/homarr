@@ -1,9 +1,8 @@
-import { observable } from "@trpc/server/observable";
-
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { MediaTranscoding } from "@homarr/request-handler/media-transcoding";
 import { mediaTranscodingRequestHandler } from "@homarr/request-handler/media-transcoding";
 import { paginatedSchema } from "@homarr/validation/common";
+import { observable } from "@trpc/server/observable";
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";

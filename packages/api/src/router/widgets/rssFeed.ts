@@ -1,6 +1,5 @@
-import { z } from "zod/v4";
-
 import { rssFeedsRequestHandler } from "@homarr/request-handler/rss-feeds";
+import { z } from "zod/v4";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
@@ -29,9 +28,7 @@ export const rssFeedRouter = createTRPCRouter({
         .flatMap((rssFeed) => rssFeed.data.entries)
         .slice(0, input.maximumAmountPosts)
         .sort((entryA, entryB) => {
-          return entryA.published && entryB.published
-            ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime()
-            : 0;
+          return entryA.published && entryB.published ? new Date(entryB.published).getTime() - new Date(entryA.published).getTime() : 0;
         });
     }),
 });

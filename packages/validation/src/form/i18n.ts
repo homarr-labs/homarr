@@ -1,6 +1,5 @@
-import type { z } from "zod/v4";
-
 import type { ScopedTranslationFunction, TranslationFunction, TranslationObject } from "@homarr/translation";
+import type { z } from "zod/v4";
 
 export const zodErrorMap = (t: TranslationFunction): z.core.$ZodErrorMap<z.core.$ZodIssue> => {
   return (issue) => {
@@ -45,9 +44,7 @@ const handleError = (issue: z.core.$ZodRawIssue): HandlerReturnValue => {
   );
 };
 
-const handleTooBigError = (
-  issue: Pick<z.core.$ZodIssueTooBig, "origin" | "maximum"> & { message?: string },
-): HandlerReturnValue => {
+const handleTooBigError = (issue: Pick<z.core.$ZodIssueTooBig, "origin" | "maximum"> & { message?: string }): HandlerReturnValue => {
   if (issue.origin !== "string" && issue.origin !== "number") {
     return (
       issue.message ?? {
@@ -67,9 +64,7 @@ const handleTooBigError = (
   } as const;
 };
 
-const handleTooSmallError = (
-  issue: Pick<z.core.$ZodIssueTooSmall, "origin" | "minimum"> & { message?: string },
-): HandlerReturnValue => {
+const handleTooSmallError = (issue: Pick<z.core.$ZodIssueTooSmall, "origin" | "minimum"> & { message?: string }): HandlerReturnValue => {
   if (issue.origin !== "string" && issue.origin !== "number") {
     return (
       issue.message ?? {

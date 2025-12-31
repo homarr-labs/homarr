@@ -1,6 +1,5 @@
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-
 import { createSharedDbConfig, createSqliteDb } from "@homarr/core/infrastructure/db";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
 import * as sqliteSchema from "../../schema/sqlite";
 import { applyCustomMigrationsAsync } from "../custom";

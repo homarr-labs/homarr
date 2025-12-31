@@ -1,7 +1,3 @@
-import { useEffect, useMemo, useRef } from "react";
-import { ActionIcon, Menu } from "@mantine/core";
-import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
-
 import { clientApi } from "@homarr/api/client";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
@@ -9,6 +5,9 @@ import { useSettings } from "@homarr/settings";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { widgetImports } from "@homarr/widgets";
 import { WidgetEditModal } from "@homarr/widgets/modals";
+import { ActionIcon, Menu } from "@mantine/core";
+import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
+import { useEffect, useMemo, useRef } from "react";
 
 import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useSectionContext } from "../sections/section-context";
@@ -31,8 +30,7 @@ export const BoardItemMenu = ({
   const { openModal: openMoveModal } = useModalAction(ItemMoveModal);
   const { openConfirmModal } = useConfirmModal();
   const [isEditMode] = useEditMode();
-  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } =
-    useItemActions();
+  const { updateItemOptions, updateItemAdvancedOptions, updateItemIntegrations, duplicateItem, removeItem } = useItemActions();
   const { data: integrationData, isPending } = clientApi.integration.all.useQuery();
   const currentDefinition = useMemo(() => widgetImports[item.kind].definition, [item.kind]);
   const { gridstack } = useSectionContext().refs;

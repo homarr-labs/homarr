@@ -1,7 +1,6 @@
-import { Fieldset, Switch } from "@mantine/core";
-
 import type { CheckboxProps } from "@homarr/form/types";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Fieldset, Switch } from "@mantine/core";
 
 interface OldmarrImportAppsSettingsProps {
   onlyImportApps: CheckboxProps;
@@ -13,11 +12,7 @@ export const OldmarrImportAppsSettings = ({ background, onlyImportApps }: Oldmar
 
   return (
     <Fieldset legend={tApps("label")} bg={background}>
-      <Switch
-        {...onlyImportApps}
-        label={tApps("onlyImportApps.label")}
-        description={tApps("onlyImportApps.description")}
-      />
+      <Switch {...onlyImportApps} label={tApps("onlyImportApps.label")} description={tApps("onlyImportApps.description")} />
     </Fieldset>
   );
 };

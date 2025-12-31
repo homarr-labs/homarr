@@ -1,8 +1,7 @@
-import type { Proxmox } from "proxmox-api";
-import proxmoxApi from "proxmox-api";
-
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import type { Proxmox } from "proxmox-api";
+import proxmoxApi from "proxmox-api";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import type { IntegrationTestingInput } from "../base/integration";
@@ -10,14 +9,7 @@ import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { IClusterHealthMonitoringIntegration } from "../interfaces/health-monitoring/health-monitoring-integration";
 import { ProxmoxApiErrorHandler } from "./proxmox-error-handler";
-import type {
-  ComputeResourceBase,
-  LxcResource,
-  NodeResource,
-  QemuResource,
-  Resource,
-  StorageResource,
-} from "./proxmox-types";
+import type { ComputeResourceBase, LxcResource, NodeResource, QemuResource, Resource, StorageResource } from "./proxmox-types";
 
 const logger = createLogger({ module: "proxmoxIntegration" });
 

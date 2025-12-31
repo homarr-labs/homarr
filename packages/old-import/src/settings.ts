@@ -1,8 +1,7 @@
-import { zfd } from "zod-form-data";
-import { z } from "zod/v4";
-
 import { boardNameSchema } from "@homarr/validation/board";
 import { createCustomErrorParams } from "@homarr/validation/form/i18n";
+import { z } from "zod/v4";
+import { zfd } from "zod-form-data";
 
 export const sidebarBehaviours = ["remove-items", "last-section"] as const;
 export const defaultSidebarBehaviour = "last-section";

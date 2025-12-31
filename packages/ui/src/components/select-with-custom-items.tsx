@@ -1,19 +1,17 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
 import type { SelectProps } from "@mantine/core";
 import { Combobox, ComboboxClearButton, Input, InputBase, useCombobox } from "@mantine/core";
 import { useUncontrolled } from "@mantine/hooks";
+import { useCallback, useMemo } from "react";
 
 interface BaseSelectItem {
   value: string;
   label: string;
 }
 
-export interface SelectWithCustomItemsProps<TSelectItem extends BaseSelectItem> extends Pick<
-  SelectProps,
-  "label" | "error" | "defaultValue" | "value" | "onChange" | "placeholder" | "clearable"
-> {
+export interface SelectWithCustomItemsProps<TSelectItem extends BaseSelectItem>
+  extends Pick<SelectProps, "label" | "error" | "defaultValue" | "value" | "onChange" | "placeholder" | "clearable"> {
   data: TSelectItem[];
   description?: string;
   withAsterisk?: boolean;

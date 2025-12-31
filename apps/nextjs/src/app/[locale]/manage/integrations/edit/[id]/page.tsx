@@ -1,9 +1,8 @@
-import { Container, Fieldset, Group, Stack, Title } from "@mantine/core";
-
 import { api } from "@homarr/api/server";
 import { getIntegrationName } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { IntegrationAvatar } from "@homarr/ui";
+import { Container, Fieldset, Group, Stack, Title } from "@mantine/core";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";

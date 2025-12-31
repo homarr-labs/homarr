@@ -1,9 +1,8 @@
-import { Group, Stack, Text } from "@mantine/core";
-
 import { objectEntries } from "@homarr/common";
 import { integrationDefs } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { IntegrationAvatar } from "@homarr/ui";
+import { Group, Stack, Text } from "@mantine/core";
 
 import { createChildrenOptions } from "../../../lib/children";
 import { interaction } from "../../../lib/interaction";
@@ -15,8 +14,7 @@ export const newIntegrationChildrenOptions = createChildrenOptions<Record<string
       .filter(([, integrationDef]) => integrationDef.name.toLowerCase().includes(normalizedQuery))
       .sort(
         ([, definitionA], [, definitionB]) =>
-          definitionA.name.toLowerCase().indexOf(normalizedQuery) -
-          definitionB.name.toLowerCase().indexOf(normalizedQuery),
+          definitionA.name.toLowerCase().indexOf(normalizedQuery) - definitionB.name.toLowerCase().indexOf(normalizedQuery),
       )
       .map(([kind, integrationDef]) => ({
         key: kind,

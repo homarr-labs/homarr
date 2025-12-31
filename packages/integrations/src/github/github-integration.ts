@@ -1,9 +1,8 @@
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createAppAuth } from "@octokit/auth-app";
 import { Octokit, RequestError as OctokitRequestError } from "octokit";
 import type { fetch } from "undici";
-
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationOctokitHttpErrorHandler } from "../base/errors/http";
@@ -100,11 +99,7 @@ export class GithubIntegration extends Integration implements ReleasesProviderIn
     }
   }
 
-  protected async getDetailsAsync(
-    api: Octokit,
-    owner: string,
-    name: string,
-  ): Promise<DetailsProviderResponse | undefined> {
+  protected async getDetailsAsync(api: Octokit, owner: string, name: string): Promise<DetailsProviderResponse | undefined> {
     try {
       const response = await api.rest.repos.get({
         owner,

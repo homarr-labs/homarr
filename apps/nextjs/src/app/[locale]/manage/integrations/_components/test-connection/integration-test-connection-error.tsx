@@ -1,9 +1,8 @@
-import { useMemo } from "react";
-import { Accordion, Anchor, Card, Stack, Text } from "@mantine/core";
-import { IconSubtask } from "@tabler/icons-react";
-
 import { getMantineColor } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
+import { Accordion, Anchor, Card, Stack, Text } from "@mantine/core";
+import { IconSubtask } from "@tabler/icons-react";
+import { useMemo } from "react";
 
 import { CertificateErrorDetails } from "./test-connection-certificate";
 import type { AnyMappedTestConnectionError, MappedError } from "./types";
@@ -31,9 +30,7 @@ export const IntegrationTestConnectionError = ({ error, url }: IntegrationTestCo
 
           {error.type === "request" ? (
             <Text size="md">
-              {t(
-                `integration.testConnection.error.request.description.${error.data.type}.${error.data.reason}` as never,
-              )}
+              {t(`integration.testConnection.error.request.description.${error.data.type}.${error.data.reason}` as never)}
             </Text>
           ) : null}
 

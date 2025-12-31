@@ -1,6 +1,5 @@
-import { Card, Stack, Text } from "@mantine/core";
-
 import { useScopedI18n } from "@homarr/translation/client";
+import { Card, Stack, Text } from "@mantine/core";
 
 import type { InitialOldmarrImportSettings } from "../../settings";
 import { OldmarrImportAppsSettings } from "../shared/apps-section";
@@ -8,10 +7,7 @@ import { SidebarBehaviourSelect } from "../shared/sidebar-behaviour-select";
 
 interface ImportSettingsCardProps {
   settings: InitialOldmarrImportSettings;
-  updateSetting: <TKey extends keyof InitialOldmarrImportSettings>(
-    setting: TKey,
-    value: InitialOldmarrImportSettings[TKey],
-  ) => void;
+  updateSetting: <TKey extends keyof InitialOldmarrImportSettings>(setting: TKey, value: InitialOldmarrImportSettings[TKey]) => void;
 }
 
 export const ImportSettingsCard = ({ settings, updateSetting }: ImportSettingsCardProps) => {
@@ -34,10 +30,7 @@ export const ImportSettingsCard = ({ settings, updateSetting }: ImportSettingsCa
           }}
         />
 
-        <SidebarBehaviourSelect
-          value={settings.sidebarBehaviour}
-          onChange={(value) => updateSetting("sidebarBehaviour", value)}
-        />
+        <SidebarBehaviourSelect value={settings.sidebarBehaviour} onChange={(value) => updateSetting("sidebarBehaviour", value)} />
       </Stack>
     </Card>
   );

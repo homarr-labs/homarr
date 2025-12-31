@@ -1,9 +1,8 @@
-import AdmZip from "adm-zip";
-import { z } from "zod/v4";
-
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
+import AdmZip from "adm-zip";
+import { z } from "zod/v4";
 
 import { oldmarrImportUserSchema } from "../user-schema";
 import type { analyseOldmarrImportInputSchema } from "./input";
@@ -28,13 +27,7 @@ export const analyseOldmarrImportAsync = async (file: File) => {
   const configs = configEntries.map((entry) => {
     const result = oldmarrConfigSchema.safeParse(JSON.parse(entry.getData().toString()));
     if (!result.success) {
-      logger.error(
-        new ErrorWithMetadata(
-          "Failed to parse oldmarr config",
-          { entryName: entry.entryName },
-          { cause: result.error },
-        ),
-      );
+      logger.error(new ErrorWithMetadata("Failed to parse oldmarr config", { entryName: entry.entryName }, { cause: result.error }));
     }
 
     return {

@@ -38,9 +38,8 @@ describe("Health checks", () => {
       readyResponse.status,
       `Expected ready to return OK statusCode=${readyResponse.status} content=${await readyResponse.text()}`,
     ).toBe(200);
-    expect(
-      liveResponse.status,
-      `Expected live to return OK statusCode=${liveResponse.status} content=${await liveResponse.text()}`,
-    ).toBe(200);
+    expect(liveResponse.status, `Expected live to return OK statusCode=${liveResponse.status} content=${await liveResponse.text()}`).toBe(
+      200,
+    );
   }, 20_000);
 });

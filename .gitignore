@@ -57,7 +57,6 @@ apps/tasks/tasks.cjs
 apps/tasks/tasks.css
 apps/websocket/wssServer.cjs
 apps/websocket/wssServer.css
-apps/nextjs/.million/
 packages/cli/cli.cjs
 
 # e2e mounts

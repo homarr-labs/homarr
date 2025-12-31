@@ -1,14 +1,13 @@
 "use client";
 
-import { useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@mantine/core";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { Button } from "@mantine/core";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 interface DeleteUserButtonProps {
   user: RouterOutputs["user"]["getById"];

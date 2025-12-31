@@ -1,13 +1,12 @@
 "use client";
 
-import React from "react";
-import { Center, LoadingOverlay, Overlay, Stack, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
-import { useDisclosure, useTimeout } from "@mantine/hooks";
-import { IconAutomation, IconCheck } from "@tabler/icons-react";
-
 import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
+import { Center, LoadingOverlay, Overlay, Stack, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
+import { useDisclosure, useTimeout } from "@mantine/hooks";
+import { IconAutomation, IconCheck } from "@tabler/icons-react";
+import React from "react";
 
 import type { WidgetComponentProps } from "../../definition";
 
@@ -49,7 +48,6 @@ export default function SmartHomeTriggerAutomationWidget({
         interaction() {
           return {
             type: "javaScript",
-            // eslint-disable-next-line no-restricted-syntax
             async onSelect() {
               await handleClick();
             },

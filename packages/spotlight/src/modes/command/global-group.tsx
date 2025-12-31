@@ -1,3 +1,7 @@
+import { useSession } from "@homarr/auth/client";
+import { useModalAction } from "@homarr/modals";
+import { AddBoardModal, AddGroupModal, ImportBoardModal, InviteCreateModal } from "@homarr/modals-collection";
+import { useScopedI18n } from "@homarr/translation/client";
 import { Group, Text, useMantineColorScheme } from "@mantine/core";
 import type { TablerIcon } from "@tabler/icons-react";
 import {
@@ -13,11 +17,6 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 
-import { useSession } from "@homarr/auth/client";
-import { useModalAction } from "@homarr/modals";
-import { AddBoardModal, AddGroupModal, ImportBoardModal, InviteCreateModal } from "@homarr/modals-collection";
-import { useScopedI18n } from "@homarr/translation/client";
-
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
 import { interaction } from "../../lib/interaction";
@@ -25,15 +24,11 @@ import { languageChildrenOptions } from "./children/language";
 import { newIntegrationChildrenOptions } from "./children/new-integration";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type Command<TSearchInteraction extends SearchInteraction = SearchInteraction> = {
   commandKey: string;
   icon: TablerIcon;
   name: string;
-  useInteraction: (
-    _c: Command<TSearchInteraction>,
-    query: string,
-  ) => inferSearchInteractionDefinition<TSearchInteraction>;
+  useInteraction: (_c: Command<TSearchInteraction>, query: string) => inferSearchInteractionDefinition<TSearchInteraction>;
 };
 
 export const globalCommandGroup = createGroup<Command>({

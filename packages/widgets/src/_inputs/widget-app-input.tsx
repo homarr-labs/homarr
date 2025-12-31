@@ -1,10 +1,5 @@
 "use client";
 
-import { memo, useMemo } from "react";
-import type { SelectProps } from "@mantine/core";
-import { Anchor, Button, Group, Loader, Select, SimpleGrid, Text } from "@mantine/core";
-import { IconCheck, IconRocket } from "@tabler/icons-react";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
@@ -12,6 +7,10 @@ import { useModalAction } from "@homarr/modals";
 import { QuickAddAppModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
+import type { SelectProps } from "@mantine/core";
+import { Anchor, Button, Group, Loader, Select, SimpleGrid, Text } from "@mantine/core";
+import { IconCheck, IconRocket } from "@tabler/icons-react";
+import { memo, useMemo } from "react";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
@@ -27,10 +26,7 @@ export const WidgetAppInput = ({ property, kind }: CommonWidgetInputProps<"app">
 
   const { openModal } = useModalAction(QuickAddAppModal);
 
-  const currentApp = useMemo(
-    () => apps?.find((app) => app.id === form.values.options.appId),
-    [apps, form.values.options.appId],
-  );
+  const currentApp = useMemo(() => apps?.find((app) => app.id === form.values.options.appId), [apps, form.values.options.appId]);
 
   return (
     <SimpleGrid cols={{ base: 1, md: canCreateApps ? 2 : 1 }} spacing={{ base: "md" }} style={{ alignItems: "center" }}>

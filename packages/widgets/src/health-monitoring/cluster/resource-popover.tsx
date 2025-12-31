@@ -1,4 +1,6 @@
-import type { PropsWithChildren } from "react";
+import { capitalize, humanFileSize } from "@homarr/common";
+import type { ComputeResource, Resource, StorageResource } from "@homarr/integrations/types";
+import { useScopedI18n } from "@homarr/translation/client";
 import { Badge, Center, Divider, Flex, Group, List, Popover, RingProgress, Stack, Text } from "@mantine/core";
 import {
   IconArrowNarrowDown,
@@ -15,10 +17,7 @@ import {
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
-
-import { capitalize, humanFileSize } from "@homarr/common";
-import type { ComputeResource, Resource, StorageResource } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
+import type { PropsWithChildren } from "react";
 
 dayjs.extend(duration);
 

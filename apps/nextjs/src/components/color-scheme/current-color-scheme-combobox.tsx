@@ -1,12 +1,11 @@
 "use client";
 
-import { Group, Text, useMantineColorScheme } from "@mantine/core";
-import { IconMoon, IconSun } from "@tabler/icons-react";
-
 import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemes } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";
 import { SelectWithCustomItems } from "@homarr/ui";
+import { Group, Text, useMantineColorScheme } from "@mantine/core";
+import { IconMoon, IconSun } from "@tabler/icons-react";
 
 interface CurrentColorSchemeComboboxProps {
   w?: string;

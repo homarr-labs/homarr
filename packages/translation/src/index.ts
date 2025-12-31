@@ -2,10 +2,10 @@ import type { SupportedLanguage } from "./config";
 import { supportedLanguages } from "./config";
 import type { stringOrTranslation, TranslationFunction } from "./type";
 
-export * from "./type";
 export * from "./config";
-export { createLanguageMapping } from "./mapping";
 export type { TranslationKeys } from "./mapping";
+export { createLanguageMapping } from "./mapping";
+export * from "./type";
 
 export const translateIfNecessary = (t: TranslationFunction, value: stringOrTranslation | undefined) => {
   if (typeof value === "function") {

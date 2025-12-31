@@ -1,10 +1,9 @@
 "use client";
 
-import { ActionIcon, CopyButton, Tooltip } from "@mantine/core";
-import { IconCheck, IconCopy } from "@tabler/icons-react";
-
 import type { RouterOutputs } from "@homarr/api";
 import { useI18n } from "@homarr/translation/client";
+import { ActionIcon, CopyButton, Tooltip } from "@mantine/core";
+import { IconCheck, IconCopy } from "@tabler/icons-react";
 
 interface CopyMediaProps {
   media: RouterOutputs["media"]["getPaginated"]["items"][number];

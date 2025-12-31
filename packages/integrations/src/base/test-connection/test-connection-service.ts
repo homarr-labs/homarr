@@ -2,10 +2,7 @@ import type { X509Certificate } from "node:crypto";
 import tls from "node:tls";
 
 import { getPortFromUrl } from "@homarr/common";
-import {
-  getAllTrustedCertificatesAsync,
-  getTrustedCertificateHostnamesAsync,
-} from "@homarr/core/infrastructure/certificates";
+import { getAllTrustedCertificatesAsync, getTrustedCertificateHostnamesAsync } from "@homarr/core/infrastructure/certificates";
 import { createCustomCheckServerIdentity } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 

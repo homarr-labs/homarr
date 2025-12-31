@@ -1,10 +1,9 @@
-import dayjs from "dayjs";
-import type { ContainerInfo, ContainerStats } from "dockerode";
-
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
 import type { ContainerState } from "@homarr/docker";
-import { dockerLabels, DockerSingleton } from "@homarr/docker";
+import { DockerSingleton, dockerLabels } from "@homarr/docker";
+import dayjs from "dayjs";
+import type { ContainerInfo, ContainerStats } from "dockerode";
 
 import { createCachedWidgetRequestHandler } from "./lib/cached-widget-request-handler";
 
@@ -104,12 +103,6 @@ function calculateMemoryUsage(stats: ContainerStats): number {
   // See https://docs.docker.com/reference/cli/docker/container/stats/ how it is / was calculated
   return (
     stats.memory_stats.usage -
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    (stats.memory_stats.stats?.cache ??
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      stats.memory_stats.stats?.total_inactive_file ??
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      stats.memory_stats.stats?.inactive_file ??
-      0)
+    (stats.memory_stats.stats?.cache ?? stats.memory_stats.stats?.total_inactive_file ?? stats.memory_stats.stats?.inactive_file ?? 0)
   );
 }

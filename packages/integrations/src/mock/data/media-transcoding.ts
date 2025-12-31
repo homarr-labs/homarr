@@ -1,9 +1,5 @@
 import type { IMediaTranscodingIntegration } from "../../interfaces/media-transcoding/media-transcoding-integration";
-import type {
-  TdarrQueue,
-  TdarrStatistics,
-  TdarrWorker,
-} from "../../interfaces/media-transcoding/media-transcoding-types";
+import type { TdarrQueue, TdarrStatistics, TdarrWorker } from "../../interfaces/media-transcoding/media-transcoding-types";
 
 export class MediaTranscodingMockService implements IMediaTranscodingIntegration {
   public async getStatisticsAsync(): Promise<TdarrStatistics> {
@@ -27,9 +23,7 @@ export class MediaTranscodingMockService implements IMediaTranscodingIntegration
     });
   }
   public async getWorkersAsync(): Promise<TdarrWorker[]> {
-    return await Promise.resolve(
-      Array.from({ length: 5 }, (_, index) => MediaTranscodingMockService.createWorker(index)),
-    );
+    return await Promise.resolve(Array.from({ length: 5 }, (_, index) => MediaTranscodingMockService.createWorker(index)));
   }
   public async getQueueAsync(firstItemIndex: number, pageSize: number): Promise<TdarrQueue> {
     return await Promise.resolve({

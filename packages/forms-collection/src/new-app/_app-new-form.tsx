@@ -1,24 +1,17 @@
 "use client";
 
-import { useCallback } from "react";
-import { useRouter } from "next/navigation";
-import type { z } from "zod/v4";
-
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
+import type { z } from "zod/v4";
 
 import { AppForm } from "./_form";
 
-export const AppNewForm = ({
-  showCreateAnother,
-  showBackToOverview,
-}: {
-  showCreateAnother: boolean;
-  showBackToOverview: boolean;
-}) => {
+export const AppNewForm = ({ showCreateAnother, showBackToOverview }: { showCreateAnother: boolean; showBackToOverview: boolean }) => {
   const tScoped = useScopedI18n("app.page.create.notification");
   const t = useI18n();
   const router = useRouter();

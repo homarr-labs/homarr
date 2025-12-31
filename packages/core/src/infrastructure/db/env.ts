@@ -1,6 +1,5 @@
-import { z } from "zod/v4";
-
 import { createEnv, runtimeEnvWithPrefix } from "@homarr/core/infrastructure/env";
+import { z } from "zod/v4";
 
 const drivers = {
   betterSqlite3: "better-sqlite3",

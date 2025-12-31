@@ -1,9 +1,8 @@
+import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 import { Card, Collapse, Group, Stack, Title, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
-
-import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
 import { CategoryMenu } from "./category/category-menu";
@@ -27,13 +26,7 @@ export const BoardCategorySection = ({ section }: Props) => {
   });
 
   return (
-    <Card
-      style={{ "--opacity": board.opacity / 100 }}
-      radius={board.itemRadius}
-      withBorder
-      p={0}
-      className={classes.itemCard}
-    >
+    <Card style={{ "--opacity": board.opacity / 100 }} radius={board.itemRadius} withBorder p={0} className={classes.itemCard}>
       <Stack>
         <Group wrap="nowrap" gap="sm">
           <UnstyledButton w="100%" p="sm" onClick={toggle}>

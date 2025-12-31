@@ -1,6 +1,9 @@
 "use client";
 
-import { useCallback } from "react";
+import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
+import { createModal, useModalAction } from "@homarr/modals";
+import { useScopedI18n } from "@homarr/translation/client";
 import {
   ActionIcon,
   Alert,
@@ -17,11 +20,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { IconClick, IconListSearch } from "@tabler/icons-react";
-
-import type { RouterOutputs } from "@homarr/api";
-import { clientApi } from "@homarr/api/client";
-import { createModal, useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCallback } from "react";
 
 import type { OptionLocation } from "../options";
 import type { CommonWidgetInputProps } from "./common";
@@ -75,12 +74,7 @@ export const WidgetLocationInput = ({ property, kind }: CommonWidgetInputProps<"
           <TextInput w="100%" label={tLocation("query")} {...form.getInputProps(`options.${property}.name`)} />
           <Tooltip hidden={selectionEnabled} label={tLocation("disabledTooltip")}>
             <div>
-              <Button
-                disabled={!selectionEnabled}
-                onClick={onSearch}
-                variant="light"
-                leftSection={<IconListSearch size={16} />}
-              >
+              <Button disabled={!selectionEnabled} onClick={onSearch} variant="light" leftSection={<IconListSearch size={16} />}>
                 {tLocation("search")}
               </Button>
             </div>

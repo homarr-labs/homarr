@@ -1,7 +1,6 @@
-import { headers } from "next/headers";
 import type { DefaultSession } from "@auth/core/types";
-
 import type { ColorScheme, GroupPermissionKey, SupportedAuthProvider } from "@homarr/definitions";
+import { headers } from "next/headers";
 
 import { createConfiguration } from "./configuration";
 

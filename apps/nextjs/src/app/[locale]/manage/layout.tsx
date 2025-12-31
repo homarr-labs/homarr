@@ -1,4 +1,8 @@
-import type { PropsWithChildren } from "react";
+import { auth } from "@homarr/auth/next";
+import { isProviderEnabled } from "@homarr/auth/server";
+import { createDocumentationLink } from "@homarr/definitions";
+import { env } from "@homarr/docker/env";
+import { getScopedI18n } from "@homarr/translation/server";
 import { AppShellMain } from "@mantine/core";
 import {
   IconAffiliateFilled,
@@ -24,12 +28,7 @@ import {
   IconUsers,
   IconUsersGroup,
 } from "@tabler/icons-react";
-
-import { auth } from "@homarr/auth/next";
-import { isProviderEnabled } from "@homarr/auth/server";
-import { createDocumentationLink } from "@homarr/definitions";
-import { env } from "@homarr/docker/env";
-import { getScopedI18n } from "@homarr/translation/server";
+import type { PropsWithChildren } from "react";
 
 import { MainHeader } from "~/components/layout/header";
 import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";

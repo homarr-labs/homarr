@@ -13,9 +13,7 @@ export const SettingsProvider = ({
   serverSettings,
   children,
 }: PropsWithChildren<{ user: UserSettings | null; serverSettings: PublicServerSettings }>) => {
-  return (
-    <SettingsContext.Provider value={createSettings({ user, serverSettings })}>{children}</SettingsContext.Provider>
-  );
+  return <SettingsContext.Provider value={createSettings({ user, serverSettings })}>{children}</SettingsContext.Provider>;
 };
 
 export const useSettings = () => {

@@ -1,21 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { Button, Group, Stack } from "@mantine/core";
-import { zod4Resolver } from "mantine-form-zod-resolver";
-import { z } from "zod/v4";
-
 import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";
 import { createModal, useModalAction } from "@homarr/modals";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import { useI18n } from "@homarr/translation/client";
 import { zodErrorMap } from "@homarr/validation/form/i18n";
-
+import { Button, Group, Stack } from "@mantine/core";
+import { zod4Resolver } from "mantine-form-zod-resolver";
+import { useState } from "react";
+import { z } from "zod/v4";
+import type { BoardItemAdvancedOptions } from "../../../validation/src/shared";
 import { widgetImports } from "..";
 import { getInputForType } from "../_inputs";
 import { FormProvider, useForm } from "../_inputs/form";
-import type { BoardItemAdvancedOptions } from "../../../validation/src/shared";
 import type { OptionsBuilderResult } from "../options";
 import type { IntegrationSelectOption } from "../widget-integration-select";
 import { WidgetIntegrationSelect } from "../widget-integration-select";
@@ -99,27 +97,17 @@ export const WidgetEditModal = createModal<ModalProps<WidgetKind>>(({ actions, i
             const Input = getInputForType(value.type);
 
             if (
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               !Input ||
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               value.shouldHide?.(
                 form.values.options as never,
-                innerProps.integrationData
-                  .filter(({ id }) => form.values.integrationIds.includes(id))
-                  .map(({ kind }) => kind),
+                innerProps.integrationData.filter(({ id }) => form.values.integrationIds.includes(id)).map(({ kind }) => kind),
               )
             ) {
               return null;
             }
 
             return (
-              <Input
-                key={key}
-                kind={innerProps.kind}
-                property={key}
-                options={value as never}
-                initialOptions={innerProps.value.options}
-              />
+              <Input key={key} kind={innerProps.kind} property={key} options={value as never} initialOptions={innerProps.value.options} />
             );
           })}
           <Group justify="space-between">

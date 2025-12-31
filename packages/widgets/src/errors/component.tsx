@@ -1,9 +1,8 @@
-import { useMemo } from "react";
+import type { WidgetKind } from "@homarr/definitions";
 import { IconExclamationCircle, IconShield } from "@tabler/icons-react";
 import { TRPCClientError } from "@trpc/client";
 import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
-
-import type { WidgetKind } from "@homarr/definitions";
+import { useMemo } from "react";
 
 import type { WidgetDefinition } from "..";
 import { widgetImports } from "..";
@@ -35,18 +34,11 @@ export const WidgetError = ({ error, resetErrorBoundary, kind }: WidgetErrorProp
   }
 
   return (
-    <BaseWidgetError
-      icon={IconExclamationCircle}
-      message={(error as { toString: () => string }).toString()}
-      onRetry={resetErrorBoundary}
-    />
+    <BaseWidgetError icon={IconExclamationCircle} message={(error as { toString: () => string }).toString()} onRetry={resetErrorBoundary} />
   );
 };
 
-const handleWidgetTrpcError = (
-  error: unknown,
-  currentDefinition: WidgetDefinition,
-): Omit<BaseWidgetErrorProps, "onRetry"> | null => {
+const handleWidgetTrpcError = (error: unknown, currentDefinition: WidgetDefinition): Omit<BaseWidgetErrorProps, "onRetry"> | null => {
   if (!(error instanceof TRPCClientError && "code" in error.data)) return null;
 
   const errorData = error.data as DefaultErrorData;

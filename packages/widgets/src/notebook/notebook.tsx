@@ -1,6 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { clientApi } from "@homarr/api/client";
+import { useForm } from "@homarr/form";
+import type { TranslationObject } from "@homarr/translation";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 import {
   ActionIcon,
   Box,
@@ -57,12 +61,7 @@ import { useEditor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import { StarterKit } from "@tiptap/starter-kit";
 import type { Node } from "prosemirror-model";
-
-import { clientApi } from "@homarr/api/client";
-import { useForm } from "@homarr/form";
-import type { TranslationObject } from "@homarr/translation";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import type { TablerIcon } from "@homarr/ui";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { WidgetComponentProps } from "../definition";
 
@@ -694,11 +693,7 @@ function EmbedImage() {
       <Popover.Dropdown>
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack gap={5}>
-            <TextInput
-              label={t("widget.notebook.popover.source")}
-              placeholder="https://example.com/"
-              {...form.getInputProps("src")}
-            />
+            <TextInput label={t("widget.notebook.popover.source")} placeholder="https://example.com/" {...form.getInputProps("src")} />
             <TextInput
               label={t("widget.notebook.popover.width")}
               placeholder={t("widget.notebook.popover.widthPlaceholder")}
@@ -722,11 +717,7 @@ function TaskListToggle() {
   }, [editor]);
 
   return (
-    <RichTextEditor.Control
-      title={tControls("checkList")}
-      onClick={handleToggleTaskList}
-      active={editor?.isActive("taskList")}
-    >
+    <RichTextEditor.Control title={tControls("checkList")} onClick={handleToggleTaskList} active={editor?.isActive("taskList")}>
       <IconListCheck stroke={1.5} size="1rem" />
     </RichTextEditor.Control>
   );
@@ -783,25 +774,19 @@ const handleAddColumnBefore = (editor: Editor) => {
   editor.commands.addColumnBefore();
 };
 
-const TableAddColumnBefore = () => (
-  <TableControl title="addColumnLeft" onClick={handleAddColumnBefore} icon={IconColumnInsertLeft} />
-);
+const TableAddColumnBefore = () => <TableControl title="addColumnLeft" onClick={handleAddColumnBefore} icon={IconColumnInsertLeft} />;
 
 const handleAddColumnAfter = (editor: Editor) => {
   editor.commands.addColumnAfter();
 };
 
-const TableAddColumnAfter = () => (
-  <TableControl title="addColumnRight" onClick={handleAddColumnAfter} icon={IconColumnInsertRight} />
-);
+const TableAddColumnAfter = () => <TableControl title="addColumnRight" onClick={handleAddColumnAfter} icon={IconColumnInsertRight} />;
 
 const handleRemoveColumn = (editor: Editor) => {
   editor.commands.deleteColumn();
 };
 
-const TableRemoveColumn = () => (
-  <TableControl title="deleteColumn" onClick={handleRemoveColumn} icon={IconColumnRemove} />
-);
+const TableRemoveColumn = () => <TableControl title="deleteColumn" onClick={handleRemoveColumn} icon={IconColumnRemove} />;
 
 const handleAddRowBefore = (editor: Editor) => {
   editor.commands.addRowBefore();
@@ -813,9 +798,7 @@ const handleAddRowAfter = (editor: Editor) => {
   editor.commands.addRowAfter();
 };
 
-const TableAddRowAfter = () => (
-  <TableControl title="addRowBelow" onClick={handleAddRowAfter} icon={IconRowInsertBottom} />
-);
+const TableAddRowAfter = () => <TableControl title="addRowBelow" onClick={handleAddRowAfter} icon={IconRowInsertBottom} />;
 
 const handleRemoveRow = (editor: Editor) => {
   editor.commands.deleteRow();
@@ -857,14 +840,7 @@ function TableToggleMerge() {
       onClick={handleToggleMerge}
       active={editor?.getAttributes("tableCell").colspan > 1}
     >
-      <svg
-        height="1.25rem"
-        width="1.25rem"
-        strokeWidth="0.1"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg height="1.25rem" width="1.25rem" strokeWidth="0.1" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         {/* No existing icon from tabler, taken from https://icon-sets.iconify.design/fluent/table-cells-merge-24-regular/ */}
         <path
           fill="currentColor"
@@ -926,11 +902,7 @@ function TableToggle() {
       trapFocus
     >
       <Popover.Target>
-        <RichTextEditor.Control
-          title={tControls(isActive ? "deleteTable" : "addTable")}
-          active={isActive}
-          onClick={handleControlClick}
-        >
+        <RichTextEditor.Control title={tControls(isActive ? "deleteTable" : "addTable")} active={isActive} onClick={handleControlClick}>
           {isActive ? <IconTableOff stroke={1.5} size="1rem" /> : <IconTablePlus stroke={1.5} size="1rem" />}
         </RichTextEditor.Control>
       </Popover.Target>

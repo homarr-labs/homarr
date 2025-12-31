@@ -1,9 +1,6 @@
 import type { ReleaseProviderResponse, ReleaseResponse } from "./releases-providers-types";
 
-export const getLatestRelease = (
-  releases: ReleaseProviderResponse[],
-  versionRegex?: string,
-): ReleaseProviderResponse | null => {
+export const getLatestRelease = (releases: ReleaseProviderResponse[], versionRegex?: string): ReleaseProviderResponse | null => {
   const validReleases = releases.filter((result) => {
     if (result.latestRelease) {
       return versionRegex ? new RegExp(versionRegex).test(result.latestRelease) : true;

@@ -36,16 +36,12 @@ const mapping: Record<OldmarrIntegrationType, IntegrationKind | null> = {
   plex: "plex",
 };
 
-export const mapAndDecryptIntegrations = (
-  preparedIntegrations: PreparedIntegration[],
-  encryptionToken: string | null,
-) => {
+export const mapAndDecryptIntegrations = (preparedIntegrations: PreparedIntegration[], encryptionToken: string | null) => {
   if (encryptionToken === null) {
     return [];
   }
 
   return preparedIntegrations.map(({ type, name, url, properties }) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const kind = mapIntegrationType(type!);
 
     return {

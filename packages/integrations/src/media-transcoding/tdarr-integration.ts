@@ -51,15 +51,11 @@ export class TdarrIntegration extends Integration implements IMediaTranscodingIn
       totalTranscodeCount: statisticsData.pieStats.totalTranscodeCount,
       totalHealthCheckCount: statisticsData.pieStats.totalHealthCheckCount,
       // The Tdarr API only returns a category if there is at least one item in it
-      failedTranscodeCount:
-        statisticsData.pieStats.status.transcode.find((transcode) => transcode.name === "Transcode error")?.value ?? 0,
-      failedHealthCheckCount:
-        statisticsData.pieStats.status.healthcheck.find((healthcheck) => healthcheck.name === "Error")?.value ?? 0,
+      failedTranscodeCount: statisticsData.pieStats.status.transcode.find((transcode) => transcode.name === "Transcode error")?.value ?? 0,
+      failedHealthCheckCount: statisticsData.pieStats.status.healthcheck.find((healthcheck) => healthcheck.name === "Error")?.value ?? 0,
       stagedTranscodeCount:
-        statisticsData.pieStats.status.transcode.find((transcode) => transcode.name === "Transcode success")?.value ??
-        0,
-      stagedHealthCheckCount:
-        statisticsData.pieStats.status.healthcheck.find((healthcheck) => healthcheck.name === "Queued")?.value ?? 0,
+        statisticsData.pieStats.status.transcode.find((transcode) => transcode.name === "Transcode success")?.value ?? 0,
+      stagedHealthCheckCount: statisticsData.pieStats.status.healthcheck.find((healthcheck) => healthcheck.name === "Queued")?.value ?? 0,
 
       totalSavedSpace: statisticsData.pieStats.sizeDiff * 1_000_000_000, // sizeDiff is in GB, convert to bytes
       transcodeStatus: statisticsData.pieStats.status.transcode,

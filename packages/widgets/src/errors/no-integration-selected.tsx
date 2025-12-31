@@ -1,6 +1,5 @@
-import { IconPlugX } from "@tabler/icons-react";
-
 import type { TranslationFunction } from "@homarr/translation";
+import { IconPlugX } from "@tabler/icons-react";
 
 import { ErrorBoundaryError } from "./base";
 

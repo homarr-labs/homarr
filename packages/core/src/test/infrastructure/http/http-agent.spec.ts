@@ -1,7 +1,6 @@
+import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 import type { Dispatcher } from "undici";
 import { describe, expect, test, vi } from "vitest";
-
-import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 
 import { TestLogger } from "../logs";
 

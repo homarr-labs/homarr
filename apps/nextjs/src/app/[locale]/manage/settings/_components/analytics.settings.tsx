@@ -1,13 +1,12 @@
 "use client";
 
-import React from "react";
-import { Card, LoadingOverlay, Stack, Title } from "@mantine/core";
-
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useForm } from "@homarr/form";
 import type { defaultServerSettings } from "@homarr/server-settings";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Card, LoadingOverlay, Stack, Title } from "@mantine/core";
+import React from "react";
 
 import { SwitchSetting } from "~/app/[locale]/manage/settings/_components/setting-switch";
 

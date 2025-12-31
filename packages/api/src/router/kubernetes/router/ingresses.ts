@@ -1,7 +1,6 @@
+import type { KubernetesIngress, KubernetesIngressPath, KubernetesIngressRuleAndPath } from "@homarr/definitions";
 import type { V1HTTPIngressPath, V1Ingress, V1IngressRule } from "@kubernetes/client-node";
 import { TRPCError } from "@trpc/server";
-
-import type { KubernetesIngress, KubernetesIngressPath, KubernetesIngressRuleAndPath } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";

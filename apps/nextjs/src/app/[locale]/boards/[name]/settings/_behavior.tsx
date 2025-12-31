@@ -1,9 +1,8 @@
 "use client";
 
-import { Button, Group, Stack, Switch } from "@mantine/core";
-
 import { useForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
+import { Button, Group, Stack, Switch } from "@mantine/core";
 
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";

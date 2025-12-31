@@ -1,27 +1,4 @@
 import type { AdapterAccount } from "@auth/core/adapters";
-import type { MantineSize } from "@mantine/core";
-import type { DayOfWeek } from "@mantine/dates";
-import { relations } from "drizzle-orm";
-import type { AnyPgColumn } from "drizzle-orm/pg-core";
-import {
-  boolean,
-  customType,
-  index,
-  integer,
-  pgTable,
-  primaryKey,
-  smallint,
-  text,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
-
-import {
-  backgroundImageAttachments,
-  backgroundImageRepeats,
-  backgroundImageSizes,
-  emptySuperJSON,
-} from "@homarr/definitions";
 import type {
   BackgroundImageAttachment,
   BackgroundImageRepeat,
@@ -38,6 +15,12 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
+import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes, emptySuperJSON } from "@homarr/definitions";
+import type { MantineSize } from "@mantine/core";
+import type { DayOfWeek } from "@mantine/dates";
+import { relations } from "drizzle-orm";
+import type { AnyPgColumn } from "drizzle-orm/pg-core";
+import { boolean, customType, index, integer, pgTable, primaryKey, smallint, text, timestamp, varchar } from "drizzle-orm/pg-core";
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
@@ -277,10 +260,7 @@ export const boards = pgTable("board", {
   logoImageUrl: text(),
   faviconImageUrl: text(),
   backgroundImageUrl: text(),
-  backgroundImageAttachment: text()
-    .$type<BackgroundImageAttachment>()
-    .default(backgroundImageAttachments.defaultValue)
-    .notNull(),
+  backgroundImageAttachment: text().$type<BackgroundImageAttachment>().default(backgroundImageAttachments.defaultValue).notNull(),
   backgroundImageRepeat: text().$type<BackgroundImageRepeat>().default(backgroundImageRepeats.defaultValue).notNull(),
   backgroundImageSize: text().$type<BackgroundImageSize>().default(backgroundImageSizes.defaultValue).notNull(),
   primaryColor: text().default("#fa5252").notNull(),

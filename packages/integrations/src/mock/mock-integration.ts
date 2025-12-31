@@ -74,9 +74,7 @@ export class MockIntegration
   disableAsync = MockIntegration.dnsHole.disableAsync.bind(MockIntegration.dnsHole);
 
   // IDownloadClientIntegration
-  getClientJobsAndStatusAsync = MockIntegration.downloadClient.getClientJobsAndStatusAsync.bind(
-    MockIntegration.downloadClient,
-  );
+  getClientJobsAndStatusAsync = MockIntegration.downloadClient.getClientJobsAndStatusAsync.bind(MockIntegration.downloadClient);
   pauseQueueAsync = MockIntegration.downloadClient.pauseQueueAsync.bind(MockIntegration.downloadClient);
   pauseItemAsync = MockIntegration.downloadClient.pauseItemAsync.bind(MockIntegration.downloadClient);
   resumeQueueAsync = MockIntegration.downloadClient.resumeQueueAsync.bind(MockIntegration.downloadClient);
@@ -112,9 +110,7 @@ export class MockIntegration
   getQueueAsync = MockIntegration.mediaTranscoding.getQueueAsync.bind(MockIntegration.mediaTranscoding);
 
   // NetworkControllerSummaryIntegration
-  getNetworkSummaryAsync = MockIntegration.networkController.getNetworkSummaryAsync.bind(
-    MockIntegration.networkController,
-  );
+  getNetworkSummaryAsync = MockIntegration.networkController.getNetworkSummaryAsync.bind(MockIntegration.networkController);
 
   // NotificationsIntegration
   getNotificationsAsync = MockIntegration.notifications.getNotificationsAsync.bind(MockIntegration.notifications);

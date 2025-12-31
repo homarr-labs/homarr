@@ -1,10 +1,9 @@
-import { describe, expect, test, vi } from "vitest";
-
 import * as authShared from "@homarr/auth/shared";
 import { createId } from "@homarr/common";
 import { eq } from "@homarr/db";
 import { integrations, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
+import { describe, expect, test, vi } from "vitest";
 
 import { throwIfActionForbiddenAsync } from "../../integration/integration-access";
 
@@ -43,8 +42,7 @@ describe("throwIfActionForbiddenAsync should check access to integration and ret
     });
 
     // Act
-    const act = () =>
-      throwIfActionForbiddenAsync({ db, session: null }, eq(integrations.id, integrationId), permission);
+    const act = () => throwIfActionForbiddenAsync({ db, session: null }, eq(integrations.id, integrationId), permission);
 
     // Assert
     await expectActToBeAsync(act, expectedResult);
@@ -74,8 +72,7 @@ describe("throwIfActionForbiddenAsync should check access to integration and ret
     });
 
     // Act
-    const act = () =>
-      throwIfActionForbiddenAsync({ db, session: null }, eq(integrations.id, integrationId), permission);
+    const act = () => throwIfActionForbiddenAsync({ db, session: null }, eq(integrations.id, integrationId), permission);
 
     // Assert
     await expectActToBeAsync(act, expectedResult);
@@ -105,8 +102,7 @@ describe("throwIfActionForbiddenAsync should check access to integration and ret
     });
 
     // Act
-    const act = () =>
-      throwIfActionForbiddenAsync({ db, session: null }, eq(integrations.id, integrationId), permission);
+    const act = () => throwIfActionForbiddenAsync({ db, session: null }, eq(integrations.id, integrationId), permission);
 
     // Assert
     await expectActToBeAsync(act, expectedResult);
@@ -136,8 +132,7 @@ describe("throwIfActionForbiddenAsync should check access to integration and ret
     });
 
     // Act
-    const act = () =>
-      throwIfActionForbiddenAsync({ db, session: null }, eq(integrations.id, integrationId), permission);
+    const act = () => throwIfActionForbiddenAsync({ db, session: null }, eq(integrations.id, integrationId), permission);
 
     // Assert
     await expectActToBeAsync(act, expectedResult);

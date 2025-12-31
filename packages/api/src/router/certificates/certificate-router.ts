@@ -1,16 +1,12 @@
 import { X509Certificate } from "node:crypto";
-import { TRPCError } from "@trpc/server";
-import { zfd } from "zod-form-data";
-import { z } from "zod/v4";
-
-import {
-  addCustomRootCertificateAsync,
-  removeCustomRootCertificateAsync,
-} from "@homarr/core/infrastructure/certificates";
+import { addCustomRootCertificateAsync, removeCustomRootCertificateAsync } from "@homarr/core/infrastructure/certificates";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { and, eq } from "@homarr/db";
 import { trustedCertificateHostnames } from "@homarr/db/schema";
 import { certificateValidFileNameSchema, checkCertificateFile } from "@homarr/validation/certificates";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod/v4";
+import { zfd } from "zod-form-data";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
 
@@ -93,12 +89,7 @@ export const certificateRouter = createTRPCRouter({
       });
       const dbResult = await ctx.db
         .delete(trustedCertificateHostnames)
-        .where(
-          and(
-            eq(trustedCertificateHostnames.hostname, input.hostname),
-            eq(trustedCertificateHostnames.thumbprint, input.thumbprint),
-          ),
-        );
+        .where(and(eq(trustedCertificateHostnames.hostname, input.hostname), eq(trustedCertificateHostnames.thumbprint, input.thumbprint)));
 
       logger.info("Removed trusted hostname", {
         hostname: input.hostname,
@@ -118,9 +109,7 @@ export const certificateRouter = createTRPCRouter({
       if (!certificate) return;
 
       // Delete all trusted hostnames for this certificate
-      await ctx.db
-        .delete(trustedCertificateHostnames)
-        .where(eq(trustedCertificateHostnames.thumbprint, certificate.fingerprint256));
+      await ctx.db.delete(trustedCertificateHostnames).where(eq(trustedCertificateHostnames.thumbprint, certificate.fingerprint256));
 
       logger.info("Removed trusted certificate", {
         fileName: input.fileName,

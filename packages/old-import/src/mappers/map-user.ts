@@ -13,13 +13,7 @@ export const mapAndDecryptUsers = (importUsers: OldmarrImportUser[], encryptionT
   const key = Buffer.from(encryptionToken, "hex");
 
   return importUsers.map(
-    ({
-      id,
-      password,
-      salt,
-      settings,
-      ...user
-    }): InferInsertModel<typeof users> & { oldId: string; isAdmin: boolean } => ({
+    ({ id, password, salt, settings, ...user }): InferInsertModel<typeof users> & { oldId: string; isAdmin: boolean } => ({
       ...user,
       oldId: id,
       id: createId(),

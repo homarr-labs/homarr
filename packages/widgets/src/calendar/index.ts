@@ -1,8 +1,7 @@
-import { IconCalendar } from "@tabler/icons-react";
-import { z } from "zod/v4";
-
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
+import { IconCalendar } from "@tabler/icons-react";
+import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

@@ -1,7 +1,6 @@
 import SuperJSON from "superjson";
-
-import { eq } from "../..";
 import type { Database } from "../..";
+import { eq } from "../..";
 import { items } from "../../schema";
 
 /**
@@ -20,9 +19,7 @@ export async function migrateAppWidgetShowDescriptionTooltipToDisplayModeAsync(d
     }))
     .filter((item) => item.options.showDescriptionTooltip !== undefined);
 
-  console.log(
-    `Migrating app items with showDescriptionTooltip to descriptionDisplayMode count=${itemsToUpdate.length}`,
-  );
+  console.log(`Migrating app items with showDescriptionTooltip to descriptionDisplayMode count=${itemsToUpdate.length}`);
 
   await Promise.all(
     itemsToUpdate.map(async (item) => {

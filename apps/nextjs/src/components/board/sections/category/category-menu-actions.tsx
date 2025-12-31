@@ -1,11 +1,10 @@
-import { useCallback } from "react";
-
 import { fetchApi } from "@homarr/api/client";
 import { getCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { createId } from "@homarr/common";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
 import { useSettings } from "@homarr/settings";
 import { useI18n } from "@homarr/translation/client";
+import { useCallback } from "react";
 
 import type { CategorySection } from "~/app/[locale]/boards/_types";
 import { useCategoryActions } from "./category-actions";
@@ -106,9 +105,7 @@ export const useCategoryMenuActions = (category: CategorySection) => {
   const openAllInNewTabs = useCallback(async () => {
     const currentLayoutId = getCurrentLayout(board);
     const appIds = filterByItemKind(
-      board.items.filter(
-        (item) => item.layouts.find((layout) => layout.layoutId === currentLayoutId)?.sectionId === category.id,
-      ),
+      board.items.filter((item) => item.layouts.find((layout) => layout.layoutId === currentLayoutId)?.sectionId === category.id),
       settings,
       "app",
     ).map((item) => {

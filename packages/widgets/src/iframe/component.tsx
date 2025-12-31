@@ -1,10 +1,9 @@
 "use client";
 
-import { Box, Stack, Text, Title } from "@mantine/core";
-import { IconBrowserOff, IconProtocol } from "@tabler/icons-react";
-
 import { objectEntries } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";
+import { Box, Stack, Text, Title } from "@mantine/core";
+import { IconBrowserOff, IconProtocol } from "@tabler/icons-react";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
@@ -74,9 +73,7 @@ const UnsupportedProtocol = () => {
   );
 };
 
-const getAllowedPermissions = (
-  permissions: Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">,
-) => {
+const getAllowedPermissions = (permissions: Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">) => {
   return (
     objectEntries(permissions)
       .filter(([_key, value]) => value)
@@ -86,16 +83,8 @@ const getAllowedPermissions = (
   );
 };
 
-const getSandboxFlags = (
-  permissions: Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">,
-) => {
-  const baseSandbox = [
-    "allow-scripts",
-    "allow-same-origin",
-    "allow-forms",
-    "allow-popups",
-    "allow-top-navigation-by-user-activation",
-  ];
+const getSandboxFlags = (permissions: Omit<WidgetComponentProps<"iframe">["options"], "embedUrl" | "allowScrolling">) => {
+  const baseSandbox = ["allow-scripts", "allow-same-origin", "allow-forms", "allow-popups", "allow-top-navigation-by-user-activation"];
 
   if (permissions.allowFullScreen) {
     baseSandbox.push("allow-presentation");

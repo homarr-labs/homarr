@@ -1,11 +1,10 @@
-import path from "path";
+import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
+import path from "path";
 import { Pool } from "pg";
 import { describe, test } from "vitest";
-
-import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 
 import * as pgSchema from "../schema/postgresql";
 

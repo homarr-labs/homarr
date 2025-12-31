@@ -1,12 +1,11 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
-import { Suspense, use } from "react";
-import { Indicator, Menu, Text } from "@mantine/core";
-import { IconBellRinging } from "@tabler/icons-react";
-
 import type { RouterOutputs } from "@homarr/api";
 import { useScopedI18n } from "@homarr/translation/client";
+import { Indicator, Menu, Text } from "@mantine/core";
+import { IconBellRinging } from "@tabler/icons-react";
+import type { PropsWithChildren } from "react";
+import { Suspense, use } from "react";
 
 interface UpdateIndicatorProps extends PropsWithChildren {
   availableUpdatesPromise: Promise<RouterOutputs["updateChecker"]["getAvailableUpdates"]> | undefined;
@@ -36,12 +35,7 @@ const InnerUpdateIndicator = ({ children, disabled, availableUpdatesPromise }: I
   const availableUpdates = use(availableUpdatesPromise);
 
   return (
-    <Indicator
-      disabled={!availableUpdates || availableUpdates.length === 0 || disabled}
-      size={15}
-      processing
-      withBorder
-    >
+    <Indicator disabled={!availableUpdates || availableUpdates.length === 0 || disabled} size={15} processing withBorder>
       {children}
     </Indicator>
   );

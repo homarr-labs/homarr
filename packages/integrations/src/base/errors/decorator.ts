@@ -10,7 +10,6 @@ import { integrationJsonParseErrorHandler, integrationZodParseErrorHandler } fro
 
 const logger = createLogger({ module: "handleIntegrationErrors" });
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-explicit-any
 type AbstractConstructor<T = {}> = abstract new (...args: any[]) => T;
 
 const defaultErrorHandlers: IIntegrationErrorHandler[] = [
@@ -23,9 +22,7 @@ export const HandleIntegrationErrors = (errorHandlers: IIntegrationErrorHandler[
   const combinedErrorHandlers = [...defaultErrorHandlers, ...errorHandlers];
   return <T extends AbstractConstructor<Integration>>(IntegrationBaseClass: T): T => {
     abstract class ErrorHandledIntegration extends IntegrationBaseClass {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       constructor(...args: any[]) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         super(...args);
         const processedProperties = new Set<string>();
 

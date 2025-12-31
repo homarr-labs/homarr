@@ -13,10 +13,7 @@ export class DownloadClientMockService implements IDownloadClientIntegration {
         },
         types: ["torrent", "usenet"],
       },
-      items: Array.from({ length: 20 }, (_, index) => DownloadClientMockService.createItem(index)).slice(
-        0,
-        input.limit,
-      ),
+      items: Array.from({ length: 20 }, (_, index) => DownloadClientMockService.createItem(index)).slice(0, input.limit),
     });
   }
 

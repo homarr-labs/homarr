@@ -1,8 +1,7 @@
-import superjson from "superjson";
-
 import { createId, hashObjectBase64 } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { WidgetKind } from "@homarr/definitions";
+import superjson from "superjson";
 
 import { ChannelSubscriptionTracker } from "./channel-subscription-tracker";
 import { createRedisConnection } from "./connection";
@@ -204,21 +203,13 @@ export const createItemAndIntegrationChannel = <TData>(kind: WidgetKind, integra
   return createChannelWithLatestAndEvents<TData>(channelName);
 };
 
-export const createIntegrationOptionsChannel = <TData>(
-  integrationId: string,
-  queryKey: string,
-  options: Record<string, unknown>,
-) => {
+export const createIntegrationOptionsChannel = <TData>(integrationId: string, queryKey: string, options: Record<string, unknown>) => {
   const optionsKey = hashObjectBase64(options);
   const channelName = `integration:${integrationId}:${queryKey}:options:${optionsKey}`;
   return createChannelWithLatestAndEvents<TData>(channelName);
 };
 
-export const createWidgetOptionsChannel = <TData>(
-  widgetKind: WidgetKind,
-  queryKey: string,
-  options: Record<string, unknown>,
-) => {
+export const createWidgetOptionsChannel = <TData>(widgetKind: WidgetKind, queryKey: string, options: Record<string, unknown>) => {
   const optionsKey = hashObjectBase64(options);
   const channelName = `widget:${widgetKind}:${queryKey}:options:${optionsKey}`;
   return createChannelWithLatestAndEvents<TData>(channelName);
@@ -301,7 +292,6 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
       const data = await getSetClient.lrange(channelName, length - 1, length);
       if (data.length !== 1) return null;
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return superjson.parse<{ data: TData; timestamp: Date }>(data[0]!);
     },
     getSliceAsync: async (startIndex: number, endIndex: number) => {
@@ -314,7 +304,6 @@ export const createChannelEventHistoryOld = <TData>(channelName: string, maxElem
       const itemsInCollection = await getSetClient.lrange(channelName, 0, length - 1);
 
       for (let i = 0; i < length - 1; i++) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const deserializedItem = superjson.parse<{ data: TData; timestamp: Date }>(itemsInCollection[i]!);
         if (deserializedItem.timestamp < time) {
           continue;

@@ -1,10 +1,9 @@
-import { cache } from "react";
-import { cookies } from "next/headers";
-
 import { db } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemeCookieKey } from "@homarr/definitions";
+import { cookies } from "next/headers";
+import { cache } from "react";
 
 export const getCurrentColorSchemeAsync = cache(async () => {
   const cookieValue = (await cookies()).get(colorSchemeCookieKey)?.value;

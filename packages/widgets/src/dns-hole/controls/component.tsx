@@ -2,25 +2,6 @@
 
 import "../../widgets-common.css";
 
-import { useState } from "react";
-import {
-  ActionIcon,
-  Badge,
-  Button,
-  Card,
-  Flex,
-  Group,
-  Indicator,
-  ScrollArea,
-  Stack,
-  Text,
-  Tooltip,
-  UnstyledButton,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconCircleFilled, IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
-import combineClasses from "clsx";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
@@ -30,21 +11,20 @@ import { integrationDefs } from "@homarr/definitions";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
-
-import type { widgetKind } from ".";
+import { ActionIcon, Badge, Button, Card, Flex, Group, Indicator, ScrollArea, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconCircleFilled, IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
+import combineClasses from "clsx";
+import { useState } from "react";
 import type { WidgetComponentProps } from "../../definition";
+import type { widgetKind } from ".";
 import classes from "./component.module.css";
 import TimerModal from "./TimerModal";
 
 const dnsLightStatus = (enabled: boolean | undefined) =>
   `var(--mantine-color-${typeof enabled === "undefined" ? "blue" : enabled ? "green" : "red"}-6`;
 
-export default function DnsHoleControlsWidget({
-  options,
-  integrationIds,
-  isEditMode,
-  width,
-}: WidgetComponentProps<typeof widgetKind>) {
+export default function DnsHoleControlsWidget({ options, integrationIds, isEditMode, width }: WidgetComponentProps<typeof widgetKind>) {
   const board = useRequiredBoard();
   // DnsHole integrations with interaction permissions
   const integrationsWithInteractions = useIntegrationsWithInteractAccess()
@@ -280,12 +260,7 @@ export default function DnsHoleControlsWidget({
         </Stack>
       </ScrollArea.Autosize>
 
-      <TimerModal
-        opened={opened}
-        close={close}
-        selectedIntegrationIds={selectedIntegrationIds}
-        disableDns={disableDns}
-      />
+      <TimerModal opened={opened} close={close} selectedIntegrationIds={selectedIntegrationIds} disableDns={disableDns} />
     </Stack>
   );
 }
@@ -322,12 +297,7 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
   const layout = rootWidth < 256 ? "sm" : "md";
 
   return (
-    <Indicator
-      disabled={!isConnected || layout !== "sm"}
-      color={dnsLightStatus(isEnabled)}
-      position="top-end"
-      offset={14}
-    >
+    <Indicator disabled={!isConnected || layout !== "sm"} color={dnsLightStatus(isEnabled)} position="top-end" offset={14}>
       <Card
         className={combineClasses(
           "dns-hole-controls-integration-item-outer-shell",
@@ -429,23 +399,13 @@ const ControlsCard: React.FC<ControlsCardProps> = ({
                     styles={{ section: { marginInlineEnd: "sm" }, root: { cursor: "inherit" } }}
                     leftSection={
                       isConnected && (
-                        <IconCircleFilled
-                          className="dns-hole-controls-item-status-icon"
-                          color={dnsLightStatus(isEnabled)}
-                          size={16}
-                        />
+                        <IconCircleFilled className="dns-hole-controls-item-status-icon" color={dnsLightStatus(isEnabled)} size={16} />
                       )
                     }
                   >
                     {t(
                       `widget.dnsHoleControls.controls.${
-                        !isConnected
-                          ? "disconnected"
-                          : typeof isEnabled === "undefined"
-                            ? "processing"
-                            : isEnabled
-                              ? "enabled"
-                              : "disabled"
+                        !isConnected ? "disconnected" : typeof isEnabled === "undefined" ? "processing" : isEnabled ? "enabled" : "disabled"
                       }`,
                     )}
                   </Badge>

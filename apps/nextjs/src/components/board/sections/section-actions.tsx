@@ -1,7 +1,6 @@
-import { useCallback } from "react";
-
 import { getCurrentLayout } from "@homarr/boards/context";
 import { useUpdateBoard } from "@homarr/boards/updater";
+import { useCallback } from "react";
 
 interface MoveAndResizeInnerSection {
   innerSectionId: string;

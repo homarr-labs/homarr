@@ -1,13 +1,12 @@
 import { Transmission } from "@ctrl/transmission";
+import { createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
 import dayjs from "dayjs";
 import type { Dispatcher } from "undici";
 
-import { createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
-
 import { HandleIntegrationErrors } from "../../base/errors/decorator";
 import { integrationOFetchHttpErrorHandler } from "../../base/errors/http";
-import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
+import { Integration } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
@@ -29,12 +28,11 @@ export class TransmissionIntegration extends Integration implements IDownloadCli
     const client = await this.getClientAsync();
     // Currently there is no way to limit the number of returned torrents
     const { torrents } = (await client.listTorrents()).arguments;
-    const rates = torrents.reduce(
-      ({ down, up }, { rateDownload, rateUpload }) => ({ down: down + rateDownload, up: up + rateUpload }),
-      { down: 0, up: 0 },
-    );
-    const paused =
-      torrents.find(({ status }) => TransmissionIntegration.getTorrentState(status) !== "paused") === undefined;
+    const rates = torrents.reduce(({ down, up }, { rateDownload, rateUpload }) => ({ down: down + rateDownload, up: up + rateUpload }), {
+      down: 0,
+      up: 0,
+    });
+    const paused = torrents.find(({ status }) => TransmissionIntegration.getTorrentState(status) !== "paused") === undefined;
     const status: DownloadClientStatus = { paused, rates, types: [type] };
     const items = torrents
       .map((torrent): DownloadClientItem => {
@@ -49,10 +47,7 @@ export class TransmissionIntegration extends Integration implements IDownloadCli
           received: torrent.downloadedEver,
           downSpeed: torrent.percentDone !== 1 ? torrent.rateDownload : undefined,
           upSpeed: torrent.rateUpload,
-          time:
-            torrent.percentDone === 1
-              ? Math.min(torrent.doneDate * 1000 - dayjs().valueOf(), -1)
-              : Math.max(torrent.eta * 1000, 0),
+          time: torrent.percentDone === 1 ? Math.min(torrent.doneDate * 1000 - dayjs().valueOf(), -1) : Math.max(torrent.eta * 1000, 0),
           added: torrent.addedDate * 1000,
           state,
           progress: torrent.percentDone,

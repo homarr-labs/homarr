@@ -1,3 +1,6 @@
+import { useSession } from "@homarr/auth/client";
+import { useScopedI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 import { Group, Text } from "@mantine/core";
 import {
   IconBox,
@@ -15,10 +18,6 @@ import {
   IconUsers,
   IconUsersGroup,
 } from "@tabler/icons-react";
-
-import { useSession } from "@homarr/auth/client";
-import { useScopedI18n } from "@homarr/translation/client";
-import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";

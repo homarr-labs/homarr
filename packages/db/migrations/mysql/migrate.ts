@@ -1,6 +1,5 @@
-import { migrate } from "drizzle-orm/mysql2/migrator";
-
 import { createMysqlDb, createSharedDbConfig } from "@homarr/core/infrastructure/db";
+import { migrate } from "drizzle-orm/mysql2/migrator";
 
 import type { Database } from "../..";
 import * as mysqlSchema from "../../schema/mysql";

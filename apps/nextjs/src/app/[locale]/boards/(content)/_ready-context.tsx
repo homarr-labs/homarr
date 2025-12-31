@@ -1,11 +1,10 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { usePathname } from "next/navigation";
+import type { PropsWithChildren } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 const BoardReadyContext = createContext<{
   isReady: boolean;

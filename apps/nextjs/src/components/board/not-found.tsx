@@ -1,6 +1,5 @@
-import { Anchor, AppShellMain, Center, Flex, Group, Image, Text, Title } from "@mantine/core";
-
 import type { TablerIcon } from "@homarr/ui";
+import { Anchor, AppShellMain, Center, Flex, Group, Image, Text, Title } from "@mantine/core";
 
 import { fullHeightWithoutHeaderAndFooter } from "~/constants";
 import { MainHeader } from "../layout/header";

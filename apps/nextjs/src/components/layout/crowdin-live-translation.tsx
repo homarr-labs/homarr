@@ -1,6 +1,5 @@
-import Script from "next/script";
-
 import type { SupportedLanguage } from "@homarr/translation";
+import Script from "next/script";
 
 export const CrowdinLiveTranslation = (props: { locale: SupportedLanguage }) => {
   if (props.locale !== "cr") return null;

@@ -1,13 +1,12 @@
+import type { Database } from "@homarr/db";
+import { eq } from "@homarr/db";
+import { groupMembers, groups, users } from "@homarr/db/schema";
+import { createDb } from "@homarr/db/test";
+import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import { describe, expect, test, vi } from "vitest";
-
-import { eq } from "@homarr/db";
-import type { Database } from "@homarr/db";
-import { groupMembers, groups, users } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
-import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 
 import { createSignInEventHandler } from "../events";
 
@@ -19,7 +18,6 @@ vi.mock("../env", () => {
     },
   };
 });
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 type HeadersExport = typeof import("next/headers");
 vi.mock("next/headers", async (importOriginal) => {
   const mod = await importOriginal<HeadersExport>();

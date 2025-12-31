@@ -1,15 +1,13 @@
+import { createDb } from "@homarr/db/test";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, Wait } from "testcontainers";
 import { describe, expect, test, vi } from "vitest";
-
-import { createDb } from "@homarr/db/test";
 
 import { PiHoleIntegrationV5, PiHoleIntegrationV6 } from "../src";
 import type { SessionStore } from "../src/base/session-store";
 import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
 
 vi.mock("@homarr/db", async (importActual) => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = await importActual<typeof import("@homarr/db")>();
   return {
     ...actual,
@@ -18,7 +16,6 @@ vi.mock("@homarr/db", async (importActual) => {
 });
 
 vi.mock("@homarr/core/infrastructure/certificates", async (importActual) => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = await importActual<typeof import("@homarr/core/infrastructure/certificates")>();
   return {
     ...actual,

@@ -1,10 +1,9 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
-import { createContext, useContext, useMemo, useState } from "react";
-
 import type { LogLevel } from "@homarr/core/infrastructure/logs/constants";
 import { logLevels } from "@homarr/core/infrastructure/logs/constants";
+import type { PropsWithChildren } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 
 const LogContext = createContext<{
   level: LogLevel;

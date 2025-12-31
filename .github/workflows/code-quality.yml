@@ -26,6 +26,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup
         uses: ./tooling/github/setup
@@ -35,19 +37,33 @@ jobs:
         run: cp .env.example .env
 
       - name: Lint
-        run: pnpm lint && pnpm lint:ws
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+            pnpm exec biome lint --changed --since="$BASE_BRANCH" && pnpm lint:ws
+          else
+            pnpm lint && pnpm lint:ws
+          fi
 
   format:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup
         uses: ./tooling/github/setup
 
-      - name: Format
-        run: pnpm format
+      - name: Format Check
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+            pnpm exec biome format --changed --since="$BASE_BRANCH"
+          else
+            pnpm format
+          fi
 
   typecheck:
     runs-on: ubuntu-latest

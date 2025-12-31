@@ -1,9 +1,8 @@
-import { notFound } from "next/navigation";
-import { Stack, Title } from "@mantine/core";
-
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getScopedI18n } from "@homarr/translation/server";
+import { Stack, Title } from "@mantine/core";
+import { notFound } from "next/navigation";
 
 import { CrawlingAndIndexingSettings } from "~/app/[locale]/manage/settings/_components/crawling-and-indexing.settings";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";

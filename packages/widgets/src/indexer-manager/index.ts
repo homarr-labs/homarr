@@ -1,6 +1,5 @@
-import { IconReportSearch, IconServerOff } from "@tabler/icons-react";
-
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { IconReportSearch, IconServerOff } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

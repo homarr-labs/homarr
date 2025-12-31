@@ -1,11 +1,7 @@
+import { objectKeys } from "@homarr/common";
 import { z } from "zod/v4";
 
-import { objectKeys } from "@homarr/common";
-
-const createAreaSchema = <TType extends string, TPropertiesSchema extends z.ZodObject>(
-  type: TType,
-  propertiesSchema: TPropertiesSchema,
-) =>
+const createAreaSchema = <TType extends string, TPropertiesSchema extends z.ZodObject>(type: TType, propertiesSchema: TPropertiesSchema) =>
   z.object({
     type: z.literal(type),
     properties: propertiesSchema,

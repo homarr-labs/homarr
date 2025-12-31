@@ -1,8 +1,7 @@
-import { observable } from "@trpc/server/observable";
-import { z } from "zod/v4";
-
 import { sendPingRequestAsync } from "@homarr/ping";
 import { pingChannel, pingUrlChannel } from "@homarr/redis";
+import { observable } from "@trpc/server/observable";
+import { z } from "zod/v4";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
@@ -26,20 +25,18 @@ export const appRouter = createTRPCRouter({
 
       const pingResult = await sendPingRequestAsync(input.url);
 
-      return observable<{ url: string; statusCode: number; durationMs: number } | { url: string; error: string }>(
-        (emit) => {
-          emit.next({ url: input.url, ...pingResult });
-          const unsubscribe = pingChannel.subscribe((message) => {
-            // Only emit if same url
-            if (message.url !== input.url) return;
-            emit.next(message);
-          });
+      return observable<{ url: string; statusCode: number; durationMs: number } | { url: string; error: string }>((emit) => {
+        emit.next({ url: input.url, ...pingResult });
+        const unsubscribe = pingChannel.subscribe((message) => {
+          // Only emit if same url
+          if (message.url !== input.url) return;
+          emit.next(message);
+        });
 
-          return () => {
-            unsubscribe();
-            void pingUrlChannel.removeAsync(input.url);
-          };
-        },
-      );
+        return () => {
+          unsubscribe();
+          void pingUrlChannel.removeAsync(input.url);
+        };
+      });
     }),
 });

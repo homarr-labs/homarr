@@ -1,7 +1,6 @@
+import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { Badge, Box, Card } from "@mantine/core";
 import combineClasses from "clsx";
-
-import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 
 import type { DynamicSectionItem } from "~/app/[locale]/boards/_types";
 import { BoardDynamicSectionMenu } from "./dynamic/dynamic-menu";

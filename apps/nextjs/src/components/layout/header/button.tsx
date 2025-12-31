@@ -1,9 +1,8 @@
-import type { ForwardedRef, ReactNode } from "react";
-import { forwardRef } from "react";
+import { Link } from "@homarr/ui";
 import type { ActionIconProps } from "@mantine/core";
 import { ActionIcon } from "@mantine/core";
-
-import { Link } from "@homarr/ui";
+import type { ForwardedRef, ReactNode } from "react";
+import { forwardRef } from "react";
 
 type HeaderButtonProps = (
   | {
@@ -26,12 +25,7 @@ const headerButtonActionIconProps: ActionIconProps = {
 export const HeaderButton = forwardRef<HTMLButtonElement, HeaderButtonProps>((props, ref) => {
   if ("href" in props) {
     return (
-      <ActionIcon
-        ref={ref as ForwardedRef<HTMLAnchorElement>}
-        component={Link}
-        {...props}
-        {...headerButtonActionIconProps}
-      >
+      <ActionIcon ref={ref as ForwardedRef<HTMLAnchorElement>} component={Link} {...props} {...headerButtonActionIconProps}>
         {props.children}
       </ActionIcon>
     );

@@ -1,11 +1,10 @@
 import { CredentialsSignin } from "@auth/core/errors";
-import { describe, expect, test, vi } from "vitest";
-
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import { groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
+import { describe, expect, test, vi } from "vitest";
 
 import { authorizeWithLdapCredentialsAsync } from "../credentials/authorization/ldap-authorization";
 import * as ldapClient from "../credentials/ldap-client";

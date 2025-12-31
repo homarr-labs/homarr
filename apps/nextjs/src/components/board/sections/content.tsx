@@ -1,6 +1,5 @@
-import { useMemo } from "react";
-
 import type { GridItemHTMLElement } from "@homarr/gridstack";
+import { useMemo } from "react";
 
 import type { DynamicSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 import { BoardItemContent } from "../items/item-content";

@@ -21,14 +21,7 @@ export const createBoardInsertCollection = (
   { preparedApps, preparedBoards }: Omit<ReturnType<typeof prepareMultipleImports>, "preparedIntegrations">,
   settings: InitialOldmarrImportSettings,
 ) => {
-  const insertCollection = createDbInsertCollectionForTransaction([
-    "apps",
-    "boards",
-    "layouts",
-    "sections",
-    "items",
-    "itemLayouts",
-  ]);
+  const insertCollection = createDbInsertCollectionForTransaction(["apps", "boards", "layouts", "sections", "items", "itemLayouts"]);
   logger.info("Preparing boards for insert collection");
 
   const appsMap = new Map(
@@ -61,10 +54,7 @@ export const createBoardInsertCollection = (
 
   preparedBoards.forEach((board) => {
     if (!hasEnoughItemShapes(board.config)) {
-      throw new OldHomarrImportError(
-        board.config,
-        new Error("Your config contains items without shapes for all board sizes."),
-      );
+      throw new OldHomarrImportError(board.config, new Error("Your config contains items without shapes for all board sizes."));
     }
 
     const { wrappers, categories, wrapperIdsToMerge } = fixSectionIssues(board.config);

@@ -1,8 +1,7 @@
-import Script from "next/script";
-
 import { UMAMI_WEBSITE_ID } from "@homarr/analytics";
 import { db } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
+import Script from "next/script";
 
 export const Analytics = async () => {
   // For static pages it will not find any analytics data so we do not include the script on them

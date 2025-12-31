@@ -1,3 +1,5 @@
+import type { IntegrationSecretKind } from "@homarr/definitions";
+import type { TablerIcon } from "@homarr/ui";
 import {
   IconCode,
   IconGrid3x3,
@@ -10,9 +12,6 @@ import {
   IconServer,
   IconUser,
 } from "@tabler/icons-react";
-
-import type { IntegrationSecretKind } from "@homarr/definitions";
-import type { TablerIcon } from "@homarr/ui";
 
 export const integrationSecretIcons = {
   username: IconUser,

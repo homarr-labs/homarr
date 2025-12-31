@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback } from "react";
 import { Burger } from "@mantine/core";
 import { atom, useAtom } from "jotai";
+import { useCallback } from "react";
 
 export const navigationCollapsedAtom = atom(true);
 

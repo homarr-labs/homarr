@@ -1,6 +1,5 @@
-import { useMemo } from "react";
-
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
+import { useMemo } from "react";
 
 import type { DynamicSectionItem, SectionItem } from "~/app/[locale]/boards/_types";
 

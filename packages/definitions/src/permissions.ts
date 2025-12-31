@@ -61,14 +61,7 @@ const groupPermissionParents = {
   "search-engine-modify-all": ["search-engine-create"],
   "search-engine-full-all": ["search-engine-modify-all"],
   "media-full-all": ["media-upload", "media-view-all"],
-  admin: [
-    "board-full-all",
-    "app-full-all",
-    "integration-full-all",
-    "search-engine-full-all",
-    "media-full-all",
-    "other-view-logs",
-  ],
+  admin: ["board-full-all", "app-full-all", "integration-full-all", "search-engine-full-all", "media-full-all", "other-view-logs"],
 } satisfies Partial<Record<GroupPermissionKey, GroupPermissionKey[]>>;
 
 export const getPermissionsWithParents = (permissions: GroupPermissionKey[]): GroupPermissionKey[] => {
@@ -85,7 +78,6 @@ export const getPermissionsWithParents = (permissions: GroupPermissionKey[]): Gr
 const getPermissionsInner = (permissionSet: Set<GroupPermissionKey>, permissions: GroupPermissionKey[]) => {
   permissions.forEach((permission) => {
     const children = groupPermissionParents[permission as keyof typeof groupPermissionParents];
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (children) {
       getPermissionsInner(permissionSet, children);
     }
@@ -103,9 +95,7 @@ export const getPermissionsWithChildren = (permissions: GroupPermissionKey[]) =>
 type GroupPermissions = typeof groupPermissions;
 
 export type GroupPermissionKey = {
-  [key in keyof GroupPermissions]: GroupPermissions[key] extends readonly string[]
-    ? `${key}-${GroupPermissions[key][number]}`
-    : key;
+  [key in keyof GroupPermissions]: GroupPermissions[key] extends readonly string[] ? `${key}-${GroupPermissions[key][number]}` : key;
 }[keyof GroupPermissions];
 
 export const groupPermissionKeys = objectKeys(groupPermissions).reduce((acc, key) => {

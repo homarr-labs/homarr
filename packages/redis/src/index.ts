@@ -4,23 +4,23 @@ import { createListChannel, createQueueChannel, createSubPubChannel } from "./li
 
 export {
   createCacheChannel,
+  createChannelEventHistory,
+  createChannelWithLatestAndEvents,
+  createGetSetChannel,
+  createIntegrationOptionsChannel,
   createItemAndIntegrationChannel,
   createItemChannel,
-  createIntegrationOptionsChannel,
-  createWidgetOptionsChannel,
-  createChannelWithLatestAndEvents,
-  createChannelEventHistory,
-  handshakeAsync,
   createSubPubChannel,
-  createGetSetChannel,
+  createWidgetOptionsChannel,
+  handshakeAsync,
 } from "./lib/channel";
 
 export { createIntegrationHistoryChannel } from "./lib/channels/history-channel";
 
 export const exampleChannel = createSubPubChannel<{ message: string }>("example");
-export const pingChannel = createSubPubChannel<
-  { url: string; statusCode: number; durationMs: number } | { url: string; error: string }
->("ping");
+export const pingChannel = createSubPubChannel<{ url: string; statusCode: number; durationMs: number } | { url: string; error: string }>(
+  "ping",
+);
 export const pingUrlChannel = createListChannel<string>("ping-url");
 
 export const homeAssistantEntityState = createSubPubChannel<{

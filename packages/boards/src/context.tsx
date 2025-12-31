@@ -1,11 +1,10 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
+import { usePathname } from "next/navigation";
+import type { PropsWithChildren } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 import { updateBoardName } from "./updater";
 
@@ -70,13 +69,11 @@ export const useOptionalBoard = () => {
 };
 
 export const getCurrentLayout = (board: RouterOutputs["board"]["getBoardByName"]) => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   if (typeof window === "undefined") return board.layouts.at(0)!.id;
 
   const sortedLayouts = board.layouts.sort((layoutA, layoutB) => layoutB.breakpoint - layoutA.breakpoint);
 
   // Fallback to smallest if none exists with breakpoint smaller than window width
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return sortedLayouts.find((layout) => layout.breakpoint <= window.innerWidth)?.id ?? sortedLayouts.at(0)!.id;
 };
 
@@ -100,8 +97,7 @@ export const useCurrentLayout = () => {
   return currentLayout;
 };
 
-export const getBoardLayouts = (board: RouterOutputs["board"]["getBoardByName"]) =>
-  board.layouts.map((layout) => layout.id);
+export const getBoardLayouts = (board: RouterOutputs["board"]["getBoardByName"]) => board.layouts.map((layout) => layout.id);
 
 export const useLayouts = () => {
   const board = useRequiredBoard();

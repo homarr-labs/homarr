@@ -1,6 +1,5 @@
-import { IconAlignLeft, IconEyeOff, IconGraphFilled, IconListDetails, IconPhoto } from "@tabler/icons-react";
-
 import { objectEntries } from "@homarr/common";
+import { IconAlignLeft, IconEyeOff, IconGraphFilled, IconListDetails, IconPhoto } from "@tabler/icons-react";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -38,6 +37,4 @@ export const { definition, componentLoader } = createWidgetDefinition("systemRes
   },
 }).withDynamicImport(() => import("./component"));
 
-export type LabelDisplayModeOption = ReturnType<
-  (typeof definition)["createOptions"]
->["labelDisplayMode"]["options"][number]["value"];
+export type LabelDisplayModeOption = ReturnType<(typeof definition)["createOptions"]>["labelDisplayMode"]["options"][number]["value"];

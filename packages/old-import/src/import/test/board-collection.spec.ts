@@ -1,6 +1,5 @@
-import { describe, expect, test } from "vitest";
-
 import type { BoardSize } from "@homarr/old-schema";
+import { describe, expect, test } from "vitest";
 
 import { hasEnoughItemShapes } from "../collections/board-collection";
 
@@ -25,29 +24,30 @@ describe("hasEnoughItemShapes should check if there are more than one shape avai
     [false, [{ md: true }, { md: true }], [{ lg: true }]], // md is missing for widgets
     [false, [{ md: true }], [{ lg: true }]], // md is missing for widgets
     [false, [{ md: true }], [{ md: true, lg: true }, { lg: true }]], // md is missing for 2. widget
-  ] as [boolean, Shape[], Shape[]][])(
-    "should return %s if there are more than one shape available",
-    (returnValue, appShapes, widgetShapes) => {
-      const result = hasEnoughItemShapes({
-        apps: appShapes.map((shapes) => ({
-          shape: {
-            sm: shapes.sm ? defaultShape : undefined,
-            md: shapes.md ? defaultShape : undefined,
-            lg: shapes.lg ? defaultShape : undefined,
-          },
-        })),
-        widgets: widgetShapes.map((shapes) => ({
-          shape: {
-            sm: shapes.sm ? defaultShape : undefined,
-            md: shapes.md ? defaultShape : undefined,
-            lg: shapes.lg ? defaultShape : undefined,
-          },
-        })),
-      });
+  ] as [
+    boolean,
+    Shape[],
+    Shape[],
+  ][])("should return %s if there are more than one shape available", (returnValue, appShapes, widgetShapes) => {
+    const result = hasEnoughItemShapes({
+      apps: appShapes.map((shapes) => ({
+        shape: {
+          sm: shapes.sm ? defaultShape : undefined,
+          md: shapes.md ? defaultShape : undefined,
+          lg: shapes.lg ? defaultShape : undefined,
+        },
+      })),
+      widgets: widgetShapes.map((shapes) => ({
+        shape: {
+          sm: shapes.sm ? defaultShape : undefined,
+          md: shapes.md ? defaultShape : undefined,
+          lg: shapes.lg ? defaultShape : undefined,
+        },
+      })),
+    });
 
-      expect(result).toBe(returnValue);
-    },
-  );
+    expect(result).toBe(returnValue);
+  });
 });
 
 type Shape = Partial<Record<BoardSize, true>>;

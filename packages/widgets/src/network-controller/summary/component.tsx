@@ -1,15 +1,14 @@
 "use client";
 
-import { useMemo } from "react";
+import { clientApi } from "@homarr/api/client";
+import { useI18n } from "@homarr/translation/client";
 import { Box, Center, List, Text, useMantineTheme } from "@mantine/core";
 import { IconCircleCheckFilled, IconCircleXFilled } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import objectSupport from "dayjs/plugin/objectSupport";
 import relativeTime from "dayjs/plugin/relativeTime";
-
-import { clientApi } from "@homarr/api/client";
-import { useI18n } from "@homarr/translation/client";
+import { useMemo } from "react";
 
 import type { WidgetComponentProps } from "../../definition";
 
@@ -17,9 +16,7 @@ dayjs.extend(objectSupport);
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
-export default function NetworkControllerSummaryWidget({
-  integrationIds,
-}: WidgetComponentProps<"networkControllerSummary">) {
+export default function NetworkControllerSummaryWidget({ integrationIds }: WidgetComponentProps<"networkControllerSummary">) {
   const [summaries] = clientApi.widget.networkController.summary.useSuspenseQuery(
     {
       integrationIds,
@@ -50,9 +47,7 @@ export default function NetworkControllerSummaryWidget({
               return undefined;
             }
 
-            return prevData.map((item) =>
-              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
-            );
+            return prevData.map((item) => (item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item));
           },
         );
       },
