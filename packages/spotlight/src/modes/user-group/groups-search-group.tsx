@@ -1,15 +1,14 @@
-import { Group, Stack, Text } from "@mantine/core";
-import { IconEye, IconUsersGroup } from "@tabler/icons-react";
-
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
+import { Group, Stack, Text } from "@mantine/core";
+import { IconEye, IconUsersGroup } from "@tabler/icons-react";
 
 import { createChildrenOptions } from "../../lib/children";
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+// biome-ignore lint/style/useConsistentTypeDefinitions: <We need it for the type>
 type Group = { id: string; name: string };
 
 const groupChildrenOptions = createChildrenOptions<Group>({

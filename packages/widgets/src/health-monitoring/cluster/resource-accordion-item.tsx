@@ -1,8 +1,7 @@
-import type { PropsWithChildren } from "react";
+import type { TablerIcon } from "@homarr/ui";
 import type { MantineColor } from "@mantine/core";
 import { Accordion, Badge, Group, Text } from "@mantine/core";
-
-import type { TablerIcon } from "@homarr/ui";
+import type { PropsWithChildren } from "react";
 
 interface ResourceAccordionItemProps {
   value: string;

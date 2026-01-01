@@ -62,11 +62,7 @@ const getNextPosition = (board: Board, layout: ItemLayout): { xOffset: number; y
   };
 };
 
-const getEmptySectionPosition = (
-  board: Board,
-  layout: ItemLayout,
-  section: Section,
-): { xOffset: number; yOffset: number } | undefined => {
+const getEmptySectionPosition = (board: Board, layout: ItemLayout, section: Section): { xOffset: number; yOffset: number } | undefined => {
   const boardLayout = board.layouts.find((boardLayout) => boardLayout.id === layout.layoutId);
   if (!boardLayout) return;
 

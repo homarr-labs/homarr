@@ -1,12 +1,11 @@
 "use client";
 
-import { startTransition, useState } from "react";
-import { Card, Stack } from "@mantine/core";
-import type { FileWithPath } from "@mantine/dropzone";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { InitialOldmarrImport } from "@homarr/old-import/components";
+import { Card, Stack } from "@mantine/core";
+import type { FileWithPath } from "@mantine/dropzone";
+import { startTransition, useState } from "react";
 
 import { FileInfoCard } from "./file-info-card";
 import { ImportDropZone } from "./import-dropzone";
@@ -14,9 +13,7 @@ import { ImportDropZone } from "./import-dropzone";
 export const InitImport = () => {
   const [file, setFile] = useState<FileWithPath | null>(null);
   const { isPending, mutate } = clientApi.import.analyseInitialOldmarrImport.useMutation();
-  const [analyseResult, setAnalyseResult] = useState<RouterOutputs["import"]["analyseInitialOldmarrImport"] | null>(
-    null,
-  );
+  const [analyseResult, setAnalyseResult] = useState<RouterOutputs["import"]["analyseInitialOldmarrImport"] | null>(null);
 
   if (!file) {
     return (

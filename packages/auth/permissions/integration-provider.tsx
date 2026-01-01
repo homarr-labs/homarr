@@ -1,9 +1,8 @@
 "use client";
 
+import type { IntegrationKind } from "@homarr/definitions";
 import type { PropsWithChildren } from "react";
 import { createContext, useContext } from "react";
-
-import type { IntegrationKind } from "@homarr/definitions";
 
 interface IntegrationContextProps {
   integrations: {

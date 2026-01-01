@@ -1,13 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { clientApi } from "@homarr/api/client";
 import { Box } from "@mantine/core";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import objectSupport from "dayjs/plugin/objectSupport";
 import relativeTime from "dayjs/plugin/relativeTime";
-
-import { clientApi } from "@homarr/api/client";
+import { useMemo } from "react";
 
 import type { WidgetComponentProps } from "../../definition";
 import { WifiVariant } from "./variants/wifi-variant";
@@ -17,10 +16,7 @@ dayjs.extend(objectSupport);
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
-export default function NetworkControllerNetworkStatusWidget({
-  options,
-  integrationIds,
-}: WidgetComponentProps<"networkControllerStatus">) {
+export default function NetworkControllerNetworkStatusWidget({ options, integrationIds }: WidgetComponentProps<"networkControllerStatus">) {
   const [summaries] = clientApi.widget.networkController.summary.useSuspenseQuery(
     {
       integrationIds,

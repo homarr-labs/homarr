@@ -17,7 +17,7 @@ export const iconsRouter = createTRPCRouter({
             },
             where:
               (input.searchText?.length ?? 0) > 0
-                ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                ? // biome-ignore lint/style/noNonNullAssertion: <explanation>
                   and(...input.searchText!.split(" ").map((keyword) => like(icons.name, `%${keyword}%`)))
                 : undefined,
             limit: input.limitPerGroup,

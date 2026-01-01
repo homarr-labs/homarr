@@ -1,8 +1,5 @@
 "use client";
 
-import { Button, Group, Stack, Switch } from "@mantine/core";
-import type { z } from "zod/v4";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -10,6 +7,8 @@ import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { userPingIconsEnabledSchema } from "@homarr/validation/user";
+import { Button, Group, Stack, Switch } from "@mantine/core";
+import type { z } from "zod/v4";
 
 interface PingIconsEnabledProps {
   user: RouterOutputs["user"]["getById"];
@@ -51,10 +50,7 @@ export const PingIconsEnabled = ({ user }: PingIconsEnabledProps) => {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="md">
-        <Switch
-          {...form.getInputProps("pingIconsEnabled", { type: "checkbox" })}
-          label={t("user.field.pingIconsEnabled.label")}
-        />
+        <Switch {...form.getInputProps("pingIconsEnabled", { type: "checkbox" })} label={t("user.field.pingIconsEnabled.label")} />
 
         <Group justify="end">
           <Button type="submit" loading={isPending}>

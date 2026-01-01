@@ -1,6 +1,5 @@
-import ICAL from "ical.js";
-
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import ICAL from "ical.js";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -45,9 +44,7 @@ export class ICalIntegration extends Integration implements ICalendarIntegration
     const result = await response.text();
 
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const jcal = ICAL.parse(result);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const comp = new ICAL.Component(jcal);
       return comp.getAllSubcomponents("vevent").length > 0
         ? { success: true }

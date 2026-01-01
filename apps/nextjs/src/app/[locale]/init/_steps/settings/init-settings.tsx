@@ -1,10 +1,5 @@
 "use client";
 
-import { startTransition } from "react";
-import { Button, Card, Group, Stack, Switch, Text } from "@mantine/core";
-import { IconArrowRight } from "@tabler/icons-react";
-import type { z } from "zod/v4";
-
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
@@ -13,6 +8,10 @@ import { defaultServerSettings } from "@homarr/server-settings";
 import type { TranslationObject } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { settingsInitSchema } from "@homarr/validation/settings";
+import { Button, Card, Group, Stack, Switch, Text } from "@mantine/core";
+import { IconArrowRight } from "@tabler/icons-react";
+import { startTransition } from "react";
+import type { z } from "zod/v4";
 
 export const InitSettings = () => {
   const tSection = useScopedI18n("management.page.settings.section");
@@ -73,18 +72,9 @@ export const InitSettings = () => {
             <Text fw={500}>{tSection("crawlingAndIndexing.title")}</Text>
 
             <Stack gap="xs">
-              <CrawlingRow
-                kind="noIndex"
-                {...form.getInputProps("crawlingAndIndexing.noIndex", { type: "checkbox" })}
-              />
-              <CrawlingRow
-                kind="noFollow"
-                {...form.getInputProps("crawlingAndIndexing.noFollow", { type: "checkbox" })}
-              />
-              <CrawlingRow
-                kind="noTranslate"
-                {...form.getInputProps("crawlingAndIndexing.noTranslate", { type: "checkbox" })}
-              />
+              <CrawlingRow kind="noIndex" {...form.getInputProps("crawlingAndIndexing.noIndex", { type: "checkbox" })} />
+              <CrawlingRow kind="noFollow" {...form.getInputProps("crawlingAndIndexing.noFollow", { type: "checkbox" })} />
+              <CrawlingRow kind="noTranslate" {...form.getInputProps("crawlingAndIndexing.noTranslate", { type: "checkbox" })} />
               <CrawlingRow
                 kind="noSiteLinksSearchBox"
                 {...form.getInputProps("crawlingAndIndexing.noSiteLinksSearchBox", { type: "checkbox" })}
@@ -109,36 +99,22 @@ interface AnalyticsRowProps {
 const AnalyticsRow = ({ kind, ...props }: AnalyticsRowProps & CheckboxProps) => {
   const tSection = useI18n("management.page.settings.section");
 
-  return (
-    <SettingRow title={tSection(`analytics.${kind}.title`)} text={tSection(`analytics.${kind}.text`)} {...props} />
-  );
+  return <SettingRow title={tSection(`analytics.${kind}.title`)} text={tSection(`analytics.${kind}.text`)} {...props} />;
 };
 
 interface CrawlingRowProps {
-  kind: Exclude<
-    keyof TranslationObject["management"]["page"]["settings"]["section"]["crawlingAndIndexing"],
-    "title" | "warning"
-  >;
+  kind: Exclude<keyof TranslationObject["management"]["page"]["settings"]["section"]["crawlingAndIndexing"], "title" | "warning">;
 }
 
 const CrawlingRow = ({ kind, ...inputProps }: CrawlingRowProps & CheckboxProps) => {
   const tSection = useI18n("management.page.settings.section");
 
   return (
-    <SettingRow
-      title={tSection(`crawlingAndIndexing.${kind}.title`)}
-      text={tSection(`crawlingAndIndexing.${kind}.text`)}
-      {...inputProps}
-    />
+    <SettingRow title={tSection(`crawlingAndIndexing.${kind}.title`)} text={tSection(`crawlingAndIndexing.${kind}.text`)} {...inputProps} />
   );
 };
 
-const SettingRow = ({
-  title,
-  text,
-  disabled,
-  ...inputProps
-}: { title: string; text: string; disabled?: boolean } & CheckboxProps) => {
+const SettingRow = ({ title, text, disabled, ...inputProps }: { title: string; text: string; disabled?: boolean } & CheckboxProps) => {
   return (
     <Group wrap="nowrap" align="center">
       <Stack gap={0} style={{ flex: 1 }}>

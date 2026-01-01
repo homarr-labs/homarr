@@ -1,6 +1,5 @@
-import { z } from "zod/v4";
-
 import { integrationKinds, integrationPermissions, integrationSecretKinds } from "@homarr/definitions";
+import { z } from "zod/v4";
 
 import { appManageSchema } from "./app";
 import { zodEnumFromArray } from "./enums";

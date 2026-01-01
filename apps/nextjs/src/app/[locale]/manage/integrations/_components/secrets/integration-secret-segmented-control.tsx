@@ -1,9 +1,8 @@
-import { useCallback } from "react";
-import { SegmentedControl } from "@mantine/core";
-
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import type { UseFormReturnType } from "@homarr/form";
 import { useScopedI18n } from "@homarr/translation/client";
+import { SegmentedControl } from "@mantine/core";
+import { useCallback } from "react";
 
 interface FormType {
   secrets: { kind: IntegrationSecretKind; value: string | null }[];
@@ -24,10 +23,7 @@ export const SecretKindsSegmentedControl = <TFormType extends FormType>({
 
   const defaultValue = defaultKinds?.length === 0 ? "empty" : defaultKinds?.join("-");
   const secretKindGroups = secretKinds.map((kinds) => ({
-    label:
-      kinds.length === 0
-        ? t("noSecretsRequired.segmentTitle")
-        : kinds.map((kind) => t(`kind.${kind}.label`)).join(" & "),
+    label: kinds.length === 0 ? t("noSecretsRequired.segmentTitle") : kinds.map((kind) => t(`kind.${kind}.label`)).join(" & "),
     value: kinds.length === 0 ? "empty" : kinds.join("-"),
   }));
 
@@ -51,12 +47,5 @@ export const SecretKindsSegmentedControl = <TFormType extends FormType>({
     [form],
   );
 
-  return (
-    <SegmentedControl
-      fullWidth
-      data={secretKindGroups}
-      defaultValue={defaultValue}
-      onChange={onChange}
-    ></SegmentedControl>
-  );
+  return <SegmentedControl fullWidth data={secretKindGroups} defaultValue={defaultValue} onChange={onChange}></SegmentedControl>;
 };

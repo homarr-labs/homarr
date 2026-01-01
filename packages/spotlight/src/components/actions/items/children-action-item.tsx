@@ -1,6 +1,5 @@
-import { Spotlight } from "@mantine/spotlight";
-
 import { Link } from "@homarr/ui";
+import { Spotlight } from "@mantine/spotlight";
 
 import type { inferSearchInteractionOptions } from "../../../lib/interaction";
 import classes from "./action-item.module.css";

@@ -1,7 +1,17 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { useRequiredBoard } from "@homarr/boards/context";
+import { useEditMode } from "@homarr/boards/edit-mode";
+import { revalidatePathActionAsync } from "@homarr/common/client";
+import { env } from "@homarr/common/env";
+import { hotkeys } from "@homarr/definitions";
+import { useConfirmModal, useModalAction } from "@homarr/modals";
+import { AppSelectModal } from "@homarr/modals-collection";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { Link } from "@homarr/ui";
 import { Group, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
 import {
@@ -16,19 +26,8 @@ import {
   IconResize,
   IconSettings,
 } from "@tabler/icons-react";
-
-import { clientApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
-import { useRequiredBoard } from "@homarr/boards/context";
-import { useEditMode } from "@homarr/boards/edit-mode";
-import { revalidatePathActionAsync } from "@homarr/common/client";
-import { env } from "@homarr/common/env";
-import { hotkeys } from "@homarr/definitions";
-import { useConfirmModal, useModalAction } from "@homarr/modals";
-import { AppSelectModal } from "@homarr/modals-collection";
-import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { Link } from "@homarr/ui";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
 
 import { useItemActions } from "~/components/board/items/item-actions";
 import { ItemSelectModal } from "~/components/board/items/item-select-modal";
@@ -192,12 +191,7 @@ const SelectBoardsMenu = () => {
       <Menu.Dropdown style={{ transform: "translate(-7px, 0)" }}>
         <ScrollArea.Autosize mah={300}>
           {boards.map((board) => (
-            <Menu.Item
-              key={board.id}
-              component={Link}
-              href={`/boards/${board.name}`}
-              leftSection={<IconLayoutBoard size={20} />}
-            >
+            <Menu.Item key={board.id} component={Link} href={`/boards/${board.name}`} leftSection={<IconLayoutBoard size={20} />}>
               {board.name}
             </Menu.Item>
           ))}

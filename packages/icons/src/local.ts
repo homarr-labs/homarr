@@ -1,1 +1,1 @@
-export { createLocalImageUrl, mapMediaToIcon, LOCAL_ICON_REPOSITORY_SLUG } from "./repositories/local.icon-repository";
+export { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG, mapMediaToIcon } from "./repositories/local.icon-repository";

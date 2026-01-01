@@ -1,6 +1,6 @@
-import Image from "next/image";
 import type { TitleOrder } from "@mantine/core";
 import { Group, Title } from "@mantine/core";
+import Image from "next/image";
 
 interface LogoProps {
   size: number;
@@ -14,7 +14,6 @@ export const Logo = ({ size = 60, shouldUseNextImage = false, src, alt }: LogoPr
     <Image className="logo" src={src} alt={alt} width={size} height={size} />
   ) : (
     // we only want to use next/image for logos that we are sure will be preloaded and are allowed
-    // eslint-disable-next-line @next/next/no-img-element
     <img className="logo" src={src} alt={alt} width={size} height={size} />
   );
 

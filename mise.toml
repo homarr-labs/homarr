@@ -1,0 +1,8 @@
+[tools]
+node = "latest"
+pnpm = "latest"
+docker = "latest"
+docker-compose = "latest"
+gh = "latest"
+act = "latest"
+git = "latest"

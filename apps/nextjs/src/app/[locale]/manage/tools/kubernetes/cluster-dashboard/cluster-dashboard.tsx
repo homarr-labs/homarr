@@ -1,11 +1,10 @@
 "use client";
 
-import { SimpleGrid, Skeleton, Stack, Title } from "@mantine/core";
-
 import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
 import type { KubernetesLabelResourceType } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
+import { SimpleGrid, Skeleton, Stack, Title } from "@mantine/core";
 
 import KubernetesErrorPage from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/error";
 import { HeaderCard } from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/header-card/header-card";
@@ -15,11 +14,7 @@ import { ResourceTile } from "~/app/[locale]/manage/tools/kubernetes/cluster-das
 export function ClusterDashboard() {
   const t = useI18n();
 
-  const {
-    data: clusterData,
-    isLoading: isClusterLoading,
-    isError: isClusterError,
-  } = clientApi.kubernetes.cluster.getCluster.useQuery();
+  const { data: clusterData, isLoading: isClusterLoading, isError: isClusterError } = clientApi.kubernetes.cluster.getCluster.useQuery();
 
   const {
     data: resourceCountsData,
@@ -51,9 +46,7 @@ export function ClusterDashboard() {
           ? Array.from({ length: 3 }).map(() => <KubernetesErrorPage key={createId()} />)
           : isClusterLoading
             ? Array.from({ length: 3 }).map(() => <Skeleton key={createId()} height={200} />)
-            : clusterData?.capacity.map((capacity) => (
-                <ResourceGauge kubernetesCapacity={capacity} key={capacity.type} />
-              ))}
+            : clusterData?.capacity.map((capacity) => <ResourceGauge kubernetesCapacity={capacity} key={capacity.type} />)}
       </SimpleGrid>
 
       <Title>{t("kubernetes.cluster.resources.title")}</Title>

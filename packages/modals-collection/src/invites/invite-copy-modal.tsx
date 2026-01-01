@@ -1,10 +1,9 @@
-import { usePathname } from "next/navigation";
-import { Button, CopyButton, Mark, Stack, Text } from "@mantine/core";
-
 import type { RouterOutputs } from "@homarr/api";
 import { createModal } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
+import { Button, CopyButton, Mark, Stack, Text } from "@mantine/core";
+import { usePathname } from "next/navigation";
 
 export const InviteCopyModal = createModal<RouterOutputs["invite"]["createInvite"]>(({ actions, innerProps }) => {
   const t = useScopedI18n("management.page.user.invite");

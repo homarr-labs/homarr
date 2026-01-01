@@ -1,11 +1,10 @@
 "use client";
 
-import { createContext, useContext, useEffect } from "react";
-import type { PropsWithChildren } from "react";
-import dayjs from "dayjs";
-
 import type { Session } from "@homarr/auth";
 import { SessionProvider, signIn } from "@homarr/auth/client";
+import dayjs from "dayjs";
+import type { PropsWithChildren } from "react";
+import { createContext, useContext, useEffect } from "react";
 
 interface AuthProviderProps extends AuthContextProps {
   session: Session | null;
@@ -37,7 +36,7 @@ export const useAuthContext = () => {
 
 const useLoginRedirectOnSessionExpiry = (session: Session | null) => {
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
     if (!session) return () => {};
     //setTimeout doesn't allow for a number higher than 2147483647 (2³¹-1 , or roughly 24 days)
     const timeout = setTimeout(() => void signIn(), Math.min(dayjs(session.expires).diff(), 2147483647));

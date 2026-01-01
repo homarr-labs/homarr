@@ -1,8 +1,7 @@
-import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
-import { z } from "zod/v4";
-
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
+import { z } from "zod/v4";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -63,7 +62,8 @@ const userSchema = z.object({
 export class EmbyIntegration extends Integration implements IMediaServerIntegration, IMediaReleasesIntegration {
   private static readonly apiKeyHeader = "X-Emby-Token";
   private static readonly deviceId = "homarr-emby-integration";
-  private static readonly authorizationHeaderValue = `Emby Client="Dashboard", Device="Homarr", DeviceId="${EmbyIntegration.deviceId}", Version="0.0.1"`;
+  private static readonly authorizationHeaderValue =
+    `Emby Client="Dashboard", Device="Homarr", DeviceId="${EmbyIntegration.deviceId}", Version="0.0.1"`;
 
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const apiKey = super.getSecretValue("apiKey");

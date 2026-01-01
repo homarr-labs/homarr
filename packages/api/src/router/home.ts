@@ -134,9 +134,7 @@ export const homeRouter = createTRPCRouter({
         subtitleKey: "resources",
         count: await db.$count(
           medias,
-          ctx.session.user.permissions.includes("media-view-all")
-            ? undefined
-            : eq(medias.creatorId, ctx.session.user.id),
+          ctx.session.user.permissions.includes("media-view-all") ? undefined : eq(medias.creatorId, ctx.session.user.id),
         ),
         path: "/manage/medias",
       });

@@ -6,10 +6,6 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
-import { initTRPC, TRPCError } from "@trpc/server";
-import superjson from "superjson";
-import type { OpenApiMeta } from "trpc-to-openapi";
-import { ZodError } from "zod/v4";
 
 import type { Session } from "@homarr/auth";
 import { FlattenError } from "@homarr/common";
@@ -17,6 +13,10 @@ import { userAgent } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
+import { initTRPC, TRPCError } from "@trpc/server";
+import superjson from "superjson";
+import type { OpenApiMeta } from "trpc-to-openapi";
+import { ZodError } from "zod/v4";
 
 import { getOnboardingOrFallbackAsync } from "./router/onboard/onboard-queries";
 

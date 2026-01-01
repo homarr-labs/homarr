@@ -1,19 +1,18 @@
 "use client";
 
-import React from "react";
-import { Badge, rem } from "@mantine/core";
-import { IconCircleDashedCheck, IconHeartBroken } from "@tabler/icons-react";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import type { MRT_ColumnDef } from "mantine-react-table";
-import { MantineReactTable } from "mantine-react-table";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { KubernetesNamespace } from "@homarr/definitions";
 import type { ScopedTranslationFunction } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+import { Badge, rem } from "@mantine/core";
+import { IconCircleDashedCheck, IconHeartBroken } from "@tabler/icons-react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import type { MRT_ColumnDef } from "mantine-react-table";
+import { MantineReactTable } from "mantine-react-table";
+import React from "react";
 
 dayjs.extend(relativeTime);
 
@@ -34,11 +33,7 @@ const createColumns = (t: ScopedTranslationFunction<"kubernetes.namespaces">): M
       const badgeKubernetesNamespaceStatusIcon = cell.row.original.status === "Active" ? checkIcon : downIcon;
 
       return (
-        <Badge
-          leftSection={badgeKubernetesNamespaceStatusIcon}
-          color={badgeKubernetesNamespaceStatusColor}
-          variant="light"
-        >
+        <Badge leftSection={badgeKubernetesNamespaceStatusIcon} color={badgeKubernetesNamespaceStatusColor} variant="light">
           {cell.row.original.status}
         </Badge>
       );

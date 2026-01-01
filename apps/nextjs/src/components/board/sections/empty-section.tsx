@@ -1,6 +1,5 @@
-import combineClasses from "clsx";
-
 import { useEditMode } from "@homarr/boards/edit-mode";
+import combineClasses from "clsx";
 
 import type { EmptySection } from "~/app/[locale]/boards/_types";
 import { GridStack } from "./gridstack/gridstack";

@@ -6,7 +6,6 @@ import { users } from "@homarr/db/schema";
 export const fixUsernames = command({
   name: "fix-usernames",
   desc: "Changes all credentials usernames to lowercase",
-  // eslint-disable-next-line no-restricted-syntax
   handler: async () => {
     if (!process.env.AUTH_PROVIDERS?.toLowerCase().includes("credentials")) {
       console.error("Credentials provider is not enabled");

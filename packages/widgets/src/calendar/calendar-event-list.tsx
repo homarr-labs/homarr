@@ -1,22 +1,9 @@
-import {
-  Badge,
-  Box,
-  Button,
-  darken,
-  Group,
-  Image,
-  lighten,
-  ScrollArea,
-  Stack,
-  Text,
-  useMantineColorScheme,
-} from "@mantine/core";
-import { IconClock, IconPin } from "@tabler/icons-react";
-import dayjs from "dayjs";
-
 import { isNullOrWhitespace } from "@homarr/common";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
+import { Badge, Box, Button, darken, Group, Image, lighten, ScrollArea, Stack, Text, useMantineColorScheme } from "@mantine/core";
+import { IconClock, IconPin } from "@tabler/icons-react";
+import dayjs from "dayjs";
 
 import classes from "./calendar-event-list.module.css";
 
@@ -48,9 +35,7 @@ export const CalendarEventList = ({ events }: CalendarEventListProps) => {
                   w={70}
                   mah={150}
                   style={{
-                    aspectRatio: event.image.aspectRatio
-                      ? `${event.image.aspectRatio.width} / ${event.image.aspectRatio.height}`
-                      : "1/1",
+                    aspectRatio: event.image.aspectRatio ? `${event.image.aspectRatio.width} / ${event.image.aspectRatio.height}` : "1/1",
                   }}
                   radius="sm"
                   fallbackSrc="https://placehold.co/400x400?text=No%20image"

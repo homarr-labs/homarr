@@ -1,10 +1,9 @@
 "use client";
 
-import { Anchor, Center, Stack, Text } from "@mantine/core";
-import { IconShipOff } from "@tabler/icons-react";
-
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
+import { Anchor, Center, Stack, Text } from "@mantine/core";
+import { IconShipOff } from "@tabler/icons-react";
 
 export default function DockerErrorPage() {
   const t = useI18n();

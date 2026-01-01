@@ -1,13 +1,6 @@
 {
-  "eslint.workingDirectories": [
-    {
-      "mode": "auto"
-    }
-  ],
-  "eslint.experimental.useFlatConfig": true,
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "js/ts.implicitProjectConfig.experimentalDecorators": true,
-  "prettier.configPath": "./tooling/prettier/index.mjs",
   "cSpell.words": [
     "ajnart",
     "cqmin",

@@ -1,7 +1,7 @@
-export { getTrustedCertificateHostnamesAsync } from "./hostnames";
 export {
   addCustomRootCertificateAsync,
-  removeCustomRootCertificateAsync,
   getAllTrustedCertificatesAsync,
   loadCustomRootCertificatesAsync,
+  removeCustomRootCertificateAsync,
 } from "./files";
+export { getTrustedCertificateHostnamesAsync } from "./hostnames";

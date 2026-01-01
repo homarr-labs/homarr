@@ -1,9 +1,8 @@
-import { cache } from "react";
-import { headers } from "next/headers";
-import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
-
 import { appRouter, createCaller, createTRPCContext } from "@homarr/api";
 import { auth } from "@homarr/auth/next";
+import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
+import { headers } from "next/headers";
+import { cache } from "react";
 
 import { makeQueryClient } from "./shared";
 

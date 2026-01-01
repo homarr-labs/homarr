@@ -1,8 +1,7 @@
-import { createHash } from "crypto";
-
 import type { InferSelectModel } from "@homarr/db";
 import { db } from "@homarr/db";
 import type { medias } from "@homarr/db/schema";
+import { createHash } from "crypto";
 
 import type { RepositoryIcon, RepositoryIconGroup } from "../types";
 import { IconRepository } from "./icon-repository";
@@ -25,9 +24,7 @@ export class LocalIconRepository extends IconRepository {
 
 export const createLocalImageUrl = (id: string) => `/api/user-medias/${id}`;
 
-export const mapMediaToIcon = (
-  media: Pick<InferSelectModel<typeof medias>, "name" | "id" | "content" | "size">,
-): RepositoryIcon => ({
+export const mapMediaToIcon = (media: Pick<InferSelectModel<typeof medias>, "name" | "id" | "content" | "size">): RepositoryIcon => ({
   local: true,
   fileNameWithExtension: media.name,
   imageUrl: createLocalImageUrl(media.id),

@@ -7,9 +7,7 @@ export interface RemoveDynamicSectionInput {
 export const removeDynamicSectionCallback =
   ({ id }: RemoveDynamicSectionInput) =>
   (board: Board): Board => {
-    const sectionToRemove = board.sections.find(
-      (section): section is DynamicSection => section.id === id && section.kind === "dynamic",
-    );
+    const sectionToRemove = board.sections.find((section): section is DynamicSection => section.id === id && section.kind === "dynamic");
     if (!sectionToRemove) return board;
 
     return {
@@ -25,9 +23,7 @@ export const removeDynamicSectionCallback =
             layouts: section.layouts.map((layout) => {
               if (layout.parentSectionId !== sectionToRemove.id) return layout;
 
-              const removedSectionLayout = sectionToRemove.layouts.find(
-                (layoutToRemove) => layoutToRemove.layoutId === layout.layoutId,
-              );
+              const removedSectionLayout = sectionToRemove.layouts.find((layoutToRemove) => layoutToRemove.layoutId === layout.layoutId);
               if (!removedSectionLayout) throw new Error("Layout not found");
 
               return {
@@ -45,9 +41,7 @@ export const removeDynamicSectionCallback =
         layouts: item.layouts.map((layout) => {
           if (layout.sectionId !== sectionToRemove.id) return layout;
 
-          const removedSectionLayout = sectionToRemove.layouts.find(
-            (layoutToRemove) => layoutToRemove.layoutId === layout.layoutId,
-          );
+          const removedSectionLayout = sectionToRemove.layouts.find((layoutToRemove) => layoutToRemove.layoutId === layout.layoutId);
           if (!removedSectionLayout) throw new Error("Layout not found");
 
           return {

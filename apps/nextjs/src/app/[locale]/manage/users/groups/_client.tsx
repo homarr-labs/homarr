@@ -1,13 +1,12 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import { Group, TextInput } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
-
 import type { RouterOutputs } from "@homarr/api";
 import { useModalAction } from "@homarr/modals";
 import { AddGroupModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
+import { Group, TextInput } from "@mantine/core";
+import { IconSearch } from "@tabler/icons-react";
+import { useCallback, useMemo, useState } from "react";
 
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { GroupsTable } from "./_groups-table";

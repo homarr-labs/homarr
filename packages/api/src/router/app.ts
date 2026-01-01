@@ -1,6 +1,3 @@
-import { TRPCError } from "@trpc/server";
-import { z } from "zod/v4";
-
 import { createId } from "@homarr/common";
 import { asc, eq, inArray, like } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
@@ -8,6 +5,8 @@ import { selectAppSchema } from "@homarr/db/validationSchemas";
 import { getIconForName } from "@homarr/icons";
 import { appCreateManySchema, appEditSchema, appManageSchema } from "@homarr/validation/app";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod/v4";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
@@ -58,11 +57,7 @@ export const appRouter = createTRPCRouter({
     }),
   selectable: protectedProcedure
     .input(z.void())
-    .output(
-      z.array(
-        selectAppSchema.pick({ id: true, name: true, iconUrl: true, href: true, pingUrl: true, description: true }),
-      ),
-    )
+    .output(z.array(selectAppSchema.pick({ id: true, name: true, iconUrl: true, href: true, pingUrl: true, description: true })))
     .meta({
       openapi: {
         method: "GET",

@@ -1,16 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useParams } from "next/navigation";
-import { useMantineTheme } from "@mantine/core";
-import { Calendar } from "@mantine/dates";
-import { useElementSize } from "@mantine/hooks";
-import dayjs from "dayjs";
-
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { useSettings } from "@homarr/settings";
+import { useMantineTheme } from "@mantine/core";
+import { Calendar } from "@mantine/dates";
+import { useElementSize } from "@mantine/hooks";
+import dayjs from "dayjs";
+import { useParams } from "next/navigation";
+import { useMemo, useState } from "react";
 
 import type { WidgetComponentProps } from "../definition";
 import { CalendarDay } from "./calender-day";
@@ -149,9 +148,7 @@ const CalendarBase = ({ isEditMode, events, month, setMonth, options }: Calendar
       renderDay={(tileDate) => {
         const eventsForDate = normalizedEvents
           .filter((event) => dayjs(event.startDate).isSame(tileDate, "day"))
-          .filter(
-            (event) => event.metadata?.type !== "radarr" || options.releaseType.includes(event.metadata.releaseType),
-          )
+          .filter((event) => event.metadata?.type !== "radarr" || options.releaseType.includes(event.metadata.releaseType))
           .sort((eventA, eventB) => eventA.startDate.getTime() - eventB.startDate.getTime());
 
         return (

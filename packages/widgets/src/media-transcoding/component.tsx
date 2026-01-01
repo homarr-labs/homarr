@@ -1,15 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { clientApi } from "@homarr/api/client";
+import { useI18n } from "@homarr/translation/client";
 import { Center, Divider, Group, Pagination, SegmentedControl, Stack, Text } from "@mantine/core";
 import type { TablerIcon } from "@tabler/icons-react";
 import { IconClipboardList, IconCpu2, IconReportAnalytics } from "@tabler/icons-react";
-
-import { clientApi } from "@homarr/api/client";
-import { useI18n } from "@homarr/translation/client";
-
-import { views } from ".";
+import { useState } from "react";
 import type { WidgetComponentProps } from "../definition";
+import { views } from ".";
 import { HealthCheckStatus } from "./health-check-status";
 import { QueuePanel } from "./panels/queue.panel";
 import { StatisticsPanel } from "./panels/statistics.panel";
@@ -23,11 +21,7 @@ const viewIcons = {
   statistics: IconReportAnalytics,
 } satisfies Record<View, TablerIcon>;
 
-export default function MediaTranscodingWidget({
-  integrationIds,
-  options,
-  width,
-}: WidgetComponentProps<"mediaTranscoding">) {
+export default function MediaTranscodingWidget({ integrationIds, options, width }: WidgetComponentProps<"mediaTranscoding">) {
   const [queuePage, setQueuePage] = useState(1);
   const queuePageSize = 10;
   const input = {

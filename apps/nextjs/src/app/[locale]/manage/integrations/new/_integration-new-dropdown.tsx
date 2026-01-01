@@ -1,13 +1,12 @@
 "use client";
 
-import type { ChangeEvent } from "react";
-import React, { useMemo, useState } from "react";
-import { Flex, Group, Menu, ScrollArea, Text, TextInput } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
-
 import { getIntegrationName, integrationKinds } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { IntegrationAvatar, Link } from "@homarr/ui";
+import { Flex, Group, Menu, ScrollArea, Text, TextInput } from "@mantine/core";
+import { IconSearch } from "@tabler/icons-react";
+import type { ChangeEvent } from "react";
+import React, { useMemo, useState } from "react";
 
 interface IntegrationCreateDropdownContentProps {
   enableMockIntegration: boolean;
@@ -24,10 +23,7 @@ export const IntegrationCreateDropdownContent = ({ enableMockIntegration }: Inte
       .sort((kindA, kindB) => getIntegrationName(kindA).localeCompare(getIntegrationName(kindB)));
   }, [search, enableMockIntegration]);
 
-  const handleSearch = React.useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => setSearch(event.target.value),
-    [setSearch],
-  );
+  const handleSearch = React.useCallback((event: ChangeEvent<HTMLInputElement>) => setSearch(event.target.value), [setSearch]);
 
   return (
     <Flex direction={{ base: "column-reverse", md: "column" }} gap="sm">

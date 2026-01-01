@@ -1,7 +1,6 @@
-import { Spotlight } from "@mantine/spotlight";
-
 import type { TranslationObject } from "@homarr/translation";
 import { Link } from "@homarr/ui";
+import { Spotlight } from "@mantine/spotlight";
 
 import type { SearchGroup } from "../../../lib/group";
 import type { inferSearchInteractionOptions } from "../../../lib/interaction";
@@ -45,9 +44,7 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
     <Spotlight.Action
       renderRoot={renderRoot}
       onClick={handleClickAsync}
-      closeSpotlightOnTrigger={
-        interaction.type !== "mode" && interaction.type !== "children" && interaction.type !== "none"
-      }
+      closeSpotlightOnTrigger={interaction.type !== "mode" && interaction.type !== "children" && interaction.type !== "none"}
       className={classes.spotlightAction}
     >
       <group.Component {...option} />

@@ -1,10 +1,9 @@
-import { fetch } from "undici";
-
 import { extractErrorMessage } from "@homarr/common";
 import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
+import { fetch } from "undici";
 
 const logger = createLogger({ module: "ping" });
 

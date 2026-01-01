@@ -1,6 +1,5 @@
-import { migrate } from "drizzle-orm/node-postgres/migrator";
-
 import { createPostgresDb, createSharedDbConfig } from "@homarr/core/infrastructure/db";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
 
 import type { Database } from "../..";
 import * as pgSchema from "../../schema/postgresql";

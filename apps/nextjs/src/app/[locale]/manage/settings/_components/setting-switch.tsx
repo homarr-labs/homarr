@@ -1,10 +1,9 @@
-import type { ReactNode } from "react";
-import React from "react";
-import type { MantineSpacing } from "@mantine/core";
-import { Group, Stack, Switch, Text, UnstyledButton } from "@mantine/core";
-
 import type { Modify } from "@homarr/common/types";
 import type { UseFormReturnType } from "@homarr/form";
+import type { MantineSpacing } from "@mantine/core";
+import { Group, Stack, Switch, Text, UnstyledButton } from "@mantine/core";
+import type { ReactNode } from "react";
+import React from "react";
 
 export const SwitchSetting = <TFormValue extends Record<string, boolean>>({
   form,

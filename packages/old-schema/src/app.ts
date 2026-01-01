@@ -17,9 +17,7 @@ const appNetworkSchema = z.object({
 const appAppearanceSchema = z.object({
   iconUrl: z.string(),
   appNameStatus: z.union([z.literal("normal"), z.literal("hover"), z.literal("hidden")]).catch("normal"),
-  positionAppName: z
-    .union([z.literal("row"), z.literal("column"), z.literal("row-reverse"), z.literal("column-reverse")])
-    .catch("column"),
+  positionAppName: z.union([z.literal("row"), z.literal("column"), z.literal("row-reverse"), z.literal("column-reverse")]).catch("column"),
   appNameFontSize: z.number().catch(16),
   lineClampAppName: z.number().catch(1),
 });

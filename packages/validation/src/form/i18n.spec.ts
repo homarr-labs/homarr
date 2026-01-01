@@ -1,7 +1,6 @@
+import type { TranslationFunction } from "@homarr/translation";
 import { describe, expect, test } from "vitest";
 import { z } from "zod/v4";
-
-import type { TranslationFunction } from "@homarr/translation";
 
 import { createCustomErrorParams, zodErrorMap } from "./i18n";
 

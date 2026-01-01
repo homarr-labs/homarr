@@ -1,11 +1,10 @@
-import { useState } from "react";
-import { Button, Group, Loader, Select, Stack } from "@mantine/core";
-
 import { clientApi } from "@homarr/api/client";
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { Button, Group, Loader, Select, Stack } from "@mantine/core";
+import { useState } from "react";
 
 interface InnerProps {
   withPermissions?: boolean;

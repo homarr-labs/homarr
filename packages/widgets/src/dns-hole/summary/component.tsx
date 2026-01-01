@@ -1,11 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
-import type { BoxProps } from "@mantine/core";
-import { Avatar, AvatarGroup, Card, Flex, SimpleGrid, Stack, Text, Tooltip, TooltipFloating } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
-import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
-
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { formatNumber } from "@homarr/common";
@@ -15,9 +9,13 @@ import type { stringOrTranslation, TranslationFunction } from "@homarr/translati
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
-
-import type { widgetKind } from ".";
+import type { BoxProps } from "@mantine/core";
+import { Avatar, AvatarGroup, Card, Flex, SimpleGrid, Stack, Text, Tooltip, TooltipFloating } from "@mantine/core";
+import { useElementSize } from "@mantine/hooks";
+import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
+import { useMemo } from "react";
 import type { WidgetComponentProps, WidgetProps } from "../../definition";
+import type { widgetKind } from ".";
 
 export default function DnsHoleSummaryWidget({ options, integrationIds }: WidgetComponentProps<typeof widgetKind>) {
   const [summaries] = clientApi.widget.dnsHole.summary.useSuspenseQuery(
@@ -65,9 +63,7 @@ export default function DnsHoleSummaryWidget({ options, integrationIds }: Widget
   return (
     <SimpleGrid cols={2} spacing="xs" h="100%" p={"xs"} {...boxPropsByLayout(options.layout)}>
       {data.length > 0 ? (
-        stats.map((item) => (
-          <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={data} t={t} />
-        ))
+        stats.map((item) => <StatCard key={item.color} item={item} usePiHoleColors={options.usePiHoleColors} data={data} t={t} />)
       ) : (
         <Stack h="100%" w="100%" justify="center" align="center" gap="sm" p="sm">
           <AvatarGroup spacing="md">

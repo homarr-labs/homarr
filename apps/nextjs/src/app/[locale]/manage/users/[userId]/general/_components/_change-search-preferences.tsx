@@ -1,8 +1,5 @@
 "use client";
 
-import { Button, Group, Select, Stack, Switch } from "@mantine/core";
-import type { z } from "zod/v4";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -10,6 +7,8 @@ import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { userChangeSearchPreferencesSchema } from "@homarr/validation/user";
+import { Button, Group, Select, Stack, Switch } from "@mantine/core";
+import type { z } from "zod/v4";
 
 interface ChangeSearchPreferencesFormProps {
   user: RouterOutputs["user"]["getById"];
@@ -60,10 +59,7 @@ export const ChangeSearchPreferencesForm = ({ user, searchEnginesData }: ChangeS
           data={searchEnginesData}
           {...form.getInputProps("defaultSearchEngineId")}
         />
-        <Switch
-          label={t("user.field.openSearchInNewTab.label")}
-          {...form.getInputProps("openInNewTab", { type: "checkbox" })}
-        />
+        <Switch label={t("user.field.openSearchInNewTab.label")} {...form.getInputProps("openInNewTab", { type: "checkbox" })} />
 
         <Group justify="end">
           <Button type="submit" loading={isPending}>

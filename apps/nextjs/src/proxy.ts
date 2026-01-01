@@ -1,11 +1,10 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-
 import { api } from "@homarr/api/server";
 import { localeCookieKey } from "@homarr/definitions";
 import type { SupportedLanguage } from "@homarr/translation";
 import { supportedLanguages } from "@homarr/translation";
 import { createI18nMiddleware } from "@homarr/translation/middleware";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 let isOnboardingFinished = false;
 

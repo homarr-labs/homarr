@@ -1,6 +1,5 @@
-import { describe, expect, test } from "vitest";
-
 import type { CalendarEvent } from "@homarr/integrations/types";
+import { describe, expect, test } from "vitest";
 
 import { splitEvents } from "./component";
 

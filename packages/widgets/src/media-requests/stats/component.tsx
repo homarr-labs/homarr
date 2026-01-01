@@ -1,5 +1,9 @@
 "use client";
 
+import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
+import type { RequestStats } from "@homarr/integrations/types";
+import { useScopedI18n } from "@homarr/translation/client";
 import { Avatar, Card, Grid, Group, Stack, Text, Tooltip } from "@mantine/core";
 import type { Icon } from "@tabler/icons-react";
 import {
@@ -14,20 +18,11 @@ import {
 } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
-import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
-import type { RequestStats } from "@homarr/integrations/types";
-import { useScopedI18n } from "@homarr/translation/client";
-
 import type { WidgetComponentProps } from "../../definition";
 import { NoIntegrationDataError } from "../../errors/no-data-integration";
 import classes from "./component.module.css";
 
-export default function MediaServerWidget({
-  integrationIds,
-  isEditMode,
-  width,
-}: WidgetComponentProps<"mediaRequests-requestStats">) {
+export default function MediaServerWidget({ integrationIds, isEditMode, width }: WidgetComponentProps<"mediaRequests-requestStats">) {
   const t = useScopedI18n("widget.mediaRequests-requestStats");
   const [requestStats] = clientApi.widget.mediaRequests.getStats.useSuspenseQuery(
     {

@@ -1,10 +1,5 @@
 "use client";
 
-import type { SegmentedControlItem } from "@mantine/core";
-import { Button, Fieldset, Grid, Group, SegmentedControl, Stack, Textarea, TextInput } from "@mantine/core";
-import { WidgetIntegrationSelect } from "node_modules/@homarr/widgets/src/widget-integration-select";
-import type { z } from "zod/v4";
-
 import { clientApi } from "@homarr/api/client";
 import { searchEngineTypes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
@@ -13,6 +8,10 @@ import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { searchEngineManageSchema } from "@homarr/validation/search-engine";
+import type { SegmentedControlItem } from "@mantine/core";
+import { Button, Fieldset, Grid, Group, SegmentedControl, Stack, Textarea, TextInput } from "@mantine/core";
+import { WidgetIntegrationSelect } from "node_modules/@homarr/widgets/src/widget-integration-select";
+import type { z } from "zod/v4";
 
 type FormType = z.infer<typeof searchEngineManageSchema>;
 
@@ -49,12 +48,7 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
             <TextInput {...form.getInputProps("name")} withAsterisk label={t("search.engine.field.name.label")} />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 4, lg: 3, xl: 2 }}>
-            <TextInput
-              {...form.getInputProps("short")}
-              disabled={disableShort}
-              withAsterisk
-              label={t("search.engine.field.short.label")}
-            />
+            <TextInput {...form.getInputProps("short")} disabled={disableShort} withAsterisk label={t("search.engine.field.short.label")} />
           </Grid.Col>
         </Grid>
         <IconPicker {...form.getInputProps("iconUrl")} />
@@ -73,11 +67,7 @@ export const SearchEngineForm = (props: SearchEngineFormProps) => {
           />
 
           {form.values.type === "generic" && (
-            <TextInput
-              {...form.getInputProps("urlTemplate")}
-              withAsterisk
-              label={t("search.engine.field.urlTemplate.label")}
-            />
+            <TextInput {...form.getInputProps("urlTemplate")} withAsterisk label={t("search.engine.field.urlTemplate.label")} />
           )}
 
           {form.values.type === "fromIntegration" && (

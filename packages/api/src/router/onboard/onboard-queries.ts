@@ -16,7 +16,6 @@ export const nextOnboardingStepAsync = async (db: Database, preferredStep: Onboa
     if (!conditionalStep) continue;
     const [nextStep, condition] = conditionalStep;
     if (condition === "preferred" && nextStep !== preferredStep) continue;
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (typeof condition === "boolean" && !condition) continue;
     if (typeof condition === "function" && !(await condition(db))) continue;
 
@@ -52,7 +51,6 @@ const nextSteps: Partial<Record<OnboardingStep, Partial<Record<OnboardingStep, N
     settings: true,
   },
   import: {
-    // eslint-disable-next-line no-restricted-syntax
     user: async (db: Database) => {
       if (!isProviderEnabled("credentials")) return false;
 

@@ -1,10 +1,9 @@
-import type { PropsWithChildren } from "react";
-import { Button, Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
-import { IconId, IconLock, IconSettings, IconUsersGroup } from "@tabler/icons-react";
-
 import { api } from "@homarr/api/server";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { Link } from "@homarr/ui";
+import { Button, Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
+import { IconId, IconLock, IconSettings, IconUsersGroup } from "@tabler/icons-react";
+import type { PropsWithChildren } from "react";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { NavigationLink } from "./_navigation";

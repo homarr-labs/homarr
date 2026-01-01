@@ -1,7 +1,6 @@
-import type { JSX } from "react";
-import { AppShellNavbar, AppShellSection, Image, ScrollArea } from "@mantine/core";
-
 import type { TablerIcon, TablerIconProps } from "@homarr/ui";
+import { AppShellNavbar, AppShellSection, Image, ScrollArea } from "@mantine/core";
+import type { JSX } from "react";
 
 import type { ClientNavigationLink } from "./navigation-link";
 import { CommonNavLink } from "./navigation-link";
@@ -16,12 +15,7 @@ export const MainNavigation = ({ headerSection, footerSection, links }: MainNavi
   return (
     <AppShellNavbar p="md">
       {headerSection && <AppShellSection>{headerSection}</AppShellSection>}
-      <AppShellSection
-        grow
-        mt={headerSection ? "md" : undefined}
-        mb={footerSection ? "md" : undefined}
-        component={ScrollArea}
-      >
+      <AppShellSection grow mt={headerSection ? "md" : undefined} mb={footerSection ? "md" : undefined} component={ScrollArea}>
         {links.map((link, index) => {
           if (link.hidden) {
             return null;

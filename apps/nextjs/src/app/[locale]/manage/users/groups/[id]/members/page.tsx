@@ -1,7 +1,3 @@
-import { notFound } from "next/navigation";
-import { Alert, Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableTr, Text, Title } from "@mantine/core";
-import { IconExclamationCircle } from "@tabler/icons-react";
-
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";
 import { env } from "@homarr/auth/env";
@@ -10,6 +6,9 @@ import { isProviderEnabled } from "@homarr/auth/server";
 import { everyoneGroup } from "@homarr/definitions";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { Link, SearchInput, UserAvatar } from "@homarr/ui";
+import { Alert, Anchor, Center, Group, Stack, Table, TableTbody, TableTd, TableTr, Text, Title } from "@mantine/core";
+import { IconExclamationCircle } from "@tabler/icons-react";
+import { notFound } from "next/navigation";
 
 import { ReservedGroupAlert } from "../_reserved-group-alert";
 import { AddGroupMember } from "./_add-group-member";
@@ -43,11 +42,7 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       group.members.filter((member) => member.name?.toLowerCase().includes(searchParams.search!.trim().toLowerCase()))
     : group.members;
 
-  const providerTypes = isProviderEnabled("credentials")
-    ? env.AUTH_PROVIDERS.length > 1
-      ? "mixed"
-      : "credentials"
-    : "external";
+  const providerTypes = isProviderEnabled("credentials") ? (env.AUTH_PROVIDERS.length > 1 ? "mixed" : "credentials") : "external";
 
   return (
     <Stack>
@@ -104,9 +99,7 @@ const Row = ({ member, groupId, disabled }: RowProps) => {
           </Anchor>
         </Group>
       </TableTd>
-      <TableTd w={100}>
-        {member.provider === "credentials" && !disabled && <RemoveGroupMember user={member} groupId={groupId} />}
-      </TableTd>
+      <TableTd w={100}>{member.provider === "credentials" && !disabled && <RemoveGroupMember user={member} groupId={groupId} />}</TableTd>
     </TableTr>
   );
 };

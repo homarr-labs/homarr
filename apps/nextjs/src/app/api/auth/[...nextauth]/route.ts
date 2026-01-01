@@ -1,8 +1,7 @@
-import { NextRequest } from "next/server";
-
 import { createHandlersAsync } from "@homarr/auth";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { SupportedAuthProvider } from "@homarr/definitions";
+import { NextRequest } from "next/server";
 
 const logger = createLogger({ module: "nextAuthRoute" });
 

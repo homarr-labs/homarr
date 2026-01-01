@@ -1,9 +1,8 @@
-import { useRef, useState } from "react";
+import { useI18n } from "@homarr/translation/client";
 import type { NumberInputHandlers } from "@mantine/core";
 import { ActionIcon, Button, Flex, Group, Modal, NumberInput, rem, Stack, Text } from "@mantine/core";
 import { IconClockPause } from "@tabler/icons-react";
-
-import { useI18n } from "@homarr/translation/client";
+import { useRef, useState } from "react";
 
 interface TimerModalProps {
   opened: boolean;
@@ -87,14 +86,7 @@ const TimerModal = ({ opened, close, selectedIntegrationIds, disableDns }: Timer
         <Text ta="center" c="dimmed" my={5}>
           {t("widget.dnsHoleControls.controls.unlimited")}
         </Text>
-        <Button
-          variant="light"
-          color="red"
-          leftSection={<IconClockPause size={20} />}
-          h="2rem"
-          w="12rem"
-          onClick={handleSetTimer}
-        >
+        <Button variant="light" color="red" leftSection={<IconClockPause size={20} />} h="2rem" w="12rem" onClick={handleSetTimer}>
           {t("widget.dnsHoleControls.controls.set")}
         </Button>
       </Flex>

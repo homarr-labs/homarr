@@ -1,27 +1,17 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { useCallback, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Center, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
-import { useHotkeys, useTimeout } from "@mantine/hooks";
-import {
-  IconCheck,
-  IconHome,
-  IconLogin,
-  IconLogout,
-  IconMoon,
-  IconSettings,
-  IconSun,
-  IconTool,
-} from "@tabler/icons-react";
-
 import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";
 import { hotkeys } from "@homarr/definitions";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
+import { Center, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
+import { useHotkeys, useTimeout } from "@mantine/hooks";
+import { IconCheck, IconHome, IconLogin, IconLogout, IconMoon, IconSettings, IconSun, IconTool } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import type { ReactNode } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useAuthContext } from "~/app/[locale]/_client-providers/session";
 import { CurrentLanguageCombobox } from "./language/current-language-combobox";
@@ -81,11 +71,7 @@ export const UserAvatarMenu = ({ children, availableUpdatesPromise }: UserAvatar
         <Menu.Divider />
         {Boolean(session.data) && (
           <>
-            <Menu.Item
-              component={Link}
-              href={`/manage/users/${session.data?.user.id}/general`}
-              leftSection={<IconSettings size="1rem" />}
-            >
+            <Menu.Item component={Link} href={`/manage/users/${session.data?.user.id}/general`} leftSection={<IconSettings size="1rem" />}>
               {t("preferences")}
             </Menu.Item>
 

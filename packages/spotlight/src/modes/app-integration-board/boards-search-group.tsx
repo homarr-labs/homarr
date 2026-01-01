@@ -1,8 +1,7 @@
-import { Group, Stack, Text } from "@mantine/core";
-import { IconDeviceMobile, IconHome, IconLayoutDashboard, IconLink, IconSettings } from "@tabler/icons-react";
-
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
+import { Group, Stack, Text } from "@mantine/core";
+import { IconDeviceMobile, IconHome, IconLayoutDashboard, IconLink, IconSettings } from "@tabler/icons-react";
 
 import type { ChildrenAction } from "../../lib/children";
 import { createChildrenOptions } from "../../lib/children";
@@ -10,7 +9,6 @@ import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type Board = {
   id: string;
   name: string;
@@ -52,7 +50,6 @@ const boardChildrenOptions = createChildrenOptions<Board>({
 
           return {
             type: "javaScript",
-            // eslint-disable-next-line no-restricted-syntax
             async onSelect() {
               await mutateAsync({ id: option.id });
             },
@@ -76,7 +73,6 @@ const boardChildrenOptions = createChildrenOptions<Board>({
 
           return {
             type: "javaScript",
-            // eslint-disable-next-line no-restricted-syntax
             async onSelect() {
               await mutateAsync({ id: option.id });
             },
@@ -128,11 +124,7 @@ export const boardsSearchGroup = createGroup<Board>({
   title: "Boards",
   Component: (board) => (
     <Group px="md" py="sm">
-      {board.logoImageUrl ? (
-        <img src={board.logoImageUrl} alt={board.name} width={24} height={24} />
-      ) : (
-        <IconLayoutDashboard size={24} />
-      )}
+      {board.logoImageUrl ? <img src={board.logoImageUrl} alt={board.name} width={24} height={24} /> : <IconLayoutDashboard size={24} />}
 
       <Text>{board.name}</Text>
     </Group>

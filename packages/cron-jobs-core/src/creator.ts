@@ -1,9 +1,8 @@
-import { createTask, validate } from "node-cron";
-
 import { Stopwatch } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db } from "@homarr/db";
+import { createTask, validate } from "node-cron";
 
 import type { Logger } from "./logger";
 import type { ValidateCron } from "./validation";
@@ -78,14 +77,10 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
           where: (cronJobConfigurations, { eq }) => eq(cronJobConfigurations.name, name),
         });
 
-        const scheduledTask = createTask(
-          configuration?.cronExpression ?? defaultCronExpression,
-          () => void catchingCallbackAsync(),
-          {
-            name,
-            timezone: creatorOptions.timezone,
-          },
-        );
+        const scheduledTask = createTask(configuration?.cronExpression ?? defaultCronExpression, () => void catchingCallbackAsync(), {
+          name,
+          timezone: creatorOptions.timezone,
+        });
         creatorOptions.logger.logDebug("The scheduled task for cron job was created", {
           name,
           cronExpression: defaultCronExpression,
@@ -122,9 +117,7 @@ export type JobCallback<TAllowedNames extends string, TName extends TAllowedName
   typeof createCallback<TAllowedNames, TName>
 >;
 
-export const createCronJobCreator = <TAllowedNames extends string = string>(
-  creatorOptions: CreateCronJobCreatorOptions<TAllowedNames>,
-) => {
+export const createCronJobCreator = <TAllowedNames extends string = string>(creatorOptions: CreateCronJobCreatorOptions<TAllowedNames>) => {
   return <TName extends TAllowedNames, TExpression extends string>(
     name: TName,
     defaultCronExpression: TExpression,
@@ -147,8 +140,6 @@ export const createCronJobCreator = <TAllowedNames extends string = string>(
     };
 
     // This is a type guard to check if the cron expression is valid and give the user a type hint
-    return returnValue as unknown as ValidateCron<TExpression> extends true
-      ? typeof returnValue
-      : "Invalid cron expression";
+    return returnValue as unknown as ValidateCron<TExpression> extends true ? typeof returnValue : "Invalid cron expression";
   };
 };

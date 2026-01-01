@@ -1,9 +1,5 @@
 "use client";
 
-import { useCallback } from "react";
-import { useRouter } from "next/navigation";
-import type { z } from "zod/v4";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -11,6 +7,9 @@ import { AppForm } from "@homarr/forms-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
+import type { z } from "zod/v4";
 
 interface AppEditFormProps {
   app: RouterOutputs["app"]["byId"];

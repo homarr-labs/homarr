@@ -1,10 +1,9 @@
-import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-
 import { appRouter, createTRPCContext } from "@homarr/api";
 import { trpcPath } from "@homarr/api/shared";
 import { auth } from "@homarr/auth/next";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
+import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 const logger = createLogger({ module: "trpcRoute" });
 

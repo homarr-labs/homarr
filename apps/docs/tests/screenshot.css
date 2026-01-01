@@ -1,0 +1,37 @@
+/* Iframes can load lazily */
+iframe,
+    /* Avatars can be flaky due to using external sources: GitHub/Unavatar */
+.avatar__photo,
+    /* Discord banner is loading lazy */
+img[loading="lazy"],
+    /* Gifs load lazily and are animated */
+img[src$='.gif'],
+    /* Dataflow is animated */
+.animated-dataflow,
+    /* Algolia keyboard shortcuts appear with a little delay */
+.DocSearch-Button-Keys > kbd,
+    /* The live playground preview can often display dates/counters */
+[class*='playgroundPreview'],
+    /* Asynchronous loading images (eg. Discord server widget) */
+img[decoding="async"],
+    /* Video is animated */
+video,
+    /* Elements that should be ignored from Argos */
+.argos-ignore {
+    visibility: hidden !important;
+}
+
+/* Different docs last-update dates can alter layout */
+.theme-last-updated,
+    /* Dataflow is animated */
+.animated-dataflow,
+/* Remove discord banner */
+img[src*="discordapp.com"],
+    /* Mermaid diagrams are rendered client-side and produce layout shifts */
+.docusaurus-mermaid-container {
+    display: none !important;
+}
+
+img {
+    border-radius: 0 !important;
+}

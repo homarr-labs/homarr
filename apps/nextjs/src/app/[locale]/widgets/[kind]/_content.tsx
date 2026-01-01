@@ -1,11 +1,5 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import { ActionIcon, Affix, Card } from "@mantine/core";
-import { IconDimensions, IconPencil, IconToggleLeft, IconToggleRight } from "@tabler/icons-react";
-import { QueryErrorResetBoundary } from "@tanstack/react-query";
-import { ErrorBoundary } from "react-error-boundary";
-
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { useModalAction } from "@homarr/modals";
 import { showSuccessNotification } from "@homarr/notifications";
@@ -15,6 +9,11 @@ import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import { loadWidgetDynamic, reduceWidgetOptionsWithDefaultValues, widgetImports } from "@homarr/widgets";
 import { WidgetError } from "@homarr/widgets/errors";
 import { WidgetEditModal } from "@homarr/widgets/modals";
+import { ActionIcon, Affix, Card } from "@mantine/core";
+import { IconDimensions, IconPencil, IconToggleLeft, IconToggleRight } from "@tabler/icons-react";
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import { useCallback, useMemo, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 import type { Dimensions } from "./_dimension-modal";
 import { PreviewDimensionsModal } from "./_dimension-modal";

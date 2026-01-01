@@ -1,5 +1,8 @@
 "use client";
 
+import { useZodForm } from "@homarr/form";
+import { useI18n } from "@homarr/translation/client";
+import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 import {
   Anchor,
   Button,
@@ -18,10 +21,6 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconX } from "@tabler/icons-react";
-
-import { useZodForm } from "@homarr/form";
-import { useI18n } from "@homarr/translation/client";
-import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
 import type { Board } from "../../_types";
 import { generateColors } from "../../(content)/_theme";
@@ -92,14 +91,7 @@ export const ColorSettingsContent = ({ board }: Props) => {
           </Grid.Col>
           <Grid.Col span={{ sm: 12, md: 6 }}>
             <InputWrapper label={t("board.field.opacity.label")}>
-              <Slider
-                my={6}
-                min={0}
-                max={100}
-                step={5}
-                label={progressPercentageLabel}
-                {...form.getInputProps("opacity")}
-              />
+              <Slider my={6} min={0} max={100} step={5} label={progressPercentageLabel} {...form.getInputProps("opacity")} />
             </InputWrapper>
           </Grid.Col>
           <Grid.Col span={{ sm: 12, md: 6 }}>

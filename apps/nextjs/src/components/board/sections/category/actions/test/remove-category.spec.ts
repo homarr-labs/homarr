@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { describe, expect, test, vi } from "vitest";
 
 import * as boardContext from "@homarr/boards/context";
+import { describe, expect, test, vi } from "vitest";
 
 import type { DynamicSection, Section } from "~/app/[locale]/boards/_types";
 import { BoardMockBuilder } from "~/components/board/items/actions/test/mocks/board-mock";
@@ -17,35 +17,30 @@ describe("Remove Category", () => {
     [5, [0, 1, 2, 3, 4, 5, 6], [0, 1, 2, 3, 4], [5, 6], 4],
     [1, [0, 1, 2, 3, 4, 5, 6], [0, 3, 4, 5, 6], [1, 2], 0],
     [3, [0, 3, 6, 7, 8], [0, 7, 8], [3, 6], 0],
-  ])(
-    "should remove category",
-    (removeId, initialYOffsets, expectedYOffsets, expectedRemovals, expectedLocationOfItems) => {
-      // Arrange
-      const layoutId = "1";
-      const input = removeId.toString();
+  ])("should remove category", (removeId, initialYOffsets, expectedYOffsets, expectedRemovals, expectedLocationOfItems) => {
+    // Arrange
+    const layoutId = "1";
+    const input = removeId.toString();
 
-      const board = new BoardMockBuilder()
-        .addLayout({ id: layoutId })
-        .addSections(createSections(initialYOffsets))
-        .addItems(createSectionItems(initialYOffsets, layoutId))
-        .build();
+    const board = new BoardMockBuilder()
+      .addLayout({ id: layoutId })
+      .addSections(createSections(initialYOffsets))
+      .addItems(createSectionItems(initialYOffsets, layoutId))
+      .build();
 
-      vi.spyOn(boardContext, "getBoardLayouts").mockReturnValue([layoutId]);
+    vi.spyOn(boardContext, "getBoardLayouts").mockReturnValue([layoutId]);
 
-      // Act
-      const result = removeCategoryCallback({ id: input })(board);
+    // Act
+    const result = removeCategoryCallback({ id: input })(board);
 
-      // Assert
-      expect(result.sections.map((section) => parseInt(section.id, 10))).toEqual(expectedYOffsets);
-      expectedRemovals.forEach((expectedRemoval) => {
-        expect(result.sections.find((section) => section.id === expectedRemoval.toString())).toBeUndefined();
-      });
-      const aboveSectionItems = result.items.filter(
-        (item) => item.layouts[0]?.sectionId === expectedLocationOfItems.toString(),
-      );
-      expect(aboveSectionItems.map((item) => parseInt(item.id, 10))).toEqual(expect.arrayContaining(expectedRemovals));
-    },
-  );
+    // Assert
+    expect(result.sections.map((section) => parseInt(section.id, 10))).toEqual(expectedYOffsets);
+    expectedRemovals.forEach((expectedRemoval) => {
+      expect(result.sections.find((section) => section.id === expectedRemoval.toString())).toBeUndefined();
+    });
+    const aboveSectionItems = result.items.filter((item) => item.layouts[0]?.sectionId === expectedLocationOfItems.toString());
+    expect(aboveSectionItems.map((item) => parseInt(item.id, 10))).toEqual(expect.arrayContaining(expectedRemovals));
+  });
 
   test("should correctly move items to above empty section", () => {
     // Arrange
@@ -73,17 +68,13 @@ describe("Remove Category", () => {
           .addLayout({ layoutId, sectionId: sectionIds.above, yOffset: 3, xOffset: 2, height: 2 })
           .build(),
       )
-      .addItem(
-        new ItemMockBuilder({ id: "category-1" }).addLayout({ layoutId, sectionId: sectionIds.category }).build(),
-      )
+      .addItem(new ItemMockBuilder({ id: "category-1" }).addLayout({ layoutId, sectionId: sectionIds.category }).build())
       .addItem(
         new ItemMockBuilder({ id: "category-2" })
           .addLayout({ layoutId, sectionId: sectionIds.category, yOffset: 2, xOffset: 4, width: 4 })
           .build(),
       )
-      .addItem(
-        new ItemMockBuilder({ id: "below-1" }).addLayout({ layoutId, sectionId: sectionIds.below, xOffset: 5 }).build(),
-      )
+      .addItem(new ItemMockBuilder({ id: "below-1" }).addLayout({ layoutId, sectionId: sectionIds.below, xOffset: 5 }).build())
       .addItem(
         new ItemMockBuilder({ id: "below-2" })
           .addLayout({ layoutId, sectionId: sectionIds.below, yOffset: 1, xOffset: 1, height: 2 })

@@ -1,13 +1,12 @@
-import type { Agent } from "https";
+import { createHttpsAgentAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import type { Agent } from "https";
 import type { RequestInit as NodeFetchRequestInit } from "node-fetch";
 import * as ical from "node-ical";
 import { DAVClient } from "tsdav";
-
-import { createHttpsAgentAsync } from "@homarr/core/infrastructure/http";
-import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationTsdavHttpErrorHandler } from "../base/errors/http";
@@ -52,7 +51,6 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
     return calendarEvents
       .map((event) => {
         // @ts-expect-error the typescript definitions for this package are wrong
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
         const icalData = ical.default.parseICS(event.data) as ical.CalendarResponse;
         const veventObject = Object.values(icalData).find((data) => data.type === "VEVENT");
 
@@ -85,13 +83,10 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
             endDate,
             image: null,
             location: veventObject.location || null,
-            indicatorColor:
-              "color" in veventObject && typeof veventObject.color === "string" ? veventObject.color : "#ff8600",
+            indicatorColor: "color" in veventObject && typeof veventObject.color === "string" ? veventObject.color : "#ff8600",
             links: [
               {
-                href: this.externalUrl(
-                  `/apps/calendar/timeGridWeek/now/edit/sidebar/${eventSlug}/${dateInMillis / 1000}`,
-                ).toString(),
+                href: this.externalUrl(`/apps/calendar/timeGridWeek/now/edit/sidebar/${eventSlug}/${dateInMillis / 1000}`).toString(),
                 name: "Nextcloud",
                 logo: "/images/apps/nextcloud.svg",
                 color: undefined,

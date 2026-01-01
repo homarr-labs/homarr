@@ -26,6 +26,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup
         uses: ./tooling/github/setup
@@ -35,19 +37,57 @@ jobs:
         run: cp .env.example .env
 
       - name: Lint
-        run: pnpm lint && pnpm lint:ws
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+            if OUTPUT=$(pnpm exec biome lint --changed --since="$BASE_BRANCH" 2>&1); then
+              echo "$OUTPUT"
+            else
+              EXIT_CODE=$?
+              if echo "$OUTPUT" | grep -q "No files were processed"; then
+                echo "No files to lint - skipping"
+                pnpm lint:ws
+                exit 0
+              else
+                echo "$OUTPUT"
+                exit $EXIT_CODE
+              fi
+            fi
+            pnpm lint:ws
+          else
+            pnpm lint && pnpm lint:ws
+          fi
 
   format:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup
         uses: ./tooling/github/setup
 
-      - name: Format
-        run: pnpm format
+      - name: Format Check
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+            if OUTPUT=$(pnpm exec biome format --changed --since="$BASE_BRANCH" 2>&1); then
+              echo "$OUTPUT"
+            else
+              EXIT_CODE=$?
+              if echo "$OUTPUT" | grep -q "No files were processed"; then
+                echo "No files to format - skipping"
+                exit 0
+              else
+                echo "$OUTPUT"
+                exit $EXIT_CODE
+              fi
+            fi
+          else
+            pnpm format
+          fi
 
   typecheck:
     runs-on: ubuntu-latest

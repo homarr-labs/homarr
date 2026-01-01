@@ -1,7 +1,6 @@
-import { describe, expect, test, vi } from "vitest";
-
 import { ResponseError } from "@homarr/common/server";
 import { createDb } from "@homarr/db/test";
+import { describe, expect, test, vi } from "vitest";
 
 import type { IntegrationTestingInput } from "../src/base/integration";
 import { Integration } from "../src/base/integration";

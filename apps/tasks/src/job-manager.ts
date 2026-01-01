@@ -1,11 +1,10 @@
-import { schedule, validate as validateCron } from "node-cron";
-
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { IJobManager } from "@homarr/cron-job-api";
 import type { jobGroup as cronJobGroup, JobGroupKeys } from "@homarr/cron-jobs";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { cronJobConfigurations } from "@homarr/db/schema";
+import { schedule, validate as validateCron } from "node-cron";
 
 const logger = createLogger({ module: "jobManager" });
 
@@ -99,9 +98,7 @@ export class JobManager implements IJobManager {
     });
   }
 
-  public async getAllAsync(): Promise<
-    { name: JobGroupKeys; cron: string; preventManualExecution: boolean; isEnabled: boolean }[]
-  > {
+  public async getAllAsync(): Promise<{ name: JobGroupKeys; cron: string; preventManualExecution: boolean; isEnabled: boolean }[]> {
     const configurations = await this.db.query.cronJobConfigurations.findMany();
 
     return [...this.jobGroup.getJobRegistry().entries()].map(([name, job]) => {

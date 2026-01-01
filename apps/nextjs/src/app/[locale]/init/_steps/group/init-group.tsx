@@ -1,14 +1,13 @@
 "use client";
 
-import { Button, Card, Stack, TextInput } from "@mantine/core";
-import { IconArrowRight } from "@tabler/icons-react";
-import type { z } from "zod/v4";
-
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { groupCreateSchema } from "@homarr/validation/group";
+import { Button, Card, Stack, TextInput } from "@mantine/core";
+import { IconArrowRight } from "@tabler/icons-react";
+import type { z } from "zod/v4";
 
 export const InitGroup = () => {
   const t = useI18n();

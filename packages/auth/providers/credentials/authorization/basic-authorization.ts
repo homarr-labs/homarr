@@ -1,18 +1,14 @@
-import bcrypt from "bcrypt";
-import type { z } from "zod/v4";
-
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import { users } from "@homarr/db/schema";
 import type { userSignInSchema } from "@homarr/validation/user";
+import bcrypt from "bcrypt";
+import type { z } from "zod/v4";
 
 const logger = createLogger({ module: "basicAuthorization" });
 
-export const authorizeWithBasicCredentialsAsync = async (
-  db: Database,
-  credentials: z.infer<typeof userSignInSchema>,
-) => {
+export const authorizeWithBasicCredentialsAsync = async (db: Database, credentials: z.infer<typeof userSignInSchema>) => {
   const user = await db.query.users.findFirst({
     where: and(eq(users.name, credentials.name.toLowerCase()), eq(users.provider, "credentials")),
   });

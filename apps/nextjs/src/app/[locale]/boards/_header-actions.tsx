@@ -1,8 +1,7 @@
 "use client";
 
-import { IconLayoutBoard } from "@tabler/icons-react";
-
 import { useRequiredBoard } from "@homarr/boards/context";
+import { IconLayoutBoard } from "@tabler/icons-react";
 
 import { HeaderButton } from "~/components/layout/header/button";
 

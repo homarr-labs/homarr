@@ -1,6 +1,5 @@
-import { Spotlight } from "@mantine/spotlight";
-
 import { useI18n } from "@homarr/translation/client";
+import { Spotlight } from "@mantine/spotlight";
 
 export const SpotlightNoResults = () => {
   const t = useI18n();

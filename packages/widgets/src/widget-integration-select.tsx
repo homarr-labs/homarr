@@ -1,25 +1,11 @@
 "use client";
 
-import type { FocusEventHandler } from "react";
-import {
-  Anchor,
-  Avatar,
-  CheckIcon,
-  CloseButton,
-  Combobox,
-  Group,
-  Input,
-  Pill,
-  PillsInput,
-  Stack,
-  Text,
-  useCombobox,
-} from "@mantine/core";
-
 import type { IntegrationKind } from "@homarr/definitions";
 import { getIconUrl } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
+import { Anchor, Avatar, CheckIcon, CloseButton, Combobox, Group, Input, Pill, PillsInput, Stack, Text, useCombobox } from "@mantine/core";
+import type { FocusEventHandler } from "react";
 
 import classes from "./widget-integration-select.module.css";
 
@@ -61,8 +47,7 @@ export const WidgetIntegrationSelect = ({
     }
   };
 
-  const handleValueRemove = (valueToRemove: string) =>
-    onChange(multiSelectValues.filter((value) => value !== valueToRemove));
+  const handleValueRemove = (valueToRemove: string) => onChange(multiSelectValues.filter((value) => value !== valueToRemove));
 
   const values = multiSelectValues.map((item) => {
     const option = data.find((integration) => integration.id === item);
@@ -70,14 +55,7 @@ export const WidgetIntegrationSelect = ({
       return null;
     }
 
-    return (
-      <IntegrationPill
-        key={item}
-        option={option}
-        onRemove={() => handleValueRemove(item)}
-        showRemoveButton={canSelectMultiple}
-      />
-    );
+    return <IntegrationPill key={item} option={option} onRemove={() => handleValueRemove(item)} showRemoveButton={canSelectMultiple} />;
   });
 
   const options = data.map((item) => {
@@ -131,7 +109,7 @@ export const WidgetIntegrationSelect = ({
                   if (event.key !== "Backspace") return;
 
                   event.preventDefault();
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  // biome-ignore lint/style/noNonNullAssertion: <explanation>
                   handleValueRemove(multiSelectValues[multiSelectValues.length - 1]!);
                 }}
               />
@@ -174,8 +152,6 @@ const IntegrationPill = ({ option, onRemove, showRemoveButton }: IntegrationPill
     <Text span size="xs" lh={1} fw={500}>
       {option.name}
     </Text>
-    {showRemoveButton && (
-      <CloseButton onMouseDown={onRemove} variant="transparent" color="gray" size={22} iconSize={14} tabIndex={-1} />
-    )}
+    {showRemoveButton && <CloseButton onMouseDown={onRemove} variant="transparent" color="gray" size={22} iconSize={14} tabIndex={-1} />}
   </Group>
 );

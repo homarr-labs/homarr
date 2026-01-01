@@ -22,9 +22,7 @@ export abstract class IconRepository {
     try {
       return await this.getAllIconsInternalAsync();
     } catch (err) {
-      logger.error(
-        new ErrorWithMetadata("Unable to request icons from repository", { slug: this.slug }, { cause: err }),
-      );
+      logger.error(new ErrorWithMetadata("Unable to request icons from repository", { slug: this.slug }, { cause: err }));
       return {
         success: false,
         icons: [],

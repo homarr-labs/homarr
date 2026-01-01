@@ -1,8 +1,7 @@
+import { createDb } from "@homarr/db/test";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, Wait } from "testcontainers";
 import { describe, expect, test, vi } from "vitest";
-
-import { createDb } from "@homarr/db/test";
 
 import { PiHoleIntegrationV5, PiHoleIntegrationV6 } from "../src";
 import type { SessionStore } from "../src/base/session-store";

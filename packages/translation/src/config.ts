@@ -1,6 +1,5 @@
-import type { MRT_Localization } from "mantine-react-table";
-
 import { objectKeys } from "@homarr/common";
+import type { MRT_Localization } from "mantine-react-table";
 
 export const localeConfigurations = {
   ca: {
@@ -19,9 +18,7 @@ export const localeConfigurations = {
     translatedName: "Chinese (Simplified)",
     icon: flagIcon("cn"),
     importMrtLocalization() {
-      return import("mantine-react-table/locales/zh-Hans/index.esm.mjs").then(
-        (module) => module.MRT_Localization_ZH_HANS,
-      );
+      return import("mantine-react-table/locales/zh-Hans/index.esm.mjs").then((module) => module.MRT_Localization_ZH_HANS);
     },
     importDayJsLocale() {
       return import("dayjs/locale/zh-cn").then((module) => module.default);
@@ -355,9 +352,7 @@ export const localeConfigurations = {
     translatedName: "Chinese (Traditional)",
     icon: flagIcon("tw"),
     importMrtLocalization() {
-      return import("mantine-react-table/locales/zh-Hant/index.esm.mjs").then(
-        (module) => module.MRT_Localization_ZH_HANT,
-      );
+      return import("mantine-react-table/locales/zh-Hant/index.esm.mjs").then((module) => module.MRT_Localization_ZH_HANT);
     },
     importDayJsLocale() {
       return import("dayjs/locale/zh-tw").then((module) => module.default);
@@ -416,5 +411,4 @@ export type SupportedLanguage = (typeof supportedLanguages)[number];
 
 export const fallbackLocale = "en" satisfies SupportedLanguage;
 
-export const isLocaleRTL = (locale: SupportedLanguage) =>
-  "isRTL" in localeConfigurations[locale] && localeConfigurations[locale].isRTL;
+export const isLocaleRTL = (locale: SupportedLanguage) => "isRTL" in localeConfigurations[locale] && localeConfigurations[locale].isRTL;

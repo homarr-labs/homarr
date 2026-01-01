@@ -1,0 +1,45 @@
+name: Argos CI Screenshots
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'apps/docs/**'
+      - '.github/workflows/docs-argos.yml'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'apps/docs/**'
+      - '.github/workflows/docs-argos.yml'
+
+jobs:
+  take-screenshots:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        node-version: [24]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Chrome and Build in Parallel
+        run: |
+          pnpm -F docs playwright install --with-deps chromium &
+          pnpm -F docs build &
+          wait
+      - name: Take screenshots with Playwright
+        run: pnpm playwright test
+        working-directory: apps/docs
+      - name: Upload screenshots to Argos
+        run: pnpm argos upload ./screenshots
+        working-directory: apps/docs
+

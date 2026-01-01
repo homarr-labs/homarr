@@ -1,6 +1,5 @@
-import { z } from "zod/v4";
-
 import { createBooleanSchema, createEnv } from "@homarr/core/infrastructure/env";
+import { z } from "zod/v4";
 
 export const env = createEnv({
   server: {

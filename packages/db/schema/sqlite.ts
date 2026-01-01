@@ -1,16 +1,4 @@
 import type { AdapterAccount } from "@auth/core/adapters";
-import type { MantineSize } from "@mantine/core";
-import type { DayOfWeek } from "@mantine/dates";
-import { relations, sql } from "drizzle-orm";
-import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
-import { blob, index, int, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
-
-import {
-  backgroundImageAttachments,
-  backgroundImageRepeats,
-  backgroundImageSizes,
-  emptySuperJSON,
-} from "@homarr/definitions";
 import type {
   BackgroundImageAttachment,
   BackgroundImageRepeat,
@@ -27,6 +15,12 @@ import type {
   SupportedAuthProvider,
   WidgetKind,
 } from "@homarr/definitions";
+import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes, emptySuperJSON } from "@homarr/definitions";
+import type { MantineSize } from "@mantine/core";
+import type { DayOfWeek } from "@mantine/dates";
+import { relations, sql } from "drizzle-orm";
+import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
+import { blob, index, int, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export * from "@homarr/core/infrastructure/certificates/hostnames/db/sqlite";
 
@@ -174,9 +168,7 @@ export const medias = sqliteTable("media", {
   content: blob({ mode: "buffer" }).$type<Buffer>().notNull(),
   contentType: text().notNull(),
   size: int().notNull(),
-  createdAt: int({ mode: "timestamp" })
-    .notNull()
-    .default(sql`(unixepoch())`),
+  createdAt: int({ mode: "timestamp" }).notNull().default(sql`(unixepoch())`),
   creatorId: text().references(() => users.id, { onDelete: "set null" }),
 });
 
@@ -263,10 +255,7 @@ export const boards = sqliteTable("board", {
   logoImageUrl: text(),
   faviconImageUrl: text(),
   backgroundImageUrl: text(),
-  backgroundImageAttachment: text()
-    .$type<BackgroundImageAttachment>()
-    .default(backgroundImageAttachments.defaultValue)
-    .notNull(),
+  backgroundImageAttachment: text().$type<BackgroundImageAttachment>().default(backgroundImageAttachments.defaultValue).notNull(),
   backgroundImageRepeat: text().$type<BackgroundImageRepeat>().default(backgroundImageRepeats.defaultValue).notNull(),
   backgroundImageSize: text().$type<BackgroundImageSize>().default(backgroundImageSizes.defaultValue).notNull(),
   primaryColor: text().default("#fa5252").notNull(),

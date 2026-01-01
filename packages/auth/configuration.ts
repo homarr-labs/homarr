@@ -1,11 +1,10 @@
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import { db } from "@homarr/db";
+import type { SupportedAuthProvider } from "@homarr/definitions";
 import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import { cookies } from "next/headers";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-
-import { createLogger } from "@homarr/core/infrastructure/logs";
-import { db } from "@homarr/db";
-import type { SupportedAuthProvider } from "@homarr/definitions";
 
 import { createAdapter } from "./adapter";
 import { createSessionCallback } from "./callbacks";
@@ -55,7 +54,6 @@ export const createConfiguration = (
     ]),
     callbacks: {
       session: createSessionCallback(db),
-      // eslint-disable-next-line no-restricted-syntax
       signIn: async ({ user }) => {
         /**
          * For credentials provider only jwt is supported by default
@@ -102,7 +100,6 @@ export const createConfiguration = (
       error: "/auth/login",
     },
     jwt: {
-      // eslint-disable-next-line no-restricted-syntax
       async encode() {
         const cookie = (await cookies()).get(sessionTokenCookieName)?.value;
         return cookie ?? "";

@@ -1,11 +1,7 @@
 import type { X509Certificate } from "node:crypto";
 
 import type { RequestErrorCode } from "@homarr/common/server";
-import type {
-  AnyTestConnectionError,
-  TestConnectionErrorDataOfType,
-  TestConnectionErrorType,
-} from "@homarr/integrations/test-connection";
+import type { AnyTestConnectionError, TestConnectionErrorDataOfType, TestConnectionErrorType } from "@homarr/integrations/test-connection";
 
 export interface MappedError {
   name: string;
@@ -109,7 +105,6 @@ const mapData = (error: AnyTestConnectionError): AnyMappedData => {
       reason: error.data.reason,
     };
   }
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (error.type === "statusCode") {
     return {
       statusCode: error.data.statusCode,

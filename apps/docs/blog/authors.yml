@@ -1,0 +1,37 @@
+manuel-rw:
+  name: Manuel
+  page: true
+  url: https://github.com/manuel-rw
+  image_url: https://avatars.githubusercontent.com/u/30572287?v=4
+  socials:
+    github: manuel-rw
+  description: >
+    Junior .NET developer from Switzerland. 🌌 .NET, Next.js, Node.js, Angular
+ajnart:
+  name: Ajnart
+  page: true
+  url: https://github.com/ajnart
+  image_url: https://avatars.githubusercontent.com/u/49837342?v=4
+  socials:
+    github: ajnart
+meierschlumpf:
+  name: Meierschlumpf
+  page: true
+  url: https://github.com/Meierschlumpf
+  image_url: https://avatars.githubusercontent.com/u/63781622?v=4
+  socials:
+    github: Meierschlumpf
+tagashi:
+  name: Tagashi
+  page: true
+  url: https://github.com/tagaishi
+  image_url: https://avatars.githubusercontent.com/u/26098587?v=4
+  socials:
+    github: tagaishi
+walkx:
+  name: Walkx
+  page: true
+  url: https://github.com/walkxcode
+  image_url: https://avatars.githubusercontent.com/u/71191962?v=4
+  socials:
+    github: walkxcode

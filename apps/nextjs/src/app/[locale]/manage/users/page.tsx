@@ -1,9 +1,8 @@
-import { notFound } from "next/navigation";
-
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";
 import { getScopedI18n } from "@homarr/translation/server";
+import { notFound } from "next/navigation";
 
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { createMetaTitle } from "~/metadata";

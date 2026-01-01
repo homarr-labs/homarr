@@ -1,7 +1,6 @@
-import React from "react";
-import { IconCpu, IconCube, IconDeviceDesktopAnalytics } from "@tabler/icons-react";
-
 import type { KubernetesCapacityType } from "@homarr/definitions";
+import { IconCpu, IconCube, IconDeviceDesktopAnalytics } from "@tabler/icons-react";
+import React from "react";
 
 const resourceIcons = {
   CPU: IconCpu,

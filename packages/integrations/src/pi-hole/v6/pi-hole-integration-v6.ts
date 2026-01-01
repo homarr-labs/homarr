@@ -1,9 +1,8 @@
-import type { fetch as undiciFetch, Response as UndiciResponse } from "undici";
-import type { z } from "zod/v4";
-
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import type { Response as UndiciResponse, fetch as undiciFetch } from "undici";
+import type { z } from "zod/v4";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
@@ -145,9 +144,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
    * Get a session id from the Pi-hole server
    * @returns The session id
    */
-  private async getSessionAsync(
-    fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync,
-  ): Promise<string | null> {
+  private async getSessionAsync(fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync): Promise<string | null> {
     const apiKey = super.hasSecretValue("apiKey") ? super.getSecretValue("apiKey") : null;
     const response = await fetchAsync(this.url("/api/auth"), {
       method: "POST",
@@ -180,10 +177,7 @@ export class PiHoleIntegrationV6 extends Integration implements DnsHoleSummaryIn
    * Remove the session from the Pi-hole server
    * @param sessionId The session id to remove
    */
-  private async clearSessionAsync(
-    sessionId: string | null,
-    fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync,
-  ) {
+  private async clearSessionAsync(sessionId: string | null, fetchAsync: typeof undiciFetch = fetchWithTrustedCertificatesAsync) {
     if (!sessionId) {
       logger.debug("No session id to clear");
       return;

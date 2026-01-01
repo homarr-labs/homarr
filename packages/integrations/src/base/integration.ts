@@ -1,11 +1,10 @@
 import type tls from "node:tls";
-import type { AxiosInstance } from "axios";
-import type { Dispatcher } from "undici";
-import { fetch as undiciFetch } from "undici";
-
 import { removeTrailingSlash } from "@homarr/common";
 import { createAxiosCertificateInstanceAsync, createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
 import type { IntegrationSecretKind } from "@homarr/definitions";
+import type { AxiosInstance } from "axios";
+import type { Dispatcher } from "undici";
+import { fetch as undiciFetch } from "undici";
 
 import { HandleIntegrationErrors } from "./errors/decorator";
 import { TestConnectionError } from "./test-connection/test-connection-error";
@@ -55,11 +54,7 @@ export abstract class Integration {
     return this.integration.decryptedSecrets.some((secret) => secret.kind === kind);
   }
 
-  private createUrl(
-    inputUrl: string,
-    path: `/${string}`,
-    queryParams?: Record<string, string | Date | number | boolean>,
-  ) {
+  private createUrl(inputUrl: string, path: `/${string}`, queryParams?: Record<string, string | Date | number | boolean>) {
     const baseUrl = removeTrailingSlash(inputUrl);
     const url = new URL(`${baseUrl}${path}`);
 

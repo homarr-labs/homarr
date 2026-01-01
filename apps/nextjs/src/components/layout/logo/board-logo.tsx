@@ -33,11 +33,6 @@ export const BoardLogoWithTitle = ({ size, hideTitleOnMobile }: CommonLogoWithTi
   const board = useRequiredBoard();
   const imageOptions = useImageOptions();
   return (
-    <LogoWithTitle
-      size={size}
-      hideTitleOnMobile={hideTitleOnMobile}
-      title={board.pageTitle ?? homarrPageTitle}
-      image={imageOptions}
-    />
+    <LogoWithTitle size={size} hideTitleOnMobile={hideTitleOnMobile} title={board.pageTitle ?? homarrPageTitle} image={imageOptions} />
   );
 };

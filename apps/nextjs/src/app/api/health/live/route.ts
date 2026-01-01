@@ -1,9 +1,8 @@
-import { performance } from "perf_hooks";
-
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db } from "@homarr/db";
 import { handshakeAsync } from "@homarr/redis";
+import { performance } from "perf_hooks";
 
 const logger = createLogger({ module: "healthLiveRoute" });
 
@@ -59,10 +58,7 @@ const executeAndAggregateAllHealthChecksAsync = async (): Promise<{
   };
 };
 
-const executeHealthCheckSafelyAsync = async (
-  name: string,
-  callback: () => Promise<object>,
-): Promise<HealthCheckResult> => {
+const executeHealthCheckSafelyAsync = async (name: string, callback: () => Promise<object>): Promise<HealthCheckResult> => {
   try {
     const currentTimeBeforeCallback = performance.now();
     const values = await callback();
@@ -75,7 +71,6 @@ const executeHealthCheckSafelyAsync = async (
       },
     };
   } catch (error) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     logger.error(new ErrorWithMetadata("Healthcheck failed", { name }, { cause: error }));
     return {
       status: "unhealthy",

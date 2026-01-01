@@ -1,11 +1,10 @@
 "use client";
 
-import { useCallback } from "react";
-import { Center, Stack, Text, UnstyledButton } from "@mantine/core";
-import { IconBinaryTree } from "@tabler/icons-react";
-
 import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";
+import { Center, Stack, Text, UnstyledButton } from "@mantine/core";
+import { IconBinaryTree } from "@tabler/icons-react";
+import { useCallback } from "react";
 
 import type { WidgetComponentProps } from "../../definition";
 
@@ -16,7 +15,6 @@ export default function SmartHomeEntityStateWidget({
   width,
 }: WidgetComponentProps<"smartHome-entityState">) {
   // It will always have at least one integration as otherwise the NoIntegrationSelectedError would be thrown in item-content.tsx
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const integrationId = integrationIds[0]!;
 
   const input = {

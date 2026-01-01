@@ -1,11 +1,10 @@
-import SuperJSON from "superjson";
-
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { InferInsertModel } from "@homarr/db";
 import type { itemLayouts, items } from "@homarr/db/schema";
 import type { BoardSize, OldmarrApp, OldmarrWidget } from "@homarr/old-schema";
 import { boardSizes } from "@homarr/old-schema";
+import SuperJSON from "superjson";
 
 import type { WidgetComponentProps } from "../../../widgets/src/definition";
 import { mapKind } from "../widgets/definitions";
@@ -37,9 +36,8 @@ export const mapApp = (
     boardId,
     kind: "app",
     options: SuperJSON.stringify({
-      // it's safe to assume that the app exists in the map
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
-      appId: appsMap.get(app.id)?.id!,
+      // biome-ignore lint/style/noNonNullAssertion: <We can assume that the app exists in the map>
+      appId: appsMap.get(app.id)!.id,
       openInNewTab: app.behaviour.isOpeningNewTab,
       pingEnabled: app.network.enabledStatusChecker,
       showTitle: app.appearance.appNameStatus === "normal",
@@ -98,11 +96,7 @@ export const mapWidget = (
     boardId,
     kind,
     options: SuperJSON.stringify(
-      mapOptions(
-        widget.type,
-        widget.properties,
-        new Map([...appsMap.entries()].map(([key, value]) => [key, value.id])),
-      ),
+      mapOptions(widget.type, widget.properties, new Map([...appsMap.entries()].map(([key, value]) => [key, value.id]))),
     ),
     layouts: boardSizes.map((size) => {
       const shapeForSize = widget.shape[size];

@@ -1,11 +1,5 @@
 "use client";
 
-import { ActionIcon, Badge, Button, Group, Select, Text } from "@mantine/core";
-import { useMap } from "@mantine/hooks";
-import { IconPlayerPlay, IconPower, IconRefresh } from "@tabler/icons-react";
-import type { MRT_ColumnDef } from "mantine-react-table";
-import { MantineReactTable } from "mantine-react-table";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
@@ -15,6 +9,11 @@ import type { ScopedTranslationFunction, TranslationFunction } from "@homarr/tra
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 import { IconPowerOff } from "@homarr/ui/icons";
+import { ActionIcon, Badge, Button, Group, Select, Text } from "@mantine/core";
+import { useMap } from "@mantine/hooks";
+import { IconPlayerPlay, IconPower, IconRefresh } from "@tabler/icons-react";
+import type { MRT_ColumnDef } from "mantine-react-table";
+import { MantineReactTable } from "mantine-react-table";
 
 const cronExpressions = [
   {

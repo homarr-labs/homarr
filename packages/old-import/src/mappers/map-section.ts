@@ -3,10 +3,7 @@ import type { InferInsertModel } from "@homarr/db";
 import type { sections } from "@homarr/db/schema";
 import type { OldmarrCategorySection, OldmarrEmptySection } from "@homarr/old-schema";
 
-export const mapCategorySection = (
-  boardId: string,
-  category: OldmarrCategorySection,
-): InferInsertModel<typeof sections> => ({
+export const mapCategorySection = (boardId: string, category: OldmarrCategorySection): InferInsertModel<typeof sections> => ({
   id: createId(),
   boardId,
   kind: "category",

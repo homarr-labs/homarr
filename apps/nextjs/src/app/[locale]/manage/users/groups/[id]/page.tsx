@@ -1,11 +1,10 @@
-import { notFound } from "next/navigation";
-import { Card, Group, Stack, Text, Title } from "@mantine/core";
-
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { everyoneGroup } from "@homarr/definitions";
 import { getScopedI18n } from "@homarr/translation/server";
 import { UserAvatar } from "@homarr/ui";
+import { Card, Group, Stack, Text, Title } from "@mantine/core";
+import { notFound } from "next/navigation";
 
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 import { DeleteGroup } from "./_delete-group";

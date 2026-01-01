@@ -1,8 +1,5 @@
 "use client";
 
-import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
-import type { z } from "zod/v4";
-
 import { clientApi } from "@homarr/api/client";
 import { signIn } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -11,6 +8,8 @@ import { showErrorNotification, showSuccessNotification } from "@homarr/notifica
 import { useScopedI18n } from "@homarr/translation/client";
 import { CustomPasswordInput } from "@homarr/ui";
 import { userInitSchema } from "@homarr/validation/user";
+import { Button, PasswordInput, Stack, TextInput } from "@mantine/core";
+import type { z } from "zod/v4";
 
 export const InitUserForm = () => {
   const t = useScopedI18n("user");
@@ -59,11 +58,7 @@ export const InitUserForm = () => {
       >
         <Stack gap="lg">
           <TextInput label={t("field.username.label")} {...form.getInputProps("username")} />
-          <CustomPasswordInput
-            withPasswordRequirements
-            label={t("field.password.label")}
-            {...form.getInputProps("password")}
-          />
+          <CustomPasswordInput withPasswordRequirements label={t("field.password.label")} {...form.getInputProps("password")} />
           <PasswordInput label={t("field.passwordConfirm.label")} {...form.getInputProps("confirmPassword")} />
           <Button type="submit" fullWidth loading={isPending}>
             {t("action.create")}

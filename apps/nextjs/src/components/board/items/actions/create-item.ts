@@ -53,9 +53,7 @@ const createItemLayouts = (board: Board, currentSection: EmptySection): ItemLayo
     const boardLayout = board.layouts.find((layout) => layout.id === layoutId);
     const elements = getSectionElements(board, { sectionId: currentSection.id, layoutId });
 
-    const emptyPosition = boardLayout
-      ? getFirstEmptyPosition(elements, boardLayout.columnCount)
-      : { xOffset: 0, yOffset: 0 };
+    const emptyPosition = boardLayout ? getFirstEmptyPosition(elements, boardLayout.columnCount) : { xOffset: 0, yOffset: 0 };
 
     if (!emptyPosition) {
       throw new Error("Your board is full");
