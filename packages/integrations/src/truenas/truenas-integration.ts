@@ -112,6 +112,27 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     });
   }
 
+  private async getPoolsAsync() {
+    localLogger.debug("Retrieving pools", {
+      url: this.wsUrl(),
+    });
+
+    const response = await this.requestAsync("pool.query", [
+      [],
+      {
+        extra: {
+          is_upgraded: true,
+        },
+      },
+    ]);
+    const result = await poolSchema.parseAsync(response);
+    localLogger.debug("Retrieved pools", {
+      url: this.wsUrl(),
+      count: result.length,
+    });
+    return result;
+  }
+
   /**
    * Retrieves data using the reporting method
    * @see https://www.truenas.com/docs/api/scale_websocket_api.html#reporting
@@ -225,6 +246,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     const cpuData = this.extractLatestReportingData(reporting, "cpu");
     const cpuTempData = this.extractLatestReportingData(reporting, "cputemp");
     const memoryData = this.extractLatestReportingData(reporting, "memory");
+    const datasets = await this.getPoolsAsync();
 
     const netdata = await this.getReportingNetdataAsync();
 
@@ -236,14 +258,23 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       cpuTemp: Math.max(...cpuTempData.filter((_item, i) => i > 0)),
       memAvailableInBytes: systemInformation.physmem,
       memUsedInBytes: memoryData[1] ?? 0, // Index 0 is UNIX timestamp, Index 1 is free space in bytes
-      fileSystem: [],
+      fileSystem: datasets.map((dataset) => ({
+        deviceName: dataset.name,
+        available: `${dataset.size}`, // TODO: can we use number instead of string here?
+        used: `${dataset.allocated}`,
+        percentage: (dataset.allocated / dataset.size) * 100,
+      })),
       availablePkgUpdates: 0,
       network: {
         up: upload * NETWORK_MULTIPLIER,
         down: download * NETWORK_MULTIPLIER,
       },
       loadAverage: null,
-      smart: [],
+      smart: datasets.map((dataset) => ({
+        deviceName: dataset.name,
+        healthy: dataset.healthy,
+        temperature: null,
+      })),
       uptime: systemInformation.uptime_seconds,
       version: systemInformation.version,
       cpuModelName: systemInformation.model,
@@ -350,6 +381,16 @@ const reportingItemSchema = z.object({
 });
 
 type ReportingItem = z.infer<typeof reportingItemSchema>;
+
+const poolSchema = z.array(
+  z.object({
+    name: z.string(),
+    healthy: z.boolean(),
+    free: z.number().min(0),
+    size: z.number(),
+    allocated: z.number(),
+  }),
+);
 
 const reportingNetDataSchema = z.array(
   z.object({
