@@ -28,7 +28,8 @@ COPY ./pnpm-lock.yaml .
 COPY ./package.json .
 COPY ./patches ./patches
 COPY ./pnpm-workspace.yaml .
-RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile --prod
+COPY ./npmrc .
+RUN corepack enable pnpm && pnpm install --frozen-lockfile --prod
 
 FROM base AS runner
 WORKDIR /app
