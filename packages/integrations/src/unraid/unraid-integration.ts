@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import type { fetch as undiciFetch } from "undici/types/fetch";
 
 import { humanFileSize } from "@homarr/common";
+import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 
@@ -174,7 +175,7 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
     });
 
     if (!response.ok) {
-      throw new Error(`GraphQL request failed: ${response.status} ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const json = (await response.json()) as { data: T; errors?: { message: string }[] };
