@@ -24,10 +24,10 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 RUN apk update
 WORKDIR /app
-COPY /app/pnpm-lock.yaml .
-COPY /app/package.json .
-COPY /app/patches ./patches
-COPY /app/pnpm-workspace.yaml .
+COPY ./pnpm-lock.yaml .
+COPY ./package.json .
+COPY ./patches ./patches
+COPY ./pnpm-workspace.yaml .
 RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile --prod
 
 FROM base AS runner
