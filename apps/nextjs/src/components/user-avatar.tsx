@@ -1,7 +1,6 @@
 import type { MantineSize } from "@mantine/core";
 
 import { auth } from "@homarr/auth/next";
-import type { UserProps } from "@homarr/ui";
 import { UserAvatar } from "@homarr/ui";
 
 interface CurrentUserAvatarProps {
@@ -11,11 +10,14 @@ interface CurrentUserAvatarProps {
 export const CurrentUserAvatar = async ({ size }: CurrentUserAvatarProps) => {
   const currentSession = await auth();
 
-  const user: UserProps = {
-    name: currentSession?.user.name ?? null,
-    image: currentSession?.user.image ?? null,
-    email: currentSession?.user.email ?? null,
-  };
-
-  return <UserAvatar user={user} size={size} />;
+  return (
+    <UserAvatar
+      user={{
+        name: currentSession?.user.name ?? null,
+        image: currentSession?.user.image ?? null,
+        email: currentSession?.user.email ?? null,
+      }}
+      size={size}
+    />
+  );
 };
