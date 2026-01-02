@@ -612,17 +612,17 @@
       "select": {
         "label": "Velg app",
         "notFound": "Ingen app funnet",
-        "search": "",
-        "noResults": "",
-        "action": "",
-        "title": ""
+        "search": "Søk etter en app",
+        "noResults": "Ingen resultater",
+        "action": "Velg {app}",
+        "title": "Velg en app for å legge den til på dette brettet"
       },
       "create": {
-        "title": "",
-        "description": "",
-        "action": ""
+        "title": "Lag ny app",
+        "description": "Lag en ny app ",
+        "action": "Åpne appoppretting"
       },
-      "add": ""
+      "add": "Legg til en app"
     }
   },
   "integration": {
@@ -649,14 +649,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Eksisterende",
+              "label": "Velg eksisterende app"
             },
             "new": {
-              "title": "",
+              "title": "Ny",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "App url",
+                "description": "URL-en appen åpnes med når den aksesseres fra dashbordet"
               }
             }
           }
@@ -676,9 +676,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Koble en app",
+            "remove": "Koble fra",
+            "select": "Velg en app å koble til"
           }
         }
       },
@@ -709,14 +709,14 @@
         "description": "Integrasjon \"{kind}\" kan brukes med søkemotorene. Huk av her for å automatisk konfigurere søkemotor."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Koblet app"
       },
       "createApp": {
-        "label": "",
-        "description": ""
+        "label": "Opprett app",
+        "description": "Opprett en app med samme navn og ikon som integrasjonen. La inndataboksen under stå tom for å opprette appen med integrasjons-URL-en."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "Egendefinert app-URL"
       }
     },
     "action": {
@@ -730,125 +730,125 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Årsak med flere detaljer"
           }
         },
         "unknown": {
-          "title": "",
-          "description": ""
+          "title": "Ukjent feil",
+          "description": "En ukjent feil oppstod, åpne årsaken nedenfor for å se flere detaljer"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Parse-feil",
+          "description": "Responsen kunne ikke tolkes. Vennligst kontroller at URL-en peker til tjenestens basis-URL."
         },
         "authorization": {
-          "title": "",
-          "description": ""
+          "title": "Autorisasjonsfeil",
+          "description": "Forespørselen var ikke autorisert. Kontroller at legitimasjonen er riktig og har tilstrekkelige rettigheter."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Responsfeil",
+          "description": "Mottok uventet {statusCode} ({reason}) respons fra <url></url>. Kontroller at URL-en peker til integrasjonens basis-URL.",
+          "otherDescription": "Mottok uventet {statusCode} respons fra <url></url>. Kontroller at URL-en peker til integrasjonens basis-URL.",
           "reason": {
-            "badRequest": "",
-            "notFound": "",
-            "tooManyRequests": "",
-            "internalServerError": "",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "badRequest": "Ugyldig forespørsel",
+            "notFound": "Ikke funnet",
+            "tooManyRequests": "For mange forespørsler",
+            "internalServerError": "Intern serverfeil",
+            "serviceUnavailable": "Tjenesten utilgjengelig",
+            "gatewayTimeout": "Tidsavbrudd i gateway"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Sertifikatfeil",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "Sertifikatet har utløpt.",
+            "notYetValid": "Sertifikatet er ikke gyldig ennå.",
+            "untrusted": "Sertifikatet er ikke betrodd.",
+            "hostnameMismatch": "Vertsnavnet i sertifikatet samsvarer ikke med URL-en."
           },
           "alert": {
             "permission": {
-              "title": "",
-              "message": ""
+              "title": "Ikke nok tillatelser",
+              "message": "Du har ikke lov til å stole på eller laste opp sertifikater. Kontakt administratoren din for å laste opp nødvendig rotsertifikat."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "Vertsnavn samsvarer ikke",
+              "message": "Vertsnavnet i sertifikatet samsvarer ikke med vertsnavnet du kobler til. Dette kan indikere en sikkerhetsrisiko, men du kan likevel velge å stole på sertifikatet."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "Utpakking av CA-sertifikat feilet",
+              "message": "Bare selvsignerte sertifikater uten kjede kan hentes automatisk. Hvis du bruker et selvsignert sertifikat, må du laste opp CA-sertifikatet manuelt. Du finner instruksjoner for dette <docsLink></docsLink>."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Prøv å opprette på nytt"
             },
             "trust": {
-              "label": ""
+              "label": "Stol på sertifikat"
             },
             "upload": {
-              "label": ""
+              "label": "Last opp sertifikat"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Stol på uoverensstemmende vertsnavn",
+              "message": "Er du sikker på at du vil stole på sertifikatet selv om vertsnavnet ikke stemmer?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Sertifikat betrodd",
+                "message": "Vertsnavn lagt til i listen over betrodde sertifikater"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Kunne ikke stole på sertifikatet",
+                "message": "Sertifikatet med avvikende vertsnavn kunne ikke betros"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Stol på selvsignert sertifikat",
+              "message": "Er du sikker på at du vil stole på dette selvsignerte sertifikatet?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Sertifikat betrodd",
+                "message": "Sertifikatet ble lagt til i listen over betrodde sertifikater"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Kunne ikke stole på sertifikatet",
+                "message": "Kunne ikke legge til sertifikatet i listen over betrodde sertifikater"
               }
             }
           },
           "details": {
-            "title": "",
-            "description": "",
+            "title": "Detaljer",
+            "description": "Gå gjennom sertifikatinformasjonen før du bestemmer deg for å stole på det.",
             "content": {
-              "action": "",
-              "title": ""
+              "action": "Vis innhold",
+              "title": "PEM-sertifikat"
             }
           }
         },
         "request": {
-          "title": "",
+          "title": "Forespørselsfeil",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "Serveren kunne ikke nås. Det betyr vanligvis at verten er frakoblet eller utilgjengelig fra nettet ditt.",
+              "networkUnreachable": "Nettverket er utilgjengelig. Kontroller internettforbindelsen eller nettverkskonfigurasjonen.",
+              "refused": "Serveren avviste tilkoblingen. Den kjører kanskje ikke eller avviser forespørsler på angitt port.",
+              "reset": "Tilkoblingen ble uventet lukket av serveren. Dette kan skje hvis serveren er ustabil eller ble startet på nytt."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "Serveradressen ble ikke funnet. Kontroller URL-en for skrivefeil eller ugyldige domenenavn.",
+              "timeout": "DNS-oppslaget fikk tidsavbrudd. Dette kan være midlertidig – prøv igjen om litt.",
+              "noAnswer": "DNS-serveren returnerte ikke et gyldig svar. Domenet kan finnes, men mangler gyldige oppføringer."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "Forespørselen ble avbrutt før den fullførte. Dette kan skyldes brukerhandling eller systemtidsavbrudd.",
+              "timeout": "Forespørselen tok for lang tid og fikk tidsavbrudd. Sjekk nettverket eller prøv igjen senere."
             }
           }
         }
@@ -920,8 +920,8 @@
           "message": "Banen er sannsynligvis ikke riktig"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "For mange forespørsler på kort tid",
+          "message": "Det var for mange forespørsler. Du blir sannsynligvis begrenset eller avvist av målsystemet"
         }
       }
     },
@@ -963,36 +963,36 @@
           "newLabel": "Nytt område"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Personlig tilgangstoken",
+          "newLabel": "Nytt personlig tilgangstoken"
         },
         "topic": {
-          "label": "",
-          "newLabel": ""
+          "label": "Emne",
+          "newLabel": "Nytt emne"
         },
         "url": {
-          "label": "",
-          "newLabel": ""
+          "label": "Url",
+          "newLabel": "Ny url"
         },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API Nøkkel (Nøkkel)",
+          "newLabel": "Ny API Nøkkel (Nøkkel)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "API Nøkkel (Hemliglet)",
+          "newLabel": "Ny API Key (Secret)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "App Id",
+          "newLabel": "Ny App Id"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Installasjons-ID",
+          "newLabel": "Ny Installation Id"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Privat nøkkel",
+          "newLabel": "Ny privat nøkkel"
         }
       }
     },
@@ -1044,14 +1044,14 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "Suksess",
     "beta": "Beta",
     "error": "Feil",
     "action": {
       "add": "Legg til",
       "apply": "Bruk",
       "backToOverview": "Tilbake til oversikt",
-      "change": "",
+      "change": "Endre",
       "create": "Opprett",
       "createAnother": "Opprett og start på nytt",
       "edit": "Rediger",
@@ -1063,7 +1063,7 @@
       "cancel": "Avbryt",
       "delete": "Slett",
       "discard": "Forkast",
-      "close": "",
+      "close": "Lukk",
       "confirm": "Bekreft",
       "continue": "Fortsett",
       "previous": "Tidligere",
@@ -1174,8 +1174,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1187,10 +1187,10 @@
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Tittel"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Egendefinerte css-klasser"
         },
         "borderColor": {
           "label": "Grensefarge"
@@ -1288,7 +1288,7 @@
           "label": "Integrasjoner"
         },
         "title": {
-          "label": ""
+          "label": "Tittel"
         },
         "customCssClasses": {
           "label": "Egendefinerte css-klasser"
@@ -1321,21 +1321,21 @@
           "label": "Aktiver enkel ping"
         },
         "layout": {
-          "label": "",
+          "label": "Oppsett",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Horisontal",
+            "row-reverse": "Horisontal (omvendt)",
+            "column": "Vertikal",
+            "column-reverse": "Vertikal (omvendt)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Visningsmodus for beskrivelse",
+          "description": "Velg hvordan appbeskrivelsen skal vises",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "Innenfor widget",
+            "tooltip": "Som verktøytips",
+            "hidden": "Skjult"
           }
         }
       },
@@ -1582,13 +1582,13 @@
         "width": "Bredde",
         "height": "Høyde"
       },
-      "placeholder": "",
+      "placeholder": "Begynn å skrive notatene dine",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Forkaste endringer?",
+        "message": "Du har ulagrede endringer i notatboken. Er du sikker på at du vil forkaste dem?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Forkast endringer",
+          "keepEditing": "Fortsett å redigere"
         }
       }
     },
@@ -1664,76 +1664,76 @@
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Aksjekurs",
+      "description": "Viser gjeldende aksjekurs for et selskap",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Aksjesymbol"
         },
         "timeRange": {
-          "label": "",
+          "label": "Tidsperiode",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 dag"
             },
             "5d": {
-              "label": ""
+              "label": "5 dager"
             },
             "1mo": {
-              "label": ""
+              "label": "1 måned"
             },
             "3mo": {
-              "label": ""
+              "label": "3 måneder"
             },
             "6mo": {
-              "label": ""
+              "label": "6 måneder"
             },
             "ytd": {
-              "label": ""
+              "label": "År til dato"
             },
             "1y": {
-              "label": ""
+              "label": "1 år"
             },
             "2y": {
-              "label": ""
+              "label": "2 år"
             },
             "5y": {
-              "label": ""
+              "label": "5 år"
             },
             "10y": {
-              "label": ""
+              "label": "10 år"
             },
             "max": {
-              "label": ""
+              "label": "Maks"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Tidsintervall",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 minutter"
             },
             "15m": {
-              "label": ""
+              "label": "15 minutter"
             },
             "30m": {
-              "label": ""
+              "label": "30 minutter"
             },
             "1h": {
-              "label": ""
+              "label": "1 time"
             },
             "1d": {
-              "label": ""
+              "label": "1 dag"
             },
             "5d": {
-              "label": ""
+              "label": "5 dager"
             },
             "1wk": {
-              "label": ""
+              "label": "1 uke"
             },
             "1mo": {
-              "label": ""
+              "label": "1 måned"
             }
           }
         }
@@ -1743,7 +1743,7 @@
       "name": "Kalender",
       "description": "Vis hendelser fra integrasjonene dine i en kalendervisning innenfor en bestemt relativ tidsperiode",
       "duration": {
-        "allDay": ""
+        "allDay": "Hele dagen"
       },
       "option": {
         "releaseType": {
@@ -1780,7 +1780,7 @@
           "description": "Bare på nåværende vær"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Bruk mph for vindhastighet"
         },
         "location": {
           "label": "Vær plassering"
@@ -1800,12 +1800,12 @@
           "description": "Hvordan datoen skal se ut"
         }
       },
-      "currentWindSpeed": "{currentWindSpeed} km/t",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
         "sunrise": "Soloppgang",
         "sunset": "Solnedgang",
-        "maxWindSpeed": "Maks. vindhastighet: {maxWindSpeed} km/t",
-        "maxWindGusts": "Maks. vindkast: {maxWindGusts} km/t"
+        "maxWindSpeed": "Maks vindhastighet: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Maks vindkast: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Tøm",
@@ -1856,7 +1856,7 @@
           "label": "Vis minneinfo"
         },
         "showUptime": {
-          "label": ""
+          "label": "Vis oppetid"
         },
         "fileSystem": {
           "label": "Vis filsysteminfo"
@@ -1865,7 +1865,7 @@
           "label": "Standard fane"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Synlige klyngeseksjoner"
         },
         "sectionIndicatorRequirement": {
           "label": "Krav til seksjonsindikator"
@@ -1937,27 +1937,27 @@
       }
     },
     "dockerContainers": {
-      "name": "",
-      "description": "",
+      "name": "Docker status",
+      "description": "Statistikk over containerne dine (denne widgeten kan bare legges til med administratorrettigheter)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Aktiver sortering av elementer"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Kolonne brukt som standard for sortering",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Navn",
+            "state": "Tilstand",
+            "cpuUsage": "CPU-bruk",
+            "memoryUsage": "Minnebruk"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Reverser sortering"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Kunne ikke hente containerstatistikk"
       }
     },
     "common": {
@@ -2026,8 +2026,8 @@
       "description": "Vis pågående strømmer på dine media-servere",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Vis kun det som spiller nå",
+          "description": "Å deaktivere dette fungerer ikke for Plex"
         }
       },
       "items": {
@@ -2036,21 +2036,21 @@
         "name": "Navn",
         "id": "Id",
         "metadata": {
-          "title": "",
+          "title": "Statistikk for nerder",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Video",
+            "resolution": "Oppløsning"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Lyd",
+            "channelCount": "Lydkanaler",
+            "codec": "Lydkodek"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "Transkoding",
+            "container": "Beholder",
+            "resolution": "Oppløsning",
+            "target": "Målkodek"
           }
         }
       }
@@ -2078,7 +2078,7 @@
           "label": "Vis torrentoppføringer markert som fullført"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Vis diverse oppføringer merket som fullført"
         },
         "activeTorrentThreshold": {
           "label": "Skjul fullført torrent under denne terskelen (i kiB/s)"
@@ -2093,8 +2093,8 @@
           "label": "Bruk filter for å beregne ratio"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Begrens elementer per integrasjon",
+          "description": "Dette begrenser antall elementer vist per integrasjon, ikke globalt"
         }
       },
       "errors": {
@@ -2203,32 +2203,32 @@
       "globalRatio": "Global ratio"
     },
     "mediaReleases": {
-      "name": "",
-      "description": "",
+      "name": "Medieutgivelser",
+      "description": "Vis nylig tillagte medier eller kommende utgivelser fra ulike integrasjoner",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Oppsett",
           "option": {
             "backdrop": {
-              "label": ""
+              "label": "Bakgrunn"
             },
             "poster": {
-              "label": ""
+              "label": "Plakat"
             }
           }
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Vis beskrivelse som verktøytips"
         },
         "showType": {
-          "label": ""
+          "label": "Vis merke for medietype"
         },
         "showSource": {
-          "label": ""
+          "label": "Vis kildeintegrasjon"
         }
       },
       "length": {
-        "duration": ""
+        "duration": "{length}min"
       }
     },
     "mediaRequests-requestList": {
@@ -2248,18 +2248,18 @@
         "unknown": "Ukjent",
         "pending": "Pågår",
         "processing": "Prosesserer",
-        "requested": "",
+        "requested": "Forespurt",
         "partiallyAvailable": "Delvis",
         "available": "Tilgjengelig",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "Svartelistet",
+        "deleted": "Slettet"
       },
       "status": {
         "pending": "Venter",
         "approved": "Godkjent",
         "declined": "Avslått",
         "failed": "Feilet",
-        "completed": ""
+        "completed": "Fullført"
       },
       "toBeDetermined": "Uavklart"
     },
@@ -2361,126 +2361,126 @@
           "label": "Antall poster grense"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Skjul beskrivelse"
         }
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "Utgivelser",
+      "description": "Viser en liste over gjeldende versjoner for angitte repositorier med gitt versjonsregex.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Ny utgivelse innen",
+          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av nye utgivelser."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Utdatert utgivelse innen",
+          "description": "Brukseksempel: 1w (1 uke), 10M (10 måneder). Gyldige enheter h (timer), d (dager), w (uker), M (måneder), y (år). La stå tomt for ingen markering av utdaterte utgivelser."
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "Vis bare uthevede",
+          "description": "Vis bare nye eller utdaterte utgivelser. Som beskrevet ovenfor."
         },
         "showDetails": {
-          "label": ""
+          "label": "Vis detaljer"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Vis bare ikon"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "Topp utgivelser",
+          "description": "Maks antall nyeste utgivelser som vises. Null betyr ingen grense."
         },
         "repositories": {
-          "label": "",
+          "label": "Repositorier",
           "addRepository": {
-            "label": ""
+            "label": "Legg til repository"
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
-            "listFoundImages": "",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": "",
-            "selectAll": "",
-            "deselectAll": ""
+            "label": "Importer fra docker",
+            "loading": "Laster docker-bilder",
+            "noImagesFound": "Ingen docker-bilder funnet",
+            "listFoundImages": "Liste over funnede bilder",
+            "listAlreadyImportedImages": "Liste over allerede importerte bilder",
+            "allImagesAlreadyImported": "Alle bilder er allerede importert",
+            "onlyAdminCanImport": "Bare administratorer kan importere fra docker",
+            "selectAll": "Velg alle",
+            "deselectAll": "Velg bort alle"
           },
           "provider": {
-            "label": ""
+            "label": "Leverandør"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "Identifikator",
+            "placeholder": "Navn eller Eier/Navn"
           },
           "name": {
-            "label": ""
+            "label": "Navn"
           },
           "versionFilter": {
-            "label": "",
+            "label": "Versjonsfilter",
             "prefix": {
-              "label": ""
+              "label": "Prefiks"
             },
             "precision": {
-              "label": "",
+              "label": "Presisjon",
               "options": {
-                "none": ""
+                "none": "Ingen"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "Suffiks"
             },
             "regex": {
-              "label": ""
+              "label": "Regulært uttrykk"
             }
           },
           "edit": {
-            "label": ""
+            "label": "Rediger"
           },
           "editForm": {
-            "title": "",
+            "title": "Rediger repository",
             "cancel": {
-              "label": ""
+              "label": "Avbryt"
             },
             "confirm": {
-              "label": ""
+              "label": "Bekreft"
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Importer fra Docker"
           },
           "example": {
-            "label": ""
+            "label": "Eksempel"
           },
-          "invalid": "",
+          "invalid": "Ugyldig repository-definisjon, kontroller verdiene",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "Ingen leverandør",
+            "tooltip": "Leverandøren kunne ikke tolkes, sett den manuelt etter import av bildene"
           }
         }
       },
-      "not-found": "",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "markViewed": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "projectDescription": "",
-      "created": "",
+      "not-found": "Ikke funnet",
+      "pre-release": "Forhåndsutgivelse",
+      "archived": "Arkivert",
+      "forked": "Forgrenet",
+      "starsCount": "Stjerner",
+      "forksCount": "Forgreninger",
+      "issuesCount": "Åpne saker",
+      "markViewed": "Merk som sett",
+      "openProjectPage": "Åpne prosjektside",
+      "openReleasePage": "Åpne releaseside",
+      "releaseDescription": "Utgivelsesbeskrivelse",
+      "projectDescription": "Prosjektbeskrivelse",
+      "created": "Opprettet",
       "error": {
-        "label": "",
+        "label": "Feil",
         "messages": {
-          "invalidIdentifier": "",
-          "noMatchingVersion": "",
-          "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "invalidIdentifier": "Ugyldig identifikator",
+          "noMatchingVersion": "Ingen samsvarende versjon funnet",
+          "noReleasesFound": "Ingen utgivelser funnet",
+          "noProviderSeleceted": "Ingen leverandør valgt",
+          "noProviderResponse": "Ingen respons fra leverandør"
         }
       }
     },
@@ -2488,125 +2488,125 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "{count} tilkoblet"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Ingen data tilgjengelig, alle integrasjoner er frakoblet",
+        "unknownContentOption": "Ukjent innholdsvalg for nettverkskontroller-sammendragswidget: "
       },
-      "name": "",
-      "description": ""
+      "name": "Nettverkskontroller-sammendrag",
+      "description": "Viser sammendrag av en nettverkskontroller (som UniFi Controller)"
     },
     "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
-            "name": ""
+            "name": "Kablet"
           },
           "wifi": {
-            "name": ""
+            "name": "Wi-Fi"
           }
         },
         "users": {
-          "label": ""
+          "label": "Brukere"
         },
         "guests": {
-          "label": ""
+          "label": "Gjester"
         }
       },
       "option": {
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "Wi-Fi"
             },
             "wired": {
-              "label": ""
+              "label": "Kablet"
             }
           },
-          "label": ""
+          "label": "Widget-innhold"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Ingen data tilgjengelig, alle integrasjoner er frakoblet",
+        "unknownContentOption": "Ukjent innholdsvalg for nettverksstatus-widget: "
       },
-      "name": "",
-      "description": ""
+      "name": "Nettverksstatus",
+      "description": "Vis tilkoblede enheter på et nettverk"
     },
     "networkController": {
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Kunne ikke hente nettverkskontroller-sammendrag"
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "Brannmur-overvåking",
+      "description": "Viser et sammendrag av brannmurer",
       "tab": {
-        "system": "",
-        "interfaces": ""
+        "system": "System",
+        "interfaces": "Grensesnitt"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Kunne ikke hente data fra brannmuren"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "Nettverksgrensesnitt som skal vises"
       },
       "widget": {
-        "fwname": "",
-        "version": "",
-        "versiontitle": "",
-        "cputitle": "",
-        "memorytitle": "",
-        "cpu": "",
-        "memory": "",
+        "fwname": "Navn",
+        "version": "Versjon",
+        "versiontitle": "Versjoner",
+        "cputitle": "CPU-bruk",
+        "memorytitle": "Minnebruk",
+        "cpu": "CPU",
+        "memory": "Minne",
         "interfaces": {
-          "name": "",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "name": "navn",
+          "trans": "Sendt",
+          "recv": "Mottatt",
+          "title": "Nettverksgrensesnitt"
         }
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "Varsler",
+      "description": "Vis varselhistorikk fra en integrasjon",
+      "noItems": "Ingen varsler å vise.",
       "option": {}
     },
     "systemResources": {
-      "name": "",
-      "description": "",
+      "name": "Systemressurser",
+      "description": "CPU, minne, disk og annen maskinvarebruk på systemet ditt",
       "option": {
         "hasShadow": {
-          "label": ""
+          "label": "Aktiver skyggelegging i diagram"
         },
         "visibleCharts": {
-          "label": "",
-          "description": "",
+          "label": "Synlige diagrammer",
+          "description": "Velg diagrammene du vil vise.",
           "option": {
-            "cpu": "",
-            "memory": "",
-            "network": ""
+            "cpu": "CPU",
+            "memory": "Minne",
+            "network": "Nettverk"
           }
         },
         "labelDisplayMode": {
-          "label": "",
+          "label": "Visningsmodus for etikett",
           "option": {
-            "textWithIcon": "",
-            "text": "",
-            "icon": "",
-            "hidden": ""
+            "textWithIcon": "Vis tekst med ikon",
+            "text": "Vis bare tekst",
+            "icon": "Vis bare ikon",
+            "hidden": "Skjul etikett"
           }
         }
       },
       "card": {
-        "cpu": "",
-        "memory": "",
-        "network": "",
-        "up": "",
-        "down": ""
+        "cpu": "CPU",
+        "memory": "Minne",
+        "network": "NETT",
+        "up": "OPP",
+        "down": "NED"
       }
     }
   },
@@ -2729,10 +2729,10 @@
       },
       "backgroundImageUrl": {
         "label": "URL for bakgrunnsbilde",
-        "placeholder": "",
+        "placeholder": "Begynn å skrive for å søke i lokale bilder",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "Dine bilder",
+          "other": "Andre bilder"
         }
       },
       "backgroundImageAttachment": {
@@ -2795,7 +2795,7 @@
         "label": "Ikonfarge"
       },
       "clearColor": {
-        "label": ""
+        "label": "Nullstill farge"
       },
       "customCss": {
         "label": "Tilpasset css for denne tavlen",
@@ -3030,8 +3030,8 @@
           "integration": "Integrasjoner",
           "app": "Apper",
           "group": "Grupper",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "Søkemotorer",
+          "media": "Medier"
         },
         "statisticLabel": {
           "boards": "Tavler",
@@ -3040,8 +3040,8 @@
           "authorization": "Autorisasjon"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Velkommen tilbake til din",
+          "subtitle": "{app} tavle"
         }
       },
       "board": {
@@ -3326,7 +3326,7 @@
             "idle": "Inaktiv",
             "running": "Kjører",
             "error": "Feil",
-            "disabled": ""
+            "disabled": "Deaktivert"
           },
           "job": {
             "minecraftServerStatus": {
@@ -3378,99 +3378,99 @@
               "label": "Media transkoding"
             },
             "networkController": {
-              "label": ""
+              "label": "Nettverkskontroller"
             },
             "refreshNotifications": {
-              "label": ""
+              "label": "Varseloppdaterer"
             },
             "dockerContainers": {
-              "label": ""
+              "label": "Docker-beholdere"
             },
             "firewallCpu": {
-              "label": ""
+              "label": "Brannmur-CPU"
             },
             "firewallMemory": {
-              "label": ""
+              "label": "Brannmur-minne"
             },
             "firewallVersion": {
-              "label": ""
+              "label": "Brannmur-versjon"
             },
             "firewallInterfaces": {
-              "label": ""
+              "label": "Brannmur-grensesnitt"
             },
             "weather": {
-              "label": ""
+              "label": "Vær"
             }
           },
           "interval": {
-            "seconds": "",
-            "minutes": "",
-            "hours": "",
-            "midnight": "",
-            "weeklyMonday": "",
+            "seconds": "Hvert {interval, plural, =1 {sekund} other {# sekunder}}",
+            "minutes": "Hvert {interval, plural, =1 {minutt} other {# minutter}}",
+            "hours": "Hver {interval, plural, =1 {time} other {# timer}}",
+            "midnight": "Hver dag ved midnatt",
+            "weeklyMonday": "Hver uke på mandag",
             "update": {
               "success": {
-                "message": ""
+                "message": "Intervall oppdatert"
               },
               "error": {
-                "message": ""
+                "message": "Kunne ikke oppdatere intervall"
               }
             }
           },
           "settings": {
-            "title": ""
+            "title": "Oppgaveinnstillinger for {jobName}"
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "Navn"
             },
             "interval": {
-              "label": ""
+              "label": "Planlagt intervall"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Siste kjøring"
             },
             "actions": {
-              "label": ""
+              "label": "Handlinger"
             }
           },
           "table": {
-            "search": ""
+            "search": "Søk i {count} oppgaver..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "Oppdater"
             }
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "Oppgaver ble oppdatert"
             },
             "error": {
-              "message": ""
+              "message": "Kunne ikke oppdatere oppgaver"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "Oppgave startet"
             },
             "error": {
-              "message": ""
+              "message": "Kunne ikke starte oppgave"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "Oppgave aktivert"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "Oppgave deaktivert"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "Kunne ikke bytte oppgavestatus"
             }
           }
         },
@@ -3527,19 +3527,19 @@
             "subtitle": "{count} brukt i koden til Homarr"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "Hurtigtaster",
+            "subtitle": "Tastatursnarveier som forbedrer arbeidsflyten din",
             "field": {
-              "shortcut": "",
-              "action": ""
+              "shortcut": "Snarvei",
+              "action": "Handling"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
-              "openSpotlight": ""
+              "toggleBoardEdit": "Slå av/på redigeringsmodus for tavle",
+              "toggleColorScheme": "Bytt lys/mørk modus",
+              "saveNotebook": "Lagre notatbok (kun i notatbok-widget)",
+              "openSpotlight": "Åpne søk"
             },
-            "note": ""
+            "note": "Tips: Mod refererer til både Ctrl-tasten og ⌘ på macOS"
           }
         }
       }
@@ -3549,9 +3549,9 @@
     "title": "Containere",
     "table": {
       "updated": "Oppdatert {when}",
-      "search": "Søk i {count} containere",
+      "search": "Søk {count} containere",
       "selected": "{selectCount} av {totalCount} containere valgt",
-      "footer": ""
+      "footer": "Totalt {count} containere"
     },
     "field": {
       "name": {
@@ -3571,10 +3571,10 @@
       },
       "stats": {
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Minne"
         }
       },
       "containerImage": {
@@ -3585,7 +3585,7 @@
       }
     },
     "action": {
-      "title": "",
+      "title": "Handlinger",
       "start": {
         "label": "Start",
         "notification": {
@@ -3995,7 +3995,7 @@
       "tools": {
         "label": "Verktøy",
         "tasks": {
-          "label": ""
+          "label": "Oppgaver"
         },
         "docker": {
           "label": "Docker"
@@ -4033,7 +4033,7 @@
         "certificates": {
           "label": "Sertifikater",
           "hostnames": {
-            "label": ""
+            "label": "Vertsnavn"
           }
         }
       },
@@ -4400,7 +4400,7 @@
         },
         "delete": {
           "title": "Slett søkemotor",
-          "message": "Er du sikker på at du vil slette søkemotoren '{name}'?",
+          "message": "Er du sikker på at du vil slette søkemotoren {name}?",
           "notification": {
             "success": {
               "title": "Søkemotor slettet",
@@ -4434,25 +4434,25 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Vertsnavn"
       },
       "subject": {
-        "label": ""
+        "label": "Emne"
       },
       "issuer": {
-        "label": ""
+        "label": "Utsteder"
       },
       "validFrom": {
-        "label": ""
+        "label": "Gyldig fra"
       },
       "validTo": {
-        "label": ""
+        "label": "Gyldig til"
       },
       "serialNumber": {
-        "label": ""
+        "label": "Serienummer"
       },
       "fingerprint": {
-        "label": ""
+        "label": "Fingeravtrykk"
       }
     },
     "page": {
@@ -4463,19 +4463,19 @@
           "title": "Det er ingen sertifikater enda"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Ugyldig sertifikat",
+          "description": "Kunne ikke tolke sertifikatet"
         },
         "expires": "Utløper {when}",
-        "toHostnames": ""
+        "toHostnames": "Betrodde vertsnavn"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "Betrodde sertifikatvertsnavn",
+        "description": "Noen sertifikater tillater ikke domenet Homarr bruker for forespørsler. Alle betrodde vertsnavn med sine sertifikat-hash brukes for å omgå disse begrensningene.",
         "noResults": {
-          "title": ""
+          "title": "Det finnes ingen vertsnavn ennå"
         },
-        "toCertificates": ""
+        "toCertificates": "Sertifikater"
       }
     },
     "action": {
@@ -4507,16 +4507,16 @@
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "Fjern betrodd vertsnavn",
+        "confirm": "Er du sikker på at du vil fjerne dette betrodde vertsnavnet? Dette kan gjøre at noen integrasjoner slutter å fungere.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Vertsnavn fjernet",
+            "message": "Vertsnavnet ble fjernet"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Vertsnavn ikke fjernet",
+            "message": "Vertsnavnet kunne ikke fjernes"
           }
         }
       }
@@ -4525,10 +4525,10 @@
   "log": {
     "level": {
       "option": {
-        "debug": "",
-        "info": "",
-        "warn": "",
-        "error": ""
+        "debug": "Feilsøk",
+        "info": "Info",
+        "warn": "Advarsel",
+        "error": "Feil"
       }
     }
   }
