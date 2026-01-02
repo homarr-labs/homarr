@@ -177,8 +177,8 @@
           }
         },
         "forgotPassword": {
-          "label": "",
-          "description": ""
+          "label": "Ste pozabili geslo?",
+          "description": "Administrator lahko zažene ukaz:"
         }
       },
       "register": {
@@ -622,7 +622,7 @@
         "description": "",
         "action": ""
       },
-      "add": ""
+      "add": "Dodaj aplikacijo"
     }
   },
   "integration": {
@@ -1059,10 +1059,10 @@
       "insert": "Vstavite",
       "remove": "Odstrani",
       "save": "Shrani",
-      "saveChanges": "Shranjevanje sprememb",
+      "saveChanges": "Shrani spremembe",
       "cancel": "Prekliči",
       "delete": "Izbriši",
-      "discard": "",
+      "discard": "Zapusti",
       "close": "",
       "confirm": "Potrdi",
       "continue": "",
@@ -1125,13 +1125,13 @@
     "userAvatar": {
       "menu": {
         "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
-        "preferences": "Vaše želje",
-        "logout": "",
+        "switchToLightMode": "Svetli način",
+        "management": "Nastavitve",
+        "preferences": "Prilagoditev",
+        "logout": "Odjava",
         "login": "Prijava",
-        "homeBoard": "",
-        "loggedOut": "",
+        "homeBoard": "Vaša nadzorna plošča",
+        "loggedOut": "Odjava uspešna",
         "updateAvailable": ""
       }
     },
@@ -1182,7 +1182,7 @@
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
+        "create": "Nova dinamična vsebina",
         "remove": ""
       },
       "option": {
@@ -1208,7 +1208,7 @@
         }
       },
       "action": {
-        "create": "",
+        "create": "Nova kategorija",
         "edit": "",
         "remove": "",
         "moveUp": "Premaknite se navzgor",
@@ -1243,12 +1243,12 @@
   },
   "item": {
     "action": {
-      "create": "",
+      "create": "Nova vsebina",
       "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "edit": "Uredi gradnik",
+      "moveResize": "Premakni/spremeni",
+      "duplicate": "Podvoji",
+      "remove": "Izbriši"
     },
     "menu": {
       "label": {
@@ -2638,8 +2638,8 @@
       "edit": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Spremembe so uveljavljene",
+            "message": "Vsebina je bila uspšeno shranjena"
           },
           "error": {
             "title": "",
@@ -2647,8 +2647,8 @@
           }
         },
         "confirmLeave": {
-          "title": "",
-          "message": ""
+          "title": "Neshranjene spremembe",
+          "message": "Vsebina ni shranjena, želite nadaljevati?"
         }
       },
       "oldImport": {
@@ -2716,16 +2716,16 @@
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "Naslov strani"
       },
       "metaTitle": {
-        "label": ""
+        "label": "Meta naslov"
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "URL logotipa"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "URL ikone"
       },
       "backgroundImageUrl": {
         "label": "",
@@ -2835,7 +2835,7 @@
       "metaTitle": ""
     },
     "setting": {
-      "title": "",
+      "title": "Nastavitve za {boardName} nadzorno ploščo",
       "section": {
         "general": {
           "title": "Splošno",
@@ -2844,9 +2844,9 @@
         "layout": {
           "title": "Postavitev",
           "responsive": {
-            "title": "",
+            "title": "Predloga",
             "action": {
-              "add": ""
+              "add": "Dodaj predlogo"
             }
           }
         },
@@ -2959,14 +2959,14 @@
   "layout": {
     "field": {
       "name": {
-        "label": ""
+        "label": "Ime"
       },
       "columnCount": {
-        "label": ""
+        "label": "Število stolpcev"
       },
       "breakpoint": {
-        "label": "",
-        "description": ""
+        "label": "Prekinitvene točke",
+        "description": "Postavitev bo uporabljena na vseh zaslonih, večjih od te prelomne točke, do naslednje večje prelomne točke."
       }
     }
   },
@@ -4046,7 +4046,7 @@
     }
   },
   "search": {
-    "placeholder": "",
+    "placeholder": "Iskanje vsebine",
     "nothingFound": "",
     "error": {
       "fetch": ""
