@@ -23,6 +23,7 @@ import {
   IconUserFilled,
   IconUsers,
   IconUsersGroup,
+  IconMotorbikeFilled
 } from "@tabler/icons-react";
 
 import { auth } from "@homarr/auth/next";
@@ -158,6 +159,11 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
       label: t("items.help.label"),
       icon: IconHelpSquareRoundedFilled,
       items: [
+        {
+          label: t("items.help.items.tours"),
+          icon: IconMotorbikeFilled,
+          href: "/manage/help/tours"
+        },
         {
           label: t("items.help.items.documentation"),
           icon: IconBook2,
