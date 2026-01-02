@@ -20,6 +20,16 @@ ARG DISABLE_REDIS_LOGS='true'
 
 RUN corepack enable pnpm && pnpm build
 
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+RUN apk update
+WORKDIR /app
+COPY /app/pnpm-lock.yaml .
+COPY /app/package.json .
+COPY /app/patches ./patches
+COPY /app/pnpm-workspace.yaml .
+RUN corepack enable pnpm && pnpm install --recursive --frozen-lockfile --prod
+
 FROM base AS runner
 WORKDIR /app
 
@@ -54,6 +64,7 @@ COPY --from=builder /app/packages/db/migrations ./db/migrations
 COPY --from=builder /app/apps/nextjs/.next/standalone ./
 COPY --from=builder /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
 COPY --from=builder /app/apps/nextjs/public ./apps/nextjs/public
+COPY --from=deps /app/node_modules ./node_modules
 COPY scripts/run.sh ./run.sh
 COPY --chmod=755 scripts/entrypoint.sh ./entrypoint.sh
 COPY packages/redis/redis.conf /app/redis.conf
