@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Accordion,
   ActionIcon,
@@ -14,6 +13,7 @@ import {
   Table,
   Text,
 } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { IconCloud, IconEye, IconEyeOff, IconServer, IconStack2 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -52,7 +52,11 @@ interface CoolifyContentProps {
 
 function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) {
   const t = useScopedI18n("widget.coolify");
-  const [showIp, setShowIp] = useState(false);
+  const [showIp, setShowIp] = useLocalStorage({ key: `coolify-${integrationId}-show-ip`, defaultValue: false });
+  const [openSections, setOpenSections] = useLocalStorage<string[]>({
+    key: `coolify-${integrationId}-sections`,
+    defaultValue: ["applications"],
+  });
   const [data] = clientApi.widget.coolify.getInstanceInfo.useSuspenseQuery({ integrationId });
   const relativeTime = useTimeAgo(data.updatedAt);
 
@@ -90,7 +94,7 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
       <Stack gap={0}>
         <CoolifyHeader isTiny={isTiny} integrationUrl={integrationUrl} displayUrl={displayUrl} />
 
-        <Accordion variant="contained" chevronPosition="right" multiple defaultValue={["applications"]}>
+        <Accordion variant="contained" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
           {options.showServers && (
             <ServersSection
               servers={instanceInfo.servers}
