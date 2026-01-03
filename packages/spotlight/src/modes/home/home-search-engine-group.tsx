@@ -1,5 +1,4 @@
 import { Box, Group, Stack, Text } from "@mantine/core";
-import type { TablerIcon } from "@tabler/icons-react";
 import { IconCaretUpDown, IconSearch, IconSearchOff } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -9,6 +8,7 @@ import { useSession } from "@homarr/auth/client";
 import { useSettings } from "@homarr/settings";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
