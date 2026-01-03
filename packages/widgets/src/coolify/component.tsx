@@ -407,7 +407,7 @@ interface ResourceTableProps {
     uuid: string;
     name: string;
     status?: string;
-    fqdn?: string;
+    fqdn?: string | null;
     projectName?: string;
     projectUuid?: string;
     environmentName?: string;
@@ -439,7 +439,7 @@ interface ResourceRowProps {
     uuid: string;
     name: string;
     status?: string;
-    fqdn?: string;
+    fqdn?: string | null;
     projectName?: string;
     projectUuid?: string;
     environmentName?: string;
@@ -478,8 +478,8 @@ function ResourceRow({ item, isTiny, integrationUrl, resourceType }: ResourceRow
       </Group>
       {/* Row 2: Icons + Project/Env */}
       <Group wrap="nowrap" gap={4} ml={16}>
-        {item.fqdn && (
-          <ActionIcon component="a" href={item.fqdn} target="_blank" size="xs" variant="subtle" c="dimmed">
+        {cleanFqdn(item.fqdn) && (
+          <ActionIcon component="a" href={cleanFqdn(item.fqdn)} target="_blank" size="xs" variant="subtle" c="dimmed">
             <IconLink size={12} />
           </ActionIcon>
         )}
@@ -503,6 +503,21 @@ function ResourceRow({ item, isTiny, integrationUrl, resourceType }: ResourceRow
 
 function parseStatus(status: string): string {
   return status.split(":")[0]?.toLowerCase() ?? "unknown";
+}
+
+function cleanFqdn(fqdn: string | undefined | null): string | undefined {
+  if (!fqdn) return undefined;
+  const firstUrl = fqdn.split(",")[0]?.trim();
+  if (!firstUrl) return undefined;
+  try {
+    const url = new URL(firstUrl);
+    if (url.protocol === "https:") {
+      return `${url.protocol}//${url.hostname}${url.pathname}`.replace(/\/$/, "");
+    }
+    return firstUrl;
+  } catch {
+    return firstUrl;
+  }
 }
 
 function getStatusColor(status: string): string {
