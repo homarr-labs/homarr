@@ -1969,15 +1969,20 @@
         },
         "showApplications": {
           "label": "Show applications"
+        },
+        "showServices": {
+          "label": "Show services"
         }
       },
       "tab": {
         "servers": "Servers",
-        "applications": "Apps"
+        "applications": "Apps",
+        "services": "Services"
       },
       "empty": {
         "servers": "No servers found",
-        "applications": "No applications found"
+        "applications": "No applications found",
+        "services": "No services found"
       },
       "table": {
         "name": "Name",
