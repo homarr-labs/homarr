@@ -61,6 +61,26 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
   const runningApps = instanceInfo.applications.filter((app) => parseStatus(app.status) === "running").length;
   const totalApps = instanceInfo.applications.length;
 
+  const serverResourceCounts = new Map<number, { apps: number; services: number }>();
+  for (const server of instanceInfo.servers) {
+    const serverId = server.id ?? 0;
+    serverResourceCounts.set(serverId, { apps: 0, services: 0 });
+  }
+  for (const app of instanceInfo.applications) {
+    const destId = app.destination_id ?? 0;
+    if (serverResourceCounts.has(destId)) {
+      const counts = serverResourceCounts.get(destId)!;
+      counts.apps++;
+    }
+  }
+  for (const service of instanceInfo.services ?? []) {
+    const destId = service.destination_id ?? 0;
+    if (serverResourceCounts.has(destId)) {
+      const counts = serverResourceCounts.get(destId)!;
+      counts.services++;
+    }
+  }
+
   const getAccordionBadgeColor = (running: number, total: number) => {
     if (total === 0) return "gray";
     if (running === total) return "green";
@@ -116,29 +136,45 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
                         <Table.Th ta="start" p={0}>
                           {t("table.name")}
                         </Table.Th>
-                        <Table.Th ta="start" p={0}>
-                          {t("table.ip")}
+                        {!isTiny && (
+                          <Table.Th ta="start" p={0}>
+                            {t("table.ip")}
+                          </Table.Th>
+                        )}
+                        <Table.Th ta="center" p={0}>
+                          {t("table.resources")}
                         </Table.Th>
                       </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
-                      {instanceInfo.servers.map((server) => (
-                        <Table.Tr key={server.uuid} fz={isTiny ? "8px" : "xs"}>
-                          <Table.Td>
-                            <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
-                              <Indicator size={isTiny ? 4 : 8} color="green" />
-                              <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
-                                {server.name}
+                      {instanceInfo.servers.map((server) => {
+                        const serverId = server.id ?? 0;
+                        const counts = serverResourceCounts.get(serverId) ?? { apps: 0, services: 0 };
+                        return (
+                          <Table.Tr key={server.uuid} fz={isTiny ? "8px" : "xs"}>
+                            <Table.Td>
+                              <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
+                                <Indicator size={isTiny ? 4 : 8} color="green" />
+                                <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
+                                  {server.name}
+                                </Text>
+                              </Group>
+                            </Table.Td>
+                            {!isTiny && (
+                              <Table.Td>
+                                <Text fz="xs" c="dimmed">
+                                  {server.ip}
+                                </Text>
+                              </Table.Td>
+                            )}
+                            <Table.Td ta="center">
+                              <Text fz={isTiny ? "8px" : "xs"} c="dimmed">
+                                {counts.apps} / {counts.services}
                               </Text>
-                            </Group>
-                          </Table.Td>
-                          <Table.Td>
-                            <Text fz={isTiny ? "8px" : "xs"} c="dimmed">
-                              {server.ip}
-                            </Text>
-                          </Table.Td>
-                        </Table.Tr>
-                      ))}
+                            </Table.Td>
+                          </Table.Tr>
+                        );
+                      })}
                     </Table.Tbody>
                   </Table>
                 ) : (

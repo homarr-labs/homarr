@@ -1983,7 +1983,8 @@
         "name": "Name",
         "ip": "IP",
         "status": "Status",
-        "project": "Project / Env"
+        "project": "Project / Env",
+        "resources": "Apps / Svcs"
       },
       "footer": {
         "updated": "Updated {when}"
