@@ -239,7 +239,7 @@ function ServersSection({
           </Badge>
         </Group>
       </Accordion.Control>
-      <Accordion.Panel>
+      <Accordion.Panel p={4}>
         {servers.length > 0 ? (
           <ServersTable
             servers={servers}
@@ -279,7 +279,7 @@ function ServersTable({
   const t = useScopedI18n("widget.coolify");
 
   return (
-    <Table highlightOnHover>
+    <Table highlightOnHover verticalSpacing={2} horizontalSpacing={4}>
       <Table.Thead>
         <Table.Tr fz={isTiny ? "8px" : "xs"}>
           <Table.Th ta="start" p={0}>
@@ -387,7 +387,7 @@ function ApplicationsSection({ applications, isTiny, integrationUrl }: Applicati
           </Badge>
         </Group>
       </Accordion.Control>
-      <Accordion.Panel>
+      <Accordion.Panel p={4}>
         {applications.length > 0 ? (
           <ResourceTable
             items={applications}
@@ -425,7 +425,7 @@ function ServicesSection({ services, isTiny, integrationUrl }: ServicesSectionPr
           </Badge>
         </Group>
       </Accordion.Control>
-      <Accordion.Panel>
+      <Accordion.Panel p={4}>
         {services.length > 0 ? (
           <ResourceTable items={services} isTiny={isTiny} integrationUrl={integrationUrl} resourceType="service" />
         ) : (
@@ -457,7 +457,7 @@ function ResourceTable({ items, isTiny, integrationUrl, resourceType }: Resource
   const t = useScopedI18n("widget.coolify");
 
   return (
-    <Table highlightOnHover>
+    <Table highlightOnHover verticalSpacing={2} horizontalSpacing={4}>
       <Table.Thead>
         <Table.Tr fz={isTiny ? "8px" : "xs"}>
           <Table.Th ta="start" p={0}>
