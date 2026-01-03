@@ -1,18 +1,6 @@
 "use client";
 
-import {
-  Accordion,
-  ActionIcon,
-  Anchor,
-  Badge,
-  Group,
-  Image,
-  Indicator,
-  ScrollArea,
-  Stack,
-  Table,
-  Text,
-} from "@mantine/core";
+import { Accordion, ActionIcon, Anchor, Badge, Group, Image, Indicator, ScrollArea, Stack, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import {
   IconCloud,
@@ -20,6 +8,7 @@ import {
   IconEye,
   IconEyeOff,
   IconFileText,
+  IconLink,
   IconServer,
   IconStack2,
 } from "@tabler/icons-react";
@@ -414,15 +403,16 @@ function ServicesSection({ services, isTiny, integrationUrl }: ServicesSectionPr
 }
 
 interface ResourceTableProps {
-  items: Array<{
+  items: {
     uuid: string;
     name: string;
     status?: string;
+    fqdn?: string;
     projectName?: string;
     projectUuid?: string;
     environmentName?: string;
     environmentUuid?: string;
-  }>;
+  }[];
   isTiny: boolean;
   integrationUrl: string;
   resourceType: "application" | "service";
@@ -449,6 +439,7 @@ interface ResourceRowProps {
     uuid: string;
     name: string;
     status?: string;
+    fqdn?: string;
     projectName?: string;
     projectUuid?: string;
     environmentName?: string;
@@ -486,23 +477,26 @@ function ResourceRow({ item, isTiny, integrationUrl, resourceType }: ResourceRow
         )}
       </Group>
       {/* Row 2: Icons + Project/Env */}
-      {(
-        <Group wrap="nowrap" gap={4} ml={16}>
-          {resourceUrl && (
-            <ActionIcon component="a" href={resourceUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
-              <IconExternalLink size={12} />
-            </ActionIcon>
-          )}
-          {logsUrl && (
-            <ActionIcon component="a" href={logsUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
-              <IconFileText size={12} />
-            </ActionIcon>
-          )}
-          <Text fz="10px" c="dimmed" lineClamp={1}>
-            {item.projectName ?? "-"} / {item.environmentName ?? "-"}
-          </Text>
-        </Group>
-      )}
+      <Group wrap="nowrap" gap={4} ml={16}>
+        {item.fqdn && (
+          <ActionIcon component="a" href={item.fqdn} target="_blank" size="xs" variant="subtle" c="dimmed">
+            <IconLink size={12} />
+          </ActionIcon>
+        )}
+        {resourceUrl && (
+          <ActionIcon component="a" href={resourceUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
+            <IconExternalLink size={12} />
+          </ActionIcon>
+        )}
+        {logsUrl && (
+          <ActionIcon component="a" href={logsUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
+            <IconFileText size={12} />
+          </ActionIcon>
+        )}
+        <Text fz="10px" c="dimmed" lineClamp={1}>
+          {item.projectName ?? "-"} / {item.environmentName ?? "-"}
+        </Text>
+      </Group>
     </Stack>
   );
 }
