@@ -1898,9 +1898,6 @@ importers:
 
   packages/settings:
     dependencies:
-      '@homarr/api':
-        specifier: workspace:^0.1.0
-        version: link:../api
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../db
@@ -2066,6 +2063,9 @@ importers:
       '@homarr/definitions':
         specifier: workspace:^0.1.0
         version: link:../definitions
+      '@homarr/settings':
+        specifier: workspace:^0.1.0
+        version: link:../settings
       '@homarr/translation':
         specifier: workspace:^0.1.0
         version: link:../translation
