@@ -1,7 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Accordion, ActionIcon, Anchor, Badge, Group, Indicator, ScrollArea, Stack, Table, Text } from "@mantine/core";
+import {
+  Accordion,
+  ActionIcon,
+  Anchor,
+  Badge,
+  Group,
+  Image,
+  Indicator,
+  ScrollArea,
+  Stack,
+  Table,
+  Text,
+} from "@mantine/core";
 import { IconCloud, IconEye, IconEyeOff, IconServer, IconStack2 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -85,15 +97,15 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
 
   for (const app of instanceInfo.applications) {
     const serverId = app.server_id ?? destinationToServer.get(app.destination_id ?? 0) ?? app.destination_id ?? 0;
-    if (serverResourceCounts.has(serverId)) {
-      const counts = serverResourceCounts.get(serverId)!;
+    const counts = serverResourceCounts.get(serverId);
+    if (counts) {
       counts.apps++;
     }
   }
   for (const service of instanceInfo.services ?? []) {
     const serverId = service.server_id ?? service.destination_id ?? 0;
-    if (serverResourceCounts.has(serverId)) {
-      const counts = serverResourceCounts.get(serverId)!;
+    const counts = serverResourceCounts.get(serverId);
+    if (counts) {
       counts.services++;
     }
   }
@@ -119,11 +131,11 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
           }}
         >
           <Group gap={2}>
-            <img
+            <Image
               src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/coolify.svg"
               alt="Coolify"
-              width={isTiny ? 18 : 24}
-              height={isTiny ? 18 : 24}
+              w={isTiny ? 18 : 24}
+              h={isTiny ? 18 : 24}
             />
             <Text fz={isTiny ? "xs" : "sm"} fw={700} style={{ color: "#8B5CF6" }}>
               oolify
@@ -337,11 +349,11 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
 
         <Group justify="space-between" p={4} style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
           <Group gap={2}>
-            <img
+            <Image
               src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/coolify.svg"
               alt="Coolify"
-              width={16}
-              height={16}
+              w={16}
+              h={16}
             />
             <Text size="xs" c="dimmed">
               v{instanceInfo.version}
