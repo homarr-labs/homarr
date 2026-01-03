@@ -105,6 +105,7 @@ export interface CoolifyService {
   name: string;
   description?: string;
   status?: string;
+  fqdn?: string;
   environment_id?: number;
   destination_id?: number;
   destination_type?: string;
