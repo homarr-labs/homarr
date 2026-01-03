@@ -65,7 +65,7 @@ export class UnraidIntegration extends Integration implements ISystemHealthMonit
       })),
       smart: systemInfo.array.disks.map((disk) => ({
         deviceName: disk.name,
-        temperature: disk.temp,
+        temperature: disk.temp ?? null,
         overallStatus: disk.status,
       })),
     };

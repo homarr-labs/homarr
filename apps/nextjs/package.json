@@ -81,7 +81,7 @@
     "prismjs": "^1.30.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-error-boundary": "^6.0.0",
+    "react-error-boundary": "^6.0.1",
     "react-simple-code-editor": "^0.14.1",
     "sass": "^1.97.1",
     "superjson": "2.2.6",
