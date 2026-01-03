@@ -88,7 +88,8 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
 
   const { instanceInfo, integrationUrl } = data;
   const isTiny = width < 256;
-  const displayUrl = integrationUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const baseUrl = integrationUrl.replace(/\/+$/, "");
+  const displayUrl = baseUrl.replace(/^https?:\/\//, "");
 
   const serverResourceCounts = buildServerResourceCounts(
     instanceInfo.servers,
@@ -99,7 +100,7 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
   return (
     <ScrollArea h="100%">
       <Stack gap={0}>
-        <CoolifyHeader isTiny={isTiny} integrationUrl={integrationUrl} displayUrl={displayUrl} />
+        <CoolifyHeader isTiny={isTiny} integrationUrl={baseUrl} displayUrl={displayUrl} />
 
         <Accordion variant="contained" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
           {options.showServers && (
@@ -109,18 +110,14 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
               isTiny={isTiny}
               showIp={showIp}
               onToggleIp={() => setShowIp((v) => !v)}
-              integrationUrl={integrationUrl}
+              integrationUrl={baseUrl}
             />
           )}
           {options.showApplications && (
-            <ApplicationsSection
-              applications={instanceInfo.applications}
-              isTiny={isTiny}
-              integrationUrl={integrationUrl}
-            />
+            <ApplicationsSection applications={instanceInfo.applications} isTiny={isTiny} integrationUrl={baseUrl} />
           )}
           {options.showServices && (
-            <ServicesSection services={instanceInfo.services ?? []} isTiny={isTiny} integrationUrl={integrationUrl} />
+            <ServicesSection services={instanceInfo.services ?? []} isTiny={isTiny} integrationUrl={baseUrl} />
           )}
         </Accordion>
 
@@ -447,6 +444,7 @@ interface ResourceTableProps {
     projectName?: string;
     projectUuid?: string;
     environmentName?: string;
+    environmentUuid?: string;
   }>;
   isTiny: boolean;
   integrationUrl: string;
@@ -493,6 +491,7 @@ interface ResourceRowProps {
     projectName?: string;
     projectUuid?: string;
     environmentName?: string;
+    environmentUuid?: string;
   };
   isTiny: boolean;
   integrationUrl: string;
@@ -504,8 +503,8 @@ function ResourceRow({ item, isTiny, integrationUrl, resourceType }: ResourceRow
   const statusColor = getStatusColor(status);
 
   const resourceUrl =
-    item.projectUuid && item.environmentName
-      ? `${integrationUrl}/project/${item.projectUuid}/${item.environmentName}/${resourceType}/${item.uuid}`
+    item.projectUuid && item.environmentUuid
+      ? `${integrationUrl}/project/${item.projectUuid}/environment/${item.environmentUuid}/${resourceType}/${item.uuid}`
       : undefined;
 
   const logsUrl = resourceType === "application" && resourceUrl ? `${resourceUrl}/logs` : undefined;

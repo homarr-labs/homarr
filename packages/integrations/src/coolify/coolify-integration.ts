@@ -328,13 +328,17 @@ export class CoolifyIntegration extends Integration {
       this.listServersAsync(fetchAsync),
     ]);
 
-    const envToProjectMap = new Map<number, { projectName: string; projectUuid: string; environmentName: string }>();
+    const envToProjectMap = new Map<
+      number,
+      { projectName: string; projectUuid: string; environmentName: string; environmentUuid?: string }
+    >();
     for (const project of projectsWithEnvs) {
       for (const env of project.environments) {
         envToProjectMap.set(env.id, {
           projectName: project.name,
           projectUuid: project.uuid,
           environmentName: env.name,
+          environmentUuid: env.uuid,
         });
       }
     }
@@ -346,6 +350,7 @@ export class CoolifyIntegration extends Integration {
         projectName: context?.projectName,
         projectUuid: context?.projectUuid,
         environmentName: context?.environmentName,
+        environmentUuid: context?.environmentUuid,
       };
     });
 
@@ -356,6 +361,7 @@ export class CoolifyIntegration extends Integration {
         projectName: context?.projectName,
         projectUuid: context?.projectUuid,
         environmentName: context?.environmentName,
+        environmentUuid: context?.environmentUuid,
       };
     });
 
