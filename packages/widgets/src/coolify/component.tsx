@@ -227,14 +227,15 @@ function ServersSection({
   integrationUrl,
 }: ServersSectionProps) {
   const t = useScopedI18n("widget.coolify");
+  const onlineServers = servers.filter((s) => s.is_reachable !== false).length;
 
   return (
     <Accordion.Item value="servers">
       <Accordion.Control icon={isTiny ? null : <IconServer size={16} />}>
         <Group gap="xs">
           <Text size="xs">{t("tab.servers")}</Text>
-          <Badge variant="light" color="gray" size="xs">
-            {servers.length}
+          <Badge variant="dot" color={getBadgeColor(onlineServers, servers.length)} size="xs">
+            {onlineServers} / {servers.length}
           </Badge>
         </Group>
       </Accordion.Control>
@@ -326,13 +327,14 @@ interface ServerRowProps {
 function ServerRow({ server, counts, isTiny, showIp, integrationUrl }: ServerRowProps) {
   const t = useScopedI18n("widget.coolify");
   const isBuildServer = server.settings?.is_build_server === true;
+  const isOnline = server.is_reachable !== false;
   const serverUrl = `${integrationUrl}/server/${server.uuid}`;
 
   return (
     <Table.Tr fz={isTiny ? "8px" : "xs"}>
       <Table.Td>
         <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
-          <Indicator size={isTiny ? 4 : 8} color="green" />
+          <Indicator size={isTiny ? 4 : 8} color={isOnline ? "green" : "red"} />
           <Anchor href={serverUrl} target="_blank" fz={isTiny ? "8px" : "xs"} c="inherit" lineClamp={1}>
             {server.name}
           </Anchor>
