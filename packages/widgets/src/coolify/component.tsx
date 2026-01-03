@@ -51,7 +51,6 @@ interface CoolifyContentProps {
 }
 
 function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) {
-  const t = useScopedI18n("widget.coolify");
   const [showIp, setShowIp] = useLocalStorage({ key: `coolify-${integrationId}-show-ip`, defaultValue: false });
   const [openSections, setOpenSections] = useLocalStorage<string[]>({
     key: `coolify-${integrationId}-sections`,
