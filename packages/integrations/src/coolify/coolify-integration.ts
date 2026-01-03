@@ -356,8 +356,10 @@ export class CoolifyIntegration extends Integration {
 
     const servicesWithContext: CoolifyServiceWithContext[] = services.map((service) => {
       const context = service.environment_id ? envToProjectMap.get(service.environment_id) : undefined;
+      const fqdn = service.fqdn ?? service.applications?.find((app) => app.fqdn)?.fqdn ?? undefined;
       return {
         ...service,
+        fqdn,
         projectName: context?.projectName,
         projectUuid: context?.projectUuid,
         environmentName: context?.environmentName,
