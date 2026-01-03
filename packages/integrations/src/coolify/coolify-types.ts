@@ -24,6 +24,7 @@ export interface CoolifyApplication {
   project_id?: number;
   destination_id?: number;
   destination_type?: string;
+  server_id?: number | null;
 }
 
 export interface CoolifyApplicationLog {
@@ -74,6 +75,13 @@ export interface CoolifyResource {
   status: string;
 }
 
+export interface CoolifyServerSettings {
+  server_id?: number;
+  is_build_server?: boolean;
+  is_reachable?: boolean;
+  is_usable?: boolean;
+}
+
 export interface CoolifyServer {
   id: number | null;
   uuid: string;
@@ -84,6 +92,7 @@ export interface CoolifyServer {
   user?: string;
   created_at: string;
   updated_at: string;
+  settings?: CoolifyServerSettings;
 }
 
 export interface CoolifyService {
@@ -95,6 +104,7 @@ export interface CoolifyService {
   environment_id?: number;
   destination_id?: number;
   destination_type?: string;
+  server_id?: number | null;
   created_at: string;
   updated_at: string;
 }

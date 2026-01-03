@@ -1997,6 +1997,9 @@
       "error": {
         "noIntegration": "No Coolify integration configured",
         "internalServerError": "Failed to fetch Coolify data"
+      },
+      "server": {
+        "buildServer": "Build"
       }
     },
     "common": {

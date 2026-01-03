@@ -65,22 +65,25 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
   const runningServices = services.filter((svc) => parseStatus(svc.status ?? "") === "running").length;
   const totalServices = services.length;
 
+  // Build a map of server IDs to resource counts
+  // Coolify Cloud uses settings.server_id, self-hosted uses server.id
   const serverResourceCounts = new Map<number, { apps: number; services: number }>();
   for (const server of instanceInfo.servers) {
-    const serverId = server.id ?? 0;
+    const serverId = server.settings?.server_id ?? server.id ?? 0;
     serverResourceCounts.set(serverId, { apps: 0, services: 0 });
   }
+  // Apps/Services have server_id field that matches settings.server_id in Coolify Cloud
   for (const app of instanceInfo.applications) {
-    const destId = app.destination_id ?? 0;
-    if (serverResourceCounts.has(destId)) {
-      const counts = serverResourceCounts.get(destId)!;
+    const serverId = app.server_id ?? app.destination_id ?? 0;
+    if (serverResourceCounts.has(serverId)) {
+      const counts = serverResourceCounts.get(serverId)!;
       counts.apps++;
     }
   }
   for (const service of instanceInfo.services ?? []) {
-    const destId = service.destination_id ?? 0;
-    if (serverResourceCounts.has(destId)) {
-      const counts = serverResourceCounts.get(destId)!;
+    const serverId = service.server_id ?? service.destination_id ?? 0;
+    if (serverResourceCounts.has(serverId)) {
+      const counts = serverResourceCounts.get(serverId)!;
       counts.services++;
     }
   }
@@ -152,8 +155,9 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
                     </Table.Thead>
                     <Table.Tbody>
                       {instanceInfo.servers.map((server) => {
-                        const serverId = server.id ?? 0;
+                        const serverId = server.settings?.server_id ?? server.id ?? 0;
                         const counts = serverResourceCounts.get(serverId) ?? { apps: 0, services: 0 };
+                        const isBuildServer = server.settings?.is_build_server === true;
                         return (
                           <Table.Tr key={server.uuid} fz={isTiny ? "8px" : "xs"}>
                             <Table.Td>
@@ -162,6 +166,11 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
                                 <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
                                   {server.name}
                                 </Text>
+                                {isBuildServer && (
+                                  <Badge size="xs" variant="light" color="violet">
+                                    {t("server.buildServer")}
+                                  </Badge>
+                                )}
                               </Group>
                             </Table.Td>
                             {!isTiny && (
