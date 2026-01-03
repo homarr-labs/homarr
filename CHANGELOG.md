@@ -1,3 +1,12 @@
+## [1.49.1](https://github.com/homarr-labs/homarr/compare/v1.49.0...v1.49.1) (2026-01-03)
+
+### Bug Fixes
+
+* **db:** connection issue do to missing host and name of db when connecting with host ([#4786](https://github.com/homarr-labs/homarr/issues/4786)) ([7d33225](https://github.com/homarr-labs/homarr/commit/7d3322576c3ed1b9917873bf707d77d2a4eef1a8))
+* **deps:** update dependency ldapts to v8.0.36 ([#4790](https://github.com/homarr-labs/homarr/issues/4790)) ([1842e5f](https://github.com/homarr-labs/homarr/commit/1842e5fff5c072c8da45a01be860e63d12d5062a))
+* **deps:** update dependency react-error-boundary to ^6.0.1 ([#4791](https://github.com/homarr-labs/homarr/issues/4791)) ([1b70973](https://github.com/homarr-labs/homarr/commit/1b70973084c9e9ebed34e8d7d9690a9e5530f60f))
+* **unraid:** temperature of disks can be null ([#4788](https://github.com/homarr-labs/homarr/issues/4788)) ([60f9d4e](https://github.com/homarr-labs/homarr/commit/60f9d4e6e69df2190171e5d8e263b2030447ab2e))
+
 ## [1.49.0](https://github.com/homarr-labs/homarr/compare/v1.48.0...v1.49.0) (2026-01-02)
 
 ### Features
