@@ -302,11 +302,6 @@ function ServerRow({ server, counts, isTiny, showIp }: ServerRowProps) {
           <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
             {server.name}
           </Text>
-          {isBuildServer && (
-            <Badge size="xs" variant="light" color="violet">
-              {t("server.buildServer")}
-            </Badge>
-          )}
         </Group>
       </Table.Td>
       {!isTiny && (
@@ -317,9 +312,15 @@ function ServerRow({ server, counts, isTiny, showIp }: ServerRowProps) {
         </Table.Td>
       )}
       <Table.Td ta="center">
-        <Text fz={isTiny ? "8px" : "xs"} c="dimmed">
-          {counts.apps} / {counts.services}
-        </Text>
+        {isBuildServer ? (
+          <Badge size="xs" variant="light" color="violet">
+            {t("server.buildServer")}
+          </Badge>
+        ) : (
+          <Text fz={isTiny ? "8px" : "xs"} c="dimmed">
+            {counts.apps} / {counts.services}
+          </Text>
+        )}
       </Table.Td>
     </Table.Tr>
   );
