@@ -12,6 +12,7 @@ coverage
 # next.js
 .next/
 out/
+dist/
 next-env.d.ts
 
 # artifacts

@@ -4,12 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm with-env next build",
+    "build": "pnpm with-env next build && pnpm build:server",
+    "build:server": "node ./esbuild.config.mjs",
     "clean": "git clean -xdf .next .turbo node_modules",
-    "dev": "pnpm with-env next dev",
+    "dev": "pnpm with-env nodemon",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "start": "pnpm with-env next start",
+    "start": "pnpm with-env cross-env NODE_ENV=production node dist/server.cjs",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
@@ -69,6 +70,7 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "chroma-js": "^3.2.0",
     "clsx": "^2.1.1",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
     "flag-icons": "^7.5.0",
@@ -100,9 +102,13 @@
     "@types/react-dom": "19.2.3",
     "@types/swagger-ui-react": "^5.18.0",
     "concurrently": "^9.2.1",
+    "esbuild": "^0.27.2",
+    "esbuild-sass-plugin": "^3.3.1",
     "eslint": "^9.39.2",
     "node-loader": "^2.1.0",
+    "nodemon": "^2.0.20",
     "prettier": "^3.7.4",
+    "tsx": "4.20.4",
     "typescript": "^5.9.3"
   }
 }
