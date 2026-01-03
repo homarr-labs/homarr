@@ -1,7 +1,8 @@
 "use client";
 
-import { Accordion, Anchor, Badge, Group, Indicator, ScrollArea, Stack, Table, Text } from "@mantine/core";
-import { IconCloud, IconServer, IconStack2 } from "@tabler/icons-react";
+import { useState } from "react";
+import { Accordion, ActionIcon, Anchor, Badge, Group, Indicator, ScrollArea, Stack, Table, Text } from "@mantine/core";
+import { IconCloud, IconEye, IconEyeOff, IconServer, IconStack2 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
@@ -32,6 +33,7 @@ interface CoolifyContentProps {
 
 function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) {
   const t = useScopedI18n("widget.coolify");
+  const [showIp, setShowIp] = useState(false);
   const [data] = clientApi.widget.coolify.getInstanceInfo.useSuspenseQuery({ integrationId });
   const relativeTime = useTimeAgo(data.updatedAt);
 
@@ -145,7 +147,12 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
                         </Table.Th>
                         {!isTiny && (
                           <Table.Th ta="start" p={0}>
-                            {t("table.ip")}
+                            <Group gap={4} wrap="nowrap">
+                              {t("table.ip")}
+                              <ActionIcon size="xs" variant="subtle" onClick={() => setShowIp((v) => !v)}>
+                                {showIp ? <IconEye size={12} /> : <IconEyeOff size={12} />}
+                              </ActionIcon>
+                            </Group>
                           </Table.Th>
                         )}
                         <Table.Th ta="center" p={0}>
@@ -176,7 +183,7 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
                             {!isTiny && (
                               <Table.Td>
                                 <Text fz="xs" c="dimmed">
-                                  {server.ip}
+                                  {showIp ? server.ip : "••••••••"}
                                 </Text>
                               </Table.Td>
                             )}
