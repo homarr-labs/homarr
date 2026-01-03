@@ -10,13 +10,7 @@ export const { definition, componentLoader } = createWidgetDefinition("coolify",
       showServers: factory.switch({
         defaultValue: true,
       }),
-      showProjects: factory.switch({
-        defaultValue: true,
-      }),
       showApplications: factory.switch({
-        defaultValue: true,
-      }),
-      showServices: factory.switch({
         defaultValue: true,
       }),
     }));

@@ -1,7 +1,7 @@
 "use client";
 
-import { Badge, Group, ScrollArea, Stack, Tabs, Text } from "@mantine/core";
-import { IconCloud, IconFolder, IconServer, IconSettings } from "@tabler/icons-react";
+import { Accordion, Badge, Group, Indicator, ScrollArea, Stack, Table, Text } from "@mantine/core";
+import { IconCloud, IconServer } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
@@ -9,7 +9,7 @@ import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 
-export default function CoolifyWidget({ options, integrationIds }: WidgetComponentProps<"coolify">) {
+export default function CoolifyWidget({ options, integrationIds, width }: WidgetComponentProps<"coolify">) {
   const t = useScopedI18n("widget.coolify");
   const integrationId = integrationIds[0];
 
@@ -21,15 +21,16 @@ export default function CoolifyWidget({ options, integrationIds }: WidgetCompone
     );
   }
 
-  return <CoolifyContent integrationId={integrationId} options={options} />;
+  return <CoolifyContent integrationId={integrationId} options={options} width={width} />;
 }
 
 interface CoolifyContentProps {
   integrationId: string;
   options: WidgetComponentProps<"coolify">["options"];
+  width: number;
 }
 
-function CoolifyContent({ integrationId, options }: CoolifyContentProps) {
+function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) {
   const t = useScopedI18n("widget.coolify");
   const [data] = clientApi.widget.coolify.getInstanceInfo.useSuspenseQuery({ integrationId });
   const relativeTime = useTimeAgo(data.updatedAt);
@@ -44,6 +45,7 @@ function CoolifyContent({ integrationId, options }: CoolifyContentProps) {
           {
             integrationId: newData.integrationId,
             integrationName: data.integrationName,
+            integrationUrl: data.integrationUrl,
             instanceInfo: newData.instanceInfo,
             updatedAt: newData.timestamp,
           },
@@ -52,159 +54,194 @@ function CoolifyContent({ integrationId, options }: CoolifyContentProps) {
     },
   );
 
-  const { instanceInfo } = data;
+  const { instanceInfo, integrationUrl } = data;
+  const isTiny = width < 256;
+  const displayUrl = integrationUrl.replace(/^https?:\/\//, "");
+
+  const runningApps = instanceInfo.applications.filter((app) => parseStatus(app.status) === "running").length;
+  const totalApps = instanceInfo.applications.length;
+
+  const getAccordionBadgeColor = (running: number, total: number) => {
+    if (total === 0) return "gray";
+    if (running === total) return "green";
+    if (running > 0) return "orange";
+    return "red";
+  };
+
+  const defaultOpenSections = ["applications"];
 
   return (
-    <Stack h="100%" gap="xs">
-      <ScrollArea flex={1}>
-        <Tabs defaultValue="servers" variant="outline">
-          <Tabs.List grow>
-            {options.showServers && (
-              <Tabs.Tab value="servers" leftSection={<IconServer size={14} />}>
-                {t("tab.servers")} ({instanceInfo.servers.length})
-              </Tabs.Tab>
-            )}
-            {options.showProjects && (
-              <Tabs.Tab value="projects" leftSection={<IconFolder size={14} />}>
-                {t("tab.projects")} ({instanceInfo.projects.length})
-              </Tabs.Tab>
-            )}
-            {options.showApplications && (
-              <Tabs.Tab value="applications" leftSection={<IconCloud size={14} />}>
-                {t("tab.applications")} ({instanceInfo.applications.length})
-              </Tabs.Tab>
-            )}
-            {options.showServices && (
-              <Tabs.Tab value="services" leftSection={<IconSettings size={14} />}>
-                {t("tab.services")} ({instanceInfo.services.length})
-              </Tabs.Tab>
-            )}
-          </Tabs.List>
+    <ScrollArea h="100%">
+      <Stack gap={0}>
+        <Group
+          p="xs"
+          justify="center"
+          gap="xs"
+          style={{
+            borderBottom: "2px solid #8B5CF6",
+          }}
+        >
+          <Group gap={2}>
+            <img
+              src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/coolify.svg"
+              alt="Coolify"
+              width={isTiny ? 18 : 24}
+              height={isTiny ? 18 : 24}
+            />
+            <Text fz={isTiny ? "xs" : "sm"} fw={700} style={{ color: "#8B5CF6" }}>
+              oolify
+            </Text>
+          </Group>
+          <Text fz={isTiny ? "xs" : "sm"} fw={500} c="dimmed" lineClamp={1}>
+            {displayUrl}
+          </Text>
+        </Group>
 
+        <Accordion variant="contained" chevronPosition="right" multiple defaultValue={defaultOpenSections}>
           {options.showServers && (
-            <Tabs.Panel value="servers" pt="xs">
-              <Stack gap="xs">
-                {instanceInfo.servers.map((server) => (
-                  <Group
-                    key={server.uuid}
-                    justify="space-between"
-                    p="xs"
-                    style={{ borderBottom: "1px solid var(--mantine-color-dark-4)" }}
-                  >
-                    <Text size="sm">{server.name}</Text>
-                    <Text size="xs" c="dimmed">
-                      {server.ip}
-                    </Text>
-                  </Group>
-                ))}
-                {instanceInfo.servers.length === 0 && (
-                  <Text size="sm" c="dimmed" ta="center">
+            <Accordion.Item value="servers">
+              <Accordion.Control icon={isTiny ? null : <IconServer size={16} />}>
+                <Group gap="xs">
+                  <Text size="xs">{t("tab.servers")}</Text>
+                  <Badge variant="light" color="gray" size="xs">
+                    {instanceInfo.servers.length}
+                  </Badge>
+                </Group>
+              </Accordion.Control>
+              <Accordion.Panel>
+                {instanceInfo.servers.length > 0 ? (
+                  <Table highlightOnHover>
+                    <Table.Thead>
+                      <Table.Tr fz={isTiny ? "8px" : "xs"}>
+                        <Table.Th ta="start" p={0}>
+                          {t("table.name")}
+                        </Table.Th>
+                        <Table.Th ta="start" p={0}>
+                          {t("table.ip")}
+                        </Table.Th>
+                      </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
+                      {instanceInfo.servers.map((server) => (
+                        <Table.Tr key={server.uuid} fz={isTiny ? "8px" : "xs"}>
+                          <Table.Td>
+                            <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
+                              <Indicator size={isTiny ? 4 : 8} color="green" />
+                              <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
+                                {server.name}
+                              </Text>
+                            </Group>
+                          </Table.Td>
+                          <Table.Td>
+                            <Text fz={isTiny ? "8px" : "xs"} c="dimmed">
+                              {server.ip}
+                            </Text>
+                          </Table.Td>
+                        </Table.Tr>
+                      ))}
+                    </Table.Tbody>
+                  </Table>
+                ) : (
+                  <Text size="sm" c="dimmed" ta="center" py="xs">
                     {t("empty.servers")}
                   </Text>
                 )}
-              </Stack>
-            </Tabs.Panel>
-          )}
-
-          {options.showProjects && (
-            <Tabs.Panel value="projects" pt="xs">
-              <Stack gap="xs">
-                {instanceInfo.projects.map((project) => (
-                  <Group
-                    key={project.uuid}
-                    justify="space-between"
-                    p="xs"
-                    style={{ borderBottom: "1px solid var(--mantine-color-dark-4)" }}
-                  >
-                    <Text size="sm">{project.name}</Text>
-                    {project.description && (
-                      <Text size="xs" c="dimmed">
-                        {project.description}
-                      </Text>
-                    )}
-                  </Group>
-                ))}
-                {instanceInfo.projects.length === 0 && (
-                  <Text size="sm" c="dimmed" ta="center">
-                    {t("empty.projects")}
-                  </Text>
-                )}
-              </Stack>
-            </Tabs.Panel>
+              </Accordion.Panel>
+            </Accordion.Item>
           )}
 
           {options.showApplications && (
-            <Tabs.Panel value="applications" pt="xs">
-              <Stack gap="xs">
-                {instanceInfo.applications.map((app) => (
-                  <Group
-                    key={app.uuid}
-                    justify="space-between"
-                    p="xs"
-                    style={{ borderBottom: "1px solid var(--mantine-color-dark-4)" }}
-                  >
-                    <Text size="sm">{app.name}</Text>
-                    <Badge size="xs" color={getStatusColor(app.status)}>
-                      {app.status}
-                    </Badge>
-                  </Group>
-                ))}
-                {instanceInfo.applications.length === 0 && (
-                  <Text size="sm" c="dimmed" ta="center">
+            <Accordion.Item value="applications">
+              <Accordion.Control icon={isTiny ? null : <IconCloud size={16} />}>
+                <Group gap="xs">
+                  <Text size="xs">{t("tab.applications")}</Text>
+                  <Badge variant="dot" color={getAccordionBadgeColor(runningApps, totalApps)} size="xs">
+                    {runningApps} / {totalApps}
+                  </Badge>
+                </Group>
+              </Accordion.Control>
+              <Accordion.Panel>
+                {instanceInfo.applications.length > 0 ? (
+                  <Table highlightOnHover>
+                    <Table.Thead>
+                      <Table.Tr fz={isTiny ? "8px" : "xs"}>
+                        <Table.Th ta="start" p={0}>
+                          {t("table.name")}
+                        </Table.Th>
+                        {!isTiny && (
+                          <Table.Th ta="start" p={0}>
+                            {t("table.project")}
+                          </Table.Th>
+                        )}
+                      </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
+                      {instanceInfo.applications.map((app) => {
+                        const status = parseStatus(app.status);
+                        const statusColor = getStatusColor(status);
+                        return (
+                          <Table.Tr key={app.uuid} fz={isTiny ? "8px" : "xs"}>
+                            <Table.Td>
+                              <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
+                                <Indicator size={isTiny ? 4 : 8} color={statusColor} />
+                                <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
+                                  {app.name}
+                                </Text>
+                              </Group>
+                            </Table.Td>
+                            {!isTiny && (
+                              <Table.Td>
+                                <Text fz="xs" c="dimmed" lineClamp={1}>
+                                  {app.projectName ?? "-"} / {app.environmentName ?? "-"}
+                                </Text>
+                              </Table.Td>
+                            )}
+                          </Table.Tr>
+                        );
+                      })}
+                    </Table.Tbody>
+                  </Table>
+                ) : (
+                  <Text size="sm" c="dimmed" ta="center" py="xs">
                     {t("empty.applications")}
                   </Text>
                 )}
-              </Stack>
-            </Tabs.Panel>
+              </Accordion.Panel>
+            </Accordion.Item>
           )}
+        </Accordion>
 
-          {options.showServices && (
-            <Tabs.Panel value="services" pt="xs">
-              <Stack gap="xs">
-                {instanceInfo.services.map((service) => (
-                  <Group
-                    key={service.uuid}
-                    justify="space-between"
-                    p="xs"
-                    style={{ borderBottom: "1px solid var(--mantine-color-dark-4)" }}
-                  >
-                    <Text size="sm">{service.name}</Text>
-                    {service.description && (
-                      <Text size="xs" c="dimmed">
-                        {service.description}
-                      </Text>
-                    )}
-                  </Group>
-                ))}
-                {instanceInfo.services.length === 0 && (
-                  <Text size="sm" c="dimmed" ta="center">
-                    {t("empty.services")}
-                  </Text>
-                )}
-              </Stack>
-            </Tabs.Panel>
-          )}
-        </Tabs>
-      </ScrollArea>
-
-      <Group justify="space-between" p={4} style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
-        <Group gap={4}>
-          <IconCloud size={16} />
-          <Text size="xs">v{instanceInfo.version}</Text>
+        <Group justify="space-between" p={4} style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
+          <Group gap={2}>
+            <img
+              src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/coolify.svg"
+              alt="Coolify"
+              width={16}
+              height={16}
+            />
+            <Text size="xs" c="dimmed">
+              v{instanceInfo.version}
+            </Text>
+          </Group>
+          <Text size="xs" c="dimmed">
+            {t("footer.updated", { when: relativeTime })}
+          </Text>
         </Group>
-        <Text size="xs" c="dimmed">
-          {t("footer.updated", { when: relativeTime })}
-        </Text>
-      </Group>
-    </Stack>
+      </Stack>
+    </ScrollArea>
   );
 }
 
+function parseStatus(status: string): string {
+  return status.split(":")[0]?.toLowerCase() ?? "unknown";
+}
+
 function getStatusColor(status: string): string {
-  switch (status.toLowerCase()) {
+  switch (status) {
     case "running":
       return "green";
     case "stopped":
+    case "exited":
       return "red";
     case "starting":
     case "restarting":

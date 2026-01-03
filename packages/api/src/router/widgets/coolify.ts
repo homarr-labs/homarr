@@ -14,6 +14,7 @@ export const coolifyRouter = createTRPCRouter({
     return {
       integrationId: ctx.integration.id,
       integrationName: ctx.integration.name,
+      integrationUrl: ctx.integration.url,
       instanceInfo: data,
       updatedAt: timestamp,
     };

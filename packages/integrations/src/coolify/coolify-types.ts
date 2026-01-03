@@ -54,6 +54,15 @@ export interface CoolifyEnvironment {
   updated_at: string;
 }
 
+export interface CoolifyProjectWithEnvironments extends CoolifyProject {
+  environments: CoolifyEnvironment[];
+}
+
+export interface CoolifyApplicationWithContext extends CoolifyApplication {
+  projectName?: string;
+  environmentName?: string;
+}
+
 export interface CoolifyResource {
   id: number;
   uuid: string;
@@ -87,9 +96,6 @@ export interface CoolifyService {
 // Aggregated information for the Coolify instance
 export interface CoolifyInstanceInfo {
   version: string;
-  applications: CoolifyApplication[];
-  projects: CoolifyProject[];
+  applications: CoolifyApplicationWithContext[];
   servers: CoolifyServer[];
-  services: CoolifyService[];
-  resources: CoolifyResource[];
 }

@@ -1962,32 +1962,28 @@
     },
     "coolify": {
       "name": "Coolify",
-      "description": "Overview of your Coolify instance with servers, projects, applications, and services",
+      "description": "Overview of your Coolify instance with servers and applications",
       "option": {
         "showServers": {
           "label": "Show servers"
         },
-        "showProjects": {
-          "label": "Show projects"
-        },
         "showApplications": {
           "label": "Show applications"
-        },
-        "showServices": {
-          "label": "Show services"
         }
       },
       "tab": {
         "servers": "Servers",
-        "projects": "Projects",
-        "applications": "Apps",
-        "services": "Services"
+        "applications": "Apps"
       },
       "empty": {
         "servers": "No servers found",
-        "projects": "No projects found",
-        "applications": "No applications found",
-        "services": "No services found"
+        "applications": "No applications found"
+      },
+      "table": {
+        "name": "Name",
+        "ip": "IP",
+        "status": "Status",
+        "project": "Project / Env"
       },
       "footer": {
         "updated": "Updated {when}"
