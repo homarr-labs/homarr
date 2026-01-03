@@ -92,6 +92,8 @@ export interface CoolifyServer {
   ip: string;
   port?: number;
   user?: string;
+  is_reachable?: boolean;
+  is_usable?: boolean;
   created_at: string;
   updated_at: string;
   settings?: CoolifyServerSettings;
