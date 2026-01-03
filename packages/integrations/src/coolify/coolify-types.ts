@@ -99,19 +99,28 @@ export interface CoolifyServer {
   settings?: CoolifyServerSettings;
 }
 
+export interface CoolifyServiceApplication {
+  id: number;
+  uuid: string;
+  name: string;
+  fqdn?: string | null;
+  status?: string;
+}
+
 export interface CoolifyService {
   id: number;
   uuid: string;
   name: string;
   description?: string;
   status?: string;
-  fqdn?: string;
+  fqdn?: string | null;
   environment_id?: number;
   destination_id?: number;
   destination_type?: string;
   server_id?: number | null;
   created_at: string;
   updated_at: string;
+  applications?: CoolifyServiceApplication[];
 }
 
 export interface CoolifyServiceWithContext extends CoolifyService {
