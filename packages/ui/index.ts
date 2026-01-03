@@ -1,6 +1,7 @@
-import type { Icon123, IconProps } from "@tabler/icons-react";
+import type { IconProps } from "@tabler/icons-react";
 
 export * from "./src";
 
-export type TablerIcon = typeof Icon123;
+export type { TablerIcon } from "@tabler/icons-react";
+
 export type TablerIconProps = IconProps;
