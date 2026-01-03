@@ -26,7 +26,9 @@ const createMysqlDbConnection = () => {
 
   return mysql.createPool({
     ...defaultOptions,
+    host: dbEnv.HOST,
     port: dbEnv.PORT,
+    database: dbEnv.NAME,
     user: dbEnv.USER,
     password: dbEnv.PASSWORD,
   });

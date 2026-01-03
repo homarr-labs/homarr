@@ -3,7 +3,7 @@ import { Octokit } from "octokit";
 import { compareSemVer, isValidSemVer } from "semver-parser";
 
 import { env } from "@homarr/common/env";
-import { fetchWithTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createChannelWithLatestAndEvents } from "@homarr/redis";
 import { createCachedRequestHandler } from "@homarr/request-handler/lib/cached-request-handler";
@@ -23,7 +23,7 @@ export const updateCheckerRequestHandler = createCachedRequestHandler({
 
     const octokit = new Octokit({
       request: {
-        fetch: fetchWithTimeoutAsync,
+        fetch: fetchWithTrustedCertificatesAsync,
       },
     });
     const releases = await octokit.rest.repos.listReleases({

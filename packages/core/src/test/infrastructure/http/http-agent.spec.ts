@@ -7,7 +7,7 @@ import { TestLogger } from "../logs";
 
 vi.mock("undici", () => {
   return {
-    Agent: class Agent {
+    EnvHttpProxyAgent: class EnvHttpProxyAgent {
       dispatch(_options: Dispatcher.DispatchOptions, _handler: Dispatcher.DispatchHandler): boolean {
         return true;
       }
