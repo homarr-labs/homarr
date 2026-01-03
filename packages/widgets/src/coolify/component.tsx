@@ -509,7 +509,7 @@ function ResourceRow({ item, isTiny, integrationUrl, resourceType }: ResourceRow
       ? `${integrationUrl}/project/${item.projectUuid}/environment/${item.environmentUuid}/${resourceType}/${item.uuid}`
       : undefined;
 
-  const logsUrl = resourceType === "application" && resourceUrl ? `${resourceUrl}/logs` : undefined;
+  const logsUrl = resourceUrl ? `${resourceUrl}/logs` : undefined;
 
   return (
     <Table.Tr fz={isTiny ? "8px" : "xs"}>
