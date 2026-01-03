@@ -13,6 +13,9 @@ export const { definition, componentLoader } = createWidgetDefinition("coolify",
       showApplications: factory.switch({
         defaultValue: true,
       }),
+      showServices: factory.switch({
+        defaultValue: true,
+      }),
     }));
   },
   supportedIntegrations: ["coolify"],

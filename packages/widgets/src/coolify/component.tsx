@@ -1,7 +1,7 @@
 "use client";
 
 import { Accordion, Badge, Group, Indicator, ScrollArea, Stack, Table, Text } from "@mantine/core";
-import { IconCloud, IconServer } from "@tabler/icons-react";
+import { IconCloud, IconServer, IconStack2 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
@@ -60,6 +60,10 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
 
   const runningApps = instanceInfo.applications.filter((app) => parseStatus(app.status) === "running").length;
   const totalApps = instanceInfo.applications.length;
+
+  const services = instanceInfo.services ?? [];
+  const runningServices = services.filter((svc) => parseStatus(svc.status ?? "") === "running").length;
+  const totalServices = services.length;
 
   const serverResourceCounts = new Map<number, { apps: number; services: number }>();
   for (const server of instanceInfo.servers) {
@@ -240,6 +244,66 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
                 ) : (
                   <Text size="sm" c="dimmed" ta="center" py="xs">
                     {t("empty.applications")}
+                  </Text>
+                )}
+              </Accordion.Panel>
+            </Accordion.Item>
+          )}
+
+          {options.showServices && (
+            <Accordion.Item value="services">
+              <Accordion.Control icon={isTiny ? null : <IconStack2 size={16} />}>
+                <Group gap="xs">
+                  <Text size="xs">{t("tab.services")}</Text>
+                  <Badge variant="dot" color={getAccordionBadgeColor(runningServices, totalServices)} size="xs">
+                    {runningServices} / {totalServices}
+                  </Badge>
+                </Group>
+              </Accordion.Control>
+              <Accordion.Panel>
+                {services.length > 0 ? (
+                  <Table highlightOnHover>
+                    <Table.Thead>
+                      <Table.Tr fz={isTiny ? "8px" : "xs"}>
+                        <Table.Th ta="start" p={0}>
+                          {t("table.name")}
+                        </Table.Th>
+                        {!isTiny && (
+                          <Table.Th ta="start" p={0}>
+                            {t("table.project")}
+                          </Table.Th>
+                        )}
+                      </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
+                      {services.map((svc) => {
+                        const status = parseStatus(svc.status ?? "");
+                        const statusColor = getStatusColor(status);
+                        return (
+                          <Table.Tr key={svc.uuid} fz={isTiny ? "8px" : "xs"}>
+                            <Table.Td>
+                              <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
+                                <Indicator size={isTiny ? 4 : 8} color={statusColor} />
+                                <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
+                                  {svc.name}
+                                </Text>
+                              </Group>
+                            </Table.Td>
+                            {!isTiny && (
+                              <Table.Td>
+                                <Text fz="xs" c="dimmed" lineClamp={1}>
+                                  {svc.projectName ?? "-"} / {svc.environmentName ?? "-"}
+                                </Text>
+                              </Table.Td>
+                            )}
+                          </Table.Tr>
+                        );
+                      })}
+                    </Table.Tbody>
+                  </Table>
+                ) : (
+                  <Text size="sm" c="dimmed" ta="center" py="xs">
+                    {t("empty.services")}
                   </Text>
                 )}
               </Accordion.Panel>
