@@ -74,9 +74,17 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
     const serverId = server.settings?.server_id ?? server.id ?? 0;
     serverResourceCounts.set(serverId, { apps: 0, services: 0 });
   }
-  // Apps/Services have server_id field that matches settings.server_id in Coolify Cloud
+
+  // Build destination_id -> server_id map from services (Coolify Cloud apps lack server_id)
+  const destinationToServer = new Map<number, number>();
+  for (const service of instanceInfo.services ?? []) {
+    if (service.destination_id != null && service.server_id != null) {
+      destinationToServer.set(service.destination_id, service.server_id);
+    }
+  }
+
   for (const app of instanceInfo.applications) {
-    const serverId = app.server_id ?? app.destination_id ?? 0;
+    const serverId = app.server_id ?? destinationToServer.get(app.destination_id ?? 0) ?? app.destination_id ?? 0;
     if (serverResourceCounts.has(serverId)) {
       const counts = serverResourceCounts.get(serverId)!;
       counts.apps++;
@@ -183,7 +191,7 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
                             {!isTiny && (
                               <Table.Td>
                                 <Text fz="xs" c="dimmed">
-                                  {showIp ? server.ip : "••••••••"}
+                                  {showIp ? server.ip : "***.***.***.***"}
                                 </Text>
                               </Table.Td>
                             )}
