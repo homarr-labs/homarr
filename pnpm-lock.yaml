@@ -233,7 +233,7 @@ importers:
         specifier: ^3.36.0
         version: 3.36.0(react@19.2.3)
       '@tanstack/react-query':
-        specifier: ^5.90.14
+        specifier: ^5.90.15
         version: 5.90.16(react@19.2.3)
       '@tanstack/react-query-devtools':
         specifier: ^5.91.2
@@ -630,7 +630,7 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       '@tanstack/react-query':
-        specifier: ^5.90.14
+        specifier: ^5.90.15
         version: 5.90.16(react@19.2.3)
       '@trpc/client':
         specifier: ^11.8.1
@@ -942,7 +942,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../cron-jobs
       '@tanstack/react-query':
-        specifier: ^5.90.14
+        specifier: ^5.90.15
         version: 5.90.16(react@19.2.3)
       '@trpc/client':
         specifier: ^11.8.1
