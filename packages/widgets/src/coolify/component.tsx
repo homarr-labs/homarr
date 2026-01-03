@@ -1,6 +1,6 @@
 "use client";
 
-import { Accordion, Badge, Group, Indicator, ScrollArea, Stack, Table, Text } from "@mantine/core";
+import { Accordion, Anchor, Badge, Group, Indicator, ScrollArea, Stack, Table, Text } from "@mantine/core";
 import { IconCloud, IconServer, IconStack2 } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
@@ -56,7 +56,7 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
 
   const { instanceInfo, integrationUrl } = data;
   const isTiny = width < 256;
-  const displayUrl = integrationUrl.replace(/^https?:\/\//, "");
+  const displayUrl = integrationUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
   const runningApps = instanceInfo.applications.filter((app) => parseStatus(app.status) === "running").length;
   const totalApps = instanceInfo.applications.length;
@@ -119,9 +119,9 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
               oolify
             </Text>
           </Group>
-          <Text fz={isTiny ? "xs" : "sm"} fw={500} c="dimmed" lineClamp={1}>
+          <Anchor href={integrationUrl} target="_blank" fz={isTiny ? "xs" : "sm"} fw={500} c="dimmed" lineClamp={1}>
             {displayUrl}
-          </Text>
+          </Anchor>
         </Group>
 
         <Accordion variant="contained" chevronPosition="right" multiple defaultValue={defaultOpenSections}>
