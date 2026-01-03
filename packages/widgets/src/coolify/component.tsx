@@ -276,43 +276,20 @@ function ServersTable({
   onToggleIp,
   integrationUrl,
 }: ServersTableProps) {
-  const t = useScopedI18n("widget.coolify");
-
   return (
-    <Table highlightOnHover verticalSpacing={2} horizontalSpacing={4}>
-      <Table.Thead>
-        <Table.Tr fz={isTiny ? "8px" : "xs"}>
-          <Table.Th ta="start" p={0}>
-            {t("table.name")}
-          </Table.Th>
-          {!isTiny && (
-            <Table.Th ta="start" p={0}>
-              <Group gap={4} wrap="nowrap">
-                {t("table.ip")}
-                <ActionIcon size="xs" variant="subtle" onClick={onToggleIp}>
-                  {showIp ? <IconEye size={12} /> : <IconEyeOff size={12} />}
-                </ActionIcon>
-              </Group>
-            </Table.Th>
-          )}
-          <Table.Th ta="center" p={0}>
-            {t("table.resources")}
-          </Table.Th>
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>
-        {servers.map((server) => (
-          <ServerRow
-            key={server.uuid}
-            server={server}
-            counts={serverResourceCounts.get(server.settings?.server_id ?? server.id ?? 0) ?? { apps: 0, services: 0 }}
-            isTiny={isTiny}
-            showIp={showIp}
-            integrationUrl={integrationUrl}
-          />
-        ))}
-      </Table.Tbody>
-    </Table>
+    <Stack gap={4}>
+      {servers.map((server) => (
+        <ServerRow
+          key={server.uuid}
+          server={server}
+          counts={serverResourceCounts.get(server.settings?.server_id ?? server.id ?? 0) ?? { apps: 0, services: 0 }}
+          isTiny={isTiny}
+          showIp={showIp}
+          onToggleIp={onToggleIp}
+          integrationUrl={integrationUrl}
+        />
+      ))}
+    </Stack>
   );
 }
 
@@ -321,49 +298,47 @@ interface ServerRowProps {
   counts: { apps: number; services: number };
   isTiny: boolean;
   showIp: boolean;
+  onToggleIp: () => void;
   integrationUrl: string;
 }
 
-function ServerRow({ server, counts, isTiny, showIp, integrationUrl }: ServerRowProps) {
+function ServerRow({ server, counts, isTiny, showIp, onToggleIp, integrationUrl }: ServerRowProps) {
   const t = useScopedI18n("widget.coolify");
   const isBuildServer = server.settings?.is_build_server === true;
   const isOnline = server.is_reachable !== false;
   const serverUrl = `${integrationUrl}/server/${server.uuid}`;
 
   return (
-    <Table.Tr fz={isTiny ? "8px" : "xs"}>
-      <Table.Td>
-        <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
-          <Indicator size={isTiny ? 4 : 8} color={isOnline ? "green" : "red"} />
-          <Anchor href={serverUrl} target="_blank" fz={isTiny ? "8px" : "xs"} c="inherit" lineClamp={1}>
-            {server.name}
-          </Anchor>
-          {!isTiny && (
-            <ActionIcon component="a" href={serverUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
-              <IconExternalLink size={12} />
-            </ActionIcon>
-          )}
-        </Group>
-      </Table.Td>
-      {!isTiny && (
-        <Table.Td>
-          <Text fz="xs" c="dimmed">
-            {showIp ? server.ip : "***.***.***.***"}
-          </Text>
-        </Table.Td>
-      )}
-      <Table.Td ta="center">
+    <Stack gap={0}>
+      {/* Row 1: Indicator + Name + BUILD/Resources */}
+      <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
+        <Indicator size={isTiny ? 4 : 8} color={isOnline ? "green" : "red"} />
+        <Anchor href={serverUrl} target="_blank" fz={isTiny ? "8px" : "xs"} c="inherit" lineClamp={1}>
+          {server.name}
+        </Anchor>
         {isBuildServer ? (
           <Badge size="xs" variant="light" color="violet">
             {t("server.buildServer")}
           </Badge>
         ) : (
-          <Text fz={isTiny ? "8px" : "xs"} c="dimmed">
-            {counts.apps} / {counts.services}
+          <Text fz="10px" c="dimmed">
+            ({counts.apps} apps / {counts.services} svcs)
           </Text>
         )}
-      </Table.Td>
-    </Table.Tr>
+      </Group>
+      {/* Row 2: Icons + IP */}
+      <Group wrap="nowrap" gap={4} ml={16}>
+        <ActionIcon component="a" href={serverUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
+          <IconExternalLink size={12} />
+        </ActionIcon>
+        <ActionIcon size="xs" variant="subtle" c="dimmed" onClick={onToggleIp}>
+          {showIp ? <IconEye size={12} /> : <IconEyeOff size={12} />}
+        </ActionIcon>
+        <Text fz="10px" c="dimmed">
+          {showIp ? server.ip : "***.***.***.***"}
+        </Text>
+      </Group>
+    </Stack>
   );
 }
 
@@ -454,34 +429,18 @@ interface ResourceTableProps {
 }
 
 function ResourceTable({ items, isTiny, integrationUrl, resourceType }: ResourceTableProps) {
-  const t = useScopedI18n("widget.coolify");
-
   return (
-    <Table highlightOnHover verticalSpacing={2} horizontalSpacing={4}>
-      <Table.Thead>
-        <Table.Tr fz={isTiny ? "8px" : "xs"}>
-          <Table.Th ta="start" p={0}>
-            {t("table.name")}
-          </Table.Th>
-          {!isTiny && (
-            <Table.Th ta="start" p={0}>
-              {t("table.project")}
-            </Table.Th>
-          )}
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>
-        {items.map((item) => (
-          <ResourceRow
-            key={item.uuid}
-            item={item}
-            isTiny={isTiny}
-            integrationUrl={integrationUrl}
-            resourceType={resourceType}
-          />
-        ))}
-      </Table.Tbody>
-    </Table>
+    <Stack gap={4}>
+      {items.map((item) => (
+        <ResourceRow
+          key={item.uuid}
+          item={item}
+          isTiny={isTiny}
+          integrationUrl={integrationUrl}
+          resourceType={resourceType}
+        />
+      ))}
+    </Stack>
   );
 }
 
@@ -512,39 +471,39 @@ function ResourceRow({ item, isTiny, integrationUrl, resourceType }: ResourceRow
   const logsUrl = resourceUrl ? `${resourceUrl}/logs` : undefined;
 
   return (
-    <Table.Tr fz={isTiny ? "8px" : "xs"}>
-      <Table.Td>
-        <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
-          <Indicator size={isTiny ? 4 : 8} color={statusColor} />
-          {resourceUrl ? (
-            <Anchor href={resourceUrl} target="_blank" fz={isTiny ? "8px" : "xs"} c="inherit" lineClamp={1}>
-              {item.name}
-            </Anchor>
-          ) : (
-            <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
-              {item.name}
-            </Text>
-          )}
-          {!isTiny && resourceUrl && (
+    <Stack gap={0}>
+      {/* Row 1: Indicator + Name */}
+      <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
+        <Indicator size={isTiny ? 4 : 8} color={statusColor} />
+        {resourceUrl ? (
+          <Anchor href={resourceUrl} target="_blank" fz={isTiny ? "8px" : "xs"} c="inherit" lineClamp={1}>
+            {item.name}
+          </Anchor>
+        ) : (
+          <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
+            {item.name}
+          </Text>
+        )}
+      </Group>
+      {/* Row 2: Icons + Project/Env */}
+      {(
+        <Group wrap="nowrap" gap={4} ml={16}>
+          {resourceUrl && (
             <ActionIcon component="a" href={resourceUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
               <IconExternalLink size={12} />
             </ActionIcon>
           )}
-          {!isTiny && logsUrl && (
+          {logsUrl && (
             <ActionIcon component="a" href={logsUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
               <IconFileText size={12} />
             </ActionIcon>
           )}
-        </Group>
-      </Table.Td>
-      {!isTiny && (
-        <Table.Td>
-          <Text fz="xs" c="dimmed" lineClamp={1}>
+          <Text fz="10px" c="dimmed" lineClamp={1}>
             {item.projectName ?? "-"} / {item.environmentName ?? "-"}
           </Text>
-        </Table.Td>
+        </Group>
       )}
-    </Table.Tr>
+    </Stack>
   );
 }
 
