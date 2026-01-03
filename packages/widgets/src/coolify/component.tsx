@@ -534,6 +534,6 @@ function getStatusColor(status: string): string {
 function getBadgeColor(running: number, total: number): string {
   if (total === 0) return "gray";
   if (running === total) return "green";
-  if (running > 0) return "orange";
+  if (running > 0) return "yellow";
   return "red";
 }
