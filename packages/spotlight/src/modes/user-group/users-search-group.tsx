@@ -52,9 +52,7 @@ export const usersSearchGroup = createGroup<User>({
   Component: (user) => (
     <Group px="md" py="sm">
       <UserAvatar user={user} size="sm" />
-      <Stack gap={0}>
-        <Text>{user.name}</Text>
-      </Stack>
+      <Text>{user.name}</Text>
     </Group>
   ),
   useInteraction: interaction.children(userChildrenOptions),
