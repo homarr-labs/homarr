@@ -12,7 +12,6 @@ import {
   Stack,
   Table,
   Text,
-  Tooltip,
 } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import {
@@ -88,7 +87,6 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
   );
 
   const { instanceInfo, integrationUrl } = data;
-  const isCompact = width < 384;
   const isTiny = width < 256;
   const baseUrl = integrationUrl.replace(/\/+$/, "");
   const displayUrl = baseUrl.replace(/^https?:\/\//, "");
@@ -99,46 +97,16 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
     instanceInfo.services ?? [],
   );
 
-  const onlineServers = instanceInfo.servers.filter((s) => s.is_reachable !== false).length;
-  const runningApps = instanceInfo.applications.filter((app) => parseStatus(app.status) === "running").length;
-  const runningServices = (instanceInfo.services ?? []).filter(
-    (svc) => parseStatus(svc.status ?? "") === "running",
-  ).length;
-
-  const counts = {
-    servers: { online: onlineServers, total: instanceInfo.servers.length },
-    apps: { running: runningApps, total: instanceInfo.applications.length },
-    services: { running: runningServices, total: (instanceInfo.services ?? []).length },
-  };
-
   return (
     <ScrollArea h="100%">
       <Stack gap={0}>
-        {isCompact ? (
-          <CompactHeader
-            version={instanceInfo.version}
-            counts={counts}
-            relativeTime={relativeTime}
-            integrationUrl={baseUrl}
-            options={options}
-          />
-        ) : (
-          <CoolifyHeader isTiny={isTiny} integrationUrl={baseUrl} displayUrl={displayUrl} />
-        )}
+        <CoolifyHeader isTiny={isTiny} integrationUrl={baseUrl} displayUrl={displayUrl} />
 
-        <Accordion
-          variant="contained"
-          chevronPosition="right"
-          multiple
-          value={openSections}
-          onChange={setOpenSections}
-          styles={{ content: { padding: isCompact ? 4 : undefined } }}
-        >
+        <Accordion variant="contained" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
           {options.showServers && (
             <ServersSection
               servers={instanceInfo.servers}
               serverResourceCounts={serverResourceCounts}
-              isCompact={isCompact}
               isTiny={isTiny}
               showIp={showIp}
               onToggleIp={() => setShowIp((v) => !v)}
@@ -146,24 +114,14 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
             />
           )}
           {options.showApplications && (
-            <ApplicationsSection
-              applications={instanceInfo.applications}
-              isCompact={isCompact}
-              isTiny={isTiny}
-              integrationUrl={baseUrl}
-            />
+            <ApplicationsSection applications={instanceInfo.applications} isTiny={isTiny} integrationUrl={baseUrl} />
           )}
           {options.showServices && (
-            <ServicesSection
-              services={instanceInfo.services ?? []}
-              isCompact={isCompact}
-              isTiny={isTiny}
-              integrationUrl={baseUrl}
-            />
+            <ServicesSection services={instanceInfo.services ?? []} isTiny={isTiny} integrationUrl={baseUrl} />
           )}
         </Accordion>
 
-        {!isCompact && <CoolifyFooter version={instanceInfo.version} relativeTime={relativeTime} />}
+        <CoolifyFooter version={instanceInfo.version} relativeTime={relativeTime} />
       </Stack>
     </ScrollArea>
   );
@@ -229,62 +187,6 @@ function CoolifyHeader({ isTiny, integrationUrl, displayUrl }: CoolifyHeaderProp
   );
 }
 
-interface CompactHeaderProps {
-  version: string;
-  counts: {
-    servers: { online: number; total: number };
-    apps: { running: number; total: number };
-    services: { running: number; total: number };
-  };
-  relativeTime: string;
-  integrationUrl: string;
-  options: WidgetComponentProps<"coolify">["options"];
-}
-
-function CompactHeader({ version, counts, relativeTime, integrationUrl, options }: CompactHeaderProps) {
-  return (
-    <Anchor href={integrationUrl} target="_blank" style={{ textDecoration: "none" }}>
-      <Group p={4} justify="space-between" gap={4} style={{ borderBottom: "1px solid var(--mantine-color-dark-4)" }}>
-        <Group gap={4}>
-          <Image src={COOLIFY_ICON_URL} alt="Coolify" w={14} h={14} />
-          <Text fz={10} c="dimmed">
-            v{version}
-          </Text>
-        </Group>
-        <Group gap={6}>
-          {options.showServers && (
-            <Group gap={2}>
-              <Indicator size={6} color={getBadgeColor(counts.servers.online, counts.servers.total)} />
-              <Text fz={10} c="dimmed">
-                {counts.servers.online}/{counts.servers.total}
-              </Text>
-            </Group>
-          )}
-          {options.showApplications && (
-            <Group gap={2}>
-              <Indicator size={6} color={getBadgeColor(counts.apps.running, counts.apps.total)} />
-              <Text fz={10} c="dimmed">
-                {counts.apps.running}/{counts.apps.total}
-              </Text>
-            </Group>
-          )}
-          {options.showServices && (
-            <Group gap={2}>
-              <Indicator size={6} color={getBadgeColor(counts.services.running, counts.services.total)} />
-              <Text fz={10} c="dimmed">
-                {counts.services.running}/{counts.services.total}
-              </Text>
-            </Group>
-          )}
-        </Group>
-        <Text fz={10} c="dimmed">
-          {relativeTime}
-        </Text>
-      </Group>
-    </Anchor>
-  );
-}
-
 interface CoolifyFooterProps {
   version: string;
   relativeTime: string;
@@ -310,7 +212,6 @@ function CoolifyFooter({ version, relativeTime }: CoolifyFooterProps) {
 interface ServersSectionProps {
   servers: CoolifyServer[];
   serverResourceCounts: Map<number, { apps: number; services: number }>;
-  isCompact: boolean;
   isTiny: boolean;
   showIp: boolean;
   onToggleIp: () => void;
@@ -320,7 +221,6 @@ interface ServersSectionProps {
 function ServersSection({
   servers,
   serverResourceCounts,
-  isCompact,
   isTiny,
   showIp,
   onToggleIp,
@@ -331,7 +231,7 @@ function ServersSection({
 
   return (
     <Accordion.Item value="servers">
-      <Accordion.Control icon={isCompact ? null : <IconServer size={16} />}>
+      <Accordion.Control icon={isTiny ? null : <IconServer size={16} />}>
         <Group gap="xs">
           <Text size="xs">{t("tab.servers")}</Text>
           <Badge variant="dot" color={getBadgeColor(onlineServers, servers.length)} size="xs">
@@ -344,7 +244,6 @@ function ServersSection({
           <ServersTable
             servers={servers}
             serverResourceCounts={serverResourceCounts}
-            isCompact={isCompact}
             isTiny={isTiny}
             showIp={showIp}
             onToggleIp={onToggleIp}
@@ -363,7 +262,6 @@ function ServersSection({
 interface ServersTableProps {
   servers: CoolifyServer[];
   serverResourceCounts: Map<number, { apps: number; services: number }>;
-  isCompact: boolean;
   isTiny: boolean;
   showIp: boolean;
   onToggleIp: () => void;
@@ -373,7 +271,6 @@ interface ServersTableProps {
 function ServersTable({
   servers,
   serverResourceCounts,
-  isCompact,
   isTiny,
   showIp,
   onToggleIp,
@@ -383,35 +280,32 @@ function ServersTable({
 
   return (
     <Table highlightOnHover>
-      {!isCompact && (
-        <Table.Thead>
-          <Table.Tr fz={isTiny ? "8px" : "xs"}>
+      <Table.Thead>
+        <Table.Tr fz={isTiny ? "8px" : "xs"}>
+          <Table.Th ta="start" p={0}>
+            {t("table.name")}
+          </Table.Th>
+          {!isTiny && (
             <Table.Th ta="start" p={0}>
-              {t("table.name")}
+              <Group gap={4} wrap="nowrap">
+                {t("table.ip")}
+                <ActionIcon size="xs" variant="subtle" onClick={onToggleIp}>
+                  {showIp ? <IconEye size={12} /> : <IconEyeOff size={12} />}
+                </ActionIcon>
+              </Group>
             </Table.Th>
-            {!isTiny && (
-              <Table.Th ta="start" p={0}>
-                <Group gap={4} wrap="nowrap">
-                  {t("table.ip")}
-                  <ActionIcon size="xs" variant="subtle" onClick={onToggleIp}>
-                    {showIp ? <IconEye size={12} /> : <IconEyeOff size={12} />}
-                  </ActionIcon>
-                </Group>
-              </Table.Th>
-            )}
-            <Table.Th ta="center" p={0}>
-              {t("table.resources")}
-            </Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-      )}
+          )}
+          <Table.Th ta="center" p={0}>
+            {t("table.resources")}
+          </Table.Th>
+        </Table.Tr>
+      </Table.Thead>
       <Table.Tbody>
         {servers.map((server) => (
           <ServerRow
             key={server.uuid}
             server={server}
             counts={serverResourceCounts.get(server.settings?.server_id ?? server.id ?? 0) ?? { apps: 0, services: 0 }}
-            isCompact={isCompact}
             isTiny={isTiny}
             showIp={showIp}
             integrationUrl={integrationUrl}
@@ -425,80 +319,67 @@ function ServersTable({
 interface ServerRowProps {
   server: CoolifyServer;
   counts: { apps: number; services: number };
-  isCompact: boolean;
   isTiny: boolean;
   showIp: boolean;
   integrationUrl: string;
 }
 
-function ServerRow({ server, counts, isCompact, isTiny, showIp, integrationUrl }: ServerRowProps) {
+function ServerRow({ server, counts, isTiny, showIp, integrationUrl }: ServerRowProps) {
   const t = useScopedI18n("widget.coolify");
   const isBuildServer = server.settings?.is_build_server === true;
   const isOnline = server.is_reachable !== false;
   const serverUrl = `${integrationUrl}/server/${server.uuid}`;
-  const ipLabel = showIp ? server.ip : "***.***.***.***";
 
   return (
-    <Table.Tr fz={isCompact ? 10 : isTiny ? "8px" : "xs"}>
-      <Table.Td p={isCompact ? 2 : undefined}>
-        <Group wrap="nowrap" gap={isCompact ? 4 : isTiny ? 4 : "xs"}>
-          <Indicator size={isCompact ? 6 : isTiny ? 4 : 8} color={isOnline ? "green" : "red"} />
-          {isCompact ? (
-            <Tooltip label={ipLabel}>
-              <Anchor href={serverUrl} target="_blank" fz={10} c="inherit" lineClamp={1}>
-                {server.name}
-              </Anchor>
-            </Tooltip>
-          ) : (
-            <Anchor href={serverUrl} target="_blank" fz={isTiny ? "8px" : "xs"} c="inherit" lineClamp={1}>
-              {server.name}
-            </Anchor>
-          )}
-          {!isCompact && !isTiny && (
+    <Table.Tr fz={isTiny ? "8px" : "xs"}>
+      <Table.Td>
+        <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
+          <Indicator size={isTiny ? 4 : 8} color={isOnline ? "green" : "red"} />
+          <Anchor href={serverUrl} target="_blank" fz={isTiny ? "8px" : "xs"} c="inherit" lineClamp={1}>
+            {server.name}
+          </Anchor>
+          {!isTiny && (
             <ActionIcon component="a" href={serverUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
               <IconExternalLink size={12} />
             </ActionIcon>
           )}
         </Group>
       </Table.Td>
-      {!isCompact && !isTiny && (
+      {!isTiny && (
         <Table.Td>
           <Text fz="xs" c="dimmed">
-            {ipLabel}
+            {showIp ? server.ip : "***.***.***.***"}
           </Text>
         </Table.Td>
       )}
-      {!isCompact && (
-        <Table.Td ta="center">
-          {isBuildServer ? (
-            <Badge size="xs" variant="light" color="violet">
-              {t("server.buildServer")}
-            </Badge>
-          ) : (
-            <Text fz={isTiny ? "8px" : "xs"} c="dimmed">
-              {counts.apps} / {counts.services}
-            </Text>
-          )}
-        </Table.Td>
-      )}
+      <Table.Td ta="center">
+        {isBuildServer ? (
+          <Badge size="xs" variant="light" color="violet">
+            {t("server.buildServer")}
+          </Badge>
+        ) : (
+          <Text fz={isTiny ? "8px" : "xs"} c="dimmed">
+            {counts.apps} / {counts.services}
+          </Text>
+        )}
+      </Table.Td>
     </Table.Tr>
   );
 }
 
 interface ApplicationsSectionProps {
   applications: CoolifyApplicationWithContext[];
-  isCompact: boolean;
   isTiny: boolean;
   integrationUrl: string;
 }
 
-function ApplicationsSection({ applications, isCompact, isTiny, integrationUrl }: ApplicationsSectionProps) {
+function ApplicationsSection({ applications, isTiny, integrationUrl }: ApplicationsSectionProps) {
   const t = useScopedI18n("widget.coolify");
   const runningApps = applications.filter((app) => parseStatus(app.status) === "running").length;
 
   return (
     <Accordion.Item value="applications">
-      <Accordion.Control icon={isCompact ? null : <IconCloud size={16} />}>
+      <Accordion.Control icon={isTiny ? null : <IconCloud size={16} />}>
         <Group gap="xs">
           <Text size="xs">{t("tab.applications")}</Text>
           <Badge variant="dot" color={getBadgeColor(runningApps, applications.length)} size="xs">
@@ -510,7 +391,6 @@ function ApplicationsSection({ applications, isCompact, isTiny, integrationUrl }
         {applications.length > 0 ? (
           <ResourceTable
             items={applications}
-            isCompact={isCompact}
             isTiny={isTiny}
             integrationUrl={integrationUrl}
             resourceType="application"
@@ -527,18 +407,17 @@ function ApplicationsSection({ applications, isCompact, isTiny, integrationUrl }
 
 interface ServicesSectionProps {
   services: CoolifyServiceWithContext[];
-  isCompact: boolean;
   isTiny: boolean;
   integrationUrl: string;
 }
 
-function ServicesSection({ services, isCompact, isTiny, integrationUrl }: ServicesSectionProps) {
+function ServicesSection({ services, isTiny, integrationUrl }: ServicesSectionProps) {
   const t = useScopedI18n("widget.coolify");
   const runningServices = services.filter((svc) => parseStatus(svc.status ?? "") === "running").length;
 
   return (
     <Accordion.Item value="services">
-      <Accordion.Control icon={isCompact ? null : <IconStack2 size={16} />}>
+      <Accordion.Control icon={isTiny ? null : <IconStack2 size={16} />}>
         <Group gap="xs">
           <Text size="xs">{t("tab.services")}</Text>
           <Badge variant="dot" color={getBadgeColor(runningServices, services.length)} size="xs">
@@ -548,13 +427,7 @@ function ServicesSection({ services, isCompact, isTiny, integrationUrl }: Servic
       </Accordion.Control>
       <Accordion.Panel>
         {services.length > 0 ? (
-          <ResourceTable
-            items={services}
-            isCompact={isCompact}
-            isTiny={isTiny}
-            integrationUrl={integrationUrl}
-            resourceType="service"
-          />
+          <ResourceTable items={services} isTiny={isTiny} integrationUrl={integrationUrl} resourceType="service" />
         ) : (
           <Text size="sm" c="dimmed" ta="center" py="xs">
             {t("empty.services")}
@@ -575,37 +448,33 @@ interface ResourceTableProps {
     environmentName?: string;
     environmentUuid?: string;
   }>;
-  isCompact: boolean;
   isTiny: boolean;
   integrationUrl: string;
   resourceType: "application" | "service";
 }
 
-function ResourceTable({ items, isCompact, isTiny, integrationUrl, resourceType }: ResourceTableProps) {
+function ResourceTable({ items, isTiny, integrationUrl, resourceType }: ResourceTableProps) {
   const t = useScopedI18n("widget.coolify");
 
   return (
     <Table highlightOnHover>
-      {!isCompact && (
-        <Table.Thead>
-          <Table.Tr fz={isTiny ? "8px" : "xs"}>
+      <Table.Thead>
+        <Table.Tr fz={isTiny ? "8px" : "xs"}>
+          <Table.Th ta="start" p={0}>
+            {t("table.name")}
+          </Table.Th>
+          {!isTiny && (
             <Table.Th ta="start" p={0}>
-              {t("table.name")}
+              {t("table.project")}
             </Table.Th>
-            {!isTiny && (
-              <Table.Th ta="start" p={0}>
-                {t("table.project")}
-              </Table.Th>
-            )}
-          </Table.Tr>
-        </Table.Thead>
-      )}
+          )}
+        </Table.Tr>
+      </Table.Thead>
       <Table.Tbody>
         {items.map((item) => (
           <ResourceRow
             key={item.uuid}
             item={item}
-            isCompact={isCompact}
             isTiny={isTiny}
             integrationUrl={integrationUrl}
             resourceType={resourceType}
@@ -626,13 +495,12 @@ interface ResourceRowProps {
     environmentName?: string;
     environmentUuid?: string;
   };
-  isCompact: boolean;
   isTiny: boolean;
   integrationUrl: string;
   resourceType: "application" | "service";
 }
 
-function ResourceRow({ item, isCompact, isTiny, integrationUrl, resourceType }: ResourceRowProps) {
+function ResourceRow({ item, isTiny, integrationUrl, resourceType }: ResourceRowProps) {
   const status = parseStatus(item.status ?? "");
   const statusColor = getStatusColor(status);
 
@@ -642,40 +510,37 @@ function ResourceRow({ item, isCompact, isTiny, integrationUrl, resourceType }: 
       : undefined;
 
   const logsUrl = resourceUrl ? `${resourceUrl}/logs` : undefined;
-  const projectEnvLabel = `${item.projectName ?? "-"} / ${item.environmentName ?? "-"}`;
-
-  const nameElement = resourceUrl ? (
-    <Anchor href={resourceUrl} target="_blank" fz={isCompact ? 10 : isTiny ? "8px" : "xs"} c="inherit" lineClamp={1}>
-      {item.name}
-    </Anchor>
-  ) : (
-    <Text lineClamp={1} fz={isCompact ? 10 : isTiny ? "8px" : "xs"}>
-      {item.name}
-    </Text>
-  );
 
   return (
-    <Table.Tr fz={isCompact ? 10 : isTiny ? "8px" : "xs"}>
-      <Table.Td p={isCompact ? 2 : undefined}>
-        <Group wrap="nowrap" gap={isCompact ? 4 : isTiny ? 4 : "xs"}>
-          <Indicator size={isCompact ? 6 : isTiny ? 4 : 8} color={statusColor} />
-          {isCompact ? <Tooltip label={projectEnvLabel}>{nameElement}</Tooltip> : nameElement}
-          {!isCompact && !isTiny && resourceUrl && (
+    <Table.Tr fz={isTiny ? "8px" : "xs"}>
+      <Table.Td>
+        <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
+          <Indicator size={isTiny ? 4 : 8} color={statusColor} />
+          {resourceUrl ? (
+            <Anchor href={resourceUrl} target="_blank" fz={isTiny ? "8px" : "xs"} c="inherit" lineClamp={1}>
+              {item.name}
+            </Anchor>
+          ) : (
+            <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
+              {item.name}
+            </Text>
+          )}
+          {!isTiny && resourceUrl && (
             <ActionIcon component="a" href={resourceUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
               <IconExternalLink size={12} />
             </ActionIcon>
           )}
-          {!isCompact && !isTiny && logsUrl && (
+          {!isTiny && logsUrl && (
             <ActionIcon component="a" href={logsUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
               <IconFileText size={12} />
             </ActionIcon>
           )}
         </Group>
       </Table.Td>
-      {!isCompact && !isTiny && (
+      {!isTiny && (
         <Table.Td>
           <Text fz="xs" c="dimmed" lineClamp={1}>
-            {projectEnvLabel}
+            {item.projectName ?? "-"} / {item.environmentName ?? "-"}
           </Text>
         </Table.Td>
       )}
