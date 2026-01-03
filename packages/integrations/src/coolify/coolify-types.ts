@@ -66,6 +66,7 @@ export interface CoolifyApplicationWithContext extends CoolifyApplication {
   projectName?: string;
   projectUuid?: string;
   environmentName?: string;
+  environmentUuid?: string;
 }
 
 export interface CoolifyResource {
@@ -114,6 +115,7 @@ export interface CoolifyServiceWithContext extends CoolifyService {
   projectName?: string;
   projectUuid?: string;
   environmentName?: string;
+  environmentUuid?: string;
 }
 
 // Aggregated information for the Coolify instance
