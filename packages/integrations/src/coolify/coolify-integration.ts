@@ -17,7 +17,6 @@ import type {
   CoolifyResource,
   CoolifyServer,
   CoolifyService,
-  CoolifyVersion,
 } from "./coolify-types";
 
 const logger = createLogger({ module: "coolifyIntegration" });
@@ -59,9 +58,9 @@ export class CoolifyIntegration extends Integration {
       throw new Error(`Failed to fetch Coolify version: ${response.statusText}`);
     }
 
-    const data = (await response.json()) as CoolifyVersion;
-    logger.info("Fetched Coolify version", { version: data.version });
-    return data.version;
+    const version = await response.text();
+    logger.info("Fetched Coolify version", { version });
+    return version.trim();
   }
 
   /**
@@ -330,7 +329,6 @@ export class CoolifyIntegration extends Integration {
   private getAuthHeaders(): Record<string, string> {
     return {
       Authorization: `Bearer ${this.getSecretValue("apiKey")}`,
-      "Content-Type": "application/json",
     };
   }
 }
