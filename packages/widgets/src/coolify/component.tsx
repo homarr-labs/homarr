@@ -18,9 +18,16 @@ import { IconCloud, IconEye, IconEyeOff, IconServer, IconStack2 } from "@tabler/
 
 import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
+import type {
+  CoolifyApplicationWithContext,
+  CoolifyServer,
+  CoolifyServiceWithContext,
+} from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+
+const COOLIFY_ICON_URL = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/coolify.svg";
 
 export default function CoolifyWidget({ options, integrationIds, width }: WidgetComponentProps<"coolify">) {
   const t = useScopedI18n("widget.coolify");
@@ -72,37 +79,65 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
   const isTiny = width < 256;
   const displayUrl = integrationUrl.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
-  const runningApps = instanceInfo.applications.filter((app) => parseStatus(app.status) === "running").length;
-  const totalApps = instanceInfo.applications.length;
+  const serverResourceCounts = buildServerResourceCounts(
+    instanceInfo.servers,
+    instanceInfo.applications,
+    instanceInfo.services ?? [],
+  );
 
-  const services = instanceInfo.services ?? [];
-  const runningServices = services.filter((svc) => parseStatus(svc.status ?? "") === "running").length;
-  const totalServices = services.length;
+  return (
+    <ScrollArea h="100%">
+      <Stack gap={0}>
+        <CoolifyHeader isTiny={isTiny} integrationUrl={integrationUrl} displayUrl={displayUrl} />
 
-  // Build a map of server IDs to resource counts
-  // Coolify Cloud uses settings.server_id, self-hosted uses server.id
+        <Accordion variant="contained" chevronPosition="right" multiple defaultValue={["applications"]}>
+          {options.showServers && (
+            <ServersSection
+              servers={instanceInfo.servers}
+              serverResourceCounts={serverResourceCounts}
+              isTiny={isTiny}
+              showIp={showIp}
+              onToggleIp={() => setShowIp((v) => !v)}
+            />
+          )}
+          {options.showApplications && <ApplicationsSection applications={instanceInfo.applications} isTiny={isTiny} />}
+          {options.showServices && <ServicesSection services={instanceInfo.services ?? []} isTiny={isTiny} />}
+        </Accordion>
+
+        <CoolifyFooter version={instanceInfo.version} relativeTime={relativeTime} />
+      </Stack>
+    </ScrollArea>
+  );
+}
+
+function buildServerResourceCounts(
+  servers: CoolifyServer[],
+  applications: CoolifyApplicationWithContext[],
+  services: CoolifyServiceWithContext[],
+) {
   const serverResourceCounts = new Map<number, { apps: number; services: number }>();
-  for (const server of instanceInfo.servers) {
+
+  for (const server of servers) {
     const serverId = server.settings?.server_id ?? server.id ?? 0;
     serverResourceCounts.set(serverId, { apps: 0, services: 0 });
   }
 
-  // Build destination_id -> server_id map from services (Coolify Cloud apps lack server_id)
   const destinationToServer = new Map<number, number>();
-  for (const service of instanceInfo.services ?? []) {
+  for (const service of services) {
     if (service.destination_id != null && service.server_id != null) {
       destinationToServer.set(service.destination_id, service.server_id);
     }
   }
 
-  for (const app of instanceInfo.applications) {
+  for (const app of applications) {
     const serverId = app.server_id ?? destinationToServer.get(app.destination_id ?? 0) ?? app.destination_id ?? 0;
     const counts = serverResourceCounts.get(serverId);
     if (counts) {
       counts.apps++;
     }
   }
-  for (const service of instanceInfo.services ?? []) {
+
+  for (const service of services) {
     const serverId = service.server_id ?? service.destination_id ?? 0;
     const counts = serverResourceCounts.get(serverId);
     if (counts) {
@@ -110,261 +145,305 @@ function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) 
     }
   }
 
-  const getAccordionBadgeColor = (running: number, total: number) => {
-    if (total === 0) return "gray";
-    if (running === total) return "green";
-    if (running > 0) return "orange";
-    return "red";
-  };
+  return serverResourceCounts;
+}
 
-  const defaultOpenSections = ["applications"];
+interface CoolifyHeaderProps {
+  isTiny: boolean;
+  integrationUrl: string;
+  displayUrl: string;
+}
+
+function CoolifyHeader({ isTiny, integrationUrl, displayUrl }: CoolifyHeaderProps) {
+  return (
+    <Group p="xs" justify="center" gap="xs" style={{ borderBottom: "2px solid #8B5CF6" }}>
+      <Group gap={2}>
+        <Image src={COOLIFY_ICON_URL} alt="Coolify" w={isTiny ? 18 : 24} h={isTiny ? 18 : 24} />
+        <Text fz={isTiny ? "xs" : "sm"} fw={700} style={{ color: "#8B5CF6" }}>
+          oolify
+        </Text>
+      </Group>
+      <Anchor href={integrationUrl} target="_blank" fz={isTiny ? "xs" : "sm"} fw={500} c="dimmed" lineClamp={1}>
+        {displayUrl}
+      </Anchor>
+    </Group>
+  );
+}
+
+interface CoolifyFooterProps {
+  version: string;
+  relativeTime: string;
+}
+
+function CoolifyFooter({ version, relativeTime }: CoolifyFooterProps) {
+  const t = useScopedI18n("widget.coolify");
+  return (
+    <Group justify="space-between" p={4} style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
+      <Group gap={2}>
+        <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
+        <Text size="xs" c="dimmed">
+          v{version}
+        </Text>
+      </Group>
+      <Text size="xs" c="dimmed">
+        {t("footer.updated", { when: relativeTime })}
+      </Text>
+    </Group>
+  );
+}
+
+interface ServersSectionProps {
+  servers: CoolifyServer[];
+  serverResourceCounts: Map<number, { apps: number; services: number }>;
+  isTiny: boolean;
+  showIp: boolean;
+  onToggleIp: () => void;
+}
+
+function ServersSection({ servers, serverResourceCounts, isTiny, showIp, onToggleIp }: ServersSectionProps) {
+  const t = useScopedI18n("widget.coolify");
 
   return (
-    <ScrollArea h="100%">
-      <Stack gap={0}>
-        <Group
-          p="xs"
-          justify="center"
-          gap="xs"
-          style={{
-            borderBottom: "2px solid #8B5CF6",
-          }}
-        >
-          <Group gap={2}>
-            <Image
-              src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/coolify.svg"
-              alt="Coolify"
-              w={isTiny ? 18 : 24}
-              h={isTiny ? 18 : 24}
-            />
-            <Text fz={isTiny ? "xs" : "sm"} fw={700} style={{ color: "#8B5CF6" }}>
-              oolify
-            </Text>
-          </Group>
-          <Anchor href={integrationUrl} target="_blank" fz={isTiny ? "xs" : "sm"} fw={500} c="dimmed" lineClamp={1}>
-            {displayUrl}
-          </Anchor>
+    <Accordion.Item value="servers">
+      <Accordion.Control icon={isTiny ? null : <IconServer size={16} />}>
+        <Group gap="xs">
+          <Text size="xs">{t("tab.servers")}</Text>
+          <Badge variant="light" color="gray" size="xs">
+            {servers.length}
+          </Badge>
         </Group>
+      </Accordion.Control>
+      <Accordion.Panel>
+        {servers.length > 0 ? (
+          <ServersTable
+            servers={servers}
+            serverResourceCounts={serverResourceCounts}
+            isTiny={isTiny}
+            showIp={showIp}
+            onToggleIp={onToggleIp}
+          />
+        ) : (
+          <Text size="sm" c="dimmed" ta="center" py="xs">
+            {t("empty.servers")}
+          </Text>
+        )}
+      </Accordion.Panel>
+    </Accordion.Item>
+  );
+}
 
-        <Accordion variant="contained" chevronPosition="right" multiple defaultValue={defaultOpenSections}>
-          {options.showServers && (
-            <Accordion.Item value="servers">
-              <Accordion.Control icon={isTiny ? null : <IconServer size={16} />}>
-                <Group gap="xs">
-                  <Text size="xs">{t("tab.servers")}</Text>
-                  <Badge variant="light" color="gray" size="xs">
-                    {instanceInfo.servers.length}
-                  </Badge>
-                </Group>
-              </Accordion.Control>
-              <Accordion.Panel>
-                {instanceInfo.servers.length > 0 ? (
-                  <Table highlightOnHover>
-                    <Table.Thead>
-                      <Table.Tr fz={isTiny ? "8px" : "xs"}>
-                        <Table.Th ta="start" p={0}>
-                          {t("table.name")}
-                        </Table.Th>
-                        {!isTiny && (
-                          <Table.Th ta="start" p={0}>
-                            <Group gap={4} wrap="nowrap">
-                              {t("table.ip")}
-                              <ActionIcon size="xs" variant="subtle" onClick={() => setShowIp((v) => !v)}>
-                                {showIp ? <IconEye size={12} /> : <IconEyeOff size={12} />}
-                              </ActionIcon>
-                            </Group>
-                          </Table.Th>
-                        )}
-                        <Table.Th ta="center" p={0}>
-                          {t("table.resources")}
-                        </Table.Th>
-                      </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody>
-                      {instanceInfo.servers.map((server) => {
-                        const serverId = server.settings?.server_id ?? server.id ?? 0;
-                        const counts = serverResourceCounts.get(serverId) ?? { apps: 0, services: 0 };
-                        const isBuildServer = server.settings?.is_build_server === true;
-                        return (
-                          <Table.Tr key={server.uuid} fz={isTiny ? "8px" : "xs"}>
-                            <Table.Td>
-                              <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
-                                <Indicator size={isTiny ? 4 : 8} color="green" />
-                                <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
-                                  {server.name}
-                                </Text>
-                                {isBuildServer && (
-                                  <Badge size="xs" variant="light" color="violet">
-                                    {t("server.buildServer")}
-                                  </Badge>
-                                )}
-                              </Group>
-                            </Table.Td>
-                            {!isTiny && (
-                              <Table.Td>
-                                <Text fz="xs" c="dimmed">
-                                  {showIp ? server.ip : "***.***.***.***"}
-                                </Text>
-                              </Table.Td>
-                            )}
-                            <Table.Td ta="center">
-                              <Text fz={isTiny ? "8px" : "xs"} c="dimmed">
-                                {counts.apps} / {counts.services}
-                              </Text>
-                            </Table.Td>
-                          </Table.Tr>
-                        );
-                      })}
-                    </Table.Tbody>
-                  </Table>
-                ) : (
-                  <Text size="sm" c="dimmed" ta="center" py="xs">
-                    {t("empty.servers")}
-                  </Text>
-                )}
-              </Accordion.Panel>
-            </Accordion.Item>
+interface ServersTableProps {
+  servers: CoolifyServer[];
+  serverResourceCounts: Map<number, { apps: number; services: number }>;
+  isTiny: boolean;
+  showIp: boolean;
+  onToggleIp: () => void;
+}
+
+function ServersTable({ servers, serverResourceCounts, isTiny, showIp, onToggleIp }: ServersTableProps) {
+  const t = useScopedI18n("widget.coolify");
+
+  return (
+    <Table highlightOnHover>
+      <Table.Thead>
+        <Table.Tr fz={isTiny ? "8px" : "xs"}>
+          <Table.Th ta="start" p={0}>
+            {t("table.name")}
+          </Table.Th>
+          {!isTiny && (
+            <Table.Th ta="start" p={0}>
+              <Group gap={4} wrap="nowrap">
+                {t("table.ip")}
+                <ActionIcon size="xs" variant="subtle" onClick={onToggleIp}>
+                  {showIp ? <IconEye size={12} /> : <IconEyeOff size={12} />}
+                </ActionIcon>
+              </Group>
+            </Table.Th>
           )}
+          <Table.Th ta="center" p={0}>
+            {t("table.resources")}
+          </Table.Th>
+        </Table.Tr>
+      </Table.Thead>
+      <Table.Tbody>
+        {servers.map((server) => (
+          <ServerRow
+            key={server.uuid}
+            server={server}
+            counts={serverResourceCounts.get(server.settings?.server_id ?? server.id ?? 0) ?? { apps: 0, services: 0 }}
+            isTiny={isTiny}
+            showIp={showIp}
+          />
+        ))}
+      </Table.Tbody>
+    </Table>
+  );
+}
 
-          {options.showApplications && (
-            <Accordion.Item value="applications">
-              <Accordion.Control icon={isTiny ? null : <IconCloud size={16} />}>
-                <Group gap="xs">
-                  <Text size="xs">{t("tab.applications")}</Text>
-                  <Badge variant="dot" color={getAccordionBadgeColor(runningApps, totalApps)} size="xs">
-                    {runningApps} / {totalApps}
-                  </Badge>
-                </Group>
-              </Accordion.Control>
-              <Accordion.Panel>
-                {instanceInfo.applications.length > 0 ? (
-                  <Table highlightOnHover>
-                    <Table.Thead>
-                      <Table.Tr fz={isTiny ? "8px" : "xs"}>
-                        <Table.Th ta="start" p={0}>
-                          {t("table.name")}
-                        </Table.Th>
-                        {!isTiny && (
-                          <Table.Th ta="start" p={0}>
-                            {t("table.project")}
-                          </Table.Th>
-                        )}
-                      </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody>
-                      {instanceInfo.applications.map((app) => {
-                        const status = parseStatus(app.status);
-                        const statusColor = getStatusColor(status);
-                        return (
-                          <Table.Tr key={app.uuid} fz={isTiny ? "8px" : "xs"}>
-                            <Table.Td>
-                              <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
-                                <Indicator size={isTiny ? 4 : 8} color={statusColor} />
-                                <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
-                                  {app.name}
-                                </Text>
-                              </Group>
-                            </Table.Td>
-                            {!isTiny && (
-                              <Table.Td>
-                                <Text fz="xs" c="dimmed" lineClamp={1}>
-                                  {app.projectName ?? "-"} / {app.environmentName ?? "-"}
-                                </Text>
-                              </Table.Td>
-                            )}
-                          </Table.Tr>
-                        );
-                      })}
-                    </Table.Tbody>
-                  </Table>
-                ) : (
-                  <Text size="sm" c="dimmed" ta="center" py="xs">
-                    {t("empty.applications")}
-                  </Text>
-                )}
-              </Accordion.Panel>
-            </Accordion.Item>
+interface ServerRowProps {
+  server: CoolifyServer;
+  counts: { apps: number; services: number };
+  isTiny: boolean;
+  showIp: boolean;
+}
+
+function ServerRow({ server, counts, isTiny, showIp }: ServerRowProps) {
+  const t = useScopedI18n("widget.coolify");
+  const isBuildServer = server.settings?.is_build_server === true;
+
+  return (
+    <Table.Tr fz={isTiny ? "8px" : "xs"}>
+      <Table.Td>
+        <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
+          <Indicator size={isTiny ? 4 : 8} color="green" />
+          <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
+            {server.name}
+          </Text>
+          {isBuildServer && (
+            <Badge size="xs" variant="light" color="violet">
+              {t("server.buildServer")}
+            </Badge>
           )}
+        </Group>
+      </Table.Td>
+      {!isTiny && (
+        <Table.Td>
+          <Text fz="xs" c="dimmed">
+            {showIp ? server.ip : "***.***.***.***"}
+          </Text>
+        </Table.Td>
+      )}
+      <Table.Td ta="center">
+        <Text fz={isTiny ? "8px" : "xs"} c="dimmed">
+          {counts.apps} / {counts.services}
+        </Text>
+      </Table.Td>
+    </Table.Tr>
+  );
+}
 
-          {options.showServices && (
-            <Accordion.Item value="services">
-              <Accordion.Control icon={isTiny ? null : <IconStack2 size={16} />}>
-                <Group gap="xs">
-                  <Text size="xs">{t("tab.services")}</Text>
-                  <Badge variant="dot" color={getAccordionBadgeColor(runningServices, totalServices)} size="xs">
-                    {runningServices} / {totalServices}
-                  </Badge>
-                </Group>
-              </Accordion.Control>
-              <Accordion.Panel>
-                {services.length > 0 ? (
-                  <Table highlightOnHover>
-                    <Table.Thead>
-                      <Table.Tr fz={isTiny ? "8px" : "xs"}>
-                        <Table.Th ta="start" p={0}>
-                          {t("table.name")}
-                        </Table.Th>
-                        {!isTiny && (
-                          <Table.Th ta="start" p={0}>
-                            {t("table.project")}
-                          </Table.Th>
-                        )}
-                      </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody>
-                      {services.map((svc) => {
-                        const status = parseStatus(svc.status ?? "");
-                        const statusColor = getStatusColor(status);
-                        return (
-                          <Table.Tr key={svc.uuid} fz={isTiny ? "8px" : "xs"}>
-                            <Table.Td>
-                              <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
-                                <Indicator size={isTiny ? 4 : 8} color={statusColor} />
-                                <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
-                                  {svc.name}
-                                </Text>
-                              </Group>
-                            </Table.Td>
-                            {!isTiny && (
-                              <Table.Td>
-                                <Text fz="xs" c="dimmed" lineClamp={1}>
-                                  {svc.projectName ?? "-"} / {svc.environmentName ?? "-"}
-                                </Text>
-                              </Table.Td>
-                            )}
-                          </Table.Tr>
-                        );
-                      })}
-                    </Table.Tbody>
-                  </Table>
-                ) : (
-                  <Text size="sm" c="dimmed" ta="center" py="xs">
-                    {t("empty.services")}
-                  </Text>
-                )}
-              </Accordion.Panel>
-            </Accordion.Item>
+interface ApplicationsSectionProps {
+  applications: CoolifyApplicationWithContext[];
+  isTiny: boolean;
+}
+
+function ApplicationsSection({ applications, isTiny }: ApplicationsSectionProps) {
+  const t = useScopedI18n("widget.coolify");
+  const runningApps = applications.filter((app) => parseStatus(app.status) === "running").length;
+
+  return (
+    <Accordion.Item value="applications">
+      <Accordion.Control icon={isTiny ? null : <IconCloud size={16} />}>
+        <Group gap="xs">
+          <Text size="xs">{t("tab.applications")}</Text>
+          <Badge variant="dot" color={getBadgeColor(runningApps, applications.length)} size="xs">
+            {runningApps} / {applications.length}
+          </Badge>
+        </Group>
+      </Accordion.Control>
+      <Accordion.Panel>
+        {applications.length > 0 ? (
+          <ResourceTable items={applications} isTiny={isTiny} />
+        ) : (
+          <Text size="sm" c="dimmed" ta="center" py="xs">
+            {t("empty.applications")}
+          </Text>
+        )}
+      </Accordion.Panel>
+    </Accordion.Item>
+  );
+}
+
+interface ServicesSectionProps {
+  services: CoolifyServiceWithContext[];
+  isTiny: boolean;
+}
+
+function ServicesSection({ services, isTiny }: ServicesSectionProps) {
+  const t = useScopedI18n("widget.coolify");
+  const runningServices = services.filter((svc) => parseStatus(svc.status ?? "") === "running").length;
+
+  return (
+    <Accordion.Item value="services">
+      <Accordion.Control icon={isTiny ? null : <IconStack2 size={16} />}>
+        <Group gap="xs">
+          <Text size="xs">{t("tab.services")}</Text>
+          <Badge variant="dot" color={getBadgeColor(runningServices, services.length)} size="xs">
+            {runningServices} / {services.length}
+          </Badge>
+        </Group>
+      </Accordion.Control>
+      <Accordion.Panel>
+        {services.length > 0 ? (
+          <ResourceTable items={services} isTiny={isTiny} />
+        ) : (
+          <Text size="sm" c="dimmed" ta="center" py="xs">
+            {t("empty.services")}
+          </Text>
+        )}
+      </Accordion.Panel>
+    </Accordion.Item>
+  );
+}
+
+interface ResourceTableProps {
+  items: Array<{ uuid: string; name: string; status?: string; projectName?: string; environmentName?: string }>;
+  isTiny: boolean;
+}
+
+function ResourceTable({ items, isTiny }: ResourceTableProps) {
+  const t = useScopedI18n("widget.coolify");
+
+  return (
+    <Table highlightOnHover>
+      <Table.Thead>
+        <Table.Tr fz={isTiny ? "8px" : "xs"}>
+          <Table.Th ta="start" p={0}>
+            {t("table.name")}
+          </Table.Th>
+          {!isTiny && (
+            <Table.Th ta="start" p={0}>
+              {t("table.project")}
+            </Table.Th>
           )}
-        </Accordion>
+        </Table.Tr>
+      </Table.Thead>
+      <Table.Tbody>
+        {items.map((item) => (
+          <ResourceRow key={item.uuid} item={item} isTiny={isTiny} />
+        ))}
+      </Table.Tbody>
+    </Table>
+  );
+}
 
-        <Group justify="space-between" p={4} style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
-          <Group gap={2}>
-            <Image
-              src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/coolify.svg"
-              alt="Coolify"
-              w={16}
-              h={16}
-            />
-            <Text size="xs" c="dimmed">
-              v{instanceInfo.version}
-            </Text>
-          </Group>
-          <Text size="xs" c="dimmed">
-            {t("footer.updated", { when: relativeTime })}
+interface ResourceRowProps {
+  item: { uuid: string; name: string; status?: string; projectName?: string; environmentName?: string };
+  isTiny: boolean;
+}
+
+function ResourceRow({ item, isTiny }: ResourceRowProps) {
+  const status = parseStatus(item.status ?? "");
+  const statusColor = getStatusColor(status);
+
+  return (
+    <Table.Tr fz={isTiny ? "8px" : "xs"}>
+      <Table.Td>
+        <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
+          <Indicator size={isTiny ? 4 : 8} color={statusColor} />
+          <Text lineClamp={1} fz={isTiny ? "8px" : "xs"}>
+            {item.name}
           </Text>
         </Group>
-      </Stack>
-    </ScrollArea>
+      </Table.Td>
+      {!isTiny && (
+        <Table.Td>
+          <Text fz="xs" c="dimmed" lineClamp={1}>
+            {item.projectName ?? "-"} / {item.environmentName ?? "-"}
+          </Text>
+        </Table.Td>
+      )}
+    </Table.Tr>
   );
 }
 
@@ -373,16 +452,19 @@ function parseStatus(status: string): string {
 }
 
 function getStatusColor(status: string): string {
-  switch (status) {
-    case "running":
-      return "green";
-    case "stopped":
-    case "exited":
-      return "red";
-    case "starting":
-    case "restarting":
-      return "yellow";
-    default:
-      return "gray";
-  }
+  const colors: Record<string, string> = {
+    running: "green",
+    stopped: "red",
+    exited: "red",
+    starting: "yellow",
+    restarting: "yellow",
+  };
+  return colors[status] ?? "gray";
+}
+
+function getBadgeColor(running: number, total: number): string {
+  if (total === 0) return "gray";
+  if (running === total) return "green";
+  if (running > 0) return "orange";
+  return "red";
 }
