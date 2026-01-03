@@ -19,6 +19,7 @@ import type {
   CoolifyResource,
   CoolifyServer,
   CoolifyService,
+  CoolifyServiceWithContext,
 } from "./coolify-types";
 
 const logger = createLogger({ module: "coolifyIntegration" });
@@ -319,9 +320,10 @@ export class CoolifyIntegration extends Integration {
   }
 
   public async getInstanceInfoAsync(fetchAsync = fetchWithTrustedCertificatesAsync): Promise<CoolifyInstanceInfo> {
-    const [version, applications, projectsWithEnvs, servers] = await Promise.all([
+    const [version, applications, services, projectsWithEnvs, servers] = await Promise.all([
       this.getVersionAsync(fetchAsync),
       this.listApplicationsAsync(fetchAsync),
+      this.listServicesAsync(fetchAsync),
       this.listProjectsWithEnvironmentsAsync(fetchAsync),
       this.listServersAsync(fetchAsync),
     ]);
@@ -342,9 +344,19 @@ export class CoolifyIntegration extends Integration {
       };
     });
 
+    const servicesWithContext: CoolifyServiceWithContext[] = services.map((service) => {
+      const context = service.environment_id ? envToProjectMap.get(service.environment_id) : undefined;
+      return {
+        ...service,
+        projectName: context?.projectName,
+        environmentName: context?.environmentName,
+      };
+    });
+
     return {
       version,
       applications: applicationsWithContext,
+      services: servicesWithContext,
       servers,
     };
   }

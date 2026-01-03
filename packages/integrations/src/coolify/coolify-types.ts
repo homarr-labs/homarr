@@ -9,6 +9,7 @@ export interface CoolifyHealthcheck {
 }
 
 export interface CoolifyApplication {
+  id: number;
   uuid: string;
   name: string;
   description?: string;
@@ -21,6 +22,8 @@ export interface CoolifyApplication {
   git_branch?: string;
   environment_id?: number;
   project_id?: number;
+  destination_id?: number;
+  destination_type?: string;
 }
 
 export interface CoolifyApplicationLog {
@@ -72,7 +75,7 @@ export interface CoolifyResource {
 }
 
 export interface CoolifyServer {
-  id: number;
+  id: number | null;
   uuid: string;
   name: string;
   description?: string;
@@ -88,14 +91,23 @@ export interface CoolifyService {
   uuid: string;
   name: string;
   description?: string;
+  status?: string;
   environment_id?: number;
+  destination_id?: number;
+  destination_type?: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface CoolifyServiceWithContext extends CoolifyService {
+  projectName?: string;
+  environmentName?: string;
 }
 
 // Aggregated information for the Coolify instance
 export interface CoolifyInstanceInfo {
   version: string;
   applications: CoolifyApplicationWithContext[];
+  services: CoolifyServiceWithContext[];
   servers: CoolifyServer[];
 }
