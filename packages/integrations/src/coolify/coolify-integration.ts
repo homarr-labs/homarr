@@ -9,11 +9,13 @@ import { CoolifyApiErrorHandler } from "./coolify-error-handler";
 import type {
   CoolifyApplication,
   CoolifyApplicationLog,
+  CoolifyApplicationWithContext,
   CoolifyEnvironment,
   CoolifyEnvironmentVariable,
   CoolifyHealthcheck,
   CoolifyInstanceInfo,
   CoolifyProject,
+  CoolifyProjectWithEnvironments,
   CoolifyResource,
   CoolifyServer,
   CoolifyService,
@@ -184,13 +186,13 @@ export class CoolifyIntegration extends Integration {
   }
 
   /**
-   * Get project by UUID
+   * Get project by UUID (includes environments)
    * https://coolify.io/docs/api-reference/api/operations/get-project-by-uuid
    */
   public async getProjectByUuidAsync(
     uuid: string,
     fetchAsync = fetchWithTrustedCertificatesAsync,
-  ): Promise<CoolifyProject> {
+  ): Promise<CoolifyProjectWithEnvironments> {
     const url = this.url(`/api/v1/projects/${uuid}`);
     const response = await fetchAsync(url, {
       headers: this.getAuthHeaders(),
@@ -200,9 +202,22 @@ export class CoolifyIntegration extends Integration {
       throw new Error(`Failed to fetch Coolify project ${uuid}: ${response.statusText}`);
     }
 
-    const data = (await response.json()) as CoolifyProject;
+    const data = (await response.json()) as CoolifyProjectWithEnvironments;
     logger.info("Fetched Coolify project", { uuid: data.uuid, name: data.name });
     return data;
+  }
+
+  /**
+   * List all projects with their environments
+   */
+  public async listProjectsWithEnvironmentsAsync(
+    fetchAsync = fetchWithTrustedCertificatesAsync,
+  ): Promise<CoolifyProjectWithEnvironments[]> {
+    const projects = await this.listProjectsAsync(fetchAsync);
+    const projectsWithEnvs = await Promise.all(
+      projects.map((project) => this.getProjectByUuidAsync(project.uuid, fetchAsync)),
+    );
+    return projectsWithEnvs;
   }
 
   /**
@@ -303,26 +318,34 @@ export class CoolifyIntegration extends Integration {
     return data;
   }
 
-  /**
-   * Get aggregated instance information
-   */
   public async getInstanceInfoAsync(fetchAsync = fetchWithTrustedCertificatesAsync): Promise<CoolifyInstanceInfo> {
-    const [version, applications, projects, servers, services, resources] = await Promise.all([
+    const [version, applications, projectsWithEnvs, servers] = await Promise.all([
       this.getVersionAsync(fetchAsync),
       this.listApplicationsAsync(fetchAsync),
-      this.listProjectsAsync(fetchAsync),
+      this.listProjectsWithEnvironmentsAsync(fetchAsync),
       this.listServersAsync(fetchAsync),
-      this.listServicesAsync(fetchAsync),
-      this.listResourcesAsync(fetchAsync),
     ]);
+
+    const envToProjectMap = new Map<number, { projectName: string; environmentName: string }>();
+    for (const project of projectsWithEnvs) {
+      for (const env of project.environments) {
+        envToProjectMap.set(env.id, { projectName: project.name, environmentName: env.name });
+      }
+    }
+
+    const applicationsWithContext: CoolifyApplicationWithContext[] = applications.map((app) => {
+      const context = app.environment_id ? envToProjectMap.get(app.environment_id) : undefined;
+      return {
+        ...app,
+        projectName: context?.projectName,
+        environmentName: context?.environmentName,
+      };
+    });
 
     return {
       version,
-      applications,
-      projects,
+      applications: applicationsWithContext,
       servers,
-      services,
-      resources,
     };
   }
 
