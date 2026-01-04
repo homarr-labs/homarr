@@ -44,7 +44,7 @@ export default async function GroupsDetailPage(props: GroupsDetailPageProps) {
       <Card>
         {group.owner ? (
           <Group>
-            <UserAvatar user={{ name: group.owner.name, image: group.owner.image }} size={"lg"} />
+            <UserAvatar user={group.owner} size={"lg"} />
             <Stack align={"start"} gap={3}>
               <Text fw={"bold"}>{group.owner.name}</Text>
               <Text>{group.owner.email}</Text>

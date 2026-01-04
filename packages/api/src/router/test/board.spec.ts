@@ -1220,11 +1220,11 @@ describe("getBoardPermissions should return board permissions", () => {
     expect(result.users).toEqual(
       expect.arrayContaining([
         {
-          user: { id: user1, name: null, image: null },
+          user: { id: user1, name: null, image: null, email: null },
           permission: "view",
         },
         {
-          user: { id: user2, name: null, image: null },
+          user: { id: user2, name: null, image: null, email: null },
           permission: "modify",
         },
       ]),

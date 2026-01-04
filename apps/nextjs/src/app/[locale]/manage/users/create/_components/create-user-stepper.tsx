@@ -200,7 +200,10 @@ export const UserCreateStepperComponent = ({ initialGroups }: UserCreateStepperC
         <Stepper.Step label={t("step.review.label")} allowStepSelect={false} allowStepClick={false}>
           <Card p="xl" shadow="md" withBorder>
             <Stack maw={300} align="center" mx="auto">
-              <UserAvatar size="xl" user={{ name: generalForm.values.username, image: null }} />
+              <UserAvatar
+                size="xl"
+                user={{ name: generalForm.values.username, email: generalForm.values.email ?? null, image: null }}
+              />
               <Text tt="uppercase" fw="bolder" size="xl">
                 {generalForm.values.username}
               </Text>

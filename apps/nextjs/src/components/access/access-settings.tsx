@@ -26,6 +26,7 @@ interface UserAccessPermission<TPermission extends string> {
   user: {
     name: string | null;
     image: string | null;
+    email: string | null;
     id: string;
   };
 }
@@ -66,6 +67,7 @@ interface Props<TPermission extends string> {
       id: string;
       name: string | null;
       image: string | null;
+      email: string | null;
     } | null;
   };
   translate: (key: TPermission) => string;

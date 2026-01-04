@@ -5,6 +5,7 @@ export const defaultServerSettingsKeys = [
   "analytics",
   "crawlingAndIndexing",
   "board",
+  "user",
   "appearance",
   "culture",
   "search",
@@ -30,6 +31,9 @@ export const defaultServerSettings = {
     mobileHomeBoardId: null as string | null,
     enableStatusByDefault: true,
     forceDisableStatus: false,
+  },
+  user: {
+    enableGravatar: true,
   },
   appearance: {
     defaultColorScheme: "light" as ColorScheme,

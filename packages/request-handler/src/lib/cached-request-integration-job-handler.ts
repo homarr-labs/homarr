@@ -57,12 +57,6 @@ export const createRequestIntegrationJobHandler = <
         reduceWidgetOptionsWithDefaultValues(
           itemForIntegration.kind,
           {
-            defaultSearchEngineId: serverSettings.search.defaultSearchEngineId,
-            openSearchInNewTab: true,
-            firstDayOfWeek: 1,
-            homeBoardId: serverSettings.board.homeBoardId,
-            mobileHomeBoardId: serverSettings.board.mobileHomeBoardId,
-            pingIconsEnabled: true,
             enableStatusByDefault: serverSettings.board.enableStatusByDefault,
             forceDisableStatus: serverSettings.board.forceDisableStatus,
           },

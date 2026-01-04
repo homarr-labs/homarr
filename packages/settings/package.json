@@ -23,7 +23,6 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@homarr/api": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@mantine/dates": "^8.3.10",

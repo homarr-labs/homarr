@@ -13,7 +13,7 @@ import { UserAvatar } from "@homarr/ui";
 interface InnerProps {
   presentUserIds: string[];
   excludeExternalProviders?: boolean;
-  onSelect: (props: { id: string; name: string; image: string }) => void | Promise<void>;
+  onSelect: (props: { id: string; name: string; image: string; email: string | null }) => void | Promise<void>;
   confirmLabel?: string;
 }
 
@@ -36,6 +36,7 @@ export const UserSelectModal = createModal<InnerProps>(({ actions, innerProps })
       id: currentUser.id,
       name: currentUser.name ?? "",
       image: currentUser.image ?? "",
+      email: currentUser.email ?? null,
     });
 
     setLoading(false);
