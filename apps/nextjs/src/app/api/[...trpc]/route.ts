@@ -103,3 +103,5 @@ export {
   handlerAsync as POST,
   handlerAsync as PUT,
 };
+
+export const dynamic = "force-dynamic";
