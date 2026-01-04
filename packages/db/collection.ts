@@ -67,14 +67,14 @@ export const createDbInsertCollectionWithoutTransaction = <TTableKey extends Tab
     ...collection,
     insertAllAsync: async (db: HomarrDatabase) => {
       switch (dbEnv.DRIVER) {
+        case "libsql":
         case "mysql2":
         case "node-postgres":
-          // For mysql2 and node-postgres, we can use the async insertAllAsync method
+          // For libsql, mysql2, and node-postgres, we can use the async insertAllAsync method
           await insertAllAsync(db as unknown as HomarrDatabaseMysql | HomarrDatabasePostgresql);
           return;
         default:
-          // For better-sqlite3, we need to use the synchronous insertAll method
-          // default assumes better-sqlite3. It's original implementation.
+          // For better-sqlite3 (legacy), we need to use the synchronous insertAll method
           insertAll(db);
           break;
       }
