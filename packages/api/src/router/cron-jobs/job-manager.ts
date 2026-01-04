@@ -1,7 +1,6 @@
 import { schedule, validate as validateCron } from "node-cron";
 
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { IJobManager } from "@homarr/cron-job-api";
 import type { jobGroup as cronJobGroup, JobGroupKeys } from "@homarr/cron-jobs";
 import type { Database, InferInsertModel } from "@homarr/db";
 import { eq } from "@homarr/db";
@@ -9,7 +8,7 @@ import { cronJobConfigurations } from "@homarr/db/schema";
 
 const logger = createLogger({ module: "jobManager" });
 
-export class JobManager implements IJobManager {
+export class JobManager {
   constructor(
     private db: Database,
     private jobGroup: typeof cronJobGroup,
