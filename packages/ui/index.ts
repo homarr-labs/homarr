@@ -1,5 +1,5 @@
 import type { IconProps } from "@tabler/icons-react";
-import type Icon123 from "@tabler/icons-react/icons/Icon123";
+import type Icon123 from "@tabler/icons-react/icons/IconNumber123";
 
 export * from "./src";
 

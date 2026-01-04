@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import { useCallback } from "react";
 import type { SelectProps } from "@mantine/core";
 import { Button, Flex, Group, Select, TableTd, TableTr, Text } from "@mantine/core";
-import Icon123 from "@tabler/icons-react/icons/Icon123";
 import IconCheck from "@tabler/icons-react/icons/IconCheck";
+import Icon123 from "@tabler/icons-react/icons/IconNumber123";
 
 import { useI18n } from "@homarr/translation/client";
 
