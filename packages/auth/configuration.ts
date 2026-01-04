@@ -26,7 +26,8 @@ export const createConfiguration = (
   headers: ReadonlyHeaders | null,
   useSecureCookies: boolean,
 ) => {
-  const adapter = createAdapter(db, provider);
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const adapter = db ? createAdapter(db, provider) : undefined;
   return NextAuth({
     logger: {
       error: (error) => {
@@ -65,7 +66,7 @@ export const createConfiguration = (
           return true;
         }
 
-        if (!adapter.createSession || !user.id) {
+        if (!adapter?.createSession || !user.id) {
           return false;
         }
 
