@@ -5,7 +5,7 @@ import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { and, eq } from "@homarr/db";
 import { groups, users } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 
 import { authorizeWithLdapCredentialsAsync } from "../credentials/authorization/ldap-authorization";
 import * as ldapClient from "../credentials/ldap-client";
@@ -123,7 +123,7 @@ describe("authorizeWithLdapCredentials", () => {
 
   test("should authorize user with correct credentials and create user", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(ldapClient, "LdapClient");
     spy.mockImplementation(function () {
       return {
@@ -161,7 +161,7 @@ describe("authorizeWithLdapCredentials", () => {
 
   test("should authorize user with correct credentials and create user with same email when credentials user already exists", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(ldapClient, "LdapClient");
     spy.mockImplementation(function () {
       return {
@@ -230,7 +230,7 @@ describe("authorizeWithLdapCredentials", () => {
     });
 
     const userId = createId();
-    const db = createDb();
+    const db = await createDbAsync();
     await db.insert(users).values({
       id: userId,
       name: "test-old",
@@ -281,7 +281,7 @@ describe("authorizeWithLdapCredentials", () => {
         disconnectAsync: vi.fn(),
       } as unknown as ldapClient.LdapClient;
     });
-    const db = createDb();
+    const db = await createDbAsync();
     const userId = createId();
     await db.insert(users).values({
       id: userId,

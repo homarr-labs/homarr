@@ -2,7 +2,7 @@ import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
 import { beforeAll, describe, expect, test, vi } from "vitest";
 
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 
 import { Aria2Integration } from "../src";
 
@@ -11,7 +11,7 @@ vi.mock("@homarr/db", async (importActual) => {
   const actual = await importActual<typeof import("@homarr/db")>();
   return {
     ...actual,
-    db: createDb(),
+    db: await createDbAsync(),
   };
 });
 vi.mock("@homarr/core/infrastructure/certificates", async (importActual) => {

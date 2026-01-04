@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { apps } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 
 import { appRouter } from "../app";
@@ -21,7 +21,7 @@ const createDefaultSession = (permissions: GroupPermissionKey[] = []): Session =
 describe("all should return all apps", () => {
   test("should return all apps with session", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,
@@ -55,7 +55,7 @@ describe("all should return all apps", () => {
   test("should throw UNAUTHORIZED if the user is not authenticated", async () => {
     // Arrange
     const caller = appRouter.createCaller({
-      db: createDb(),
+      db: await createDbAsync(),
       deviceType: undefined,
       session: null,
     });
@@ -71,7 +71,7 @@ describe("all should return all apps", () => {
 describe("byId should return an app by id", () => {
   test("should return an app by id when canUserSeeAppAsync returns true", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,
@@ -103,7 +103,7 @@ describe("byId should return an app by id", () => {
 
   test("should throw NOT_FOUND error when canUserSeeAppAsync returns false", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,
@@ -129,7 +129,7 @@ describe("byId should return an app by id", () => {
 
   test("should throw an error if the app does not exist", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,
@@ -147,7 +147,7 @@ describe("byId should return an app by id", () => {
 describe("create should create a new app with all arguments", () => {
   test("should create a new app", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,
@@ -176,7 +176,7 @@ describe("create should create a new app with all arguments", () => {
 
   test("should create a new app only with required arguments", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,
@@ -207,7 +207,7 @@ describe("create should create a new app with all arguments", () => {
 describe("update should update an app", () => {
   test("should update an app", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,
@@ -247,7 +247,7 @@ describe("update should update an app", () => {
 
   test("should throw an error if the app does not exist", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,
@@ -273,7 +273,7 @@ describe("update should update an app", () => {
 describe("delete should delete an app", () => {
   test("should delete an app", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,

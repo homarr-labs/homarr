@@ -5,7 +5,7 @@ import * as env from "@homarr/auth/env";
 import { createId } from "@homarr/common";
 import { eq } from "@homarr/db";
 import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 
 import { groupRouter } from "../group";
@@ -37,7 +37,7 @@ describe("paginated should return a list of groups with pagination", () => {
     "with 5 groups in database and pageSize set to 3 on page %s it should return %s groups",
     async (page, expectedCount) => {
       // Arrange
-      const db = createDb();
+      const db = await createDbAsync();
       const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
       await db.insert(groups).values(
@@ -61,7 +61,7 @@ describe("paginated should return a list of groups with pagination", () => {
 
   test("with 5 groups in database and pagesize set to 3 it should return total count 5", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     await db.insert(groups).values(
@@ -83,7 +83,7 @@ describe("paginated should return a list of groups with pagination", () => {
 
   test("groups should contain id, name, email and image of members", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     const user = createDummyUser();
@@ -120,7 +120,7 @@ describe("paginated should return a list of groups with pagination", () => {
     "groups should be searchable by name with contains pattern, query %s should result in %s results",
     async (query, expectedCount, firstKey) => {
       // Arrange
-      const db = createDb();
+      const db = await createDbAsync();
       const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
       await db.insert(groups).values(
@@ -144,7 +144,7 @@ describe("paginated should return a list of groups with pagination", () => {
 
   test("without admin permissions it should throw unauthorized error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     // Act
@@ -158,7 +158,7 @@ describe("paginated should return a list of groups with pagination", () => {
 describe("byId should return group by id including members and permissions", () => {
   test('should return group with id "1" with members and permissions', async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     const user = createDummyUser();
@@ -203,7 +203,7 @@ describe("byId should return group by id including members and permissions", () 
 
   test("with group id 1 and group 2 in database it should throw NOT_FOUND error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     await db.insert(groups).values({
@@ -221,7 +221,7 @@ describe("byId should return group by id including members and permissions", () 
 
   test("without admin permissions it should throw unauthorized error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     // Act
@@ -235,7 +235,7 @@ describe("byId should return group by id including members and permissions", () 
 describe("create should create group in database", () => {
   test("with valid input (64 character name) and non existing name it should be successful", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     const name = "a".repeat(64);
@@ -259,7 +259,7 @@ describe("create should create group in database", () => {
 
   test("with more than 64 characters name it should fail while validation", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
     const longName = "a".repeat(65);
 
@@ -280,7 +280,7 @@ describe("create should create group in database", () => {
     ["test", " TeSt"],
   ])("with similar name %s it should fail to create %s", async (similarName, nameToCreate) => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     await db.insert(groups).values({
@@ -298,7 +298,7 @@ describe("create should create group in database", () => {
 
   test("without admin permissions it should throw unauthorized error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     // Act
@@ -315,7 +315,7 @@ describe("update should update name with value that is no duplicate", () => {
     ["first", " first", "first"],
   ])("update should update name from %s to %s normalized", async (initialValue, updateValue, expectedValue) => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     const groupId = createId();
@@ -350,7 +350,7 @@ describe("update should update name with value that is no duplicate", () => {
     [" seCond", "second"],
   ])("with similar name %s it should fail to update %s", async (updateValue, initialDuplicate) => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     const groupId = createId();
@@ -380,7 +380,7 @@ describe("update should update name with value that is no duplicate", () => {
 
   test("with non existing id it should throw not found error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     await db.insert(groups).values({
@@ -402,7 +402,7 @@ describe("update should update name with value that is no duplicate", () => {
 
   test("without admin permissions it should throw unauthorized error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     // Act
@@ -420,7 +420,7 @@ describe("update should update name with value that is no duplicate", () => {
 describe("savePermissions should save permissions for group", () => {
   test("with existing group and permissions it should save permissions", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     const groupId = createId();
@@ -451,7 +451,7 @@ describe("savePermissions should save permissions for group", () => {
 
   test("with non existing group it should throw not found error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     await db.insert(groups).values({
@@ -473,7 +473,7 @@ describe("savePermissions should save permissions for group", () => {
 
   test("without admin permissions it should throw unauthorized error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     // Act
@@ -491,7 +491,7 @@ describe("savePermissions should save permissions for group", () => {
 describe("transferOwnership should transfer ownership of group", () => {
   test("with existing group and user it should transfer ownership", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     const groupId = createId();
@@ -529,7 +529,7 @@ describe("transferOwnership should transfer ownership of group", () => {
 
   test("with non existing group it should throw not found error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     await db.insert(groups).values({
@@ -551,7 +551,7 @@ describe("transferOwnership should transfer ownership of group", () => {
 
   test("without admin permissions it should throw unauthorized error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     // Act
@@ -569,7 +569,7 @@ describe("transferOwnership should transfer ownership of group", () => {
 describe("deleteGroup should delete group", () => {
   test("with existing group it should delete group", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     const groupId = createId();
@@ -600,7 +600,7 @@ describe("deleteGroup should delete group", () => {
 
   test("with non existing group it should throw not found error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     await db.insert(groups).values({
@@ -621,7 +621,7 @@ describe("deleteGroup should delete group", () => {
 
   test("without admin permissions it should throw unauthorized error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     // Act
@@ -638,7 +638,7 @@ describe("deleteGroup should delete group", () => {
 describe("addMember should add member to group", () => {
   test("with existing group and user it should add member", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(env, "env", "get");
     spy.mockReturnValue({ AUTH_PROVIDERS: ["credentials"] } as never);
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
@@ -679,7 +679,7 @@ describe("addMember should add member to group", () => {
 
   test("with non existing group it should throw not found error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     await db.insert(users).values({
@@ -700,7 +700,7 @@ describe("addMember should add member to group", () => {
 
   test("without admin permissions it should throw unauthorized error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     // Act
@@ -716,7 +716,7 @@ describe("addMember should add member to group", () => {
 
   test("without credentials provider it should throw FORBIDDEN error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(env, "env", "get");
     spy.mockReturnValue({ AUTH_PROVIDERS: ["ldap"] } as never);
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
@@ -755,7 +755,7 @@ describe("addMember should add member to group", () => {
 describe("removeMember should remove member from group", () => {
   test("with existing group and user it should remove member", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(env, "env", "get");
     spy.mockReturnValue({ AUTH_PROVIDERS: ["credentials"] } as never);
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
@@ -799,7 +799,7 @@ describe("removeMember should remove member from group", () => {
 
   test("with non existing group it should throw not found error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
     await db.insert(users).values({
@@ -820,7 +820,7 @@ describe("removeMember should remove member from group", () => {
 
   test("without admin permissions it should throw unauthorized error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
     // Act
@@ -836,7 +836,7 @@ describe("removeMember should remove member from group", () => {
 
   test("without credentials provider it should throw FORBIDDEN error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(env, "env", "get");
     spy.mockReturnValue({ AUTH_PROVIDERS: ["ldap"] } as never);
     const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });

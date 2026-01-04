@@ -3,7 +3,7 @@ import { env } from "@homarr/common/env";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
 import type { InferInsertModel } from "@homarr/db";
-import { db, handleTransactionsAsync, inArray, sql } from "@homarr/db";
+import { db, inArray, sql } from "@homarr/db";
 import { iconRepositories, icons } from "@homarr/db/schema";
 import { fetchIconsAsync } from "@homarr/icons";
 
@@ -89,81 +89,37 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
     (iconRepository) => !repositoryIconGroups.some((group) => group.slug === iconRepository.slug),
   );
 
-  await handleTransactionsAsync(db, {
-    async handleAsync(db, schema) {
-      await db.transaction(async (transaction) => {
-        if (newIconRepositories.length >= 1) {
-          await transaction.insert(schema.iconRepositories).values(newIconRepositories);
-        }
+  await db.transaction(async (transaction) => {
+    if (newIconRepositories.length >= 1) {
+      await transaction.insert(iconRepositories).values(newIconRepositories);
+    }
 
-        if (newIcons.length >= 1) {
-          // We only insert 5000 icons at a time to avoid SQLite limitations
-          for (const chunck of splitToNChunks(newIcons, Math.ceil(newIcons.length / 5000))) {
-            await transaction.insert(schema.icons).values(chunck);
-          }
-        }
-        if (deadIcons.length >= 1) {
-          await transaction.delete(schema.icons).where(
-            inArray(
-              // Combine iconRepositoryId and checksum to allow same icons on different repositories
-              sql`concat(${icons.iconRepositoryId}, '.', ${icons.checksum})`,
-              deadIcons.map((icon) => `${icon.iconRepositoryId}.${icon.checksum}`),
-            ),
-          );
-        }
+    if (newIcons.length >= 1) {
+      // We only insert 5000 icons at a time to avoid SQLite limitations
+      for (const chunck of splitToNChunks(newIcons, Math.ceil(newIcons.length / 5000))) {
+        await transaction.insert(icons).values(chunck);
+      }
+    }
+    if (deadIcons.length >= 1) {
+      await transaction.delete(icons).where(
+        inArray(
+          // Combine iconRepositoryId and checksum to allow same icons on different repositories
+          sql`concat(${icons.iconRepositoryId}, '.', ${icons.checksum})`,
+          deadIcons.map((icon) => `${icon.iconRepositoryId}.${icon.checksum}`),
+        ),
+      );
+    }
 
-        if (deadIconRepositories.length >= 1) {
-          await transaction.delete(schema.iconRepositories).where(
-            inArray(
-              iconRepositories.id,
-              deadIconRepositories.map((iconRepository) => iconRepository.id),
-            ),
-          );
-        }
+    if (deadIconRepositories.length >= 1) {
+      await transaction.delete(iconRepositories).where(
+        inArray(
+          iconRepositories.id,
+          deadIconRepositories.map((iconRepository) => iconRepository.id),
+        ),
+      );
+    }
 
-        countDeleted += deadIcons.length;
-      });
-    },
-    handleSync() {
-      db.transaction((transaction) => {
-        if (newIconRepositories.length >= 1) {
-          transaction.insert(iconRepositories).values(newIconRepositories).run();
-        }
-
-        if (newIcons.length >= 1) {
-          // We only insert 5000 icons at a time to avoid SQLite limitations
-          for (const chunck of splitToNChunks(newIcons, Math.ceil(newIcons.length / 5000))) {
-            transaction.insert(icons).values(chunck).run();
-          }
-        }
-        if (deadIcons.length >= 1) {
-          transaction
-            .delete(icons)
-            .where(
-              inArray(
-                // Combine iconRepositoryId and checksum to allow same icons on different repositories
-                sql`concat(${icons.iconRepositoryId}, '.', ${icons.checksum})`,
-                deadIcons.map((icon) => `${icon.iconRepositoryId}.${icon.checksum}`),
-              ),
-            )
-            .run();
-        }
-
-        if (deadIconRepositories.length >= 1) {
-          transaction
-            .delete(iconRepositories)
-            .where(
-              inArray(
-                iconRepositories.id,
-                deadIconRepositories.map((iconRepository) => iconRepository.id),
-              ),
-            )
-            .run();
-        }
-
-        countDeleted += deadIcons.length;
-      });
-    },
+    countDeleted += deadIcons.length;
   });
 
   logger.info("Updated icons in database", {

@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import { createId } from "@homarr/common";
 import { users } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 
 import { createSaltAsync, hashPasswordAsync } from "../../security";
 import { authorizeWithBasicCredentialsAsync } from "../credentials/authorization/basic-authorization";
@@ -12,7 +12,7 @@ const defaultUserId = createId();
 describe("authorizeWithBasicCredentials", () => {
   test("should authorize user with correct credentials", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const salt = await createSaltAsync();
     await db.insert(users).values({
       id: defaultUserId,
@@ -33,7 +33,7 @@ describe("authorizeWithBasicCredentials", () => {
 
   test("should not authorize user with incorrect credentials", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const salt = await createSaltAsync();
     await db.insert(users).values({
       id: defaultUserId,
@@ -54,7 +54,7 @@ describe("authorizeWithBasicCredentials", () => {
 
   test("should not authorize user with incorrect username", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const salt = await createSaltAsync();
     await db.insert(users).values({
       id: defaultUserId,
@@ -75,7 +75,7 @@ describe("authorizeWithBasicCredentials", () => {
 
   test("should not authorize user when password is not set", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     await db.insert(users).values({
       id: defaultUserId,
       name: "test",

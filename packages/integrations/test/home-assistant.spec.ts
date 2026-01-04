@@ -3,7 +3,7 @@ import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
 import { beforeAll, describe, expect, test, vi } from "vitest";
 
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 
 import { HomeAssistantIntegration } from "../src";
 import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
@@ -13,7 +13,7 @@ vi.mock("@homarr/db", async (importActual) => {
   const actual = await importActual<typeof import("@homarr/db")>();
   return {
     ...actual,
-    db: createDb(),
+    db: await createDbAsync(),
   };
 });
 

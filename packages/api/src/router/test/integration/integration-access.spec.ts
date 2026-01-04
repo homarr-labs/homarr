@@ -4,7 +4,7 @@ import * as authShared from "@homarr/auth/shared";
 import { createId } from "@homarr/common";
 import { eq } from "@homarr/db";
 import { integrations, users } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 
 import { throwIfActionForbiddenAsync } from "../../integration/integration-access";
 
@@ -26,7 +26,7 @@ describe("throwIfActionForbiddenAsync should check access to integration and ret
     ["use" as const, true],
   ])("with permission %s should return %s when hasFullAccess is true", async (permission, expectedResult) => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(authShared, "constructIntegrationPermissions");
     spy.mockReturnValue({
       hasFullAccess: true,
@@ -56,7 +56,7 @@ describe("throwIfActionForbiddenAsync should check access to integration and ret
     ["use" as const, true],
   ])("with permission %s should return %s when hasInteractAccess is true", async (permission, expectedResult) => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(authShared, "constructIntegrationPermissions");
     spy.mockReturnValue({
       hasFullAccess: false,
@@ -87,7 +87,7 @@ describe("throwIfActionForbiddenAsync should check access to integration and ret
     ["use" as const, true],
   ])("with permission %s should return %s when hasUseAccess is true", async (permission, expectedResult) => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(authShared, "constructIntegrationPermissions");
     spy.mockReturnValue({
       hasFullAccess: false,
@@ -118,7 +118,7 @@ describe("throwIfActionForbiddenAsync should check access to integration and ret
     ["use" as const, false],
   ])("with permission %s should return %s when hasUseAccess is false", async (permission, expectedResult) => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(authShared, "constructIntegrationPermissions");
     spy.mockReturnValue({
       hasFullAccess: false,
@@ -145,7 +145,7 @@ describe("throwIfActionForbiddenAsync should check access to integration and ret
 
   test("should throw when integration is not found", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
 
     // Act
     const act = () => throwIfActionForbiddenAsync({ db, session: null }, eq(integrations.id, createId()), "full");

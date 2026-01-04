@@ -1,6 +1,6 @@
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { createDbInsertCollectionForTransaction } from "@homarr/db/collection";
+import { createDbInsertCollection } from "@homarr/db/collection";
 import { credentialsAdminGroup } from "@homarr/definitions";
 
 import { mapAndDecryptUsers } from "../../mappers/map-user";
@@ -12,12 +12,7 @@ export const createUserInsertCollection = (
   importUsers: OldmarrImportUser[],
   encryptionToken: string | null | undefined,
 ) => {
-  const insertCollection = createDbInsertCollectionForTransaction([
-    "users",
-    "groups",
-    "groupMembers",
-    "groupPermissions",
-  ]);
+  const insertCollection = createDbInsertCollection(["users", "groups", "groupMembers", "groupPermissions"]);
 
   if (importUsers.length === 0) {
     return insertCollection;

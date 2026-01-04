@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 
 import { ResponseError } from "@homarr/common/server";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 
 import type { IntegrationTestingInput } from "../src/base/integration";
 import { Integration } from "../src/base/integration";
@@ -12,7 +12,7 @@ vi.mock("@homarr/db", async (importActual) => {
   const actual = await importActual<typeof import("@homarr/db")>();
   return {
     ...actual,
-    db: createDb(),
+    db: await createDbAsync(),
   };
 });
 

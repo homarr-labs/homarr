@@ -5,7 +5,7 @@ import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { invites, onboarding, users } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
 
 import { userRouter } from "../user";
@@ -39,7 +39,7 @@ vi.mock("@homarr/auth/env", () => {
 
 describe("initUser should initialize the first user", () => {
   it("should create a user if none exists", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
@@ -63,7 +63,7 @@ describe("initUser should initialize the first user", () => {
   });
 
   it("should not create a user if the password and confirmPassword do not match", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
@@ -88,7 +88,7 @@ describe("initUser should initialize the first user", () => {
     ["ABC123+/-"], // does not contain lowercase
     ["abc123+/-"], // does not contain uppercase
   ])("should throw error that password requirements do not match for '%s' as password", async (password) => {
-    const db = createDb();
+    const db = await createDbAsync();
     await createOnboardingStepAsync(db, "user");
     const caller = userRouter.createCaller({
       db,
@@ -110,7 +110,7 @@ describe("initUser should initialize the first user", () => {
 describe("register should create a user with valid invitation", () => {
   test("register should create a user with valid invitation", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = userRouter.createCaller({
       db,
       deviceType: undefined,
@@ -166,7 +166,7 @@ describe("register should create a user with valid invitation", () => {
     "register should throw an error with input %s and date %s if the invitation is invalid",
     async (partialInput, systemTime) => {
       // Arrange
-      const db = createDb();
+      const db = await createDbAsync();
       const caller = userRouter.createCaller({
         db,
         deviceType: undefined,
@@ -209,7 +209,7 @@ describe("register should create a user with valid invitation", () => {
 describe("editProfile shoud update user", () => {
   test("editProfile should update users and not update emailVerified when email not dirty", async () => {
     // arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = userRouter.createCaller({
       db,
       deviceType: undefined,
@@ -246,7 +246,7 @@ describe("editProfile shoud update user", () => {
 
   test("editProfile should update users and update emailVerified when email dirty", async () => {
     // arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = userRouter.createCaller({
       db,
       deviceType: undefined,
@@ -282,7 +282,7 @@ describe("editProfile shoud update user", () => {
 
 describe("delete should delete user", () => {
   test("delete should delete user", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = userRouter.createCaller({
       db,
       deviceType: undefined,

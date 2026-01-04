@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 import * as ping from "@homarr/ping";
 
 import { appRouter } from "../../widgets/app";
@@ -15,7 +15,7 @@ describe("ping should call sendPingRequestAsync with url and return result", () 
     // Arrange
     const spy = vi.spyOn(ping, "sendPingRequestAsync");
     const url = "http://localhost";
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,
@@ -35,7 +35,7 @@ describe("ping should call sendPingRequestAsync with url and return result", () 
     // Arrange
     const spy = vi.spyOn(ping, "sendPingRequestAsync");
     const url = "http://localhost";
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = appRouter.createCaller({
       db,
       deviceType: undefined,

@@ -4,7 +4,7 @@ import * as authShared from "@homarr/auth/shared";
 import { createId } from "@homarr/common";
 import { eq } from "@homarr/db";
 import { boards, users } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 
 import { throwIfActionForbiddenAsync } from "../../board/board-access";
 
@@ -26,7 +26,7 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
     ["view" as const, true],
   ])("with permission %s should return %s when hasFullAccess is true", async (permission, expectedResult) => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(authShared, "constructBoardPermissions");
     spy.mockReturnValue({
       hasFullAccess: true,
@@ -55,7 +55,7 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
     ["view" as const, true],
   ])("with permission %s should return %s when hasChangeAccess is true", async (permission, expectedResult) => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(authShared, "constructBoardPermissions");
     spy.mockReturnValue({
       hasFullAccess: false,
@@ -84,7 +84,7 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
     ["view" as const, true],
   ])("with permission %s should return %s when hasViewAccess is true", async (permission, expectedResult) => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(authShared, "constructBoardPermissions");
     spy.mockReturnValue({
       hasFullAccess: false,
@@ -113,7 +113,7 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
     ["view" as const, false],
   ])("with permission %s should return %s when hasViewAccess is false", async (permission, expectedResult) => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const spy = vi.spyOn(authShared, "constructBoardPermissions");
     spy.mockReturnValue({
       hasFullAccess: false,
@@ -138,7 +138,7 @@ describe("throwIfActionForbiddenAsync should check access to board and return bo
 
   test("should throw when board is not found", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
 
     // Act
     const act = () => throwIfActionForbiddenAsync({ db, session: null }, eq(boards.id, createId()), "full");

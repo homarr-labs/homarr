@@ -6,7 +6,7 @@ import { describe, expect, test, vi } from "vitest";
 import { eq } from "@homarr/db";
 import type { Database } from "@homarr/db";
 import { groupMembers, groups, users } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
 
 import { createSignInEventHandler } from "../events";
@@ -39,7 +39,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
   describe("signInEventHandler should add users to everyone group", () => {
     test("should add user to everyone group if he isn't already", async () => {
       // Arrange
-      const db = createDb();
+      const db = await createDbAsync();
       await createUserAsync(db);
       await createGroupAsync(db, everyoneGroup);
       const eventHandler = createSignInEventHandler(db);
@@ -62,7 +62,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
   describe("signInEventHandler should synchronize ldap groups", () => {
     test("should add missing group membership", async () => {
       // Arrange
-      const db = createDb();
+      const db = await createDbAsync();
       await createUserAsync(db);
       await createGroupAsync(db);
       const eventHandler = createSignInEventHandler(db);
@@ -82,7 +82,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     });
     test("should remove group membership", async () => {
       // Arrange
-      const db = createDb();
+      const db = await createDbAsync();
       await createUserAsync(db);
       await createGroupAsync(db);
       await db.insert(groupMembers).values({
@@ -106,7 +106,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     });
     test("should not remove group membership for everyone group", async () => {
       // Arrange
-      const db = createDb();
+      const db = await createDbAsync();
       await createUserAsync(db);
       await createGroupAsync(db, everyoneGroup);
       await db.insert(groupMembers).values({
@@ -132,7 +132,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
   describe("signInEventHandler should synchronize oidc groups", () => {
     test("should add missing group membership", async () => {
       // Arrange
-      const db = createDb();
+      const db = await createDbAsync();
       await createUserAsync(db);
       await createGroupAsync(db);
       const eventHandler = createSignInEventHandler(db);
@@ -152,7 +152,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     });
     test("should remove group membership", async () => {
       // Arrange
-      const db = createDb();
+      const db = await createDbAsync();
       await createUserAsync(db);
       await createGroupAsync(db);
       await db.insert(groupMembers).values({
@@ -176,7 +176,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     });
     test("should not remove group membership for everyone group", async () => {
       // Arrange
-      const db = createDb();
+      const db = await createDbAsync();
       await createUserAsync(db);
       await createGroupAsync(db, everyoneGroup);
       await db.insert(groupMembers).values({
@@ -205,7 +205,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
     ["oidc" as const, { name: "test" }, { preferred_username: "test@example.com", name: "test-new" }],
   ])("signInEventHandler should update username for %s provider", async (_provider, user, profile) => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     await createUserAsync(db);
     const eventHandler = createSignInEventHandler(db);
 
@@ -227,7 +227,7 @@ describe("createSignInEventHandler should create signInEventHandler", () => {
   });
   test("signInEventHandler should set color-scheme cookie", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     await createUserAsync(db);
     const eventHandler = createSignInEventHandler(db);
 

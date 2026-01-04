@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import { createId } from "@homarr/common";
 import type { InferInsertModel } from "@homarr/db";
 import { boardGroupPermissions, boards, boardUserPermissions, groupMembers, groups, users } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 
 import * as integrationPermissions from "../integration-permissions";
 import { hasQueryAccessToIntegrationsAsync } from "../integration-query-permissions";
@@ -22,7 +22,7 @@ const createSession = (user: Partial<Session["user"]>): Session => ({
 describe("hasQueryAccessToIntegrationsAsync should check if the user has query access to the specified integrations", () => {
   test("should return true if the user has the board-view-all permission and the integrations are used anywhere", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const session = createSession({
       permissions: ["board-view-all"],
     });
@@ -50,7 +50,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
 
   test("should return true if the user has the board-view-all permission, the first integration is used and the second one he has use access", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const session = createSession({
       permissions: ["board-view-all"],
     });
@@ -84,7 +84,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
 
   test("should return true if the user has use access to all integrations", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const session = createSession({});
     const spy = vi.spyOn(integrationPermissions, "constructIntegrationPermissions");
     spy.mockReturnValue({
@@ -116,7 +116,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
 
   test("should return true if the user has user permission to access to at least one board of each integration", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const session = createSession({});
     await db.insert(users).values({ id: session.user.id });
     const spy = vi.spyOn(integrationPermissions, "constructIntegrationPermissions");
@@ -168,7 +168,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
 
   test("should return false if the user has user permission to access board of first integration but not of second one", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const session = createSession({});
     await db.insert(users).values({ id: session.user.id });
     const spy = vi.spyOn(integrationPermissions, "constructIntegrationPermissions");
@@ -215,7 +215,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
 
   test("should return true if the user has group permission to access to at least one board of each integration", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const session = createSession({});
     await db.insert(users).values({ id: session.user.id });
     const spy = vi.spyOn(integrationPermissions, "constructIntegrationPermissions");
@@ -269,7 +269,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
 
   test("should return false if the user has group permission to access board of first integration but not of second one", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const session = createSession({});
     await db.insert(users).values({ id: session.user.id });
     const spy = vi.spyOn(integrationPermissions, "constructIntegrationPermissions");
@@ -318,7 +318,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
 
   test("should return true if the user has user permission to access first board and group permission to access second one", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const session = createSession({});
     await db.insert(users).values({ id: session.user.id });
     const spy = vi.spyOn(integrationPermissions, "constructIntegrationPermissions");
@@ -369,7 +369,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
 
   test("should return true if one of the boards the integration is used is public", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const session = createSession({});
     const integrations = [
       {
@@ -413,7 +413,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
 
   test("should return true if the user is creator of the board the integration is used", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const session = createSession({});
     await db.insert(users).values({ id: session.user.id });
     const integrations = [
@@ -458,7 +458,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
 
   test("should return false if the user has no access to any of the integrations", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const session = createSession({});
     const integrations = [
       {
@@ -496,7 +496,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
 
   test("should return false if the user is anonymous and the board is not public", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const integrations = [
       {
         id: "1",
@@ -534,7 +534,7 @@ describe("hasQueryAccessToIntegrationsAsync should check if the user has query a
 
   test("should return true if the user is anonymous and the board is public", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const integrations = [
       {
         id: "1",
