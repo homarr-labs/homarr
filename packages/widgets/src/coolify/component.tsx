@@ -408,6 +408,7 @@ interface ResourceTableProps {
     name: string;
     status?: string;
     fqdn?: string | null;
+    updated_at?: string;
     projectName?: string;
     projectUuid?: string;
     environmentName?: string;
@@ -440,6 +441,7 @@ interface ResourceRowProps {
     name: string;
     status?: string;
     fqdn?: string | null;
+    updated_at?: string;
     projectName?: string;
     projectUuid?: string;
     environmentName?: string;
@@ -496,6 +498,11 @@ function ResourceRow({ item, isTiny, integrationUrl, resourceType }: ResourceRow
         <Text fz="10px" c="dimmed" lineClamp={1}>
           {item.projectName ?? "-"} / {item.environmentName ?? "-"}
         </Text>
+        {formatRelativeTime(item.updated_at) && (
+          <Text fz="10px" c="dimmed" ml="auto">
+            {formatRelativeTime(item.updated_at)}
+          </Text>
+        )}
       </Group>
     </Stack>
   );
@@ -536,4 +543,28 @@ function getBadgeColor(running: number, total: number): string {
   if (running === total) return "green";
   if (running > 0) return "yellow";
   return "red";
+}
+
+function formatRelativeTime(dateString: string | undefined): string | undefined {
+  if (!dateString) return undefined;
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return undefined;
+
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
+
+  if (diffDay > 0) {
+    const remainingHours = diffHour % 24;
+    return remainingHours > 0 ? `${diffDay}d ${remainingHours}h ago` : `${diffDay}d ago`;
+  }
+  if (diffHour > 0) {
+    const remainingMin = diffMin % 60;
+    return remainingMin > 0 ? `${diffHour}h ${remainingMin}m ago` : `${diffHour}h ago`;
+  }
+  if (diffMin > 0) return `${diffMin}m ago`;
+  return "just now";
 }
