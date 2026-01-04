@@ -142,6 +142,9 @@ importers:
       '@homarr/cron-job-status':
         specifier: workspace:^0.1.0
         version: link:../../packages/cron-job-status
+      '@homarr/cron-jobs':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/cron-jobs
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
@@ -187,6 +190,9 @@ importers:
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../../packages/redis
+      '@homarr/request-handler':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/request-handler
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../../packages/server-settings
