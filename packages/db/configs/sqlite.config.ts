@@ -7,6 +7,6 @@ export default {
   dialect: "sqlite",
   schema: "./schema",
   casing: DB_CASING,
-  dbCredentials: { url: dbEnv.URL },
+  dbCredentials: { url: `file:${dbEnv.URL}` },
   out: "./migrations/sqlite",
 } satisfies Config;
