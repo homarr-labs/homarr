@@ -92,3 +92,5 @@ interface HealthCheckResult {
   name: string;
   values: object;
 }
+
+export const dynamic = "force-dynamic";
