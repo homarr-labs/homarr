@@ -1,12 +1,12 @@
+import type { Session } from "next-auth";
+
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { apiKeys } from "@homarr/db/schema";
 
-import { createLogger } from "@homarr/core/infrastructure/logs";
-
-import type { Session } from "./index";
-import { hashPasswordAsync } from "./index";
-import { createSessionAsync } from "./server";
+import { hashPasswordAsync } from "../security";
+import { createSessionAsync } from "../server";
 
 const logger = createLogger({ module: "apiKeyAuth" });
 
@@ -32,7 +32,7 @@ export const getSessionFromApiKeyAsync = async (
   const [apiKeyId, apiKey] = apiKeyHeaderValue.split(".");
 
   if (!apiKeyId || !apiKey) {
-    logger.warn("API key auth failed: invalid format", { ipAddress, userAgent });
+    logger.warn("Failed to authenticate with api-key", { ipAddress, userAgent, reason: "API_KEY_INVALID_FORMAT" });
     return null;
   }
 
@@ -56,18 +56,18 @@ export const getSessionFromApiKeyAsync = async (
   });
 
   if (!apiKeyFromDb) {
-    logger.warn("API key auth failed: key not found", { ipAddress, userAgent });
+    logger.warn("Failed to authenticate with api-key", { ipAddress, userAgent, reason: "API_KEY_NOT_FOUND" });
     return null;
   }
 
   const hashedApiKey = await hashPasswordAsync(apiKey, apiKeyFromDb.salt);
 
   if (apiKeyFromDb.apiKey !== hashedApiKey) {
-    logger.warn("API key auth failed: invalid key", { ipAddress, userAgent });
+    logger.warn("Failed to authenticate with api-key", { ipAddress, userAgent, reason: "API_KEY_MISMATCH" });
     return null;
   }
 
-  logger.info("API key auth successful", {
+  logger.info("Successfully authenticated with api-key", {
     name: apiKeyFromDb.user.name,
     id: apiKeyFromDb.user.id,
   });

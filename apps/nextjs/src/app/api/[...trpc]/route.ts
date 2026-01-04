@@ -3,7 +3,8 @@ import { userAgent } from "next/server";
 import { createOpenApiFetchHandler } from "trpc-to-openapi";
 
 import { appRouter, createTRPCContext } from "@homarr/api";
-import { getSessionFromApiKeyAsync } from "@homarr/auth";
+import { API_KEY_HEADER_NAME, getSessionFromApiKeyAsync } from "@homarr/auth/api-key";
+import { ipAddressFromHeaders } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db } from "@homarr/db";
@@ -11,8 +12,8 @@ import { db } from "@homarr/db";
 const logger = createLogger({ module: "trpcOpenApiRoute" });
 
 const handlerAsync = async (req: NextRequest) => {
-  const apiKeyHeaderValue = req.headers.get("ApiKey");
-  const ipAddress = req.headers.get("x-forwarded-for");
+  const apiKeyHeaderValue = req.headers.get(API_KEY_HEADER_NAME);
+  const ipAddress = ipAddressFromHeaders(req.headers);
   const { ua } = userAgent(req);
 
   logger.info(
