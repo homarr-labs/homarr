@@ -1,5 +1,5 @@
-import { handleTransactionsAsync, inArray } from "@homarr/db";
 import type { Database } from "@homarr/db";
+import { inArray } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 import type { OldmarrConfig } from "@homarr/old-schema";
 
@@ -31,12 +31,5 @@ export const importSingleOldmarrConfigAsync = async (
 
   const boardInsertCollection = createBoardInsertCollection({ preparedApps, preparedBoards }, settings);
 
-  await handleTransactionsAsync(db, {
-    async handleAsync(db) {
-      await boardInsertCollection.insertAllAsync(db);
-    },
-    handleSync(db) {
-      boardInsertCollection.insertAll(db);
-    },
-  });
+  await boardInsertCollection.insertAllAsync(db);
 };

@@ -91,7 +91,7 @@ export const certificateRouter = createTRPCRouter({
         hostname: input.hostname,
         thumbprint: input.thumbprint,
       });
-      const dbResult = await ctx.db
+      await ctx.db
         .delete(trustedCertificateHostnames)
         .where(
           and(
@@ -103,7 +103,6 @@ export const certificateRouter = createTRPCRouter({
       logger.info("Removed trusted hostname", {
         hostname: input.hostname,
         thumbprint: input.thumbprint,
-        count: dbResult.changes,
       });
     }),
   removeCertificate: permissionRequiredProcedure

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { users } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 
 import { createAdapter } from "../adapter";
 
@@ -10,7 +10,7 @@ describe("createAdapter should create drizzle adapter", () => {
     "createAdapter getUserByEmail should return user for provider %s when this provider provided",
     async (provider) => {
       // Arrange
-      const db = createDb();
+      const db = await createDbAsync();
       const adapter = createAdapter(db, provider);
       const email = "test@example.com";
       await db.insert(users).values({ id: "1", name: "test", email, provider });
@@ -37,7 +37,7 @@ describe("createAdapter should create drizzle adapter", () => {
     "createAdapter getUserByEmail should return null if only for other providers than %s exist",
     async (requestedProvider, existingProviders) => {
       // Arrange
-      const db = createDb();
+      const db = await createDbAsync();
       const adapter = createAdapter(db, requestedProvider);
       const email = "test@example.com";
       for (const provider of existingProviders) {
@@ -54,7 +54,7 @@ describe("createAdapter should create drizzle adapter", () => {
 
   test("createAdapter getUserByEmail should throw error if provider is unknown", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const adapter = createAdapter(db, "unknown");
     const email = "test@example.com";
 

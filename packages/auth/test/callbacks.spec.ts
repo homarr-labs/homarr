@@ -4,7 +4,7 @@ import type { JWT } from "next-auth/jwt";
 import { describe, expect, test, vi } from "vitest";
 
 import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 import * as definitions from "@homarr/definitions";
 
 import { createSessionCallback, getCurrentUserPermissionsAsync } from "../callbacks";
@@ -20,7 +20,7 @@ vi.mock("next/headers", () => ({
 describe("getCurrentUserPermissions", () => {
   test("should return empty permissions when non existing user requested", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
 
     await db.insert(groups).values({
       id: "2",
@@ -46,7 +46,7 @@ describe("getCurrentUserPermissions", () => {
 
   test("should return empty permissions when user has no groups", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const userId = "1";
 
     await db.insert(groups).values({
@@ -71,7 +71,7 @@ describe("getCurrentUserPermissions", () => {
 
   test("should return permissions for user", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const getPermissionsWithChildrenMock = vi
       .spyOn(definitions, "getPermissionsWithChildren")
       .mockReturnValue(["board-create"]);
@@ -113,7 +113,7 @@ describe("session callback", () => {
       emailVerified: new Date("2023-01-13"),
     };
     const token: JWT = {};
-    const db = createDb();
+    const db = await createDbAsync();
     const callback = createSessionCallback(db);
 
     // Act

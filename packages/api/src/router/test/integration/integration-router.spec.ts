@@ -5,7 +5,7 @@ import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { encryptSecret } from "@homarr/common/server";
 import { apps, integrations, integrationSecrets } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
 
 import { integrationRouter } from "../../integration/integration-router";
@@ -30,7 +30,7 @@ vi.mock("../../integration/integration-test-connection", () => ({
 
 describe("all should return all integrations", () => {
   test("with any session should return all integrations", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -61,7 +61,7 @@ describe("all should return all integrations", () => {
 
 describe("byId should return an integration by id", () => {
   test("with full access should return an integration by id", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -88,7 +88,7 @@ describe("byId should return an integration by id", () => {
   });
 
   test("with full access should throw an error if the integration does not exist", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -100,7 +100,7 @@ describe("byId should return an integration by id", () => {
   });
 
   test("with full access should only return the public secret values", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -148,7 +148,7 @@ describe("byId should return an integration by id", () => {
 
   test("without full access should throw integration not found error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -174,7 +174,7 @@ describe("byId should return an integration by id", () => {
 
 describe("create should create a new integration", () => {
   test("with create integration access should create a new integration", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -209,7 +209,7 @@ describe("create should create a new integration", () => {
   });
 
   test("with create integration access should create a new integration when creating search engine", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -252,7 +252,7 @@ describe("create should create a new integration", () => {
   });
 
   test("with create integration access should create a new integration with new linked app", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -302,7 +302,7 @@ describe("create should create a new integration", () => {
   });
 
   test("with create integration access should create a new integration with existing linked app", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const appId = createId();
     await db.insert(apps).values({
       id: appId,
@@ -349,7 +349,7 @@ describe("create should create a new integration", () => {
 
   test("without create integration access should throw permission error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -372,7 +372,7 @@ describe("create should create a new integration", () => {
 
   test("without create app access should throw permission error with new linked app", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -403,7 +403,7 @@ describe("create should create a new integration", () => {
 
 describe("update should update an integration", () => {
   test("with full access should update an integration", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -486,7 +486,7 @@ describe("update should update an integration", () => {
   });
 
   test("with full access should throw an error if the integration does not exist", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -506,7 +506,7 @@ describe("update should update an integration", () => {
 
   test("without full access should throw permission error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -530,7 +530,7 @@ describe("update should update an integration", () => {
 
 describe("delete should delete an integration", () => {
   test("with full access should delete an integration", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,
@@ -564,7 +564,7 @@ describe("delete should delete an integration", () => {
 
   test("without full access should throw permission error", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = integrationRouter.createCaller({
       db,
       deviceType: undefined,

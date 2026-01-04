@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { invites, users } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 
 import { inviteRouter } from "../invite";
 
@@ -35,7 +35,7 @@ vi.mock("@homarr/auth/env", () => {
 describe("all should return all existing invites without sensitive informations", () => {
   test("invites should not contain sensitive informations", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = inviteRouter.createCaller({
       db,
       deviceType: undefined,
@@ -70,7 +70,7 @@ describe("all should return all existing invites without sensitive informations"
 
   test("invites should be sorted ascending by expiration date", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = inviteRouter.createCaller({
       db,
       deviceType: undefined,
@@ -110,7 +110,7 @@ describe("all should return all existing invites without sensitive informations"
 describe("create should create a new invite expiring on the specified date with a token and id returned to generate url", () => {
   test("creation should work with a date in the future, but less than 6 months.", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = inviteRouter.createCaller({
       db,
       deviceType: undefined,
@@ -142,7 +142,7 @@ describe("create should create a new invite expiring on the specified date with 
 describe("delete should remove invite by id", () => {
   test("deletion should remove present invite", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = inviteRouter.createCaller({
       db,
       deviceType: undefined,
@@ -180,7 +180,7 @@ describe("delete should remove invite by id", () => {
 
   test("deletion should throw with NOT_FOUND code when specified invite not present", async () => {
     // Arrange
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = inviteRouter.createCaller({
       db,
       deviceType: undefined,

@@ -2,7 +2,7 @@ import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, Wait } from "testcontainers";
 import { describe, expect, test, vi } from "vitest";
 
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 
 import { PiHoleIntegrationV5, PiHoleIntegrationV6 } from "../src";
 import type { SessionStore } from "../src/base/session-store";
@@ -13,7 +13,7 @@ vi.mock("@homarr/db", async (importActual) => {
   const actual = await importActual<typeof import("@homarr/db")>();
   return {
     ...actual,
-    db: createDb(),
+    db: await createDbAsync(),
   };
 });
 

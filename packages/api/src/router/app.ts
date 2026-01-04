@@ -141,13 +141,15 @@ export const appRouter = createTRPCRouter({
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(apps).values(
-        input.map((app) => ({
-          id: createId(),
-          name: app.name,
-          description: app.description,
-          iconUrl: app.iconUrl ?? getIconForName(ctx.db, app.name).sync()?.url ?? defaultIcon,
-          href: app.href,
-        })),
+        await Promise.all(
+          input.map(async (app) => ({
+            id: createId(),
+            name: app.name,
+            description: app.description,
+            iconUrl: app.iconUrl ?? (await getIconForName(ctx.db, app.name))?.url ?? defaultIcon,
+            href: app.href,
+          })),
+        ),
       );
     }),
   update: permissionRequiredProcedure

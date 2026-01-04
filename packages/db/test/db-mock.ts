@@ -1,15 +1,17 @@
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+import { createClient } from "@libsql/client/node";
+import { drizzle } from "drizzle-orm/libsql";
+import { migrate } from "drizzle-orm/libsql/migrator";
 
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 
 import * as sqliteSchema from "../schema/sqlite";
 
-export const createDb = (debug?: boolean) => {
-  const sqlite = new Database(":memory:");
+export const createDbAsync = async (debug?: boolean) => {
+  const sqlite = createClient({
+    url: ":memory:",
+  });
   const db = drizzle(sqlite, { schema: sqliteSchema, logger: debug, casing: DB_CASING });
-  migrate(db, {
+  await migrate(db, {
     migrationsFolder: "./packages/db/migrations/sqlite",
   });
 

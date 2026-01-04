@@ -1,6 +1,6 @@
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { createDbInsertCollectionForTransaction } from "@homarr/db/collection";
+import { createDbInsertCollection } from "@homarr/db/collection";
 import type { BoardSize, OldmarrConfig } from "@homarr/old-schema";
 import { boardSizes, getBoardSizeName } from "@homarr/old-schema";
 
@@ -21,14 +21,7 @@ export const createBoardInsertCollection = (
   { preparedApps, preparedBoards }: Omit<ReturnType<typeof prepareMultipleImports>, "preparedIntegrations">,
   settings: InitialOldmarrImportSettings,
 ) => {
-  const insertCollection = createDbInsertCollectionForTransaction([
-    "apps",
-    "boards",
-    "layouts",
-    "sections",
-    "items",
-    "itemLayouts",
-  ]);
+  const insertCollection = createDbInsertCollection(["apps", "boards", "layouts", "sections", "items", "itemLayouts"]);
   logger.info("Preparing boards for insert collection");
 
   const appsMap = new Map(

@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { serverSettings } from "@homarr/db/schema";
-import { createDb } from "@homarr/db/test";
+import { createDbAsync } from "@homarr/db/test";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
 
 import { serverSettingsRouter } from "../serverSettings";
@@ -23,7 +23,7 @@ const defaultSession = {
 
 describe("getAll server settings", () => {
   test("getAll should throw error when unauthorized", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = serverSettingsRouter.createCaller({
       db,
       deviceType: undefined,
@@ -42,7 +42,7 @@ describe("getAll server settings", () => {
     await expect(actAsync()).rejects.toThrow();
   });
   test("getAll should return default server settings when nothing in database", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = serverSettingsRouter.createCaller({
       db,
       deviceType: undefined,
@@ -57,7 +57,7 @@ describe("getAll server settings", () => {
 
 describe("saveSettings", () => {
   test("saveSettings should update settings and return true when it updated only one", async () => {
-    const db = createDb();
+    const db = await createDbAsync();
     const caller = serverSettingsRouter.createCaller({
       db,
       deviceType: undefined,

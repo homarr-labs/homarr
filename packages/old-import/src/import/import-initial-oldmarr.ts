@@ -2,7 +2,6 @@ import type { z } from "zod/v4";
 
 import { Stopwatch } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { handleTransactionsAsync } from "@homarr/db";
 import type { Database } from "@homarr/db";
 
 import { analyseOldmarrImportAsync } from "../analyse/analyse-oldmarr-import";
@@ -37,21 +36,10 @@ export const importInitialOldmarrAsync = async (
 
   logger.info("Inserting import data to database");
 
-  await handleTransactionsAsync(db, {
-    async handleAsync(db) {
-      await db.transaction(async (transaction) => {
-        await boardInsertCollection.insertAllAsync(transaction);
-        await userInsertCollection.insertAllAsync(transaction);
-        await integrationInsertCollection.insertAllAsync(transaction);
-      });
-    },
-    handleSync(db) {
-      db.transaction((transaction) => {
-        boardInsertCollection.insertAll(transaction);
-        userInsertCollection.insertAll(transaction);
-        integrationInsertCollection.insertAll(transaction);
-      });
-    },
+  await db.transaction(async (transaction) => {
+    await boardInsertCollection.insertAllAsync(transaction);
+    await userInsertCollection.insertAllAsync(transaction);
+    await integrationInsertCollection.insertAllAsync(transaction);
   });
 
   logger.info("Import successful", { duration: stopwatch.getElapsedInHumanWords() });

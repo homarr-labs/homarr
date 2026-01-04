@@ -1,6 +1,6 @@
 import { encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { createDbInsertCollectionForTransaction } from "@homarr/db/collection";
+import { createDbInsertCollection } from "@homarr/db/collection";
 
 import { mapAndDecryptIntegrations } from "../../mappers/map-integration";
 import type { PreparedIntegration } from "../../prepare/prepare-integrations";
@@ -11,7 +11,7 @@ export const createIntegrationInsertCollection = (
   preparedIntegrations: PreparedIntegration[],
   encryptionToken: string | null | undefined,
 ) => {
-  const insertCollection = createDbInsertCollectionForTransaction(["integrations", "integrationSecrets"]);
+  const insertCollection = createDbInsertCollection(["integrations", "integrationSecrets"]);
 
   if (preparedIntegrations.length === 0) {
     return insertCollection;

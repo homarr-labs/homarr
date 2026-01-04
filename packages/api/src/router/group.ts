@@ -3,7 +3,7 @@ import { z } from "zod/v4";
 
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
-import { and, eq, handleTransactionsAsync, like, not } from "@homarr/db";
+import { and, eq, like, not } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { groupMembers, groupPermissions, groups } from "@homarr/db/schema";
 import { everyoneGroup } from "@homarr/definitions";
@@ -252,21 +252,10 @@ export const groupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const positions = input.positions.map((id, index) => ({ id, position: index + 1 }));
 
-      await handleTransactionsAsync(ctx.db, {
-        handleAsync: async (db, schema) => {
-          await db.transaction(async (trx) => {
-            for (const { id, position } of positions) {
-              await trx.update(schema.groups).set({ position }).where(eq(groups.id, id));
-            }
-          });
-        },
-        handleSync: (db) => {
-          db.transaction((trx) => {
-            for (const { id, position } of positions) {
-              trx.update(groups).set({ position }).where(eq(groups.id, id)).run();
-            }
-          });
-        },
+      await ctx.db.transaction(async (trx) => {
+        for (const { id, position } of positions) {
+          await trx.update(groups).set({ position }).where(eq(groups.id, id));
+        }
       });
     }),
   savePermissions: permissionRequiredProcedure
