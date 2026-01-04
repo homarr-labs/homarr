@@ -442,6 +442,7 @@ interface ResourceRowProps {
     status?: string;
     fqdn?: string | null;
     updated_at?: string;
+    last_online_at?: string;
     projectName?: string;
     projectUuid?: string;
     environmentName?: string;
@@ -498,9 +499,9 @@ function ResourceRow({ item, isTiny, integrationUrl, resourceType }: ResourceRow
         <Text fz="10px" c="dimmed" lineClamp={1}>
           {item.projectName ?? "-"} / {item.environmentName ?? "-"}
         </Text>
-        {formatRelativeTime(item.updated_at) && (
+        {getResourceTimestamp(item, resourceType) && (
           <Text fz="10px" c="dimmed" ml="auto">
-            {formatRelativeTime(item.updated_at)}
+            {getResourceTimestamp(item, resourceType)}
           </Text>
         )}
       </Group>
@@ -567,4 +568,17 @@ function formatRelativeTime(dateString: string | undefined): string | undefined 
   }
   if (diffMin > 0) return `${diffMin}m ago`;
   return "just now";
+}
+
+function getResourceTimestamp(
+  item: { updated_at?: string; last_online_at?: string; status?: string },
+  resourceType: "application" | "service",
+): string | undefined {
+  const status = parseStatus(item.status ?? "");
+  const isRunning = status === "running";
+
+  if (isRunning) return undefined;
+
+  const timestamp = resourceType === "application" ? (item.last_online_at ?? item.updated_at) : item.updated_at;
+  return formatRelativeTime(timestamp);
 }

@@ -16,6 +16,7 @@ export interface CoolifyApplication {
   status: string;
   created_at: string;
   updated_at: string;
+  last_online_at?: string;
   fqdn?: string;
   dockerfile?: string;
   git_repository?: string;
