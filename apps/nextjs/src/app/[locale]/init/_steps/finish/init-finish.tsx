@@ -1,6 +1,9 @@
 import type { MantineColor } from "@mantine/core";
 import { Button, Card, Stack, Text } from "@mantine/core";
-import { IconBook2, IconCategoryPlus, IconLayoutDashboard, IconMailForward } from "@tabler/icons-react";
+import IconBook2 from "@tabler/icons-react/icons/IconBook2";
+import IconCategoryPlus from "@tabler/icons-react/icons/IconCategoryPlus";
+import IconLayoutDashboard from "@tabler/icons-react/icons/IconLayoutDashboard";
+import IconMailForward from "@tabler/icons-react/icons/IconMailForward";
 
 import { isProviderEnabled } from "@homarr/auth/server";
 import { getMantineColor } from "@homarr/common";

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Combobox, Group, InputBase, Loader, ScrollArea, Text, useCombobox } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
 
 import type { SupportedLanguage } from "@homarr/translation";
 import { localeConfigurations, supportedLanguages } from "@homarr/translation";

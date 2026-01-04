@@ -2,7 +2,9 @@
 
 import { ActionIcon, Badge, Button, Group, Select, Text } from "@mantine/core";
 import { useMap } from "@mantine/hooks";
-import { IconPlayerPlay, IconPower, IconRefresh } from "@tabler/icons-react";
+import IconPlayerPlay from "@tabler/icons-react/icons/IconPlayerPlay";
+import IconPower from "@tabler/icons-react/icons/IconPower";
+import IconRefresh from "@tabler/icons-react/icons/IconRefresh ";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 

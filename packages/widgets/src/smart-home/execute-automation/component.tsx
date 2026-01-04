@@ -3,7 +3,8 @@
 import React from "react";
 import { Center, LoadingOverlay, Overlay, Stack, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
 import { useDisclosure, useTimeout } from "@mantine/hooks";
-import { IconAutomation, IconCheck } from "@tabler/icons-react";
+import IconAutomation from "@tabler/icons-react/icons/IconAutomation";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
 
 import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";

@@ -2,16 +2,14 @@
 
 import React, { useMemo } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
-import {
-  IconDotsVertical,
-  IconEdit,
-  IconExternalLink,
-  IconRowInsertBottom,
-  IconRowInsertTop,
-  IconTransitionBottom,
-  IconTransitionTop,
-  IconTrash,
-} from "@tabler/icons-react";
+import IconDotsVertical from "@tabler/icons-react/icons/IconDotsVertical";
+import IconEdit from "@tabler/icons-react/icons/IconEdit";
+import IconExternalLink from "@tabler/icons-react/icons/IconExternalLink";
+import IconRowInsertBottom from "@tabler/icons-react/icons/IconRowInsertBottom";
+import IconRowInsertTop from "@tabler/icons-react/icons/IconRowInsertTop";
+import IconTransitionBottom from "@tabler/icons-react/icons/IconTransitionBottom";
+import IconTransitionTop from "@tabler/icons-react/icons/IconTransitionTop";
+import IconTrash from "@tabler/icons-react/icons/IconTrash";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
 import type { MaybePromise } from "@homarr/common/types";

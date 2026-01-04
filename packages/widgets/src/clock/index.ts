@@ -1,4 +1,4 @@
-import { IconClock } from "@tabler/icons-react";
+import IconClock from "@tabler/icons-react/icons/IconClock";
 import dayjs from "dayjs";
 
 import { createWidgetDefinition } from "../definition";

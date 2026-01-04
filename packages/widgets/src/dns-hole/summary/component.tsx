@@ -4,7 +4,10 @@ import { useMemo } from "react";
 import type { BoxProps } from "@mantine/core";
 import { Avatar, AvatarGroup, Card, Flex, SimpleGrid, Stack, Text, Tooltip, TooltipFloating } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { IconBarrierBlock, IconPercentage, IconSearch, IconWorldWww } from "@tabler/icons-react";
+import IconBarrierBlock from "@tabler/icons-react/icons/IconBarrierBlock";
+import IconPercentage from "@tabler/icons-react/icons/IconPercentage";
+import IconSearch from "@tabler/icons-react/icons/IconSearch";
+import IconWorldWww from "@tabler/icons-react/icons/IconWorldWww";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";

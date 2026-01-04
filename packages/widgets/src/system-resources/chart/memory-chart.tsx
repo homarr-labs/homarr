@@ -1,5 +1,5 @@
 import { Paper, Text } from "@mantine/core";
-import { IconBrain } from "@tabler/icons-react";
+import IconBrain from "@tabler/icons-react/icons/IconBrain";
 
 import { humanFileSize } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";

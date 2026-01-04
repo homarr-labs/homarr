@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Anchor, Flex } from "@mantine/core";
-import { IconArrowRight } from "@tabler/icons-react";
+import IconArrowRight from "@tabler/icons-react/icons/IconArrowRight";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { MRT_ColumnDef } from "mantine-react-table";

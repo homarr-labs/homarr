@@ -18,7 +18,7 @@ import {
   useCombobox,
 } from "@mantine/core";
 import { useDebouncedValue, useUncontrolled } from "@mantine/hooks";
-import { IconUpload } from "@tabler/icons-react";
+import IconUpload from "@tabler/icons-react/icons/IconUpload";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";

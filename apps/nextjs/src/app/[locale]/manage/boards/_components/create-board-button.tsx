@@ -1,7 +1,9 @@
 "use client";
 
 import { Affix, Button, Menu } from "@mantine/core";
-import { IconCategoryPlus, IconChevronDown, IconFileImport } from "@tabler/icons-react";
+import IconCategoryPlus from "@tabler/icons-react/icons/IconCategoryPlus";
+import IconChevronDown from "@tabler/icons-react/icons/IconChevronDown";
+import IconFileImport from "@tabler/icons-react/icons/IconFileImport";
 
 import { useModalAction } from "@homarr/modals";
 import { AddBoardModal, ImportBoardModal } from "@homarr/modals-collection";

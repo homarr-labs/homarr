@@ -1,4 +1,4 @@
-import { IconCloud } from "@tabler/icons-react";
+import IconCloud from "@tabler/icons-react/icons/IconCloud";
 import dayjs from "dayjs";
 import { z } from "zod/v4";
 

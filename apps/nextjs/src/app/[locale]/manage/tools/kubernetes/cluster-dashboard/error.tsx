@@ -1,7 +1,7 @@
 "use client";
 
 import { Anchor, Center, Stack, Text } from "@mantine/core";
-import { IconCubeOff } from "@tabler/icons-react";
+import IconCubeOff from "@tabler/icons-react/icons/IconCubeOff";
 
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";

@@ -1,18 +1,16 @@
 import { List, Stack, Text } from "@mantine/core";
-import {
-  IconCloud,
-  IconCloudFog,
-  IconCloudRain,
-  IconCloudSnow,
-  IconCloudStorm,
-  IconMoon,
-  IconQuestionMark,
-  IconSnowflake,
-  IconSun,
-  IconTemperatureMinus,
-  IconTemperaturePlus,
-  IconWind,
-} from "@tabler/icons-react";
+import IconCloud from "@tabler/icons-react/icons/IconCloud";
+import IconCloudFog from "@tabler/icons-react/icons/IconCloudFog";
+import IconCloudRain from "@tabler/icons-react/icons/IconCloudRain";
+import IconCloudSnow from "@tabler/icons-react/icons/IconCloudSnow";
+import IconCloudStorm from "@tabler/icons-react/icons/IconCloudStorm";
+import IconMoon from "@tabler/icons-react/icons/IconMoon";
+import IconQuestionMark from "@tabler/icons-react/icons/IconQuestionMark";
+import IconSnowflake from "@tabler/icons-react/icons/IconSnowflake";
+import IconSun from "@tabler/icons-react/icons/IconSun";
+import IconTemperatureMinus from "@tabler/icons-react/icons/IconTemperatureMinus";
+import IconTemperaturePlus from "@tabler/icons-react/icons/IconTemperaturePlus";
+import IconWind from "@tabler/icons-react/icons/IconWind";
 import dayjs from "dayjs";
 
 import { metricToImperial } from "@homarr/common";

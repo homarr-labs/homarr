@@ -14,7 +14,11 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { IconDeviceMobile, IconDotsVertical, IconHomeFilled, IconLock, IconWorld } from "@tabler/icons-react";
+import IconDeviceMobile from "@tabler/icons-react/icons/IconDeviceMobile";
+import IconDotsVertical from "@tabler/icons-react/icons/IconDotsVertical";
+import IconHomeFilled from "@tabler/icons-react/icons/IconHomeFilled";
+import IconLock from "@tabler/icons-react/icons/IconLock";
+import IconWorld from "@tabler/icons-react/icons/IconWorld";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";

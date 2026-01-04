@@ -1,4 +1,6 @@
-import { IconBrandGit, IconCloudShare, IconGeometry } from "@tabler/icons-react";
+import IconBrandGit from "@tabler/icons-react/icons/IconBrandGit";
+import IconCloudShare from "@tabler/icons-react/icons/IconCloudShare";
+import IconGeometry from "@tabler/icons-react/icons/IconGeometry";
 
 import type { HeaderTypes } from "~/app/[locale]/manage/tools/kubernetes/cluster-dashboard/header-card/header-card";
 

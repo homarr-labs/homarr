@@ -1,5 +1,8 @@
 import { Button, Card, Group } from "@mantine/core";
-import { IconArrowBackUp, IconArrowLeft, IconArrowRight, IconRotate } from "@tabler/icons-react";
+import IconArrowBackUp from "@tabler/icons-react/icons/IconArrowBackUp";
+import IconArrowLeft from "@tabler/icons-react/icons/IconArrowLeft";
+import IconArrowRight from "@tabler/icons-react/icons/IconArrowRight";
+import IconRotate from "@tabler/icons-react/icons/IconRotate";
 
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";

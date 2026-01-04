@@ -1,6 +1,7 @@
 import { Card, Collapse, Group, Stack, Title, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import IconChevronDown from "@tabler/icons-react/icons/IconChevronDown";
+import IconChevronUp from "@tabler/icons-react/icons/IconChevronUp";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";

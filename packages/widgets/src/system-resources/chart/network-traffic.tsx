@@ -1,5 +1,6 @@
 import { Paper, Text } from "@mantine/core";
-import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
+import IconArrowDown from "@tabler/icons-react/icons/IconArrowDown";
+import IconArrowUp from "@tabler/icons-react/icons/IconArrowUp";
 
 import { humanFileSize } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";

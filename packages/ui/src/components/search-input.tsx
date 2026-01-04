@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Loader, TextInput } from "@mantine/core";
 import { useDebouncedCallback } from "@mantine/hooks";
-import { IconSearch } from "@tabler/icons-react";
+import IconSearch from "@tabler/icons-react/icons/IconSearch";
 
 interface SearchInputProps {
   defaultValue?: string;

@@ -33,7 +33,7 @@ import {
   Text,
   Transition,
 } from "@mantine/core";
-import { IconGripVertical } from "@tabler/icons-react";
+import IconGripVertical from "@tabler/icons-react/icons/IconGripVertical";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

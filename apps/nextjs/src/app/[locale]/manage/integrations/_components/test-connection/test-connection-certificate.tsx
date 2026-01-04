@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { ActionIcon, Alert, Anchor, Button, Card, CopyButton, Group, SimpleGrid, Stack, Text } from "@mantine/core";
-import { IconAlertTriangle, IconCheck, IconCopy, IconExclamationCircle, IconRepeat } from "@tabler/icons-react";
+import IconAlertTriangle from "@tabler/icons-react/icons/IconAlertTriangle";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
+import IconCopy from "@tabler/icons-react/icons/IconCopy";
+import IconExclamationCircle from "@tabler/icons-react/icons/IconExclamationCircle";
+import IconRepeat from "@tabler/icons-react/icons/IconRepeat";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";

@@ -2,7 +2,8 @@
 
 import { Sparkline } from "@mantine/charts";
 import { Flex, Stack, Text, Title, useMantineTheme } from "@mantine/core";
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import IconTrendingDown from "@tabler/icons-react/icons/IconTrendingDown";
+import IconTrendingUp from "@tabler/icons-react/icons/IconTrendingUp";
 
 import { clientApi } from "@homarr/api/client";
 import { useScopedI18n } from "@homarr/translation/client";

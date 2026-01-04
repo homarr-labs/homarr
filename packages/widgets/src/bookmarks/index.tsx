@@ -1,5 +1,6 @@
 import { ActionIcon, Avatar, Group, Stack, Text } from "@mantine/core";
-import { IconBookmark, IconX } from "@tabler/icons-react";
+import IconBookmark from "@tabler/icons-react/icons/IconBookmark";
+import IconX from "@tabler/icons-react/icons/IconX";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

@@ -1,5 +1,6 @@
 import { Group, Stack, Text } from "@mantine/core";
-import { IconEye, IconUsersGroup } from "@tabler/icons-react";
+import IconEye from "@tabler/icons-react/icons/IconEye";
+import IconUsersGroup from "@tabler/icons-react/icons/IconUsersGroup";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";

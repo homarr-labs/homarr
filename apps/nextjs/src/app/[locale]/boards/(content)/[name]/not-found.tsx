@@ -1,4 +1,4 @@
-import { IconLayoutOff } from "@tabler/icons-react";
+import IconLayoutOff from "@tabler/icons-react/icons/IconLayoutOff";
 
 import { getScopedI18n } from "@homarr/translation/server";
 

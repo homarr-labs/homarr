@@ -1,7 +1,8 @@
 import type { PropsWithChildren } from "react";
 import { notFound } from "next/navigation";
 import { Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
-import { IconSettings, IconShieldLock } from "@tabler/icons-react";
+import IconSettings from "@tabler/icons-react/icons/IconSettings";
+import IconShieldLock from "@tabler/icons-react/icons/IconShieldLock";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";

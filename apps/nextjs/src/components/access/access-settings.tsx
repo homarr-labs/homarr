@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Group, Stack, Tabs } from "@mantine/core";
-import { IconUser, IconUserDown, IconUsersGroup } from "@tabler/icons-react";
+import IconUser from "@tabler/icons-react/icons/IconUser";
+import IconUserDown from "@tabler/icons-react/icons/IconUserDown";
+import IconUsersGroup from "@tabler/icons-react/icons/IconUsersGroup";
 
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { useScopedI18n } from "@homarr/translation/client";

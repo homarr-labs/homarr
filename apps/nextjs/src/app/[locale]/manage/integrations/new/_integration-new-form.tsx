@@ -16,7 +16,8 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconCheck, IconInfoCircle } from "@tabler/icons-react";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
+import IconInfoCircle from "@tabler/icons-react/icons/IconInfoCircle";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";

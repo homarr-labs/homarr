@@ -1,5 +1,6 @@
 import { Group, Image, Kbd, Stack, Text } from "@mantine/core";
-import { IconDownload, IconSearch } from "@tabler/icons-react";
+import IconDownload from "@tabler/icons-react/icons/IconDownload";
+import IconSearch from "@tabler/icons-react/icons/IconSearch";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

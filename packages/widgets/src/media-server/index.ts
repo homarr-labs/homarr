@@ -1,4 +1,4 @@
-import { IconVideo } from "@tabler/icons-react";
+import IconVideo from "@tabler/icons-react/icons/IconVideo";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 

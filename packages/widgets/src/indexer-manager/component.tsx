@@ -1,7 +1,10 @@
 "use client";
 
 import { ActionIcon, Anchor, Button, Card, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
-import { IconCircleCheck, IconCircleX, IconReportSearch, IconTestPipe } from "@tabler/icons-react";
+import IconCircleCheck from "@tabler/icons-react/icons/IconCircleCheck";
+import IconCircleX from "@tabler/icons-react/icons/IconCircleX";
+import IconReportSearch from "@tabler/icons-react/icons/IconReportSearch";
+import IconTestPipe from "@tabler/icons-react/icons/IconTestPipe";
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";

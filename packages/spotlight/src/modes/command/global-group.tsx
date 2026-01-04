@@ -1,16 +1,14 @@
 import { Group, Text, useMantineColorScheme } from "@mantine/core";
-import {
-  IconBox,
-  IconCategoryPlus,
-  IconFileImport,
-  IconLanguage,
-  IconMailForward,
-  IconMoon,
-  IconPlug,
-  IconSun,
-  IconUserPlus,
-  IconUsersGroup,
-} from "@tabler/icons-react";
+import IconBox from "@tabler/icons-react/icons/IconBox";
+import IconCategoryPlus from "@tabler/icons-react/icons/IconCategoryPlus";
+import IconFileImport from "@tabler/icons-react/icons/IconFileImport";
+import IconLanguage from "@tabler/icons-react/icons/IconLanguage";
+import IconMailForward from "@tabler/icons-react/icons/IconMailForward";
+import IconMoon from "@tabler/icons-react/icons/IconMoon";
+import IconPlug from "@tabler/icons-react/icons/IconPlug";
+import IconSun from "@tabler/icons-react/icons/IconSun";
+import IconUserPlus from "@tabler/icons-react/icons/IconUserPlus";
+import IconUsersGroup from "@tabler/icons-react/icons/IconUsersGroup";
 
 import { useSession } from "@homarr/auth/client";
 import { useModalAction } from "@homarr/modals";

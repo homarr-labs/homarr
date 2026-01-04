@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useRef } from "react";
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconCopy, IconDotsVertical, IconLayoutKanban, IconPencil, IconTrash } from "@tabler/icons-react";
+import IconCopy from "@tabler/icons-react/icons/IconCopy";
+import IconDotsVertical from "@tabler/icons-react/icons/IconDotsVertical";
+import IconLayoutKanban from "@tabler/icons-react/icons/IconLayoutKanban";
+import IconPencil from "@tabler/icons-react/icons/IconPencil";
+import IconTrash from "@tabler/icons-react/icons/IconTrash";
 
 import { clientApi } from "@homarr/api/client";
 import { useEditMode } from "@homarr/boards/edit-mode";

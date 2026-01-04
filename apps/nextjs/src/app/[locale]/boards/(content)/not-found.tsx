@@ -1,4 +1,4 @@
-import { IconHomeOff } from "@tabler/icons-react";
+import IconHomeOff from "@tabler/icons-react/icons/IconHomeOff";
 
 import { auth } from "@homarr/auth/next";
 import { db } from "@homarr/db";

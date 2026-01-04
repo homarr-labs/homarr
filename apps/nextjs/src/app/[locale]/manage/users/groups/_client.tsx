@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { Group, TextInput } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import IconSearch from "@tabler/icons-react/icons/IconSearch";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useModalAction } from "@homarr/modals";

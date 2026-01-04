@@ -1,7 +1,7 @@
 "use client";
 
 import { Group, Select } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
 
 import { translateIfNecessary } from "@homarr/translation";
 import type { stringOrTranslation } from "@homarr/translation";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Anchor, Box, Button, Group, Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine/core";
-import { IconPlus } from "@tabler/icons-react";
+import IconPlus from "@tabler/icons-react/icons/IconPlus";
 
 import { useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";

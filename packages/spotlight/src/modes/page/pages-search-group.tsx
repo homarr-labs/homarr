@@ -1,20 +1,18 @@
 import { Group, Text } from "@mantine/core";
-import {
-  IconBox,
-  IconBrandDocker,
-  IconHome,
-  IconInfoSmall,
-  IconLayoutDashboard,
-  IconLogs,
-  IconMailForward,
-  IconPhoto,
-  IconPlug,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
-  IconUsersGroup,
-} from "@tabler/icons-react";
+import IconBox from "@tabler/icons-react/icons/IconBox";
+import IconBrandDocker from "@tabler/icons-react/icons/IconBrandDocker";
+import IconHome from "@tabler/icons-react/icons/IconHome";
+import IconInfoSmall from "@tabler/icons-react/icons/IconInfoSmall";
+import IconLayoutDashboard from "@tabler/icons-react/icons/IconLayoutDashboard";
+import IconLogs from "@tabler/icons-react/icons/IconLogs";
+import IconMailForward from "@tabler/icons-react/icons/IconMailForward";
+import IconPhoto from "@tabler/icons-react/icons/IconPhoto";
+import IconPlug from "@tabler/icons-react/icons/IconPlug";
+import IconReport from "@tabler/icons-react/icons/IconReport";
+import IconSearch from "@tabler/icons-react/icons/IconSearch";
+import IconSettings from "@tabler/icons-react/icons/IconSettings";
+import IconUsers from "@tabler/icons-react/icons/IconUsers";
+import IconUsersGroup from "@tabler/icons-react/icons/IconUsersGroup";
 
 import { useSession } from "@homarr/auth/client";
 import { useScopedI18n } from "@homarr/translation/client";

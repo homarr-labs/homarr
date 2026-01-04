@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 import { ActionIcon, Button, Title } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import IconTrash from "@tabler/icons-react/icons/IconTrash";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { MRT_ColumnDef, MRT_Row } from "mantine-react-table";

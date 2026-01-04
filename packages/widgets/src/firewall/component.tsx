@@ -3,7 +3,11 @@
 import { useCallback, useState } from "react";
 import { Accordion, Box, Center, Flex, Group, RingProgress, ScrollArea, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
-import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconCpu, IconTopologyBus } from "@tabler/icons-react";
+import IconArrowBarDown from "@tabler/icons-react/icons/IconArrowBarDown";
+import IconArrowBarUp from "@tabler/icons-react/icons/IconArrowBarUp";
+import IconBrain from "@tabler/icons-react/icons/IconBrain";
+import IconCpu from "@tabler/icons-react/icons/IconCpu";
+import IconTopologyBus from "@tabler/icons-react/icons/IconTopologyBus";
 
 import { clientApi } from "@homarr/api/client";
 import type { FirewallInterface, FirewallInterfacesSummary } from "@homarr/integrations";

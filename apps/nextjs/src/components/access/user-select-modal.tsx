@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { SelectProps } from "@mantine/core";
 import { Button, Group, Loader, Select, Stack } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

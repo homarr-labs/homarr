@@ -11,7 +11,8 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { IconHeartbeat, IconTransform } from "@tabler/icons-react";
+import IconHeartbeat from "@tabler/icons-react/icons/IconHeartbeat";
+import IconTransform from "@tabler/icons-react/icons/IconTransform";
 
 import type { TdarrWorker } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";

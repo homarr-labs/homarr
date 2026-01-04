@@ -1,29 +1,27 @@
 import type { PropsWithChildren } from "react";
 import { AppShellMain } from "@mantine/core";
-import {
-  IconAffiliateFilled,
-  IconBook2,
-  IconBox,
-  IconBrandDiscord,
-  IconBrandDocker,
-  IconBrandGithub,
-  IconBrandTablerFilled,
-  IconCertificate,
-  IconClipboardListFilled,
-  IconDirectionsFilled,
-  IconGitFork,
-  IconHelpSquareRoundedFilled,
-  IconHomeFilled,
-  IconLayoutDashboardFilled,
-  IconMailForward,
-  IconPhotoFilled,
-  IconPointerFilled,
-  IconSearch,
-  IconSettingsFilled,
-  IconUserFilled,
-  IconUsers,
-  IconUsersGroup,
-} from "@tabler/icons-react";
+import IconAffiliateFilled from "@tabler/icons-react/icons/IconAffiliateFilled";
+import IconBook2 from "@tabler/icons-react/icons/IconBook2";
+import IconBox from "@tabler/icons-react/icons/IconBox";
+import IconBrandDiscord from "@tabler/icons-react/icons/IconBrandDiscord";
+import IconBrandDocker from "@tabler/icons-react/icons/IconBrandDocker";
+import IconBrandGithub from "@tabler/icons-react/icons/IconBrandGithub";
+import IconBrandTablerFilled from "@tabler/icons-react/icons/IconBrandTablerFilled";
+import IconCertificate from "@tabler/icons-react/icons/IconCertificate";
+import IconClipboardListFilled from "@tabler/icons-react/icons/IconClipboardListFilled";
+import IconDirectionsFilled from "@tabler/icons-react/icons/IconDirectionsFilled";
+import IconGitFork from "@tabler/icons-react/icons/IconGitFork";
+import IconHelpSquareRoundedFilled from "@tabler/icons-react/icons/IconHelpSquareRoundedFilled";
+import IconHomeFilled from "@tabler/icons-react/icons/IconHomeFilled";
+import IconLayoutDashboardFilled from "@tabler/icons-react/icons/IconLayoutDashboardFilled";
+import IconMailForward from "@tabler/icons-react/icons/IconMailForward";
+import IconPhotoFilled from "@tabler/icons-react/icons/IconPhotoFilled";
+import IconPointerFilled from "@tabler/icons-react/icons/IconPointerFilled";
+import IconSearch from "@tabler/icons-react/icons/IconSearch";
+import IconSettingsFilled from "@tabler/icons-react/icons/IconSettingsFilled";
+import IconUserFilled from "@tabler/icons-react/icons/IconUserFilled";
+import IconUsers from "@tabler/icons-react/icons/IconUsers";
+import IconUsersGroup from "@tabler/icons-react/icons/IconUsersGroup";
 
 import { auth } from "@homarr/auth/next";
 import { isProviderEnabled } from "@homarr/auth/server";

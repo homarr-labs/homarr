@@ -18,7 +18,7 @@ import {
 } from "@dnd-kit/sortable";
 import type { ActionIconProps } from "@mantine/core";
 import { ActionIcon, Card, Center, Fieldset, Loader, Stack } from "@mantine/core";
-import { IconGripHorizontal } from "@tabler/icons-react";
+import IconGripHorizontal from "@tabler/icons-react/icons/IconGripHorizontal";
 
 import { useWidgetInputTranslation } from "./common";
 import type { CommonWidgetInputProps } from "./common";

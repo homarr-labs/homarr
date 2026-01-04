@@ -1,5 +1,5 @@
 import { Paper, Text } from "@mantine/core";
-import { IconCpu } from "@tabler/icons-react";
+import IconCpu from "@tabler/icons-react/icons/IconCpu";
 
 import { useScopedI18n } from "@homarr/translation/client";
 

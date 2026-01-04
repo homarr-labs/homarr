@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import IconSearch from "@tabler/icons-react/icons/IconSearch";
 
 import { objectEntries } from "@homarr/common";
 import type { WidgetKind } from "@homarr/definitions";

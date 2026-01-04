@@ -2,7 +2,8 @@
 
 import React from "react";
 import { Badge, rem, RingProgress, Text } from "@mantine/core";
-import { IconCircleDashedCheck, IconHeartBroken } from "@tabler/icons-react";
+import IconCircleDashedCheck from "@tabler/icons-react/icons/IconCircleDashedCheck";
+import IconHeartBroken from "@tabler/icons-react/icons/IconHeartBroken";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { MRT_ColumnDef } from "mantine-react-table";

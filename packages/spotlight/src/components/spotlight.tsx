@@ -4,7 +4,9 @@ import type { Dispatch, SetStateAction } from "react";
 import { useMemo, useRef, useState } from "react";
 import { ActionIcon, Center, Group, Kbd } from "@mantine/core";
 import { Spotlight as MantineSpotlight } from "@mantine/spotlight";
-import { IconQuestionMark, IconSearch, IconX } from "@tabler/icons-react";
+import IconQuestionMark from "@tabler/icons-react/icons/IconQuestionMark";
+import IconSearch from "@tabler/icons-react/icons/IconSearch";
+import IconX from "@tabler/icons-react/icons/IconX";
 
 import { hotkeys } from "@homarr/definitions";
 import type { TranslationObject } from "@homarr/translation";

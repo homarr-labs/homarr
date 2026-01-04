@@ -1,7 +1,8 @@
 "use client";
 
 import { Box, Flex, Group, Text, Tooltip } from "@mantine/core";
-import { IconCube, IconUsersGroup } from "@tabler/icons-react";
+import IconCube from "@tabler/icons-react/icons/IconCube";
+import IconUsersGroup from "@tabler/icons-react/icons/IconUsersGroup";
 
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";

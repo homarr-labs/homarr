@@ -24,17 +24,15 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconAlertTriangle,
-  IconCirclesRelation,
-  IconFilter,
-  IconInfinity,
-  IconInfoCircle,
-  IconPlayerPause,
-  IconPlayerPlay,
-  IconTrash,
-  IconX,
-} from "@tabler/icons-react";
+import IconAlertTriangle from "@tabler/icons-react/icons/IconAlertTriangle";
+import IconCirclesRelation from "@tabler/icons-react/icons/IconCirclesRelation";
+import IconFilter from "@tabler/icons-react/icons/IconFilter";
+import IconInfinity from "@tabler/icons-react/icons/IconInfinity";
+import IconInfoCircle from "@tabler/icons-react/icons/IconInfoCircle";
+import IconPlayerPause from "@tabler/icons-react/icons/IconPlayerPause";
+import IconPlayerPlay from "@tabler/icons-react/icons/IconPlayerPlay";
+import IconTrash from "@tabler/icons-react/icons/IconTrash";
+import IconX from "@tabler/icons-react/icons/IconX";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { MRT_ColumnDef, MRT_VisibilityState } from "mantine-react-table";

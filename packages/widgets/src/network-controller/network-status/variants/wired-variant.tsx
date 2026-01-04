@@ -1,5 +1,5 @@
 import { Group, Stack, Text } from "@mantine/core";
-import { IconNetwork } from "@tabler/icons-react";
+import IconNetwork from "@tabler/icons-react/icons/IconNetwork";
 
 import { useScopedI18n } from "@homarr/translation/client";
 

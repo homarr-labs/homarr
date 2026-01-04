@@ -1,4 +1,4 @@
-import { IconBinaryTree } from "@tabler/icons-react";
+import IconBinaryTree from "@tabler/icons-react/icons/IconBinaryTree";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 

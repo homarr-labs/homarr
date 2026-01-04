@@ -1,7 +1,7 @@
 "use client";
 
 import { TextInput, UnstyledButton } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import IconSearch from "@tabler/icons-react/icons/IconSearch";
 
 import { openSpotlight } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";

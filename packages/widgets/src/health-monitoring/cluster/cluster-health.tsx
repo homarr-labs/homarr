@@ -1,5 +1,10 @@
 import { Accordion, Center, Flex, Group, RingProgress, Stack, Text } from "@mantine/core";
-import { IconBrain, IconCpu, IconCube, IconDatabase, IconDeviceLaptop, IconServer } from "@tabler/icons-react";
+import IconBrain from "@tabler/icons-react/icons/IconBrain";
+import IconCpu from "@tabler/icons-react/icons/IconCpu";
+import IconCube from "@tabler/icons-react/icons/IconCube";
+import IconDatabase from "@tabler/icons-react/icons/IconDatabase";
+import IconDeviceLaptop from "@tabler/icons-react/icons/IconDeviceLaptop";
+import IconServer from "@tabler/icons-react/icons/IconServer";
 
 import { clientApi } from "@homarr/api/client";
 import type { Resource } from "@homarr/integrations/types";

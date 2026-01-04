@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, FileInput, Group, Stack, TextInput } from "@mantine/core";
-import { IconFileUpload } from "@tabler/icons-react";
+import IconFileUpload from "@tabler/icons-react/icons/IconFileUpload";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";

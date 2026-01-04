@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
+import IconPlus from "@tabler/icons-react/icons/IconPlus";
+import IconSearch from "@tabler/icons-react/icons/IconSearch";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

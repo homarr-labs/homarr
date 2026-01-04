@@ -1,4 +1,4 @@
-import { IconPlugX } from "@tabler/icons-react";
+import IconPlugX from "@tabler/icons-react/icons/IconPlugX";
 
 import type { TranslationFunction } from "@homarr/translation";
 

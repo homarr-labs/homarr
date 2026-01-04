@@ -1,6 +1,9 @@
 import type { PropsWithChildren } from "react";
 import { Button, Grid, GridCol, Group, Stack, Text, Title } from "@mantine/core";
-import { IconId, IconLock, IconSettings, IconUsersGroup } from "@tabler/icons-react";
+import IconId from "@tabler/icons-react/icons/IconId";
+import IconLock from "@tabler/icons-react/icons/IconLock";
+import IconSettings from "@tabler/icons-react/icons/IconSettings";
+import IconUsersGroup from "@tabler/icons-react/icons/IconUsersGroup";
 
 import { api } from "@homarr/api/server";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";

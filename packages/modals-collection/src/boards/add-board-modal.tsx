@@ -1,6 +1,7 @@
 import { Button, Group, InputWrapper, Slider, Stack, Switch, TextInput } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
-import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react";
+import IconAlertTriangle from "@tabler/icons-react/icons/IconAlertTriangle";
+import IconCircleCheck from "@tabler/icons-react/icons/IconCircleCheck";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";

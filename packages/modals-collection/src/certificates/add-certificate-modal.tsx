@@ -1,5 +1,5 @@
 import { Button, FileInput, Group, Stack } from "@mantine/core";
-import { IconCertificate } from "@tabler/icons-react";
+import IconCertificate from "@tabler/icons-react/icons/IconCertificate";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";

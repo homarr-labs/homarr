@@ -3,7 +3,10 @@
 import type { ReactNode } from "react";
 import { Fragment, useMemo } from "react";
 import { Avatar, Divider, Flex, Group, Stack, Text, Title } from "@mantine/core";
-import { IconDeviceTv, IconHeadphones, IconMovie, IconVideo } from "@tabler/icons-react";
+import IconDeviceTv from "@tabler/icons-react/icons/IconDeviceTv";
+import IconHeadphones from "@tabler/icons-react/icons/IconHeadphones";
+import IconMovie from "@tabler/icons-react/icons/IconMovie";
+import IconVideo from "@tabler/icons-react/icons/IconVideo";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 

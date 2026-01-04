@@ -1,4 +1,4 @@
-import { IconRocket } from "@tabler/icons-react";
+import IconRocket from "@tabler/icons-react/icons/IconRocket";
 import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../definition";

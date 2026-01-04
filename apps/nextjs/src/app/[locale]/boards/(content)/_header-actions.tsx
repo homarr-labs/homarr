@@ -4,18 +4,16 @@ import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Group, Menu, ScrollArea } from "@mantine/core";
 import { useHotkeys } from "@mantine/hooks";
-import {
-  IconBox,
-  IconBoxAlignTop,
-  IconChevronDown,
-  IconLayoutBoard,
-  IconPencil,
-  IconPencilOff,
-  IconPlus,
-  IconReplace,
-  IconResize,
-  IconSettings,
-} from "@tabler/icons-react";
+import IconBox from "@tabler/icons-react/icons/IconBox";
+import IconBoxAlignTop from "@tabler/icons-react/icons/IconBoxAlignTop";
+import IconChevronDown from "@tabler/icons-react/icons/IconChevronDown";
+import IconLayoutBoard from "@tabler/icons-react/icons/IconLayoutBoard";
+import IconPencil from "@tabler/icons-react/icons/IconPencil";
+import IconPencilOff from "@tabler/icons-react/icons/IconPencilOff";
+import IconPlus from "@tabler/icons-react/icons/IconPlus";
+import IconReplace from "@tabler/icons-react/icons/IconReplace";
+import IconResize from "@tabler/icons-react/icons/IconResize";
+import IconSettings from "@tabler/icons-react/icons/IconSettings";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";

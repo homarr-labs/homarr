@@ -1,6 +1,6 @@
 import { ActionIcon, Button, Card, Group, Text } from "@mantine/core";
 import type { FileWithPath } from "@mantine/dropzone";
-import { IconPencil } from "@tabler/icons-react";
+import IconPencil from "@tabler/icons-react/icons/IconPencil";
 
 import { humanFileSize } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";

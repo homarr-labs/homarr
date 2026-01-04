@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { Center, Stack, Text, UnstyledButton } from "@mantine/core";
-import { IconBinaryTree } from "@tabler/icons-react";
+import IconBinaryTree from "@tabler/icons-react/icons/IconBinaryTree";
 
 import { clientApi } from "@homarr/api/client";
 import { useRegisterSpotlightContextActions } from "@homarr/spotlight";

@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { Anchor, Box, Center, Group, Stack, Title } from "@mantine/core";
-import { IconBrandYoutube, IconDeviceCctvOff } from "@tabler/icons-react";
+import IconBrandYoutube from "@tabler/icons-react/icons/IconBrandYoutube";
+import IconDeviceCctvOff from "@tabler/icons-react/icons/IconDeviceCctvOff";
 import videojs from "video.js";
 
 import { useI18n } from "@homarr/translation/client";

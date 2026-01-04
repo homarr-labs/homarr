@@ -2,7 +2,8 @@
 
 import { useMemo } from "react";
 import { Box, Center, List, Text, useMantineTheme } from "@mantine/core";
-import { IconCircleCheckFilled, IconCircleXFilled } from "@tabler/icons-react";
+import IconCircleCheckFilled from "@tabler/icons-react/icons/IconCircleCheckFilled";
+import IconCircleXFilled from "@tabler/icons-react/icons/IconCircleXFilled";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import objectSupport from "dayjs/plugin/objectSupport";

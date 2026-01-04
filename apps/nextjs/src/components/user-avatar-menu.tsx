@@ -5,16 +5,14 @@ import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Center, Menu, Stack, Text, useMantineColorScheme } from "@mantine/core";
 import { useHotkeys, useTimeout } from "@mantine/hooks";
-import {
-  IconCheck,
-  IconHome,
-  IconLogin,
-  IconLogout,
-  IconMoon,
-  IconSettings,
-  IconSun,
-  IconTool,
-} from "@tabler/icons-react";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
+import IconHome from "@tabler/icons-react/icons/IconHome";
+import IconLogin from "@tabler/icons-react/icons/IconLogin";
+import IconLogout from "@tabler/icons-react/icons/IconLogout";
+import IconMoon from "@tabler/icons-react/icons/IconMoon";
+import IconSettings from "@tabler/icons-react/icons/IconSettings";
+import IconSun from "@tabler/icons-react/icons/IconSun";
+import IconTool from "@tabler/icons-react/icons/IconTool";
 
 import type { RouterOutputs } from "@homarr/api";
 import { signOut, useSession } from "@homarr/auth/client";

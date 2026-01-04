@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { ActionIcon } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import IconTrash from "@tabler/icons-react/icons/IconTrash";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";

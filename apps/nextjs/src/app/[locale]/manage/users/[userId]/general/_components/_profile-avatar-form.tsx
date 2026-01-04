@@ -3,7 +3,9 @@
 import { useCallback } from "react";
 import { Box, Button, FileButton, Menu, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPencil, IconPhotoEdit, IconPhotoX } from "@tabler/icons-react";
+import IconPencil from "@tabler/icons-react/icons/IconPencil";
+import IconPhotoEdit from "@tabler/icons-react/icons/IconPhotoEdit";
+import IconPhotoX from "@tabler/icons-react/icons/IconPhotoX ";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

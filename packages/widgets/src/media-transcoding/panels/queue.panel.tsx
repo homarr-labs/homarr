@@ -1,5 +1,6 @@
 import { Center, Group, ScrollArea, Table, TableTd, TableTh, TableTr, Text, Title, Tooltip } from "@mantine/core";
-import { IconHeartbeat, IconTransform } from "@tabler/icons-react";
+import IconHeartbeat from "@tabler/icons-react/icons/IconHeartbeat";
+import IconTransform from "@tabler/icons-react/icons/IconTransform";
 
 import { humanFileSize } from "@homarr/common";
 import type { TdarrQueue } from "@homarr/integrations";

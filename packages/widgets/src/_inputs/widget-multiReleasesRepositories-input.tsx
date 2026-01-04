@@ -21,18 +21,16 @@ import {
 } from "@mantine/core";
 import type { FormErrors } from "@mantine/form";
 import { useDebouncedValue } from "@mantine/hooks";
-import {
-  IconAlertTriangleFilled,
-  IconBrandDocker,
-  IconCopy,
-  IconCopyCheckFilled,
-  IconEdit,
-  IconPackageImport,
-  IconPlus,
-  IconTrash,
-  IconTriangleFilled,
-  IconZoomScan,
-} from "@tabler/icons-react";
+import IconAlertTriangleFilled from "@tabler/icons-react/icons/IconAlertTriangleFilled";
+import IconBrandDocker from "@tabler/icons-react/icons/IconBrandDocker";
+import IconCopy from "@tabler/icons-react/icons/IconCopy";
+import IconCopyCheckFilled from "@tabler/icons-react/icons/IconCopyCheckFilled";
+import IconEdit from "@tabler/icons-react/icons/IconEdit";
+import IconPackageImport from "@tabler/icons-react/icons/IconPackageImport";
+import IconPlus from "@tabler/icons-react/icons/IconPlus";
+import IconTrash from "@tabler/icons-react/icons/IconTrash";
+import IconTriangleFilled from "@tabler/icons-react/icons/IconTriangleFilled";
+import IconZoomScan from "@tabler/icons-react/icons/IconZoomScan";
 import { escapeForRegEx } from "@tiptap/react";
 
 import { clientApi } from "@homarr/api/client";

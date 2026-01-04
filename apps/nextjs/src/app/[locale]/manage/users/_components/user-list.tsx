@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { Anchor, Button, Group, Text, Title, Tooltip } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 

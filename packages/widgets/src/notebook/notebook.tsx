@@ -18,28 +18,26 @@ import {
 } from "@mantine/core";
 import { getHotkeyHandler, useDisclosure } from "@mantine/hooks";
 import { Link, RichTextEditor, useRichTextEditorContext } from "@mantine/tiptap";
-import {
-  IconCheck,
-  IconCircleOff,
-  IconColumnInsertLeft,
-  IconColumnInsertRight,
-  IconColumnRemove,
-  IconDeviceFloppy,
-  IconEdit,
-  IconHighlight,
-  IconIndentDecrease,
-  IconIndentIncrease,
-  IconLayoutGrid,
-  IconLetterA,
-  IconListCheck,
-  IconPhoto,
-  IconRowInsertBottom,
-  IconRowInsertTop,
-  IconRowRemove,
-  IconTableOff,
-  IconTablePlus,
-  IconX,
-} from "@tabler/icons-react";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
+import IconCircleOff from "@tabler/icons-react/icons/IconCircleOff";
+import IconColumnInsertLeft from "@tabler/icons-react/icons/IconColumnInsertLeft";
+import IconColumnInsertRight from "@tabler/icons-react/icons/IconColumnInsertRight";
+import IconColumnRemove from "@tabler/icons-react/icons/IconColumnRemove";
+import IconDeviceFloppy from "@tabler/icons-react/icons/IconDeviceFloppy";
+import IconEdit from "@tabler/icons-react/icons/IconEdit";
+import IconHighlight from "@tabler/icons-react/icons/IconHighlight";
+import IconIndentDecrease from "@tabler/icons-react/icons/IconIndentDecrease";
+import IconIndentIncrease from "@tabler/icons-react/icons/IconIndentIncrease";
+import IconLayoutGrid from "@tabler/icons-react/icons/IconLayoutGrid";
+import IconLetterA from "@tabler/icons-react/icons/IconLetterA";
+import IconListCheck from "@tabler/icons-react/icons/IconListCheck";
+import IconPhoto from "@tabler/icons-react/icons/IconPhoto";
+import IconRowInsertBottom from "@tabler/icons-react/icons/IconRowInsertBottom";
+import IconRowInsertTop from "@tabler/icons-react/icons/IconRowInsertTop";
+import IconRowRemove from "@tabler/icons-react/icons/IconRowRemove";
+import IconTableOff from "@tabler/icons-react/icons/IconTableOff";
+import IconTablePlus from "@tabler/icons-react/icons/IconTablePlus";
+import IconX from "@tabler/icons-react/icons/IconX";
 import { Color } from "@tiptap/extension-color";
 import { Highlight } from "@tiptap/extension-highlight";
 import { Image } from "@tiptap/extension-image";

@@ -1,5 +1,5 @@
 import { Center, RingProgress, Text } from "@mantine/core";
-import { IconBrain } from "@tabler/icons-react";
+import IconBrain from "@tabler/icons-react/icons/IconBrain";
 
 import { progressColor } from "../system-health";
 

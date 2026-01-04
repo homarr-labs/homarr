@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { Anchor, Badge, Breadcrumbs, Text } from "@mantine/core";
-import { IconHomeFilled } from "@tabler/icons-react";
+import IconHomeFilled from "@tabler/icons-react/icons/IconHomeFilled";
 
 import type { TranslationKeys } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";

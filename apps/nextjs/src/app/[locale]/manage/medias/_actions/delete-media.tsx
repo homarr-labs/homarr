@@ -1,7 +1,7 @@
 "use client";
 
 import { ActionIcon, Tooltip } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import IconTrash from "@tabler/icons-react/icons/IconTrash";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

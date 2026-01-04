@@ -1,14 +1,12 @@
-import {
-  IconApps,
-  IconDeviceDesktopX,
-  IconEyeOff,
-  IconLayoutBottombarExpand,
-  IconLayoutNavbarExpand,
-  IconLayoutSidebarLeftExpand,
-  IconLayoutSidebarRightExpand,
-  IconTextScan2,
-  IconTooltip,
-} from "@tabler/icons-react";
+import IconApps from "@tabler/icons-react/icons/IconApps";
+import IconDeviceDesktopX from "@tabler/icons-react/icons/IconDeviceDesktopX";
+import IconEyeOff from "@tabler/icons-react/icons/IconEyeOff";
+import IconLayoutBottombarExpand from "@tabler/icons-react/icons/IconLayoutBottombarExpand";
+import IconLayoutNavbarExpand from "@tabler/icons-react/icons/IconLayoutNavbarExpand";
+import IconLayoutSidebarLeftExpand from "@tabler/icons-react/icons/IconLayoutSidebarLeftExpand";
+import IconLayoutSidebarRightExpand from "@tabler/icons-react/icons/IconLayoutSidebarRightExpand";
+import IconTextScan2 from "@tabler/icons-react/icons/IconTextScan2";
+import IconTooltip from "@tabler/icons-react/icons/IconTooltip";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

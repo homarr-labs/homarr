@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { Center, Divider, Group, Pagination, SegmentedControl, Stack, Text } from "@mantine/core";
-import { IconClipboardList, IconCpu2, IconReportAnalytics } from "@tabler/icons-react";
+import IconClipboardList from "@tabler/icons-react/icons/IconClipboardList";
+import IconCpu2 from "@tabler/icons-react/icons/IconCpu2";
+import IconReportAnalytics from "@tabler/icons-react/icons/IconReportAnalytics";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";

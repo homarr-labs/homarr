@@ -1,7 +1,8 @@
 import { Fragment } from "react";
 import { redirect } from "next/navigation";
 import { ActionIcon, ActionIconGroup, Anchor, Avatar, Card, Group, Stack, Text, Title } from "@mantine/core";
-import { IconBox, IconPencil } from "@tabler/icons-react";
+import IconBox from "@tabler/icons-react/icons/IconBox";
+import IconPencil from "@tabler/icons-react/icons/IconPencil";
 import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";

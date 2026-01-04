@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import type { NumberInputHandlers } from "@mantine/core";
 import { ActionIcon, Button, Flex, Group, Modal, NumberInput, rem, Stack, Text } from "@mantine/core";
-import { IconClockPause } from "@tabler/icons-react";
+import IconClockPause from "@tabler/icons-react/icons/IconClockPause";
 
 import { useI18n } from "@homarr/translation/client";
 

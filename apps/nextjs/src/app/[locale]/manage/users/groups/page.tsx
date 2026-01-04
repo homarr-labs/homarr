@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Card, Group, Stack, Text, ThemeIcon, Title, UnstyledButton } from "@mantine/core";
-import { IconChevronRight, IconUsersGroup } from "@tabler/icons-react";
+import IconChevronRight from "@tabler/icons-react/icons/IconChevronRight";
+import IconUsersGroup from "@tabler/icons-react/icons/IconUsersGroup";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";

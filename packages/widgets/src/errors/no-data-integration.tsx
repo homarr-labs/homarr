@@ -1,4 +1,4 @@
-import { IconDatabaseOff } from "@tabler/icons-react";
+import IconDatabaseOff from "@tabler/icons-react/icons/IconDatabaseOff";
 
 import type { TranslationFunction } from "@homarr/translation";
 

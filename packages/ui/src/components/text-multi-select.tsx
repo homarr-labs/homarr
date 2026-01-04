@@ -3,7 +3,7 @@
 import type { FocusEventHandler } from "react";
 import { useState } from "react";
 import { Combobox, Group, Pill, PillsInput, Text, useCombobox } from "@mantine/core";
-import { IconPlus } from "@tabler/icons-react";
+import IconPlus from "@tabler/icons-react/icons/IconPlus";
 
 import { useI18n } from "@homarr/translation/client";
 

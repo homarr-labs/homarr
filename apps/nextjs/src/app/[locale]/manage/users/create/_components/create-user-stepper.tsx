@@ -16,7 +16,8 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
-import { IconPlus, IconUserCheck } from "@tabler/icons-react";
+import IconPlus from "@tabler/icons-react/icons/IconPlus";
+import IconUserCheck from "@tabler/icons-react/icons/IconUserCheck";
 import { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
+import IconX from "@tabler/icons-react/icons/IconX";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

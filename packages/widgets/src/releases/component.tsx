@@ -3,17 +3,15 @@
 import { useCallback, useMemo, useState } from "react";
 import { Button, Divider, Group, Stack, Text, Title, Tooltip } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
-import {
-  IconArchive,
-  IconCheck,
-  IconCircleDot,
-  IconCircleFilled,
-  IconExternalLink,
-  IconGitFork,
-  IconProgressCheck,
-  IconStar,
-  IconTriangleFilled,
-} from "@tabler/icons-react";
+import IconArchive from "@tabler/icons-react/icons/IconArchive";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
+import IconCircleDot from "@tabler/icons-react/icons/IconCircleDot";
+import IconCircleFilled from "@tabler/icons-react/icons/IconCircleFilled";
+import IconExternalLink from "@tabler/icons-react/icons/IconExternalLink";
+import IconGitFork from "@tabler/icons-react/icons/IconGitFork";
+import IconProgressCheck from "@tabler/icons-react/icons/IconProgressCheck";
+import IconStar from "@tabler/icons-react/icons/IconStar";
+import IconTriangleFilled from "@tabler/icons-react/icons/IconTriangleFilled";
 import combineClasses from "clsx";
 import { useFormatter, useNow } from "next-intl";
 import ReactMarkdown from "react-markdown";

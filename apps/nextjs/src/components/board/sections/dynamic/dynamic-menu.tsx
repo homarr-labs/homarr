@@ -1,5 +1,7 @@
 import { ActionIcon, Menu } from "@mantine/core";
-import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
+import IconDotsVertical from "@tabler/icons-react/icons/IconDotsVertical";
+import IconPencil from "@tabler/icons-react/icons/IconPencil";
+import IconTrash from "@tabler/icons-react/icons/IconTrash";
 
 import { useEditMode } from "@homarr/boards/edit-mode";
 import { useConfirmModal, useModalAction } from "@homarr/modals";

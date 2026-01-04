@@ -1,4 +1,8 @@
-import { IconAlignLeft, IconEyeOff, IconGraphFilled, IconListDetails, IconPhoto } from "@tabler/icons-react";
+import IconAlignLeft from "@tabler/icons-react/icons/IconAlignLeft";
+import IconEyeOff from "@tabler/icons-react/icons/IconEyeOff";
+import IconGraphFilled from "@tabler/icons-react/icons/IconGraphFilled";
+import IconListDetails from "@tabler/icons-react/icons/IconListDetails";
+import IconPhoto from "@tabler/icons-react/icons/IconPhoto";
 
 import { objectEntries } from "@homarr/common";
 

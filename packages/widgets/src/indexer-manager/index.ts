@@ -1,4 +1,5 @@
-import { IconReportSearch, IconServerOff } from "@tabler/icons-react";
+import IconReportSearch from "@tabler/icons-react/icons/IconReportSearch";
+import IconServerOff from "@tabler/icons-react/icons/IconServerOff";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 

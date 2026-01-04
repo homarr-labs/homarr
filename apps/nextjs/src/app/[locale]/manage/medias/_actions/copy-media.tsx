@@ -1,7 +1,8 @@
 "use client";
 
 import { ActionIcon, CopyButton, Tooltip } from "@mantine/core";
-import { IconCheck, IconCopy } from "@tabler/icons-react";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
+import IconCopy from "@tabler/icons-react/icons/IconCopy";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useI18n } from "@homarr/translation/client";

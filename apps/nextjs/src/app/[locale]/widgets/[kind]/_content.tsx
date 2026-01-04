@@ -2,7 +2,10 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { ActionIcon, Affix, Card } from "@mantine/core";
-import { IconDimensions, IconPencil, IconToggleLeft, IconToggleRight } from "@tabler/icons-react";
+import IconDimensions from "@tabler/icons-react/icons/IconDimensions";
+import IconPencil from "@tabler/icons-react/icons/IconPencil";
+import IconToggleLeft from "@tabler/icons-react/icons/IconToggleLeft";
+import IconToggleRight from "@tabler/icons-react/icons/IconToggleRight";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 

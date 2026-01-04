@@ -18,7 +18,10 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconCircleFilled, IconClockPause, IconPlayerPlay, IconPlayerStop } from "@tabler/icons-react";
+import IconCircleFilled from "@tabler/icons-react/icons/IconCircleFilled";
+import IconClockPause from "@tabler/icons-react/icons/IconClockPause";
+import IconPlayerPlay from "@tabler/icons-react/icons/IconPlayerPlay";
+import IconPlayerStop from "@tabler/icons-react/icons/IconPlayerStop";
 import combineClasses from "clsx";
 
 import type { RouterOutputs } from "@homarr/api";

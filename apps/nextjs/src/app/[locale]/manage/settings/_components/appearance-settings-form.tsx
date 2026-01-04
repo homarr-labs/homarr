@@ -1,7 +1,8 @@
 "use client";
 
 import { Group, Text } from "@mantine/core";
-import { IconMoon, IconSun } from "@tabler/icons-react";
+import IconMoon from "@tabler/icons-react/icons/IconMoon";
+import IconSun from "@tabler/icons-react/icons/IconSun";
 
 import type { ColorScheme } from "@homarr/definitions";
 import { colorSchemes } from "@homarr/definitions";

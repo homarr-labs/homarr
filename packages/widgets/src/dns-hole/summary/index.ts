@@ -1,4 +1,5 @@
-import { IconAd, IconServerOff } from "@tabler/icons-react";
+import IconAd from "@tabler/icons-react/icons/IconAd";
+import IconServerOff from "@tabler/icons-react/icons/IconServerOff";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 

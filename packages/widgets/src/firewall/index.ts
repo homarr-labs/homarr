@@ -1,4 +1,5 @@
-import { IconWall, IconWallOff } from "@tabler/icons-react";
+import IconWall from "@tabler/icons-react/icons/IconWall";
+import IconWallOff from "@tabler/icons-react/icons/IconWallOff";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 

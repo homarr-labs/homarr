@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alert, Anchor, Button, ButtonGroup, Fieldset, Group, Stack, Text, TextInput } from "@mantine/core";
-import { IconInfoCircle, IconPencil, IconPlus, IconUnlink } from "@tabler/icons-react";
+import IconInfoCircle from "@tabler/icons-react/icons/IconInfoCircle";
+import IconPencil from "@tabler/icons-react/icons/IconPencil";
+import IconPlus from "@tabler/icons-react/icons/IconPlus";
+import IconUnlink from "@tabler/icons-react/icons/IconUnlink";
 import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";

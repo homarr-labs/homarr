@@ -2,7 +2,10 @@
 
 import { Fragment } from "react";
 import { Avatar, Badge, Box, Divider, Group, Image, Stack, Text, TooltipFloating, UnstyledButton } from "@mantine/core";
-import { IconBook, IconCalendar, IconClock, IconStarFilled } from "@tabler/icons-react";
+import IconBook from "@tabler/icons-react/icons/IconBook";
+import IconCalendar from "@tabler/icons-react/icons/IconCalendar";
+import IconClock from "@tabler/icons-react/icons/IconClock";
+import IconStarFilled from "@tabler/icons-react/icons/IconStarFilled";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

@@ -1,5 +1,5 @@
 import { Group, Stack, Text } from "@mantine/core";
-import { IconWifi } from "@tabler/icons-react";
+import IconWifi from "@tabler/icons-react/icons/IconWifi";
 
 import { useScopedI18n } from "@homarr/translation/client";
 

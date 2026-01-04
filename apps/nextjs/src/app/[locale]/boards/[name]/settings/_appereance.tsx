@@ -17,7 +17,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconX } from "@tabler/icons-react";
+import IconX from "@tabler/icons-react/icons/IconX";
 
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";

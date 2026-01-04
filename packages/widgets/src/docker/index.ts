@@ -1,4 +1,5 @@
-import { IconBrandDocker, IconServerOff } from "@tabler/icons-react";
+import IconBrandDocker from "@tabler/icons-react/icons/IconBrandDocker";
+import IconServerOff from "@tabler/icons-react/icons/IconServerOff";
 
 import type { RouterOutputs } from "@homarr/api";
 

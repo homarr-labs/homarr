@@ -1,6 +1,8 @@
 "use client";
 
-import { IconPlayerPlay, IconSelector, IconSettings } from "@tabler/icons-react";
+import IconPlayerPlay from "@tabler/icons-react/icons/IconPlayerPlay";
+import IconSelector from "@tabler/icons-react/icons/IconSelector";
+import IconSettings from "@tabler/icons-react/icons/IconSettings";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

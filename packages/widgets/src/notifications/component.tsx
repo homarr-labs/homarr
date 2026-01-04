@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { Card, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
-import { IconClock } from "@tabler/icons-react";
+import IconClock from "@tabler/icons-react/icons/IconClock";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";

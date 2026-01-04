@@ -26,7 +26,10 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { IconChevronDown, IconChevronUp, IconPencil, IconPlugX } from "@tabler/icons-react";
+import IconChevronDown from "@tabler/icons-react/icons/IconChevronDown";
+import IconChevronUp from "@tabler/icons-react/icons/IconChevronUp";
+import IconPencil from "@tabler/icons-react/icons/IconPencil";
+import IconPlugX from "@tabler/icons-react/icons/IconPlugX";
 
 import type { RouterOutputs } from "@homarr/api";
 import { api } from "@homarr/api/server";

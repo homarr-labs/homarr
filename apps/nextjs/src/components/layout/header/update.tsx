@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { Suspense, use } from "react";
 import { Indicator, Menu, Text } from "@mantine/core";
-import { IconBellRinging } from "@tabler/icons-react";
+import IconBellRinging from "@tabler/icons-react/icons/IconBellRinging";
 
 import type { RouterOutputs } from "@homarr/api";
 import { useScopedI18n } from "@homarr/translation/client";

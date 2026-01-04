@@ -1,5 +1,5 @@
 import { Group, Text } from "@mantine/core";
-import { IconLayoutDashboard } from "@tabler/icons-react";
+import IconLayoutDashboard from "@tabler/icons-react/icons/IconLayoutDashboard";
 
 import type { SelectWithCustomItemsProps } from "@homarr/ui";
 import { SelectWithCustomItems } from "@homarr/ui";

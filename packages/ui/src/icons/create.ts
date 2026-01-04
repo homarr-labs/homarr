@@ -1,5 +1,5 @@
 import type { IconNode } from "@tabler/icons-react";
-import { createReactComponent } from "@tabler/icons-react";
+import createReactComponent from "@tabler/icons-react/createReactComponent";
 import { parseSync } from "svgson";
 
 import { capitalize } from "@homarr/common";

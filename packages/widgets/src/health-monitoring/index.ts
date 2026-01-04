@@ -1,4 +1,5 @@
-import { IconHeartRateMonitor, IconServerOff } from "@tabler/icons-react";
+import IconHeartRateMonitor from "@tabler/icons-react/icons/IconHeartRateMonitor";
+import IconServerOff from "@tabler/icons-react/icons/IconServerOff";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 

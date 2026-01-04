@@ -1,4 +1,4 @@
-import { IconCalendar } from "@tabler/icons-react";
+import IconCalendar from "@tabler/icons-react/icons/IconCalendar";
 import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";

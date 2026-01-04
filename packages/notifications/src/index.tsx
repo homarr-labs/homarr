@@ -1,6 +1,7 @@
 import type { NotificationData } from "@mantine/notifications";
 import { notifications } from "@mantine/notifications";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
+import IconX from "@tabler/icons-react/icons/IconX";
 
 export const showSuccessNotification = (props: NotificationData) =>
   notifications.show({

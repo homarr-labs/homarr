@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, Flex, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
-import { IconClock } from "@tabler/icons-react";
+import IconClock from "@tabler/icons-react/icons/IconClock";
 import dayjs from "dayjs";
 
 import { clientApi } from "@homarr/api/client";

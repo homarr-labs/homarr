@@ -1,4 +1,4 @@
-import { IconBrowser } from "@tabler/icons-react";
+import IconBrowser from "@tabler/icons-react/icons/IconBrowser";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

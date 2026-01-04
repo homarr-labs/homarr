@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 import { ActionIcon, Button, Group, Stack, Text, Title } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import IconTrash from "@tabler/icons-react/icons/IconTrash";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
 

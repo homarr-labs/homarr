@@ -1,4 +1,4 @@
-import { IconMessage } from "@tabler/icons-react";
+import IconMessage from "@tabler/icons-react/icons/IconMessage";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 

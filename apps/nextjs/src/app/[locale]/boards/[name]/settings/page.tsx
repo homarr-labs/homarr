@@ -1,16 +1,14 @@
 import type { PropsWithChildren } from "react";
 import { notFound } from "next/navigation";
 import { AccordionControl, AccordionItem, AccordionPanel, Container, Stack, Text, Title } from "@mantine/core";
-import {
-  IconAlertTriangle,
-  IconBrush,
-  IconClick,
-  IconFileTypeCss,
-  IconLayout,
-  IconPhoto,
-  IconSettings,
-  IconUser,
-} from "@tabler/icons-react";
+import IconAlertTriangle from "@tabler/icons-react/icons/IconAlertTriangle";
+import IconBrush from "@tabler/icons-react/icons/IconBrush";
+import IconClick from "@tabler/icons-react/icons/IconClick";
+import IconFileTypeCss from "@tabler/icons-react/icons/IconFileTypeCss";
+import IconLayout from "@tabler/icons-react/icons/IconLayout";
+import IconPhoto from "@tabler/icons-react/icons/IconPhoto";
+import IconSettings from "@tabler/icons-react/icons/IconSettings";
+import IconUser from "@tabler/icons-react/icons/IconUser";
 import { TRPCError } from "@trpc/server";
 
 import { api } from "@homarr/api/server";

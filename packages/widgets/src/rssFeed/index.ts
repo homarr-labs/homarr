@@ -1,4 +1,4 @@
-import { IconRss } from "@tabler/icons-react";
+import IconRss from "@tabler/icons-react/icons/IconRss";
 import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../definition";

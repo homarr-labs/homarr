@@ -3,7 +3,10 @@
 import { useMemo } from "react";
 import { ActionIcon, Avatar, Badge, Group, Stack, Text, Tooltip } from "@mantine/core";
 import type { IconProps } from "@tabler/icons-react";
-import { IconBrandDocker, IconPlayerPlay, IconPlayerStop, IconRotateClockwise } from "@tabler/icons-react";
+import IconBrandDocker from "@tabler/icons-react/icons/IconBrandDocker";
+import IconPlayerPlay from "@tabler/icons-react/icons/IconPlayerPlay";
+import IconPlayerStop from "@tabler/icons-react/icons/IconPlayerStop";
+import IconRotateClockwise from "@tabler/icons-react/icons/IconRotateClockwise";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 

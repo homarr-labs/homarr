@@ -11,7 +11,8 @@ import {
   Text,
   useMantineColorScheme,
 } from "@mantine/core";
-import { IconClock, IconPin } from "@tabler/icons-react";
+import IconClock from "@tabler/icons-react/icons/IconClock";
+import IconPin from "@tabler/icons-react/icons/IconPin";
 import dayjs from "dayjs";
 
 import { isNullOrWhitespace } from "@homarr/common";

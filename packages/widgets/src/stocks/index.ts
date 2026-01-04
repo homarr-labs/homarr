@@ -1,4 +1,4 @@
-import { IconBuildingBank } from "@tabler/icons-react";
+import IconBuildingBank from "@tabler/icons-react/icons/IconBuildingBank";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

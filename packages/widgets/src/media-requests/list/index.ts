@@ -1,4 +1,4 @@
-import { IconZoomQuestion } from "@tabler/icons-react";
+import IconZoomQuestion from "@tabler/icons-react/icons/IconZoomQuestion";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 

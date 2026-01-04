@@ -3,7 +3,8 @@
 import { memo, useMemo } from "react";
 import type { SelectProps } from "@mantine/core";
 import { Anchor, Button, Group, Loader, Select, SimpleGrid, Text } from "@mantine/core";
-import { IconCheck, IconRocket } from "@tabler/icons-react";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
+import IconRocket from "@tabler/icons-react/icons/IconRocket";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { Alert, Box, Group, Stack, Title } from "@mantine/core";
-import { IconExclamationCircle } from "@tabler/icons-react";
+import IconExclamationCircle from "@tabler/icons-react/icons/IconExclamationCircle";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";

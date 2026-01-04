@@ -1,4 +1,5 @@
-import { IconServerOff, IconTopologyFull } from "@tabler/icons-react";
+import IconServerOff from "@tabler/icons-react/icons/IconServerOff";
+import IconTopologyFull from "@tabler/icons-react/icons/IconTopologyFull";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Card, Stack, TextInput } from "@mantine/core";
-import { IconArrowRight } from "@tabler/icons-react";
+import IconArrowRight from "@tabler/icons-react/icons/IconArrowRight";
 import type { z } from "zod/v4";
 
 import { clientApi } from "@homarr/api/client";

@@ -1,6 +1,8 @@
 "use client";
 
-import { IconEye, IconPencil, IconSettings } from "@tabler/icons-react";
+import IconEye from "@tabler/icons-react/icons/IconEye";
+import IconPencil from "@tabler/icons-react/icons/IconPencil";
+import IconSettings from "@tabler/icons-react/icons/IconSettings";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

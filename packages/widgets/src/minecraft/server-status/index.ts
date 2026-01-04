@@ -1,4 +1,4 @@
-import { IconBrandMinecraft } from "@tabler/icons-react";
+import IconBrandMinecraft from "@tabler/icons-react/icons/IconBrandMinecraft";
 import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../../definition";

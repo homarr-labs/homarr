@@ -1,5 +1,9 @@
 import { Group, Stack, Text } from "@mantine/core";
-import { IconDeviceMobile, IconHome, IconLayoutDashboard, IconLink, IconSettings } from "@tabler/icons-react";
+import IconDeviceMobile from "@tabler/icons-react/icons/IconDeviceMobile";
+import IconHome from "@tabler/icons-react/icons/IconHome";
+import IconLayoutDashboard from "@tabler/icons-react/icons/IconLayoutDashboard";
+import IconLink from "@tabler/icons-react/icons/IconLink";
+import IconSettings from "@tabler/icons-react/icons/IconSettings";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";

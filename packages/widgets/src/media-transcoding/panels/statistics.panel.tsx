@@ -1,6 +1,9 @@
 import type { MantineColor, RingProgressProps } from "@mantine/core";
 import { Card, Center, Group, RingProgress, ScrollArea, Stack, Text, Title, Tooltip } from "@mantine/core";
-import { IconDatabaseHeart, IconFileDescription, IconHeartbeat, IconTransform } from "@tabler/icons-react";
+import IconDatabaseHeart from "@tabler/icons-react/icons/IconDatabaseHeart";
+import IconFileDescription from "@tabler/icons-react/icons/IconFileDescription";
+import IconHeartbeat from "@tabler/icons-react/icons/IconHeartbeat";
+import IconTransform from "@tabler/icons-react/icons/IconTransform";
 
 import { useRequiredBoard } from "@homarr/boards/context";
 import { humanFileSize } from "@homarr/common";

@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from "react";
 import { Fragment, Suspense } from "react";
 import { Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
-import { IconLoader } from "@tabler/icons-react";
+import IconLoader from "@tabler/icons-react/icons/IconLoader";
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";

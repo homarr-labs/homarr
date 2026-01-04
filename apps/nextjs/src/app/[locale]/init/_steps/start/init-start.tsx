@@ -1,5 +1,6 @@
 import { Card, Stack, Text } from "@mantine/core";
-import { IconFileImport, IconPlayerPlay } from "@tabler/icons-react";
+import IconFileImport from "@tabler/icons-react/icons/IconFileImport";
+import IconPlayerPlay from "@tabler/icons-react/icons/IconPlayerPlay";
 
 import { getMantineColor } from "@homarr/common";
 import { getScopedI18n } from "@homarr/translation/server";

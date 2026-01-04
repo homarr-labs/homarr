@@ -1,4 +1,4 @@
-import { IconTransform } from "@tabler/icons-react";
+import IconTransform from "@tabler/icons-react/icons/IconTransform";
 import { z } from "zod/v4";
 
 import { capitalize } from "@homarr/common";

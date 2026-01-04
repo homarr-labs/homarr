@@ -1,4 +1,5 @@
-import { IconDeviceGamepad, IconServerOff } from "@tabler/icons-react";
+import IconDeviceGamepad from "@tabler/icons-react/icons/IconDeviceGamepad";
+import IconServerOff from "@tabler/icons-react/icons/IconServerOff";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 

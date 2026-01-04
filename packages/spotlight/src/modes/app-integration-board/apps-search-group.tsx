@@ -1,5 +1,6 @@
 import { Avatar, Group, Stack, Text } from "@mantine/core";
-import { IconExternalLink, IconEye } from "@tabler/icons-react";
+import IconExternalLink from "@tabler/icons-react/icons/IconExternalLink";
+import IconEye from "@tabler/icons-react/icons/IconEye";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";

@@ -1,7 +1,8 @@
 "use client";
 
 import { Box, Stack, Text, Title } from "@mantine/core";
-import { IconBrowserOff, IconProtocol } from "@tabler/icons-react";
+import IconBrowserOff from "@tabler/icons-react/icons/IconBrowserOff";
+import IconProtocol from "@tabler/icons-react/icons/IconProtocol";
 
 import { objectEntries } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";

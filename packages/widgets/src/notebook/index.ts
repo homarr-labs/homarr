@@ -1,4 +1,4 @@
-import { IconNotes } from "@tabler/icons-react";
+import IconNotes from "@tabler/icons-react/icons/IconNotes";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

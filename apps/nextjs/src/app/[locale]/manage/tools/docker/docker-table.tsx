@@ -2,14 +2,12 @@
 
 import type { MantineColor } from "@mantine/core";
 import { Avatar, Badge, Box, Button, Group, Text } from "@mantine/core";
-import {
-  IconCategoryPlus,
-  IconPlayerPlay,
-  IconPlayerStop,
-  IconRefresh,
-  IconRotateClockwise,
-  IconTrash,
-} from "@tabler/icons-react";
+import IconCategoryPlus from "@tabler/icons-react/icons/IconCategoryPlus";
+import IconPlayerPlay from "@tabler/icons-react/icons/IconPlayerPlay";
+import IconPlayerStop from "@tabler/icons-react/icons/IconPlayerStop";
+import IconRefresh from "@tabler/icons-react/icons/IconRefresh";
+import IconRotateClockwise from "@tabler/icons-react/icons/IconRotateClockwise";
+import IconTrash from "@tabler/icons-react/icons/IconTrash";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
 

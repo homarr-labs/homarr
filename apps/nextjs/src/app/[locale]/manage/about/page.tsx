@@ -24,7 +24,10 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { IconKeyboard, IconLanguage, IconLibrary, IconUsers } from "@tabler/icons-react";
+import IconKeyboard from "@tabler/icons-react/icons/IconKeyboard";
+import IconLanguage from "@tabler/icons-react/icons/IconLanguage";
+import IconLibrary from "@tabler/icons-react/icons/IconLibrary";
+import IconUsers from "@tabler/icons-react/icons/IconUsers";
 
 import { capitalize, objectEntries } from "@homarr/common";
 import { hotkeys } from "@homarr/definitions";

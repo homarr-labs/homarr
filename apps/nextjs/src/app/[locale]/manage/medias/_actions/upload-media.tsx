@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@mantine/core";
-import { IconUpload } from "@tabler/icons-react";
+import IconUpload from "@tabler/icons-react/icons/IconUpload";
 
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { UploadMedia } from "@homarr/forms-collection";

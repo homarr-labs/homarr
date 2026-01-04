@@ -3,7 +3,8 @@
 import { startTransition } from "react";
 import { ActionIcon, Autocomplete, Button, Center, Grid, Group, Popover, Stack, Text } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
-import { IconPhotoOff, IconUpload } from "@tabler/icons-react";
+import IconPhotoOff from "@tabler/icons-react/icons/IconPhotoOff";
+import IconUpload from "@tabler/icons-react/icons/IconUpload";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";

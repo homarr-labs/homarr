@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { ActionIcon, Avatar, Badge, Button, Card, Collapse, Group, Kbd, Stack, Text, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconEye, IconEyeOff } from "@tabler/icons-react";
+import IconEye from "@tabler/icons-react/icons/IconEye";
+import IconEyeOff from "@tabler/icons-react/icons/IconEyeOff";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 

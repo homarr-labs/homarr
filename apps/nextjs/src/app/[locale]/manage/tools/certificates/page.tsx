@@ -1,7 +1,9 @@
 import { X509Certificate } from "node:crypto";
 import { notFound } from "next/navigation";
 import { Button, Card, Group, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import { IconAlertTriangle, IconCertificate, IconCertificateOff } from "@tabler/icons-react";
+import IconAlertTriangle from "@tabler/icons-react/icons/IconAlertTriangle";
+import IconCertificate from "@tabler/icons-react/icons/IconCertificate";
+import IconCertificateOff from "@tabler/icons-react/icons/IconCertificateOff";
 import dayjs from "dayjs";
 
 import { auth } from "@homarr/auth/next";

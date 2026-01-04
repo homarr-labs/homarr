@@ -1,15 +1,13 @@
-import {
-  IconCode,
-  IconGrid3x3,
-  IconKey,
-  IconLink,
-  IconMessage,
-  IconPassword,
-  IconPasswordUser,
-  IconPlug,
-  IconServer,
-  IconUser,
-} from "@tabler/icons-react";
+import IconCode from "@tabler/icons-react/icons/IconCode";
+import IconGrid3x3 from "@tabler/icons-react/icons/IconGrid3x3";
+import IconKey from "@tabler/icons-react/icons/IconKey";
+import IconLink from "@tabler/icons-react/icons/IconLink";
+import IconMessage from "@tabler/icons-react/icons/IconMessage";
+import IconPassword from "@tabler/icons-react/icons/IconPassword";
+import IconPasswordUser from "@tabler/icons-react/icons/IconPasswordUser";
+import IconPlug from "@tabler/icons-react/icons/IconPlug";
+import IconServer from "@tabler/icons-react/icons/IconServer";
+import IconUser from "@tabler/icons-react/icons/IconUser";
 
 import type { IntegrationSecretKind } from "@homarr/definitions";
 import type { TablerIcon } from "@homarr/ui";

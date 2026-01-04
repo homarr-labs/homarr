@@ -16,17 +16,15 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconBrain,
-  IconClock,
-  IconCpu,
-  IconCpu2,
-  IconFileReport,
-  IconInfoCircle,
-  IconServer,
-  IconTemperature,
-  IconVersions,
-} from "@tabler/icons-react";
+import IconBrain from "@tabler/icons-react/icons/IconBrain";
+import IconClock from "@tabler/icons-react/icons/IconClock";
+import IconCpu from "@tabler/icons-react/icons/IconCpu";
+import IconCpu2 from "@tabler/icons-react/icons/IconCpu2";
+import IconFileReport from "@tabler/icons-react/icons/IconFileReport";
+import IconInfoCircle from "@tabler/icons-react/icons/IconInfoCircle";
+import IconServer from "@tabler/icons-react/icons/IconServer";
+import IconTemperature from "@tabler/icons-react/icons/IconTemperature";
+import IconVersions from "@tabler/icons-react/icons/IconVersions";
 import combineClasses from "clsx";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";

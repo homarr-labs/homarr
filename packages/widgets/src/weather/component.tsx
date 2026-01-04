@@ -1,7 +1,10 @@
 "use client";
 
 import { Box, Group, HoverCard, Stack, Text } from "@mantine/core";
-import { IconArrowDownRight, IconArrowUpRight, IconMapPin, IconWind } from "@tabler/icons-react";
+import IconArrowDownRight from "@tabler/icons-react/icons/IconArrowDownRight";
+import IconArrowUpRight from "@tabler/icons-react/icons/IconArrowUpRight";
+import IconMapPin from "@tabler/icons-react/icons/IconMapPin";
+import IconWind from "@tabler/icons-react/icons/IconWind";
 import combineClasses from "clsx";
 import dayjs from "dayjs";
 

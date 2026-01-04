@@ -1,5 +1,7 @@
 import { Group, Kbd, Text } from "@mantine/core";
-import { IconBook2, IconBrandDiscord, IconBrandGithub } from "@tabler/icons-react";
+import IconBook2 from "@tabler/icons-react/icons/IconBook2";
+import IconBrandDiscord from "@tabler/icons-react/icons/IconBrandDiscord";
+import IconBrandGithub from "@tabler/icons-react/icons/IconBrandGithub";
 
 import { useSession } from "@homarr/auth/client";
 import { createDocumentationLink } from "@homarr/definitions";

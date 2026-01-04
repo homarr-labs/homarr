@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { IconExclamationCircle, IconShield } from "@tabler/icons-react";
+import IconExclamationCircle from "@tabler/icons-react/icons/IconExclamationCircle";
+import IconShield from "@tabler/icons-react/icons/IconShield";
 import { TRPCClientError } from "@trpc/client";
 import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
 

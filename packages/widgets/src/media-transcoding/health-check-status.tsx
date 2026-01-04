@@ -1,7 +1,7 @@
 import type { MantineColor } from "@mantine/core";
 import { Divider, Group, HoverCard, Indicator, RingProgress, Stack, Text } from "@mantine/core";
 import { useColorScheme } from "@mantine/hooks";
-import { IconHeartbeat } from "@tabler/icons-react";
+import IconHeartbeat from "@tabler/icons-react/icons/IconHeartbeat";
 
 import type { TdarrStatistics } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";

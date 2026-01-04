@@ -1,5 +1,7 @@
 import { Box, Group, Stack, Text } from "@mantine/core";
-import { IconCaretUpDown, IconSearch, IconSearchOff } from "@tabler/icons-react";
+import IconCaretUpDown from "@tabler/icons-react/icons/IconCaretUpDown";
+import IconSearch from "@tabler/icons-react/icons/IconSearch";
+import IconSearchOff from "@tabler/icons-react/icons/IconSearchOff ";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

@@ -1,4 +1,4 @@
-import { IconChartBar } from "@tabler/icons-react";
+import IconChartBar from "@tabler/icons-react/icons/IconChartBar";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 

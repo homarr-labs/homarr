@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Card, Group, SimpleGrid, Space, Stack, Text } from "@mantine/core";
-import { IconArrowRight } from "@tabler/icons-react";
+import IconArrowRight from "@tabler/icons-react/icons/IconArrowRight";
 
 import { api } from "@homarr/api/server";
 import { getScopedI18n } from "@homarr/translation/server";

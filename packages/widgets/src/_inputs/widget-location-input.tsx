@@ -16,7 +16,8 @@ import {
   TextInput,
   Tooltip,
 } from "@mantine/core";
-import { IconClick, IconListSearch } from "@tabler/icons-react";
+import IconClick from "@tabler/icons-react/icons/IconClick";
+import IconListSearch from "@tabler/icons-react/icons/IconListSearch";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

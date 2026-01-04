@@ -2,16 +2,14 @@
 
 import { Avatar, Card, Grid, Group, Stack, Text, Tooltip } from "@mantine/core";
 import type { Icon } from "@tabler/icons-react";
-import {
-  IconDeviceTv,
-  IconHourglass,
-  IconLoaderQuarter,
-  IconMovie,
-  IconPlayerPlay,
-  IconReceipt,
-  IconThumbDown,
-  IconThumbUp,
-} from "@tabler/icons-react";
+import IconDeviceTv from "@tabler/icons-react/icons/IconDeviceTv";
+import IconHourglass from "@tabler/icons-react/icons/IconHourglass";
+import IconLoaderQuarter from "@tabler/icons-react/icons/IconLoaderQuarter";
+import IconMovie from "@tabler/icons-react/icons/IconMovie";
+import IconPlayerPlay from "@tabler/icons-react/icons/IconPlayerPlay";
+import IconReceipt from "@tabler/icons-react/icons/IconReceipt";
+import IconThumbDown from "@tabler/icons-react/icons/IconThumbDown";
+import IconThumbUp from "@tabler/icons-react/icons/IconThumbUp";
 import combineClasses from "clsx";
 
 import { clientApi } from "@homarr/api/client";

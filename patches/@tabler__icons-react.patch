@@ -1,0 +1,70 @@
+diff --git a/dist/createReactComponent.d.ts b/dist/createReactComponent.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..de03ee5faff125d78c16e47b6f6c91a2e13290c8
+--- /dev/null
++++ b/dist/createReactComponent.d.ts
+@@ -0,0 +1,13 @@
++import { FunctionComponent, ReactSVG, ForwardRefExoticComponent, RefAttributes } from 'react';
++export { ReactNode } from 'react';
++
++type IconNode = [elementName: keyof ReactSVG, attrs: Record<string, string>][];
++interface IconProps extends Partial<Omit<React.ComponentPropsWithoutRef<'svg'>, 'stroke'>> {
++    size?: string | number;
++    stroke?: string | number;
++    title?: string;
++}
++type Icon = FunctionComponent<IconProps>;
++
++declare const createReactComponent: (type: "outline" | "filled", iconName: string, iconNamePascal: string, iconNode: IconNode) => ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>;
++export default createReactComponent;
+\ No newline at end of file
+diff --git a/dist/esm/icons/AnyIcon.d.ts b/dist/esm/icons/AnyIcon.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..3d9d089e362771aae181978f56ebb9bd4024b05a
+--- /dev/null
++++ b/dist/esm/icons/AnyIcon.d.ts
+@@ -0,0 +1,13 @@
++import * as react from 'react';
++import { FunctionComponent } from 'react';
++
++
++interface IconProps extends Partial<Omit<React.ComponentPropsWithoutRef<'svg'>, 'stroke'>> {
++    size?: string | number;
++    stroke?: string | number;
++    title?: string;
++}
++type Icon = FunctionComponent<IconProps>;
++
++declare const Icon: react.ForwardRefExoticComponent<IconProps & react.RefAttributes<Icon>>;
++export default Icon;
+\ No newline at end of file
+diff --git a/package.json b/package.json
+index 2c7dceb0ce82d890b2b16cf189012a47d9c335fe..7d79a4cbd6893235b3440795d281e3a0cb14e761 100644
+--- a/package.json
++++ b/package.json
+@@ -17,9 +17,22 @@
+     "url": "git+https://github.com/tabler/tabler-icons.git",
+     "directory": "packages/icons-react"
+   },
+-  "main": "./dist/cjs/tabler-icons-react.cjs",
+-  "module": "./dist/esm/tabler-icons-react.mjs",
+-  "types": "./dist/tabler-icons-react.d.ts",
++  "exports": {
++    ".": {
++      "import": "./dist/esm/tabler-icons-react.mjs",
++      "require": "./dist/cjs/tabler-icons-react.cjs",
++      "types": "./dist/tabler-icons-react.d.ts"
++    },"./createReactComponent": {
++      "import": "./dist/esm/createReactComponent.mjs",
++      "require": "./dist/cjs/createReactComponent.cjs",
++      "types": "./dist/createReactComponent.d.ts"
++    },
++    "./icons/*": {
++      "import": "./dist/esm/icons/*.mjs",
++      "require": "./dist/cjs/icons/*.cjs",
++      "types": "./dist/esm/icons/AnyIcon.d.ts"
++    }
++  },
+   "amdName": "TablerIconsReact",
+   "sideEffects": false,
+   "files": [

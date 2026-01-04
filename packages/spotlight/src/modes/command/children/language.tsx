@@ -1,5 +1,5 @@
 import { Group, Stack, Text } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
+import IconCheck from "@tabler/icons-react/icons/IconCheck";
 
 import { localeConfigurations, supportedLanguages } from "@homarr/translation";
 import { useChangeLocale, useCurrentLocale, useI18n } from "@homarr/translation/client";

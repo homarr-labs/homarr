@@ -2,7 +2,11 @@
 
 import { useCallback } from "react";
 import { Menu } from "@mantine/core";
-import { IconCopy, IconDeviceMobile, IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
+import IconCopy from "@tabler/icons-react/icons/IconCopy";
+import IconDeviceMobile from "@tabler/icons-react/icons/IconDeviceMobile";
+import IconHome from "@tabler/icons-react/icons/IconHome";
+import IconSettings from "@tabler/icons-react/icons/IconSettings";
+import IconTrash from "@tabler/icons-react/icons/IconTrash";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

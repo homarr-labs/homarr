@@ -1,7 +1,8 @@
 "use client";
 
 import { ActionIcon, Anchor, Avatar, Badge, Card, Group, Image, ScrollArea, Stack, Text, Tooltip } from "@mantine/core";
-import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
+import IconThumbDown from "@tabler/icons-react/icons/IconThumbDown";
+import IconThumbUp from "@tabler/icons-react/icons/IconThumbUp";
 
 import type { RouterInputs, RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";

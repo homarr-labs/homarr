@@ -14,7 +14,7 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { IconExternalLink } from "@tabler/icons-react";
+import IconExternalLink from "@tabler/icons-react/icons/IconExternalLink";
 import { z } from "zod/v4";
 
 import type { RouterOutputs } from "@homarr/api";

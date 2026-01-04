@@ -13,7 +13,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { IconCertificateOff } from "@tabler/icons-react";
+import IconCertificateOff from "@tabler/icons-react/icons/IconCertificateOff";
 
 import { auth } from "@homarr/auth/next";
 import { getTrustedCertificateHostnamesAsync } from "@homarr/core/infrastructure/certificates";

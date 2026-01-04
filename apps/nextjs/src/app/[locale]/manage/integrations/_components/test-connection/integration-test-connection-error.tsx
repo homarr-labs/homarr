@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Accordion, Anchor, Card, Stack, Text } from "@mantine/core";
-import { IconSubtask } from "@tabler/icons-react";
+import IconSubtask from "@tabler/icons-react/icons/IconSubtask";
 
 import { getMantineColor } from "@homarr/common";
 import { useI18n } from "@homarr/translation/client";

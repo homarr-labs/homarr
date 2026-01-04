@@ -1,5 +1,7 @@
 import React from "react";
-import { IconCpu, IconCube, IconDeviceDesktopAnalytics } from "@tabler/icons-react";
+import IconCpu from "@tabler/icons-react/icons/IconCpu";
+import IconCube from "@tabler/icons-react/icons/IconCube";
+import IconDeviceDesktopAnalytics from "@tabler/icons-react/icons/IconDeviceDesktopAnalytics";
 
 import type { KubernetesCapacityType } from "@homarr/definitions";
 

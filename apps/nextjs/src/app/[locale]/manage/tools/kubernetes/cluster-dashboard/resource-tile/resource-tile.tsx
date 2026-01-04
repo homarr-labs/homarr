@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Card, Group, Text } from "@mantine/core";
-import { IconArrowRight } from "@tabler/icons-react";
+import IconArrowRight from "@tabler/icons-react/icons/IconArrowRight";
 
 import type { KubernetesLabelResourceType } from "@homarr/definitions";
 import { useI18n } from "@homarr/translation/client";

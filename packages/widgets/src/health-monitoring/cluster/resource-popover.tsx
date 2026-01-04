@@ -1,18 +1,16 @@
 import type { PropsWithChildren } from "react";
 import { Badge, Center, Divider, Flex, Group, List, Popover, RingProgress, Stack, Text } from "@mantine/core";
-import {
-  IconArrowNarrowDown,
-  IconArrowNarrowUp,
-  IconBrain,
-  IconClockHour3,
-  IconCpu,
-  IconDatabase,
-  IconDeviceLaptop,
-  IconHeartBolt,
-  IconNetwork,
-  IconQuestionMark,
-  IconServer,
-} from "@tabler/icons-react";
+import IconArrowNarrowDown from "@tabler/icons-react/icons/IconArrowNarrowDown";
+import IconArrowNarrowUp from "@tabler/icons-react/icons/IconArrowNarrowUp";
+import IconBrain from "@tabler/icons-react/icons/IconBrain";
+import IconClockHour3 from "@tabler/icons-react/icons/IconClockHour3";
+import IconCpu from "@tabler/icons-react/icons/IconCpu";
+import IconDatabase from "@tabler/icons-react/icons/IconDatabase";
+import IconDeviceLaptop from "@tabler/icons-react/icons/IconDeviceLaptop";
+import IconHeartBolt from "@tabler/icons-react/icons/IconHeartBolt";
+import IconNetwork from "@tabler/icons-react/icons/IconNetwork";
+import IconQuestionMark from "@tabler/icons-react/icons/IconQuestionMark";
+import IconServer from "@tabler/icons-react/icons/IconServer";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 

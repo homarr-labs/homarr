@@ -1,4 +1,4 @@
-import { IconDownload } from "@tabler/icons-react";
+import IconDownload from "@tabler/icons-react/icons/IconDownload";
 import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";

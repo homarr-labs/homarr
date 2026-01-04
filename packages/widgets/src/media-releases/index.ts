@@ -1,4 +1,4 @@
-import { IconTicket } from "@tabler/icons-react";
+import IconTicket from "@tabler/icons-react/icons/IconTicket";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

@@ -1,4 +1,4 @@
-import { IconDeviceCctv } from "@tabler/icons-react";
+import IconDeviceCctv from "@tabler/icons-react/icons/IconDeviceCctv";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
