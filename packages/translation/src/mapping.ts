@@ -6,8 +6,10 @@ type EnTranslation = typeof _enTranslations;
 export const createLanguageMapping = () => {
   const mapping: Record<string, unknown> = {};
 
+  mapping.en = () => import(`./lang/en.json`);
   for (const language of supportedLanguages) {
-    mapping[language] = () => import(`./lang/${language}.json`);
+    if (language === "en") continue;
+    mapping[language] = () => Promise.resolve({ default: {} });
   }
 
   return mapping as Record<(typeof supportedLanguages)[number], () => ReturnType<EnTranslation>>;
