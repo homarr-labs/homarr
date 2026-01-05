@@ -715,8 +715,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       ldapts:
-        specifier: 8.0.36
-        version: 8.0.36
+        specifier: 8.1.0
+        version: 8.1.0
       next:
         specifier: 16.1.1
         version: 16.1.1(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.97.1)
@@ -7893,8 +7893,8 @@ packages:
     resolution: {integrity: sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw==}
     engines: {node: '>= 0.6.3'}
 
-  ldapts@8.0.36:
-    resolution: {integrity: sha512-PGWfAjAukRQV0Kcv3yiw0MMIIchD0wHbI4c4oCXVDBES1rEU01tnaH8YWfoRfGYBEla+xjrlz7xd/pes2aiiHQ==}
+  ldapts@8.1.0:
+    resolution: {integrity: sha512-m3QzVVTzZeiEc/r1Nw4udwQVsX9dG98igIt8PPC+++0Cy9HIqF5iZWiwLEpKw70PZ7HGeEQSIQuqTPB5op0+bw==}
     engines: {node: '>=20'}
 
   levn@0.4.1:
@@ -17343,7 +17343,7 @@ snapshots:
     dependencies:
       readable-stream: 2.3.8
 
-  ldapts@8.0.36:
+  ldapts@8.1.0:
     dependencies:
       '@types/asn1': 0.2.4
       asn1: 0.2.6
