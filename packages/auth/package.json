@@ -8,6 +8,7 @@
     ".": "./index.ts",
     "./next": "./next.ts",
     "./security": "./security.ts",
+    "./api-key": "./api-key/index.ts",
     "./client": "./client.ts",
     "./server": "./server.ts",
     "./shared": "./shared.ts",
