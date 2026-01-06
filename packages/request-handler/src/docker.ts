@@ -57,6 +57,57 @@ export const getContainerLogsAsync = async (id: string, tail = 200) => {
   return decodeDockerLogs(rawLogs);
 };
 
+export const streamContainerLogsAsync = async (
+  id: string,
+  tail: number,
+  onData: (data: string) => void,
+  onError: (err: Error) => void,
+) => {
+  const container = await findContainerByIdAsync(id);
+  if (!container) {
+    onError(new Error("Container not found"));
+    return () => undefined;
+  }
+
+  const stream = await container.logs({
+    tail,
+    stdout: true,
+    stderr: true,
+    follow: true,
+  });
+
+  // Docker multiplexed stream processing
+  let buffer = Buffer.alloc(0);
+
+  const processChunk = (chunk: Buffer) => {
+    buffer = Buffer.concat([buffer, chunk]);
+
+    while (buffer.length >= 8) {
+      const length = buffer.readUInt32BE(4);
+      const fullMessageSize = 8 + length;
+
+      if (buffer.length < fullMessageSize) {
+        // Wait for more data
+        break;
+      }
+
+      const payload = buffer.subarray(8, fullMessageSize);
+      onData(payload.toString("utf-8"));
+
+      buffer = buffer.subarray(fullMessageSize);
+    }
+  };
+
+  stream.on("data", processChunk);
+  stream.on("error", onError);
+
+  return () => {
+    stream.removeListener("data", processChunk);
+    stream.removeListener("error", onError);
+    stream.destroy();
+  };
+};
+
 const decodeDockerLogs = (logs: Buffer | string) => {
   if (typeof logs === "string") {
     return logs;

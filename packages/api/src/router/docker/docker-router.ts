@@ -4,7 +4,11 @@ import { z } from "zod/v4";
 
 import type { Container, ContainerState, Docker, Port } from "@homarr/docker";
 import { DockerSingleton } from "@homarr/docker";
-import { dockerContainersRequestHandler, getContainerLogsAsync } from "@homarr/request-handler/docker";
+import {
+  dockerContainersRequestHandler,
+  getContainerLogsAsync,
+  streamContainerLogsAsync,
+} from "@homarr/request-handler/docker";
 
 import { dockerMiddleware } from "../../middlewares/docker";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
@@ -126,6 +130,51 @@ export const dockerRouter = createTRPCRouter({
       return {
         logs,
       };
+    }),
+  subscribeLogs: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .concat(dockerMiddleware())
+    .input(
+      z.object({
+        id: z.string(),
+        tail: z.number().min(1).max(1000).optional(),
+      }),
+    )
+    .subscription(({ input }) => {
+      return observable<string>((emit) => {
+        let cleanup: (() => void) | undefined;
+
+        streamContainerLogsAsync(
+          input.id,
+          input.tail ?? 200,
+          (data) => {
+            emit.next(data);
+          },
+          (err) => {
+            emit.error(
+              new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: err.message,
+              }),
+            );
+          },
+        )
+          .then((cleanupFn) => {
+            cleanup = cleanupFn;
+          })
+          .catch((err) => {
+            emit.error(
+              new TRPCError({
+                code: "NOT_FOUND",
+                message: err instanceof Error ? err.message : "Container not found",
+              }),
+            );
+          });
+
+        return () => {
+          cleanup?.();
+        };
+      });
     }),
 });
 
