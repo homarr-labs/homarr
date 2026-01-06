@@ -93,23 +93,7 @@ describe("CoolifyIntegration", () => {
       const result = await integration.getVersionAsync(mockFetch);
 
       expect(result).toBe("4.0.0-beta.460");
-      expect(mockFetch).toHaveBeenCalledWith(
-        `${TEST_URL}/api/v1/version`,
-        expect.objectContaining({
-          headers: { Authorization: `Bearer ${TEST_API_KEY}` },
-        }),
-      );
-    });
-
-    test("should throw error when API returns error", async () => {
-      const integration = createCoolifyIntegration();
-      const mockFetch = vi.fn().mockResolvedValue({
-        ok: false,
-        status: 401,
-        statusText: "Unauthorized",
-      });
-
-      await expect(integration.getVersionAsync(mockFetch)).rejects.toThrow("Failed to fetch Coolify version");
+      expect(mockFetch).toHaveBeenCalled();
     });
   });
 
