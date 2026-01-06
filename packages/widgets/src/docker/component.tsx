@@ -11,7 +11,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { humanFileSize, useTimeAgo } from "@homarr/common";
 import type { ContainerState } from "@homarr/docker";
-import { containerStateColorMap } from "@homarr/docker/shared";
+import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
@@ -27,25 +27,6 @@ const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
     </Badge>
   );
 };
-
-const memoryUsageColor = (number: number, state: string) => {
-  const mbUsage = number / 1024 / 1024;
-  if (mbUsage === 0 && state !== "running") return "red";
-  if (mbUsage < 128) return "green";
-  if (mbUsage < 256) return "yellow";
-  if (mbUsage < 512) return "orange";
-  return "red";
-};
-
-const cpuUsageColor = (number: number, state: string) => {
-  if (number === 0 && state !== "running") return "red";
-  if (number < 40) return "green";
-  if (number < 60) return "yellow";
-  if (number < 90) return "orange";
-  return "red";
-};
-
-const safeValue = (value?: number, fallback = 0) => (value !== undefined && !isNaN(value) ? value : fallback);
 
 const actionIconIconStyle: IconProps["style"] = {
   height: "var(--ai-icon-size)",
