@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import type { MantineColor } from "@mantine/core";
 import { Avatar, Badge, Box, Button, Group, Text } from "@mantine/core";
 import {
@@ -19,7 +18,7 @@ import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { humanFileSize, useTimeAgo } from "@homarr/common";
 import type { ContainerState } from "@homarr/docker";
-import { containerStateColorMap } from "@homarr/docker/shared";
+import { containerStateColorMap, cpuUsageColor, memoryUsageColor, safeValue } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
 import { AddDockerAppToHomarr, DockerLogsModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
@@ -80,9 +79,10 @@ const createColumns = (
     accessorKey: "ports",
     header: t("docker.field.ports.label"),
     Cell({ cell }) {
-      if (!cell?.row?.original?.ports?.length) return null;
+      const ports = cell.row.original.ports;
+      if (!ports || ports.length === 0) return null;
       return (
-        <OverflowBadge overflowCount={1} data={cell.row.original.ports.map((port) => port.PrivatePort.toString())} />
+        <OverflowBadge overflowCount={1} data={ports.map((port) => port.PrivatePort.toString())} />
       );
     },
   },
@@ -135,7 +135,6 @@ const createColumns = (
 export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"]) {
   const t = useI18n();
   const tDocker = useScopedI18n("docker");
-  const [showStats, setShowStats] = useState(false);
   const { data } = clientApi.docker.getContainers.useQuery(undefined, {
     initialData,
     refetchOnMount: false,
@@ -208,14 +207,6 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
 
     columns: createColumns(t),
   });
-
-  useEffect(() => {
-    table.setColumnVisibility((prev) => ({
-      ...prev,
-      cpuUsage: showStats,
-      memoryUsage: showStats,
-    }));
-  }, [showStats, table]);
 
   return (
     <>
@@ -334,21 +325,3 @@ const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
   );
 };
 
-const memoryUsageColor = (number: number, state: string) => {
-  const mbUsage = number / 1024 / 1024;
-  if (mbUsage === 0 && state !== "running") return "red";
-  if (mbUsage < 128) return "green";
-  if (mbUsage < 256) return "yellow";
-  if (mbUsage < 512) return "orange";
-  return "red";
-};
-
-const cpuUsageColor = (number: number, state: string) => {
-  if (number === 0 && state !== "running") return "red";
-  if (number < 40) return "green";
-  if (number < 60) return "yellow";
-  if (number < 90) return "orange";
-  return "red";
-};
-
-const safeValue = (value?: number, fallback = 0) => (value !== undefined && !isNaN(value) ? value : fallback);

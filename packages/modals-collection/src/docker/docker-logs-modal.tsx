@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Group, Loader, ScrollArea, Stack, Text } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
@@ -13,44 +13,99 @@ interface DockerLogsModalInnerProps {
   tail?: number;
 }
 
+const SCROLL_THRESHOLD = 100;
+
+const isViewportAtBottom = (viewport: HTMLDivElement | null): boolean => {
+  if (!viewport) return false;
+  return viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight < SCROLL_THRESHOLD;
+};
+
 export const DockerLogsModal = createModal<DockerLogsModalInnerProps>(({ innerProps }) => {
   const t = useI18n();
   const viewportRef = useRef<HTMLDivElement | null>(null);
-  const didInitialScrollRef = useRef(false);
+  const [logs, setLogs] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const shouldScrollRef = useRef(true);
+  const hasInitializedRef = useRef(false);
 
-  const { data, isPending, isError } = clientApi.docker.logs.useQuery(
-    { id: innerProps.id, tail: innerProps.tail },
+  // Get initial logs
+  const { data: initialData } = clientApi.docker.logs.useQuery(
+    { id: innerProps.id, tail: innerProps.tail ?? 200 },
     {
       refetchOnWindowFocus: false,
       retry: 0,
-      refetchInterval: 1000,
-      refetchIntervalInBackground: true,
     },
   );
 
+  // Maximum log size to prevent memory issues (500KB)
+  const MAX_LOG_SIZE = 500 * 1024;
+
+  // Subscribe to streaming logs
+  clientApi.docker.subscribeLogs.useSubscription(
+    { id: innerProps.id, tail: innerProps.tail ?? 200 },
+    {
+      onData(data) {
+        setLogs((prev) => {
+          const newLogs = prev + data;
+          // Truncate from the beginning if logs exceed maximum size
+          if (newLogs.length > MAX_LOG_SIZE) {
+            const truncated = newLogs.slice(-MAX_LOG_SIZE);
+            // Try to start from a newline to avoid partial lines
+            const firstNewline = truncated.indexOf("\n");
+            return firstNewline > 0 ? truncated.slice(firstNewline + 1) : truncated;
+          }
+          return newLogs;
+        });
+        setIsLoading(false);
+      },
+      onError(err) {
+        setError(err.message);
+        setIsLoading(false);
+      },
+    },
+  );
+
+  // Initialize with static logs (only once)
   useEffect(() => {
-    if (didInitialScrollRef.current) return;
-    if (!data?.logs) return;
+    if (initialData?.logs && !hasInitializedRef.current) {
+      setLogs(initialData.logs);
+      setIsLoading(false);
+      hasInitializedRef.current = true;
+    }
+  }, [initialData]);
+
+  // Auto-scroll to bottom when new logs arrive
+  useEffect(() => {
+    if (!shouldScrollRef.current) return;
     const viewport = viewportRef.current;
     if (!viewport) return;
-    viewport.scrollTop = viewport.scrollHeight;
-    didInitialScrollRef.current = true;
-  }, [data?.logs]);
+
+    if (isViewportAtBottom(viewport)) {
+      viewport.scrollTop = viewport.scrollHeight;
+    }
+  }, [logs]);
+
+  // Handle manual scroll to determine auto-scroll behavior
+  const handleScroll = () => {
+    const viewport = viewportRef.current;
+    shouldScrollRef.current = isViewportAtBottom(viewport);
+  };
 
   return (
     <Box>
       <Stack gap="sm">
-        {isPending ? (
+        {isLoading ? (
           <Group justify="center" py="md">
             <Loader size="sm" />
           </Group>
-        ) : isError ? (
+        ) : error ? (
           <Text c="red" size="sm">
-            Failed to load logs
+            {error}
           </Text>
         ) : (
-          <ScrollArea h="75vh" viewportRef={viewportRef}>
-            {data?.logs ? (
+          <ScrollArea h="75vh" viewportRef={viewportRef} onScrollPositionChange={handleScroll}>
+            {logs ? (
               <pre
                 style={{
                   margin: 0,
@@ -58,7 +113,7 @@ export const DockerLogsModal = createModal<DockerLogsModalInnerProps>(({ innerPr
                   overflowWrap: "anywhere",
                 }}
               >
-                <code>{data.logs}</code>
+                <code>{logs}</code>
               </pre>
             ) : (
               <Text size="sm" c="dimmed">
