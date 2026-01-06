@@ -76,22 +76,27 @@ export const streamContainerLogsAsync = async (
     follow: true,
   });
 
-  // Docker multiplexed stream processing
+  // Docker uses a multiplexed stream format for logs where each message has an 8-byte header:
+  // - 1 byte: stream type (stdout/stderr)
+  // - 3 bytes: padding
+  // - 4 bytes: payload length (big-endian)
+  // We need to process the stream in chunks and extract complete messages from the buffer.
+  const DOCKER_STREAM_HEADER_SIZE = 8;
   let buffer = Buffer.alloc(0);
 
   const processChunk = (chunk: Buffer) => {
     buffer = Buffer.concat([buffer, chunk]);
 
-    while (buffer.length >= 8) {
+    while (buffer.length >= DOCKER_STREAM_HEADER_SIZE) {
       const length = buffer.readUInt32BE(4);
-      const fullMessageSize = 8 + length;
+      const fullMessageSize = DOCKER_STREAM_HEADER_SIZE + length;
 
       if (buffer.length < fullMessageSize) {
         // Wait for more data
         break;
       }
 
-      const payload = buffer.subarray(8, fullMessageSize);
+      const payload = buffer.subarray(DOCKER_STREAM_HEADER_SIZE, fullMessageSize);
       onData(payload.toString("utf-8"));
 
       buffer = buffer.subarray(fullMessageSize);

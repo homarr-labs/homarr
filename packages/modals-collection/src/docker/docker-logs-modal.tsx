@@ -67,7 +67,7 @@ export const DockerLogsModal = createModal<DockerLogsModalInnerProps>(({ innerPr
     if (!shouldScrollRef.current) return;
     const viewport = viewportRef.current;
     if (!viewport) return;
-    
+
     if (isViewportAtBottom(viewport)) {
       viewport.scrollTop = viewport.scrollHeight;
     }
