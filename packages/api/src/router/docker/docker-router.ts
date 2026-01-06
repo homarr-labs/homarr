@@ -142,37 +142,47 @@ export const dockerRouter = createTRPCRouter({
     )
     .subscription(({ input }) => {
       return observable<string>((emit) => {
-        let cleanup: (() => void) | undefined;
+        let cleanupFn: (() => void) | undefined;
+        let isSubscribed = true;
 
-        streamContainerLogsAsync(
-          input.id,
-          input.tail ?? 200,
-          (data) => {
-            emit.next(data);
-          },
-          (err) => {
-            emit.error(
-              new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: err.message,
-              }),
+        const initializeStream = async () => {
+          try {
+            cleanupFn = await streamContainerLogsAsync(
+              input.id,
+              input.tail ?? 200,
+              (data) => {
+                if (isSubscribed) {
+                  emit.next(data);
+                }
+              },
+              (err) => {
+                if (isSubscribed) {
+                  emit.error(
+                    new TRPCError({
+                      code: "INTERNAL_SERVER_ERROR",
+                      message: err.message,
+                    }),
+                  );
+                }
+              },
             );
-          },
-        )
-          .then((cleanupFn) => {
-            cleanup = cleanupFn;
-          })
-          .catch((err) => {
-            emit.error(
-              new TRPCError({
-                code: "NOT_FOUND",
-                message: err instanceof Error ? err.message : "Container not found",
-              }),
-            );
-          });
+          } catch (err) {
+            if (isSubscribed) {
+              emit.error(
+                new TRPCError({
+                  code: "NOT_FOUND",
+                  message: err instanceof Error ? err.message : "Container not found",
+                }),
+              );
+            }
+          }
+        };
+
+        void initializeStream();
 
         return () => {
-          cleanup?.();
+          isSubscribed = false;
+          cleanupFn?.();
         };
       });
     }),

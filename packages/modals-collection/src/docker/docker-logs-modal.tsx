@@ -38,12 +38,25 @@ export const DockerLogsModal = createModal<DockerLogsModalInnerProps>(({ innerPr
     },
   );
 
+  // Maximum log size to prevent memory issues (500KB)
+  const MAX_LOG_SIZE = 500 * 1024;
+
   // Subscribe to streaming logs
   clientApi.docker.subscribeLogs.useSubscription(
     { id: innerProps.id, tail: innerProps.tail ?? 200 },
     {
       onData(data) {
-        setLogs((prev) => prev + data);
+        setLogs((prev) => {
+          const newLogs = prev + data;
+          // Truncate from the beginning if logs exceed maximum size
+          if (newLogs.length > MAX_LOG_SIZE) {
+            const truncated = newLogs.slice(-MAX_LOG_SIZE);
+            // Try to start from a newline to avoid partial lines
+            const firstNewline = truncated.indexOf("\n");
+            return firstNewline > 0 ? truncated.slice(firstNewline + 1) : truncated;
+          }
+          return newLogs;
+        });
         setIsLoading(false);
       },
       onError(err) {
