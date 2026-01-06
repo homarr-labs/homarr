@@ -221,11 +221,24 @@ function ServersSection({
   return (
     <Accordion.Item value="servers">
       <Accordion.Control icon={isTiny ? null : <IconServer size={16} />}>
-        <Group gap="xs">
-          <Text size="xs">{t("tab.servers")}</Text>
-          <Badge variant="dot" color={getBadgeColor(onlineServers, servers.length)} size="xs">
-            {onlineServers} / {servers.length}
-          </Badge>
+        <Group gap="xs" justify="space-between" wrap="nowrap" style={{ flex: 1 }}>
+          <Group gap="xs">
+            <Text size="xs">{t("tab.servers")}</Text>
+            <Badge variant="dot" color={getBadgeColor(onlineServers, servers.length)} size="xs">
+              {onlineServers} / {servers.length}
+            </Badge>
+          </Group>
+          <ActionIcon
+            size="xs"
+            variant="subtle"
+            c="dimmed"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleIp();
+            }}
+          >
+            {showIp ? <IconEye size={12} /> : <IconEyeOff size={12} />}
+          </ActionIcon>
         </Group>
       </Accordion.Control>
       <Accordion.Panel p={4}>
@@ -235,7 +248,6 @@ function ServersSection({
             serverResourceCounts={serverResourceCounts}
             isTiny={isTiny}
             showIp={showIp}
-            onToggleIp={onToggleIp}
             integrationUrl={integrationUrl}
           />
         ) : (
@@ -253,18 +265,10 @@ interface ServersTableProps {
   serverResourceCounts: Map<number, { apps: number; services: number }>;
   isTiny: boolean;
   showIp: boolean;
-  onToggleIp: () => void;
   integrationUrl: string;
 }
 
-function ServersTable({
-  servers,
-  serverResourceCounts,
-  isTiny,
-  showIp,
-  onToggleIp,
-  integrationUrl,
-}: ServersTableProps) {
+function ServersTable({ servers, serverResourceCounts, isTiny, showIp, integrationUrl }: ServersTableProps) {
   return (
     <Stack gap={4}>
       {servers.map((server) => (
@@ -274,7 +278,6 @@ function ServersTable({
           counts={serverResourceCounts.get(server.settings?.server_id ?? server.id ?? 0) ?? { apps: 0, services: 0 }}
           isTiny={isTiny}
           showIp={showIp}
-          onToggleIp={onToggleIp}
           integrationUrl={integrationUrl}
         />
       ))}
@@ -287,11 +290,10 @@ interface ServerRowProps {
   counts: { apps: number; services: number };
   isTiny: boolean;
   showIp: boolean;
-  onToggleIp: () => void;
   integrationUrl: string;
 }
 
-function ServerRow({ server, counts, isTiny, showIp, onToggleIp, integrationUrl }: ServerRowProps) {
+function ServerRow({ server, counts, isTiny, showIp, integrationUrl }: ServerRowProps) {
   const t = useScopedI18n("widget.coolify");
   const isBuildServer = server.settings?.is_build_server === true;
   const isOnline = server.is_reachable !== false;
@@ -299,7 +301,6 @@ function ServerRow({ server, counts, isTiny, showIp, onToggleIp, integrationUrl 
 
   return (
     <Stack gap={0}>
-      {/* Row 1: Indicator + Name + BUILD/Resources */}
       <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
         <Indicator size={isTiny ? 4 : 8} color={isOnline ? "green" : "red"} />
         <Anchor href={serverUrl} target="_blank" fz={isTiny ? "8px" : "xs"} c="inherit" lineClamp={1}>
@@ -315,13 +316,9 @@ function ServerRow({ server, counts, isTiny, showIp, onToggleIp, integrationUrl 
           </Text>
         )}
       </Group>
-      {/* Row 2: Icons + IP */}
       <Group wrap="nowrap" gap={4} ml={16}>
         <ActionIcon component="a" href={serverUrl} target="_blank" size="xs" variant="subtle" c="dimmed">
           <IconExternalLink size={12} />
-        </ActionIcon>
-        <ActionIcon size="xs" variant="subtle" c="dimmed" onClick={onToggleIp}>
-          {showIp ? <IconEye size={12} /> : <IconEyeOff size={12} />}
         </ActionIcon>
         <Text fz="10px" c="dimmed">
           {showIp ? server.ip : "***.***.***.***"}
@@ -519,10 +516,8 @@ function cleanFqdn(fqdn: string | undefined | null): string | undefined {
   if (!firstUrl) return undefined;
   try {
     const url = new URL(firstUrl);
-    if (url.protocol === "https:") {
-      return `${url.protocol}//${url.hostname}${url.pathname}`.replace(/\/$/, "");
-    }
-    return firstUrl;
+    // Normalize all URLs: protocol + hostname + pathname (strip trailing slash and port for cleaner display)
+    return `${url.protocol}//${url.hostname}${url.pathname}`.replace(/\/$/, "");
   } catch {
     return firstUrl;
   }
