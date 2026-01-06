@@ -13,6 +13,13 @@ interface DockerLogsModalInnerProps {
   tail?: number;
 }
 
+const SCROLL_THRESHOLD = 100;
+
+const isViewportAtBottom = (viewport: HTMLDivElement | null): boolean => {
+  if (!viewport) return false;
+  return viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight < SCROLL_THRESHOLD;
+};
+
 export const DockerLogsModal = createModal<DockerLogsModalInnerProps>(({ innerProps }) => {
   const t = useI18n();
   const viewportRef = useRef<HTMLDivElement | null>(null);
@@ -20,6 +27,7 @@ export const DockerLogsModal = createModal<DockerLogsModalInnerProps>(({ innerPr
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const shouldScrollRef = useRef(true);
+  const hasInitializedRef = useRef(false);
 
   // Get initial logs
   const { data: initialData } = clientApi.docker.logs.useQuery(
@@ -45,11 +53,12 @@ export const DockerLogsModal = createModal<DockerLogsModalInnerProps>(({ innerPr
     },
   );
 
-  // Initialize with static logs
+  // Initialize with static logs (only once)
   useEffect(() => {
-    if (initialData?.logs) {
+    if (initialData?.logs && !hasInitializedRef.current) {
       setLogs(initialData.logs);
       setIsLoading(false);
+      hasInitializedRef.current = true;
     }
   }, [initialData]);
 
@@ -59,9 +68,7 @@ export const DockerLogsModal = createModal<DockerLogsModalInnerProps>(({ innerPr
     const viewport = viewportRef.current;
     if (!viewport) return;
     
-    // Check if user has scrolled up
-    const isAtBottom = viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight < 100;
-    if (isAtBottom) {
+    if (isViewportAtBottom(viewport)) {
       viewport.scrollTop = viewport.scrollHeight;
     }
   }, [logs]);
@@ -69,10 +76,7 @@ export const DockerLogsModal = createModal<DockerLogsModalInnerProps>(({ innerPr
   // Handle manual scroll to determine auto-scroll behavior
   const handleScroll = () => {
     const viewport = viewportRef.current;
-    if (!viewport) return;
-    
-    const isAtBottom = viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight < 100;
-    shouldScrollRef.current = isAtBottom;
+    shouldScrollRef.current = isViewportAtBottom(viewport);
   };
 
   return (
