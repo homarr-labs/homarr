@@ -7,7 +7,7 @@
         "description": "Pour commencer, veuillez selectionner comment vous souhaitez configurer votre instance Homarr.",
         "action": {
           "scratch": "Partir de zéro",
-          "importOldmarr": "Importer à partir d'Homarr avant la 1.0"
+          "importOldmarr": "Importer depuis Homarr avant la 1.0"
         }
       },
       "import": {
@@ -27,7 +27,7 @@
           "description": "Configurer le comportement d'importation"
         },
         "boardSelection": {
-          "title": "{count} tableaux trouvés",
+          "title": "Tableaux {count} trouvés",
           "description": "Choisissez tous les tableaux avec la taille que vous souhaitez importer",
           "action": {
             "selectAll": "Tout sélectionner",
@@ -113,7 +113,7 @@
         "subtitle": "Bon retour parmi nous ! Veuillez entrer vos identifiants"
       },
       "invite": {
-        "title": "Rejoindre Homarr",
+        "title": "Rejoignez Homarr",
         "subtitle": "Bienvenue sur Homarr! Veuillez créer votre compte",
         "description": "Vous avez été invité par {username}"
       },
@@ -649,14 +649,14 @@
         "app": {
           "option": {
             "existing": {
-              "title": "",
-              "label": ""
+              "title": "Existant",
+              "label": "Sélectionner une application existante"
             },
             "new": {
-              "title": "",
+              "title": "Nouveau",
               "url": {
-                "label": "",
-                "description": ""
+                "label": "Lien de l'application",
+                "description": "Lien d'ouverture de l'application depuis le tableau de bord"
               }
             }
           }
@@ -676,9 +676,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Lier une application",
+            "remove": "Délier",
+            "select": "Sélectionnez une application à lier"
           }
         }
       },
@@ -709,7 +709,7 @@
         "description": "L'intégration \"{kind}\" peut être utilisée avec les moteurs de recherche. Cochez ceci pour configurer automatiquement le moteur de recherche."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Application liée"
       },
       "createApp": {
         "label": "Créer une application",
@@ -991,8 +991,8 @@
           "newLabel": "Nouvel ID d'installation"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Clé privée",
+          "newLabel": "Nouvelle clé privée"
         }
       }
     },
@@ -1044,14 +1044,14 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "Succès",
     "beta": "Bêta",
     "error": "Erreur",
     "action": {
       "add": "Ajouter",
       "apply": "Appliquer",
       "backToOverview": "Retourner à l'aperçu",
-      "change": "",
+      "change": "Modifier",
       "create": "Créer",
       "createAnother": "Créer et recommencer",
       "edit": "Modifier",
@@ -1174,8 +1174,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1190,7 +1190,7 @@
           "label": "Titre"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Classes Css personnalisées"
         },
         "borderColor": {
           "label": "Couleur de la bordure"
@@ -1321,21 +1321,21 @@
           "label": "Activer la vérification du statut"
         },
         "layout": {
-          "label": "",
+          "label": "Mise en page",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Horizontale",
+            "row-reverse": "Horizontal (inversé)",
+            "column": "Vertical",
+            "column-reverse": "Vertical (inversé)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Mode d'affichage de la description",
+          "description": "Choisissez comment afficher la description de l'application",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "Au sein du widget",
+            "tooltip": "Comme infobulle",
+            "hidden": "Masquer"
           }
         }
       },
@@ -1584,11 +1584,11 @@
       },
       "placeholder": "Commencer à écrire vos notes",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Abandonner les modifications ?",
+        "message": "Vous avez des modifications non enregistrées dans votre bloc-notes. Êtes-vous sûr de vouloir les supprimer ?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Ignorer les modifications",
+          "keepEditing": "Continuer les modifications"
         }
       }
     },
@@ -1743,7 +1743,7 @@
       "name": "Calendrier",
       "description": "Afficher les événements de vos intégrations dans une vue calendrier pendant une certaine période de temps relative",
       "duration": {
-        "allDay": ""
+        "allDay": "Tous les jours"
       },
       "option": {
         "releaseType": {
@@ -1780,7 +1780,7 @@
           "description": "Uniquement sur la météo actuelle"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Utiliser mph pour la vitesse du vent"
         },
         "location": {
           "label": "Lieu de la météo"
@@ -1941,19 +1941,19 @@
       "description": "Statistiques de vos conteneurs (Ce widget ne peut être ajouté qu'avec les privilèges d'administrateur)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Activer le tri des éléments"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Colonne de tri par défaut",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Nom",
+            "state": "État",
+            "cpuUsage": "Utilisation du CPU",
+            "memoryUsage": "Utilisation mémoire"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Inverser le tri"
         }
       },
       "error": {
@@ -2036,21 +2036,21 @@
         "name": "Nom",
         "id": "Id",
         "metadata": {
-          "title": "",
+          "title": "Statistiques détaillées",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Vidéo",
+            "resolution": "Résolution"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Audio",
+            "channelCount": "Canaux audio",
+            "codec": "Codec audio"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
+            "title": "Transcodage",
+            "container": "Conteneur",
             "resolution": "Résolution",
-            "target": ""
+            "target": "Codec cible"
           }
         }
       }
@@ -2248,7 +2248,7 @@
         "unknown": "Inconnu",
         "pending": "En attente",
         "processing": "Traitement en cours",
-        "requested": "",
+        "requested": "En attente",
         "partiallyAvailable": "Partiel",
         "available": "Disponible",
         "blacklisted": "Sur la liste noire",
@@ -2361,7 +2361,7 @@
           "label": "Nombre maximum de publications"
         },
         "hideDescription": {
-          "label": ""
+          "label": "Masquer la description"
         }
       }
     },
@@ -2542,7 +2542,7 @@
     },
     "firewall": {
       "name": "Surveillance du pare-feu",
-      "description": "",
+      "description": "Affiche un résumé des pare-feu",
       "tab": {
         "system": "Système",
         "interfaces": "Interfaces"
@@ -2556,16 +2556,16 @@
       "widget": {
         "fwname": "Nom",
         "version": "Version",
-        "versiontitle": "",
-        "cputitle": "",
-        "memorytitle": "",
-        "cpu": "",
-        "memory": "",
+        "versiontitle": "Versions",
+        "cputitle": "Utilisation du CPU",
+        "memorytitle": "Utilisation de la mémoire",
+        "cpu": "CPU",
+        "memory": "Mémoire",
         "interfaces": {
-          "name": "",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "name": "nom",
+          "trans": "Transmis",
+          "recv": "Reçus",
+          "title": "Interfaces réseau"
         }
       }
     },
@@ -2576,37 +2576,37 @@
       "option": {}
     },
     "systemResources": {
-      "name": "",
-      "description": "",
+      "name": "Ressources du système",
+      "description": "CPU, Mémoire, Disque et autre utilisation matérielle de votre système",
       "option": {
         "hasShadow": {
-          "label": ""
+          "label": "Activer l'ombrage des cartes"
         },
         "visibleCharts": {
-          "label": "",
-          "description": "",
+          "label": "Graphiques visibles",
+          "description": "Sélectionnez les graphiques à afficher.",
           "option": {
-            "cpu": "",
-            "memory": "",
-            "network": ""
+            "cpu": "CPU",
+            "memory": "Mémoire",
+            "network": "Réseau"
           }
         },
         "labelDisplayMode": {
-          "label": "",
+          "label": "Mode d'affichage de l'étiquette",
           "option": {
-            "textWithIcon": "",
-            "text": "",
-            "icon": "",
-            "hidden": ""
+            "textWithIcon": "Afficher le texte avec l'icône",
+            "text": "Afficher uniquement le texte",
+            "icon": "Afficher uniquement l'icône",
+            "hidden": "Masquer l'étiquette"
           }
         }
       },
       "card": {
-        "cpu": "",
-        "memory": "",
-        "network": "",
-        "up": "",
-        "down": ""
+        "cpu": "CPU",
+        "memory": "RAM",
+        "network": "NET",
+        "up": "UP",
+        "down": "HORS SERVICE"
       }
     }
   },
@@ -3030,8 +3030,8 @@
           "integration": "Intégrations",
           "app": "Applications",
           "group": "Groupes",
-          "searchEngine": "",
-          "media": ""
+          "searchEngine": "Moteurs de recherche",
+          "media": "Médias"
         },
         "statisticLabel": {
           "boards": "Tableaux de bord",
@@ -3040,8 +3040,8 @@
           "authorization": "Autorisation"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Bienvenue sur votre",
+          "subtitle": "Tableau {app}"
         }
       },
       "board": {
@@ -3387,19 +3387,19 @@
               "label": "Conteneurs Docker"
             },
             "firewallCpu": {
-              "label": ""
+              "label": "Processeur du pare-feu"
             },
             "firewallMemory": {
-              "label": ""
+              "label": "Mémoire du pare-feu"
             },
             "firewallVersion": {
-              "label": ""
+              "label": "Version du pare-feu"
             },
             "firewallInterfaces": {
-              "label": ""
+              "label": "Interfaces du pare-feu"
             },
             "weather": {
-              "label": ""
+              "label": "Météo"
             }
           },
           "interval": {
@@ -3410,10 +3410,10 @@
             "weeklyMonday": "Chaque semaine le lundi",
             "update": {
               "success": {
-                "message": ""
+                "message": "Intervalle mis à jour avec succès"
               },
               "error": {
-                "message": ""
+                "message": "L'intervalle de mise à jour a échoué"
               }
             }
           },
@@ -3422,55 +3422,55 @@
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "Nom"
             },
             "interval": {
               "label": "Intervalle de planification"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Dernière exécution"
             },
             "actions": {
-              "label": ""
+              "label": "Actions"
             }
           },
           "table": {
-            "search": ""
+            "search": "Rechercher des tâches {count}..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "Rafraîchir"
             }
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "Tâches actualisées avec succès"
             },
             "error": {
-              "message": ""
+              "message": "Échec de l'actualisation des tâches"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "Tâche déclenchée avec succès"
             },
             "error": {
-              "message": ""
+              "message": "Échec du déclenchement de la tâche"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "Tâche activée avec succès"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "Tâche désactivée avec succès"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "Impossible de basculer le statut de la tâche"
             }
           }
         },
@@ -3527,19 +3527,19 @@
             "subtitle": "{count} utilisés dans le Code d'Homarr"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "Raccourcis clavier",
+            "subtitle": "Raccourcis clavier pour améliorer votre flux de travail",
             "field": {
-              "shortcut": "",
-              "action": ""
+              "shortcut": "Raccourci",
+              "action": "Action"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
-              "openSpotlight": ""
+              "toggleBoardEdit": "Activer/désactiver le mode d'édition du tableau",
+              "toggleColorScheme": "Basculer en mode clair/sombre",
+              "saveNotebook": "Enregistrer le bloc-notes (uniquement à l'intérieur du widget notebook)",
+              "openSpotlight": "Ouvrir la recherche"
             },
-            "note": ""
+            "note": "Astuce : Mod correspond à la touche Ctrl ou ⌘ sur macOS"
           }
         }
       }
@@ -3995,7 +3995,7 @@
       "tools": {
         "label": "Outils",
         "tasks": {
-          "label": ""
+          "label": "Tâches"
         },
         "docker": {
           "label": "Docker"

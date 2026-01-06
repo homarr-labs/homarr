@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { Center, Divider, Group, Pagination, SegmentedControl, Stack, Text } from "@mantine/core";
-import type { TablerIcon } from "@tabler/icons-react";
 import { IconClipboardList, IconCpu2, IconReportAnalytics } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 
 import { views } from ".";
 import type { WidgetComponentProps } from "../definition";

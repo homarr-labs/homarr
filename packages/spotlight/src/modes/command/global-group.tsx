@@ -1,5 +1,4 @@
 import { Group, Text, useMantineColorScheme } from "@mantine/core";
-import type { TablerIcon } from "@tabler/icons-react";
 import {
   IconBox,
   IconCategoryPlus,
@@ -17,6 +16,7 @@ import { useSession } from "@homarr/auth/client";
 import { useModalAction } from "@homarr/modals";
 import { AddBoardModal, AddGroupModal, ImportBoardModal, InviteCreateModal } from "@homarr/modals-collection";
 import { useScopedI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";

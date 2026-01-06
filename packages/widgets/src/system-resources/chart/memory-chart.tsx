@@ -47,7 +47,7 @@ export const SystemResourceMemoryChart = ({
           return (
             <Paper px={3} py={2} withBorder shadow="md" radius="md">
               <Text c="dimmed" size="xs">
-                {humanFileSize(value)} / {humanFileSize(totalCapacityInBytes)} (
+                {humanFileSize(Math.round(value))} / {humanFileSize(totalCapacityInBytes)} (
                 {Math.round((value / totalCapacityInBytes) * 100)}%)
               </Text>
             </Paper>
