@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import type { ContainerInfo, ContainerStats } from "dockerode";
+import type { Container, ContainerInfo, ContainerStats } from "dockerode";
 
 import { db, like, or } from "@homarr/db";
 import { icons } from "@homarr/db/schema";
@@ -20,6 +20,73 @@ export const dockerContainersRequestHandler = createCachedWidgetRequestHandler({
 const dockerInstances = DockerSingleton.getInstances();
 
 const extractImage = (container: ContainerInfo) => container.Image.split("/").at(-1)?.split(":").at(0) ?? "";
+
+const findContainerByIdAsync = async (id: string) => {
+  const containers = await Promise.all(
+    dockerInstances.map(async ({ instance }) => {
+      const container = instance.getContainer(id);
+
+      return await new Promise<Container | null>((resolve) => {
+        container.inspect((err, data) => {
+          if (err || !data) {
+            resolve(null);
+          } else {
+            resolve(container);
+          }
+        });
+      });
+    }),
+  );
+
+  return containers.find((container) => container) ?? null;
+};
+
+export const getContainerLogsAsync = async (id: string, tail = 200) => {
+  const container = await findContainerByIdAsync(id);
+  if (!container) {
+    return null;
+  }
+
+  const rawLogs = await container.logs({
+    tail,
+    stdout: true,
+    stderr: true,
+    follow: false,
+  });
+
+  return decodeDockerLogs(rawLogs);
+};
+
+const decodeDockerLogs = (logs: Buffer | string) => {
+  if (typeof logs === "string") {
+    return logs;
+  }
+
+  // Docker multiplexed stream: 1 byte stream type, 3 bytes padding, 4 bytes big-endian length, then payload
+  // Repeat until buffer consumed.
+  let cursor = 0;
+  const parts: string[] = [];
+
+  while (cursor < logs.length) {
+    // Defensive: need at least 8 bytes header
+    if (cursor + 8 > logs.length) {
+      break;
+    }
+
+    const length = logs.readUInt32BE(cursor + 4);
+    const start = cursor + 8;
+    const end = start + length;
+    if (end > logs.length) {
+      break;
+    }
+
+    const payload = logs.subarray(start, end);
+    parts.push(payload.toString("utf-8"));
+    cursor = end;
+  }
+
+  return parts.join("");
+};
 
 async function getContainersWithStatsAsync() {
   const containers = await Promise.all(
