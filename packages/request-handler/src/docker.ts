@@ -82,6 +82,7 @@ export const streamContainerLogsAsync = async (
   // - 4 bytes: payload length (big-endian)
   // We need to process the stream in chunks and extract complete messages from the buffer.
   const DOCKER_STREAM_HEADER_SIZE = 8;
+  const MAX_MESSAGE_SIZE = 1024 * 1024; // 1MB maximum message size for safety
   let buffer = Buffer.alloc(0);
 
   const processChunk = (chunk: Buffer) => {
@@ -89,6 +90,13 @@ export const streamContainerLogsAsync = async (
 
     while (buffer.length >= DOCKER_STREAM_HEADER_SIZE) {
       const length = buffer.readUInt32BE(4);
+      
+      // Validate message size to prevent memory exhaustion from corrupted data
+      if (length > MAX_MESSAGE_SIZE) {
+        onError(new Error(`Docker log message size (${length} bytes) exceeds maximum allowed (${MAX_MESSAGE_SIZE} bytes)`));
+        return;
+      }
+      
       const fullMessageSize = DOCKER_STREAM_HEADER_SIZE + length;
 
       if (buffer.length < fullMessageSize) {
