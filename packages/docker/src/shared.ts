@@ -29,4 +29,4 @@ export const cpuUsageColor = (number: number, state: string): MantineColor => {
   return "red";
 };
 
-export const safeValue = (value?: number, fallback = 0) => (value !== undefined && !isNaN(value) ? value : fallback);
+export const safeValue = (value?: number, fallback = 0): number => (value !== undefined && !isNaN(value) ? value : fallback);
