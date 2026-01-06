@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import type { MantineColor } from "@mantine/core";
 import { Avatar, Badge, Box, Button, Group, Text } from "@mantine/core";
 import {
   IconCategoryPlus,
+  IconFileText,
   IconPlayerPlay,
   IconPlayerStop,
   IconRefresh,
@@ -15,11 +17,11 @@ import { MantineReactTable } from "mantine-react-table";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useTimeAgo } from "@homarr/common";
+import { humanFileSize, useTimeAgo } from "@homarr/common";
 import type { ContainerState } from "@homarr/docker";
 import { containerStateColorMap } from "@homarr/docker/shared";
 import { useModalAction } from "@homarr/modals";
-import { AddDockerAppToHomarr } from "@homarr/modals-collection";
+import { AddDockerAppToHomarr, DockerLogsModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
@@ -35,17 +37,19 @@ const createColumns = (
     header: t("docker.field.name.label"),
     Cell({ renderedCellValue, row }) {
       return (
-        <Group gap="xs">
+        <Group gap="xs" wrap="nowrap">
           <Avatar
             variant="outline"
-            radius="lg"
+            radius="sm"
             size="md"
             styles={{ image: { objectFit: "contain" } }}
             src={row.original.iconUrl}
           >
             {row.original.name.at(0)?.toUpperCase()}
           </Avatar>
-          <Text>{renderedCellValue}</Text>
+          <Text truncate="end" maw={500}>
+            {renderedCellValue}
+          </Text>
         </Group>
       );
     },
@@ -76,9 +80,53 @@ const createColumns = (
     accessorKey: "ports",
     header: t("docker.field.ports.label"),
     Cell({ cell }) {
-      if (!cell.row.original.ports.length) return null;
+      if (!cell?.row?.original?.ports?.length) return null;
       return (
         <OverflowBadge overflowCount={1} data={cell.row.original.ports.map((port) => port.PrivatePort.toString())} />
+      );
+    },
+  },
+  {
+    id: "cpuUsage",
+    accessorKey: "cpuUsage",
+    size: 120,
+    header: t("docker.field.stats.cpu.label"),
+    enableHiding: true,
+    sortingFn: (rowA, rowB) => {
+      const cpuUsageA = safeValue(rowA.original.cpuUsage);
+      const cpuUsageB = safeValue(rowB.original.cpuUsage);
+
+      return cpuUsageA - cpuUsageB;
+    },
+    Cell({ row }) {
+      const cpuUsage = safeValue(row.original.cpuUsage);
+
+      return (
+        <Text size="sm" c={cpuUsageColor(cpuUsage, row.original.state)}>
+          {cpuUsage.toFixed(2)}%
+        </Text>
+      );
+    },
+  },
+  {
+    id: "memoryUsage",
+    accessorKey: "memoryUsage",
+    size: 140,
+    header: t("docker.field.stats.memory.label"),
+    enableHiding: true,
+    sortingFn: (rowA, rowB) => {
+      const memoryUsageA = safeValue(rowA.original.memoryUsage);
+      const memoryUsageB = safeValue(rowB.original.memoryUsage);
+
+      return memoryUsageA - memoryUsageB;
+    },
+    Cell({ row }) {
+      const bytesUsage = safeValue(row.original.memoryUsage);
+
+      return (
+        <Text size="sm" c={memoryUsageColor(bytesUsage, row.original.state)}>
+          {humanFileSize(bytesUsage)}
+        </Text>
       );
     },
   },
@@ -87,6 +135,7 @@ const createColumns = (
 export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"]) {
   const t = useI18n();
   const tDocker = useScopedI18n("docker");
+  const [showStats, setShowStats] = useState(false);
   const { data } = clientApi.docker.getContainers.useQuery(undefined, {
     initialData,
     refetchOnMount: false,
@@ -111,7 +160,7 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
       autoFocus: true,
     },
 
-    initialState: { density: "xs", showGlobalFilter: true },
+    initialState: { density: "xs", showGlobalFilter: true, columnVisibility: { cpuUsage: false, memoryUsage: false } },
     renderTopToolbarCustomActions: () => {
       const utils = clientApi.useUtils();
       const { mutate, isPending } = clientApi.docker.invalidate.useMutation({
@@ -160,6 +209,14 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
     columns: createColumns(t),
   });
 
+  useEffect(() => {
+    table.setColumnVisibility((prev) => ({
+      ...prev,
+      cpuUsage: showStats,
+      memoryUsage: showStats,
+    }));
+  }, [showStats, table]);
+
   return (
     <>
       <Text>{tDocker("table.updated", { when: relativeTime })}</Text>
@@ -175,6 +232,7 @@ interface ContainerActionBarProps {
 const ContainerActionBar = ({ selectedContainers }: ContainerActionBarProps) => {
   const t = useScopedI18n("docker.action");
   const { openModal } = useModalAction(AddDockerAppToHomarr);
+  const { openModal: openLogsModal } = useModalAction(DockerLogsModal);
   const handleClick = () => {
     openModal({
       selectedContainers,
@@ -183,12 +241,31 @@ const ContainerActionBar = ({ selectedContainers }: ContainerActionBarProps) => 
 
   const selectedIds = selectedContainers.map((container) => container.id);
 
+  const handleShowLogs = () => {
+    const targetContainer = selectedContainers.at(0);
+    if (!targetContainer) return;
+    openLogsModal(
+      { id: targetContainer.id, name: targetContainer.name },
+      { title: t("logs.modal.title", { name: targetContainer.name }) },
+    );
+  };
+
   return (
     <Group gap="xs">
       <ContainerActionBarButton icon={IconPlayerPlay} color="green" action="start" selectedIds={selectedIds} />
       <ContainerActionBarButton icon={IconPlayerStop} color="red" action="stop" selectedIds={selectedIds} />
       <ContainerActionBarButton icon={IconRotateClockwise} color="orange" action="restart" selectedIds={selectedIds} />
       <ContainerActionBarButton icon={IconTrash} color="red" action="remove" selectedIds={selectedIds} />
+      <Button
+        leftSection={<IconFileText />}
+        color="blue"
+        onClick={handleShowLogs}
+        disabled={selectedContainers.length !== 1}
+        variant="light"
+        radius="md"
+      >
+        {t("logs.label")}
+      </Button>
       <Button leftSection={<IconCategoryPlus />} color={"red"} onClick={handleClick} variant="light" radius="md">
         {t("addToHomarr.label")}
       </Button>
@@ -256,3 +333,22 @@ const ContainerStateBadge = ({ state }: { state: ContainerState }) => {
     </Badge>
   );
 };
+
+const memoryUsageColor = (number: number, state: string) => {
+  const mbUsage = number / 1024 / 1024;
+  if (mbUsage === 0 && state !== "running") return "red";
+  if (mbUsage < 128) return "green";
+  if (mbUsage < 256) return "yellow";
+  if (mbUsage < 512) return "orange";
+  return "red";
+};
+
+const cpuUsageColor = (number: number, state: string) => {
+  if (number === 0 && state !== "running") return "red";
+  if (number < 40) return "green";
+  if (number < 60) return "yellow";
+  if (number < 90) return "orange";
+  return "red";
+};
+
+const safeValue = (value?: number, fallback = 0) => (value !== undefined && !isNaN(value) ? value : fallback);
