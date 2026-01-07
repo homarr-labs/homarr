@@ -60,7 +60,7 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
   useQueryOptions(query) {
     const t = useI18n();
     const { data: session, status } = useSession();
-    const [debouncedQuery] = useDebouncedValue(query, 100);
+    const [debouncedQuery] = useDebouncedValue(query, 250);
     const { data: defaultSearchEngine, ...defaultSearchEngineQuery } =
       clientApi.searchEngine.getDefaultSearchEngine.useQuery(undefined, {
         enabled: status !== "loading",
