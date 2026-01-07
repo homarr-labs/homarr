@@ -1,4 +1,5 @@
 import { Group, Image, Kbd, Stack, Text } from "@mantine/core";
+import { useDebouncedValue } from "@mantine/hooks";
 import { IconDownload, IconSearch } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
@@ -391,12 +392,14 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
   useQueryOptions(query) {
     const tExternal = useScopedI18n("search.mode.external.group.searchEngine");
     const { bangToken, searchText, locked } = parseBangQuery(query);
-    const enginesQuery = clientApi.searchEngine.search.useQuery({ query: bangToken, limit: 10 });
+    const [debouncedBangToken] = useDebouncedValue(bangToken, 100);
+    const enginesQueryToken = query === "!" ? "" : debouncedBangToken;
+    const enginesQuery = clientApi.searchEngine.search.useQuery({ query: enginesQueryToken, limit: 10 });
 
     const ddgQuery = clientApi.bangs.search.useQuery(
-      { query: bangToken, limit: 20 },
+      { query: debouncedBangToken, limit: 20 },
       {
-        enabled: bangToken.length > 0,
+        enabled: debouncedBangToken.length > 0,
       },
     );
 
