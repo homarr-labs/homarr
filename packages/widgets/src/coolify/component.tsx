@@ -36,6 +36,15 @@ import type {
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
+import {
+  buildServerResourceCounts,
+  cleanFqdn,
+  createWidgetKey,
+  getBadgeColor,
+  getResourceTimestamp,
+  getStatusColor,
+  parseStatus,
+} from "./coolify-utils";
 
 const COOLIFY_ICON_URL = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/coolify.svg";
 
@@ -89,7 +98,7 @@ function CoolifyContent({ integrationIds, options, width }: CoolifyContentProps)
 
   const isTiny = width < 256;
   const [firstInstance] = instancesData;
-  const widgetKey = integrationIds.slice().sort().join("-");
+  const widgetKey = createWidgetKey(integrationIds);
 
   if (instancesData.length === 1 && firstInstance) {
     return <SingleInstanceLayout instance={firstInstance} options={options} isTiny={isTiny} widgetKey={widgetKey} />;
@@ -294,44 +303,6 @@ function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceCardProp
       </Group>
     </Card>
   );
-}
-
-function buildServerResourceCounts(
-  servers: CoolifyServer[],
-  applications: CoolifyApplicationWithContext[],
-  services: CoolifyServiceWithContext[],
-) {
-  const serverResourceCounts = new Map<number, { apps: number; services: number }>();
-
-  for (const server of servers) {
-    const serverId = server.settings?.server_id ?? server.id ?? 0;
-    serverResourceCounts.set(serverId, { apps: 0, services: 0 });
-  }
-
-  const destinationToServer = new Map<number, number>();
-  for (const service of services) {
-    if (service.destination_id != null && service.server_id != null) {
-      destinationToServer.set(service.destination_id, service.server_id);
-    }
-  }
-
-  for (const app of applications) {
-    const serverId = app.server_id ?? destinationToServer.get(app.destination_id ?? 0) ?? app.destination_id ?? 0;
-    const counts = serverResourceCounts.get(serverId);
-    if (counts) {
-      counts.apps++;
-    }
-  }
-
-  for (const service of services) {
-    const serverId = service.server_id ?? service.destination_id ?? 0;
-    const counts = serverResourceCounts.get(serverId);
-    if (counts) {
-      counts.services++;
-    }
-  }
-
-  return serverResourceCounts;
 }
 
 interface ServersSectionProps {
@@ -583,75 +554,4 @@ function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRowProps) 
       </Group>
     </Stack>
   );
-}
-
-function parseStatus(status: string): string {
-  return status.split(":")[0]?.toLowerCase() ?? "unknown";
-}
-
-function cleanFqdn(fqdn: string | undefined | null): string | undefined {
-  if (!fqdn) return undefined;
-  const firstUrl = fqdn.split(",")[0]?.trim();
-  if (!firstUrl) return undefined;
-  try {
-    const url = new URL(firstUrl);
-    return `${url.protocol}//${url.hostname}${url.pathname}`.replace(/\/$/, "");
-  } catch {
-    return firstUrl;
-  }
-}
-
-function getStatusColor(status: string): string {
-  const colors: Record<string, string> = {
-    running: "green",
-    stopped: "red",
-    exited: "red",
-    starting: "yellow",
-    restarting: "yellow",
-  };
-  return colors[status] ?? "gray";
-}
-
-function getBadgeColor(running: number, total: number): string {
-  if (total === 0) return "gray";
-  if (running === total) return "green";
-  if (running > 0) return "yellow";
-  return "red";
-}
-
-function formatRelativeTime(dateString: string | undefined): string | undefined {
-  if (!dateString) return undefined;
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return undefined;
-
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffSec = Math.floor(diffMs / 1000);
-  const diffMin = Math.floor(diffSec / 60);
-  const diffHour = Math.floor(diffMin / 60);
-  const diffDay = Math.floor(diffHour / 24);
-
-  if (diffDay > 0) {
-    const remainingHours = diffHour % 24;
-    return remainingHours > 0 ? `${diffDay}d ${remainingHours}h ago` : `${diffDay}d ago`;
-  }
-  if (diffHour > 0) {
-    const remainingMin = diffMin % 60;
-    return remainingMin > 0 ? `${diffHour}h ${remainingMin}m ago` : `${diffHour}h ago`;
-  }
-  if (diffMin > 0) return `${diffMin}m ago`;
-  return "just now";
-}
-
-function getResourceTimestamp(
-  item: { updated_at?: string; last_online_at?: string; status?: string },
-  resourceType: "application" | "service",
-): string | undefined {
-  const status = parseStatus(item.status ?? "");
-  const isRunning = status === "running";
-
-  if (isRunning) return undefined;
-
-  const timestamp = resourceType === "application" ? (item.last_online_at ?? item.updated_at) : item.updated_at;
-  return formatRelativeTime(timestamp);
 }
