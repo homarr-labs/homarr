@@ -1,5 +1,5 @@
 import { Box, Group, Stack, Text } from "@mantine/core";
-import { IconCaretUpDown, IconSearch, IconSearchOff } from "@tabler/icons-react";
+import { IconSearch, IconSearchOff } from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -79,20 +79,7 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
       isLoading:
         defaultSearchEngineQuery.isLoading || (resultQuery.isLoading && fromIntegrationEnabled) || status === "loading",
       isError: defaultSearchEngineQuery.isError || (resultQuery.isError && fromIntegrationEnabled),
-      data: [
-        ...createDefaultSearchEntries(defaultSearchEngine, results, session, query, t),
-        {
-          id: "other",
-          name: t("search.mode.home.group.search.option.other.label"),
-          icon: IconCaretUpDown,
-          useInteraction() {
-            return {
-              type: "mode",
-              mode: "external",
-            };
-          },
-        },
-      ],
+      data: createDefaultSearchEntries(defaultSearchEngine, results, session, query, t),
     };
   },
 });
