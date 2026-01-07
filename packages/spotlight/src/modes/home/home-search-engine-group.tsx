@@ -1,6 +1,5 @@
 import { Box, Group, Stack, Text } from "@mantine/core";
 import { IconSearch, IconSearchOff } from "@tabler/icons-react";
-import { useDebouncedValue } from "@mantine/hooks";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -60,15 +59,14 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
   useQueryOptions(query) {
     const t = useI18n();
     const { data: session, status } = useSession();
-    const [debouncedQuery] = useDebouncedValue(query, 100);
     const { data: defaultSearchEngine, ...defaultSearchEngineQuery } =
       clientApi.searchEngine.getDefaultSearchEngine.useQuery(undefined, {
         enabled: status !== "loading",
       });
-    const fromIntegrationEnabled = defaultSearchEngine?.type === "fromIntegration" && debouncedQuery.length > 0;
+    const fromIntegrationEnabled = defaultSearchEngine?.type === "fromIntegration" && query.length > 0;
     const { data: results, ...resultQuery } = clientApi.integration.searchInIntegration.useQuery(
       {
-        query: debouncedQuery,
+        query,
         integrationId: defaultSearchEngine?.integrationId ?? "",
       },
       {
