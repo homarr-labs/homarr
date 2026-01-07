@@ -193,11 +193,13 @@ const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestChildrenP
 
 export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>({
   useActions: (searchEngine, query) => {
+    const [debouncedQuery] = useDebouncedValue(query, 100);
     const { data } = clientApi.integration.searchInIntegration.useQuery(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      { integrationId: searchEngine.integrationId!, query },
+      { integrationId: searchEngine.integrationId!, query: debouncedQuery },
       {
-        enabled: searchEngine.type === "fromIntegration" && searchEngine.integrationId !== null && query.length > 0,
+        enabled:
+          searchEngine.type === "fromIntegration" && searchEngine.integrationId !== null && debouncedQuery.length > 0,
       },
     );
     const { openSearchInNewTab } = useSettings();
@@ -392,7 +394,7 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
   useQueryOptions(query) {
     const tExternal = useScopedI18n("search.mode.external.group.searchEngine");
     const { bangToken, searchText, locked } = parseBangQuery(query);
-    const [debouncedBangToken] = useDebouncedValue(bangToken, 250);
+    const [debouncedBangToken] = useDebouncedValue(bangToken, 100);
     const enginesQueryToken = query === "!" ? "" : debouncedBangToken;
     const enginesQuery = clientApi.searchEngine.search.useQuery({ query: enginesQueryToken, limit: 10 });
 
