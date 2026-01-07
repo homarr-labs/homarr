@@ -193,13 +193,11 @@ const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestChildrenP
 
 export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>({
   useActions: (searchEngine, query) => {
-    const [debouncedQuery] = useDebouncedValue(query, 100);
     const { data } = clientApi.integration.searchInIntegration.useQuery(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      { integrationId: searchEngine.integrationId!, query: debouncedQuery },
+      { integrationId: searchEngine.integrationId!, query },
       {
-        enabled:
-          searchEngine.type === "fromIntegration" && searchEngine.integrationId !== null && debouncedQuery.length > 0,
+        enabled: searchEngine.type === "fromIntegration" && searchEngine.integrationId !== null && query.length > 0,
       },
     );
     const { openSearchInNewTab } = useSettings();
