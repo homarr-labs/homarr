@@ -1,6 +1,5 @@
 import { beforeAll, describe, expect, test, vi } from "vitest";
 
-import type { IntegrationRequestError } from "../../base/errors/http/integration-request-error";
 import type { IntegrationResponseError } from "../../base/errors/http/integration-response-error";
 import type { CoolifyApiErrorHandler as CoolifyApiErrorHandlerType } from "../coolify-error-handler";
 
