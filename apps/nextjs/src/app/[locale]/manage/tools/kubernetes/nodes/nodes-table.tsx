@@ -93,6 +93,7 @@ export function NodesTable(initialData: NodesListComponentProps) {
   });
 
   const table = useTranslatedMantineReactTable({
+    id: "manage-tools-kubernetes-nodes",
     data,
     enableDensityToggle: false,
     enableColumnActions: false,

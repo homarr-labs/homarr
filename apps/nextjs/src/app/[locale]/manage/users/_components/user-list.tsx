@@ -59,6 +59,7 @@ export const UserListComponent = ({ initialUserList, credentialsProviderEnabled 
   );
 
   const table = useTranslatedMantineReactTable({
+    id: "manage-users",
     columns,
     data,
     enableRowSelection: true,

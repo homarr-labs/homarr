@@ -67,6 +67,7 @@ export function NamespacesTable(initialData: NamespacesTableComponentProps) {
   });
 
   const table = useTranslatedMantineReactTable({
+    id: "manage-tools-kubernetes-namespaces",
     data,
     enableDensityToggle: false,
     enableColumnActions: false,

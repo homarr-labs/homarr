@@ -77,6 +77,7 @@ export function VolumesTable(initialData: VolumesTableComponentProps) {
   });
 
   const table = useTranslatedMantineReactTable({
+    id: "manage-tools-kubernetes-volumes",
     data,
     enableDensityToggle: false,
     enableColumnActions: false,

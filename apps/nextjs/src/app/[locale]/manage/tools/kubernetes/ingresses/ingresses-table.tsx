@@ -83,6 +83,7 @@ export function IngressesTable(initialData: IngressesTableComponentProps) {
   });
 
   const table = useTranslatedMantineReactTable({
+    id: "manage-tools-kubernetes-ingresses",
     data,
     enableDensityToggle: false,
     enableColumnActions: false,

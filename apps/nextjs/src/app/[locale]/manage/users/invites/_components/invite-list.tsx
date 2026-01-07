@@ -53,6 +53,7 @@ export const InviteListComponent = ({ initialInvites }: InviteListComponentProps
   );
 
   const table = useTranslatedMantineReactTable({
+    id: "manage-users-invites",
     columns,
     data,
     positionActionsColumn: "last",
