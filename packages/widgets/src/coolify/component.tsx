@@ -1,6 +1,18 @@
 "use client";
 
-import { Accordion, ActionIcon, Anchor, Badge, Group, Image, Indicator, ScrollArea, Stack, Text } from "@mantine/core";
+import {
+  Accordion,
+  ActionIcon,
+  Anchor,
+  Badge,
+  Card,
+  Group,
+  Image,
+  Indicator,
+  ScrollArea,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import {
   IconCloud,
@@ -17,6 +29,7 @@ import { clientApi } from "@homarr/api/client";
 import { useTimeAgo } from "@homarr/common";
 import type {
   CoolifyApplicationWithContext,
+  CoolifyInstanceInfo,
   CoolifyServer,
   CoolifyServiceWithContext,
 } from "@homarr/integrations/types";
@@ -26,11 +39,18 @@ import type { WidgetComponentProps } from "../definition";
 
 const COOLIFY_ICON_URL = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/coolify.svg";
 
+interface InstanceData {
+  integrationId: string;
+  integrationName: string;
+  integrationUrl: string;
+  instanceInfo: CoolifyInstanceInfo;
+  updatedAt: Date;
+}
+
 export default function CoolifyWidget({ options, integrationIds, width }: WidgetComponentProps<"coolify">) {
   const t = useScopedI18n("widget.coolify");
-  const integrationId = integrationIds[0];
 
-  if (!integrationId) {
+  if (integrationIds.length === 0) {
     return (
       <Stack align="center" justify="center" h="100%">
         <Text c="dimmed">{t("error.noIntegration")}</Text>
@@ -38,81 +58,241 @@ export default function CoolifyWidget({ options, integrationIds, width }: Widget
     );
   }
 
-  return <CoolifyContent integrationId={integrationId} options={options} width={width} />;
+  return <CoolifyContent integrationIds={integrationIds} options={options} width={width} />;
 }
 
 interface CoolifyContentProps {
-  integrationId: string;
+  integrationIds: string[];
   options: WidgetComponentProps<"coolify">["options"];
   width: number;
 }
 
-function CoolifyContent({ integrationId, options, width }: CoolifyContentProps) {
-  const [showIp, setShowIp] = useLocalStorage({ key: `coolify-${integrationId}-show-ip`, defaultValue: false });
-  const [openSections, setOpenSections] = useLocalStorage<string[]>({
-    key: `coolify-${integrationId}-sections`,
-    defaultValue: ["applications"],
-  });
-  const [data] = clientApi.widget.coolify.getInstanceInfo.useSuspenseQuery({ integrationId });
-  const relativeTime = useTimeAgo(data.updatedAt);
+function CoolifyContent({ integrationIds, options, width }: CoolifyContentProps) {
+  const [instancesData] = clientApi.widget.coolify.getInstancesInfo.useSuspenseQuery({ integrationIds });
 
   const utils = clientApi.useUtils();
-  clientApi.widget.coolify.subscribeInstanceInfo.useSubscription(
-    { integrationId },
+  clientApi.widget.coolify.subscribeInstancesInfo.useSubscription(
+    { integrationIds },
     {
-      onData(newData) {
-        utils.widget.coolify.getInstanceInfo.setData(
-          { integrationId },
-          {
-            integrationId: newData.integrationId,
-            integrationName: data.integrationName,
-            integrationUrl: data.integrationUrl,
-            instanceInfo: newData.instanceInfo,
-            updatedAt: newData.timestamp,
-          },
-        );
+      onData(newData: { integrationId: string; instanceInfo: CoolifyInstanceInfo; timestamp: Date }) {
+        utils.widget.coolify.getInstancesInfo.setData({ integrationIds }, (prevData) => {
+          if (!prevData) return prevData;
+          return prevData.map((instance) =>
+            instance.integrationId === newData.integrationId
+              ? { ...instance, instanceInfo: newData.instanceInfo, updatedAt: newData.timestamp }
+              : instance,
+          );
+        });
       },
     },
   );
 
-  const { instanceInfo, integrationUrl } = data;
   const isTiny = width < 256;
-  const baseUrl = integrationUrl.replace(/\/+$/, "");
-  const displayUrl = baseUrl.replace(/^https?:\/\//, "");
+  const [firstInstance] = instancesData;
+  const widgetKey = integrationIds.slice().sort().join("-");
+
+  if (instancesData.length === 1 && firstInstance) {
+    return <SingleInstanceLayout instance={firstInstance} options={options} isTiny={isTiny} widgetKey={widgetKey} />;
+  }
+
+  return (
+    <ScrollArea h="100%">
+      <Stack gap="xs" p="xs">
+        {instancesData.map((instance) => (
+          <InstanceCard
+            key={instance.integrationId}
+            instance={instance}
+            options={options}
+            isTiny={isTiny}
+            widgetKey={widgetKey}
+          />
+        ))}
+      </Stack>
+    </ScrollArea>
+  );
+}
+
+interface SingleInstanceLayoutProps {
+  instance: InstanceData;
+  options: WidgetComponentProps<"coolify">["options"];
+  isTiny: boolean;
+  widgetKey: string;
+}
+
+function SingleInstanceLayout({ instance, options, isTiny, widgetKey }: SingleInstanceLayoutProps) {
+  const t = useScopedI18n("widget.coolify");
+  const [showIp, setShowIp] = useLocalStorage({
+    key: `coolify-show-ip-${widgetKey}`,
+    defaultValue: false,
+  });
+  const [openSections, setOpenSections] = useLocalStorage<string[]>({
+    key: `coolify-sections-${widgetKey}`,
+    defaultValue: ["applications"],
+  });
 
   const serverResourceCounts = buildServerResourceCounts(
-    instanceInfo.servers,
-    instanceInfo.applications,
-    instanceInfo.services ?? [],
+    instance.instanceInfo.servers,
+    instance.instanceInfo.applications,
+    instance.instanceInfo.services,
   );
+
+  const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
+  const displayUrl = baseUrl.replace(/^https?:\/\//, "");
+  const relativeTime = useTimeAgo(instance.updatedAt);
 
   return (
     <ScrollArea h="100%">
       <Stack gap={0}>
-        <CoolifyHeader isTiny={isTiny} integrationUrl={baseUrl} displayUrl={displayUrl} />
+        <Group p="xs" justify="center" gap="xs" style={{ borderBottom: "2px solid #8B5CF6" }}>
+          <Group gap={2}>
+            <Image src={COOLIFY_ICON_URL} alt="Coolify" w={isTiny ? 18 : 24} h={isTiny ? 18 : 24} />
+            <Text fz={isTiny ? "xs" : "sm"} fw={700} style={{ color: "#8B5CF6" }}>
+              oolify
+            </Text>
+          </Group>
+          <Anchor href={baseUrl} target="_blank" fz={isTiny ? "xs" : "sm"} fw={500} c="dimmed" lineClamp={1}>
+            {displayUrl}
+          </Anchor>
+        </Group>
 
         <Accordion variant="contained" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
           {options.showServers && (
             <ServersSection
-              servers={instanceInfo.servers}
+              servers={instance.instanceInfo.servers}
               serverResourceCounts={serverResourceCounts}
+              baseUrl={baseUrl}
               isTiny={isTiny}
               showIp={showIp}
-              onToggleIp={() => setShowIp((v) => !v)}
-              integrationUrl={baseUrl}
+              onToggleIp={() => setShowIp((prev) => !prev)}
             />
           )}
           {options.showApplications && (
-            <ApplicationsSection applications={instanceInfo.applications} isTiny={isTiny} integrationUrl={baseUrl} />
+            <ApplicationsSection applications={instance.instanceInfo.applications} baseUrl={baseUrl} isTiny={isTiny} />
           )}
           {options.showServices && (
-            <ServicesSection services={instanceInfo.services ?? []} isTiny={isTiny} integrationUrl={baseUrl} />
+            <ServicesSection services={instance.instanceInfo.services} baseUrl={baseUrl} isTiny={isTiny} />
           )}
         </Accordion>
 
-        <CoolifyFooter version={instanceInfo.version} relativeTime={relativeTime} />
+        <Group justify="space-between" p={4} style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
+          <Group gap={2}>
+            <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
+            <Text size="xs" c="dimmed">
+              v{instance.instanceInfo.version}
+            </Text>
+          </Group>
+          <Text size="xs" c="dimmed">
+            {t("footer.updated", { when: relativeTime })}
+          </Text>
+        </Group>
       </Stack>
     </ScrollArea>
+  );
+}
+
+interface InstanceCardProps {
+  instance: InstanceData;
+  options: WidgetComponentProps<"coolify">["options"];
+  isTiny: boolean;
+  widgetKey: string;
+}
+
+function InstanceCard({ instance, options, isTiny, widgetKey }: InstanceCardProps) {
+  const t = useScopedI18n("widget.coolify");
+  const cardKey = `${widgetKey}-${instance.integrationId}`;
+  const [showIp, setShowIp] = useLocalStorage({
+    key: `coolify-show-ip-${cardKey}`,
+    defaultValue: false,
+  });
+  const [openSections, setOpenSections] = useLocalStorage<string[]>({
+    key: `coolify-sections-${cardKey}`,
+    defaultValue: ["applications"],
+  });
+
+  const serverResourceCounts = buildServerResourceCounts(
+    instance.instanceInfo.servers,
+    instance.instanceInfo.applications,
+    instance.instanceInfo.services,
+  );
+
+  const baseUrl = instance.integrationUrl.replace(/\/+$/, "");
+  const relativeTime = useTimeAgo(instance.updatedAt);
+
+  const onlineServers = instance.instanceInfo.servers.filter((s) => s.is_reachable !== false).length;
+  const runningApps = instance.instanceInfo.applications.filter((a) => parseStatus(a.status) === "running").length;
+  const runningServices = instance.instanceInfo.services.filter(
+    (s) => parseStatus(s.status ?? "") === "running",
+  ).length;
+
+  return (
+    <Card p={0} radius="sm" withBorder>
+      <Group
+        p="xs"
+        justify="space-between"
+        wrap="nowrap"
+        style={{ borderBottom: "1px solid var(--mantine-color-dark-4)" }}
+      >
+        <Group gap={4} wrap="nowrap">
+          <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
+          <Anchor href={baseUrl} target="_blank" fz={isTiny ? "10px" : "xs"} fw={600} c="inherit" lineClamp={1}>
+            {instance.integrationName}
+          </Anchor>
+        </Group>
+        <Group gap={4} wrap="nowrap">
+          {options.showServers && (
+            <Badge variant="dot" color={getBadgeColor(onlineServers, instance.instanceInfo.servers.length)} size="xs">
+              {onlineServers}/{instance.instanceInfo.servers.length}
+            </Badge>
+          )}
+          {options.showApplications && (
+            <Badge
+              variant="dot"
+              color={getBadgeColor(runningApps, instance.instanceInfo.applications.length)}
+              size="xs"
+            >
+              {runningApps}/{instance.instanceInfo.applications.length}
+            </Badge>
+          )}
+          {options.showServices && (
+            <Badge
+              variant="dot"
+              color={getBadgeColor(runningServices, instance.instanceInfo.services.length)}
+              size="xs"
+            >
+              {runningServices}/{instance.instanceInfo.services.length}
+            </Badge>
+          )}
+        </Group>
+      </Group>
+
+      <Accordion variant="filled" chevronPosition="right" multiple value={openSections} onChange={setOpenSections}>
+        {options.showServers && (
+          <ServersSection
+            servers={instance.instanceInfo.servers}
+            serverResourceCounts={serverResourceCounts}
+            baseUrl={baseUrl}
+            isTiny={isTiny}
+            showIp={showIp}
+            onToggleIp={() => setShowIp((prev) => !prev)}
+          />
+        )}
+        {options.showApplications && (
+          <ApplicationsSection applications={instance.instanceInfo.applications} baseUrl={baseUrl} isTiny={isTiny} />
+        )}
+        {options.showServices && (
+          <ServicesSection services={instance.instanceInfo.services} baseUrl={baseUrl} isTiny={isTiny} />
+        )}
+      </Accordion>
+
+      <Group justify="space-between" p={4} style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
+        <Text size="10px" c="dimmed">
+          v{instance.instanceInfo.version}
+        </Text>
+        <Text size="10px" c="dimmed">
+          {t("footer.updated", { when: relativeTime })}
+        </Text>
+      </Group>
+    </Card>
   );
 }
 
@@ -154,69 +334,18 @@ function buildServerResourceCounts(
   return serverResourceCounts;
 }
 
-interface CoolifyHeaderProps {
-  isTiny: boolean;
-  integrationUrl: string;
-  displayUrl: string;
-}
-
-function CoolifyHeader({ isTiny, integrationUrl, displayUrl }: CoolifyHeaderProps) {
-  return (
-    <Group p="xs" justify="center" gap="xs" style={{ borderBottom: "2px solid #8B5CF6" }}>
-      <Group gap={2}>
-        <Image src={COOLIFY_ICON_URL} alt="Coolify" w={isTiny ? 18 : 24} h={isTiny ? 18 : 24} />
-        <Text fz={isTiny ? "xs" : "sm"} fw={700} style={{ color: "#8B5CF6" }}>
-          oolify
-        </Text>
-      </Group>
-      <Anchor href={integrationUrl} target="_blank" fz={isTiny ? "xs" : "sm"} fw={500} c="dimmed" lineClamp={1}>
-        {displayUrl}
-      </Anchor>
-    </Group>
-  );
-}
-
-interface CoolifyFooterProps {
-  version: string;
-  relativeTime: string;
-}
-
-function CoolifyFooter({ version, relativeTime }: CoolifyFooterProps) {
-  const t = useScopedI18n("widget.coolify");
-  return (
-    <Group justify="space-between" p={4} style={{ borderTop: "1px solid var(--mantine-color-dark-4)" }}>
-      <Group gap={2}>
-        <Image src={COOLIFY_ICON_URL} alt="Coolify" w={16} h={16} />
-        <Text size="xs" c="dimmed">
-          v{version}
-        </Text>
-      </Group>
-      <Text size="xs" c="dimmed">
-        {t("footer.updated", { when: relativeTime })}
-      </Text>
-    </Group>
-  );
-}
-
 interface ServersSectionProps {
   servers: CoolifyServer[];
   serverResourceCounts: Map<number, { apps: number; services: number }>;
+  baseUrl: string;
   isTiny: boolean;
   showIp: boolean;
   onToggleIp: () => void;
-  integrationUrl: string;
 }
 
-function ServersSection({
-  servers,
-  serverResourceCounts,
-  isTiny,
-  showIp,
-  onToggleIp,
-  integrationUrl,
-}: ServersSectionProps) {
+function ServersSection({ servers, serverResourceCounts, baseUrl, isTiny, showIp, onToggleIp }: ServersSectionProps) {
   const t = useScopedI18n("widget.coolify");
-  const onlineServers = servers.filter((s) => s.is_reachable !== false).length;
+  const onlineServers = servers.filter((server) => server.is_reachable !== false).length;
 
   return (
     <Accordion.Item value="servers">
@@ -232,8 +361,8 @@ function ServersSection({
             size="xs"
             variant="subtle"
             c="dimmed"
-            onClick={(e) => {
-              e.stopPropagation();
+            onClick={(event) => {
+              event.stopPropagation();
               onToggleIp();
             }}
           >
@@ -243,13 +372,20 @@ function ServersSection({
       </Accordion.Control>
       <Accordion.Panel p={4}>
         {servers.length > 0 ? (
-          <ServersTable
-            servers={servers}
-            serverResourceCounts={serverResourceCounts}
-            isTiny={isTiny}
-            showIp={showIp}
-            integrationUrl={integrationUrl}
-          />
+          <Stack gap={4}>
+            {servers.map((server) => (
+              <ServerRow
+                key={server.uuid}
+                server={server}
+                counts={
+                  serverResourceCounts.get(server.settings?.server_id ?? server.id ?? 0) ?? { apps: 0, services: 0 }
+                }
+                baseUrl={baseUrl}
+                isTiny={isTiny}
+                showIp={showIp}
+              />
+            ))}
+          </Stack>
         ) : (
           <Text size="sm" c="dimmed" ta="center" py="xs">
             {t("empty.servers")}
@@ -260,44 +396,19 @@ function ServersSection({
   );
 }
 
-interface ServersTableProps {
-  servers: CoolifyServer[];
-  serverResourceCounts: Map<number, { apps: number; services: number }>;
-  isTiny: boolean;
-  showIp: boolean;
-  integrationUrl: string;
-}
-
-function ServersTable({ servers, serverResourceCounts, isTiny, showIp, integrationUrl }: ServersTableProps) {
-  return (
-    <Stack gap={4}>
-      {servers.map((server) => (
-        <ServerRow
-          key={server.uuid}
-          server={server}
-          counts={serverResourceCounts.get(server.settings?.server_id ?? server.id ?? 0) ?? { apps: 0, services: 0 }}
-          isTiny={isTiny}
-          showIp={showIp}
-          integrationUrl={integrationUrl}
-        />
-      ))}
-    </Stack>
-  );
-}
-
 interface ServerRowProps {
   server: CoolifyServer;
   counts: { apps: number; services: number };
+  baseUrl: string;
   isTiny: boolean;
   showIp: boolean;
-  integrationUrl: string;
 }
 
-function ServerRow({ server, counts, isTiny, showIp, integrationUrl }: ServerRowProps) {
+function ServerRow({ server, counts, baseUrl, isTiny, showIp }: ServerRowProps) {
   const t = useScopedI18n("widget.coolify");
   const isBuildServer = server.settings?.is_build_server === true;
   const isOnline = server.is_reachable !== false;
-  const serverUrl = `${integrationUrl}/server/${server.uuid}`;
+  const serverUrl = `${baseUrl}/server/${server.uuid}`;
 
   return (
     <Stack gap={0}>
@@ -330,11 +441,11 @@ function ServerRow({ server, counts, isTiny, showIp, integrationUrl }: ServerRow
 
 interface ApplicationsSectionProps {
   applications: CoolifyApplicationWithContext[];
+  baseUrl: string;
   isTiny: boolean;
-  integrationUrl: string;
 }
 
-function ApplicationsSection({ applications, isTiny, integrationUrl }: ApplicationsSectionProps) {
+function ApplicationsSection({ applications, baseUrl, isTiny }: ApplicationsSectionProps) {
   const t = useScopedI18n("widget.coolify");
   const runningApps = applications.filter((app) => parseStatus(app.status) === "running").length;
 
@@ -350,12 +461,11 @@ function ApplicationsSection({ applications, isTiny, integrationUrl }: Applicati
       </Accordion.Control>
       <Accordion.Panel p={4}>
         {applications.length > 0 ? (
-          <ResourceTable
-            items={applications}
-            isTiny={isTiny}
-            integrationUrl={integrationUrl}
-            resourceType="application"
-          />
+          <Stack gap={4}>
+            {applications.map((app) => (
+              <ResourceRow key={app.uuid} item={app} baseUrl={baseUrl} isTiny={isTiny} resourceType="application" />
+            ))}
+          </Stack>
         ) : (
           <Text size="sm" c="dimmed" ta="center" py="xs">
             {t("empty.applications")}
@@ -368,11 +478,11 @@ function ApplicationsSection({ applications, isTiny, integrationUrl }: Applicati
 
 interface ServicesSectionProps {
   services: CoolifyServiceWithContext[];
+  baseUrl: string;
   isTiny: boolean;
-  integrationUrl: string;
 }
 
-function ServicesSection({ services, isTiny, integrationUrl }: ServicesSectionProps) {
+function ServicesSection({ services, baseUrl, isTiny }: ServicesSectionProps) {
   const t = useScopedI18n("widget.coolify");
   const runningServices = services.filter((svc) => parseStatus(svc.status ?? "") === "running").length;
 
@@ -388,7 +498,11 @@ function ServicesSection({ services, isTiny, integrationUrl }: ServicesSectionPr
       </Accordion.Control>
       <Accordion.Panel p={4}>
         {services.length > 0 ? (
-          <ResourceTable items={services} isTiny={isTiny} integrationUrl={integrationUrl} resourceType="service" />
+          <Stack gap={4}>
+            {services.map((service) => (
+              <ResourceRow key={service.uuid} item={service} baseUrl={baseUrl} isTiny={isTiny} resourceType="service" />
+            ))}
+          </Stack>
         ) : (
           <Text size="sm" c="dimmed" ta="center" py="xs">
             {t("empty.services")}
@@ -396,39 +510,6 @@ function ServicesSection({ services, isTiny, integrationUrl }: ServicesSectionPr
         )}
       </Accordion.Panel>
     </Accordion.Item>
-  );
-}
-
-interface ResourceTableProps {
-  items: {
-    uuid: string;
-    name: string;
-    status?: string;
-    fqdn?: string | null;
-    updated_at?: string;
-    projectName?: string;
-    projectUuid?: string;
-    environmentName?: string;
-    environmentUuid?: string;
-  }[];
-  isTiny: boolean;
-  integrationUrl: string;
-  resourceType: "application" | "service";
-}
-
-function ResourceTable({ items, isTiny, integrationUrl, resourceType }: ResourceTableProps) {
-  return (
-    <Stack gap={4}>
-      {items.map((item) => (
-        <ResourceRow
-          key={item.uuid}
-          item={item}
-          isTiny={isTiny}
-          integrationUrl={integrationUrl}
-          resourceType={resourceType}
-        />
-      ))}
-    </Stack>
   );
 }
 
@@ -445,25 +526,24 @@ interface ResourceRowProps {
     environmentName?: string;
     environmentUuid?: string;
   };
+  baseUrl: string;
   isTiny: boolean;
-  integrationUrl: string;
   resourceType: "application" | "service";
 }
 
-function ResourceRow({ item, isTiny, integrationUrl, resourceType }: ResourceRowProps) {
+function ResourceRow({ item, baseUrl, isTiny, resourceType }: ResourceRowProps) {
   const status = parseStatus(item.status ?? "");
   const statusColor = getStatusColor(status);
 
   const resourceUrl =
     item.projectUuid && item.environmentUuid
-      ? `${integrationUrl}/project/${item.projectUuid}/environment/${item.environmentUuid}/${resourceType}/${item.uuid}`
+      ? `${baseUrl}/project/${item.projectUuid}/environment/${item.environmentUuid}/${resourceType}/${item.uuid}`
       : undefined;
 
   const logsUrl = resourceUrl ? `${resourceUrl}/logs` : undefined;
 
   return (
     <Stack gap={0}>
-      {/* Row 1: Indicator + Name */}
       <Group wrap="nowrap" gap={isTiny ? 4 : "xs"}>
         <Indicator size={isTiny ? 4 : 8} color={statusColor} />
         {resourceUrl ? (
@@ -476,7 +556,6 @@ function ResourceRow({ item, isTiny, integrationUrl, resourceType }: ResourceRow
           </Text>
         )}
       </Group>
-      {/* Row 2: Icons + Project/Env */}
       <Group wrap="nowrap" gap={4} ml={16}>
         {cleanFqdn(item.fqdn) && (
           <ActionIcon component="a" href={cleanFqdn(item.fqdn)} target="_blank" size="xs" variant="subtle" c="dimmed">
@@ -516,7 +595,6 @@ function cleanFqdn(fqdn: string | undefined | null): string | undefined {
   if (!firstUrl) return undefined;
   try {
     const url = new URL(firstUrl);
-    // Normalize all URLs: protocol + hostname + pathname (strip trailing slash and port for cleaner display)
     return `${url.protocol}//${url.hostname}${url.pathname}`.replace(/\/$/, "");
   } catch {
     return firstUrl;

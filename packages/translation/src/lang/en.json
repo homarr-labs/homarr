@@ -2000,6 +2000,9 @@
       },
       "server": {
         "buildServer": "Build"
+      },
+      "instances": {
+        "title": "Instances"
       }
     },
     "common": {
