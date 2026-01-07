@@ -316,6 +316,7 @@ interface ServersSectionProps {
 
 function ServersSection({ servers, serverResourceCounts, baseUrl, isTiny, showIp, onToggleIp }: ServersSectionProps) {
   const t = useScopedI18n("widget.coolify");
+  const tCommon = useScopedI18n("common");
   const onlineServers = servers.filter((server) => server.is_reachable !== false).length;
 
   return (
@@ -323,7 +324,7 @@ function ServersSection({ servers, serverResourceCounts, baseUrl, isTiny, showIp
       <Accordion.Control icon={isTiny ? null : <IconServer size={16} />}>
         <Group gap="xs" justify="space-between" wrap="nowrap" style={{ flex: 1 }}>
           <Group gap="xs">
-            <Text size="xs">{t("tab.servers")}</Text>
+            <Text size="xs">{tCommon("servers")}</Text>
             <Badge variant="dot" color={getBadgeColor(onlineServers, servers.length)} size="xs">
               {onlineServers} / {servers.length}
             </Badge>
@@ -418,13 +419,14 @@ interface ApplicationsSectionProps {
 
 function ApplicationsSection({ applications, baseUrl, isTiny }: ApplicationsSectionProps) {
   const t = useScopedI18n("widget.coolify");
+  const tCommon = useScopedI18n("common");
   const runningApps = applications.filter((app) => parseStatus(app.status) === "running").length;
 
   return (
     <Accordion.Item value="applications">
       <Accordion.Control icon={isTiny ? null : <IconCloud size={16} />}>
         <Group gap="xs">
-          <Text size="xs">{t("tab.applications")}</Text>
+          <Text size="xs">{tCommon("applications")}</Text>
           <Badge variant="dot" color={getBadgeColor(runningApps, applications.length)} size="xs">
             {runningApps} / {applications.length}
           </Badge>
@@ -455,13 +457,14 @@ interface ServicesSectionProps {
 
 function ServicesSection({ services, baseUrl, isTiny }: ServicesSectionProps) {
   const t = useScopedI18n("widget.coolify");
+  const tCommon = useScopedI18n("common");
   const runningServices = services.filter((svc) => parseStatus(svc.status ?? "") === "running").length;
 
   return (
     <Accordion.Item value="services">
       <Accordion.Control icon={isTiny ? null : <IconStack2 size={16} />}>
         <Group gap="xs">
-          <Text size="xs">{t("tab.services")}</Text>
+          <Text size="xs">{tCommon("services")}</Text>
           <Badge variant="dot" color={getBadgeColor(runningServices, services.length)} size="xs">
             {runningServices} / {services.length}
           </Badge>
