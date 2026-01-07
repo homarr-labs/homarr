@@ -4159,6 +4159,9 @@
         "group": {
           "searchEngine": {
             "title": "Search engines",
+            "tip": {
+              "ddgBangs": "Tip: You can use any DuckDuckGo bangs here as well, e.g. !something"
+            },
             "children": {
               "action": {
                 "search": {
