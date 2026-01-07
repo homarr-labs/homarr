@@ -1961,7 +1961,6 @@
       }
     },
     "coolify": {
-      "name": "Coolify",
       "description": "Overview of your Coolify instance with servers and applications",
       "option": {
         "showServers": {
@@ -1983,13 +1982,6 @@
         "servers": "No servers found",
         "applications": "No applications found",
         "services": "No services found"
-      },
-      "table": {
-        "name": "Name",
-        "ip": "IP",
-        "status": "Status",
-        "project": "Project / Env",
-        "resources": "Apps / Svcs"
       },
       "footer": {
         "updated": "Updated {when}"
