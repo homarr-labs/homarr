@@ -1,8 +1,6 @@
 [tools]
-node = "latest"
-pnpm = "latest"
-docker = "latest"
-docker-compose = "latest"
+node = "25.1.0"
+pnpm = "10.26.2"
+biome = "2.3.10"
 gh = "latest"
 act = "latest"
-git = "latest"
