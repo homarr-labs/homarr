@@ -22,7 +22,6 @@
   <img src="img/screenshot.png" alt="Homarr Dashboard Screenshot" />
 </div>
 
-
 ## ![](img/headers/features.png)
 
 Homarr is a powerful, customizable dashboard that brings all your self-hosted services together in one beautiful interface. Built with modern technologies and designed for ease of use.
@@ -338,6 +337,7 @@ Homarr can be installed using various methods to suit your infrastructure needs.
 Homarr is a free and open-source project maintained by volunteers and developers from around the world. We publish under the [Apache License 2.0](LICENSE), which allows commercial usage.
 
 Our team invests countless hours daily in:
+
 - Providing community support
 - Developing new features and improvements
 - Integrating with third-party services
@@ -365,6 +365,7 @@ Help make Homarr accessible to users worldwide by contributing translations. We 
 We welcome code contributions of all sizes and scopes. Whether it's bug fixes, new features, or improvements, your contributions make Homarr better for everyone.
 
 **Before contributing:**
+
 - Read our [Contribution Guidelines](https://homarr.dev/docs/advanced/development/getting-started)
 - Follow our coding standards and best practices
 - Ensure your code is well-tested and documented

@@ -29,10 +29,20 @@ const nextConfig: NextConfig = {
    */
   serverExternalPackages: ["dockerode", "isomorphic-dompurify", "jsdom"],
   experimental: {
-    optimizePackageImports: ["@mantine/core", "@mantine/hooks", "@tabler/icons-react"],
+    optimizePackageImports: [
+      "@mantine/core",
+      "@mantine/hooks",
+      "@tabler/icons-react",
+    ],
     turbopackFileSystemCacheForDev: true,
   },
-  transpilePackages: ["@homarr/ui", "@homarr/notifications", "@homarr/modals", "@homarr/spotlight", "@homarr/widgets"],
+  transpilePackages: [
+    "@homarr/ui",
+    "@homarr/notifications",
+    "@homarr/modals",
+    "@homarr/spotlight",
+    "@homarr/widgets",
+  ],
   images: {
     localPatterns: [
       {
