@@ -1,10 +1,11 @@
+import { observable } from "@trpc/server/observable";
+import z from "zod/v4";
+
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { logLevels } from "@homarr/core/infrastructure/logs/constants";
 import type { LoggerMessage } from "@homarr/redis";
 import { loggingChannel } from "@homarr/redis";
 import { zodEnumFromArray } from "@homarr/validation/enums";
-import { observable } from "@trpc/server/observable";
-import z from "zod/v4";
 
 import { createTRPCRouter, permissionRequiredProcedure } from "../trpc";
 

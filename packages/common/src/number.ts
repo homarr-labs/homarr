@@ -31,7 +31,9 @@ export const humanFileSize = (size: number, concat = ""): string => {
   //64bit limit for Number stops at EiB
   const siRanges = ["B", "kiB", "MiB", "GiB", "TiB", "PiB", "EiB"];
   if (!Number.isInteger(size)) {
-    console.warn("Invalid use of the humanFileSize function with a float, please report this and what integration this is impacting.");
+    console.warn(
+      "Invalid use of the humanFileSize function with a float, please report this and what integration this is impacting.",
+    );
     //Not an Integer
     return "NaI";
   }

@@ -25,7 +25,9 @@ export async function migrateOpnsenseCredentialsAsync(db: Database) {
         .set({
           kind: "opnsenseApiKey",
         })
-        .where(and(eq(integrationSecrets.integrationId, username.integrationId), eq(integrationSecrets.kind, "username")));
+        .where(
+          and(eq(integrationSecrets.integrationId, username.integrationId), eq(integrationSecrets.kind, "username")),
+        );
     }),
   );
 
@@ -38,7 +40,9 @@ export async function migrateOpnsenseCredentialsAsync(db: Database) {
         .set({
           kind: "opnsenseApiSecret",
         })
-        .where(and(eq(integrationSecrets.integrationId, password.integrationId), eq(integrationSecrets.kind, "password")));
+        .where(
+          and(eq(integrationSecrets.integrationId, password.integrationId), eq(integrationSecrets.kind, "password")),
+        );
     }),
   );
 

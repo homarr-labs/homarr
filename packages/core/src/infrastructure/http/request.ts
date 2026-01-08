@@ -1,18 +1,26 @@
 import type { AgentOptions } from "node:https";
 import { Agent as HttpsAgent } from "node:https";
 import { checkServerIdentity } from "node:tls";
-import { getAllTrustedCertificatesAsync, getTrustedCertificateHostnamesAsync } from "@homarr/core/infrastructure/certificates";
-import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
 import axios from "axios";
 import type { RequestInfo, RequestInit, Response } from "undici";
 import { fetch } from "undici";
 
+import {
+  getAllTrustedCertificatesAsync,
+  getTrustedCertificateHostnamesAsync,
+} from "@homarr/core/infrastructure/certificates";
+import { UndiciHttpAgent } from "@homarr/core/infrastructure/http";
+
 import type { TrustedCertificateHostname } from "../certificates/hostnames";
 import { withTimeoutAsync } from "./timeout";
 
-export const createCustomCheckServerIdentity = (trustedHostnames: TrustedCertificateHostname[]): typeof checkServerIdentity => {
+export const createCustomCheckServerIdentity = (
+  trustedHostnames: TrustedCertificateHostname[],
+): typeof checkServerIdentity => {
   return (hostname, peerCertificate) => {
-    const matchingTrustedHostnames = trustedHostnames.filter((cert) => cert.thumbprint === peerCertificate.fingerprint256);
+    const matchingTrustedHostnames = trustedHostnames.filter(
+      (cert) => cert.thumbprint === peerCertificate.fingerprint256,
+    );
 
     // We trust the certificate if we have a matching hostname
     if (matchingTrustedHostnames.some((cert) => cert.hostname === hostname)) return undefined;
@@ -43,7 +51,9 @@ export const createHttpsAgentAsync = async (override?: Pick<AgentOptions, "ca" |
   });
 };
 
-export const createAxiosCertificateInstanceAsync = async (override?: Pick<AgentOptions, "ca" | "checkServerIdentity">) => {
+export const createAxiosCertificateInstanceAsync = async (
+  override?: Pick<AgentOptions, "ca" | "checkServerIdentity">,
+) => {
   return axios.create({
     httpsAgent: await createHttpsAgentAsync(override),
   });

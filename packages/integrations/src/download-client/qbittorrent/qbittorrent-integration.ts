@@ -1,12 +1,13 @@
 import { QBittorrent } from "@ctrl/qbittorrent";
-import { createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
 import dayjs from "dayjs";
 import type { Dispatcher } from "undici";
 
+import { createCertificateAgentAsync } from "@homarr/core/infrastructure/http";
+
 import { HandleIntegrationErrors } from "../../base/errors/decorator";
 import { integrationOFetchHttpErrorHandler } from "../../base/errors/http";
-import type { IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
+import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
@@ -30,8 +31,12 @@ export class QBitTorrentIntegration extends Integration implements IDownloadClie
     const type = "torrent";
     const client = await this.getClientAsync();
     const torrents = await client.listTorrents({ limit: input.limit });
-    const rates = torrents.reduce(({ down, up }, { dlspeed, upspeed }) => ({ down: down + dlspeed, up: up + upspeed }), { down: 0, up: 0 });
-    const paused = torrents.find(({ state }) => QBitTorrentIntegration.getTorrentState(state) !== "paused") === undefined;
+    const rates = torrents.reduce(
+      ({ down, up }, { dlspeed, upspeed }) => ({ down: down + dlspeed, up: up + upspeed }),
+      { down: 0, up: 0 },
+    );
+    const paused =
+      torrents.find(({ state }) => QBitTorrentIntegration.getTorrentState(state) !== "paused") === undefined;
     const status: DownloadClientStatus = { paused, rates, types: [type] };
     const items = torrents.map((torrent): DownloadClientItem => {
       const state = QBitTorrentIntegration.getTorrentState(torrent.state);

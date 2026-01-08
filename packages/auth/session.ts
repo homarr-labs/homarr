@@ -1,6 +1,7 @@
+import type { Session } from "next-auth";
+
 import { generateSecureRandomToken } from "@homarr/common/server";
 import type { Database } from "@homarr/db";
-import type { Session } from "next-auth";
 
 import { getCurrentUserPermissionsAsync } from "./callbacks";
 

@@ -1,10 +1,11 @@
 "use client";
 
+import { Box, Flex, Group, Text, Tooltip } from "@mantine/core";
+import { IconCube, IconUsersGroup } from "@tabler/icons-react";
+
 import { clientApi } from "@homarr/api/client";
 import { formatNumber } from "@homarr/common";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Box, Flex, Group, Text, Tooltip } from "@mantine/core";
-import { IconCube, IconUsersGroup } from "@tabler/icons-react";
 
 import type { WidgetComponentProps } from "../../definition";
 
@@ -24,7 +25,15 @@ export default function MinecraftServerStatusWidget({ options }: WidgetComponent
   const title = options.title.trim().length > 0 ? options.title : options.domain;
 
   return (
-    <Flex className="minecraftServerStatus-wrapper" h="100%" w="100%" direction="column" p="sm" justify="center" align="center">
+    <Flex
+      className="minecraftServerStatus-wrapper"
+      h="100%"
+      w="100%"
+      direction="column"
+      p="sm"
+      justify="center"
+      align="center"
+    >
       <Group gap="xs" wrap="nowrap" align="center">
         <Tooltip label={data.online ? tStatus("online") : tStatus("offline")}>
           <Box miw="md" h="md" bg={data.online ? "teal" : "red"} style={{ borderRadius: "100%" }}></Box>

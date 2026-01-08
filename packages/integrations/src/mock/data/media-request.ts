@@ -1,5 +1,12 @@
 import type { IMediaRequestIntegration } from "../../interfaces/media-requests/media-request-integration";
-import type { MediaAvailability, MediaInformation, MediaRequest, MediaRequestStatus, RequestStats, RequestUser } from "../../types";
+import type {
+  MediaAvailability,
+  MediaInformation,
+  MediaRequest,
+  MediaRequestStatus,
+  RequestStats,
+  RequestUser,
+} from "../../types";
 import { mediaAvailabilities, mediaRequestStatuses } from "../../types";
 
 export class MediaRequestMockService implements IMediaRequestIntegration {
@@ -23,7 +30,9 @@ export class MediaRequestMockService implements IMediaRequestIntegration {
     await Promise.resolve();
   }
   public async getRequestsAsync(): Promise<MediaRequest[]> {
-    const result = await Promise.resolve(Array.from({ length: 10 }, (_, index) => MediaRequestMockService.createRequest(index)));
+    const result = await Promise.resolve(
+      Array.from({ length: 10 }, (_, index) => MediaRequestMockService.createRequest(index)),
+    );
 
     return result;
   }

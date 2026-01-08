@@ -1,6 +1,7 @@
-import { getPermissionsWithChildren } from "@homarr/definitions";
 import type { Session } from "next-auth";
 import { describe, expect, test } from "vitest";
+
+import { getPermissionsWithChildren } from "@homarr/definitions";
 
 import { constructIntegrationPermissions } from "../integration-permissions";
 

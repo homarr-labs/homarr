@@ -1,11 +1,12 @@
+import dayjs from "dayjs";
+import { Octokit } from "octokit";
+import { compareSemVer, isValidSemVer } from "semver-parser";
+
 import { env } from "@homarr/common/env";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { createChannelWithLatestAndEvents } from "@homarr/redis";
 import { createCachedRequestHandler } from "@homarr/request-handler/lib/cached-request-handler";
-import dayjs from "dayjs";
-import { Octokit } from "octokit";
-import { compareSemVer, isValidSemVer } from "semver-parser";
 
 import packageJson from "../../../package.json";
 
@@ -46,7 +47,11 @@ export const updateCheckerRequestHandler = createCachedRequestHandler({
       .filter((release) => compareSemVer(release.tag_name, currentVersion) > 0)
       .sort((releaseA, releaseB) => compareSemVer(releaseB.tag_name, releaseA.tag_name));
     if (availableNewerReleases.length > 0) {
-      logger.info("Update checker found a new available version", { version: availableReleases[0]!.tag_name, currentVersion });
+      logger.info(
+        "Update checker found a new available version",
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        { version: availableReleases[0]!.tag_name, currentVersion },
+      );
     } else {
       logger.debug("Update checker did not find any available updates", { currentVersion });
     }

@@ -1,8 +1,9 @@
-import { eq } from "@homarr/db";
-import { boards, items } from "@homarr/db/schema";
 import { TRPCError } from "@trpc/server";
 import SuperJSON from "superjson";
 import { z } from "zod/v4";
+
+import { eq } from "@homarr/db";
+import { boards, items } from "@homarr/db/schema";
 
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { throwIfActionForbiddenAsync } from "../board/board-access";

@@ -1,10 +1,11 @@
+import type { JSX } from "react";
+import { FileButton } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import type { MaybePromise } from "@homarr/common/types";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { supportedMediaUploadFormats } from "@homarr/validation/media";
-import { FileButton } from "@mantine/core";
-import type { JSX } from "react";
 
 interface UploadMediaProps {
   children: (props: { onClick: () => void; loading: boolean }) => JSX.Element;

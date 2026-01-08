@@ -1,21 +1,4 @@
 import type { AdapterAccount } from "@auth/core/adapters";
-import type {
-  BackgroundImageAttachment,
-  BackgroundImageRepeat,
-  BackgroundImageSize,
-  BoardPermission,
-  ColorScheme,
-  GroupPermissionKey,
-  IntegrationKind,
-  IntegrationPermission,
-  IntegrationSecretKind,
-  OnboardingStep,
-  SearchEngineType,
-  SectionKind,
-  SupportedAuthProvider,
-  WidgetKind,
-} from "@homarr/definitions";
-import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes, emptySuperJSON } from "@homarr/definitions";
 import type { MantineSize } from "@mantine/core";
 import type { DayOfWeek } from "@mantine/dates";
 import { relations } from "drizzle-orm";
@@ -33,6 +16,29 @@ import {
   tinyint,
   varchar,
 } from "drizzle-orm/mysql-core";
+
+import {
+  backgroundImageAttachments,
+  backgroundImageRepeats,
+  backgroundImageSizes,
+  emptySuperJSON,
+} from "@homarr/definitions";
+import type {
+  BackgroundImageAttachment,
+  BackgroundImageRepeat,
+  BackgroundImageSize,
+  BoardPermission,
+  ColorScheme,
+  GroupPermissionKey,
+  IntegrationKind,
+  IntegrationPermission,
+  IntegrationSecretKind,
+  OnboardingStep,
+  SearchEngineType,
+  SectionKind,
+  SupportedAuthProvider,
+  WidgetKind,
+} from "@homarr/definitions";
 
 const customBlob = customType<{ data: Buffer }>({
   dataType() {
@@ -272,7 +278,10 @@ export const boards = mysqlTable("board", {
   logoImageUrl: text(),
   faviconImageUrl: text(),
   backgroundImageUrl: text(),
-  backgroundImageAttachment: text().$type<BackgroundImageAttachment>().default(backgroundImageAttachments.defaultValue).notNull(),
+  backgroundImageAttachment: text()
+    .$type<BackgroundImageAttachment>()
+    .default(backgroundImageAttachments.defaultValue)
+    .notNull(),
   backgroundImageRepeat: text().$type<BackgroundImageRepeat>().default(backgroundImageRepeats.defaultValue).notNull(),
   backgroundImageSize: text().$type<BackgroundImageSize>().default(backgroundImageSizes.defaultValue).notNull(),
   primaryColor: text().default("#fa5252").notNull(),

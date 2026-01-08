@@ -1,10 +1,11 @@
+import dayjs from "dayjs";
+import type { NextAuthConfig } from "next-auth";
+
 import type { Session } from "@homarr/auth";
 import type { Database } from "@homarr/db";
 import { eq, inArray } from "@homarr/db";
 import { groupMembers, groupPermissions, users } from "@homarr/db/schema";
 import { getPermissionsWithChildren } from "@homarr/definitions";
-import dayjs from "dayjs";
-import type { NextAuthConfig } from "next-auth";
 
 export const getCurrentUserPermissionsAsync = async (db: Database, userId: string) => {
   const dbGroupMembers = await db.query.groupMembers.findMany({
@@ -25,7 +26,10 @@ export const getCurrentUserPermissionsAsync = async (db: Database, userId: strin
   return getPermissionsWithChildren(permissionKeys);
 };
 
-export const createSessionAsync = async (db: Database, user: { id: string; email: string | null }): Promise<Session> => {
+export const createSessionAsync = async (
+  db: Database,
+  user: { id: string; email: string | null },
+): Promise<Session> => {
   return {
     expires: dayjs().add(1, "day").toISOString(),
     user: {
@@ -60,4 +64,7 @@ export const createSessionCallback = (db: Database): NextAuthCallbackOf<"session
 };
 
 type NextAuthCallbackRecord = Exclude<NextAuthConfig["callbacks"], undefined>;
-export type NextAuthCallbackOf<TKey extends keyof NextAuthCallbackRecord> = Exclude<NextAuthCallbackRecord[TKey], undefined>;
+export type NextAuthCallbackOf<TKey extends keyof NextAuthCallbackRecord> = Exclude<
+  NextAuthCallbackRecord[TKey],
+  undefined
+>;

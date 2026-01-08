@@ -1,7 +1,10 @@
 import { z } from "zod/v4";
 
 export const entityStateSchema = z.object({
-  attributes: z.record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.union([z.string(), z.number()]))])),
+  attributes: z.record(
+    z.string(),
+    z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.union([z.string(), z.number()]))]),
+  ),
   entity_id: z.string(),
   last_changed: z.string().pipe(z.coerce.date()),
   last_updated: z.string().pipe(z.coerce.date()),

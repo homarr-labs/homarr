@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { encryptSecret } from "@homarr/common/server";
-import { apps, integrationSecrets, integrations } from "@homarr/db/schema";
+import { apps, integrations, integrationSecrets } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
-import { describe, expect, test, vi } from "vitest";
 
 import { integrationRouter } from "../../integration/integration-router";
 import { expectToBeDefined } from "../helper";
@@ -246,7 +246,9 @@ describe("create should create a new integration", () => {
     expect(dbSearchEngine!.integrationId).toBe(dbIntegration!.id);
     expect(dbSearchEngine!.short).toBe("j");
     expect(dbSearchEngine!.name).toBe(input.name);
-    expect(dbSearchEngine!.iconUrl).toBe("https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyseerr.svg");
+    expect(dbSearchEngine!.iconUrl).toBe(
+      "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/jellyseerr.svg",
+    );
   });
 
   test("with create integration access should create a new integration with new linked app", async () => {

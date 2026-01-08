@@ -15,7 +15,9 @@ export const mapOldmarrApp = (app: OldmarrApp): InferSelectModel<typeof apps> =>
   };
 };
 
-export const mapOldmarrBookmarkApp = (app: OldmarrBookmarkDefinition["options"]["items"][number]): InferSelectModel<typeof apps> => {
+export const mapOldmarrBookmarkApp = (
+  app: OldmarrBookmarkDefinition["options"]["items"][number],
+): InferSelectModel<typeof apps> => {
   return {
     id: app.id,
     name: app.name,

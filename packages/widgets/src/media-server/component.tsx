@@ -1,5 +1,12 @@
 "use client";
 
+import type { ReactNode } from "react";
+import { Fragment, useMemo } from "react";
+import { Avatar, Divider, Flex, Group, Stack, Text, Title } from "@mantine/core";
+import { IconDeviceTv, IconHeadphones, IconMovie, IconVideo } from "@tabler/icons-react";
+import type { MRT_ColumnDef } from "mantine-react-table";
+import { MantineReactTable } from "mantine-react-table";
+
 import { clientApi } from "@homarr/api/client";
 import { objectEntries } from "@homarr/common";
 import { getIconUrl, integrationDefs } from "@homarr/definitions";
@@ -8,16 +15,14 @@ import { createModal, useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
-import { Avatar, Divider, Flex, Group, Stack, Text, Title } from "@mantine/core";
-import { IconDeviceTv, IconHeadphones, IconMovie, IconVideo } from "@tabler/icons-react";
-import type { MRT_ColumnDef } from "mantine-react-table";
-import { MantineReactTable } from "mantine-react-table";
-import type { ReactNode } from "react";
-import { Fragment, useMemo } from "react";
 
 import type { WidgetComponentProps } from "../definition";
 
-export default function MediaServerWidget({ options, integrationIds, isEditMode }: WidgetComponentProps<"mediaServer">) {
+export default function MediaServerWidget({
+  options,
+  integrationIds,
+  isEditMode,
+}: WidgetComponentProps<"mediaServer">) {
   const [currentStreams] = clientApi.widget.mediaServer.getCurrentStreams.useSuspenseQuery(
     {
       integrationIds,
@@ -86,17 +91,20 @@ export default function MediaServerWidget({ options, integrationIds, isEditMode 
     {
       enabled: !isEditMode,
       onData(data) {
-        utils.widget.mediaServer.getCurrentStreams.setData({ integrationIds, showOnlyPlaying: options.showOnlyPlaying }, (previousData) => {
-          return previousData?.map((pair) => {
-            if (pair.integrationId === data.integrationId) {
-              return {
-                ...pair,
-                sessions: data.data,
-              };
-            }
-            return pair;
-          });
-        });
+        utils.widget.mediaServer.getCurrentStreams.setData(
+          { integrationIds, showOnlyPlaying: options.showOnlyPlaying },
+          (previousData) => {
+            return previousData?.map((pair) => {
+              if (pair.integrationId === data.integrationId) {
+                return {
+                  ...pair,
+                  sessions: data.data,
+                };
+              }
+              return pair;
+            });
+          },
+        );
       },
     },
   );
@@ -217,7 +225,9 @@ const ItemInfoModal = createModal<{ item: StreamSession }>(({ innerProps }) => {
   const Icon = innerProps.item.currentlyPlaying ? mediaTypeIconMap[innerProps.item.currentlyPlaying.type] : null;
 
   const metadata = useMemo(() => {
-    return innerProps.item.currentlyPlaying?.metadata ? constructMetadata(innerProps.item.currentlyPlaying.metadata) : null;
+    return innerProps.item.currentlyPlaying?.metadata
+      ? constructMetadata(innerProps.item.currentlyPlaying.metadata)
+      : null;
   }, [innerProps.item.currentlyPlaying?.metadata]);
 
   return (
@@ -245,7 +255,8 @@ const ItemInfoModal = createModal<{ item: StreamSession }>(({ innerProps }) => {
         itemKey={t("user")}
         value={
           <Group gap="sm" align="center">
-            <Avatar size="sm" src={innerProps.item.user.profilePictureUrl} /> <Text>{innerProps.item.user.username}</Text>
+            <Avatar size="sm" src={innerProps.item.user.profilePictureUrl} />{" "}
+            <Text>{innerProps.item.user.username}</Text>
           </Group>
         }
       />
@@ -305,7 +316,9 @@ const mediaTypeIconMap = {
 
 const constructMetadata = (metadata: Exclude<Exclude<StreamSession["currentlyPlaying"], null>["metadata"], null>) => ({
   video: {
-    resolution: metadata.video.resolution ? `${metadata.video.resolution.width}x${metadata.video.resolution.height}` : null,
+    resolution: metadata.video.resolution
+      ? `${metadata.video.resolution.width}x${metadata.video.resolution.height}`
+      : null,
     frameRate: metadata.video.frameRate,
   },
   audio: {

@@ -1,8 +1,9 @@
+import { Accordion, Center, Flex, Group, RingProgress, Stack, Text } from "@mantine/core";
+import { IconBrain, IconCpu, IconCube, IconDatabase, IconDeviceLaptop, IconServer } from "@tabler/icons-react";
+
 import { clientApi } from "@homarr/api/client";
 import type { Resource } from "@homarr/integrations/types";
 import { useI18n } from "@homarr/translation/client";
-import { Accordion, Center, Flex, Group, RingProgress, Stack, Text } from "@mantine/core";
-import { IconBrain, IconCpu, IconCube, IconDatabase, IconDeviceLaptop, IconServer } from "@tabler/icons-react";
 
 import type { WidgetComponentProps } from "../../definition";
 import { formatUptime } from "../system-health";
@@ -63,7 +64,10 @@ export const ClusterHealthMonitoring = ({
   const usedMem = healthData.nodes.reduce((sum, item) => (item.isRunning ? item.memory.used + sum : sum), 0);
   const maxMem = healthData.nodes.reduce((sum, item) => (item.isRunning ? item.memory.total + sum : sum), 0);
   const maxCpu = healthData.nodes.reduce((sum, item) => (item.isRunning ? item.cpu.cores + sum : sum), 0);
-  const usedCpu = healthData.nodes.reduce((sum, item) => (item.isRunning ? item.cpu.utilization * item.cpu.cores + sum : sum), 0);
+  const usedCpu = healthData.nodes.reduce(
+    (sum, item) => (item.isRunning ? item.cpu.utilization * item.cpu.cores + sum : sum),
+    0,
+  );
   const uptime = healthData.nodes.reduce((sum, { uptime }) => (sum > uptime ? sum : uptime), 0);
 
   const cpuPercent = maxCpu ? (usedCpu / maxCpu) * 100 : 0;

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { describe, expect, test, vi } from "vitest";
 
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { invites, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
-import { describe, expect, test, vi } from "vitest";
 
 import { inviteRouter } from "../invite";
 

@@ -1,11 +1,12 @@
+import type { LoaderComponent } from "next/dynamic";
+import type { QueryClient } from "@tanstack/react-query";
+import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
+
 import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import type { ServerSettings } from "@homarr/server-settings";
 import type { SettingsContextProps } from "@homarr/settings/creator";
 import type { stringOrTranslation } from "@homarr/translation";
 import type { TablerIcon } from "@homarr/ui";
-import type { QueryClient } from "@tanstack/react-query";
-import type { DefaultErrorData } from "@trpc/server/unstable-core-do-not-import";
-import type { LoaderComponent } from "next/dynamic";
 
 import type { WidgetImports } from ".";
 import type { inferOptionsFromCreator, WidgetOptionsRecord } from "./options";

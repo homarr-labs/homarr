@@ -1,9 +1,10 @@
+import { cache } from "react";
+import type { QueryClient } from "@tanstack/react-query";
+
 import { db } from "@homarr/db";
 import { getServerSettingsAsync } from "@homarr/db/queries";
 import type { WidgetKind } from "@homarr/definitions";
 import { createSettings } from "@homarr/settings/creator";
-import type { QueryClient } from "@tanstack/react-query";
-import { cache } from "react";
 
 import { reduceWidgetOptionsWithDefaultValues } from ".";
 import prefetchForApps from "./app/prefetch";

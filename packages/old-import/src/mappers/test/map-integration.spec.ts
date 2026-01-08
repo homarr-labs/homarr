@@ -1,5 +1,6 @@
-import * as commonServer from "@homarr/common/server";
 import { describe, expect, test, vi } from "vitest";
+
+import * as commonServer from "@homarr/common/server";
 
 import type { PreparedIntegration } from "../../prepare/prepare-integrations";
 import { mapAndDecryptIntegrations } from "../map-integration";

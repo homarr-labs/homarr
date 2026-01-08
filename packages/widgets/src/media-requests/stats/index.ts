@@ -1,5 +1,6 @@
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { IconChartBar } from "@tabler/icons-react";
+
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../../definition";
 

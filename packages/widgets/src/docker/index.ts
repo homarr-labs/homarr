@@ -1,5 +1,6 @@
-import type { RouterOutputs } from "@homarr/api";
 import { IconBrandDocker, IconServerOff } from "@tabler/icons-react";
+
+import type { RouterOutputs } from "@homarr/api";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

@@ -1,8 +1,9 @@
+import dayjs from "dayjs";
+import z from "zod";
+
 import { createId } from "@homarr/common";
 import { RequestError, ResponseError } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import dayjs from "dayjs";
-import z from "zod";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -99,7 +100,11 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
     logger.debug("Authenticating with username and password", {
       url: this.wsUrl(),
     });
-    const response = await this.requestAsync("auth.login", [this.getSecretValue("username"), this.getSecretValue("password")], webSocket);
+    const response = await this.requestAsync(
+      "auth.login",
+      [this.getSecretValue("username"), this.getSecretValue("password")],
+      webSocket,
+    );
     const result = await z.boolean().parseAsync(response);
     if (!result) throw new ResponseError({ status: 401 });
     logger.debug("Authenticated successfully with username and password", {
@@ -322,8 +327,10 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
   };
 
   private extractLatestReportingData(data: ReportingItem[], key: ReportingItem["identifier"]) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const dataObject = data.find((item) => item.identifier === key)!;
     // TODO: check why the below sorting is done, because right now it compares number[] with number[]?
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return dataObject.data.sort((item1, item2) => (item1 > item2 ? -1 : 1))[0]!;
   }
 }

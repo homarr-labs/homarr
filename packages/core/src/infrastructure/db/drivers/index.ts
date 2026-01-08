@@ -8,7 +8,9 @@ import { createSqliteDb } from "./sqlite";
 
 export type Database<TSchema extends Record<string, unknown>> = ReturnType<typeof createSqliteDb<TSchema>>;
 
-export const createSharedConfig = <TSchema extends Record<string, unknown>>(schema: TSchema): SharedDrizzleConfig<TSchema> => ({
+export const createSharedConfig = <TSchema extends Record<string, unknown>>(
+  schema: TSchema,
+): SharedDrizzleConfig<TSchema> => ({
   logger: new WinstonDrizzleLogger(),
   casing: DB_CASING,
   schema,

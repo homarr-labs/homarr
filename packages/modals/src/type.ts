@@ -1,8 +1,12 @@
-import type { stringOrTranslation } from "@homarr/translation";
-import type { ModalProps } from "@mantine/core";
 import type { ReactNode } from "react";
+import type { ModalProps } from "@mantine/core";
 
-export type ModalComponent<TInnerProps> = (props: { actions: { closeModal: () => void }; innerProps: TInnerProps }) => ReactNode;
+import type { stringOrTranslation } from "@homarr/translation";
+
+export type ModalComponent<TInnerProps> = (props: {
+  actions: { closeModal: () => void };
+  innerProps: TInnerProps;
+}) => ReactNode;
 
 export type CreateModalOptions = Pick<
   ModalOptions<unknown>,
@@ -22,6 +26,7 @@ export type CreateModalOptions = Pick<
 };
 
 export interface ModalDefinition {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: ModalComponent<any>;
   options: Partial<CreateModalOptions>;
 }
@@ -37,4 +42,5 @@ export interface ModalState<TModal extends ModalDefinition = ModalDefinition> {
   props: ModalOptions<inferInnerProps<TModal>>;
 }
 
-export type inferInnerProps<TModal extends ModalDefinition> = TModal["component"] extends ModalComponent<infer P> ? P : never;
+export type inferInnerProps<TModal extends ModalDefinition> =
+  TModal["component"] extends ModalComponent<infer P> ? P : never;

@@ -1,10 +1,11 @@
+import { useMemo, useState } from "react";
+import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
+import { IconPlus, IconSearch } from "@tabler/icons-react";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { createModal, useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
-import { useMemo, useState } from "react";
 
 import { QuickAddAppModal } from "./quick-add-app/quick-add-app-modal";
 
@@ -21,7 +22,9 @@ export const AppSelectModal = createModal<AppSelectModalProps>(({ actions, inner
 
   const filteredApps = useMemo(
     () =>
-      apps.filter((app) => app.name.toLowerCase().includes(search.toLowerCase())).sort((appA, appB) => appA.name.localeCompare(appB.name)),
+      apps
+        .filter((app) => app.name.toLowerCase().includes(search.toLowerCase()))
+        .sort((appA, appB) => appA.name.localeCompare(appB.name)),
     [apps, search],
   );
 

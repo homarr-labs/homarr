@@ -1,7 +1,8 @@
-import { capitalize } from "@homarr/common";
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { IconTransform } from "@tabler/icons-react";
 import { z } from "zod/v4";
+
+import { capitalize } from "@homarr/common";
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

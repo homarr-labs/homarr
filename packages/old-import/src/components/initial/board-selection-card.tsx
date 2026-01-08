@@ -1,6 +1,7 @@
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
-import { Anchor, Card, Checkbox, Group, Stack, Text } from "@mantine/core";
 import type { ChangeEvent } from "react";
+import { Anchor, Card, Checkbox, Group, Stack, Text } from "@mantine/core";
+
+import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
 export type BoardSelectionMap = Map<string, boolean>;
 

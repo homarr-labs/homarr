@@ -1,10 +1,11 @@
+import { applyWSSHandler } from "@trpc/server/adapters/ws";
+import { WebSocketServer } from "ws";
+
 import { appRouter, createTRPCContext } from "@homarr/api/websocket";
 import { getSessionFromToken, sessionTokenCookieName } from "@homarr/auth";
 import { parseCookies } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { db } from "@homarr/db";
-import { applyWSSHandler } from "@trpc/server/adapters/ws";
-import { WebSocketServer } from "ws";
 
 const logger = createLogger({ module: "websocketMain" });
 
@@ -15,6 +16,7 @@ const handler = applyWSSHandler({
   wss,
   router: appRouter,
   // ignore error on next line because the createContext must be set with this name
+  // eslint-disable-next-line no-restricted-syntax
   createContext: async ({ req }) => {
     try {
       const headers = Object.entries(req.headers).map(

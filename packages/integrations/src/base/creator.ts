@@ -11,8 +11,8 @@ import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorre
 import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { EmbyIntegration } from "../emby/emby-integration";
-import { GithubIntegration } from "../github/github-integration";
 import { GitHubContainerRegistryIntegration } from "../github-container-registry/github-container-registry-integration";
+import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { ICalIntegration } from "../ical/ical-integration";
@@ -44,7 +44,9 @@ export const createIntegrationAsync = async <TKind extends keyof typeof integrat
   integration: IntegrationInput & { kind: TKind },
 ) => {
   if (!(integration.kind in integrationCreators)) {
-    throw new Error(`Unknown integration kind ${integration.kind}. Did you forget to add it to the integration creator?`);
+    throw new Error(
+      `Unknown integration kind ${integration.kind}. Did you forget to add it to the integration creator?`,
+    );
   }
 
   const creator = integrationCreators[integration.kind];

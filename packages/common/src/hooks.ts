@@ -1,8 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useEffect, useState } from "react";
 
 dayjs.extend(relativeTime);
 

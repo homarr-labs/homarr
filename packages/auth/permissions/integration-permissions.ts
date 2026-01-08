@@ -1,5 +1,6 @@
-import type { IntegrationPermission } from "@homarr/definitions";
 import type { Session } from "next-auth";
+
+import type { IntegrationPermission } from "@homarr/definitions";
 
 export interface IntegrationPermissionsProps {
   userPermissions: {
@@ -11,10 +12,13 @@ export interface IntegrationPermissionsProps {
 }
 
 export const constructIntegrationPermissions = (integration: IntegrationPermissionsProps, session: Session | null) => {
-  const permissions = integration.userPermissions.concat(integration.groupPermissions).map(({ permission }) => permission);
+  const permissions = integration.userPermissions
+    .concat(integration.groupPermissions)
+    .map(({ permission }) => permission);
 
   return {
-    hasFullAccess: (session?.user.permissions.includes("integration-full-all") ?? false) || permissions.includes("full"),
+    hasFullAccess:
+      (session?.user.permissions.includes("integration-full-all") ?? false) || permissions.includes("full"),
     hasInteractAccess:
       permissions.includes("full") ||
       permissions.includes("interact") ||

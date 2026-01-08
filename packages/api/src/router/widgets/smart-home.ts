@@ -1,8 +1,9 @@
+import { observable } from "@trpc/server/observable";
+import { z } from "zod/v4";
+
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { createIntegrationAsync } from "@homarr/integrations";
 import { smartHomeEntityStateRequestHandler } from "@homarr/request-handler/smart-home-entity-state";
-import { observable } from "@trpc/server/observable";
-import { z } from "zod/v4";
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";

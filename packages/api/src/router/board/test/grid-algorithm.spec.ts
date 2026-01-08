@@ -25,52 +25,59 @@ describe("Grid Algorithm", () => {
 
     expect(output).toBe(item.output);
   });
-  test.each(dynamicSectionTests)("should convert a grid with dynamic sections from 16 columns to %i columns", (_, testInput) => {
-    const outerDynamicSectionId = "b";
-    const innerDynamicSectionId = "f";
-    const items = [
-      algoItem({ id: "a", width: 2, height: 2 }),
-      algoItem({ id: outerDynamicSectionId, type: "section", width: 12, height: 3, yOffset: 2 }),
-      algoItem({ id: "a", width: 2, sectionId: outerDynamicSectionId }),
-      algoItem({ id: "b", width: 4, sectionId: outerDynamicSectionId, xOffset: 2 }),
-      algoItem({ id: "c", width: 2, sectionId: outerDynamicSectionId, xOffset: 6 }),
-      algoItem({ id: "d", width: 1, sectionId: outerDynamicSectionId, xOffset: 8 }),
-      algoItem({ id: "e", width: 3, sectionId: outerDynamicSectionId, xOffset: 9 }),
-      algoItem({
-        id: innerDynamicSectionId,
-        type: "section",
-        width: 8,
-        height: 2,
-        yOffset: 1,
-        sectionId: outerDynamicSectionId,
-      }),
-      algoItem({ id: "a", width: 2, sectionId: innerDynamicSectionId }),
-      algoItem({ id: "b", width: 5, xOffset: 2, sectionId: innerDynamicSectionId }),
-      algoItem({ id: "c", width: 1, height: 2, xOffset: 7, sectionId: innerDynamicSectionId }),
-      algoItem({ id: "d", width: 7, yOffset: 1, sectionId: innerDynamicSectionId }),
-      algoItem({ id: "g", width: 4, yOffset: 1, sectionId: outerDynamicSectionId, xOffset: 8 }),
-      algoItem({ id: "h", width: 3, yOffset: 2, sectionId: outerDynamicSectionId, xOffset: 8 }),
-      algoItem({ id: "i", width: 1, yOffset: 2, sectionId: outerDynamicSectionId, xOffset: 11 }),
-      algoItem({ id: "c", width: 5, yOffset: 5 }),
-    ];
+  test.each(dynamicSectionTests)(
+    "should convert a grid with dynamic sections from 16 columns to %i columns",
+    (_, testInput) => {
+      const outerDynamicSectionId = "b";
+      const innerDynamicSectionId = "f";
+      const items = [
+        algoItem({ id: "a", width: 2, height: 2 }),
+        algoItem({ id: outerDynamicSectionId, type: "section", width: 12, height: 3, yOffset: 2 }),
+        algoItem({ id: "a", width: 2, sectionId: outerDynamicSectionId }),
+        algoItem({ id: "b", width: 4, sectionId: outerDynamicSectionId, xOffset: 2 }),
+        algoItem({ id: "c", width: 2, sectionId: outerDynamicSectionId, xOffset: 6 }),
+        algoItem({ id: "d", width: 1, sectionId: outerDynamicSectionId, xOffset: 8 }),
+        algoItem({ id: "e", width: 3, sectionId: outerDynamicSectionId, xOffset: 9 }),
+        algoItem({
+          id: innerDynamicSectionId,
+          type: "section",
+          width: 8,
+          height: 2,
+          yOffset: 1,
+          sectionId: outerDynamicSectionId,
+        }),
+        algoItem({ id: "a", width: 2, sectionId: innerDynamicSectionId }),
+        algoItem({ id: "b", width: 5, xOffset: 2, sectionId: innerDynamicSectionId }),
+        algoItem({ id: "c", width: 1, height: 2, xOffset: 7, sectionId: innerDynamicSectionId }),
+        algoItem({ id: "d", width: 7, yOffset: 1, sectionId: innerDynamicSectionId }),
+        algoItem({ id: "g", width: 4, yOffset: 1, sectionId: outerDynamicSectionId, xOffset: 8 }),
+        algoItem({ id: "h", width: 3, yOffset: 2, sectionId: outerDynamicSectionId, xOffset: 8 }),
+        algoItem({ id: "i", width: 1, yOffset: 2, sectionId: outerDynamicSectionId, xOffset: 11 }),
+        algoItem({ id: "c", width: 5, yOffset: 5 }),
+      ];
 
-    const newItems = generateResponsiveGridFor({
-      items,
-      width: testInput.outputColumns,
-      previousWidth: 16,
-      sectionId: ROOT_SECTION_ID,
-    });
+      const newItems = generateResponsiveGridFor({
+        items,
+        width: testInput.outputColumns,
+        previousWidth: 16,
+        sectionId: ROOT_SECTION_ID,
+      });
 
-    const rootItems = newItems.items.filter((item) => item.sectionId === ROOT_SECTION_ID);
-    const outerSection = items.find((item) => item.id === outerDynamicSectionId);
-    const outerItems = newItems.items.filter((item) => item.sectionId === outerDynamicSectionId);
-    const innerSection = items.find((item) => item.id === innerDynamicSectionId);
-    const innerItems = newItems.items.filter((item) => item.sectionId === innerDynamicSectionId);
+      const rootItems = newItems.items.filter((item) => item.sectionId === ROOT_SECTION_ID);
+      const outerSection = items.find((item) => item.id === outerDynamicSectionId);
+      const outerItems = newItems.items.filter((item) => item.sectionId === outerDynamicSectionId);
+      const innerSection = items.find((item) => item.id === innerDynamicSectionId);
+      const innerItems = newItems.items.filter((item) => item.sectionId === innerDynamicSectionId);
 
-    expect(generateOutputText(rootItems, testInput.outputColumns)).toBe(testInput.root);
-    expect(generateOutputText(outerItems, Math.min(testInput.outputColumns, outerSection?.width ?? 999))).toBe(testInput.outer);
-    expect(generateOutputText(innerItems, Math.min(testInput.outputColumns, innerSection?.width ?? 999))).toBe(testInput.inner);
-  });
+      expect(generateOutputText(rootItems, testInput.outputColumns)).toBe(testInput.root);
+      expect(generateOutputText(outerItems, Math.min(testInput.outputColumns, outerSection?.width ?? 999))).toBe(
+        testInput.outer,
+      );
+      expect(generateOutputText(innerItems, Math.min(testInput.outputColumns, innerSection?.width ?? 999))).toBe(
+        testInput.inner,
+      );
+    },
+  );
 });
 
 const algoItem = (item: Partial<GridAlgorithmItem>): GridAlgorithmItem => ({
@@ -345,7 +352,12 @@ const getHeight = (lines: string[], position: { x: number; y: number }, char: st
   return height;
 };
 
-const addItemToOccupied = (occupied2d: string[][], item: GridAlgorithmItem, position: { x: number; y: number }, columnCount: number) => {
+const addItemToOccupied = (
+  occupied2d: string[][],
+  item: GridAlgorithmItem,
+  position: { x: number; y: number },
+  columnCount: number,
+) => {
   for (let yOffset = 0; yOffset < item.height; yOffset++) {
     let row = occupied2d[position.y + yOffset];
     if (!row) {

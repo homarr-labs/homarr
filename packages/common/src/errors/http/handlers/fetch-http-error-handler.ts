@@ -39,13 +39,20 @@ type TypeErrorWithCode = Modify<
 >;
 
 const isTypeErrorWithCode = (error: unknown): error is TypeErrorWithCode => {
-  return error instanceof TypeError && error.cause instanceof Error && "code" in error.cause && typeof error.cause.code === "string";
+  return (
+    error instanceof TypeError &&
+    error.cause instanceof Error &&
+    "code" in error.cause &&
+    typeof error.cause.code === "string"
+  );
 };
 
 export const matchErrorCode = (code: string): AnyRequestErrorInput | undefined => {
   for (const [key, value] of objectEntries(requestErrorMap)) {
     const entries = Object.entries(value) as [string, string | string[]][];
-    const found = entries.find(([_, entryCode]) => (typeof entryCode === "string" ? entryCode === code : entryCode.includes(code)));
+    const found = entries.find(([_, entryCode]) =>
+      typeof entryCode === "string" ? entryCode === code : entryCode.includes(code),
+    );
     if (!found) continue;
 
     return {

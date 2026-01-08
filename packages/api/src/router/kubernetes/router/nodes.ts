@@ -1,5 +1,6 @@
-import type { KubernetesNode, KubernetesNodeState } from "@homarr/definitions";
 import { TRPCError } from "@trpc/server";
+
+import type { KubernetesNode, KubernetesNodeState } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";

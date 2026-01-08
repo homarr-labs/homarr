@@ -1,10 +1,11 @@
+import { useCallback, useState } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import type { ButtonProps, GroupProps } from "@mantine/core";
+import { Box, Button, Group } from "@mantine/core";
+
 import type { stringOrTranslation, TranslationFunction } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import type { ButtonProps, GroupProps } from "@mantine/core";
-import { Box, Button, Group } from "@mantine/core";
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import { useCallback, useState } from "react";
 
 import { createModal } from "./creator";
 

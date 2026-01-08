@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
 import { useParams } from "next/navigation";
+import dayjs from "dayjs";
 
 import type { SupportedLanguage } from "./config";
 import { localeConfigurations } from "./config";
@@ -9,6 +9,7 @@ let loading = true;
 let previousLocale: SupportedLanguage | null = null;
 const load = () => {
   if (loading) {
+    // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw promise;
   }
 };

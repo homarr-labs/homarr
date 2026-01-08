@@ -1,8 +1,9 @@
+import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import type { OIDCConfig } from "@auth/core/providers";
 import type { Profile } from "@auth/core/types";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import { customFetch } from "next-auth";
+
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import { env } from "../../env";
 import { createRedirectUri } from "../../redirect";

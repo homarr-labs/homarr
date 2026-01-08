@@ -1,7 +1,8 @@
+import SuperJSON from "superjson";
+
 import type { Session } from "@homarr/auth";
 import { db, eq, or } from "@homarr/db";
 import { items } from "@homarr/db/schema";
-import SuperJSON from "superjson";
 
 import type { WidgetComponentProps } from "../../../../widgets/src";
 

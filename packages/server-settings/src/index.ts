@@ -1,7 +1,14 @@
 import type { ColorScheme } from "@homarr/definitions";
 import type { SupportedLanguage } from "@homarr/translation";
 
-export const defaultServerSettingsKeys = ["analytics", "crawlingAndIndexing", "board", "appearance", "culture", "search"] as const;
+export const defaultServerSettingsKeys = [
+  "analytics",
+  "crawlingAndIndexing",
+  "board",
+  "appearance",
+  "culture",
+  "search",
+] as const;
 
 export type ServerSettingsRecord = Record<(typeof defaultServerSettingsKeys)[number], Record<string, unknown>>;
 

@@ -1,7 +1,8 @@
-import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+
+import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 
 import * as sqliteSchema from "../schema/sqlite";
 

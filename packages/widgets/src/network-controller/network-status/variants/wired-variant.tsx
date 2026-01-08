@@ -1,6 +1,7 @@
-import { useScopedI18n } from "@homarr/translation/client";
 import { Group, Stack, Text } from "@mantine/core";
 import { IconNetwork } from "@tabler/icons-react";
+
+import { useScopedI18n } from "@homarr/translation/client";
 
 import { StatRow } from "./stat-row";
 

@@ -61,6 +61,7 @@ const updateSitemapTypeFileAsync = async (sitemapPathType: string) => {
  * This script fetches the sitemap.xml and generates the HomarrDocumentationPath type
  * which is used for typesafe documentation links
  */
+// eslint-disable-next-line no-restricted-syntax
 const main = async () => {
   const sitemapXml = await fetchSitemapAsync();
   const sitemapData = parseXml(sitemapXml);

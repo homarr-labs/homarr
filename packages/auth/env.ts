@@ -1,6 +1,7 @@
+import { z } from "zod/v4";
+
 import { createBooleanSchema, createDurationSchema, createEnv } from "@homarr/core/infrastructure/env";
 import { supportedAuthProviders } from "@homarr/definitions";
-import { z } from "zod/v4";
 
 const authProvidersSchema = z
   .string()
@@ -12,7 +13,8 @@ const authProvidersSchema = z
       .split(",")
       .filter((provider) => {
         if (supportedAuthProviders.some((supportedProvider) => supportedProvider === provider)) return true;
-        else if (!provider) console.log("One or more of the entries for AUTH_PROVIDER could not be parsed and/or returned null.");
+        else if (!provider)
+          console.log("One or more of the entries for AUTH_PROVIDER could not be parsed and/or returned null.");
         else console.log(`The value entered for AUTH_PROVIDER "${provider}" is incorrect.`);
         return false;
       }),

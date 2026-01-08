@@ -1,5 +1,5 @@
-import type { Database } from "@homarr/db";
 import { handleTransactionsAsync, inArray } from "@homarr/db";
+import type { Database } from "@homarr/db";
 import { apps } from "@homarr/db/schema";
 import type { OldmarrConfig } from "@homarr/old-schema";
 
@@ -8,7 +8,11 @@ import { prepareSingleImport } from "../prepare/prepare-single";
 import type { OldmarrImportConfiguration } from "../settings";
 import { createBoardInsertCollection } from "./collections/board-collection";
 
-export const importSingleOldmarrConfigAsync = async (db: Database, config: OldmarrConfig, settings: OldmarrImportConfiguration) => {
+export const importSingleOldmarrConfigAsync = async (
+  db: Database,
+  config: OldmarrConfig,
+  settings: OldmarrImportConfiguration,
+) => {
   const { preparedApps, preparedBoards } = prepareSingleImport(config, settings);
   const existingApps = await db.query.apps.findMany({
     where: inArray(

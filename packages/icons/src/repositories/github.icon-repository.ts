@@ -1,6 +1,7 @@
+import { parse } from "path";
+
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
-import { parse } from "path";
 
 import type { IconRepositoryLicense } from "../types/icon-repository-license";
 import type { RepositoryIconGroup } from "../types/repository-icon-group";
@@ -30,10 +31,13 @@ export class GitHubIconRepository extends IconRepository {
     return {
       success: true,
       icons: listOfFiles.tree
-        .filter(({ path }) => this.allowedImageFileTypes.some((allowedImageFileType) => parse(path).ext === allowedImageFileType))
+        .filter(({ path }) =>
+          this.allowedImageFileTypes.some((allowedImageFileType) => parse(path).ext === allowedImageFileType),
+        )
         .map(({ path, size: sizeInBytes, sha: checksum }) => {
           const file = parse(path);
           const fileNameWithExtension = file.base;
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const imageUrl = this.repositoryBlobUrlTemplate!.replace("{0}", path).replace("{1}", file.name);
           return {
             imageUrl,

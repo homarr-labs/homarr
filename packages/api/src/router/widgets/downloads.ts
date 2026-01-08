@@ -1,3 +1,6 @@
+import { observable } from "@trpc/server/observable";
+import { z } from "zod/v4";
+
 import type { Modify } from "@homarr/common/types";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKindByCategory } from "@homarr/definitions";
@@ -5,8 +8,6 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { DownloadClientJobsAndStatus } from "@homarr/integrations";
 import { createIntegrationAsync, downloadClientItemSchema } from "@homarr/integrations";
 import { downloadClientRequestHandler } from "@homarr/request-handler/downloads";
-import { observable } from "@trpc/server/observable";
-import { z } from "zod/v4";
 
 import type { IntegrationAction } from "../../middlewares/integration";
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";

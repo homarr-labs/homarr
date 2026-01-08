@@ -1,5 +1,9 @@
 "use client";
 
+import { Fragment } from "react";
+import { Avatar, Badge, Box, Divider, Group, Image, Stack, Text, TooltipFloating, UnstyledButton } from "@mantine/core";
+import { IconBook, IconCalendar, IconClock, IconStarFilled } from "@tabler/icons-react";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { getMantineColor } from "@homarr/common";
@@ -10,9 +14,6 @@ import type { TranslationFunction } from "@homarr/translation";
 import { useCurrentLocale, useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
 import { OverflowBadge } from "@homarr/ui";
-import { Avatar, Badge, Box, Divider, Group, Image, Stack, Text, TooltipFloating, UnstyledButton } from "@mantine/core";
-import { IconBook, IconCalendar, IconClock, IconStarFilled } from "@tabler/icons-react";
-import { Fragment } from "react";
 
 import type { WidgetComponentProps } from "../definition";
 
@@ -127,19 +128,33 @@ const Item = ({ item, options }: ItemProps) => {
                 )}
               </Group>
               {item.tags.length > 0 && (
-                <OverflowBadge size="xs" groupGap={4} data={item.tags} overflowCount={3} disablePopover style={{ cursor: "pointer" }} />
+                <OverflowBadge
+                  size="xs"
+                  groupGap={4}
+                  data={item.tags}
+                  overflowCount={3}
+                  disablePopover
+                  style={{ cursor: "pointer" }}
+                />
               )}
             </Stack>
           </Group>
           {(options.showType || options.showSource) && (
             <Stack justify="space-between" align="end" h="100%" style={{ zIndex: 0 }}>
               {options.showType && (
-                <Badge w="max-content" size="xs" color={mediaTypeConfigurations[item.type].color} style={{ cursor: "pointer" }}>
+                <Badge
+                  w="max-content"
+                  size="xs"
+                  color={mediaTypeConfigurations[item.type].color}
+                  style={{ cursor: "pointer" }}
+                >
                   {item.type}
                 </Badge>
               )}
 
-              {options.showSource && <Avatar size="sm" radius="xl" src={getIconUrl(item.integration.kind)} alt={item.integration.name} />}
+              {options.showSource && (
+                <Avatar size="sm" radius="xl" src={getIconUrl(item.integration.kind)} alt={item.integration.name} />
+              )}
             </Stack>
           )}
         </Group>

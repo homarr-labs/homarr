@@ -1,7 +1,8 @@
-import type { Weather } from "@homarr/request-handler/weather";
-import { weatherRequestHandler } from "@homarr/request-handler/weather";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
+
+import type { Weather } from "@homarr/request-handler/weather";
+import { weatherRequestHandler } from "@homarr/request-handler/weather";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 

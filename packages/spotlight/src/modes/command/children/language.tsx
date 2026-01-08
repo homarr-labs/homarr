@@ -1,8 +1,9 @@
+import { Group, Stack, Text } from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
+
 import { localeConfigurations, supportedLanguages } from "@homarr/translation";
 import { useChangeLocale, useCurrentLocale, useI18n } from "@homarr/translation/client";
 import { LanguageIcon } from "@homarr/ui";
-import { Group, Stack, Text } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
 
 import { createChildrenOptions } from "../../../lib/children";
 

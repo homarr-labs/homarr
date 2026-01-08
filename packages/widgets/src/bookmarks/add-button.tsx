@@ -1,8 +1,9 @@
 "use client";
 
+import { Button } from "@mantine/core";
+
 import { useModalAction } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import { Button } from "@mantine/core";
 
 import type { SortableItemListInput } from "../options";
 import { AppSelectModal } from "./app-select-modal";
@@ -21,5 +22,9 @@ export const BookmarkAddButton: SortableItemListInput<
   const { openModal } = useModalAction(AppSelectModal);
   const t = useI18n();
 
-  return <Button onClick={() => openModal({ onSelect: addItem, presentAppIds: values })}>{t("widget.bookmarks.option.items.add")}</Button>;
+  return (
+    <Button onClick={() => openModal({ onSelect: addItem, presentAppIds: values })}>
+      {t("widget.bookmarks.option.items.add")}
+    </Button>
+  );
 };

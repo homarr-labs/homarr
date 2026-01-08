@@ -1,7 +1,8 @@
-import { useSettings } from "@homarr/settings";
-import type { TablerIcon } from "@homarr/ui";
 import type { MantineColor } from "@mantine/core";
 import { Box, Tooltip } from "@mantine/core";
+
+import { useSettings } from "@homarr/settings";
+import type { TablerIcon } from "@homarr/ui";
 
 interface PingDotProps {
   icon: TablerIcon;

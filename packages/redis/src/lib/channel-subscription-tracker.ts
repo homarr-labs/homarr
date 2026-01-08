@@ -1,6 +1,7 @@
+import { randomUUID } from "crypto";
+
 import type { MaybePromise } from "@homarr/common/types";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { randomUUID } from "crypto";
 
 import { createRedisConnection } from "./connection";
 

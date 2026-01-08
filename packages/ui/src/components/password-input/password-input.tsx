@@ -1,9 +1,9 @@
 "use client";
 
-import type { PasswordInputProps } from "@mantine/core";
-import { PasswordInput } from "@mantine/core";
 import type { ChangeEvent } from "react";
 import { useState } from "react";
+import { PasswordInput } from "@mantine/core";
+import type { PasswordInputProps } from "@mantine/core";
 
 import { PasswordRequirementsPopover } from "./password-requirements-popover";
 

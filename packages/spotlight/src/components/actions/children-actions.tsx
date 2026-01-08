@@ -7,7 +7,11 @@ interface SpotlightChildrenActionsProps {
   setChildrenOptions: (options: inferSearchInteractionOptions<"children">) => void;
 }
 
-export const SpotlightChildrenActions = ({ childrenOptions, query, setChildrenOptions }: SpotlightChildrenActionsProps) => {
+export const SpotlightChildrenActions = ({
+  childrenOptions,
+  query,
+  setChildrenOptions,
+}: SpotlightChildrenActionsProps) => {
   const actions = childrenOptions.useActions(childrenOptions.option, query);
 
   return actions

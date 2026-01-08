@@ -1,8 +1,9 @@
-import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { KubernetesPod } from "@homarr/definitions";
 import type { KubeConfig, V1OwnerReference } from "@kubernetes/client-node";
 import { AppsV1Api } from "@kubernetes/client-node";
 import { TRPCError } from "@trpc/server";
+
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import type { KubernetesPod } from "@homarr/definitions";
 
 import { kubernetesMiddleware } from "../../../middlewares/kubernetes";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../../trpc";
@@ -65,7 +66,11 @@ export const podsRouter = createTRPCRouter({
     }),
 });
 
-async function getOwnerKind(kubeConfig: KubeConfig, ownerRef: V1OwnerReference, namespace: string): Promise<string | null> {
+async function getOwnerKind(
+  kubeConfig: KubeConfig,
+  ownerRef: V1OwnerReference,
+  namespace: string,
+): Promise<string | null> {
   const { kind, name } = ownerRef;
 
   if (kind === "ReplicaSet") {

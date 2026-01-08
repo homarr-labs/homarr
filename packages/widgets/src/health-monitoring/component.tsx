@@ -1,11 +1,12 @@
 "use client";
 
-import { clientApi } from "@homarr/api/client";
-import type { IntegrationKind } from "@homarr/definitions";
-import { useI18n } from "@homarr/translation/client";
 import { ScrollArea, Tabs } from "@mantine/core";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
+
+import { clientApi } from "@homarr/api/client";
+import type { IntegrationKind } from "@homarr/definitions";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { ClusterHealthMonitoring } from "./cluster/cluster-health";
@@ -13,7 +14,8 @@ import { SystemHealthMonitoring } from "./system-health";
 
 dayjs.extend(duration);
 
-const isClusterIntegration = (integration: { kind: IntegrationKind }) => integration.kind === "proxmox" || integration.kind === "mock";
+const isClusterIntegration = (integration: { kind: IntegrationKind }) =>
+  integration.kind === "proxmox" || integration.kind === "mock";
 
 export default function HealthMonitoringWidget(props: WidgetComponentProps<"healthMonitoring">) {
   const [integrations] = clientApi.integration.byIds.useSuspenseQuery(props.integrationIds);

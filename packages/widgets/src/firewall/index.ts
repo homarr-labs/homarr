@@ -1,5 +1,6 @@
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import { IconWall, IconWallOff } from "@tabler/icons-react";
+
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";

@@ -1,2 +1,2 @@
-export { Notifications } from "@mantine/notifications";
 export * from "./src";
+export { Notifications } from "@mantine/notifications";

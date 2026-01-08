@@ -1,6 +1,6 @@
 import type { Gitlab as CoreGitlab } from "@gitbeaker/core";
-import type { FormattedResponse, RequestOptions, ResourceOptions } from "@gitbeaker/requester-utils";
 import { createRequesterFn, defaultOptionsHandler } from "@gitbeaker/requester-utils";
+import type { FormattedResponse, RequestOptions, ResourceOptions } from "@gitbeaker/requester-utils";
 import { Gitlab } from "@gitbeaker/rest";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -24,7 +24,9 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
     const response = await input.fetchAsync(this.url("/api/v4/projects"), {
       headers: {
-        ...(this.hasSecretValue("personalAccessToken") ? { Authorization: `Bearer ${this.getSecretValue("personalAccessToken")}` } : {}),
+        ...(this.hasSecretValue("personalAccessToken")
+          ? { Authorization: `Bearer ${this.getSecretValue("personalAccessToken")}` }
+          : {}),
       },
     });
 
@@ -134,7 +136,10 @@ export class GitlabIntegration extends Integration implements ReleasesProviderIn
             throw new Error("Gitlab library is not configured correctly. Options must be provided.");
           }
 
-          const response = await fetchWithTrustedCertificatesAsync(`${options.prefixUrl as string}${endpoint}`, options);
+          const response = await fetchWithTrustedCertificatesAsync(
+            `${options.prefixUrl as string}${endpoint}`,
+            options,
+          );
           const headers = Object.fromEntries(response.headers.entries());
 
           return {

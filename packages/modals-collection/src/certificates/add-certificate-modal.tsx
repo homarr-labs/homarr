@@ -1,3 +1,7 @@
+import { Button, FileInput, Group, Stack } from "@mantine/core";
+import { IconCertificate } from "@tabler/icons-react";
+import { z } from "zod/v4";
+
 import { clientApi } from "@homarr/api/client";
 import type { MaybePromise } from "@homarr/common/types";
 import { useZodForm } from "@homarr/form";
@@ -5,9 +9,6 @@ import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { checkCertificateFile } from "@homarr/validation/certificates";
-import { Button, FileInput, Group, Stack } from "@mantine/core";
-import { IconCertificate } from "@tabler/icons-react";
-import { z } from "zod/v4";
 
 interface InnerProps {
   onSuccess?: () => MaybePromise<void>;
@@ -21,6 +22,7 @@ export const AddCertificateModal = createModal<InnerProps>(({ actions, innerProp
     }),
     {
       initialValues: {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         file: null!,
       },
     },

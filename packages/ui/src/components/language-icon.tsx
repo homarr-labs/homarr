@@ -1,5 +1,6 @@
-import type { LanguageIconDefinition } from "@homarr/translation";
 import { Image } from "@mantine/core";
+
+import type { LanguageIconDefinition } from "@homarr/translation";
 
 export const LanguageIcon = ({ icon }: { icon: LanguageIconDefinition }) => {
   if (icon.type === "flag") {

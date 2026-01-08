@@ -2,12 +2,7 @@
 
 import "../widgets-common.css";
 
-import { clientApi } from "@homarr/api/client";
-import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
-import { humanFileSize, useIntegrationConnected } from "@homarr/common";
-import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
-import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useCallback, useMemo, useState } from "react";
 import type { MantineStyleProp } from "@mantine/core";
 import {
   ActionIcon,
@@ -44,7 +39,13 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { MRT_ColumnDef, MRT_VisibilityState } from "mantine-react-table";
 import { MantineReactTable, useMantineReactTable } from "mantine-react-table";
-import { useCallback, useMemo, useState } from "react";
+
+import { clientApi } from "@homarr/api/client";
+import { useIntegrationsWithInteractAccess } from "@homarr/auth/client";
+import { humanFileSize, useIntegrationConnected } from "@homarr/common";
+import { getIconUrl, getIntegrationKindsByCategory } from "@homarr/definitions";
+import type { ExtendedClientStatus, ExtendedDownloadClientItem } from "@homarr/integrations";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 
@@ -76,8 +77,15 @@ const columnsRatios: Record<keyof ExtendedDownloadClientItem, number> = {
   upSpeed: 3,
 };
 
-export default function DownloadClientsWidget({ isEditMode, integrationIds, options, setOptions }: WidgetComponentProps<"downloads">) {
-  const integrationsWithInteractions = useIntegrationsWithInteractAccess().flatMap(({ id }) => (integrationIds.includes(id) ? [id] : []));
+export default function DownloadClientsWidget({
+  isEditMode,
+  integrationIds,
+  options,
+  setOptions,
+}: WidgetComponentProps<"downloads">) {
+  const integrationsWithInteractions = useIntegrationsWithInteractAccess().flatMap(({ id }) =>
+    integrationIds.includes(id) ? [id] : [],
+  );
 
   const [currentItems] = clientApi.widget.downloads.getJobsAndStatuses.useSuspenseQuery(
     {
@@ -159,13 +167,17 @@ export default function DownloadClientsWidget({ isEditMode, integrationIds, opti
             .filter(
               ({ category }) =>
                 options.filterIsWhitelist ===
-                options.categoryFilter.some((filter) => (Array.isArray(category) ? category : [category]).includes(filter)),
+                options.categoryFilter.some((filter) =>
+                  (Array.isArray(category) ? category : [category]).includes(filter),
+                ),
             )
             //Filter completed items following widget option
             .filter(
               ({ type, progress, upSpeed }) =>
                 (type === "torrent" &&
-                  ((progress === 1 && options.showCompletedTorrent && (upSpeed ?? 0) >= Number(options.activeTorrentThreshold) * 1024) ||
+                  ((progress === 1 &&
+                    options.showCompletedTorrent &&
+                    (upSpeed ?? 0) >= Number(options.activeTorrentThreshold) * 1024) ||
                     progress !== 1)) ||
                 (type === "usenet" && ((progress === 1 && options.showCompletedUsenet) || progress !== 1)) ||
                 (type === "miscellaneous" && ((progress === 1 && options.showCompletedHttp) || progress !== 1)),
@@ -173,7 +185,8 @@ export default function DownloadClientsWidget({ isEditMode, integrationIds, opti
             //Filter following user quick setting
             .filter(
               ({ state }) =>
-                (quickFilters.integrationKinds.length === 0 || quickFilters.integrationKinds.includes(pair.integration.name)) &&
+                (quickFilters.integrationKinds.length === 0 ||
+                  quickFilters.integrationKinds.includes(pair.integration.name)) &&
                 (quickFilters.statuses.length === 0 || quickFilters.statuses.includes(state)),
             )
             //Add extrapolated data and actions if user is allowed interaction
@@ -231,7 +244,9 @@ export default function DownloadClientsWidget({ isEditMode, integrationIds, opti
                 !options.applyFilterToRatio ||
                 !data.status.types.includes("torrent") ||
                 options.filterIsWhitelist ===
-                  options.categoryFilter.some((filter) => (Array.isArray(category) ? category : [category]).includes(filter)),
+                  options.categoryFilter.some((filter) =>
+                    (Array.isArray(category) ? category : [category]).includes(filter),
+                  ),
             )
             .reduce(
               ({ totalUp, totalDown }, { sent, size, progress }) => ({
@@ -251,7 +266,10 @@ export default function DownloadClientsWidget({ isEditMode, integrationIds, opti
             },
           };
         })
-        .sort(({ status: statusA }, { status: statusB }) => (statusA?.types.length ?? Infinity) - (statusB?.types.length ?? Infinity)),
+        .sort(
+          ({ status: statusA }, { status: statusB }) =>
+            (statusA?.types.length ?? Infinity) - (statusB?.types.length ?? Infinity),
+        ),
     [
       currentItems,
       integrationIds,
@@ -297,7 +315,13 @@ export default function DownloadClientsWidget({ isEditMode, integrationIds, opti
 
   //Base element in common with all columns
   const columnsDefBase = useCallback(
-    ({ key, showHeader }: { key: keyof ExtendedDownloadClientItem; showHeader: boolean }): MRT_ColumnDef<ExtendedDownloadClientItem> => {
+    ({
+      key,
+      showHeader,
+    }: {
+      key: keyof ExtendedDownloadClientItem;
+      showHeader: boolean;
+    }): MRT_ColumnDef<ExtendedDownloadClientItem> => {
       return {
         id: key,
         accessorKey: key,
@@ -596,7 +620,9 @@ export default function DownloadClientsWidget({ isEditMode, integrationIds, opti
 
   //Used for Global Torrent Ratio
   const globalTraffic = clients
-    .filter(({ integration: { kind } }) => getIntegrationKindsByCategory("torrent").some((integrationKind) => integrationKind === kind))
+    .filter(({ integration: { kind } }) =>
+      getIntegrationKindsByCategory("torrent").some((integrationKind) => integrationKind === kind),
+    )
     .reduce(
       ({ up, down }, { status }) => ({
         up: up + (status?.totalUp ?? 0),
@@ -629,7 +655,12 @@ export default function DownloadClientsWidget({ isEditMode, integrationIds, opti
             <Text size="xs">{(globalTraffic.up / globalTraffic.down).toFixed(2)}</Text>
           </Group>
         )}
-        <ClientsControl clients={clients} filters={quickFilters} setFilters={setQuickFilters} availableStatuses={availableStatuses} />
+        <ClientsControl
+          clients={clients}
+          filters={quickFilters}
+          setFilters={setQuickFilters}
+          availableStatuses={availableStatuses}
+        />
       </Group>
       <ItemInfoModal items={data} currentIndex={clickedIndex} opened={opened} onClose={close} />
     </Stack>
@@ -662,10 +693,16 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
           <NormalizedLine itemKey="type" values={item.type} />
           <NormalizedLine itemKey="state" values={t(item.state)} />
           {item.type !== "miscellaneous" && (
-            <NormalizedLine itemKey="upSpeed" values={item.upSpeed === undefined ? undefined : humanFileSize(item.upSpeed, "/s")} />
+            <NormalizedLine
+              itemKey="upSpeed"
+              values={item.upSpeed === undefined ? undefined : humanFileSize(item.upSpeed, "/s")}
+            />
           )}
 
-          <NormalizedLine itemKey="downSpeed" values={item.downSpeed === undefined ? undefined : humanFileSize(item.downSpeed, "/s")} />
+          <NormalizedLine
+            itemKey="downSpeed"
+            values={item.downSpeed === undefined ? undefined : humanFileSize(item.downSpeed, "/s")}
+          />
 
           {item.type !== "miscellaneous" && (
             <NormalizedLine itemKey="sent" values={item.sent === undefined ? undefined : humanFileSize(item.sent)} />
@@ -683,7 +720,10 @@ const ItemInfoModal = ({ items, currentIndex, opened, onClose }: ItemInfoModalPr
           />
           {item.type !== "miscellaneous" && <NormalizedLine itemKey="ratio" values={item.ratio} />}
           <NormalizedLine itemKey="added" values={item.added === undefined ? "unknown" : dayjs(item.added).format()} />
-          <NormalizedLine itemKey="time" values={item.time !== 0 ? dayjs().add(item.time, "milliseconds").fromNow() : "∞"} />
+          <NormalizedLine
+            itemKey="time"
+            values={item.time !== 0 ? dayjs().add(item.time, "milliseconds").fromNow() : "∞"}
+          />
           <NormalizedLine itemKey="category" values={item.category} />
         </Stack>
       )}
@@ -750,7 +790,11 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
         <Popover.Dropdown>
           <Stack gap="md" align="center">
             <Text fw="700">{t("items.integration.columnTitle")}</Text>
-            <Chip.Group multiple value={filters.integrationKinds} onChange={(names) => setFilters({ ...filters, integrationKinds: names })}>
+            <Chip.Group
+              multiple
+              value={filters.integrationKinds}
+              onChange={(names) => setFilters({ ...filters, integrationKinds: names })}
+            >
               {clients.map(({ integration }) => (
                 <Chip key={integration.id} value={integration.name}>
                   {integration.name}
@@ -790,7 +834,15 @@ const ClientsControl = ({ clients, filters, setFilters, availableStatuses }: Cli
           </ActionIcon>
         </Tooltip>
       )}
-      <Button h={20} size="xs" variant="light" radius="lg" fw="500" onClick={open} styles={{ label: { height: "fit-content" } }}>
+      <Button
+        h={20}
+        size="xs"
+        variant="light"
+        radius="lg"
+        fw="500"
+        onClick={open}
+        styles={{ label: { height: "fit-content" } }}
+      >
         {totalSpeed}
       </Button>
       {someInteract && (

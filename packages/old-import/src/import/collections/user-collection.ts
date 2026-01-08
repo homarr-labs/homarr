@@ -8,8 +8,16 @@ import type { OldmarrImportUser } from "../../user-schema";
 
 const logger = createLogger({ module: "userCollection" });
 
-export const createUserInsertCollection = (importUsers: OldmarrImportUser[], encryptionToken: string | null | undefined) => {
-  const insertCollection = createDbInsertCollectionForTransaction(["users", "groups", "groupMembers", "groupPermissions"]);
+export const createUserInsertCollection = (
+  importUsers: OldmarrImportUser[],
+  encryptionToken: string | null | undefined,
+) => {
+  const insertCollection = createDbInsertCollectionForTransaction([
+    "users",
+    "groups",
+    "groupMembers",
+    "groupPermissions",
+  ]);
 
   if (importUsers.length === 0) {
     return insertCollection;

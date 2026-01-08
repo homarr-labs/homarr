@@ -1,10 +1,11 @@
 "use client";
 
-import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
 import { Sparkline } from "@mantine/charts";
 import { Flex, Stack, Text, Title, useMantineTheme } from "@mantine/core";
 import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+
+import { clientApi } from "@homarr/api/client";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 
@@ -26,7 +27,9 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
   const [{ data }] = clientApi.widget.stockPrice.getPriceHistory.useSuspenseQuery(options);
 
   const stockValuesChange = round(calculateChange(data.priceHistory.at(-1) ?? 0, data.previousClose));
-  const stockValuesChangePercentage = round(calculateChangePercentage(data.priceHistory.at(-1) ?? 0, data.previousClose));
+  const stockValuesChangePercentage = round(
+    calculateChangePercentage(data.priceHistory.at(-1) ?? 0, data.previousClose),
+  );
 
   const stockValuesMin = Math.min(...data.priceHistory);
   const stockGraphValues = data.priceHistory.map((value) => value - stockValuesMin + 50);

@@ -1,8 +1,9 @@
 "use client";
 
+import { useCallback } from "react";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
-import { useCallback } from "react";
 
 let boardName: string | null = null;
 
@@ -20,7 +21,9 @@ export const useUpdateBoard = () => {
       if (!boardName) {
         throw new Error("Board name is not set");
       }
-      utils.board.getBoardByName.setData({ name: boardName }, (previous) => (previous ? updaterWithoutUndefined(previous) : previous));
+      utils.board.getBoardByName.setData({ name: boardName }, (previous) =>
+        previous ? updaterWithoutUndefined(previous) : previous,
+      );
     },
     [utils],
   );

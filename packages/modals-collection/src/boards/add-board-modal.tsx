@@ -1,3 +1,7 @@
+import { Button, Group, InputWrapper, Slider, Stack, Switch, TextInput } from "@mantine/core";
+import { useDebouncedValue } from "@mantine/hooks";
+import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react";
+
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
@@ -5,9 +9,6 @@ import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
 import { boardColumnCountSchema, boardCreateSchema, boardNameSchema } from "@homarr/validation/board";
-import { Button, Group, InputWrapper, Slider, Stack, Switch, TextInput } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
-import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react";
 
 export const AddBoardModal = createModal(({ actions }) => {
   const t = useI18n();

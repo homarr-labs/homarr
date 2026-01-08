@@ -1,3 +1,6 @@
+import { TRPCError } from "@trpc/server";
+import { z } from "zod/v4";
+
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -6,8 +9,8 @@ import { and, eq, like } from "@homarr/db";
 import { getMaxGroupPositionAsync } from "@homarr/db/queries";
 import { boards, groupMembers, groupPermissions, groups, invites, users } from "@homarr/db/schema";
 import { selectUserSchema } from "@homarr/db/validationSchemas";
-import type { SupportedAuthProvider } from "@homarr/definitions";
 import { credentialsAdminGroup } from "@homarr/definitions";
+import type { SupportedAuthProvider } from "@homarr/definitions";
 import { byIdSchema } from "@homarr/validation/common";
 import type { userBaseCreateSchema } from "@homarr/validation/user";
 import {
@@ -22,11 +25,15 @@ import {
   userPingIconsEnabledSchema,
   userRegistrationApiSchema,
 } from "@homarr/validation/user";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod/v4";
 
 import { convertIntersectionToZodObject } from "../schema-merger";
-import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
+import {
+  createTRPCRouter,
+  onboardingProcedure,
+  permissionRequiredProcedure,
+  protectedProcedure,
+  publicProcedure,
+} from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
 import { throwIfCredentialsDisabled } from "./invite/checks";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
@@ -432,7 +439,9 @@ export const userRouter = createTRPCRouter({
     }),
   changeDefaultSearchEngine: protectedProcedure
     .input(
-      convertIntersectionToZodObject(userChangeSearchPreferencesSchema.omit({ openInNewTab: true }).and(z.object({ userId: z.string() }))),
+      convertIntersectionToZodObject(
+        userChangeSearchPreferencesSchema.omit({ openInNewTab: true }).and(z.object({ userId: z.string() })),
+      ),
     )
     .output(z.void())
     .meta({
@@ -469,22 +478,24 @@ export const userRouter = createTRPCRouter({
         })
         .where(eq(users.id, ctx.session.user.id));
     }),
-  changePingIconsEnabled: protectedProcedure.input(userPingIconsEnabledSchema.and(byIdSchema)).mutation(async ({ input, ctx }) => {
-    // Only admins can change other users ping icons enabled
-    if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found",
-      });
-    }
+  changePingIconsEnabled: protectedProcedure
+    .input(userPingIconsEnabledSchema.and(byIdSchema))
+    .mutation(async ({ input, ctx }) => {
+      // Only admins can change other users ping icons enabled
+      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
 
-    await ctx.db
-      .update(users)
-      .set({
-        pingIconsEnabled: input.pingIconsEnabled,
-      })
-      .where(eq(users.id, ctx.session.user.id));
-  }),
+      await ctx.db
+        .update(users)
+        .set({
+          pingIconsEnabled: input.pingIconsEnabled,
+        })
+        .where(eq(users.id, ctx.session.user.id));
+    }),
   changeFirstDayOfWeek: protectedProcedure
     .input(convertIntersectionToZodObject(userFirstDayOfWeekSchema.and(byIdSchema)))
     .output(z.void())

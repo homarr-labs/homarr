@@ -1,7 +1,8 @@
+import { Group, Text } from "@mantine/core";
+
 import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind } from "@homarr/definitions";
 import { IntegrationAvatar } from "@homarr/ui";
-import { Group, Text } from "@mantine/core";
 
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";

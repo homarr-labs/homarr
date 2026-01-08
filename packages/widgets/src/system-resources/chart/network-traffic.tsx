@@ -1,7 +1,8 @@
-import { humanFileSize } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
 import { Paper, Text } from "@mantine/core";
 import { IconArrowDown, IconArrowUp } from "@tabler/icons-react";
+
+import { humanFileSize } from "@homarr/common";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";

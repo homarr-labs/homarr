@@ -1,8 +1,9 @@
 "use client";
 
-import { useTranslations } from "@homarr/translation/client";
 import type { BadgeProps } from "@mantine/core";
 import { Badge } from "@mantine/core";
+
+import { useTranslations } from "@homarr/translation/client";
 
 interface BetaBadgeProps {
   size: BadgeProps["size"];

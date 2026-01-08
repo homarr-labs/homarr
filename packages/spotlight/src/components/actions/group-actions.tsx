@@ -1,7 +1,8 @@
-import type { TranslationObject } from "@homarr/translation";
-import { useI18n } from "@homarr/translation/client";
 import { Center, Loader } from "@mantine/core";
 import { useWindowEvent } from "@mantine/hooks";
+
+import type { TranslationObject } from "@homarr/translation";
+import { useI18n } from "@homarr/translation/client";
 
 import type { SearchGroup } from "../../lib/group";
 import type { inferSearchInteractionOptions } from "../../lib/interaction";
@@ -22,7 +23,8 @@ export const SpotlightGroupActions = <TOption extends Record<string, unknown>>({
   setChildrenOptions,
 }: GroupActionsProps<TOption>) => {
   // This does work as the same amount of hooks is called on every render
-  const useOptions = "options" in group ? () => group.options : "useOptions" in group ? group.useOptions : group.useQueryOptions;
+  const useOptions =
+    "options" in group ? () => group.options : "useOptions" in group ? group.useOptions : group.useQueryOptions;
   const options = useOptions(query);
   const t = useI18n();
 

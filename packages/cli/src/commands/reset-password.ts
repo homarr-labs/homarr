@@ -11,6 +11,7 @@ export const resetPassword = command({
   options: {
     username: string("username").required().alias("u").desc("Name of the user"),
   },
+  // eslint-disable-next-line no-restricted-syntax
   handler: async (options) => {
     if (!process.env.AUTH_PROVIDERS?.toLowerCase().includes("credentials")) {
       console.error("Credentials provider is not enabled");

@@ -10,9 +10,13 @@ import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server
 
 import type { Database } from "..";
 import { eq } from "..";
-import { getServerSettingByKeyAsync, insertServerSettingByKeyAsync, updateServerSettingByKeyAsync } from "../queries/server-setting";
-import type { Integration } from "../schema";
+import {
+  getServerSettingByKeyAsync,
+  insertServerSettingByKeyAsync,
+  updateServerSettingByKeyAsync,
+} from "../queries/server-setting";
 import { groups, integrations, onboarding, searchEngines } from "../schema";
+import type { Integration } from "../schema";
 
 export const seedDataAsync = async (db: Database) => {
   await seedEveryoneGroupAsync(db);

@@ -1,9 +1,10 @@
+import { Anchor, Button, Stack, Text } from "@mantine/core";
+
 import type { stringOrTranslation } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import type { TablerIcon } from "@homarr/ui";
 import { Link } from "@homarr/ui";
-import { Anchor, Button, Stack, Text } from "@mantine/core";
+import type { TablerIcon } from "@homarr/ui";
 
 export interface BaseWidgetErrorProps {
   icon: TablerIcon;

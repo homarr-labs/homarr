@@ -1,5 +1,6 @@
-import type { TranslationFunction } from "@homarr/translation";
 import { IconDatabaseOff } from "@tabler/icons-react";
+
+import type { TranslationFunction } from "@homarr/translation";
 
 import { ErrorBoundaryError } from "./base";
 

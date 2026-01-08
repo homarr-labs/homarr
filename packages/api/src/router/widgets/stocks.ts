@@ -1,5 +1,6 @@
-import { fetchStockPriceHandler } from "@homarr/request-handler/stock-price";
 import { z } from "zod/v4";
+
+import { fetchStockPriceHandler } from "@homarr/request-handler/stock-price";
 
 import { stockPriceTimeFrames } from "../../../../widgets/src/stocks";
 import { createTRPCRouter, publicProcedure } from "../../trpc";

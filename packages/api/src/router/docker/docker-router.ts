@@ -1,9 +1,10 @@
-import type { Container, ContainerState, Docker, Port } from "@homarr/docker";
-import { DockerSingleton } from "@homarr/docker";
-import { dockerContainersRequestHandler } from "@homarr/request-handler/docker";
 import { TRPCError } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
+
+import type { Container, ContainerState, Docker, Port } from "@homarr/docker";
+import { DockerSingleton } from "@homarr/docker";
+import { dockerContainersRequestHandler } from "@homarr/request-handler/docker";
 
 import { dockerMiddleware } from "../../middlewares/docker";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";

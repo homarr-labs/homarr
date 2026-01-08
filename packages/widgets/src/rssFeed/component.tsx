@@ -1,10 +1,11 @@
 "use client";
 
-import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
 import { Card, Flex, Group, Image, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 import dayjs from "dayjs";
+
+import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.scss";
@@ -40,7 +41,9 @@ export default function RssFeed({ options }: WidgetComponentProps<"rssFeed">) {
             w="100%"
             p="sm"
           >
-            {feedEntry.enclosure && <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" />}
+            {feedEntry.enclosure && (
+              <Image className={classes.backgroundImage} src={feedEntry.enclosure} alt="backdrop" />
+            )}
 
             <Flex gap="sm" direction="column" w="100%">
               <Text dir={languageDir} fz="sm" lh="sm" lineClamp={2}>

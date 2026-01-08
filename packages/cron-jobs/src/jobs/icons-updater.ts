@@ -1,4 +1,4 @@
-import { createId, Stopwatch, splitToNChunks } from "@homarr/common";
+import { createId, splitToNChunks, Stopwatch } from "@homarr/common";
 import { env } from "@homarr/common/env";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { EVERY_WEEK } from "@homarr/cron-jobs-core/expressions";
@@ -51,7 +51,9 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
       continue;
     }
 
-    const repositoryInDb = databaseIconRepositories.find((dbIconGroup) => dbIconGroup.slug === repositoryIconGroup.slug);
+    const repositoryInDb = databaseIconRepositories.find(
+      (dbIconGroup) => dbIconGroup.slug === repositoryIconGroup.slug,
+    );
     const iconRepositoryId: string = repositoryInDb?.id ?? createId();
     if (!repositoryInDb?.id) {
       newIconRepositories.push({
@@ -79,7 +81,9 @@ export const iconsUpdaterJob = createCronJob("iconsUpdater", EVERY_WEEK, {
     }
   }
 
-  const deadIcons = allDbIcons.filter((icon) => !skippedChecksums.includes(`${icon.iconRepositoryId}.${icon.checksum}`));
+  const deadIcons = allDbIcons.filter(
+    (icon) => !skippedChecksums.includes(`${icon.iconRepositoryId}.${icon.checksum}`),
+  );
 
   const deadIconRepositories = databaseIconRepositories.filter(
     (iconRepository) => !repositoryIconGroups.some((group) => group.slug === iconRepository.slug),

@@ -1,9 +1,11 @@
-import { ResponseError } from "@homarr/common/server";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import path from "path";
 import type { fetch as undiciFetch } from "undici";
-import type { IntegrationTestingInput } from "../../base/integration";
+
+import { ResponseError } from "@homarr/common/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+
 import { Integration } from "../../base/integration";
+import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";

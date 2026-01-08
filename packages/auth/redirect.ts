@@ -1,5 +1,6 @@
-import { extractBaseUrlFromHeaders } from "@homarr/common";
 import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
+
+import { extractBaseUrlFromHeaders } from "@homarr/common";
 
 /**
  * The redirect_uri is constructed to work behind a reverse proxy. It is constructed from the headers x-forwarded-proto and x-forwarded-host.
@@ -7,7 +8,11 @@ import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapte
  * @param pathname
  * @returns
  */
-export const createRedirectUri = (headers: ReadonlyHeaders | null, pathname: string, fallbackProtocol: "http" | "https" = "http") => {
+export const createRedirectUri = (
+  headers: ReadonlyHeaders | null,
+  pathname: string,
+  fallbackProtocol: "http" | "https" = "http",
+) => {
   if (!headers) {
     return pathname;
   }

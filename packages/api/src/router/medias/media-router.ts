@@ -1,3 +1,6 @@
+import { TRPCError } from "@trpc/server";
+import { z } from "zod/v4";
+
 import { createId } from "@homarr/common";
 import type { InferInsertModel } from "@homarr/db";
 import { and, desc, eq, like } from "@homarr/db";
@@ -5,14 +8,16 @@ import { iconRepositories, icons, medias } from "@homarr/db/schema";
 import { createLocalImageUrl, LOCAL_ICON_REPOSITORY_SLUG, mapMediaToIcon } from "@homarr/icons/local";
 import { byIdSchema, paginatedSchema } from "@homarr/validation/common";
 import { mediaUploadSchema } from "@homarr/validation/media";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod/v4";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure } from "../../trpc";
 
 export const mediaRouter = createTRPCRouter({
   getPaginated: protectedProcedure
-    .input(paginatedSchema.and(z.object({ includeFromAllUsers: z.boolean().default(false), search: z.string().trim().default("") })))
+    .input(
+      paginatedSchema.and(
+        z.object({ includeFromAllUsers: z.boolean().default(false), search: z.string().trim().default("") }),
+      ),
+    )
     .query(async ({ ctx, input }) => {
       const includeFromAllUsers = ctx.session.user.permissions.includes("media-view-all") && input.includeFromAllUsers;
 

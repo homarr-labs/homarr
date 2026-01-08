@@ -1,6 +1,7 @@
 import { FetchError } from "node-fetch";
-import type { AnyRequestError } from "../request-error";
+
 import { RequestError } from "../request-error";
+import type { AnyRequestError } from "../request-error";
 import type { ResponseError } from "../response-error";
 import { matchErrorCode } from "./fetch-http-error-handler";
 import { HttpErrorHandler } from "./http-error-handler";
@@ -11,7 +12,6 @@ import { HttpErrorHandler } from "./http-error-handler";
  * It is for example used within the cross-fetch package which is used in tsdav.
  */
 export class NodeFetchHttpErrorHandler extends HttpErrorHandler {
-  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: <>
   constructor(private type = "node-fetch") {
     super(type);
   }

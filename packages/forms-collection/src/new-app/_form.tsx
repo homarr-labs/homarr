@@ -1,15 +1,16 @@
 "use client";
 
+import type { ChangeEventHandler } from "react";
+import { useEffect, useRef } from "react";
+import { Button, Checkbox, Collapse, Group, Stack, Textarea, TextInput } from "@mantine/core";
+import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
+import type { z } from "zod/v4";
+
 import { clientApi } from "@homarr/api/client";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 import { appManageSchema } from "@homarr/validation/app";
-import { Button, Checkbox, Collapse, Group, Stack, Textarea, TextInput } from "@mantine/core";
-import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
-import type { ChangeEventHandler } from "react";
-import { useEffect, useRef } from "react";
-import type { z } from "zod/v4";
 
 import { IconPicker } from "../icon-picker/icon-picker";
 import { findBestIconMatch } from "./icon-matcher";
@@ -96,7 +97,13 @@ export const AppForm = ({
       <Stack>
         <TextInput {...form.getInputProps("name")} withAsterisk label={t("app.field.name.label")} />
         <IconPicker {...form.getInputProps("iconUrl")} />
-        <Textarea {...form.getInputProps("description")} label={t("app.field.description.label")} autosize minRows={2} resize="vertical" />
+        <Textarea
+          {...form.getInputProps("description")}
+          label={t("app.field.description.label")}
+          autosize
+          minRows={2}
+          resize="vertical"
+        />
         <TextInput {...form.getInputProps("href")} label={t("app.field.url.label")} />
 
         <Checkbox

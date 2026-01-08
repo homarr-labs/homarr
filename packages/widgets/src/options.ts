@@ -1,9 +1,10 @@
-import type { DraggableAttributes, UniqueIdentifier } from "@dnd-kit/core";
-import type { IntegrationKind } from "@homarr/definitions";
-import type { ActionIconProps } from "@mantine/core";
 import type React from "react";
-import type { ZodType } from "zod/v4";
+import type { DraggableAttributes, UniqueIdentifier } from "@dnd-kit/core";
+import type { ActionIconProps } from "@mantine/core";
 import { z } from "zod/v4";
+import type { ZodType } from "zod/v4";
+
+import type { IntegrationKind } from "@homarr/definitions";
 
 import type { inferSelectOptionValue, SelectOption } from "./_inputs/widget-select-input";
 import type { ReleasesRepository } from "./releases/releases-repository";
@@ -17,13 +18,17 @@ interface TextInput extends CommonInput<string> {
   validate?: z.ZodType<string>;
 }
 
-interface MultiSelectInput<TOptions extends SelectOption[]> extends CommonInput<inferSelectOptionValue<TOptions[number]>[]> {
+interface MultiSelectInput<TOptions extends SelectOption[]> extends CommonInput<
+  inferSelectOptionValue<TOptions[number]>[]
+> {
   options: TOptions;
   searchable?: boolean;
 }
 
-export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentifier>
-  extends Omit<CommonInput<TOptionValue[]>, "withDescription"> {
+export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentifier> extends Omit<
+  CommonInput<TOptionValue[]>,
+  "withDescription"
+> {
   AddButton: (props: { addItem: (item: TItem) => void; values: TOptionValue[] }) => React.ReactNode;
   ItemComponent: (props: {
     item: TItem;
@@ -35,7 +40,9 @@ export interface SortableItemListInput<TItem, TOptionValue extends UniqueIdentif
   useData: (values: TOptionValue[]) => { data: TItem[] | undefined; isLoading: boolean; error: unknown };
 }
 
-interface SelectInput<TOptions extends readonly SelectOption[]> extends CommonInput<inferSelectOptionValue<TOptions[number]>> {
+interface SelectInput<TOptions extends readonly SelectOption[]> extends CommonInput<
+  inferSelectOptionValue<TOptions[number]>
+> {
   options: TOptions;
   searchable?: boolean;
 }
@@ -129,7 +136,9 @@ const optionsFactory = {
     defaultValue: "",
     withDescription: false,
   }),
-  sortableItemList: <const TItem, const TOptionValue extends UniqueIdentifier>(input: SortableItemListInput<TItem, TOptionValue>) => ({
+  sortableItemList: <const TItem, const TOptionValue extends UniqueIdentifier>(
+    input: SortableItemListInput<TItem, TOptionValue>,
+  ) => ({
     type: "sortableItemList" as const,
     defaultValue: [] as TOptionValue[],
     itemComponent: input.ItemComponent,
@@ -145,6 +154,7 @@ type WidgetOptionFactory = typeof optionsFactory;
 export type WidgetOptionDefinition =
   | ReturnType<WidgetOptionFactory[Exclude<keyof WidgetOptionFactory, "sortableItemList">]>
   // We allow any here as it's already type guarded with Record<string, unknown> and it still infers the correct type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   | ReturnType<typeof optionsFactory.sortableItemList<any, any>>;
 export type WidgetOptionsRecord = Record<string, WidgetOptionDefinition>;
 export type WidgetOptionType = WidgetOptionDefinition["type"];
@@ -152,9 +162,9 @@ export type WidgetOptionOfType<TType extends WidgetOptionType> = Extract<WidgetO
 
 type inferOptionFromDefinition<TDefinition extends WidgetOptionDefinition> = TDefinition["defaultValue"];
 
-export type inferOptionsFromCreator<TOptions extends (settings: any) => WidgetOptionsRecord> = inferOptionsFromDefinition<
-  ReturnType<TOptions>
->;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type inferOptionsFromCreator<TOptions extends (settings: any) => WidgetOptionsRecord> =
+  inferOptionsFromDefinition<ReturnType<TOptions>>;
 export type inferOptionsFromDefinition<TOptions extends WidgetOptionsRecord> = {
   [key in keyof TOptions]: inferOptionFromDefinition<TOptions[key]>;
 };
@@ -163,7 +173,9 @@ interface FieldConfiguration<TOptions extends WidgetOptionsRecord> {
   shouldHide: (options: inferOptionsFromDefinition<TOptions>, integrationKinds: IntegrationKind[]) => boolean;
 }
 
-type ConfigurationInput<TOptions extends WidgetOptionsRecord> = Partial<Record<keyof TOptions, FieldConfiguration<TOptions>>>;
+type ConfigurationInput<TOptions extends WidgetOptionsRecord> = Partial<
+  Record<keyof TOptions, FieldConfiguration<TOptions>>
+>;
 
 const createOptions = <TOptions extends WidgetOptionsRecord>(
   optionsCallback: (factory: WidgetOptionFactory) => TOptions,

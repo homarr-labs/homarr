@@ -1,5 +1,5 @@
-import { usePathname, useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 import type { SupportedLanguage } from "../config";
 import { useCurrentLocale } from "./use-current-locale";

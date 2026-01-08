@@ -1,10 +1,11 @@
+import { TRPCError } from "@trpc/server";
+import { describe, expect, test, vi } from "vitest";
+
 import type { Session } from "@homarr/auth";
 import { objectKeys } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import type { GroupPermissionKey } from "@homarr/definitions";
 import { getPermissionsWithChildren } from "@homarr/definitions";
-import { TRPCError } from "@trpc/server";
-import { describe, expect, test, vi } from "vitest";
 
 import type { RouterInputs } from "../../..";
 import { dockerRouter } from "../../docker/docker-router";
@@ -30,7 +31,7 @@ vi.mock("@homarr/redis", () => ({
       timestamp: new Date().toISOString(),
       data: { containers: [] },
     }),
-    // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     invalidateAsync: async () => {},
   }),
   createWidgetOptionsChannel: () => ({}),
@@ -83,7 +84,9 @@ describe("All procedures should only be accessible for users with admin permissi
 
   test.each(procedureKeys)("Procedure %s should not be accessible with other permissions", async (procedure) => {
     // Arrange
-    const groupPermissionsWithoutAdmin = getPermissionsWithChildren(["admin"]).filter((permission) => permission !== "admin");
+    const groupPermissionsWithoutAdmin = getPermissionsWithChildren(["admin"]).filter(
+      (permission) => permission !== "admin",
+    );
     const caller = dockerRouter.createCaller({
       db: null as unknown as Database,
       deviceType: undefined,

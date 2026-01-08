@@ -1,7 +1,8 @@
-import { createDb } from "@homarr/db/test";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
 import { beforeAll, describe, expect, test, vi } from "vitest";
+
+import { createDb } from "@homarr/db/test";
 
 import { Aria2Integration } from "../src";
 

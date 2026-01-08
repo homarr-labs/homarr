@@ -1,3 +1,6 @@
+import { TRPCError } from "@trpc/server";
+import { z } from "zod/v4";
+
 import { createId } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { asc, eq, like } from "@homarr/db";
@@ -7,8 +10,6 @@ import { createIntegrationAsync } from "@homarr/integrations";
 import { byIdSchema, paginatedSchema, searchSchema } from "@homarr/validation/common";
 import { searchEngineEditSchema, searchEngineManageSchema } from "@homarr/validation/search-engine";
 import { mediaRequestOptionsSchema, mediaRequestRequestSchema } from "@homarr/validation/widgets/media-request";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod/v4";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../../trpc";
@@ -62,11 +63,13 @@ export const searchEngineRouter = createTRPCRouter({
       ? {
           ...searchEngine,
           type: "fromIntegration" as const,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           integrationId: searchEngine.integrationId!,
         }
       : {
           ...searchEngine,
           type: "generic" as const,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           urlTemplate: searchEngine.urlTemplate!,
         };
   }),
@@ -123,7 +126,9 @@ export const searchEngineRouter = createTRPCRouter({
         defaultSearchEngineId: null,
       });
     } catch (error) {
-      logger.warn(new Error("Failed to update search settings after default search engine not found", { cause: error }));
+      logger.warn(
+        new Error("Failed to update search settings after default search engine not found", { cause: error }),
+      );
     }
 
     return null;

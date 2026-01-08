@@ -1,3 +1,8 @@
+import { useState } from "react";
+import { Button, FileInput, Group, Stack, TextInput } from "@mantine/core";
+import { IconFileUpload } from "@tabler/icons-react";
+import { z } from "zod/v4";
+
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useZodForm } from "@homarr/form";
@@ -8,10 +13,6 @@ import type { OldmarrImportConfiguration } from "@homarr/old-import/shared";
 import { checkJsonImportFile, oldmarrImportConfigurationSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Button, FileInput, Group, Stack, TextInput } from "@mantine/core";
-import { IconFileUpload } from "@tabler/icons-react";
-import { useState } from "react";
-import { z } from "zod/v4";
 
 import { useBoardNameStatus } from "./add-board-modal";
 
@@ -27,6 +28,7 @@ export const ImportBoardModal = createModal(({ actions }) => {
     {
       mode: "controlled",
       initialValues: {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         file: null!,
         configuration: {
           onlyImportApps: false,
@@ -42,6 +44,7 @@ export const ImportBoardModal = createModal(({ actions }) => {
           }
 
           // Before validation it can still be null
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (!values.file) {
             return;
           }

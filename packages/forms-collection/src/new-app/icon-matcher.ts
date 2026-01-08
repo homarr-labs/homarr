@@ -1,5 +1,6 @@
-import type { AppRouter } from "@homarr/api";
 import type { inferRouterOutputs } from "@trpc/server";
+
+import type { AppRouter } from "@homarr/api";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type IconGroupsOutput = RouterOutput["icon"]["findIcons"]["icons"];

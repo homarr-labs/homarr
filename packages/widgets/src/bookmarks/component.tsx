@@ -1,12 +1,13 @@
 "use client";
 
+import { Anchor, Card, Flex, Group, Stack, Text, Title, UnstyledButton } from "@mantine/core";
+import combineClasses from "clsx";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { MaskedOrNormalImage } from "@homarr/ui";
-import { Anchor, Card, Flex, Group, Stack, Text, Title, UnstyledButton } from "@mantine/core";
-import combineClasses from "clsx";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./bookmark.module.css";
@@ -31,6 +32,7 @@ export default function BookmarksWidget({ options, itemId }: WidgetComponentProp
           return {
             type: "link",
             // We checked above that app.href is defined
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             href: app.href!,
             newTab: false,
           };
@@ -82,7 +84,15 @@ interface FlexLayoutProps {
   hasIconColor: boolean;
 }
 
-const FlexLayout = ({ data, direction, hideTitle, hideIcon, hideHostname, openNewTab, hasIconColor }: FlexLayoutProps) => {
+const FlexLayout = ({
+  data,
+  direction,
+  hideTitle,
+  hideIcon,
+  hideHostname,
+  openNewTab,
+  hasIconColor,
+}: FlexLayoutProps) => {
   const board = useRequiredBoard();
   return (
     <Flex direction={direction} gap="0" w="100%">
@@ -98,7 +108,13 @@ const FlexLayout = ({ data, direction, hideTitle, hideIcon, hideHostname, openNe
           >
             <Card radius={board.itemRadius} className={classes.card} w="100%" display="flex" p={4} h="100%">
               {direction === "row" ? (
-                <VerticalItem app={app} hideTitle={hideTitle} hideIcon={hideIcon} hideHostname={hideHostname} hasIconColor={hasIconColor} />
+                <VerticalItem
+                  app={app}
+                  hideTitle={hideTitle}
+                  hideIcon={hideIcon}
+                  hideHostname={hideHostname}
+                  hasIconColor={hasIconColor}
+                />
               ) : (
                 <HorizontalItem
                   app={app}
@@ -126,7 +142,15 @@ interface GridLayoutProps {
   hasIconColor: boolean;
 }
 
-const GridLayout = ({ data, hideTitle, hideIcon, hideHostname, openNewTab, itemDirection, hasIconColor }: GridLayoutProps) => {
+const GridLayout = ({
+  data,
+  hideTitle,
+  hideIcon,
+  hideHostname,
+  openNewTab,
+  itemDirection,
+  hasIconColor,
+}: GridLayoutProps) => {
   const board = useRequiredBoard();
 
   return (
@@ -140,11 +164,28 @@ const GridLayout = ({ data, hideTitle, hideIcon, hideHostname, openNewTab, itemD
           key={app.id}
           flex="1"
         >
-          <Card h="100%" className={combineClasses(classes.card, classes["card-grid"])} radius={board.itemRadius} p="xs">
+          <Card
+            h="100%"
+            className={combineClasses(classes.card, classes["card-grid"])}
+            radius={board.itemRadius}
+            p="xs"
+          >
             {itemDirection === "horizontal" ? (
-              <HorizontalItem app={app} hideTitle={hideTitle} hideIcon={hideIcon} hideHostname={hideHostname} hasIconColor={hasIconColor} />
+              <HorizontalItem
+                app={app}
+                hideTitle={hideTitle}
+                hideIcon={hideIcon}
+                hideHostname={hideHostname}
+                hasIconColor={hasIconColor}
+              />
             ) : (
-              <VerticalItem app={app} hideTitle={hideTitle} hideIcon={hideIcon} hideHostname={hideHostname} hasIconColor={hasIconColor} />
+              <VerticalItem
+                app={app}
+                hideTitle={hideTitle}
+                hideIcon={hideIcon}
+                hideHostname={hideHostname}
+                hasIconColor={hasIconColor}
+              />
             )}
           </Card>
         </UnstyledButton>

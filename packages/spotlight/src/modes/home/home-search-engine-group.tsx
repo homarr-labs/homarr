@@ -1,3 +1,7 @@
+import { Box, Group, Stack, Text } from "@mantine/core";
+import type { TablerIcon } from "@tabler/icons-react";
+import { IconCaretUpDown, IconSearch, IconSearchOff } from "@tabler/icons-react";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { Session } from "@homarr/auth";
@@ -5,15 +9,12 @@ import { useSession } from "@homarr/auth/client";
 import { useSettings } from "@homarr/settings";
 import type { TranslationFunction } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { Box, Group, Stack, Text } from "@mantine/core";
-import type { TablerIcon } from "@tabler/icons-react";
-import { IconCaretUpDown, IconSearch, IconSearchOff } from "@tabler/icons-react";
 
 import { createGroup } from "../../lib/group";
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
 import { useFromIntegrationSearchInteraction } from "../external/search-engines-search-group";
 
-// biome-ignore lint/style/useConsistentTypeDefinitions: <We need it for the type>
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type GroupItem = {
   id: string;
   name: string;
@@ -58,9 +59,10 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
   useQueryOptions(query) {
     const t = useI18n();
     const { data: session, status } = useSession();
-    const { data: defaultSearchEngine, ...defaultSearchEngineQuery } = clientApi.searchEngine.getDefaultSearchEngine.useQuery(undefined, {
-      enabled: status !== "loading",
-    });
+    const { data: defaultSearchEngine, ...defaultSearchEngineQuery } =
+      clientApi.searchEngine.getDefaultSearchEngine.useQuery(undefined, {
+        enabled: status !== "loading",
+      });
     const fromIntegrationEnabled = defaultSearchEngine?.type === "fromIntegration" && query.length > 0;
     const { data: results, ...resultQuery } = clientApi.integration.searchInIntegration.useQuery(
       {
@@ -74,7 +76,8 @@ export const homeSearchEngineGroup = createGroup<GroupItem>({
     );
 
     return {
-      isLoading: defaultSearchEngineQuery.isLoading || (resultQuery.isLoading && fromIntegrationEnabled) || status === "loading",
+      isLoading:
+        defaultSearchEngineQuery.isLoading || (resultQuery.isLoading && fromIntegrationEnabled) || status === "loading",
       isError: defaultSearchEngineQuery.isError || (resultQuery.isError && fromIntegrationEnabled),
       data: [
         ...createDefaultSearchEntries(defaultSearchEngine, results, session, query, t),
@@ -115,6 +118,7 @@ const createDefaultSearchEntries = (
         useInteraction() {
           return {
             type: "link",
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             href: `/manage/users/${session!.user.id}/general`,
           };
         },
@@ -135,6 +139,7 @@ const createDefaultSearchEntries = (
           const { openSearchInNewTab } = useSettings();
           return {
             type: "link",
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             href: defaultSearchEngine.urlTemplate!.replace("%s", query),
             newTab: openSearchInNewTab,
           };

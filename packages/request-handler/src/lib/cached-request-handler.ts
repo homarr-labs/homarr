@@ -1,7 +1,8 @@
-import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { createChannelWithLatestAndEvents } from "@homarr/redis";
 import dayjs from "dayjs";
 import type { Duration } from "dayjs/plugin/duration";
+
+import { createLogger } from "@homarr/core/infrastructure/logs";
+import type { createChannelWithLatestAndEvents } from "@homarr/redis";
 
 const logger = createLogger({ module: "cachedRequestHandler" });
 
@@ -9,11 +10,16 @@ interface Options<TData, TInput extends Record<string, unknown>> {
   // Unique key for this request handler
   queryKey: string;
   requestAsync: (input: TInput) => Promise<TData>;
-  createRedisChannel: (input: TInput, options: Options<TData, TInput>) => ReturnType<typeof createChannelWithLatestAndEvents<TData>>;
+  createRedisChannel: (
+    input: TInput,
+    options: Options<TData, TInput>,
+  ) => ReturnType<typeof createChannelWithLatestAndEvents<TData>>;
   cacheDuration: Duration;
 }
 
-export const createCachedRequestHandler = <TData, TInput extends Record<string, unknown>>(options: Options<TData, TInput>) => {
+export const createCachedRequestHandler = <TData, TInput extends Record<string, unknown>>(
+  options: Options<TData, TInput>,
+) => {
   return {
     handler: (input: TInput) => {
       const channel = options.createRedisChannel(input, options);
@@ -40,7 +46,8 @@ export const createCachedRequestHandler = <TData, TInput extends Record<string, 
           const channelData = await channel.getAsync();
 
           const shouldRequestNewData =
-            !channelData || dayjs().diff(channelData.timestamp, "milliseconds") > options.cacheDuration.asMilliseconds();
+            !channelData ||
+            dayjs().diff(channelData.timestamp, "milliseconds") > options.cacheDuration.asMilliseconds();
 
           if (shouldRequestNewData) {
             logger.debug("Cached request handler cache miss", {

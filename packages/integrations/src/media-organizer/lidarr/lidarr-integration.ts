@@ -1,8 +1,10 @@
+import { z } from "zod/v4";
+
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import { z } from "zod/v4";
-import type { IntegrationTestingInput } from "../../base/integration";
+
 import { Integration } from "../../base/integration";
+import type { IntegrationTestingInput } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { ICalendarIntegration } from "../../interfaces/calendar/calendar-integration";
@@ -108,7 +110,8 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
     const flatImages = [...event.images];
 
     const sortedImages = flatImages.sort(
-      (imageA, imageB) => mediaOrganizerPriorities.indexOf(imageA.coverType) - mediaOrganizerPriorities.indexOf(imageB.coverType),
+      (imageA, imageB) =>
+        mediaOrganizerPriorities.indexOf(imageA.coverType) - mediaOrganizerPriorities.indexOf(imageB.coverType),
     );
     logger.debug(`Sorted images to [${sortedImages.map((image) => image.coverType).join(",")}]`);
     return sortedImages[0];
@@ -126,7 +129,18 @@ export class LidarrIntegration extends Integration implements ICalendarIntegrati
 const lidarrCalendarEventImageSchema = z.array(
   z.object({
     // See https://github.com/Lidarr/Lidarr/blob/bc6417229e9da3d3cab418f92b46eec7a76168c2/src/NzbDrone.Core/MediaCover/MediaCover.cs#L8-L20
-    coverType: z.enum(["unknown", "poster", "banner", "fanart", "screenshot", "headshot", "cover", "disc", "logo", "clearlogo"]),
+    coverType: z.enum([
+      "unknown",
+      "poster",
+      "banner",
+      "fanart",
+      "screenshot",
+      "headshot",
+      "cover",
+      "disc",
+      "logo",
+      "clearlogo",
+    ]),
     remoteUrl: z.string().url(),
   }),
 );

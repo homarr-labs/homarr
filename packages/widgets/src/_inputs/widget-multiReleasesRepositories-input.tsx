@@ -1,14 +1,6 @@
 "use client";
 
-import { clientApi } from "@homarr/api/client";
-import { useSession } from "@homarr/auth/client";
-import { createId } from "@homarr/common";
-import type { IntegrationKind } from "@homarr/definitions";
-import { getIconUrl } from "@homarr/definitions";
-import { findBestIconMatch, IconPicker } from "@homarr/forms-collection";
-import { createModal, useModalAction } from "@homarr/modals";
-import { useScopedI18n } from "@homarr/translation/client";
-import { MaskedImage } from "@homarr/ui";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Accordion,
   ActionIcon,
@@ -42,11 +34,20 @@ import {
   IconZoomScan,
 } from "@tabler/icons-react";
 import { escapeForRegEx } from "@tiptap/react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+
+import { clientApi } from "@homarr/api/client";
+import { useSession } from "@homarr/auth/client";
+import { createId } from "@homarr/common";
+import { getIconUrl } from "@homarr/definitions";
+import type { IntegrationKind } from "@homarr/definitions";
+import { findBestIconMatch, IconPicker } from "@homarr/forms-collection";
+import { createModal, useModalAction } from "@homarr/modals";
+import { useScopedI18n } from "@homarr/translation/client";
+import { MaskedImage } from "@homarr/ui";
 
 import type { ReleasesRepository, ReleasesVersionFilter } from "../releases/releases-repository";
-import type { IntegrationSelectOption } from "../widget-integration-select";
 import { WidgetIntegrationSelect } from "../widget-integration-select";
+import type { IntegrationSelectOption } from "../widget-integration-select";
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";
 import { useFormContext } from "./form";
@@ -60,7 +61,10 @@ interface Integration extends IntegrationSelectOption {
   iconUrl: string;
 }
 
-export const WidgetMultiReleasesRepositoriesInput = ({ property, kind }: CommonWidgetInputProps<"multiReleasesRepositories">) => {
+export const WidgetMultiReleasesRepositoriesInput = ({
+  property,
+  kind,
+}: CommonWidgetInputProps<"multiReleasesRepositories">) => {
   const t = useWidgetInputTranslation(kind, property);
   const tRepository = useScopedI18n("widget.releases.option.repositories");
   const form = useFormContext();
@@ -206,7 +210,9 @@ export const WidgetMultiReleasesRepositoriesInput = ({ property, kind }: CommonW
         <Divider my="sm" />
 
         {repositories.map((repository, index) => {
-          const integration = repository.providerIntegrationId ? integrations[repository.providerIntegrationId] : undefined;
+          const integration = repository.providerIntegrationId
+            ? integrations[repository.providerIntegrationId]
+            : undefined;
           return (
             <Stack key={repository.id} gap={5}>
               <Group align="center" gap="xs">
@@ -374,7 +380,8 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
           value={tempRepository.identifier}
           onChange={(event) => {
             const name =
-              tempRepository.name === undefined || formatIdentifierName(tempRepository.identifier) === tempRepository.name
+              tempRepository.name === undefined ||
+              formatIdentifierName(tempRepository.identifier) === tempRepository.name
                 ? formatIdentifierName(event.currentTarget.value)
                 : tempRepository.name;
 
@@ -475,7 +482,8 @@ const RepositoryEditModal = createModal<RepositoryEditProps>(({ innerProps, acti
 
         <Text size="xs" c="dimmed">
           {tRepository("versionFilter.regex.label")}:{" "}
-          {formatVersionFilterRegex(tempRepository.versionFilter) ?? tRepository("versionFilter.precision.options.none")}
+          {formatVersionFilterRegex(tempRepository.versionFilter) ??
+            tRepository("versionFilter.precision.options.none")}
         </Text>
       </Fieldset>
 
@@ -618,9 +626,12 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
         if (!identifier) return acc;
 
         const providerKind = containerImageToProviderKind[source] ?? "dockerHub";
-        const integrationId = Object.values(innerProps.integrations).find((integration) => integration.kind === providerKind)?.id;
+        const integrationId = Object.values(innerProps.integrations).find(
+          (integration) => integration.kind === providerKind,
+        )?.id;
 
-        if (acc.some((item) => item.providerIntegrationId === integrationId && item.identifier === identifier)) return acc;
+        if (acc.some((item) => item.providerIntegrationId === integrationId && item.identifier === identifier))
+          return acc;
 
         acc.push({
           id: createId(),
@@ -647,9 +658,15 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
     actions.closeModal();
   }, [innerProps, selectedImages, actions]);
 
-  const allImagesImported = useMemo(() => importRepositories.every((repository) => repository.alreadyImported), [importRepositories]);
+  const allImagesImported = useMemo(
+    () => importRepositories.every((repository) => repository.alreadyImported),
+    [importRepositories],
+  );
 
-  const anyImagesImported = useMemo(() => importRepositories.some((repository) => repository.alreadyImported), [importRepositories]);
+  const anyImagesImported = useMemo(
+    () => importRepositories.some((repository) => repository.alreadyImported),
+    [importRepositories],
+  );
 
   return (
     <Stack>
@@ -683,7 +700,9 @@ const RepositoryImportModal = createModal<RepositoryImportProps>(({ innerProps, 
                     <Group>
                       <Button
                         leftSection={<IconCopyCheckFilled size="1em" />}
-                        onClick={() => setSelectedImages(importRepositories.filter((repository) => !repository.alreadyImported))}
+                        onClick={() =>
+                          setSelectedImages(importRepositories.filter((repository) => !repository.alreadyImported))
+                        }
                         size="xs"
                       >
                         {tRepository("importRepositories.selectAll")}

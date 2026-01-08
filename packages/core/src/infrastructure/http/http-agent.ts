@@ -1,7 +1,8 @@
-import type { ILogger } from "@homarr/core/infrastructure/logs";
-import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Dispatcher } from "undici";
 import { EnvHttpProxyAgent } from "undici";
+
+import type { ILogger } from "@homarr/core/infrastructure/logs";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 // The below import statement initializes dns-caching
 import "@homarr/core/infrastructure/dns/init";
@@ -28,7 +29,9 @@ export class UndiciHttpAgent extends EnvHttpProxyAgent {
     let url = new URL(`${options.origin as string}${path}`);
     url = this.redactSearchParams(url);
 
-    this.logger.debug(`Dispatching request ${url.toString().replaceAll("=&", "&")} (${Object.keys(options.headers ?? {}).length} headers)`);
+    this.logger.debug(
+      `Dispatching request ${url.toString().replaceAll("=&", "&")} (${Object.keys(options.headers ?? {}).length} headers)`,
+    );
   }
 
   /**

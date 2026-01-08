@@ -9,6 +9,7 @@ export const extractBaseUrlFromHeaders = (
   fallbackProtocol: "http" | "https" = "http",
 ): `${string}://${string}` => {
   // For empty string we also use the fallback protocol
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   let protocol = headers.get("x-forwarded-proto") || fallbackProtocol;
 
   // @see https://support.glitch.com/t/x-forwarded-proto-contains-multiple-protocols/17219

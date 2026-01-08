@@ -1,8 +1,9 @@
+import z from "zod";
+
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
-import z from "zod";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";

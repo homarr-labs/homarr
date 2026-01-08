@@ -1,16 +1,22 @@
 "use client";
 
-import { clientApi } from "@homarr/api/client";
-import { useRequiredBoard } from "@homarr/boards/context";
-import { useI18n } from "@homarr/translation/client";
 import { ActionIcon, Anchor, Button, Card, Flex, Group, ScrollArea, Stack, Text } from "@mantine/core";
 import { IconCircleCheck, IconCircleX, IconReportSearch, IconTestPipe } from "@tabler/icons-react";
 import combineClasses from "clsx";
 
+import { clientApi } from "@homarr/api/client";
+import { useRequiredBoard } from "@homarr/boards/context";
+import { useI18n } from "@homarr/translation/client";
+
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 
-export default function IndexerManagerWidget({ options, integrationIds, width, height }: WidgetComponentProps<"indexerManager">) {
+export default function IndexerManagerWidget({
+  options,
+  integrationIds,
+  width,
+  height,
+}: WidgetComponentProps<"indexerManager">) {
   const t = useI18n();
   const [indexersData] = clientApi.widget.indexerManager.getIndexersStatus.useSuspenseQuery(
     { integrationIds },
@@ -31,7 +37,9 @@ export default function IndexerManagerWidget({ options, integrationIds, width, h
     {
       onData(newData) {
         utils.widget.indexerManager.getIndexersStatus.setData({ integrationIds }, (previousData) =>
-          previousData?.map((item) => (item.integrationId === newData.integrationId ? { ...item, indexers: newData.indexers } : item)),
+          previousData?.map((item) =>
+            item.integrationId === newData.integrationId ? { ...item, indexers: newData.indexers } : item,
+          ),
         );
       },
     },
@@ -67,7 +75,13 @@ export default function IndexerManagerWidget({ options, integrationIds, width, h
           </ActionIcon>
         )}
       </Group>
-      <Card className={combineClasses("indexer-manager-list-container", classes.card)} w="100%" p="xs" radius={board.itemRadius} flex={1}>
+      <Card
+        className={combineClasses("indexer-manager-list-container", classes.card)}
+        w="100%"
+        p="xs"
+        radius={board.itemRadius}
+        flex={1}
+      >
         <ScrollArea className="indexer-manager-list-scroll-area" h="100%" scrollbars="y">
           {indexersData.map(({ integrationId, indexers }) => (
             <Stack gap={4} className={`indexer-manager-${integrationId}-list-container`} p={0} key={integrationId}>

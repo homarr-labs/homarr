@@ -1,12 +1,27 @@
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { UniqueIdentifier } from "@dnd-kit/core";
-import { closestCenter, DndContext, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import type { ActionIconProps } from "@mantine/core";
 import { ActionIcon, Card, Center, Fieldset, Loader, Stack } from "@mantine/core";
 import { IconGripHorizontal } from "@tabler/icons-react";
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { CommonWidgetInputProps } from "./common";
+
 import { useWidgetInputTranslation } from "./common";
+import type { CommonWidgetInputProps } from "./common";
 import { useFormContext } from "./form";
 
 export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIdentifier>({
@@ -20,7 +35,10 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
   const initialValues = useMemo(() => initialOptions[property] as TOptionValue[], [initialOptions, property]);
   const values = form.values.options[property] as TOptionValue[];
   const { data, isLoading, error } = options.useData(initialValues);
-  const dataMap = useMemo(() => new Map(data?.map((item) => [options.uniqueIdentifier(item), item as TItem])), [data, options]);
+  const dataMap = useMemo(
+    () => new Map(data?.map((item) => [options.uniqueIdentifier(item), item as TItem])),
+    [data, options],
+  );
   const [tempMap, setTempMap] = useState<Map<TOptionValue, TItem>>(new Map());
 
   const [activeId, setActiveId] = useState<TOptionValue | null>(null);
@@ -73,6 +91,7 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragStart={({ active }) => {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (!active) {
               return;
             }
@@ -113,7 +132,16 @@ export const WidgetSortedItemListInput = <TItem, TOptionValue extends UniqueIden
                     return null;
                   }
 
-                  return <MemoizedItem key={value} id={value} index={index} item={item} removeItem={removeItem} options={options} />;
+                  return (
+                    <MemoizedItem
+                      key={value}
+                      id={value}
+                      index={index}
+                      item={item}
+                      removeItem={removeItem}
+                      options={options}
+                    />
+                  );
                 })}
                 {isLoading && (
                   <Center h={256}>
@@ -138,14 +166,27 @@ interface ItemProps<TItem, TOptionValue extends UniqueIdentifier> {
   options: CommonWidgetInputProps<"sortableItemList">["options"];
 }
 
-const Item = <TItem, TOptionValue extends UniqueIdentifier>({ id, index, item, removeItem, options }: ItemProps<TItem, TOptionValue>) => {
+const Item = <TItem, TOptionValue extends UniqueIdentifier>({
+  id,
+  index,
+  item,
+  removeItem,
+  options,
+}: ItemProps<TItem, TOptionValue>) => {
   const { attributes, isDragging, listeners, setNodeRef, setActivatorNodeRef, transform, transition } = useSortable({
     id,
   });
 
   const Handle = (props: Partial<ActionIconProps>) => {
     return (
-      <ActionIcon variant="transparent" color="gray" {...props} {...listeners} ref={setActivatorNodeRef} style={{ cursor: "grab" }}>
+      <ActionIcon
+        variant="transparent"
+        color="gray"
+        {...props}
+        {...listeners}
+        ref={setActivatorNodeRef}
+        style={{ cursor: "grab" }}
+      >
         <IconGripHorizontal />
       </ActionIcon>
     );
@@ -165,7 +206,8 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({ id, index, item, r
           "--scale-x": transform?.scaleX ? `${transform.scaleX}` : undefined,
           "--scale-y": transform?.scaleY ? `${transform.scaleY}` : undefined,
           "--index": index,
-          transform: "translate3d(var(--translate-x, 0), var(--translate-y, 0), 0) scaleX(var(--scale-x, 1)) scaleY(var(--scale-y, 1))",
+          transform:
+            "translate3d(var(--translate-x, 0), var(--translate-y, 0), 0) scaleX(var(--scale-x, 1)) scaleY(var(--scale-y, 1))",
           transformOrigin: "0 0",
           ...(isDragging
             ? {
@@ -177,7 +219,13 @@ const Item = <TItem, TOptionValue extends UniqueIdentifier>({ id, index, item, r
       }
       ref={setNodeRef}
     >
-      <options.itemComponent key={index} item={item} removeItem={removeItem} rootAttributes={attributes} handle={Handle} />
+      <options.itemComponent
+        key={index}
+        item={item}
+        removeItem={removeItem}
+        rootAttributes={attributes}
+        handle={Handle}
+      />
     </Card>
   );
 };

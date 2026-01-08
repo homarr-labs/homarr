@@ -1,13 +1,15 @@
-import { clientApi } from "@homarr/api/client";
-import { useI18n } from "@homarr/translation/client";
 import { Avatar, Group, Stack, Text } from "@mantine/core";
 import { IconExternalLink, IconEye } from "@tabler/icons-react";
+
+import { clientApi } from "@homarr/api/client";
+import { useI18n } from "@homarr/translation/client";
 
 import { createChildrenOptions } from "../../lib/children";
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type App = { id: string; name: string; iconUrl: string; href: string | null };
 
 const appChildrenOptions = createChildrenOptions<App>({
@@ -24,6 +26,7 @@ const appChildrenOptions = createChildrenOptions<App>({
           </Group>
         );
       },
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       useInteraction: interaction.link((option) => ({ href: option.href! })),
       hide(option) {
         return !option.href;

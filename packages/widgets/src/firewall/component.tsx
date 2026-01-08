@@ -1,12 +1,13 @@
 "use client";
 
-import { clientApi } from "@homarr/api/client";
-import type { FirewallInterface, FirewallInterfacesSummary } from "@homarr/integrations";
-import { useI18n } from "@homarr/translation/client";
+import { useCallback, useState } from "react";
 import { Accordion, Box, Center, Flex, Group, RingProgress, ScrollArea, Text } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { IconArrowBarDown, IconArrowBarUp, IconBrain, IconCpu, IconTopologyBus } from "@tabler/icons-react";
-import { useCallback, useState } from "react";
+
+import { clientApi } from "@homarr/api/client";
+import type { FirewallInterface, FirewallInterfacesSummary } from "@homarr/integrations";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { FirewallMenu } from "./firewall-menu";
@@ -145,13 +146,23 @@ export default function FirewallWidget({ integrationIds, width, itemId }: Widget
                             {name}
                           </Text>
                         </Flex>
-                        <Flex align="center" gap="4" w={isTiny ? "100%" : "33%"} style={{ justifyContent: "flex-start" }}>
+                        <Flex
+                          align="center"
+                          gap="4"
+                          w={isTiny ? "100%" : "33%"}
+                          style={{ justifyContent: "flex-start" }}
+                        >
                           <IconArrowBarUp size={isTiny ? "8" : "12"} color="lightgreen" />
                           <Text size={isTiny ? "8px" : "xs"} color="lightgreen" style={{ textAlign: "left" }}>
                             {formatBitsPerSec(transmit, 2)}
                           </Text>
                         </Flex>
-                        <Flex align="center" gap="4" w={isTiny ? "100%" : "33%"} style={{ justifyContent: "flex-start" }}>
+                        <Flex
+                          align="center"
+                          gap="4"
+                          w={isTiny ? "100%" : "33%"}
+                          style={{ justifyContent: "flex-start" }}
+                        >
                           <IconArrowBarDown size={isTiny ? "8" : "12"} color="yellow" />
                           <Text size={isTiny ? "8px" : "xs"} color="yellow" style={{ textAlign: "left" }}>
                             {formatBitsPerSec(receive, 2)}
@@ -200,7 +211,9 @@ export const useUpdatingCpuStatus = (integrationIds: string[]) => {
               return undefined;
             }
 
-            return prevData.map((item) => (item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item));
+            return prevData.map((item) =>
+              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
+            );
           },
         );
       },
@@ -239,7 +252,9 @@ export const useUpdatingMemoryStatus = (integrationIds: string[]) => {
               return undefined;
             }
 
-            return prevData.map((item) => (item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item));
+            return prevData.map((item) =>
+              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
+            );
           },
         );
       },
@@ -278,7 +293,9 @@ export const useUpdatingVersionStatus = (integrationIds: string[]) => {
               return undefined;
             }
 
-            return prevData.map((item) => (item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item));
+            return prevData.map((item) =>
+              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
+            );
           },
         );
       },
@@ -315,7 +332,9 @@ export const useUpdatingInterfacesStatus = (integrationIds: string[]) => {
             if (!prevData) {
               return undefined;
             }
-            return prevData.map((item) => (item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item));
+            return prevData.map((item) =>
+              item.integration.id === data.integration.id ? { ...item, summary: data.summary } : item,
+            );
           },
         );
       },

@@ -1,6 +1,7 @@
+import SuperJSON from "superjson";
+
 import type { ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettings, defaultServerSettingsKeys } from "@homarr/server-settings";
-import SuperJSON from "superjson";
 
 import type { Database } from "..";
 import { eq } from "..";

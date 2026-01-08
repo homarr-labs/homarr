@@ -1,5 +1,5 @@
-import type { MantineColor } from "@mantine/core";
 import { Image } from "@mantine/core";
+import type { MantineColor } from "@mantine/core";
 import combineClasses from "clsx";
 import type { Property } from "csstype";
 
@@ -44,6 +44,12 @@ export const MaskedOrNormalImage = ({
       }}
     />
   ) : (
-    <Image className={combineClasses("normal-image", className)} src={imageUrl} alt={alt} fit={fit} style={{ ...style }} />
+    <Image
+      className={combineClasses("normal-image", className)}
+      src={imageUrl}
+      alt={alt}
+      fit={fit}
+      style={{ ...style }}
+    />
   );
 };

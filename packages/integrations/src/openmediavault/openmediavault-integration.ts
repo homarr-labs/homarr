@@ -1,7 +1,8 @@
+import type { Headers, HeadersInit, fetch as undiciFetch, Response as UndiciResponse } from "undici";
+
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { Headers, HeadersInit, Response as UndiciResponse, fetch as undiciFetch } from "undici";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -14,7 +15,9 @@ import { cpuTempSchema, fileSystemSchema, smartSchema, systemInformationSchema }
 
 const logger = createLogger({ module: "openMediaVaultIntegration" });
 
-type SessionStoreValue = { type: "header"; sessionId: string } | { type: "cookie"; loginToken: string; sessionId: string };
+type SessionStoreValue =
+  | { type: "header"; sessionId: string }
+  | { type: "cookie"; loginToken: string; sessionId: string };
 
 export class OpenMediaVaultIntegration extends Integration implements ISystemHealthMonitoringIntegration {
   private readonly sessionStore: SessionStore<SessionStoreValue>;
@@ -26,9 +29,11 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
 
   public async getSystemInfoAsync(): Promise<SystemHealthMonitoring> {
     const systemResponses = await this.makeAuthenticatedRpcCallAsync("system", "getInformation");
-    const fileSystemResponse = await this.makeAuthenticatedRpcCallAsync("filesystemmgmt", "enumerateMountedFilesystems", {
-      includeroot: true,
-    });
+    const fileSystemResponse = await this.makeAuthenticatedRpcCallAsync(
+      "filesystemmgmt",
+      "enumerateMountedFilesystems",
+      { includeroot: true },
+    );
     const smartResponse = await this.makeAuthenticatedRpcCallAsync("smart", "enumerateDevices");
     const cpuTempResponse = await this.makeAuthenticatedRpcCallAsync("cputemp", "get");
 
@@ -216,7 +221,9 @@ export class OpenMediaVaultIntegration extends Integration implements ISystemHea
 
   private static extractLoginTokenFromCookies(headers: Headers): string | null {
     const cookies = headers.getSetCookie();
-    const loginToken = cookies.find((cookie) => cookie.includes("X-OPENMEDIAVAULT-LOGIN") || cookie.includes("OPENMEDIAVAULT-LOGIN"));
+    const loginToken = cookies.find(
+      (cookie) => cookie.includes("X-OPENMEDIAVAULT-LOGIN") || cookie.includes("OPENMEDIAVAULT-LOGIN"),
+    );
 
     return loginToken ?? null;
   }

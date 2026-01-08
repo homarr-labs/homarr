@@ -25,7 +25,9 @@ const extractAppsFromConfig = (config: OldmarrConfig) => {
 
 const extractBookmarkAppsFromConfig = (config: OldmarrConfig) => {
   const bookmarkWidgets = config.widgets.filter((widget) => widget.type === "bookmark");
-  return bookmarkWidgets.flatMap((widget) => (widget.properties as OldmarrBookmarkDefinition["options"]).items.map(mapOldmarrBookmarkApp));
+  return bookmarkWidgets.flatMap((widget) =>
+    (widget.properties as OldmarrBookmarkDefinition["options"]).items.map(mapOldmarrBookmarkApp),
+  );
 };
 
 const addAppsToPreparedApps = (preparedApps: PreparedApp[], configApps: InferSelectModel<typeof apps>[]) => {
@@ -44,6 +46,14 @@ const addAppsToPreparedApps = (preparedApps: PreparedApp[], configApps: InferSel
   });
 };
 
-export const doAppsMatch = (app1: Omit<InferSelectModel<typeof apps>, "id">, app2: Omit<InferSelectModel<typeof apps>, "id">) => {
-  return app1.name === app2.name && app1.iconUrl === app2.iconUrl && app1.description === app2.description && app1.href === app2.href;
+export const doAppsMatch = (
+  app1: Omit<InferSelectModel<typeof apps>, "id">,
+  app2: Omit<InferSelectModel<typeof apps>, "id">,
+) => {
+  return (
+    app1.name === app2.name &&
+    app1.iconUrl === app2.iconUrl &&
+    app1.description === app2.description &&
+    app1.href === app2.href
+  );
 };

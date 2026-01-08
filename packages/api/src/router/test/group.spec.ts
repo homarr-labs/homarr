@@ -1,3 +1,5 @@
+import { describe, expect, test, vi } from "vitest";
+
 import type { Session } from "@homarr/auth";
 import * as env from "@homarr/auth/env";
 import { createId } from "@homarr/common";
@@ -5,7 +7,6 @@ import { eq } from "@homarr/db";
 import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey } from "@homarr/definitions";
-import { describe, expect, test, vi } from "vitest";
 
 import { groupRouter } from "../group";
 
@@ -32,28 +33,31 @@ describe("paginated should return a list of groups with pagination", () => {
   test.each([
     [1, 3],
     [2, 2],
-  ])("with 5 groups in database and pageSize set to 3 on page %s it should return %s groups", async (page, expectedCount) => {
-    // Arrange
-    const db = createDb();
-    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+  ])(
+    "with 5 groups in database and pageSize set to 3 on page %s it should return %s groups",
+    async (page, expectedCount) => {
+      // Arrange
+      const db = createDb();
+      const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
-    await db.insert(groups).values(
-      [1, 2, 3, 4, 5].map((number) => ({
-        id: number.toString(),
-        name: `Group ${number}`,
-        position: number,
-      })),
-    );
+      await db.insert(groups).values(
+        [1, 2, 3, 4, 5].map((number) => ({
+          id: number.toString(),
+          name: `Group ${number}`,
+          position: number,
+        })),
+      );
 
-    // Act
-    const result = await caller.getPaginated({
-      page,
-      pageSize: 3,
-    });
+      // Act
+      const result = await caller.getPaginated({
+        page,
+        pageSize: 3,
+      });
 
-    // Assert
-    expect(result.items.length).toBe(expectedCount);
-  });
+      // Assert
+      expect(result.items.length).toBe(expectedCount);
+    },
+  );
 
   test("with 5 groups in database and pagesize set to 3 it should return total count 5", async () => {
     // Arrange
@@ -112,28 +116,31 @@ describe("paginated should return a list of groups with pagination", () => {
     ["d", 2, "second"],
     ["th", 3, "third"],
     ["fi", 2, "first"],
-  ])("groups should be searchable by name with contains pattern, query %s should result in %s results", async (query, expectedCount, firstKey) => {
-    // Arrange
-    const db = createDb();
-    const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
+  ])(
+    "groups should be searchable by name with contains pattern, query %s should result in %s results",
+    async (query, expectedCount, firstKey) => {
+      // Arrange
+      const db = createDb();
+      const caller = groupRouter.createCaller({ db, deviceType: undefined, session: adminSession });
 
-    await db.insert(groups).values(
-      ["first", "second", "third", "forth", "fifth"].map((key, index) => ({
-        id: index.toString(),
-        name: key,
-        position: index + 1,
-      })),
-    );
+      await db.insert(groups).values(
+        ["first", "second", "third", "forth", "fifth"].map((key, index) => ({
+          id: index.toString(),
+          name: key,
+          position: index + 1,
+        })),
+      );
 
-    // Act
-    const result = await caller.getPaginated({
-      search: query,
-    });
+      // Act
+      const result = await caller.getPaginated({
+        search: query,
+      });
 
-    // Assert
-    expect(result.totalCount).toBe(expectedCount);
-    expect(result.items.at(0)?.name).toBe(firstKey);
-  });
+      // Assert
+      expect(result.totalCount).toBe(expectedCount);
+      expect(result.items.at(0)?.name).toBe(firstKey);
+    },
+  );
 
   test("without admin permissions it should throw unauthorized error", async () => {
     // Arrange

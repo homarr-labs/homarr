@@ -1,6 +1,7 @@
+import { z } from "zod/v4";
+
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
-import { z } from "zod/v4";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
@@ -37,7 +38,10 @@ export const locationRouter = createTRPCRouter({
     .output(locationSearchCityOutput)
     .query(async ({ input }) => {
       const res = await withTimeoutAsync(async (signal) => {
-        return await fetchWithTrustedCertificatesAsync(`https://geocoding-api.open-meteo.com/v1/search?name=${input.query}`, { signal });
+        return await fetchWithTrustedCertificatesAsync(
+          `https://geocoding-api.open-meteo.com/v1/search?name=${input.query}`,
+          { signal },
+        );
       });
       return (await res.json()) as z.infer<typeof locationSearchCityOutput>;
     }),

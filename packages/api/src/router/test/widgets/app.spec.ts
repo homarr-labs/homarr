@@ -1,7 +1,8 @@
+import { describe, expect, test, vi } from "vitest";
+
 import type { Session } from "@homarr/auth";
 import { createDb } from "@homarr/db/test";
 import * as ping from "@homarr/ping";
-import { describe, expect, test, vi } from "vitest";
 
 import { appRouter } from "../../widgets/app";
 

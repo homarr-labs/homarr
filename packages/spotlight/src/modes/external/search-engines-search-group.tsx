@@ -1,3 +1,6 @@
+import { Group, Image, Kbd, Stack, Text } from "@mantine/core";
+import { IconDownload, IconSearch } from "@tabler/icons-react";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import type { IntegrationKind } from "@homarr/definitions";
@@ -6,8 +9,6 @@ import { useModalAction } from "@homarr/modals";
 import { RequestMediaModal } from "@homarr/modals-collection";
 import { useSettings } from "@homarr/settings";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Group, Image, Kbd, Stack, Text } from "@mantine/core";
-import { IconDownload, IconSearch } from "@tabler/icons-react";
 
 import { createChildrenOptions } from "../../lib/children";
 import { createGroup } from "../../lib/group";
@@ -17,6 +18,7 @@ import { interaction } from "../../lib/interaction";
 type SearchEngine = RouterOutputs["searchEngine"]["search"][number];
 type FromIntegrationSearchResult = RouterOutputs["integration"]["searchInIntegration"][number];
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type MediaRequestChildrenProps = {
   result: {
     id: number;
@@ -49,7 +51,9 @@ export const useFromIntegrationSearchInteraction = (
   }
 
   if (
-    getIntegrationKindsByCategory("mediaRequest").some((categoryKind) => categoryKind === searchEngine.integration?.kind) &&
+    getIntegrationKindsByCategory("mediaRequest").some(
+      (categoryKind) => categoryKind === searchEngine.integration?.kind,
+    ) &&
     "type" in searchResult
   ) {
     const type = searchResult.type;
@@ -160,6 +164,7 @@ const mediaRequestsChildrenOptions = createChildrenOptions<MediaRequestChildrenP
 export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>({
   useActions: (searchEngine, query) => {
     const { data } = clientApi.integration.searchInIntegration.useQuery(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       { integrationId: searchEngine.integrationId!, query },
       {
         enabled: searchEngine.type === "fromIntegration" && searchEngine.integrationId !== null && query.length > 0,
@@ -182,6 +187,7 @@ export const searchEnginesChildrenOptions = createChildrenOptions<SearchEngine>(
             );
           },
           useInteraction: interaction.link(({ urlTemplate }, query) => ({
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             href: urlTemplate!.replace("%s", query),
             newTab: openSearchInNewTab,
           })),

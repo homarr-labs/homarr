@@ -1,5 +1,5 @@
-import type { transport } from "winston";
 import { transports } from "winston";
+import type { transport } from "winston";
 
 import { RedisTransport } from "./redis-transport";
 

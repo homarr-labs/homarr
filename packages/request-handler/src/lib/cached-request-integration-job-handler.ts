@@ -1,3 +1,5 @@
+import SuperJSON from "superjson";
+
 import { hashObjectBase64, Stopwatch } from "@homarr/common";
 import { decryptSecret } from "@homarr/common/server";
 import type { MaybeArray } from "@homarr/common/types";
@@ -6,7 +8,6 @@ import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { db } from "@homarr/db";
 import { getItemsWithIntegrationsAsync, getServerSettingsAsync } from "@homarr/db/queries";
 import type { WidgetKind } from "@homarr/definitions";
-import SuperJSON from "superjson";
 
 // This imports are done that way to avoid circular dependencies.
 import type { inferSupportedIntegrationsStrict } from "../../../widgets/src";
@@ -19,6 +20,7 @@ const logger = createLogger({ module: "cachedRequestIntegrationJobHandler" });
 export const createRequestIntegrationJobHandler = <
   TWidgetKind extends WidgetKind,
   TIntegrationKind extends inferSupportedIntegrationsStrict<TWidgetKind>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   THandler extends ReturnType<typeof createCachedIntegrationRequestHandler<any, TIntegrationKind, any>>["handler"],
 >(
   handler: THandler,
@@ -74,7 +76,8 @@ export const createRequestIntegrationJobHandler = <
           const inputHash = hashObjectBase64(input);
           if (
             distinctIntegrations.some(
-              (distinctIntegration) => distinctIntegration.integrationId === integration.id && distinctIntegration.inputHash === inputHash,
+              (distinctIntegration) =>
+                distinctIntegration.integrationId === integration.id && distinctIntegration.inputHash === inputHash,
             )
           ) {
             continue;
@@ -109,7 +112,9 @@ export const createRequestIntegrationJobHandler = <
           elapsed: stopWatch.getElapsedInHumanWords(),
         });
       } catch (error) {
-        logger.error(new ErrorWithMetadata("Failed to run integration job", { integrationId, inputHash }, { cause: error }));
+        logger.error(
+          new ErrorWithMetadata("Failed to run integration job", { integrationId, inputHash }, { cause: error }),
+        );
       }
     }
   };

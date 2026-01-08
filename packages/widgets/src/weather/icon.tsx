@@ -1,7 +1,3 @@
-import { metricToImperial } from "@homarr/common";
-import type { TranslationObject } from "@homarr/translation";
-import { useScopedI18n } from "@homarr/translation/client";
-import type { TablerIcon } from "@homarr/ui";
 import { List, Stack, Text } from "@mantine/core";
 import {
   IconCloud,
@@ -18,6 +14,11 @@ import {
   IconWind,
 } from "@tabler/icons-react";
 import dayjs from "dayjs";
+
+import { metricToImperial } from "@homarr/common";
+import type { TranslationObject } from "@homarr/translation";
+import { useScopedI18n } from "@homarr/translation/client";
+import type { TablerIcon } from "@homarr/ui";
 
 import type { WidgetProps } from "../definition";
 

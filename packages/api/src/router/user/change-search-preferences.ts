@@ -1,13 +1,16 @@
-import type { Session } from "@homarr/auth";
-import type { Modify } from "@homarr/common/types";
-import type { Database } from "@homarr/db";
-import { eq } from "@homarr/db";
-import { users } from "@homarr/db/schema";
-import { userChangeSearchPreferencesSchema } from "@homarr/validation/user";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-export const changeSearchPreferencesInputSchema = userChangeSearchPreferencesSchema.and(z.object({ userId: z.string() }));
+import type { Session } from "@homarr/auth";
+import type { Modify } from "@homarr/common/types";
+import { eq } from "@homarr/db";
+import type { Database } from "@homarr/db";
+import { users } from "@homarr/db/schema";
+import { userChangeSearchPreferencesSchema } from "@homarr/validation/user";
+
+export const changeSearchPreferencesInputSchema = userChangeSearchPreferencesSchema.and(
+  z.object({ userId: z.string() }),
+);
 
 export const changeSearchPreferencesAsync = async (
   db: Database,

@@ -1,5 +1,6 @@
-import { localeCookieKey } from "@homarr/definitions";
 import { defineRouting } from "next-intl/routing";
+
+import { localeCookieKey } from "@homarr/definitions";
 
 import type { SupportedLanguage } from "./config";
 import { supportedLanguages } from "./config";

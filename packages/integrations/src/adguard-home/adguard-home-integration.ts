@@ -18,7 +18,9 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
     });
 
     if (!statsResponse.ok) {
-      throw new Error(`Failed to fetch stats for ${this.integration.name} (${this.integration.id}): ${statsResponse.statusText}`);
+      throw new Error(
+        `Failed to fetch stats for ${this.integration.name} (${this.integration.id}): ${statsResponse.statusText}`,
+      );
     }
 
     const statusResponse = await fetchWithTrustedCertificatesAsync(this.url("/control/status"), {
@@ -28,7 +30,9 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
     });
 
     if (!statusResponse.ok) {
-      throw new Error(`Failed to fetch status for ${this.integration.name} (${this.integration.id}): ${statusResponse.statusText}`);
+      throw new Error(
+        `Failed to fetch status for ${this.integration.name} (${this.integration.id}): ${statusResponse.statusText}`,
+      );
     }
 
     const filteringStatusResponse = await fetchWithTrustedCertificatesAsync(this.url("/control/filtering/status"), {
@@ -58,7 +62,9 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
       errorMessages.push(`Filtering status parsing error: ${filteringStatus.error.message}`);
     }
     if (!stats.success || !status.success || !filteringStatus.success) {
-      throw new Error(`Failed to parse summary for ${this.integration.name} (${this.integration.id}):\n${errorMessages.join("\n")}`);
+      throw new Error(
+        `Failed to parse summary for ${this.integration.name} (${this.integration.id}):\n${errorMessages.join("\n")}`,
+      );
     }
 
     const blockedQueriesToday =
@@ -109,7 +115,9 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
       }),
     });
     if (!response.ok) {
-      throw new Error(`Failed to enable AdGuard Home for ${this.integration.name} (${this.integration.id}): ${response.statusText}`);
+      throw new Error(
+        `Failed to enable AdGuard Home for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
+      );
     }
   }
 
@@ -126,7 +134,9 @@ export class AdGuardHomeIntegration extends Integration implements DnsHoleSummar
       }),
     });
     if (!response.ok) {
-      throw new Error(`Failed to disable AdGuard Home for ${this.integration.name} (${this.integration.id}): ${response.statusText}`);
+      throw new Error(
+        `Failed to disable AdGuard Home for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
+      );
     }
   }
 

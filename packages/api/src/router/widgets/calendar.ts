@@ -1,3 +1,6 @@
+import { observable } from "@trpc/server/observable";
+import { z } from "zod/v4";
+
 import type { Modify } from "@homarr/common/types";
 import type { Integration } from "@homarr/db/schema";
 import type { IntegrationKindByCategory } from "@homarr/definitions";
@@ -5,8 +8,6 @@ import { getIntegrationKindsByCategory } from "@homarr/definitions";
 import type { CalendarEvent } from "@homarr/integrations/types";
 import { radarrReleaseTypes } from "@homarr/integrations/types";
 import { calendarMonthRequestHandler } from "@homarr/request-handler/calendar";
-import { observable } from "@trpc/server/observable";
-import { z } from "zod/v4";
 
 import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";

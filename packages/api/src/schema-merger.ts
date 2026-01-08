@@ -1,7 +1,9 @@
-import type { ZodIntersection, ZodObject } from "zod/v4";
 import { z } from "zod/v4";
+import type { ZodIntersection, ZodObject } from "zod/v4";
 
-export function convertIntersectionToZodObject<TIntersection extends ZodIntersection<ZodObject, ZodObject>>(intersection: TIntersection) {
+export function convertIntersectionToZodObject<TIntersection extends ZodIntersection<ZodObject, ZodObject>>(
+  intersection: TIntersection,
+) {
   const left = intersection.def.left;
   const right = intersection.def.right;
 

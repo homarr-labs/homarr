@@ -1,8 +1,9 @@
-import { useScopedI18n } from "@homarr/translation/client";
-import { passwordRequirements } from "@homarr/validation/user";
-import { Popover, Progress } from "@mantine/core";
 import type { PropsWithChildren } from "react";
 import { useState } from "react";
+import { Popover, Progress } from "@mantine/core";
+
+import { useScopedI18n } from "@homarr/translation/client";
+import { passwordRequirements } from "@homarr/validation/user";
 
 import { PasswordRequirement } from "./password-requirement";
 

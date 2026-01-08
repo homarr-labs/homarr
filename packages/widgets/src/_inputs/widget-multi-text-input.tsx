@@ -1,6 +1,7 @@
-import { useScopedI18n } from "@homarr/translation/client";
-import { Combobox, Pill, PillsInput, useCombobox } from "@mantine/core";
 import React, { useState } from "react";
+import { Combobox, Pill, PillsInput, useCombobox } from "@mantine/core";
+
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { CommonWidgetInputProps } from "./common";
 import { useWidgetInputTranslation } from "./common";

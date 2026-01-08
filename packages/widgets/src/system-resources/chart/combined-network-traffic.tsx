@@ -1,7 +1,8 @@
-import { humanFileSize } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
 import { Box, Group, Paper, Stack, Text } from "@mantine/core";
 import { IconNetwork } from "@tabler/icons-react";
+
+import { humanFileSize } from "@homarr/common";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { LabelDisplayModeOption } from "..";
 import { CommonChart } from "./common-chart";
@@ -46,7 +47,11 @@ export const CombinedNetworkTrafficChart = ({
                   <Group key={payloadData.key} gap={4}>
                     <Box bg={payloadData.color} w={10} h={10} style={{ borderRadius: 99 }}></Box>
                     <Text c="dimmed" size="xs">
-                      {payloadData.value === undefined ? <>N/A</> : <>{humanFileSize(Math.round(payloadData.value))}/s</>}
+                      {payloadData.value === undefined ? (
+                        <>N/A</>
+                      ) : (
+                        <>{humanFileSize(Math.round(payloadData.value))}/s</>
+                      )}
                     </Text>
                   </Group>
                 ))}

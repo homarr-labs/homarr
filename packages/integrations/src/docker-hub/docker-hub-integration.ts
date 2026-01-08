@@ -1,7 +1,8 @@
+import type { fetch, RequestInit, Response } from "undici";
+
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { fetch, RequestInit, Response } from "undici";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -11,7 +12,10 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
-import type { DetailsProviderResponse, ReleaseResponse } from "../interfaces/releases-providers/releases-providers-types";
+import type {
+  DetailsProviderResponse,
+  ReleaseResponse,
+} from "../interfaces/releases-providers/releases-providers-types";
 import { accessTokenResponseSchema, detailsResponseSchema, releasesResponseSchema } from "./docker-hub-schemas";
 
 const logger = createLogger({ module: "dockerHubIntegration" });
@@ -25,7 +29,8 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
   }
 
   private async withHeadersAsync(callback: (headers: RequestInit["headers"]) => Promise<Response>): Promise<Response> {
-    if (!this.hasSecretValue("username") || !this.hasSecretValue("personalAccessToken")) return await callback(undefined);
+    if (!this.hasSecretValue("username") || !this.hasSecretValue("personalAccessToken"))
+      return await callback(undefined);
 
     const storedSession = await this.sessionStore.getAsync();
 
@@ -106,7 +111,9 @@ export class DockerHubIntegration extends Integration implements ReleasesProvide
           success: false,
           error: {
             code: "unexpected",
-            message: releasesResponseJson ? JSON.stringify(releasesResponseJson, null, 2) : releasesResult.error.message,
+            message: releasesResponseJson
+              ? JSON.stringify(releasesResponseJson, null, 2)
+              : releasesResult.error.message,
           },
         };
       }

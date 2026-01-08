@@ -1,8 +1,9 @@
+import superjson from "superjson";
+
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import { createGetSetChannel } from "@homarr/redis";
-import superjson from "superjson";
 
 const logger = createLogger({ module: "sessionStore" });
 

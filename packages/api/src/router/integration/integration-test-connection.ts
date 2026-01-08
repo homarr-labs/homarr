@@ -69,9 +69,11 @@ export const testConnectionAsync = async (
     .map((kind) => {
       const secrets = sourcedSecrets.filter((secret) => secret.kind === kind);
       // Will never be undefined because of the check before
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (secrets.length === 1) return secrets[0]!;
 
       // There will always be a matching secret because of the getSecretKindOption function
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return secrets.find((secret) => secret.source === "form") ?? secrets[0]!;
     })
     .map(({ source: _, ...secret }) => secret);
@@ -112,27 +114,36 @@ const getSecretKindOption = (kind: IntegrationKind, sourcedSecrets: SourcedInteg
 
   if (matchingSecretKindOptions.length === 1) {
     // Will never be undefined because of the check above
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return matchingSecretKindOptions[0]!;
   }
 
   const onlyFormSecretsKindOptions = matchingSecretKindOptions.filter((secretKinds) =>
-    secretKinds.every((secretKind) => sourcedSecrets.find((secret) => secret.kind === secretKind && secret.source === "form")),
+    secretKinds.every((secretKind) =>
+      sourcedSecrets.find((secret) => secret.kind === secretKind && secret.source === "form"),
+    ),
   );
 
   if (onlyFormSecretsKindOptions.length >= 1) {
     // If the first option is no secret it would always be selected even if we want to have a secret
-    if (onlyFormSecretsKindOptions.length >= 2 && onlyFormSecretsKindOptions.some((secretKinds) => secretKinds.length === 0)) {
+    if (
+      onlyFormSecretsKindOptions.length >= 2 &&
+      onlyFormSecretsKindOptions.some((secretKinds) => secretKinds.length === 0)
+    ) {
       return (
         // Will never be undefined because of the check above
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         onlyFormSecretsKindOptions.find((secretKinds) => secretKinds.length >= 1) ?? onlyFormSecretsKindOptions[0]!
       );
     }
 
     // Will never be undefined because of the check above
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return onlyFormSecretsKindOptions[0]!;
   }
 
   // Will never be undefined because of the check above
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return matchingSecretKindOptions[0]!;
 };
 

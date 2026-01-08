@@ -1,7 +1,8 @@
+import { Button, Card, Group, Stack, Text } from "@mantine/core";
+
 import { objectEntries } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
 import { useScopedI18n } from "@homarr/translation/client";
-import { Button, Card, Group, Stack, Text } from "@mantine/core";
 
 interface ImportSummaryCardProps {
   counts: { apps: number; boards: number; integrations: number; credentialUsers: number };

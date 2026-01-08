@@ -1,6 +1,7 @@
+import type { ScheduledTask } from "node-cron";
+
 import { objectEntries, objectKeys } from "@homarr/common";
 import { db } from "@homarr/db";
-import type { ScheduledTask } from "node-cron";
 
 import type { JobCallback } from "./creator";
 import type { Logger } from "./logger";
@@ -14,7 +15,9 @@ export interface CreateCronJobGroupCreatorOptions {
   logger: Logger;
 }
 
-export const createJobGroupCreator = <TAllowedNames extends string = string>(options: CreateCronJobGroupCreatorOptions) => {
+export const createJobGroupCreator = <TAllowedNames extends string = string>(
+  options: CreateCronJobGroupCreatorOptions,
+) => {
   return <TJobs extends Jobs<TAllowedNames>>(jobs: TJobs) => {
     options.logger.logDebug("Creating job group.", {
       jobCount: Object.keys(jobs).length,

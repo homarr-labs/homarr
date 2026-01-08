@@ -1,5 +1,6 @@
-import { everyoneGroup, groupPermissionKeys } from "@homarr/definitions";
 import { z } from "zod/v4";
+
+import { everyoneGroup, groupPermissionKeys } from "@homarr/definitions";
 
 import { byIdSchema } from "./common";
 import { zodEnumFromArray } from "./enums";

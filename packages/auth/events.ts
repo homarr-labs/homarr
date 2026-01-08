@@ -1,11 +1,12 @@
+import { cookies } from "next/headers";
+import dayjs from "dayjs";
+import type { NextAuthConfig } from "next-auth";
+
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { Database } from "@homarr/db";
 import { and, eq, inArray } from "@homarr/db";
+import type { Database } from "@homarr/db";
 import { groupMembers, groups, users } from "@homarr/db/schema";
 import { colorSchemeCookieKey, everyoneGroup } from "@homarr/definitions";
-import dayjs from "dayjs";
-import { cookies } from "next/headers";
-import type { NextAuthConfig } from "next-auth";
 
 import { env } from "./env";
 import { extractProfileName } from "./providers/oidc/oidc-provider";
@@ -66,7 +67,11 @@ export const createSignInEventHandler = (db: Database): Exclude<NextAuthConfig["
         });
       }
 
-      if (typeof profile.picture === "string" && dbUser.image !== profile.picture && !dbUser.image?.startsWith("data:")) {
+      if (
+        typeof profile.picture === "string" &&
+        dbUser.image !== profile.picture &&
+        !dbUser.image?.startsWith("data:")
+      ) {
         await db.update(users).set({ image: profile.picture }).where(eq(users.id, user.id));
         logger.info("Profile picture for user of oidc provider has changed.", {
           userId: user.id,

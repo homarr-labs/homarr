@@ -1,14 +1,15 @@
 "use client";
 
+import { memo, useState } from "react";
+import type { SelectProps } from "@mantine/core";
+import { Button, Group, Loader, Select, Stack } from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
-import type { SelectProps } from "@mantine/core";
-import { Button, Group, Loader, Select, Stack } from "@mantine/core";
-import { IconCheck } from "@tabler/icons-react";
-import { memo, useState } from "react";
 
 interface InnerProps {
   presentAppIds: string[];

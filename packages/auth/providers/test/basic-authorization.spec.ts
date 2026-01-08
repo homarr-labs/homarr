@@ -1,7 +1,8 @@
+import { describe, expect, test } from "vitest";
+
 import { createId } from "@homarr/common";
 import { users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
-import { describe, expect, test } from "vitest";
 
 import { createSaltAsync, hashPasswordAsync } from "../../security";
 import { authorizeWithBasicCredentialsAsync } from "../credentials/authorization/basic-authorization";

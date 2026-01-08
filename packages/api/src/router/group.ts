@@ -1,3 +1,6 @@
+import { TRPCError } from "@trpc/server";
+import { z } from "zod/v4";
+
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
 import { and, eq, handleTransactionsAsync, like, not } from "@homarr/db";
@@ -13,8 +16,6 @@ import {
   groupUpdateSchema,
   groupUserSchema,
 } from "@homarr/validation/group";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod/v4";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, protectedProcedure } from "../trpc";
 import { throwIfCredentialsDisabled } from "./invite/checks";
@@ -340,7 +341,9 @@ export const groupRouter = createTRPCRouter({
       await throwIfGroupNameIsReservedAsync(ctx.db, input.groupId);
       throwIfCredentialsDisabled();
 
-      await ctx.db.delete(groupMembers).where(and(eq(groupMembers.groupId, input.groupId), eq(groupMembers.userId, input.userId)));
+      await ctx.db
+        .delete(groupMembers)
+        .where(and(eq(groupMembers.groupId, input.groupId), eq(groupMembers.userId, input.userId)));
     }),
 });
 

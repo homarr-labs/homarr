@@ -1,7 +1,8 @@
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import type { ExtendedDownloadClientItem } from "@homarr/integrations";
 import { IconDownload } from "@tabler/icons-react";
 import { z } from "zod/v4";
+
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import type { ExtendedDownloadClientItem } from "@homarr/integrations";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -26,10 +27,9 @@ const columnsList = [
   "upSpeed",
 ] as const satisfies (keyof ExtendedDownloadClientItem)[];
 const sortingExclusion = ["actions", "id", "state"] as const satisfies readonly (typeof columnsList)[number][];
-const columnsSort = columnsList.filter((column) => sortingExclusion.some((exclusion) => exclusion !== column)) as Exclude<
-  typeof columnsList,
-  (typeof sortingExclusion)[number]
->;
+const columnsSort = columnsList.filter((column) =>
+  sortingExclusion.some((exclusion) => exclusion !== column),
+) as Exclude<typeof columnsList, (typeof sortingExclusion)[number]>;
 
 export const { definition, componentLoader } = createWidgetDefinition("downloads", {
   icon: IconDownload,
@@ -96,20 +96,24 @@ export const { definition, componentLoader } = createWidgetDefinition("downloads
           shouldHide: (options) => !options.enableRowSorting,
         },
         showCompletedUsenet: {
-          shouldHide: (_, integrationKinds) => !getIntegrationKindsByCategory("usenet").some((kinds) => integrationKinds.includes(kinds)),
+          shouldHide: (_, integrationKinds) =>
+            !getIntegrationKindsByCategory("usenet").some((kinds) => integrationKinds.includes(kinds)),
         },
         showCompletedTorrent: {
-          shouldHide: (_, integrationKinds) => !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
+          shouldHide: (_, integrationKinds) =>
+            !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
         },
         showCompletedHttp: {
           shouldHide: (_, integrationKinds) =>
             !getIntegrationKindsByCategory("miscellaneous").some((kinds) => integrationKinds.includes(kinds)),
         },
         activeTorrentThreshold: {
-          shouldHide: (_, integrationKinds) => !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
+          shouldHide: (_, integrationKinds) =>
+            !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
         },
         applyFilterToRatio: {
-          shouldHide: (_, integrationKinds) => !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
+          shouldHide: (_, integrationKinds) =>
+            !getIntegrationKindsByCategory("torrent").some((kinds) => integrationKinds.includes(kinds)),
         },
       },
     );

@@ -1,9 +1,10 @@
+import type { Session } from "next-auth";
+import { describe, expect, test, vi } from "vitest";
+
 import { createId } from "@homarr/common";
 import type { InferInsertModel } from "@homarr/db";
 import { boardGroupPermissions, boards, boardUserPermissions, groupMembers, groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
-import type { Session } from "next-auth";
-import { describe, expect, test, vi } from "vitest";
 
 import * as integrationPermissions from "../integration-permissions";
 import { hasQueryAccessToIntegrationsAsync } from "../integration-query-permissions";

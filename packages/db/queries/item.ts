@@ -1,10 +1,14 @@
 import type { WidgetKind } from "@homarr/definitions";
-import type { inferSupportedIntegrations } from "../../widgets/src";
+
 import type { Database } from "..";
 import { inArray } from "..";
+import type { inferSupportedIntegrations } from "../../widgets/src";
 import { items } from "../schema";
 
-export const getItemsWithIntegrationsAsync = async <TKind extends WidgetKind>(db: Database, { kinds }: { kinds: TKind[] }) => {
+export const getItemsWithIntegrationsAsync = async <TKind extends WidgetKind>(
+  db: Database,
+  { kinds }: { kinds: TKind[] },
+) => {
   const itemsForIntegration = await db.query.items.findMany({
     where: inArray(items.kind, kinds),
     with: {

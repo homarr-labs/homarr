@@ -1,11 +1,12 @@
 "use client";
 
+import { Button, CloseButton, ColorInput, Group, Input, Stack, TextInput, useMantineTheme } from "@mantine/core";
+
 import { useForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import { TextMultiSelect } from "@homarr/ui";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
-import { Button, CloseButton, ColorInput, Group, Input, Stack, TextInput, useMantineTheme } from "@mantine/core";
 
 interface InnerProps {
   advancedOptions: BoardItemAdvancedOptions;
@@ -22,6 +23,7 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, in
     innerProps.onSuccess({
       ...values,
       // we want to fallback to null if the title is empty
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       title: values.title?.trim() || null,
     });
     actions.closeModal();
@@ -35,7 +37,10 @@ export const WidgetAdvancedOptionsModal = createModal<InnerProps>(({ actions, in
           {...form.getInputProps("title")}
           rightSection={<Input.ClearButton onClick={() => form.setFieldValue("title", "")} />}
         />
-        <TextMultiSelect label={t("item.edit.field.customCssClasses.label")} {...form.getInputProps("customCssClasses")} />
+        <TextMultiSelect
+          label={t("item.edit.field.customCssClasses.label")}
+          {...form.getInputProps("customCssClasses")}
+        />
         <ColorInput
           label={t("item.edit.field.borderColor.label")}
           format="hex"

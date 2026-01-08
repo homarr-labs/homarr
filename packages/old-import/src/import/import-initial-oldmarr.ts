@@ -1,8 +1,9 @@
+import type { z } from "zod/v4";
+
 import { Stopwatch } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { Database } from "@homarr/db";
 import { handleTransactionsAsync } from "@homarr/db";
-import type { z } from "zod/v4";
+import type { Database } from "@homarr/db";
 
 import { analyseOldmarrImportAsync } from "../analyse/analyse-oldmarr-import";
 import { prepareMultipleImports } from "../prepare/prepare-multiple";
@@ -14,12 +15,19 @@ import { ensureValidTokenOrThrow } from "./validate-token";
 
 const logger = createLogger({ module: "importInitialOldmarr" });
 
-export const importInitialOldmarrAsync = async (db: Database, input: z.infer<typeof importInitialOldmarrInputSchema>) => {
+export const importInitialOldmarrAsync = async (
+  db: Database,
+  input: z.infer<typeof importInitialOldmarrInputSchema>,
+) => {
   const stopwatch = new Stopwatch();
   const { checksum, configs, users: importUsers } = await analyseOldmarrImportAsync(input.file);
   ensureValidTokenOrThrow(checksum, input.token);
 
-  const { preparedApps, preparedBoards, preparedIntegrations } = prepareMultipleImports(configs, input.settings, input.boardSelections);
+  const { preparedApps, preparedBoards, preparedIntegrations } = prepareMultipleImports(
+    configs,
+    input.settings,
+    input.boardSelections,
+  );
 
   logger.info("Preparing import data in insert collections for database");
 

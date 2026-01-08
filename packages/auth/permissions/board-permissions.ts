@@ -1,5 +1,6 @@
-import type { BoardPermission } from "@homarr/definitions";
 import type { Session } from "next-auth";
+
+import type { BoardPermission } from "@homarr/definitions";
 
 export type BoardPermissionsProps = (
   | {

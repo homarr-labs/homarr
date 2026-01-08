@@ -1,8 +1,9 @@
+import { z } from "zod/v4";
+
 import { getServerSettingByKeyAsync, getServerSettingsAsync, updateServerSettingByKeyAsync } from "@homarr/db/queries";
 import type { ServerSettings } from "@homarr/server-settings";
 import { defaultServerSettingsKeys } from "@homarr/server-settings";
 import { settingsInitSchema } from "@homarr/validation/settings";
-import { z } from "zod/v4";
 
 import { createTRPCRouter, onboardingProcedure, permissionRequiredProcedure, publicProcedure } from "../trpc";
 import { nextOnboardingStepAsync } from "./onboard/onboard-queries";
@@ -23,7 +24,11 @@ export const serverSettingsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await updateServerSettingByKeyAsync(ctx.db, input.settingsKey, input.value as ServerSettings[keyof ServerSettings]);
+      await updateServerSettingByKeyAsync(
+        ctx.db,
+        input.settingsKey,
+        input.value as ServerSettings[keyof ServerSettings],
+      );
     }),
   initSettings: onboardingProcedure
     .requiresStep("settings")

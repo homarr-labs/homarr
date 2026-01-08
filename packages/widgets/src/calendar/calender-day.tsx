@@ -1,8 +1,9 @@
-import { useRequiredBoard } from "@homarr/boards/context";
-import type { CalendarEvent } from "@homarr/integrations/types";
+import { useState } from "react";
 import { Box, Container, Flex, Popover, Text, useMantineTheme } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-import { useState } from "react";
+
+import { useRequiredBoard } from "@homarr/boards/context";
+import type { CalendarEvent } from "@homarr/integrations/types";
 
 import { CalendarEventList } from "./calendar-event-list";
 

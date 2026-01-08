@@ -1,6 +1,7 @@
+import type { InferInsertModel } from "drizzle-orm";
+
 import { objectEntries } from "@homarr/common";
 import { dbEnv } from "@homarr/core/infrastructure/db/env";
-import type { InferInsertModel } from "drizzle-orm";
 
 import type { HomarrDatabase, HomarrDatabaseMysql, HomarrDatabasePostgresql } from "./driver";
 import * as schema from "./schema";
@@ -17,7 +18,9 @@ export function isPostgresql(): boolean {
   return dbEnv.DRIVER === "node-postgres";
 }
 
-export const createDbInsertCollectionForTransaction = <TTableKey extends TableKey>(tablesInInsertOrder: TTableKey[]) => {
+export const createDbInsertCollectionForTransaction = <TTableKey extends TableKey>(
+  tablesInInsertOrder: TTableKey[],
+) => {
   const context = tablesInInsertOrder.reduce(
     (acc, key) => {
       acc[key] = [];
@@ -55,7 +58,9 @@ export const createDbInsertCollectionForTransaction = <TTableKey extends TableKe
   };
 };
 
-export const createDbInsertCollectionWithoutTransaction = <TTableKey extends TableKey>(tablesInInsertOrder: TTableKey[]) => {
+export const createDbInsertCollectionWithoutTransaction = <TTableKey extends TableKey>(
+  tablesInInsertOrder: TTableKey[],
+) => {
   const { insertAll, insertAllAsync, ...collection } = createDbInsertCollectionForTransaction(tablesInInsertOrder);
 
   return {

@@ -1,5 +1,6 @@
-import type { stringOrTranslation } from "@homarr/translation";
 import type { JSX } from "react";
+
+import type { stringOrTranslation } from "@homarr/translation";
 
 import type { inferSearchInteractionDefinition, inferSearchInteractionOptions, SearchInteraction } from "./interaction";
 
@@ -19,6 +20,7 @@ type CommonSearchGroup<TOption extends Record<string, unknown>, TOptionProps ext
   ) => void;
 } & TOptionProps;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SearchGroup<TOption extends Record<string, unknown> = any> =
   | CommonSearchGroup<TOption, { filter: (query: string, option: TOption) => boolean; options: TOption[] }>
   | CommonSearchGroup<

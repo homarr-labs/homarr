@@ -6,8 +6,8 @@ export { Spotlight } from "./components/spotlight";
 export { openSpotlight };
 export {
   SpotlightProvider,
-  useRegisterSpotlightContextActions,
   useRegisterSpotlightContextResults,
+  useRegisterSpotlightContextActions,
 } from "./modes/home/context";
 
 const openSpotlight = spotlightActions.open;

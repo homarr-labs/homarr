@@ -1,9 +1,10 @@
-import { createDb } from "@homarr/db/test";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
 import { beforeAll, describe, expect, test, vi } from "vitest";
+
+import { createDb } from "@homarr/db/test";
 
 import { NzbGetIntegration } from "../src";
 import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
@@ -191,7 +192,12 @@ const createNzbGetIntegration = (container: StartedTestContainer, username: stri
   });
 };
 
-const nzbGetAddItemAsync = async (container: StartedTestContainer, username: string, password: string, integration: NzbGetIntegration) => {
+const nzbGetAddItemAsync = async (
+  container: StartedTestContainer,
+  username: string,
+  password: string,
+  integration: NzbGetIntegration,
+) => {
   const fileContent = await readFile(join(__dirname, "/volumes/usenet/test_download_100MB.nzb"), "base64");
   // Trigger scanning of the watch folder (Only available way to add an item except "append" which is too complex and unnecessary)
   await fetch(`http://${container.getHost()}:${container.getMappedPort(6789)}/${username}:${password}/jsonrpc`, {

@@ -1,5 +1,11 @@
-import { backgroundImageAttachments, backgroundImageRepeats, backgroundImageSizes, boardPermissions } from "@homarr/definitions";
 import { z } from "zod/v4";
+
+import {
+  backgroundImageAttachments,
+  backgroundImageRepeats,
+  backgroundImageSizes,
+  boardPermissions,
+} from "@homarr/definitions";
 
 import { zodEnumFromArray } from "./enums";
 import { createSavePermissionsSchema } from "./permissions";

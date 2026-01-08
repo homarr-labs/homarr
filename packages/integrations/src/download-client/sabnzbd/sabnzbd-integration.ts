@@ -1,10 +1,12 @@
-import { ResponseError } from "@homarr/common/server";
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import type { fetch as undiciFetch } from "undici";
-import type { IntegrationTestingInput } from "../../base/integration";
+
+import { ResponseError } from "@homarr/common/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+
 import { Integration } from "../../base/integration";
+import type { IntegrationTestingInput } from "../../base/integration";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
 import type { IDownloadClientIntegration } from "../../interfaces/downloads/download-client-integration";
@@ -23,8 +25,12 @@ export class SabnzbdIntegration extends Integration implements IDownloadClientIn
 
   public async getClientJobsAndStatusAsync(input: { limit: number }): Promise<DownloadClientJobsAndStatus> {
     const type = "usenet";
-    const { queue } = await queueSchema.parseAsync(await this.sabNzbApiCallAsync("queue", { limit: input.limit.toString() }));
-    const { history } = await historySchema.parseAsync(await this.sabNzbApiCallAsync("history", { limit: input.limit.toString() }));
+    const { queue } = await queueSchema.parseAsync(
+      await this.sabNzbApiCallAsync("queue", { limit: input.limit.toString() }),
+    );
+    const { history } = await historySchema.parseAsync(
+      await this.sabNzbApiCallAsync("history", { limit: input.limit.toString() }),
+    );
     const status: DownloadClientStatus = {
       paused: queue.paused,
       rates: { down: Math.floor(Number(queue.kbpersec) * 1024) }, //Actually rounded kiBps ()

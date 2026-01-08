@@ -1,3 +1,5 @@
+import { describe, expect, it, test, vi } from "vitest";
+
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import type { Database } from "@homarr/db";
@@ -5,7 +7,6 @@ import { eq } from "@homarr/db";
 import { invites, onboarding, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { GroupPermissionKey, OnboardingStep } from "@homarr/definitions";
-import { describe, expect, it, test, vi } from "vitest";
 
 import { userRouter } from "../user";
 
@@ -161,45 +162,48 @@ describe("register should create a user with valid invitation", () => {
     [{ token: "fakeToken" }, new Date(2024, 0, 3)],
     [{ inviteId: "fakeInviteId" }, new Date(2024, 0, 3)],
     [{}, new Date(2024, 0, 5, 0, 0, 1)],
-  ])("register should throw an error with input %s and date %s if the invitation is invalid", async (partialInput, systemTime) => {
-    // Arrange
-    const db = createDb();
-    const caller = userRouter.createCaller({
-      db,
-      deviceType: undefined,
-      session: null,
-    });
-
-    const userId = createId();
-    const inviteId = createId();
-    const inviteToken = "123";
-    vi.useFakeTimers();
-    vi.setSystemTime(systemTime);
-
-    await db.insert(users).values({
-      id: userId,
-    });
-    await db.insert(invites).values({
-      id: inviteId,
-      token: inviteToken,
-      creatorId: userId,
-      expirationDate: new Date(2024, 0, 5),
-    });
-
-    // Act
-    const actAsync = async () =>
-      await caller.register({
-        inviteId,
-        token: inviteToken,
-        username: "test",
-        password: "123ABCdef+/-",
-        confirmPassword: "123ABCdef+/-",
-        ...partialInput,
+  ])(
+    "register should throw an error with input %s and date %s if the invitation is invalid",
+    async (partialInput, systemTime) => {
+      // Arrange
+      const db = createDb();
+      const caller = userRouter.createCaller({
+        db,
+        deviceType: undefined,
+        session: null,
       });
 
-    // Assert
-    await expect(actAsync()).rejects.toThrow("Invalid invite");
-  });
+      const userId = createId();
+      const inviteId = createId();
+      const inviteToken = "123";
+      vi.useFakeTimers();
+      vi.setSystemTime(systemTime);
+
+      await db.insert(users).values({
+        id: userId,
+      });
+      await db.insert(invites).values({
+        id: inviteId,
+        token: inviteToken,
+        creatorId: userId,
+        expirationDate: new Date(2024, 0, 5),
+      });
+
+      // Act
+      const actAsync = async () =>
+        await caller.register({
+          inviteId,
+          token: inviteToken,
+          username: "test",
+          password: "123ABCdef+/-",
+          confirmPassword: "123ABCdef+/-",
+          ...partialInput,
+        });
+
+      // Assert
+      await expect(actAsync()).rejects.toThrow("Invalid invite");
+    },
+  );
 });
 
 describe("editProfile shoud update user", () => {

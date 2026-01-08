@@ -1,5 +1,6 @@
-import { objectEntries } from "@homarr/common";
 import { describe, expect, it } from "vitest";
+
+import { objectEntries } from "@homarr/common";
 
 import { integrationDefs } from "../integration";
 

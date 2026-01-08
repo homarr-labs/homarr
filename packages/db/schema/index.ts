@@ -1,5 +1,6 @@
-import { createSchema } from "@homarr/core/infrastructure/db";
 import type { InferSelectModel } from "drizzle-orm";
+
+import { createSchema } from "@homarr/core/infrastructure/db";
 
 import * as mysqlSchema from "./mysql";
 import * as pgSchema from "./postgresql";

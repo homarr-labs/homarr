@@ -1,9 +1,11 @@
-import type { TablerIcon } from "@homarr/ui";
 import type { DependencyList, PropsWithChildren } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
+import type { TablerIcon } from "@homarr/ui";
+
 import type { inferSearchInteractionDefinition, SearchInteraction } from "../../lib/interaction";
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type ContextSpecificItem = {
   id: string;
   name: string;
@@ -52,7 +54,11 @@ const createSpotlightContext = (displayName: string) => {
 
     const items = useMemo(() => Array.from(itemsMap.values()).flatMap(({ items }) => items), [itemsMap]);
 
-    return <SpotlightContext.Provider value={{ items, registerItems, unregisterItems }}>{children}</SpotlightContext.Provider>;
+    return (
+      <SpotlightContext.Provider value={{ items, registerItems, unregisterItems }}>
+        {children}
+      </SpotlightContext.Provider>
+    );
   };
 
   const useSpotlightContextItems = () => {
@@ -65,11 +71,17 @@ const createSpotlightContext = (displayName: string) => {
     return context.items;
   };
 
-  const useRegisterSpotlightContextItems = (key: string, items: ContextSpecificItem[], dependencyArray: DependencyList) => {
+  const useRegisterSpotlightContextItems = (
+    key: string,
+    items: ContextSpecificItem[],
+    dependencyArray: DependencyList,
+  ) => {
     const context = useContext(SpotlightContext);
 
     if (!context) {
-      throw new Error(`useRegisterSpotlightContextItems must be used within SpotlightContext[displayName=${displayName}]`);
+      throw new Error(
+        `useRegisterSpotlightContextItems must be used within SpotlightContext[displayName=${displayName}]`,
+      );
     }
 
     useEffect(() => {
@@ -82,6 +94,7 @@ const createSpotlightContext = (displayName: string) => {
         context.unregisterItems(key);
       };
       // We ignore the results
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [...dependencyArray, key]);
   };
 
@@ -93,7 +106,12 @@ const [_ResultContext, ResultProvider, useSpotlightContextResults, useRegisterSp
 const [_ActionContext, ActionProvider, useSpotlightContextActions, useRegisterSpotlightContextActions] =
   createSpotlightContext("SpotlightContextSpecificActions");
 
-export { useRegisterSpotlightContextActions, useRegisterSpotlightContextResults, useSpotlightContextActions, useSpotlightContextResults };
+export {
+  useRegisterSpotlightContextActions,
+  useRegisterSpotlightContextResults,
+  useSpotlightContextActions,
+  useSpotlightContextResults,
+};
 
 export const SpotlightProvider = ({ children }: PropsWithChildren) => {
   return (

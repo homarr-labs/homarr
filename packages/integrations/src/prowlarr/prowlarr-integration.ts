@@ -1,5 +1,6 @@
-import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { z } from "zod/v4";
+
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -19,7 +20,9 @@ export class ProwlarrIntegration extends Integration implements IIndexerManagerI
       },
     });
     if (!indexerResponse.ok) {
-      throw new Error(`Failed to fetch indexers for ${this.integration.name} (${this.integration.id}): ${indexerResponse.statusText}`);
+      throw new Error(
+        `Failed to fetch indexers for ${this.integration.name} (${this.integration.id}): ${indexerResponse.statusText}`,
+      );
     }
 
     const statusResponse = await fetchWithTrustedCertificatesAsync(this.url("/api/v1/indexerstatus"), {
@@ -28,7 +31,9 @@ export class ProwlarrIntegration extends Integration implements IIndexerManagerI
       },
     });
     if (!statusResponse.ok) {
-      throw new Error(`Failed to fetch status for ${this.integration.name} (${this.integration.id}): ${statusResponse.statusText}`);
+      throw new Error(
+        `Failed to fetch status for ${this.integration.name} (${this.integration.id}): ${statusResponse.statusText}`,
+      );
     }
 
     const indexersResult = indexerResponseSchema.array().safeParse(await indexerResponse.json());
@@ -69,7 +74,9 @@ export class ProwlarrIntegration extends Integration implements IIndexerManagerI
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to test all indexers for ${this.integration.name} (${this.integration.id}): ${response.statusText}`);
+      throw new Error(
+        `Failed to test all indexers for ${this.integration.name} (${this.integration.id}): ${response.statusText}`,
+      );
     }
   }
 

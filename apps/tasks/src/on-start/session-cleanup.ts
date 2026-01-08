@@ -15,7 +15,11 @@ export async function cleanupSessionsAsync() {
     const currentAuthProviders = env.AUTH_PROVIDERS;
 
     const inactiveAuthProviders = supportedAuthProviders.filter((provider) => !currentAuthProviders.includes(provider));
-    const subQuery = db.select({ id: users.id }).from(users).where(inArray(users.provider, inactiveAuthProviders)).as("sq");
+    const subQuery = db
+      .select({ id: users.id })
+      .from(users)
+      .where(inArray(users.provider, inactiveAuthProviders))
+      .as("sq");
     const sessionsWithInactiveProviders = await db
       .select({ userId: sessions.userId })
       .from(sessions)

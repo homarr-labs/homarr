@@ -1,6 +1,7 @@
+import type { RequestInit, Response } from "undici";
+
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { RequestInit, Response } from "undici";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -8,7 +9,10 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
-import type { ReleaseProviderResponse, ReleaseResponse } from "../interfaces/releases-providers/releases-providers-types";
+import type {
+  ReleaseProviderResponse,
+  ReleaseResponse,
+} from "../interfaces/releases-providers/releases-providers-types";
 import { releasesResponseSchema } from "./quay-schemas";
 
 const logger = createLogger({ module: "quayIntegration" });
@@ -57,7 +61,9 @@ export class QuayIntegration extends Integration implements ReleasesProviderInte
 
     const releasesResponse = await this.withHeadersAsync(async (headers) => {
       return await fetchWithTrustedCertificatesAsync(
-        this.url(`/api/v1/repository/${encodeURIComponent(owner)}/${encodeURIComponent(name)}?includeTags=true&includeStats=true`),
+        this.url(
+          `/api/v1/repository/${encodeURIComponent(owner)}/${encodeURIComponent(name)}?includeTags=true&includeStats=true`,
+        ),
         {
           headers,
         },

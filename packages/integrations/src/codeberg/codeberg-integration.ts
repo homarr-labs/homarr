@@ -1,6 +1,7 @@
+import type { RequestInit, Response } from "undici";
+
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
-import type { RequestInit, Response } from "undici";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -8,7 +9,10 @@ import { TestConnectionError } from "../base/test-connection/test-connection-err
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { ReleasesProviderIntegration } from "../interfaces/releases-providers/releases-providers-integration";
 import { getLatestRelease } from "../interfaces/releases-providers/releases-providers-integration";
-import type { DetailsProviderResponse, ReleaseResponse } from "../interfaces/releases-providers/releases-providers-types";
+import type {
+  DetailsProviderResponse,
+  ReleaseResponse,
+} from "../interfaces/releases-providers/releases-providers-types";
 import { detailsResponseSchema, releasesResponseSchema } from "./codeberg-schemas";
 
 const logger = createLogger({ module: "codebergIntegration" });
@@ -95,9 +99,12 @@ export class CodebergIntegration extends Integration implements ReleasesProvider
 
   protected async getDetailsAsync(owner: string, name: string): Promise<DetailsProviderResponse | undefined> {
     const response = await this.withHeadersAsync(async (headers) => {
-      return await fetchWithTrustedCertificatesAsync(this.url(`/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`), {
-        headers,
-      });
+      return await fetchWithTrustedCertificatesAsync(
+        this.url(`/api/v1/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`),
+        {
+          headers,
+        },
+      );
     });
 
     if (!response.ok) {

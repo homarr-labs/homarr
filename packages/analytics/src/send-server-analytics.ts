@@ -1,10 +1,11 @@
+import type { UmamiEventData } from "@umami/node";
+import { Umami } from "@umami/node";
+
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { count, db } from "@homarr/db";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 import { integrations, items, users } from "@homarr/db/schema";
 import type { defaultServerSettings } from "@homarr/server-settings";
-import type { UmamiEventData } from "@umami/node";
-import { Umami } from "@umami/node";
 
 import { Stopwatch } from "../../common/src";
 import { UMAMI_HOST_URL, UMAMI_WEBSITE_ID } from "./constants";
@@ -65,7 +66,10 @@ const sendUserDataAsync = async (umamiInstance: Umami, analyticsSettings: typeof
   logger.warn("Unable to send track event data to Umami instance");
 };
 
-const sendIntegrationDataAsync = async (umamiInstance: Umami, analyticsSettings: typeof defaultServerSettings.analytics) => {
+const sendIntegrationDataAsync = async (
+  umamiInstance: Umami,
+  analyticsSettings: typeof defaultServerSettings.analytics,
+) => {
   if (!analyticsSettings.enableIntegrationData) {
     return;
   }

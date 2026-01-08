@@ -327,7 +327,8 @@ export const getIconUrl = (integration: IntegrationKind) => integrationDefs[inte
 
 export const getIntegrationName = (integration: IntegrationKind) => integrationDefs[integration].name;
 
-export const getDefaultSecretKinds = (integration: IntegrationKind): IntegrationSecretKind[] => integrationDefs[integration].secretKinds[0];
+export const getDefaultSecretKinds = (integration: IntegrationKind): IntegrationSecretKind[] =>
+  integrationDefs[integration].secretKinds[0];
 
 export const getAllSecretKindOptions = (integration: IntegrationKind): AtLeastOneOf<IntegrationSecretKind[]> =>
   integrationDefs[integration].secretKinds;
@@ -352,7 +353,9 @@ export const getIntegrationKindsByCategory = <TCategory extends IntegrationCateg
  * Directly get the types of the list returned by getIntegrationKindsByCategory
  */
 export type IntegrationKindByCategory<TCategory extends IntegrationCategory> = {
-  [Key in keyof typeof integrationDefs]: TCategory extends (typeof integrationDefs)[Key]["category"][number] ? Key : never;
+  [Key in keyof typeof integrationDefs]: TCategory extends (typeof integrationDefs)[Key]["category"][number]
+    ? Key
+    : never;
 }[keyof typeof integrationDefs] extends infer U
   ? //Needed to simplify the type when using it
     U

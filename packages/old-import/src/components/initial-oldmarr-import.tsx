@@ -1,8 +1,9 @@
+import { useMemo, useState } from "react";
+import { Stack } from "@mantine/core";
+import SuperJSON from "superjson";
+
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useModalAction } from "@homarr/modals";
-import { Stack } from "@mantine/core";
-import { useMemo, useState } from "react";
-import SuperJSON from "superjson";
 
 // We don't have access to the API client here, so we need to import it from the API package
 // In the future we should consider having the used router also in this package
@@ -75,7 +76,9 @@ export const InitialOldmarrImport = ({ file, analyseResult }: InitialOldmarrImpo
           setSettings((settings) => ({ ...settings, [setting]: value }));
         }}
       />
-      {settings.onlyImportApps ? null : <BoardSelectionCard selections={boardSelections} updateSelections={setBoardSelections} />}
+      {settings.onlyImportApps ? null : (
+        <BoardSelectionCard selections={boardSelections} updateSelections={setBoardSelections} />
+      )}
       <ImportSummaryCard
         counts={{
           apps: preparedApps.length,

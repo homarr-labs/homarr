@@ -1,10 +1,11 @@
+import { TRPCError } from "@trpc/server";
+
 import type { Session } from "@homarr/auth";
 import { constructIntegrationPermissions } from "@homarr/auth/shared";
 import type { Database, SQL } from "@homarr/db";
 import { eq, inArray } from "@homarr/db";
 import { groupMembers, integrationGroupPermissions, integrationUserPermissions } from "@homarr/db/schema";
 import type { IntegrationPermission } from "@homarr/definitions";
-import { TRPCError } from "@trpc/server";
 
 /**
  * Throws NOT_FOUND if user is not allowed to perform action on integration
@@ -31,7 +32,10 @@ export const throwIfActionForbiddenAsync = async (
         where: eq(integrationUserPermissions.userId, session?.user.id ?? ""),
       },
       groupPermissions: {
-        where: inArray(integrationGroupPermissions.groupId, groupsOfCurrentUser.map((group) => group.groupId).concat("")),
+        where: inArray(
+          integrationGroupPermissions.groupId,
+          groupsOfCurrentUser.map((group) => group.groupId).concat(""),
+        ),
       },
     },
   });

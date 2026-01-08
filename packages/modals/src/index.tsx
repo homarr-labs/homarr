@@ -1,16 +1,17 @@
 "use client";
 
+import type { PropsWithChildren } from "react";
+import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState } from "react";
+import { getDefaultZIndex, Modal } from "@mantine/core";
+import { randomId } from "@mantine/hooks";
+
 import type { stringOrTranslation } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
-import { getDefaultZIndex, Modal } from "@mantine/core";
-import { randomId } from "@mantine/hooks";
-import type { PropsWithChildren } from "react";
-import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState } from "react";
 
 import type { ConfirmModalProps } from "./confirm-modal";
 import { ConfirmModal } from "./confirm-modal";
-import type { ModalStateWithReference, ModalsState } from "./reducer";
+import type { ModalsState, ModalStateWithReference } from "./reducer";
 import { modalReducer } from "./reducer";
 import type { inferInnerProps, ModalDefinition } from "./type";
 
@@ -135,6 +136,7 @@ export const useModalAction = <TModal extends ModalDefinition>(modal: TModal) =>
   return {
     openModal: (innerProps: inferInnerProps<TModal>, options: OpenModalOptions | void) => {
       // void actually is undefined
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       context.openModalInner({ modal, innerProps, options: options ?? {} });
     },
   };

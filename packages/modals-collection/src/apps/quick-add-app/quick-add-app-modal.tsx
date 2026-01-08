@@ -1,3 +1,5 @@
+import type { z } from "zod/v4";
+
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { AppForm } from "@homarr/forms-collection";
@@ -5,7 +7,6 @@ import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import type { appManageSchema } from "@homarr/validation/app";
-import type { z } from "zod/v4";
 
 interface QuickAddAppModalProps {
   onClose: (createdApp: Omit<RouterOutputs["app"]["create"], "appId">) => void;

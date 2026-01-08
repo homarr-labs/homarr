@@ -1,2 +1,2 @@
-export { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
+export { signIn, signOut, useSession, SessionProvider } from "next-auth/react";
 export * from "./permissions/integration-provider";

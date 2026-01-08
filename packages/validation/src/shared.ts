@@ -1,5 +1,6 @@
-import { integrationKinds, widgetKinds } from "@homarr/definitions";
 import { z } from "zod/v4";
+
+import { integrationKinds, widgetKinds } from "@homarr/definitions";
 
 import { zodEnumFromArray } from "./enums";
 

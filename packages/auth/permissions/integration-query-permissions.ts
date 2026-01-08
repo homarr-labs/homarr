@@ -1,8 +1,9 @@
+import type { Session } from "next-auth";
+
 import type { Database } from "@homarr/db";
 import { and, eq, inArray, or } from "@homarr/db";
 import { boards, boardUserPermissions, groupMembers } from "@homarr/db/schema";
 import type { IntegrationPermission } from "@homarr/definitions";
-import type { Session } from "next-auth";
 
 import { constructIntegrationPermissions } from "./integration-permissions";
 
@@ -21,9 +22,16 @@ interface Integration {
   }[];
 }
 
-export const hasQueryAccessToIntegrationsAsync = async (db: Database, integrations: Integration[], session: Session | null) => {
+export const hasQueryAccessToIntegrationsAsync = async (
+  db: Database,
+  integrations: Integration[],
+  session: Session | null,
+) => {
   // If the user has board-view-all and every integration has at least one item that is placed on a board he has access.
-  if (session?.user.permissions.includes("board-view-all") && integrations.every((integration) => integration.items.length >= 1)) {
+  if (
+    session?.user.permissions.includes("board-view-all") &&
+    integrations.every((integration) => integration.items.length >= 1)
+  ) {
     return true;
   }
 
@@ -82,16 +90,23 @@ export const hasQueryAccessToIntegrationsAsync = async (db: Database, integratio
     );
 
   // If for each integration the user has access to at least of of it's present boards, he has access.
-  if (checkEveryIntegrationContainsSomeBoardIdIncludedInBoardsWithAccess(integrationsWithBoardIds, boardIdsWithPermission)) {
+  if (
+    checkEveryIntegrationContainsSomeBoardIdIncludedInBoardsWithAccess(integrationsWithBoardIds, boardIdsWithPermission)
+  ) {
     return true;
   }
 
   const relevantBoardIds = [...new Set(integrationsWithBoardIds.map(({ anyOfBoardIds }) => anyOfBoardIds).flat())];
   const publicBoardsOrBoardsWhereCurrentUserIsOwner = await db.query.boards.findMany({
-    where: and(or(eq(boards.isPublic, true), eq(boards.creatorId, session?.user.id ?? "")), inArray(boards.id, relevantBoardIds)),
+    where: and(
+      or(eq(boards.isPublic, true), eq(boards.creatorId, session?.user.id ?? "")),
+      inArray(boards.id, relevantBoardIds),
+    ),
   });
 
-  const boardsWithAccess = boardIdsWithPermission.concat(publicBoardsOrBoardsWhereCurrentUserIsOwner.map(({ id }) => id));
+  const boardsWithAccess = boardIdsWithPermission.concat(
+    publicBoardsOrBoardsWhereCurrentUserIsOwner.map(({ id }) => id),
+  );
 
   // If for each integration the user has access to at least of of it's present boards, he has access.
   return checkEveryIntegrationContainsSomeBoardIdIncludedInBoardsWithAccess(integrationsWithBoardIds, boardsWithAccess);
@@ -101,5 +116,7 @@ const checkEveryIntegrationContainsSomeBoardIdIncludedInBoardsWithAccess = (
   integration: { id: string; anyOfBoardIds: string[] }[],
   boardIdsWithAccess: string[],
 ) => {
-  return integration.every(({ anyOfBoardIds }) => anyOfBoardIds.some((boardId) => boardIdsWithAccess.includes(boardId)));
+  return integration.every(({ anyOfBoardIds }) =>
+    anyOfBoardIds.some((boardId) => boardIdsWithAccess.includes(boardId)),
+  );
 };

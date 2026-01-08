@@ -1,11 +1,12 @@
-import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import { createIntegrationAsync } from "@homarr/integrations";
-import type { MediaRequest } from "@homarr/integrations/types";
-import { mediaRequestStatusConfiguration } from "@homarr/integrations/types";
-import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
-import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
+
+import { getIntegrationKindsByCategory } from "@homarr/definitions";
+import { createIntegrationAsync } from "@homarr/integrations";
+import { mediaRequestStatusConfiguration } from "@homarr/integrations/types";
+import type { MediaRequest } from "@homarr/integrations/types";
+import { mediaRequestListRequestHandler } from "@homarr/request-handler/media-request-list";
+import { mediaRequestStatsRequestHandler } from "@homarr/request-handler/media-request-stats";
 
 import { createManyIntegrationMiddleware, createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
@@ -35,7 +36,10 @@ export const mediaRequestsRouter = createTRPCRouter({
             return dataB.createdAt.getTime() - dataA.createdAt.getTime();
           }
 
-          return mediaRequestStatusConfiguration[dataA.status].position - mediaRequestStatusConfiguration[dataB.status].position;
+          return (
+            mediaRequestStatusConfiguration[dataA.status].position -
+            mediaRequestStatusConfiguration[dataB.status].position
+          );
         });
     }),
   subscribeToLatestRequests: publicProcedure

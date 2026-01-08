@@ -3,7 +3,9 @@ import type { INotificationsIntegration } from "../../interfaces/notifications/n
 
 export class NotificationsMockService implements INotificationsIntegration {
   public async getNotificationsAsync(): Promise<Notification[]> {
-    return await Promise.resolve(Array.from({ length: 10 }, (_, index) => NotificationsMockService.createNotification(index)));
+    return await Promise.resolve(
+      Array.from({ length: 10 }, (_, index) => NotificationsMockService.createNotification(index)),
+    );
   }
 
   private static createNotification(index: number): Notification {

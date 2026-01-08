@@ -8,7 +8,11 @@ import type { OldmarrImportConfiguration } from "./settings";
 
 const logger = createLogger({ module: "moveWidgetsAndAppsMerge" });
 
-export const moveWidgetsAndAppsIfMerge = (old: OldmarrConfig, wrapperIdsToMerge: string[], configuration: OldmarrImportConfiguration) => {
+export const moveWidgetsAndAppsIfMerge = (
+  old: OldmarrConfig,
+  wrapperIdsToMerge: string[],
+  configuration: OldmarrImportConfiguration,
+) => {
   const firstId = wrapperIdsToMerge[0];
   if (!firstId) {
     return { apps: old.apps, widgets: old.widgets };
@@ -126,7 +130,12 @@ export const moveWidgetsAndAppsIfMerge = (old: OldmarrConfig, wrapperIdsToMerge:
   return { apps: old.apps, widgets: old.widgets };
 };
 
-const moveWidgetsAndAppsInLeftSidebar = (old: OldmarrConfig, firstId: string, offset: number, screenSize: BoardSize) => {
+const moveWidgetsAndAppsInLeftSidebar = (
+  old: OldmarrConfig,
+  firstId: string,
+  offset: number,
+  screenSize: BoardSize,
+) => {
   const columnCount = mapColumnCount(old.settings.customization.gridstack, screenSize);
   let requiredHeight = updateItems({
     // This should work as the reference of the items did not change, only the array reference did
@@ -170,7 +179,10 @@ const moveWidgetsAndAppsInLeftSidebar = (old: OldmarrConfig, firstId: string, of
     // This should work as the reference of the items did not change, only the array reference did
     items: [...old.widgets, ...old.apps],
     screenSize,
-    filter: (item) => item.area.type === "sidebar" && item.area.properties.location === "left" && item.shape[screenSize]?.location.x === 1,
+    filter: (item) =>
+      item.area.type === "sidebar" &&
+      item.area.properties.location === "left" &&
+      item.shape[screenSize]?.location.x === 1,
     update: (item) => {
       item.area = {
         type: "wrapper",
@@ -191,7 +203,12 @@ const moveWidgetsAndAppsInLeftSidebar = (old: OldmarrConfig, firstId: string, of
   return offset;
 };
 
-const moveWidgetsAndAppsInRightSidebar = (old: OldmarrConfig, firstId: string, offset: number, screenSize: BoardSize) => {
+const moveWidgetsAndAppsInRightSidebar = (
+  old: OldmarrConfig,
+  firstId: string,
+  offset: number,
+  screenSize: BoardSize,
+) => {
   const columnCount = mapColumnCount(old.settings.customization.gridstack, screenSize);
   const xOffsetDelta = Math.max(columnCount - 2, 0);
   const requiredHeight = updateItems({
@@ -234,7 +251,10 @@ const moveWidgetsAndAppsInRightSidebar = (old: OldmarrConfig, firstId: string, o
     // This should work as the reference of the items did not change, only the array reference did
     items: [...old.widgets, ...old.apps],
     screenSize,
-    filter: (item) => item.area.type === "sidebar" && item.area.properties.location === "left" && item.shape[screenSize]?.location.x === 1,
+    filter: (item) =>
+      item.area.type === "sidebar" &&
+      item.area.properties.location === "left" &&
+      item.shape[screenSize]?.location.x === 1,
     update: (item) => {
       item.area = {
         type: "wrapper",
@@ -297,7 +317,9 @@ const updateItems = (options: {
 
     const after = createItemSnapshot(item, options.screenSize);
 
-    logger.debug(`Moved item ${item.id}\n [snapshot before]: ${before.toString()}\n [snapshot after]: ${after.toString()}`);
+    logger.debug(
+      `Moved item ${item.id}\n [snapshot before]: ${before.toString()}\n [snapshot after]: ${after.toString()}`,
+    );
   }
 
   return requiredHeight;

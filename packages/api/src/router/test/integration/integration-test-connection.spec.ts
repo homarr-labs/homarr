@@ -1,6 +1,7 @@
+import { describe, expect, test, vi } from "vitest";
+
 import * as homarrDefinitions from "@homarr/definitions";
 import * as homarrIntegrations from "@homarr/integrations";
-import { describe, expect, test, vi } from "vitest";
 
 import { testConnectionAsync } from "../../integration/integration-test-connection";
 

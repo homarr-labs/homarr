@@ -1,13 +1,14 @@
 "use client";
 
-import type { RouterOutputs } from "@homarr/api";
-import { clientApi } from "@homarr/api/client";
-import { metricToImperial } from "@homarr/common";
-import { useScopedI18n } from "@homarr/translation/client";
 import { Box, Group, HoverCard, Stack, Text } from "@mantine/core";
 import { IconArrowDownRight, IconArrowUpRight, IconMapPin, IconWind } from "@tabler/icons-react";
 import combineClasses from "clsx";
 import dayjs from "dayjs";
+
+import type { RouterOutputs } from "@homarr/api";
+import { clientApi } from "@homarr/api/client";
+import { metricToImperial } from "@homarr/common";
+import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { WeatherDescription, WeatherIcon } from "./icon";
@@ -29,8 +30,19 @@ export default function WeatherWidget({ isEditMode, options }: WidgetComponentPr
   });
 
   return (
-    <Stack align="center" gap="sm" justify="center" w="100%" h="100%" style={{ pointerEvents: isEditMode ? "none" : undefined }}>
-      {options.hasForecast ? <WeeklyForecast weather={weather} options={options} /> : <DailyWeather weather={weather} options={options} />}
+    <Stack
+      align="center"
+      gap="sm"
+      justify="center"
+      w="100%"
+      h="100%"
+      style={{ pointerEvents: isEditMode ? "none" : undefined }}
+    >
+      {options.hasForecast ? (
+        <WeeklyForecast weather={weather} options={options} />
+      ) : (
+        <DailyWeather weather={weather} options={options} />
+      )}
     </Stack>
   );
 }
@@ -56,7 +68,13 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
             <WeatherDescription weatherOnly weatherCode={weather.current.weathercode} />
           </HoverCard.Dropdown>
         </HoverCard>
-        <Text fz={30}>{getPreferredUnit(weather.current.temperature, options.isFormatFahrenheit, options.disableTemperatureDecimals)}</Text>
+        <Text fz={30}>
+          {getPreferredUnit(
+            weather.current.temperature,
+            options.isFormatFahrenheit,
+            options.disableTemperatureDecimals,
+          )}
+        </Text>
       </Group>
       <Stack gap="xs" align="center">
         {options.showCurrentWindSpeed && (
@@ -68,7 +86,9 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
                   ? metricToImperial(weather.current.windspeed)
                   : weather.current.windspeed
                 ).toFixed(1),
-                unit: options.useImperialSpeed ? tCommon("unit.speed.milesPerHour") : tCommon("unit.speed.kilometersPerHour"),
+                unit: options.useImperialSpeed
+                  ? tCommon("unit.speed.milesPerHour")
+                  : tCommon("unit.speed.kilometersPerHour"),
               })}
             </Text>
           </Group>
@@ -77,13 +97,21 @@ const DailyWeather = ({ options, weather }: WeatherProps) => {
           <Group gap="xs" wrap="nowrap">
             <IconArrowUpRight size={16} />
             <Text fz={16}>
-              {getPreferredUnit(weather.daily[0]?.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
+              {getPreferredUnit(
+                weather.daily[0]?.maxTemp,
+                options.isFormatFahrenheit,
+                options.disableTemperatureDecimals,
+              )}
             </Text>
           </Group>
           <Group gap="xs" wrap="nowrap">
             <IconArrowDownRight size={16} />
             <Text fz={16}>
-              {getPreferredUnit(weather.daily[0]?.minTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
+              {getPreferredUnit(
+                weather.daily[0]?.minTemp,
+                options.isFormatFahrenheit,
+                options.disableTemperatureDecimals,
+              )}
             </Text>
           </Group>
         </Group>
@@ -126,7 +154,11 @@ const WeeklyForecast = ({ options, weather }: WeatherProps) => {
             </HoverCard.Dropdown>
           </HoverCard>
           <Text fz={16}>
-            {getPreferredUnit(weather.current.temperature, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
+            {getPreferredUnit(
+              weather.current.temperature,
+              options.isFormatFahrenheit,
+              options.disableTemperatureDecimals,
+            )}
           </Text>
         </Group>
       </Group>
@@ -153,7 +185,9 @@ function Forecast({ weather, options }: WeatherProps) {
             >
               <Text fz="xl">{dayjs(dayWeather.time).format("dd")}</Text>
               <WeatherIcon size={16} code={dayWeather.weatherCode} />
-              <Text fz={16}>{getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}</Text>
+              <Text fz={16}>
+                {getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
+              </Text>
             </Stack>
           </HoverCard.Target>
           <HoverCard.Dropdown>
@@ -162,8 +196,16 @@ function Forecast({ weather, options }: WeatherProps) {
               dateFormat={dateFormat}
               time={dayWeather.time}
               weatherCode={dayWeather.weatherCode}
-              maxTemp={getPreferredUnit(dayWeather.maxTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
-              minTemp={getPreferredUnit(dayWeather.minTemp, options.isFormatFahrenheit, options.disableTemperatureDecimals)}
+              maxTemp={getPreferredUnit(
+                dayWeather.maxTemp,
+                options.isFormatFahrenheit,
+                options.disableTemperatureDecimals,
+              )}
+              minTemp={getPreferredUnit(
+                dayWeather.minTemp,
+                options.isFormatFahrenheit,
+                options.disableTemperatureDecimals,
+              )}
               sunrise={dayjs(dayWeather.sunrise).format("HH:mm")}
               sunset={dayjs(dayWeather.sunset).format("HH:mm")}
               maxWindSpeed={dayWeather.maxWindSpeed}

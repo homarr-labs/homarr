@@ -1,9 +1,10 @@
-import type { TdarrStatistics } from "@homarr/integrations";
-import { useI18n } from "@homarr/translation/client";
 import type { MantineColor } from "@mantine/core";
 import { Divider, Group, HoverCard, Indicator, RingProgress, Stack, Text } from "@mantine/core";
 import { useColorScheme } from "@mantine/hooks";
 import { IconHeartbeat } from "@tabler/icons-react";
+
+import type { TdarrStatistics } from "@homarr/integrations";
+import { useI18n } from "@homarr/translation/client";
 
 interface HealthCheckStatusProps {
   statistics: TdarrStatistics;
@@ -13,7 +14,11 @@ export function HealthCheckStatus(props: HealthCheckStatusProps) {
   const colorScheme = useColorScheme();
   const t = useI18n("widget.mediaTranscoding.healthCheck");
 
-  const indicatorColor = props.statistics.failedHealthCheckCount ? "red" : props.statistics.stagedHealthCheckCount ? "yellow" : "green";
+  const indicatorColor = props.statistics.failedHealthCheckCount
+    ? "red"
+    : props.statistics.stagedHealthCheckCount
+      ? "yellow"
+      : "green";
 
   return (
     <HoverCard position="bottom" width={250} shadow="sm">
