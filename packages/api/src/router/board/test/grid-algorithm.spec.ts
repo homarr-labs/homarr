@@ -99,11 +99,12 @@ qlllmmmmmnnrrrst
 ulllmmmmmnnrrrvw
 xyz           äö`;
 
-// Just add two empty columns to the right
-const eighteenColumns = sixteenColumns
-  .split("\n")
-  .map((line, index) => (index === 0 ? line : `${line}  `))
-  .join("\n");
+const eighteenColumns = `
+abbccccddddeeefghi
+jbbccccddddeeeklll
+mmmmmnnopqseeetlll
+mmmmmnnrrruvwxylll
+mmmmmnnrrrzäö     `;
 
 const tenColumns = `
 abbcccceee

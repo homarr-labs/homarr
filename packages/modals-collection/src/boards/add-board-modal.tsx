@@ -1,13 +1,28 @@
-import { Button, Group, InputWrapper, Slider, Stack, Switch, TextInput } from "@mantine/core";
+import {
+  Badge,
+  Box,
+  Button,
+  Fieldset,
+  Group,
+  InputWrapper,
+  RadioGroup,
+  SimpleGrid,
+  Slider,
+  Stack,
+  Switch,
+  TextInput,
+} from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
+import { boardLayoutModes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { CustomRadioCard } from "@homarr/ui";
 import { boardColumnCountSchema, boardCreateSchema, boardNameSchema } from "@homarr/validation/board";
 
 export const AddBoardModal = createModal(({ actions }) => {
@@ -18,6 +33,7 @@ export const AddBoardModal = createModal(({ actions }) => {
       name: "",
       columnCount: 10,
       isPublic: false,
+      layoutMode: boardLayoutModes.defaultValue,
     },
   });
   const { mutate, isPending } = clientApi.board.createBoard.useMutation({
@@ -64,14 +80,38 @@ export const AddBoardModal = createModal(({ actions }) => {
             ) : null
           }
         />
-        <InputWrapper label={t("board.field.columnCount.label")} {...form.getInputProps("columnCount")}>
-          <Slider
-            min={boardColumnCountSchema.minValue ?? undefined}
-            max={boardColumnCountSchema.maxValue ?? undefined}
-            step={1}
-            {...form.getInputProps("columnCount")}
-          />
-        </InputWrapper>
+
+        <Fieldset legend={t("board.setting.section.layout.title")}>
+          <Stack gap="sm">
+            <RadioGroup {...form.getInputProps("layoutMode")}>
+              <SimpleGrid cols={{ sm: 2, xs: 1 }} spacing="md">
+                {boardLayoutModes.values.map((mode) => (
+                  <Box w="100%" key={mode} pos="relative">
+                    <CustomRadioCard
+                      value={mode}
+                      label={t(`board.field.layoutMode.option.${mode}.label`)}
+                      description={t(`board.field.layoutMode.option.${mode}.description`)}
+                    />
+                    {mode === boardLayoutModes.defaultValue && (
+                      <Badge pos="absolute" top="8px" right="8px" variant="light" size="sm">
+                        {t("common.select.badge.recommended")}
+                      </Badge>
+                    )}
+                  </Box>
+                ))}
+              </SimpleGrid>
+            </RadioGroup>
+
+            <InputWrapper label={t("board.field.columnCount.label")} {...form.getInputProps("columnCount")}>
+              <Slider
+                min={boardColumnCountSchema.minValue ?? undefined}
+                max={boardColumnCountSchema.maxValue ?? undefined}
+                step={1}
+                {...form.getInputProps("columnCount")}
+              />
+            </InputWrapper>
+          </Stack>
+        </Fieldset>
 
         <Switch
           label={t("board.field.isPublic.label")}
@@ -92,6 +132,7 @@ export const AddBoardModal = createModal(({ actions }) => {
   );
 }).withOptions({
   defaultTitle: (t) => t("management.page.board.action.new.label"),
+  size: "lg",
 });
 
 export const useBoardNameStatus = (name: string) => {

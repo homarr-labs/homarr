@@ -17,7 +17,7 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 
-import { clientApi } from "@homarr/api/client";
+import { applyAutoLayoutToBoard, clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
@@ -165,7 +165,7 @@ const EditModeMenu = () => {
   });
 
   const toggle = useCallback(() => {
-    if (isEditMode) return saveBoard(board);
+    if (isEditMode) return saveBoard(applyAutoLayoutToBoard(board));
     open();
   }, [board, isEditMode, saveBoard, open]);
 

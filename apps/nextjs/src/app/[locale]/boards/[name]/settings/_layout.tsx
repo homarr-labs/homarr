@@ -1,11 +1,31 @@
 "use client";
 
-import { Button, Fieldset, Grid, Group, Input, NumberInput, Slider, Stack, Text, TextInput } from "@mantine/core";
+import {
+  Badge,
+  Box,
+  Button,
+  Chip,
+  ChipGroup,
+  Fieldset,
+  Grid,
+  Group,
+  Input,
+  InputWrapper,
+  NumberInput,
+  RadioGroup,
+  SimpleGrid,
+  Slider,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { createId } from "@homarr/common";
+import { boardLayoutModes } from "@homarr/definitions";
 import { useZodForm } from "@homarr/form";
 import { useI18n } from "@homarr/translation/client";
+import { CustomRadioCard } from "@homarr/ui";
 import { boardSaveLayoutsSchema } from "@homarr/validation/board";
 
 import type { Board } from "../../_types";
@@ -25,6 +45,8 @@ export const LayoutSettingsContent = ({ board }: Props) => {
   const form = useZodForm(boardSaveLayoutsSchema.omit({ id: true }).required(), {
     initialValues: {
       layouts: board.layouts,
+      layoutMode: board.layoutMode,
+      baseLayoutId: board.baseLayoutId,
     },
   });
 
@@ -38,6 +60,53 @@ export const LayoutSettingsContent = ({ board }: Props) => {
       })}
     >
       <Stack>
+        <RadioGroup {...form.getInputProps("layoutMode")} label={t("board.field.layoutMode.label")}>
+          <SimpleGrid cols={{ sm: 2, xs: 1 }} spacing="md">
+            {boardLayoutModes.values.map((layoutMode) => (
+              <Box w="100%" key={layoutMode} pos="relative">
+                <CustomRadioCard
+                  value={layoutMode}
+                  label={t(`board.field.layoutMode.option.${layoutMode}.label`)}
+                  description={t(`board.field.layoutMode.option.${layoutMode}.description`)}
+                />
+                {layoutMode === boardLayoutModes.defaultValue && (
+                  <Badge pos="absolute" top="8px" right="8px" variant="light" size="sm">
+                    {t("common.select.badge.recommended")}
+                  </Badge>
+                )}
+              </Box>
+            ))}
+          </SimpleGrid>
+        </RadioGroup>
+
+        {form.values.layoutMode === "auto" && (
+          <InputWrapper label={t("board.field.baseLayout.label")} description={t("board.field.baseLayout.description")}>
+            <ChipGroup {...form.getInputProps("baseLayoutId")} multiple={false}>
+              <SimpleGrid
+                cols={{
+                  lg: Math.min(6, form.values.layouts.length),
+                  sm: Math.min(4, form.values.layouts.length),
+                  xs: Math.min(2, form.values.layouts.length),
+                }}
+                spacing="md"
+                mt="sm"
+              >
+                {form.values.layouts.map((layout) => (
+                  <Chip
+                    key={layout.id}
+                    value={layout.id}
+                    w="100%"
+                    size="sm"
+                    styles={{ label: { width: "100%", justifyContent: "center" } }}
+                  >
+                    {layout.name}
+                  </Chip>
+                ))}
+              </SimpleGrid>
+            </ChipGroup>
+          </InputWrapper>
+        )}
+
         <Stack gap="sm">
           <Group justify="space-between" align="center">
             <Text fw={500}>{t("board.setting.section.layout.responsive.title")}</Text>
@@ -82,18 +151,21 @@ export const LayoutSettingsContent = ({ board }: Props) => {
                   />
                 </Grid.Col>
               </Grid>
-              {form.values.layouts.length >= 2 && (
+              {form.values.layouts.length >= 2 && form.values.baseLayoutId !== layout.id && (
                 <Group justify="end">
                   <Button
                     variant="subtle"
                     onClick={() => {
-                      form.setValues((previous) =>
-                        previous.layouts !== undefined && previous.layouts.length >= 2
-                          ? {
-                              layouts: form.values.layouts.filter((filteredLayout) => filteredLayout.id !== layout.id),
-                            }
-                          : previous,
-                      );
+                      form.setValues((previous) => {
+                        if (!previous.layouts) return previous;
+                        if (previous.layouts.length < 2) return previous;
+                        if (previous.baseLayoutId === layout.id) return previous;
+
+                        return {
+                          ...previous,
+                          layouts: previous.layouts.filter((filteredLayout) => filteredLayout.id !== layout.id),
+                        };
+                      });
                     }}
                   >
                     {t("common.action.remove")}
