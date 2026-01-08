@@ -1,20 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useI18n } from "@homarr/translation/client";
 import { Anchor, Box, Center, Group, Stack, Title } from "@mantine/core";
 import { IconBrandYoutube, IconDeviceCctvOff } from "@tabler/icons-react";
+import { useEffect, useRef } from "react";
 import videojs from "video.js";
-
-import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./component.module.css";
 
 import "video.js/dist/video-js.css";
 
-import type Player from "video.js/dist/types/player";
-
 import { createDocumentationLink } from "@homarr/definitions";
+import type Player from "video.js/dist/types/player";
 
 export default function VideoWidget({ options }: WidgetComponentProps<"video">) {
   if (options.feedUrl.trim() === "") {
@@ -79,7 +77,6 @@ const Feed = ({ options }: Pick<WidgetComponentProps<"video">, "options">) => {
       ],
     });
     // All other properties are updated with other useEffect
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoRef]);
 
   useEffect(() => {

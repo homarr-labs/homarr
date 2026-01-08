@@ -1,10 +1,9 @@
-import { notFound } from "next/navigation";
-import { Alert, Box, Group, Stack, Title } from "@mantine/core";
-import { IconExclamationCircle } from "@tabler/icons-react";
-
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
+import { Alert, Box, Group, Stack, Title } from "@mantine/core";
+import { IconExclamationCircle } from "@tabler/icons-react";
+import { notFound } from "next/navigation";
 
 import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
@@ -41,7 +40,6 @@ export async function generateMetadata(props: Props) {
   const t = await getScopedI18n("management.page.user.edit");
 
   return {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     title: createMetaTitle(t("metaTitle", { username: user.name! })),
   };
 }

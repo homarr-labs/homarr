@@ -1,11 +1,10 @@
 "use client";
 
-import type { FocusEventHandler } from "react";
-import { useState } from "react";
+import { useI18n } from "@homarr/translation/client";
 import { Combobox, Group, Pill, PillsInput, Text, useCombobox } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
-
-import { useI18n } from "@homarr/translation/client";
+import type { FocusEventHandler } from "react";
+import { useState } from "react";
 
 interface TextMultiSelectProps {
   label: string;
@@ -37,8 +36,7 @@ export const TextMultiSelect = ({ label, value = [], onChange, onBlur, onFocus, 
     }
   };
 
-  const handleValueRemove = (removedValue: string) =>
-    onChange(value.filter((filterValue) => filterValue !== removedValue));
+  const handleValueRemove = (removedValue: string) => onChange(value.filter((filterValue) => filterValue !== removedValue));
 
   const values = value.map((item) => (
     <Pill key={item} withRemoveButton onRemove={() => handleValueRemove(item)}>
@@ -72,7 +70,7 @@ export const TextMultiSelect = ({ label, value = [], onChange, onBlur, onFocus, 
                 onKeyDown={(event) => {
                   if (event.key === "Backspace" && search.length === 0) {
                     event.preventDefault();
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
                     handleValueRemove(value.at(-1)!);
                   }
                 }}

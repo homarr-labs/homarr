@@ -1,12 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
-import { ActionIcon, Avatar, Badge, Group, Stack, Text, Tooltip } from "@mantine/core";
-import type { IconProps } from "@tabler/icons-react";
-import { IconBrandDocker, IconPlayerPlay, IconPlayerStop, IconRotateClockwise } from "@tabler/icons-react";
-import type { MRT_ColumnDef } from "mantine-react-table";
-import { MantineReactTable } from "mantine-react-table";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { humanFileSize, useTimeAgo } from "@homarr/common";
@@ -15,6 +8,12 @@ import { containerStateColorMap } from "@homarr/docker/shared";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
+import { ActionIcon, Avatar, Badge, Group, Stack, Text, Tooltip } from "@mantine/core";
+import type { IconProps } from "@tabler/icons-react";
+import { IconBrandDocker, IconPlayerPlay, IconPlayerStop, IconRotateClockwise } from "@tabler/icons-react";
+import type { MRT_ColumnDef } from "mantine-react-table";
+import { MantineReactTable } from "mantine-react-table";
+import { useMemo } from "react";
 
 import type { WidgetComponentProps } from "../definition";
 
@@ -129,7 +128,7 @@ const createColumns = (
     enableSorting: false,
     Cell({ row }) {
       const utils = clientApi.useUtils();
-      // eslint-disable-next-line no-restricted-syntax
+
       const onSettled = async () => {
         await utils.docker.getContainers.invalidate();
       };

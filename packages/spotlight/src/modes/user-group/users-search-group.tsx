@@ -1,16 +1,15 @@
-import { Group, Stack, Text } from "@mantine/core";
-import { IconEye } from "@tabler/icons-react";
-
 import { clientApi } from "@homarr/api/client";
 import { useI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
+import { Group, Stack, Text } from "@mantine/core";
+import { IconEye } from "@tabler/icons-react";
 
 import { createChildrenOptions } from "../../lib/children";
 import { createGroup } from "../../lib/group";
 import { interaction } from "../../lib/interaction";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+
 type User = { id: string; name: string; image: string | null };
 
 const userChildrenOptions = createChildrenOptions<User>({

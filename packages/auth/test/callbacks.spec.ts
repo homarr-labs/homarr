@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { AdapterUser } from "@auth/core/adapters";
-import type { JWT } from "next-auth/jwt";
-import { describe, expect, test, vi } from "vitest";
-
 import { groupMembers, groupPermissions, groups, users } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import * as definitions from "@homarr/definitions";
+import type { JWT } from "next-auth/jwt";
+import { describe, expect, test, vi } from "vitest";
 
 import { createSessionCallback, getCurrentUserPermissionsAsync } from "../callbacks";
 
@@ -72,9 +70,7 @@ describe("getCurrentUserPermissions", () => {
   test("should return permissions for user", async () => {
     // Arrange
     const db = createDb();
-    const getPermissionsWithChildrenMock = vi
-      .spyOn(definitions, "getPermissionsWithChildren")
-      .mockReturnValue(["board-create"]);
+    const getPermissionsWithChildrenMock = vi.spyOn(definitions, "getPermissionsWithChildren").mockReturnValue(["board-create"]);
     const mockId = "1";
 
     await db.insert(users).values({

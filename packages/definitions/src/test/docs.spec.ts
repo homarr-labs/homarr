@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax */
+
 import { describe, expect, test } from "vitest";
 
 import { createDocumentationLink } from "../docs";

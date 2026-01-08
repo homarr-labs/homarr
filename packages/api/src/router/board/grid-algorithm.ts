@@ -114,7 +114,7 @@ const addItemToOccupied = (
     if (!row) {
       addRow(occupied2d, columnCount);
       // After adding it, it must exist
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       row = occupied2d[position.y + yOffset]!;
     }
 

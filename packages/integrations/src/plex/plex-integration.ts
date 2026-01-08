@@ -1,10 +1,9 @@
-import { parseStringPromise } from "xml2js";
-import { z } from "zod/v4";
-
 import { ParseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ImageProxy } from "@homarr/image-proxy";
+import { parseStringPromise } from "xml2js";
+import { z } from "zod/v4";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -92,19 +91,17 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
           {
             mediaKey: item.key,
             type: "poster",
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
             url: item.Image!.find((image) => image?.type === "coverPoster")?.url,
           },
           {
             mediaKey: item.key,
             type: "backdrop",
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
             url: item.Image!.find((image) => image?.type === "background")?.url,
           },
         ])
-        .filter(
-          (image): image is { mediaKey: string; type: "poster" | "backdrop"; url: string } => image.url !== undefined,
-        ) ?? [];
+        .filter((image): image is { mediaKey: string; type: "poster" | "backdrop"; url: string } => image.url !== undefined) ?? [];
 
     const proxiedImages = await Promise.all(
       images.map(async (image) => {
@@ -133,9 +130,7 @@ export class PlexIntegration extends Integration implements IMediaServerIntegrat
           title: item.title,
           subtitle: item.tagline,
           description: item.summary,
-          releaseDate: item.originallyAvailableAt
-            ? new Date(item.originallyAvailableAt)
-            : new Date(item.addedAt * 1000),
+          releaseDate: item.originallyAvailableAt ? new Date(item.originallyAvailableAt) : new Date(item.addedAt * 1000),
           imageUrls: {
             poster: proxiedImages.find((image) => image.mediaKey === item.key && image.type === "poster")?.url,
             backdrop: proxiedImages.find((image) => image.mediaKey === item.key && image.type === "backdrop")?.url,

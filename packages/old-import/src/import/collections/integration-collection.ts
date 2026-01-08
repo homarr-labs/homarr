@@ -40,7 +40,7 @@ export const createIntegrationInsertCollection = (
         insertCollection.integrationSecrets.push({
           integrationId: integration.id,
           kind: secret.field,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           value: encryptSecret(secret.value!),
         });
       });

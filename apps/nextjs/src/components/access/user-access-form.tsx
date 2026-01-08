@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { Anchor, Box, Button, Group, Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine/core";
-import { IconPlus } from "@tabler/icons-react";
-
 import { useModalAction } from "@homarr/modals";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { Link, UserAvatar } from "@homarr/ui";
+import { Anchor, Box, Button, Group, Stack, Table, TableTbody, TableTh, TableThead, TableTr } from "@mantine/core";
+import { IconPlus } from "@tabler/icons-react";
+import { useState } from "react";
 
 import type { AccessQueryData } from "./access-settings";
 import { AccessDisplayRow, AccessSelectRow } from "./access-table-rows";
@@ -83,13 +82,10 @@ export const UsersAccessForm = <TPermission extends string>({
               </TableTr>
             </TableThead>
             <TableTbody>
-              {entity.owner && (
-                <AccessDisplayRow itemContent={<UserItemContent user={entity.owner} />} permission="full" />
-              )}
+              {entity.owner && <AccessDisplayRow itemContent={<UserItemContent user={entity.owner} />} permission="full" />}
               {form.values.items.map((row, index) => (
                 <AccessSelectRow
                   key={row.principalId}
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                   itemContent={<UserItemContent user={users.get(row.principalId)!} />}
                   permission={row.permission}
                   index={index}

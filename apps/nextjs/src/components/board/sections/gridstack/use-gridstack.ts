@@ -1,10 +1,9 @@
-import type { RefObject } from "react";
-import { createRef, useCallback, useEffect, useRef } from "react";
-import { useElementSize } from "@mantine/hooks";
-
 import { useCurrentLayout, useRequiredBoard } from "@homarr/boards/context";
 import { useEditMode } from "@homarr/boards/edit-mode";
 import type { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode } from "@homarr/gridstack";
+import { useElementSize } from "@mantine/hooks";
+import type { RefObject } from "react";
+import { createRef, useCallback, useEffect, useRef } from "react";
 
 import type { Section } from "~/app/[locale]/boards/_types";
 import { useMarkSectionAsReady } from "~/app/[locale]/boards/(content)/_ready-context";
@@ -31,13 +30,7 @@ interface UseGristackReturnType {
  * @param height height of the section (row count)
  * @param isDynamic if the section is dynamic
  */
-const handleResizeChange = (
-  wrapper: HTMLDivElement,
-  gridstack: GridStack,
-  width: number,
-  height: number,
-  isDynamic: boolean,
-) => {
+const handleResizeChange = (wrapper: HTMLDivElement, gridstack: GridStack, width: number, height: number, isDynamic: boolean) => {
   wrapper.style.setProperty("--gridstack-column-count", width.toString());
   wrapper.style.setProperty("--gridstack-row-count", height.toString());
 
@@ -69,12 +62,10 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
   const board = useRequiredBoard();
 
   const currentLayoutId = useCurrentLayout();
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
   const currentLayout = board.layouts.find((layout) => layout.id === currentLayoutId)!;
   const columnCount =
-    section.kind === "dynamic" && "width" in section && typeof section.width === "number"
-      ? section.width
-      : currentLayout.columnCount;
+    section.kind === "dynamic" && "width" in section && typeof section.width === "number" ? section.width : currentLayout.columnCount;
 
   const itemRefKeys = Object.keys(itemRefs.current);
   // define items in itemRefs for easy access and reference to items
@@ -104,13 +95,13 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
           itemId: id,
           // We want the following properties to be null by default
           // so the next free position is used from the gridstack
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           xOffset: changedNode.x!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           yOffset: changedNode.y!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           width: changedNode.w!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           height: changedNode.h!,
         });
         return;
@@ -121,13 +112,13 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
           innerSectionId: id,
           // We want the following properties to be null by default
           // so the next free position is used from the gridstack
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           xOffset: changedNode.x!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           yOffset: changedNode.y!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           width: changedNode.w!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           height: changedNode.h!,
         });
         return;
@@ -151,13 +142,13 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
           sectionId: section.id,
           // We want the following properties to be null by default
           // so the next free position is used from the gridstack
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           xOffset: addedNode.x!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           yOffset: addedNode.y!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           width: addedNode.w!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           height: addedNode.h!,
         });
         return;
@@ -169,13 +160,13 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
           sectionId: section.id,
           // We want the following properties to be null by default
           // so the next free position is used from the gridstack
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           xOffset: addedNode.x!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           yOffset: addedNode.y!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           width: addedNode.w!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           height: addedNode.h!,
         });
         return;
@@ -206,7 +197,6 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
     }
 
     // Only run this effect when the section items change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemIds.length, columnCount]);
 
   /**
@@ -228,13 +218,7 @@ export const useGridstack = (section: Omit<Section, "items">, itemIds: string[])
 
           if (!dynamicInnerGrid?.gridstack) return;
 
-          handleResizeChange(
-            dynamicInnerGrid as HTMLDivElement,
-            dynamicInnerGrid.gridstack,
-            node.w ?? 1,
-            node.h ?? 1,
-            true,
-          );
+          handleResizeChange(dynamicInnerGrid as HTMLDivElement, dynamicInnerGrid.gridstack, node.w ?? 1, node.h ?? 1, true);
         });
     });
 
@@ -311,24 +295,11 @@ interface UseCssVariableConfiguration {
  * @param height height of the section
  * @param columnCount column count of the gridstack
  */
-const useCssVariableConfiguration = ({
-  gridRef,
-  wrapperRef,
-  width,
-  height,
-  columnCount,
-  isDynamic,
-}: UseCssVariableConfiguration) => {
+const useCssVariableConfiguration = ({ gridRef, wrapperRef, width, height, columnCount, isDynamic }: UseCssVariableConfiguration) => {
   const onResize = useCallback(() => {
     if (!wrapperRef.current) return;
     if (!gridRef.current) return;
-    handleResizeChange(
-      wrapperRef.current,
-      gridRef.current,
-      gridRef.current.getColumn(),
-      gridRef.current.getRow(),
-      isDynamic,
-    );
+    handleResizeChange(wrapperRef.current, gridRef.current, gridRef.current.getColumn(), gridRef.current.getRow(), isDynamic);
   }, [wrapperRef, gridRef, isDynamic]);
 
   useCallback(() => {

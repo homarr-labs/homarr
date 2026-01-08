@@ -1,12 +1,11 @@
-import type { MantineColor, RingProgressProps } from "@mantine/core";
-import { Card, Center, Group, RingProgress, ScrollArea, Stack, Text, Title, Tooltip } from "@mantine/core";
-import { IconDatabaseHeart, IconFileDescription, IconHeartbeat, IconTransform } from "@tabler/icons-react";
-
 import { useRequiredBoard } from "@homarr/boards/context";
 import { humanFileSize } from "@homarr/common";
 import type { TdarrPieSegment, TdarrStatistics } from "@homarr/integrations";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
+import type { MantineColor, RingProgressProps } from "@mantine/core";
+import { Card, Center, Group, RingProgress, ScrollArea, Stack, Text, Title, Tooltip } from "@mantine/core";
+import { IconDatabaseHeart, IconFileDescription, IconHeartbeat, IconTransform } from "@tabler/icons-react";
 
 const PIE_COLORS: MantineColor[] = ["cyan", "grape", "gray", "orange", "pink"];
 
@@ -32,17 +31,9 @@ export function StatisticsPanel(props: StatisticsPanelProps) {
     <ScrollArea h="100%">
       <Group wrap="wrap" justify="center" p={4} w="100%" gap="xs">
         <StatisticItem icon={IconTransform} label={t("transcodesCount")} value={props.statistics.totalTranscodeCount} />
-        <StatisticItem
-          icon={IconHeartbeat}
-          label={t("healthChecksCount")}
-          value={props.statistics.totalHealthCheckCount}
-        />
+        <StatisticItem icon={IconHeartbeat} label={t("healthChecksCount")} value={props.statistics.totalHealthCheckCount} />
         <StatisticItem icon={IconFileDescription} label={t("filesCount")} value={props.statistics.totalFileCount} />
-        <StatisticItem
-          icon={IconDatabaseHeart}
-          label={t("savedSpace")}
-          value={humanFileSize(Math.floor(allLibs.totalSavedSpace))}
-        />
+        <StatisticItem icon={IconDatabaseHeart} label={t("savedSpace")} value={humanFileSize(Math.floor(allLibs.totalSavedSpace))} />
       </Group>
       <Group justify="center" wrap="wrap" grow>
         <StatisticRingProgress items={allLibs.transcodeStatus} label={t("transcodes")} />
@@ -76,7 +67,7 @@ function toRingProgressSections(segments: TdarrPieSegment[]): RingProgressProps[
   return segments.map((segment, index) => ({
     value: (segment.value * 100) / total,
     tooltip: `${segment.name}: ${segment.value}`,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     color: PIE_COLORS[index % PIE_COLORS.length]!, // Ensures a valid color in the case that index > PIE_COLORS.length
   }));
 }

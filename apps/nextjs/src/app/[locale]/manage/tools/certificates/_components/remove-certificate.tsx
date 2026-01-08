@@ -1,13 +1,12 @@
 "use client";
 
-import { ActionIcon } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
-
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n } from "@homarr/translation/client";
+import { ActionIcon } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 
 interface RemoveCertificateProps {
   fileName: string;
@@ -26,7 +25,7 @@ export const RemoveCertificate = ({ fileName }: RemoveCertificateProps) => {
     openConfirmModal({
       title: t("certificate.action.remove.label"),
       children: t("certificate.action.remove.confirm"),
-      // eslint-disable-next-line no-restricted-syntax
+
       async onConfirm() {
         await mutateAsync(
           { fileName },

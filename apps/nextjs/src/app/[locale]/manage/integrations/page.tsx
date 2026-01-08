@@ -1,6 +1,11 @@
-import { Fragment } from "react";
-import type { PropsWithChildren } from "react";
-import { redirect } from "next/navigation";
+import type { RouterOutputs } from "@homarr/api";
+import { api } from "@homarr/api/server";
+import { auth } from "@homarr/auth/next";
+import { objectEntries } from "@homarr/common";
+import type { IntegrationKind } from "@homarr/definitions";
+import { getIntegrationName } from "@homarr/definitions";
+import { getScopedI18n } from "@homarr/translation/server";
+import { CountBadge, IntegrationAvatar, Link } from "@homarr/ui";
 import {
   AccordionControl,
   AccordionItem,
@@ -27,15 +32,9 @@ import {
   Title,
 } from "@mantine/core";
 import { IconChevronDown, IconChevronUp, IconPencil, IconPlugX } from "@tabler/icons-react";
-
-import type { RouterOutputs } from "@homarr/api";
-import { api } from "@homarr/api/server";
-import { auth } from "@homarr/auth/next";
-import { objectEntries } from "@homarr/common";
-import type { IntegrationKind } from "@homarr/definitions";
-import { getIntegrationName } from "@homarr/definitions";
-import { getScopedI18n } from "@homarr/translation/server";
-import { CountBadge, IntegrationAvatar, Link } from "@homarr/ui";
+import { redirect } from "next/navigation";
+import type { PropsWithChildren } from "react";
+import { Fragment } from "react";
 
 import { ManageContainer } from "~/components/manage/manage-container";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
@@ -103,15 +102,7 @@ export default async function IntegrationsPage(props: IntegrationsPageProps) {
 
 const IntegrationSelectMenu = ({ children }: PropsWithChildren) => {
   return (
-    <Menu
-      width={256}
-      trapFocus
-      position="bottom-end"
-      withinPortal
-      shadow="md"
-      keepMounted={false}
-      withInitialFocusPlaceholder={false}
-    >
+    <Menu width={256} trapFocus position="bottom-end" withinPortal shadow="md" keepMounted={false} withInitialFocusPlaceholder={false}>
       {children}
       <MenuDropdown>
         <IntegrationCreateDropdownContent enableMockIntegration={env.UNSAFE_ENABLE_MOCK_INTEGRATION} />
@@ -136,7 +127,6 @@ const IntegrationList = async ({ integrations, activeTab }: IntegrationListProps
 
   const groupedIntegrations = integrations.reduce(
     (acc, integration) => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!acc[integration.kind]) {
         acc[integration.kind] = [];
       }

@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ReactNode } from "react";
+import { useRequiredBoard } from "@homarr/boards/context";
+import type { TablerIcon } from "@homarr/ui";
 import type { AreaChartSeries } from "@mantine/charts";
 import { AreaChart, LineChart } from "@mantine/charts";
 import { Card, Center, Group, Loader, Stack, Text, useMantineColorScheme, useMantineTheme } from "@mantine/core";
 import { useElementSize, useHover, useMergedRef } from "@mantine/hooks";
+import type { ReactNode } from "react";
 import type { TooltipProps, YAxisProps } from "recharts";
-
-import { useRequiredBoard } from "@homarr/boards/context";
-import type { TablerIcon } from "@homarr/ui";
 
 import type { LabelDisplayModeOption } from "..";
 
@@ -42,23 +40,14 @@ export const CommonChart = ({
   const ref = useMergedRef(elementSizeRef, hoverRef);
 
   const opacity = board.opacity / 100;
-  const backgroundColor =
-    scheme.colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
+  const backgroundColor = scheme.colorScheme === "dark" ? `rgba(57, 57, 57, ${opacity})` : `rgba(246, 247, 248, ${opacity})`;
 
   const ChartComponent = chartType === "line" ? LineChart : AreaChart;
   const showIcon = labelDisplayMode === "icon" || labelDisplayMode === "textWithIcon";
   const showText = labelDisplayMode === "text" || labelDisplayMode === "textWithIcon";
 
   return (
-    <Card
-      ref={ref}
-      h={"100%"}
-      pos={"relative"}
-      style={{ overflow: "visible" }}
-      p={0}
-      bg={backgroundColor}
-      radius={board.itemRadius}
-    >
+    <Card ref={ref} h={"100%"} pos={"relative"} style={{ overflow: "visible" }} p={0} bg={backgroundColor} radius={board.itemRadius}>
       {data.length > 1 && height > 40 && !hovered && (
         <Group
           pos={"absolute"}

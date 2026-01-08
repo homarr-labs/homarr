@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { clientApi } from "@homarr/api/client";
 import { Box, Group, Stack } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
-
-import { clientApi } from "@homarr/api/client";
+import { useState } from "react";
 
 import type { WidgetComponentProps } from "../definition";
 import { CombinedNetworkTrafficChart } from "./chart/combined-network-traffic";
@@ -20,8 +19,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
   const [data] = clientApi.widget.healthMonitoring.getSystemHealthStatus.useSuspenseQuery({
     integrationIds,
   });
-  const memoryCapacityInBytes =
-    (data[0]?.healthInfo.memAvailableInBytes ?? 0) + (data[0]?.healthInfo.memUsedInBytes ?? 0);
+  const memoryCapacityInBytes = (data[0]?.healthInfo.memAvailableInBytes ?? 0) + (data[0]?.healthInfo.memUsedInBytes ?? 0);
   const [items, setItems] = useState<{ cpu: number; memory: number; network: { up: number; down: number } | null }[]>(
     data.map((item) => ({
       cpu: item.healthInfo.cpuUtilization,
@@ -49,8 +47,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
     },
   );
 
-  const showNetwork =
-    items.length === 0 || (items.every((item) => item.network !== null) && options.visibleCharts.includes("network"));
+  const showNetwork = items.length === 0 || (items.every((item) => item.network !== null) && options.visibleCharts.includes("network"));
   const rowHeight = `calc((100% - ${(options.visibleCharts.length - 1) * 8}px) / ${options.visibleCharts.length})`;
 
   return (
@@ -78,7 +75,6 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
         (width > 256 ? (
           <Group h={rowHeight} gap="xs" grow>
             <NetworkTrafficChart
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               usageOverTime={items.map((item) => item.network!.down)}
               isUp={false}
               hasShadow={options.hasShadow}
@@ -86,7 +82,6 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
             />
 
             <NetworkTrafficChart
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               usageOverTime={items.map((item) => item.network!.up)}
               isUp
               hasShadow={options.hasShadow}
@@ -96,7 +91,6 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
         ) : (
           <Box h={rowHeight}>
             <CombinedNetworkTrafficChart
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               usageOverTime={items.map((item) => item.network!)}
               hasShadow={options.hasShadow}
               labelDisplayMode={options.labelDisplayMode}

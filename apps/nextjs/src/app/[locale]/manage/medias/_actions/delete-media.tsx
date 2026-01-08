@@ -1,13 +1,12 @@
 "use client";
 
-import { ActionIcon, Tooltip } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
+import { ActionIcon, Tooltip } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 
 interface DeleteMediaProps {
   media: RouterOutputs["media"]["getPaginated"]["items"][number];
@@ -22,7 +21,7 @@ export const DeleteMedia = ({ media }: DeleteMediaProps) => {
     openConfirmModal({
       title: t("media.action.delete.label"),
       children: t.rich("media.action.delete.description", { bName: () => <b>{media.name}</b> }),
-      // eslint-disable-next-line no-restricted-syntax
+
       onConfirm: async () => {
         await mutateAsync({ id: media.id });
         await revalidatePathActionAsync("/manage/medias");

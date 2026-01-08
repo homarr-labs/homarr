@@ -1,7 +1,6 @@
-import { z } from "zod/v4";
-
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
+import { z } from "zod/v4";
 
 import type { IntegrationTestingInput } from "../../base/integration";
 import { Integration } from "../../base/integration";
@@ -46,7 +45,7 @@ export class RadarrIntegration extends Integration implements ICalendarIntegrati
           subTitle: radarrCalendarEvent.originalTitle,
           description: radarrCalendarEvent.overview ?? null,
           // Check is done above in the filter
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           startDate: item.date!,
           endDate: null,
           image: imageSrc
@@ -96,8 +95,7 @@ export class RadarrIntegration extends Integration implements ICalendarIntegrati
     const flatImages = [...event.images];
 
     const sortedImages = flatImages.sort(
-      (imageA, imageB) =>
-        mediaOrganizerPriorities.indexOf(imageA.coverType) - mediaOrganizerPriorities.indexOf(imageB.coverType),
+      (imageA, imageB) => mediaOrganizerPriorities.indexOf(imageA.coverType) - mediaOrganizerPriorities.indexOf(imageB.coverType),
     );
     logger.debug(`Sorted images to [${sortedImages.map((image) => image.coverType).join(",")}]`);
     return sortedImages[0];

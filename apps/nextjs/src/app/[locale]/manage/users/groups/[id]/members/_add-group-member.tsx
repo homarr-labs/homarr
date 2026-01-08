@@ -1,11 +1,10 @@
 "use client";
 
-import { useCallback } from "react";
-
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useModalAction } from "@homarr/modals";
 import { useScopedI18n } from "@homarr/translation/client";
+import { useCallback } from "react";
 
 import { UserSelectModal } from "~/components/access/user-select-modal";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
@@ -23,7 +22,6 @@ export const AddGroupMember = ({ groupId, presentUserIds }: AddGroupMemberProps)
   const handleAddMember = useCallback(() => {
     openModal(
       {
-        // eslint-disable-next-line no-restricted-syntax
         async onSelect({ id }) {
           await mutateAsync({
             userId: id,

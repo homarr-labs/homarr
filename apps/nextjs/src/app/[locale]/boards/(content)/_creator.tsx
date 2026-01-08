@@ -1,10 +1,8 @@
-import type { Metadata } from "next";
 import { TRPCError } from "@trpc/server";
+import type { Metadata } from "next";
 
 // Placed here because gridstack styles are used for board content
 import "~/styles/gridstack.scss";
-
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 import { getQueryClient } from "@homarr/api/server";
 import { IntegrationProvider } from "@homarr/auth/client";
@@ -16,6 +14,7 @@ import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 import type { WidgetKind } from "@homarr/definitions";
 import { getI18n } from "@homarr/translation/server";
 import { prefetchForKindAsync } from "@homarr/widgets/prefetch";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 import { createMetaTitle } from "~/metadata";
 import { createBoardLayout } from "../_layout-creator";
@@ -39,7 +38,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
       headerActions: <BoardContentHeaderActions />,
       getInitialBoardAsync: getInitialBoard,
     }),
-    // eslint-disable-next-line no-restricted-syntax
+
     page: async ({ params }: { params: Promise<TParams> }) => {
       const session = await auth();
       const integrations = await getIntegrationsWithPermissionsAsync(session);
@@ -60,13 +59,7 @@ export const createBoardContentPage = <TParams extends Record<string, unknown>>(
 
       for (const [kind, items] of itemsMap) {
         await prefetchForKindAsync(kind, queryClient, items).catch((error) => {
-          logger.error(
-            new ErrorWithMetadata(
-              "Failed to prefetch widget",
-              { widgetKind: kind, itemCount: items.length },
-              { cause: error },
-            ),
-          );
+          logger.error(new ErrorWithMetadata("Failed to prefetch widget", { widgetKind: kind, itemCount: items.length }, { cause: error }));
         });
       }
 

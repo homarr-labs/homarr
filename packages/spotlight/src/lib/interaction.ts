@@ -13,11 +13,10 @@ const searchInteractions = [
   createSearchInteraction("javaScript").optionsType<{ onSelect: () => MaybePromise<void> }>(),
   createSearchInteraction("mode").optionsType<{ mode: keyof TranslationObject["search"]["mode"] }>(),
   createSearchInteraction("children").optionsType<{
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     useActions: CreateChildrenOptionsProps<any>["useActions"];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     DetailComponent: CreateChildrenOptionsProps<any>["DetailComponent"];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     option: any;
   }>(),
   createSearchInteraction("none").optionsType<never>(),

@@ -1,3 +1,4 @@
+import { createAxiosCertificateInstanceAsync } from "@homarr/core/infrastructure/http";
 import { Jellyfin } from "@jellyfin/sdk";
 import { BaseItemKind } from "@jellyfin/sdk/lib/generated-client/models";
 import { getSessionApi } from "@jellyfin/sdk/lib/utils/api/session-api";
@@ -5,8 +6,6 @@ import { getSystemApi } from "@jellyfin/sdk/lib/utils/api/system-api";
 import { getUserApi } from "@jellyfin/sdk/lib/utils/api/user-api";
 import { getUserLibraryApi } from "@jellyfin/sdk/lib/utils/api/user-library-api";
 import type { AxiosInstance } from "axios";
-
-import { createAxiosCertificateInstanceAsync } from "@homarr/core/infrastructure/http";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import { integrationAxiosHttpErrorHandler } from "../base/errors/http";
@@ -120,14 +119,13 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
       limit: 100,
     });
     return result.data.map((item) => ({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       id: item.Id!,
       type: this.mapMediaReleaseType(item.Type),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       title: item.Name!,
       subtitle: item.Taglines?.at(0),
       description: item.Overview ?? undefined,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       releaseDate: new Date(item.PremiereDate ?? item.DateCreated!),
       imageUrls: {
         poster: super.externalUrl(`/Items/${item.Id}/Images/Primary?maxHeight=492&maxWidth=328&quality=90`).toString(),
@@ -182,9 +180,7 @@ export class JellyfinIntegration extends Integration implements IMediaServerInte
   }
 }
 
-export const convertJellyfinType = (
-  kind: BaseItemKind | undefined,
-): Exclude<StreamSession["currentlyPlaying"], null>["type"] => {
+export const convertJellyfinType = (kind: BaseItemKind | undefined): Exclude<StreamSession["currentlyPlaying"], null>["type"] => {
   switch (kind) {
     case BaseItemKind.Audio:
     case BaseItemKind.MusicVideo:

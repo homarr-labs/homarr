@@ -10,7 +10,7 @@ import { ProxmoxApiErrorHandler } from "../proxmox-error-handler";
 describe("ProxmoxApiErrorHandler handleError should handle the provided error accordingly", () => {
   test.each([400, 401, 500])("should handle %s error", async (statusCode) => {
     // Arrange
-    // eslint-disable-next-line no-restricted-syntax
+
     const mockedFetch: typeof undiciFetch = async () => {
       return Promise.resolve(createFakeResponse(statusCode));
     };
@@ -25,7 +25,7 @@ describe("ProxmoxApiErrorHandler handleError should handle the provided error ac
   });
   test("should handle other non successful status codes", async () => {
     // Arrange
-    // eslint-disable-next-line no-restricted-syntax
+
     const mockedFetch: typeof undiciFetch = async () => {
       return Promise.resolve(createFakeResponse(404));
     };

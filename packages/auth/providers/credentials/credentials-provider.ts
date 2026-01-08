@@ -13,7 +13,7 @@ export const createCredentialsConfiguration = (db: Database) =>
     id: "credentials",
     type: "credentials",
     name: "Credentials",
-    // eslint-disable-next-line no-restricted-syntax
+
     async authorize(credentials) {
       const data = await userSignInSchema.parseAsync(credentials);
 
@@ -26,7 +26,7 @@ export const createLdapConfiguration = (db: Database) =>
     id: "ldap",
     type: "credentials",
     name: "Ldap",
-    // eslint-disable-next-line no-restricted-syntax
+
     async authorize(credentials) {
       const data = await ldapSignInSchema.parseAsync(credentials);
       return await authorizeWithLdapCredentialsAsync(db, data).catch(() => null);

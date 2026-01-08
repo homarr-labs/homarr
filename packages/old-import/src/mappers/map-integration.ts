@@ -45,7 +45,7 @@ export const mapAndDecryptIntegrations = (
   }
 
   return preparedIntegrations.map(({ type, name, url, properties }) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    
     const kind = mapIntegrationType(type!);
 
     return {

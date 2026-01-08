@@ -1,8 +1,7 @@
-import { Spotlight } from "@mantine/spotlight";
-
 import type { TranslationObject } from "@homarr/translation";
 import { translateIfNecessary } from "@homarr/translation";
 import { useI18n } from "@homarr/translation/client";
+import { Spotlight } from "@mantine/spotlight";
 
 import type { SearchGroup } from "../../../lib/group";
 import type { inferSearchInteractionOptions } from "../../../lib/interaction";
@@ -20,7 +19,6 @@ export const SpotlightActionGroups = ({ groups, ...others }: SpotlightActionGrou
 
   return groups.map((group) => (
     <Spotlight.ActionsGroup key={translateIfNecessary(t, group.title)} label={translateIfNecessary(t, group.title)}>
-      {/*eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       <SpotlightGroupActions<any> group={group} {...others} />
     </Spotlight.ActionsGroup>
   ));

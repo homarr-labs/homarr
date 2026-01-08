@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import type { Column, InferSelectModel } from "drizzle-orm";
-import type { ForeignKey as MysqlForeignKey, MySqlTableWithColumns } from "drizzle-orm/mysql-core";
-import type { PgTableWithColumns, ForeignKey as PostgresqlForeignKey } from "drizzle-orm/pg-core";
-import type { ForeignKey as SqliteForeignKey, SQLiteTableWithColumns } from "drizzle-orm/sqlite-core";
-import { expect, expectTypeOf, test } from "vitest";
+
 
 import { objectEntries } from "@homarr/common";
+import type { Column, InferSelectModel } from "drizzle-orm";
+import type { MySqlTableWithColumns, ForeignKey as MysqlForeignKey } from "drizzle-orm/mysql-core";
+import type { PgTableWithColumns, ForeignKey as PostgresqlForeignKey } from "drizzle-orm/pg-core";
+import type { SQLiteTableWithColumns, ForeignKey as SqliteForeignKey } from "drizzle-orm/sqlite-core";
+import { expect, expectTypeOf, test } from "vitest";
 
 import * as mysqlSchema from "../schema/mysql";
 import * as postgresqlSchema from "../schema/postgresql";
@@ -27,14 +27,9 @@ type FixedMysqlConfig = {
 type FixedPostgresqlConfig = {
   [key in keyof PostgreisqlConfig]: {
     [column in keyof PostgreisqlConfig[key]]: {
-      [property in Exclude<
-        keyof PostgreisqlConfig[key][column],
-        "dataType" | "data"
-      >]: PostgreisqlConfig[key][column][property];
+      [property in Exclude<keyof PostgreisqlConfig[key][column], "dataType" | "data">]: PostgreisqlConfig[key][column][property];
     } & {
-      dataType: PostgreisqlConfig[key][column]["data"] extends Buffer
-        ? "buffer"
-        : PostgreisqlConfig[key][column]["dataType"];
+      dataType: PostgreisqlConfig[key][column]["data"] extends Buffer ? "buffer" : PostgreisqlConfig[key][column]["dataType"];
       data: PostgreisqlConfig[key][column]["data"] extends Buffer ? Buffer : PostgreisqlConfig[key][column]["data"];
     };
   };
@@ -70,18 +65,16 @@ test("schemas should match", () => {
       if (!("uniqueName" in mysqlColumn)) return;
       if (!("primary" in mysqlColumn)) return;
 
-      expect(
-        sqliteColumn.isUnique,
-        `expect unique of column ${columnName} in table ${tableName} to be the same for both schemas`,
-      ).toEqual(mysqlColumn.isUnique);
+      expect(sqliteColumn.isUnique, `expect unique of column ${columnName} in table ${tableName} to be the same for both schemas`).toEqual(
+        mysqlColumn.isUnique,
+      );
       expect(
         sqliteColumn.uniqueName,
         `expect uniqueName of column ${columnName} in table ${tableName} to be the same for both schemas`,
       ).toEqual(mysqlColumn.uniqueName);
-      expect(
-        sqliteColumn.primary,
-        `expect primary of column ${columnName} in table ${tableName} to be the same for both schemas`,
-      ).toEqual(mysqlColumn.primary);
+      expect(sqliteColumn.primary, `expect primary of column ${columnName} in table ${tableName} to be the same for both schemas`).toEqual(
+        mysqlColumn.primary,
+      );
     });
 
     const mysqlTable = mysqlSchema[tableName];
@@ -97,18 +90,14 @@ test("schemas should match", () => {
     expect(mysqlForeignKeys, `mysql foreign key for ${tableName} to be defined`).toBeDefined();
     expect(sqliteForeignKeys, `sqlite foreign key for ${tableName} to be defined`).toBeDefined();
 
-    expect(
-      sqliteForeignKeys!.length,
-      `expect number of foreign keys in table ${tableName} to be the same for both schemas`,
-    ).toEqual(mysqlForeignKeys!.length);
+    expect(sqliteForeignKeys!.length, `expect number of foreign keys in table ${tableName} to be the same for both schemas`).toEqual(
+      mysqlForeignKeys!.length,
+    );
 
     sqliteForeignKeys?.forEach((sqliteForeignKey) => {
       sqliteForeignKey.getName();
       const mysqlForeignKey = mysqlForeignKeys!.find((key) => key.getName() === sqliteForeignKey.getName());
-      expect(
-        mysqlForeignKey,
-        `expect foreign key ${sqliteForeignKey.getName()} to be defined in mysql schema`,
-      ).toBeDefined();
+      expect(mysqlForeignKey, `expect foreign key ${sqliteForeignKey.getName()} to be defined in mysql schema`).toBeDefined();
 
       expect(
         sqliteForeignKey.onDelete,
@@ -155,43 +144,37 @@ test("schemas should match for postgresql", () => {
       if (!("uniqueName" in postgresqlColumn)) return;
       if (!("primary" in postgresqlColumn)) return;
 
-      expect(
-        sqliteColumn.isUnique,
-        `expect unique of column ${columnName} in table ${tableName} to be the same for both schemas`,
-      ).toEqual(postgresqlColumn.isUnique);
+      expect(sqliteColumn.isUnique, `expect unique of column ${columnName} in table ${tableName} to be the same for both schemas`).toEqual(
+        postgresqlColumn.isUnique,
+      );
       expect(
         sqliteColumn.uniqueName,
         `expect uniqueName of column ${columnName} in table ${tableName} to be the same for both schemas`,
       ).toEqual(postgresqlColumn.uniqueName);
-      expect(
-        sqliteColumn.primary,
-        `expect primary of column ${columnName} in table ${tableName} to be the same for both schemas`,
-      ).toEqual(postgresqlColumn.primary);
+      expect(sqliteColumn.primary, `expect primary of column ${columnName} in table ${tableName} to be the same for both schemas`).toEqual(
+        postgresqlColumn.primary,
+      );
     });
 
     const sqliteForeignKeys = sqliteTable[Symbol.for("drizzle:SQLiteInlineForeignKeys") as keyof typeof sqliteTable] as
       | SqliteForeignKey[]
       | undefined;
-    const postgresqlForeignKeys = postgresqlTable[
-      Symbol.for("drizzle:PgInlineForeignKeys") as keyof typeof postgresqlTable
-    ] as PostgresqlForeignKey[] | undefined;
+    const postgresqlForeignKeys = postgresqlTable[Symbol.for("drizzle:PgInlineForeignKeys") as keyof typeof postgresqlTable] as
+      | PostgresqlForeignKey[]
+      | undefined;
     if (!sqliteForeignKeys && !postgresqlForeignKeys) return;
 
     expect(postgresqlForeignKeys, `postgresql foreign key for ${tableName} to be defined`).toBeDefined();
     expect(sqliteForeignKeys, `sqlite foreign key for ${tableName} to be defined`).toBeDefined();
 
-    expect(
-      sqliteForeignKeys!.length,
-      `expect number of foreign keys in table ${tableName} to be the same for both schemas`,
-    ).toEqual(postgresqlForeignKeys?.length);
+    expect(sqliteForeignKeys!.length, `expect number of foreign keys in table ${tableName} to be the same for both schemas`).toEqual(
+      postgresqlForeignKeys?.length,
+    );
 
     sqliteForeignKeys?.forEach((sqliteForeignKey) => {
       sqliteForeignKey.getName();
       const postgresqlForeignKey = postgresqlForeignKeys!.find((key) => key.getName() === sqliteForeignKey.getName());
-      expect(
-        postgresqlForeignKey,
-        `expect foreign key ${sqliteForeignKey.getName()} to be defined in postgresql schema`,
-      ).toBeDefined();
+      expect(postgresqlForeignKey, `expect foreign key ${sqliteForeignKey.getName()} to be defined in postgresql schema`).toBeDefined();
 
       // In PostgreSql, onDelete is "no action" by default, so it is treated as undefined to match Sqlite.
       expect(
@@ -221,31 +204,26 @@ test("schemas should match for postgresql", () => {
 });
 
 type SqliteTables = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof sqliteSchema]: (typeof sqliteSchema)[K] extends SQLiteTableWithColumns<any>
     ? InferSelectModel<(typeof sqliteSchema)[K]>
     : never;
 };
 type MysqlTables = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof mysqlSchema]: (typeof mysqlSchema)[K] extends MySqlTableWithColumns<any>
     ? InferSelectModel<(typeof mysqlSchema)[K]>
     : never;
 };
 
 type PostgresqlTables = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof postgresqlSchema]: (typeof postgresqlSchema)[K] extends PgTableWithColumns<any>
     ? InferSelectModel<(typeof postgresqlSchema)[K]>
     : never;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type InferColumnConfig<T extends Column<any, object>> =
   T extends Column<infer C, object> ? Omit<C, "columnType" | "enumValues" | "driverParam"> : never;
 
 type SqliteConfig = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof sqliteSchema]: (typeof sqliteSchema)[K] extends SQLiteTableWithColumns<any>
     ? {
         [C in keyof (typeof sqliteSchema)[K]["_"]["config"]["columns"]]: InferColumnConfig<
@@ -256,7 +234,6 @@ type SqliteConfig = {
 };
 
 type MysqlConfig = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof mysqlSchema]: (typeof mysqlSchema)[K] extends MySqlTableWithColumns<any>
     ? {
         [C in keyof (typeof mysqlSchema)[K]["_"]["config"]["columns"]]: InferColumnConfig<
@@ -267,7 +244,6 @@ type MysqlConfig = {
 };
 
 type PostgreisqlConfig = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in keyof typeof postgresqlSchema]: (typeof postgresqlSchema)[K] extends PgTableWithColumns<any>
     ? {
         [C in keyof (typeof postgresqlSchema)[K]["_"]["config"]["columns"]]: InferColumnConfig<

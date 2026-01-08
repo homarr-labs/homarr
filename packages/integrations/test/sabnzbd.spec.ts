@@ -1,16 +1,14 @@
-import { join } from "path";
-import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
-import type { StartedTestContainer } from "testcontainers";
-import { beforeAll, describe, expect, test, vi } from "vitest";
-
 import { createDb } from "@homarr/db/test";
+import { join } from "path";
+import type { StartedTestContainer } from "testcontainers";
+import { GenericContainer, getContainerRuntimeClient, ImageName, Wait } from "testcontainers";
+import { beforeAll, describe, expect, test, vi } from "vitest";
 
 import { SabnzbdIntegration } from "../src";
 import { TestConnectionError } from "../src/base/test-connection/test-connection-error";
 import type { DownloadClientItem } from "../src/interfaces/downloads/download-client-items";
 
 vi.mock("@homarr/db", async (importActual) => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = await importActual<typeof import("@homarr/db")>();
   return {
     ...actual,
@@ -19,7 +17,6 @@ vi.mock("@homarr/db", async (importActual) => {
 });
 
 vi.mock("@homarr/core/infrastructure/certificates", async (importActual) => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = await importActual<typeof import("@homarr/core/infrastructure/certificates")>();
   return {
     ...actual,
@@ -189,8 +186,7 @@ describe("Sabnzbd integration", () => {
     const item = await sabNzbdAddItemAsync(startedContainer, DEFAULT_API_KEY, sabnzbdIntegration);
 
     // Act - fromDisk already doesn't work for sabnzbd, so only test deletion itself.
-    const actAsync = async () =>
-      await sabnzbdIntegration.deleteItemAsync({ ...item, progress: 0 } as DownloadClientItem, false);
+    const actAsync = async () => await sabnzbdIntegration.deleteItemAsync({ ...item, progress: 0 } as DownloadClientItem, false);
     const getAsync = async () => await sabnzbdIntegration.getClientJobsAndStatusAsync({ limit: 99 });
 
     // Assert
@@ -233,11 +229,7 @@ const createSabnzbdIntegration = (container: StartedTestContainer, apiKey: strin
   });
 };
 
-const sabNzbdAddItemAsync = async (
-  container: StartedTestContainer,
-  apiKey: string,
-  integration: SabnzbdIntegration,
-) => {
+const sabNzbdAddItemAsync = async (container: StartedTestContainer, apiKey: string, integration: SabnzbdIntegration) => {
   // Add nzb file in the watch folder
   await container.copyFilesToContainer([
     {

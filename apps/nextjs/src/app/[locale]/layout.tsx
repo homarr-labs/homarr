@@ -6,10 +6,6 @@ import "@homarr/spotlight/styles.css";
 import "@homarr/ui/styles.css";
 import "~/styles/scroll-area.scss";
 
-import { notFound } from "next/navigation";
-import type { DayOfWeek } from "@mantine/dates";
-import { NextIntlClientProvider } from "next-intl";
-
 import { api } from "@homarr/api/server";
 import { env } from "@homarr/auth/env";
 import { auth } from "@homarr/auth/next";
@@ -21,6 +17,9 @@ import { SettingsProvider } from "@homarr/settings";
 import { SpotlightProvider } from "@homarr/spotlight";
 import type { SupportedLanguage } from "@homarr/translation";
 import { isLocaleRTL, isLocaleSupported } from "@homarr/translation";
+import type { DayOfWeek } from "@mantine/dates";
+import { notFound } from "next/navigation";
+import { NextIntlClientProvider } from "next-intl";
 
 import { Analytics } from "~/components/layout/analytics";
 import { CrowdinLiveTranslation } from "~/components/layout/crowdin-live-translation";
@@ -38,7 +37,6 @@ const fontSans = Inter({
   variable: "--font-sans",
 });
 
-// eslint-disable-next-line no-restricted-syntax
 export const generateMetadata = async (): Promise<Metadata> => ({
   title: "Homarr",
   description:
@@ -69,10 +67,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default async function Layout(props: {
-  children: React.ReactNode;
-  params: Promise<{ locale: SupportedLanguage }>;
-}) {
+export default async function Layout(props: { children: React.ReactNode; params: Promise<{ locale: SupportedLanguage }> }) {
   if (!isLocaleSupported((await props.params).locale)) {
     notFound();
   }

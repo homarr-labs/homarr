@@ -1,6 +1,3 @@
-import SuperJSON from "superjson";
-import { describe, expect, it, test, vi } from "vitest";
-
 import type { Session } from "@homarr/auth";
 import { createId } from "@homarr/common";
 import type { Database, InferInsertModel } from "@homarr/db";
@@ -24,6 +21,8 @@ import {
 } from "@homarr/db/schema";
 import { createDb } from "@homarr/db/test";
 import type { BoardPermission, GroupPermissionKey } from "@homarr/definitions";
+import SuperJSON from "superjson";
+import { describe, expect, it, test, vi } from "vitest";
 
 import type { RouterOutputs } from "../..";
 import { boardRouter } from "../board";
@@ -166,125 +165,123 @@ describe("getAllBoards should return all boards accessable to the current user",
     expect(result.map(({ name }) => name)).toStrictEqual(["public", "private2"]);
   });
 
-  test.each([["view"], ["modify"]] satisfies [BoardPermission][])(
-    "with %s group board permission it should show board",
-    async (permission) => {
-      // Arrange
-      const db = createDb();
-      const caller = boardRouter.createCaller({
-        db,
-        deviceType: undefined,
-        session: defaultSession,
-      });
+  test.each([["view"], ["modify"]] satisfies [
+    BoardPermission,
+  ][])("with %s group board permission it should show board", async (permission) => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
 
-      const user1 = await createRandomUserAsync(db);
-      const user2 = await createRandomUserAsync(db);
-      await db.insert(users).values({
-        id: defaultCreatorId,
-      });
-      const boardId = createId();
+    const user1 = await createRandomUserAsync(db);
+    const user2 = await createRandomUserAsync(db);
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+    const boardId = createId();
 
-      await db.insert(boards).values([
-        {
-          id: createId(),
-          name: "public",
-          creatorId: user1,
-          isPublic: true,
-        },
-        {
-          id: boardId,
-          name: "private1",
-          creatorId: user2,
-          isPublic: false,
-        },
-        {
-          id: createId(),
-          name: "private2",
-          creatorId: user2,
-          isPublic: false,
-        },
-      ]);
+    await db.insert(boards).values([
+      {
+        id: createId(),
+        name: "public",
+        creatorId: user1,
+        isPublic: true,
+      },
+      {
+        id: boardId,
+        name: "private1",
+        creatorId: user2,
+        isPublic: false,
+      },
+      {
+        id: createId(),
+        name: "private2",
+        creatorId: user2,
+        isPublic: false,
+      },
+    ]);
 
-      const groupId = createId();
-      await db.insert(groups).values({
-        id: groupId,
-        name: "group1",
-        position: 1,
-      });
+    const groupId = createId();
+    await db.insert(groups).values({
+      id: groupId,
+      name: "group1",
+      position: 1,
+    });
 
-      await db.insert(groupMembers).values({
-        userId: defaultSession.user.id,
-        groupId,
-      });
+    await db.insert(groupMembers).values({
+      userId: defaultSession.user.id,
+      groupId,
+    });
 
-      await db.insert(boardGroupPermissions).values({
-        groupId,
-        permission,
-        boardId,
-      });
+    await db.insert(boardGroupPermissions).values({
+      groupId,
+      permission,
+      boardId,
+    });
 
-      // Act
-      const result = await caller.getAllBoards();
+    // Act
+    const result = await caller.getAllBoards();
 
-      // Assert
-      expect(result.length).toBe(2);
-      expect(result.map(({ name }) => name)).toStrictEqual(["public", "private1"]);
-    },
-  );
+    // Assert
+    expect(result.length).toBe(2);
+    expect(result.map(({ name }) => name)).toStrictEqual(["public", "private1"]);
+  });
 
-  test.each([["view"], ["modify"]] satisfies [BoardPermission][])(
-    "with %s user board permission it should show board",
-    async (permission) => {
-      // Arrange
-      const db = createDb();
-      const caller = boardRouter.createCaller({
-        db,
-        deviceType: undefined,
-        session: defaultSession,
-      });
+  test.each([["view"], ["modify"]] satisfies [
+    BoardPermission,
+  ][])("with %s user board permission it should show board", async (permission) => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({
+      db,
+      deviceType: undefined,
+      session: defaultSession,
+    });
 
-      const user1 = await createRandomUserAsync(db);
-      const user2 = await createRandomUserAsync(db);
-      await db.insert(users).values({
-        id: defaultCreatorId,
-      });
-      const boardId = createId();
+    const user1 = await createRandomUserAsync(db);
+    const user2 = await createRandomUserAsync(db);
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+    const boardId = createId();
 
-      await db.insert(boards).values([
-        {
-          id: createId(),
-          name: "public",
-          creatorId: user1,
-          isPublic: true,
-        },
-        {
-          id: boardId,
-          name: "private1",
-          creatorId: user2,
-          isPublic: false,
-        },
-        {
-          id: createId(),
-          name: "private2",
-          creatorId: user2,
-          isPublic: false,
-        },
-      ]);
+    await db.insert(boards).values([
+      {
+        id: createId(),
+        name: "public",
+        creatorId: user1,
+        isPublic: true,
+      },
+      {
+        id: boardId,
+        name: "private1",
+        creatorId: user2,
+        isPublic: false,
+      },
+      {
+        id: createId(),
+        name: "private2",
+        creatorId: user2,
+        isPublic: false,
+      },
+    ]);
 
-      await db.insert(boardUserPermissions).values({
-        userId: defaultSession.user.id,
-        permission,
-        boardId,
-      });
+    await db.insert(boardUserPermissions).values({
+      userId: defaultSession.user.id,
+      permission,
+      boardId,
+    });
 
-      // Act
-      const result = await caller.getAllBoards();
+    // Act
+    const result = await caller.getAllBoards();
 
-      // Assert
-      expect(result.length).toBe(2);
-      expect(result.map(({ name }) => name)).toStrictEqual(["public", "private1"]);
-    },
-  );
+    // Assert
+    expect(result.length).toBe(2);
+    expect(result.map(({ name }) => name)).toStrictEqual(["public", "private1"]);
+  });
 });
 
 describe("createBoard should create a new board", () => {
@@ -414,40 +411,37 @@ describe("rename board should rename board", () => {
 });
 
 describe("changeBoardVisibility should change board visibility", () => {
-  test.each([["public"], ["private"]] satisfies ["private" | "public"][])(
-    "should change board visibility to %s",
-    async (visibility) => {
-      // Arrange
-      const db = createDb();
-      const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
-      const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+  test.each([["public"], ["private"]] satisfies ["private" | "public"][])("should change board visibility to %s", async (visibility) => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
 
-      await db.insert(users).values({
-        id: defaultCreatorId,
-      });
-      const boardId = createId();
-      await db.insert(boards).values({
-        id: boardId,
-        name: "board",
-        creatorId: defaultCreatorId,
-        isPublic: visibility === "public",
-      });
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
+    const boardId = createId();
+    await db.insert(boards).values({
+      id: boardId,
+      name: "board",
+      creatorId: defaultCreatorId,
+      isPublic: visibility === "public",
+    });
 
-      // Act
-      await caller.changeBoardVisibility({
-        id: boardId,
-        visibility,
-      });
+    // Act
+    await caller.changeBoardVisibility({
+      id: boardId,
+      visibility,
+    });
 
-      // Assert
-      const dbBoard = await db.query.boards.findFirst({
-        where: eq(boards.id, boardId),
-      });
-      expect(dbBoard).toBeDefined();
-      expect(dbBoard?.isPublic).toBe(visibility === "public");
-      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
-    },
-  );
+    // Assert
+    const dbBoard = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+    });
+    expect(dbBoard).toBeDefined();
+    expect(dbBoard?.isPublic).toBe(visibility === "public");
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
+  });
 });
 
 describe("deleteBoard should delete board", () => {
@@ -828,60 +822,60 @@ describe("saveBoard should save full board", () => {
     expect(integration).toBeUndefined();
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
   });
-  it.each([[{ kind: "empty" as const }], [{ kind: "category" as const, collapsed: false, name: "My first category" }]])(
-    "should add section when present in input",
-    async (partialSection) => {
-      const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
-      const db = createDb();
-      const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+  it.each([
+    [{ kind: "empty" as const }],
+    [{ kind: "category" as const, collapsed: false, name: "My first category" }],
+  ])("should add section when present in input", async (partialSection) => {
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
 
-      const { boardId, sectionId } = await createFullBoardAsync(db, "default");
+    const { boardId, sectionId } = await createFullBoardAsync(db, "default");
 
-      const newSectionId = createId();
-      await caller.saveBoard({
-        id: boardId,
-        sections: [
-          {
-            id: newSectionId,
-            xOffset: 0,
-            yOffset: 1,
-            ...partialSection,
-          },
-          {
-            id: sectionId,
-            kind: "empty",
-            xOffset: 0,
-            yOffset: 0,
-          },
-        ],
-        items: [],
-      });
-
-      const board = await db.query.boards.findFirst({
-        where: eq(boards.id, boardId),
-        with: {
-          sections: true,
+    const newSectionId = createId();
+    await caller.saveBoard({
+      id: boardId,
+      sections: [
+        {
+          id: newSectionId,
+          xOffset: 0,
+          yOffset: 1,
+          ...partialSection,
         },
-      });
+        {
+          id: sectionId,
+          kind: "empty",
+          xOffset: 0,
+          yOffset: 0,
+        },
+      ],
+      items: [],
+    });
 
-      const section = await db.query.sections.findFirst({
-        where: eq(sections.id, newSectionId),
-      });
+    const board = await db.query.boards.findFirst({
+      where: eq(boards.id, boardId),
+      with: {
+        sections: true,
+      },
+    });
 
-      const definedBoard = expectToBeDefined(board);
-      expect(definedBoard.sections.length).toBe(2);
-      const addedSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === newSectionId));
-      expect(addedSection).toBeDefined();
-      expect(addedSection.id).toBe(newSectionId);
-      expect(addedSection.kind).toBe(partialSection.kind);
-      expect(addedSection.yOffset).toBe(1);
-      if ("name" in partialSection) {
-        expect(addedSection.name).toBe(partialSection.name);
-      }
-      expect(section).toBeDefined();
-      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
-    },
-  );
+    const section = await db.query.sections.findFirst({
+      where: eq(sections.id, newSectionId),
+    });
+
+    const definedBoard = expectToBeDefined(board);
+    expect(definedBoard.sections.length).toBe(2);
+    const addedSection = expectToBeDefined(definedBoard.sections.find((section) => section.id === newSectionId));
+    expect(addedSection).toBeDefined();
+    expect(addedSection.id).toBe(newSectionId);
+    expect(addedSection.kind).toBe(partialSection.kind);
+    expect(addedSection.yOffset).toBe(1);
+    if ("name" in partialSection) {
+      expect(addedSection.name).toBe(partialSection.name);
+    }
+    expect(section).toBeDefined();
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "modify");
+  });
   it("should add item when present in input", async () => {
     const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
     const db = createDb();
@@ -1235,93 +1229,87 @@ describe("getBoardPermissions should return board permissions", () => {
 });
 
 describe("saveUserBoardPermissions should save user board permissions", () => {
-  test.each([["view"], ["modify"]] satisfies [BoardPermission][])(
-    "should save user board permissions",
-    async (permission) => {
-      // Arrange
-      const db = createDb();
-      const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
-      const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+  test.each([["view"], ["modify"]] satisfies [BoardPermission][])("should save user board permissions", async (permission) => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
 
-      const user1 = await createRandomUserAsync(db);
-      await db.insert(users).values({
-        id: defaultCreatorId,
-      });
+    const user1 = await createRandomUserAsync(db);
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
 
-      const boardId = createId();
-      await db.insert(boards).values({
-        id: boardId,
-        name: "board",
-        creatorId: defaultCreatorId,
-      });
+    const boardId = createId();
+    await db.insert(boards).values({
+      id: boardId,
+      name: "board",
+      creatorId: defaultCreatorId,
+    });
 
-      // Act
-      await caller.saveUserBoardPermissions({
-        entityId: boardId,
-        permissions: [
-          {
-            principalId: user1,
-            permission,
-          },
-        ],
-      });
+    // Act
+    await caller.saveUserBoardPermissions({
+      entityId: boardId,
+      permissions: [
+        {
+          principalId: user1,
+          permission,
+        },
+      ],
+    });
 
-      // Assert
-      const dbUserPermission = await db.query.boardUserPermissions.findFirst({
-        where: eq(boardUserPermissions.userId, user1),
-      });
-      expect(dbUserPermission).toBeDefined();
-      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
-    },
-  );
+    // Assert
+    const dbUserPermission = await db.query.boardUserPermissions.findFirst({
+      where: eq(boardUserPermissions.userId, user1),
+    });
+    expect(dbUserPermission).toBeDefined();
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
+  });
 });
 
 describe("saveGroupBoardPermissions should save group board permissions", () => {
-  test.each([["view"], ["modify"]] satisfies [BoardPermission][])(
-    "should save group board permissions",
-    async (permission) => {
-      // Arrange
-      const db = createDb();
-      const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
-      const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
+  test.each([["view"], ["modify"]] satisfies [BoardPermission][])("should save group board permissions", async (permission) => {
+    // Arrange
+    const db = createDb();
+    const caller = boardRouter.createCaller({ db, deviceType: undefined, session: defaultSession });
+    const spy = vi.spyOn(boardAccess, "throwIfActionForbiddenAsync");
 
-      await db.insert(users).values({
-        id: defaultCreatorId,
-      });
+    await db.insert(users).values({
+      id: defaultCreatorId,
+    });
 
-      const groupId = createId();
-      await db.insert(groups).values({
-        id: groupId,
-        name: "group1",
-        position: 1,
-      });
+    const groupId = createId();
+    await db.insert(groups).values({
+      id: groupId,
+      name: "group1",
+      position: 1,
+    });
 
-      const boardId = createId();
-      await db.insert(boards).values({
-        id: boardId,
-        name: "board",
-        creatorId: defaultCreatorId,
-      });
+    const boardId = createId();
+    await db.insert(boards).values({
+      id: boardId,
+      name: "board",
+      creatorId: defaultCreatorId,
+    });
 
-      // Act
-      await caller.saveGroupBoardPermissions({
-        entityId: boardId,
-        permissions: [
-          {
-            principalId: groupId,
-            permission,
-          },
-        ],
-      });
+    // Act
+    await caller.saveGroupBoardPermissions({
+      entityId: boardId,
+      permissions: [
+        {
+          principalId: groupId,
+          permission,
+        },
+      ],
+    });
 
-      // Assert
-      const dbGroupPermission = await db.query.boardGroupPermissions.findFirst({
-        where: eq(boardGroupPermissions.groupId, groupId),
-      });
-      expect(dbGroupPermission).toBeDefined();
-      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
-    },
-  );
+    // Assert
+    const dbGroupPermission = await db.query.boardGroupPermissions.findFirst({
+      where: eq(boardGroupPermissions.groupId, groupId),
+    });
+    expect(dbGroupPermission).toBeDefined();
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.anything(), "full");
+  });
 });
 
 const createExistingLayout = (id: string) => ({
@@ -1384,12 +1372,12 @@ describe("saveLayouts should save layout changes", () => {
     const layout = await db.query.layouts.findFirst({
       where: not(eq(layouts.id, layoutId)),
     });
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     await expectLayoutForRootLayoutAsync(db, sectionId, layout!.id, {
       ...assignments.inRoot,
       a: itemId,
     });
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     await expectLayoutForDynamicSectionAsync(db, assignments.inRoot.f, layout!.id, assignments.inDynamicSection);
   });
   test("should update layout when present in input", async () => {
@@ -1627,10 +1615,7 @@ const addDynamicSectionAsync = async (
   return sectionId;
 };
 
-const createItemsAndSectionsAsync = async (
-  db: Database,
-  options: { boardId: string; sectionId: string; layoutId: string },
-) => {
+const createItemsAndSectionsAsync = async (db: Database, options: { boardId: string; sectionId: string; layoutId: string }) => {
   const { boardId, layoutId, sectionId } = options;
   // From:
   // abbbbbccdd
@@ -1703,12 +1688,7 @@ const createItemsAndSectionsAsync = async (
   };
 };
 
-const expectLayoutForRootLayoutAsync = async (
-  db: Database,
-  sectionId: string,
-  layoutId: string,
-  assignments: Record<string, string>,
-) => {
+const expectLayoutForRootLayoutAsync = async (db: Database, sectionId: string, layoutId: string, assignments: Record<string, string>) => {
   await expectLayoutInSectionAsync(
     db,
     sectionId,

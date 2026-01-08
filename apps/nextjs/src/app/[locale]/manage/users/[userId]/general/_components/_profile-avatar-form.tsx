@@ -1,10 +1,5 @@
 "use client";
 
-import { useCallback } from "react";
-import { Box, Button, FileButton, Menu, UnstyledButton } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { IconPencil, IconPhotoEdit, IconPhotoX } from "@tabler/icons-react";
-
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
@@ -12,6 +7,10 @@ import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import { UserAvatar } from "@homarr/ui";
+import { Box, Button, FileButton, Menu, UnstyledButton } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconPencil, IconPhotoEdit, IconPhotoX } from "@tabler/icons-react";
+import { useCallback } from "react";
 
 interface UserProfileAvatarForm {
   user: RouterOutputs["user"]["getById"];
@@ -138,7 +137,7 @@ const fileToBase64Async = async (file: File): Promise<string> =>
     reader.readAsDataURL(file);
 
     // The functionality below works as expected and doesn't result in [object Object].
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+
     reader.onload = () => resolve(reader.result?.toString() ?? "");
     reader.onerror = reject;
   });

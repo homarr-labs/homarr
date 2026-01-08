@@ -1,17 +1,16 @@
 "use client";
 
-import type { PropsWithChildren } from "react";
-import { Fragment, Suspense } from "react";
-import { Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
-import { IconLoader } from "@tabler/icons-react";
-import combineClasses from "clsx";
-
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
 import { useSettings } from "@homarr/settings";
 import { useRegisterSpotlightContextResults } from "@homarr/spotlight";
 import { useI18n } from "@homarr/translation/client";
 import { MaskedOrNormalImage } from "@homarr/ui";
+import { Flex, rem, Stack, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { IconLoader } from "@tabler/icons-react";
+import combineClasses from "clsx";
+import type { PropsWithChildren } from "react";
+import { Fragment, Suspense } from "react";
 
 import type { WidgetComponentProps } from "../definition";
 import classes from "./app.module.css";
@@ -45,7 +44,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
               return {
                 type: "link",
                 // We checked above that app.href is defined
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
                 href: app.href!,
                 newTab: options.openInNewTab,
               };
@@ -60,11 +59,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
   const isColumnLayout = options.layout.startsWith("column");
 
   return (
-    <AppLink
-      href={app.href ?? undefined}
-      openInNewTab={options.openInNewTab}
-      enabled={Boolean(app.href) && !isEditMode}
-    >
+    <AppLink href={app.href ?? undefined} openInNewTab={options.openInNewTab} enabled={Boolean(app.href) && !isEditMode}>
       <Tooltip.Floating
         label={app.description?.split("\n").map((line, index) => (
           <Fragment key={index}>
@@ -89,12 +84,7 @@ export default function AppWidget({ options, isEditMode, height, width }: Widget
         >
           <Stack gap={0}>
             {options.showTitle && (
-              <Text
-                className="app-title"
-                fw={700}
-                size={isTiny ? rem(8) : "sm"}
-                ta={isColumnLayout ? "center" : undefined}
-              >
+              <Text className="app-title" fw={700} size={isTiny ? rem(8) : "sm"} ta={isColumnLayout ? "center" : undefined}>
                 {app.name}
               </Text>
             )}
@@ -146,14 +136,7 @@ interface AppLinkProps {
 
 const AppLink = ({ href, openInNewTab, enabled, children }: PropsWithChildren<AppLinkProps>) =>
   enabled ? (
-    <UnstyledButton
-      component="a"
-      href={href}
-      target={openInNewTab ? "_blank" : undefined}
-      rel="noreferrer"
-      h="100%"
-      w="100%"
-    >
+    <UnstyledButton component="a" href={href} target={openInNewTab ? "_blank" : undefined} rel="noreferrer" h="100%" w="100%">
       {children}
     </UnstyledButton>
   ) : (

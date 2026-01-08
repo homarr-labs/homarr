@@ -13,7 +13,7 @@ interface SwaggerUIClientProps {
 }
 
 export const SwaggerUIClient = ({ document }: SwaggerUIClientProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  
   const requestInterceptor = (req: Record<string, any>) => {
     req.credentials = "omit";
     return req;

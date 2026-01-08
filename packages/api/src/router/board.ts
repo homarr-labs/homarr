@@ -1,7 +1,3 @@
-import { TRPCError } from "@trpc/server";
-import superjson from "superjson";
-import { z } from "zod/v4";
-
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { createId } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
@@ -28,13 +24,7 @@ import {
   users,
 } from "@homarr/db/schema";
 import type { WidgetKind } from "@homarr/definitions";
-import {
-  emptySuperJSON,
-  everyoneGroup,
-  getPermissionsWithChildren,
-  getPermissionsWithParents,
-  widgetKinds,
-} from "@homarr/definitions";
+import { emptySuperJSON, everyoneGroup, getPermissionsWithChildren, getPermissionsWithParents, widgetKinds } from "@homarr/definitions";
 import { importOldmarrAsync } from "@homarr/old-import";
 import { importJsonFileSchema } from "@homarr/old-import/shared";
 import { oldmarrConfigSchema } from "@homarr/old-schema";
@@ -53,6 +43,9 @@ import { byIdSchema } from "@homarr/validation/common";
 import { zodUnionFromArray } from "@homarr/validation/enums";
 import type { BoardItemAdvancedOptions } from "@homarr/validation/shared";
 import { sectionSchema, sharedItemSchema } from "@homarr/validation/shared";
+import { TRPCError } from "@trpc/server";
+import superjson from "superjson";
+import { z } from "zod/v4";
 
 import { createTRPCRouter, permissionRequiredProcedure, protectedProcedure, publicProcedure } from "../trpc";
 import { throwIfActionForbiddenAsync } from "./board/board-access";
@@ -100,9 +93,7 @@ export const boardRouter = createTRPCRouter({
       );
       const canViewAllBoards = getPermissionsWithChildren([...distinctPermissions]).includes("board-view-all");
 
-      const boardIds = dbEveryoneAndCurrentGroup.flatMap((group) =>
-        group.boardPermissions.map(({ boardId }) => boardId),
-      );
+      const boardIds = dbEveryoneAndCurrentGroup.flatMap((group) => group.boardPermissions.map(({ boardId }) => boardId));
       const boardWhere = canViewAllBoards ? undefined : or(eq(boards.isPublic, true), inArray(boards.id, boardIds));
 
       return await ctx.db.query.boards.findMany({
@@ -220,11 +211,7 @@ export const boardRouter = createTRPCRouter({
           like(boards.name, `%${input.query}%`),
           ctx.session?.user.permissions.includes("board-view-all")
             ? undefined
-            : or(
-                eq(boards.isPublic, true),
-                eq(boards.creatorId, ctx.session?.user.id ?? ""),
-                inArray(boards.id, boardIds),
-              ),
+            : or(eq(boards.isPublic, true), eq(boards.creatorId, ctx.session?.user.id ?? ""), inArray(boards.id, boardIds)),
         ),
         limit: input.limit,
         columns: {
@@ -343,7 +330,7 @@ export const boardRouter = createTRPCRouter({
       const layoutsMap = new Map<string, string>(boardLayouts.map((layout) => [layout.id, createId()]));
       const layoutsToInsert = boardLayouts.map((layout) => ({
         ...layout,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
         id: layoutsMap.get(layout.id)!,
         boardId: newBoardId,
       }));
@@ -352,7 +339,7 @@ export const boardRouter = createTRPCRouter({
       const sectionsToInsert: InferInsertModel<typeof sections>[] = boardSections.map(
         ({ collapseStates: _, layouts: _layouts, ...section }) => ({
           ...section,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           id: sectionMap.get(section.id)!,
           boardId: newBoardId,
         }),
@@ -362,47 +349,41 @@ export const boardRouter = createTRPCRouter({
         section.layouts.map(
           (layoutSection): InferInsertModel<typeof sectionLayouts> => ({
             ...layoutSection,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
             layoutId: layoutsMap.get(layoutSection.layoutId)!,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
             sectionId: sectionMap.get(layoutSection.sectionId)!,
-            parentSectionId: layoutSection.parentSectionId
-              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                sectionMap.get(layoutSection.parentSectionId)!
-              : layoutSection.parentSectionId,
+            parentSectionId: layoutSection.parentSectionId ? sectionMap.get(layoutSection.parentSectionId)! : layoutSection.parentSectionId,
           }),
         ),
       );
-      const sectionCollapseStatesToInsert: InferInsertModel<typeof sectionCollapseStates>[] = boardSections.flatMap(
-        (section) =>
-          section.collapseStates.map(
-            (collapseState): InferInsertModel<typeof sectionCollapseStates> => ({
-              ...collapseState,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              sectionId: sectionMap.get(collapseState.sectionId)!,
-            }),
-          ),
+      const sectionCollapseStatesToInsert: InferInsertModel<typeof sectionCollapseStates>[] = boardSections.flatMap((section) =>
+        section.collapseStates.map(
+          (collapseState): InferInsertModel<typeof sectionCollapseStates> => ({
+            ...collapseState,
+
+            sectionId: sectionMap.get(collapseState.sectionId)!,
+          }),
+        ),
       );
 
       const itemMap = new Map<string, string>(boardItems.map((item) => [item.id, createId()]));
-      const itemsToInsert: InferInsertModel<typeof items>[] = boardItems.map(
-        ({ integrations: _, layouts: _layouts, ...item }) => ({
-          ...item,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          id: itemMap.get(item.id)!,
-          boardId: newBoardId,
-        }),
-      );
+      const itemsToInsert: InferInsertModel<typeof items>[] = boardItems.map(({ integrations: _, layouts: _layouts, ...item }) => ({
+        ...item,
+
+        id: itemMap.get(item.id)!,
+        boardId: newBoardId,
+      }));
 
       const itemLayoutsToInsert: InferInsertModel<typeof itemLayouts>[] = boardItems.flatMap((item) =>
         item.layouts.map(
           (layoutSection): InferInsertModel<typeof itemLayouts> => ({
             ...layoutSection,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
             sectionId: sectionMap.get(layoutSection.sectionId)!,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
             itemId: itemMap.get(layoutSection.itemId)!,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
             layoutId: layoutsMap.get(layoutSection.layoutId)!,
           }),
         ),
@@ -432,7 +413,6 @@ export const boardRouter = createTRPCRouter({
           // Restrict integrations to only those the user has access to
           .filter(({ integrationId }) => integrationIdsWithAccess.includes(integrationId) || hasAccessForAll)
           .map((integration) => ({
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             itemId: itemMap.get(item.id)!,
             integrationId: integration.integrationId,
           })),
@@ -531,10 +511,7 @@ export const boardRouter = createTRPCRouter({
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
     const boardSettings = await getServerSettingByKeyAsync(ctx.db, "board");
 
-    if (
-      input.visibility !== "public" &&
-      (boardSettings.homeBoardId === input.id || boardSettings.mobileHomeBoardId === input.id)
-    ) {
+    if (input.visibility !== "public" && (boardSettings.homeBoardId === input.id || boardSettings.mobileHomeBoardId === input.id)) {
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "Cannot make home board private",
@@ -614,9 +591,7 @@ export const boardRouter = createTRPCRouter({
 
       const sortedLayouts = board.layouts.sort((layoutA, layoutB) => layoutA.columnCount - layoutB.columnCount);
       // Fallback to biggest if none exists with columnCount bigger than addedLayout.columnCount
-      const layoutToClone =
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        sortedLayouts.find((layout) => layout.columnCount >= addedLayout.columnCount) ?? sortedLayouts.at(-1)!;
+      const layoutToClone = sortedLayouts.find((layout) => layout.columnCount >= addedLayout.columnCount) ?? sortedLayouts.at(-1)!;
 
       const updatedBoardLayout = getUpdatedBoardLayout(board, {
         previous: {
@@ -647,7 +622,6 @@ export const boardRouter = createTRPCRouter({
 
     const updatedLayouts = filterUpdatedItems(input.layouts, board.layouts);
     for (const updatedLayout of updatedLayouts) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const dbLayout = board.layouts.find((layout) => layout.id === updatedLayout.id)!;
 
       if (dbLayout.columnCount !== updatedLayout.columnCount) {
@@ -672,12 +646,7 @@ export const boardRouter = createTRPCRouter({
               yOffset: itemSectionLayout.yOffset,
               sectionId: itemSectionLayout.sectionId,
             })
-            .where(
-              and(
-                eq(itemLayouts.itemId, itemSectionLayout.itemId),
-                eq(itemLayouts.layoutId, itemSectionLayout.layoutId),
-              ),
-            );
+            .where(and(eq(itemLayouts.itemId, itemSectionLayout.itemId), eq(itemLayouts.layoutId, itemSectionLayout.layoutId)));
         }
 
         for (const sectionLayout of updatedBoardLayout.sectionLayouts) {
@@ -690,12 +659,7 @@ export const boardRouter = createTRPCRouter({
               yOffset: sectionLayout.yOffset,
               parentSectionId: sectionLayout.parentSectionId,
             })
-            .where(
-              and(
-                eq(sectionLayouts.sectionId, sectionLayout.sectionId),
-                eq(sectionLayouts.layoutId, sectionLayout.layoutId),
-              ),
-            );
+            .where(and(eq(sectionLayouts.sectionId, sectionLayout.sectionId), eq(sectionLayouts.layoutId, sectionLayout.layoutId)));
         }
       }
 
@@ -838,9 +802,7 @@ export const boardRouter = createTRPCRouter({
           const addedIntegrationRelations = inputIntegrationRelations.filter(
             (inputRelation) =>
               !dbIntegrationRelations.some(
-                (dbRelation) =>
-                  dbRelation.itemId === inputRelation.itemId &&
-                  dbRelation.integrationId === inputRelation.integrationId,
+                (dbRelation) => dbRelation.itemId === inputRelation.itemId && dbRelation.integrationId === inputRelation.integrationId,
               ),
           );
 
@@ -875,12 +837,7 @@ export const boardRouter = createTRPCRouter({
                   yOffset: itemSectionLayout.yOffset,
                   sectionId: itemSectionLayout.sectionId,
                 })
-                .where(
-                  and(
-                    eq(schema.itemLayouts.itemId, item.id),
-                    eq(schema.itemLayouts.layoutId, itemSectionLayout.layoutId),
-                  ),
-                );
+                .where(and(eq(schema.itemLayouts.itemId, item.id), eq(schema.itemLayouts.layoutId, itemSectionLayout.layoutId)));
             }
           }
 
@@ -910,33 +867,21 @@ export const boardRouter = createTRPCRouter({
                   yOffset: sectionLayout.yOffset,
                   parentSectionId: sectionLayout.parentSectionId,
                 })
-                .where(
-                  and(
-                    eq(schema.sectionLayouts.sectionId, section.id),
-                    eq(schema.sectionLayouts.layoutId, sectionLayout.layoutId),
-                  ),
-                );
+                .where(and(eq(schema.sectionLayouts.sectionId, section.id), eq(schema.sectionLayouts.layoutId, sectionLayout.layoutId)));
             }
           }
 
           const removedIntegrationRelations = dbIntegrationRelations.filter(
             (dbRelation) =>
               !inputIntegrationRelations.some(
-                (inputRelation) =>
-                  dbRelation.itemId === inputRelation.itemId &&
-                  dbRelation.integrationId === inputRelation.integrationId,
+                (inputRelation) => dbRelation.itemId === inputRelation.itemId && dbRelation.integrationId === inputRelation.integrationId,
               ),
           );
 
           for (const relation of removedIntegrationRelations) {
             await transaction
               .delete(schema.integrationItems)
-              .where(
-                and(
-                  eq(integrationItems.itemId, relation.itemId),
-                  eq(integrationItems.integrationId, relation.integrationId),
-                ),
-              );
+              .where(and(eq(integrationItems.itemId, relation.itemId), eq(integrationItems.integrationId, relation.integrationId)));
           }
 
           const removedItems = filterRemovedItems(input.items, dbBoard.items);
@@ -1048,9 +993,7 @@ export const boardRouter = createTRPCRouter({
           const addedIntegrationRelations = inputIntegrationRelations.filter(
             (inputRelation) =>
               !dbIntegrationRelations.some(
-                (dbRelation) =>
-                  dbRelation.itemId === inputRelation.itemId &&
-                  dbRelation.integrationId === inputRelation.integrationId,
+                (dbRelation) => dbRelation.itemId === inputRelation.itemId && dbRelation.integrationId === inputRelation.integrationId,
               ),
           );
 
@@ -1121,9 +1064,7 @@ export const boardRouter = createTRPCRouter({
                   yOffset: sectionLayout.yOffset,
                   parentSectionId: sectionLayout.parentSectionId,
                 })
-                .where(
-                  and(eq(sectionLayouts.sectionId, section.id), eq(sectionLayouts.layoutId, sectionLayout.layoutId)),
-                )
+                .where(and(eq(sectionLayouts.sectionId, section.id), eq(sectionLayouts.layoutId, sectionLayout.layoutId)))
                 .run();
             }
           }
@@ -1131,21 +1072,14 @@ export const boardRouter = createTRPCRouter({
           const removedIntegrationRelations = dbIntegrationRelations.filter(
             (dbRelation) =>
               !inputIntegrationRelations.some(
-                (inputRelation) =>
-                  dbRelation.itemId === inputRelation.itemId &&
-                  dbRelation.integrationId === inputRelation.integrationId,
+                (inputRelation) => dbRelation.itemId === inputRelation.itemId && dbRelation.integrationId === inputRelation.integrationId,
               ),
           );
 
           for (const relation of removedIntegrationRelations) {
             transaction
               .delete(integrationItems)
-              .where(
-                and(
-                  eq(integrationItems.itemId, relation.itemId),
-                  eq(integrationItems.integrationId, relation.integrationId),
-                ),
-              )
+              .where(and(eq(integrationItems.itemId, relation.itemId), eq(integrationItems.integrationId, relation.integrationId)))
               .run();
           }
 
@@ -1170,10 +1104,7 @@ export const boardRouter = createTRPCRouter({
     await throwIfActionForbiddenAsync(ctx, eq(boards.id, input.id), "full");
 
     const dbGroupPermissions = await ctx.db.query.groupPermissions.findMany({
-      where: inArray(
-        groupPermissions.permission,
-        getPermissionsWithParents(["board-view-all", "board-modify-all", "board-full-all"]),
-      ),
+      where: inArray(groupPermissions.permission, getPermissionsWithParents(["board-view-all", "board-modify-all", "board-full-all"])),
       columns: {
         groupId: false,
       },
@@ -1282,9 +1213,7 @@ export const boardRouter = createTRPCRouter({
     await handleTransactionsAsync(ctx.db, {
       async handleAsync(db, schema) {
         await db.transaction(async (transaction) => {
-          await transaction
-            .delete(schema.boardGroupPermissions)
-            .where(eq(boardGroupPermissions.boardId, input.entityId));
+          await transaction.delete(schema.boardGroupPermissions).where(eq(boardGroupPermissions.boardId, input.entityId));
           if (input.permissions.length === 0) {
             return;
           }
@@ -1340,11 +1269,7 @@ export const boardRouter = createTRPCRouter({
  * 8. serverSettings.homeBoardId
  * 9. show NOT_FOUND error
  */
-const getHomeIdBoardAsync = async (
-  db: Database,
-  user: InferSelectModel<typeof users> | null,
-  deviceType: DeviceType,
-) => {
+const getHomeIdBoardAsync = async (db: Database, user: InferSelectModel<typeof users> | null, deviceType: DeviceType) => {
   const settingKey = deviceType === "mobile" ? "mobileHomeBoardId" : "homeBoardId";
 
   if (!user) {
@@ -1396,9 +1321,7 @@ const noBoardWithSimilarNameAsync = async (db: Database, name: string, ignoredId
     },
   });
 
-  const board = boards.find(
-    (board) => board.name.toLowerCase() === name.toLowerCase() && !ignoredIds.includes(board.id),
-  );
+  const board = boards.find((board) => board.name.toLowerCase() === name.toLowerCase() && !ignoredIds.includes(board.id));
 
   if (board) {
     throw new TRPCError({
@@ -1461,9 +1384,7 @@ const getUpdatedBoardLayout = (
       ...board.sections
         .filter((section) => section.kind === "dynamic")
         .map((section): InferInsertModel<typeof sectionLayouts> | null => {
-          const currentElement = result.items.find(
-            (element) => element.type === "section" && element.id === section.id,
-          );
+          const currentElement = result.items.find((element) => element.type === "section" && element.id === section.id);
 
           if (!currentElement) {
             return null;
@@ -1493,7 +1414,6 @@ const getElementsForLayout = (board: Awaited<ReturnType<typeof getFullBoardWithW
   const sectionElements = board.sections
     .filter((section) => section.kind === "dynamic")
     .map((section) => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const clonedLayout = section.layouts.find((sectionLayout) => sectionLayout.layoutId === layoutId)!;
 
       return {
@@ -1508,7 +1428,6 @@ const getElementsForLayout = (board: Awaited<ReturnType<typeof getFullBoardWithW
     });
 
   const itemElements = board.items.map((item) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const clonedLayout = item.layouts.find((itemLayout) => itemLayout.layoutId === layoutId)!;
 
     return {
@@ -1581,9 +1500,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
 
   return {
     ...otherBoardProperties,
-    layouts: layouts
-      .map(({ boardId: _, ...layout }) => layout)
-      .sort((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint),
+    layouts: layouts.map(({ boardId: _, ...layout }) => layout).sort((layoutA, layoutB) => layoutA.breakpoint - layoutB.breakpoint),
     sections: sections.map(({ collapseStates, ...section }) =>
       parseSection({
         ...section,
