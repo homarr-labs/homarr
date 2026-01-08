@@ -3,9 +3,6 @@ version = 1
 [[analyzers]]
 name = "javascript"
 
-  [analyzers.meta]
-  plugins = ["react"]
-  environment = ["nodejs"]
-
-[[transformers]]
-name = "prettier"
+[analyzers.meta]
+plugins = ["react"]
+environment = ["nodejs"]
