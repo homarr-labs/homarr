@@ -748,7 +748,7 @@
         "statusCode": {
           "title": "Antwoord fout",
           "description": "Onverwachte {statusCode} ({reason}) reactie van <url></url>. Controleer of de URL wijst naar de basis-URL van de integratie.",
-          "otherDescription": "",
+          "otherDescription": "Onverwachte statuscode {statusCode} ontvangen van <url></url>. Controleer of de URL verwijst naar de basis-URL van de integratie.",
           "reason": {
             "badRequest": "Onjuist verzoek",
             "notFound": "Niet gevonden",

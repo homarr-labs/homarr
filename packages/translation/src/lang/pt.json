@@ -342,7 +342,7 @@
           },
           "full-all": {
             "label": "Acesso completo a aplicativos",
-            "description": ""
+            "description": "Permitir que membros gerenciem, usem e excluam qualquer aplicativo"
           }
         }
       },
@@ -350,104 +350,104 @@
         "title": "Placas",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Criar painel",
+            "description": "Permitir que membros criem painéis"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Ver todos os painéis",
+            "description": "Permitir que membros visualizem todos os painéis"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modificar todos os painéis",
+            "description": "Permitir que membros modifiquem todos os painéis (Não inclui o controle de acesso e a zona de perigo)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acesso total ao painel",
+            "description": "Permitir que membros vejam, modifiquem e deletem todos os painéis (Incluindo o controle de acesso e a zona de perigo)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integrações",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Criar integração",
+            "description": "Permitir que membros criem integrações"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Usar todas as integrações",
+            "description": "Permitir que membros adicionem qualquer integração aos seus painéis"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Interagir com qualquer integração",
+            "description": "Permitir que membros interajam com qualquer integração"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acesso total às integrações",
+            "description": "Permitir que membros gerenciem, usem e interajam com qualquer integração"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Mídias",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Adicionar Mídia",
+            "description": "Permitir que membros adicionem mídias"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Visualizar todas as mídias",
+            "description": "Permitir que membros visualizem todas as mídias"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acesso total às mídias",
+            "description": "Permitir que membros gerenciem e deletem qualquer mídia"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Outras",
         "item": {
           "view-logs": {
-            "label": "",
+            "label": "Visualizar registros",
             "description": "Permitir que os membros visualizem os registros"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Ferramentas de busca",
         "item": {
           "create": {
-            "label": "",
+            "label": "Criar ferramenta de busca",
             "description": "Permitir que os membros criem mecanismos de busca"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modificar todas as ferramentas de busca",
+            "description": "Permitir que membros modifiquem todas as ferramentas de busca"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acesso total às ferramentas de busca",
+            "description": "Permitir que membros modifiquem e deletem qualquer ferramenta de busca"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Alguns membros são de provedores externos e não podem ser gerenciados aqui",
+      "external": "Todos os membros são de provedores externos e não podem ser gerenciados aqui"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Esse grupo é reservado para uso do sistema e restringe algumas ações. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Novo grupo",
         "notification": {
           "success": {
-            "message": ""
+            "message": "O grupo foi criado com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível criar o grupo"
           }
         }
       },
@@ -457,38 +457,38 @@
         "confirm": "Tem certeza de que deseja transferir a propriedade do grupo {name} para {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupo {group} transferido para {user} com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível transferir a propriedade"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Adicionar membro"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Remover membro",
+        "confirm": "Você tem certeza que deseja remover {user} desse grupo?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Deletar grupo",
+        "description": "Uma vez deletado o grupo não há como reverter. Tenha cuidado.",
+        "confirm": "Você tem certeza que deseja deletar o grupo {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupo {name} deletado com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível deletar o grupo {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Permissões salvas",
+            "message": "Permissões foram salvas com sucesso"
           },
           "error": {
             "title": "",
@@ -514,7 +514,7 @@
         "board": {
           "notification": {
             "success": {
-              "title": "",
+              "title": "Configurações salvas",
               "message": ""
             },
             "error": {
@@ -536,7 +536,7 @@
       }
     },
     "defaultGroup": {
-      "name": "",
+      "name": "Grupo padrão",
       "description": ""
     }
   },
