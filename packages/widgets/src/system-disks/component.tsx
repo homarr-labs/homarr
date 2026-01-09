@@ -97,7 +97,15 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
             </Group>
             <Box
               bg={healthy ? "green" : "red"}
-              style={{ position: "absolute", top: 0, left: 0, width: `${item.percentage}%`, height: "100%", zIndex: 0 }}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: `${item.percentage}%`,
+                height: "100%",
+                zIndex: 0,
+                display: options.showBackgroundBar ? "block" : "none",
+              }}
             ></Box>
           </Card>
         );

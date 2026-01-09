@@ -2629,6 +2629,9 @@
               "label": "Free space percentage (e.g., 24% free)"
             }
           }
+        },
+        "showBackgroundBar": {
+          "label": "Show background usage bar"
         }
       },
       "status": {

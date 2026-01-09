@@ -16,6 +16,7 @@ export const { definition, componentLoader } = createWidgetDefinition("systemDis
         })),
         defaultValue: "percentage",
       }),
+      showBackgroundBar: factory.switch({ defaultValue: true }),
     }));
   },
 }).withDynamicImport(() => import("./component"));
