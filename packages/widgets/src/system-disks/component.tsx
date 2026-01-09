@@ -54,7 +54,8 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
       case "percentage":
         return `${Math.round(item.percentage)}%`;
       case "absolute":
-        // Shows: "used / total" or "used / free" depending on integration
+        // Note: Due to data model differences, 'available' may represent total size (TrueNAS, Unraid)
+        // or free space (DashDot), so this displays: "used / total" or "used / free"
         return `${item.used} / ${item.available}`;
       case "free":
         // Calculate free space description based on percentage
