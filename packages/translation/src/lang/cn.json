@@ -1941,19 +1941,19 @@
       "description": "您的容器状态 (这个小部件只能用管理员权限添加)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "启用项目排序"
         },
         "defaultSort": {
-          "label": "",
+          "label": "默认排序列",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "名称",
+            "state": "状态",
+            "cpuUsage": "CPU 利用率",
+            "memoryUsage": "内存占用率"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "倒序"
         }
       },
       "error": {
@@ -2248,7 +2248,7 @@
         "unknown": "未知",
         "pending": "等待处理",
         "processing": "处理中",
-        "requested": "",
+        "requested": "已请求",
         "partiallyAvailable": "部分",
         "available": "可用",
         "blacklisted": "已列入黑名单",
