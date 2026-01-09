@@ -9,6 +9,14 @@ export const { definition, componentLoader } = createWidgetDefinition("systemDis
   createOptions() {
     return optionsBuilder.from((factory) => ({
       showTemperatureIfAvailable: factory.switch({ defaultValue: true }),
+      displayMode: factory.select({
+        options: (["percentage", "absolute", "free"] as const).map((value) => ({
+          value,
+          label: (t) => t(`widget.systemDisks.option.displayMode.option.${value}.label`),
+        })),
+        defaultValue: "percentage",
+      }),
+      showBackgroundBar: factory.switch({ defaultValue: true }),
     }));
   },
 }).withDynamicImport(() => import("./component"));
