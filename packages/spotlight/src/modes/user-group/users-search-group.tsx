@@ -11,7 +11,7 @@ import { interaction } from "../../lib/interaction";
 
 // This has to be type so it can be interpreted as Record<string, unknown>.
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-type User = { id: string; name: string; image: string | null };
+type User = { id: string; name: string; image: string | null; email: string | null };
 
 const userChildrenOptions = createChildrenOptions<User>({
   useActions: () => [

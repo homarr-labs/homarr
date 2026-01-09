@@ -476,6 +476,7 @@ export const integrationRouter = createTRPCRouter({
             id: true,
             name: true,
             image: true,
+            email: true,
           },
         },
       },
