@@ -1,4 +1,4 @@
 export * from "./security";
 export * from "./encryption";
-export * from "./user-agent";
+export * from "./request";
 export * from "./errors";
