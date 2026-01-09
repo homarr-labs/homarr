@@ -2615,7 +2615,24 @@
       "option": {
         "showTemperatureIfAvailable": {
           "label": "Show temperature if available"
+        },
+        "displayMode": {
+          "label": "Display mode",
+          "option": {
+            "percentage": {
+              "label": "Percentage (e.g., 76%)"
+            },
+            "absolute": {
+              "label": "Absolute values (e.g., 800GB / 1TB)"
+            },
+            "free": {
+              "label": "Free space percentage (e.g., 24% free)"
+            }
+          }
         }
+      },
+      "status": {
+        "unhealthy": "Unhealthy"
       }
     }
   },
