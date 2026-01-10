@@ -16,7 +16,7 @@ overrides:
   linkifyjs@<4.3.2: '>=4.3.2'
   nanoid@>=4.0.0 <5.0.9: '>=5.1.6'
   prismjs@<1.30.0: '>=1.30.0'
-  proxmox-api>undici: 7.17.0
+  proxmox-api>undici: 7.18.0
   react-is: ^19.2.3
   rollup@>=4.0.0 <4.22.4: '>=4.54.0'
   sha.js@<=2.4.11: '>=2.4.12'
@@ -10560,6 +10560,10 @@ packages:
     resolution: {integrity: sha512-JMcHKwIp6E5xjyHQr4mK5xcvo6YiMGkE2Pwo06GFLGVh/U22jjFIVG30KiZhD3/yNEgPJKL0iWkwBiG0GF0Ccw==}
     engines: {node: '>=20.18.1'}
 
+  undici@7.18.0:
+    resolution: {integrity: sha512-CfPufgPFHCYu0W4h1NiKW9+tNJ39o3kWm7Cm29ET1enSJx+AERfz7A2wAr26aY0SZbYzZlTBQtcHy15o60VZfQ==}
+    engines: {node: '>=20.18.1'}
+
   unicode-emoji-modifier-base@1.0.0:
     resolution: {integrity: sha512-yLSH4py7oFH3oG/9K+XWrz1pSi3dfUrWEnInbxMfArOfc1+33BlGPQtLsOYwvdMy11AwUBetYuaRxSPqgkq+8g==}
     engines: {node: '>=4'}
@@ -18777,7 +18781,7 @@ snapshots:
 
   proxmox-api@1.1.1:
     dependencies:
-      undici: 7.17.0
+      undici: 7.18.0
 
   proxy-agent@6.5.0:
     dependencies:
@@ -20486,6 +20490,8 @@ snapshots:
       '@fastify/busboy': 2.1.1
 
   undici@7.17.0: {}
+
+  undici@7.18.0: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 
