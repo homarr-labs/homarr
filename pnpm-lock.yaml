@@ -308,8 +308,8 @@ importers:
         specifier: 19.2.3
         version: 19.2.3(react@19.2.3)
       react-error-boundary:
-        specifier: ^6.0.1
-        version: 6.0.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        specifier: ^6.0.2
+        version: 6.0.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react-simple-code-editor:
         specifier: ^0.14.1
         version: 0.14.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -9250,8 +9250,8 @@ packages:
     peerDependencies:
       react: '>= 16.8 || 18.0.0'
 
-  react-error-boundary@6.0.1:
-    resolution: {integrity: sha512-zArgQpjJUN1ZLMEKWtifxQweW3yfvwL5j2nh3Pesze1qG6r5oCDMy/TA97bUF01wy4xCeeL4/pd8GHmvEsP3Bg==}
+  react-error-boundary@6.0.2:
+    resolution: {integrity: sha512-yvWErn55ag/ywZEFqYpXYX9rxIDPIabXIX25F184KY3F5Szk2x/cVieOflw5R47ltN3KzWOw82Lmlb4vNjyn9A==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -18859,7 +18859,7 @@ snapshots:
       prop-types: 15.8.1
       react: 19.2.3
 
-  react-error-boundary@6.0.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+  react-error-boundary@6.0.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
