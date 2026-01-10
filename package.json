@@ -43,7 +43,7 @@
     "@semantic-release/npm": "^13.1.3",
     "@semantic-release/release-notes-generator": "^14.1.0",
     "@testcontainers/redis": "^11.11.0",
-    "@turbo/gen": "^2.7.2",
+    "@turbo/gen": "^2.7.3",
     "@vitejs/plugin-react": "^5.1.2",
     "@vitest/coverage-v8": "^4.0.16",
     "@vitest/ui": "^4.0.16",
@@ -54,7 +54,7 @@
     "prettier": "^3.7.4",
     "semantic-release": "^25.0.2",
     "testcontainers": "^11.11.0",
-    "turbo": "^2.7.2",
+    "turbo": "^2.7.3",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^6.0.3",
     "vitest": "^4.0.16"
