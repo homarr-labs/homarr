@@ -205,6 +205,7 @@ export default function DockerWidget({ options, width, isEditMode }: WidgetCompo
   const columns = useMemo(() => createColumns(t), [t]);
 
   const table = useTranslatedMantineReactTable({
+    id: "widget-docker",
     columns,
     data: containers,
     enablePagination: false,
