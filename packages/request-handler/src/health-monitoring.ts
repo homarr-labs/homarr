@@ -8,7 +8,7 @@ import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-
 
 export const systemInfoRequestHandler = createCachedIntegrationRequestHandler<
   SystemHealthMonitoring,
-  Exclude<IntegrationKindByCategory<"healthMonitoring">, "proxmox">,
+  Exclude<IntegrationKindByCategory<"healthMonitoring">, "proxmox" | "coolify">,
   Record<string, never>
 >({
   async requestAsync(integration, _input) {
