@@ -3006,8 +3006,7 @@
             "api": "API",
             "certificates": "Sertifikalar",
             "tasks": "Görevler"
-          },
-          "backups": "Yedekler"
+          }
         },
         "settings": "Ayarlar",
         "help": {
@@ -3079,40 +3078,6 @@
             "confirm": {
               "title": "Paneli sil",
               "description": "{name} panelini silmek istediğinizden emin misiniz?"
-            }
-          },
-          "export": {
-            "label": "JSON olarak dışa aktar",
-            "success": {
-              "title": "Panel dışa aktarıldı",
-              "message": "Panel başarıyla dışa aktarıldı"
-            },
-            "error": {
-              "title": "Dışa aktarma başarısız",
-              "message": "Panel dışa aktarılamadı"
-            }
-          },
-          "importJson": {
-            "label": "JSON'dan içe aktar",
-            "description": "Daha önce Homarr'dan dışa aktarılan bir JSON dosyasından panel içe aktarın.",
-            "warning": "Aynı ada sahip bir panel zaten varsa, içe aktarılan panel yeniden adlandırılacaktır.",
-            "form": {
-              "file": {
-                "label": "Panel JSON dosyası",
-                "placeholder": "Bir .json dosyası seçin",
-                "invalidError": "Lütfen geçerli bir JSON dosyası seçin",
-                "invalidJsonError": "Dosya geçerli JSON içermiyor"
-              }
-            },
-            "notification": {
-              "success": {
-                "title": "Panel içe aktarıldı",
-                "message": "başarıyla içe aktarıldı"
-              },
-              "error": {
-                "title": "İçe aktarma başarısız",
-                "message": "Panel içe aktarılamadı"
-              }
             }
           }
         },
@@ -4077,9 +4042,6 @@
           "hostnames": {
             "label": "Ana makine adları"
           }
-        },
-        "backups": {
-          "label": "Backups"
         }
       },
       "settings": {

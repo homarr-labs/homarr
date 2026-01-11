@@ -3006,8 +3006,7 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          },
-          "backups": "Còpies de seguretat"
+          }
         },
         "settings": "",
         "help": {
@@ -3079,40 +3078,6 @@
             "confirm": {
               "title": "",
               "description": ""
-            }
-          },
-          "export": {
-            "label": "Exporta com a JSON",
-            "success": {
-              "title": "Tauler exportat",
-              "message": "El tauler s'ha exportat correctament"
-            },
-            "error": {
-              "title": "Error d'exportació",
-              "message": "No s'ha pogut exportar el tauler"
-            }
-          },
-          "importJson": {
-            "label": "Importa des de JSON",
-            "description": "Importa un tauler des d'un fitxer JSON que s'ha exportat prèviament des de Homarr.",
-            "warning": "Si ja existeix un tauler amb el mateix nom, el tauler importat es canviarà de nom.",
-            "form": {
-              "file": {
-                "label": "Fitxer JSON del tauler",
-                "placeholder": "Seleccioneu un fitxer .json",
-                "invalidError": "Seleccioneu un fitxer JSON vàlid",
-                "invalidJsonError": "El fitxer no conté JSON vàlid"
-              }
-            },
-            "notification": {
-              "success": {
-                "title": "Tauler importat",
-                "message": "s'ha importat correctament"
-              },
-              "error": {
-                "title": "Error d'importació",
-                "message": "No s'ha pogut importar el tauler"
-              }
             }
           }
         },
@@ -4077,9 +4042,6 @@
           "hostnames": {
             "label": ""
           }
-        },
-        "backups": {
-          "label": "Backups"
         }
       },
       "settings": {

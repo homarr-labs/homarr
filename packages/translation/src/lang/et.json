@@ -3006,8 +3006,7 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          },
-          "backups": "Varukoopiad"
+          }
         },
         "settings": "",
         "help": {
@@ -3079,40 +3078,6 @@
             "confirm": {
               "title": "",
               "description": ""
-            }
-          },
-          "export": {
-            "label": "Ekspordi JSON-ina",
-            "success": {
-              "title": "Tahvel eksporditud",
-              "message": "Tahvel on edukalt eksporditud"
-            },
-            "error": {
-              "title": "Eksportimine ebaõnnestus",
-              "message": "Tahvli eksportimine ebaõnnestus"
-            }
-          },
-          "importJson": {
-            "label": "Impordi JSON-ist",
-            "description": "Importige tahvel JSON-failist, mis on varem Homarrist eksporditud.",
-            "warning": "Kui sama nimega tahvel juba eksisteerib, siis imporditav tahvel nimetatakse ümber.",
-            "form": {
-              "file": {
-                "label": "Tahvli JSON-fail",
-                "placeholder": "Valige .json fail",
-                "invalidError": "Palun valige kehtiv JSON-fail",
-                "invalidJsonError": "Fail ei sisalda kehtivat JSON-i"
-              }
-            },
-            "notification": {
-              "success": {
-                "title": "Tahvel imporditud",
-                "message": "on edukalt imporditud"
-              },
-              "error": {
-                "title": "Importimine ebaõnnestus",
-                "message": "Tahvli importimine ebaõnnestus"
-              }
             }
           }
         },
@@ -4077,9 +4042,6 @@
           "hostnames": {
             "label": ""
           }
-        },
-        "backups": {
-          "label": "Backups"
         }
       },
       "settings": {

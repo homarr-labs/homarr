@@ -3006,8 +3006,7 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          },
-          "backups": "Zálohy"
+          }
         },
         "settings": "Nastavení",
         "help": {
@@ -3079,40 +3078,6 @@
             "confirm": {
               "title": "Odstranit plochu",
               "description": "Jste si jisti, že chcete vymazat plochu {name}?"
-            }
-          },
-          "export": {
-            "label": "Exportovat jako JSON",
-            "success": {
-              "title": "Plocha exportována",
-              "message": "Plocha byla úspěšně exportována"
-            },
-            "error": {
-              "title": "Export selhal",
-              "message": "Nepodařilo se exportovat plochu"
-            }
-          },
-          "importJson": {
-            "label": "Importovat z JSON",
-            "description": "Importujte plochu ze souboru JSON, který byl dříve exportován z Homarr.",
-            "warning": "Pokud plocha se stejným názvem již existuje, importovaná plocha bude přejmenována.",
-            "form": {
-              "file": {
-                "label": "JSON soubor plochy",
-                "placeholder": "Vyberte soubor .json",
-                "invalidError": "Vyberte prosím platný soubor JSON",
-                "invalidJsonError": "Soubor neobsahuje platný JSON"
-              }
-            },
-            "notification": {
-              "success": {
-                "title": "Plocha importována",
-                "message": "byla úspěšně importována"
-              },
-              "error": {
-                "title": "Import selhal",
-                "message": "Nepodařilo se importovat plochu"
-              }
             }
           }
         },
@@ -4077,9 +4042,6 @@
           "hostnames": {
             "label": ""
           }
-        },
-        "backups": {
-          "label": "Backups"
         }
       },
       "settings": {

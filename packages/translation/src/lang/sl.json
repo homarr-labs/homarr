@@ -3006,8 +3006,7 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          },
-          "backups": "Varnostne kopije"
+          }
         },
         "settings": "Nastavitve",
         "help": {
@@ -3079,40 +3078,6 @@
             "confirm": {
               "title": "Izbriši tablo",
               "description": ""
-            }
-          },
-          "export": {
-            "label": "Izvozi kot JSON",
-            "success": {
-              "title": "Tabla izvožena",
-              "message": "Tabla je bila uspešno izvožena"
-            },
-            "error": {
-              "title": "Izvoz ni uspel",
-              "message": "Table ni bilo mogoče izvoziti"
-            }
-          },
-          "importJson": {
-            "label": "Uvozi iz JSON",
-            "description": "Uvozite tablo iz datoteke JSON, ki je bila predhodno izvožena iz Homarr.",
-            "warning": "Če tabla z istim imenom že obstaja, bo uvožena tabla preimenovana.",
-            "form": {
-              "file": {
-                "label": "JSON datoteka table",
-                "placeholder": "Izberite datoteko .json",
-                "invalidError": "Prosimo, izberite veljavno datoteko JSON",
-                "invalidJsonError": "Datoteka ne vsebuje veljavnega JSON"
-              }
-            },
-            "notification": {
-              "success": {
-                "title": "Tabla uvožena",
-                "message": "je bila uspešno uvožena"
-              },
-              "error": {
-                "title": "Uvoz ni uspel",
-                "message": "Table ni bilo mogoče uvoziti"
-              }
             }
           }
         },
@@ -4077,9 +4042,6 @@
           "hostnames": {
             "label": ""
           }
-        },
-        "backups": {
-          "label": "Backups"
         }
       },
       "settings": {

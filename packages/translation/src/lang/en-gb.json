@@ -3006,8 +3006,7 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          },
-          "backups": "Backups"
+          }
         },
         "settings": "",
         "help": {
@@ -3079,40 +3078,6 @@
             "confirm": {
               "title": "",
               "description": ""
-            }
-          },
-          "export": {
-            "label": "Export as JSON",
-            "success": {
-              "title": "Board exported",
-              "message": "The board has been exported successfully"
-            },
-            "error": {
-              "title": "Export failed",
-              "message": "Failed to export the board"
-            }
-          },
-          "importJson": {
-            "label": "Import from JSON",
-            "description": "Import a board from a JSON file that was previously exported from Homarr.",
-            "warning": "If a board with the same name already exists, the imported board will be renamed.",
-            "form": {
-              "file": {
-                "label": "Board JSON file",
-                "placeholder": "Select a .json file",
-                "invalidError": "Please select a valid JSON file",
-                "invalidJsonError": "The file does not contain valid JSON"
-              }
-            },
-            "notification": {
-              "success": {
-                "title": "Board imported",
-                "message": "has been imported successfully"
-              },
-              "error": {
-                "title": "Import failed",
-                "message": "Failed to import the board"
-              }
             }
           }
         },
@@ -4077,9 +4042,6 @@
           "hostnames": {
             "label": ""
           }
-        },
-        "backups": {
-          "label": "Backups"
         }
       },
       "settings": {

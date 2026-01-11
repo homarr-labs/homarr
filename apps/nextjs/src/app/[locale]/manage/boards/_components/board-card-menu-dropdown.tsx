@@ -79,9 +79,7 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
       const link = document.createElement("a");
       link.href = url;
       link.download = result.fileName;
-      document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
       URL.revokeObjectURL(url);
       showSuccessNotification({
         title: t("export.success.title"),

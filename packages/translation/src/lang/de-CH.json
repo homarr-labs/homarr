@@ -3006,8 +3006,7 @@
             "api": "",
             "certificates": "Zertifikate",
             "tasks": "Aufgaben"
-          },
-          "backups": "Sicherungen"
+          }
         },
         "settings": "Einstellungen",
         "help": {
@@ -3079,40 +3078,6 @@
             "confirm": {
               "title": "Board löschen",
               "description": "Sind Sie sicher, dass Sie das Board {name} löschen möchten?"
-            }
-          },
-          "export": {
-            "label": "Als JSON exportiere",
-            "success": {
-              "title": "Board exportiert",
-              "message": "S Board isch erfolgrich exportiert worde"
-            },
-            "error": {
-              "title": "Export fehlgschlage",
-              "message": "S Board het nöd chöne exportiert werde"
-            }
-          },
-          "importJson": {
-            "label": "Vo JSON importiere",
-            "description": "Importier es Board us ere JSON-Datei, wo vorhär us Homarr exportiert worde isch.",
-            "warning": "Wenn es Board mit em gliche Name scho existiert, wird s importierte Board umbenännt.",
-            "form": {
-              "file": {
-                "label": "Board JSON-Datei",
-                "placeholder": "Wähl e .json Datei us",
-                "invalidError": "Bitte wähl e gültigi JSON-Datei us",
-                "invalidJsonError": "D Datei enthält keis gültigs JSON"
-              }
-            },
-            "notification": {
-              "success": {
-                "title": "Board importiert",
-                "message": "isch erfolgrich importiert worde"
-              },
-              "error": {
-                "title": "Import fehlgschlage",
-                "message": "S Board het nöd chöne importiert werde"
-              }
             }
           }
         },
@@ -4077,9 +4042,6 @@
           "hostnames": {
             "label": ""
           }
-        },
-        "backups": {
-          "label": "Backups"
         }
       },
       "settings": {

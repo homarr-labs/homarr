@@ -68,9 +68,7 @@ export const BackupsTable = ({ initialBackups }: BackupsTableProps) => {
     const link = document.createElement("a");
     link.href = `/api/backup/download/${backup.id}`;
     link.download = `${backup.name}.zip`;
-    document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
   }, []);
 
   const handleRefresh = useCallback(async () => {
@@ -179,7 +177,7 @@ export const BackupsTable = ({ initialBackups }: BackupsTableProps) => {
       ),
     },
   ];
-
+  const searchPlaceholder = tBackup("field.search", { count: backups.length.toString() });
   const table = useTranslatedMantineReactTable({
     data: backups,
     columns,
@@ -195,7 +193,7 @@ export const BackupsTable = ({ initialBackups }: BackupsTableProps) => {
     enableSorting: true,
     positionGlobalFilter: "right",
     mantineSearchTextInputProps: {
-      placeholder: `Search ${backups.length} backups...`,
+      placeholder: searchPlaceholder,
       style: { minWidth: 300 },
     },
     initialState: {
@@ -205,7 +203,7 @@ export const BackupsTable = ({ initialBackups }: BackupsTableProps) => {
     },
     renderTopToolbarCustomActions: () => (
       <Button variant="default" rightSection={<IconRefresh size="1rem" />} onClick={handleRefresh}>
-        Refresh
+        {tBackup("action.refresh.label")}
       </Button>
     ),
     renderEmptyRowsFallback: () => (

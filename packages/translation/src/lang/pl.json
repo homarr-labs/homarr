@@ -3006,8 +3006,7 @@
             "api": "API",
             "certificates": "Certyfikaty",
             "tasks": "Zadania"
-          },
-          "backups": "Kopie zapasowe"
+          }
         },
         "settings": "Ustawienia",
         "help": {
@@ -3079,40 +3078,6 @@
             "confirm": {
               "title": "Usuń tablicę",
               "description": "Czy na pewno chcesz usunąć tablicę {name}?"
-            }
-          },
-          "export": {
-            "label": "Eksportuj jako JSON",
-            "success": {
-              "title": "Tablica wyeksportowana",
-              "message": "Tablica została pomyślnie wyeksportowana"
-            },
-            "error": {
-              "title": "Błąd eksportu",
-              "message": "Nie udało się wyeksportować tablicy"
-            }
-          },
-          "importJson": {
-            "label": "Importuj z JSON",
-            "description": "Zaimportuj tablicę z pliku JSON, który został wcześniej wyeksportowany z Homarr.",
-            "warning": "Jeśli tablica o tej samej nazwie już istnieje, zaimportowana tablica zostanie przemianowana.",
-            "form": {
-              "file": {
-                "label": "Plik JSON tablicy",
-                "placeholder": "Wybierz plik .json",
-                "invalidError": "Proszę wybrać prawidłowy plik JSON",
-                "invalidJsonError": "Plik nie zawiera prawidłowego JSON"
-              }
-            },
-            "notification": {
-              "success": {
-                "title": "Tablica zaimportowana",
-                "message": "została pomyślnie zaimportowana"
-              },
-              "error": {
-                "title": "Błąd importu",
-                "message": "Nie udało się zaimportować tablicy"
-              }
             }
           }
         },
@@ -4077,9 +4042,6 @@
           "hostnames": {
             "label": "Nazwy hostów"
           }
-        },
-        "backups": {
-          "label": "Backups"
         }
       },
       "settings": {
