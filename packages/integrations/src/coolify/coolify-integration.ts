@@ -83,7 +83,9 @@ export class CoolifyIntegration extends Integration {
 
     const result = coolifyHealthcheckSchema.safeParse(await response.json());
     if (!result.success) {
-      throw new Error(`Failed to parse healthcheck response: ${result.error.message}`);
+      throw new ResponseError(response, {
+        cause: new Error(`Failed to parse healthcheck response: ${result.error.message}`),
+      });
     }
 
     return result.data;
@@ -105,7 +107,9 @@ export class CoolifyIntegration extends Integration {
 
     const result = coolifyApplicationSchema.array().safeParse(await response.json());
     if (!result.success) {
-      throw new Error(`Failed to parse applications response: ${result.error.message}`);
+      throw new ResponseError(response, {
+        cause: new Error(`Failed to parse applications response: ${result.error.message}`),
+      });
     }
 
     return result.data;
@@ -127,7 +131,9 @@ export class CoolifyIntegration extends Integration {
 
     const result = coolifyApplicationSchema.safeParse(await response.json());
     if (!result.success) {
-      throw new Error(`Failed to parse application response: ${result.error.message}`);
+      throw new ResponseError(response, {
+        cause: new Error(`Failed to parse application response: ${result.error.message}`),
+      });
     }
 
     return result.data;
@@ -149,7 +155,9 @@ export class CoolifyIntegration extends Integration {
 
     const result = coolifyApplicationLogSchema.safeParse(await response.json());
     if (!result.success) {
-      throw new Error(`Failed to parse application logs response: ${result.error.message}`);
+      throw new ResponseError(response, {
+        cause: new Error(`Failed to parse application logs response: ${result.error.message}`),
+      });
     }
 
     return result.data.logs;
@@ -171,7 +179,9 @@ export class CoolifyIntegration extends Integration {
 
     const result = coolifyEnvironmentVariableSchema.array().safeParse(await response.json());
     if (!result.success) {
-      throw new Error(`Failed to parse environment variables response: ${result.error.message}`);
+      throw new ResponseError(response, {
+        cause: new Error(`Failed to parse environment variables response: ${result.error.message}`),
+      });
     }
 
     return result.data;
@@ -193,7 +203,9 @@ export class CoolifyIntegration extends Integration {
 
     const result = coolifyProjectSchema.array().safeParse(await response.json());
     if (!result.success) {
-      throw new Error(`Failed to parse projects response: ${result.error.message}`);
+      throw new ResponseError(response, {
+        cause: new Error(`Failed to parse projects response: ${result.error.message}`),
+      });
     }
 
     return result.data;
@@ -215,7 +227,9 @@ export class CoolifyIntegration extends Integration {
 
     const result = coolifyProjectWithEnvironmentsSchema.safeParse(await response.json());
     if (!result.success) {
-      throw new Error(`Failed to parse project response: ${result.error.message}`);
+      throw new ResponseError(response, {
+        cause: new Error(`Failed to parse project response: ${result.error.message}`),
+      });
     }
 
     return result.data;
@@ -237,7 +251,9 @@ export class CoolifyIntegration extends Integration {
 
     const result = coolifyEnvironmentSchema.array().safeParse(await response.json());
     if (!result.success) {
-      throw new Error(`Failed to parse environments response: ${result.error.message}`);
+      throw new ResponseError(response, {
+        cause: new Error(`Failed to parse environments response: ${result.error.message}`),
+      });
     }
 
     return result.data;
@@ -259,7 +275,9 @@ export class CoolifyIntegration extends Integration {
 
     const result = coolifyEnvironmentSchema.safeParse(await response.json());
     if (!result.success) {
-      throw new Error(`Failed to parse environment response: ${result.error.message}`);
+      throw new ResponseError(response, {
+        cause: new Error(`Failed to parse environment response: ${result.error.message}`),
+      });
     }
 
     return result.data;
@@ -281,7 +299,9 @@ export class CoolifyIntegration extends Integration {
 
     const result = coolifyResourceSchema.array().safeParse(await response.json());
     if (!result.success) {
-      throw new Error(`Failed to parse resources response: ${result.error.message}`);
+      throw new ResponseError(response, {
+        cause: new Error(`Failed to parse resources response: ${result.error.message}`),
+      });
     }
 
     return result.data;
@@ -303,7 +323,9 @@ export class CoolifyIntegration extends Integration {
 
     const result = coolifyServerSchema.array().safeParse(await response.json());
     if (!result.success) {
-      throw new Error(`Failed to parse servers response: ${result.error.message}`);
+      throw new ResponseError(response, {
+        cause: new Error(`Failed to parse servers response: ${result.error.message}`),
+      });
     }
 
     return result.data;
@@ -325,7 +347,9 @@ export class CoolifyIntegration extends Integration {
 
     const result = coolifyServiceSchema.array().safeParse(await response.json());
     if (!result.success) {
-      throw new Error(`Failed to parse services response: ${result.error.message}`);
+      throw new ResponseError(response, {
+        cause: new Error(`Failed to parse services response: ${result.error.message}`),
+      });
     }
 
     return result.data;

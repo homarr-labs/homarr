@@ -12,26 +12,19 @@ import type {
   CoolifyService,
 } from "../coolify-types";
 
-// Mock environment modules to prevent client-side env check errors
+// Required mocks for server-side environment variables accessed during import
 vi.mock("@homarr/common/env", () => ({
-  env: {
-    SECRET_ENCRYPTION_KEY: "0".repeat(64),
-  },
+  env: { SECRET_ENCRYPTION_KEY: "0".repeat(64) },
 }));
 
 vi.mock("@homarr/core/infrastructure/logs/env", () => ({
-  logsEnv: {
-    LEVEL: "info",
-  },
+  logsEnv: { LEVEL: "info" },
 }));
 
 vi.mock("@homarr/core/infrastructure/db/env", () => ({
-  dbEnv: {
-    DRIVER: "better-sqlite3",
-  },
+  dbEnv: { DRIVER: "better-sqlite3" },
 }));
 
-// Mock the redis client to prevent env access
 vi.mock("@homarr/core/infrastructure/redis", () => ({
   createRedisClient: vi.fn(() => ({
     publish: vi.fn(),
