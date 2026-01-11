@@ -28,6 +28,7 @@ const backupCreatorSchema = z.object({
   id: z.string(),
   name: z.string().nullable(),
   image: z.string().nullable(),
+  email: z.string().nullable(),
 });
 
 const backupSchema = z.object({
@@ -151,6 +152,7 @@ export const backupRouter = createTRPCRouter({
               id: true,
               name: true,
               image: true,
+              email: true,
             },
           },
         },
@@ -182,6 +184,7 @@ export const backupRouter = createTRPCRouter({
               id: true,
               name: true,
               image: true,
+              email: true,
             },
           },
         },

@@ -3006,8 +3006,7 @@
             "api": "API",
             "certificates": "Certifikat",
             "tasks": "Uppgifter"
-          },
-          "backups": "Backuper"
+          }
         },
         "settings": "Inställningar",
         "help": {
@@ -3079,40 +3078,6 @@
             "confirm": {
               "title": "Ta bort tavla",
               "description": "Är du säker på att du vill ta bort tavlan {name}?"
-            }
-          },
-          "export": {
-            "label": "Exportera som JSON",
-            "success": {
-              "title": "Tavla exporterad",
-              "message": "Tavlan har exporterats framgångsrikt"
-            },
-            "error": {
-              "title": "Export misslyckades",
-              "message": "Kunde inte exportera tavlan"
-            }
-          },
-          "importJson": {
-            "label": "Importera från JSON",
-            "description": "Importera en tavla från en JSON-fil som tidigare exporterades från Homarr.",
-            "warning": "Om en tavla med samma namn redan finns kommer den importerade tavlan att döpas om.",
-            "form": {
-              "file": {
-                "label": "Tavla JSON-fil",
-                "placeholder": "Välj en .json-fil",
-                "invalidError": "Välj en giltig JSON-fil",
-                "invalidJsonError": "Filen innehåller inte giltig JSON"
-              }
-            },
-            "notification": {
-              "success": {
-                "title": "Tavla importerad",
-                "message": "har importerats framgångsrikt"
-              },
-              "error": {
-                "title": "Import misslyckades",
-                "message": "Kunde inte importera tavlan"
-              }
             }
           }
         },
@@ -4077,9 +4042,6 @@
           "hostnames": {
             "label": ""
           }
-        },
-        "backups": {
-          "label": "Backups"
         }
       },
       "settings": {

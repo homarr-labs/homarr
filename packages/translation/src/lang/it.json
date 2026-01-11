@@ -3006,8 +3006,7 @@
             "api": "API",
             "certificates": "Certificati",
             "tasks": "Attività"
-          },
-          "backups": "Backup"
+          }
         },
         "settings": "Impostazioni",
         "help": {
@@ -3079,40 +3078,6 @@
             "confirm": {
               "title": "Elimina board",
               "description": "Sei sicuro di voler eliminare la board {name}?"
-            }
-          },
-          "export": {
-            "label": "Esporta come JSON",
-            "success": {
-              "title": "Board esportata",
-              "message": "La board è stata esportata con successo"
-            },
-            "error": {
-              "title": "Esportazione fallita",
-              "message": "Impossibile esportare la board"
-            }
-          },
-          "importJson": {
-            "label": "Importa da JSON",
-            "description": "Importa una board da un file JSON precedentemente esportato da Homarr.",
-            "warning": "Se esiste già una board con lo stesso nome, la board importata verrà rinominata.",
-            "form": {
-              "file": {
-                "label": "File JSON della board",
-                "placeholder": "Seleziona un file .json",
-                "invalidError": "Seleziona un file JSON valido",
-                "invalidJsonError": "Il file non contiene JSON valido"
-              }
-            },
-            "notification": {
-              "success": {
-                "title": "Board importata",
-                "message": "è stata importata con successo"
-              },
-              "error": {
-                "title": "Importazione fallita",
-                "message": "Impossibile importare la board"
-              }
             }
           }
         },
@@ -4077,9 +4042,6 @@
           "hostnames": {
             "label": "Nomi Host"
           }
-        },
-        "backups": {
-          "label": "Backups"
         }
       },
       "settings": {

@@ -3006,8 +3006,7 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          },
-          "backups": "Rezerves kopijas"
+          }
         },
         "settings": "Iestatījumi",
         "help": {
@@ -3079,40 +3078,6 @@
             "confirm": {
               "title": "Dzēst dēli",
               "description": ""
-            }
-          },
-          "export": {
-            "label": "Eksportēt kā JSON",
-            "success": {
-              "title": "Dēlis eksportēts",
-              "message": "Dēlis ir veiksmīgi eksportēts"
-            },
-            "error": {
-              "title": "Eksportēšana neizdevās",
-              "message": "Neizdevās eksportēt dēli"
-            }
-          },
-          "importJson": {
-            "label": "Importēt no JSON",
-            "description": "Importējiet dēli no JSON faila, kas iepriekš tika eksportēts no Homarr.",
-            "warning": "Ja dēlis ar tādu pašu nosaukumu jau pastāv, importētais dēlis tiks pārdēvēts.",
-            "form": {
-              "file": {
-                "label": "Dēļa JSON fails",
-                "placeholder": "Atlasiet .json failu",
-                "invalidError": "Lūdzu, atlasiet derīgu JSON failu",
-                "invalidJsonError": "Fails nesatur derīgu JSON"
-              }
-            },
-            "notification": {
-              "success": {
-                "title": "Dēlis importēts",
-                "message": "ir veiksmīgi importēts"
-              },
-              "error": {
-                "title": "Importēšana neizdevās",
-                "message": "Neizdevās importēt dēli"
-              }
             }
           }
         },
@@ -4077,9 +4042,6 @@
           "hostnames": {
             "label": ""
           }
-        },
-        "backups": {
-          "label": "Backups"
         }
       },
       "settings": {

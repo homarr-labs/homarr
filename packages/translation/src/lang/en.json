@@ -4597,7 +4597,8 @@
       "size": "Size",
       "status": "Status",
       "createdAt": "Created",
-      "creator": "Created by"
+      "creator": "Created by",
+      "search": "Search {count} backups..."
     },
     "type": {
       "manual": "Manual",
@@ -4623,6 +4624,9 @@
       },
       "download": {
         "label": "Download"
+      },
+      "refresh": {
+        "label": "Refresh"
       },
       "delete": {
         "label": "Delete",
@@ -4654,6 +4658,15 @@
           "warnings": "Warnings",
           "summary": "Summary",
           "summaryDetails": "{boards} boards, {integrations} integrations, {users} users, {groups} groups",
+          "entities": {
+            "boards": "Boards",
+            "integrations": "Integrations",
+            "users": "Users",
+            "groups": "Groups",
+            "apps": "Apps",
+            "searchEngines": "Search engines",
+            "mediaFiles": "Media files"
+          },
           "error": {
             "title": "Validation failed",
             "message": "Failed to validate backup file"

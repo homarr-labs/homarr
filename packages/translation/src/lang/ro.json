@@ -3006,8 +3006,7 @@
             "api": "",
             "certificates": "",
             "tasks": ""
-          },
-          "backups": "Copii de rezervă"
+          }
         },
         "settings": "Setări",
         "help": {
@@ -3079,40 +3078,6 @@
             "confirm": {
               "title": "Șterge planșa",
               "description": ""
-            }
-          },
-          "export": {
-            "label": "Exportă ca JSON",
-            "success": {
-              "title": "Planșă exportată",
-              "message": "Planșa a fost exportată cu succes"
-            },
-            "error": {
-              "title": "Export eșuat",
-              "message": "Nu s-a putut exporta planșa"
-            }
-          },
-          "importJson": {
-            "label": "Importă din JSON",
-            "description": "Importă o planșă dintr-un fișier JSON care a fost exportat anterior din Homarr.",
-            "warning": "Dacă există deja o planșă cu același nume, planșa importată va fi redenumită.",
-            "form": {
-              "file": {
-                "label": "Fișier JSON planșă",
-                "placeholder": "Selectează un fișier .json",
-                "invalidError": "Vă rugăm să selectați un fișier JSON valid",
-                "invalidJsonError": "Fișierul nu conține JSON valid"
-              }
-            },
-            "notification": {
-              "success": {
-                "title": "Planșă importată",
-                "message": "a fost importată cu succes"
-              },
-              "error": {
-                "title": "Import eșuat",
-                "message": "Nu s-a putut importa planșa"
-              }
             }
           }
         },
@@ -4077,9 +4042,6 @@
           "hostnames": {
             "label": ""
           }
-        },
-        "backups": {
-          "label": "Backups"
         }
       },
       "settings": {

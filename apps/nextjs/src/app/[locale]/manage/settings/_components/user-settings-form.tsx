@@ -12,15 +12,18 @@ export const UserSettingsForm = ({ defaultValues }: { defaultValues: ServerSetti
 
   return (
     <CommonSettingsForm settingKey="user" defaultValues={defaultValues}>
-      {(form) => (
-        <>
+      {(form) => {
+        const gravatarLabel = tUser("enableGravatar.label");
+        const gravatarDescription = tUser("enableGravatar.description");
+
+        return (
           <Switch
             {...form.getInputProps("enableGravatar", { type: "checkbox" })}
-            label={tUser("enableGravatar.label")}
-            description={tUser("enableGravatar.description")}
+            label={gravatarLabel}
+            description={gravatarDescription}
           />
-        </>
-      )}
+        );
+      }}
     </CommonSettingsForm>
   );
 };
