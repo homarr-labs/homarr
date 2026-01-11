@@ -111,13 +111,13 @@ export type CoolifyServerSettings = z.infer<typeof coolifyServerSettingsSchema>;
 // Server schema
 export const coolifyServerSchema = z
   .object({
-    id: z.number().nullable(),
+    id: z.number().nullish(),
     uuid: z.string(),
     name: z.string(),
-    ip: z.string(),
-    is_reachable: z.boolean().optional(),
-    is_usable: z.boolean().optional(),
-    settings: coolifyServerSettingsSchema.optional(),
+    ip: z.string().nullish(),
+    is_reachable: z.boolean().nullish(),
+    is_usable: z.boolean().nullish(),
+    settings: coolifyServerSettingsSchema.nullish(),
   })
   .passthrough();
 
