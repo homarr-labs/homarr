@@ -1,5 +1,7 @@
 import { Response } from "undici";
-import { describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import { CoolifyIntegration } from "../coolify-integration";
 import type {
@@ -10,14 +12,48 @@ import type {
   CoolifyService,
 } from "../coolify-types";
 
+// Mock environment modules to prevent client-side env check errors
+vi.mock("@homarr/common/env", () => ({
+  env: {
+    SECRET_ENCRYPTION_KEY: "0".repeat(64),
+  },
+}));
+
+vi.mock("@homarr/core/infrastructure/logs/env", () => ({
+  logsEnv: {
+    LEVEL: "info",
+  },
+}));
+
+vi.mock("@homarr/core/infrastructure/db/env", () => ({
+  dbEnv: {
+    DRIVER: "better-sqlite3",
+  },
+}));
+
+// Mock the redis client to prevent env access
+vi.mock("@homarr/core/infrastructure/redis", () => ({
+  createRedisClient: vi.fn(() => ({
+    publish: vi.fn(),
+    subscribe: vi.fn(),
+    quit: vi.fn(),
+  })),
+}));
+
+vi.mock("@homarr/core/infrastructure/http", () => ({
+  fetchWithTrustedCertificatesAsync: vi.fn(),
+}));
+
 const TEST_API_KEY = "test-api-key-12345";
 const TEST_URL = "https://coolify.example.com";
 
 type MockResponseData = string | object | unknown[];
 
-const createMockFetch = (responses: Record<string, MockResponseData>) => {
-  return vi.fn().mockImplementation((url: URL | string) => {
-    const urlString = url instanceof URL ? url.toString() : url;
+const mockFetchWithTrustedCertificates = vi.mocked(fetchWithTrustedCertificatesAsync);
+
+const setupMockFetch = (responses: Record<string, MockResponseData>) => {
+  mockFetchWithTrustedCertificates.mockImplementation((url) => {
+    const urlString = url instanceof URL ? url.toString() : String(url);
     const urlObj = new URL(urlString);
     const path = urlObj.pathname;
 
@@ -28,7 +64,7 @@ const createMockFetch = (responses: Record<string, MockResponseData>) => {
         new Response(body, {
           status: 200,
           headers: { "content-type": "application/json" },
-        }),
+        }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
       );
     }
 
@@ -36,7 +72,7 @@ const createMockFetch = (responses: Record<string, MockResponseData>) => {
       new Response(JSON.stringify({ error: "Not Found" }), {
         status: 404,
         headers: { "content-type": "application/json" },
-      }),
+      }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
     );
   });
 };
@@ -52,29 +88,33 @@ const createCoolifyIntegration = () => {
 };
 
 describe("CoolifyIntegration", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   describe("getVersionAsync", () => {
     test("should return version string from Coolify API", async () => {
-      const integration = createCoolifyIntegration();
-      const mockFetch = createMockFetch({
+      setupMockFetch({
         "/api/v1/version": "4.0.0-beta.460",
       });
 
-      const result = await integration.getVersionAsync(mockFetch);
+      const integration = createCoolifyIntegration();
+      const result = await integration.getVersionAsync();
 
       expect(result).toBe("4.0.0-beta.460");
-      expect(mockFetch).toHaveBeenCalled();
+      expect(mockFetchWithTrustedCertificates).toHaveBeenCalled();
     });
 
     test("should throw error when API returns error", async () => {
-      const integration = createCoolifyIntegration();
-      const mockFetch = vi.fn().mockResolvedValue(
+      mockFetchWithTrustedCertificates.mockResolvedValue(
         new Response("Unauthorized", {
           status: 401,
           headers: { "content-type": "text/plain" },
-        }),
+        }) as unknown as Awaited<ReturnType<typeof fetchWithTrustedCertificatesAsync>>,
       );
 
-      await expect(integration.getVersionAsync(mockFetch)).rejects.toThrow();
+      const integration = createCoolifyIntegration();
+      await expect(integration.getVersionAsync()).rejects.toThrow();
     });
   });
 
@@ -88,8 +128,6 @@ describe("CoolifyIntegration", () => {
           ip: "192.168.1.100",
           is_reachable: true,
           is_usable: true,
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z",
           settings: { is_build_server: false },
         },
         {
@@ -99,18 +137,16 @@ describe("CoolifyIntegration", () => {
           ip: "192.168.1.101",
           is_reachable: true,
           is_usable: true,
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z",
           settings: { is_build_server: true },
         },
       ];
 
-      const integration = createCoolifyIntegration();
-      const mockFetch = createMockFetch({
+      setupMockFetch({
         "/api/v1/servers": servers,
       });
 
-      const result = await integration.listServersAsync(mockFetch);
+      const integration = createCoolifyIntegration();
+      const result = await integration.listServersAsync();
 
       expect(result).toHaveLength(2);
       expect(result[0]?.name).toBe("Production Server");
@@ -125,10 +161,8 @@ describe("CoolifyIntegration", () => {
           id: 1,
           uuid: "app-uuid-1",
           name: "my-app",
-          description: "My Application",
           fqdn: "https://myapp.example.com",
           status: "running",
-          created_at: "2024-01-01T00:00:00Z",
           updated_at: "2024-01-01T00:00:00Z",
         },
         {
@@ -137,17 +171,16 @@ describe("CoolifyIntegration", () => {
           name: "another-app",
           fqdn: "https://another.example.com",
           status: "stopped",
-          created_at: "2024-01-01T00:00:00Z",
           updated_at: "2024-01-01T00:00:00Z",
         },
       ];
 
-      const integration = createCoolifyIntegration();
-      const mockFetch = createMockFetch({
+      setupMockFetch({
         "/api/v1/applications": applications,
       });
 
-      const result = await integration.listApplicationsAsync(mockFetch);
+      const integration = createCoolifyIntegration();
+      const result = await integration.listApplicationsAsync();
 
       expect(result).toHaveLength(2);
       expect(result[0]?.status).toBe("running");
@@ -162,18 +195,16 @@ describe("CoolifyIntegration", () => {
           id: 1,
           uuid: "service-uuid-1",
           name: "postgresql",
-          description: "PostgreSQL Database",
-          created_at: "2024-01-01T00:00:00Z",
           updated_at: "2024-01-01T00:00:00Z",
         },
       ];
 
-      const integration = createCoolifyIntegration();
-      const mockFetch = createMockFetch({
+      setupMockFetch({
         "/api/v1/services": services,
       });
 
-      const result = await integration.listServicesAsync(mockFetch);
+      const integration = createCoolifyIntegration();
+      const result = await integration.listServicesAsync();
 
       expect(result).toHaveLength(1);
       expect(result[0]?.name).toBe("postgresql");
@@ -187,18 +218,15 @@ describe("CoolifyIntegration", () => {
           id: 1,
           uuid: "proj-uuid-1",
           name: "Production",
-          description: "Production environment",
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z",
         },
       ];
 
-      const integration = createCoolifyIntegration();
-      const mockFetch = createMockFetch({
+      setupMockFetch({
         "/api/v1/projects": projects,
       });
 
-      const result = await integration.listProjectsAsync(mockFetch);
+      const integration = createCoolifyIntegration();
+      const result = await integration.listProjectsAsync();
 
       expect(result).toHaveLength(1);
       expect(result[0]?.name).toBe("Production");
@@ -211,21 +239,17 @@ describe("CoolifyIntegration", () => {
         id: 1,
         uuid: "proj-uuid-1",
         name: "Production",
-        created_at: "2024-01-01T00:00:00Z",
-        updated_at: "2024-01-01T00:00:00Z",
         environments: [
           {
             id: 1,
             uuid: "env-uuid-1",
             name: "production",
             project_id: 1,
-            created_at: "2024-01-01T00:00:00Z",
-            updated_at: "2024-01-01T00:00:00Z",
           },
         ],
       };
 
-      const mockFetch = createMockFetch({
+      setupMockFetch({
         "/api/v1/version": "4.0.0-beta.460",
         "/api/v1/applications": [
           {
@@ -234,7 +258,6 @@ describe("CoolifyIntegration", () => {
             name: "my-app",
             status: "running",
             environment_id: 1,
-            created_at: "2024-01-01T00:00:00Z",
             updated_at: "2024-01-01T00:00:00Z",
           },
         ],
@@ -244,7 +267,6 @@ describe("CoolifyIntegration", () => {
             uuid: "service-uuid-1",
             name: "postgres",
             environment_id: 1,
-            created_at: "2024-01-01T00:00:00Z",
             updated_at: "2024-01-01T00:00:00Z",
           },
         ],
@@ -253,8 +275,6 @@ describe("CoolifyIntegration", () => {
             id: 1,
             uuid: "proj-uuid-1",
             name: "Production",
-            created_at: "2024-01-01T00:00:00Z",
-            updated_at: "2024-01-01T00:00:00Z",
           },
         ],
         "/api/v1/servers": [
@@ -265,8 +285,6 @@ describe("CoolifyIntegration", () => {
             ip: "192.168.1.1",
             is_reachable: true,
             is_usable: true,
-            created_at: "2024-01-01T00:00:00Z",
-            updated_at: "2024-01-01T00:00:00Z",
             settings: { is_build_server: false },
           },
         ],
@@ -274,7 +292,7 @@ describe("CoolifyIntegration", () => {
       });
 
       const integration = createCoolifyIntegration();
-      const result = await integration.getInstanceInfoAsync(mockFetch);
+      const result = await integration.getInstanceInfoAsync();
 
       expect(result.version).toBe("4.0.0-beta.460");
       expect(result.applications).toHaveLength(1);
@@ -287,12 +305,12 @@ describe("CoolifyIntegration", () => {
 
   describe("getHealthcheckAsync", () => {
     test("should return healthcheck status", async () => {
-      const integration = createCoolifyIntegration();
-      const mockFetch = createMockFetch({
+      setupMockFetch({
         "/api/v1/healthcheck": { status: "healthy" },
       });
 
-      const result = await integration.getHealthcheckAsync(mockFetch);
+      const integration = createCoolifyIntegration();
+      const result = await integration.getHealthcheckAsync();
 
       expect(result.status).toBe("healthy");
     });
@@ -304,19 +322,17 @@ describe("CoolifyIntegration", () => {
         id: 1,
         uuid: "app-uuid-1",
         name: "my-app",
-        description: "Test app",
         fqdn: "https://app.example.com",
         status: "running",
-        created_at: "2024-01-01T00:00:00Z",
         updated_at: "2024-01-01T00:00:00Z",
       };
 
-      const integration = createCoolifyIntegration();
-      const mockFetch = createMockFetch({
+      setupMockFetch({
         "/api/v1/applications/app-uuid-1": application,
       });
 
-      const result = await integration.getApplicationByUuidAsync("app-uuid-1", mockFetch);
+      const integration = createCoolifyIntegration();
+      const result = await integration.getApplicationByUuidAsync("app-uuid-1");
 
       expect(result.uuid).toBe("app-uuid-1");
       expect(result.name).toBe("my-app");

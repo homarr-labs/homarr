@@ -8,7 +8,6 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import { CoolifyApiErrorHandler } from "./coolify-error-handler";
 import type {
   CoolifyApplication,
-  CoolifyApplicationLog,
   CoolifyApplicationWithContext,
   CoolifyEnvironment,
   CoolifyEnvironmentVariable,
@@ -21,6 +20,18 @@ import type {
   CoolifyService,
   CoolifyServiceWithContext,
 } from "./coolify-types";
+import {
+  coolifyApplicationLogSchema,
+  coolifyApplicationSchema,
+  coolifyEnvironmentSchema,
+  coolifyEnvironmentVariableSchema,
+  coolifyHealthcheckSchema,
+  coolifyProjectSchema,
+  coolifyProjectWithEnvironmentsSchema,
+  coolifyResourceSchema,
+  coolifyServerSchema,
+  coolifyServiceSchema,
+} from "./coolify-types";
 
 @HandleIntegrationErrors([new CoolifyApiErrorHandler()])
 export class CoolifyIntegration extends Integration {
@@ -32,14 +43,8 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(healthResponse);
     }
 
-    const versionUrl = this.url("/api/v1/version");
-    const versionResponse = await input.fetchAsync(versionUrl, {
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!versionResponse.ok) {
-      throw new ResponseError(versionResponse);
-    }
+    // Reuse getVersionAsync to test API key authentication
+    await this.getVersionAsync();
 
     return { success: true };
   }
@@ -48,9 +53,9 @@ export class CoolifyIntegration extends Integration {
    * Get Coolify version information
    * https://coolify.io/docs/api-reference/api/operations/version
    */
-  public async getVersionAsync(fetchAsync = fetchWithTrustedCertificatesAsync): Promise<string> {
+  public async getVersionAsync(): Promise<string> {
     const url = this.url("/api/v1/version");
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -66,9 +71,9 @@ export class CoolifyIntegration extends Integration {
    * Get Coolify healthcheck status
    * https://coolify.io/docs/api-reference/api/operations/healthcheck
    */
-  public async getHealthcheckAsync(fetchAsync = fetchWithTrustedCertificatesAsync): Promise<CoolifyHealthcheck> {
+  public async getHealthcheckAsync(): Promise<CoolifyHealthcheck> {
     const url = this.url("/api/v1/healthcheck");
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -76,17 +81,21 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as CoolifyHealthcheck;
-    return data;
+    const result = coolifyHealthcheckSchema.safeParse(await response.json());
+    if (!result.success) {
+      throw new Error(`Failed to parse healthcheck response: ${result.error.message}`);
+    }
+
+    return result.data;
   }
 
   /**
    * List all applications
    * https://coolify.io/docs/api-reference/api/operations/list-applications
    */
-  public async listApplicationsAsync(fetchAsync = fetchWithTrustedCertificatesAsync): Promise<CoolifyApplication[]> {
+  public async listApplicationsAsync(): Promise<CoolifyApplication[]> {
     const url = this.url("/api/v1/applications");
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -94,20 +103,21 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as CoolifyApplication[];
-    return data;
+    const result = coolifyApplicationSchema.array().safeParse(await response.json());
+    if (!result.success) {
+      throw new Error(`Failed to parse applications response: ${result.error.message}`);
+    }
+
+    return result.data;
   }
 
   /**
    * Get application by UUID
    * https://coolify.io/docs/api-reference/api/operations/get-application-by-uuid
    */
-  public async getApplicationByUuidAsync(
-    uuid: string,
-    fetchAsync = fetchWithTrustedCertificatesAsync,
-  ): Promise<CoolifyApplication> {
+  public async getApplicationByUuidAsync(uuid: string): Promise<CoolifyApplication> {
     const url = this.url(`/api/v1/applications/${uuid}`);
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -115,17 +125,21 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as CoolifyApplication;
-    return data;
+    const result = coolifyApplicationSchema.safeParse(await response.json());
+    if (!result.success) {
+      throw new Error(`Failed to parse application response: ${result.error.message}`);
+    }
+
+    return result.data;
   }
 
   /**
    * Get application logs by UUID
    * https://coolify.io/docs/api-reference/api/operations/get-application-logs-by-uuid
    */
-  public async getApplicationLogsAsync(uuid: string, fetchAsync = fetchWithTrustedCertificatesAsync): Promise<string> {
+  public async getApplicationLogsAsync(uuid: string): Promise<string> {
     const url = this.url(`/api/v1/applications/${uuid}/logs`);
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -133,20 +147,21 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as CoolifyApplicationLog;
-    return data.logs;
+    const result = coolifyApplicationLogSchema.safeParse(await response.json());
+    if (!result.success) {
+      throw new Error(`Failed to parse application logs response: ${result.error.message}`);
+    }
+
+    return result.data.logs;
   }
 
   /**
    * List environment variables by application UUID
    * https://coolify.io/docs/api-reference/api/operations/list-envs-by-application-uuid
    */
-  public async listEnvsByApplicationUuidAsync(
-    uuid: string,
-    fetchAsync = fetchWithTrustedCertificatesAsync,
-  ): Promise<CoolifyEnvironmentVariable[]> {
+  public async listEnvsByApplicationUuidAsync(uuid: string): Promise<CoolifyEnvironmentVariable[]> {
     const url = this.url(`/api/v1/applications/${uuid}/envs`);
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -154,17 +169,21 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as CoolifyEnvironmentVariable[];
-    return data;
+    const result = coolifyEnvironmentVariableSchema.array().safeParse(await response.json());
+    if (!result.success) {
+      throw new Error(`Failed to parse environment variables response: ${result.error.message}`);
+    }
+
+    return result.data;
   }
 
   /**
    * List projects
    * https://coolify.io/docs/api-reference/api/operations/list-projects
    */
-  public async listProjectsAsync(fetchAsync = fetchWithTrustedCertificatesAsync): Promise<CoolifyProject[]> {
+  public async listProjectsAsync(): Promise<CoolifyProject[]> {
     const url = this.url("/api/v1/projects");
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -172,20 +191,21 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as CoolifyProject[];
-    return data;
+    const result = coolifyProjectSchema.array().safeParse(await response.json());
+    if (!result.success) {
+      throw new Error(`Failed to parse projects response: ${result.error.message}`);
+    }
+
+    return result.data;
   }
 
   /**
    * Get project by UUID (includes environments)
    * https://coolify.io/docs/api-reference/api/operations/get-project-by-uuid
    */
-  public async getProjectByUuidAsync(
-    uuid: string,
-    fetchAsync = fetchWithTrustedCertificatesAsync,
-  ): Promise<CoolifyProjectWithEnvironments> {
+  public async getProjectByUuidAsync(uuid: string): Promise<CoolifyProjectWithEnvironments> {
     const url = this.url(`/api/v1/projects/${uuid}`);
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -193,30 +213,21 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as CoolifyProjectWithEnvironments;
-    return data;
-  }
+    const result = coolifyProjectWithEnvironmentsSchema.safeParse(await response.json());
+    if (!result.success) {
+      throw new Error(`Failed to parse project response: ${result.error.message}`);
+    }
 
-  /**
-   * List all projects with their environments
-   */
-  public async listProjectsWithEnvironmentsAsync(
-    fetchAsync = fetchWithTrustedCertificatesAsync,
-  ): Promise<CoolifyProjectWithEnvironments[]> {
-    const projects = await this.listProjectsAsync(fetchAsync);
-    const projectsWithEnvs = await Promise.all(
-      projects.map((project) => this.getProjectByUuidAsync(project.uuid, fetchAsync)),
-    );
-    return projectsWithEnvs;
+    return result.data;
   }
 
   /**
    * Get environments
    * https://coolify.io/docs/api-reference/api/operations/get-environments
    */
-  public async getEnvironmentsAsync(fetchAsync = fetchWithTrustedCertificatesAsync): Promise<CoolifyEnvironment[]> {
+  public async getEnvironmentsAsync(): Promise<CoolifyEnvironment[]> {
     const url = this.url("/api/v1/environments");
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -224,20 +235,21 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as CoolifyEnvironment[];
-    return data;
+    const result = coolifyEnvironmentSchema.array().safeParse(await response.json());
+    if (!result.success) {
+      throw new Error(`Failed to parse environments response: ${result.error.message}`);
+    }
+
+    return result.data;
   }
 
   /**
    * Get environment by name or UUID
    * https://coolify.io/docs/api-reference/api/operations/get-environment-by-name-or-uuid
    */
-  public async getEnvironmentByNameOrUuidAsync(
-    nameOrUuid: string,
-    fetchAsync = fetchWithTrustedCertificatesAsync,
-  ): Promise<CoolifyEnvironment> {
+  public async getEnvironmentByNameOrUuidAsync(nameOrUuid: string): Promise<CoolifyEnvironment> {
     const url = this.url(`/api/v1/environments/${nameOrUuid}`);
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -245,17 +257,21 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as CoolifyEnvironment;
-    return data;
+    const result = coolifyEnvironmentSchema.safeParse(await response.json());
+    if (!result.success) {
+      throw new Error(`Failed to parse environment response: ${result.error.message}`);
+    }
+
+    return result.data;
   }
 
   /**
    * List resources
    * https://coolify.io/docs/api-reference/api/operations/list-resources
    */
-  public async listResourcesAsync(fetchAsync = fetchWithTrustedCertificatesAsync): Promise<CoolifyResource[]> {
+  public async listResourcesAsync(): Promise<CoolifyResource[]> {
     const url = this.url("/api/v1/resources");
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -263,17 +279,21 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as CoolifyResource[];
-    return data;
+    const result = coolifyResourceSchema.array().safeParse(await response.json());
+    if (!result.success) {
+      throw new Error(`Failed to parse resources response: ${result.error.message}`);
+    }
+
+    return result.data;
   }
 
   /**
    * List servers
    * https://coolify.io/docs/api-reference/api/operations/list-servers
    */
-  public async listServersAsync(fetchAsync = fetchWithTrustedCertificatesAsync): Promise<CoolifyServer[]> {
+  public async listServersAsync(): Promise<CoolifyServer[]> {
     const url = this.url("/api/v1/servers");
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -281,17 +301,21 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as CoolifyServer[];
-    return data;
+    const result = coolifyServerSchema.array().safeParse(await response.json());
+    if (!result.success) {
+      throw new Error(`Failed to parse servers response: ${result.error.message}`);
+    }
+
+    return result.data;
   }
 
   /**
    * List services
    * https://coolify.io/docs/api-reference/api/operations/list-services
    */
-  public async listServicesAsync(fetchAsync = fetchWithTrustedCertificatesAsync): Promise<CoolifyService[]> {
+  public async listServicesAsync(): Promise<CoolifyService[]> {
     const url = this.url("/api/v1/services");
-    const response = await fetchAsync(url, {
+    const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
 
@@ -299,17 +323,21 @@ export class CoolifyIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const data = (await response.json()) as CoolifyService[];
-    return data;
+    const result = coolifyServiceSchema.array().safeParse(await response.json());
+    if (!result.success) {
+      throw new Error(`Failed to parse services response: ${result.error.message}`);
+    }
+
+    return result.data;
   }
 
-  public async getInstanceInfoAsync(fetchAsync = fetchWithTrustedCertificatesAsync): Promise<CoolifyInstanceInfo> {
+  public async getInstanceInfoAsync(): Promise<CoolifyInstanceInfo> {
     const [version, applications, services, projectsWithEnvs, servers] = await Promise.all([
-      this.getVersionAsync(fetchAsync),
-      this.listApplicationsAsync(fetchAsync),
-      this.listServicesAsync(fetchAsync),
-      this.listProjectsWithEnvironmentsAsync(fetchAsync),
-      this.listServersAsync(fetchAsync),
+      this.getVersionAsync(),
+      this.listApplicationsAsync(),
+      this.listServicesAsync(),
+      this.listProjectsWithEnvironmentsAsync(),
+      this.listServersAsync(),
     ]);
 
     const envToProjectMap = new Map<
@@ -357,6 +385,15 @@ export class CoolifyIntegration extends Integration {
       services: servicesWithContext,
       servers,
     };
+  }
+
+  /**
+   * List all projects with their environments
+   */
+  private async listProjectsWithEnvironmentsAsync(): Promise<CoolifyProjectWithEnvironments[]> {
+    const projects = await this.listProjectsAsync();
+    const projectsWithEnvs = await Promise.all(projects.map((project) => this.getProjectByUuidAsync(project.uuid)));
+    return projectsWithEnvs;
   }
 
   private getAuthHeaders(): Record<string, string> {

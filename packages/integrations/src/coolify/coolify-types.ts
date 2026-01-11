@@ -1,127 +1,165 @@
-// Coolify API Types based on https://coolify.io/docs/api-reference/api
+// Coolify API Types and Schemas based on https://coolify.io/docs/api-reference/api
+import { z } from "zod/v4";
 
-export interface CoolifyVersion {
-  version: string;
-}
+// Health check schema
+export const coolifyHealthcheckSchema = z
+  .object({
+    status: z.string(),
+  })
+  .passthrough();
 
-export interface CoolifyHealthcheck {
-  status: string;
-}
+export type CoolifyHealthcheck = z.infer<typeof coolifyHealthcheckSchema>;
 
-export interface CoolifyApplication {
-  id: number;
-  uuid: string;
-  name: string;
-  description?: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-  last_online_at?: string;
-  fqdn?: string;
-  dockerfile?: string;
-  git_repository?: string;
-  git_branch?: string;
-  environment_id?: number;
-  project_id?: number;
-  destination_id?: number;
-  destination_type?: string;
-  server_id?: number | null;
-}
+// Application log schema
+export const coolifyApplicationLogSchema = z
+  .object({
+    logs: z.string(),
+  })
+  .passthrough();
 
-export interface CoolifyApplicationLog {
-  logs: string;
-}
+export type CoolifyApplicationLog = z.infer<typeof coolifyApplicationLogSchema>;
 
-export interface CoolifyEnvironmentVariable {
-  id: number;
-  key: string;
-  value: string;
-  is_build_time: boolean;
-  is_preview: boolean;
-  application_id: number;
-}
+// Environment variable schema
+export const coolifyEnvironmentVariableSchema = z
+  .object({
+    id: z.number(),
+    key: z.string(),
+    value: z.string(),
+    is_build_time: z.boolean(),
+    is_preview: z.boolean(),
+    application_id: z.number(),
+  })
+  .passthrough();
 
-export interface CoolifyProject {
-  id: number;
-  uuid: string;
-  name: string;
-  description?: string;
-  created_at: string;
-  updated_at: string;
-}
+export type CoolifyEnvironmentVariable = z.infer<typeof coolifyEnvironmentVariableSchema>;
 
-export interface CoolifyEnvironment {
-  id: number;
-  uuid?: string;
-  name: string;
-  project_id: number;
-  created_at: string;
-  updated_at: string;
-}
+// Application schema (only fields used in the widget)
+export const coolifyApplicationSchema = z
+  .object({
+    id: z.number(),
+    uuid: z.string(),
+    name: z.string(),
+    status: z.string(),
+    fqdn: z.string().nullish(),
+    environment_id: z.number().nullish(),
+    server_id: z.number().nullish(),
+    destination_id: z.number().nullish(),
+    updated_at: z.string(),
+    last_online_at: z.string().nullish(),
+  })
+  .passthrough();
 
-export interface CoolifyProjectWithEnvironments extends CoolifyProject {
-  environments: CoolifyEnvironment[];
-}
+export type CoolifyApplication = z.infer<typeof coolifyApplicationSchema>;
 
+// Project schema
+export const coolifyProjectSchema = z
+  .object({
+    id: z.number(),
+    uuid: z.string(),
+    name: z.string(),
+  })
+  .passthrough();
+
+export type CoolifyProject = z.infer<typeof coolifyProjectSchema>;
+
+// Environment schema
+export const coolifyEnvironmentSchema = z
+  .object({
+    id: z.number(),
+    uuid: z.string().optional(),
+    name: z.string(),
+    project_id: z.number(),
+  })
+  .passthrough();
+
+export type CoolifyEnvironment = z.infer<typeof coolifyEnvironmentSchema>;
+
+// Project with environments schema
+export const coolifyProjectWithEnvironmentsSchema = coolifyProjectSchema
+  .extend({
+    environments: z.array(coolifyEnvironmentSchema),
+  })
+  .passthrough();
+
+export type CoolifyProjectWithEnvironments = z.infer<typeof coolifyProjectWithEnvironmentsSchema>;
+
+// Resource schema
+export const coolifyResourceSchema = z
+  .object({
+    id: z.number(),
+    uuid: z.string(),
+    name: z.string(),
+    type: z.string(),
+    status: z.string(),
+  })
+  .passthrough();
+
+export type CoolifyResource = z.infer<typeof coolifyResourceSchema>;
+
+// Server settings schema
+export const coolifyServerSettingsSchema = z
+  .object({
+    server_id: z.number().optional(),
+    is_build_server: z.boolean().optional(),
+    is_reachable: z.boolean().optional(),
+    is_usable: z.boolean().optional(),
+  })
+  .passthrough();
+
+export type CoolifyServerSettings = z.infer<typeof coolifyServerSettingsSchema>;
+
+// Server schema
+export const coolifyServerSchema = z
+  .object({
+    id: z.number().nullable(),
+    uuid: z.string(),
+    name: z.string(),
+    ip: z.string(),
+    is_reachable: z.boolean().optional(),
+    is_usable: z.boolean().optional(),
+    settings: coolifyServerSettingsSchema.optional(),
+  })
+  .passthrough();
+
+export type CoolifyServer = z.infer<typeof coolifyServerSchema>;
+
+// Service application schema (nested in services)
+export const coolifyServiceApplicationSchema = z
+  .object({
+    id: z.number(),
+    uuid: z.string(),
+    name: z.string(),
+    fqdn: z.string().nullish(),
+    status: z.string().optional(),
+  })
+  .passthrough();
+
+export type CoolifyServiceApplication = z.infer<typeof coolifyServiceApplicationSchema>;
+
+// Service schema
+export const coolifyServiceSchema = z
+  .object({
+    id: z.number(),
+    uuid: z.string(),
+    name: z.string(),
+    status: z.string().nullish(),
+    fqdn: z.string().nullish(),
+    environment_id: z.number().optional(),
+    server_id: z.number().nullish(),
+    destination_id: z.number().nullish(),
+    updated_at: z.string(),
+    applications: z.array(coolifyServiceApplicationSchema).optional(),
+  })
+  .passthrough();
+
+export type CoolifyService = z.infer<typeof coolifyServiceSchema>;
+
+// Extended types with context (not from API, added by integration)
 export interface CoolifyApplicationWithContext extends CoolifyApplication {
   projectName?: string;
   projectUuid?: string;
   environmentName?: string;
   environmentUuid?: string;
-}
-
-export interface CoolifyResource {
-  id: number;
-  uuid: string;
-  name: string;
-  type: string;
-  status: string;
-}
-
-export interface CoolifyServerSettings {
-  server_id?: number;
-  is_build_server?: boolean;
-  is_reachable?: boolean;
-  is_usable?: boolean;
-}
-
-export interface CoolifyServer {
-  id: number | null;
-  uuid: string;
-  name: string;
-  description?: string;
-  ip: string;
-  port?: number;
-  user?: string;
-  is_reachable?: boolean;
-  is_usable?: boolean;
-  created_at: string;
-  updated_at: string;
-  settings?: CoolifyServerSettings;
-}
-
-export interface CoolifyServiceApplication {
-  id: number;
-  uuid: string;
-  name: string;
-  fqdn?: string | null;
-  status?: string;
-}
-
-export interface CoolifyService {
-  id: number;
-  uuid: string;
-  name: string;
-  description?: string;
-  status?: string;
-  fqdn?: string | null;
-  environment_id?: number;
-  destination_id?: number;
-  destination_type?: string;
-  server_id?: number | null;
-  created_at: string;
-  updated_at: string;
-  applications?: CoolifyServiceApplication[];
 }
 
 export interface CoolifyServiceWithContext extends CoolifyService {

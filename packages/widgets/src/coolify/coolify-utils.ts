@@ -65,7 +65,7 @@ export function formatRelativeTime(dateString: string | undefined): string | und
 }
 
 export function getResourceTimestamp(
-  item: { updated_at?: string; last_online_at?: string; status?: string },
+  item: { updated_at?: string; last_online_at?: string | null; status?: string | null },
   resourceType: "application" | "service",
 ): string | undefined {
   const status = parseStatus(item.status ?? "");

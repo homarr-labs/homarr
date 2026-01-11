@@ -1,10 +1,54 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 import { ResponseError } from "@homarr/common/server";
 
 import { IntegrationRequestError } from "../../base/errors/http/integration-request-error";
 import { IntegrationResponseError } from "../../base/errors/http/integration-response-error";
 import { CoolifyApiErrorHandler } from "../coolify-error-handler";
+
+// Mock environment modules to prevent client-side env check errors
+vi.mock("@homarr/common/env", () => ({
+  env: {
+    SECRET_ENCRYPTION_KEY: "0".repeat(64),
+  },
+}));
+
+vi.mock("@homarr/core/infrastructure/logs/env", () => ({
+  logsEnv: {
+    LEVEL: "info",
+  },
+}));
+
+vi.mock("@homarr/core/infrastructure/db/env", () => ({
+  dbEnv: {
+    DRIVER: "better-sqlite3",
+  },
+}));
+
+// Mock the redis client to prevent env access
+vi.mock("@homarr/core/infrastructure/redis", () => ({
+  createRedisClient: vi.fn(() => ({
+    publish: vi.fn().mockResolvedValue(undefined),
+    subscribe: vi.fn(),
+    quit: vi.fn(),
+  })),
+}));
+
+// Mock the logs module to prevent Redis transport issues
+vi.mock("@homarr/core/infrastructure/logs", () => ({
+  logger: {
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+  },
+  createLogger: vi.fn(() => ({
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+  })),
+}));
 
 const integration = { id: "test-coolify", name: "Test Coolify", url: "https://coolify.example.com" };
 const handler = new CoolifyApiErrorHandler();
