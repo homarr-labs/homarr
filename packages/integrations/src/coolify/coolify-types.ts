@@ -22,12 +22,12 @@ export type CoolifyApplicationLog = z.infer<typeof coolifyApplicationLogSchema>;
 // Environment variable schema
 export const coolifyEnvironmentVariableSchema = z
   .object({
-    id: z.number(),
+    id: z.number().nullish(),
     key: z.string(),
     value: z.string(),
-    is_build_time: z.boolean(),
-    is_preview: z.boolean(),
-    application_id: z.number(),
+    is_build_time: z.boolean().nullish(),
+    is_preview: z.boolean().nullish(),
+    application_id: z.number().nullish(),
   })
   .passthrough();
 
@@ -36,15 +36,15 @@ export type CoolifyEnvironmentVariable = z.infer<typeof coolifyEnvironmentVariab
 // Application schema (only fields used in the widget)
 export const coolifyApplicationSchema = z
   .object({
-    id: z.number(),
+    id: z.number().nullish(),
     uuid: z.string(),
     name: z.string(),
-    status: z.string(),
+    status: z.string().nullish(),
     fqdn: z.string().nullish(),
     environment_id: z.number().nullish(),
     server_id: z.number().nullish(),
     destination_id: z.number().nullish(),
-    updated_at: z.string(),
+    updated_at: z.string().nullish(),
     last_online_at: z.string().nullish(),
   })
   .passthrough();
@@ -54,7 +54,7 @@ export type CoolifyApplication = z.infer<typeof coolifyApplicationSchema>;
 // Project schema
 export const coolifyProjectSchema = z
   .object({
-    id: z.number(),
+    id: z.number().nullish(),
     uuid: z.string(),
     name: z.string(),
   })
@@ -65,10 +65,10 @@ export type CoolifyProject = z.infer<typeof coolifyProjectSchema>;
 // Environment schema
 export const coolifyEnvironmentSchema = z
   .object({
-    id: z.number(),
-    uuid: z.string().optional(),
+    id: z.number().nullish(),
+    uuid: z.string().nullish(),
     name: z.string(),
-    project_id: z.number(),
+    project_id: z.number().nullish(),
   })
   .passthrough();
 
@@ -77,7 +77,7 @@ export type CoolifyEnvironment = z.infer<typeof coolifyEnvironmentSchema>;
 // Project with environments schema
 export const coolifyProjectWithEnvironmentsSchema = coolifyProjectSchema
   .extend({
-    environments: z.array(coolifyEnvironmentSchema),
+    environments: z.array(coolifyEnvironmentSchema).nullish(),
   })
   .passthrough();
 
@@ -86,11 +86,11 @@ export type CoolifyProjectWithEnvironments = z.infer<typeof coolifyProjectWithEn
 // Resource schema
 export const coolifyResourceSchema = z
   .object({
-    id: z.number(),
+    id: z.number().nullish(),
     uuid: z.string(),
     name: z.string(),
     type: z.string(),
-    status: z.string(),
+    status: z.string().nullish(),
   })
   .passthrough();
 
@@ -99,10 +99,10 @@ export type CoolifyResource = z.infer<typeof coolifyResourceSchema>;
 // Server settings schema
 export const coolifyServerSettingsSchema = z
   .object({
-    server_id: z.number().optional(),
-    is_build_server: z.boolean().optional(),
-    is_reachable: z.boolean().optional(),
-    is_usable: z.boolean().optional(),
+    server_id: z.number().nullish(),
+    is_build_server: z.boolean().nullish(),
+    is_reachable: z.boolean().nullish(),
+    is_usable: z.boolean().nullish(),
   })
   .passthrough();
 
@@ -126,11 +126,11 @@ export type CoolifyServer = z.infer<typeof coolifyServerSchema>;
 // Service application schema (nested in services)
 export const coolifyServiceApplicationSchema = z
   .object({
-    id: z.number(),
+    id: z.number().nullish(),
     uuid: z.string(),
     name: z.string(),
     fqdn: z.string().nullish(),
-    status: z.string().optional(),
+    status: z.string().nullish(),
   })
   .passthrough();
 
@@ -139,16 +139,16 @@ export type CoolifyServiceApplication = z.infer<typeof coolifyServiceApplication
 // Service schema
 export const coolifyServiceSchema = z
   .object({
-    id: z.number(),
+    id: z.number().nullish(),
     uuid: z.string(),
     name: z.string(),
     status: z.string().nullish(),
     fqdn: z.string().nullish(),
-    environment_id: z.number().optional(),
+    environment_id: z.number().nullish(),
     server_id: z.number().nullish(),
     destination_id: z.number().nullish(),
-    updated_at: z.string(),
-    applications: z.array(coolifyServiceApplicationSchema).optional(),
+    updated_at: z.string().nullish(),
+    applications: z.array(coolifyServiceApplicationSchema).nullish(),
   })
   .passthrough();
 

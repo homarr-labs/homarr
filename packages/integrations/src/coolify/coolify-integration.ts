@@ -369,13 +369,15 @@ export class CoolifyIntegration extends Integration {
       { projectName: string; projectUuid: string; environmentName: string; environmentUuid?: string }
     >();
     for (const project of projectsWithEnvs) {
-      for (const env of project.environments) {
-        envToProjectMap.set(env.id, {
-          projectName: project.name,
-          projectUuid: project.uuid,
-          environmentName: env.name,
-          environmentUuid: env.uuid,
-        });
+      for (const env of project.environments ?? []) {
+        if (env.id != null) {
+          envToProjectMap.set(env.id, {
+            projectName: project.name,
+            projectUuid: project.uuid,
+            environmentName: env.name,
+            environmentUuid: env.uuid ?? undefined,
+          });
+        }
       }
     }
 
