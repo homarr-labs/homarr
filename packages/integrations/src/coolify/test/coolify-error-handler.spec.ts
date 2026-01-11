@@ -1,30 +1,13 @@
-import { beforeAll, describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 
-import type { IntegrationResponseError } from "../../base/errors/http/integration-response-error";
-import type { CoolifyApiErrorHandler as CoolifyApiErrorHandlerType } from "../coolify-error-handler";
+import { ResponseError } from "@homarr/common/server";
 
-vi.stubEnv("SECRET_ENCRYPTION_KEY", "0".repeat(64));
+import { IntegrationRequestError } from "../../base/errors/http/integration-request-error";
+import { IntegrationResponseError } from "../../base/errors/http/integration-response-error";
+import { CoolifyApiErrorHandler } from "../coolify-error-handler";
 
 const integration = { id: "test-coolify", name: "Test Coolify", url: "https://coolify.example.com" };
-
-let ResponseError: typeof import("@homarr/common/server").ResponseError;
-let IntegrationRequestErrorClass: typeof import("../../base/errors/http/integration-request-error").IntegrationRequestError;
-let IntegrationResponseErrorClass: typeof import("../../base/errors/http/integration-response-error").IntegrationResponseError;
-let handler: CoolifyApiErrorHandlerType;
-
-beforeAll(async () => {
-  const commonServer = await import("@homarr/common/server");
-  ResponseError = commonServer.ResponseError;
-
-  const requestErrorModule = await import("../../base/errors/http/integration-request-error");
-  IntegrationRequestErrorClass = requestErrorModule.IntegrationRequestError;
-
-  const responseErrorModule = await import("../../base/errors/http/integration-response-error");
-  IntegrationResponseErrorClass = responseErrorModule.IntegrationResponseError;
-
-  const handlerModule = await import("../coolify-error-handler");
-  handler = new handlerModule.CoolifyApiErrorHandler();
-});
+const handler = new CoolifyApiErrorHandler();
 
 describe("CoolifyApiErrorHandler", () => {
   describe("handleError should handle the provided error accordingly", () => {
@@ -42,7 +25,7 @@ describe("CoolifyApiErrorHandler", () => {
       const responseError = new ResponseError({ status: 500 });
       const result = handler.handleError(responseError, integration);
 
-      expect(result).toBeInstanceOf(IntegrationResponseErrorClass);
+      expect(result).toBeInstanceOf(IntegrationResponseError);
       expect((result as IntegrationResponseError).cause).toBe(responseError);
     });
 
@@ -59,7 +42,7 @@ describe("CoolifyApiErrorHandler", () => {
       const error = new Error(message);
       const result = handler.handleError(error, integration);
 
-      expect(result).toBeInstanceOf(IntegrationResponseErrorClass);
+      expect(result).toBeInstanceOf(IntegrationResponseError);
       const integrationError = result as IntegrationResponseError;
       expect(integrationError.cause).toBeInstanceOf(ResponseError);
       expect(integrationError.cause.statusCode).toBe(expectedStatus);
@@ -73,7 +56,7 @@ describe("CoolifyApiErrorHandler", () => {
 
       const result = handler.handleError(error, integration);
 
-      expect(result).toBeInstanceOf(IntegrationRequestErrorClass);
+      expect(result).toBeInstanceOf(IntegrationRequestError);
     });
 
     test("should return undefined for unrecognized errors", () => {

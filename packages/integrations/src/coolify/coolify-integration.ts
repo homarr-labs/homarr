@@ -1,5 +1,5 @@
+import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
-import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import { HandleIntegrationErrors } from "../base/errors/decorator";
 import type { IntegrationTestingInput } from "../base/integration";
@@ -22,8 +22,6 @@ import type {
   CoolifyServiceWithContext,
 } from "./coolify-types";
 
-const logger = createLogger({ module: "coolifyIntegration" });
-
 @HandleIntegrationErrors([new CoolifyApiErrorHandler()])
 export class CoolifyIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -31,7 +29,7 @@ export class CoolifyIntegration extends Integration {
     const healthResponse = await input.fetchAsync(healthUrl, {});
 
     if (!healthResponse.ok) {
-      throw new Error(`Failed to connect to Coolify: ${healthResponse.statusText}`);
+      throw new ResponseError(healthResponse);
     }
 
     const versionUrl = this.url("/api/v1/version");
@@ -40,8 +38,7 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!versionResponse.ok) {
-      const errorText = await versionResponse.text();
-      throw new Error(`Failed to authenticate with Coolify API: ${versionResponse.status} - ${errorText}`);
+      throw new ResponseError(versionResponse);
     }
 
     return { success: true };
@@ -58,11 +55,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify version: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const version = await response.text();
-    logger.info("Fetched Coolify version", { version });
     return version.trim();
   }
 
@@ -77,11 +73,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify healthcheck: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const data = (await response.json()) as CoolifyHealthcheck;
-    logger.info("Fetched Coolify healthcheck", { status: data.status });
     return data;
   }
 
@@ -96,11 +91,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify applications: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const data = (await response.json()) as CoolifyApplication[];
-    logger.info("Fetched Coolify applications", { count: data.length });
     return data;
   }
 
@@ -118,11 +112,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify application ${uuid}: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const data = (await response.json()) as CoolifyApplication;
-    logger.info("Fetched Coolify application", { uuid: data.uuid, name: data.name });
     return data;
   }
 
@@ -137,11 +130,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify application logs for ${uuid}: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const data = (await response.json()) as CoolifyApplicationLog;
-    logger.info("Fetched Coolify application logs", { uuid });
     return data.logs;
   }
 
@@ -159,11 +151,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify application environment variables for ${uuid}: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const data = (await response.json()) as CoolifyEnvironmentVariable[];
-    logger.info("Fetched Coolify application environment variables", { uuid, count: data.length });
     return data;
   }
 
@@ -178,11 +169,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify projects: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const data = (await response.json()) as CoolifyProject[];
-    logger.info("Fetched Coolify projects", { count: data.length });
     return data;
   }
 
@@ -200,11 +190,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify project ${uuid}: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const data = (await response.json()) as CoolifyProjectWithEnvironments;
-    logger.info("Fetched Coolify project", { uuid: data.uuid, name: data.name });
     return data;
   }
 
@@ -232,11 +221,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify environments: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const data = (await response.json()) as CoolifyEnvironment[];
-    logger.info("Fetched Coolify environments", { count: data.length });
     return data;
   }
 
@@ -254,11 +242,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify environment ${nameOrUuid}: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const data = (await response.json()) as CoolifyEnvironment;
-    logger.info("Fetched Coolify environment", { name: data.name });
     return data;
   }
 
@@ -273,11 +260,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify resources: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const data = (await response.json()) as CoolifyResource[];
-    logger.info("Fetched Coolify resources", { count: data.length });
     return data;
   }
 
@@ -292,11 +278,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify servers: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const data = (await response.json()) as CoolifyServer[];
-    logger.info("Fetched Coolify servers", { count: data.length });
     return data;
   }
 
@@ -311,11 +296,10 @@ export class CoolifyIntegration extends Integration {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Coolify services: ${response.statusText}`);
+      throw new ResponseError(response);
     }
 
     const data = (await response.json()) as CoolifyService[];
-    logger.info("Fetched Coolify services", { count: data.length });
     return data;
   }
 

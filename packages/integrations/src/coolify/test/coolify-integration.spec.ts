@@ -1,8 +1,7 @@
-import { beforeAll, describe, expect, test, vi } from "vitest";
+import { Response } from "undici";
+import { describe, expect, test, vi } from "vitest";
 
-import { createDb } from "@homarr/db/test";
-
-import type { CoolifyIntegration as CoolifyIntegrationType } from "../../index";
+import { CoolifyIntegration } from "../coolify-integration";
 import type {
   CoolifyApplication,
   CoolifyProject,
@@ -11,45 +10,8 @@ import type {
   CoolifyService,
 } from "../coolify-types";
 
-vi.stubEnv("SECRET_ENCRYPTION_KEY", "0".repeat(64));
-
-vi.mock("@homarr/db", async (importActual) => {
-  const actual = await importActual<typeof import("@homarr/db")>();
-  return {
-    ...actual,
-    db: createDb(),
-  };
-});
-
-vi.mock("@homarr/core/infrastructure/certificates", async (importActual) => {
-  const actual = await importActual<typeof import("@homarr/core/infrastructure/certificates")>();
-  return {
-    ...actual,
-    getTrustedCertificateHostnamesAsync: vi.fn().mockImplementation(() => {
-      return Promise.resolve([]);
-    }),
-  };
-});
-
-let CoolifyIntegration: typeof CoolifyIntegrationType;
-
-beforeAll(async () => {
-  const module = await import("../../index");
-  CoolifyIntegration = module.CoolifyIntegration;
-});
-
 const TEST_API_KEY = "test-api-key-12345";
 const TEST_URL = "https://coolify.example.com";
-
-const createCoolifyIntegration = () => {
-  return new CoolifyIntegration({
-    id: "test-coolify",
-    name: "Test Coolify",
-    url: TEST_URL,
-    externalUrl: null,
-    decryptedSecrets: [{ kind: "apiKey", value: TEST_API_KEY }],
-  });
-};
 
 type MockResponseData = string | object | unknown[];
 
@@ -61,27 +23,31 @@ const createMockFetch = (responses: Record<string, MockResponseData>) => {
 
     if (path in responses) {
       const data = responses[path];
-      if (typeof data === "string") {
-        return Promise.resolve({
-          ok: true,
+      const body = typeof data === "string" ? data : JSON.stringify(data);
+      return Promise.resolve(
+        new Response(body, {
           status: 200,
-          text: () => Promise.resolve(data),
-          json: () => Promise.resolve(JSON.parse(data) as unknown),
-        });
-      }
-      return Promise.resolve({
-        ok: true,
-        status: 200,
-        text: () => Promise.resolve(JSON.stringify(data)),
-        json: () => Promise.resolve(data),
-      });
+          headers: { "content-type": "application/json" },
+        }),
+      );
     }
 
-    return Promise.resolve({
-      ok: false,
-      status: 404,
-      statusText: "Not Found",
-    });
+    return Promise.resolve(
+      new Response(JSON.stringify({ error: "Not Found" }), {
+        status: 404,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+  });
+};
+
+const createCoolifyIntegration = () => {
+  return new CoolifyIntegration({
+    id: "test-coolify",
+    name: "Test Coolify",
+    url: TEST_URL,
+    externalUrl: null,
+    decryptedSecrets: [{ kind: "apiKey", value: TEST_API_KEY }],
   });
 };
 
@@ -101,11 +67,12 @@ describe("CoolifyIntegration", () => {
 
     test("should throw error when API returns error", async () => {
       const integration = createCoolifyIntegration();
-      const mockFetch = vi.fn().mockResolvedValue({
-        ok: false,
-        status: 401,
-        statusText: "Unauthorized",
-      });
+      const mockFetch = vi.fn().mockResolvedValue(
+        new Response("Unauthorized", {
+          status: 401,
+          headers: { "content-type": "text/plain" },
+        }),
+      );
 
       await expect(integration.getVersionAsync(mockFetch)).rejects.toThrow();
     });
@@ -240,8 +207,6 @@ describe("CoolifyIntegration", () => {
 
   describe("getInstanceInfoAsync", () => {
     test("should aggregate all instance data with project context", async () => {
-      const integration = createCoolifyIntegration();
-
       const projectWithEnvs: CoolifyProjectWithEnvironments = {
         id: 1,
         uuid: "proj-uuid-1",
@@ -308,6 +273,7 @@ describe("CoolifyIntegration", () => {
         "/api/v1/projects/proj-uuid-1": projectWithEnvs,
       });
 
+      const integration = createCoolifyIntegration();
       const result = await integration.getInstanceInfoAsync(mockFetch);
 
       expect(result.version).toBe("4.0.0-beta.460");

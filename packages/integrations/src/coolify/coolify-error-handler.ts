@@ -5,6 +5,13 @@ import { integrationFetchHttpErrorHandler } from "../base/errors/http";
 import { IntegrationResponseError } from "../base/errors/http/integration-response-error";
 import type { IntegrationError, IntegrationErrorData } from "../base/errors/integration-error";
 
+const statusPatterns = [
+  { pattern: /401|Unauthorized/i, status: 401 },
+  { pattern: /403|Forbidden/i, status: 403 },
+  { pattern: /404|Not Found/i, status: 404 },
+  { pattern: /500|Internal Server Error/i, status: 500 },
+] as const;
+
 export class CoolifyApiErrorHandler implements IIntegrationErrorHandler {
   handleError(error: unknown, integration: IntegrationErrorData): IntegrationError | undefined {
     if (!(error instanceof Error)) return undefined;
@@ -16,13 +23,6 @@ export class CoolifyApiErrorHandler implements IIntegrationErrorHandler {
     if (error instanceof ResponseError) {
       return new IntegrationResponseError(integration, { cause: error });
     }
-
-    const statusPatterns = [
-      { pattern: /401|Unauthorized/i, status: 401 },
-      { pattern: /403|Forbidden/i, status: 403 },
-      { pattern: /404|Not Found/i, status: 404 },
-      { pattern: /500|Internal Server Error/i, status: 500 },
-    ];
 
     for (const { pattern, status } of statusPatterns) {
       if (pattern.test(error.message)) {

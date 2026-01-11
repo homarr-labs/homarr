@@ -2,6 +2,7 @@ import { objectKeys } from "@homarr/common";
 import type { AtLeastOneOf } from "@homarr/common/types";
 
 import { createDocumentationLink } from "./docs";
+import type { HomarrDocumentationPath } from "./docs/homarr-docs-sitemap";
 
 export const integrationSecretKindObject = {
   apiKey: { isPublic: false, multiline: false },
@@ -310,7 +311,7 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/coolify.svg",
     category: ["healthMonitoring"],
-    documentationUrl: createDocumentationLink("/docs/category/integrations"),
+    documentationUrl: createDocumentationLink("/docs/integrations/coolify" as HomarrDocumentationPath),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
