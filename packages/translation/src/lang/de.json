@@ -3294,6 +3294,13 @@
               }
             }
           },
+          "user": {
+            "title": "",
+            "enableGravatar": {
+              "label": "",
+              "description": ""
+            }
+          },
           "search": {
             "title": "Suche",
             "defaultSearchEngine": {

@@ -3294,6 +3294,13 @@
               }
             }
           },
+          "user": {
+            "title": "crwdns3822:0crwdne3822:0",
+            "enableGravatar": {
+              "label": "crwdns3824:0crwdne3824:0",
+              "description": "crwdns3826:0crwdne3826:0"
+            }
+          },
           "search": {
             "title": "crwdns2550:0crwdne2550:0",
             "defaultSearchEngine": {
