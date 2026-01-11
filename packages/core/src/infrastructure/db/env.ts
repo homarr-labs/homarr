@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 import { createEnv, runtimeEnvWithPrefix } from "@homarr/core/infrastructure/env";
 
 const drivers = {
+  libsql: "libsql",
   betterSqlite3: "better-sqlite3",
   mysql2: "mysql2",
   nodePostgres: "node-postgres",
@@ -10,7 +11,7 @@ const drivers = {
 
 const isDriver = (driver: (typeof drivers)[keyof typeof drivers]) => process.env.DB_DRIVER === driver;
 const isUsingDbHost = Boolean(process.env.DB_HOST);
-const onlyAllowUrl = isDriver(drivers.betterSqlite3);
+const onlyAllowUrl = isDriver(drivers.libsql) || isDriver(drivers.betterSqlite3);
 const urlRequired = onlyAllowUrl || !isUsingDbHost;
 const hostRequired = isUsingDbHost && !onlyAllowUrl;
 
@@ -21,15 +22,20 @@ export const dbEnv = createEnv({
    */
   server: {
     DRIVER: z
-      .union([z.literal(drivers.betterSqlite3), z.literal(drivers.mysql2), z.literal(drivers.nodePostgres)], {
+      .union([
+        z.literal(drivers.libsql),
+        z.literal(drivers.betterSqlite3),
+        z.literal(drivers.mysql2),
+        z.literal(drivers.nodePostgres),
+      ], {
         message: `Invalid database driver, supported are ${Object.keys(drivers).join(", ")}`,
       })
-      .default(drivers.betterSqlite3),
+      .default(drivers.libsql),
     ...(urlRequired
       ? {
           URL:
             // Fallback to the default sqlite file path in production
-            process.env.NODE_ENV === "production" && isDriver("better-sqlite3")
+            process.env.NODE_ENV === "production" && (isDriver("libsql") || isDriver("better-sqlite3"))
               ? z.string().default("/appdata/db/db.sqlite")
               : z.string().nonempty(),
         }

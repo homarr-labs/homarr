@@ -5,6 +5,8 @@ import { createPostgresDb } from "./postgresql";
 import type { SharedDrizzleConfig } from "./shared";
 import { WinstonDrizzleLogger } from "./shared";
 import { createSqliteDb } from "./sqlite";
+import { createNewSqliteDb } from "./new-sqlite";
+
 
 export type Database<TSchema extends Record<string, unknown>> = ReturnType<typeof createSqliteDb<TSchema>>;
 
@@ -23,5 +25,6 @@ export const createDb = <TSchema extends Record<string, unknown>>(schema: TSchem
     mysql2: () => createMysqlDb(config),
     "node-postgres": () => createPostgresDb(config),
     "better-sqlite3": () => createSqliteDb(config),
+    "libsql": () => createNewSqliteDb(config),
   });
 };

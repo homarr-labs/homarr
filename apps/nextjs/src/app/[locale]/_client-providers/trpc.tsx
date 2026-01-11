@@ -32,15 +32,12 @@ const getWebSocketProtocol = () => {
 };
 
 const constructWebsocketUrl = () => {
-  const fallback = `${getWebSocketProtocol()}://localhost:3001/websockets`;
+  // WebSocket is now merged into Next.js, so use the same port as the current page
   if (typeof window === "undefined") {
-    return fallback;
+    return `${getWebSocketProtocol()}://localhost:3000/websockets`;
   }
 
-  if (env.NODE_ENV === "development") {
-    return fallback;
-  }
-
+  // Always use the same hostname and port as the current page (WebSocket is on same server)
   return `${getWebSocketProtocol()}://${window.location.hostname}:${window.location.port}/websockets`;
 };
 
