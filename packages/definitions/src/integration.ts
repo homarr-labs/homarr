@@ -2,7 +2,6 @@ import { objectKeys } from "@homarr/common";
 import type { AtLeastOneOf } from "@homarr/common/types";
 
 import { createDocumentationLink } from "./docs";
-import type { HomarrDocumentationPath } from "./docs/homarr-docs-sitemap";
 
 export const integrationSecretKindObject = {
   apiKey: { isPublic: false, multiline: false },
