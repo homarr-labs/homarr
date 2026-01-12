@@ -212,3 +212,25 @@ export interface BoardImportResult {
   /** Warnings during import */
   warnings: string[];
 }
+
+/**
+ * Result returned after merging a board into an existing board
+ */
+export interface BoardMergeResult {
+  /** Whether the merge completed successfully */
+  success: boolean;
+  /** ID of the target board */
+  boardId: string;
+  /** Name of the target board */
+  boardName: string;
+  /** Number of sections added */
+  sectionsAdded: number;
+  /** Number of items added */
+  itemsAdded: number;
+  /** Number of layouts added */
+  layoutsAdded: number;
+  /** Errors encountered during merge */
+  errors: string[];
+  /** Warnings during merge */
+  warnings: string[];
+}

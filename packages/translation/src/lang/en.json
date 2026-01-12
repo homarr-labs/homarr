@@ -1067,6 +1067,7 @@
       "edit": "Edit",
       "import": "Import",
       "insert": "Insert",
+      "merge": "Merge",
       "remove": "Remove",
       "save": "Save",
       "saveChanges": "Save changes",
@@ -3122,6 +3123,29 @@
               "error": {
                 "title": "Import failed",
                 "message": "Failed to import the board"
+              }
+            }
+          },
+          "importAndMerge": {
+            "label": "Import and Merge",
+            "description": "Merge sections and items from a JSON file into this board ({boardName}).",
+            "info": "Sections, items, and layouts from the imported board will be added to this board. Existing content will not be removed.",
+            "form": {
+              "file": {
+                "label": "Board JSON file",
+                "placeholder": "Select a .json file",
+                "invalidError": "Please select a valid JSON file",
+                "invalidJsonError": "The file does not contain valid JSON"
+              }
+            },
+            "notification": {
+              "success": {
+                "title": "Board merged",
+                "message": "Successfully merged {sectionsAdded} sections, {itemsAdded} items, and {layoutsAdded} layouts into {boardName}"
+              },
+              "error": {
+                "title": "Merge failed",
+                "message": "Failed to merge the board"
               }
             }
           }

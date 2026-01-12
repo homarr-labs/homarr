@@ -67,6 +67,17 @@ const importBoardOutputSchema = z.object({
   warnings: z.array(z.string()),
 });
 
+const mergeBoardOutputSchema = z.object({
+  success: z.boolean(),
+  boardId: z.string(),
+  boardName: z.string(),
+  sectionsAdded: z.number(),
+  itemsAdded: z.number(),
+  layoutsAdded: z.number(),
+  errors: z.array(z.string()),
+  warnings: z.array(z.string()),
+});
+
 const downloadOutputSchema = z.object({
   filePath: z.string(),
   fileName: z.string(),
@@ -325,6 +336,60 @@ export const backupRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const importer = new BackupImporter(ctx.db);
       return await importer.importBoardFromJsonAsync(input.jsonContent);
+    }),
+
+  /**
+   * Merge a board from JSON export into an existing board (requires board modify permission)
+   */
+  mergeBoardIntoExisting: protectedProcedure
+    .input(
+      z.object({
+        jsonContent: z.string().describe("JSON content of the exported board"),
+        targetBoardId: z.string().describe("ID of the board to merge into"),
+      }),
+    )
+    .output(mergeBoardOutputSchema)
+    .meta({
+      openapi: {
+        method: "POST",
+        path: "/api/backups/merge-board",
+        tags: ["backups"],
+        protect: true,
+        summary: "Merge a board from JSON into an existing board",
+        description:
+          "Merges a board from JSON export format into an existing board. Sections, items, and layouts from the imported board will be added to the target board.",
+      },
+    })
+    .mutation(async ({ input, ctx }) => {
+      // Get user's groups for permission check
+      const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
+        where: eq(groupMembers.userId, ctx.session.user.id),
+      });
+
+      // Check board access with permissions
+      const board = await ctx.db.query.boards.findFirst({
+        where: eq(boards.id, input.targetBoardId),
+        with: {
+          userPermissions: {
+            where: eq(boardUserPermissions.userId, ctx.session.user.id),
+          },
+          groupPermissions: {
+            where: inArray(boardGroupPermissions.groupId, groupsOfCurrentUser.map((group) => group.groupId).concat("")),
+          },
+        },
+      });
+
+      if (!board) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Board not found" });
+      }
+
+      const permissions = constructBoardPermissions(board, ctx.session);
+      if (!permissions.hasChangeAccess) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "No permission to modify this board" });
+      }
+
+      const importer = new BackupImporter(ctx.db);
+      return await importer.mergeBoardIntoExistingBoardAsync(input.jsonContent, input.targetBoardId);
     }),
 
   /**

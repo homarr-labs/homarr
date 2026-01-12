@@ -6,6 +6,7 @@ import {
   IconCopy,
   IconDeviceMobile,
   IconDownload,
+  IconGitMerge,
   IconHome,
   IconSettings,
   IconTrash,
@@ -17,7 +18,7 @@ import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
-import { DuplicateBoardModal, ImportBoardJsonModal } from "@homarr/modals-collection";
+import { DuplicateBoardModal, ImportAndMergeBoardModal, ImportBoardJsonModal } from "@homarr/modals-collection";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
@@ -46,6 +47,7 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
   const { openConfirmModal } = useConfirmModal();
   const { openModal: openDuplicateModal } = useModalAction(DuplicateBoardModal);
   const { openModal: openImportJsonModal } = useModalAction(ImportBoardJsonModal);
+  const { openModal: openImportAndMergeModal } = useModalAction(ImportAndMergeBoardModal);
 
   const setHomeBoardMutation = clientApi.board.setHomeBoard.useMutation({
     onSettled: async () => {
@@ -125,6 +127,15 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
     });
   }, [board.id, board.name, openDuplicateModal]);
 
+  const handleImportAndMerge = useCallback(() => {
+    openImportAndMergeModal({
+      board: {
+        id: board.id,
+        name: board.name,
+      },
+    });
+  }, [board.id, board.name, openImportAndMergeModal]);
+
   return (
     <Menu.Dropdown>
       <Menu.Item onClick={handleSetHomeBoard} leftSection={<IconHome {...iconProps} />}>
@@ -157,6 +168,11 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
           disabled={exportBoardMutation.isPending}
         >
           {t("export.label")}
+        </Menu.Item>
+      )}
+      {hasChangeAccess && (
+        <Menu.Item onClick={handleImportAndMerge} leftSection={<IconGitMerge {...iconProps} />}>
+          {t("importAndMerge.label")}
         </Menu.Item>
       )}
       {session?.user.permissions.includes("board-create") && (
