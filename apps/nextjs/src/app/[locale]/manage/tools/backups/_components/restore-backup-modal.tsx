@@ -13,7 +13,7 @@ import { BackupValidationSummary } from "./backup-validation-summary";
 
 type RestoreMode = "full" | "merge";
 
-export const RestoreBackupModal = createModal<void>(({ actions }) => {
+export const RestoreBackupModal = createModal(({ actions }) => {
   const t = useI18n();
   const tBackup = useScopedI18n("backup");
   const [step, setStep] = useState(0);

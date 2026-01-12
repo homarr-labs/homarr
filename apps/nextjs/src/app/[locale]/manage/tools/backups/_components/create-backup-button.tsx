@@ -13,7 +13,7 @@ export const CreateBackupButton = () => {
   const { openModal } = useModalAction(CreateBackupModal);
 
   return (
-    <Button leftSection={<IconPlus size={16} />} onClick={() => openModal()}>
+    <Button leftSection={<IconPlus size={16} />} onClick={() => openModal({})}>
       {tBackup("action.create.label")}
     </Button>
   );

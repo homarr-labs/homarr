@@ -286,227 +286,24 @@ export class BackupImporter {
     logger.info("Starting board merge", { targetBoardId });
 
     try {
-      // Verify target board exists
-      const targetBoard = await this.db.query.boards.findFirst({
-        where: eq(boards.id, targetBoardId),
-      });
-
-      if (!targetBoard) {
-        throw new Error(`Target board with ID '${targetBoardId}' not found`);
-      }
-
-      // Parse and validate the JSON export format
-      const exportData = parseEntityExport<{
-        board: Record<string, unknown>;
-        integrations?: Record<string, unknown>[];
-      }>(jsonContent);
-
-      // Validate export type
-      if (exportData.type !== "board") {
-        throw new Error(`Invalid export type: expected 'board', got '${exportData.type}'`);
-      }
-
-      // Validate version compatibility
-      if (!isVersionCompatible(exportData.version)) {
-        throw new Error(`Incompatible version: ${exportData.version}`);
-      }
-
-      const { board, integrations: exportedIntegrations } = exportData.data;
-
-      if (typeof board !== "object" || !board.name) {
-        throw new Error("Invalid export: missing board data");
-      }
+      // Verify target board exists and parse export data
+      const { targetBoard, board, exportedIntegrations } = await this.validateAndParseMergeDataAsync(
+        jsonContent,
+        targetBoardId,
+      );
 
       // Import integrations first if present (they may be referenced by items)
-      let _integrationsCount = 0;
-      if (exportedIntegrations && exportedIntegrations.length > 0) {
-        for (const integration of exportedIntegrations) {
-          try {
-            const result = await this.importIntegrationAsync(integration, "merge");
-            if (result === "imported") {
-              _integrationsCount++;
-            }
-          } catch (error) {
-            warnings.push(`Failed to import integration ${(integration as { name?: string }).name}: ${String(error)}`);
-          }
-        }
-      }
+      await this.importMergeIntegrationsAsync(exportedIntegrations, warnings);
 
-      // Get existing board layouts to avoid duplicates
-      const existingLayouts = await this.db.query.layouts.findMany({
-        where: eq(layouts.boardId, targetBoardId),
-      });
-      const existingLayoutNames = new Set(existingLayouts.map((layout) => layout.name));
+      // Prepare ID mappers and get existing layouts
+      const { sectionIdMap, itemIdMap, layoutIdMap, existingLayouts } =
+        await this.prepareMergeMappersAsync(targetBoardId);
 
-      // Create ID mappers for imported entities
-      const sectionIdMap = new Map<string, string>();
-      const itemIdMap = new Map<string, string>();
-      const layoutIdMap = new Map<string, string>();
-
-      // Import layouts (skip if name already exists)
-      let layoutsAdded = 0;
-      const boardLayouts = board.layouts as Record<string, unknown>[] | undefined;
-      if (boardLayouts) {
-        for (const layout of boardLayouts) {
-          const layoutName = layout.name as string;
-          if (!existingLayoutNames.has(layoutName)) {
-            const newLayoutId = createId();
-            layoutIdMap.set(layout.id as string, newLayoutId);
-
-            await this.db.insert(layouts).values({
-              id: newLayoutId,
-              name: layoutName,
-              boardId: targetBoardId,
-              columnCount: layout.columnCount as number,
-              breakpoint: layout.breakpoint as number,
-            });
-            layoutsAdded++;
-          } else {
-            // Map to existing layout with same name
-            const existingLayout = existingLayouts.find((layout) => layout.name === layoutName);
-            if (existingLayout) {
-              layoutIdMap.set(layout.id as string, existingLayout.id);
-            }
-          }
-        }
-      }
-
-      // Import sections (always create new ones)
-      let sectionsAdded = 0;
-      const boardSections = board.sections as Record<string, unknown>[] | undefined;
-      if (boardSections) {
-        for (const section of boardSections) {
-          const originalSectionId = section.id as string;
-          const newSectionId = createId();
-          sectionIdMap.set(originalSectionId, newSectionId);
-
-          await this.db.insert(sections).values({
-            id: newSectionId,
-            boardId: targetBoardId,
-            kind: section.kind as never,
-            xOffset: section.xOffset as number | null,
-            yOffset: section.yOffset as number | null,
-            name: section.name as string | null,
-            options: section.options as string | undefined,
-          });
-          sectionsAdded++;
-        }
-      }
-
-      // Import items (always create new ones)
-      let itemsAdded = 0;
-      const boardItems = board.items as Record<string, unknown>[] | undefined;
-      if (boardItems) {
-        for (const item of boardItems) {
-          const originalItemId = item.id as string;
-          const newItemId = createId();
-          itemIdMap.set(originalItemId, newItemId);
-
-          // Insert item
-          await this.db.insert(items).values({
-            id: newItemId,
-            boardId: targetBoardId,
-            kind: item.kind as never,
-            options: item.options as string,
-            advancedOptions: item.advancedOptions as string,
-          });
-
-          // Import item-integration relations
-          const itemIntegrations = item.integrations as { integrationId: string }[] | undefined;
-          if (itemIntegrations) {
-            for (const integ of itemIntegrations) {
-              const integrationExists = await this.db.query.integrations.findFirst({
-                where: eq(integrations.id, integ.integrationId),
-              });
-              if (integrationExists) {
-                await this.db.insert(integrationItems).values({
-                  itemId: newItemId,
-                  integrationId: integ.integrationId,
-                });
-              }
-            }
-          }
-
-          // Import item layouts
-          const itemLayoutsData = item.layouts as Record<string, unknown>[] | undefined;
-          if (itemLayoutsData) {
-            for (const layout of itemLayoutsData) {
-              const originalLayoutId = layout.layoutId as string;
-              const mappedLayoutId = layoutIdMap.get(originalLayoutId) ?? originalLayoutId;
-              const originalSectionId = layout.sectionId as string;
-              const mappedSectionId = sectionIdMap.get(originalSectionId) ?? originalSectionId;
-
-              // Verify layout and section exist
-              const layoutExists = await this.db.query.layouts.findFirst({
-                where: eq(layouts.id, mappedLayoutId),
-              });
-              const sectionExists = await this.db.query.sections.findFirst({
-                where: eq(sections.id, mappedSectionId),
-              });
-
-              if (layoutExists && sectionExists) {
-                await this.db.insert(itemLayouts).values({
-                  itemId: newItemId,
-                  sectionId: mappedSectionId,
-                  layoutId: mappedLayoutId,
-                  xOffset: layout.xOffset as number,
-                  yOffset: layout.yOffset as number,
-                  width: layout.width as number,
-                  height: layout.height as number,
-                });
-              }
-            }
-          }
-
-          itemsAdded++;
-        }
-      }
-
-      // Import section layouts from board layouts
-      if (boardLayouts) {
-        for (const layout of boardLayouts) {
-          const layoutSections = layout.sections as Record<string, unknown>[] | undefined;
-          if (!layoutSections) continue;
-
-          const targetLayoutId = layoutIdMap.get(layout.id as string) ?? (layout.id as string);
-
-          for (const sectionLayout of layoutSections) {
-            const originalSectionId = sectionLayout.sectionId as string;
-            const mappedSectionId = sectionIdMap.get(originalSectionId);
-            const parentSectionId = sectionLayout.parentSectionId as string | null;
-            const mappedParentSectionId = parentSectionId
-              ? (sectionIdMap.get(parentSectionId) ?? parentSectionId)
-              : null;
-
-            // Only import if we have a mapped section (from this import)
-            if (!mappedSectionId) continue;
-
-            const sectionExists = await this.db.query.sections.findFirst({
-              where: eq(sections.id, mappedSectionId),
-            });
-
-            let parentExists = true;
-            if (mappedParentSectionId) {
-              const parent = await this.db.query.sections.findFirst({
-                where: eq(sections.id, mappedParentSectionId),
-              });
-              parentExists = !!parent;
-            }
-
-            if (sectionExists && parentExists) {
-              await this.db.insert(sectionLayouts).values({
-                sectionId: mappedSectionId,
-                layoutId: targetLayoutId,
-                parentSectionId: mappedParentSectionId,
-                xOffset: sectionLayout.xOffset as number,
-                yOffset: sectionLayout.yOffset as number,
-                width: sectionLayout.width as number,
-                height: sectionLayout.height as number,
-              });
-            }
-          }
-        }
-      }
+      // Import layouts, sections, items, and section layouts
+      const layoutsAdded = await this.importMergeLayoutsAsync(board, targetBoardId, existingLayouts, layoutIdMap);
+      const sectionsAdded = await this.importMergeSectionsAsync(board, targetBoardId, sectionIdMap);
+      const itemsAdded = await this.importMergeItemsAsync(board, targetBoardId, sectionIdMap, itemIdMap, layoutIdMap);
+      await this.importMergeSectionLayoutsAsync(board, sectionIdMap, layoutIdMap);
 
       logger.info("Board merge completed", {
         targetBoardId,
@@ -540,6 +337,328 @@ export class BackupImporter {
         errors,
         warnings,
       };
+    }
+  }
+
+  /**
+   * Validates the target board and parses the JSON export data
+   */
+  private async validateAndParseMergeDataAsync(jsonContent: string, targetBoardId: string) {
+    // Verify target board exists
+    const targetBoard = await this.db.query.boards.findFirst({
+      where: eq(boards.id, targetBoardId),
+    });
+
+    if (!targetBoard) {
+      throw new Error(`Target board with ID '${targetBoardId}' not found`);
+    }
+
+    // Parse and validate the JSON export format
+    const exportData = parseEntityExport<{
+      board: Record<string, unknown>;
+      integrations?: Record<string, unknown>[];
+    }>(jsonContent);
+
+    // Validate export type
+    if (exportData.type !== "board") {
+      throw new Error(`Invalid export type: expected 'board', got '${exportData.type}'`);
+    }
+
+    // Validate version compatibility
+    if (!isVersionCompatible(exportData.version)) {
+      throw new Error(`Incompatible version: ${exportData.version}`);
+    }
+
+    const { board, integrations: exportedIntegrations } = exportData.data;
+
+    if (typeof board !== "object" || !board.name) {
+      throw new Error("Invalid export: missing board data");
+    }
+
+    return { targetBoard, board, exportedIntegrations };
+  }
+
+  /**
+   * Imports integrations during merge operation
+   */
+  private async importMergeIntegrationsAsync(
+    exportedIntegrations: Record<string, unknown>[] | undefined,
+    warnings: string[],
+  ) {
+    if (!exportedIntegrations || exportedIntegrations.length === 0) {
+      return;
+    }
+
+    for (const integration of exportedIntegrations) {
+      try {
+        await this.importIntegrationAsync(integration, "merge");
+      } catch (error) {
+        warnings.push(`Failed to import integration ${(integration as { name?: string }).name}: ${String(error)}`);
+      }
+    }
+  }
+
+  /**
+   * Prepares ID mappers for imported entities and gets existing layouts
+   */
+  private async prepareMergeMappersAsync(targetBoardId: string) {
+    const sectionIdMap = new Map<string, string>();
+    const itemIdMap = new Map<string, string>();
+    const layoutIdMap = new Map<string, string>();
+
+    const existingLayouts = await this.db.query.layouts.findMany({
+      where: eq(layouts.boardId, targetBoardId),
+    });
+
+    return { sectionIdMap, itemIdMap, layoutIdMap, existingLayouts };
+  }
+
+  /**
+   * Imports layouts during merge operation
+   */
+  private async importMergeLayoutsAsync(
+    board: Record<string, unknown>,
+    targetBoardId: string,
+    existingLayouts: unknown[],
+    layoutIdMap: Map<string, string>,
+  ) {
+    let layoutsAdded = 0;
+    const boardLayouts = board.layouts as Record<string, unknown>[] | undefined;
+    if (!boardLayouts) {
+      return layoutsAdded;
+    }
+
+    const existingLayoutNames = new Set(existingLayouts.map((layout) => (layout as { name: string }).name));
+
+    for (const layout of boardLayouts) {
+      const layoutName = layout.name as string;
+      if (!existingLayoutNames.has(layoutName)) {
+        const newLayoutId = createId();
+        layoutIdMap.set(layout.id as string, newLayoutId);
+
+        await this.db.insert(layouts).values({
+          id: newLayoutId,
+          name: layoutName,
+          boardId: targetBoardId,
+          columnCount: layout.columnCount as number,
+          breakpoint: layout.breakpoint as number,
+        });
+        layoutsAdded++;
+      } else {
+        // Map to existing layout with same name
+        const existingLayout = existingLayouts.find((item) => (item as { name: string }).name === layoutName);
+        if (existingLayout) {
+          layoutIdMap.set(layout.id as string, (existingLayout as { id: string }).id);
+        }
+      }
+    }
+
+    return layoutsAdded;
+  }
+
+  /**
+   * Imports sections during merge operation
+   */
+  private async importMergeSectionsAsync(
+    board: Record<string, unknown>,
+    targetBoardId: string,
+    sectionIdMap: Map<string, string>,
+  ) {
+    let sectionsAdded = 0;
+    const boardSections = board.sections as Record<string, unknown>[] | undefined;
+    if (!boardSections) {
+      return sectionsAdded;
+    }
+
+    for (const section of boardSections) {
+      const originalSectionId = section.id as string;
+      const newSectionId = createId();
+      sectionIdMap.set(originalSectionId, newSectionId);
+
+      await this.db.insert(sections).values({
+        id: newSectionId,
+        boardId: targetBoardId,
+        kind: section.kind as never,
+        xOffset: section.xOffset as number | null,
+        yOffset: section.yOffset as number | null,
+        name: section.name as string | null,
+        options: section.options as string | undefined,
+      });
+      sectionsAdded++;
+    }
+
+    return sectionsAdded;
+  }
+
+  /**
+   * Imports items during merge operation
+   */
+  private async importMergeItemsAsync(
+    board: Record<string, unknown>,
+    targetBoardId: string,
+    sectionIdMap: Map<string, string>,
+    itemIdMap: Map<string, string>,
+    layoutIdMap: Map<string, string>,
+  ) {
+    let itemsAdded = 0;
+    const boardItems = board.items as Record<string, unknown>[] | undefined;
+    if (!boardItems) {
+      return itemsAdded;
+    }
+
+    for (const item of boardItems) {
+      const originalItemId = item.id as string;
+      const newItemId = createId();
+      itemIdMap.set(originalItemId, newItemId);
+
+      // Insert item
+      await this.db.insert(items).values({
+        id: newItemId,
+        boardId: targetBoardId,
+        kind: item.kind as never,
+        options: item.options as string,
+        advancedOptions: item.advancedOptions as string,
+      });
+
+      // Import item-integration relations
+      await this.importMergeItemIntegrationsAsync(item, newItemId);
+
+      // Import item layouts
+      await this.importMergeItemLayoutsAsync(item, newItemId, sectionIdMap, layoutIdMap);
+
+      itemsAdded++;
+    }
+
+    return itemsAdded;
+  }
+
+  /**
+   * Imports item-integration relations during merge
+   */
+  private async importMergeItemIntegrationsAsync(item: Record<string, unknown>, newItemId: string) {
+    const itemIntegrations = item.integrations as { integrationId: string }[] | undefined;
+    if (!itemIntegrations) {
+      return;
+    }
+
+    for (const integ of itemIntegrations) {
+      const integrationExists = await this.db.query.integrations.findFirst({
+        where: eq(integrations.id, integ.integrationId),
+      });
+      if (integrationExists) {
+        await this.db.insert(integrationItems).values({
+          itemId: newItemId,
+          integrationId: integ.integrationId,
+        });
+      }
+    }
+  }
+
+  /**
+   * Imports item layouts during merge
+   */
+  private async importMergeItemLayoutsAsync(
+    item: Record<string, unknown>,
+    newItemId: string,
+    sectionIdMap: Map<string, string>,
+    layoutIdMap: Map<string, string>,
+  ) {
+    const itemLayoutsData = item.layouts as Record<string, unknown>[] | undefined;
+    if (!itemLayoutsData) {
+      return;
+    }
+
+    for (const layout of itemLayoutsData) {
+      const originalLayoutId = layout.layoutId as string;
+      const mappedLayoutId = layoutIdMap.get(originalLayoutId) ?? originalLayoutId;
+      const originalSectionId = layout.sectionId as string;
+      const mappedSectionId = sectionIdMap.get(originalSectionId) ?? originalSectionId;
+
+      // Verify layout and section exist
+      const layoutExists = await this.db.query.layouts.findFirst({
+        where: eq(layouts.id, mappedLayoutId),
+      });
+      const sectionExists = await this.db.query.sections.findFirst({
+        where: eq(sections.id, mappedSectionId),
+      });
+
+      if (layoutExists && sectionExists) {
+        await this.db.insert(itemLayouts).values({
+          itemId: newItemId,
+          sectionId: mappedSectionId,
+          layoutId: mappedLayoutId,
+          xOffset: layout.xOffset as number,
+          yOffset: layout.yOffset as number,
+          width: layout.width as number,
+          height: layout.height as number,
+        });
+      }
+    }
+  }
+
+  /**
+   * Imports section layouts from board layouts during merge
+   */
+  private async importMergeSectionLayoutsAsync(
+    board: Record<string, unknown>,
+    sectionIdMap: Map<string, string>,
+    layoutIdMap: Map<string, string>,
+  ) {
+    const boardLayouts = board.layouts as Record<string, unknown>[] | undefined;
+    if (!boardLayouts) {
+      return;
+    }
+
+    for (const layout of boardLayouts) {
+      const layoutSections = layout.sections as Record<string, unknown>[] | undefined;
+      if (!layoutSections) continue;
+
+      const targetLayoutId = layoutIdMap.get(layout.id as string) ?? (layout.id as string);
+
+      for (const sectionLayout of layoutSections) {
+        await this.importSingleSectionLayoutAsync(sectionLayout, targetLayoutId, sectionIdMap);
+      }
+    }
+  }
+
+  /**
+   * Imports a single section layout during merge
+   */
+  private async importSingleSectionLayoutAsync(
+    sectionLayout: Record<string, unknown>,
+    targetLayoutId: string,
+    sectionIdMap: Map<string, string>,
+  ) {
+    const originalSectionId = sectionLayout.sectionId as string;
+    const mappedSectionId = sectionIdMap.get(originalSectionId);
+    const parentSectionId = sectionLayout.parentSectionId as string | null;
+    const mappedParentSectionId = parentSectionId ? (sectionIdMap.get(parentSectionId) ?? parentSectionId) : null;
+
+    // Only import if we have a mapped section (from this import)
+    if (!mappedSectionId) return;
+
+    const sectionExists = await this.db.query.sections.findFirst({
+      where: eq(sections.id, mappedSectionId),
+    });
+
+    let parentExists = true;
+    if (mappedParentSectionId) {
+      const parent = await this.db.query.sections.findFirst({
+        where: eq(sections.id, mappedParentSectionId),
+      });
+      parentExists = Boolean(parent);
+    }
+
+    if (sectionExists && parentExists) {
+      await this.db.insert(sectionLayouts).values({
+        sectionId: mappedSectionId,
+        layoutId: targetLayoutId,
+        parentSectionId: mappedParentSectionId,
+        xOffset: sectionLayout.xOffset as number,
+        yOffset: sectionLayout.yOffset as number,
+        width: sectionLayout.width as number,
+        height: sectionLayout.height as number,
+      });
     }
   }
 

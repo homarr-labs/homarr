@@ -6,7 +6,7 @@ import { createModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 
-export const CreateBackupModal = createModal<void>(({ actions }) => {
+export const CreateBackupModal = createModal(({ actions }) => {
   const t = useI18n();
   const tBackup = useScopedI18n("backup");
 

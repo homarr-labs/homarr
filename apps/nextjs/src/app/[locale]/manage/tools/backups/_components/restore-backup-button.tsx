@@ -13,7 +13,7 @@ export const RestoreBackupButton = () => {
   const { openModal } = useModalAction(RestoreBackupModal);
 
   return (
-    <Button variant="default" leftSection={<IconDatabaseImport size={16} stroke={1.5} />} onClick={() => openModal()}>
+    <Button variant="default" leftSection={<IconDatabaseImport size={16} stroke={1.5} />} onClick={() => openModal({})}>
       {tBackup("action.restore.label")}
     </Button>
   );
