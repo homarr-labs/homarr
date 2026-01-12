@@ -3295,10 +3295,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Brukere",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Aktiver Gravatar",
+              "description": "Bruker avatarer fra Libravatar/Gravatar som reserve når ingen egendefinert avatar er angitt og en e-post er konfigurert"
             }
           },
           "search": {
