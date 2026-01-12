@@ -7,6 +7,7 @@ import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { apps, backups, medias, searchEngines, serverSettings } from "@homarr/db/schema";
 
+import packageJson from "../../../../package.json";
 import { backupEnv } from "../env";
 import { BACKUP_FORMAT_VERSION } from "../formats/json-format";
 import { createZipArchiveAsync } from "../formats/zip-format";
@@ -52,7 +53,7 @@ export class FullExporter {
     // Create metadata
     const metadata: BackupMetadata = {
       version: BACKUP_FORMAT_VERSION,
-      homarrVersion: process.env.VERSION ?? "unknown",
+      homarrVersion: packageJson.version,
       exportedAt: timestamp.toISOString(),
       exportedBy: options.userId ?? null,
       checksum,

@@ -152,9 +152,14 @@ export interface BoardExportOptions {
 /**
  * Wrapper for single entity export (board, integration)
  */
+/**
+ * Wrapper for single entity export (board, integration)
+ */
 export interface EntityExport<T> {
   /** Version of the export format */
   version: string;
+  /** Version of Homarr that created the export */
+  homarrVersion: string;
   /** ISO timestamp of when export was created */
   exportedAt: string;
   /** Type of entity exported */

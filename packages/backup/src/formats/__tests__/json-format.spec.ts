@@ -9,6 +9,9 @@ import {
   parseJson,
 } from "../json-format";
 
+// Get the current Homarr version from formatEntityExport
+const getHomarrVersion = (): string => formatEntityExport("board", {}).homarrVersion;
+
 describe("BACKUP_FORMAT_VERSION", () => {
   it("should be a semantic version string", () => {
     expect(BACKUP_FORMAT_VERSION).toMatch(/^\d+\.\d+\.\d+$/);
@@ -27,6 +30,13 @@ describe("formatEntityExport", () => {
     expect(new Date(result.exportedAt).getTime()).toBeLessThanOrEqual(Date.now());
   });
 
+  it("should include homarrVersion from package.json", () => {
+    const data = { name: "test-board", items: [] };
+    const result = formatEntityExport("board", data);
+
+    expect(result.homarrVersion).toBe(getHomarrVersion());
+  });
+
   it("should set correct type for integration exports", () => {
     const data = { name: "test-integration", url: "http://example.com" };
     const result = formatEntityExport("integration", data);
@@ -39,6 +49,22 @@ describe("parseEntityExport", () => {
   it("should parse valid JSON export", () => {
     const exportData = {
       version: "1.0.0",
+      type: "board",
+      data: { name: "test" },
+      exportedAt: new Date().toISOString(),
+    };
+    const content = JSON.stringify(exportData);
+
+    const result = parseEntityExport<{ name: string }>(content);
+
+    // When homarrVersion is missing (legacy format), it's set to current package version
+    expect(result).toEqual({ ...exportData, homarrVersion: getHomarrVersion() });
+  });
+
+  it("should preserve homarrVersion when present", () => {
+    const exportData = {
+      version: "1.0.0",
+      homarrVersion: "1.2.3",
       type: "board",
       data: { name: "test" },
       exportedAt: new Date().toISOString(),

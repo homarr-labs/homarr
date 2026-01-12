@@ -11,7 +11,7 @@ import { clientApi } from "@homarr/api/client";
 import { humanFileSize, useTimeAgo } from "@homarr/common";
 import { useConfirmModal } from "@homarr/modals";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
-import { useI18n, useScopedI18n } from "@homarr/translation/client";
+import { useScopedI18n } from "@homarr/translation/client";
 import { Link, UserAvatar } from "@homarr/ui";
 import { useTranslatedMantineReactTable } from "@homarr/ui/hooks";
 
@@ -22,7 +22,6 @@ interface BackupsTableProps {
 }
 
 export const BackupsTable = ({ initialBackups }: BackupsTableProps) => {
-  const t = useI18n();
   const tBackup = useScopedI18n("backup");
 
   const utils = clientApi.useUtils();
@@ -72,19 +71,8 @@ export const BackupsTable = ({ initialBackups }: BackupsTableProps) => {
   }, []);
 
   const handleRefresh = useCallback(async () => {
-    try {
-      await utils.backup.list.invalidate();
-      showSuccessNotification({
-        title: t("common.success"),
-        message: "List refreshed",
-      });
-    } catch {
-      showErrorNotification({
-        title: t("common.error"),
-        message: "Failed to refresh",
-      });
-    }
-  }, [utils, t]);
+    await utils.backup.list.refetch();
+  }, [utils]);
 
   const columns: MRT_ColumnDef<BackupData>[] = [
     {

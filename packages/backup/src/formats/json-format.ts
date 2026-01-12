@@ -1,3 +1,4 @@
+import packageJson from "../../../../package.json";
 import type { EntityExport } from "../types";
 
 /**
@@ -11,6 +12,7 @@ export const BACKUP_FORMAT_VERSION = "1.0.0";
 export const formatEntityExport = <T>(type: "board" | "integration", data: T): EntityExport<T> => {
   return {
     version: BACKUP_FORMAT_VERSION,
+    homarrVersion: packageJson.version,
     exportedAt: new Date().toISOString(),
     type,
     data,
@@ -32,6 +34,11 @@ export const parseEntityExport = <T>(content: string): EntityExport<T> => {
     !("data" in parsed)
   ) {
     throw new Error("Invalid export format: missing required fields");
+  }
+
+  // For backward compatibility, if homarrVersion is missing, use current version
+  if (!("homarrVersion" in parsed)) {
+    (parsed as EntityExport<T>).homarrVersion = packageJson.version;
   }
 
   return parsed as EntityExport<T>;

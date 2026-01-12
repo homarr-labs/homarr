@@ -3,6 +3,35 @@ import JSZip from "jszip";
 import type { BackupMetadata, FullBackupData, MediaFile } from "../types";
 
 /**
+ * Wrapper for data files with Homarr version
+ */
+interface VersionedData<T> {
+  homarrVersion: string;
+  data: T;
+}
+
+/**
+ * Helper to wrap data with version
+ */
+const wrapData = <T>(homarrVersion: string, itemData: T): VersionedData<T> => ({
+  homarrVersion,
+  data: itemData,
+});
+
+/**
+ * Helper to unwrap data, supporting both versioned and legacy formats
+ */
+const unwrapData = <T>(content: string): T => {
+  const parsed = JSON.parse(content) as Record<string, unknown> | VersionedData<unknown>;
+  // Check if data is in versioned format (has homarrVersion and data fields)
+  if (typeof parsed === "object" && "homarrVersion" in parsed && "data" in parsed) {
+    return (parsed as VersionedData<T>).data;
+  }
+  // Legacy format: return as-is
+  return parsed as T;
+};
+
+/**
  * Creates a ZIP archive buffer from backup data and media files
  */
 export const createZipArchiveAsync = async (
@@ -15,16 +44,16 @@ export const createZipArchiveAsync = async (
   // Add metadata
   zip.file("metadata.json", JSON.stringify(metadata, null, 2));
 
-  // Add data files
-  zip.file("boards.json", JSON.stringify(data.boards, null, 2));
-  zip.file("integrations.json", JSON.stringify(data.integrations, null, 2));
-  zip.file("users.json", JSON.stringify(data.users, null, 2));
-  zip.file("groups.json", JSON.stringify(data.groups, null, 2));
-  zip.file("apps.json", JSON.stringify(data.apps, null, 2));
-  zip.file("searchEngines.json", JSON.stringify(data.searchEngines, null, 2));
+  // Add data files with version wrapper
+  zip.file("boards.json", JSON.stringify(wrapData(metadata.homarrVersion, data.boards), null, 2));
+  zip.file("integrations.json", JSON.stringify(wrapData(metadata.homarrVersion, data.integrations), null, 2));
+  zip.file("users.json", JSON.stringify(wrapData(metadata.homarrVersion, data.users), null, 2));
+  zip.file("groups.json", JSON.stringify(wrapData(metadata.homarrVersion, data.groups), null, 2));
+  zip.file("apps.json", JSON.stringify(wrapData(metadata.homarrVersion, data.apps), null, 2));
+  zip.file("searchEngines.json", JSON.stringify(wrapData(metadata.homarrVersion, data.searchEngines), null, 2));
 
   if (data.settings) {
-    zip.file("settings.json", JSON.stringify(data.settings, null, 2));
+    zip.file("settings.json", JSON.stringify(wrapData(metadata.homarrVersion, data.settings), null, 2));
   }
 
   // Add media files to media folder
@@ -68,16 +97,16 @@ export const extractZipArchiveAsync = async (
   const searchEnginesFile = zip.file("searchEngines.json");
 
   const data: FullBackupData = {
-    boards: boardsFile ? (JSON.parse(await boardsFile.async("string")) as FullBackupData["boards"]) : [],
+    boards: boardsFile ? unwrapData<FullBackupData["boards"]>(await boardsFile.async("string")) : [],
     integrations: integrationsFile
-      ? (JSON.parse(await integrationsFile.async("string")) as FullBackupData["integrations"])
+      ? unwrapData<FullBackupData["integrations"]>(await integrationsFile.async("string"))
       : [],
-    users: usersFile ? (JSON.parse(await usersFile.async("string")) as FullBackupData["users"]) : [],
-    groups: groupsFile ? (JSON.parse(await groupsFile.async("string")) as FullBackupData["groups"]) : [],
-    apps: appsFile ? (JSON.parse(await appsFile.async("string")) as FullBackupData["apps"]) : [],
-    settings: settingsFile ? (JSON.parse(await settingsFile.async("string")) as FullBackupData["settings"]) : null,
+    users: usersFile ? unwrapData<FullBackupData["users"]>(await usersFile.async("string")) : [],
+    groups: groupsFile ? unwrapData<FullBackupData["groups"]>(await groupsFile.async("string")) : [],
+    apps: appsFile ? unwrapData<FullBackupData["apps"]>(await appsFile.async("string")) : [],
+    settings: settingsFile ? unwrapData<FullBackupData["settings"]>(await settingsFile.async("string")) : null,
     searchEngines: searchEnginesFile
-      ? (JSON.parse(await searchEnginesFile.async("string")) as FullBackupData["searchEngines"])
+      ? unwrapData<FullBackupData["searchEngines"]>(await searchEnginesFile.async("string"))
       : [],
   };
 
