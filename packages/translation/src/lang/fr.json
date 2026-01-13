@@ -2,7 +2,7 @@
   "init": {
     "step": {
       "start": {
-        "title": "Bienvenue dans Homarr",
+        "title": "Bienvenue sur Homarr",
         "subtitle": "Commençons par configurer votre instance Homarr.",
         "description": "Pour commencer, veuillez selectionner comment vous souhaitez configurer votre instance Homarr.",
         "action": {
@@ -3295,10 +3295,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Utilisateurs",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Activer Gravatar",
+              "description": "Revient aux avatars des utilisateurs de Libravatar/Gravatar quand aucun avatar personnalisé n'est défini et qu'un e-mail est configuré"
             }
           },
           "search": {
