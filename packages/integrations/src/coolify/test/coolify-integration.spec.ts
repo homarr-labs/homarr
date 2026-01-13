@@ -1,4 +1,4 @@
-import { Response } from "undici";
+import { Request, Response } from "undici";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -12,27 +12,6 @@ import type {
   CoolifyService,
 } from "../coolify-types";
 
-// Required mocks for server-side environment variables accessed during import
-vi.mock("@homarr/common/env", () => ({
-  env: { SECRET_ENCRYPTION_KEY: "0".repeat(64) },
-}));
-
-vi.mock("@homarr/core/infrastructure/logs/env", () => ({
-  logsEnv: { LEVEL: "info" },
-}));
-
-vi.mock("@homarr/core/infrastructure/db/env", () => ({
-  dbEnv: { DRIVER: "better-sqlite3" },
-}));
-
-vi.mock("@homarr/core/infrastructure/redis", () => ({
-  createRedisClient: vi.fn(() => ({
-    publish: vi.fn(),
-    subscribe: vi.fn(),
-    quit: vi.fn(),
-  })),
-}));
-
 vi.mock("@homarr/core/infrastructure/http", () => ({
   fetchWithTrustedCertificatesAsync: vi.fn(),
 }));
@@ -40,13 +19,13 @@ vi.mock("@homarr/core/infrastructure/http", () => ({
 const TEST_API_KEY = "test-api-key-12345";
 const TEST_URL = "https://coolify.example.com";
 
-type MockResponseData = string | object | unknown[];
+type MockResponseData = string | Record<string, unknown> | unknown[];
 
 const mockFetchWithTrustedCertificates = vi.mocked(fetchWithTrustedCertificatesAsync);
 
 const setupMockFetch = (responses: Record<string, MockResponseData>) => {
   mockFetchWithTrustedCertificates.mockImplementation((url) => {
-    const urlString = url instanceof URL ? url.toString() : String(url);
+    const urlString = typeof url === "string" ? url : url instanceof Request ? url.url : url.toString();
     const urlObj = new URL(urlString);
     const path = urlObj.pathname;
 
