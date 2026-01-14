@@ -40,7 +40,7 @@ export function getBadgeColor(running: number, total: number): string {
   return "red";
 }
 
-export function formatRelativeTime(dateString: string | undefined): string | undefined {
+export function formatRelativeTime(dateString: string | null | undefined): string | undefined {
   if (!dateString) return undefined;
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return undefined;
@@ -65,7 +65,7 @@ export function formatRelativeTime(dateString: string | undefined): string | und
 }
 
 export function getResourceTimestamp(
-  item: { updated_at?: string; last_online_at?: string | null; status?: string | null },
+  item: { updated_at?: string | null; last_online_at?: string | null; status?: string | null },
   resourceType: "application" | "service",
 ): string | undefined {
   const status = parseStatus(item.status ?? "");

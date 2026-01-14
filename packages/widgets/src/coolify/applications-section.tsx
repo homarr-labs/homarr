@@ -18,7 +18,7 @@ interface ApplicationsSectionProps {
 export function ApplicationsSection({ applications, baseUrl, isTiny }: ApplicationsSectionProps) {
   const t = useScopedI18n("widget.coolify");
   const tCommon = useScopedI18n("common");
-  const runningApps = applications.filter((app) => parseStatus(app.status) === "running").length;
+  const runningApps = applications.filter((app) => parseStatus(app.status ?? "") === "running").length;
 
   return (
     <Accordion.Item value="applications">

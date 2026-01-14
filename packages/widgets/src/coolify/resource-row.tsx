@@ -11,7 +11,7 @@ interface ResourceRowProps {
     name: string;
     status?: string | null;
     fqdn?: string | null;
-    updated_at?: string;
+    updated_at?: string | null;
     last_online_at?: string | null;
     projectName?: string;
     projectUuid?: string;
