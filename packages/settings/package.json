@@ -25,7 +25,7 @@
   "dependencies": {
     "@homarr/db": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/dates": "^8.3.11",
+    "@mantine/dates": "^8.3.12",
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3"
