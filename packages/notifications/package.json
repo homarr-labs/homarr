@@ -24,8 +24,8 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@homarr/ui": "workspace:^0.1.0",
-    "@mantine/notifications": "^8.3.10",
-    "@tabler/icons-react": "^3.36.0"
+    "@mantine/notifications": "^8.3.12",
+    "@tabler/icons-react": "^3.36.1"
   },
   "devDependencies": {
     "@homarr/eslint-config": "workspace:^0.2.0",
