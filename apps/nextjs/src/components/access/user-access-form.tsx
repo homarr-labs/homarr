@@ -21,6 +21,7 @@ export interface FormProps<TPermission extends string> {
       id: string;
       name: string | null;
       image: string | null;
+      email: string | null;
     } | null;
   };
   accessQueryData: AccessQueryData<TPermission>;
@@ -118,6 +119,7 @@ interface UserItemContentProps {
     id: string;
     name: string | null;
     image: string | null;
+    email: string | null;
   };
 }
 

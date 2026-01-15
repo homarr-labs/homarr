@@ -491,24 +491,24 @@
             "message": "Permissões foram salvas com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Permissões não salvas",
+            "message": "As permissões não foram salvas"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "O grupo {name} foi salvo com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não é possível salvar o grupo {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Selecionar grupo",
+        "notFound": "Nenhum grupo encontrado"
       },
       "settings": {
         "board": {
@@ -3292,6 +3292,13 @@
                 "label": "",
                 "description": ""
               }
+            }
+          },
+          "user": {
+            "title": "",
+            "enableGravatar": {
+              "label": "",
+              "description": ""
             }
           },
           "search": {
