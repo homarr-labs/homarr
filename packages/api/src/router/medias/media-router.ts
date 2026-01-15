@@ -39,6 +39,7 @@ export const mediaRouter = createTRPCRouter({
               id: true,
               name: true,
               image: true,
+              email: true,
             },
           },
         },

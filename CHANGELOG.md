@@ -1,3 +1,21 @@
+## [1.50.0](https://github.com/homarr-labs/homarr/compare/v1.49.1...v1.50.0) (2026-01-09)
+
+### Features
+
+* **auth:** extend API key authentication to tRPC endpoints ([#4732](https://github.com/homarr-labs/homarr/issues/4732)) ([0dc61a8](https://github.com/homarr-labs/homarr/commit/0dc61a88b8d12c61fd436adf0693c9fa5087a8c0))
+* **users:** add libravatar / gravatar support ([#4277](https://github.com/homarr-labs/homarr/issues/4277)) ([a2a3412](https://github.com/homarr-labs/homarr/commit/a2a34124ae11b0b9242b9c2579f7376768d35d52))
+
+### Bug Fixes
+
+* **deps:** update dependency @tabler/icons-react to ^3.36.0 ([#4707](https://github.com/homarr-labs/homarr/issues/4707)) ([35e0198](https://github.com/homarr-labs/homarr/commit/35e0198b5df2a315ea2efb584752c5af062f960d))
+* **deps:** update dependency @tabler/icons-react to ^3.36.1 ([#4812](https://github.com/homarr-labs/homarr/issues/4812)) ([dabb2bb](https://github.com/homarr-labs/homarr/commit/dabb2bb7821f6a68d41c4a931bb70c41fdd21a72))
+* **deps:** update dependency @tanstack/react-query to ^5.90.15 ([#4794](https://github.com/homarr-labs/homarr/issues/4794)) ([ea848bd](https://github.com/homarr-labs/homarr/commit/ea848bdd0bc1268675d00213bb86dc1d1b298162))
+* **deps:** update dependency @tanstack/react-query to ^5.90.16 ([#4799](https://github.com/homarr-labs/homarr/issues/4799)) ([413e846](https://github.com/homarr-labs/homarr/commit/413e846133f13a800f509273b8b87cf677f0024d))
+* **deps:** update dependency ldapts to v8.1.0 ([#4804](https://github.com/homarr-labs/homarr/issues/4804)) ([c8ecf5f](https://github.com/homarr-labs/homarr/commit/c8ecf5f0a13b1c74f24cebced76a60728eb2d543))
+* **deps:** update dependency ldapts to v8.1.2 ([#4805](https://github.com/homarr-labs/homarr/issues/4805)) ([9e63e34](https://github.com/homarr-labs/homarr/commit/9e63e3443af7946199999104024f00991cc1cba2))
+* **deps:** update dependency next-intl to v4.7.0 ([#4806](https://github.com/homarr-labs/homarr/issues/4806)) ([35042a7](https://github.com/homarr-labs/homarr/commit/35042a783ce5c381425bb96766adbefcac75bfdd))
+* **deps:** update dependency typescript-eslint to ^8.51.0 ([#4795](https://github.com/homarr-labs/homarr/issues/4795)) ([f0a2551](https://github.com/homarr-labs/homarr/commit/f0a2551fdf5b5e02ece789d473411ad3edcfb093))
+
 ## [1.49.1](https://github.com/homarr-labs/homarr/compare/v1.49.0...v1.49.1) (2026-01-03)
 
 ### Bug Fixes

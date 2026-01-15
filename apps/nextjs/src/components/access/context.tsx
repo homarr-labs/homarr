@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
-import type { TablerIcon } from "@tabler/icons-react";
+
+import type { TablerIcon } from "@homarr/ui";
 
 const AccessContext = createContext<{
   permissions: readonly string[];
