@@ -72,7 +72,7 @@ export const WidgetPreviewPageContent = ({ kind, integrationData }: WidgetPrevie
       },
       {
         title(t) {
-          return `${t("item.edit.title")} - ${t(`widget.${kind}.name`)}`;
+          return `${t("item.edit.title")} - ${t(`widget.${kind}.name` as never, undefined)}`;
         },
       },
     );

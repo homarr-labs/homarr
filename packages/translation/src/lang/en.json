@@ -1964,6 +1964,7 @@
       }
     },
     "coolify": {
+      "name": "Coolify",
       "description": "Overview of your Coolify instance with servers and applications",
       "option": {
         "showServers": {

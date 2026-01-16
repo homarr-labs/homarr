@@ -82,7 +82,7 @@ export const BoardItemMenu = ({
       },
       {
         title(t) {
-          return `${t("item.edit.title")} - ${t(`widget.${item.kind}.name`)}`;
+          return `${t("item.edit.title")} - ${t(`widget.${item.kind}.name` as never, undefined)}`;
         },
       },
     );
