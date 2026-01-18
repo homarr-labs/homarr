@@ -18,6 +18,8 @@ interface TextInput extends CommonInput<string> {
   validate?: z.ZodType<string>;
 }
 
+interface AnchorNoteInput extends CommonInput<string> {}
+
 interface MultiSelectInput<TOptions extends SelectOption[]> extends CommonInput<
   inferSelectOptionValue<TOptions[number]>[]
 > {
@@ -74,6 +76,11 @@ const optionsFactory = {
     defaultValue: input?.defaultValue ?? "",
     withDescription: input?.withDescription ?? false,
     validate: input?.validate,
+  }),
+  anchorNote: (input?: AnchorNoteInput) => ({
+    type: "anchorNote" as const,
+    defaultValue: input?.defaultValue ?? "",
+    withDescription: input?.withDescription ?? false,
   }),
   multiSelect: <const TOptions extends SelectOption[]>(input: MultiSelectInput<TOptions>) => ({
     type: "multiSelect" as const,

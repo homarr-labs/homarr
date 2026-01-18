@@ -5,6 +5,7 @@ export const widgetKinds = [
   "iframe",
   "video",
   "notebook",
+  "anchorNote",
   "dnsHoleSummary",
   "dnsHoleControls",
   "smartHome-entityState",

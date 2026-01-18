@@ -1592,6 +1592,27 @@
         }
       }
     },
+    "anchorNote": {
+      "name": "Anchor Note",
+      "description": "Displays a selected note from Anchor",
+      "option": {
+        "noteId": {
+          "label": "Note"
+        },
+        "showTitle": {
+          "label": "Show title"
+        },
+        "showUpdatedAt": {
+          "label": "Show last updated"
+        }
+      },
+      "empty": "Select a note to display",
+      "emptyContent": "This note has no content",
+      "notFound": "Note not found",
+      "noNotes": "No notes found",
+      "integrationRequired": "Select an Anchor integration first",
+      "updatedAt": "Updated {date}"
+    },
     "iframe": {
       "name": "iFrame",
       "description": "Embed any content from the internet. Some websites may restrict access.",
