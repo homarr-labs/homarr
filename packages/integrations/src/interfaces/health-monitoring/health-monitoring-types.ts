@@ -28,6 +28,7 @@ export interface SystemHealthMonitoring {
   smart: {
     deviceName: string;
     temperature: number | null;
+    overallStatus: string;
     healthy: boolean;
   }[];
 }

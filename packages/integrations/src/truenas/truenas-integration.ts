@@ -113,7 +113,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
   }
 
   private async getPoolsAsync() {
-    localLogger.debug("Retrieving pools", {
+    logger.debug("Retrieving pools", {
       url: this.wsUrl(),
     });
 
@@ -126,7 +126,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       },
     ]);
     const result = await poolSchema.parseAsync(response);
-    localLogger.debug("Retrieved pools", {
+    logger.debug("Retrieved pools", {
       url: this.wsUrl(),
       count: result.length,
     });
@@ -273,6 +273,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
       smart: datasets.map((dataset) => ({
         deviceName: dataset.name,
         healthy: dataset.healthy,
+        overallStatus: dataset.status,
         temperature: null,
       })),
       uptime: systemInformation.uptime_seconds,
@@ -385,6 +386,7 @@ type ReportingItem = z.infer<typeof reportingItemSchema>;
 const poolSchema = z.array(
   z.object({
     name: z.string(),
+    status: z.string(),
     healthy: z.boolean(),
     free: z.number().min(0),
     size: z.number(),
