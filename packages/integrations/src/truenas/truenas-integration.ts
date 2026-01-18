@@ -292,7 +292,7 @@ export class TrueNasIntegration extends Integration implements ISystemHealthMoni
    */
   private async requestAsync(method: string, params: unknown[] = [], webSocketOverride?: WebSocket) {
     let webSocket = webSocketOverride ?? this.webSocket;
-    if (!webSocket || webSocket.readyState !== WebSocket.OPEN) {
+    if (webSocket?.readyState !== WebSocket.OPEN) {
       logger.debug("Connecting to websocket", {
         url: this.wsUrl(),
       });

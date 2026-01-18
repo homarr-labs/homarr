@@ -24,7 +24,7 @@ export const notebookRouter = createTRPCRouter({
         where: eq(items.id, input.itemId),
       });
 
-      if (!item || item.boardId !== input.boardId) {
+      if (item?.boardId !== input.boardId) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Specified item was not found",

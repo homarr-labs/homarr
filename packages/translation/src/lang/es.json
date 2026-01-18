@@ -1941,19 +1941,19 @@
       "description": "Estadísticas de tus contenedores (Este widget sólo puede ser añadido con privilegios de administrador)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Habilitar ordenar elementos"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Columna usada para ordenar por defecto",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "Nombre",
+            "state": "Estado",
+            "cpuUsage": "Uso de CPU",
+            "memoryUsage": "Uso de memoria"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Invertir orden"
         }
       },
       "error": {
@@ -3292,6 +3292,13 @@
                 "label": "Forzar deshabilitar estado",
                 "description": "El estado de las aplicaciones se deshabilitará para todos los usuarios y no se puede activar"
               }
+            }
+          },
+          "user": {
+            "title": "",
+            "enableGravatar": {
+              "label": "",
+              "description": ""
             }
           },
           "search": {

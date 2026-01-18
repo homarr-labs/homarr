@@ -9,3 +9,7 @@ export const userAgent = (headers: Headers) => {
 };
 
 export type DeviceType = "console" | "mobile" | "tablet" | "smarttv" | "wearable" | "embedded" | undefined;
+
+export const ipAddressFromHeaders = (headers: Headers): string | null => {
+  return headers.get("x-forwarded-for");
+};

@@ -3323,6 +3323,13 @@
               }
             }
           },
+          "user": {
+            "title": "Users",
+            "enableGravatar": {
+              "label": "Enable Gravatar",
+              "description": "Falls back to user avatars from Libravatar/Gravatar when no custom avatar is set and an email is configured"
+            }
+          },
           "search": {
             "title": "Search",
             "defaultSearchEngine": {

@@ -314,6 +314,13 @@
   <br/>  
   <p align="center">Unifi<br/>Controller</p>
 </a>
+</td>
+<td align="center">
+<a href="https://homarr.dev/docs/integrations/unraid" target="_blank" rel="noreferrer noopener">
+  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/unraid.svg" alt="Unraid" width="90" height="90" />
+  <br/>  
+  <p align="center">Unraid</p>
+</a>
 </td></tr>
 </tbody>
 </table>
