@@ -20,7 +20,9 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
+    "@fastify/websocket": "^11.2.0",
     "@homarr/analytics": "workspace:^0.1.0",
+    "@homarr/api": "workspace:^0.1.0",
     "@homarr/auth": "workspace:^0.1.0",
     "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^",
