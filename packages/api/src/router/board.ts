@@ -155,6 +155,7 @@ export const boardRouter = createTRPCRouter({
             id: true,
             name: true,
             image: true,
+            email: true,
           },
         },
         userPermissions: {
@@ -924,6 +925,7 @@ export const boardRouter = createTRPCRouter({
             id: true,
             name: true,
             image: true,
+            email: true,
           },
         },
       },
@@ -1220,6 +1222,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
           id: true,
           name: true,
           image: true,
+          email: true,
         },
       },
       sections: {

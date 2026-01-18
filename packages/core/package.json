@@ -41,7 +41,7 @@
     "@t3-oss/env-nextjs": "^0.13.10",
     "dns-caching": "^0.2.9",
     "drizzle-orm": "^0.45.1",
-    "ioredis": "5.8.2",
+    "ioredis": "5.9.1",
     "mysql2": "3.16.0",
     "pg": "^8.16.3",
     "superjson": "2.2.6",
