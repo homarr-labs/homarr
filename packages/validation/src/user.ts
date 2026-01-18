@@ -57,12 +57,13 @@ export const userBaseCreateSchema = z.object({
   password: userPasswordSchema,
   confirmPassword: z.string(),
   email: z.string().email().or(z.string().length(0)).optional(),
-  groupIds: z.array(z.string()),
 });
 
-export const userCreateSchema = addConfirmPasswordRefinement(userBaseCreateSchema);
+export const userCreateSchema = addConfirmPasswordRefinement(userBaseCreateSchema).and(
+  z.object({ groupIds: z.array(z.string()) }),
+);
 
-export const userInitSchema = addConfirmPasswordRefinement(userBaseCreateSchema.omit({ groupIds: true }));
+export const userInitSchema = addConfirmPasswordRefinement(userBaseCreateSchema);
 
 export const userSignInSchema = z.object({
   name: z.string().min(1),
