@@ -38,7 +38,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.10",
-    "better-sqlite3": "^12.5.0",
+    "better-sqlite3": "^12.6.0",
     "dns-caching": "^0.2.9",
     "drizzle-orm": "^0.45.1",
     "ioredis": "5.9.1",
