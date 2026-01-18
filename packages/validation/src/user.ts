@@ -112,12 +112,15 @@ const baseChangePasswordSchema = z.object({
   previousPassword: z.string().min(1),
   password: userPasswordSchema,
   confirmPassword: z.string(),
-  userId: z.string(),
 });
 
-export const userChangePasswordSchema = addConfirmPasswordRefinement(baseChangePasswordSchema.omit({ userId: true }));
+export const userChangePasswordSchema = addConfirmPasswordRefinement(baseChangePasswordSchema);
 
-export const userChangePasswordApiSchema = addConfirmPasswordRefinement(baseChangePasswordSchema);
+export const userChangePasswordApiSchema = addConfirmPasswordRefinement(baseChangePasswordSchema).and(
+  z.object({
+    userId: z.string(),
+  }),
+);
 
 export const userChangeHomeBoardsSchema = z.object({
   homeBoardId: z.string().nullable(),

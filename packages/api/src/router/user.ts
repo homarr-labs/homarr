@@ -329,7 +329,7 @@ export const userRouter = createTRPCRouter({
       await ctx.db.delete(users).where(eq(users.id, input.userId));
     }),
   changePassword: protectedProcedure
-    .input(userChangePasswordApiSchema)
+    .input(convertIntersectionToZodObject(userChangePasswordApiSchema))
     .output(z.void())
     .meta({ openapi: { method: "PATCH", path: "/api/users/{userId}/changePassword", tags: ["users"], protect: true } })
     .mutation(async ({ ctx, input }) => {
