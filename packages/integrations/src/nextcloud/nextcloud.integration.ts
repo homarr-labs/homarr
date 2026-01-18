@@ -70,10 +70,7 @@ export class NextcloudIntegration extends Integration implements ICalendarIntegr
         const durationMs = veventObject.end.getTime() - veventObject.start.getTime();
 
         return startDates.map((startDate) => {
-          const timezoneOffsetMinutes = veventObject.rrule?.origOptions.tzid
-            ? dayjs(startDate).tz(veventObject.rrule.origOptions.tzid).utcOffset()
-            : 0;
-          const utcStartDate = new Date(startDate.getTime() - timezoneOffsetMinutes * 60 * 1000);
+          const utcStartDate = dayjs(startDate).tz("UTC").toDate();
           const endDate = new Date(utcStartDate.getTime() + durationMs);
           const dateInMillis = utcStartDate.valueOf();
 
