@@ -5,6 +5,7 @@ import { Box, Card, Group, Stack, useMantineColorScheme } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
 import { useRequiredBoard } from "@homarr/boards/context";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
@@ -16,6 +17,7 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
 
   const board = useRequiredBoard();
   const scheme = useMantineColorScheme();
+  const t = useI18n();
 
   const lastItem = data.at(-1);
 
@@ -47,6 +49,23 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
     throw new NoIntegrationDataError();
   }
 
+  const getDisplayText = (item: { used: string; available: string; percentage: number }) => {
+    switch (options.displayMode) {
+      case "percentage":
+        return `${Math.round(item.percentage)}%`;
+      case "absolute":
+        // Note: Due to data model differences, 'available' may represent total size (TrueNAS, Unraid)
+        // or free space (DashDot), so this displays: "used / total" or "used / free"
+        return `${item.used} / ${item.available}`;
+      case "free":
+        // Calculate free space description based on percentage
+        const freePercentage = Math.round(100 - item.percentage);
+        return `${freePercentage}% free`;
+      default:
+        return `${Math.round(item.percentage)}%`;
+    }
+  };
+
   return (
     <Stack gap="xs" p="xs" h="100%">
       {disks.fileSystem.map((item) => {
@@ -67,8 +86,8 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
                   <b>{item.deviceName}</b>
                 </p>
                 <p style={{ margin: 0 }}>
-                  <span>{Math.round(item.percentage)}%</span>
-                  {!healthy && <span style={{ marginLeft: 5 }}>Unhealthy</span>}
+                  <span>{getDisplayText(item)}</span>
+                  {!healthy && <span style={{ marginLeft: 5 }}>{t("widget.systemDisks.status.unhealthy")}</span>}
                 </p>
               </div>
               <div>
@@ -79,7 +98,15 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
             </Group>
             <Box
               bg={healthy ? "green" : "red"}
-              style={{ position: "absolute", top: 0, left: 0, width: `${item.percentage}%`, height: "100%", zIndex: 0 }}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: `${item.percentage}%`,
+                height: "100%",
+                zIndex: 0,
+                display: options.showBackgroundBar ? "block" : "none",
+              }}
             ></Box>
           </Card>
         );
