@@ -1,44 +1,5 @@
 import type { IntegrationKind } from "@homarr/definitions";
 
-import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
-import { CodebergIntegration } from "../codeberg/codeberg-integration";
-import { DashDotIntegration } from "../dashdot/dashdot-integration";
-import { DockerHubIntegration } from "../docker-hub/docker-hub-integration";
-import { Aria2Integration } from "../download-client/aria2/aria2-integration";
-import { DelugeIntegration } from "../download-client/deluge/deluge-integration";
-import { NzbGetIntegration } from "../download-client/nzbget/nzbget-integration";
-import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorrent-integration";
-import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
-import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
-import { EmbyIntegration } from "../emby/emby-integration";
-import { GitHubContainerRegistryIntegration } from "../github-container-registry/github-container-registry-integration";
-import { GithubIntegration } from "../github/github-integration";
-import { GitlabIntegration } from "../gitlab/gitlab-integration";
-import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
-import { ICalIntegration } from "../ical/ical-integration";
-import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
-import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
-import { LinuxServerIOIntegration } from "../linuxserverio/linuxserverio-integration";
-import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
-import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
-import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integration";
-import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
-import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
-import { MockIntegration } from "../mock/mock-integration";
-import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
-import { NPMIntegration } from "../npm/npm-integration";
-import { NTFYIntegration } from "../ntfy/ntfy-integration";
-import { OpenMediaVaultIntegration } from "../openmediavault/openmediavault-integration";
-import { OPNsenseIntegration } from "../opnsense/opnsense-integration";
-import { OverseerrIntegration } from "../overseerr/overseerr-integration";
-import { createPiHoleIntegrationAsync } from "../pi-hole/pi-hole-integration-factory";
-import { PlexIntegration } from "../plex/plex-integration";
-import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
-import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
-import { QuayIntegration } from "../quay/quay-integration";
-import { TrueNasIntegration } from "../truenas/truenas-integration";
-import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
-import { UnraidIntegration } from "../unraid/unraid-integration";
 import type { Integration, IntegrationInput } from "./integration";
 
 export const createIntegrationAsync = async <TKind extends keyof typeof integrationCreators>(
@@ -50,7 +11,8 @@ export const createIntegrationAsync = async <TKind extends keyof typeof integrat
     );
   }
 
-  const creator = integrationCreators[integration.kind];
+  const importCreator = integrationCreators[integration.kind];
+  const creator = await importCreator();
 
   // factories are an array, to differentiate in js between class constructors and functions
   if (Array.isArray(creator)) {
@@ -64,46 +26,59 @@ type IntegrationInstance = new (integration: IntegrationInput) => Integration;
 
 // factories are an array, to differentiate in js between class constructors and functions
 export const integrationCreators = {
-  piHole: [createPiHoleIntegrationAsync],
-  adGuardHome: AdGuardHomeIntegration,
-  homeAssistant: HomeAssistantIntegration,
-  jellyfin: JellyfinIntegration,
-  plex: PlexIntegration,
-  sonarr: SonarrIntegration,
-  radarr: RadarrIntegration,
-  sabNzbd: SabnzbdIntegration,
-  nzbGet: NzbGetIntegration,
-  qBittorrent: QBitTorrentIntegration,
-  deluge: DelugeIntegration,
-  transmission: TransmissionIntegration,
-  aria2: Aria2Integration,
-  jellyseerr: JellyseerrIntegration,
-  overseerr: OverseerrIntegration,
-  prowlarr: ProwlarrIntegration,
-  openmediavault: OpenMediaVaultIntegration,
-  lidarr: LidarrIntegration,
-  readarr: ReadarrIntegration,
-  dashDot: DashDotIntegration,
-  tdarr: TdarrIntegration,
-  proxmox: ProxmoxIntegration,
-  emby: EmbyIntegration,
-  nextcloud: NextcloudIntegration,
-  unifiController: UnifiControllerIntegration,
-  opnsense: OPNsenseIntegration,
-  github: GithubIntegration,
-  dockerHub: DockerHubIntegration,
-  gitlab: GitlabIntegration,
-  npm: NPMIntegration,
-  codeberg: CodebergIntegration,
-  linuxServerIO: LinuxServerIOIntegration,
-  gitHubContainerRegistry: GitHubContainerRegistryIntegration,
-  ical: ICalIntegration,
-  quay: QuayIntegration,
-  ntfy: NTFYIntegration,
-  mock: MockIntegration,
-  truenas: TrueNasIntegration,
-  unraid: UnraidIntegration,
-} satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
+  piHole: () =>
+    import("../pi-hole/pi-hole-integration-factory").then((module) => [module.createPiHoleIntegrationAsync]),
+  adGuardHome: () => import("../adguard-home/adguard-home-integration").then((module) => module.AdGuardHomeIntegration),
+  homeAssistant: () =>
+    import("../homeassistant/homeassistant-integration").then((module) => module.HomeAssistantIntegration),
+  jellyfin: () => import("../jellyfin/jellyfin-integration").then((module) => module.JellyfinIntegration),
+  plex: () => import("../plex/plex-integration").then((module) => module.PlexIntegration),
+  sonarr: () => import("../media-organizer/sonarr/sonarr-integration").then((module) => module.SonarrIntegration),
+  radarr: () => import("../media-organizer/radarr/radarr-integration").then((module) => module.RadarrIntegration),
+  sabNzbd: () => import("../download-client/sabnzbd/sabnzbd-integration").then((module) => module.SabnzbdIntegration),
+  nzbGet: () => import("../download-client/nzbget/nzbget-integration").then((module) => module.NzbGetIntegration),
+  qBittorrent: () =>
+    import("../download-client/qbittorrent/qbittorrent-integration").then((module) => module.QBitTorrentIntegration),
+  deluge: () => import("../download-client/deluge/deluge-integration").then((module) => module.DelugeIntegration),
+  transmission: () =>
+    import("../download-client/transmission/transmission-integration").then((module) => module.TransmissionIntegration),
+  aria2: () => import("../download-client/aria2/aria2-integration").then((module) => module.Aria2Integration),
+  jellyseerr: () => import("../jellyseerr/jellyseerr-integration").then((module) => module.JellyseerrIntegration),
+  overseerr: () => import("../overseerr/overseerr-integration").then((module) => module.OverseerrIntegration),
+  prowlarr: () => import("../prowlarr/prowlarr-integration").then((module) => module.ProwlarrIntegration),
+  openmediavault: () =>
+    import("../openmediavault/openmediavault-integration").then((module) => module.OpenMediaVaultIntegration),
+  lidarr: () => import("../media-organizer/lidarr/lidarr-integration").then((module) => module.LidarrIntegration),
+  readarr: () => import("../media-organizer/readarr/readarr-integration").then((module) => module.ReadarrIntegration),
+  dashDot: () => import("../dashdot/dashdot-integration").then((module) => module.DashDotIntegration),
+  tdarr: () => import("../media-transcoding/tdarr-integration").then((module) => module.TdarrIntegration),
+  proxmox: () => import("../proxmox/proxmox-integration").then((module) => module.ProxmoxIntegration),
+  emby: () => import("../emby/emby-integration").then((module) => module.EmbyIntegration),
+  nextcloud: () => import("../nextcloud/nextcloud.integration").then((module) => module.NextcloudIntegration),
+  unifiController: () =>
+    import("../unifi-controller/unifi-controller-integration").then((module) => module.UnifiControllerIntegration),
+  opnsense: () => import("../opnsense/opnsense-integration").then((module) => module.OPNsenseIntegration),
+  github: () => import("../github/github-integration").then((module) => module.GithubIntegration),
+  dockerHub: () => import("../docker-hub/docker-hub-integration").then((module) => module.DockerHubIntegration),
+  gitlab: () => import("../gitlab/gitlab-integration").then((module) => module.GitlabIntegration),
+  npm: () => import("../npm/npm-integration").then((module) => module.NPMIntegration),
+  codeberg: () => import("../codeberg/codeberg-integration").then((module) => module.CodebergIntegration),
+  linuxServerIO: () =>
+    import("../linuxserverio/linuxserverio-integration").then((module) => module.LinuxServerIOIntegration),
+  gitHubContainerRegistry: () =>
+    import("../github-container-registry/github-container-registry-integration").then(
+      (module) => module.GitHubContainerRegistryIntegration,
+    ),
+  ical: () => import("../ical/ical-integration").then((module) => module.ICalIntegration),
+  quay: () => import("../quay/quay-integration").then((module) => module.QuayIntegration),
+  ntfy: () => import("../ntfy/ntfy-integration").then((module) => module.NTFYIntegration),
+  mock: () => import("../mock/mock-integration").then((module) => module.MockIntegration),
+  truenas: () => import("../truenas/truenas-integration").then((module) => module.TrueNasIntegration),
+  unraid: () => import("../unraid/unraid-integration").then((module) => module.UnraidIntegration),
+} satisfies Record<
+  IntegrationKind,
+  () => Promise<[(input: IntegrationInput) => Promise<Integration>] | IntegrationInstance>
+>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {
   [kind in TKind]: (typeof integrationCreators)[kind] extends [(input: IntegrationInput) => Promise<Integration>]
