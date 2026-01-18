@@ -22,8 +22,8 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
         .map(([kind, value]) => ({
           kind,
           icon: value.definition.icon,
-          name: t(`widget.${kind}.name` as never, undefined),
-          description: t(`widget.${kind}.description` as never, undefined),
+          name: t(`widget.${kind}.name`),
+          description: t(`widget.${kind}.description`),
         }))
         .sort((itemA, itemB) => itemA.name.localeCompare(itemB.name)),
     [t],
