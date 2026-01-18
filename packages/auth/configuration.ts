@@ -66,16 +66,26 @@ export const createConfiguration = (
         }
 
         if (!adapter.createSession || !user.id) {
+          logger.warn("Cannot create session: adapter.createSession missing or user.id missing");
           return false;
         }
 
         const expires = expireDateAfter(env.AUTH_SESSION_EXPIRY_TIME);
         const sessionToken = generateSessionToken();
-        await adapter.createSession({
-          sessionToken,
-          expires,
-          userId: user.id,
-        });
+        
+        try {
+          // DrizzleAdapter expects expires as a number (timestamp_ms), not a Date object
+          // The schema defines expires as int({ mode: "timestamp_ms" })
+          await adapter.createSession({
+            sessionToken,
+            expires: expires.getTime(), // Convert Date to milliseconds timestamp
+            userId: user.id,
+          });
+          logger.info(`Session created successfully for user ${user.id}`);
+        } catch (error) {
+          logger.error(new Error(`Failed to create session for user ${user.id}`, { cause: error }));
+          return false;
+        }
 
         (await cookies()).set(sessionTokenCookieName, sessionToken, {
           path: "/",
