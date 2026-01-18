@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Box, Card, Group, Stack, useMantineColorScheme } from "@mantine/core";
 
 import { clientApi } from "@homarr/api/client";
@@ -10,10 +9,25 @@ import { useI18n } from "@homarr/translation/client";
 import type { WidgetComponentProps } from "../definition";
 import { NoIntegrationDataError } from "../errors/no-data-integration";
 
+type DisplayMode = WidgetComponentProps<"systemDisks">["options"]["displayMode"];
+
+const getDisplayText = (item: { used: string; available: string; percentage: number }, displayMode: DisplayMode) => {
+  switch (displayMode) {
+    case "percentage":
+      return `${Math.round(item.percentage)}%`;
+    case "absolute":
+      return `${item.used} / ${item.available}`;
+    case "free":
+      return `${Math.round(100 - item.percentage)}% free`;
+    default:
+      return `${Math.round(item.percentage)}%`;
+  }
+};
+
 export default function SystemResources({ integrationIds, options }: WidgetComponentProps<"systemDisks">) {
-  const [data] = clientApi.widget.healthMonitoring.getSystemHealthStatus.useSuspenseQuery({
-    integrationIds,
-  });
+  const queryInput = { integrationIds };
+  const [data] = clientApi.widget.healthMonitoring.getSystemHealthStatus.useSuspenseQuery(queryInput);
+  const utils = clientApi.useUtils();
 
   const board = useRequiredBoard();
   const scheme = useMantineColorScheme();
@@ -22,55 +36,25 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
   const lastItem = data.at(-1);
 
   if (!lastItem) return null;
+  const { fileSystem, smart } = lastItem.healthInfo;
 
-  const [disks, setDisks] = useState<{
-    fileSystem: { deviceName: string; used: string; available: string; percentage: number }[];
-    smart: { deviceName: string; temperature: number | null; healthy: boolean }[];
-  }>({
-    fileSystem: lastItem.healthInfo.fileSystem,
-    smart: lastItem.healthInfo.smart,
+  clientApi.widget.healthMonitoring.subscribeSystemHealthStatus.useSubscription(queryInput, {
+    onData(data) {
+      utils.widget.healthMonitoring.getSystemHealthStatus.setData(queryInput, (oldData) =>
+        oldData?.map((item) => (item.integrationId === data.integrationId ? { ...item, ...data } : item)),
+      );
+    },
   });
 
-  clientApi.widget.healthMonitoring.subscribeSystemHealthStatus.useSubscription(
-    {
-      integrationIds,
-    },
-    {
-      onData(data) {
-        setDisks({
-          fileSystem: data.healthInfo.fileSystem,
-          smart: data.healthInfo.smart,
-        });
-      },
-    },
-  );
-
-  if (disks.fileSystem.length === 0) {
+  if (fileSystem.length === 0) {
     throw new NoIntegrationDataError();
   }
 
-  const getDisplayText = (item: { used: string; available: string; percentage: number }) => {
-    switch (options.displayMode) {
-      case "percentage":
-        return `${Math.round(item.percentage)}%`;
-      case "absolute":
-        // Note: Due to data model differences, 'available' may represent total size (TrueNAS, Unraid)
-        // or free space (DashDot), so this displays: "used / total" or "used / free"
-        return `${item.used} / ${item.available}`;
-      case "free":
-        // Calculate free space description based on percentage
-        const freePercentage = Math.round(100 - item.percentage);
-        return `${freePercentage}% free`;
-      default:
-        return `${Math.round(item.percentage)}%`;
-    }
-  };
-
   return (
     <Stack gap="xs" p="xs" h="100%">
-      {disks.fileSystem.map((item) => {
-        const smart = disks.smart.find((smart) => smart.deviceName === item.deviceName);
-        const healthy = smart?.healthy ?? true; // fall back to healthy if no information is available
+      {fileSystem.map((item) => {
+        const smartItem = smart.find((smart) => smart.deviceName === item.deviceName);
+        const healthy = smartItem?.healthy ?? true; // fall back to healthy if no information is available
 
         return (
           <Card
@@ -86,14 +70,14 @@ export default function SystemResources({ integrationIds, options }: WidgetCompo
                   <b>{item.deviceName}</b>
                 </p>
                 <p style={{ margin: 0 }}>
-                  <span>{getDisplayText(item)}</span>
+                  <span>{getDisplayText(item, options.displayMode)}</span>
                   {!healthy && <span style={{ marginLeft: 5 }}>{t("widget.systemDisks.status.unhealthy")}</span>}
                 </p>
               </div>
               <div>
-                {smart?.temperature && options.showTemperatureIfAvailable && (
-                  <p style={{ margin: 0 }}>{smart.temperature}°C</p>
-                )}
+                {smartItem?.temperature && options.showTemperatureIfAvailable ? (
+                  <p style={{ margin: 0 }}>{smartItem.temperature}°C</p>
+                ) : null}
               </div>
             </Group>
             <Box
