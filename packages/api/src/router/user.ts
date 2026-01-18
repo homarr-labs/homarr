@@ -98,7 +98,7 @@ export const userRouter = createTRPCRouter({
   create: permissionRequiredProcedure
     .requiresPermission("admin")
     .meta({ openapi: { method: "POST", path: "/api/users", tags: ["users"], protect: true } })
-    .input(userCreateSchema)
+    .input(convertIntersectionToZodObject(userCreateSchema))
     .output(z.void())
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
