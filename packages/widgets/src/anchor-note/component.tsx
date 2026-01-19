@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Button, Center, Group, Loader, Stack, Text, TextInput } from "@mantine/core";
+import { useInterval } from "@mantine/hooks";
 import { TRPCClientError } from "@trpc/client";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -216,7 +217,7 @@ export default function AnchorNoteWidget({ options, integrationIds }: WidgetComp
         console.error("Failed to toggle checklist item", err);
       } finally {
         if (didLock) {
-          unlockNoteAsync({ integrationId, noteId }).catch(() => {});
+          unlockNoteAsync({ integrationId, noteId }).catch(() => undefined);
         }
       }
     },
@@ -293,33 +294,36 @@ export default function AnchorNoteWidget({ options, integrationIds }: WidgetComp
     }
   }, [draftContent, draftTitle, hasChanges, integrationId, note, noteId, refetch, updateNoteAsync]);
 
-  useEffect(() => {
-    if (!isEditing || !integrationId) return;
-
-    let isActive = true;
-    const refreshLock = async () => {
-      try {
-        const result = await lockNoteAsync({ integrationId, noteId });
-        if (!isActive) return;
-        setLockStatus(result);
-        if (result.status === "locked") {
-          setIsEditing(false);
-        }
-      } catch (err) {
-        if (!isActive) return;
-        console.error("Failed to refresh note lock", err);
+  const refreshLock = useCallback(async () => {
+    if (!integrationId) return;
+    try {
+      const result = await lockNoteAsync({ integrationId, noteId });
+      setLockStatus(result);
+      if (result.status === "locked") {
+        setIsEditing(false);
       }
-    };
+    } catch (err) {
+      console.error("Failed to refresh note lock", err);
+    }
+  }, [integrationId, lockNoteAsync, noteId]);
+
+  const refreshLockInterval = useInterval(refreshLock, 45_000);
+  const wasEditingRef = useRef(isEditing);
+
+  useEffect(() => {
+    if (!isEditing || !integrationId) {
+      refreshLockInterval.stop();
+      if (wasEditingRef.current && integrationId) {
+        unlockNoteAsync({ integrationId, noteId }).catch(() => undefined);
+      }
+      wasEditingRef.current = isEditing;
+      return;
+    }
 
     refreshLock();
-    const interval = setInterval(refreshLock, 45_000);
-
-    return () => {
-      isActive = false;
-      clearInterval(interval);
-      unlockNoteAsync({ integrationId, noteId }).catch(() => {});
-    };
-  }, [integrationId, isEditing, lockNoteAsync, noteId, unlockNoteAsync]);
+    refreshLockInterval.start();
+    wasEditingRef.current = isEditing;
+  }, [integrationId, isEditing, noteId, refreshLock, refreshLockInterval, unlockNoteAsync]);
 
   if (!hasIntegration) {
     return (
