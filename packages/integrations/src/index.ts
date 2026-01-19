@@ -51,7 +51,13 @@ export type {
 } from "./interfaces/media-transcoding/media-transcoding-types";
 export type { ReleasesRepository, ReleaseResponse } from "./interfaces/releases-providers/releases-providers-types";
 export type { Notification } from "./interfaces/notifications/notification-types";
-export type { AnchorNote, AnchorNotesListInput, AnchorNoteSummary } from "./anchor/anchor-types";
+export type {
+  AnchorNote,
+  AnchorNoteLockStatus,
+  AnchorNoteUpdateInput,
+  AnchorNotesListInput,
+  AnchorNoteSummary,
+} from "./anchor/anchor-types";
 
 // Schemas
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";

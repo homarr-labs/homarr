@@ -1611,7 +1611,11 @@
       "notFound": "Note not found",
       "noNotes": "No notes found",
       "integrationRequired": "Select an Anchor integration first",
-      "updatedAt": "Updated {date}"
+      "updatedAt": "Updated {date}",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "lockedByAnchor": "Locked by Anchor"
     },
     "iframe": {
       "name": "iFrame",

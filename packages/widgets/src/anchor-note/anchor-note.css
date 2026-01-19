@@ -1,0 +1,23 @@
+.homarr-anchor-quill .ql-toolbar.ql-snow,
+.homarr-anchor-quill .ql-container.ql-snow {
+  border-color: var(--mantine-color-default-border);
+}
+
+.homarr-anchor-quill .ql-toolbar.ql-snow {
+  background: var(--mantine-color-body);
+  border-radius: var(--mantine-radius-md) var(--mantine-radius-md) 0 0;
+}
+
+.homarr-anchor-quill .ql-container.ql-snow {
+  background: var(--mantine-color-body);
+  border-radius: 0 0 var(--mantine-radius-md) var(--mantine-radius-md);
+}
+
+.homarr-anchor-quill .ql-editor {
+  min-height: 160px;
+  color: var(--mantine-color-text);
+}
+
+.homarr-anchor-quill .ql-editor.ql-blank::before {
+  color: var(--mantine-color-dimmed);
+}

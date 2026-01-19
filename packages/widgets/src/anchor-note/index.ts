@@ -6,6 +6,7 @@ import { optionsBuilder } from "../options";
 export const { definition, componentLoader } = createWidgetDefinition("anchorNote", {
   icon: IconNotes,
   supportedIntegrations: ["anchor"],
+  integrationsRequired: false,
   createOptions() {
     return optionsBuilder.from((factory) => ({
       noteId: factory.anchorNote(),

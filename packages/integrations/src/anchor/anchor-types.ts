@@ -18,3 +18,16 @@ export interface AnchorNote extends AnchorNoteSummary {
   isArchived: boolean;
   background?: string | null;
 }
+
+export type AnchorNoteLockOwner = "anchor" | "homarr";
+
+export interface AnchorNoteLockStatus {
+  status: "acquired" | "locked";
+  lockedBy: AnchorNoteLockOwner;
+  expiresAt: string;
+}
+
+export interface AnchorNoteUpdateInput {
+  title?: string;
+  content?: string;
+}
