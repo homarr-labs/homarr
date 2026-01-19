@@ -1138,6 +1138,9 @@
     "dangerZone": "Danger zone",
     "noResults": "No results found",
     "unsavedChanges": "You have unsaved changes!",
+    "servers": "Servers",
+    "applications": "Apps",
+    "services": "Services",
     "preview": {
       "show": "Show preview",
       "hide": "Hide preview"
@@ -1958,6 +1961,39 @@
       },
       "error": {
         "internalServerError": "Failed to fetch containers stats"
+      }
+    },
+    "coolify": {
+      "name": "Coolify",
+      "description": "Overview of your Coolify instance with servers and applications",
+      "option": {
+        "showServers": {
+          "label": "Show servers"
+        },
+        "showApplications": {
+          "label": "Show applications"
+        },
+        "showServices": {
+          "label": "Show services"
+        }
+      },
+      "empty": {
+        "servers": "No servers found",
+        "applications": "No applications found",
+        "services": "No services found"
+      },
+      "footer": {
+        "updated": "Updated {when}"
+      },
+      "error": {
+        "noIntegration": "No Coolify integration configured",
+        "internalServerError": "Failed to fetch Coolify data"
+      },
+      "server": {
+        "buildServer": "Build"
+      },
+      "instances": {
+        "title": "Instances"
       }
     },
     "common": {

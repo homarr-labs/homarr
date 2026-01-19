@@ -25,6 +25,7 @@ export { TrueNasIntegration } from "./truenas/truenas-integration";
 export { UnraidIntegration } from "./unraid/unraid-integration";
 export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
 export { ICalIntegration } from "./ical/ical-integration";
+export { CoolifyIntegration } from "./coolify/coolify-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
