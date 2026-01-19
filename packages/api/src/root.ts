@@ -16,6 +16,7 @@ import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
 import { mediaRouter } from "./router/medias/media-router";
 import { onboardRouter } from "./router/onboard/onboard-router";
+import { bangsRouter } from "./router/bangs/bangs-router";
 import { searchEngineRouter } from "./router/search-engine/search-engine-router";
 import { sectionRouter } from "./router/section/section-router";
 import { serverSettingsRouter } from "./router/serverSettings";
@@ -25,6 +26,7 @@ import { widgetRouter } from "./router/widgets";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
+  bangs: bangsRouter,
   user: userRouter,
   group: groupRouter,
   invite: inviteRouter,
