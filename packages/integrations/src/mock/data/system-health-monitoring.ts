@@ -33,6 +33,7 @@ export class SystemHealthMonitoringMockService implements ISystemHealthMonitorin
           deviceName: "Mock Device",
           temperature: Math.floor(Math.random() * 100), // Random temperature between 0 and 99
           overallStatus: "OK",
+          healthy: true,
         },
       ],
     });
