@@ -53,6 +53,7 @@ export function SecretsTable(initialData: SecretsTableComponentProps) {
   });
 
   const table = useTranslatedMantineReactTable({
+    id: "manage-tools-kubernetes-secrets",
     data,
     enableDensityToggle: false,
     enableColumnActions: false,

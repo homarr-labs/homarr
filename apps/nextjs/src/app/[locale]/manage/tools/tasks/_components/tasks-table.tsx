@@ -373,6 +373,7 @@ export const TasksTable = ({ initialJobs }: TasksTableProps) => {
   };
 
   const table = useTranslatedMantineReactTable({
+    id: "manage-tools-tasks",
     data: jobs,
     enableDensityToggle: false,
     enableColumnActions: false,
