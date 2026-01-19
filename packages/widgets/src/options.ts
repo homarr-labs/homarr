@@ -18,7 +18,7 @@ interface TextInput extends CommonInput<string> {
   validate?: z.ZodType<string>;
 }
 
-interface AnchorNoteInput extends CommonInput<string> {}
+type AnchorNoteInput = CommonInput<string>;
 
 interface MultiSelectInput<TOptions extends SelectOption[]> extends CommonInput<
   inferSelectOptionValue<TOptions[number]>[]

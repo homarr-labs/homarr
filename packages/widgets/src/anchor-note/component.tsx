@@ -216,7 +216,7 @@ export default function AnchorNoteWidget({ options, integrationIds }: WidgetComp
         console.error("Failed to toggle checklist item", err);
       } finally {
         if (didLock) {
-          unlockNoteAsync({ integrationId, noteId }).catch(() => {});
+          unlockNoteAsync({ integrationId, noteId }).catch(() => undefined);
         }
       }
     },
@@ -293,7 +293,7 @@ export default function AnchorNoteWidget({ options, integrationIds }: WidgetComp
     }
   }, [draftContent, draftTitle, hasChanges, integrationId, note, noteId, refetch, updateNoteAsync]);
 
-  useEffect(() => {
+  useEffect(function refreshLockEffect() {
     if (!isEditing || !integrationId) return;
 
     let isActive = true;
@@ -317,7 +317,7 @@ export default function AnchorNoteWidget({ options, integrationIds }: WidgetComp
     return () => {
       isActive = false;
       clearInterval(interval);
-      unlockNoteAsync({ integrationId, noteId }).catch(() => {});
+      unlockNoteAsync({ integrationId, noteId }).catch(() => undefined);
     };
   }, [integrationId, isEditing, lockNoteAsync, noteId, unlockNoteAsync]);
 
