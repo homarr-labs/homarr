@@ -79,7 +79,6 @@ const Feed = ({ options }: Pick<WidgetComponentProps<"video">, "options">) => {
       ],
     });
     // All other properties are updated with other useEffect
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoRef]);
 
   useEffect(() => {

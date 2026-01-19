@@ -502,6 +502,18 @@ export const cronJobConfigurations = pgTable("cron_job_configuration", {
   isEnabled: boolean().default(true).notNull(),
 });
 
+export const backups = pgTable("backup", {
+  id: varchar({ length: 64 }).notNull().primaryKey(),
+  name: varchar({ length: 256 }).notNull(),
+  type: varchar({ length: 16 }).$type<"manual" | "auto">().notNull(),
+  filePath: text().notNull(),
+  fileSize: integer().notNull(),
+  checksum: varchar({ length: 64 }).notNull(),
+  status: varchar({ length: 16 }).$type<"completed" | "failed">().notNull(),
+  createdBy: varchar({ length: 64 }).references(() => users.id, { onDelete: "set null" }),
+  createdAt: timestamp().notNull(),
+});
+
 export const accountRelations = relations(accounts, ({ one }) => ({
   user: one(users, {
     fields: [accounts.userId],
@@ -764,5 +776,12 @@ export const layoutRelations = relations(layouts, ({ one, many }) => ({
   board: one(boards, {
     fields: [layouts.boardId],
     references: [boards.id],
+  }),
+}));
+
+export const backupRelations = relations(backups, ({ one }) => ({
+  creator: one(users, {
+    fields: [backups.createdBy],
+    references: [users.id],
   }),
 }));

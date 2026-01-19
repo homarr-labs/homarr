@@ -50,6 +50,9 @@ yarn-error.log*
 # database
 *.sqlite
 
+# backups archive
+backups-archive/
+
 # logs
 *.log
 
@@ -68,3 +71,7 @@ apps/nextjs/public/images/background.png
 
 # next-intl
 en.d.json.ts
+
+# ai
+.claude/
+.serena/
