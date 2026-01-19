@@ -291,6 +291,13 @@ export const integrationDefs = {
     category: ["calendar"],
     documentationUrl: createDocumentationLink("/docs/integrations/ical"),
   },
+  anchor: {
+    name: "Anchor",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://raw.githubusercontent.com/zhfahim/anchor/main/web/public/icons/anchor_icon.png",
+    category: ["miscellaneous"],
+    documentationUrl: null,
+  },
   truenas: {
     name: "TrueNAS",
     secretKinds: [["username", "password"]],

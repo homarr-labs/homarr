@@ -78,7 +78,8 @@ export default async function Layout(props: {
   }
 
   const session = await auth();
-  const user = session ? await api.user.getById({ userId: session.user.id }).catch(() => null) : null;
+  const userId = session?.user?.id;
+  const user = userId ? await api.user.getById({ userId }).catch(() => null) : null;
   const serverSettings = await getServerSettingsAsync(db);
   const colorScheme = await getCurrentColorSchemeAsync();
   const direction = isLocaleRTL((await props.params).locale) ? "rtl" : "ltr";

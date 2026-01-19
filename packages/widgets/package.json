@@ -75,6 +75,7 @@
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-quill-new": "^3.7.0",
     "react-markdown": "^10.1.0",
     "recharts": "^2.15.4",
     "video.js": "^8.23.4",

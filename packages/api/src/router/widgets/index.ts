@@ -1,4 +1,5 @@
 import { createTRPCRouter } from "../../trpc";
+import { anchorNotesRouter } from "./anchor-notes";
 import { appRouter } from "./app";
 import { calendarRouter } from "./calendar";
 import { dnsHoleRouter } from "./dns-hole";
@@ -22,6 +23,7 @@ import { stockPriceRouter } from "./stocks";
 import { weatherRouter } from "./weather";
 
 export const widgetRouter = createTRPCRouter({
+  anchorNotes: anchorNotesRouter,
   notebook: notebookRouter,
   weather: weatherRouter,
   app: appRouter,
