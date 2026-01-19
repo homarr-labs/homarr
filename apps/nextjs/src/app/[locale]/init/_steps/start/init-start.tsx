@@ -5,6 +5,7 @@ import { getMantineColor } from "@homarr/common";
 import { getScopedI18n } from "@homarr/translation/server";
 
 import { InitStartButton } from "./next-button";
+import { RestoreBackupButton } from "./restore-backup-button";
 
 export const InitStart = async () => {
   const tStart = await getScopedI18n("init.step.start");
@@ -26,6 +27,7 @@ export const InitStart = async () => {
         >
           {tStart("action.importOldmarr")}
         </InitStartButton>
+        <RestoreBackupButton>{tStart("action.restoreBackup")}</RestoreBackupButton>
       </Stack>
     </Card>
   );

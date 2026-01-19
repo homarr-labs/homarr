@@ -1,5 +1,6 @@
 import { apiKeysRouter } from "./router/apiKeys";
 import { appRouter as innerAppRouter } from "./router/app";
+import { backupRouter } from "./router/backup";
 import { boardRouter } from "./router/board";
 import { certificateRouter } from "./router/certificates/certificate-router";
 import { cronJobsRouter } from "./router/cron-jobs";
@@ -30,6 +31,7 @@ export const appRouter = createTRPCRouter({
   invite: inviteRouter,
   integration: integrationRouter,
   board: boardRouter,
+  backup: backupRouter,
   section: sectionRouter,
   app: innerAppRouter,
   searchEngine: searchEngineRouter,

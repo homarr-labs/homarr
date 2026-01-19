@@ -1,16 +1,17 @@
 "use client";
 
 import { Affix, Button, Menu } from "@mantine/core";
-import { IconCategoryPlus, IconChevronDown, IconFileImport } from "@tabler/icons-react";
+import { IconCategoryPlus, IconChevronDown, IconFileImport, IconUpload } from "@tabler/icons-react";
 
 import { useModalAction } from "@homarr/modals";
-import { AddBoardModal, ImportBoardModal } from "@homarr/modals-collection";
+import { AddBoardModal, ImportBoardJsonModal, ImportBoardModal } from "@homarr/modals-collection";
 import { useI18n } from "@homarr/translation/client";
 
 export const CreateBoardButton = () => {
   const t = useI18n();
   const { openModal: openAddModal } = useModalAction(AddBoardModal);
   const { openModal: openImportModal } = useModalAction(ImportBoardModal);
+  const { openModal: openImportJsonModal } = useModalAction(ImportBoardJsonModal);
 
   const buttonGroupContent = (
     <>
@@ -24,6 +25,9 @@ export const CreateBoardButton = () => {
           </Button>
         </Menu.Target>
         <Menu.Dropdown>
+          <Menu.Item onClick={openImportJsonModal} leftSection={<IconUpload size="1rem" />}>
+            {t("management.page.board.action.importJson.label")}
+          </Menu.Item>
           <Menu.Item onClick={openImportModal} leftSection={<IconFileImport size="1rem" />}>
             {t("board.action.oldImport.label")}
           </Menu.Item>

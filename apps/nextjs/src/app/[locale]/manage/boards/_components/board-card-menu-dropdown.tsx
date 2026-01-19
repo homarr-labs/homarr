@@ -2,14 +2,24 @@
 
 import { useCallback } from "react";
 import { Menu } from "@mantine/core";
-import { IconCopy, IconDeviceMobile, IconHome, IconSettings, IconTrash } from "@tabler/icons-react";
+import {
+  IconCopy,
+  IconDeviceMobile,
+  IconDownload,
+  IconGitMerge,
+  IconHome,
+  IconSettings,
+  IconTrash,
+  IconUpload,
+} from "@tabler/icons-react";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { useConfirmModal, useModalAction } from "@homarr/modals";
-import { DuplicateBoardModal } from "@homarr/modals-collection";
+import { DuplicateBoardModal, ImportAndMergeBoardModal, ImportBoardJsonModal } from "@homarr/modals-collection";
+import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useScopedI18n } from "@homarr/translation/client";
 import { Link } from "@homarr/ui";
 
@@ -36,6 +46,8 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
 
   const { openConfirmModal } = useConfirmModal();
   const { openModal: openDuplicateModal } = useModalAction(DuplicateBoardModal);
+  const { openModal: openImportJsonModal } = useModalAction(ImportBoardJsonModal);
+  const { openModal: openImportAndMergeModal } = useModalAction(ImportAndMergeBoardModal);
 
   const setHomeBoardMutation = clientApi.board.setHomeBoard.useMutation({
     onSettled: async () => {
@@ -54,6 +66,34 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
       await revalidatePathActionAsync("/manage/boards");
     },
   });
+
+  const exportBoardMutation = clientApi.backup.exportBoard.useMutation();
+
+  const handleExportBoard = useCallback(async () => {
+    try {
+      const result = await exportBoardMutation.mutateAsync({
+        boardId: board.id,
+        includeIntegrations: false,
+      });
+      // Create a blob and trigger download
+      const blob = new Blob([result.data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = result.fileName;
+      link.click();
+      URL.revokeObjectURL(url);
+      showSuccessNotification({
+        title: t("export.success.title"),
+        message: t("export.success.message"),
+      });
+    } catch {
+      showErrorNotification({
+        title: t("export.error.title"),
+        message: t("export.error.message"),
+      });
+    }
+  }, [board.id, exportBoardMutation, t]);
 
   const handleDeletion = useCallback(() => {
     openConfirmModal({
@@ -87,6 +127,15 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
     });
   }, [board.id, board.name, openDuplicateModal]);
 
+  const handleImportAndMerge = useCallback(() => {
+    openImportAndMergeModal({
+      board: {
+        id: board.id,
+        name: board.name,
+      },
+    });
+  }, [board.id, board.name, openImportAndMergeModal]);
+
   return (
     <Menu.Dropdown>
       <Menu.Item onClick={handleSetHomeBoard} leftSection={<IconHome {...iconProps} />}>
@@ -111,6 +160,25 @@ export const BoardCardMenuDropdown = ({ board }: BoardCardMenuDropdownProps) => 
             {t("settings.label")}
           </Menu.Item>
         </>
+      )}
+      {hasFullAccess && (
+        <Menu.Item
+          onClick={handleExportBoard}
+          leftSection={<IconDownload {...iconProps} />}
+          disabled={exportBoardMutation.isPending}
+        >
+          {t("export.label")}
+        </Menu.Item>
+      )}
+      {hasChangeAccess && (
+        <Menu.Item onClick={handleImportAndMerge} leftSection={<IconGitMerge {...iconProps} />}>
+          {t("importAndMerge.label")}
+        </Menu.Item>
+      )}
+      {session?.user.permissions.includes("board-create") && (
+        <Menu.Item onClick={openImportJsonModal} leftSection={<IconUpload {...iconProps} />}>
+          {t("importJson.label")}
+        </Menu.Item>
       )}
       {hasFullAccess && (
         <>
