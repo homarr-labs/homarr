@@ -1,11 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Button, Center, Group, Loader, ScrollArea, Stack, Text, TextInput } from "@mantine/core";
+import { Button, Center, Group, Loader, Stack, Text, TextInput } from "@mantine/core";
 import { TRPCClientError } from "@trpc/client";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { clientApi } from "@homarr/api/client";
 import type { AnchorNoteLockStatus } from "@homarr/integrations";
@@ -33,8 +33,10 @@ type QuillDelta = {
 const quillModules = {
   toolbar: [
     ["bold", "italic", "underline", "strike"],
-    [{ header: [1, 2, 3, false] }],
-    [{ list: "ordered" }, { list: "bullet" }],
+    [{ header: [1, 2, 3, 4, false] }],
+    [{ align: [] }],
+    [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+    [{ indent: "-1" }, { indent: "+1" }],
     ["blockquote", "code-block"],
     ["link"],
     ["clean"],
@@ -46,9 +48,26 @@ const quillModules = {
   },
 };
 
-const quillFormats = ["bold", "italic", "underline", "strike", "header", "list", "blockquote", "code-block", "link"];
+const quillFormats = [
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "header",
+  "align",
+  "list",
+  "indent",
+  "blockquote",
+  "code-block",
+  "link",
+];
 
 const emptyDelta = (): QuillDelta => ({ ops: [{ insert: "\n" }] });
+
+const toPlainTextDelta = (value: string): QuillDelta => {
+  const normalized = value.endsWith("\n") ? value : `${value}\n`;
+  return { ops: [{ insert: normalized }] };
+};
 
 const parseStoredContent = (content?: string | null): QuillDelta => {
   if (!content) return emptyDelta();
@@ -65,10 +84,10 @@ const parseStoredContent = (content?: string | null): QuillDelta => {
       return { ops: (parsed as { ops: QuillOp[] }).ops };
     }
   } catch {
-    return emptyDelta();
+    return toPlainTextDelta(content);
   }
 
-  return emptyDelta();
+  return toPlainTextDelta(content);
 };
 
 const stringifyDelta = (delta: unknown): string => {
@@ -84,49 +103,19 @@ const stringifyDelta = (delta: unknown): string => {
   return JSON.stringify(emptyDelta());
 };
 
-const extractPlainText = (content?: string | null) => {
-  if (!content) return "";
-
-  try {
-    const parsed = JSON.parse(content) as { ops?: { insert?: unknown }[] };
-    if (parsed && typeof parsed === "object" && Array.isArray(parsed.ops)) {
-      return parsed.ops
-        .map((op) => (typeof op.insert === "string" ? op.insert : ""))
-        .join("")
-        .trim();
-    }
-  } catch {
-    return content;
-  }
-
-  return content;
-};
-
 export default function AnchorNoteWidget({ options, integrationIds }: WidgetComponentProps<"anchorNote">) {
   const t = useScopedI18n("widget.anchorNote");
   const integrationId = integrationIds[0];
   const noteId = options.noteId.trim();
+  const hasIntegration = Boolean(integrationId);
+  const hasNoteId = Boolean(noteId);
 
   const [isEditing, setIsEditing] = useState(false);
   const [draftTitle, setDraftTitle] = useState("");
   const [draftContent, setDraftContent] = useState("");
   const [lockStatus, setLockStatus] = useState<AnchorNoteLockStatus | null>(null);
-
-  if (!integrationId) {
-    return (
-      <Center h="100%">
-        <Text c="dimmed">{t("integrationRequired")}</Text>
-      </Center>
-    );
-  }
-
-  if (!noteId) {
-    return (
-      <Center h="100%">
-        <Text c="dimmed">{t("empty")}</Text>
-      </Center>
-    );
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const quillRef = useRef<any>(null);
 
   const {
     data: note,
@@ -135,10 +124,11 @@ export default function AnchorNoteWidget({ options, integrationIds }: WidgetComp
     refetch,
   } = clientApi.widget.anchorNotes.getNote.useQuery(
     {
-      integrationId,
+      integrationId: integrationId ?? "",
       noteId,
     },
     {
+      enabled: hasIntegration && hasNoteId,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
@@ -164,6 +154,86 @@ export default function AnchorNoteWidget({ options, integrationIds }: WidgetComp
     return draftTitle.trim() !== note.title || draftContent !== (note.content ?? "");
   }, [draftTitle, draftContent, note]);
   const editorValue = useMemo(() => parseStoredContent(draftContent), [draftContent]);
+  const readOnlyValue = useMemo(() => parseStoredContent(note?.content), [note?.content]);
+  const readOnlyModules = useMemo(() => ({ toolbar: false }), []);
+  const getQuill = useCallback(() => quillRef.current?.getEditor?.(), []);
+
+  const handleReadOnlyCheckToggle = useCallback(
+    async (event: React.MouseEvent<HTMLDivElement>) => {
+      if (isEditing || isUpdating || !note || !integrationId || isLockedByAnchor) return;
+
+      const target = event.target as HTMLElement | null;
+      const listItem = target?.closest('li[data-list="checked"], li[data-list="unchecked"]');
+      if (!listItem) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const quill = getQuill();
+      if (!quill) return;
+
+      const blot = quill.scroll?.find(listItem);
+      if (!blot) return;
+
+      const index = quill.getIndex(blot);
+      const [line] = quill.getLine(index);
+      if (!line) return;
+
+      const formats = line.formats?.() ?? {};
+      const currentList = formats.list as string | undefined;
+      const nextList = currentList === "checked" ? "unchecked" : "checked";
+
+      let didLock = false;
+
+      try {
+        const lockResult = await lockNoteAsync({ integrationId, noteId });
+        setLockStatus(lockResult);
+        if (lockResult.status === "locked") {
+          return;
+        }
+        didLock = true;
+
+        quill.formatLine(index, 1, "list", nextList, "api");
+        const nextContent = stringifyDelta(quill.getContents?.());
+
+        await updateNoteAsync({
+          integrationId,
+          noteId,
+          title: note.title,
+          content: nextContent,
+        });
+        await refetch();
+        setLockStatus(null);
+      } catch (err) {
+        if (err instanceof TRPCClientError && "code" in err.data && err.data.code === "CONFLICT") {
+          setLockStatus({
+            status: "locked",
+            lockedBy: "anchor",
+            expiresAt: new Date().toISOString(),
+          });
+          return;
+        }
+        console.error("Failed to toggle checklist item", err);
+      } finally {
+        if (didLock) {
+          unlockNoteAsync({ integrationId, noteId }).catch(() => {});
+        }
+      }
+    },
+    [
+      getQuill,
+      integrationId,
+      isEditing,
+      isLockedByAnchor,
+      isUpdating,
+      lockNoteAsync,
+      note,
+      noteId,
+      refetch,
+      unlockNoteAsync,
+      updateNoteAsync,
+    ],
+  );
 
   const handleEdit = useCallback(async () => {
     if (!note || !integrationId) return;
@@ -251,6 +321,22 @@ export default function AnchorNoteWidget({ options, integrationIds }: WidgetComp
     };
   }, [integrationId, isEditing, lockNoteAsync, noteId, unlockNoteAsync]);
 
+  if (!hasIntegration) {
+    return (
+      <Center h="100%">
+        <Text c="dimmed">{t("integrationRequired")}</Text>
+      </Center>
+    );
+  }
+
+  if (!hasNoteId) {
+    return (
+      <Center h="100%">
+        <Text c="dimmed">{t("empty")}</Text>
+      </Center>
+    );
+  }
+
   if (error) {
     throw error;
   }
@@ -270,8 +356,6 @@ export default function AnchorNoteWidget({ options, integrationIds }: WidgetComp
       </Center>
     );
   }
-
-  const content = extractPlainText(note.content);
 
   return (
     <Stack h="100%" gap="xs" p="sm">
@@ -319,35 +403,33 @@ export default function AnchorNoteWidget({ options, integrationIds }: WidgetComp
           )}
         </Group>
       </Group>
-      {isEditing ? (
-        <div className="homarr-anchor-quill" style={{ flex: 1 }}>
-          <ReactQuill
-            theme="snow"
+      <div
+        className={`homarr-anchor-quill${isEditing ? "" : " homarr-anchor-quill--readonly"}`}
+        style={{ flex: 1 }}
+        onMouseDownCapture={handleReadOnlyCheckToggle}
+      >
+        <ReactQuill
+          theme="snow"
+          readOnly={!isEditing}
+            ref={quillRef}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          value={(isEditing ? editorValue : readOnlyValue) as any}
+          onChange={(
+            _html: string,
+            _delta: unknown,
+            source: "user" | "api" | "silent" | string,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            value={editorValue as any}
-            onChange={(
-              _html: string,
-              _delta: unknown,
-              source: "user" | "api" | "silent" | string,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              editor: any,
-            ) => {
-              if (source !== "user") return;
-              const next = stringifyDelta(editor.getContents?.());
-              setDraftContent(next);
-            }}
-            modules={quillModules}
-            formats={quillFormats}
-            placeholder={t("emptyContent")}
-          />
-        </div>
-      ) : (
-        <ScrollArea offsetScrollbars style={{ flex: 1 }}>
-          <Text size="sm" style={{ whiteSpace: "pre-wrap" }}>
-            {content || t("emptyContent")}
-          </Text>
-        </ScrollArea>
-      )}
+            editor: any,
+          ) => {
+            if (!isEditing || source !== "user") return;
+            const next = stringifyDelta(editor.getContents?.());
+            setDraftContent(next);
+          }}
+          modules={isEditing ? quillModules : readOnlyModules}
+          formats={quillFormats}
+          placeholder={t("emptyContent")}
+        />
+      </div>
     </Stack>
   );
 }

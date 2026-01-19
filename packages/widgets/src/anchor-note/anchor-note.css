@@ -1,23 +1,121 @@
+.homarr-anchor-quill {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .homarr-anchor-quill .ql-toolbar.ql-snow,
 .homarr-anchor-quill .ql-container.ql-snow {
-  border-color: var(--mantine-color-default-border);
+  border: 0;
 }
 
 .homarr-anchor-quill .ql-toolbar.ql-snow {
-  background: var(--mantine-color-body);
-  border-radius: var(--mantine-radius-md) var(--mantine-radius-md) 0 0;
+  background: transparent;
+  border-radius: 0;
 }
 
 .homarr-anchor-quill .ql-container.ql-snow {
-  background: var(--mantine-color-body);
-  border-radius: 0 0 var(--mantine-radius-md) var(--mantine-radius-md);
+  background: transparent;
+  border-radius: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .homarr-anchor-quill .ql-editor {
   min-height: 160px;
+  flex: 1;
+  padding: 0;
   color: var(--mantine-color-text);
+  font-size: var(--mantine-font-size-sm, 0.95rem);
+  line-height: 1.6;
 }
 
 .homarr-anchor-quill .ql-editor.ql-blank::before {
   color: var(--mantine-color-dimmed);
+}
+
+.homarr-anchor-quill .ql-editor ol,
+.homarr-anchor-quill .ql-editor ul {
+  padding-left: 1.5rem;
+}
+
+.homarr-anchor-quill .ql-editor li {
+  margin: 0.25rem 0;
+}
+
+.homarr-anchor-quill .ql-editor li[data-list="unchecked"],
+.homarr-anchor-quill .ql-editor li[data-list="checked"] {
+  padding-left: 28px !important;
+  list-style: none;
+  position: relative;
+}
+
+.homarr-anchor-quill .ql-editor li[data-list="checked"] > .ql-ui,
+.homarr-anchor-quill .ql-editor li[data-list="unchecked"] > .ql-ui {
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 5px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: all 150ms ease;
+  background: transparent;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.homarr-anchor-quill .ql-container.ql-disabled li[data-list="checked"] > .ql-ui,
+.homarr-anchor-quill .ql-container.ql-disabled li[data-list="unchecked"] > .ql-ui {
+  cursor: pointer;
+}
+
+.homarr-anchor-quill .ql-editor li[data-list="checked"] > .ql-ui::before,
+.homarr-anchor-quill .ql-editor li[data-list="unchecked"] > .ql-ui::before {
+  content: "" !important;
+  display: none !important;
+}
+
+.homarr-anchor-quill .ql-editor li[data-list="unchecked"] > .ql-ui {
+  border: 2px solid var(--mantine-color-dimmed);
+  opacity: 0.7;
+}
+
+.homarr-anchor-quill .ql-editor li[data-list="unchecked"]:hover > .ql-ui {
+  border-color: var(--mantine-primary-color-filled);
+  opacity: 1;
+}
+
+.homarr-anchor-quill .ql-editor li[data-list="checked"] > .ql-ui {
+  border: 2px solid var(--mantine-primary-color-filled);
+  background: var(--mantine-primary-color-filled);
+}
+
+.homarr-anchor-quill .ql-editor li[data-list="checked"] > .ql-ui::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: 5px;
+  height: 9px;
+  border: solid var(--mantine-color-white, #fff);
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.homarr-anchor-quill .ql-editor li[data-list="checked"] {
+  color: var(--mantine-color-dimmed);
+  text-decoration: line-through;
+  text-decoration-color: var(--mantine-color-dimmed);
+}
+
+.homarr-anchor-quill--readonly .ql-toolbar.ql-snow {
+  display: none;
+}
+
+.homarr-anchor-quill--readonly .ql-container.ql-snow {
+  border-radius: 0;
 }
