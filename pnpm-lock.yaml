@@ -287,8 +287,8 @@ importers:
         specifier: ^2.35.0
         version: 2.35.0(postcss@8.5.6)
       jotai:
-        specifier: ^2.16.1
-        version: 2.16.1(@babel/core@7.26.0)(@babel/template@7.28.6)(@types/react@19.2.8)(react@19.2.3)
+        specifier: ^2.16.2
+        version: 2.16.2(@babel/core@7.26.0)(@babel/template@7.28.6)(@types/react@19.2.8)(react@19.2.3)
       mantine-react-table:
         specifier: 2.0.0-beta.9
         version: 2.0.0-beta.9(@mantine/core@8.3.12(@mantine/hooks@8.3.12(react@19.2.3))(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@mantine/dates@8.3.12(@mantine/core@8.3.12(@mantine/hooks@8.3.12(react@19.2.3))(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@mantine/hooks@8.3.12(react@19.2.3))(dayjs@1.11.19)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@mantine/hooks@8.3.12(react@19.2.3))(@tabler/icons-react@3.36.1(react@19.2.3))(clsx@2.1.1)(dayjs@1.11.19)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -881,14 +881,14 @@ importers:
         specifier: ^0.13.10
         version: 0.13.10(arktype@2.1.20)(typescript@5.9.3)(zod@4.2.1)
       better-sqlite3:
-        specifier: ^12.5.0
-        version: 12.5.0
+        specifier: ^12.6.0
+        version: 12.6.0
       dns-caching:
         specifier: ^0.2.9
         version: 0.2.9
       drizzle-orm:
         specifier: ^0.45.1
-        version: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.5.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.16.3)
+        version: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.16.3)
       ioredis:
         specifier: 5.9.1
         version: 5.9.1
@@ -1141,8 +1141,8 @@ importers:
         specifier: ^11.11.0
         version: 11.11.0
       better-sqlite3:
-        specifier: ^12.5.0
-        version: 12.5.0
+        specifier: ^12.6.0
+        version: 12.6.0
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
@@ -1151,10 +1151,10 @@ importers:
         version: 0.31.8
       drizzle-orm:
         specifier: ^0.45.1
-        version: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.5.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.16.3)
+        version: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.16.3)
       drizzle-zod:
         specifier: ^0.8.3
-        version: 0.8.3(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.5.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.16.3))(zod@4.2.1)
+        version: 0.8.3(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.16.3))(zod@4.2.1)
       mysql2:
         specifier: 3.16.0
         version: 3.16.0
@@ -1252,8 +1252,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
       '@types/dockerode':
-        specifier: ^3.3.47
-        version: 3.3.47
+        specifier: ^4.0.0
+        version: 4.0.0
       eslint:
         specifier: ^9.39.2
         version: 9.39.2
@@ -1978,8 +1978,8 @@ importers:
         specifier: ^3.36.1
         version: 3.36.1(react@19.2.3)
       jotai:
-        specifier: ^2.16.1
-        version: 2.16.1(@babel/core@7.28.5)(@babel/template@7.28.6)(@types/react@19.2.8)(react@19.2.3)
+        specifier: ^2.16.2
+        version: 2.16.2(@babel/core@7.28.5)(@babel/template@7.28.6)(@types/react@19.2.8)(react@19.2.3)
       next:
         specifier: 16.1.1
         version: 16.1.1(@babel/core@7.28.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.97.2)
@@ -2398,8 +2398,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../typescript
       prettier-plugin-packagejson:
-        specifier: ^2.5.20
-        version: 2.5.20(prettier@3.7.4)
+        specifier: ^2.5.21
+        version: 2.5.21(prettier@3.7.4)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -3955,10 +3955,6 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@pkgr/core@0.2.9':
-    resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
-    engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
-
   '@pnpm/config.env-replace@1.1.0':
     resolution: {integrity: sha512-htyl8TWnKL7K/ESFa1oW2UB5lVDxuF5DpM7tBi6Hu2LNL3mWkIzNLG6N4zoCUP1lCKNxWy/3iu8mS8MvToGd6w==}
     engines: {node: '>=12.22.0'}
@@ -4879,6 +4875,9 @@ packages:
   '@types/dockerode@3.3.47':
     resolution: {integrity: sha512-ShM1mz7rCjdssXt7Xz0u1/R2BJC7piWa3SJpUBiVjCf2A3XNn4cP6pUVaD8bLanpPVVn4IKzJuw3dOvkJ8IbYw==}
 
+  '@types/dockerode@4.0.0':
+    resolution: {integrity: sha512-NBm/UIL1KYWivh9ihJELK4Jv0dzOQCleS0OT5JklErra8mZ/t0UQpHfTkMmPrAqtra7OyFius1EFLVs0DhiHQA==}
+
   '@types/estree-jsx@1.0.5':
     resolution: {integrity: sha512-52CcUVNFyfb1A2ALocQw/Dd1BQFNmSdkuC3BkZ6iqhdMfQz7JWOFRuJFloOzjk+6WijU56m9oKXFAXc7o3Towg==}
 
@@ -5588,8 +5587,8 @@ packages:
   before-after-hook@4.0.0:
     resolution: {integrity: sha512-q6tR3RPqIB1pMiTRMFcZwuG5T8vwp+vUvEG0vuI6B+Rikh5BfPp2fQ82c925FOs+b0lcFQ8CFrL+KbilfZFhOQ==}
 
-  better-sqlite3@12.5.0:
-    resolution: {integrity: sha512-WwCZ/5Diz7rsF29o27o0Gcc1Du+l7Zsv7SYtVPG0X3G/uUI1LqdxrQI7c9Hs2FWpqXXERjW9hp6g3/tH7DlVKg==}
+  better-sqlite3@12.6.0:
+    resolution: {integrity: sha512-FXI191x+D6UPWSze5IzZjhz+i9MK9nsuHsmTX9bXVl52k06AfZ2xql0lrgIUuzsMsJ7Vgl5kIptvDgBLIV3ZSQ==}
     engines: {node: 20.x || 22.x || 23.x || 24.x || 25.x}
 
   bidi-js@1.0.3:
@@ -7784,8 +7783,8 @@ packages:
   jose@6.0.8:
     resolution: {integrity: sha512-EyUPtOKyTYq+iMOszO42eobQllaIjJnwkZ2U93aJzNyPibCy7CEvT9UQnaCVB51IAd49gbNdCew1c0LcLTCB2g==}
 
-  jotai@2.16.1:
-    resolution: {integrity: sha512-vrHcAbo3P7Br37C8Bv6JshMtlKMPqqmx0DDREtTjT4nf3QChDrYdbH+4ik/9V0cXA57dK28RkJ5dctYvavcIlg==}
+  jotai@2.16.2:
+    resolution: {integrity: sha512-DH0lBiTXvewsxtqqwjDW6Hg9JPTDnq9LcOsXSFWCAUEt+qj5ohl9iRVX9zQXPPHKLXCdH+5mGvM28fsXMl17/g==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@babel/core': '>=7.0.0'
@@ -9066,8 +9065,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-plugin-packagejson@2.5.20:
-    resolution: {integrity: sha512-G8cowPh+QmJJECTZlrPDKWkVVcwrFjF2rGcw546w3N8blLoc4szSs8UUPfFVxHUNLUjiru71Ah83g1lZkeK9Bw==}
+  prettier-plugin-packagejson@2.5.21:
+    resolution: {integrity: sha512-d9ivsysb1SeRaKDhjf6Hi7jBGnP4TVsh7DeVi8N5HtHJ5vwD7YHcQIuy6jRkr2qGW/VKbrEVDWVMODuqcZuz8Q==}
     peerDependencies:
       prettier: '>= 1.16.0'
     peerDependenciesMeta:
@@ -10143,10 +10142,6 @@ packages:
 
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
-
-  synckit@0.11.11:
-    resolution: {integrity: sha512-MeQTA1r0litLUf0Rp/iisCaL8761lKAZHaimlbGK4j0HysC4PLfqygQj9srcs0m2RdtDYnF8UuYyKpbjHYp7Jw==}
-    engines: {node: ^14.18.0 || >=16.0.0}
 
   tabbable@6.2.0:
     resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
@@ -11460,7 +11455,11 @@ snapshots:
 
   '@babel/parser@7.28.4':
     dependencies:
-      '@babel/types': 7.28.6
+      '@babel/types': 7.28.4
+
+  '@babel/parser@7.28.5':
+    dependencies:
+      '@babel/types': 7.28.5
 
   '@babel/parser@7.28.6':
     dependencies:
@@ -12735,8 +12734,6 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@pkgr/core@0.2.9': {}
-
   '@pnpm/config.env-replace@1.1.0': {}
 
   '@pnpm/network.ca-file@1.0.2':
@@ -13899,6 +13896,12 @@ snapshots:
       '@types/node': 24.10.7
       '@types/ssh2': 1.15.1
 
+  '@types/dockerode@4.0.0':
+    dependencies:
+      '@types/docker-modem': 3.0.6
+      '@types/node': 24.10.7
+      '@types/ssh2': 1.15.1
+
   '@types/estree-jsx@1.0.5':
     dependencies:
       '@types/estree': 1.0.8
@@ -14749,7 +14752,7 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  better-sqlite3@12.5.0:
+  better-sqlite3@12.6.0:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.2
@@ -15520,19 +15523,19 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.5.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.16.3):
+  drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.16.3):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
       '@types/better-sqlite3': 7.6.13
       '@types/pg': 8.16.0
-      better-sqlite3: 12.5.0
+      better-sqlite3: 12.6.0
       gel: 2.0.0
       mysql2: 3.16.0
       pg: 8.16.3
 
-  drizzle-zod@0.8.3(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.5.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.16.3))(zod@4.2.1):
+  drizzle-zod@0.8.3(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.16.3))(zod@4.2.1):
     dependencies:
-      drizzle-orm: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.5.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.16.3)
+      drizzle-orm: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.16.3)
       zod: 4.2.1
 
   dunder-proto@1.0.1:
@@ -17259,14 +17262,14 @@ snapshots:
 
   jose@6.0.8: {}
 
-  jotai@2.16.1(@babel/core@7.26.0)(@babel/template@7.28.6)(@types/react@19.2.8)(react@19.2.3):
+  jotai@2.16.2(@babel/core@7.26.0)(@babel/template@7.28.6)(@types/react@19.2.8)(react@19.2.3):
     optionalDependencies:
       '@babel/core': 7.26.0
       '@babel/template': 7.28.6
       '@types/react': 19.2.8
       react: 19.2.3
 
-  jotai@2.16.1(@babel/core@7.28.5)(@babel/template@7.28.6)(@types/react@19.2.8)(react@19.2.3):
+  jotai@2.16.2(@babel/core@7.28.5)(@babel/template@7.28.6)(@types/react@19.2.8)(react@19.2.3):
     optionalDependencies:
       '@babel/core': 7.28.5
       '@babel/template': 7.28.6
@@ -18639,10 +18642,9 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-packagejson@2.5.20(prettier@3.7.4):
+  prettier-plugin-packagejson@2.5.21(prettier@3.7.4):
     dependencies:
       sort-package-json: 3.5.0
-      synckit: 0.11.11
     optionalDependencies:
       prettier: 3.7.4
 
@@ -20047,10 +20049,6 @@ snapshots:
       upper-case: 1.1.3
 
   symbol-tree@3.2.4: {}
-
-  synckit@0.11.11:
-    dependencies:
-      '@pkgr/core': 0.2.9
 
   tabbable@6.2.0: {}
 
