@@ -890,8 +890,8 @@ importers:
         specifier: ^0.45.1
         version: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.0)(gel@2.0.0)(mysql2@3.16.0)(pg@8.17.1)
       ioredis:
-        specifier: 5.9.1
-        version: 5.9.1
+        specifier: 5.9.2
+        version: 5.9.2
       mysql2:
         specifier: 3.16.0
         version: 3.16.0
@@ -1791,8 +1791,8 @@ importers:
         specifier: workspace:^
         version: link:../definitions
       ioredis:
-        specifier: 5.9.1
-        version: 5.9.1
+        specifier: 5.9.2
+        version: 5.9.2
       superjson:
         specifier: 2.2.6
         version: 2.2.6
@@ -7452,8 +7452,8 @@ packages:
   invariant@2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
 
-  ioredis@5.9.1:
-    resolution: {integrity: sha512-BXNqFQ66oOsR82g9ajFFsR8ZKrjVvYCLyeML9IvSMAsP56XH2VXBdZjmI11p65nXXJxTEt1hie3J2QeFJVgrtQ==}
+  ioredis@5.9.2:
+    resolution: {integrity: sha512-tAAg/72/VxOUW7RQSX1pIxJVucYKcjFjfvj60L57jrZpYCHC3XN0WCQ3sNYL4Gmvv+7GPvTAjc+KSdeNuE8oWQ==}
     engines: {node: '>=12.22.0'}
 
   ip-address@9.0.5:
@@ -16909,7 +16909,7 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
-  ioredis@5.9.1:
+  ioredis@5.9.2:
     dependencies:
       '@ioredis/commands': 1.5.0
       cluster-key-slot: 1.1.2
