@@ -11,7 +11,7 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
-    "prettier": "^3.7.4"
+    "prettier": "^3.8.0"
   },
   "devDependencies": {
     "@homarr/tsconfig": "workspace:^0.1.0",
