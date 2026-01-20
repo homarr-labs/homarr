@@ -896,7 +896,7 @@ importers:
         specifier: 3.16.0
         version: 3.16.0
       pg:
-        specifier: ^8.17.0
+        specifier: ^8.17.1
         version: 8.17.1
       superjson:
         specifier: 2.2.6
@@ -1159,7 +1159,7 @@ importers:
         specifier: 3.16.0
         version: 3.16.0
       pg:
-        specifier: ^8.17.0
+        specifier: ^8.17.1
         version: 8.17.1
       superjson:
         specifier: 2.2.6
