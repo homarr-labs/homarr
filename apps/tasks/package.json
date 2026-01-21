@@ -39,7 +39,7 @@
     "@homarr/widgets": "workspace:^0.1.0",
     "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
-    "fastify": "^5.7.0",
+    "fastify": "^5.7.1",
     "superjson": "2.2.6",
     "undici": "7.18.2"
   },

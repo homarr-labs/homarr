@@ -432,7 +432,7 @@ importers:
         specifier: ^17.2.3
         version: 17.2.3
       fastify:
-        specifier: ^5.7.0
+        specifier: ^5.7.1
         version: 5.7.1
       superjson:
         specifier: 2.2.6
