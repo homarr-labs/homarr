@@ -3295,10 +3295,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Usuarios",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Habilitar Gravatar",
+              "description": "Recupera los avatares de usuario de Libravatar/Gravatar cuando no hay ningún avatar personalizado y se configura un correo electrónico"
             }
           },
           "search": {
