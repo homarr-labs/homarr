@@ -9,7 +9,7 @@ export const Analytics = async () => {
   const analytics = await getServerSettingByKeyAsync(db, "analytics").catch(() => null);
 
   if (analytics?.enableGeneral) {
-    return <Script src="https://umami.homarr.dev/script.js" data-website-id={UMAMI_WEBSITE_ID} defer />;
+    return <Script src="https://umami.homarr.dev/script.js" data-website-id={UMAMI_WEBSITE_ID} data-auto-track="false" defer />;
   }
 
   return <></>;
