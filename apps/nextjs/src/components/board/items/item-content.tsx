@@ -108,7 +108,7 @@ const InnerContent = ({ item, ...dimensions }: InnerContentProps) => {
           fallbackRender={({ resetErrorBoundary, error }) => (
             <>
               <BoardItemMenu offset={4} item={newItem} resetErrorBoundary={resetErrorBoundary} />
-              <WidgetError kind={item.kind} error={error as unknown} resetErrorBoundary={resetErrorBoundary} />
+              <WidgetError kind={item.kind} error={error} resetErrorBoundary={resetErrorBoundary} />
             </>
           )}
         >
