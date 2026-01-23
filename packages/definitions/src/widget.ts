@@ -30,5 +30,6 @@ export const widgetKinds = [
   "notifications",
   "systemResources",
   "coolify",
+  "systemDisks",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];

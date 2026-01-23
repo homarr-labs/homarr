@@ -2644,6 +2644,35 @@
         "up": "UP",
         "down": "DOWN"
       }
+    },
+    "systemDisks": {
+      "name": "System disks",
+      "description": "Disk usage of your system",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "Show temperature if available"
+        },
+        "displayMode": {
+          "label": "Display mode",
+          "option": {
+            "percentage": {
+              "label": "Percentage (e.g., 76%)"
+            },
+            "absolute": {
+              "label": "Absolute values (e.g., 800GB / 1TB)"
+            },
+            "free": {
+              "label": "Free space percentage (e.g., 24% free)"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "Show background usage bar"
+        }
+      },
+      "status": {
+        "unhealthy": "Unhealthy"
+      }
     }
   },
   "widgetPreview": {

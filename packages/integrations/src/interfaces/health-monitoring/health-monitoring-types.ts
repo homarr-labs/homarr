@@ -29,6 +29,7 @@ export interface SystemHealthMonitoring {
     deviceName: string;
     temperature: number | null;
     overallStatus: string;
+    healthy: boolean;
   }[];
 }
 

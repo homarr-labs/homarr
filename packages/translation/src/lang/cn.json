@@ -3295,10 +3295,10 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "用户",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "启用Gravatar",
+              "description": "未设置自定义头像时，若用户有邮箱，则自动采用其 Libravatar/Gravatar 头像"
             }
           },
           "search": {

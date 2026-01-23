@@ -55,7 +55,7 @@ export class DashDotIntegration extends Integration implements ISystemHealthMoni
       cpuTemp: cpuLoad.averageTemperature,
       availablePkgUpdates: 0,
       rebootRequired: false,
-      smart: [],
+      smart: [], // API endpoint does not provide S.M.A.R.T data.
       uptime: info.uptime,
       version: `${info.operatingSystemVersion}`,
       loadAverage: {

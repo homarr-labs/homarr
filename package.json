@@ -43,25 +43,25 @@
     "@semantic-release/npm": "^13.1.3",
     "@semantic-release/release-notes-generator": "^14.1.0",
     "@testcontainers/redis": "^11.11.0",
-    "@turbo/gen": "^2.7.3",
+    "@turbo/gen": "^2.7.5",
     "@vitejs/plugin-react": "^5.1.2",
-    "@vitest/coverage-v8": "^4.0.16",
-    "@vitest/ui": "^4.0.16",
+    "@vitest/coverage-v8": "^4.0.17",
+    "@vitest/ui": "^4.0.17",
     "conventional-changelog-conventionalcommits": "^9.1.0",
     "cross-env": "^10.1.0",
     "jsdom": "^27.4.0",
     "json5": "^2.2.3",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.0",
     "semantic-release": "^25.0.2",
     "testcontainers": "^11.11.0",
-    "turbo": "^2.7.3",
+    "turbo": "^2.7.5",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^6.0.4",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.17"
   },
   "packageManager": "pnpm@10.28.0",
   "engines": {
-    "node": ">=24.12.0",
+    "node": ">=24.13.0",
     "pnpm": ">=10.28.0"
   },
   "pnpm": {
@@ -77,8 +77,8 @@
       "tree-sitter-json"
     ],
     "overrides": {
-      "@babel/helpers@<7.26.10": ">=7.28.4",
-      "@babel/runtime@<7.26.10": ">=7.28.4",
+      "@babel/helpers@<7.26.10": ">=7.28.6",
+      "@babel/runtime@<7.26.10": ">=7.28.6",
       "axios@>=1.0.0 <1.8.2": ">=1.13.2",
       "brace-expansion@>=2.0.0 <=2.0.1": ">=4.0.1",
       "brace-expansion@>=1.0.0 <=1.1.11": ">=4.0.1",
