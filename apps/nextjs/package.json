@@ -56,7 +56,7 @@
     "@mantine/tiptap": "^8.3.12",
     "@million/lint": "1.0.14",
     "@tabler/icons-react": "^3.36.1",
-    "@tanstack/react-query": "^5.90.17",
+    "@tanstack/react-query": "^5.90.19",
     "@tanstack/react-query-devtools": "^5.91.2",
     "@tanstack/react-query-next-experimental": "^5.91.0",
     "@trpc/client": "^11.8.1",
