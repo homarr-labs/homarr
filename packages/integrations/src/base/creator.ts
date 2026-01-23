@@ -2,6 +2,7 @@ import type { IntegrationKind } from "@homarr/definitions";
 
 import { AdGuardHomeIntegration } from "../adguard-home/adguard-home-integration";
 import { CodebergIntegration } from "../codeberg/codeberg-integration";
+import { CoolifyIntegration } from "../coolify/coolify-integration";
 import { DashDotIntegration } from "../dashdot/dashdot-integration";
 import { DockerHubIntegration } from "../docker-hub/docker-hub-integration";
 import { Aria2Integration } from "../download-client/aria2/aria2-integration";
@@ -103,6 +104,7 @@ export const integrationCreators = {
   mock: MockIntegration,
   truenas: TrueNasIntegration,
   unraid: UnraidIntegration,
+  coolify: CoolifyIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

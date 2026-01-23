@@ -11,6 +11,7 @@ import * as app from "./app";
 import * as bookmarks from "./bookmarks";
 import * as calendar from "./calendar";
 import * as clock from "./clock";
+import * as coolify from "./coolify";
 import type { WidgetComponentProps } from "./definition";
 import * as dnsHoleControls from "./dns-hole/controls";
 import * as dnsHoleSummary from "./dns-hole/summary";
@@ -37,6 +38,7 @@ import * as rssFeed from "./rssFeed";
 import * as smartHomeEntityState from "./smart-home/entity-state";
 import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as stockPrice from "./stocks";
+import * as systemDisks from "./system-disks";
 import * as systemResources from "./system-resources";
 import * as video from "./video";
 import * as weather from "./weather";
@@ -75,6 +77,8 @@ export const widgetImports = {
   notifications,
   mediaReleases,
   systemResources,
+  coolify,
+  systemDisks,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

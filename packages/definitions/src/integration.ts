@@ -305,6 +305,14 @@ export const integrationDefs = {
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/unraid"),
   },
+  coolify: {
+    name: "Coolify",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/coolify.svg",
+    category: ["healthMonitoring"],
+    // @ts-expect-error - docs page will be created when integration is merged
+    documentationUrl: createDocumentationLink("/docs/integrations/coolify"),
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",

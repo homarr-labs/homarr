@@ -530,7 +530,7 @@
             "message": ""
           },
           "error": {
-            "message": ""
+            "message": "Não é possível alterar a posição"
           }
         }
       }
@@ -568,7 +568,7 @@
         "notification": {
           "success": {
             "title": "",
-            "message": ""
+            "message": "O aplicativo foi salvo com sucesso"
           },
           "error": {
             "title": "",
@@ -684,7 +684,7 @@
       },
       "delete": {
         "title": "",
-        "message": "",
+        "message": "Tem certeza que deseja excluir a integração {name}?",
         "notification": {
           "success": {
             "title": "",
