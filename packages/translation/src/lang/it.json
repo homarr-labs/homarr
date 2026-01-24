@@ -1138,6 +1138,9 @@
     "dangerZone": "Zona pericolosa",
     "noResults": "Nessun risultato trovato",
     "unsavedChanges": "Ci sono modifiche non salvate!",
+    "servers": "",
+    "applications": "",
+    "services": "",
     "preview": {
       "show": "Mostra anteprima",
       "hide": "Nascondi anteprima"
@@ -1960,6 +1963,39 @@
         "internalServerError": "Recupero statistiche container non riuscito"
       }
     },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": ""
+        },
+        "showApplications": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": ""
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
+      }
+    },
     "common": {
       "location": {
         "query": "Città / Codice postale",
@@ -2607,6 +2643,35 @@
         "network": "NET",
         "up": "SU",
         "down": "DOWN"
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
       }
     }
   },

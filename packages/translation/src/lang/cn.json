@@ -1138,6 +1138,9 @@
     "dangerZone": "危险",
     "noResults": "未找到结果",
     "unsavedChanges": "你有未保存的更改 ！",
+    "servers": "",
+    "applications": "",
+    "services": "",
     "preview": {
       "show": "显示预览",
       "hide": "隐藏预览"
@@ -1960,6 +1963,39 @@
         "internalServerError": "获取容器统计信息失败"
       }
     },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": ""
+        },
+        "showApplications": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": ""
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
+      }
+    },
     "common": {
       "location": {
         "query": "城市/邮编",
@@ -2607,6 +2643,35 @@
         "network": "网络",
         "up": "上传",
         "down": "下载"
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
       }
     }
   },
