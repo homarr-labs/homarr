@@ -106,6 +106,7 @@ export default async function Layout(props: {
             forceDisableStatus: serverSettings.board.forceDisableStatus,
           },
           search: { defaultSearchEngineId: serverSettings.search.defaultSearchEngineId },
+          user: { enableGravatar: serverSettings.user.enableGravatar },
         }}
         {...innerProps}
       />

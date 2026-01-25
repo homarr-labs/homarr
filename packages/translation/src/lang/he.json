@@ -1138,6 +1138,9 @@
     "dangerZone": "אזור מסוכן",
     "noResults": "לא נמצאו תוצאות",
     "unsavedChanges": "ישנם שינויים שלא נשמרו!",
+    "servers": "",
+    "applications": "",
+    "services": "",
     "preview": {
       "show": "הצג תצוגה מקדימה",
       "hide": "הסתר תצוגה המקדימה"
@@ -1960,6 +1963,39 @@
         "internalServerError": "נכשל באחזור סטטיסטיקות המכולות"
       }
     },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": ""
+        },
+        "showApplications": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": ""
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
+      }
+    },
     "common": {
       "location": {
         "query": "עיר / מיקוד",
@@ -2607,6 +2643,35 @@
         "network": "רשת",
         "up": "העלאה",
         "down": "הורדה"
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
       }
     }
   },
@@ -3292,6 +3357,13 @@
                 "label": "כפה על סטטוס השבתה",
                 "description": "סטטוס אפליקציות יושבת עבור כל המשתמשים ולא ניתן להפעיל אותו"
               }
+            }
+          },
+          "user": {
+            "title": "",
+            "enableGravatar": {
+              "label": "",
+              "description": ""
             }
           },
           "search": {

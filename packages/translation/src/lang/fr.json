@@ -2,7 +2,7 @@
   "init": {
     "step": {
       "start": {
-        "title": "Bienvenue dans Homarr",
+        "title": "Bienvenue sur Homarr",
         "subtitle": "Commençons par configurer votre instance Homarr.",
         "description": "Pour commencer, veuillez selectionner comment vous souhaitez configurer votre instance Homarr.",
         "action": {
@@ -1138,6 +1138,9 @@
     "dangerZone": "Zone de danger",
     "noResults": "Aucun résultat trouvé",
     "unsavedChanges": "Vous avez des modifications non enregistrées !",
+    "servers": "",
+    "applications": "",
+    "services": "",
     "preview": {
       "show": "Afficher l’aperçu",
       "hide": "Masquer l'aperçu"
@@ -1960,6 +1963,39 @@
         "internalServerError": "Impossible de récupérer les statistiques des conteneurs"
       }
     },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": ""
+        },
+        "showApplications": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": ""
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
+      }
+    },
     "common": {
       "location": {
         "query": "Ville / Code Postal",
@@ -2607,6 +2643,35 @@
         "network": "NET",
         "up": "UP",
         "down": "HORS SERVICE"
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
       }
     }
   },
@@ -3292,6 +3357,13 @@
                 "label": "Forcer la désactivation de l'état",
                 "description": "Le statut des applications sera désactivé pour tous les utilisateurs et ne peut pas être activé"
               }
+            }
+          },
+          "user": {
+            "title": "Utilisateurs",
+            "enableGravatar": {
+              "label": "Activer Gravatar",
+              "description": "Revient aux avatars des utilisateurs de Libravatar/Gravatar quand aucun avatar personnalisé n'est défini et qu'un e-mail est configuré"
             }
           },
           "search": {

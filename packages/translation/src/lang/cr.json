@@ -1138,6 +1138,9 @@
     "dangerZone": "crwdns610:0crwdne610:0",
     "noResults": "crwdns612:0crwdne612:0",
     "unsavedChanges": "crwdns2784:0crwdne2784:0",
+    "servers": "crwdns3846:0crwdne3846:0",
+    "applications": "crwdns3848:0crwdne3848:0",
+    "services": "crwdns3850:0crwdne3850:0",
     "preview": {
       "show": "crwdns614:0crwdne614:0",
       "hide": "crwdns616:0crwdne616:0"
@@ -1960,6 +1963,39 @@
         "internalServerError": "crwdns3428:0crwdne3428:0"
       }
     },
+    "coolify": {
+      "name": "crwdns3852:0crwdne3852:0",
+      "description": "crwdns3854:0crwdne3854:0",
+      "option": {
+        "showServers": {
+          "label": "crwdns3856:0crwdne3856:0"
+        },
+        "showApplications": {
+          "label": "crwdns3858:0crwdne3858:0"
+        },
+        "showServices": {
+          "label": "crwdns3860:0crwdne3860:0"
+        }
+      },
+      "empty": {
+        "servers": "crwdns3862:0crwdne3862:0",
+        "applications": "crwdns3864:0crwdne3864:0",
+        "services": "crwdns3866:0crwdne3866:0"
+      },
+      "footer": {
+        "updated": "crwdns3868:0{when}crwdne3868:0"
+      },
+      "error": {
+        "noIntegration": "crwdns3870:0crwdne3870:0",
+        "internalServerError": "crwdns3872:0crwdne3872:0"
+      },
+      "server": {
+        "buildServer": "crwdns3874:0crwdne3874:0"
+      },
+      "instances": {
+        "title": "crwdns3876:0crwdne3876:0"
+      }
+    },
     "common": {
       "location": {
         "query": "crwdns1110:0crwdne1110:0",
@@ -2607,6 +2643,35 @@
         "network": "crwdns3608:0crwdne3608:0",
         "up": "crwdns3610:0crwdne3610:0",
         "down": "crwdns3612:0crwdne3612:0"
+      }
+    },
+    "systemDisks": {
+      "name": "crwdns3828:0crwdne3828:0",
+      "description": "crwdns3830:0crwdne3830:0",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": "crwdns3832:0crwdne3832:0"
+        },
+        "displayMode": {
+          "label": "crwdns3834:0crwdne3834:0",
+          "option": {
+            "percentage": {
+              "label": "crwdns3836:0crwdne3836:0"
+            },
+            "absolute": {
+              "label": "crwdns3838:0crwdne3838:0"
+            },
+            "free": {
+              "label": "crwdns3840:0crwdne3840:0"
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": "crwdns3842:0crwdne3842:0"
+        }
+      },
+      "status": {
+        "unhealthy": "crwdns3844:0crwdne3844:0"
       }
     }
   },
@@ -3292,6 +3357,13 @@
                 "label": "crwdns2756:0crwdne2756:0",
                 "description": "crwdns2758:0crwdne2758:0"
               }
+            }
+          },
+          "user": {
+            "title": "crwdns3822:0crwdne3822:0",
+            "enableGravatar": {
+              "label": "crwdns3824:0crwdne3824:0",
+              "description": "crwdns3826:0crwdne3826:0"
             }
           },
           "search": {

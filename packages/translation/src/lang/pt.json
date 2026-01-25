@@ -338,11 +338,11 @@
           },
           "modify-all": {
             "label": "Modificar todos os aplicativos",
-            "description": ""
+            "description": "Permitir que membros modifiquem todos os aplicativos"
           },
           "full-all": {
             "label": "Acesso completo a aplicativos",
-            "description": ""
+            "description": "Permitir que membros gerenciem, usem e excluam qualquer aplicativo"
           }
         }
       },
@@ -350,104 +350,104 @@
         "title": "Placas",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Criar painel",
+            "description": "Permitir que membros criem painéis"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Ver todos os painéis",
+            "description": "Permitir que membros visualizem todos os painéis"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modificar todos os painéis",
+            "description": "Permitir que membros modifiquem todos os painéis (Não inclui o controle de acesso e a zona de perigo)"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acesso total ao painel",
+            "description": "Permitir que membros vejam, modifiquem e deletem todos os painéis (Incluindo o controle de acesso e a zona de perigo)"
           }
         }
       },
       "integration": {
-        "title": "",
+        "title": "Integrações",
         "item": {
           "create": {
-            "label": "",
-            "description": ""
+            "label": "Criar integração",
+            "description": "Permitir que membros criem integrações"
           },
           "use-all": {
-            "label": "",
-            "description": ""
+            "label": "Usar todas as integrações",
+            "description": "Permitir que membros adicionem qualquer integração aos seus painéis"
           },
           "interact-all": {
-            "label": "",
-            "description": ""
+            "label": "Interagir com qualquer integração",
+            "description": "Permitir que membros interajam com qualquer integração"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acesso total às integrações",
+            "description": "Permitir que membros gerenciem, usem e interajam com qualquer integração"
           }
         }
       },
       "media": {
-        "title": "",
+        "title": "Mídias",
         "item": {
           "upload": {
-            "label": "",
-            "description": ""
+            "label": "Adicionar Mídia",
+            "description": "Permitir que membros adicionem mídias"
           },
           "view-all": {
-            "label": "",
-            "description": ""
+            "label": "Visualizar todas as mídias",
+            "description": "Permitir que membros visualizem todas as mídias"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acesso total às mídias",
+            "description": "Permitir que membros gerenciem e deletem qualquer mídia"
           }
         }
       },
       "other": {
-        "title": "",
+        "title": "Outras",
         "item": {
           "view-logs": {
-            "label": "",
+            "label": "Visualizar registros",
             "description": "Permitir que os membros visualizem os registros"
           }
         }
       },
       "search-engine": {
-        "title": "",
+        "title": "Ferramentas de busca",
         "item": {
           "create": {
-            "label": "",
+            "label": "Criar ferramenta de busca",
             "description": "Permitir que os membros criem mecanismos de busca"
           },
           "modify-all": {
-            "label": "",
-            "description": ""
+            "label": "Modificar todas as ferramentas de busca",
+            "description": "Permitir que membros modifiquem todas as ferramentas de busca"
           },
           "full-all": {
-            "label": "",
-            "description": ""
+            "label": "Acesso total às ferramentas de busca",
+            "description": "Permitir que membros modifiquem e deletem qualquer ferramenta de busca"
           }
         }
       }
     },
     "memberNotice": {
-      "mixed": "",
-      "external": ""
+      "mixed": "Alguns membros são de provedores externos e não podem ser gerenciados aqui",
+      "external": "Todos os membros são de provedores externos e não podem ser gerenciados aqui"
     },
     "reservedNotice": {
-      "message": ""
+      "message": "Esse grupo é reservado para uso do sistema e restringe algumas ações. <checkoutDocs></checkoutDocs>"
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Novo grupo",
         "notification": {
           "success": {
-            "message": ""
+            "message": "O grupo foi criado com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível criar o grupo"
           }
         }
       },
@@ -457,69 +457,69 @@
         "confirm": "Tem certeza de que deseja transferir a propriedade do grupo {name} para {username}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupo {group} transferido para {user} com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível transferir a propriedade"
           }
         }
       },
       "addMember": {
-        "label": ""
+        "label": "Adicionar membro"
       },
       "removeMember": {
-        "label": "",
-        "confirm": ""
+        "label": "Remover membro",
+        "confirm": "Você tem certeza que deseja remover {user} desse grupo?"
       },
       "delete": {
-        "label": "",
-        "description": "",
-        "confirm": "",
+        "label": "Deletar grupo",
+        "description": "Uma vez deletado o grupo não há como reverter. Tenha cuidado.",
+        "confirm": "Você tem certeza que deseja deletar o grupo {name}?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Grupo {name} deletado com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível deletar o grupo {name}"
           }
         }
       },
       "changePermissions": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Permissões salvas",
+            "message": "Permissões foram salvas com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Permissões não salvas",
+            "message": "As permissões não foram salvas"
           }
         }
       },
       "update": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "O grupo {name} foi salvo com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não é possível salvar o grupo {name}"
           }
         }
       },
       "select": {
-        "label": "",
-        "notFound": ""
+        "label": "Selecionar grupo",
+        "notFound": "Nenhum grupo encontrado"
       },
       "settings": {
         "board": {
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Configurações salvas",
+              "message": "As configurações do quadro foram salvas com sucesso"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Falha ao salvar configurações",
+              "message": "Não foi possível salvar as configurações do quadro"
             }
           }
         }
@@ -527,26 +527,26 @@
       "changePosition": {
         "notification": {
           "success": {
-            "message": ""
+            "message": "Posição alterada com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não é possível alterar a posição"
           }
         }
       }
     },
     "defaultGroup": {
-      "name": "",
+      "name": "Grupo padrão",
       "description": ""
     }
   },
   "app": {
-    "search": "",
+    "search": "Encontre um aplicativo",
     "page": {
       "list": {
         "title": "Aplicativos",
         "noResults": {
-          "title": "",
+          "title": "Ainda não há aplicativos disponíveis",
           "action": "Crie seu primeiro aplicativo"
         }
       },
@@ -564,29 +564,29 @@
         }
       },
       "edit": {
-        "title": "",
+        "title": "Editar aplicativo",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Mudanças aplicadas com sucesso",
+            "message": "O aplicativo foi salvo com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Não foi possível aplicar as alterações",
+            "message": "O aplicativo não pôde ser salvo"
           }
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Deletar aplicativo",
+        "message": "Tem certeza que deseja excluir o aplicativo {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Exclusão bem-sucedida",
+            "message": "O aplicativo foi excluído com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Falha na exclusão",
+            "message": "Não foi possível excluir o aplicativo"
           }
         }
       }
@@ -596,10 +596,10 @@
         "label": "Nome"
       },
       "description": {
-        "label": ""
+        "label": "Descrição"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "useDifferentUrlForPing": {
         "checkbox": {
@@ -610,26 +610,26 @@
     },
     "action": {
       "select": {
-        "label": "",
-        "notFound": "",
-        "search": "",
-        "noResults": "",
+        "label": "Selecionar aplicativo",
+        "notFound": "Nenhum aplicativo encontrado",
+        "search": "Busque por um aplicativo",
+        "noResults": "Sem resultados",
         "action": "",
-        "title": ""
+        "title": "Selecione um aplicativo para adicioná-lo neste quadro"
       },
       "create": {
-        "title": "Criar  aplicativo",
+        "title": "Criar aplicativo",
         "description": "Criar um aplicativo",
         "action": "Abrir criação de aplicativo"
       },
-      "add": ""
+      "add": "Adicione um aplicativo"
     }
   },
   "integration": {
     "page": {
       "list": {
-        "title": "",
-        "search": "",
+        "title": "Integrações",
+        "search": "Buscar integrações",
         "noResults": {
           "title": ""
         }
@@ -638,12 +638,12 @@
         "title": "",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Criação bem-sucedida",
+            "message": "A integração foi criada com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "A criação falhou",
+            "message": "A integração não pôde ser criada"
           }
         },
         "app": {
@@ -666,12 +666,12 @@
         "title": "",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Mudanças aplicadas com sucesso",
+            "message": "A integração foi salva com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Não foi possível aplicar as alterações",
+            "message": "A integração não pôde ser salva"
           }
         },
         "app": {
@@ -683,16 +683,16 @@
         }
       },
       "delete": {
-        "title": "",
-        "message": "",
+        "title": "Excluir integração",
+        "message": "Tem certeza que deseja excluir a integração {name}?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Exclusão bem-sucedida",
+            "message": "A integração foi excluída com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Falha na exclusão",
+            "message": "Não foi possível deletar a integração"
           }
         }
       }
@@ -702,7 +702,7 @@
         "label": "Nome"
       },
       "url": {
-        "label": ""
+        "label": "URL"
       },
       "attemptSearchEngineCreation": {
         "label": "",
@@ -720,7 +720,7 @@
       }
     },
     "action": {
-      "create": ""
+      "create": "Nova integração"
     },
     "testConnection": {
       "action": {
@@ -734,7 +734,7 @@
           }
         },
         "unknown": {
-          "title": "",
+          "title": "Erro desconhecido",
           "description": ""
         },
         "parse": {
@@ -768,7 +768,7 @@
           },
           "alert": {
             "permission": {
-              "title": "",
+              "title": "Permissões insuficientes",
               "message": ""
             },
             "hostnameMismatch": {
@@ -827,7 +827,7 @@
             "title": "",
             "description": "",
             "content": {
-              "action": "",
+              "action": "Exibir conteúdo",
               "title": ""
             }
           }
@@ -842,7 +842,7 @@
               "reset": ""
             },
             "dns": {
-              "notFound": "",
+              "notFound": "Não foi possível encontrar o endereço do servidor. Verifique se há erros de digitação ou nomes de domínio inválidos na URL.",
               "timeout": "",
               "noAnswer": ""
             },
@@ -944,7 +944,7 @@
       "kind": {
         "username": {
           "label": "Usuário",
-          "newLabel": ""
+          "newLabel": "Novo nome de usuário"
         },
         "apiKey": {
           "label": "",
@@ -967,12 +967,12 @@
           "newLabel": ""
         },
         "topic": {
-          "label": "",
-          "newLabel": ""
+          "label": "Tópico",
+          "newLabel": "Novo tópico"
         },
         "url": {
-          "label": "",
-          "newLabel": ""
+          "label": "URL",
+          "newLabel": "Nova URL"
         },
         "opnsenseApiKey": {
           "label": "",
@@ -1003,8 +1003,8 @@
     }
   },
   "media": {
-    "plural": "",
-    "search": "",
+    "plural": "Mídias",
+    "search": "Buscar uma mídia",
     "field": {
       "name": "Nome",
       "size": "Tamanho",
@@ -1012,31 +1012,31 @@
     },
     "action": {
       "upload": {
-        "label": "",
-        "file": "",
+        "label": "Enviar mídia",
+        "file": "Selecionar arquivo",
         "notification": {
           "success": {
-            "message": ""
+            "message": "A mídia foi carregada com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível carregar a mídia"
           }
         }
       },
       "delete": {
-        "label": "",
-        "description": "",
+        "label": "Excluir mídia",
+        "description": "Tem certeza que deseja deletar a mídia <bName></bName>?",
         "notification": {
           "success": {
-            "message": ""
+            "message": "A mídia foi excluída com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Não foi possível excluir a mídia"
           }
         }
       },
       "copy": {
-        "label": ""
+        "label": "Copiar URL"
       },
       "open": {
         "label": ""
@@ -1075,72 +1075,75 @@
     },
     "here": "",
     "iconPicker": {
-      "label": "",
-      "header": ""
+      "label": "URL do ícone",
+      "header": "Digite o nome ou os objetos para filtrar os ícones... O Homarr pesquisará {countIcons} ícones para você."
     },
     "colorScheme": {
       "options": {
-        "light": "",
-        "dark": ""
+        "light": "Claro",
+        "dark": "Escuro"
       }
     },
     "information": {
-      "min": "",
-      "max": "",
-      "days": "",
-      "hours": "",
-      "minutes": ""
+      "min": "Mínimo",
+      "max": "Máximo",
+      "days": "Dias",
+      "hours": "Horas",
+      "minutes": "Minutos"
     },
     "notification": {
       "create": {
-        "success": "",
-        "error": ""
+        "success": "Criação realizada com sucesso",
+        "error": "Criação falhou"
       },
       "delete": {
-        "success": "",
-        "error": ""
+        "success": "Exclusão realizada com sucesso",
+        "error": "Exclusão falhou"
       },
       "update": {
-        "success": "",
-        "error": ""
+        "success": "Mudanças aplicadas com sucesso",
+        "error": "Não foi possível aplicar as mudanças"
       },
       "transfer": {
-        "success": "",
-        "error": ""
+        "success": "Transferência realizada com sucesso",
+        "error": "Transferência falhou"
       }
     },
     "multiSelect": {
-      "placeholder": ""
+      "placeholder": "Selecione um ou mais valores"
     },
     "multiText": {
-      "placeholder": "",
-      "addLabel": ""
+      "placeholder": "Adicione mais valores",
+      "addLabel": "Adicionar {value}"
     },
     "select": {
       "placeholder": "",
       "badge": {
-        "recommended": ""
+        "recommended": "Recomendado"
       }
     },
     "userAvatar": {
       "menu": {
-        "switchToDarkMode": "",
-        "switchToLightMode": "",
-        "management": "",
+        "switchToDarkMode": "Alternar para o modo escuro",
+        "switchToLightMode": "Alternar para o modo claro",
+        "management": "Gerenciamento",
         "preferences": "Suas preferências",
-        "logout": "",
+        "logout": "Sair",
         "login": "“Login”",
-        "homeBoard": "",
+        "homeBoard": "Seu painel inicial",
         "loggedOut": "",
-        "updateAvailable": ""
+        "updateAvailable": "{countUpdates} atualizações disponíveis: {tag}"
       }
     },
     "dangerZone": "Zona de risco",
     "noResults": "Nenhum resultado encontrado",
-    "unsavedChanges": "",
+    "unsavedChanges": "Você tem alterações não salvas!",
+    "servers": "Servidores",
+    "applications": "Aplicativos",
+    "services": "Serviços",
     "preview": {
-      "show": "",
-      "hide": ""
+      "show": "Exibir visualização",
+      "hide": "Ocultar visualização"
     },
     "zod": {
       "errors": {
@@ -1150,7 +1153,7 @@
           "startsWith": "Esse campo deve começar com {startsWith}",
           "endsWith": "Esse campo deve terminar com {endsWith}",
           "includes": "Esse campo deve incluir {includes}",
-          "invalidEmail": ""
+          "invalidEmail": "Este campo deve ser um e-mail válido"
         },
         "tooSmall": {
           "string": "Esse campo deve ter pelo menos {minimum} caracteres",
@@ -1161,36 +1164,36 @@
           "number": "Esse campo deve ser menor ou igual a {maximum}"
         },
         "custom": {
-          "passwordsDoNotMatch": "",
-          "passwordRequirements": "",
-          "boardAlreadyExists": "",
-          "invalidFileType": "",
-          "invalidFileName": "",
-          "fileTooLarge": "",
-          "invalidConfiguration": "",
-          "groupNameTaken": ""
+          "passwordsDoNotMatch": "Senhas não coincidem",
+          "passwordRequirements": "A senha não atende aos requisitos",
+          "boardAlreadyExists": "Já existe um quadro com este nome",
+          "invalidFileType": "Formato de arquivo inválido, esperado {expected}",
+          "invalidFileName": "Nome de arquivo inválido",
+          "fileTooLarge": "O arquivo é muito grande, o tamanho máximo é {maxSize}",
+          "invalidConfiguration": "Configuração inválida",
+          "groupNameTaken": "Nome de grupo já em uso"
         }
       }
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
   "section": {
     "dynamic": {
       "action": {
-        "create": "",
-        "remove": ""
+        "create": "Nova seção dinâmica",
+        "remove": "Remover seção dinâmica"
       },
       "option": {
         "title": {
-          "label": ""
+          "label": "Título"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Classes CSS customizadas"
         },
         "borderColor": {
           "label": ""
@@ -1209,7 +1212,7 @@
       },
       "action": {
         "create": "",
-        "edit": "",
+        "edit": "Renomear categoria",
         "remove": "",
         "moveUp": "Subir",
         "moveDown": "Mover para baixo",
@@ -1223,11 +1226,11 @@
       },
       "remove": {
         "title": "",
-        "message": ""
+        "message": "Tem certeza que deseja deletar a categoria {name}?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Renomear categoria",
+        "submit": "Renomear categoria"
       },
       "menu": {
         "label": {
@@ -1315,7 +1318,7 @@
           "label": "Abrir em novo separador"
         },
         "showTitle": {
-          "label": ""
+          "label": "Exibir o nome do aplicativo"
         },
         "pingEnabled": {
           "label": ""
@@ -1467,7 +1470,7 @@
       "option": {
         "customTitleToggle": {
           "label": "",
-          "description": ""
+          "description": "Exiba um título personalizado ou o nome da cidade/país na parte superior do relógio."
         },
         "customTitle": {
           "label": ""
@@ -1487,7 +1490,7 @@
           "description": ""
         },
         "showDate": {
-          "label": ""
+          "label": "Exibir data"
         },
         "dateFormat": {
           "label": "",
@@ -1638,7 +1641,7 @@
           "label": "ID da entidade"
         },
         "displayName": {
-          "label": ""
+          "label": "Nome de exibição"
         },
         "entityUnit": {
           "label": ""
@@ -1660,7 +1663,7 @@
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "Executar {name}"
       }
     },
     "stockPrice": {
@@ -1692,48 +1695,48 @@
               "label": ""
             },
             "1y": {
-              "label": ""
+              "label": "1 ano"
             },
             "2y": {
-              "label": ""
+              "label": "2 anos"
             },
             "5y": {
-              "label": ""
+              "label": "5 anos"
             },
             "10y": {
-              "label": ""
+              "label": "10 anos"
             },
             "max": {
-              "label": ""
+              "label": "Máximo"
             }
           }
         },
         "timeInterval": {
-          "label": "",
+          "label": "Intervalo de tempo",
           "option": {
             "5m": {
-              "label": ""
+              "label": "5 minutos"
             },
             "15m": {
-              "label": ""
+              "label": "15 minutos"
             },
             "30m": {
-              "label": ""
+              "label": "30 minutos"
             },
             "1h": {
-              "label": ""
+              "label": "1 hora"
             },
             "1d": {
-              "label": ""
+              "label": "1 dia"
             },
             "5d": {
-              "label": ""
+              "label": "5 dias"
             },
             "1wk": {
-              "label": ""
+              "label": "1 semana"
             },
             "1mo": {
-              "label": ""
+              "label": "1 mês"
             }
           }
         }
@@ -1743,7 +1746,7 @@
       "name": "Calendário",
       "description": "",
       "duration": {
-        "allDay": ""
+        "allDay": "Dia inteiro"
       },
       "option": {
         "releaseType": {
@@ -1776,7 +1779,7 @@
           "label": ""
         },
         "showCurrentWindSpeed": {
-          "label": "",
+          "label": "Exibir velocidade do vento atual",
           "description": ""
         },
         "useImperialSpeed": {
@@ -1786,10 +1789,10 @@
           "label": "Localização do tempo"
         },
         "showCity": {
-          "label": ""
+          "label": "Exibir cidade"
         },
         "hasForecast": {
-          "label": ""
+          "label": "Exibir previsão"
         },
         "forecastDayCount": {
           "label": "",
@@ -1856,7 +1859,7 @@
           "label": "Mostrar informações da memória"
         },
         "showUptime": {
-          "label": ""
+          "label": "Exibir tempo de atividade"
         },
         "fileSystem": {
           "label": "Mostrar informações do sistema de arquivos"
@@ -1872,9 +1875,9 @@
         }
       },
       "popover": {
-        "information": "",
-        "processor": "",
-        "memory": "",
+        "information": "Informação",
+        "processor": "Processador: {cpuModelName}",
+        "memory": "Memória: {memory}GiB",
         "memoryAvailable": "",
         "version": "",
         "uptime": "",
@@ -1928,7 +1931,7 @@
         },
         "table": {
           "header": {
-            "name": "",
+            "name": "Nome",
             "cpu": "",
             "memory": "",
             "node": ""
@@ -1937,7 +1940,7 @@
       }
     },
     "dockerContainers": {
-      "name": "",
+      "name": "Estatísticas do Docker",
       "description": "",
       "option": {
         "enableRowSorting": {
@@ -1946,9 +1949,9 @@
         "defaultSort": {
           "label": "",
           "option": {
-            "name": "",
+            "name": "Nome",
             "state": "",
-            "cpuUsage": "",
+            "cpuUsage": "Uso da CPU",
             "memoryUsage": ""
           }
         },
@@ -1958,6 +1961,39 @@
       },
       "error": {
         "internalServerError": ""
+      }
+    },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": "Exibir servidores"
+        },
+        "showApplications": {
+          "label": "Exibir aplicações"
+        },
+        "showServices": {
+          "label": "Exibir serviços"
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": ""
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
       }
     },
     "common": {
@@ -2033,7 +2069,7 @@
       "items": {
         "currentlyPlaying": "",
         "user": "",
-        "name": "",
+        "name": "Nome",
         "id": "",
         "metadata": {
           "title": "",
@@ -2397,13 +2433,13 @@
             "label": ""
           },
           "importRepositories": {
-            "label": "",
-            "loading": "",
-            "noImagesFound": "",
+            "label": "Importar do Docker",
+            "loading": "Carregando imagens do Docker",
+            "noImagesFound": "Nenhuma imagem do Docker encontrada",
             "listFoundImages": "",
             "listAlreadyImportedImages": "",
             "allImagesAlreadyImported": "",
-            "onlyAdminCanImport": "",
+            "onlyAdminCanImport": "Apenas administradores podem importar do Docker",
             "selectAll": "",
             "deselectAll": ""
           },
@@ -2415,7 +2451,7 @@
             "placeholder": ""
           },
           "name": {
-            "label": ""
+            "label": "Nome"
           },
           "versionFilter": {
             "label": "",
@@ -2448,7 +2484,7 @@
             }
           },
           "importForm": {
-            "title": ""
+            "title": "Importar do Docker"
           },
           "example": {
             "label": ""
@@ -2554,15 +2590,15 @@
         "interfaces": ""
       },
       "widget": {
-        "fwname": "",
+        "fwname": "Nome",
         "version": "",
         "versiontitle": "",
-        "cputitle": "",
+        "cputitle": "Uso da CPU",
         "memorytitle": "",
         "cpu": "",
         "memory": "",
         "interfaces": {
-          "name": "",
+          "name": "nome",
           "trans": "",
           "recv": "",
           "title": ""
@@ -2577,7 +2613,7 @@
     },
     "systemResources": {
       "name": "",
-      "description": "",
+      "description": "Utilização da CPU, Memória, Disco e outro hardware do seu sistema",
       "option": {
         "hasShadow": {
           "label": ""
@@ -2607,6 +2643,35 @@
         "network": "",
         "up": "",
         "down": ""
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
       }
     }
   },
@@ -2680,7 +2745,7 @@
             }
           },
           "name": {
-            "label": ""
+            "label": "Nome do quadro"
           },
           "screenSize": {
             "label": "",
@@ -2832,10 +2897,10 @@
       }
     },
     "content": {
-      "metaTitle": ""
+      "metaTitle": "Quadro {boardName}"
     },
     "setting": {
-      "title": "",
+      "title": "Configurações para o quadro {boardName}",
       "section": {
         "general": {
           "title": "Geral",
@@ -2882,11 +2947,11 @@
           "title": "Zona de risco",
           "action": {
             "rename": {
-              "label": "",
+              "label": "Renomear quadro",
               "description": "",
-              "button": "",
+              "button": "Alterar nome",
               "modal": {
-                "title": ""
+                "title": "Renomear quadro"
               }
             },
             "visibility": {
@@ -2959,7 +3024,7 @@
   "layout": {
     "field": {
       "name": {
-        "label": ""
+        "label": "Nome"
       },
       "columnCount": {
         "label": ""
@@ -2973,9 +3038,9 @@
   "management": {
     "metaTitle": "",
     "title": {
-      "morning": "",
-      "afternoon": "",
-      "evening": ""
+      "morning": "Bom dia, {username}",
+      "afternoon": "Boa tarde, {username}",
+      "evening": "Boa noite, {username}"
     },
     "notFound": {
       "title": "",
@@ -3000,8 +3065,8 @@
         "tools": {
           "label": "Ferramentas",
           "items": {
-            "docker": "",
-            "kubernetes": "",
+            "docker": "Docker",
+            "kubernetes": "Kubernetes",
             "logs": "",
             "api": "",
             "certificates": "",
@@ -3077,7 +3142,7 @@
             "label": "Excluir permanentemente",
             "confirm": {
               "title": "Excluir quadro",
-              "description": ""
+              "description": "Tem certeza que deseja deletar o quadro {name}?"
             }
           }
         },
@@ -3130,7 +3195,7 @@
           "title": "Usuários"
         },
         "edit": {
-          "metaTitle": ""
+          "metaTitle": "Editar usuário {username}"
         },
         "create": {
           "metaTitle": "Criar usuário",
@@ -3294,6 +3359,13 @@
               }
             }
           },
+          "user": {
+            "title": "",
+            "enableGravatar": {
+              "label": "",
+              "description": ""
+            }
+          },
           "search": {
             "title": "",
             "defaultSearchEngine": {
@@ -3384,7 +3456,7 @@
               "label": ""
             },
             "dockerContainers": {
-              "label": ""
+              "label": "Contêineres do Docker"
             },
             "firewallCpu": {
               "label": ""
@@ -3418,11 +3490,11 @@
             }
           },
           "settings": {
-            "title": ""
+            "title": "Configurações da tarefa para {jobName}"
           },
           "field": {
             "name": {
-              "label": ""
+              "label": "Nome"
             },
             "interval": {
               "label": ""
@@ -3664,12 +3736,12 @@
           }
         },
         "modal": {
-          "title": ""
+          "title": "Adicionar contêiner(s) docker ao Homarr"
         }
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Falha ao buscar contêineres Docker"
     }
   },
   "kubernetes": {
@@ -3727,7 +3799,7 @@
           "label": ""
         },
         "kubernetesVersion": {
-          "label": ""
+          "label": "Versão do Kubernetes"
         },
         "creationTimestamp": {
           "label": ""
@@ -3826,7 +3898,7 @@
           "label": ""
         },
         "status": {
-          "label": ""
+          "label": "Status"
         },
         "creationTimestamp": {
           "label": ""
@@ -3898,7 +3970,7 @@
           "label": ""
         },
         "status": {
-          "label": ""
+          "label": "Status"
         },
         "creationTimestamp": {
           "label": ""
@@ -3909,7 +3981,7 @@
       }
     },
     "error": {
-      "internalServerError": ""
+      "internalServerError": "Falha ao buscar dados do Kubernetes"
     }
   },
   "permission": {
@@ -3918,11 +3990,11 @@
       "title": ""
     },
     "groupSelect": {
-      "title": ""
+      "title": "Adicionar permissão de grupo"
     },
     "tab": {
       "user": "Usuários",
-      "group": "",
+      "group": "Grupos",
       "inherited": ""
     },
     "field": {
@@ -3930,15 +4002,15 @@
         "label": "Usuário"
       },
       "group": {
-        "label": ""
+        "label": "Grupo"
       },
       "permission": {
-        "label": ""
+        "label": "Permissão"
       }
     },
     "action": {
-      "saveUser": "",
-      "saveGroup": ""
+      "saveUser": "Salvar permissão de usuário",
+      "saveGroup": "Salvar permissão de grupo"
     }
   },
   "navigationStructure": {
@@ -3948,30 +4020,30 @@
         "label": "Placas"
       },
       "integrations": {
-        "label": "",
+        "label": "Integrações",
         "edit": {
           "label": "Editar"
         },
         "new": {
-          "label": ""
+          "label": "Novo"
         }
       },
       "search-engines": {
         "label": "",
         "new": {
-          "label": ""
+          "label": "Novo"
         },
         "edit": {
           "label": "Editar"
         }
       },
       "medias": {
-        "label": ""
+        "label": "Mídias"
       },
       "apps": {
         "label": "Aplicativos",
         "new": {
-          "label": ""
+          "label": "Novo"
         },
         "edit": {
           "label": "Editar"
@@ -3986,7 +4058,7 @@
         "security": "Segurança",
         "board": "Placas",
         "groups": {
-          "label": ""
+          "label": "Grupos"
         },
         "invites": {
           "label": "Convites"
@@ -3995,15 +4067,15 @@
       "tools": {
         "label": "Ferramentas",
         "tasks": {
-          "label": ""
+          "label": "Tarefas"
         },
         "docker": {
-          "label": ""
+          "label": "Docker"
         },
         "kubernetes": {
-          "label": "",
+          "label": "Kubernetes",
           "nodes": {
-            "label": ""
+            "label": "Nós"
           },
           "namespaces": {
             "label": ""
@@ -4012,7 +4084,7 @@
             "label": ""
           },
           "services": {
-            "label": ""
+            "label": "Serviços"
           },
           "pods": {
             "label": ""
@@ -4031,7 +4103,7 @@
           "label": ""
         },
         "certificates": {
-          "label": "",
+          "label": "Certificados",
           "hostnames": {
             "label": ""
           }
@@ -4053,17 +4125,17 @@
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "",
+        "help": "Buscar por aplicativos, integrações ou quadros",
         "group": {
           "app": {
             "title": "Aplicativos",
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Abrir URL do aplicativo"
                 },
                 "edit": {
-                  "label": ""
+                  "label": "Editar aplicativo"
                 }
               },
               "detail": {
@@ -4076,7 +4148,7 @@
             "children": {
               "action": {
                 "open": {
-                  "label": ""
+                  "label": "Abrir quadro"
                 },
                 "homeBoard": {
                   "label": ""
@@ -4085,7 +4157,7 @@
                   "label": ""
                 },
                 "settings": {
-                  "label": ""
+                  "label": "Abrir configurações"
                 }
               },
               "detail": {
@@ -4094,7 +4166,7 @@
             }
           },
           "integration": {
-            "title": ""
+            "title": "Integrações"
           }
         }
       },
@@ -4102,20 +4174,20 @@
         "help": "",
         "group": {
           "localCommand": {
-            "title": ""
+            "title": "Comandos locais"
           },
           "globalCommand": {
-            "title": "",
+            "title": "Comandos globais",
             "option": {
               "colorScheme": {
-                "light": "",
-                "dark": ""
+                "light": "Alternar para o modo claro",
+                "dark": "Alternar para o modo escuro"
               },
               "language": {
-                "label": "",
+                "label": "Alterar idioma",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecione sua linguagem preferida"
                   }
                 }
               },
@@ -4123,27 +4195,27 @@
                 "label": ""
               },
               "importBoard": {
-                "label": ""
+                "label": "Importe um quadro"
               },
               "newApp": {
                 "label": "Criar aplicativo"
               },
               "newIntegration": {
-                "label": "",
+                "label": "Criar uma nova integração",
                 "children": {
                   "detail": {
-                    "title": ""
+                    "title": "Selecione o tipo de integração que deseja criar"
                   }
                 }
               },
               "newUser": {
-                "label": ""
+                "label": "Criar um novo usuário"
               },
               "newInvite": {
-                "label": ""
+                "label": "Criar um novo convite"
               },
               "newGroup": {
-                "label": ""
+                "label": "Criar um novo grupo"
               }
             }
           }
@@ -4155,14 +4227,14 @@
         "openIn": ""
       },
       "external": {
-        "help": "",
+        "help": "Usar um mecanismo de busca externo",
         "group": {
           "searchEngine": {
             "title": "",
             "children": {
               "action": {
                 "search": {
-                  "label": ""
+                  "label": "Pesquisar com {name}"
                 }
               },
               "detail": {
@@ -4174,24 +4246,24 @@
             },
             "option": {
               "google": {
-                "name": "",
-                "description": ""
+                "name": "Google",
+                "description": "Pesquise na web com o Google"
               },
               "bing": {
-                "name": "",
-                "description": ""
+                "name": "Bing",
+                "description": "Pesquise na web com o Bing"
               },
               "duckduckgo": {
-                "name": "",
-                "description": ""
+                "name": "DuckDuckGo",
+                "description": "Pesquise na web com o DuckDuckGo"
               },
               "torrent": {
                 "name": "Torrentes",
-                "description": ""
+                "description": "Pesquise torrents em torrentdownloads.pro"
               },
               "youTube": {
-                "name": "",
-                "description": ""
+                "name": "YouTube",
+                "description": "Pesquise vídeos no YouTube"
               }
             }
           }
@@ -4200,7 +4272,7 @@
       "help": {
         "group": {
           "mode": {
-            "title": ""
+            "title": "Modos"
           },
           "help": {
             "title": "Ajuda",
@@ -4224,78 +4296,78 @@
             "title": "",
             "option": {
               "other": {
-                "label": ""
+                "label": "Pesquise com outro mecanismo de busca"
               },
               "no-default": {
-                "label": "",
-                "description": ""
+                "label": "Nenhum mecanismo de busca predefinido",
+                "description": "Defina um mecanismo de busca padrão nas preferências"
               },
               "search": {
                 "label": ""
               },
               "from-integration": {
-                "description": ""
+                "description": "Comece a digitar para pesquisar"
               }
             }
           },
           "local": {
-            "title": ""
+            "title": "Resultados locais"
           }
         }
       },
       "page": {
-        "help": "",
+        "help": "Buscar páginas",
         "group": {
           "page": {
-            "title": "",
+            "title": "Páginas",
             "option": {
               "manageHome": {
-                "label": ""
+                "label": "Gerenciar página inicial"
               },
               "manageBoard": {
-                "label": ""
+                "label": "Gerenciar quadros"
               },
               "manageApp": {
-                "label": ""
+                "label": "Gerenciar aplicativos"
               },
               "manageIntegration": {
-                "label": ""
+                "label": "Gerenciar integrações"
               },
               "manageSearchEngine": {
-                "label": ""
+                "label": "Gerenciar ferramentas de busca"
               },
               "manageMedia": {
-                "label": ""
+                "label": "Gerencias mídias"
               },
               "manageUser": {
                 "label": "Gerenciar usuários"
               },
               "manageInvite": {
-                "label": ""
+                "label": "Gerenciar convites"
               },
               "manageGroup": {
-                "label": ""
+                "label": "Gerenciar grupos"
               },
               "manageDocker": {
-                "label": ""
+                "label": "Gerenciar Docker"
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API"
               },
               "manageLog": {
                 "label": ""
               },
               "manageTask": {
-                "label": ""
+                "label": "Gerenciar tarefas"
               },
               "manageSettings": {
-                "label": ""
+                "label": "Configurações globais"
               },
               "about": {
                 "label": "Sobre"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Quadro inicial"
               },
               "preferences": {
                 "label": "Suas preferências"
@@ -4305,14 +4377,14 @@
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "Buscar por usuários ou grupos",
         "group": {
           "user": {
             "title": "Usuários",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Exibir detalhes do usuário"
                 }
               },
               "detail": {
@@ -4321,17 +4393,17 @@
             }
           },
           "group": {
-            "title": "",
+            "title": "Grupos",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Exibir detalhes do grupo"
                 },
                 "manageMember": {
-                  "label": ""
+                  "label": "Gerenciar membros"
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "Gerenciar permissões"
                 }
               },
               "detail": {
@@ -4355,7 +4427,7 @@
           "label": ""
         },
         "description": {
-          "label": ""
+          "label": "Descrição"
         }
       },
       "page": {
@@ -4384,7 +4456,7 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
+              "title": "Mudanças aplicadas com sucesso",
               "message": ""
             },
             "error": {
@@ -4475,34 +4547,34 @@
         "noResults": {
           "title": ""
         },
-        "toCertificates": ""
+        "toCertificates": "Certificados"
       }
     },
     "action": {
       "create": {
-        "label": "",
+        "label": "Adicionar certificado",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Certificado adicionado",
+            "message": "O certificado foi adicionado com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Falha ao adicionar certificado",
+            "message": "O certificado não pôde ser adicionado"
           }
         }
       },
       "remove": {
-        "label": "",
-        "confirm": "",
+        "label": "Remover certificado",
+        "confirm": "Tem certeza que deseja remover o certificado?",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Certificado removido",
+            "message": "O certificado foi removido com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Certificado não removido",
+            "message": "O certificado não pôde ser removido"
           }
         }
       },
@@ -4526,9 +4598,9 @@
     "level": {
       "option": {
         "debug": "",
-        "info": "",
+        "info": "Informação",
         "warn": "",
-        "error": ""
+        "error": "Erro"
       }
     }
   }

@@ -41,13 +41,13 @@
     "@homarr/translation": "workspace:^0.1.0",
     "@homarr/validation": "workspace:^0.1.0",
     "@kubernetes/client-node": "^1.4.0",
-    "@tanstack/react-query": "^5.90.16",
+    "@tanstack/react-query": "^5.90.19",
     "@trpc/client": "^11.8.1",
     "@trpc/react-query": "^11.8.1",
     "@trpc/server": "^11.8.1",
     "@trpc/tanstack-react-query": "^11.8.1",
     "lodash.clonedeep": "^4.5.0",
-    "next": "16.1.1",
+    "next": "16.1.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "superjson": "2.2.6",
@@ -59,7 +59,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "eslint": "^9.39.2",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.0",
     "typescript": "^5.9.3"
   }
 }

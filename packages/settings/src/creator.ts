@@ -11,7 +11,8 @@ export type SettingsContextProps = Pick<
   | "ddgBangs"
   | "pingIconsEnabled"
 > &
-  Pick<ServerSettings["board"], "enableStatusByDefault" | "forceDisableStatus">;
+  Pick<ServerSettings["board"], "enableStatusByDefault" | "forceDisableStatus"> &
+  Pick<ServerSettings["user"], "enableGravatar">;
 
 export interface PublicServerSettings {
   search: Pick<ServerSettings["search"], "defaultSearchEngineId">;
@@ -19,6 +20,7 @@ export interface PublicServerSettings {
     ServerSettings["board"],
     "homeBoardId" | "mobileHomeBoardId" | "enableStatusByDefault" | "forceDisableStatus"
   >;
+  user: Pick<ServerSettings["user"], "enableGravatar">;
 }
 
 export type UserSettings = Pick<
@@ -48,4 +50,5 @@ export const createSettings = ({
   pingIconsEnabled: user?.pingIconsEnabled ?? false,
   enableStatusByDefault: serverSettings.board.enableStatusByDefault,
   forceDisableStatus: serverSettings.board.forceDisableStatus,
+  enableGravatar: serverSettings.user.enableGravatar,
 });

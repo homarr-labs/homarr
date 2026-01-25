@@ -1138,6 +1138,9 @@
     "dangerZone": "危險區域",
     "noResults": "未找到結果",
     "unsavedChanges": "尚未儲存變更",
+    "servers": "",
+    "applications": "",
+    "services": "",
     "preview": {
       "show": "顯示預覽",
       "hide": "隱藏預覽"
@@ -1960,6 +1963,39 @@
         "internalServerError": ""
       }
     },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": ""
+        },
+        "showApplications": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": ""
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
+      }
+    },
     "common": {
       "location": {
         "query": "城市 / 郵遞區號",
@@ -2607,6 +2643,35 @@
         "network": "",
         "up": "",
         "down": ""
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
       }
     }
   },
@@ -3292,6 +3357,13 @@
                 "label": "強制停用狀態",
                 "description": "所有使用者的應用程式狀態將被停用，且無法使用"
               }
+            }
+          },
+          "user": {
+            "title": "",
+            "enableGravatar": {
+              "label": "",
+              "description": ""
             }
           },
           "search": {

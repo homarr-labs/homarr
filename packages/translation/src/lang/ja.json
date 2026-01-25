@@ -1138,6 +1138,9 @@
     "dangerZone": "危険な操作",
     "noResults": "結果が見つかりません",
     "unsavedChanges": "保存していない変更があります！",
+    "servers": "",
+    "applications": "",
+    "services": "",
     "preview": {
       "show": "プレビューを表示",
       "hide": "プレビューを閉じる"
@@ -1941,23 +1944,56 @@
       "description": "あなたのコンテナの統計（このウィジェットは管理者権限でのみ追加できます）",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "アイテムの並び替えを有効にする"
         },
         "defaultSort": {
-          "label": "",
+          "label": "デフォルトで並び替えに使用される列",
           "option": {
-            "name": "",
-            "state": "",
-            "cpuUsage": "",
-            "memoryUsage": ""
+            "name": "名称",
+            "state": "状態",
+            "cpuUsage": "CPU 使用率",
+            "memoryUsage": "メモリ使用量"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "並び替えを反転"
         }
       },
       "error": {
         "internalServerError": "コンテナステータスの取得に失敗しました"
+      }
+    },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": ""
+        },
+        "showApplications": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": ""
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
       }
     },
     "common": {
@@ -2248,7 +2284,7 @@
         "unknown": "不明",
         "pending": "保留中",
         "processing": "処理中",
-        "requested": "",
+        "requested": "要求済み",
         "partiallyAvailable": "一部",
         "available": "利用可能",
         "blacklisted": "ブラックリスト",
@@ -2607,6 +2643,35 @@
         "network": "NET",
         "up": "UP",
         "down": "DOWN"
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
       }
     }
   },
@@ -3292,6 +3357,13 @@
                 "label": "強制的にステータスを無効にする",
                 "description": "アプリのステータスはすべてのユーザーに対して無効になり、有効にすることはできません"
               }
+            }
+          },
+          "user": {
+            "title": "ユーザー",
+            "enableGravatar": {
+              "label": "Gravatar を有効化",
+              "description": "カスタムアバターが設定されておらず、メールが設定されている場合は、Libavatar/Gravatarからユーザーのアバターにフォールバックします"
             }
           },
           "search": {

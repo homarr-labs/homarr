@@ -38,12 +38,12 @@
   "prettier": "@homarr/prettier-config",
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.10",
-    "better-sqlite3": "^12.5.0",
+    "better-sqlite3": "^12.6.2",
     "dns-caching": "^0.2.9",
     "drizzle-orm": "^0.45.1",
-    "ioredis": "5.8.2",
-    "mysql2": "3.16.0",
-    "pg": "^8.16.3",
+    "ioredis": "5.9.2",
+    "mysql2": "3.16.1",
+    "pg": "^8.17.1",
     "superjson": "2.2.6",
     "winston": "3.19.0",
     "zod": "^4.2.1"
