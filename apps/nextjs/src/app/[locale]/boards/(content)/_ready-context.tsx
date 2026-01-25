@@ -27,7 +27,6 @@ export const BoardReadyProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     setReadySections((previous) => previous.filter((id) => board.sections.some((section) => section.id === id)));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [board.sections.length, setReadySections]);
 
   const markAsReady = useCallback((id: string) => {

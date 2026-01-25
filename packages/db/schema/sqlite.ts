@@ -60,6 +60,7 @@ export const users = sqliteTable("user", {
     onDelete: "set null",
   }),
   openSearchInNewTab: int({ mode: "boolean" }).default(true).notNull(),
+  ddgBangs: int({ mode: "boolean" }).default(true).notNull(),
   colorScheme: text().$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: int().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: int({ mode: "boolean" }).default(false).notNull(),

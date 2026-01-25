@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Open search results in new tab"
+      },
+      "ddgBangs": {
+        "label": "Enable DuckDuckGo bangs"
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Unable to toggle ping icons"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo bangs toggled successfully"
+          },
+          "error": {
+            "message": "Unable to toggle DuckDuckGo bangs"
           }
         }
       },

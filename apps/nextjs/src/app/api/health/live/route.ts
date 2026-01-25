@@ -75,7 +75,6 @@ const executeHealthCheckSafelyAsync = async (
       },
     };
   } catch (error) {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     logger.error(new ErrorWithMetadata("Healthcheck failed", { name }, { cause: error }));
     return {
       status: "unhealthy",

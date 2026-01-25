@@ -8,6 +8,7 @@ export type SettingsContextProps = Pick<
   | "homeBoardId"
   | "mobileHomeBoardId"
   | "openSearchInNewTab"
+  | "ddgBangs"
   | "pingIconsEnabled"
 > &
   Pick<ServerSettings["board"], "enableStatusByDefault" | "forceDisableStatus">;
@@ -27,6 +28,7 @@ export type UserSettings = Pick<
   | "homeBoardId"
   | "mobileHomeBoardId"
   | "openSearchInNewTab"
+  | "ddgBangs"
   | "pingIconsEnabled"
 >;
 
@@ -39,6 +41,7 @@ export const createSettings = ({
 }) => ({
   defaultSearchEngineId: user?.defaultSearchEngineId ?? serverSettings.search.defaultSearchEngineId,
   openSearchInNewTab: user?.openSearchInNewTab ?? true,
+  ddgBangs: user?.ddgBangs ?? true,
   firstDayOfWeek: user?.firstDayOfWeek ?? (1 as const),
   homeBoardId: user?.homeBoardId ?? serverSettings.board.homeBoardId,
   mobileHomeBoardId: user?.mobileHomeBoardId ?? serverSettings.board.mobileHomeBoardId,

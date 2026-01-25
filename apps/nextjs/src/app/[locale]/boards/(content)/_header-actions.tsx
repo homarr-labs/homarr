@@ -264,6 +264,5 @@ const usePreventLeaveWithDirty = (isDirty: boolean) => {
       window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDirty]);
 };

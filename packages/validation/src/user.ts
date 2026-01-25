@@ -147,3 +147,7 @@ export const userFirstDayOfWeekSchema = z.object({
 export const userPingIconsEnabledSchema = z.object({
   pingIconsEnabled: z.boolean(),
 });
+
+export const userDdgBangsSchema = z.object({
+  ddgBangs: z.boolean(),
+});
