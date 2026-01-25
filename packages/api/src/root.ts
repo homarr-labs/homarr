@@ -1,5 +1,6 @@
 import { apiKeysRouter } from "./router/apiKeys";
 import { appRouter as innerAppRouter } from "./router/app";
+import { bangsRouter } from "./router/bangs/bangs-router";
 import { boardRouter } from "./router/board";
 import { certificateRouter } from "./router/certificates/certificate-router";
 import { cronJobsRouter } from "./router/cron-jobs";
@@ -16,7 +17,6 @@ import { locationRouter } from "./router/location";
 import { logRouter } from "./router/log";
 import { mediaRouter } from "./router/medias/media-router";
 import { onboardRouter } from "./router/onboard/onboard-router";
-import { bangsRouter } from "./router/bangs/bangs-router";
 import { searchEngineRouter } from "./router/search-engine/search-engine-router";
 import { sectionRouter } from "./router/section/section-router";
 import { serverSettingsRouter } from "./router/serverSettings";
