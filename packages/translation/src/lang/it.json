@@ -1138,9 +1138,9 @@
     "dangerZone": "Zona pericolosa",
     "noResults": "Nessun risultato trovato",
     "unsavedChanges": "Ci sono modifiche non salvate!",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "servers": "Server",
+    "applications": "App",
+    "services": "Servizi",
     "preview": {
       "show": "Mostra anteprima",
       "hide": "Nascondi anteprima"
@@ -1964,36 +1964,36 @@
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Panoramica della tua istanza Coolify con server e applicazioni",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Mostra server"
         },
         "showApplications": {
-          "label": ""
+          "label": "Mostra applicazioni"
         },
         "showServices": {
-          "label": ""
+          "label": "Mostra servizi"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "Nessun server trovato",
+        "applications": "Nessuna applicazione trovata",
+        "services": "Nessun servizio trovato"
       },
       "footer": {
-        "updated": ""
+        "updated": "Aggiornato {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Nessuna integrazione di Coolify configurata",
+        "internalServerError": "Impossibile recuperare i dati Coolify"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Build"
       },
       "instances": {
-        "title": ""
+        "title": "Istanze"
       }
     },
     "common": {
@@ -2646,32 +2646,32 @@
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "Dischi di sistema",
+      "description": "Uso del disco del sistema",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Mostra temperatura se disponibile"
         },
         "displayMode": {
-          "label": "",
+          "label": "Modalità di visualizzazione",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Percentuale (es. 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "Valori assoluti (ad es. 800GB / 1TB)"
             },
             "free": {
-              "label": ""
+              "label": "Percentuale di spazio libero (ad es. 24% libero)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Mostra barra di utilizzo in background"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "Compromesso"
       }
     }
   },

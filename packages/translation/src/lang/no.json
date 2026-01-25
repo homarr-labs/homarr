@@ -1138,9 +1138,9 @@
     "dangerZone": "Faresonen",
     "noResults": "Ingen resultater funnet",
     "unsavedChanges": "Du har ulagrede endringer!",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "servers": "Servere",
+    "applications": "Apper",
+    "services": "Tjenester",
     "preview": {
       "show": "Vis forhåndsvisning",
       "hide": "Skjul forhåndsvisning"
@@ -1964,36 +1964,36 @@
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Oversikt over din Coolify-instans med servere og apper",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "Vis servere"
         },
         "showApplications": {
-          "label": ""
+          "label": "Vis applikasjoner"
         },
         "showServices": {
-          "label": ""
+          "label": "Vis tjenester"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "Ingen server funnet",
+        "applications": "Ingen applikasjoner funnet",
+        "services": "Ingen tjenester funnet"
       },
       "footer": {
-        "updated": ""
+        "updated": "Oppdatert {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Ingen Coolify integrasjon konfigurert",
+        "internalServerError": "Kunne ikke hente Coolify data"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Bygg"
       },
       "instances": {
-        "title": ""
+        "title": "Instanser"
       }
     },
     "common": {
@@ -2646,32 +2646,32 @@
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "Systemdisker",
+      "description": "Disk bruk av systemet",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Vis temperatur hvis tilgjengelig"
         },
         "displayMode": {
-          "label": "",
+          "label": "Visningsmodus",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Prosentandel (f.eks. 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "Absolutte verdier (f.eks. 800GB / 1TB)"
             },
             "free": {
-              "label": ""
+              "label": "Prosentandel ledig plass (f.eks. 24% ledig)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Vis bakgrunnsbrukslinje"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "Usunn"
       }
     }
   },
