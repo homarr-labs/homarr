@@ -392,6 +392,7 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
   },
   useQueryOptions(query) {
     const tExternal = useScopedI18n("search.mode.external.group.searchEngine");
+    const { ddgBangs } = useSettings();
     const { bangToken, searchText, locked } = parseBangQuery(query);
     const [debouncedBangToken] = useDebouncedValue(bangToken, 150);
 
@@ -403,7 +404,7 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
     const ddgQuery = clientApi.bangs.search.useQuery(
       { query: debouncedBangToken, limit: 10 },
       {
-        enabled: debouncedBangToken.length >= 1,
+        enabled: ddgBangs && debouncedBangToken.length >= 1,
         placeholderData: keepPreviousData,
       },
     );
@@ -465,7 +466,7 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
         key: "hint",
         kind: "hint",
         label: "Type a bang, e.g. !yt, then press Space to select",
-        description: tExternal("tip.ddgBangs"),
+        description: ddgBangs ? tExternal("tip.ddgBangs") : undefined,
       });
     }
 

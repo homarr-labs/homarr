@@ -13,6 +13,7 @@ import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
 import { ChangeHomeBoardForm } from "./_components/_change-home-board";
 import { ChangeSearchPreferencesForm } from "./_components/_change-search-preferences";
+import { DdgBangsForm } from "./_components/_ddg-bangs";
 import { DeleteUserButton } from "./_components/_delete-user-button";
 import { FirstDayOfWeek } from "./_components/_first-day-of-week";
 import { PingIconsEnabled } from "./_components/_ping-icons-enabled";
@@ -106,6 +107,7 @@ export default async function EditUserPage(props: Props) {
       <Stack mb="lg">
         <Title order={2}>{tGeneral("item.search")}</Title>
         <ChangeSearchPreferencesForm user={user} searchEnginesData={searchEngines} />
+        <DdgBangsForm user={user} />
       </Stack>
 
       <Stack mb="lg">
