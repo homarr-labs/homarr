@@ -32,7 +32,9 @@ export const Spotlight = () => {
   }
 
   // We use the "key" below to prevent the 'Different amounts of hooks' error
-  return <SpotlightWithActiveMode key={mode} modeState={searchModeState} queryState={queryState} activeMode={activeMode} />;
+  return (
+    <SpotlightWithActiveMode key={mode} modeState={searchModeState} queryState={queryState} activeMode={activeMode} />
+  );
 };
 
 interface SpotlightWithActiveModeProps {
@@ -63,22 +65,20 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
         setQuery("");
       }}
       query={query}
-      onQueryChange={(query) => {
-        setQuery(query);
+      onQueryChange={(nextQuery) => {
+        const sanitizedQuery = mode === "external" && nextQuery.startsWith("!") ? nextQuery.slice(1) : nextQuery;
+        setQuery(sanitizedQuery);
 
         // Only switch modes when a single trigger character is typed
-        if (query.length !== 1) return;
+        if (sanitizedQuery.length !== 1) return;
 
-        const modeToActivate = searchModes.find((mode) => mode.character === query);
+        const modeToActivate = searchModes.find((mode) => mode.character === sanitizedQuery);
         if (!modeToActivate) return;
 
         setMode(modeToActivate.modeKey);
         setChildrenOptions(null);
 
-        // Keep '!' in the input to allow !bang parsing in external mode
-        
         setQuery("");
-        
 
         setTimeout(() => selectAction(0, spotlightStore));
       }}
@@ -154,7 +154,7 @@ const SpotlightWithActiveMode = ({ modeState, queryState, activeMode }: Spotligh
               });
             }}
             query={query}
-            groups={mode === defaultMode && query.length === 0 ? homeEmptyGroups : groups}
+            groups={mode === defaultMode && query.length === 0 ? [...homeEmptyGroups] : groups}
           />
         )}
       </MantineSpotlight.ActionsList>

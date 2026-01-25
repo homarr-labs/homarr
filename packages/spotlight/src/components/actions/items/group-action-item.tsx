@@ -27,7 +27,7 @@ export const SpotlightGroupActionItem = <TOption extends Record<string, unknown>
 }: SpotlightGroupActionItemProps<TOption>) => {
   const interaction = group.useInteraction(option, query);
   // Avoid passing React's special `key` prop via spread
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const { key: _reactKey, ...optionProps } = option as unknown as { key?: unknown } & Record<string, unknown>;
 
   const renderRoot =
