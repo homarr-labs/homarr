@@ -1,4 +1,4 @@
-import { Group, Kbd, Stack, Text } from "@mantine/core";
+import { Group, Kbd, Text } from "@mantine/core";
 import {
   IconBook2,
   IconBrandDiscord,
@@ -22,11 +22,11 @@ import { externalMode } from "../external";
 import { pageMode } from "../page";
 import { userGroupMode } from "../user-group";
 
-type QuickLinkOption = {
+interface QuickLinkOption {
   icon: TablerIcon;
   name: string;
   path: string;
-};
+}
 
 export const useHomeEmptyGroups = () => {
   const { data: session } = useSession();
@@ -57,7 +57,7 @@ export const useHomeEmptyGroups = () => {
           name: tPages("manageBoard.label"),
         });
 
-        if (session?.user?.permissions.includes("admin")) {
+        if (session?.user.permissions.includes("admin")) {
           quickLinks.push({
             icon: IconSettings,
             path: "/manage/settings",
@@ -136,5 +136,3 @@ export const useHomeEmptyGroups = () => {
     }),
   ] as const;
 };
-
-

@@ -1,5 +1,7 @@
 import { Group, Image, Kbd, Stack, Text } from "@mantine/core";
+import { useDebouncedValue } from "@mantine/hooks";
 import { IconDownload, IconSearch } from "@tabler/icons-react";
+import { keepPreviousData } from "@tanstack/react-query";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
@@ -353,7 +355,7 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
           <Stack gap={0} justify="center">
             <Text size="sm">{name}</Text>
             <Text size="xs" c="gray.6">
-              {domain ? domain : "DuckDuckGo bang"}
+              {domain ?? "DuckDuckGo bang"}
             </Text>
           </Stack>
         </Group>
@@ -376,13 +378,13 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
 
     if (option.kind === "engine") {
       const nextBang = option.engine.short;
-      const nextQuery = `!${nextBang} ${searchText}`.trimEnd() + " ";
+      const nextQuery = `${nextBang} ${searchText}`.trimEnd() + " ";
       return { type: "setQuery", query: bangToken === nextBang && query.endsWith(" ") ? query : nextQuery };
     }
 
     if (option.kind === "ddg") {
       const nextBang = option.bang.t;
-      const nextQuery = `!${nextBang} ${searchText}`.trimEnd() + " ";
+      const nextQuery = `${nextBang} ${searchText}`.trimEnd() + " ";
       return { type: "setQuery", query: bangToken === nextBang && query.endsWith(" ") ? query : nextQuery };
     }
 
@@ -391,12 +393,18 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
   useQueryOptions(query) {
     const tExternal = useScopedI18n("search.mode.external.group.searchEngine");
     const { bangToken, searchText, locked } = parseBangQuery(query);
-    const enginesQuery = clientApi.searchEngine.search.useQuery({ query: bangToken, limit: 10 });
+    const [debouncedBangToken] = useDebouncedValue(bangToken, 150);
+
+    const enginesQuery = clientApi.searchEngine.search.useQuery(
+      { query: debouncedBangToken, limit: 10 },
+      { placeholderData: keepPreviousData },
+    );
 
     const ddgQuery = clientApi.bangs.search.useQuery(
-      { query: bangToken, limit: 20 },
+      { query: debouncedBangToken, limit: 10 },
       {
-        enabled: bangToken.length > 0,
+        enabled: debouncedBangToken.length >= 1,
+        placeholderData: keepPreviousData,
       },
     );
 
@@ -412,7 +420,7 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
     );
 
     const ddgOptions = (ddgQuery.data ?? [])
-      .filter((bang) => !engineOptions.some((o) => o.kind === "engine" && o.engine.short === bang.t))
+      .filter((bang) => !engineOptions.some((option) => option.kind === "engine" && option.engine.short === bang.t))
       .map(
         (bang): ExternalOption => ({
           key: `ddg-${bang.t}`,
@@ -423,8 +431,8 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
 
     const searchActions: ExternalOption[] = [];
     if (locked && bangToken.length > 0) {
-      const matchedEngine = (enginesQuery.data ?? []).find((e) => e.short === bangToken);
-      const matchedDdg = (ddgQuery.data ?? []).find((b) => b.t === bangToken);
+      const matchedEngine = (enginesQuery.data ?? []).find((engine) => engine.short === bangToken);
+      const matchedDdg = (ddgQuery.data ?? []).find((bang) => bang.t === bangToken);
 
       const label = matchedEngine?.name ?? matchedDdg?.s;
       const iconUrl = matchedEngine?.iconUrl;
@@ -451,7 +459,8 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
           });
         }
       }
-    } if (query.length === 0) {
+    }
+    if (query.length === 0) {
       searchActions.push({
         key: "hint",
         kind: "hint",
@@ -463,7 +472,7 @@ export const searchEnginesSearchGroups = createGroup<ExternalOption>({
     return {
       isLoading,
       isError,
-      data: [...searchActions, ...engineOptions, ...ddgOptions],
+      data: [...searchActions, ...engineOptions, ...ddgOptions].slice(0, 10),
     };
   },
 });
