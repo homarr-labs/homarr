@@ -1,23 +1,17 @@
 import { notFound } from "next/navigation";
-import { Alert, Box, Group, Stack, Title } from "@mantine/core";
-import { IconExclamationCircle } from "@tabler/icons-react";
+import { Box, Card, Group, Stack, Title } from "@mantine/core";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 
-import { CurrentLanguageCombobox } from "~/components/language/current-language-combobox";
 import { DangerZoneItem, DangerZoneRoot } from "~/components/manage/danger-zone";
 import { catchTrpcNotFound } from "~/errors/trpc-catch-error";
 import { createMetaTitle } from "~/metadata";
 import { canAccessUserEditPage } from "../access";
-import { ChangeHomeBoardForm } from "./_components/_change-home-board";
-import { ChangeSearchPreferencesForm } from "./_components/_change-search-preferences";
 import { DeleteUserButton } from "./_components/_delete-user-button";
-import { FirstDayOfWeek } from "./_components/_first-day-of-week";
-import { PingIconsEnabled } from "./_components/_ping-icons-enabled";
+import { UserGeneralSettingsForm } from "./_components/_general-settings-form";
 import { UserProfileAvatarForm } from "./_components/_profile-avatar-form";
-import { UserProfileForm } from "./_components/_profile-form";
 
 interface Props {
   params: Promise<{
@@ -63,60 +57,30 @@ export default async function EditUserPage(props: Props) {
 
   const boards = await api.board.getAllBoards();
   const searchEngines = await api.searchEngine.getSelectable();
-
-  const isCredentialsUser = user.provider === "credentials";
+  const isSelf = session?.user.id === user.id;
 
   return (
     <Stack>
-      {!isCredentialsUser && (
-        <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
-          {t("management.page.user.fieldsDisabledExternalProvider")}
-        </Alert>
-      )}
-
       <Title>{tGeneral("title")}</Title>
-      <Group gap="xl">
-        <Box flex={1}>
-          <UserProfileForm user={user} />
+      <Group gap="xl" align="flex-start" wrap="wrap">
+        <Box flex={1} miw={{ base: "100%", md: 540 }}>
+          <UserGeneralSettingsForm
+            user={user}
+            boardsData={boards.map((board) => ({
+              id: board.id,
+              name: board.name,
+              logoImageUrl: board.logoImageUrl,
+            }))}
+            searchEnginesData={searchEngines}
+            showLanguageSelector={isSelf}
+          />
         </Box>
-        <Box w={{ base: "100%", lg: 200 }}>
-          <UserProfileAvatarForm user={user} />
+        <Box w={{ base: "100%", lg: 260 }}>
+          <Card withBorder>
+            <UserProfileAvatarForm user={user} />
+          </Card>
         </Box>
       </Group>
-
-      {session?.user.id === user.id && (
-        <Stack mb="lg">
-          <Title order={2}>{tGeneral("item.language")}</Title>
-          <CurrentLanguageCombobox />
-        </Stack>
-      )}
-
-      <Stack mb="lg">
-        <Title order={2}>{tGeneral("item.board.title")}</Title>
-        <ChangeHomeBoardForm
-          user={user}
-          boardsData={boards.map((board) => ({
-            id: board.id,
-            name: board.name,
-            logoImageUrl: board.logoImageUrl,
-          }))}
-        />
-      </Stack>
-
-      <Stack mb="lg">
-        <Title order={2}>{tGeneral("item.search")}</Title>
-        <ChangeSearchPreferencesForm user={user} searchEnginesData={searchEngines} />
-      </Stack>
-
-      <Stack mb="lg">
-        <Title order={2}>{tGeneral("item.firstDayOfWeek")}</Title>
-        <FirstDayOfWeek user={user} />
-      </Stack>
-
-      <Stack mb="lg">
-        <Title order={2}>{tGeneral("item.accessibility")}</Title>
-        <PingIconsEnabled user={user} />
-      </Stack>
 
       <DangerZoneRoot>
         <DangerZoneItem
