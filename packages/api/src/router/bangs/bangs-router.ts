@@ -15,5 +15,3 @@ export const bangsRouter = createTRPCRouter({
       return await searchDuckDuckGoBangsAsync({ query: input.query, limit: input.limit });
     }),
 });
-
-
