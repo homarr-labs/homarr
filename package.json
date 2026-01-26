@@ -51,7 +51,7 @@
     "cross-env": "^10.1.0",
     "jsdom": "^27.4.0",
     "json5": "^2.2.3",
-    "prettier": "^3.8.0",
+    "prettier": "^3.8.1",
     "semantic-release": "^25.0.2",
     "testcontainers": "^11.11.0",
     "turbo": "^2.7.5",
