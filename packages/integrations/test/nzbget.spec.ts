@@ -66,6 +66,8 @@ describe("Nzbget integration", () => {
     expect(result.success).toBe(false);
     if (result.success) return;
 
+    console.log(JSON.stringify(result.error, null, 2));
+
     expect(result.error).toBeInstanceOf(TestConnectionError);
     expect(result.error.type).toBe("authorization");
 
