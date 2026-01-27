@@ -29,7 +29,7 @@
     "@homarr/core": "workspace:^0.1.0",
     "@paralleldrive/cuid2": "^3.1.0",
     "dayjs": "^1.11.19",
-    "next": "16.1.4",
+    "next": "16.1.5",
     "octokit": "^5.0.5",
     "react": "19.2.3",
     "react-dom": "19.2.3",
