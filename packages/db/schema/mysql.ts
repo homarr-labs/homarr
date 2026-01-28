@@ -78,6 +78,7 @@ export const users = mysqlTable("user", {
     onDelete: "set null",
   }),
   openSearchInNewTab: boolean().default(false).notNull(),
+  ddgBangs: boolean().default(true).notNull(),
   colorScheme: varchar({ length: 5 }).$type<ColorScheme>().default("dark").notNull(),
   firstDayOfWeek: tinyint().$type<DayOfWeek>().default(1).notNull(), // Defaults to Monday
   pingIconsEnabled: boolean().default(false).notNull(),

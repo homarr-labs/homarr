@@ -126,6 +126,7 @@ export const userChangeHomeBoardsSchema = z.object({
 export const userChangeSearchPreferencesSchema = z.object({
   defaultSearchEngineId: z.string().min(1).nullable(),
   openInNewTab: z.boolean(),
+  ddgBangsEnabled: z.boolean(),
 });
 
 export const userChangeColorSchemeSchema = z.object({
@@ -146,4 +147,8 @@ export const userFirstDayOfWeekSchema = z.object({
 
 export const userPingIconsEnabledSchema = z.object({
   pingIconsEnabled: z.boolean(),
+});
+
+export const userDdgBangsSchema = z.object({
+  ddgBangs: z.boolean(),
 });

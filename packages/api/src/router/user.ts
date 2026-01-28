@@ -19,6 +19,7 @@ import {
   userChangePasswordApiSchema,
   userChangeSearchPreferencesSchema,
   userCreateSchema,
+  userDdgBangsSchema,
   userEditProfileSchema,
   userFirstDayOfWeekSchema,
   userInitSchema,
@@ -231,6 +232,7 @@ export const userRouter = createTRPCRouter({
         pingIconsEnabled: true,
         defaultSearchEngineId: true,
         openSearchInNewTab: true,
+        ddgBangs: true,
       }),
     )
     .meta({ openapi: { method: "GET", path: "/api/users/{userId}", tags: ["users"], protect: true } })
@@ -256,6 +258,7 @@ export const userRouter = createTRPCRouter({
           pingIconsEnabled: true,
           defaultSearchEngineId: true,
           openSearchInNewTab: true,
+          ddgBangs: true,
         },
         where: eq(users.id, input.userId),
       });
@@ -498,6 +501,33 @@ export const userRouter = createTRPCRouter({
           pingIconsEnabled: input.pingIconsEnabled,
         })
         .where(eq(users.id, ctx.session.user.id));
+    }),
+  changeDdgBangs: protectedProcedure
+    .input(userDdgBangsSchema.and(byIdSchema))
+    .meta({
+      openapi: {
+        method: "PATCH",
+        path: "/api/users/ddg-bangs",
+        tags: ["users"],
+        protect: true,
+        deprecated: true,
+      },
+    })
+    .mutation(async ({ input, ctx }) => {
+      // Only admins can change other users DDG bang preference
+      if (!ctx.session.user.permissions.includes("admin") && ctx.session.user.id !== input.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      await ctx.db
+        .update(users)
+        .set({
+          ddgBangs: input.ddgBangs,
+        })
+        .where(eq(users.id, input.id));
     }),
   changeFirstDayOfWeek: protectedProcedure
     .input(convertIntersectionToZodObject(userFirstDayOfWeekSchema.and(byIdSchema)))

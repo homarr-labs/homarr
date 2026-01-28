@@ -26,6 +26,7 @@ export const appRouter = createTRPCRouter({
   media: lazy(() => import("./router/medias/media-router").then((mod) => mod.mediaRouter)),
   updateChecker: lazy(() => import("./router/update-checker").then((mod) => mod.updateCheckerRouter)),
   certificates: lazy(() => import("./router/certificates/certificate-router").then((mod) => mod.certificateRouter)),
+  bangs: lazy(() => import("./router/bangs/bangs-router").then((mod) => mod.bangsRouter)),
   info: lazy(() => import("./router/info").then((mod) => mod.infoRouter)),
 });
 

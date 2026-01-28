@@ -157,6 +157,9 @@
       },
       "openSearchInNewTab": {
         "label": "Open search results in new tab"
+      },
+      "ddgBangs": {
+        "label": "Enable DuckDuckGo bangs"
       }
     },
     "error": {
@@ -243,6 +246,16 @@
           },
           "error": {
             "message": "Unable to toggle ping icons"
+          }
+        }
+      },
+      "changeDdgBangs": {
+        "notification": {
+          "success": {
+            "message": "DuckDuckGo bangs toggled successfully"
+          },
+          "error": {
+            "message": "Unable to toggle DuckDuckGo bangs"
           }
         }
       },
@@ -4231,6 +4244,9 @@
         "group": {
           "searchEngine": {
             "title": "Search engines",
+            "tip": {
+              "ddgBangs": "Tip: You can use any DuckDuckGo bangs here as well, e.g. !something"
+            },
             "children": {
               "action": {
                 "search": {
