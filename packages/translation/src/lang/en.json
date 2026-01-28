@@ -3305,7 +3305,7 @@
             "title": "Analytics",
             "general": {
               "title": "Send anonymous analytics",
-              "text": "Homarr will send anonymized analytics using the open source software Umami. It never collects any personal information and is therefore fully GDPR & CCPA compliant. We encourage you to enable analytics because it helps our open source team to identify issues and prioritize our backlog."
+              "text": "Homarr will send anonymized analytics using the open source software Umami. When enabled, we collect: Homarr version, database type (MySQL/PostgreSQL/SQLite), Docker/Kubernetes status, authentication methods enabled, and the number of each feature. All data is anonymous and aggregated - no personal information, URLs, names, or identifiable data is ever collected. This helps our open source team understand usage patterns and prioritize development."
             },
             "widgetData": {
               "title": "Widget data",
