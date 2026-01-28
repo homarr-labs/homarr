@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { Box, Card, Group, Stack, Title } from "@mantine/core";
+import { Alert, Box, Group, Stack, Title } from "@mantine/core";
+import { IconExclamationCircle } from "@tabler/icons-react";
 
 import { api } from "@homarr/api/server";
 import { auth } from "@homarr/auth/next";
@@ -58,9 +59,15 @@ export default async function EditUserPage(props: Props) {
   const boards = await api.board.getAllBoards();
   const searchEngines = await api.searchEngine.getSelectable();
   const isSelf = session?.user.id === user.id;
+  const isCredentialsUser = user.provider === "credentials";
 
   return (
     <Stack>
+      {!isCredentialsUser && (
+        <Alert variant="light" color="yellow" icon={<IconExclamationCircle size="1rem" stroke={1.5} />}>
+          {t("management.page.user.fieldsDisabledExternalProvider")}
+        </Alert>
+      )}
       <Title>{tGeneral("title")}</Title>
       <Group gap="xl" align="flex-start" wrap="wrap">
         <Box flex={1} miw={{ base: "100%", md: 540 }}>
@@ -76,9 +83,7 @@ export default async function EditUserPage(props: Props) {
           />
         </Box>
         <Box w={{ base: "100%", lg: 260 }}>
-          <Card withBorder>
-            <UserProfileAvatarForm user={user} />
-          </Card>
+          <UserProfileAvatarForm user={user} />
         </Box>
       </Group>
 
