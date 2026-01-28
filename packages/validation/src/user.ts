@@ -126,6 +126,7 @@ export const userChangeHomeBoardsSchema = z.object({
 export const userChangeSearchPreferencesSchema = z.object({
   defaultSearchEngineId: z.string().min(1).nullable(),
   openInNewTab: z.boolean(),
+  ddgBangsEnabled: z.boolean(),
 });
 
 export const userChangeColorSchemeSchema = z.object({
