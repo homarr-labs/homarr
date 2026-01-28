@@ -95,6 +95,7 @@ export function DockerTable(initialData: RouterOutputs["docker"]["getContainers"
   });
   const relativeTime = useTimeAgo(data.timestamp);
   const table = useTranslatedMantineReactTable({
+    id: "manage-tools-docker",
     data: data.containers,
     enableDensityToggle: false,
     enableColumnActions: false,

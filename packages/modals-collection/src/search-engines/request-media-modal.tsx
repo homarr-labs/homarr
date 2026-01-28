@@ -49,6 +49,7 @@ export const RequestMediaModal = createModal<RequestMediaModalProps>(({ actions,
   );
 
   const table = useTranslatedMantineReactTable({
+    id: "modal-request-media",
     columns,
     data: data && "seasons" in data ? data.seasons : [],
     enableColumnActions: false,

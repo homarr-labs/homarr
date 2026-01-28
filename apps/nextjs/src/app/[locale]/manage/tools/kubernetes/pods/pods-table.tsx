@@ -58,6 +58,7 @@ export function PodsTable(initialData: PodsTableComponentProps) {
   });
 
   const table = useTranslatedMantineReactTable({
+    id: "manage-tools-kubernetes-pods",
     data,
     enableDensityToggle: false,
     enableColumnActions: false,

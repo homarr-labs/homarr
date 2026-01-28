@@ -72,6 +72,7 @@ export function ServicesTable(initialData: ServicesTableComponentProps) {
   });
 
   const table = useTranslatedMantineReactTable({
+    id: "manage-tools-kubernetes-services",
     data,
     enableDensityToggle: false,
     enableColumnActions: false,
