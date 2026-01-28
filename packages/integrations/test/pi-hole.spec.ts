@@ -191,6 +191,7 @@ describe("Pi-hole v6 integration", () => {
     expect(result.success).toBe(false);
     if (result.success) return;
     expect(result.error).toBeInstanceOf(TestConnectionError);
+    console.log(JSON.stringify(result.error, null, 2));
     expect(result.error.type).toBe("authorization");
 
     // Cleanup
