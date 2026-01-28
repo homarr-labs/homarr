@@ -5,12 +5,12 @@ import { Button, Card, Divider, Group, Radio, Select, SimpleGrid, Stack, Switch,
 import type { DayOfWeek } from "@mantine/dates";
 import dayjs from "dayjs";
 import localeData from "dayjs/plugin/localeData";
-import { useForm } from "@tanstack/react-form";
 
 import type { RouterOutputs } from "@homarr/api";
 import { clientApi } from "@homarr/api/client";
 import { revalidatePathActionAsync } from "@homarr/common/client";
 import { env } from "@homarr/common/env";
+import { useZodForm } from "@homarr/form";
 import { showErrorNotification, showSuccessNotification } from "@homarr/notifications";
 import { useI18n, useScopedI18n } from "@homarr/translation/client";
 import {
@@ -47,17 +47,6 @@ const FIRST_DAY_OPTIONS: { value: DayOfWeek; labelKey: number }[] = [
   { value: 0, labelKey: 0 },
 ];
 
-const getErrorMessage = (errors: unknown[]): string | undefined => {
-  const messages = errors
-    .map((err) => {
-      if (typeof err === "string") return err;
-      if (err && typeof err === "object" && "message" in err) return String((err as { message: unknown }).message);
-      return null;
-    })
-    .filter(Boolean);
-  return messages.length > 0 ? messages.join(", ") : undefined;
-};
-
 interface UserGeneralSettingsFormProps {
   user: RouterOutputs["user"]["getById"];
   boardsData: Pick<Board, "id" | "name" | "logoImageUrl">[];
@@ -92,118 +81,90 @@ export const UserGeneralSettingsForm = ({
   const changeFirstDayOfWeekMutation = clientApi.user.changeFirstDayOfWeek.useMutation();
   const changePingIconsEnabledMutation = clientApi.user.changePingIconsEnabled.useMutation();
 
-  const hasChangesRef = useRef(false);
+  const initialValues = buildInitialValues(user);
+  const initialValuesRef = useRef(initialValues);
 
-  const form = useForm({
-    defaultValues: buildInitialValues(user),
-    validators: {
-      onChange: userGeneralSettingsSchema,
-    },
-    onSubmit: async ({ value, formApi }) => {
-      const parsed = userGeneralSettingsSchema.safeParse(value);
-      if (!parsed.success) return;
-
-      const defaults = formApi.options.defaultValues as FormValues | undefined;
-      if (!defaults) return;
-
-      const hasChanged = <K extends keyof FormValues>(field: K) =>
-        field === "email"
-          ? (value[field] || null) !== (defaults[field] || null)
-          : value[field] !== defaults[field];
-
-      const promises: Promise<unknown>[] = [];
-
-      const profileChanged = hasChanged("name") || hasChanged("email");
-      if (isCredentialsUser && profileChanged) {
-        promises.push(
-          editProfileMutation.mutateAsync({
-            id: user.id,
-            name: parsed.data.name,
-            email: parsed.data.email ?? "",
-          }),
-        );
-      }
-
-      const boardsChanged = hasChanged("homeBoardId") || hasChanged("mobileHomeBoardId");
-      if (boardsChanged) {
-        promises.push(
-          changeHomeBoardsMutation.mutateAsync({
-            userId: user.id,
-            homeBoardId: parsed.data.homeBoardId,
-            mobileHomeBoardId: parsed.data.mobileHomeBoardId,
-          }),
-        );
-      }
-
-      const searchChanged = hasChanged("defaultSearchEngineId") || hasChanged("openInNewTab");
-      if (searchChanged) {
-        promises.push(
-          changeSearchPreferencesMutation.mutateAsync({
-            userId: user.id,
-            defaultSearchEngineId: parsed.data.defaultSearchEngineId,
-            openInNewTab: parsed.data.openInNewTab,
-          }),
-        );
-      }
-
-      if (hasChanged("firstDayOfWeek")) {
-        promises.push(
-          changeFirstDayOfWeekMutation.mutateAsync({
-            id: user.id,
-            firstDayOfWeek: parsed.data.firstDayOfWeek,
-          }),
-        );
-      }
-
-      if (hasChanged("pingIconsEnabled")) {
-        promises.push(
-          changePingIconsEnabledMutation.mutateAsync({
-            id: user.id,
-            pingIconsEnabled: parsed.data.pingIconsEnabled,
-          }),
-        );
-      }
-
-      if (promises.length === 0) return;
-
-      try {
-        await Promise.all(promises);
-        formApi.reset({ ...parsed.data, email: parsed.data.email ?? "" });
-        await revalidatePathActionAsync(`/manage/users/${user.id}`);
-        showSuccessNotification({
-          title: t("common.notification.update.success"),
-          message: t("common.notification.update.success"),
-        });
-      } catch {
-        showErrorNotification({
-          title: t("common.notification.update.error"),
-          message: t("common.notification.update.error"),
-        });
-      }
-    },
+  const form = useZodForm(userGeneralSettingsSchema, {
+    initialValues,
   });
 
-  hasChangesRef.current = !form.state.isDefaultValue;
+  const isDirtyRef = useRef(false);
+  isDirtyRef.current = form.isDirty();
 
   const weekDays = useMemo(() => dayjs.weekdays(false), []);
+
+  const mutations = [editProfileMutation, changeHomeBoardsMutation, changeSearchPreferencesMutation, changeFirstDayOfWeekMutation, changePingIconsEnabledMutation];
+  const isPending = mutations.some((m) => m.isPending);
 
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
       if (env.NODE_ENV === "development") return;
-      if (hasChangesRef.current) e.preventDefault();
+      if (isDirtyRef.current) e.preventDefault();
     };
     window.addEventListener("beforeunload", handler);
     return () => window.removeEventListener("beforeunload", handler);
   }, []);
 
+  const handleSubmit = async (values: FormValues) => {
+    const parsed = userGeneralSettingsSchema.safeParse(values);
+    if (!parsed.success) return;
+
+    const defaults = initialValuesRef.current;
+    const changed = <K extends keyof FormValues>(...fields: K[]) =>
+      fields.some((f) => (f === "email" ? (values[f] || null) !== (defaults[f] || null) : values[f] !== defaults[f]));
+
+    const saveActions: { when: boolean; action: () => Promise<unknown> }[] = [
+      {
+        when: isCredentialsUser && changed("name", "email"),
+        action: () => editProfileMutation.mutateAsync({ id: user.id, name: parsed.data.name, email: parsed.data.email ?? "" }),
+      },
+      {
+        when: changed("homeBoardId", "mobileHomeBoardId"),
+        action: () => changeHomeBoardsMutation.mutateAsync({ userId: user.id, homeBoardId: parsed.data.homeBoardId, mobileHomeBoardId: parsed.data.mobileHomeBoardId }),
+      },
+      {
+        when: changed("defaultSearchEngineId", "openInNewTab"),
+        action: () => changeSearchPreferencesMutation.mutateAsync({ userId: user.id, defaultSearchEngineId: parsed.data.defaultSearchEngineId, openInNewTab: parsed.data.openInNewTab }),
+      },
+      {
+        when: changed("firstDayOfWeek"),
+        action: () => changeFirstDayOfWeekMutation.mutateAsync({ id: user.id, firstDayOfWeek: parsed.data.firstDayOfWeek }),
+      },
+      {
+        when: changed("pingIconsEnabled"),
+        action: () => changePingIconsEnabledMutation.mutateAsync({ id: user.id, pingIconsEnabled: parsed.data.pingIconsEnabled }),
+      },
+    ];
+
+    const promises = saveActions.filter((s) => s.when).map((s) => s.action());
+    if (promises.length === 0) return;
+
+    try {
+      await Promise.all(promises);
+      const newValues = { ...parsed.data, email: parsed.data.email ?? "" };
+      initialValuesRef.current = newValues;
+      form.setInitialValues(newValues);
+      form.resetDirty();
+      await revalidatePathActionAsync(`/manage/users/${user.id}`);
+      showSuccessNotification({
+        title: t("common.notification.update.success"),
+        message: t("common.notification.update.success"),
+      });
+    } catch {
+      showErrorNotification({
+        title: t("common.notification.update.error"),
+        message: t("common.notification.update.error"),
+      });
+    }
+  };
+
+  const handleDiscard = () => {
+    form.setValues(initialValuesRef.current);
+    form.resetDirty();
+  };
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        void form.handleSubmit();
-      }}
-    >
+    <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap="lg">
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg" verticalSpacing="lg">
           <Card withBorder bg="transparent">
@@ -217,31 +178,17 @@ export const UserGeneralSettingsForm = ({
                 )}
               </Stack>
               <Divider />
-              <form.Field name="name">
-                {({ state, handleChange, handleBlur }) => (
-                  <TextInput
-                    disabled={!isCredentialsUser}
-                    label={t("user.field.username.label")}
-                    withAsterisk
-                    value={state.value}
-                    onChange={(e) => handleChange(e.target.value)}
-                    onBlur={handleBlur}
-                    error={getErrorMessage(state.meta.errors)}
-                  />
-                )}
-              </form.Field>
-              <form.Field name="email">
-                {({ state, handleChange, handleBlur }) => (
-                  <TextInput
-                    disabled={!isCredentialsUser}
-                    label={t("user.field.email.label")}
-                    value={state.value ?? ""}
-                    onChange={(e) => handleChange(e.target.value)}
-                    onBlur={handleBlur}
-                    error={getErrorMessage(state.meta.errors)}
-                  />
-                )}
-              </form.Field>
+              <TextInput
+                disabled={!isCredentialsUser}
+                label={t("user.field.username.label")}
+                withAsterisk
+                {...form.getInputProps("name")}
+              />
+              <TextInput
+                disabled={!isCredentialsUser}
+                label={t("user.field.email.label")}
+                {...form.getInputProps("email")}
+              />
             </Stack>
           </Card>
 
@@ -251,34 +198,20 @@ export const UserGeneralSettingsForm = ({
                 <Title order={3}>{tGeneral("item.board.title")}</Title>
               </Stack>
               <Divider />
-              <form.Field name="homeBoardId">
-                {({ state, handleChange, handleBlur }) => (
-                  <BoardSelect
-                    label={tGeneral("item.board.type.general")}
-                    clearable
-                    boards={boardsData}
-                    w="100%"
-                    value={state.value}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={getErrorMessage(state.meta.errors)}
-                  />
-                )}
-              </form.Field>
-              <form.Field name="mobileHomeBoardId">
-                {({ state, handleChange, handleBlur }) => (
-                  <BoardSelect
-                    label={tGeneral("item.board.type.mobile")}
-                    clearable
-                    boards={boardsData}
-                    w="100%"
-                    value={state.value}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={getErrorMessage(state.meta.errors)}
-                  />
-                )}
-              </form.Field>
+              <BoardSelect
+                label={tGeneral("item.board.type.general")}
+                clearable
+                boards={boardsData}
+                w="100%"
+                {...form.getInputProps("homeBoardId")}
+              />
+              <BoardSelect
+                label={tGeneral("item.board.type.mobile")}
+                clearable
+                boards={boardsData}
+                w="100%"
+                {...form.getInputProps("mobileHomeBoardId")}
+              />
             </Stack>
           </Card>
 
@@ -288,30 +221,16 @@ export const UserGeneralSettingsForm = ({
                 <Title order={3}>{tGeneral("item.search")}</Title>
               </Stack>
               <Divider />
-              <form.Field name="defaultSearchEngineId">
-                {({ state, handleChange, handleBlur }) => (
-                  <Select
-                    label={t("user.field.defaultSearchEngine.label")}
-                    w="100%"
-                    data={searchEnginesData}
-                    value={state.value}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={getErrorMessage(state.meta.errors)}
-                  />
-                )}
-              </form.Field>
-              <form.Field name="openInNewTab">
-                {({ state, handleChange, handleBlur }) => (
-                  <Switch
-                    label={t("user.field.openSearchInNewTab.label")}
-                    checked={state.value}
-                    onChange={(e) => handleChange(e.currentTarget.checked)}
-                    onBlur={handleBlur}
-                    error={getErrorMessage(state.meta.errors)}
-                  />
-                )}
-              </form.Field>
+              <Select
+                label={t("user.field.defaultSearchEngine.label")}
+                w="100%"
+                data={searchEnginesData}
+                {...form.getInputProps("defaultSearchEngineId")}
+              />
+              <Switch
+                label={t("user.field.openSearchInNewTab.label")}
+                {...form.getInputProps("openInNewTab", { type: "checkbox" })}
+              />
             </Stack>
           </Card>
 
@@ -323,62 +242,40 @@ export const UserGeneralSettingsForm = ({
               <Divider />
               {showLanguageSelector && <CurrentLanguageCombobox />}
               <Title order={4}>{tGeneral("item.firstDayOfWeek")}</Title>
-              <form.Field name="firstDayOfWeek">
-                {({ state, handleChange, handleBlur }) => (
-                  <Radio.Group
-                    value={String(state.value)}
-                    onChange={(value) => handleChange(parseInt(value) as DayOfWeek)}
-                    onBlur={handleBlur}
-                    error={getErrorMessage(state.meta.errors)}
-                  >
-                    <Group mt="xs" wrap="wrap">
-                      {FIRST_DAY_OPTIONS.map(({ value: dayValue, labelKey }) => (
-                        <Radio key={dayValue} value={String(dayValue)} label={weekDays[labelKey]} />
-                      ))}
-                    </Group>
-                  </Radio.Group>
-                )}
-              </form.Field>
+              <Radio.Group {...form.getInputProps("firstDayOfWeek")}>
+                <Group mt="xs" wrap="wrap">
+                  {FIRST_DAY_OPTIONS.map(({ value: dayValue, labelKey }) => (
+                    <Radio key={dayValue} value={dayValue} label={weekDays[labelKey]} />
+                  ))}
+                </Group>
+              </Radio.Group>
               <Divider my="xs" />
               <Title order={4}>{tGeneral("item.accessibility")}</Title>
-              <form.Field name="pingIconsEnabled">
-                {({ state, handleChange, handleBlur }) => (
-                  <Switch
-                    label={t("user.field.pingIconsEnabled.label")}
-                    checked={state.value}
-                    onChange={(e) => handleChange(e.currentTarget.checked)}
-                    onBlur={handleBlur}
-                    error={getErrorMessage(state.meta.errors)}
-                  />
-                )}
-              </form.Field>
+              <Switch
+                label={t("user.field.pingIconsEnabled.label")}
+                {...form.getInputProps("pingIconsEnabled", { type: "checkbox" })}
+              />
             </Stack>
           </Card>
         </SimpleGrid>
 
-        <form.Subscribe
-          selector={(state) => ({ hasChanges: !state.isDefaultValue, isSubmitting: state.isSubmitting, canSubmit: state.canSubmit })}
-        >
-          {({ hasChanges, isSubmitting, canSubmit }) => (
-            <div style={{ position: "sticky", bottom: 20 }}>
-              {hasChanges && (
-                <Card withBorder>
-                  <Group justify="space-between" wrap="wrap">
-                    <Text fw={500}>{t("common.unsavedChanges")}</Text>
-                    <Group>
-                      <Button disabled={isSubmitting} variant="default" onClick={() => form.reset()}>
-                        {t("common.action.discard")}
-                      </Button>
-                      <Button loading={isSubmitting} type="submit" disabled={!canSubmit}>
-                        {t("common.action.saveChanges")}
-                      </Button>
-                    </Group>
-                  </Group>
-                </Card>
-              )}
-            </div>
+        <div style={{ position: "sticky", bottom: 20 }}>
+          {form.isDirty() && (
+            <Card withBorder>
+              <Group justify="space-between" wrap="wrap">
+                <Text fw={500}>{t("common.unsavedChanges")}</Text>
+                <Group>
+                  <Button disabled={isPending} variant="default" onClick={handleDiscard}>
+                    {t("common.action.discard")}
+                  </Button>
+                  <Button loading={isPending} type="submit" disabled={!form.isValid()}>
+                    {t("common.action.saveChanges")}
+                  </Button>
+                </Group>
+              </Group>
+            </Card>
           )}
-        </form.Subscribe>
+        </div>
       </Stack>
     </form>
   );
