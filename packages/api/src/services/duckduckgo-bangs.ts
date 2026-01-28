@@ -7,6 +7,13 @@ import type { DuckDuckGoBang } from "@homarr/request-handler/duckduckgo-bangs";
 
 const normalizeBangToken = (token: string) => token.toLowerCase().trim();
 
+/**
+ * Binary search to find the first index where bang.t >= tokenPrefix.
+ * This is O(log n) vs O(n) for findIndex, which matters because DuckDuckGo
+ * has ~13,000+ bangs. Combined with the pre-sorted data, this allows
+ * efficient prefix matching by finding the start position and iterating
+ * only through consecutive matches.
+ */
 const lowerBound = (arr: DuckDuckGoBang[], tokenPrefix: string) => {
   let low = 0;
   let high = arr.length;
