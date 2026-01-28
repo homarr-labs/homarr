@@ -56,7 +56,7 @@
     "testcontainers": "^11.11.0",
     "turbo": "^2.7.5",
     "typescript": "^5.9.3",
-    "vite-tsconfig-paths": "^6.0.4",
+    "vite-tsconfig-paths": "^6.0.5",
     "vitest": "^4.0.18"
   },
   "packageManager": "pnpm@10.28.1",
