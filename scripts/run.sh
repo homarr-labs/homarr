@@ -40,19 +40,20 @@ fi
 
 
 
-node apps/tasks/tasks.cjs &
-TASKS_PID=$!
+# Node.js memory optimization flags:
+# --optimize-for-size: Optimizes for smaller memory footprint (trades some performance for memory)
+# --max-old-space-size: Limit heap size to prevent memory bloat (set to reasonable limit)
+# --expose-gc: Expose garbage collection API (allows manual GC if needed)
+NODE_OPTS="--optimize-for-size --max-old-space-size=300 --expose-gc"
 
-node apps/websocket/wssServer.cjs &
-WSS_PID=$!
-
-node apps/nextjs/server.js &
+# Tasks worker and WebSocket are now merged into Next.js server, so only one process needed
+node $NODE_OPTS apps/nextjs/server.js &
 NEXTJS_PID=$!
 
 # Function to handle SIGTERM and shut down services
 terminate() {
     echo "Received SIGTERM. Shutting down..."
-    kill -TERM $NGINX_PID $TASKS_PID $WSS_PID $NEXTJS_PID 2>/dev/null
+    kill -TERM $NGINX_PID $NEXTJS_PID 2>/dev/null
     wait
     # kill redis-server last because of logging of other services and only if $REDIS_PID is set
     if [ -n "$REDIS_PID" ]; then

@@ -16,5 +16,8 @@ export const cronJobApi = createTRPCClient<JobRouter>({
 });
 
 function getBaseUrl() {
-  return `http://localhost:${CRON_JOB_API_PORT}`;
+  // Tasks API is now merged into Next.js, so use the same port
+  // In production, this will be handled by nginx proxy
+  const port = process.env.PORT || "3000";
+  return `http://localhost:${port}`;
 }
