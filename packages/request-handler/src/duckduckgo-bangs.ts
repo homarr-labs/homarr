@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { z } from "zod";
 
 import { env } from "@homarr/common/env";
+import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { withTimeoutAsync } from "@homarr/core/infrastructure/http/timeout";
 import { createChannelWithLatestAndEvents } from "@homarr/redis";
@@ -55,7 +56,7 @@ export const duckDuckGoBangsRequestHandler = createCachedRequestHandler({
     });
 
     if (!res.ok) {
-      throw new Error(`Failed to fetch DuckDuckGo bangs: ${res.status} ${res.statusText}`);
+      throw new ResponseError(res);
     }
 
     const json: unknown = await res.json();
