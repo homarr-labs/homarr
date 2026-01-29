@@ -156,7 +156,7 @@
         "label": "Mecanismo de pesquisa padrão"
       },
       "openSearchInNewTab": {
-        "label": "Abrir resultados da busca em uma nova aba"
+        "label": "Abrir resultados da busca em uma nova guia"
       }
     },
     "error": {
@@ -742,7 +742,7 @@
           "description": ""
         },
         "authorization": {
-          "title": "",
+          "title": "Erro de autorização",
           "description": ""
         },
         "statusCode": {
@@ -751,9 +751,9 @@
           "otherDescription": "",
           "reason": {
             "badRequest": "",
-            "notFound": "",
+            "notFound": "Não encontrado",
             "tooManyRequests": "",
-            "internalServerError": "",
+            "internalServerError": "Erro interno do servidor",
             "serviceUnavailable": "",
             "gatewayTimeout": ""
           }
@@ -824,7 +824,7 @@
             }
           },
           "details": {
-            "title": "",
+            "title": "Detalhes",
             "description": "",
             "content": {
               "action": "Exibir conteúdo",
@@ -833,7 +833,7 @@
           }
         },
         "request": {
-          "title": "",
+          "title": "Erro de requisição",
           "description": {
             "connection": {
               "hostUnreachable": "",
@@ -888,12 +888,12 @@
           "message": ""
         },
         "notFound": {
-          "title": "",
+          "title": "Não encontrado",
           "message": ""
         },
         "internalServerError": {
-          "title": "",
-          "message": ""
+          "title": "Erro interno do servidor",
+          "message": "O servidor encontrou um erro"
         },
         "serviceUnavailable": {
           "title": "",
@@ -904,8 +904,8 @@
           "message": ""
         },
         "domainNotFound": {
-          "title": "",
-          "message": ""
+          "title": "Domínio não encontrado",
+          "message": "O domínio não pôde ser encontrado"
         },
         "connectionRefused": {
           "title": "",
@@ -947,8 +947,8 @@
           "newLabel": "Novo nome de usuário"
         },
         "apiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Chave de API",
+          "newLabel": "Nova chave de API"
         },
         "password": {
           "label": "Senha",
@@ -1069,7 +1069,7 @@
       "previous": "Anterior",
       "next": "Próximo",
       "checkoutDocs": "",
-      "checkLogs": "",
+      "checkLogs": "Verifique os logs para mais detalhes",
       "tryAgain": "Tente novamente",
       "loading": ""
     },
@@ -1201,7 +1201,7 @@
       },
       "remove": {
         "title": "",
-        "message": ""
+        "message": "Tem certeza de que deseja remover esta seção dinâmica? Os itens serão movidos para o mesmo local na seção pai."
       }
     },
     "category": {
@@ -1211,18 +1211,18 @@
         }
       },
       "action": {
-        "create": "",
+        "create": "Nova categoria",
         "edit": "Renomear categoria",
         "remove": "",
         "moveUp": "Subir",
         "moveDown": "Mover para baixo",
-        "createAbove": "",
-        "createBelow": "",
+        "createAbove": "Nova categoria acima",
+        "createBelow": "Nova categoria abaixo",
         "openAllInNewTabs": ""
       },
       "create": {
-        "title": "",
-        "submit": ""
+        "title": "Nova categoria",
+        "submit": "Adicionar categoria"
       },
       "remove": {
         "title": "",
@@ -1234,7 +1234,7 @@
       },
       "menu": {
         "label": {
-          "create": "",
+          "create": "Nova categoria",
           "changePosition": "Mudar de posição"
         }
       },
@@ -1246,12 +1246,12 @@
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "Novo item",
+      "import": "Importar item",
+      "edit": "Editar item",
+      "moveResize": "Mover / redimensionar item",
+      "duplicate": "Duplicar item",
+      "remove": "Remover item"
     },
     "menu": {
       "label": {
@@ -1260,11 +1260,11 @@
     },
     "create": {
       "title": "",
-      "search": "",
+      "search": "Filtrar itens",
       "addToBoard": ""
     },
     "moveResize": {
-      "title": "",
+      "title": "Mover / redimensionar item",
       "field": {
         "width": {
           "label": "Largura"
@@ -1281,17 +1281,17 @@
       }
     },
     "edit": {
-      "title": "",
+      "title": "Editar item",
       "advancedOptions": {
         "label": "",
-        "title": ""
+        "title": "Opções avançadas de itens"
       },
       "field": {
         "integrations": {
           "label": ""
         },
         "title": {
-          "label": ""
+          "label": "Título"
         },
         "customCssClasses": {
           "label": ""
@@ -1302,8 +1302,8 @@
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Remover item",
+      "message": "Tem certeza que deseja remover esse item?"
     }
   },
   "widget": {
@@ -1315,7 +1315,7 @@
           "label": ""
         },
         "openInNewTab": {
-          "label": "Abrir em novo separador"
+          "label": "Abrir em nova guia"
         },
         "showTitle": {
           "label": "Exibir o nome do aplicativo"
@@ -1326,10 +1326,10 @@
         "layout": {
           "label": "",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Horizontal",
+            "row-reverse": "Horizontal (invertido)",
+            "column": "Vertical",
+            "column-reverse": "Vertical (invertido)"
           }
         },
         "descriptionDisplayMode": {
@@ -1338,7 +1338,7 @@
           "option": {
             "normal": "",
             "tooltip": "",
-            "hidden": ""
+            "hidden": "Oculto"
           }
         }
       },
@@ -1354,36 +1354,36 @@
       "description": "",
       "option": {
         "title": {
-          "label": ""
+          "label": "Título"
         },
         "layout": {
           "label": "",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
-              "label": ""
+              "label": "Grade"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "Grade horizontal"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "Ocultar título"
         },
         "hideIcon": {
-          "label": ""
+          "label": "Ocultar ícones"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Ocultar nomes de host"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Abrir em nova guia"
         },
         "items": {
           "label": "",
@@ -1399,13 +1399,13 @@
           "label": "",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
-              "label": ""
+              "label": "Grade"
             }
           }
         },
@@ -1433,13 +1433,13 @@
           "label": "",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
-              "label": ""
+              "label": "Grade"
             }
           }
         },
@@ -1459,8 +1459,8 @@
         "disabled": "Desativado",
         "processing": "",
         "disconnected": "",
-        "hours": "",
-        "minutes": "",
+        "hours": "Horas",
+        "minutes": "Minutos",
         "unlimited": ""
       }
     },
@@ -1469,11 +1469,11 @@
       "description": "Apresenta a data e hora actuais.",
       "option": {
         "customTitleToggle": {
-          "label": "",
+          "label": "Exibição personalizada do título/cidade",
           "description": "Exiba um título personalizado ou o nome da cidade/país na parte superior do relógio."
         },
         "customTitle": {
-          "label": ""
+          "label": "Título"
         },
         "is24HourFormat": {
           "label": "",
@@ -1511,7 +1511,7 @@
       "description": "",
       "option": {
         "title": {
-          "label": ""
+          "label": "Título"
         },
         "domain": {
           "label": ""
@@ -1521,7 +1521,7 @@
         }
       },
       "status": {
-        "online": "",
+        "online": "Online",
         "offline": ""
       }
     },
@@ -1596,7 +1596,7 @@
       }
     },
     "iframe": {
-      "name": "",
+      "name": "iFrame",
       "description": "Incorporar qualquer conteúdo da internet. Alguns sites podem restringir o acesso.",
       "option": {
         "embedUrl": {
@@ -1677,10 +1677,10 @@
           "label": "",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 dia"
             },
             "5d": {
-              "label": ""
+              "label": "5 dias"
             },
             "1mo": {
               "label": ""
@@ -1832,7 +1832,7 @@
       "description": "",
       "option": {
         "openIndexerSiteInNewTab": {
-          "label": ""
+          "label": "Abrir o site do indexador em uma nova guia"
         }
       },
       "title": "Gerenciador de indexadores",
@@ -1845,7 +1845,7 @@
       "name": "Monitoramento da integridade do sistema",
       "description": "Exibe informações que mostram a saúde e status de seu(s) sistema(s).",
       "tab": {
-        "system": "",
+        "system": "Sistema",
         "cluster": ""
       },
       "option": {
@@ -1879,11 +1879,11 @@
         "processor": "Processador: {cpuModelName}",
         "memory": "Memória: {memory}GiB",
         "memoryAvailable": "",
-        "version": "",
+        "version": "Versão {version}",
         "uptime": "",
         "loadAverage": "",
         "minute": "",
-        "minutes": "",
+        "minutes": "{count} minutos",
         "used": "",
         "available": "Disponível",
         "lastSeen": ""
@@ -1894,8 +1894,8 @@
       },
       "cluster": {
         "summary": {
-          "cpu": "",
-          "memory": ""
+          "cpu": "CPU",
+          "memory": "RAM"
         },
         "resource": {
           "node": {
@@ -1918,7 +1918,7 @@
             "plugin": ""
           },
           "detail": {
-            "cpu": "",
+            "cpu": "Núcleos",
             "memory": "",
             "storage": "",
             "uptime": "",
@@ -1932,8 +1932,8 @@
         "table": {
           "header": {
             "name": "Nome",
-            "cpu": "",
-            "memory": "",
+            "cpu": "CPU",
+            "memory": "RAM",
             "node": ""
           }
         }
@@ -1993,26 +1993,26 @@
         "buildServer": ""
       },
       "instances": {
-        "title": ""
+        "title": "Instâncias"
       }
     },
     "common": {
       "location": {
         "query": "",
-        "latitude": "",
-        "longitude": "",
-        "disabledTooltip": "",
-        "unknownLocation": "",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "disabledTooltip": "Por favor, insira uma cidade ou um CEP",
+        "unknownLocation": "Localização desconhecida",
         "search": "Pesquisa",
         "table": {
           "header": {
-            "city": "",
-            "country": "",
-            "coordinates": "",
-            "population": ""
+            "city": "Cidade",
+            "country": "País",
+            "coordinates": "Coordenadas",
+            "population": "População"
           },
           "action": {
-            "select": ""
+            "select": "Selecione {city}, {countryCode}"
           },
           "population": {
             "fallback": "Desconhecido"
@@ -2020,7 +2020,7 @@
         }
       },
       "integration": {
-        "noData": "",
+        "noData": "Nenhuma integração encontrada",
         "description": ""
       },
       "app": {
@@ -2054,7 +2054,7 @@
       },
       "error": {
         "noUrl": "",
-        "forYoutubeUseIframe": ""
+        "forYoutubeUseIframe": "Para vídeos do Youtube, use a opção de iFrame"
       }
     },
     "mediaServer": {
@@ -2226,7 +2226,7 @@
           "resume": ""
         },
         "item": {
-          "pause": "",
+          "pause": "Pausar item",
           "resume": "",
           "delete": {
             "title": "",
@@ -2397,7 +2397,7 @@
           "label": ""
         },
         "hideDescription": {
-          "label": ""
+          "label": "Ocultar descrição"
         }
       }
     },
@@ -2418,7 +2418,7 @@
           "description": ""
         },
         "showDetails": {
-          "label": ""
+          "label": "Exibir detalhes"
         },
         "showOnlyIcon": {
           "label": ""
@@ -2436,7 +2436,7 @@
             "label": "Importar do Docker",
             "loading": "Carregando imagens do Docker",
             "noImagesFound": "Nenhuma imagem do Docker encontrada",
-            "listFoundImages": "",
+            "listFoundImages": "Lista de imagens encontradas",
             "listAlreadyImportedImages": "",
             "allImagesAlreadyImported": "",
             "onlyAdminCanImport": "Apenas administradores podem importar do Docker",
@@ -2496,7 +2496,7 @@
           }
         }
       },
-      "not-found": "",
+      "not-found": "Não encontrado",
       "pre-release": "",
       "archived": "",
       "forked": "",
@@ -2510,7 +2510,7 @@
       "projectDescription": "",
       "created": "",
       "error": {
-        "label": "",
+        "label": "Erro",
         "messages": {
           "invalidIdentifier": "",
           "noMatchingVersion": "",
@@ -2545,7 +2545,7 @@
           }
         },
         "users": {
-          "label": ""
+          "label": "Usuários"
         },
         "guests": {
           "label": ""
@@ -2580,7 +2580,7 @@
       "name": "",
       "description": "",
       "tab": {
-        "system": "",
+        "system": "Sistema",
         "interfaces": ""
       },
       "error": {
@@ -2591,11 +2591,11 @@
       },
       "widget": {
         "fwname": "Nome",
-        "version": "",
-        "versiontitle": "",
+        "version": "Versão",
+        "versiontitle": "Versões",
         "cputitle": "Uso da CPU",
         "memorytitle": "",
-        "cpu": "",
+        "cpu": "CPU",
         "memory": "",
         "interfaces": {
           "name": "nome",
@@ -2622,7 +2622,7 @@
           "label": "",
           "description": "",
           "option": {
-            "cpu": "",
+            "cpu": "CPU",
             "memory": "",
             "network": ""
           }
@@ -2633,12 +2633,12 @@
             "textWithIcon": "",
             "text": "",
             "icon": "",
-            "hidden": ""
+            "hidden": "Ocultar rótulo"
           }
         }
       },
       "card": {
-        "cpu": "",
+        "cpu": "CPU",
         "memory": "",
         "network": "",
         "up": "",
@@ -2758,15 +2758,15 @@
           },
           "sidebarBehavior": {
             "label": "",
-            "description": "",
+            "description": "As barras laterais foram removidas na versão 1.0. Você pode selecionar o que deve acontecer com os itens dentro delas.",
             "option": {
               "lastSection": {
                 "label": "",
                 "description": ""
               },
               "removeItems": {
-                "label": "",
-                "description": ""
+                "label": "Remover itens",
+                "description": "Os itens presentes na barra lateral serão removidos"
               }
             }
           }
@@ -2781,7 +2781,7 @@
     },
     "field": {
       "pageTitle": {
-        "label": ""
+        "label": "Título da página"
       },
       "metaTitle": {
         "label": ""
@@ -2796,8 +2796,8 @@
         "label": "",
         "placeholder": "",
         "group": {
-          "your": "",
-          "other": ""
+          "your": "Suas imagens",
+          "other": "Outras imagens"
         }
       },
       "backgroundImageAttachment": {
@@ -2967,7 +2967,7 @@
               "confirm": {
                 "public": {
                   "title": "",
-                  "description": ""
+                  "description": "Tem certeza que deseja tornar esse quadro privado? Isso ocultará o quadro do público. Os links para convidados serão desativados."
                 },
                 "private": {
                   "title": "",
@@ -2996,8 +2996,8 @@
         "notice": "Para fazer esta página desaparecer, crie um quadro e defina-o como quadro inicial"
       },
       "notFound": {
-        "title": "",
-        "description": "",
+        "title": "Quadro não encontrado",
+        "description": "O quadro especificado não foi encontrado ou você não tem acesso a ele.",
         "link": "",
         "notice": ""
       },
@@ -3043,7 +3043,7 @@
       "evening": "Boa noite, {username}"
     },
     "notFound": {
-      "title": "",
+      "title": "Não encontrado",
       "text": ""
     },
     "navbar": {
@@ -3068,7 +3068,7 @@
             "docker": "Docker",
             "kubernetes": "Kubernetes",
             "logs": "",
-            "api": "",
+            "api": "API",
             "certificates": "",
             "tasks": ""
           }
@@ -3164,7 +3164,7 @@
         "includeFromAllUsers": ""
       },
       "user": {
-        "back": "",
+        "back": "Voltar aos usuários",
         "fieldsDisabledExternalProvider": "",
         "setting": {
           "general": {
@@ -3199,16 +3199,16 @@
         },
         "create": {
           "metaTitle": "Criar usuário",
-          "title": "",
+          "title": "Criar novo usuário",
           "step": {
             "personalInformation": {
-              "label": ""
+              "label": "Informações pessoais"
             },
             "security": {
               "label": "Segurança"
             },
             "groups": {
-              "label": "",
+              "label": "Grupos",
               "title": "",
               "description": ""
             },
@@ -3316,7 +3316,7 @@
               "text": ""
             },
             "usersData": {
-              "title": "",
+              "title": "Dados dos usuários",
               "text": ""
             }
           },
@@ -3360,7 +3360,7 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "Usuários",
             "enableGravatar": {
               "label": "",
               "description": ""
@@ -3378,22 +3378,22 @@
             "defaultColorScheme": {
               "label": "",
               "options": {
-                "light": "",
-                "dark": ""
+                "light": "Claro",
+                "dark": "Escuro"
               }
             }
           },
           "culture": {
-            "title": "",
+            "title": "Cultura",
             "defaultLocale": {
-              "label": ""
+              "label": "Idioma padrão"
             }
           }
         }
       },
       "tool": {
         "tasks": {
-          "title": "",
+          "title": "Tarefas",
           "status": {
             "idle": "",
             "running": "Em execução",
@@ -3402,7 +3402,7 @@
           },
           "job": {
             "minecraftServerStatus": {
-              "label": ""
+              "label": "Status do servidor Minecraft"
             },
             "iconsUpdater": {
               "label": ""
@@ -3459,13 +3459,13 @@
               "label": "Contêineres do Docker"
             },
             "firewallCpu": {
-              "label": ""
+              "label": "CPU do Firewall"
             },
             "firewallMemory": {
               "label": ""
             },
             "firewallVersion": {
-              "label": ""
+              "label": "Versão do Firewall"
             },
             "firewallInterfaces": {
               "label": ""
@@ -3547,12 +3547,12 @@
           }
         },
         "api": {
-          "title": "",
+          "title": "API",
           "modal": {
             "createApiToken": {
-              "title": "",
+              "title": "Token de API criado",
               "description": "",
-              "button": ""
+              "button": "Copiar e fechar"
             }
           },
           "tab": {
@@ -3560,10 +3560,10 @@
               "label": "Documentação"
             },
             "apiKey": {
-              "label": "",
-              "title": "",
+              "label": "Autenticação",
+              "title": "Chaves de API",
               "button": {
-                "createApiToken": ""
+                "createApiToken": "Criar token de API"
               },
               "modal": {
                 "delete": {
@@ -3573,9 +3573,9 @@
               },
               "table": {
                 "header": {
-                  "id": "",
-                  "createdBy": "",
-                  "actions": ""
+                  "id": "ID",
+                  "createdBy": "Criado por",
+                  "actions": "Ações"
                 }
               }
             }
@@ -3583,7 +3583,7 @@
         }
       },
       "about": {
-        "version": "",
+        "version": "Versão {version}",
         "text": "",
         "accordion": {
           "contributors": {
@@ -3643,7 +3643,7 @@
       },
       "stats": {
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
           "label": ""
@@ -3749,7 +3749,7 @@
       "title": "",
       "label": "",
       "providers": "",
-      "version": "",
+      "version": "Versão",
       "architecture": "",
       "capacity": {
         "title": "",
@@ -3774,7 +3774,7 @@
       "label": "",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nome"
         },
         "state": {
           "label": "",
@@ -3784,10 +3784,10 @@
           }
         },
         "cpu": {
-          "label": ""
+          "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "RAM"
         },
         "pods": {
           "label": ""
@@ -3813,7 +3813,7 @@
       "label": "",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nome"
         },
         "state": {
           "label": "",
@@ -3834,13 +3834,13 @@
       "label": "",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nome"
         },
         "namespace": {
           "label": ""
         },
         "className": {
-          "label": ""
+          "label": "Nome da classe"
         },
         "rulesAndPaths": {
           "label": ""
@@ -3857,7 +3857,7 @@
       "label": "",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nome"
         },
         "namespace": {
           "label": ""
@@ -3886,13 +3886,13 @@
       "label": "",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nome"
         },
         "namespace": {
           "label": ""
         },
         "image": {
-          "label": ""
+          "label": "Imagem"
         },
         "applicationType": {
           "label": ""
@@ -3912,7 +3912,7 @@
       "label": "",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nome"
         },
         "namespace": {
           "label": ""
@@ -3932,7 +3932,7 @@
       "label": "",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nome"
         },
         "namespace": {
           "label": ""
@@ -3949,7 +3949,7 @@
       "label": "",
       "field": {
         "name": {
-          "label": ""
+          "label": "Nome"
         },
         "namespace": {
           "label": ""
@@ -3985,9 +3985,9 @@
     }
   },
   "permission": {
-    "title": "",
+    "title": "Permissões",
     "userSelect": {
-      "title": ""
+      "title": "Adicionar permissão de usuário"
     },
     "groupSelect": {
       "title": "Adicionar permissão de grupo"
@@ -4119,7 +4119,7 @@
   },
   "search": {
     "placeholder": "",
-    "nothingFound": "",
+    "nothingFound": "Nada encontrado",
     "error": {
       "fetch": ""
     },
