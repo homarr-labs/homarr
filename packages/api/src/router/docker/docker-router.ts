@@ -4,7 +4,11 @@ import { z } from "zod/v4";
 
 import type { Container, ContainerState, Docker, Port } from "@homarr/docker";
 import { DockerSingleton } from "@homarr/docker";
-import { dockerContainersRequestHandler } from "@homarr/request-handler/docker";
+import {
+  dockerContainersRequestHandler,
+  getContainerLogsAsync,
+  streamContainerLogsAsync,
+} from "@homarr/request-handler/docker";
 
 import { dockerMiddleware } from "../../middlewares/docker";
 import { createTRPCRouter, permissionRequiredProcedure } from "../../trpc";
@@ -103,6 +107,84 @@ export const dockerRouter = createTRPCRouter({
 
       const innerHandler = dockerContainersRequestHandler.handler({});
       await innerHandler.invalidateAsync();
+    }),
+  logs: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .concat(dockerMiddleware())
+    .input(
+      z.object({
+        id: z.string(),
+        tail: z.number().min(1).max(1000).optional(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const logs = await getContainerLogsAsync(input.id, input.tail ?? 200);
+
+      if (!logs) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Container not found",
+        });
+      }
+
+      return {
+        logs,
+      };
+    }),
+  subscribeLogs: permissionRequiredProcedure
+    .requiresPermission("admin")
+    .concat(dockerMiddleware())
+    .input(
+      z.object({
+        id: z.string(),
+        tail: z.number().min(1).max(1000).optional(),
+      }),
+    )
+    .subscription(({ input }) => {
+      return observable<string>((emit) => {
+        let cleanupFn: (() => void) | undefined;
+        let isSubscribed = true;
+
+        const initializeStream = async () => {
+          try {
+            cleanupFn = await streamContainerLogsAsync(
+              input.id,
+              input.tail ?? 200,
+              (data) => {
+                if (isSubscribed) {
+                  emit.next(data);
+                }
+              },
+              (err) => {
+                if (isSubscribed) {
+                  emit.error(
+                    new TRPCError({
+                      code: "INTERNAL_SERVER_ERROR",
+                      message: err.message,
+                    }),
+                  );
+                }
+              },
+            );
+          } catch (err) {
+            if (isSubscribed) {
+              emit.error(
+                new TRPCError({
+                  code: "NOT_FOUND",
+                  message: err instanceof Error ? err.message : "Container not found",
+                }),
+              );
+            }
+          }
+        };
+
+        void initializeStream();
+
+        return () => {
+          isSubscribed = false;
+          cleanupFn?.();
+        };
+      });
     }),
 });
 
