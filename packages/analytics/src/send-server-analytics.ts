@@ -1,16 +1,51 @@
 import type { UmamiEventData } from "@umami/node";
 import { Umami } from "@umami/node";
 
+import { isProviderEnabled } from "@homarr/auth/server";
+import { Stopwatch } from "@homarr/common";
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { count, db } from "@homarr/db";
+import { isMysql, isPostgresql } from "@homarr/db/collection";
 import { getServerSettingByKeyAsync } from "@homarr/db/queries";
-import { integrations, items, users } from "@homarr/db/schema";
-import type { defaultServerSettings } from "@homarr/server-settings";
+import {
+  apiKeys,
+  apps,
+  boards,
+  cronJobConfigurations,
+  groups,
+  iconRepositories,
+  icons,
+  integrations,
+  invites,
+  itemLayouts,
+  items,
+  layouts,
+  medias,
+  searchEngines,
+  sectionLayouts,
+  sections,
+  users,
+} from "@homarr/db/schema";
+import { env as dockerEnv } from "@homarr/docker/env";
 
-import { Stopwatch } from "../../common/src";
+import packageJson from "../../../package.json";
 import { UMAMI_HOST_URL, UMAMI_WEBSITE_ID } from "./constants";
 
 const logger = createLogger({ module: "analytics" });
+
+const getDatabaseType = (): "mysql" | "postgresql" | "sqlite" => {
+  if (isMysql()) return "mysql";
+  if (isPostgresql()) return "postgresql";
+  return "sqlite";
+};
+
+const getEnabledAuthProviders = (): string[] => {
+  const providers: string[] = [];
+  if (isProviderEnabled("credentials")) providers.push("credentials");
+  if (isProviderEnabled("oidc")) providers.push("oidc");
+  if (isProviderEnabled("ldap")) providers.push("ldap");
+  return providers;
+};
 
 export const sendServerAnalyticsAsync = async () => {
   const stopWatch = new Stopwatch();
@@ -27,67 +62,48 @@ export const sendServerAnalyticsAsync = async () => {
     websiteId: UMAMI_WEBSITE_ID,
   });
 
-  await sendIntegrationDataAsync(umamiInstance, analyticsSettings);
-  await sendWidgetDataAsync(umamiInstance, analyticsSettings);
-  await sendUserDataAsync(umamiInstance, analyticsSettings);
+  const enabledAuthProviders = getEnabledAuthProviders();
 
-  logger.info(`Sent all analytics in ${stopWatch.getElapsedInHumanWords()}`);
-};
+  const analyticsData: UmamiEventData = {
+    homarrVersion: packageJson.version,
+    databaseType: getDatabaseType(),
+    dockerEnabled: dockerEnv.ENABLE_DOCKER ? 1 : 0,
+    kubernetesEnabled: dockerEnv.ENABLE_KUBERNETES ? 1 : 0,
+    authCredentials: enabledAuthProviders.includes("credentials") ? 1 : 0,
+    authOidc: enabledAuthProviders.includes("oidc") ? 1 : 0,
+    authLdap: enabledAuthProviders.includes("ldap") ? 1 : 0,
+    countUsers: await db.$count(users),
+    countBoards: await db.$count(boards),
+    countGroups: await db.$count(groups),
+    countApps: await db.$count(apps),
+    countWidgets: await db.$count(items),
+    countSections: await db.$count(sections),
+    countIntegrations: await db.$count(integrations),
+    countSearchEngines: await db.$count(searchEngines),
+    countIconRepositories: await db.$count(iconRepositories),
+    countIcons: await db.$count(icons),
+    countApiKeys: await db.$count(apiKeys),
+    countInvites: await db.$count(invites),
+    countMedias: await db.$count(medias),
+    countLayouts: await db.$count(layouts),
+    countItemLayouts: await db.$count(itemLayouts),
+    countSectionLayouts: await db.$count(sectionLayouts),
+    countCronJobConfigs: await db.$count(cronJobConfigurations),
+  };
 
-const sendWidgetDataAsync = async (umamiInstance: Umami, analyticsSettings: typeof defaultServerSettings.analytics) => {
-  if (!analyticsSettings.enableWidgetData) {
-    return;
-  }
-  const widgetCount = await db.$count(items);
-
-  const response = await umamiInstance.track("server-widget-data", {
-    countWidgets: widgetCount,
-  });
-  if (response.ok) {
-    return;
-  }
-
-  logger.warn("Unable to send track event data to Umami instance");
-};
-
-const sendUserDataAsync = async (umamiInstance: Umami, analyticsSettings: typeof defaultServerSettings.analytics) => {
-  if (!analyticsSettings.enableUserData) {
-    return;
-  }
-  const userCount = await db.$count(users);
-
-  const response = await umamiInstance.track("server-user-data", {
-    countUsers: userCount,
-  });
-  if (response.ok) {
-    return;
-  }
-
-  logger.warn("Unable to send track event data to Umami instance");
-};
-
-const sendIntegrationDataAsync = async (
-  umamiInstance: Umami,
-  analyticsSettings: typeof defaultServerSettings.analytics,
-) => {
-  if (!analyticsSettings.enableIntegrationData) {
-    return;
-  }
   const integrationKinds = await db
     .select({ kind: integrations.kind, count: count(integrations.id) })
     .from(integrations)
     .groupBy(integrations.kind);
 
-  const map: UmamiEventData = {};
-
   integrationKinds.forEach((integrationKind) => {
-    map[integrationKind.kind] = integrationKind.count;
+    analyticsData[`integration_${integrationKind.kind}`] = integrationKind.count;
   });
 
-  const response = await umamiInstance.track("server-integration-data-kind", map);
-  if (response.ok) {
-    return;
+  const response = await umamiInstance.track("server-analytics-v2", analyticsData);
+  if (!response.ok) {
+    logger.warn("Unable to send analytics to Umami instance");
   }
 
-  logger.warn("Unable to send track event data to Umami instance");
+  logger.info(`Sent analytics in ${stopWatch.getElapsedInHumanWords()}`);
 };
