@@ -11,12 +11,12 @@ import type { inferSearchParamsFromSchema } from "@homarr/common/types";
 import { getI18n, getScopedI18n } from "@homarr/translation/server";
 import { Link, SearchInput, TablePagination } from "@homarr/ui";
 
+import { DockerImportButton } from "~/components/apps/docker-import-button";
 import { ManageContainer } from "~/components/manage/manage-container";
 import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
 import { AppDeleteButton } from "./_app-delete-button";
-import { DockerImportButton } from "~/components/apps/docker-import-button";
 
 const searchParamsSchema = z.object({
   search: z.string().optional(),

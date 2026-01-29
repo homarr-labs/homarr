@@ -34,28 +34,26 @@ export const dockerRouter = createTRPCRouter({
       const nestedContainers = await Promise.all(
         instances.map(async ({ instance }) => {
           return await instance.listContainers({ all: false });
-        })
+        }),
       );
 
       const allContainers = nestedContainers.flat();
 
       return allContainers.map((c) => {
-          const publicPort = c.Ports?.find((p) => p.PublicPort)?.PublicPort;
-          // We default to localhost here, but the Frontend will override it
-          const defaultUrl = publicPort ? `http://localhost:${publicPort}` : "";
-          
-          const rawName = (c.Names && c.Names.length > 0) 
-            ? c.Names[0].replace(/^\//, "") 
-            : c.Id.substring(0, 12);
+        const publicPort = c.Ports?.find((p) => p.PublicPort)?.PublicPort;
+        // We default to localhost here, but the Frontend will override it
+        const defaultUrl = publicPort ? `http://localhost:${publicPort}` : "";
 
-          const containerName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+        const rawName = c.Names && c.Names.length > 0 ? c.Names[0].replace(/^\//, "") : c.Id.substring(0, 12);
 
-          return {
-            id: c.Id,
-            name: containerName,
-            icon: null, 
-            url: defaultUrl,
-          };
+        const containerName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+
+        return {
+          id: c.Id,
+          name: containerName,
+          icon: null,
+          url: defaultUrl,
+        };
       });
     }),
 
