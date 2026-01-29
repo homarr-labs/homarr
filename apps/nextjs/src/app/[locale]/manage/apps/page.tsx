@@ -16,6 +16,7 @@ import { MobileAffixButton } from "~/components/manage/mobile-affix-button";
 import { DynamicBreadcrumb } from "~/components/navigation/dynamic-breadcrumb";
 import { NoResults } from "~/components/no-results";
 import { AppDeleteButton } from "./_app-delete-button";
+import { DockerImportButton } from "~/components/apps/docker-import-button";
 
 const searchParamsSchema = z.object({
   search: z.string().optional(),
@@ -51,6 +52,7 @@ export default async function AppsPage(props: AppsPageProps) {
               {t("page.create.title")}
             </MobileAffixButton>
           )}
+          <DockerImportButton />
         </Group>
         {apps.length === 0 && <AppNoResults />}
         {apps.length > 0 && (
