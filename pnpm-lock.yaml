@@ -832,8 +832,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../core
       '@paralleldrive/cuid2':
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^3.3.0
+        version: 3.3.0
       dayjs:
         specifier: ^1.11.19
         version: 1.11.19
@@ -1132,8 +1132,8 @@ importers:
         specifier: ^8.3.13
         version: 8.3.13(@mantine/hooks@8.3.13(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@paralleldrive/cuid2':
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^3.3.0
+        version: 3.3.0
       '@testcontainers/mysql':
         specifier: ^11.11.0
         version: 11.11.0
@@ -3857,8 +3857,8 @@ packages:
   '@panva/hkdf@1.2.1':
     resolution: {integrity: sha512-6oclG6Y3PiDFcoyk8srjLfVKyMfVCKJ27JwNPViuXziFpmdz+MZnZN/aKY0JGXgYuO/VghU0jcOAZgWXZ1Dmrw==}
 
-  '@paralleldrive/cuid2@3.1.0':
-    resolution: {integrity: sha512-UhTJsF2XGlIFmGGTUKBfmNCX+B/UCv3w0OHhq2CJIsfH33GN1lkgjATozG+Pf7s3ACcUdM4qaWgzy4Rr8PlUdA==}
+  '@paralleldrive/cuid2@3.3.0':
+    resolution: {integrity: sha512-OqiFvSOF0dBSesELYY2CAMa4YINvlLpvKOz/rv6NeZEqiyttlHgv98Juwv4Ch+GrEV7IZ8jfI2VcEoYUjXXCjw==}
     hasBin: true
 
   '@parcel/watcher-android-arm64@2.4.1':
@@ -12628,7 +12628,7 @@ snapshots:
 
   '@panva/hkdf@1.2.1': {}
 
-  '@paralleldrive/cuid2@3.1.0':
+  '@paralleldrive/cuid2@3.3.0':
     dependencies:
       '@noble/hashes': 2.0.1
       bignumber.js: 9.3.1
