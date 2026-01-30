@@ -1138,6 +1138,9 @@
     "dangerZone": "危険な操作",
     "noResults": "結果が見つかりません",
     "unsavedChanges": "保存していない変更があります！",
+    "servers": "",
+    "applications": "",
+    "services": "",
     "preview": {
       "show": "プレビューを表示",
       "hide": "プレビューを閉じる"
@@ -1960,6 +1963,39 @@
         "internalServerError": "コンテナステータスの取得に失敗しました"
       }
     },
+    "coolify": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showServers": {
+          "label": ""
+        },
+        "showApplications": {
+          "label": ""
+        },
+        "showServices": {
+          "label": ""
+        }
+      },
+      "empty": {
+        "servers": "",
+        "applications": "",
+        "services": ""
+      },
+      "footer": {
+        "updated": ""
+      },
+      "error": {
+        "noIntegration": "",
+        "internalServerError": ""
+      },
+      "server": {
+        "buildServer": ""
+      },
+      "instances": {
+        "title": ""
+      }
+    },
     "common": {
       "location": {
         "query": "都市／郵便番号",
@@ -2607,6 +2643,35 @@
         "network": "NET",
         "up": "UP",
         "down": "DOWN"
+      }
+    },
+    "systemDisks": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showTemperatureIfAvailable": {
+          "label": ""
+        },
+        "displayMode": {
+          "label": "",
+          "option": {
+            "percentage": {
+              "label": ""
+            },
+            "absolute": {
+              "label": ""
+            },
+            "free": {
+              "label": ""
+            }
+          }
+        },
+        "showBackgroundBar": {
+          "label": ""
+        }
+      },
+      "status": {
+        "unhealthy": ""
       }
     }
   },

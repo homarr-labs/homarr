@@ -13,6 +13,14 @@ import * as appAccessControl from "../app/app-access-control";
 // Mock the auth module to return an empty session
 vi.mock("@homarr/auth", () => ({ auth: () => ({}) as Session }));
 
+const createFakeAccessControl = (canAccess: boolean) =>
+  vi.fn(
+    class {
+      canUserSeeAppAsync = async (_: string) => await Promise.resolve(canAccess);
+      canUserSeeAppsAsync = async (_: string[]) => await Promise.resolve(canAccess);
+    } as unknown as typeof appAccessControl.AppAccessControl,
+  );
+
 const createDefaultSession = (permissions: GroupPermissionKey[] = []): Session => ({
   user: { id: createId(), permissions, colorScheme: "light" },
   expires: new Date().toISOString(),
@@ -77,7 +85,7 @@ describe("byId should return an app by id", () => {
       deviceType: undefined,
       session: null,
     });
-    vi.spyOn(appAccessControl, "canUserSeeAppAsync").mockReturnValue(Promise.resolve(true));
+    vi.spyOn(appAccessControl, "AppAccessControl").mockImplementation(createFakeAccessControl(true));
 
     await db.insert(apps).values([
       {
@@ -118,7 +126,7 @@ describe("byId should return an app by id", () => {
         href: "https://mantine.dev",
       },
     ]);
-    vi.spyOn(appAccessControl, "canUserSeeAppAsync").mockReturnValue(Promise.resolve(false));
+    vi.spyOn(appAccessControl, "AppAccessControl").mockImplementation(createFakeAccessControl(false));
 
     // Act
     const actAsync = async () => await caller.byId({ id: "2" });
