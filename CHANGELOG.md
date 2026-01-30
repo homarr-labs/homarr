@@ -1,3 +1,24 @@
+## [1.52.0](https://github.com/homarr-labs/homarr/compare/v1.51.0...v1.52.0) (2026-01-30)
+
+### Features
+
+* **installations:** support docker secrets file for encryption key ([#4946](https://github.com/homarr-labs/homarr/issues/4946)) ([9ba8213](https://github.com/homarr-labs/homarr/commit/9ba82133da2ae472952358f84d8ee1758c0f108a))
+
+### Bug Fixes
+
+* **deps:** update dependency @tanstack/react-query to ^5.90.20 ([#4939](https://github.com/homarr-labs/homarr/issues/4939)) ([840940b](https://github.com/homarr-labs/homarr/commit/840940bab663e728b8516ac48f913fef2b5c61b7))
+* **deps:** update dependency next to v16.1.5 [security] ([#4937](https://github.com/homarr-labs/homarr/issues/4937)) ([aeb1df1](https://github.com/homarr-labs/homarr/commit/aeb1df122926c7bed71bea9b21f1c42c45cc9b3e))
+* **deps:** update dependency pg to ^8.17.2 ([#4916](https://github.com/homarr-labs/homarr/issues/4916)) ([a50a29a](https://github.com/homarr-labs/homarr/commit/a50a29a778689efcca0afc2b640fdb497e6e7d98))
+* **deps:** update dependency prettier to ^3.8.1 ([#4925](https://github.com/homarr-labs/homarr/issues/4925)) ([a727b8e](https://github.com/homarr-labs/homarr/commit/a727b8e323b9fb7cba536909a51fabde0a992a69))
+* **deps:** update dependency sass to ^1.97.3 ([#4927](https://github.com/homarr-labs/homarr/issues/4927)) ([b1658a5](https://github.com/homarr-labs/homarr/commit/b1658a5d01b5c12f391af9d326ec98b3da000f9e))
+* **deps:** update dependency typescript-eslint to ^8.53.1 ([#4904](https://github.com/homarr-labs/homarr/issues/4904)) ([c58da00](https://github.com/homarr-labs/homarr/commit/c58da0095738352515d6d8c5e81b3c34c8726ffe))
+* **deps:** update mantine monorepo to ^8.3.13 ([#4911](https://github.com/homarr-labs/homarr/issues/4911)) ([f2eec74](https://github.com/homarr-labs/homarr/commit/f2eec748494480e773b45a309aa89ae3862e2b05))
+* **deps:** update nextjs monorepo to v16.1.4 ([#4909](https://github.com/homarr-labs/homarr/issues/4909)) ([99a2574](https://github.com/homarr-labs/homarr/commit/99a2574d80ad5a7dfe3b9c92d43bd4b9423bf22d))
+* **deps:** update tiptap monorepo to v3.16.0 ([#4912](https://github.com/homarr-labs/homarr/issues/4912)) ([2354510](https://github.com/homarr-labs/homarr/commit/23545101b61e456fd886eedb4b3d86b8cc606639))
+* **deps:** update tiptap monorepo to v3.17.0 ([#4940](https://github.com/homarr-labs/homarr/issues/4940)) ([d030261](https://github.com/homarr-labs/homarr/commit/d03026187cb6451d727167b02ac138f9c7ccc754))
+* **deps:** update tiptap monorepo to v3.17.1 ([#4945](https://github.com/homarr-labs/homarr/issues/4945)) ([b354085](https://github.com/homarr-labs/homarr/commit/b354085c7adfb6e5f3cad51b5b825426e072e874))
+* **deps:** update turbo monorepo to ^2.7.6 ([#4947](https://github.com/homarr-labs/homarr/issues/4947)) ([e078237](https://github.com/homarr-labs/homarr/commit/e078237e31d11029987c6c4370fd8f65023b87bc))
+
 ## [1.51.0](https://github.com/homarr-labs/homarr/compare/v1.50.1...v1.51.0) (2026-01-23)
 
 ### Features
