@@ -31,8 +31,8 @@
     "dayjs": "^1.11.19",
     "next": "16.1.5",
     "octokit": "^5.0.5",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "undici": "7.18.2",
     "zod": "^4.2.1",
     "zod-validation-error": "^5.0.0"
