@@ -37,8 +37,8 @@
     "@tabler/icons-react": "^3.36.1",
     "dayjs": "^1.11.19",
     "next": "16.1.5",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "zod": "^4.2.1"
   },
   "devDependencies": {
