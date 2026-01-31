@@ -140,7 +140,7 @@ export function IncusInstancesTable({ integrations }: IncusInstancesTableProps) 
   const { data, isLoading, dataUpdatedAt, refetch, isRefetching } = clientApi.incus.getInstances.useQuery(
     { integrationId: selectedIntegrationId ?? "" },
     {
-      enabled: !!selectedIntegrationId,
+      enabled: Boolean(selectedIntegrationId),
       refetchOnMount: true,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
