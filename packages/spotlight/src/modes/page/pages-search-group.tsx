@@ -11,6 +11,7 @@ import {
   IconPlug,
   IconReport,
   IconSearch,
+  IconServer,
   IconSettings,
   IconUsers,
   IconUsersGroup,
@@ -118,6 +119,12 @@ export const pagesSearchGroup = createGroup<{
         icon: IconBrandDocker,
         path: "/manage/tools/docker",
         name: "Manage Docker",
+        hidden: !session?.user.permissions.includes("admin"),
+      },
+      {
+        icon: IconServer,
+        path: "/manage/tools/incus",
+        name: "Manage Incus",
         hidden: !session?.user.permissions.includes("admin"),
       },
       {

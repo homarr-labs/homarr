@@ -8,6 +8,7 @@ export * from "./interfaces/media-requests/media-request-types";
 export * from "./base/searchable-integration";
 export * from "./homeassistant/homeassistant-types";
 export * from "./proxmox/proxmox-types";
+export * from "./incus/incus-types";
 export * from "./unifi-controller/unifi-controller-types";
 export * from "./opnsense/opnsense-types";
 export * from "./interfaces/media-releases";

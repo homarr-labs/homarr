@@ -81,3 +81,52 @@ export const fetchWithTrustedCertificatesAsync = async (
     dispatcher: agent,
   });
 };
+
+export interface MtlsOptions {
+  /** PEM-encoded client certificate */
+  cert: string;
+  /** PEM-encoded client private key */
+  key: string;
+}
+
+/**
+ * Create an HTTP agent with mTLS (mutual TLS) client certificate authentication
+ */
+export const createMtlsCertificateAgentAsync = async (mtlsOptions: MtlsOptions) => {
+  return new UndiciHttpAgent({
+    connect: {
+      ca: await getAllTrustedCertificatesAsync(),
+      checkServerIdentity: createCustomCheckServerIdentity(await getTrustedCertificateHostnamesAsync()),
+      cert: mtlsOptions.cert,
+      key: mtlsOptions.key,
+      rejectUnauthorized: false, // Allow self-signed server certificates (common in Incus)
+    },
+  });
+};
+
+/**
+ * Fetch with mTLS (mutual TLS) client certificate authentication
+ * Used for services like Incus that require client certificate authentication
+ */
+export const fetchWithMtlsAsync = async (
+  url: RequestInfo,
+  options: RequestInit & { timeout?: number; mtls: MtlsOptions },
+): Promise<Response> => {
+  const agent = await createMtlsCertificateAgentAsync(options.mtls);
+  if (options.timeout) {
+    return await withTimeoutAsync(
+      async (signal) =>
+        fetch(url, {
+          ...options,
+          signal,
+          dispatcher: agent,
+        }),
+      options.timeout,
+    );
+  }
+
+  return fetch(url, {
+    ...options,
+    dispatcher: agent,
+  });
+};

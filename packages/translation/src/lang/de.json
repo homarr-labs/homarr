@@ -993,6 +993,10 @@
         "privateKey": {
           "label": "Privater Schlüssel",
           "newLabel": "Neuer privater Schlüssel"
+        },
+        "clientCertificate": {
+          "label": "Client-Zertifikat",
+          "newLabel": "Neues Client-Zertifikat"
         }
       }
     },
@@ -3066,6 +3070,7 @@
           "label": "Werkzeuge",
           "items": {
             "docker": "Docker",
+            "incus": "Incus",
             "kubernetes": "Kubernetes",
             "logs": "Logs",
             "api": "API",
@@ -4071,6 +4076,9 @@
         },
         "docker": {
           "label": "Docker"
+        },
+        "incus": {
+          "label": "Incus"
         },
         "kubernetes": {
           "label": "Kubernetes",

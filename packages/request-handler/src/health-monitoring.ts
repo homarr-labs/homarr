@@ -8,7 +8,7 @@ import { createCachedIntegrationRequestHandler } from "./lib/cached-integration-
 
 export const systemInfoRequestHandler = createCachedIntegrationRequestHandler<
   SystemHealthMonitoring,
-  Exclude<IntegrationKindByCategory<"healthMonitoring">, "proxmox" | "coolify">,
+  Exclude<IntegrationKindByCategory<"healthMonitoring">, "proxmox" | "coolify" | "incus">,
   Record<string, never>
 >({
   async requestAsync(integration, _input) {
@@ -21,7 +21,7 @@ export const systemInfoRequestHandler = createCachedIntegrationRequestHandler<
 
 export const clusterInfoRequestHandler = createCachedIntegrationRequestHandler<
   ProxmoxClusterInfo,
-  "proxmox" | "mock",
+  "proxmox" | "incus" | "mock",
   Record<string, never>
 >({
   async requestAsync(integration, _input) {
