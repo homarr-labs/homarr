@@ -415,15 +415,15 @@
         }
       },
       "search-engine": {
-        "title": "Ferramentas de busca",
+        "title": "Mecanismos de busca",
         "item": {
           "create": {
-            "label": "Criar ferramenta de busca",
+            "label": "Criar mecanismos de busca",
             "description": "Permitir que os membros criem mecanismos de busca"
           },
           "modify-all": {
-            "label": "Modificar todas as ferramentas de busca",
-            "description": "Permitir que membros modifiquem todas as ferramentas de busca"
+            "label": "Modificar todos os mecanismos de busca",
+            "description": "Permitir que membros modifiquem todos os mecanismos de busca"
           },
           "full-all": {
             "label": "Acesso total às ferramentas de busca",
@@ -743,7 +743,7 @@
         },
         "authorization": {
           "title": "Erro de autorização",
-          "description": ""
+          "description": "A requisição não foi autorizada. Verifique se as credenciais estão corretas e se você as configurou com permissões suficientes."
         },
         "statusCode": {
           "title": "",
@@ -861,7 +861,7 @@
         },
         "invalidUrl": {
           "title": "URL inválido",
-          "message": ""
+          "message": "A URL é inválida"
         },
         "secretNotDefined": {
           "title": "",
@@ -880,16 +880,16 @@
           "message": ""
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Não autorizado",
+          "message": "Credenciais provavelmente incorretas"
         },
         "forbidden": {
           "title": "",
-          "message": ""
+          "message": "Provavelmente faltam permissões"
         },
         "notFound": {
           "title": "Não encontrado",
-          "message": ""
+          "message": "Provavelmente URL ou caminho incorreto"
         },
         "internalServerError": {
           "title": "Erro interno do servidor",
@@ -1050,28 +1050,28 @@
     "action": {
       "add": "Adicionar",
       "apply": "Aplicar",
-      "backToOverview": "",
+      "backToOverview": "Voltar à visão geral",
       "change": "",
       "create": "Criar",
-      "createAnother": "",
+      "createAnother": "Criar e recomeçar",
       "edit": "Editar",
-      "import": "",
+      "import": "Importar",
       "insert": "Inserir",
       "remove": "Excluir",
       "save": "Salvar",
       "saveChanges": "Salvar alterações",
       "cancel": "Cancelar",
       "delete": "Apagar",
-      "discard": "",
-      "close": "",
+      "discard": "Descartar",
+      "close": "Fechar",
       "confirm": "Confirme",
-      "continue": "",
+      "continue": "Continuar",
       "previous": "Anterior",
       "next": "Próximo",
-      "checkoutDocs": "",
+      "checkoutDocs": "Confira a documentação",
       "checkLogs": "Verifique os logs para mais detalhes",
       "tryAgain": "Tente novamente",
-      "loading": ""
+      "loading": "Carregando"
     },
     "here": "",
     "iconPicker": {
@@ -1261,7 +1261,7 @@
     "create": {
       "title": "",
       "search": "Filtrar itens",
-      "addToBoard": ""
+      "addToBoard": "Adicionar ao quadro"
     },
     "moveResize": {
       "title": "Mover / redimensionar item",
@@ -1522,7 +1522,7 @@
       },
       "status": {
         "online": "Online",
-        "offline": ""
+        "offline": "Offline"
       }
     },
     "notebook": {
@@ -1628,8 +1628,8 @@
         }
       },
       "error": {
-        "noUrl": "",
-        "unsupportedProtocol": "",
+        "noUrl": "Nenhum URL de iFrame fornecido",
+        "unsupportedProtocol": "A URL fornecida está usando um protocolo não suportado. Use um dos seguintes protocolos: ({supportedProtocols})",
         "noBrowerSupport": "Seu navegador não suporta iframes. Atualize seu navegador."
       }
     },
@@ -1683,13 +1683,13 @@
               "label": "5 dias"
             },
             "1mo": {
-              "label": ""
+              "label": "1 mês"
             },
             "3mo": {
-              "label": ""
+              "label": "3 meses"
             },
             "6mo": {
-              "label": ""
+              "label": "6 meses"
             },
             "ytd": {
               "label": ""
@@ -1878,11 +1878,11 @@
         "information": "Informação",
         "processor": "Processador: {cpuModelName}",
         "memory": "Memória: {memory}GiB",
-        "memoryAvailable": "",
+        "memoryAvailable": "Disponível: {memoryAvailable}GiB ({percent}%)",
         "version": "Versão {version}",
-        "uptime": "",
+        "uptime": "Tempo de atividade: {months} mês(es), {days} dias, {hours} horas, {minutes} minutos",
         "loadAverage": "",
-        "minute": "",
+        "minute": "1 minuto",
         "minutes": "{count} minutos",
         "used": "",
         "available": "Disponível",
@@ -1919,7 +1919,7 @@
           },
           "detail": {
             "cpu": "Núcleos",
-            "memory": "",
+            "memory": "Memória",
             "storage": "",
             "uptime": "",
             "haState": "",
@@ -1941,7 +1941,7 @@
     },
     "dockerContainers": {
       "name": "Estatísticas do Docker",
-      "description": "",
+      "description": "Estatísticas dos seus contêineres (Esse widget só pode ser adicionado com privilégios de administrador)",
       "option": {
         "enableRowSorting": {
           "label": ""
@@ -1952,7 +1952,7 @@
             "name": "Nome",
             "state": "",
             "cpuUsage": "Uso da CPU",
-            "memoryUsage": ""
+            "memoryUsage": "Uso da Memória"
           }
         },
         "descendingDefaultSort": {
@@ -1960,11 +1960,11 @@
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Erro ao obter as estatísticas dos contêineres"
       }
     },
     "coolify": {
-      "name": "",
+      "name": "Coolify",
       "description": "",
       "option": {
         "showServers": {
@@ -1978,12 +1978,12 @@
         }
       },
       "empty": {
-        "servers": "",
+        "servers": "Nenhum servidor encontrado",
         "applications": "",
-        "services": ""
+        "services": "Nenhum serviço encontrado"
       },
       "footer": {
-        "updated": ""
+        "updated": "Atualizado em {when}"
       },
       "error": {
         "noIntegration": "",
@@ -1998,7 +1998,7 @@
     },
     "common": {
       "location": {
-        "query": "",
+        "query": "Cidade / CEP",
         "latitude": "Latitude",
         "longitude": "Longitude",
         "disabledTooltip": "Por favor, insira uma cidade ou um CEP",
@@ -2021,16 +2021,16 @@
       },
       "integration": {
         "noData": "Nenhuma integração encontrada",
-        "description": ""
+        "description": "Clique <here></here< para criar uma nova integração"
       },
       "app": {
-        "noData": "",
+        "noData": "Nenhum aplicativo encontrado",
         "description": "Clique <here></here> para criar um aplicativo",
         "quickCreate": "Criar aplicativo em tempo real"
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "Nenhuma integração selecionada",
+        "noData": "Nenhum dado de integração disponível"
       },
       "option": {}
     },
@@ -2053,7 +2053,7 @@
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "Nenhum URL de vídeo fornecido",
         "forYoutubeUseIframe": "Para vídeos do Youtube, use a opção de iFrame"
       }
     },
@@ -2068,24 +2068,24 @@
       },
       "items": {
         "currentlyPlaying": "",
-        "user": "",
+        "user": "Usuário",
         "name": "Nome",
-        "id": "",
+        "id": "Id",
         "metadata": {
           "title": "",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Vídeo",
+            "resolution": "Resolução"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Áudio",
+            "channelCount": "Canais de áudio",
+            "codec": "Codificador de áudio"
           },
           "transcoding": {
             "title": "",
-            "container": "",
-            "resolution": "",
+            "container": "Contêiner",
+            "resolution": "Resolução",
             "target": ""
           }
         }
@@ -2142,23 +2142,23 @@
           "columnTitle": ""
         },
         "added": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Adicionado",
+          "detailsTitle": "Data adicionada"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Extras",
+          "detailsTitle": "Categorias (ou informações extras)"
         },
         "downSpeed": {
           "columnTitle": "Para baixo",
           "detailsTitle": "Velocidade de Transferência"
         },
         "index": {
-          "columnTitle": "",
+          "columnTitle": "#",
           "detailsTitle": ""
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "Id"
         },
         "integration": {
           "columnTitle": "Integração"
@@ -2168,11 +2168,11 @@
         },
         "progress": {
           "columnTitle": "Progresso",
-          "detailsTitle": ""
+          "detailsTitle": "Baixar progresso"
         },
         "ratio": {
           "columnTitle": "Razão",
-          "detailsTitle": ""
+          "detailsTitle": "Relação de torrent (recebido/enviado)"
         },
         "received": {
           "columnTitle": "",
@@ -2288,16 +2288,16 @@
         "partiallyAvailable": "Parcial",
         "available": "Disponível",
         "blacklisted": "",
-        "deleted": ""
+        "deleted": "Excluído"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": "",
-        "completed": ""
+        "pending": "Pendente",
+        "approved": "Aprovado",
+        "declined": "Rejeitado",
+        "failed": "Falhou",
+        "completed": "Concluído"
       },
-      "toBeDetermined": ""
+      "toBeDetermined": "TBD"
     },
     "mediaRequests-requestStats": {
       "name": "",
@@ -2356,8 +2356,8 @@
           "savedSpace": "",
           "healthChecks": "",
           "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "videoContainers": "Contêineres",
+          "videoResolutions": "Resoluções"
         },
         "workers": {
           "empty": "Vazio",
@@ -2385,7 +2385,7 @@
       "description": "",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "URLs de feed"
         },
         "enableRtl": {
           "label": ""
@@ -2407,11 +2407,11 @@
       "option": {
         "newReleaseWithin": {
           "label": "",
-          "description": ""
+          "description": "Exemplo de uso: 1w (1 semana), 10M (10 meses). Tipos de unidades aceitas: h (horas), d (dias), w (semanas), M (meses), y (anos). Deixe em branco para não destacar novos lançamentos."
         },
         "staleReleaseWithin": {
           "label": "",
-          "description": ""
+          "description": "Exemplo de uso: 1w (1 semana), 10M (10 meses). Tipos de unidades aceitas: h (horas), d (dias), w (semanas), M (meses), y (anos). Deixe em branco para não destacar versões antigas."
         },
         "showOnlyHighlighted": {
           "label": "",
@@ -2421,33 +2421,33 @@
           "label": "Exibir detalhes"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Exibir apenas ícones"
         },
         "topReleases": {
           "label": "",
           "description": ""
         },
         "repositories": {
-          "label": "",
+          "label": "Repositórios",
           "addRepository": {
-            "label": ""
+            "label": "Adicionar repositório"
           },
           "importRepositories": {
             "label": "Importar do Docker",
             "loading": "Carregando imagens do Docker",
             "noImagesFound": "Nenhuma imagem do Docker encontrada",
             "listFoundImages": "Lista de imagens encontradas",
-            "listAlreadyImportedImages": "",
+            "listAlreadyImportedImages": "Lista de imagens já importadas",
             "allImagesAlreadyImported": "",
             "onlyAdminCanImport": "Apenas administradores podem importar do Docker",
             "selectAll": "",
             "deselectAll": ""
           },
           "provider": {
-            "label": ""
+            "label": "Provedor"
           },
           "identifier": {
-            "label": "",
+            "label": "Identificador",
             "placeholder": ""
           },
           "name": {
@@ -2491,7 +2491,7 @@
           },
           "invalid": "",
           "noProvider": {
-            "label": "",
+            "label": "Nenhum provedor",
             "tooltip": ""
           }
         }
@@ -2508,15 +2508,15 @@
       "openReleasePage": "",
       "releaseDescription": "",
       "projectDescription": "",
-      "created": "",
+      "created": "Criado",
       "error": {
         "label": "Erro",
         "messages": {
-          "invalidIdentifier": "",
+          "invalidIdentifier": "Identificador inválido",
           "noMatchingVersion": "",
           "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "noProviderSeleceted": "Nenhum provedor selecionado",
+          "noProviderResponse": "Nenhuma resposta do provedor"
         }
       }
     },
@@ -2541,7 +2541,7 @@
             "name": ""
           },
           "wifi": {
-            "name": ""
+            "name": "Wi-Fi"
           }
         },
         "users": {
@@ -2555,13 +2555,13 @@
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "Wi-Fi"
             },
             "wired": {
               "label": ""
             }
           },
-          "label": ""
+          "label": "Conteúdo do widget"
         }
       },
       "error": {
@@ -2594,9 +2594,9 @@
         "version": "Versão",
         "versiontitle": "Versões",
         "cputitle": "Uso da CPU",
-        "memorytitle": "",
+        "memorytitle": "Uso da Memória",
         "cpu": "CPU",
-        "memory": "",
+        "memory": "Memória",
         "interfaces": {
           "name": "nome",
           "trans": "",
@@ -2623,7 +2623,7 @@
           "description": "",
           "option": {
             "cpu": "CPU",
-            "memory": "",
+            "memory": "Memória",
             "network": ""
           }
         },
@@ -2787,13 +2787,13 @@
         "label": ""
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "URL da imagem de logo"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "URL da imagem do favicon"
       },
       "backgroundImageUrl": {
-        "label": "",
+        "label": "URL da imagem do plano de fundo",
         "placeholder": "",
         "group": {
           "your": "Suas imagens",
@@ -2843,7 +2843,7 @@
           },
           "contain": {
             "label": "",
-            "description": ""
+            "description": "Dimensione a imagem o máximo possível dentro do seu contêiner, sem recortá-la ou distorcê-la."
           }
         }
       },
@@ -2866,12 +2866,12 @@
         "label": "",
         "description": "Além disso, personalize seu painel usando CSS, recomendado apenas para usuários experientes",
         "customClassesAlert": {
-          "title": "",
-          "description": ""
+          "title": "Classes personalizadas",
+          "description": "Você pode adicionar classes personalizadas aos itens do seu quadro nas opções avançadas de cada item e usá-las no CSS personalizado acima."
         }
       },
       "disableStatus": {
-        "label": "",
+        "label": "Desabilitar status do aplicativo",
         "description": ""
       },
       "columnCount": {
@@ -2881,11 +2881,11 @@
         "label": "",
         "description": "",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "Muito pequeno",
+          "sm": "Pequeno",
+          "md": "Médio",
+          "lg": "Grande",
+          "xl": "Muito grande"
         }
       },
       "name": {
@@ -2893,7 +2893,7 @@
       },
       "isPublic": {
         "label": "Público",
-        "description": ""
+        "description": "Quadros públicos são acessíveis a todos, mesmo sem uma conta"
       }
     },
     "content": {
@@ -2907,11 +2907,11 @@
           "unrecognizedLink": ""
         },
         "layout": {
-          "title": "",
+          "title": "Layout",
           "responsive": {
-            "title": "",
+            "title": "Layouts responsivos",
             "action": {
-              "add": ""
+              "add": "Adicionar layout"
             }
           }
         },
@@ -2919,26 +2919,26 @@
           "title": "Antecedentes"
         },
         "appearance": {
-          "title": ""
+          "title": "Aparência"
         },
         "customCss": {
-          "title": ""
+          "title": "CSS personalizado"
         },
         "behavior": {
-          "title": ""
+          "title": "Comportamento"
         },
         "access": {
-          "title": "",
+          "title": "Controle de acesso",
           "permission": {
             "item": {
               "view": {
                 "label": "Exibir quadro"
               },
               "modify": {
-                "label": ""
+                "label": "Editar quadro"
               },
               "full": {
-                "label": ""
+                "label": "Acesso completo"
               }
             }
           }
@@ -2955,28 +2955,28 @@
               }
             },
             "visibility": {
-              "label": "",
+              "label": "Editar visibilidade do quadro",
               "description": {
-                "public": "",
-                "private": ""
+                "public": "Este quadro está público atualmente.",
+                "private": "Este quadro está privado atualmente."
               },
               "button": {
-                "public": "",
-                "private": ""
+                "public": "Tornar privado",
+                "private": "Tornar público"
               },
               "confirm": {
                 "public": {
-                  "title": "",
+                  "title": "Tornar quadro privado",
                   "description": "Tem certeza que deseja tornar esse quadro privado? Isso ocultará o quadro do público. Os links para convidados serão desativados."
                 },
                 "private": {
-                  "title": "",
-                  "description": ""
+                  "title": "Tornar quadro público",
+                  "description": "Tem certeza que deseja tornar esse quadro público? Isso tornará o quadro acessível a todos."
                 }
               }
             },
             "delete": {
-              "label": "",
+              "label": "Excluir este quadro",
               "description": "",
               "button": "",
               "confirm": {
@@ -2990,15 +2990,15 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
+        "title": "Bem-vindo ao Homarr",
         "description": "",
-        "link": "",
+        "link": "Crie seu primeiro quadro",
         "notice": "Para fazer esta página desaparecer, crie um quadro e defina-o como quadro inicial"
       },
       "notFound": {
         "title": "Quadro não encontrado",
         "description": "O quadro especificado não foi encontrado ou você não tem acesso a ele.",
-        "link": "",
+        "link": "Visualizar todos os quadros",
         "notice": ""
       },
       "homeBoard": {
@@ -3052,14 +3052,14 @@
         "boards": "Placas",
         "apps": "Aplicativos",
         "integrations": "",
-        "searchEngies": "",
+        "searchEngies": "Mecanismos de busca",
         "medias": "",
         "users": {
           "label": "Usuários",
           "items": {
             "manage": "Gerenciar",
             "invites": "Convites",
-            "groups": ""
+            "groups": "Grupos"
           }
         },
         "tools": {
@@ -3070,7 +3070,7 @@
             "logs": "",
             "api": "API",
             "certificates": "",
-            "tasks": ""
+            "tasks": "Tarefas"
           }
         },
         "settings": "Configurações",
@@ -3080,7 +3080,7 @@
             "documentation": "Documentação",
             "submitIssue": "",
             "discord": "Discórdia da comunidade",
-            "sourceCode": ""
+            "sourceCode": "Código-fonte"
           }
         },
         "about": "Sobre"
@@ -3092,20 +3092,20 @@
           "board": "Placas",
           "user": "Usuários",
           "invite": "Convites",
-          "integration": "",
+          "integration": "Integrações",
           "app": "Aplicativos",
-          "group": "",
-          "searchEngine": "",
-          "media": ""
+          "group": "Grupos",
+          "searchEngine": "Mecanismos de busca",
+          "media": "Mídias"
         },
         "statisticLabel": {
           "boards": "Placas",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "Recursos",
+          "authentication": "Autenticação",
+          "authorization": "Autorização"
         },
         "heroBanner": {
-          "title": "",
+          "title": "Bem-vindo de volta ao seu",
           "subtitle": ""
         }
       },
@@ -3216,7 +3216,7 @@
               "label": ""
             },
             "completed": {
-              "title": ""
+              "title": "Usuário criado"
             },
             "error": {
               "title": ""
@@ -3231,12 +3231,12 @@
           "title": "Gerenciar convites de usuários",
           "action": {
             "new": {
-              "title": "",
+              "title": "Novo convite",
               "description": "Após a expiração, um convite não será mais válido e o destinatário do convite não poderá criar uma conta."
             },
             "copy": {
-              "title": "",
-              "description": "",
+              "title": "Copiar convite",
+              "description": "Seu convite foi gerado. Após o fechamento deste modal, <b> você não poderá mais copiar este link. </b> Caso não deseje mais convidar essa pessoa, você pode excluir este convite a qualquer momento.",
               "link": "Link do convite",
               "button": ""
             },
@@ -3247,7 +3247,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Criador"
@@ -3262,7 +3262,7 @@
         }
       },
       "group": {
-        "back": "",
+        "back": "Voltar aos grupos",
         "setting": {
           "general": {
             "title": "Geral",
@@ -3271,19 +3271,19 @@
             "ownerOfGroupDeleted": ""
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "Configurações",
+            "alert": "As configurações do grupo são priorizadas pela ordem dos grupos na lista. As configurações superiores substituem as configurações inferiores.",
             "board": {
-              "title": ""
+              "title": "Quadros"
             }
           },
           "members": {
-            "title": "",
+            "title": "Membros",
             "search": "",
-            "notFound": ""
+            "notFound": "Nenhum membro encontrado"
           },
           "permissions": {
-            "title": "",
+            "title": "Permissões",
             "form": {
               "unsavedChanges": ""
             }
@@ -3294,10 +3294,10 @@
         "title": "Configurações",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Configurações salvas com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Erro ao salvar permissões"
           }
         },
         "section": {
@@ -3322,7 +3322,7 @@
           },
           "crawlingAndIndexing": {
             "title": "",
-            "warning": "",
+            "warning": "Ativar ou desativar qualquer configuração aqui afetará significativamente a forma como os mecanismos de pesquisa indexam e rastreiam sua página. Qualquer configuração é uma solicitação e cabe ao rastreador aplicar essas configurações. Qualquer modificação pode levar vários dias ou semanas para serem aplicadas. Algumas configurações podem ser específicas do mecanismo de busca.",
             "noIndex": {
               "title": "",
               "text": ""
@@ -3345,17 +3345,17 @@
             "homeBoard": {
               "label": "",
               "mobileLabel": "",
-              "description": ""
+              "description": "Apenas quadros públicos estão disponíveis para seleção"
             },
             "status": {
-              "title": "",
+              "title": "Status de aplicativo",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "Ativar status por padrão",
+                "description": "Ao adicionar um item de aplicativo, o status será ativado por padrão"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "Forçar status de desativação",
+                "description": "O status dos aplicativos será desativado para todos os usuários e não poderá ser ativado"
               }
             }
           },
@@ -3462,7 +3462,7 @@
               "label": "CPU do Firewall"
             },
             "firewallMemory": {
-              "label": ""
+              "label": "Memória do Firewall"
             },
             "firewallVersion": {
               "label": "Versão do Firewall"
@@ -3507,7 +3507,7 @@
             }
           },
           "table": {
-            "search": ""
+            "search": "Buscar {count} tarefas..."
           },
           "action": {
             "refresh": {
@@ -3516,10 +3516,10 @@
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "Tarefas atualizadas com sucesso"
             },
             "error": {
-              "message": ""
+              "message": "Erro ao atualizar tarefas"
             }
           },
           "trigger": {
@@ -3551,7 +3551,7 @@
           "modal": {
             "createApiToken": {
               "title": "Token de API criado",
-              "description": "",
+              "description": "O token de API foi criado. Atenção, esse token é encriptado no banco de dados e jamais poderá ser transferido novamente a você. Se você perder este token, você não será mais capaz de recuperar este token específico.",
               "button": "Copiar e fechar"
             }
           },
@@ -3600,13 +3600,13 @@
           },
           "hotkeys": {
             "title": "",
-            "subtitle": "",
+            "subtitle": "Atalhos de teclado para melhorar seu fluxo de trabalho",
             "field": {
-              "shortcut": "",
+              "shortcut": "Atalhos",
               "action": ""
             },
             "action": {
-              "toggleBoardEdit": "",
+              "toggleBoardEdit": "Alternar para o modo de edição do quadro",
               "toggleColorScheme": "",
               "saveNotebook": "",
               "openSpotlight": ""
@@ -3618,12 +3618,12 @@
     }
   },
   "docker": {
-    "title": "",
+    "title": "Contêineres",
     "table": {
       "updated": "",
-      "search": "",
-      "selected": "",
-      "footer": ""
+      "search": "Buscar {count} contêineres",
+      "selected": "{selectCount} de {totalCount} contêineres selecionados",
+      "footer": "Total de contêineres: {count}"
     },
     "field": {
       "name": {
@@ -3646,7 +3646,7 @@
           "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Memória"
         }
       },
       "containerImage": {
@@ -3662,12 +3662,12 @@
         "label": "Iniciar",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Contêineres iniciados",
+            "message": "Os contêineres foram iniciados com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Os contêineres não foram iniciados",
+            "message": "Os contêineres não puderam ser iniciados"
           }
         }
       },
@@ -3675,12 +3675,12 @@
         "label": "Parar",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Os contêineres foram parados",
+            "message": "Os contêineres foram parados com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Os contêineres não foram parados",
+            "message": "Os contêineres não puderam ser parados"
           }
         }
       },
@@ -3688,12 +3688,12 @@
         "label": "Reiniciar",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Contêineres reiniciados",
+            "message": "Os contêineres foram reiniciados com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Contêineres não reiniciados",
+            "message": "Os contêineres não puderam ser reiniciados"
           }
         }
       },
@@ -3701,12 +3701,12 @@
         "label": "Excluir",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Contêineres removidos",
+            "message": "Os contêineres foram removidos com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Contêineres não removidos",
+            "message": "Os contêineres não puderam ser removidos"
           }
         }
       },
@@ -3714,25 +3714,25 @@
         "label": "",
         "notification": {
           "success": {
-            "title": "",
+            "title": "Os contêineres foram atualizados",
             "message": ""
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Os contêineres não foram atualizados",
+            "message": "Algo deu errado enquanto atualizava os contêineres"
           }
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Adicionar ao Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Adicionado ao Homarr",
+            "message": "Os aplicativos selecionados foram adicionados ao Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Não foi possivel adicionar ao Homarr",
+            "message": "Os aplicativos selecionados não puderam ser adicionados ao Homarr"
           }
         },
         "modal": {
@@ -3746,41 +3746,41 @@
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
-      "label": "",
-      "providers": "",
+      "title": "Painel do Cluster",
+      "label": "Cluster",
+      "providers": "Provedores",
       "version": "Versão",
-      "architecture": "",
+      "architecture": "Arquitetura",
       "capacity": {
-        "title": "",
+        "title": "Capacidade",
         "resource": {
-          "reserved": "",
-          "used": ""
+          "reserved": "Reservado",
+          "used": "Usado"
         }
       },
       "resources": {
-        "title": "",
-        "nodes": "",
-        "namespaces": "",
-        "ingresses": "",
-        "services": "",
-        "pods": "",
-        "configmaps": "",
-        "secrets": "",
-        "volumes": ""
+        "title": "Recursos",
+        "nodes": "Nós",
+        "namespaces": "Namespaces",
+        "ingresses": "Ingresses",
+        "services": "Serviços",
+        "pods": "Pods",
+        "configmaps": "ConfigMaps",
+        "secrets": "Secrets",
+        "volumes": "Volumes"
       }
     },
     "nodes": {
-      "label": "",
+      "label": "Nós",
       "field": {
         "name": {
           "label": "Nome"
         },
         "state": {
-          "label": "",
+          "label": "Estado",
           "option": {
-            "ready": "",
-            "NotReady": ""
+            "ready": "Pronto",
+            "NotReady": "Não está pronto"
           }
         },
         "cpu": {
@@ -3790,194 +3790,194 @@
           "label": "RAM"
         },
         "pods": {
-          "label": ""
+          "label": "Pods"
         },
         "operatingSystem": {
-          "label": ""
+          "label": "SO"
         },
         "architecture": {
-          "label": ""
+          "label": "Arquitetura"
         },
         "kubernetesVersion": {
           "label": "Versão do Kubernetes"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} nós"
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "Namespaces",
       "field": {
         "name": {
           "label": "Nome"
         },
         "state": {
-          "label": "",
+          "label": "Estado",
           "option": {
-            "active": "",
-            "terminating": ""
+            "active": "Ativo",
+            "terminating": "Terminando"
           }
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} namespaces"
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "Ingresses",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "className": {
           "label": "Nome da classe"
         },
         "rulesAndPaths": {
-          "label": ""
+          "label": "Regras & caminhos"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} ingresses"
       }
     },
     "services": {
-      "label": "",
+      "label": "Serviços",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "type": {
-          "label": ""
+          "label": "Tipo"
         },
         "ports": {
-          "label": ""
+          "label": "Portas"
         },
         "targetPorts": {
-          "label": ""
+          "label": "Portas de destino"
         },
         "clusterIP": {
-          "label": ""
+          "label": "IP do Cluster"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} serviços"
       }
     },
     "pods": {
-      "label": "",
+      "label": "Pods",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "image": {
           "label": "Imagem"
         },
         "applicationType": {
-          "label": ""
+          "label": "Tipos de aplicações"
         },
         "status": {
           "label": "Status"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} pods"
       }
     },
     "secrets": {
-      "label": "",
+      "label": "Secrets",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "namespace"
         },
         "type": {
-          "label": ""
+          "label": "tipo"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} secrets"
       }
     },
     "configmaps": {
-      "label": "",
+      "label": "ConfigMaps",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "namespace"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} configMaps"
       }
     },
     "volumes": {
-      "label": "",
+      "label": "Volumes",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "accessModes": {
-          "label": ""
+          "label": "Modos de acesso"
         },
         "storage": {
-          "label": ""
+          "label": "Armazenamento"
         },
         "storageClassName": {
-          "label": ""
+          "label": "Nome da classe de armazenamento"
         },
         "volumeMode": {
-          "label": ""
+          "label": "Modo do volume"
         },
         "volumeName": {
-          "label": ""
+          "label": "Nome do volume"
         },
         "status": {
           "label": "Status"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} volumes"
       }
     },
     "error": {
@@ -4029,7 +4029,7 @@
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Mecanismos de busca",
         "new": {
           "label": "Novo"
         },
@@ -4078,25 +4078,25 @@
             "label": "Nós"
           },
           "namespaces": {
-            "label": ""
+            "label": "Namespaces"
           },
           "ingresses": {
-            "label": ""
+            "label": "Ingresses"
           },
           "services": {
             "label": "Serviços"
           },
           "pods": {
-            "label": ""
+            "label": "pods"
           },
           "configmaps": {
-            "label": ""
+            "label": "ConfigMaps"
           },
           "secrets": {
-            "label": ""
+            "label": "Secrets"
           },
           "volumes": {
-            "label": ""
+            "label": "Volumes"
           }
         },
         "logs": {
@@ -4139,7 +4139,7 @@
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Selecione uma ação para o aplicativo"
               }
             }
           },
@@ -4151,7 +4151,7 @@
                   "label": "Abrir quadro"
                 },
                 "homeBoard": {
-                  "label": ""
+                  "label": "Definir como quadro inicial"
                 },
                 "mobileBoard": {
                   "label": ""
@@ -4161,7 +4161,7 @@
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Selecione uma ação para o quadro"
               }
             }
           },
@@ -4192,7 +4192,7 @@
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "Criar um novo quadro"
               },
               "importBoard": {
                 "label": "Importe um quadro"
@@ -4230,7 +4230,7 @@
         "help": "Usar um mecanismo de busca externo",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Mecanismos de busca",
             "children": {
               "action": {
                 "search": {
@@ -4334,7 +4334,7 @@
                 "label": "Gerenciar integrações"
               },
               "manageSearchEngine": {
-                "label": "Gerenciar ferramentas de busca"
+                "label": "Gerenciar mecanismos de busca"
               },
               "manageMedia": {
                 "label": "Gerencias mídias"
@@ -4424,7 +4424,7 @@
           "label": ""
         },
         "urlTemplate": {
-          "label": ""
+          "label": "Modelo de busca de URL"
         },
         "description": {
           "label": "Descrição"
@@ -4432,55 +4432,55 @@
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Mecanismos de busca",
           "noResults": {
-            "title": "",
+            "title": "Ainda não existem mecanismos de busca",
             "action": ""
           },
           "interactive": ""
         },
         "create": {
-          "title": "",
+          "title": "Novo mecanismo de busca",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Mecanismo de busca criado",
+              "message": "O mecanismo de busca foi criado com sucesso"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "O mecanismo de busca não foi criado",
+              "message": "O mecanismo de busca não pôde ser criado"
             }
           }
         },
         "edit": {
-          "title": "",
+          "title": "Editar mecanismo de busca",
           "notification": {
             "success": {
               "title": "Mudanças aplicadas com sucesso",
-              "message": ""
+              "message": "O mecanismo de busca foi salvo com sucesso"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Não foi possível aplicar as mudanças",
+              "message": "O mecanismo de busca não pôde ser salvo"
             }
           },
-          "configControl": "",
+          "configControl": "Configuração",
           "searchEngineType": {
             "generic": "",
             "fromIntegration": ""
           }
         },
         "delete": {
-          "title": "",
-          "message": "",
+          "title": "Excluir mecanismo de busca",
+          "message": "Tem certeza que deseja excluir o mecanismo de busca {name}?",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Mecanismo de busca excluído",
+              "message": "O mecanismo de busca foi excluído com sucesso"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Mecanismo de busca não deletado",
+              "message": "O mecanismo de busca não pôde ser deletado"
             }
           }
         }
