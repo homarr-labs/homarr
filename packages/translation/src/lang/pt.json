@@ -730,7 +730,7 @@
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Causa com mais detalhes"
           }
         },
         "unknown": {
@@ -750,7 +750,7 @@
           "description": "",
           "otherDescription": "",
           "reason": {
-            "badRequest": "",
+            "badRequest": "Requisição inválida",
             "notFound": "Não encontrado",
             "tooManyRequests": "",
             "internalServerError": "Erro interno do servidor",
@@ -759,76 +759,76 @@
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Erro de certificado",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "O certificado expirou.",
+            "notYetValid": "O certificado ainda não é válido.",
+            "untrusted": "O certificado não é confiável.",
+            "hostnameMismatch": "O hostname do certificado não corresponde à URL."
           },
           "alert": {
             "permission": {
               "title": "Permissões insuficientes",
-              "message": ""
+              "message": "Você não tem permissão para confiar ou carregar certificados. Entre em contato com o seu administrador para carregar o certificado raiz necessário."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "Incompatibilidade de hostname",
+              "message": "O hostname no certificado não corresponde ao hostname ao qual você está se conectando. Isso pode indicar um risco de segurança, mas você ainda pode optar por confiar neste certificado."
             },
             "extract": {
-              "title": "",
+              "title": "Falha na extração do certificado CA",
               "message": ""
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Tentar criação novamente"
             },
             "trust": {
-              "label": ""
+              "label": "Confiar no certificado"
             },
             "upload": {
-              "label": ""
+              "label": "Enviar certificado"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Confiar na incompatibilidade de hostname",
+              "message": "Tem certeza de que deseja confiar no certificado com incompatibilidade de hostname?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Certificado confiável",
+                "message": "Hostname adicionado à lista de certificados confiáveis"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Falha ao confiar no certificado",
+                "message": "Não foi possível confiar no certificado com incompatibilidade de hostname"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Confiar no certificado autoassinado",
+              "message": "Tem certeza de que deseja confiar neste certificado autoassinado?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Certificado confiável",
+                "message": "Adicionar certificado a lista de certificados confiáveis"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Falha ao confiar no certificado",
+                "message": "Falha ao adicionar certificado à lista de certificados confiáveis"
               }
             }
           },
           "details": {
             "title": "Detalhes",
-            "description": "",
+            "description": "Revise as informações do certificado antes de decidir confiar nele.",
             "content": {
               "action": "Exibir conteúdo",
-              "title": ""
+              "title": "Certificado PEM"
             }
           }
         },
@@ -836,15 +836,15 @@
           "title": "Erro de requisição",
           "description": {
             "connection": {
-              "hostUnreachable": "",
+              "hostUnreachable": "O servidor não pôde ser alcançado. Isso geralmente significa que o host está offline ou inacessível da sua rede.",
               "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "refused": "O servidor recusou a conexão. Ele pode não estar em execução ou está rejeitando solicitações na porta especificada.",
+              "reset": "A conexão foi fechada inesperadamente pelo servidor. Isso pode acontecer se o servidor estiver instável ou for reiniciado."
             },
             "dns": {
               "notFound": "Não foi possível encontrar o endereço do servidor. Verifique se há erros de digitação ou nomes de domínio inválidos na URL.",
               "timeout": "",
-              "noAnswer": ""
+              "noAnswer": "O servidor DNS não retornou uma resposta válida. O domínio pode existir, mas não possui registros válidos."
             },
             "timeout": {
               "aborted": "",
@@ -864,8 +864,8 @@
           "message": "A URL é inválida"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Credenciais ausentes",
+          "message": "Nem todas as credenciais foram fornecidas"
         },
         "invalidCredentials": {
           "title": "",
@@ -876,8 +876,8 @@
           "message": ""
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Requisição inválida",
+          "message": "A solicitação estava malformada"
         },
         "unauthorized": {
           "title": "Não autorizado",
@@ -897,7 +897,7 @@
         },
         "serviceUnavailable": {
           "title": "",
-          "message": ""
+          "message": "O servidor está indisponível no momento"
         },
         "connectionAborted": {
           "title": "",
@@ -927,19 +927,19 @@
     },
     "secrets": {
       "title": "",
-      "lastUpdated": "",
+      "lastUpdated": "Última atualização em {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "Nenhum valor definido",
+        "tooltip": "Esta credencial obrigatória ainda não foi definida"
       },
-      "secureNotice": "",
+      "secureNotice": "Esta credencial não pode ser recuperada após a criação",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Redefinir credencial",
+        "message": "Tem certeza de que deseja redefinir esta credencial?"
       },
       "noSecretsRequired": {
         "segmentTitle": "",
-        "text": ""
+        "text": "Nenhuma credencial necessária para esta integração"
       },
       "kind": {
         "username": {
@@ -955,16 +955,16 @@
           "newLabel": "Nova senha"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Token ID",
+          "newLabel": "Novo ID de token"
         },
         "realm": {
           "label": "",
           "newLabel": ""
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Token de acesso pessoal",
+          "newLabel": "Novo token de acesso pessoal"
         },
         "topic": {
           "label": "Tópico",
@@ -1044,14 +1044,14 @@
     }
   },
   "common": {
-    "success": "",
-    "beta": "",
+    "success": "Sucesso",
+    "beta": "Beta",
     "error": "Erro",
     "action": {
       "add": "Adicionar",
       "apply": "Aplicar",
       "backToOverview": "Voltar à visão geral",
-      "change": "",
+      "change": "Alterar",
       "create": "Criar",
       "createAnother": "Criar e recomeçar",
       "edit": "Editar",
@@ -1073,7 +1073,7 @@
       "tryAgain": "Tente novamente",
       "loading": "Carregando"
     },
-    "here": "",
+    "here": "aqui",
     "iconPicker": {
       "label": "URL do ícone",
       "header": "Digite o nome ou os objetos para filtrar os ícones... O Homarr pesquisará {countIcons} ícones para você."
@@ -1131,7 +1131,7 @@
         "logout": "Sair",
         "login": "“Login”",
         "homeBoard": "Seu painel inicial",
-        "loggedOut": "",
+        "loggedOut": "Sessão encerrada",
         "updateAvailable": "{countUpdates} atualizações disponíveis: {tag}"
       }
     },
@@ -1259,7 +1259,7 @@
       }
     },
     "create": {
-      "title": "",
+      "title": "Escolha o item a adicionar",
       "search": "Filtrar itens",
       "addToBoard": "Adicionar ao quadro"
     },
@@ -1273,31 +1273,31 @@
           "label": "Altura"
         },
         "xOffset": {
-          "label": ""
+          "label": "Deslocamento X"
         },
         "yOffset": {
-          "label": ""
+          "label": "Deslocamento Y"
         }
       }
     },
     "edit": {
       "title": "Editar item",
       "advancedOptions": {
-        "label": "",
+        "label": "Opções avançadas",
         "title": "Opções avançadas de itens"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integrações"
         },
         "title": {
           "label": "Título"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Classes CSS personalizadas"
         },
         "borderColor": {
-          "label": ""
+          "label": "Cor da borda"
         }
       }
     },
@@ -1350,7 +1350,7 @@
       }
     },
     "bookmarks": {
-      "name": "",
+      "name": "Marcadores",
       "description": "",
       "option": {
         "title": {
@@ -1386,8 +1386,8 @@
           "label": "Abrir em nova guia"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Marcadores",
+          "add": "Adicionar marcador"
         }
       }
     },
@@ -1465,7 +1465,7 @@
       }
     },
     "clock": {
-      "name": "",
+      "name": "Data e hora",
       "description": "Apresenta a data e hora actuais.",
       "option": {
         "customTitleToggle": {
@@ -1476,45 +1476,45 @@
           "label": "Título"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "Formato de 24 horas",
+          "description": "Use o formato de 24 horas em vez do formato de 12 horas"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Exibir segundos"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Usar um fuso horário fixo"
         },
         "timezone": {
           "label": "Fuso-horário",
-          "description": ""
+          "description": "Escolha o fuso horário seguindo o padrão IANA"
         },
         "showDate": {
           "label": "Exibir data"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Formato de data",
+          "description": "Como a data deve ser apresentada"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Formato de hora personalizado",
+          "description": "Usar ISO 8601 para formatar horas (Isso sobrescreverá outras opções)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Formato de data personalizado",
+          "description": "Usar ISO 8601 para formatar datas (Isso sobrescreverá outras opções)"
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Status de servidor Minecraft",
+      "description": "Exibir o status de um servidor Minecraft",
       "option": {
         "title": {
           "label": "Título"
         },
         "domain": {
-          "label": ""
+          "label": "Endereço do servidor"
         },
         "isBedrockServer": {
           "label": ""
@@ -1965,7 +1965,7 @@
     },
     "coolify": {
       "name": "Coolify",
-      "description": "",
+      "description": "Visão geral da sua instância Coolify com servidores e aplicativos",
       "option": {
         "showServers": {
           "label": "Exibir servidores"
@@ -1979,14 +1979,14 @@
       },
       "empty": {
         "servers": "Nenhum servidor encontrado",
-        "applications": "",
+        "applications": "Nenhum aplicativo encontrado",
         "services": "Nenhum serviço encontrado"
       },
       "footer": {
         "updated": "Atualizado em {when}"
       },
       "error": {
-        "noIntegration": "",
+        "noIntegration": "Nenhuma integração Coolify configurada",
         "internalServerError": ""
       },
       "server": {
@@ -2229,7 +2229,7 @@
           "pause": "Pausar item",
           "resume": "",
           "delete": {
-            "title": "",
+            "title": "Excluir item",
             "modalTitle": "",
             "entry": "",
             "entryAndFiles": ""
@@ -3036,7 +3036,7 @@
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "Gerenciamento",
     "title": {
       "morning": "Bom dia, {username}",
       "afternoon": "Boa tarde, {username}",
@@ -3044,16 +3044,16 @@
     },
     "notFound": {
       "title": "Não encontrado",
-      "text": ""
+      "text": "Não foi possível encontrar o recurso solicitado"
     },
     "navbar": {
       "items": {
         "home": "Início",
         "boards": "Placas",
         "apps": "Aplicativos",
-        "integrations": "",
+        "integrations": "Integrações",
         "searchEngies": "Mecanismos de busca",
-        "medias": "",
+        "medias": "Mídias",
         "users": {
           "label": "Usuários",
           "items": {
@@ -3067,9 +3067,9 @@
           "items": {
             "docker": "Docker",
             "kubernetes": "Kubernetes",
-            "logs": "",
+            "logs": "Logs",
             "api": "API",
-            "certificates": "",
+            "certificates": "Certificados",
             "tasks": "Tarefas"
           }
         },
@@ -3078,7 +3078,7 @@
           "label": "Ajuda",
           "items": {
             "documentation": "Documentação",
-            "submitIssue": "",
+            "submitIssue": "Enviar um problema",
             "discord": "Discórdia da comunidade",
             "sourceCode": "Código-fonte"
           }
@@ -3106,26 +3106,26 @@
         },
         "heroBanner": {
           "title": "Bem-vindo de volta ao seu",
-          "subtitle": ""
+          "subtitle": "Quadro {app}"
         }
       },
       "board": {
         "title": "Suas placas",
         "action": {
           "new": {
-            "label": ""
+            "label": "Novo quadro"
           },
           "open": {
-            "label": ""
+            "label": "Abrir quadro"
           },
           "settings": {
             "label": "Configurações"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "Definir como quadro inicial",
             "badge": {
               "label": "Início",
-              "tooltip": ""
+              "tooltip": "Este quadro será exibido como seu quadro inicial"
             }
           },
           "setMobileHomeBoard": {
@@ -3172,13 +3172,13 @@
             "item": {
               "language": "",
               "board": {
-                "title": "",
+                "title": "Quadro inicial",
                 "type": {
-                  "general": "",
+                  "general": "Geral",
                   "mobile": ""
                 }
               },
-              "search": "",
+              "search": "Buscar",
               "firstDayOfWeek": "Primeiro dia da semana",
               "accessibility": "Acessibilidade"
             }
@@ -3256,7 +3256,7 @@
               "label": "Data de expiração"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
@@ -3367,7 +3367,7 @@
             }
           },
           "search": {
-            "title": "",
+            "title": "Buscar",
             "defaultSearchEngine": {
               "label": "",
               "description": ""
@@ -3584,34 +3584,34 @@
       },
       "about": {
         "version": "Versão {version}",
-        "text": "",
+        "text": "O Homarr é um projeto de código aberto impulsionado pela comunidade e mantido por voluntários. Graças a essas pessoas, o Homarr tem sido um projeto em crescimento desde 2021. Nossa equipe trabalha remotamente em vários países diferentes no Homarr, em seu tempo livre e sem remuneração.",
         "accordion": {
           "contributors": {
-            "title": "",
+            "title": "Contribuidores",
             "subtitle": ""
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Tradutores",
+            "subtitle": "{count} traduções contribuídas em vários idiomas"
           },
           "libraries": {
-            "title": "",
+            "title": "Bibliotecas",
             "subtitle": ""
           },
           "hotkeys": {
-            "title": "",
+            "title": "Teclas de atalho",
             "subtitle": "Atalhos de teclado para melhorar seu fluxo de trabalho",
             "field": {
               "shortcut": "Atalhos",
-              "action": ""
+              "action": "Ação"
             },
             "action": {
               "toggleBoardEdit": "Alternar para o modo de edição do quadro",
-              "toggleColorScheme": "",
+              "toggleColorScheme": "Alternar entre modo claro/escuro",
               "saveNotebook": "",
-              "openSpotlight": ""
+              "openSpotlight": "Abrir busca"
             },
-            "note": ""
+            "note": "Dica: Mod refere-se tanto à tecla Ctrl quanto à tecla ⌘ no macOS"
           }
         }
       }
@@ -3620,7 +3620,7 @@
   "docker": {
     "title": "Contêineres",
     "table": {
-      "updated": "",
+      "updated": "Atualizado em {when}",
       "search": "Buscar {count} contêineres",
       "selected": "{selectCount} de {totalCount} contêineres selecionados",
       "footer": "Total de contêineres: {count}"
@@ -3657,7 +3657,7 @@
       }
     },
     "action": {
-      "title": "",
+      "title": "Ações",
       "start": {
         "label": "Iniciar",
         "notification": {
@@ -3711,7 +3711,7 @@
         }
       },
       "refresh": {
-        "label": "",
+        "label": "Atualizar",
         "notification": {
           "success": {
             "title": "Os contêineres foram atualizados",
@@ -4100,12 +4100,12 @@
           }
         },
         "logs": {
-          "label": ""
+          "label": "Logs"
         },
         "certificates": {
           "label": "Certificados",
           "hostnames": {
-            "label": ""
+            "label": "Hostnames"
           }
         }
       },
@@ -4293,7 +4293,7 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Buscar",
             "option": {
               "other": {
                 "label": "Pesquise com outro mecanismo de busca"
@@ -4303,7 +4303,7 @@
                 "description": "Defina um mecanismo de busca padrão nas preferências"
               },
               "search": {
-                "label": ""
+                "label": "Buscar por \"{query}\" com {name}"
               },
               "from-integration": {
                 "description": "Comece a digitar para pesquisar"
@@ -4355,7 +4355,7 @@
                 "label": "Swagger API"
               },
               "manageLog": {
-                "label": ""
+                "label": "Exibir logs"
               },
               "manageTask": {
                 "label": "Gerenciar tarefas"
@@ -4388,7 +4388,7 @@
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Selecione uma ação para o usuário"
               }
             }
           },
@@ -4407,7 +4407,7 @@
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Selecione uma ação para o grupo"
               }
             }
           }
@@ -4491,8 +4491,8 @@
             "title": "",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "Temporada",
+                "episodes": "Episódios"
               }
             },
             "button": {
@@ -4506,46 +4506,46 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Hostname"
       },
       "subject": {
-        "label": ""
+        "label": "Assunto"
       },
       "issuer": {
-        "label": ""
+        "label": "Emissor"
       },
       "validFrom": {
-        "label": ""
+        "label": "Válido desde"
       },
       "validTo": {
-        "label": ""
+        "label": "Válido até"
       },
       "serialNumber": {
-        "label": ""
+        "label": "Número de série"
       },
       "fingerprint": {
-        "label": ""
+        "label": "Impressão digital"
       }
     },
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "Certificados confiáveis",
+        "description": "Usado pelo Homarr para solicitar dados de integrações.",
         "noResults": {
-          "title": ""
+          "title": "Ainda não existem certificados"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Certificado inválido",
+          "description": "Falha ao analisar certificado"
         },
-        "expires": "",
-        "toHostnames": ""
+        "expires": "Expira em {when}",
+        "toHostnames": "Hostnames confiáveis"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "Hostnames de certificados confiáveis",
+        "description": "Alguns certificados não permitem o domínio específico que o Homarr usa para solicitá-los, por isso todos os hostnames confiáveis com suas impressões digitais de certificado são usados para contornar essas restrições.",
         "noResults": {
-          "title": ""
+          "title": "Ainda não existem hostnames"
         },
         "toCertificates": "Certificados"
       }
@@ -4579,16 +4579,16 @@
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "Remover hostname confiável",
+        "confirm": "Tem certeza que deseja remover este hostname confiável? Isso pode fazer com que algumas integrações parem de funcionar.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Hostname removido",
+            "message": "O hostname foi removido com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Hostname não removido",
+            "message": "O hostname não pôde ser removido"
           }
         }
       }
@@ -4597,9 +4597,9 @@
   "log": {
     "level": {
       "option": {
-        "debug": "",
+        "debug": "Debug",
         "info": "Informação",
-        "warn": "",
+        "warn": "Aviso",
         "error": "Erro"
       }
     }
