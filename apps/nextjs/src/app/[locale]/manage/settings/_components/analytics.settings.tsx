@@ -24,15 +24,6 @@ export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
         return;
       }
 
-      if (
-        !updatedValues.enableGeneral &&
-        (updatedValues.enableWidgetData || updatedValues.enableIntegrationData || updatedValues.enableUserData)
-      ) {
-        updatedValues.enableIntegrationData = false;
-        updatedValues.enableUserData = false;
-        updatedValues.enableWidgetData = false;
-      }
-
       void mutateAsync({
         settingsKey: "analytics",
         value: updatedValues,
@@ -54,30 +45,6 @@ export const AnalyticsSettings = ({ initialData }: AnalyticsSettingsProps) => {
         <LoadingOverlay visible={isPending} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
         <Stack>
           <SwitchSetting form={form} formKey="enableGeneral" title={t("general.title")} text={t("general.text")} />
-          <SwitchSetting
-            form={form}
-            formKey="enableIntegrationData"
-            ms="xl"
-            title={t("integrationData.title")}
-            text={t("integrationData.text")}
-            disabled={!form.values.enableGeneral}
-          />
-          <SwitchSetting
-            form={form}
-            formKey="enableWidgetData"
-            ms="xl"
-            title={t("widgetData.title")}
-            text={t("widgetData.text")}
-            disabled={!form.values.enableGeneral}
-          />
-          <SwitchSetting
-            form={form}
-            formKey="enableUserData"
-            ms="xl"
-            title={t("usersData.title")}
-            text={t("usersData.text")}
-            disabled={!form.values.enableGeneral}
-          />
         </Stack>
       </Card>
     </>
