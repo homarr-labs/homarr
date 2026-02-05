@@ -77,7 +77,7 @@
     "react-dom": "19.2.4",
     "react-markdown": "^10.1.0",
     "recharts": "^2.15.4",
-    "video.js": "^8.23.4",
+    "video.js": "^8.23.6",
     "zod": "^4.2.1"
   },
   "devDependencies": {
