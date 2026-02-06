@@ -705,18 +705,18 @@
         "label": "URL"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
+        "label": "Criar mecanismo de busca",
         "description": ""
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Aplicativo vinculado"
       },
       "createApp": {
         "label": "Criar aplicativo",
         "description": "Crie um aplicativo com o mesmo nome e ícone da integração. Deixe o campo de entrada abaixo vazio para criar o aplicativo com a URL de integração."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "URL de aplicativo personalizada"
       }
     },
     "action": {
@@ -724,8 +724,8 @@
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Testar conexão e criar",
+        "edit": "Testar conexão e salvar"
       },
       "error": {
         "common": {
@@ -735,7 +735,7 @@
         },
         "unknown": {
           "title": "Erro desconhecido",
-          "description": ""
+          "description": "Ocorreu um erro desconhecido, abra a causa abaixo para ver mais detalhes"
         },
         "parse": {
           "title": "",
@@ -1415,7 +1415,7 @@
       },
       "error": {
         "internalServerError": "",
-        "integrationsDisconnected": ""
+        "integrationsDisconnected": "Nenhum dado disponível, todas as integrações estão desconectadas"
       },
       "data": {
         "adsBlockedToday": "Bloqueado hoje",
@@ -1451,14 +1451,14 @@
         "internalServerError": ""
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
-        "set": "",
+        "enableAll": "Habilitar todos",
+        "disableAll": "Desabilitar todos",
+        "setTimer": "Definir temporizador",
+        "set": "Definir",
         "enabled": "Ativado",
         "disabled": "Desativado",
-        "processing": "",
-        "disconnected": "",
+        "processing": "Processando",
+        "disconnected": "Desconectado",
         "hours": "Horas",
         "minutes": "Minutos",
         "unlimited": ""
@@ -1517,7 +1517,7 @@
           "label": "Endereço do servidor"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Servidor Bedrock"
         }
       },
       "status": {
@@ -1527,7 +1527,7 @@
     },
     "notebook": {
       "name": "Caderno de anotações",
-      "description": "",
+      "description": "Um widget de bloco de notas simples que suporta markdown",
       "option": {
         "showToolbar": {
           "label": "Mostrar a barra de ferramentas para ajudá-lo a escrever markdown"
@@ -1587,11 +1587,11 @@
       },
       "placeholder": "",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Descartar alterações?",
+        "message": "Você tem alterações não salvas em seu bloco de notas. Tem certeza de que deseja descartá-las?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Descartar alterações",
+          "keepEditing": "Continuar editando"
         }
       }
     },
@@ -1773,17 +1773,17 @@
       "description": "Apresenta a informação meteorológica actual de um local definido.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperatura em Fahrenheit"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Desativar decimais de temperatura"
         },
         "showCurrentWindSpeed": {
           "label": "Exibir velocidade do vento atual",
-          "description": ""
+          "description": "Somente no clima atual"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Usar unidade mph para velocidade do vento"
         },
         "location": {
           "label": "Localização do tempo"
@@ -1795,20 +1795,20 @@
           "label": "Exibir previsão"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Quantidade de dias de previsão",
+          "description": "Quando o widget não é largo o suficiente, menos dias serão exibidos"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Formato de data",
+          "description": "Como a data deve ser exibida"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "Nascer do sol",
+        "sunset": "Pôr do sol",
+        "maxWindSpeed": "Velocidade máxima do vento: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Rajadas máximas de vento: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Limpar",
@@ -2528,7 +2528,7 @@
         }
       },
       "error": {
-        "integrationsDisconnected": "",
+        "integrationsDisconnected": "Nenhum dado disponível, todas as integrações estão desconectadas",
         "unknownContentOption": ""
       },
       "name": "",
@@ -2565,7 +2565,7 @@
         }
       },
       "error": {
-        "integrationsDisconnected": "",
+        "integrationsDisconnected": "Nenhum dado disponível, todas as integrações estão desconectadas",
         "unknownContentOption": ""
       },
       "name": "",
@@ -2854,16 +2854,16 @@
         "label": "Cor secundária"
       },
       "opacity": {
-        "label": ""
+        "label": "Opacidade"
       },
       "iconColor": {
-        "label": ""
+        "label": "Cor do ícone"
       },
       "clearColor": {
         "label": ""
       },
       "customCss": {
-        "label": "",
+        "label": "CSS personalizado para este quadro",
         "description": "Além disso, personalize seu painel usando CSS, recomendado apenas para usuários experientes",
         "customClassesAlert": {
           "title": "Classes personalizadas",
@@ -3165,12 +3165,12 @@
       },
       "user": {
         "back": "Voltar aos usuários",
-        "fieldsDisabledExternalProvider": "",
+        "fieldsDisabledExternalProvider": "Alguns campos estão desabilitados porque são gerenciados por um provedor de autenticação externo.",
         "setting": {
           "general": {
             "title": "Geral",
             "item": {
-              "language": "",
+              "language": "Idioma & Região",
               "board": {
                 "title": "Quadro inicial",
                 "type": {
@@ -3423,37 +3423,37 @@
               "label": ""
             },
             "downloads": {
-              "label": ""
+              "label": "Downloads"
             },
             "mediaRequestStats": {
-              "label": ""
+              "label": "Estatísticas de solicitações de mídia"
             },
             "mediaRequestList": {
-              "label": ""
+              "label": "Lista de solicitações de mídia"
             },
             "rssFeeds": {
-              "label": ""
+              "label": "Feeds RSS"
             },
             "indexerManager": {
               "label": ""
             },
             "healthMonitoring": {
-              "label": ""
+              "label": "Monitoramento de saúde"
             },
             "dnsHole": {
-              "label": ""
+              "label": "Dados do DNS Hole"
             },
             "updateChecker": {
-              "label": ""
+              "label": "Verificador de atualizações"
             },
             "mediaTranscoding": {
-              "label": ""
+              "label": "Transcodificação de mídia"
             },
             "networkController": {
-              "label": ""
+              "label": "Controlador de rede"
             },
             "refreshNotifications": {
-              "label": ""
+              "label": "Atualizador de notificações"
             },
             "dockerContainers": {
               "label": "Contêineres do Docker"
@@ -3468,24 +3468,24 @@
               "label": "Versão do Firewall"
             },
             "firewallInterfaces": {
-              "label": ""
+              "label": "Interfaces de firewall"
             },
             "weather": {
-              "label": ""
+              "label": "Clima"
             }
           },
           "interval": {
-            "seconds": "",
-            "minutes": "",
-            "hours": "",
-            "midnight": "",
-            "weeklyMonday": "",
+            "seconds": "A cada {interval, plural, =1 {segundo} other {# segundos}}",
+            "minutes": "A cada {interval, plural, =1 {minuto} other {# minutos}}",
+            "hours": "A cada {interval, plural, =1 {hora} other {# horas}}",
+            "midnight": "Todo dia à meia-noite",
+            "weeklyMonday": "Toda semana na segunda-feira",
             "update": {
               "success": {
-                "message": ""
+                "message": "Intervalo atualizado com sucesso"
               },
               "error": {
-                "message": ""
+                "message": "Erro ao atualizar intervalo"
               }
             }
           },
@@ -3497,13 +3497,13 @@
               "label": "Nome"
             },
             "interval": {
-              "label": ""
+              "label": "Intervalo de agendamento"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Última Execução"
             },
             "actions": {
-              "label": ""
+              "label": "Ações"
             }
           },
           "table": {
@@ -3511,7 +3511,7 @@
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "Atualizar"
             }
           },
           "refresh": {
@@ -3567,8 +3567,8 @@
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "Remover token de API",
+                  "text": "Isso excluirá permanentemente o token de API. Clientes de API que usam este token não poderão mais autenticar e executar solicitações de API. Esta ação não pode ser desfeita."
                 }
               },
               "table": {
@@ -3608,7 +3608,7 @@
             "action": {
               "toggleBoardEdit": "Alternar para o modo de edição do quadro",
               "toggleColorScheme": "Alternar entre modo claro/escuro",
-              "saveNotebook": "",
+              "saveNotebook": "Salvar bloco de notas (apenas dentro do widget de bloco de notas)",
               "openSpotlight": "Abrir busca"
             },
             "note": "Dica: Mod refere-se tanto à tecla Ctrl quanto à tecla ⌘ no macOS"
