@@ -47,8 +47,8 @@
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/core": "^8.3.13",
-    "@paralleldrive/cuid2": "^3.1.0",
+    "@mantine/core": "^8.3.14",
+    "@paralleldrive/cuid2": "^3.3.0",
     "@testcontainers/mysql": "^11.11.0",
     "@testcontainers/postgresql": "^11.11.0",
     "better-sqlite3": "^12.6.2",
@@ -56,8 +56,8 @@
     "drizzle-kit": "^0.31.8",
     "drizzle-orm": "^0.45.1",
     "drizzle-zod": "^0.8.3",
-    "mysql2": "3.16.1",
-    "pg": "^8.17.2",
+    "mysql2": "3.16.2",
+    "pg": "^8.18.0",
     "superjson": "2.2.6"
   },
   "devDependencies": {

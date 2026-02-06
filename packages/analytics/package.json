@@ -22,8 +22,11 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
+    "@homarr/auth": "workspace:^0.1.0",
+    "@homarr/common": "workspace:^0.1.0",
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/db": "workspace:^0.1.0",
+    "@homarr/docker": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
     "@umami/node": "^0.4.0",
     "superjson": "2.2.6"
