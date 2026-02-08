@@ -3305,7 +3305,7 @@
             "title": "Statistikk",
             "general": {
               "title": "Send anonym brukerdata",
-              "text": "Homarr vil sende anonymt brukerdata med åpen kildekode programvaren Umami. Det vil aldri samle inn personlig informasjon og følger derfor GDPR & CCPA fullstendig. Vi oppfordrer deg til å aktivere sending av brukerdata da det hjelper teamet vårt å identifisere problemer og sette prioritering."
+              "text": "Homarr vil sende anonymiserte analyser ved bruk av den åpne programvaren Umami. Når dette er aktivert, samler vi inn: Homarr-versjon, databastype (MySQL/PostgreSQL/SQLite), Docker/Kubernetes-status, aktiverte autentiseringsmetoder, og antallet av hver funksjon. Alle data er anonyme og aggregerte – ingen personlig informasjon, URL-er, navn eller identifiserbare data samles inn. Dette hjelper vårt open source-team med å forstå bruks‑mønstre og prioritere utvikling."
             },
             "widgetData": {
               "title": "Widget data",
