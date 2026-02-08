@@ -836,19 +836,19 @@
           "title": "Request error",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "The server could not be reached. This usually means the host is offline or unreachable from your network.",
+              "networkUnreachable": "The network is unreachable. Please check your Internet connection or network configuration.",
+              "refused": "The server refused the connection. It may not be running or is rejecting requests on the specified port.",
+              "reset": "The connection was unexpectedly closed by the server. This can happen if the server is unstable or restarted."
             },
             "dns": {
-              "notFound": "",
-              "timeout": "",
-              "noAnswer": ""
+              "notFound": "The server address could not be found. Please check the URL for typos or invalid domain names.",
+              "timeout": "DNS lookup timed out. This may be a temporary issue—please try again in a few moments.",
+              "noAnswer": "The DNS server didn't return a valid response. The domain may exist but has no valid records."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "The request was aborted before it could complete. This might be due to a user action or system timeout.",
+              "timeout": "The request took too long to complete and was timed out. Check your network or try again later."
             }
           }
         }
@@ -920,8 +920,8 @@
           "message": "The path is incorrect. Please double-check the URL"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "Too many requests in a given time",
+          "message": "There were too many requests. You are likely being rate-limited or rejected by the target system"
         }
       }
     },
@@ -963,36 +963,36 @@
           "newLabel": "New realm"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Personal Access Token",
+          "newLabel": "New Personal Access Token"
         },
         "topic": {
-          "label": "",
-          "newLabel": ""
+          "label": "Topic",
+          "newLabel": "New topic"
         },
         "url": {
-          "label": "",
-          "newLabel": ""
+          "label": "URL",
+          "newLabel": "New URL"
         },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "API Key (Key)",
+          "newLabel": "New API Key (Key)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "API Key (Secret)",
+          "newLabel": "New API Key (Secret)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "App Id",
+          "newLabel": "New App Id"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Installation Id",
+          "newLabel": "New Installation Id"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Private key",
+          "newLabel": "New private key"
         }
       }
     },
@@ -1044,14 +1044,14 @@
     }
   },
   "common": {
-    "success": "",
+    "success": "Success",
     "beta": "Beta",
     "error": "Alpha",
     "action": {
       "add": "Add",
       "apply": "Apply",
       "backToOverview": "Back to overview",
-      "change": "",
+      "change": "Change",
       "create": "Create",
       "createAnother": "Create and start over",
       "edit": "Edit",
@@ -1063,7 +1063,7 @@
       "cancel": "Cancel",
       "delete": "Delete",
       "discard": "Discard",
-      "close": "",
+      "close": "Close",
       "confirm": "Confirm",
       "continue": "Continue",
       "previous": "Previous",
@@ -1138,9 +1138,9 @@
     "dangerZone": "Danger zone",
     "noResults": "No results have been found",
     "unsavedChanges": "You have unsaved changes!",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "servers": "Servers",
+    "applications": "Apps",
+    "services": "Services",
     "preview": {
       "show": "Show a preview",
       "hide": "Hide the preview"
@@ -1177,8 +1177,8 @@
     },
     "unit": {
       "speed": {
-        "kilometersPerHour": "",
-        "milesPerHour": ""
+        "kilometersPerHour": "km/h",
+        "milesPerHour": "mph"
       }
     }
   },
@@ -1193,7 +1193,7 @@
           "label": "Title"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Custom CSS classes"
         },
         "borderColor": {
           "label": "Border colour"
@@ -1226,69 +1226,69 @@
       },
       "remove": {
         "title": "Remove category",
-        "message": ""
+        "message": "Are you sure you want to remove the category {name}?"
       },
       "edit": {
-        "title": "",
-        "submit": ""
+        "title": "Rename category",
+        "submit": "Rename category"
       },
       "menu": {
         "label": {
-          "create": "",
-          "changePosition": ""
+          "create": "New category",
+          "changePosition": "Change position"
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "Open all in tabs",
+        "text": "Some browsers may block the bulk-opening of tabs for security reasons. Homarr was unable to open all windows, because your browser blocked this action. Please allow \"Open pop-up windows\" and re-try."
       }
     }
   },
   "item": {
     "action": {
-      "create": "",
-      "import": "",
-      "edit": "",
-      "moveResize": "",
-      "duplicate": "",
-      "remove": ""
+      "create": "New item",
+      "import": "Import item",
+      "edit": "Edit item",
+      "moveResize": "Move / resize item",
+      "duplicate": "Duplicate item",
+      "remove": "Remove item"
     },
     "menu": {
       "label": {
-        "settings": ""
+        "settings": "Settings"
       }
     },
     "create": {
-      "title": "",
-      "search": "",
-      "addToBoard": ""
+      "title": "Choose item to add",
+      "search": "Filter items",
+      "addToBoard": "Add to board"
     },
     "moveResize": {
-      "title": "",
+      "title": "Move / resize item",
       "field": {
         "width": {
-          "label": ""
+          "label": "Width"
         },
         "height": {
-          "label": ""
+          "label": "Height"
         },
         "xOffset": {
-          "label": ""
+          "label": "X offset"
         },
         "yOffset": {
-          "label": ""
+          "label": "Y offset"
         }
       }
     },
     "edit": {
-      "title": "",
+      "title": "Edit item",
       "advancedOptions": {
-        "label": "",
-        "title": ""
+        "label": "Advanced options",
+        "title": "Advanced item options"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integrations"
         },
         "title": {
           "label": ""
@@ -1427,46 +1427,46 @@
     },
     "dnsHoleControls": {
       "name": "",
-      "description": "",
+      "description": "Control PiHole or AdGuard from your dashboard",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
-              "label": ""
+              "label": "Grid"
             }
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Show Toggle All Buttons"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Failed to control DNS Hole"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
-        "set": "",
-        "enabled": "",
-        "disabled": "",
-        "processing": "",
-        "disconnected": "",
-        "hours": "",
-        "minutes": "",
-        "unlimited": ""
+        "enableAll": "Enable All",
+        "disableAll": "Disable All",
+        "setTimer": "Set Timer",
+        "set": "Set",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "processing": "Processing",
+        "disconnected": "Disconnected",
+        "hours": "Hours",
+        "minutes": "Minutes",
+        "unlimited": "Leave blank to unlimited"
       }
     },
     "clock": {
-      "name": "",
-      "description": "",
+      "name": "Date and time",
+      "description": "Displays the current date and time.",
       "option": {
         "customTitleToggle": {
           "label": "",
@@ -4475,12 +4475,12 @@
           "message": "",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Search engine deleted",
+              "message": "The search engine was deleted successfully"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Search engine not deleted",
+              "message": "The search engine could not be deleted"
             }
           }
         }
@@ -4488,15 +4488,15 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "Request \"{name}\"",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "Season",
+                "episodes": "Episodes"
               }
             },
             "button": {
-              "send": ""
+              "send": "Send request"
             }
           }
         }
@@ -4506,44 +4506,44 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Hostname"
       },
       "subject": {
-        "label": ""
+        "label": "Subject"
       },
       "issuer": {
-        "label": ""
+        "label": "Issuer"
       },
       "validFrom": {
-        "label": ""
+        "label": "Valid from"
       },
       "validTo": {
-        "label": ""
+        "label": "Valid to"
       },
       "serialNumber": {
-        "label": ""
+        "label": "Serial number"
       },
       "fingerprint": {
-        "label": ""
+        "label": "Fingerprint"
       }
     },
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "Trusted certificates",
+        "description": "Used by Homarr to request data from integrations.",
         "noResults": {
-          "title": ""
+          "title": "There are no certificates yet"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Invalid certificate",
+          "description": "Failed to parse certificate"
         },
-        "expires": "",
-        "toHostnames": ""
+        "expires": "Expires {when}",
+        "toHostnames": "Trusted hostnames"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "Trusted certificate hostnames",
+        "description": "Some certificates do not allow the specific domain Homarr uses to request them, because of this all trusted hostnames with their certificate thumbprints are used to bypass these restrictions.",
         "noResults": {
           "title": "There are no hostnames yet"
         },
