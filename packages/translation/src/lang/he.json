@@ -1138,7 +1138,7 @@
     "dangerZone": "אזור מסוכן",
     "noResults": "לא נמצאו תוצאות",
     "unsavedChanges": "ישנם שינויים שלא נשמרו!",
-    "servers": "",
+    "servers": "שרתים",
     "applications": "",
     "services": "",
     "preview": {
@@ -3360,7 +3360,7 @@
             }
           },
           "user": {
-            "title": "",
+            "title": "משתמשים",
             "enableGravatar": {
               "label": "",
               "description": ""
