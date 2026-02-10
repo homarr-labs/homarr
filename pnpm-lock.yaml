@@ -432,7 +432,7 @@ importers:
         specifier: ^17.2.3
         version: 17.2.3
       fastify:
-        specifier: ^5.7.2
+        specifier: ^5.7.3
         version: 5.7.3
       superjson:
         specifier: 2.2.6
@@ -843,6 +843,9 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^3.3.0
         version: 3.3.0
+      cookie:
+        specifier: 1.1.1
+        version: 1.1.1
       dayjs:
         specifier: ^1.11.19
         version: 1.11.19
@@ -4188,9 +4191,6 @@ packages:
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
 
-  '@standard-schema/spec@1.0.0':
-    resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
-
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
@@ -5931,10 +5931,6 @@ packages:
   cookie@0.7.2:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
-
-  cookie@1.0.2:
-    resolution: {integrity: sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==}
-    engines: {node: '>=18'}
 
   cookie@1.1.1:
     resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
@@ -11550,7 +11546,7 @@ snapshots:
       '@ctrl/magnet-link': 4.2.0
       '@ctrl/shared-torrent': 6.5.0(ofetch@1.5.1)
       '@ctrl/torrent-file': 4.4.0
-      cookie: 1.0.2
+      cookie: 1.1.1
       node-fetch-native: 1.6.7
       ofetch: 1.5.1
       type-fest: 5.2.0
@@ -12857,8 +12853,6 @@ snapshots:
 
   '@socket.io/component-emitter@3.1.2': {}
 
-  '@standard-schema/spec@1.0.0': {}
-
   '@standard-schema/spec@1.1.0': {}
 
   '@swagger-api/apidom-ast@1.0.0-rc.1':
@@ -14116,7 +14110,7 @@ snapshots:
 
   '@vitest/expect@4.0.18':
     dependencies:
-      '@standard-schema/spec': 1.0.0
+      '@standard-schema/spec': 1.1.0
       '@types/chai': 5.2.2
       '@vitest/spy': 4.0.18
       '@vitest/utils': 4.0.18
@@ -15041,8 +15035,6 @@ snapshots:
   cookie-es@1.2.2: {}
 
   cookie@0.7.2: {}
-
-  cookie@1.0.2: {}
 
   cookie@1.1.1: {}
 
@@ -18026,7 +18018,7 @@ snapshots:
   normalize-package-data@8.0.0:
     dependencies:
       hosted-git-info: 9.0.2
-      semver: 7.7.3
+      semver: 7.7.4
       validate-npm-package-license: 3.0.4
 
   normalize-path@3.0.0: {}
