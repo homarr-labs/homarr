@@ -117,6 +117,8 @@ const createColumns = (
     header: tTasks("field.interval.label"),
     size: 200,
     Cell({ row }) {
+      if (row.original.preventCustomInterval) return null;
+
       const handleIntervalChange = (newCron: string | null) => {
         if (!newCron || newCron === row.original.cron) return;
 
