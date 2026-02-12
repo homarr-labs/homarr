@@ -120,8 +120,24 @@ export class TracearrIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    const json = await response.json();
-    return json as TracearrViolationsResponse;
+    const json = (await response.json()) as TracearrViolationsResponse;
+    const imageProxy = new ImageProxy();
+
+    await Promise.all(
+      json.data.map(async (violation) => {
+        if (violation.user.avatarUrl) {
+          violation.user = { ...violation.user };
+          violation.user.avatarUrl = await this.proxyImageAsync(
+            imageProxy,
+            violation.user.avatarUrl,
+            violation.user.id,
+            "avatar",
+          );
+        }
+      }),
+    );
+
+    return json;
   }
 
   /**

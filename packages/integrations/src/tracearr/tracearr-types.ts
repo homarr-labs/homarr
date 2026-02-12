@@ -145,14 +145,23 @@ export interface TracearrStreamsResponse {
 
 export interface TracearrViolation {
   id: string;
-  userId: string;
-  username: string;
-  ruleName: string;
-  mediaTitle: string;
   serverId: string;
   serverName: string;
-  detectedAt: string;
-  resolved: boolean;
+  severity: "low" | "medium" | "high";
+  acknowledged: boolean;
+  data: Record<string, string>;
+  createdAt: string;
+  rule: {
+    id: string;
+    type: string;
+    name: string;
+  };
+  user: {
+    id: string;
+    username: string;
+    thumbUrl: string | null;
+    avatarUrl: string | null;
+  };
 }
 
 export interface TracearrViolationsResponse {
