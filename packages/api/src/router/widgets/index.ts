@@ -25,4 +25,5 @@ export const widgetRouter = createTRPCRouter({
   networkController: lazy(() => import("./network-controller").then((mod) => mod.networkControllerRouter)),
   firewall: lazy(() => import("./firewall").then((mod) => mod.firewallRouter)),
   notifications: lazy(() => import("./notifications").then((mod) => mod.notificationsRouter)),
+  tracearr: lazy(() => import("./tracearr").then((mod) => mod.tracearrRouter)),
 });

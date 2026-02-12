@@ -40,6 +40,7 @@ import * as smartHomeExecuteAutomation from "./smart-home/execute-automation";
 import * as stockPrice from "./stocks";
 import * as systemDisks from "./system-disks";
 import * as systemResources from "./system-resources";
+import * as tracearr from "./tracearr";
 import * as video from "./video";
 import * as weather from "./weather";
 
@@ -79,6 +80,7 @@ export const widgetImports = {
   systemResources,
   coolify,
   systemDisks,
+  tracearr,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;

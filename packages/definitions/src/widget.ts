@@ -31,5 +31,6 @@ export const widgetKinds = [
   "systemResources",
   "coolify",
   "systemDisks",
+  "tracearr",
 ] as const;
 export type WidgetKind = (typeof widgetKinds)[number];

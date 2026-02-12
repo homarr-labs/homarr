@@ -37,6 +37,7 @@ import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { QuayIntegration } from "../quay/quay-integration";
+import { TracearrIntegration } from "../tracearr/tracearr-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import { UnraidIntegration } from "../unraid/unraid-integration";
@@ -105,6 +106,7 @@ export const integrationCreators = {
   truenas: TrueNasIntegration,
   unraid: UnraidIntegration,
   coolify: CoolifyIntegration,
+  tracearr: TracearrIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

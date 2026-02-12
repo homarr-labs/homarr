@@ -26,6 +26,7 @@ export { UnraidIntegration } from "./unraid/unraid-integration";
 export { OPNsenseIntegration } from "./opnsense/opnsense-integration";
 export { ICalIntegration } from "./ical/ical-integration";
 export { CoolifyIntegration } from "./coolify/coolify-integration";
+export { TracearrIntegration } from "./tracearr/tracearr-integration";
 
 // Types
 export type { IntegrationInput } from "./base/integration";
@@ -51,6 +52,7 @@ export type {
 } from "./interfaces/media-transcoding/media-transcoding-types";
 export type { ReleasesRepository, ReleaseResponse } from "./interfaces/releases-providers/releases-providers-types";
 export type { Notification } from "./interfaces/notifications/notification-types";
+export type { TracearrDashboardData } from "./tracearr/tracearr-types";
 
 // Schemas
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";
