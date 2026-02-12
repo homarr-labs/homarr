@@ -143,7 +143,76 @@ export interface TracearrStreamsResponse {
   summary: TracearrStreamsSummary;
 }
 
+export interface TracearrViolation {
+  id: string;
+  userId: string;
+  username: string;
+  ruleName: string;
+  mediaTitle: string;
+  serverId: string;
+  serverName: string;
+  detectedAt: string;
+  resolved: boolean;
+}
+
+export interface TracearrViolationsResponse {
+  data: TracearrViolation[];
+  meta: {
+    total: number;
+    page: number;
+    pageSize: number;
+  };
+}
+
+export interface TracearrHistorySession {
+  id: string;
+  serverId: string;
+  serverName: string;
+  state: string;
+  mediaType: string;
+  mediaTitle: string;
+  showTitle: string | null;
+  seasonNumber: number | null;
+  episodeNumber: number | null;
+  year: number | null;
+  thumbPath: string | null;
+  posterUrl: string | null;
+  durationMs: number;
+  progressMs: string | number;
+  totalDurationMs: string | number;
+  startedAt: string;
+  stoppedAt: string | null;
+  watched: boolean;
+  segmentCount: number;
+  device: string | null;
+  player: string | null;
+  product: string | null;
+  platform: string | null;
+  isTranscode: boolean;
+  videoDecision: string | null;
+  audioDecision: string | null;
+  bitrate: number | null;
+  resolution: string | null;
+  user: {
+    id: string;
+    username: string;
+    thumbUrl: string | null;
+    avatarUrl: string | null;
+  };
+}
+
+export interface TracearrHistoryResponse {
+  data: TracearrHistorySession[];
+  meta: {
+    total: number;
+    page: number;
+    pageSize: number;
+  };
+}
+
 export interface TracearrDashboardData {
   stats: TracearrStatsResponse;
   streams: TracearrStreamsResponse;
+  violations?: TracearrViolationsResponse;
+  recentActivity?: TracearrHistoryResponse;
 }

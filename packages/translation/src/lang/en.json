@@ -2005,6 +2005,12 @@
         },
         "showStats": {
           "label": "Show stats summary"
+        },
+        "showRecentActivity": {
+          "label": "Show recent activity"
+        },
+        "showViolations": {
+          "label": "Show violations"
         }
       },
       "stats": {
@@ -2022,6 +2028,18 @@
         "device": "Device",
         "progress": "Progress"
       },
+
+      "recentActivity": {
+        "title": "Recent Activity",
+        "empty": "No recent activity"
+      },
+      "violations": {
+        "title": "Violations",
+        "empty": "No recent violations",
+        "rule": "Rule",
+        "user": "User"
+      },
+      "noSectionsEnabled": "No sections enabled",
       "error": {
         "noIntegration": "No Tracearr integration configured",
         "internalServerError": "Failed to fetch Tracearr data"

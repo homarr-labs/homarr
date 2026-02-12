@@ -1,15 +1,33 @@
 "use client";
 
-import { Badge, Group, Paper, Progress, ScrollArea, SimpleGrid, Stack, Text, Tooltip } from "@mantine/core";
-import { IconDevices, IconNetwork, IconPlayerPause, IconPlayerPlay, IconUsers, IconVideo } from "@tabler/icons-react";
+import { Avatar, Badge, Group, Paper, Progress, ScrollArea, SimpleGrid, Stack, Text, Tooltip } from "@mantine/core";
+import {
+  IconAlertTriangle,
+  IconDevices,
+  IconNetwork,
+  IconPlayerPause,
+  IconPlayerPlay,
+  IconUsers,
+  IconVideo,
+} from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import type { TracearrDashboardData, TracearrStream } from "@homarr/integrations/types";
+import type {
+  TracearrDashboardData,
+  TracearrHistorySession,
+  TracearrStream,
+  TracearrViolation,
+} from "@homarr/integrations/types";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../definition";
 
-export default function TracearrWidget({ options, integrationIds }: WidgetComponentProps<"tracearr">) {
+export default function TracearrWidget({
+  options,
+  integrationIds,
+  width,
+  isEditMode,
+}: WidgetComponentProps<"tracearr">) {
   const t = useScopedI18n("widget.tracearr");
 
   if (integrationIds.length === 0) {
@@ -20,21 +38,25 @@ export default function TracearrWidget({ options, integrationIds }: WidgetCompon
     );
   }
 
-  return <TracearrContent integrationIds={integrationIds} options={options} />;
+  return <TracearrContent integrationIds={integrationIds} options={options} width={width} isEditMode={isEditMode} />;
 }
 
 interface TracearrContentProps {
   integrationIds: string[];
   options: WidgetComponentProps<"tracearr">["options"];
+  width: number;
+  isEditMode: boolean;
 }
 
-function TracearrContent({ integrationIds, options }: TracearrContentProps) {
+function TracearrContent({ integrationIds, options, width, isEditMode }: TracearrContentProps) {
+  const t = useScopedI18n("widget.tracearr");
   const [dashboardData] = clientApi.widget.tracearr.getDashboard.useSuspenseQuery({ integrationIds });
 
   const utils = clientApi.useUtils();
   clientApi.widget.tracearr.subscribeToDashboard.useSubscription(
     { integrationIds },
     {
+      enabled: !isEditMode,
       onData(newData) {
         utils.widget.tracearr.getDashboard.setData({ integrationIds }, (prevData) => {
           if (!prevData) return prevData;
@@ -50,26 +72,48 @@ function TracearrContent({ integrationIds, options }: TracearrContentProps) {
 
   // Merge data from all integrations
   const combined = dashboardData.reduce<TracearrDashboardData>(
-    (acc, item) => ({
-      stats: {
-        activeStreams: acc.stats.activeStreams + item.dashboard.stats.activeStreams,
-        totalUsers: acc.stats.totalUsers + item.dashboard.stats.totalUsers,
-        totalSessions: acc.stats.totalSessions + item.dashboard.stats.totalSessions,
-        recentViolations: acc.stats.recentViolations + item.dashboard.stats.recentViolations,
-        timestamp: item.dashboard.stats.timestamp,
-      },
-      streams: {
-        data: [...acc.streams.data, ...item.dashboard.streams.data],
-        summary: {
-          total: acc.streams.summary.total + item.dashboard.streams.summary.total,
-          transcodes: acc.streams.summary.transcodes + item.dashboard.streams.summary.transcodes,
-          directStreams: acc.streams.summary.directStreams + item.dashboard.streams.summary.directStreams,
-          directPlays: acc.streams.summary.directPlays + item.dashboard.streams.summary.directPlays,
-          totalBitrate: item.dashboard.streams.summary.totalBitrate,
-          byServer: [...acc.streams.summary.byServer, ...item.dashboard.streams.summary.byServer],
+    (acc, item) => {
+      const { stats, streams, violations, recentActivity } = item.dashboard;
+      const vData = violations ?? { data: [], meta: { total: 0, page: 1, pageSize: 5 } };
+      const aData = recentActivity ?? { data: [], meta: { total: 0, page: 1, pageSize: 5 } };
+
+      return {
+        stats: {
+          activeStreams: acc.stats.activeStreams + stats.activeStreams,
+          totalUsers: acc.stats.totalUsers + stats.totalUsers,
+          totalSessions: acc.stats.totalSessions + stats.totalSessions,
+          recentViolations: acc.stats.recentViolations + stats.recentViolations,
+          timestamp: stats.timestamp,
         },
-      },
-    }),
+        streams: {
+          data: [...acc.streams.data, ...streams.data],
+          summary: {
+            total: acc.streams.summary.total + streams.summary.total,
+            transcodes: acc.streams.summary.transcodes + streams.summary.transcodes,
+            directStreams: acc.streams.summary.directStreams + streams.summary.directStreams,
+            directPlays: acc.streams.summary.directPlays + streams.summary.directPlays,
+            totalBitrate: streams.summary.totalBitrate,
+            byServer: [...acc.streams.summary.byServer, ...streams.summary.byServer],
+          },
+        },
+        violations: {
+          data: [...(acc.violations?.data ?? []), ...vData.data],
+          meta: {
+            total: (acc.violations?.meta.total ?? 0) + vData.meta.total,
+            page: 1,
+            pageSize: 5,
+          },
+        },
+        recentActivity: {
+          data: [...(acc.recentActivity?.data ?? []), ...aData.data],
+          meta: {
+            total: (acc.recentActivity?.meta.total ?? 0) + aData.meta.total,
+            page: 1,
+            pageSize: 5,
+          },
+        },
+      };
+    },
     {
       stats: { activeStreams: 0, totalUsers: 0, totalSessions: 0, recentViolations: 0, timestamp: "" },
       streams: {
@@ -79,14 +123,19 @@ function TracearrContent({ integrationIds, options }: TracearrContentProps) {
     },
   );
 
+  const noSectionsEnabled =
+    !options.showStats && !options.showStreams && !options.showRecentActivity && !options.showViolations;
+
   return (
     <ScrollArea h="100%">
       <Stack gap="xs" p="xs">
-        {options.showStats && <StatsBar stats={combined.stats} summary={combined.streams.summary} />}
-        {options.showStreams && <StreamsList streams={combined.streams.data} />}
-        {!options.showStats && !options.showStreams && (
+        {options.showStats && <StatsBar stats={combined.stats} summary={combined.streams.summary} width={width} />}
+        {options.showStreams && <StreamsList streams={combined.streams.data} width={width} />}
+        {options.showViolations && <ViolationsList violations={combined.violations?.data ?? []} />}
+        {options.showRecentActivity && <RecentActivityList sessions={combined.recentActivity?.data ?? []} />}
+        {noSectionsEnabled && (
           <Text c="dimmed" ta="center">
-            No sections enabled
+            {t("noSectionsEnabled")}
           </Text>
         )}
       </Stack>
@@ -94,17 +143,22 @@ function TracearrContent({ integrationIds, options }: TracearrContentProps) {
   );
 }
 
+// --- Stats Section ---
+
 function StatsBar({
   stats,
   summary,
+  width,
 }: {
   stats: TracearrDashboardData["stats"];
   summary: TracearrDashboardData["streams"]["summary"];
+  width: number;
 }) {
   const t = useScopedI18n("widget.tracearr");
+  const cols = width > 400 ? 4 : width > 250 ? 2 : 1;
 
   return (
-    <SimpleGrid cols={4} spacing="xs">
+    <SimpleGrid cols={cols} spacing="xs">
       <StatCard icon={<IconVideo size={16} />} label={t("stats.activeStreams")} value={stats.activeStreams} />
       <StatCard icon={<IconUsers size={16} />} label={t("stats.totalUsers")} value={stats.totalUsers} />
       <StatCard
@@ -122,7 +176,7 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
     <Paper p="xs" radius="lg" withBorder>
       <Group gap={4} wrap="nowrap">
         {icon}
-        <Stack gap={0}>
+        <Stack gap={0} style={{ overflow: "hidden" }}>
           <Text size="xs" c="dimmed" lineClamp={1}>
             {label}
           </Text>
@@ -135,7 +189,9 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
   );
 }
 
-function StreamsList({ streams }: { streams: TracearrStream[] }) {
+// --- Streams Section ---
+
+function StreamsList({ streams, width }: { streams: TracearrStream[]; width: number }) {
   const t = useScopedI18n("widget.tracearr");
 
   if (streams.length === 0) {
@@ -149,26 +205,15 @@ function StreamsList({ streams }: { streams: TracearrStream[] }) {
   return (
     <Stack gap="xs">
       {streams.map((stream) => (
-        <StreamCard key={stream.id} stream={stream} />
+        <StreamCard key={stream.id} stream={stream} compact={width < 300} />
       ))}
     </Stack>
   );
 }
 
-function StreamCard({ stream }: { stream: TracearrStream }) {
+function StreamCard({ stream, compact }: { stream: TracearrStream; compact: boolean }) {
   const progressPercent =
     stream.durationMs && stream.durationMs > 0 ? (stream.progressMs / stream.durationMs) * 100 : 0;
-
-  const formatDuration = (milliseconds: number) => {
-    const totalSeconds = Math.floor(milliseconds / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    if (hours > 0) {
-      return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-    }
-    return `${minutes}:${String(seconds).padStart(2, "0")}`;
-  };
 
   const mediaLabel =
     stream.mediaType === "episode" && stream.showTitle
@@ -198,7 +243,7 @@ function StreamCard({ stream }: { stream: TracearrStream }) {
               {stream.username}
             </Text>
           </Group>
-          <Group gap={4} wrap="nowrap">
+          <Group gap={4} wrap={compact ? "wrap" : "nowrap"}>
             {stream.resolution && (
               <Badge size="xs" variant="light">
                 {stream.resolution}
@@ -247,4 +292,108 @@ function StreamCard({ stream }: { stream: TracearrStream }) {
       </Stack>
     </Paper>
   );
+}
+
+// --- Violations Section ---
+
+function ViolationsList({ violations }: { violations: TracearrViolation[] }) {
+  const t = useScopedI18n("widget.tracearr");
+
+  return (
+    <Stack gap={4}>
+      <Text size="xs" fw={600} c="dimmed" tt="uppercase">
+        {t("violations.title")}
+      </Text>
+      {violations.length === 0 ? (
+        <Text size="xs" c="dimmed" ta="center">
+          {t("violations.empty")}
+        </Text>
+      ) : (
+        <Stack gap="xs">
+          {violations.map((violation) => (
+            <Paper key={violation.id} p="xs" radius="lg" withBorder>
+              <Group justify="space-between" wrap="nowrap">
+                <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
+                  <IconAlertTriangle size={14} color="var(--mantine-color-orange-6)" />
+                  <Stack gap={0} style={{ overflow: "hidden" }}>
+                    <Text size="sm" fw={500} lineClamp={1}>
+                      {violation.mediaTitle}
+                    </Text>
+                    <Text size="xs" c="dimmed" lineClamp={1}>
+                      {t("violations.rule")}: {violation.ruleName}
+                    </Text>
+                  </Stack>
+                </Group>
+                <Badge size="xs" variant="light" color={violation.resolved ? "green" : "orange"}>
+                  {violation.username}
+                </Badge>
+              </Group>
+            </Paper>
+          ))}
+        </Stack>
+      )}
+    </Stack>
+  );
+}
+
+// --- Recent Activity Section ---
+
+function RecentActivityList({ sessions }: { sessions: TracearrHistorySession[] }) {
+  const t = useScopedI18n("widget.tracearr");
+
+  return (
+    <Stack gap={4}>
+      <Text size="xs" fw={600} c="dimmed" tt="uppercase">
+        {t("recentActivity.title")}
+      </Text>
+      {sessions.length === 0 ? (
+        <Text size="xs" c="dimmed" ta="center">
+          {t("recentActivity.empty")}
+        </Text>
+      ) : (
+        <Stack gap="xs">
+          {sessions.map((session) => {
+            const mediaLabel =
+              session.mediaType === "episode" && session.showTitle
+                ? `${session.showTitle} - S${session.seasonNumber ?? 0}E${session.episodeNumber ?? 0}`
+                : session.mediaTitle;
+
+            return (
+              <Paper key={session.id} p="xs" radius="lg" withBorder>
+                <Group justify="space-between" wrap="nowrap">
+                  <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
+                    <Avatar src={session.user.avatarUrl} alt={session.user.username} radius="xl" size="sm" />
+                    <Stack gap={0} style={{ overflow: "hidden" }}>
+                      <Text size="sm" fw={500} lineClamp={1}>
+                        {mediaLabel}
+                      </Text>
+                      <Text size="xs" c="dimmed" lineClamp={1}>
+                        {session.user.username} • {session.serverName}
+                      </Text>
+                    </Stack>
+                  </Group>
+                  <Badge size="xs" variant="light" color={session.watched ? "green" : "blue"}>
+                    {session.watched ? "Watched" : "Partial"}
+                  </Badge>
+                </Group>
+              </Paper>
+            );
+          })}
+        </Stack>
+      )}
+    </Stack>
+  );
+}
+
+// --- Utility ---
+
+function formatDuration(milliseconds: number) {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  if (hours > 0) {
+    return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  }
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }

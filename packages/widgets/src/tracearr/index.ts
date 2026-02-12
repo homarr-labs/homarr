@@ -13,6 +13,13 @@ export const { definition, componentLoader } = createWidgetDefinition("tracearr"
       showStats: factory.switch({
         defaultValue: true,
       }),
+
+      showRecentActivity: factory.switch({
+        defaultValue: true,
+      }),
+      showViolations: factory.switch({
+        defaultValue: true,
+      }),
     }));
   },
   supportedIntegrations: ["tracearr"],

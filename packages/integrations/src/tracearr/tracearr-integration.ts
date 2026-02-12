@@ -1,5 +1,6 @@
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { ImageProxy } from "@homarr/image-proxy";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
@@ -7,8 +8,10 @@ import type { TestingResult } from "../base/test-connection/test-connection-serv
 import type {
   TracearrDashboardData,
   TracearrHealthResponse,
+  TracearrHistoryResponse,
   TracearrStatsResponse,
   TracearrStreamsResponse,
+  TracearrViolationsResponse,
 } from "./tracearr-types";
 
 export class TracearrIntegration extends Integration {
@@ -87,12 +90,87 @@ export class TracearrIntegration extends Integration {
   }
 
   /**
-   * Get combined dashboard data (stats + streams)
+   * GET /api/v1/public/violations
+   * Recent rule violations with optional pagination
+   */
+  public async getViolationsAsync(pageSize = 5): Promise<TracearrViolationsResponse> {
+    const url = this.url("/api/v1/public/violations", {
+      page: "1",
+      pageSize: String(pageSize),
+    });
+    const response = await fetchWithTrustedCertificatesAsync(url, {
+      headers: this.getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    const json = await response.json();
+    return json as TracearrViolationsResponse;
+  }
+
+  /**
+   * GET /api/v1/public/history
+   * Session history with optional pagination
+   */
+  public async getHistoryAsync(pageSize = 10): Promise<TracearrHistoryResponse> {
+    const url = this.url("/api/v1/public/history", {
+      page: "1",
+      pageSize: String(pageSize),
+    });
+    const response = await fetchWithTrustedCertificatesAsync(url, {
+      headers: this.getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    const json = (await response.json()) as TracearrHistoryResponse;
+    const imageProxy = new ImageProxy();
+
+    await Promise.all(
+      json.data.map(async (session) => {
+        if (session.user.avatarUrl) {
+          try {
+            session.user = { ...session.user };
+            const cleanUrl = session.user.avatarUrl?.replace(/&fallback=[^&]+/, "").replace(/\?fallback=[^&]+&?/, "?");
+            // Build the full URL, then inject _uid as the FIRST query param.
+            // This is critical because ImageProxy uses bcrypt which truncates at 72 bytes.
+            // Without this, all long avatar URLs hash identically since they only differ after byte ~90.
+            const baseUrl = this.url(cleanUrl as `/${string}`).toString();
+            const fullUrl = baseUrl.replace("?", `?_uid=${session.user.id}&`);
+
+            session.user.avatarUrl = await imageProxy.createImageAsync(fullUrl, this.getAuthHeaders());
+          } catch {
+            session.user.avatarUrl = null;
+          }
+        }
+      }),
+    );
+
+    return json;
+  }
+
+  /**
+   * Get combined dashboard data (stats + streams + violations + history)
+   * Uses Promise.allSettled for optional endpoints so failures don't break the dashboard.
    */
   public async getDashboardDataAsync(): Promise<TracearrDashboardData> {
     const [stats, streams] = await Promise.all([this.getStatsAsync(), this.getStreamsAsync()]);
 
-    return { stats, streams };
+    const [violationsResult, historyResult] = await Promise.allSettled([
+      this.getViolationsAsync(),
+      this.getHistoryAsync(),
+    ]);
+
+    return {
+      stats,
+      streams,
+      violations: violationsResult.status === "fulfilled" ? violationsResult.value : undefined,
+      recentActivity: historyResult.status === "fulfilled" ? historyResult.value : undefined,
+    };
   }
 
   private getAuthHeaders(): Record<string, string> {
