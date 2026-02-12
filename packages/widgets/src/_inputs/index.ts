@@ -1,4 +1,5 @@
 import type { WidgetOptionType } from "../options";
+import { WidgetAnchorNoteInput } from "./widget-anchor-note-input";
 import { WidgetAppInput } from "./widget-app-input";
 import { WidgetLocationInput } from "./widget-location-input";
 import { WidgetMultiTextInput } from "./widget-multi-text-input";
@@ -12,6 +13,7 @@ import { WidgetSwitchInput } from "./widget-switch-input";
 import { WidgetTextInput } from "./widget-text-input";
 
 const mapping = {
+  anchorNote: WidgetAnchorNoteInput,
   text: WidgetTextInput,
   location: WidgetLocationInput,
   multiSelect: WidgetMultiSelectInput,
