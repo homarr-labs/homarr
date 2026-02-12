@@ -1,0 +1,115 @@
+import type { fetch as undiciFetch } from "undici";
+import { z } from "zod/v4";
+
+import { ResponseError } from "@homarr/common/server";
+import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+
+import type { IntegrationTestingInput } from "../base/integration";
+import { Integration } from "../base/integration";
+import type { TestingResult } from "../base/test-connection/test-connection-service";
+import type { AnchorNote, AnchorNotesListInput, AnchorNoteSummary, AnchorNoteUpdateInput } from "./anchor-types";
+
+const anchorNotePermissionSchema = z.enum(["owner", "viewer", "editor"]);
+
+const anchorNoteSummarySchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  updatedAt: z.string(),
+  isPinned: z.boolean(),
+  tagIds: z.array(z.string()),
+  permission: anchorNotePermissionSchema,
+});
+
+const anchorNoteSchema = anchorNoteSummarySchema.extend({
+  content: z.string().nullable().optional(),
+  createdAt: z.string(),
+  isArchived: z.boolean(),
+  background: z.string().nullable().optional(),
+  userId: z.string(),
+});
+
+const anchorNoteSummaryListSchema = z.array(anchorNoteSummarySchema);
+
+export class AnchorIntegration extends Integration {
+  protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
+    const response = await this.requestAsync(input.fetchAsync, "/api/notes", {
+      queryParams: { limit: "1" },
+    });
+    anchorNoteSummaryListSchema.parse(response);
+    return { success: true };
+  }
+
+  public async listNotesAsync(input: AnchorNotesListInput = {}): Promise<AnchorNoteSummary[]> {
+    const queryParams = buildListQuery(input);
+    const response = await this.requestAsync(fetchWithTrustedCertificatesAsync, "/api/notes", {
+      queryParams,
+    });
+    return anchorNoteSummaryListSchema.parse(response);
+  }
+
+  public async getNoteAsync(noteId: string): Promise<AnchorNote> {
+    const response = await this.requestAsync(fetchWithTrustedCertificatesAsync, `/api/notes/${noteId}`);
+    return anchorNoteSchema.parse(response);
+  }
+
+  public async updateNoteAsync(noteId: string, input: AnchorNoteUpdateInput): Promise<AnchorNote> {
+    const response = await this.requestAsync(fetchWithTrustedCertificatesAsync, `/api/notes/${noteId}`, {
+      method: "PATCH",
+      body: input,
+    });
+    return anchorNoteSchema.parse(response);
+  }
+
+  private async requestAsync(
+    fetchAsync: typeof undiciFetch,
+    path: `/${string}`,
+    options?: {
+      queryParams?: Record<string, string>;
+      method?: string;
+      body?: unknown;
+    },
+  ): Promise<unknown> {
+    const url = this.url(path, options?.queryParams);
+    const headers: Record<string, string> = {
+      Authorization: `Bearer ${this.getSecretValue("apiKey")}`,
+    };
+
+    if (options?.body !== undefined) {
+      headers["Content-Type"] = "application/json";
+    }
+
+    const response = await fetchAsync(url, {
+      method: options?.method ?? "GET",
+      headers,
+      body: options?.body !== undefined ? JSON.stringify(options.body) : undefined,
+    });
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
+    if (response.status === 204) {
+      return null;
+    }
+
+    return await response.json();
+  }
+}
+
+const buildListQuery = (input: AnchorNotesListInput) => {
+  const queryParams: Record<string, string> = {};
+
+  if (input.search?.trim()) {
+    queryParams.search = input.search.trim();
+  }
+
+  if (input.tagId?.trim()) {
+    queryParams.tagId = input.tagId.trim();
+  }
+
+  if (typeof input.limit === "number") {
+    queryParams.limit = input.limit.toString();
+  }
+
+  return Object.keys(queryParams).length >= 1 ? queryParams : undefined;
+};
