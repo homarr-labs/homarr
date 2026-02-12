@@ -86,7 +86,21 @@ export class TracearrIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    return (await response.json()) as TracearrStreamsResponse;
+    const json = (await response.json()) as TracearrStreamsResponse;
+    const imageProxy = new ImageProxy();
+
+    await Promise.all(
+      json.data.map(async (stream) => {
+        if (stream.userAvatarUrl) {
+          stream.userAvatarUrl = await this.proxyImageAsync(imageProxy, stream.userAvatarUrl, stream.id, "avatar");
+        }
+        if (stream.posterUrl) {
+          stream.posterUrl = await this.proxyImageAsync(imageProxy, stream.posterUrl, stream.id, "poster");
+        }
+      }),
+    );
+
+    return json;
   }
 
   /**
@@ -133,19 +147,13 @@ export class TracearrIntegration extends Integration {
     await Promise.all(
       json.data.map(async (session) => {
         if (session.user.avatarUrl) {
-          try {
-            session.user = { ...session.user };
-            const cleanUrl = session.user.avatarUrl?.replace(/&fallback=[^&]+/, "").replace(/\?fallback=[^&]+&?/, "?");
-            // Build the full URL, then inject _uid as the FIRST query param.
-            // This is critical because ImageProxy uses bcrypt which truncates at 72 bytes.
-            // Without this, all long avatar URLs hash identically since they only differ after byte ~90.
-            const baseUrl = this.url(cleanUrl as `/${string}`).toString();
-            const fullUrl = baseUrl.replace("?", `?_uid=${session.user.id}&`);
-
-            session.user.avatarUrl = await imageProxy.createImageAsync(fullUrl, this.getAuthHeaders());
-          } catch {
-            session.user.avatarUrl = null;
-          }
+          session.user = { ...session.user };
+          session.user.avatarUrl = await this.proxyImageAsync(
+            imageProxy,
+            session.user.avatarUrl,
+            session.user.id,
+            "avatar",
+          );
         }
       }),
     );
@@ -177,5 +185,28 @@ export class TracearrIntegration extends Integration {
     return {
       Authorization: `Bearer ${this.getSecretValue("apiKey")}`,
     };
+  }
+
+  private async proxyImageAsync(
+    imageProxy: ImageProxy,
+    url: string | null | undefined,
+    uniqueId: string,
+    discriminator: string,
+  ): Promise<string | null> {
+    if (!url) return null;
+    try {
+      const cleanUrl = url.replace(/&fallback=[^&]+/, "").replace(/\?fallback=[^&]+&?/, "?");
+      // Build the full URL, then inject _uid as the FIRST query param.
+      // This is critical because ImageProxy uses bcrypt which truncates at 72 bytes.
+      // Without this, all long avatar/poster URLs from the same session hash identically
+      // since they share the same first 72+ bytes.
+      const baseUrl = this.url(cleanUrl as `/${string}`).toString();
+      const prefix = `_uid=${discriminator}_${uniqueId}&`;
+      const fullUrl = baseUrl.includes("?") ? baseUrl.replace("?", `?${prefix}`) : `${baseUrl}?${prefix}`;
+
+      return await imageProxy.createImageAsync(fullUrl, this.getAuthHeaders());
+    } catch {
+      return null;
+    }
   }
 }

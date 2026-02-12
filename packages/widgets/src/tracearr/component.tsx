@@ -1,6 +1,18 @@
 "use client";
 
-import { Avatar, Badge, Group, Paper, Progress, ScrollArea, SimpleGrid, Stack, Text, Tooltip } from "@mantine/core";
+import {
+  Avatar,
+  Badge,
+  Box,
+  Group,
+  Paper,
+  Progress,
+  ScrollArea,
+  SimpleGrid,
+  Stack,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import {
   IconAlertTriangle,
   IconDevices,
@@ -230,8 +242,26 @@ function StreamCard({ stream, compact }: { stream: TracearrStream; compact: bool
           : null;
 
   return (
-    <Paper p="xs" radius="lg" withBorder>
-      <Stack gap={4}>
+    <Paper p="xs" radius="lg" withBorder style={{ position: "relative", overflow: "hidden" }}>
+      {stream.posterUrl && (
+        <Box
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            bottom: 0,
+            width: "50%",
+            backgroundImage: `url(${stream.posterUrl})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center right",
+            opacity: 0.25,
+            maskImage: "linear-gradient(to left, black 20%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to left, black 20%, transparent 100%)",
+            pointerEvents: "none",
+          }}
+        />
+      )}
+      <Stack gap={4} style={{ position: "relative" }}>
         <Group justify="space-between" wrap="nowrap">
           <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
             {stream.state === "playing" ? (
@@ -359,7 +389,7 @@ function RecentActivityList({ sessions }: { sessions: TracearrHistorySession[] }
                 : session.mediaTitle;
 
             return (
-              <Paper key={session.id} p="xs" radius="lg" withBorder>
+              <Paper key={session.id} p="sm" radius="lg" withBorder>
                 <Group justify="space-between" wrap="nowrap">
                   <Group gap="xs" wrap="nowrap" style={{ overflow: "hidden" }}>
                     <Avatar src={session.user.avatarUrl} alt={session.user.username} radius="xl" size="sm" />
@@ -372,9 +402,14 @@ function RecentActivityList({ sessions }: { sessions: TracearrHistorySession[] }
                       </Text>
                     </Stack>
                   </Group>
-                  <Badge size="xs" variant="light" color={session.watched ? "green" : "blue"}>
-                    {session.watched ? "Watched" : "Partial"}
-                  </Badge>
+                  <Stack gap={4} align="center">
+                    <Badge size="xs" variant="light" color={session.watched ? "green" : "blue"}>
+                      {session.watched ? "Watched" : "Partial"}
+                    </Badge>
+                    <Text size="xs" c="dimmed" lineClamp={1}>
+                      {new Date(session.startedAt).toLocaleDateString()}
+                    </Text>
+                  </Stack>
                 </Group>
               </Paper>
             );
