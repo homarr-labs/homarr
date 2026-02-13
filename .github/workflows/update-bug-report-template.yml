@@ -26,6 +26,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           token: ${{ steps.obtainToken.outputs.token }}
+          ref: fix-update-bug-report-template
       - name: Setup
         uses: ./tooling/github/setup
       - run: pnpm run scripts:update-bug-report-template
@@ -35,8 +36,6 @@ jobs:
         run: |
           git config --global user.email "175486441+homarr-releases[bot]@users.noreply.github.com"
           git config --global user.name "Releases Homarr"
-          git checkout -b update-bug-report-template
-          git add .
           git commit -m "chore: update bug report template"
 
       - name: Create Pull Request
