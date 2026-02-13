@@ -6,6 +6,7 @@ on:
       version:
         type: string
         required: true
+  push:
 
 jobs:
   update-bug-report-template:
@@ -29,7 +30,7 @@ jobs:
         uses: ./tooling/github/setup
       - run: pnpm run scripts:update-bug-report-template
         env:
-          NEXT_VERSION: ${{ github.event.inputs.version }}
+          NEXT_VERSION: ${{ github.event.inputs.version || 'v9.0.0' }}
       - name: Commit changes
         run: |
           git config --global user.email "175486441+homarr-releases[bot]@users.noreply.github.com"
