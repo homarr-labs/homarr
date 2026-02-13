@@ -2,7 +2,7 @@ permissions: {}
 
 on:
   release:
-    types: [published]
+    types: [released]
 
 jobs:
   trigger-docs-release:
