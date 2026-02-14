@@ -4,10 +4,10 @@
   "dependencies": {
     "better-sqlite3": "^12.6.2"
   },
-  "packageManager": "pnpm@10.29.1",
+  "packageManager": "pnpm@10.29.2",
   "engines": {
     "node": ">=24.13.0",
-    "pnpm": ">=10.29.1"
+    "pnpm": ">=10.29.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
