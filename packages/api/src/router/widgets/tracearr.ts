@@ -7,26 +7,24 @@ import { createManyIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 export const tracearrRouter = createTRPCRouter({
-  getDashboard: publicProcedure
-    .concat(createManyIntegrationMiddleware("query", "tracearr"))
-    .query(async ({ ctx }) => {
-      const results = await Promise.all(
-        ctx.integrations.map(async (integration) => {
-          const innerHandler = tracearrRequestHandler.handler(integration, {});
-          const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+  getDashboard: publicProcedure.concat(createManyIntegrationMiddleware("query", "tracearr")).query(async ({ ctx }) => {
+    const results = await Promise.all(
+      ctx.integrations.map(async (integration) => {
+        const innerHandler = tracearrRequestHandler.handler(integration, {});
+        const { data, timestamp } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
 
-          return {
-            integrationId: integration.id,
-            integrationName: integration.name,
-            integrationUrl: integration.url,
-            dashboard: data,
-            updatedAt: timestamp,
-          };
-        }),
-      );
+        return {
+          integrationId: integration.id,
+          integrationName: integration.name,
+          integrationUrl: integration.url,
+          dashboard: data,
+          updatedAt: timestamp,
+        };
+      }),
+    );
 
-      return results;
-    }),
+    return results;
+  }),
   subscribeToDashboard: publicProcedure
     .concat(createManyIntegrationMiddleware("query", "tracearr"))
     .subscription(({ ctx }) => {
