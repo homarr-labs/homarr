@@ -32,7 +32,14 @@ export class OnboardingActions {
   }
 
   public async processUserStepAsync(input: { username: string; password: string; confirmPassword: string }) {
-    await this.page.waitForSelector("text=administrator user");
+    try {
+      await this.page.waitForSelector("text=administrator user");
+    } catch (error) {
+      if (error instanceof Error && error.name === "TimeoutError") {
+        console.log(this.page.innerHTML("html"));
+      }
+      throw error;
+    }
 
     await this.page.getByLabel("Username").fill(input.username);
     await this.page.getByLabel("Password", { exact: true }).fill(input.password);
