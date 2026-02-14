@@ -177,8 +177,8 @@ export interface TracearrHistorySession {
   id: string;
   serverId: string;
   serverName: string;
-  state: string;
-  mediaType: string;
+  state: "playing" | "paused" | "stopped";
+  mediaType: "movie" | "episode" | "track" | "live" | "photo" | "unknown";
   mediaTitle: string;
   showTitle: string | null;
   seasonNumber: number | null;
@@ -187,8 +187,8 @@ export interface TracearrHistorySession {
   thumbPath: string | null;
   posterUrl: string | null;
   durationMs: number;
-  progressMs: string | number;
-  totalDurationMs: string | number;
+  progressMs: number;
+  totalDurationMs: number;
   startedAt: string;
   stoppedAt: string | null;
   watched: boolean;
@@ -198,8 +198,8 @@ export interface TracearrHistorySession {
   product: string | null;
   platform: string | null;
   isTranscode: boolean;
-  videoDecision: string | null;
-  audioDecision: string | null;
+  videoDecision: "directplay" | "copy" | "transcode" | null;
+  audioDecision: "directplay" | "copy" | "transcode" | null;
   bitrate: number | null;
   resolution: string | null;
   user: {

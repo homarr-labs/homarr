@@ -332,6 +332,7 @@ export const integrationDefs = {
       "downloadClient",
       "healthMonitoring",
       "indexerManager",
+      "mediaMonitoring",
       "mediaRelease",
       "mediaRequest",
       "mediaService",

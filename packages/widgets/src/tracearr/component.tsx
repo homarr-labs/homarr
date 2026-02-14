@@ -224,6 +224,7 @@ function StreamsList({ streams, width }: { streams: TracearrStream[]; width: num
 }
 
 function StreamCard({ stream, compact }: { stream: TracearrStream; compact: boolean }) {
+  const t = useScopedI18n("widget.tracearr");
   const progressPercent =
     stream.durationMs && stream.durationMs > 0 ? (stream.progressMs / stream.durationMs) * 100 : 0;
 
@@ -234,11 +235,11 @@ function StreamCard({ stream, compact }: { stream: TracearrStream; compact: bool
 
   const videoDecisionLabel =
     stream.videoDecision === "directplay"
-      ? "Direct Play"
+      ? t("streams.videoDecision.directPlay")
       : stream.videoDecision === "transcode"
-        ? "Transcode"
+        ? t("streams.videoDecision.transcode")
         : stream.videoDecision === "copy"
-          ? "Direct Stream"
+          ? t("streams.videoDecision.directStream")
           : null;
 
   return (
@@ -425,7 +426,7 @@ function RecentActivityList({ sessions }: { sessions: TracearrHistorySession[] }
                   </Group>
                   <Stack gap={4} align="center">
                     <Badge size="xs" variant="light" color={session.watched ? "green" : "blue"}>
-                      {session.watched ? "Watched" : "Partial"}
+                      {session.watched ? t("recentActivity.watched") : t("recentActivity.partial")}
                     </Badge>
                     <Text size="xs" c="dimmed" lineClamp={1}>
                       {new Date(session.startedAt).toLocaleDateString()}

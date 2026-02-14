@@ -2026,12 +2026,19 @@
         "state": "State",
         "quality": "Quality",
         "device": "Device",
-        "progress": "Progress"
+        "progress": "Progress",
+        "videoDecision": {
+          "directPlay": "Direct Play",
+          "transcode": "Transcode",
+          "directStream": "Direct Stream"
+        }
       },
 
       "recentActivity": {
         "title": "Recent Activity",
-        "empty": "No recent activity"
+        "empty": "No recent activity",
+        "watched": "Watched",
+        "partial": "Partial"
       },
       "violations": {
         "title": "Violations",
