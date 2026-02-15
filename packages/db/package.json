@@ -53,7 +53,7 @@
     "@testcontainers/postgresql": "^11.11.0",
     "better-sqlite3": "^12.6.2",
     "dotenv": "^17.2.4",
-    "drizzle-kit": "^0.31.8",
+    "drizzle-kit": "^0.31.9",
     "drizzle-orm": "^0.45.1",
     "drizzle-zod": "^0.8.3",
     "mysql2": "3.16.3",
