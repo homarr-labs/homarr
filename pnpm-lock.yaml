@@ -281,7 +281,7 @@ importers:
         specifier: ^7.5.0
         version: 7.5.0
       glob:
-        specifier: ^13.0.2
+        specifier: ^13.0.3
         version: 13.0.3
       isomorphic-dompurify:
         specifier: ^2.36.0
@@ -17883,11 +17883,11 @@ snapshots:
 
   minimatch@5.1.6:
     dependencies:
-      brace-expansion: 4.0.1
+      brace-expansion: 5.0.2
 
   minimatch@7.4.6:
     dependencies:
-      brace-expansion: 4.0.1
+      brace-expansion: 5.0.2
 
   minimatch@9.0.0:
     dependencies:
@@ -17895,7 +17895,7 @@ snapshots:
 
   minimatch@9.0.5:
     dependencies:
-      brace-expansion: 4.0.1
+      brace-expansion: 5.0.2
 
   minimist@1.2.8: {}
 
