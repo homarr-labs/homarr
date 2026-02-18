@@ -2326,6 +2326,9 @@ importers:
       recharts:
         specifier: ^2.15.4
         version: 2.15.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      selectn:
+        specifier: ^1.3.0
+        version: 1.3.0ev
       video.js:
         specifier: ^8.23.7
         version: 8.23.7
@@ -2342,6 +2345,9 @@ importers:
       '@homarr/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/selectn':
+        specifier: ^1.1.3
+        version: 1.1.3
       '@types/video.js':
         specifier: ^7.3.58
         version: 7.3.58
@@ -5052,6 +5058,9 @@ packages:
   '@types/react@19.2.14':
     resolution: {integrity: sha512-ilcTH/UniCkMdtexkoCN0bI7pMcJDvmQFPvuPvmEaYA/NSfFTAgdUSLAoVjaRJm7+6PvcM+q1zYOwS4wTYMF9w==}
 
+  '@types/selectn@1.1.3':
+    resolution: {integrity: sha512-LexO1MVMVC1fgfLJoHfwSmSAsXoCBx4R/spBtwihqbXrYrN8wCjM3xWvB+20jerFyRMZxhdfeeq1zK429IXBxw==}
+
   '@types/semver@7.5.8':
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
 
@@ -5698,6 +5707,9 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
+  brackets2dots@1.1.0:
+    resolution: {integrity: sha512-DEIJz+ebFQ2SYPpXd8owCjy+8H+9N2Pd9DeSf0J33oavLyBYpAtjLg/Z/RmdJdTeHmKVva+L411HjnvyV2rSOA==}
+
   browserslist@4.24.2:
     resolution: {integrity: sha512-ZIc+Q62revdMcqC6aChtW4jz3My3klmCO1fEmINZY/8J3EpBg5/A/D0AKmBveUh6pgoeycoMkVMko84tuYS+Gg==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
@@ -6125,6 +6137,9 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
+  curry2@1.0.3:
+    resolution: {integrity: sha512-2vXqPLsITt0ccyczu1BFl3tc8Q6BOCsTHt+NZYasd8wp60RQIYhGM3Beis5h5FgJPT11M1rfiKOR7dPL6cL14Q==}
+
   d3-array@3.2.4:
     resolution: {integrity: sha512-tdQAmyA18i4J7wprpYq8ClcxZy3SC31QMeByyCFyRt7BVHdREQZ5lpzoe5mFEYZUWe+oq8HBvk9JjpibyEV4Jg==}
     engines: {node: '>=12'}
@@ -6411,6 +6426,9 @@ packages:
   dotenv@17.3.1:
     resolution: {integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==}
     engines: {node: '>=12'}
+
+  dotsplit.js@1.1.0:
+    resolution: {integrity: sha512-oFVx9VEE+M3yM4oUkaiDa+U2RhOmjXWyXwtfdc5UiHDSZWleE96FS3nx3yXMVuhLJOdI2GMThvaegkwRYPgAFQ==}
 
   drange@1.1.1:
     resolution: {integrity: sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==}
@@ -6886,6 +6904,9 @@ packages:
   external-editor@3.1.0:
     resolution: {integrity: sha512-hMQ4CX1p1izmuLYyZqLMO/qGNw10wSv9QDCPfzXfyFrOaCSSoRfqE1Kf1s5an66J5JZC62NewG+mK49jOCtQew==}
     engines: {node: '>=4'}
+
+  fast-bind@1.0.0:
+    resolution: {integrity: sha512-kna1xVU4nn4HW4RVwh6VYSWoii+u8EkWKS3I6YZluncEvtQwahHKhZTRPFHOOkeJK4m0/Tz2Ir9n10tARqeiXw==}
 
   fast-check@3.23.2:
     resolution: {integrity: sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A==}
@@ -9734,6 +9755,9 @@ packages:
 
   secure-json-parse@4.1.0:
     resolution: {integrity: sha512-l4KnYfEyqYJxDwlNVyRfO2E4NTHfMKAWdUuA8J0yve2Dz/E/PdBepY03RvyJpssIpRFwJoCD55wA+mEDs6ByWA==}
+
+  selectn@1.3.0:
+    resolution: {integrity: sha512-mid0kbUHd1kZ2hMYIMTqPMJ4xpLiaGnpXqkiMuwSBH9GiS0jkE8wGjlMG9D6ICZ4Nj8iln75wn3oCZQf9Gudpw==}
 
   semantic-release@25.0.3:
     resolution: {integrity: sha512-WRgl5GcypwramYX4HV+eQGzUbD7UUbljVmS+5G1uMwX/wLgYuJAxGeerXJDMO2xshng4+FXqCgyB5QfClV6WjA==}
@@ -14056,6 +14080,8 @@ snapshots:
     dependencies:
       csstype: 3.2.3
 
+  '@types/selectn@1.1.3': {}
+
   '@types/semver@7.5.8': {}
 
   '@types/send@0.17.4':
@@ -14846,6 +14872,8 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
+  brackets2dots@1.1.0: {}
+
   browserslist@4.24.2:
     dependencies:
       caniuse-lite: 1.0.30001755
@@ -15293,6 +15321,10 @@ snapshots:
 
   csstype@3.2.3: {}
 
+  curry2@1.0.3:
+    dependencies:
+      fast-bind: 1.0.0
+
   d3-array@3.2.4:
     dependencies:
       internmap: 2.0.3
@@ -15562,6 +15594,8 @@ snapshots:
   dotenv@16.6.1: {}
 
   dotenv@17.3.1: {}
+
+  dotsplit.js@1.1.0: {}
 
   drange@1.1.1: {}
 
@@ -16252,6 +16286,8 @@ snapshots:
       chardet: 0.7.0
       iconv-lite: 0.4.24
       tmp: 0.2.5
+
+  fast-bind@1.0.0: {}
 
   fast-check@3.23.2:
     dependencies:
@@ -19416,6 +19452,12 @@ snapshots:
       ajv-keywords: 5.1.0(ajv@8.17.1)
 
   secure-json-parse@4.1.0: {}
+
+  selectn@1.3.0:
+    dependencies:
+      brackets2dots: 1.1.0
+      curry2: 1.0.3
+      dotsplit.js: 1.1.0
 
   semantic-release@25.0.3(typescript@5.9.3):
     dependencies:
