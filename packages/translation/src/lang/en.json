@@ -1767,11 +1767,9 @@
             }
           }
         },
-        "headerName": {
-          "label": "Header name"
-        },
-        "headerValue": {
-          "label": "Header value"
+        "headers": {
+          "label": "Headers",
+          "description": "Add headers in \"Name: Value\" format, e.g. Authorization: Bearer token"
         },
         "filter": {
           "label": "Filter"

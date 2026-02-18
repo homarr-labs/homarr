@@ -5,6 +5,7 @@ import { z } from "zod/v4";
 import { constructBoardPermissions } from "@homarr/auth/shared";
 import { createId } from "@homarr/common";
 import type { DeviceType } from "@homarr/common/server";
+import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import type { Database, InferInsertModel, InferSelectModel, SQL } from "@homarr/db";
 import { and, asc, eq, handleTransactionsAsync, inArray, isNull, like, not, or, sql } from "@homarr/db";
 import { createDbInsertCollectionWithoutTransaction } from "@homarr/db/collection";
@@ -802,7 +803,7 @@ export const boardRouter = createTRPCRouter({
               addedItems.map((item) => ({
                 id: item.id,
                 kind: item.kind,
-                options: superjson.stringify(item.options),
+                options: superjson.stringify(encryptWidgetOptions(item.kind, item.options)),
                 advancedOptions: superjson.stringify(item.advancedOptions),
                 boardId: dbBoard.id,
               })),
@@ -861,7 +862,7 @@ export const boardRouter = createTRPCRouter({
               .update(schema.items)
               .set({
                 kind: item.kind,
-                options: superjson.stringify(item.options),
+                options: superjson.stringify(encryptWidgetOptions(item.kind, item.options)),
                 advancedOptions: superjson.stringify(item.advancedOptions),
               })
               .where(eq(schema.items.id, item.id));
@@ -1008,7 +1009,7 @@ export const boardRouter = createTRPCRouter({
                 addedItems.map((item) => ({
                   id: item.id,
                   kind: item.kind,
-                  options: superjson.stringify(item.options),
+                  options: superjson.stringify(encryptWidgetOptions(item.kind, item.options)),
                   advancedOptions: superjson.stringify(item.advancedOptions),
                   boardId: dbBoard.id,
                 })),
@@ -1074,7 +1075,7 @@ export const boardRouter = createTRPCRouter({
               .update(items)
               .set({
                 kind: item.kind,
-                options: superjson.stringify(item.options),
+                options: superjson.stringify(encryptWidgetOptions(item.kind, item.options)),
                 advancedOptions: superjson.stringify(item.advancedOptions),
               })
               .where(eq(items.id, item.id))
@@ -1617,7 +1618,7 @@ const getFullBoardWithWhereAsync = async (db: Database, where: SQL<unknown>, use
         })),
         integrationIds: itemIntegrations.map((item) => item.integration.id),
         advancedOptions: superjson.parse<BoardItemAdvancedOptions>(item.advancedOptions),
-        options: superjson.parse<Record<string, unknown>>(item.options),
+        options: decryptWidgetOptions(item.kind, superjson.parse<Record<string, unknown>>(item.options)),
       }),
     ),
   };
@@ -1657,3 +1658,35 @@ const filterRemovedItems = <TInput extends { id: string }>(inputArray: TInput[],
 
 const filterUpdatedItems = <TInput extends { id: string }>(inputArray: TInput[], dbArray: TInput[]) =>
   inputArray.filter((inputItem) => dbArray.some((dbItem) => dbItem.id === inputItem.id));
+
+const encryptWidgetOptions = (kind: string, options: Record<string, unknown>): Record<string, unknown> => {
+  if (kind === "customApi" && Array.isArray(options.headers)) {
+    return {
+      ...options,
+      headers: (options.headers as string[]).map((header) => {
+        const colonIndex = header.indexOf(":");
+        if (colonIndex === -1) return header;
+        const name = header.slice(0, colonIndex);
+        const value = header.slice(colonIndex + 1).trim();
+        return `${name}:${encryptSecret(value)}`;
+      }),
+    };
+  }
+  return options;
+};
+
+const decryptWidgetOptions = (kind: string, options: Record<string, unknown>): Record<string, unknown> => {
+  if (kind === "customApi" && Array.isArray(options.headers)) {
+    return {
+      ...options,
+      headers: (options.headers as string[]).map((header) => {
+        const colonIndex = header.indexOf(":");
+        if (colonIndex === -1) return header;
+        const name = header.slice(0, colonIndex);
+        const encryptedValue = header.slice(colonIndex + 1).trim() as `${string}.${string}`;
+        return `${name}:${decryptSecret(encryptedValue)}`;
+      }),
+    };
+  }
+  return options;
+};

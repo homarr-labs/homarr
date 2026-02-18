@@ -34,8 +34,7 @@ export default function CustomApiWidget({ options, width }: WidgetComponentProps
   const [{ data }] = clientApi.widget.customApi.fetchURL.useSuspenseQuery({
     url: options.url,
     method: options.method,
-    headerName: options.headerName,
-    headerValue: options.headerValue,
+    headers: options.headers,
   });
 
   const value = selectn(options.filter, data) as unknown;

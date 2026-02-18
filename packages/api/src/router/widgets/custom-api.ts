@@ -1,5 +1,6 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
+import { encryptSecret } from "@homarr/common/server";
 import { fetchCustomApiRequestHandler } from "@homarr/request-handler/custom-api-fetch";
 
 import { createTRPCRouter, publicProcedure } from "../../trpc";
@@ -7,8 +8,7 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 const fetchCustomApiInputSchema = z.object({
   url: z.string().nonempty(),
   method: z.string().nonempty(),
-  headerName: z.string(),
-  headerValue: z.string(),
+  headers: z.array(z.string()),
 });
 
 export const customApiRouter = createTRPCRouter({
@@ -16,8 +16,13 @@ export const customApiRouter = createTRPCRouter({
     const innerHandler = fetchCustomApiRequestHandler.handler({
       url: input.url,
       method: input.method,
-      headerName: input.headerName,
-      headerValue: input.headerValue,
+      headers: input.headers.map((header) => {
+        const colonIndex = header.indexOf(":");
+        if (colonIndex === -1) return header;
+        const name = header.slice(0, colonIndex);
+        const value = header.slice(colonIndex + 1).trim();
+        return `${name}:${encryptSecret(value)}`;
+      }),
     });
     return await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: true });
   }),

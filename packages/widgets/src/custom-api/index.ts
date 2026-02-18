@@ -1,4 +1,5 @@
 import { IconWorldWww } from "@tabler/icons-react";
+import { z } from "zod/v4";
 
 import { createWidgetDefinition } from "../definition";
 import { optionsBuilder } from "../options";
@@ -16,6 +17,7 @@ export const { definition, componentLoader } = createWidgetDefinition("customApi
       }),
       url: factory.text({
         defaultValue: "https://api.ipify.org?format=json",
+        validate: z.string().url(),
       }),
       method: factory.select({
         options: (["get", "post"] as const).map((value) => ({
@@ -24,11 +26,10 @@ export const { definition, componentLoader } = createWidgetDefinition("customApi
         })),
         defaultValue: "get",
       }),
-      headerName: factory.text({
-        defaultValue: "",
-      }),
-      headerValue: factory.text({
-        defaultValue: "",
+      headers: factory.multiText({
+        defaultValue: [],
+        withDescription: true,
+        validate: z.string().min(1),
       }),
       filter: factory.text({
         defaultValue: "ip",
