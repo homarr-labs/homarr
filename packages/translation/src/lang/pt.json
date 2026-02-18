@@ -27,8 +27,8 @@
           "description": "Configure o comportamento da importação"
         },
         "boardSelection": {
-          "title": "{count} quadros encontrados",
-          "description": "Escolha todos os quadros com o tamanho que você deseja importar",
+          "title": "{count} painéis encontrados",
+          "description": "Escolha todos os painéis com o tamanho que você deseja importar",
           "action": {
             "selectAll": "Selecionar todos",
             "unselectAll": "Desmarcar Todos"
@@ -95,8 +95,8 @@
         "subtitle": "Você está pronto para começar!",
         "description": "Você concluiu com sucesso o processo de configuração. Agora você pode começar a usar o Homarr. Selecione sua próxima ação:",
         "action": {
-          "goToBoard": "Ir para o quadro {name}",
-          "createBoard": "Crie seu primeiro quadro",
+          "goToBoard": "Ir para o painel {name}",
+          "createBoard": "Crie seu primeiro painel",
           "inviteUser": "Convidar outros usuários",
           "docs": "Ler a documentação"
         }
@@ -212,7 +212,7 @@
             "message": "Quadro inicial alterado com sucesso"
           },
           "error": {
-            "message": "Não foi possível alterar o quadro inicial"
+            "message": "Não foi possível alterar o painel inicial"
           }
         }
       },
@@ -287,7 +287,7 @@
       },
       "delete": {
         "label": "Excluir usuário permanentemente",
-        "description": "Exclui esse usuário incluindo suas preferências. Isso não removerá nenhum quadro. O usuário não sera notificado.",
+        "description": "Exclui esse usuário incluindo suas preferências. Isso não removerá nenhum painel. O usuário não será notificado.",
         "confirm": "Tem certeza que deseja excluir o usuário {username} e suas preferências?"
       },
       "select": {
@@ -308,11 +308,11 @@
       "members": "Membros",
       "homeBoard": {
         "label": "Quadro inicial",
-        "description": "Somente quadros acessíveis ao grupo podem ser selecionados"
+        "description": "Somente painéis acessíveis ao grupo podem ser selecionados"
       },
       "mobileBoard": {
         "label": "Quadro para celular",
-        "description": "Somente quadros acessíveis ao grupo podem ser selecionados"
+        "description": "Somente painéis acessíveis ao grupo podem ser selecionados"
       }
     },
     "permission": {
@@ -334,7 +334,7 @@
           },
           "use-all": {
             "label": "Usar todas aplicações",
-            "description": "Permitir que os membros adicionem qualquer aplicativo aos seus quadros"
+            "description": "Permitir que os membros adicionem qualquer aplicativo aos seus painéis"
           },
           "modify-all": {
             "label": "Modificar todos os aplicativos",
@@ -415,15 +415,15 @@
         }
       },
       "search-engine": {
-        "title": "Ferramentas de busca",
+        "title": "Mecanismos de busca",
         "item": {
           "create": {
-            "label": "Criar ferramenta de busca",
+            "label": "Criar mecanismos de busca",
             "description": "Permitir que os membros criem mecanismos de busca"
           },
           "modify-all": {
-            "label": "Modificar todas as ferramentas de busca",
-            "description": "Permitir que membros modifiquem todas as ferramentas de busca"
+            "label": "Modificar todos os mecanismos de busca",
+            "description": "Permitir que membros modifiquem todos os mecanismos de busca"
           },
           "full-all": {
             "label": "Acesso total às ferramentas de busca",
@@ -515,11 +515,11 @@
           "notification": {
             "success": {
               "title": "Configurações salvas",
-              "message": "As configurações do quadro foram salvas com sucesso"
+              "message": "As configurações do painel foram salvas com sucesso"
             },
             "error": {
               "title": "Falha ao salvar configurações",
-              "message": "Não foi possível salvar as configurações do quadro"
+              "message": "Não foi possível salvar as configurações do painel"
             }
           }
         }
@@ -537,7 +537,7 @@
     },
     "defaultGroup": {
       "name": "Grupo padrão",
-      "description": ""
+      "description": "{name} — Todos os usuários conectados"
     }
   },
   "app": {
@@ -603,8 +603,8 @@
       },
       "useDifferentUrlForPing": {
         "checkbox": {
-          "label": "",
-          "description": ""
+          "label": "Use uma URL diferente para o ping",
+          "description": "Útil se o Homarr puder acessar diretamente usando um hostname interno ou rede para evitar uso de largura de banda do provedor"
         }
       }
     },
@@ -614,8 +614,8 @@
         "notFound": "Nenhum aplicativo encontrado",
         "search": "Busque por um aplicativo",
         "noResults": "Sem resultados",
-        "action": "",
-        "title": "Selecione um aplicativo para adicioná-lo neste quadro"
+        "action": "Selecionar {app}",
+        "title": "Selecione um aplicativo para adicioná-lo neste painel"
       },
       "create": {
         "title": "Criar aplicativo",
@@ -631,11 +631,11 @@
         "title": "Integrações",
         "search": "Buscar integrações",
         "noResults": {
-          "title": ""
+          "title": "Ainda não existem integrações"
         }
       },
       "create": {
-        "title": "",
+        "title": "Nova integração {name}",
         "notification": {
           "success": {
             "title": "Criação bem-sucedida",
@@ -663,7 +663,7 @@
         }
       },
       "edit": {
-        "title": "",
+        "title": "Editar integração {name}",
         "notification": {
           "success": {
             "title": "Mudanças aplicadas com sucesso",
@@ -676,9 +676,9 @@
         },
         "app": {
           "action": {
-            "add": "",
-            "remove": "",
-            "select": ""
+            "add": "Vincular um aplicativo",
+            "remove": "Desvincular",
+            "select": "Selecione um aplicativo para vincular"
           }
         }
       },
@@ -705,18 +705,18 @@
         "label": "URL"
       },
       "attemptSearchEngineCreation": {
-        "label": "",
-        "description": ""
+        "label": "Criar mecanismo de busca",
+        "description": "A integração \"{kind}\" pode ser usada com os mecanismos de busca. Marque isso para configurar automaticamente o mecanismo de busca."
       },
       "app": {
-        "sectionTitle": ""
+        "sectionTitle": "Aplicativo vinculado"
       },
       "createApp": {
         "label": "Criar aplicativo",
         "description": "Crie um aplicativo com o mesmo nome e ícone da integração. Deixe o campo de entrada abaixo vazio para criar o aplicativo com a URL de integração."
       },
       "appHref": {
-        "placeholder": ""
+        "placeholder": "URL de aplicativo personalizada"
       }
     },
     "action": {
@@ -724,222 +724,222 @@
     },
     "testConnection": {
       "action": {
-        "create": "",
-        "edit": ""
+        "create": "Testar conexão e criar",
+        "edit": "Testar conexão e salvar"
       },
       "error": {
         "common": {
           "cause": {
-            "title": ""
+            "title": "Causa com mais detalhes"
           }
         },
         "unknown": {
           "title": "Erro desconhecido",
-          "description": ""
+          "description": "Ocorreu um erro desconhecido, abra a causa abaixo para ver mais detalhes"
         },
         "parse": {
-          "title": "",
-          "description": ""
+          "title": "Erro de análise",
+          "description": "A resposta não pôde ser analisada. Verifique se a URL está apontando para a URL base do serviço."
         },
         "authorization": {
           "title": "Erro de autorização",
-          "description": ""
+          "description": "A solicitação não foi autorizada. Verifique se as credenciais estão corretas e se você as configurou com permissões suficientes."
         },
         "statusCode": {
-          "title": "",
-          "description": "",
-          "otherDescription": "",
+          "title": "Erro de resposta",
+          "description": "Resposta inesperada recebida: {statusCode} ({reason}) de <url></url>. Verifique se a URL está apontando para a URL base da integração.",
+          "otherDescription": "Resposta inesperada recebida: {statusCode} de <url></url>. Verifique se a URL está apontando para a URL base da integração.",
           "reason": {
-            "badRequest": "",
+            "badRequest": "Solicitação inválida",
             "notFound": "Não encontrado",
-            "tooManyRequests": "",
+            "tooManyRequests": "Muitas solicitações",
             "internalServerError": "Erro interno do servidor",
-            "serviceUnavailable": "",
-            "gatewayTimeout": ""
+            "serviceUnavailable": "Serviço indisponível",
+            "gatewayTimeout": "Tempo esgotado do gateway"
           }
         },
         "certificate": {
-          "title": "",
+          "title": "Erro de certificado",
           "description": {
-            "expired": "",
-            "notYetValid": "",
-            "untrusted": "",
-            "hostnameMismatch": ""
+            "expired": "O certificado expirou.",
+            "notYetValid": "O certificado ainda não é válido.",
+            "untrusted": "O certificado não é confiável.",
+            "hostnameMismatch": "O hostname do certificado não corresponde à URL."
           },
           "alert": {
             "permission": {
               "title": "Permissões insuficientes",
-              "message": ""
+              "message": "Você não tem permissão para confiar ou carregar certificados. Entre em contato com o seu administrador para carregar o certificado raiz necessário."
             },
             "hostnameMismatch": {
-              "title": "",
-              "message": ""
+              "title": "Incompatibilidade de hostname",
+              "message": "O hostname no certificado não corresponde ao hostname ao qual você está se conectando. Isso pode indicar um risco de segurança, mas você ainda pode optar por confiar neste certificado."
             },
             "extract": {
-              "title": "",
-              "message": ""
+              "title": "Falha na extração do certificado CA",
+              "message": "Apenas certificados autoassinados sem uma cadeia podem ser buscados automaticamente. Se você estiver usando um certificado autoassinado, certifique-se de fazer upload do certificado CA manualmente. Você pode encontrar instruções sobre como fazer isso em <docsLink></docsLink>."
             }
           },
           "action": {
             "retry": {
-              "label": ""
+              "label": "Tentar criação novamente"
             },
             "trust": {
-              "label": ""
+              "label": "Confiar no certificado"
             },
             "upload": {
-              "label": ""
+              "label": "Enviar certificado"
             }
           },
           "hostnameMismatch": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Confiar na incompatibilidade de hostname",
+              "message": "Tem certeza de que deseja confiar no certificado com incompatibilidade de hostname?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Certificado confiável",
+                "message": "Hostname adicionado à lista de certificados confiáveis"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Falha ao confiar no certificado",
+                "message": "Não foi possível confiar no certificado com incompatibilidade de hostname"
               }
             }
           },
           "selfSigned": {
             "confirm": {
-              "title": "",
-              "message": ""
+              "title": "Confiar no certificado autoassinado",
+              "message": "Tem certeza de que deseja confiar neste certificado autoassinado?"
             },
             "notification": {
               "success": {
-                "title": "",
-                "message": ""
+                "title": "Certificado confiável",
+                "message": "Adicionar certificado a lista de certificados confiáveis"
               },
               "error": {
-                "title": "",
-                "message": ""
+                "title": "Falha ao confiar no certificado",
+                "message": "Falha ao adicionar certificado à lista de certificados confiáveis"
               }
             }
           },
           "details": {
             "title": "Detalhes",
-            "description": "",
+            "description": "Revise as informações do certificado antes de decidir confiar nele.",
             "content": {
               "action": "Exibir conteúdo",
-              "title": ""
+              "title": "Certificado PEM"
             }
           }
         },
         "request": {
-          "title": "Erro de requisição",
+          "title": "Erro de solicitação",
           "description": {
             "connection": {
-              "hostUnreachable": "",
-              "networkUnreachable": "",
-              "refused": "",
-              "reset": ""
+              "hostUnreachable": "O servidor não pôde ser alcançado. Isso geralmente significa que o host está offline ou inacessível da sua rede.",
+              "networkUnreachable": "A rede está inacessível. Verifique sua conexão com a internet ou configuração de rede.",
+              "refused": "O servidor recusou a conexão. Ele pode não estar em execução ou está rejeitando solicitações na porta especificada.",
+              "reset": "A conexão foi fechada inesperadamente pelo servidor. Isso pode acontecer se o servidor estiver instável ou for reiniciado."
             },
             "dns": {
               "notFound": "Não foi possível encontrar o endereço do servidor. Verifique se há erros de digitação ou nomes de domínio inválidos na URL.",
-              "timeout": "",
-              "noAnswer": ""
+              "timeout": "A consulta DNS expirou. Isso pode ser um problema temporário—tente novamente em alguns instantes.",
+              "noAnswer": "O servidor DNS não retornou uma resposta válida. O domínio pode existir, mas não possui registros válidos."
             },
             "timeout": {
-              "aborted": "",
-              "timeout": ""
+              "aborted": "A solicitação foi abortada antes de ser concluída. Isso pode ser devido a uma ação do usuário ou tempo limite do sistema.",
+              "timeout": "A solicitação demorou muito para ser concluída e expirou. Verifique sua rede ou tente novamente mais tarde."
             }
           }
         }
       },
-      "alertNotice": "",
+      "alertNotice": "O botão Salvar é habilitado após o estabelecimento de uma conexão bem-sucedida",
       "notification": {
         "success": {
-          "title": "",
-          "message": ""
+          "title": "Conexão bem-sucedida",
+          "message": "A conexão foi estabelecida com sucesso"
         },
         "invalidUrl": {
           "title": "URL inválido",
-          "message": ""
+          "message": "A URL é inválida"
         },
         "secretNotDefined": {
-          "title": "",
-          "message": ""
+          "title": "Credenciais ausentes",
+          "message": "Nem todas as credenciais foram fornecidas"
         },
         "invalidCredentials": {
-          "title": "",
-          "message": ""
+          "title": "Credenciais inválidas",
+          "message": "As credenciais são inválidas"
         },
         "commonError": {
-          "title": "",
-          "message": ""
+          "title": "Falha na conexão",
+          "message": "A conexão não pôde ser estabelecida"
         },
         "badRequest": {
-          "title": "",
-          "message": ""
+          "title": "Solicitação inválida",
+          "message": "A solicitação estava malformada"
         },
         "unauthorized": {
-          "title": "",
-          "message": ""
+          "title": "Não autorizado",
+          "message": "Credenciais provavelmente incorretas"
         },
         "forbidden": {
-          "title": "",
-          "message": ""
+          "title": "Proibido",
+          "message": "Provavelmente faltam permissões"
         },
         "notFound": {
           "title": "Não encontrado",
-          "message": ""
+          "message": "Provavelmente URL ou caminho incorreto"
         },
         "internalServerError": {
           "title": "Erro interno do servidor",
           "message": "O servidor encontrou um erro"
         },
         "serviceUnavailable": {
-          "title": "",
-          "message": ""
+          "title": "Serviço indisponível",
+          "message": "O servidor está indisponível no momento"
         },
         "connectionAborted": {
-          "title": "",
-          "message": ""
+          "title": "Conexão abortada",
+          "message": "A conexão foi abortada"
         },
         "domainNotFound": {
           "title": "Domínio não encontrado",
           "message": "O domínio não pôde ser encontrado"
         },
         "connectionRefused": {
-          "title": "",
-          "message": ""
+          "title": "Conexão recusada",
+          "message": "A conexão foi recusada"
         },
         "invalidJson": {
-          "title": "",
-          "message": ""
+          "title": "JSON inválido",
+          "message": "A resposta não é um JSON válido"
         },
         "wrongPath": {
-          "title": "",
-          "message": ""
+          "title": "Caminho incorreto",
+          "message": "O caminho provavelmente não está correto"
         },
         "tooManyRequests": {
-          "title": "",
-          "message": ""
+          "title": "Muitas solicitações em um curto período",
+          "message": "Houve muitas requisições. Você provavelmente está sendo limitado por taxa ou rejeitado pelo sistema de destino"
         }
       }
     },
     "secrets": {
-      "title": "",
-      "lastUpdated": "",
+      "title": "Secrets",
+      "lastUpdated": "Última atualização em {date}",
       "notSet": {
-        "label": "",
-        "tooltip": ""
+        "label": "Nenhum valor definido",
+        "tooltip": "Esta credencial obrigatória ainda não foi definida"
       },
-      "secureNotice": "",
+      "secureNotice": "Esta credencial não pode ser recuperada após a criação",
       "reset": {
-        "title": "",
-        "message": ""
+        "title": "Redefinir credencial",
+        "message": "Tem certeza de que deseja redefinir esta credencial?"
       },
       "noSecretsRequired": {
-        "segmentTitle": "",
-        "text": ""
+        "segmentTitle": "Sem credenciais",
+        "text": "Nenhuma credencial necessária para esta integração"
       },
       "kind": {
         "username": {
@@ -955,16 +955,16 @@
           "newLabel": "Nova senha"
         },
         "tokenId": {
-          "label": "",
-          "newLabel": ""
+          "label": "Token ID",
+          "newLabel": "Novo ID de token"
         },
         "realm": {
-          "label": "",
-          "newLabel": ""
+          "label": "Realm",
+          "newLabel": "Novo realm"
         },
         "personalAccessToken": {
-          "label": "",
-          "newLabel": ""
+          "label": "Token de acesso pessoal",
+          "newLabel": "Novo token de acesso pessoal"
         },
         "topic": {
           "label": "Tópico",
@@ -975,31 +975,31 @@
           "newLabel": "Nova URL"
         },
         "opnsenseApiKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Chave de API (Key)",
+          "newLabel": "Nova Chave de API (Key)"
         },
         "opnsenseApiSecret": {
-          "label": "",
-          "newLabel": ""
+          "label": "Chave de API (Key)",
+          "newLabel": "Nova Chave de API (Key)"
         },
         "githubAppId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID do Aplicativo",
+          "newLabel": "Novo ID de Aplicativo"
         },
         "githubInstallationId": {
-          "label": "",
-          "newLabel": ""
+          "label": "ID de instalação",
+          "newLabel": "Novo ID de instalação"
         },
         "privateKey": {
-          "label": "",
-          "newLabel": ""
+          "label": "Chave privada",
+          "newLabel": "Nova chave privada"
         }
       }
     },
     "permission": {
-      "use": "",
-      "interact": "",
-      "full": ""
+      "use": "Selecionar integrações em itens",
+      "interact": "Interagir com integrações",
+      "full": "Acesso completo à integração"
     }
   },
   "media": {
@@ -1039,41 +1039,41 @@
         "label": "Copiar URL"
       },
       "open": {
-        "label": ""
+        "label": "Abrir mídia"
       }
     }
   },
   "common": {
-    "success": "",
-    "beta": "",
+    "success": "Sucesso",
+    "beta": "Beta",
     "error": "Erro",
     "action": {
       "add": "Adicionar",
       "apply": "Aplicar",
-      "backToOverview": "",
-      "change": "",
+      "backToOverview": "Voltar à visão geral",
+      "change": "Alterar",
       "create": "Criar",
-      "createAnother": "",
+      "createAnother": "Criar e recomeçar",
       "edit": "Editar",
-      "import": "",
+      "import": "Importar",
       "insert": "Inserir",
       "remove": "Excluir",
       "save": "Salvar",
       "saveChanges": "Salvar alterações",
       "cancel": "Cancelar",
       "delete": "Apagar",
-      "discard": "",
-      "close": "",
+      "discard": "Descartar",
+      "close": "Fechar",
       "confirm": "Confirme",
-      "continue": "",
+      "continue": "Continuar",
       "previous": "Anterior",
       "next": "Próximo",
-      "checkoutDocs": "",
+      "checkoutDocs": "Confira a documentação",
       "checkLogs": "Verifique os logs para mais detalhes",
       "tryAgain": "Tente novamente",
-      "loading": ""
+      "loading": "Carregando"
     },
-    "here": "",
+    "here": "aqui",
     "iconPicker": {
       "label": "URL do ícone",
       "header": "Digite o nome ou os objetos para filtrar os ícones... O Homarr pesquisará {countIcons} ícones para você."
@@ -1117,7 +1117,7 @@
       "addLabel": "Adicionar {value}"
     },
     "select": {
-      "placeholder": "",
+      "placeholder": "Selecionar um valor",
       "badge": {
         "recommended": "Recomendado"
       }
@@ -1131,7 +1131,7 @@
         "logout": "Sair",
         "login": "“Login”",
         "homeBoard": "Seu painel inicial",
-        "loggedOut": "",
+        "loggedOut": "Sessão encerrada",
         "updateAvailable": "{countUpdates} atualizações disponíveis: {tag}"
       }
     },
@@ -1166,7 +1166,7 @@
         "custom": {
           "passwordsDoNotMatch": "Senhas não coincidem",
           "passwordRequirements": "A senha não atende aos requisitos",
-          "boardAlreadyExists": "Já existe um quadro com este nome",
+          "boardAlreadyExists": "Já existe um painel com este nome",
           "invalidFileType": "Formato de arquivo inválido, esperado {expected}",
           "invalidFileName": "Nome de arquivo inválido",
           "fileTooLarge": "O arquivo é muito grande, o tamanho máximo é {maxSize}",
@@ -1196,11 +1196,11 @@
           "label": "Classes CSS customizadas"
         },
         "borderColor": {
-          "label": ""
+          "label": "Cor da borda"
         }
       },
       "remove": {
-        "title": "",
+        "title": "Remover seção dinâmica",
         "message": "Tem certeza de que deseja remover esta seção dinâmica? Os itens serão movidos para o mesmo local na seção pai."
       }
     },
@@ -1213,19 +1213,19 @@
       "action": {
         "create": "Nova categoria",
         "edit": "Renomear categoria",
-        "remove": "",
+        "remove": "Remover categoria",
         "moveUp": "Subir",
         "moveDown": "Mover para baixo",
         "createAbove": "Nova categoria acima",
         "createBelow": "Nova categoria abaixo",
-        "openAllInNewTabs": ""
+        "openAllInNewTabs": "Abrir tudo em abas"
       },
       "create": {
         "title": "Nova categoria",
         "submit": "Adicionar categoria"
       },
       "remove": {
-        "title": "",
+        "title": "Remover categoria",
         "message": "Tem certeza que deseja deletar a categoria {name}?"
       },
       "edit": {
@@ -1239,8 +1239,8 @@
         }
       },
       "openAllInNewTabs": {
-        "title": "",
-        "text": ""
+        "title": "Abrir tudo em abas",
+        "text": "Alguns navegadores podem bloquear a abertura em massa de abas por motivos de segurança. O Homarr não conseguiu abrir todas as janelas porque seu navegador bloqueou esta ação. Por favor, permita \"Abrir janelas pop-up\" e tente novamente."
       }
     }
   },
@@ -1259,9 +1259,9 @@
       }
     },
     "create": {
-      "title": "",
+      "title": "Escolha o item a adicionar",
       "search": "Filtrar itens",
-      "addToBoard": ""
+      "addToBoard": "Adicionar ao painel"
     },
     "moveResize": {
       "title": "Mover / redimensionar item",
@@ -1273,31 +1273,31 @@
           "label": "Altura"
         },
         "xOffset": {
-          "label": ""
+          "label": "Deslocamento X"
         },
         "yOffset": {
-          "label": ""
+          "label": "Deslocamento Y"
         }
       }
     },
     "edit": {
       "title": "Editar item",
       "advancedOptions": {
-        "label": "",
+        "label": "Opções avançadas",
         "title": "Opções avançadas de itens"
       },
       "field": {
         "integrations": {
-          "label": ""
+          "label": "Integrações"
         },
         "title": {
           "label": "Título"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Classes CSS personalizadas"
         },
         "borderColor": {
-          "label": ""
+          "label": "Cor da borda"
         }
       }
     },
@@ -1308,11 +1308,11 @@
   },
   "widget": {
     "app": {
-      "name": "",
-      "description": "",
+      "name": "Aplicativo",
+      "description": "Incorpora um aplicativo no quadro.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Escolher aplicativo"
         },
         "openInNewTab": {
           "label": "Abrir em nova guia"
@@ -1321,10 +1321,10 @@
           "label": "Exibir o nome do aplicativo"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "Habilitar verificação de status"
         },
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": "Horizontal",
             "row-reverse": "Horizontal (invertido)",
@@ -1333,31 +1333,31 @@
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
-          "description": "",
+          "label": "Modo de exibição da descrição",
+          "description": "Escolha como exibir a descrição do aplicativo",
           "option": {
-            "normal": "",
-            "tooltip": "",
+            "normal": "Dentro do widget",
+            "tooltip": "Como tooltip",
             "hidden": "Oculto"
           }
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "Nenhum aplicativo",
+          "tooltip": "Você não tem nenhum aplicativo válido selecionado"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Marcadores",
+      "description": "Exibe múltiplos links de aplicativos",
       "option": {
         "title": {
           "label": "Título"
         },
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
               "label": "Horizontal"
@@ -1386,17 +1386,17 @@
           "label": "Abrir em nova guia"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Marcadores",
+          "add": "Adicionar marcador"
         }
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "Resumo do DNS Hole",
+      "description": "Exibe o resumo do seu DNS Hole",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
               "label": "Horizontal"
@@ -1410,27 +1410,27 @@
           }
         },
         "usePiHoleColors": {
-          "label": ""
+          "label": "Usar cores do Pi-Hole"
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "Falha ao buscar resumo do DNS Hole",
+        "integrationsDisconnected": "Nenhum dado disponível, todas as integrações estão desconectadas"
       },
       "data": {
         "adsBlockedToday": "Bloqueado hoje",
         "adsBlockedTodayPercentage": "Bloqueado hoje",
         "dnsQueriesToday": "Consultas hoje",
-        "domainsBeingBlocked": ""
+        "domainsBeingBlocked": "Domínios na lista de bloqueio"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "Devido a múltiplas integrações, o Homarr não pode calcular o número exato de domínios sendo bloqueados"
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "Controles do DNS Hole",
       "description": "Controle o PiHole ou o AdGuard em seu painel de controle",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
               "label": "Horizontal"
@@ -1444,28 +1444,28 @@
           }
         },
         "showToggleAllButtons": {
-          "label": ""
+          "label": "Exibir botões \"Alternar Todos\""
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Falha ao gerenciar o DNS Hole"
       },
       "controls": {
-        "enableAll": "",
-        "disableAll": "",
-        "setTimer": "",
-        "set": "",
+        "enableAll": "Habilitar todos",
+        "disableAll": "Desabilitar todos",
+        "setTimer": "Definir temporizador",
+        "set": "Definir",
         "enabled": "Ativado",
         "disabled": "Desativado",
-        "processing": "",
-        "disconnected": "",
+        "processing": "Processando",
+        "disconnected": "Desconectado",
         "hours": "Horas",
         "minutes": "Minutos",
-        "unlimited": ""
+        "unlimited": "Deixe em branco para não limitar"
       }
     },
     "clock": {
-      "name": "",
+      "name": "Data e hora",
       "description": "Apresenta a data e hora actuais.",
       "option": {
         "customTitleToggle": {
@@ -1476,58 +1476,58 @@
           "label": "Título"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "Formato de 24 horas",
+          "description": "Use o formato de 24 horas em vez do formato de 12 horas"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Exibir segundos"
         },
         "useCustomTimezone": {
-          "label": ""
+          "label": "Usar um fuso horário fixo"
         },
         "timezone": {
           "label": "Fuso-horário",
-          "description": ""
+          "description": "Escolha o fuso horário seguindo o padrão IANA"
         },
         "showDate": {
           "label": "Exibir data"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Formato de data",
+          "description": "Como a data deve ser apresentada"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Formato de hora personalizado",
+          "description": "Usar ISO 8601 para formatar horas (Isso sobrescreverá outras opções)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Formato de data personalizado",
+          "description": "Usar ISO 8601 para formatar datas (Isso sobrescreverá outras opções)"
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Status de servidor Minecraft",
+      "description": "Exibir o status de um servidor Minecraft",
       "option": {
         "title": {
           "label": "Título"
         },
         "domain": {
-          "label": ""
+          "label": "Endereço do servidor"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Servidor Bedrock"
         }
       },
       "status": {
         "online": "Online",
-        "offline": ""
+        "offline": "Offline"
       }
     },
     "notebook": {
       "name": "Caderno de anotações",
-      "description": "",
+      "description": "Um widget de bloco de notas simples que suporta markdown",
       "option": {
         "showToolbar": {
           "label": "Mostrar a barra de ferramentas para ajudá-lo a escrever markdown"
@@ -1557,7 +1557,7 @@
         "checkList": "Lista de verificação",
         "increaseIndent": "Aumentar recuo",
         "decreaseIndent": "Diminuir recuo",
-        "link": "",
+        "link": "Link",
         "unlink": "Remover link",
         "image": "Incorporar imagem",
         "addTable": "Adicionar tabela",
@@ -1585,13 +1585,13 @@
         "width": "Largura",
         "height": "Altura"
       },
-      "placeholder": "",
+      "placeholder": "Comece a escrever suas notas",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Descartar alterações?",
+        "message": "Você tem alterações não salvas em seu bloco de notas. Tem certeza de que deseja descartá-las?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Descartar alterações",
+          "keepEditing": "Continuar editando"
         }
       }
     },
@@ -1628,14 +1628,14 @@
         }
       },
       "error": {
-        "noUrl": "",
-        "unsupportedProtocol": "",
+        "noUrl": "Nenhum URL de iFrame fornecido",
+        "unsupportedProtocol": "A URL fornecida está usando um protocolo não suportado. Use um dos seguintes protocolos: ({supportedProtocols})",
         "noBrowerSupport": "Seu navegador não suporta iframes. Atualize seu navegador."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Estado da Entidade",
+      "description": "Exibe o estado de uma entidade e permite alterná-lo opcionalmente",
       "option": {
         "entityId": {
           "label": "ID da entidade"
@@ -1644,16 +1644,16 @@
           "label": "Nome de exibição"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Unidade da Entidade"
         },
         "clickable": {
-          "label": ""
+          "label": "Clicável"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Executar automação",
+      "description": "Acionar uma automação com um único clique",
       "option": {
         "displayName": {
           "label": "Nome de exibição"
@@ -1667,14 +1667,14 @@
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Preço das ações",
+      "description": "Exibe o preço atual das ações de uma empresa",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Símbolo da ação"
         },
         "timeRange": {
-          "label": "",
+          "label": "Intervalo de tempo",
           "option": {
             "1d": {
               "label": "1 dia"
@@ -1683,16 +1683,16 @@
               "label": "5 dias"
             },
             "1mo": {
-              "label": ""
+              "label": "1 mês"
             },
             "3mo": {
-              "label": ""
+              "label": "3 meses"
             },
             "6mo": {
-              "label": ""
+              "label": "6 meses"
             },
             "ytd": {
-              "label": ""
+              "label": "Acumulado no ano (YTD)"
             },
             "1y": {
               "label": "1 ano"
@@ -1744,7 +1744,7 @@
     },
     "calendar": {
       "name": "Calendário",
-      "description": "",
+      "description": "Exibe eventos de suas integrações em uma visualização de calendário dentro de um período relativo específico",
       "duration": {
         "allDay": "Dia inteiro"
       },
@@ -1752,19 +1752,19 @@
         "releaseType": {
           "label": "Tipo de libertação de Radarr",
           "options": {
-            "inCinemas": "",
-            "digitalRelease": "",
-            "physicalRelease": ""
+            "inCinemas": "Nos cinemas",
+            "digitalRelease": "Lançamento digital",
+            "physicalRelease": "Lançamento físico"
           }
         },
         "filterPastMonths": {
-          "label": ""
+          "label": "Começar de"
         },
         "filterFutureMonths": {
-          "label": ""
+          "label": "Terminar em"
         },
         "showUnmonitored": {
-          "label": ""
+          "label": "Mostrar não monitorados"
         }
       }
     },
@@ -1773,17 +1773,17 @@
       "description": "Apresenta a informação meteorológica actual de um local definido.",
       "option": {
         "isFormatFahrenheit": {
-          "label": ""
+          "label": "Temperatura em Fahrenheit"
         },
         "disableTemperatureDecimals": {
-          "label": ""
+          "label": "Desativar decimais de temperatura"
         },
         "showCurrentWindSpeed": {
           "label": "Exibir velocidade do vento atual",
-          "description": ""
+          "description": "Somente no clima atual"
         },
         "useImperialSpeed": {
-          "label": ""
+          "label": "Usar unidade mph para velocidade do vento"
         },
         "location": {
           "label": "Localização do tempo"
@@ -1795,20 +1795,20 @@
           "label": "Exibir previsão"
         },
         "forecastDayCount": {
-          "label": "",
-          "description": ""
+          "label": "Quantidade de dias de previsão",
+          "description": "Quando o widget não é largo o suficiente, menos dias serão exibidos"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Formato de data",
+          "description": "Como a data deve ser exibida"
         }
       },
-      "currentWindSpeed": "",
+      "currentWindSpeed": "{currentWindSpeed} {unit}",
       "dailyForecast": {
-        "sunrise": "",
-        "sunset": "",
-        "maxWindSpeed": "",
-        "maxWindGusts": ""
+        "sunrise": "Nascer do sol",
+        "sunset": "Pôr do sol",
+        "maxWindSpeed": "Velocidade máxima do vento: {maxWindSpeed} {unit}",
+        "maxWindGusts": "Rajadas máximas de vento: {maxWindGusts} {unit}"
       },
       "kind": {
         "clear": "Limpar",
@@ -1829,7 +1829,7 @@
     },
     "indexerManager": {
       "name": "Status do Gerenciador de Indexadores",
-      "description": "",
+      "description": "Status dos seus indexadores",
       "option": {
         "openIndexerSiteInNewTab": {
           "label": "Abrir o site do indexador em uma nova guia"
@@ -1838,7 +1838,7 @@
       "title": "Gerenciador de indexadores",
       "testAll": "Testar todos",
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Falha ao buscar status dos indexadores"
       }
     },
     "healthMonitoring": {
@@ -1846,7 +1846,7 @@
       "description": "Exibe informações que mostram a saúde e status de seu(s) sistema(s).",
       "tab": {
         "system": "Sistema",
-        "cluster": ""
+        "cluster": "Cluster"
       },
       "option": {
         "fahrenheit": {
@@ -1865,32 +1865,32 @@
           "label": "Mostrar informações do sistema de arquivos"
         },
         "defaultTab": {
-          "label": ""
+          "label": "Aba padrão"
         },
         "visibleClusterSections": {
-          "label": ""
+          "label": "Seções de cluster visíveis"
         },
         "sectionIndicatorRequirement": {
-          "label": ""
+          "label": "Requisito do indicador de seção"
         }
       },
       "popover": {
         "information": "Informação",
         "processor": "Processador: {cpuModelName}",
         "memory": "Memória: {memory}GiB",
-        "memoryAvailable": "",
+        "memoryAvailable": "Disponível: {memoryAvailable}GiB ({percent}%)",
         "version": "Versão {version}",
-        "uptime": "",
-        "loadAverage": "",
-        "minute": "",
+        "uptime": "Tempo de atividade: {months} mês(es), {days} dias, {hours} horas, {minutes} minutos",
+        "loadAverage": "Média de carga:",
+        "minute": "1 minuto",
         "minutes": "{count} minutos",
-        "used": "",
+        "used": "Usado",
         "available": "Disponível",
-        "lastSeen": ""
+        "lastSeen": "Última atualização de status: {lastSeen}"
       },
       "memory": {},
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Falha ao buscar status de saúde"
       },
       "cluster": {
         "summary": {
@@ -1899,33 +1899,33 @@
         },
         "resource": {
           "node": {
-            "name": ""
+            "name": "Nós"
           },
           "qemu": {
-            "name": ""
+            "name": "VMs"
           },
           "lxc": {
-            "name": ""
+            "name": "LXCs"
           },
           "storage": {
-            "name": ""
+            "name": "Armazenamento"
           }
         },
         "popover": {
           "rightSection": {
-            "node": "",
-            "vmId": "",
-            "plugin": ""
+            "node": "Nós",
+            "vmId": "ID da VM",
+            "plugin": "Plugin"
           },
           "detail": {
             "cpu": "Núcleos",
-            "memory": "",
-            "storage": "",
-            "uptime": "",
-            "haState": "",
+            "memory": "Memória",
+            "storage": "Armazenamento",
+            "uptime": "Tempo de atividade",
+            "haState": "Estado HA",
             "storageType": {
-              "local": "",
-              "shared": ""
+              "local": "Armazenamento local",
+              "shared": "Armazenamento compartilhado"
             }
           }
         },
@@ -1934,38 +1934,38 @@
             "name": "Nome",
             "cpu": "CPU",
             "memory": "RAM",
-            "node": ""
+            "node": "Nó"
           }
         }
       }
     },
     "dockerContainers": {
       "name": "Estatísticas do Docker",
-      "description": "",
+      "description": "Estatísticas dos seus contêineres (Esse widget só pode ser adicionado com privilégios de administrador)",
       "option": {
         "enableRowSorting": {
-          "label": ""
+          "label": "Ativar ordenação de itens"
         },
         "defaultSort": {
-          "label": "",
+          "label": "Coluna usada para ordenação por padrão",
           "option": {
             "name": "Nome",
-            "state": "",
+            "state": "Estado",
             "cpuUsage": "Uso da CPU",
-            "memoryUsage": ""
+            "memoryUsage": "Uso da Memória"
           }
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Inverter ordenação"
         }
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Erro ao obter as estatísticas dos contêineres"
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "Visão geral da sua instância Coolify com servidores e aplicativos",
       "option": {
         "showServers": {
           "label": "Exibir servidores"
@@ -1978,19 +1978,19 @@
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "Nenhum servidor encontrado",
+        "applications": "Nenhum aplicativo encontrado",
+        "services": "Nenhum serviço encontrado"
       },
       "footer": {
-        "updated": ""
+        "updated": "Atualizado em {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "Nenhuma integração Coolify configurada",
+        "internalServerError": "Falha ao buscar dados do Coolify"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "Build"
       },
       "instances": {
         "title": "Instâncias"
@@ -1998,7 +1998,7 @@
     },
     "common": {
       "location": {
-        "query": "",
+        "query": "Cidade / CEP",
         "latitude": "Latitude",
         "longitude": "Longitude",
         "disabledTooltip": "Por favor, insira uma cidade ou um CEP",
@@ -2021,16 +2021,16 @@
       },
       "integration": {
         "noData": "Nenhuma integração encontrada",
-        "description": ""
+        "description": "Clique <here></here< para criar uma nova integração"
       },
       "app": {
-        "noData": "",
+        "noData": "Nenhum aplicativo encontrado",
         "description": "Clique <here></here> para criar um aplicativo",
         "quickCreate": "Criar aplicativo em tempo real"
       },
       "error": {
-        "noIntegration": "",
-        "noData": ""
+        "noIntegration": "Nenhuma integração selecionada",
+        "noData": "Nenhum dado de integração disponível"
       },
       "option": {}
     },
@@ -2043,232 +2043,232 @@
         },
         "hasAutoPlay": {
           "label": "Reprodução automática",
-          "description": ""
+          "description": "A reprodução automática só funciona quando está no mudo devido a restrições do navegador"
         },
         "isMuted": {
-          "label": ""
+          "label": "Mudo"
         },
         "hasControls": {
-          "label": ""
+          "label": "Exibir controles"
         }
       },
       "error": {
-        "noUrl": "",
+        "noUrl": "Nenhum URL de vídeo fornecido",
         "forYoutubeUseIframe": "Para vídeos do Youtube, use a opção de iFrame"
       }
     },
     "mediaServer": {
-      "name": "",
-      "description": "",
+      "name": "Streams atuais do servidor de mídia",
+      "description": "Exibe os streams atuais em seus servidores de mídia",
       "option": {
         "showOnlyPlaying": {
-          "label": "",
-          "description": ""
+          "label": "Exibir apenas o que está sendo reproduzido",
+          "description": "Desabilitar isso não funcionará para o Plex"
         }
       },
       "items": {
-        "currentlyPlaying": "",
-        "user": "",
+        "currentlyPlaying": "Reproduzindo agora",
+        "user": "Usuário",
         "name": "Nome",
-        "id": "",
+        "id": "Id",
         "metadata": {
-          "title": "",
+          "title": "Estatísticas para nerds",
           "video": {
-            "title": "",
-            "resolution": ""
+            "title": "Vídeo",
+            "resolution": "Resolução"
           },
           "audio": {
-            "title": "",
-            "channelCount": "",
-            "codec": ""
+            "title": "Áudio",
+            "channelCount": "Canais de áudio",
+            "codec": "Codificador de áudio"
           },
           "transcoding": {
-            "title": "",
-            "container": "",
-            "resolution": "",
-            "target": ""
+            "title": "Transcodificação",
+            "container": "Contêiner",
+            "resolution": "Resolução",
+            "target": "Codec de destino"
           }
         }
       }
     },
     "downloads": {
-      "name": "",
-      "description": "",
+      "name": "Cliente de Download",
+      "description": "Permite visualizar e gerenciar seus Downloads de clientes Torrent e Usenet.",
       "option": {
         "columns": {
-          "label": ""
+          "label": "Colunas para exibir"
         },
         "enableRowSorting": {
-          "label": ""
+          "label": "Habilitar ordenação de itens"
         },
         "defaultSort": {
-          "label": ""
+          "label": "Coluna usada para ordenação por padrão"
         },
         "descendingDefaultSort": {
-          "label": ""
+          "label": "Inverter ordenação"
         },
         "showCompletedUsenet": {
-          "label": ""
+          "label": "Exibir entradas usenet marcadas como concluídas"
         },
         "showCompletedTorrent": {
-          "label": ""
+          "label": "Exibir entradas torrent marcadas como concluídas"
         },
         "showCompletedHttp": {
-          "label": ""
+          "label": "Exibir entradas diversas marcadas como concluídas"
         },
         "activeTorrentThreshold": {
-          "label": ""
+          "label": "Ocultar torrents concluídos abaixo deste limite (em kiB/s)"
         },
         "categoryFilter": {
-          "label": ""
+          "label": "Categorias/rótulos para filtrar"
         },
         "filterIsWhitelist": {
-          "label": ""
+          "label": "Filtrar como lista de permissões"
         },
         "applyFilterToRatio": {
-          "label": ""
+          "label": "Usar filtro para calcular Proporção"
         },
         "limitPerIntegration": {
-          "label": "",
-          "description": ""
+          "label": "Limitar itens por integração",
+          "description": "Isso limitará o número de itens exibidos por integração, não globalmente"
         }
       },
       "errors": {
-        "noColumns": "",
-        "noCommunications": ""
+        "noColumns": "Selecionar Colunas em Itens",
+        "noCommunications": "Não foi possível carregar dados da integração"
       },
       "items": {
         "actions": {
-          "columnTitle": ""
+          "columnTitle": "Controles"
         },
         "added": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Adicionado",
+          "detailsTitle": "Data adicionada"
         },
         "category": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Extras",
+          "detailsTitle": "Categorias (ou informações extras)"
         },
         "downSpeed": {
           "columnTitle": "Para baixo",
           "detailsTitle": "Velocidade de Transferência"
         },
         "index": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "#",
+          "detailsTitle": "Índice atual no cliente"
         },
         "id": {
-          "columnTitle": ""
+          "columnTitle": "Id"
         },
         "integration": {
           "columnTitle": "Integração"
         },
         "name": {
-          "columnTitle": ""
+          "columnTitle": "Nome do trabalho"
         },
         "progress": {
           "columnTitle": "Progresso",
-          "detailsTitle": ""
+          "detailsTitle": "Baixar progresso"
         },
         "ratio": {
           "columnTitle": "Razão",
-          "detailsTitle": ""
+          "detailsTitle": "Relação de torrent (recebido/enviado)"
         },
         "received": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Total baixado",
+          "detailsTitle": "Total baixado"
         },
         "sent": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Total enviado",
+          "detailsTitle": "Total enviado"
         },
         "size": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Tamanho do arquivo",
+          "detailsTitle": "Tamanho total da seleção/arquivos"
         },
         "state": {
           "columnTitle": "Estado",
-          "detailsTitle": ""
+          "detailsTitle": "Estado do trabalho"
         },
         "time": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Tempo de conclusão",
+          "detailsTitle": "Tempo desde/até a conclusão"
         },
         "type": {
-          "columnTitle": "",
-          "detailsTitle": ""
+          "columnTitle": "Tipo",
+          "detailsTitle": "Tipo de cliente de download"
         },
         "upSpeed": {
           "columnTitle": "Para cima",
-          "detailsTitle": ""
+          "detailsTitle": "Velocidade de envio"
         }
       },
       "states": {
         "downloading": "Baixando",
-        "queued": "",
+        "queued": "Em fila",
         "paused": "Pausado",
         "completed": "Concluído",
-        "failed": "",
-        "processing": "",
-        "leeching": "",
-        "stalled": "",
+        "failed": "Falhou",
+        "processing": "Processando",
+        "leeching": "Baixando (Leeching)",
+        "stalled": "Parado",
         "unknown": "Desconhecido",
-        "seeding": ""
+        "seeding": "Compartilhando (Seeding)"
       },
       "actions": {
         "clients": {
-          "modalTitle": "",
-          "pause": "",
-          "resume": ""
+          "modalTitle": "Lista de clientes de download",
+          "pause": "Pausar todos os clientes/itens",
+          "resume": "Retomar todos os clientes/itens"
         },
         "client": {
-          "pause": "",
-          "resume": ""
+          "pause": "Pausar cliente",
+          "resume": "Retomar cliente"
         },
         "item": {
           "pause": "Pausar item",
-          "resume": "",
+          "resume": "Pausar item",
           "delete": {
-            "title": "",
-            "modalTitle": "",
-            "entry": "",
-            "entryAndFiles": ""
+            "title": "Excluir item",
+            "modalTitle": "Tem certeza de que deseja excluir este trabalho?",
+            "entry": "Excluir entrada",
+            "entryAndFiles": "Excluir entrada e arquivo(s)"
           }
         }
       },
-      "globalRatio": ""
+      "globalRatio": "Proporção global"
     },
     "mediaReleases": {
-      "name": "",
-      "description": "",
+      "name": "Lançamentos de mídias",
+      "description": "Exibe mídias recém-adicionadas ou lançamentos futuros de diferentes integrações",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "backdrop": {
-              "label": ""
+              "label": "Backdrop"
             },
             "poster": {
-              "label": ""
+              "label": "Pôster"
             }
           }
         },
         "showDescriptionTooltip": {
-          "label": ""
+          "label": "Exibir dica de descrição"
         },
         "showType": {
-          "label": ""
+          "label": "Exibir emblema de tipo de mídia"
         },
         "showSource": {
-          "label": ""
+          "label": "Exibir integração de origem"
         }
       },
       "length": {
-        "duration": ""
+        "duration": "{length} minutos"
       }
     },
     "mediaRequests-requestList": {
-      "name": "",
+      "name": "Lista de Solicitações de Mídia",
       "description": "Veja uma lista de todas as solicitações de mídia da sua instância do Overseerr ou Jellyseerr",
       "option": {
         "linksTargetNewTab": {
@@ -2276,31 +2276,31 @@
         }
       },
       "pending": {
-        "approve": "",
-        "approving": "",
-        "decline": ""
+        "approve": "Aprovar solicitação",
+        "approving": "Aprovando solicitação...",
+        "decline": "Recusar solicitação"
       },
       "availability": {
         "unknown": "Desconhecido",
-        "pending": "",
-        "processing": "",
-        "requested": "",
+        "pending": "Pendente",
+        "processing": "Processando",
+        "requested": "Solicitado",
         "partiallyAvailable": "Parcial",
         "available": "Disponível",
-        "blacklisted": "",
-        "deleted": ""
+        "blacklisted": "Na lista negra",
+        "deleted": "Excluído"
       },
       "status": {
-        "pending": "",
-        "approved": "",
-        "declined": "",
-        "failed": "",
-        "completed": ""
+        "pending": "Pendente",
+        "approved": "Aprovado",
+        "declined": "Rejeitado",
+        "failed": "Falhou",
+        "completed": "Concluído"
       },
-      "toBeDetermined": ""
+      "toBeDetermined": "TBD"
     },
     "mediaRequests-requestStats": {
-      "name": "",
+      "name": "Estatísticas de Solicitações de Mídia",
       "description": "Estatísticas sobre suas solicitações de mídia",
       "option": {},
       "titles": {
@@ -2308,56 +2308,56 @@
           "main": "Estatísticas de mídia",
           "approved": "Já aprovado",
           "pending": "Aprovações pendentes",
-          "processing": "",
-          "declined": "",
-          "available": "",
+          "processing": "Sendo processado",
+          "declined": "Já recusado",
+          "available": "Já disponível",
           "tv": "Solicitações de TV",
           "movie": "Solicitações de filmes",
-          "total": ""
+          "total": "Total"
         },
         "users": {
           "main": "Principais usuários",
-          "requests": ""
+          "requests": "Solicitações"
         }
       }
     },
     "mediaTranscoding": {
-      "name": "",
-      "description": "",
+      "name": "Transcodificação de mídia",
+      "description": "Estatísticas, fila atual e status dos workers de transcodificação de mídia",
       "option": {
         "defaultView": {
-          "label": ""
+          "label": "Visualização padrão"
         },
         "queuePageSize": {
-          "label": ""
+          "label": "Tamanho da página da fila"
         }
       },
       "tab": {
-        "workers": "",
+        "workers": "Workers",
         "queue": "Fila",
         "statistics": "Estatísticas"
       },
-      "currentIndex": "",
+      "currentIndex": "{start}-{end} de {total}",
       "healthCheck": {
-        "title": "",
-        "queued": "",
+        "title": "Verificação de saúde",
+        "queued": "Em fila",
         "status": {
-          "healthy": "",
-          "unhealthy": ""
+          "healthy": "Saudável",
+          "unhealthy": "Não saudável"
         }
       },
       "panel": {
         "statistics": {
           "empty": "Vazio",
-          "transcodes": "",
-          "transcodesCount": "",
-          "healthChecksCount": "",
-          "filesCount": "",
-          "savedSpace": "",
-          "healthChecks": "",
-          "videoCodecs": "",
-          "videoContainers": "",
-          "videoResolutions": ""
+          "transcodes": "Transcodificações",
+          "transcodesCount": "Transcodificações",
+          "healthChecksCount": "Verificações de saúde",
+          "filesCount": "Arquivos",
+          "savedSpace": "Espaço economizado",
+          "healthChecks": "Verificações de saúde",
+          "videoCodecs": "Codificadores",
+          "videoContainers": "Contêineres",
+          "videoResolutions": "Resoluções"
         },
         "workers": {
           "empty": "Vazio",
@@ -2366,7 +2366,7 @@
             "eta": "TED",
             "progress": "Progresso",
             "transcode": "Transcodificar",
-            "healthCheck": ""
+            "healthCheck": "Verificação de saúde"
           }
         },
         "queue": {
@@ -2375,26 +2375,26 @@
             "file": "Ficheiro",
             "size": "Tamanho",
             "transcode": "Transcodificar",
-            "healthCheck": ""
+            "healthCheck": "Verificação de saúde"
           }
         }
       }
     },
     "rssFeed": {
-      "name": "",
-      "description": "",
+      "name": "Feeds RSS",
+      "description": "Monitora e exibe um ou mais feeds RSS, ATOM ou JSON genéricos",
       "option": {
         "feedUrls": {
-          "label": ""
+          "label": "URLs de feed"
         },
         "enableRtl": {
-          "label": ""
+          "label": "Habilitar RTL"
         },
         "textLinesClamp": {
-          "label": ""
+          "label": "Limite de linhas da descrição"
         },
         "maximumAmountPosts": {
-          "label": ""
+          "label": "Limite de quantidade de posts"
         },
         "hideDescription": {
           "label": "Ocultar descrição"
@@ -2402,121 +2402,121 @@
       }
     },
     "releases": {
-      "name": "",
-      "description": "",
+      "name": "Lançamentos",
+      "description": "Exibe uma lista da versão atual dos repositórios fornecidos com a expressão regular de versão fornecida.",
       "option": {
         "newReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Novo lançamento dentro de",
+          "description": "Exemplo de uso: 1w (1 semana), 10M (10 meses). Tipos de unidades aceitas: h (horas), d (dias), w (semanas), M (meses), y (anos). Deixe em branco para não destacar novos lançamentos."
         },
         "staleReleaseWithin": {
-          "label": "",
-          "description": ""
+          "label": "Lançamento Antigo Dentro de",
+          "description": "Exemplo de uso: 1w (1 semana), 10M (10 meses). Tipos de unidades aceitas: h (horas), d (dias), w (semanas), M (meses), y (anos). Deixe em branco para não destacar versões antigas."
         },
         "showOnlyHighlighted": {
-          "label": "",
-          "description": ""
+          "label": "Exibir apenas destacados",
+          "description": "Exibir apenas lançamentos novos ou antigos. Conforme acima."
         },
         "showDetails": {
           "label": "Exibir detalhes"
         },
         "showOnlyIcon": {
-          "label": ""
+          "label": "Exibir apenas ícones"
         },
         "topReleases": {
-          "label": "",
-          "description": ""
+          "label": "Principais lançamentos",
+          "description": "O número máximo de lançamentos recentes a exibir. Zero significa sem limite."
         },
         "repositories": {
-          "label": "",
+          "label": "Repositórios",
           "addRepository": {
-            "label": ""
+            "label": "Adicionar repositório"
           },
           "importRepositories": {
             "label": "Importar do Docker",
             "loading": "Carregando imagens do Docker",
             "noImagesFound": "Nenhuma imagem do Docker encontrada",
             "listFoundImages": "Lista de imagens encontradas",
-            "listAlreadyImportedImages": "",
-            "allImagesAlreadyImported": "",
+            "listAlreadyImportedImages": "Lista de imagens já importadas",
+            "allImagesAlreadyImported": "Todas as imagens já importadas",
             "onlyAdminCanImport": "Apenas administradores podem importar do Docker",
-            "selectAll": "",
-            "deselectAll": ""
+            "selectAll": "Selecionar tudo",
+            "deselectAll": "Desmarcar tudo"
           },
           "provider": {
-            "label": ""
+            "label": "Provedor"
           },
           "identifier": {
-            "label": "",
-            "placeholder": ""
+            "label": "Identificador",
+            "placeholder": "Nome ou Proprietário/Nome"
           },
           "name": {
             "label": "Nome"
           },
           "versionFilter": {
-            "label": "",
+            "label": "Filtro de versão",
             "prefix": {
-              "label": ""
+              "label": "Prefixo"
             },
             "precision": {
-              "label": "",
+              "label": "Precisão",
               "options": {
-                "none": ""
+                "none": "Nenhum(a)"
               }
             },
             "suffix": {
-              "label": ""
+              "label": "Sufixo"
             },
             "regex": {
-              "label": ""
+              "label": "Expressão regular (RegEx)"
             }
           },
           "edit": {
-            "label": ""
+            "label": "Editar"
           },
           "editForm": {
-            "title": "",
+            "title": "Editar repositório",
             "cancel": {
-              "label": ""
+              "label": "Cancelar"
             },
             "confirm": {
-              "label": ""
+              "label": "Confirmar"
             }
           },
           "importForm": {
             "title": "Importar do Docker"
           },
           "example": {
-            "label": ""
+            "label": "Exemplo"
           },
-          "invalid": "",
+          "invalid": "Definição de repositório inválida, verifique os valores",
           "noProvider": {
-            "label": "",
-            "tooltip": ""
+            "label": "Nenhum provedor",
+            "tooltip": "O provedor não pôde ser analisado, defina-o manualmente após importar as imagens"
           }
         }
       },
       "not-found": "Não encontrado",
-      "pre-release": "",
-      "archived": "",
-      "forked": "",
-      "starsCount": "",
-      "forksCount": "",
-      "issuesCount": "",
-      "markViewed": "",
-      "openProjectPage": "",
-      "openReleasePage": "",
-      "releaseDescription": "",
-      "projectDescription": "",
-      "created": "",
+      "pre-release": "Pré-lançamento",
+      "archived": "Arquivado",
+      "forked": "Fork",
+      "starsCount": "Estrelas",
+      "forksCount": "Forks",
+      "issuesCount": "Issues abertas",
+      "markViewed": "Marcar como visualizado",
+      "openProjectPage": "Abrir página do projeto",
+      "openReleasePage": "Abrir página do lançamento",
+      "releaseDescription": "Descrição do lançamento",
+      "projectDescription": "Descrição do projeto",
+      "created": "Criado",
       "error": {
         "label": "Erro",
         "messages": {
-          "invalidIdentifier": "",
-          "noMatchingVersion": "",
-          "noReleasesFound": "",
-          "noProviderSeleceted": "",
-          "noProviderResponse": ""
+          "invalidIdentifier": "Identificador inválido",
+          "noMatchingVersion": "Nenhuma versão correspondente encontrada",
+          "noReleasesFound": "Nenhum lançamento encontrado",
+          "noProviderSeleceted": "Nenhum provedor selecionado",
+          "noProviderResponse": "Nenhuma resposta do provedor"
         }
       }
     },
@@ -2524,232 +2524,232 @@
       "option": {},
       "card": {
         "vpn": {
-          "countConnected": ""
+          "countConnected": "{count} conectados"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Nenhum dado disponível, todas as integrações estão desconectadas",
+        "unknownContentOption": "Opção de conteúdo desconhecida para o widget de resumo do controlador de rede: "
       },
-      "name": "",
-      "description": ""
+      "name": "Resumo do Controlador de Rede",
+      "description": "Exibe o resumo de um Controlador de Rede (como UniFi Controller)"
     },
     "networkControllerStatus": {
       "card": {
         "variants": {
           "wired": {
-            "name": ""
+            "name": "Com fio"
           },
           "wifi": {
-            "name": ""
+            "name": "Wi-Fi"
           }
         },
         "users": {
           "label": "Usuários"
         },
         "guests": {
-          "label": ""
+          "label": "Convidados"
         }
       },
       "option": {
         "content": {
           "option": {
             "wifi": {
-              "label": ""
+              "label": "Wi-Fi"
             },
             "wired": {
-              "label": ""
+              "label": "Com fio"
             }
           },
-          "label": ""
+          "label": "Conteúdo do widget"
         }
       },
       "error": {
-        "integrationsDisconnected": "",
-        "unknownContentOption": ""
+        "integrationsDisconnected": "Nenhum dado disponível, todas as integrações estão desconectadas",
+        "unknownContentOption": "Opção de conteúdo desconhecida para o widget de status de rede: "
       },
-      "name": "",
-      "description": ""
+      "name": "Status da Rede",
+      "description": "Exibir dispositivos conectados em uma rede"
     },
     "networkController": {
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Falha ao buscar resumo do Controlador de Rede"
       }
     },
     "firewall": {
-      "name": "",
-      "description": "",
+      "name": "Monitoramento do Firewall",
+      "description": "Exibe um resumo dos firewalls",
       "tab": {
         "system": "Sistema",
-        "interfaces": ""
+        "interfaces": "Interfaces"
       },
       "error": {
-        "internalServerError": ""
+        "internalServerError": "Não foi possível obter dados do firewall"
       },
       "option": {
-        "interfaces": ""
+        "interfaces": "Interfaces de rede a serem exibidas"
       },
       "widget": {
         "fwname": "Nome",
         "version": "Versão",
         "versiontitle": "Versões",
         "cputitle": "Uso da CPU",
-        "memorytitle": "",
+        "memorytitle": "Uso da Memória",
         "cpu": "CPU",
-        "memory": "",
+        "memory": "Memória",
         "interfaces": {
           "name": "nome",
-          "trans": "",
-          "recv": "",
-          "title": ""
+          "trans": "Transmitido",
+          "recv": "Recebido",
+          "title": "Interfaces de rede"
         }
       }
     },
     "notifications": {
-      "name": "",
-      "description": "",
-      "noItems": "",
+      "name": "Notificações",
+      "description": "Exibe histórico de notificações de uma integração",
+      "noItems": "Nenhuma notificação para exibir.",
       "option": {}
     },
     "systemResources": {
-      "name": "",
+      "name": "Recursos do Sistema",
       "description": "Utilização da CPU, Memória, Disco e outro hardware do seu sistema",
       "option": {
         "hasShadow": {
-          "label": ""
+          "label": "Habilitar sombreamento do gráfico"
         },
         "visibleCharts": {
-          "label": "",
-          "description": "",
+          "label": "Gráficos visíveis",
+          "description": "Selecione os gráficos que você deseja que estejam visíveis.",
           "option": {
             "cpu": "CPU",
-            "memory": "",
-            "network": ""
+            "memory": "Memória",
+            "network": "Rede"
           }
         },
         "labelDisplayMode": {
-          "label": "",
+          "label": "Modo de exibição do rótulo",
           "option": {
-            "textWithIcon": "",
-            "text": "",
-            "icon": "",
+            "textWithIcon": "Exibir texto com ícone",
+            "text": "Exibir apenas texto",
+            "icon": "Exibir apenas ícones",
             "hidden": "Ocultar rótulo"
           }
         }
       },
       "card": {
         "cpu": "CPU",
-        "memory": "",
-        "network": "",
-        "up": "",
-        "down": ""
+        "memory": "MEM",
+        "network": "REDE",
+        "up": "ENVIO",
+        "down": "RECEBIDO"
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "Discos do sistema",
+      "description": "Uso de disco do seu sistema",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "Mostrar temperatura se disponível"
         },
         "displayMode": {
-          "label": "",
+          "label": "Modo de exibição",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "Porcentagem (ex: 76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "Valores absolutos (ex: 800GB / 1TB)"
             },
             "free": {
-              "label": ""
+              "label": "Porcentagem de espaço livre (ex: 24% livre)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "Exibir barra de uso em segundo plano"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "Não saudável"
       }
     }
   },
   "widgetPreview": {
     "toggle": {
-      "enabled": "",
-      "disabled": ""
+      "enabled": "Modo de edição habilitado",
+      "disabled": "Modo de edição desabilitado"
     },
     "dimensions": {
-      "title": ""
+      "title": "Alterar dimensões"
     }
   },
   "board": {
     "action": {
       "duplicate": {
-        "title": "",
-        "message": "",
+        "title": "Duplicar painel",
+        "message": "Isso duplicará o painel {name} com todo o seu conteúdo. Se os widgets fizerem referência a integrações que você não tem permissão para usar, eles serão removidos.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Painel duplicado",
+            "message": "O painel foi duplicado com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Não foi possível duplicar o painel",
+            "message": "O painel não pôde ser duplicado"
           }
         }
       },
       "edit": {
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Alterações aplicadas com sucesso",
+            "message": "O painel foi salvo com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Não foi possível aplicar as alterações",
+            "message": "O painel não pôde ser salvo"
           }
         },
         "confirmLeave": {
-          "title": "",
-          "message": ""
+          "title": "Alterações não salvas",
+          "message": "Você tem alterações não salvas, tem certeza de que deseja sair?"
         }
       },
       "oldImport": {
-        "label": "",
+        "label": "Importar do Homarr anterior à versão 1.0.0",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Importação bem-sucedida",
+            "message": "O painel foi importado com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Falha na importação",
+            "message": "O painel não pôde ser importado, verifique os logs para mais detalhes"
           }
         },
         "form": {
           "file": {
-            "label": "",
-            "invalidError": ""
+            "label": "Selecionar arquivo JSON",
+            "invalidError": "Arquivo de configuração inválido"
           },
           "apps": {
             "label": "Aplicativos",
             "avoidDuplicates": {
-              "label": "",
-              "description": ""
+              "label": "Evitar duplicatas",
+              "description": "Ignora aplicativos onde já existe um aplicativo com o mesmo href"
             },
             "onlyImportApps": {
-              "label": "",
-              "description": "Só adiciona os aplicativos, o quadro precisa ser recriado manualmente"
+              "label": "Importar apenas aplicativos",
+              "description": "Só adiciona os aplicativos, o painel precisa ser recriado manualmente"
             }
           },
           "name": {
-            "label": "Nome do quadro"
+            "label": "Nome do painel"
           },
           "screenSize": {
-            "label": "",
-            "description": "",
+            "label": "Tamanho da tela",
+            "description": "Nas versões anteriores à 1.0 existiam três modos diferentes, então você podia escolher a quantidade de colunas para cada tamanho de tela.",
             "option": {
               "sm": "Pequeno",
               "md": "Médio",
@@ -2757,12 +2757,12 @@
             }
           },
           "sidebarBehavior": {
-            "label": "",
+            "label": "Comportamento da barra lateral",
             "description": "As barras laterais foram removidas na versão 1.0. Você pode selecionar o que deve acontecer com os itens dentro delas.",
             "option": {
               "lastSection": {
-                "label": "",
-                "description": ""
+                "label": "Última seção",
+                "description": "A barra lateral será exibida abaixo da última seção"
               },
               "removeItems": {
                 "label": "Remover itens",
@@ -2784,17 +2784,17 @@
         "label": "Título da página"
       },
       "metaTitle": {
-        "label": ""
+        "label": "Meta-título"
       },
       "logoImageUrl": {
-        "label": ""
+        "label": "URL da imagem de logo"
       },
       "faviconImageUrl": {
-        "label": ""
+        "label": "URL da imagem do favicon"
       },
       "backgroundImageUrl": {
-        "label": "",
-        "placeholder": "",
+        "label": "URL da imagem do plano de fundo",
+        "placeholder": "Comece a digitar para pesquisar imagens locais",
         "group": {
           "your": "Suas imagens",
           "other": "Outras imagens"
@@ -2804,33 +2804,33 @@
         "label": "Anexo de imagem de fundo",
         "option": {
           "fixed": {
-            "label": "",
-            "description": ""
+            "label": "Fixo",
+            "description": "O plano de fundo permanece na mesma posição."
           },
           "scroll": {
-            "label": "",
-            "description": ""
+            "label": "Rolar",
+            "description": "O plano de fundo rola com o mouse."
           }
         }
       },
       "backgroundImageRepeat": {
-        "label": "",
+        "label": "Repetição da imagem de fundo",
         "option": {
           "repeat": {
-            "label": "",
-            "description": ""
+            "label": "Repetir",
+            "description": "A imagem é repetida o quanto for necessário para cobrir toda a área de pintura da imagem de fundo."
           },
           "no-repeat": {
-            "label": "",
-            "description": ""
+            "label": "Não repetir",
+            "description": "A imagem não é repetida e pode não preencher todo o espaço."
           },
           "repeat-x": {
-            "label": "",
-            "description": ""
+            "label": "Repetir X",
+            "description": "Igual a 'Repetir' mas apenas no eixo horizontal."
           },
           "repeat-y": {
-            "label": "",
-            "description": ""
+            "label": "Repetir Y",
+            "description": "Igual a 'Repetir' mas apenas no eixo vertical."
           }
         }
       },
@@ -2838,12 +2838,12 @@
         "label": "Tamanho da imagem de fundo",
         "option": {
           "cover": {
-            "label": "",
-            "description": ""
+            "label": "Cobrir",
+            "description": "Dimensiona a imagem o menor possível para cobrir toda a janela cortando o espaço excessivo."
           },
           "contain": {
-            "label": "",
-            "description": ""
+            "label": "Incluir",
+            "description": "Dimensione a imagem o máximo possível dentro do seu contêiner, sem recortá-la ou distorcê-la."
           }
         }
       },
@@ -2854,38 +2854,38 @@
         "label": "Cor secundária"
       },
       "opacity": {
-        "label": ""
+        "label": "Opacidade"
       },
       "iconColor": {
-        "label": ""
+        "label": "Cor do ícone"
       },
       "clearColor": {
-        "label": ""
+        "label": "Limpar cor"
       },
       "customCss": {
-        "label": "",
+        "label": "CSS personalizado para este painel",
         "description": "Além disso, personalize seu painel usando CSS, recomendado apenas para usuários experientes",
         "customClassesAlert": {
-          "title": "",
-          "description": ""
+          "title": "Classes personalizadas",
+          "description": "Você pode adicionar classes personalizadas aos itens do seu painel nas opções avançadas de cada item e usá-las no CSS personalizado acima."
         }
       },
       "disableStatus": {
-        "label": "",
-        "description": ""
+        "label": "Desabilitar status do aplicativo",
+        "description": "Desabilita a verificação de status para todos os aplicativos neste painel"
       },
       "columnCount": {
-        "label": ""
+        "label": "Contagem de coluna"
       },
       "itemRadius": {
-        "label": "",
-        "description": "",
+        "label": "Raio do item",
+        "description": "Altera o arredondamento dos blocos no seu painel",
         "option": {
-          "xs": "",
-          "sm": "",
-          "md": "",
-          "lg": "",
-          "xl": ""
+          "xs": "Muito pequeno",
+          "sm": "Pequeno",
+          "md": "Médio",
+          "lg": "Grande",
+          "xl": "Muito grande"
         }
       },
       "name": {
@@ -2893,25 +2893,25 @@
       },
       "isPublic": {
         "label": "Público",
-        "description": ""
+        "description": "Painéis públicos são acessíveis a todos, mesmo sem uma conta."
       }
     },
     "content": {
       "metaTitle": "Quadro {boardName}"
     },
     "setting": {
-      "title": "Configurações para o quadro {boardName}",
+      "title": "Configurações para o painel {boardName}",
       "section": {
         "general": {
           "title": "Geral",
-          "unrecognizedLink": ""
+          "unrecognizedLink": "O link fornecido não é reconhecido e não será exibido, mas ainda pode funcionar."
         },
         "layout": {
-          "title": "",
+          "title": "Layout",
           "responsive": {
-            "title": "",
+            "title": "Layouts responsivos",
             "action": {
-              "add": ""
+              "add": "Adicionar layout"
             }
           }
         },
@@ -2919,26 +2919,26 @@
           "title": "Antecedentes"
         },
         "appearance": {
-          "title": ""
+          "title": "Aparência"
         },
         "customCss": {
-          "title": ""
+          "title": "CSS personalizado"
         },
         "behavior": {
-          "title": ""
+          "title": "Comportamento"
         },
         "access": {
-          "title": "",
+          "title": "Controle de acesso",
           "permission": {
             "item": {
               "view": {
-                "label": "Exibir quadro"
+                "label": "Exibir painel"
               },
               "modify": {
-                "label": ""
+                "label": "Editar painel"
               },
               "full": {
-                "label": ""
+                "label": "Acesso completo"
               }
             }
           }
@@ -2947,41 +2947,41 @@
           "title": "Zona de risco",
           "action": {
             "rename": {
-              "label": "Renomear quadro",
-              "description": "",
+              "label": "Renomear painel",
+              "description": "Alterar o nome quebrará quaisquer links para este painel.",
               "button": "Alterar nome",
               "modal": {
-                "title": "Renomear quadro"
+                "title": "Renomear painel"
               }
             },
             "visibility": {
-              "label": "",
+              "label": "Editar visibilidade do painel",
               "description": {
-                "public": "",
-                "private": ""
+                "public": "Este painel está público atualmente.",
+                "private": "Este painel está privado atualmente."
               },
               "button": {
-                "public": "",
-                "private": ""
+                "public": "Tornar privado",
+                "private": "Tornar público"
               },
               "confirm": {
                 "public": {
-                  "title": "",
-                  "description": "Tem certeza que deseja tornar esse quadro privado? Isso ocultará o quadro do público. Os links para convidados serão desativados."
+                  "title": "Tornar painel privado",
+                  "description": "Tem certeza que deseja tornar esse painel privado? Isso ocultará o painel do público. Os links para convidados serão desativados."
                 },
                 "private": {
-                  "title": "",
-                  "description": ""
+                  "title": "Tornar painel público",
+                  "description": "Tem certeza que deseja tornar esse painel público? Isso tornará o painel acessível a todos."
                 }
               }
             },
             "delete": {
-              "label": "",
-              "description": "",
-              "button": "",
+              "label": "Excluir este painel",
+              "description": "Uma vez que você exclui um painel, não há como voltar atrás. Por favor, tenha certeza.",
+              "button": "Excluir este painel",
               "confirm": {
-                "title": "Excluir quadro",
-                "description": ""
+                "title": "Excluir painel",
+                "description": "Tem certeza de que deseja excluir este painel? Isso excluirá permanentemente o painel e todo o seu conteúdo."
               }
             }
           }
@@ -2990,33 +2990,33 @@
     },
     "error": {
       "noBoard": {
-        "title": "",
-        "description": "",
-        "link": "",
-        "notice": "Para fazer esta página desaparecer, crie um quadro e defina-o como quadro inicial"
+        "title": "Bem-vindo ao Homarr",
+        "description": "Um painel elegante e moderno que coloca todos os seus aplicativos e serviços ao seu alcance.",
+        "link": "Crie seu primeiro painel",
+        "notice": "Para fazer esta página desaparecer, crie um painel e defina-o como painel inicial"
       },
       "notFound": {
         "title": "Quadro não encontrado",
-        "description": "O quadro especificado não foi encontrado ou você não tem acesso a ele.",
-        "link": "",
-        "notice": ""
+        "description": "O painel especificado não foi encontrado ou você não tem acesso a ele.",
+        "link": "Visualizar todos os painéis",
+        "notice": "Verifique o link ou entre em contato com um administrador se você acha que deveria estar acessível"
       },
       "homeBoard": {
-        "title": "",
+        "title": "Nenhum painel inicial estabelecido",
         "admin": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Você ainda não definiu um painel inicial para o servidor.",
+          "link": "Configurar painel inicial do servidor",
+          "notice": "Para fazer essa página desaparecer para todos os usuários, defina um painel inicial para o servidor"
         },
         "user": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "Você ainda não definiu um painel inicial.",
+          "link": "Configure seu quadro inicial",
+          "notice": "Para fazer essa página desaparecer, especifique o quadro inicial em suas preferências"
         },
         "anonymous": {
-          "description": "",
-          "link": "",
-          "notice": ""
+          "description": "O administrador do servidor ainda não definiu um quadro inicial.",
+          "link": "Visualizar painéis públicos",
+          "notice": "Para fazer essa página desaparecer, peça ao administrador do servidor para definir um quadro inicial para o servidor"
         }
       }
     }
@@ -3027,16 +3027,16 @@
         "label": "Nome"
       },
       "columnCount": {
-        "label": ""
+        "label": "Contagem de colunas"
       },
       "breakpoint": {
-        "label": "",
-        "description": ""
+        "label": "Breakpoint",
+        "description": "O layout será usado em todas as telas maiores que este breakpoint até o próximo breakpoint maior."
       }
     }
   },
   "management": {
-    "metaTitle": "",
+    "metaTitle": "Gerenciamento",
     "title": {
       "morning": "Bom dia, {username}",
       "afternoon": "Boa tarde, {username}",
@@ -3044,22 +3044,22 @@
     },
     "notFound": {
       "title": "Não encontrado",
-      "text": ""
+      "text": "Não foi possível encontrar o recurso solicitado"
     },
     "navbar": {
       "items": {
         "home": "Início",
         "boards": "Placas",
         "apps": "Aplicativos",
-        "integrations": "",
-        "searchEngies": "",
-        "medias": "",
+        "integrations": "Integrações",
+        "searchEngies": "Mecanismos de busca",
+        "medias": "Mídias",
         "users": {
           "label": "Usuários",
           "items": {
             "manage": "Gerenciar",
             "invites": "Convites",
-            "groups": ""
+            "groups": "Grupos"
           }
         },
         "tools": {
@@ -3067,10 +3067,10 @@
           "items": {
             "docker": "Docker",
             "kubernetes": "Kubernetes",
-            "logs": "",
+            "logs": "Logs",
             "api": "API",
-            "certificates": "",
-            "tasks": ""
+            "certificates": "Certificados",
+            "tasks": "Tarefas"
           }
         },
         "settings": "Configurações",
@@ -3078,9 +3078,9 @@
           "label": "Ajuda",
           "items": {
             "documentation": "Documentação",
-            "submitIssue": "",
+            "submitIssue": "Enviar um problema",
             "discord": "Discórdia da comunidade",
-            "sourceCode": ""
+            "sourceCode": "Código-fonte"
           }
         },
         "about": "Sobre"
@@ -3092,51 +3092,51 @@
           "board": "Placas",
           "user": "Usuários",
           "invite": "Convites",
-          "integration": "",
+          "integration": "Integrações",
           "app": "Aplicativos",
-          "group": "",
-          "searchEngine": "",
-          "media": ""
+          "group": "Grupos",
+          "searchEngine": "Mecanismos de busca",
+          "media": "Mídias"
         },
         "statisticLabel": {
           "boards": "Placas",
-          "resources": "",
-          "authentication": "",
-          "authorization": ""
+          "resources": "Recursos",
+          "authentication": "Autenticação",
+          "authorization": "Autorização"
         },
         "heroBanner": {
-          "title": "",
-          "subtitle": ""
+          "title": "Bem-vindo de volta ao seu",
+          "subtitle": "Quadro {app}"
         }
       },
       "board": {
         "title": "Suas placas",
         "action": {
           "new": {
-            "label": ""
+            "label": "Novo quadro"
           },
           "open": {
-            "label": ""
+            "label": "Abrir quadro"
           },
           "settings": {
             "label": "Configurações"
           },
           "setHomeBoard": {
-            "label": "",
+            "label": "Definir como quadro inicial",
             "badge": {
               "label": "Início",
-              "tooltip": ""
+              "tooltip": "Este quadro será exibido como seu quadro inicial"
             }
           },
           "setMobileHomeBoard": {
-            "label": "",
+            "label": "Definir como painel para dispositivos móveis",
             "badge": {
-              "label": "",
-              "tooltip": ""
+              "label": "Dispositivos móveis",
+              "tooltip": "Esse painel será exibido como padrão para dispositivos móveis"
             }
           },
           "duplicate": {
-            "label": ""
+            "label": "Quadro duplicado"
           },
           "delete": {
             "label": "Excluir permanentemente",
@@ -3147,8 +3147,8 @@
           }
         },
         "visibility": {
-          "public": "",
-          "private": ""
+          "public": "Este quadro é publico",
+          "private": "Este quadro é privado"
         },
         "modal": {
           "createBoard": {
@@ -3161,24 +3161,24 @@
         }
       },
       "media": {
-        "includeFromAllUsers": ""
+        "includeFromAllUsers": "Incluir mídia para todos os usuários"
       },
       "user": {
         "back": "Voltar aos usuários",
-        "fieldsDisabledExternalProvider": "",
+        "fieldsDisabledExternalProvider": "Alguns campos estão desabilitados porque são gerenciados por um provedor de autenticação externo.",
         "setting": {
           "general": {
             "title": "Geral",
             "item": {
-              "language": "",
+              "language": "Idioma & Região",
               "board": {
-                "title": "",
+                "title": "Quadro inicial",
                 "type": {
-                  "general": "",
-                  "mobile": ""
+                  "general": "Geral",
+                  "mobile": "Dispositivos móveis"
                 }
               },
-              "search": "",
+              "search": "Buscar",
               "firstDayOfWeek": "Primeiro dia da semana",
               "accessibility": "Acessibilidade"
             }
@@ -3209,36 +3209,36 @@
             },
             "groups": {
               "label": "Grupos",
-              "title": "",
-              "description": ""
+              "title": "Selecione todos os grupos dos quais o usuário deve ser membro",
+              "description": "O grupo {everyoneGroup} é atribuído a todos os usuários e não pode ser removido."
             },
             "review": {
-              "label": ""
+              "label": "Revisão"
             },
             "completed": {
-              "title": ""
+              "title": "Usuário criado"
             },
             "error": {
-              "title": ""
+              "title": "Falha ao criar usuário"
             }
           },
           "action": {
-            "createAnother": "",
-            "back": ""
+            "createAnother": "Criar outro usuário",
+            "back": "Retornar à lista de usuários"
           }
         },
         "invite": {
           "title": "Gerenciar convites de usuários",
           "action": {
             "new": {
-              "title": "",
+              "title": "Novo convite",
               "description": "Após a expiração, um convite não será mais válido e o destinatário do convite não poderá criar uma conta."
             },
             "copy": {
-              "title": "",
-              "description": "",
+              "title": "Copiar convite",
+              "description": "Seu convite foi gerado. Após o fechamento deste modal, <b> você não poderá mais copiar este link. </b> Caso não deseje mais convidar essa pessoa, você pode excluir este convite a qualquer momento.",
               "link": "Link do convite",
-              "button": ""
+              "button": "Copiar e fechar"
             },
             "delete": {
               "title": "Excluir convite",
@@ -3247,7 +3247,7 @@
           },
           "field": {
             "id": {
-              "label": ""
+              "label": "ID"
             },
             "creator": {
               "label": "Criador"
@@ -3256,36 +3256,36 @@
               "label": "Data de expiração"
             },
             "token": {
-              "label": ""
+              "label": "Token"
             }
           }
         }
       },
       "group": {
-        "back": "",
+        "back": "Voltar aos grupos",
         "setting": {
           "general": {
             "title": "Geral",
             "owner": "Dono",
-            "ownerOfGroup": "",
-            "ownerOfGroupDeleted": ""
+            "ownerOfGroup": "Proprietário deste grupo",
+            "ownerOfGroupDeleted": "O proprietário deste grupo foi excluído. Atualmente não possui proprietário."
           },
           "setting": {
-            "title": "",
-            "alert": "",
+            "title": "Configurações",
+            "alert": "As configurações do grupo são priorizadas pela ordem dos grupos na lista. As configurações superiores substituem as configurações inferiores.",
             "board": {
-              "title": ""
+              "title": "Painéis"
             }
           },
           "members": {
-            "title": "",
-            "search": "",
-            "notFound": ""
+            "title": "Membros",
+            "search": "Encontrar um membro",
+            "notFound": "Nenhum membro encontrado"
           },
           "permissions": {
-            "title": "",
+            "title": "Permissões",
             "form": {
-              "unsavedChanges": ""
+              "unsavedChanges": "Você tem alterações não salvas!"
             }
           }
         }
@@ -3294,89 +3294,89 @@
         "title": "Configurações",
         "notification": {
           "success": {
-            "message": ""
+            "message": "Configurações salvas com sucesso"
           },
           "error": {
-            "message": ""
+            "message": "Erro ao salvar permissões"
           }
         },
         "section": {
           "analytics": {
-            "title": "",
+            "title": "Análises",
             "general": {
-              "title": "",
-              "text": ""
+              "title": "Enviar análises anônimas",
+              "text": "O Homarr enviará análises anonimizadas usando o software de código aberto Umami. Quando habilitado, coletamos: versão do Homarr, tipo de banco de dados (MySQL/PostgreSQL/SQLite), status Docker/Kubernetes, métodos de autenticação habilitados e a quantidade de cada recurso. Todos os dados são anônimos e agregados - nenhuma informação pessoal, URLs, nomes ou dados identificáveis são coletados. Isso ajuda nossa equipe de código aberto a entender padrões de uso e priorizar o desenvolvimento."
             },
             "widgetData": {
-              "title": "",
-              "text": ""
+              "title": "Dados de widgets",
+              "text": "Envia quais widgets (e suas quantidades) você configurou. Não inclui URLs, nomes ou quaisquer outros dados."
             },
             "integrationData": {
-              "title": "",
-              "text": ""
+              "title": "Dados de integrações",
+              "text": "Envia quais integrações (e suas quantidades) você configurou. Não inclui URLs, nomes ou quaisquer outros dados."
             },
             "usersData": {
               "title": "Dados dos usuários",
-              "text": ""
+              "text": "Envia a quantidade de usuários e se você ativou SSO"
             }
           },
           "crawlingAndIndexing": {
-            "title": "",
-            "warning": "",
+            "title": "Rastreamento e Indexação",
+            "warning": "Ativar ou desativar qualquer configuração aqui afetará significativamente a forma como os mecanismos de pesquisa indexam e rastreiam sua página. Qualquer configuração é uma solicitação e cabe ao rastreador aplicar essas configurações. Qualquer modificação pode levar vários dias ou semanas para serem aplicadas. Algumas configurações podem ser específicas do mecanismo de busca.",
             "noIndex": {
-              "title": "",
-              "text": ""
+              "title": "Não indexar",
+              "text": "Não indexe o site nos mecanismos de busca e não o exiba em nenhum resultado de pesquisa"
             },
             "noFollow": {
-              "title": "",
-              "text": ""
+              "title": "Não seguir",
+              "text": "Não siga nenhum link durante a indexação. Desabilitar isso fará com que os rastreadores tentem seguir todos os links no Homarr."
             },
             "noTranslate": {
-              "title": "",
-              "text": ""
+              "title": "Não traduzir",
+              "text": "Quando o idioma do site provavelmente não é aquele que o usuário provavelmente deseja ler, o Google mostrará um link de tradução nos resultados da pesquisa"
             },
             "noSiteLinksSearchBox": {
-              "title": "",
-              "text": ""
+              "title": "Sem caixa de pesquisa de links do site",
+              "text": "O Google criará uma caixa de pesquisa com os links rastreados, juntamente com outros links diretos. Habilitar isso pedirá ao Google para desabilitar essa caixa."
             }
           },
           "board": {
             "title": "Placas",
             "homeBoard": {
-              "label": "",
-              "mobileLabel": "",
-              "description": ""
+              "label": "Painel inicial global",
+              "mobileLabel": "Painel para dispositivos móveis (global)",
+              "description": "Apenas painéis públicos estão disponíveis para seleção"
             },
             "status": {
-              "title": "",
+              "title": "Status de aplicativo",
               "enableStatusByDefault": {
-                "label": "",
-                "description": ""
+                "label": "Ativar status por padrão",
+                "description": "Ao adicionar um item de aplicativo, o status será ativado por padrão"
               },
               "forceDisableStatus": {
-                "label": "",
-                "description": ""
+                "label": "Forçar status de desativação",
+                "description": "O status dos aplicativos será desativado para todos os usuários e não poderá ser ativado"
               }
             }
           },
           "user": {
             "title": "Usuários",
             "enableGravatar": {
-              "label": "",
-              "description": ""
+              "label": "Ativar Gravatar",
+              "description": "Usa avatares de usuário do Libravatar/Gravatar quando nenhum avatar personalizado está definido e um e-mail está configurado"
             }
           },
           "search": {
-            "title": "",
+            "title": "Buscar",
             "defaultSearchEngine": {
-              "label": "",
-              "description": ""
+              "label": "Mecanismo de busca padrão global",
+              "description": "Mecanismos de busca de integração não podem ser selecionados aqui"
             }
           },
           "appearance": {
             "title": "Aparência",
             "defaultColorScheme": {
-              "label": "",
+              "label": "Esquema de cores padrão",
               "options": {
                 "light": "Claro",
                 "dark": "Escuro"
@@ -3395,65 +3395,65 @@
         "tasks": {
           "title": "Tarefas",
           "status": {
-            "idle": "",
+            "idle": "Ocioso",
             "running": "Em execução",
             "error": "Erro",
-            "disabled": ""
+            "disabled": "Desabilitado"
           },
           "job": {
             "minecraftServerStatus": {
               "label": "Status do servidor Minecraft"
             },
             "iconsUpdater": {
-              "label": ""
+              "label": "Atualizador de Ícones"
             },
             "analytics": {
-              "label": ""
+              "label": "Análises"
             },
             "smartHomeEntityState": {
-              "label": ""
+              "label": "Estado de Entidade do Smart Home"
             },
             "ping": {
-              "label": ""
+              "label": "Pings"
             },
             "mediaServer": {
               "label": "Servidor de Mídia"
             },
             "mediaOrganizer": {
-              "label": ""
+              "label": "Organizadores de Mídia"
             },
             "downloads": {
-              "label": ""
+              "label": "Downloads"
             },
             "mediaRequestStats": {
-              "label": ""
+              "label": "Estatísticas de solicitações de mídia"
             },
             "mediaRequestList": {
-              "label": ""
+              "label": "Lista de solicitações de mídia"
             },
             "rssFeeds": {
-              "label": ""
+              "label": "Feeds RSS"
             },
             "indexerManager": {
-              "label": ""
+              "label": "Gerenciador de Indexadores"
             },
             "healthMonitoring": {
-              "label": ""
+              "label": "Monitoramento de saúde"
             },
             "dnsHole": {
-              "label": ""
+              "label": "Dados do DNS Hole"
             },
             "updateChecker": {
-              "label": ""
+              "label": "Verificador de atualizações"
             },
             "mediaTranscoding": {
-              "label": ""
+              "label": "Transcodificação de mídia"
             },
             "networkController": {
-              "label": ""
+              "label": "Controlador de rede"
             },
             "refreshNotifications": {
-              "label": ""
+              "label": "Atualizador de notificações"
             },
             "dockerContainers": {
               "label": "Contêineres do Docker"
@@ -3462,30 +3462,30 @@
               "label": "CPU do Firewall"
             },
             "firewallMemory": {
-              "label": ""
+              "label": "Memória do Firewall"
             },
             "firewallVersion": {
               "label": "Versão do Firewall"
             },
             "firewallInterfaces": {
-              "label": ""
+              "label": "Interfaces de firewall"
             },
             "weather": {
-              "label": ""
+              "label": "Clima"
             }
           },
           "interval": {
-            "seconds": "",
-            "minutes": "",
-            "hours": "",
-            "midnight": "",
-            "weeklyMonday": "",
+            "seconds": "A cada {interval, plural, =1 {segundo} other {# segundos}}",
+            "minutes": "A cada {interval, plural, =1 {minuto} other {# minutos}}",
+            "hours": "A cada {interval, plural, =1 {hora} other {# horas}}",
+            "midnight": "Todo dia à meia-noite",
+            "weeklyMonday": "Toda semana na segunda-feira",
             "update": {
               "success": {
-                "message": ""
+                "message": "Intervalo atualizado com sucesso"
               },
               "error": {
-                "message": ""
+                "message": "Erro ao atualizar intervalo"
               }
             }
           },
@@ -3497,52 +3497,52 @@
               "label": "Nome"
             },
             "interval": {
-              "label": ""
+              "label": "Intervalo de agendamento"
             },
             "lastExecution": {
-              "label": ""
+              "label": "Última Execução"
             },
             "actions": {
-              "label": ""
+              "label": "Ações"
             }
           },
           "table": {
-            "search": ""
+            "search": "Buscar {count} tarefas..."
           },
           "action": {
             "refresh": {
-              "label": ""
+              "label": "Atualizar"
             }
           },
           "refresh": {
             "success": {
-              "message": ""
+              "message": "Tarefas atualizadas com sucesso"
             },
             "error": {
-              "message": ""
+              "message": "Erro ao atualizar tarefas"
             }
           },
           "trigger": {
             "success": {
-              "message": ""
+              "message": "Tarefa acionada com sucesso"
             },
             "error": {
-              "message": ""
+              "message": "Falha ao acionar tarefa"
             }
           },
           "enable": {
             "success": {
-              "message": ""
+              "message": "Tarefa habilitada com sucesso"
             }
           },
           "disable": {
             "success": {
-              "message": ""
+              "message": "Tarefa desabilitada com sucesso"
             }
           },
           "toggle": {
             "error": {
-              "message": ""
+              "message": "Falha ao alternar status da tarefa"
             }
           }
         },
@@ -3551,7 +3551,7 @@
           "modal": {
             "createApiToken": {
               "title": "Token de API criado",
-              "description": "",
+              "description": "O token de API foi criado. Atenção, esse token é encriptado no banco de dados e jamais poderá ser transferido novamente a você. Se você perder este token, você não será mais capaz de recuperar este token específico.",
               "button": "Copiar e fechar"
             }
           },
@@ -3567,8 +3567,8 @@
               },
               "modal": {
                 "delete": {
-                  "title": "",
-                  "text": ""
+                  "title": "Remover token de API",
+                  "text": "Isso excluirá permanentemente o token de API. Clientes de API que usam este token não poderão mais autenticar e executar solicitações de API. Esta ação não pode ser desfeita."
                 }
               },
               "table": {
@@ -3584,46 +3584,46 @@
       },
       "about": {
         "version": "Versão {version}",
-        "text": "",
+        "text": "O Homarr é um projeto de código aberto impulsionado pela comunidade e mantido por voluntários. Graças a essas pessoas, o Homarr tem sido um projeto em crescimento desde 2021. Nossa equipe trabalha remotamente em vários países diferentes no Homarr, em seu tempo livre e sem remuneração.",
         "accordion": {
           "contributors": {
-            "title": "",
-            "subtitle": ""
+            "title": "Contribuidores",
+            "subtitle": "{count} mantendo código e Homarr"
           },
           "translators": {
-            "title": "",
-            "subtitle": ""
+            "title": "Tradutores",
+            "subtitle": "{count} traduções contribuídas em vários idiomas"
           },
           "libraries": {
-            "title": "",
-            "subtitle": ""
+            "title": "Bibliotecas",
+            "subtitle": "{count} usadas no código do Homarr"
           },
           "hotkeys": {
-            "title": "",
-            "subtitle": "",
+            "title": "Teclas de atalho",
+            "subtitle": "Atalhos de teclado para melhorar seu fluxo de trabalho",
             "field": {
-              "shortcut": "",
-              "action": ""
+              "shortcut": "Atalhos",
+              "action": "Ação"
             },
             "action": {
-              "toggleBoardEdit": "",
-              "toggleColorScheme": "",
-              "saveNotebook": "",
-              "openSpotlight": ""
+              "toggleBoardEdit": "Alternar para o modo de edição do quadro",
+              "toggleColorScheme": "Alternar entre modo claro/escuro",
+              "saveNotebook": "Salvar bloco de notas (apenas dentro do widget de bloco de notas)",
+              "openSpotlight": "Abrir busca"
             },
-            "note": ""
+            "note": "Dica: Mod refere-se tanto à tecla Ctrl quanto à tecla ⌘ no macOS"
           }
         }
       }
     }
   },
   "docker": {
-    "title": "",
+    "title": "Contêineres",
     "table": {
-      "updated": "",
-      "search": "",
-      "selected": "",
-      "footer": ""
+      "updated": "Atualizado em {when}",
+      "search": "Buscar {count} contêineres",
+      "selected": "{selectCount} de {totalCount} contêineres selecionados",
+      "footer": "Total de contêineres: {count}"
     },
     "field": {
       "name": {
@@ -3636,9 +3636,9 @@
           "running": "Em execução",
           "paused": "Pausado",
           "restarting": "Recomeço",
-          "exited": "",
+          "exited": "Finalizado",
           "removing": "Remoção",
-          "dead": ""
+          "dead": "Morto"
         }
       },
       "stats": {
@@ -3646,7 +3646,7 @@
           "label": "CPU"
         },
         "memory": {
-          "label": ""
+          "label": "Memória"
         }
       },
       "containerImage": {
@@ -3657,17 +3657,17 @@
       }
     },
     "action": {
-      "title": "",
+      "title": "Ações",
       "start": {
         "label": "Iniciar",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Contêineres iniciados",
+            "message": "Os contêineres foram iniciados com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Os contêineres não foram iniciados",
+            "message": "Os contêineres não puderam ser iniciados"
           }
         }
       },
@@ -3675,12 +3675,12 @@
         "label": "Parar",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Os contêineres foram parados",
+            "message": "Os contêineres foram parados com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Os contêineres não foram parados",
+            "message": "Os contêineres não puderam ser parados"
           }
         }
       },
@@ -3688,12 +3688,12 @@
         "label": "Reiniciar",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Contêineres reiniciados",
+            "message": "Os contêineres foram reiniciados com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Contêineres não reiniciados",
+            "message": "Os contêineres não puderam ser reiniciados"
           }
         }
       },
@@ -3701,38 +3701,38 @@
         "label": "Excluir",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Contêineres removidos",
+            "message": "Os contêineres foram removidos com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Contêineres não removidos",
+            "message": "Os contêineres não puderam ser removidos"
           }
         }
       },
       "refresh": {
-        "label": "",
+        "label": "Atualizar",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Os contêineres foram atualizados",
+            "message": "Você está agora visualizando os dados mais recentes"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Os contêineres não foram atualizados",
+            "message": "Algo deu errado enquanto atualizava os contêineres"
           }
         }
       },
       "addToHomarr": {
-        "label": "",
+        "label": "Adicionar ao Homarr",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Adicionado ao Homarr",
+            "message": "Os aplicativos selecionados foram adicionados ao Homarr"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Não foi possivel adicionar ao Homarr",
+            "message": "Os aplicativos selecionados não puderam ser adicionados ao Homarr"
           }
         },
         "modal": {
@@ -3746,41 +3746,41 @@
   },
   "kubernetes": {
     "cluster": {
-      "title": "",
-      "label": "",
-      "providers": "",
+      "title": "Painel do Cluster",
+      "label": "Cluster",
+      "providers": "Provedores",
       "version": "Versão",
-      "architecture": "",
+      "architecture": "Arquitetura",
       "capacity": {
-        "title": "",
+        "title": "Capacidade",
         "resource": {
-          "reserved": "",
-          "used": ""
+          "reserved": "Reservado",
+          "used": "Usado"
         }
       },
       "resources": {
-        "title": "",
-        "nodes": "",
-        "namespaces": "",
-        "ingresses": "",
-        "services": "",
-        "pods": "",
-        "configmaps": "",
-        "secrets": "",
-        "volumes": ""
+        "title": "Recursos",
+        "nodes": "Nós",
+        "namespaces": "Namespaces",
+        "ingresses": "Ingresses",
+        "services": "Serviços",
+        "pods": "Pods",
+        "configmaps": "ConfigMaps",
+        "secrets": "Secrets",
+        "volumes": "Volumes"
       }
     },
     "nodes": {
-      "label": "",
+      "label": "Nós",
       "field": {
         "name": {
           "label": "Nome"
         },
         "state": {
-          "label": "",
+          "label": "Estado",
           "option": {
-            "ready": "",
-            "NotReady": ""
+            "ready": "Pronto",
+            "NotReady": "Não está pronto"
           }
         },
         "cpu": {
@@ -3790,194 +3790,194 @@
           "label": "RAM"
         },
         "pods": {
-          "label": ""
+          "label": "Pods"
         },
         "operatingSystem": {
-          "label": ""
+          "label": "SO"
         },
         "architecture": {
-          "label": ""
+          "label": "Arquitetura"
         },
         "kubernetesVersion": {
           "label": "Versão do Kubernetes"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} nós"
       }
     },
     "namespaces": {
-      "label": "",
+      "label": "Namespaces",
       "field": {
         "name": {
           "label": "Nome"
         },
         "state": {
-          "label": "",
+          "label": "Estado",
           "option": {
-            "active": "",
-            "terminating": ""
+            "active": "Ativo",
+            "terminating": "Terminando"
           }
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} namespaces"
       }
     },
     "ingresses": {
-      "label": "",
+      "label": "Ingresses",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "className": {
           "label": "Nome da classe"
         },
         "rulesAndPaths": {
-          "label": ""
+          "label": "Regras & caminhos"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} ingresses"
       }
     },
     "services": {
-      "label": "",
+      "label": "Serviços",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "type": {
-          "label": ""
+          "label": "Tipo"
         },
         "ports": {
-          "label": ""
+          "label": "Portas"
         },
         "targetPorts": {
-          "label": ""
+          "label": "Portas de destino"
         },
         "clusterIP": {
-          "label": ""
+          "label": "IP do Cluster"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} serviços"
       }
     },
     "pods": {
-      "label": "",
+      "label": "Pods",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "image": {
           "label": "Imagem"
         },
         "applicationType": {
-          "label": ""
+          "label": "Tipos de aplicações"
         },
         "status": {
           "label": "Status"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} pods"
       }
     },
     "secrets": {
-      "label": "",
+      "label": "Secrets",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "namespace"
         },
         "type": {
-          "label": ""
+          "label": "tipo"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} secrets"
       }
     },
     "configmaps": {
-      "label": "",
+      "label": "ConfigMaps",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "namespace"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} configMaps"
       }
     },
     "volumes": {
-      "label": "",
+      "label": "Volumes",
       "field": {
         "name": {
           "label": "Nome"
         },
         "namespace": {
-          "label": ""
+          "label": "Namespace"
         },
         "accessModes": {
-          "label": ""
+          "label": "Modos de acesso"
         },
         "storage": {
-          "label": ""
+          "label": "Armazenamento"
         },
         "storageClassName": {
-          "label": ""
+          "label": "Nome da classe de armazenamento"
         },
         "volumeMode": {
-          "label": ""
+          "label": "Modo do volume"
         },
         "volumeName": {
-          "label": ""
+          "label": "Nome do volume"
         },
         "status": {
           "label": "Status"
         },
         "creationTimestamp": {
-          "label": ""
+          "label": "Criado"
         }
       },
       "table": {
-        "search": ""
+        "search": "Buscar {count} volumes"
       }
     },
     "error": {
@@ -3995,7 +3995,7 @@
     "tab": {
       "user": "Usuários",
       "group": "Grupos",
-      "inherited": ""
+      "inherited": "Grupos herdados"
     },
     "field": {
       "user": {
@@ -4029,7 +4029,7 @@
         }
       },
       "search-engines": {
-        "label": "",
+        "label": "Mecanismos de busca",
         "new": {
           "label": "Novo"
         },
@@ -4078,34 +4078,34 @@
             "label": "Nós"
           },
           "namespaces": {
-            "label": ""
+            "label": "Namespaces"
           },
           "ingresses": {
-            "label": ""
+            "label": "Ingresses"
           },
           "services": {
             "label": "Serviços"
           },
           "pods": {
-            "label": ""
+            "label": "pods"
           },
           "configmaps": {
-            "label": ""
+            "label": "ConfigMaps"
           },
           "secrets": {
-            "label": ""
+            "label": "Secrets"
           },
           "volumes": {
-            "label": ""
+            "label": "Volumes"
           }
         },
         "logs": {
-          "label": ""
+          "label": "Logs"
         },
         "certificates": {
           "label": "Certificados",
           "hostnames": {
-            "label": ""
+            "label": "Hostnames"
           }
         }
       },
@@ -4118,14 +4118,14 @@
     }
   },
   "search": {
-    "placeholder": "",
+    "placeholder": "Buscar por qualquer coisa",
     "nothingFound": "Nada encontrado",
     "error": {
-      "fetch": ""
+      "fetch": "Ocorreu um erro ao buscar os dados"
     },
     "mode": {
       "appIntegrationBoard": {
-        "help": "Buscar por aplicativos, integrações ou quadros",
+        "help": "Buscar por aplicativos, integrações ou painéis",
         "group": {
           "app": {
             "title": "Aplicativos",
@@ -4139,7 +4139,7 @@
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Selecione uma ação para o aplicativo"
               }
             }
           },
@@ -4151,17 +4151,17 @@
                   "label": "Abrir quadro"
                 },
                 "homeBoard": {
-                  "label": ""
+                  "label": "Definir como quadro inicial"
                 },
                 "mobileBoard": {
-                  "label": ""
+                  "label": "Definir como painel para dispositivos móveis"
                 },
                 "settings": {
                   "label": "Abrir configurações"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Selecione uma ação para o quadro"
               }
             }
           },
@@ -4171,7 +4171,7 @@
         }
       },
       "command": {
-        "help": "",
+        "help": "Ativar modo de comando",
         "group": {
           "localCommand": {
             "title": "Comandos locais"
@@ -4192,7 +4192,7 @@
                 }
               },
               "newBoard": {
-                "label": ""
+                "label": "Criar um novo quadro"
               },
               "importBoard": {
                 "label": "Importe um quadro"
@@ -4222,15 +4222,15 @@
         }
       },
       "media": {
-        "requestMovie": "",
-        "requestSeries": "",
-        "openIn": ""
+        "requestMovie": "Solicitar filme",
+        "requestSeries": "Solicitar série",
+        "openIn": "Abrir em {kind}"
       },
       "external": {
         "help": "Usar um mecanismo de busca externo",
         "group": {
           "searchEngine": {
-            "title": "",
+            "title": "Mecanismos de busca",
             "children": {
               "action": {
                 "search": {
@@ -4238,10 +4238,10 @@
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Selecione uma ação para o mecanismo de busca"
               },
               "searchResults": {
-                "title": ""
+                "title": "Selecione um resultado de pesquisa para ações"
               }
             },
             "option": {
@@ -4281,7 +4281,7 @@
                 "label": "Documentação"
               },
               "submitIssue": {
-                "label": ""
+                "label": "Reportar um problema"
               },
               "discord": {
                 "label": "Discórdia da comunidade"
@@ -4293,7 +4293,7 @@
       "home": {
         "group": {
           "search": {
-            "title": "",
+            "title": "Buscar",
             "option": {
               "other": {
                 "label": "Pesquise com outro mecanismo de busca"
@@ -4303,7 +4303,7 @@
                 "description": "Defina um mecanismo de busca padrão nas preferências"
               },
               "search": {
-                "label": ""
+                "label": "Buscar por \"{query}\" com {name}"
               },
               "from-integration": {
                 "description": "Comece a digitar para pesquisar"
@@ -4325,7 +4325,7 @@
                 "label": "Gerenciar página inicial"
               },
               "manageBoard": {
-                "label": "Gerenciar quadros"
+                "label": "Gerenciar painéis"
               },
               "manageApp": {
                 "label": "Gerenciar aplicativos"
@@ -4334,7 +4334,7 @@
                 "label": "Gerenciar integrações"
               },
               "manageSearchEngine": {
-                "label": "Gerenciar ferramentas de busca"
+                "label": "Gerenciar mecanismos de busca"
               },
               "manageMedia": {
                 "label": "Gerencias mídias"
@@ -4355,7 +4355,7 @@
                 "label": "Swagger API"
               },
               "manageLog": {
-                "label": ""
+                "label": "Exibir logs"
               },
               "manageTask": {
                 "label": "Gerenciar tarefas"
@@ -4388,7 +4388,7 @@
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Selecione uma ação para o usuário"
               }
             }
           },
@@ -4407,7 +4407,7 @@
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Selecione uma ação para o grupo"
               }
             }
           }
@@ -4415,16 +4415,16 @@
       }
     },
     "engine": {
-      "search": "",
+      "search": "Encontrar um mecanismo de busca",
       "field": {
         "name": {
           "label": "Nome"
         },
         "short": {
-          "label": ""
+          "label": "Abreviação"
         },
         "urlTemplate": {
-          "label": ""
+          "label": "Modelo de busca de URL"
         },
         "description": {
           "label": "Descrição"
@@ -4432,55 +4432,55 @@
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Mecanismos de busca",
           "noResults": {
-            "title": "",
-            "action": ""
+            "title": "Ainda não existem mecanismos de busca",
+            "action": "Crie seu primeiro mecanismo de busca"
           },
-          "interactive": ""
+          "interactive": "Interativo, usa uma integração"
         },
         "create": {
-          "title": "",
+          "title": "Novo mecanismo de busca",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Mecanismo de busca criado",
+              "message": "O mecanismo de busca foi criado com sucesso"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "O mecanismo de busca não foi criado",
+              "message": "O mecanismo de busca não pôde ser criado"
             }
           }
         },
         "edit": {
-          "title": "",
+          "title": "Editar mecanismo de busca",
           "notification": {
             "success": {
               "title": "Mudanças aplicadas com sucesso",
-              "message": ""
+              "message": "O mecanismo de busca foi salvo com sucesso"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Não foi possível aplicar as mudanças",
+              "message": "O mecanismo de busca não pôde ser salvo"
             }
           },
-          "configControl": "",
+          "configControl": "Configuração",
           "searchEngineType": {
-            "generic": "",
-            "fromIntegration": ""
+            "generic": "Genérico",
+            "fromIntegration": "De integração"
           }
         },
         "delete": {
-          "title": "",
-          "message": "",
+          "title": "Excluir mecanismo de busca",
+          "message": "Tem certeza que deseja excluir o mecanismo de busca {name}?",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Mecanismo de busca excluído",
+              "message": "O mecanismo de busca foi excluído com sucesso"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Mecanismo de busca não deletado",
+              "message": "O mecanismo de busca não pôde ser deletado"
             }
           }
         }
@@ -4488,15 +4488,15 @@
       "media": {
         "request": {
           "modal": {
-            "title": "",
+            "title": "Solicitar \"{name}\"",
             "table": {
               "header": {
-                "season": "",
-                "episodes": ""
+                "season": "Temporada",
+                "episodes": "Episódios"
               }
             },
             "button": {
-              "send": ""
+              "send": "Enviar solicitação"
             }
           }
         }
@@ -4506,46 +4506,46 @@
   "certificate": {
     "field": {
       "hostname": {
-        "label": ""
+        "label": "Hostname"
       },
       "subject": {
-        "label": ""
+        "label": "Assunto"
       },
       "issuer": {
-        "label": ""
+        "label": "Emissor"
       },
       "validFrom": {
-        "label": ""
+        "label": "Válido desde"
       },
       "validTo": {
-        "label": ""
+        "label": "Válido até"
       },
       "serialNumber": {
-        "label": ""
+        "label": "Número de série"
       },
       "fingerprint": {
-        "label": ""
+        "label": "Impressão digital"
       }
     },
     "page": {
       "list": {
-        "title": "",
-        "description": "",
+        "title": "Certificados confiáveis",
+        "description": "Usado pelo Homarr para solicitar dados de integrações.",
         "noResults": {
-          "title": ""
+          "title": "Ainda não existem certificados"
         },
         "invalid": {
-          "title": "",
-          "description": ""
+          "title": "Certificado inválido",
+          "description": "Falha ao analisar certificado"
         },
-        "expires": "",
-        "toHostnames": ""
+        "expires": "Expira em {when}",
+        "toHostnames": "Hostnames confiáveis"
       },
       "hostnames": {
-        "title": "",
-        "description": "",
+        "title": "Hostnames de certificados confiáveis",
+        "description": "Alguns certificados não permitem o domínio específico que o Homarr usa para solicitá-los, por isso todos os hostnames confiáveis com suas impressões digitais de certificado são usados para contornar essas restrições.",
         "noResults": {
-          "title": ""
+          "title": "Ainda não existem hostnames"
         },
         "toCertificates": "Certificados"
       }
@@ -4579,16 +4579,16 @@
         }
       },
       "removeHostname": {
-        "label": "",
-        "confirm": "",
+        "label": "Remover hostname confiável",
+        "confirm": "Tem certeza que deseja remover este hostname confiável? Isso pode fazer com que algumas integrações parem de funcionar.",
         "notification": {
           "success": {
-            "title": "",
-            "message": ""
+            "title": "Hostname removido",
+            "message": "O hostname foi removido com sucesso"
           },
           "error": {
-            "title": "",
-            "message": ""
+            "title": "Hostname não removido",
+            "message": "O hostname não pôde ser removido"
           }
         }
       }
@@ -4597,9 +4597,9 @@
   "log": {
     "level": {
       "option": {
-        "debug": "",
+        "debug": "Debug",
         "info": "Informação",
-        "warn": "",
+        "warn": "Aviso",
         "error": "Erro"
       }
     }

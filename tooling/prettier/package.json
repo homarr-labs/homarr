@@ -10,7 +10,7 @@
   },
   "prettier": "@homarr/prettier-config",
   "dependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
     "prettier": "^3.8.1"
   },
   "devDependencies": {
