@@ -10,6 +10,7 @@ import { DelugeIntegration } from "../download-client/deluge/deluge-integration"
 import { NzbGetIntegration } from "../download-client/nzbget/nzbget-integration";
 import { QBitTorrentIntegration } from "../download-client/qbittorrent/qbittorrent-integration";
 import { SabnzbdIntegration } from "../download-client/sabnzbd/sabnzbd-integration";
+import { SlskdIntegration } from "../download-client/slskd/slskd-integration";
 import { TransmissionIntegration } from "../download-client/transmission/transmission-integration";
 import { EmbyIntegration } from "../emby/emby-integration";
 import { GitHubContainerRegistryIntegration } from "../github-container-registry/github-container-registry-integration";
@@ -77,6 +78,7 @@ export const integrationCreators = {
   qBittorrent: QBitTorrentIntegration,
   deluge: DelugeIntegration,
   transmission: TransmissionIntegration,
+  slskd: SlskdIntegration,
   aria2: Aria2Integration,
   jellyseerr: JellyseerrIntegration,
   overseerr: OverseerrIntegration,
