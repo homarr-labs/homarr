@@ -222,6 +222,6 @@ export interface TracearrHistoryResponse {
 export interface TracearrDashboardData {
   stats: TracearrStatsResponse;
   streams: TracearrStreamsResponse;
-  violations?: TracearrViolationsResponse;
-  recentActivity?: TracearrHistoryResponse;
+  violations: TracearrViolationsResponse | null;
+  recentActivity: TracearrHistoryResponse | null;
 }

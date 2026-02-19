@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { ImageProxy } from "@homarr/image-proxy";
@@ -13,6 +15,20 @@ import type {
   TracearrStreamsResponse,
   TracearrViolationsResponse,
 } from "./tracearr-types";
+
+const TracearrHealthResponseSchema = z.object({
+  status: z.literal("ok"),
+  timestamp: z.string(),
+  servers: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      type: z.union([z.literal("plex"), z.literal("jellyfin"), z.literal("emby")]),
+      online: z.boolean(),
+      activeStreams: z.number(),
+    }),
+  ),
+});
 
 export class TracearrIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -42,7 +58,7 @@ export class TracearrIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    return (await response.json()) as TracearrHealthResponse;
+    return TracearrHealthResponseSchema.parse(await response.json()) as TracearrHealthResponse;
   }
 
   /**
@@ -50,12 +66,7 @@ export class TracearrIntegration extends Integration {
    * Dashboard statistics with optional server filter
    */
   public async getStatsAsync(serverId?: string): Promise<TracearrStatsResponse> {
-    const queryParams: Record<string, string> = {};
-    if (serverId) {
-      queryParams.serverId = serverId;
-    }
-
-    const url = this.url("/api/v1/public/stats", queryParams);
+    const url = this.url("/api/v1/public/stats", { serverId });
     const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
@@ -72,12 +83,7 @@ export class TracearrIntegration extends Integration {
    * Active playback sessions with codec and quality details
    */
   public async getStreamsAsync(serverId?: string): Promise<TracearrStreamsResponse> {
-    const queryParams: Record<string, string> = {};
-    if (serverId) {
-      queryParams.serverId = serverId;
-    }
-
-    const url = this.url("/api/v1/public/streams", queryParams);
+    const url = this.url("/api/v1/public/streams", { serverId });
     const response = await fetchWithTrustedCertificatesAsync(url, {
       headers: this.getAuthHeaders(),
     });
@@ -125,15 +131,12 @@ export class TracearrIntegration extends Integration {
 
     await Promise.all(
       json.data.map(async (violation) => {
-        if (violation.user.avatarUrl) {
-          violation.user = { ...violation.user };
-          violation.user.avatarUrl = await this.proxyImageAsync(
-            imageProxy,
-            violation.user.avatarUrl,
-            violation.user.id,
-            "avatar",
-          );
-        }
+        violation.user.avatarUrl = await this.proxyImageAsync(
+          imageProxy,
+          violation.user.avatarUrl,
+          violation.user.id,
+          "avatar",
+        );
       }),
     );
 
@@ -162,15 +165,12 @@ export class TracearrIntegration extends Integration {
 
     await Promise.all(
       json.data.map(async (session) => {
-        if (session.user.avatarUrl) {
-          session.user = { ...session.user };
-          session.user.avatarUrl = await this.proxyImageAsync(
-            imageProxy,
-            session.user.avatarUrl,
-            session.user.id,
-            "avatar",
-          );
-        }
+        session.user.avatarUrl = await this.proxyImageAsync(
+          imageProxy,
+          session.user.avatarUrl,
+          session.user.id,
+          "avatar",
+        );
       }),
     );
 
@@ -192,8 +192,8 @@ export class TracearrIntegration extends Integration {
     return {
       stats,
       streams,
-      violations: violationsResult.status === "fulfilled" ? violationsResult.value : undefined,
-      recentActivity: historyResult.status === "fulfilled" ? historyResult.value : undefined,
+      violations: violationsResult.status === "fulfilled" ? violationsResult.value : null,
+      recentActivity: historyResult.status === "fulfilled" ? historyResult.value : null,
     };
   }
 
@@ -211,6 +211,7 @@ export class TracearrIntegration extends Integration {
   ): Promise<string | null> {
     if (!url) return null;
     try {
+      // ImageProxy doesn't support fallback urls so we need to remove them
       const cleanUrl = url.replace(/&fallback=[^&]+/, "").replace(/\?fallback=[^&]+&?/, "?");
       // Build the full URL, then inject _uid as the FIRST query param.
       // This is critical because ImageProxy uses bcrypt which truncates at 72 bytes.

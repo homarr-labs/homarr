@@ -105,6 +105,8 @@ function TracearrContent({ integrationIds, options, width, isEditMode }: Tracear
         data: [],
         summary: { total: 0, transcodes: 0, directStreams: 0, directPlays: 0, totalBitrate: "0", byServer: [] },
       },
+      violations: null,
+      recentActivity: null,
     },
   );
 
