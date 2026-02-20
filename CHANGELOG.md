@@ -1,3 +1,27 @@
+## [1.53.2](https://github.com/homarr-labs/homarr/compare/v1.53.1...v1.53.2) (2026-02-20)
+
+### Bug Fixes
+
+* **analytics:** restrict publishing to every week ([#5028](https://github.com/homarr-labs/homarr/issues/5028)) ([8c4be2f](https://github.com/homarr-labs/homarr/commit/8c4be2fbe80e42472b8b17542a4282ec26d1fefe))
+* **deps:** update dependency @tanstack/react-query to ^5.90.21 ([#5067](https://github.com/homarr-labs/homarr/issues/5067)) ([1b8dde9](https://github.com/homarr-labs/homarr/commit/1b8dde98d2518d3d82895a26a58db7f42abf2a6e))
+* **deps:** update dependency dotenv to ^17.3.0 ([#5079](https://github.com/homarr-labs/homarr/issues/5079)) ([1e822fb](https://github.com/homarr-labs/homarr/commit/1e822fbe0c8224e6ba5b99e6516ea4437c9f36bb))
+* **deps:** update dependency dotenv to ^17.3.1 ([#5081](https://github.com/homarr-labs/homarr/issues/5081)) ([46ba48f](https://github.com/homarr-labs/homarr/commit/46ba48fb20b69b2876fc42ee862a64717e6428f7))
+* **deps:** update dependency drizzle-kit to ^0.31.9 ([#5059](https://github.com/homarr-labs/homarr/issues/5059)) ([db14d98](https://github.com/homarr-labs/homarr/commit/db14d98d1966dada5d74507e64e90f34fb4eee60))
+* **deps:** update dependency fast-xml-parser to ^5.3.6 ([#5089](https://github.com/homarr-labs/homarr/issues/5089)) ([ac5bc70](https://github.com/homarr-labs/homarr/commit/ac5bc70a5de9a4307c4165203ff26ee1a112ca81))
+* **deps:** update dependency glob to ^13.0.2 ([#5065](https://github.com/homarr-labs/homarr/issues/5065)) ([50601d5](https://github.com/homarr-labs/homarr/commit/50601d53792baae5a259adb4e4d3fefcc35d25df))
+* **deps:** update dependency glob to ^13.0.3 ([#5078](https://github.com/homarr-labs/homarr/issues/5078)) ([ba0ed77](https://github.com/homarr-labs/homarr/commit/ba0ed77bb036dd0e35db08ce9df98f133f835d53))
+* **deps:** update dependency ioredis to v5.9.3 ([#5076](https://github.com/homarr-labs/homarr/issues/5076)) ([4e1baa5](https://github.com/homarr-labs/homarr/commit/4e1baa570324be06eb442f2db08a8b152d9b416b))
+* **deps:** update dependency mysql2 to v3.17.0 ([#5066](https://github.com/homarr-labs/homarr/issues/5066)) ([fcb020c](https://github.com/homarr-labs/homarr/commit/fcb020c191b98a729508b7660fb484f29208c51c))
+* **deps:** update dependency mysql2 to v3.17.1 ([#5082](https://github.com/homarr-labs/homarr/issues/5082)) ([475f14d](https://github.com/homarr-labs/homarr/commit/475f14dc312c1b8cffbabe607c17be8b2d1d294c))
+* **deps:** update dependency react-error-boundary to ^6.1.1 ([#5086](https://github.com/homarr-labs/homarr/issues/5086)) ([bb9da30](https://github.com/homarr-labs/homarr/commit/bb9da3007e4f29fd7993bd9960e80e316a17bbf0))
+* **deps:** update dependency tsdav to ^2.1.8 ([#5090](https://github.com/homarr-labs/homarr/issues/5090)) ([840d110](https://github.com/homarr-labs/homarr/commit/840d1107ec3392b4581c931ef1efe2d9816ededd))
+* **deps:** update dependency typescript-eslint to ^8.55.0 ([#5061](https://github.com/homarr-labs/homarr/issues/5061)) ([56ecce2](https://github.com/homarr-labs/homarr/commit/56ecce254195c480eef9cefefd7bad98c49b9175))
+* **deps:** update trpc monorepo to ^11.10.0 ([#5062](https://github.com/homarr-labs/homarr/issues/5062)) ([bc7ec63](https://github.com/homarr-labs/homarr/commit/bc7ec63f8547e8f868ef5d56a1a8c5c893fda1e3))
+* **deps:** update turbo monorepo to ^2.8.5 ([#5064](https://github.com/homarr-labs/homarr/issues/5064)) ([c36e947](https://github.com/homarr-labs/homarr/commit/c36e947935246761cac26049ac24c56c8cc0990a))
+* **deps:** update turbo monorepo to ^2.8.7 ([#5071](https://github.com/homarr-labs/homarr/issues/5071)) ([c6c48ea](https://github.com/homarr-labs/homarr/commit/c6c48ea6e5f76303fd93022fd566a99af1ad829f))
+* **deps:** update turbo monorepo to ^2.8.8 ([#5084](https://github.com/homarr-labs/homarr/issues/5084)) ([dcae437](https://github.com/homarr-labs/homarr/commit/dcae437fc5cadc2e112037fa26f8351111c69869))
+* **deps:** update turbo monorepo to ^2.8.9 ([#5092](https://github.com/homarr-labs/homarr/issues/5092)) ([24560cb](https://github.com/homarr-labs/homarr/commit/24560cb93f17767b5ab8047c07f81a165e0fb769))
+
 ## [1.53.1](https://github.com/homarr-labs/homarr/compare/v1.53.0...v1.53.1) (2026-02-13)
 
 ### Bug Fixes
