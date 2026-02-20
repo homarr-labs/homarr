@@ -19,6 +19,7 @@ export interface CreateCronJobCreatorOptions<TAllowedNames extends string> {
 interface CreateCronJobOptions {
   runOnStart?: boolean;
   preventManualExecution?: boolean;
+  preventCustomInterval?: boolean;
   expectedMaximumDurationInMillis?: number;
   beforeStart?: () => MaybePromise<void>;
 }
@@ -78,14 +79,14 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
           where: (cronJobConfigurations, { eq }) => eq(cronJobConfigurations.name, name),
         });
 
-        const scheduledTask = createTask(
-          configuration?.cronExpression ?? defaultCronExpression,
-          () => void catchingCallbackAsync(),
-          {
-            name,
-            timezone: creatorOptions.timezone,
-          },
-        );
+        const cronExpression = options.preventCustomInterval
+          ? defaultCronExpression
+          : (configuration?.cronExpression ?? defaultCronExpression);
+
+        const scheduledTask = createTask(cronExpression, () => void catchingCallbackAsync(), {
+          name,
+          timezone: creatorOptions.timezone,
+        });
         creatorOptions.logger.logDebug("The scheduled task for cron job was created", {
           name,
           cronExpression: defaultCronExpression,
@@ -114,6 +115,7 @@ const createCallback = <TAllowedNames extends string, TName extends TAllowedName
         await catchingCallbackAsync();
       },
       preventManualExecution: options.preventManualExecution ?? false,
+      preventCustomInterval: options.preventCustomInterval ?? false,
     };
   };
 };
