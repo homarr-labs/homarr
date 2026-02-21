@@ -1427,7 +1427,7 @@ importers:
   packages/integrations:
     dependencies:
       '@ctrl/deluge':
-        specifier: ^7.5.1
+        specifier: ^7.5.2
         version: 7.5.2
       '@ctrl/qbittorrent':
         specifier: ^9.11.1
