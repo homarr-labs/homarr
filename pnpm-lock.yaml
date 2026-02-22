@@ -281,7 +281,7 @@ importers:
         specifier: ^7.5.0
         version: 7.5.0
       glob:
-        specifier: ^13.0.4
+        specifier: ^13.0.5
         version: 13.0.5
       isomorphic-dompurify:
         specifier: ^2.36.0
