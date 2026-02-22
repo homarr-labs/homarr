@@ -1430,7 +1430,7 @@ importers:
         specifier: ^7.5.2
         version: 7.5.2
       '@ctrl/qbittorrent':
-        specifier: ^9.11.1
+        specifier: ^9.11.2
         version: 9.11.2
       '@ctrl/transmission':
         specifier: ^7.4.0
