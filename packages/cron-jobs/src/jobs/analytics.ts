@@ -9,6 +9,7 @@ import { createCronJob } from "../lib";
 export const analyticsJob = createCronJob("analytics", EVERY_WEEK, {
   runOnStart: true,
   preventManualExecution: true,
+  preventCustomInterval: true,
 }).withCallback(async () => {
   if (env.NO_EXTERNAL_CONNECTION) return;
   const analyticSetting = await getServerSettingByKeyAsync(db, "analytics");

@@ -17,7 +17,15 @@ export interface IJobManager {
   updateIntervalAsync(name: JobGroupKeys, cron: string): Promise<void>;
   disableAsync(name: JobGroupKeys): Promise<void>;
   enableAsync(name: JobGroupKeys): Promise<void>;
-  getAllAsync(): Promise<{ name: JobGroupKeys; cron: string; preventManualExecution: boolean; isEnabled: boolean }[]>;
+  getAllAsync(): Promise<
+    {
+      name: JobGroupKeys;
+      cron: string;
+      preventManualExecution: boolean;
+      preventCustomInterval: boolean;
+      isEnabled: boolean;
+    }[]
+  >;
 }
 
 const t = initTRPC
