@@ -37,7 +37,7 @@
     "@mantine/hooks": "^8.3.15",
     "@mantine/spotlight": "^8.3.15",
     "@tabler/icons-react": "^3.36.1",
-    "jotai": "^2.17.1",
+    "jotai": "^2.18.0",
     "next": "16.1.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
