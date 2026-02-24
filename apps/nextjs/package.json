@@ -72,7 +72,7 @@
     "dayjs": "^1.11.19",
     "dotenv": "^17.3.1",
     "flag-icons": "^7.5.0",
-    "glob": "^13.0.5",
+    "glob": "^13.0.6",
     "isomorphic-dompurify": "^2.36.0",
     "jotai": "^2.18.0",
     "mantine-react-table": "2.0.0-beta.9",
