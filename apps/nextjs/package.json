@@ -55,7 +55,7 @@
     "@mantine/modals": "^8.3.15",
     "@mantine/tiptap": "^8.3.15",
     "@million/lint": "1.0.14",
-    "@tabler/icons-react": "^3.36.1",
+    "@tabler/icons-react": "^3.37.0",
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-query-devtools": "^5.91.3",
     "@tanstack/react-query-next-experimental": "^5.91.0",
