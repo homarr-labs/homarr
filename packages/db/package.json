@@ -56,7 +56,7 @@
     "drizzle-kit": "^0.31.9",
     "drizzle-orm": "^0.45.1",
     "drizzle-zod": "^0.8.3",
-    "mysql2": "3.17.3",
+    "mysql2": "3.17.4",
     "pg": "^8.18.0",
     "superjson": "2.2.6"
   },
