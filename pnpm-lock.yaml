@@ -230,7 +230,7 @@ importers:
         specifier: 1.0.14
         version: 1.0.14(webpack-sources@3.3.4)
       '@tabler/icons-react':
-        specifier: ^3.37.0
+        specifier: ^3.37.1
         version: 3.37.1(react@19.2.4)
       '@tanstack/react-query':
         specifier: ^5.90.21
@@ -1594,7 +1594,7 @@ importers:
         specifier: ^8.3.15
         version: 8.3.15(@mantine/hooks@8.3.15(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tabler/icons-react':
-        specifier: ^3.37.0
+        specifier: ^3.37.1
         version: 3.37.1(react@19.2.4)
       dayjs:
         specifier: ^1.11.19
@@ -1637,7 +1637,7 @@ importers:
         specifier: ^8.3.15
         version: 8.3.15(@mantine/core@8.3.15(@mantine/hooks@8.3.15(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.15(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tabler/icons-react':
-        specifier: ^3.37.0
+        specifier: ^3.37.1
         version: 3.37.1(react@19.2.4)
     devDependencies:
       '@homarr/eslint-config':
@@ -1987,7 +1987,7 @@ importers:
         specifier: ^8.3.15
         version: 8.3.15(@mantine/core@8.3.15(@mantine/hooks@8.3.15(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@mantine/hooks@8.3.15(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tabler/icons-react':
-        specifier: ^3.37.0
+        specifier: ^3.37.1
         version: 3.37.1(react@19.2.4)
       jotai:
         specifier: ^2.18.0
@@ -2094,7 +2094,7 @@ importers:
         specifier: ^8.3.15
         version: 8.3.15(react@19.2.4)
       '@tabler/icons-react':
-        specifier: ^3.37.0
+        specifier: ^3.37.1
         version: 3.37.1(react@19.2.4)
       crypto-js:
         specifier: ^4.2.0
@@ -2249,7 +2249,7 @@ importers:
         specifier: ^8.3.15
         version: 8.3.15(react@19.2.4)
       '@tabler/icons-react':
-        specifier: ^3.37.0
+        specifier: ^3.37.1
         version: 3.37.1(react@19.2.4)
       '@tiptap/extension-color':
         specifier: 3.20.0
