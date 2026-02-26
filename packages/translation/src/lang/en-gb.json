@@ -1291,10 +1291,10 @@
           "label": "Integrations"
         },
         "title": {
-          "label": ""
+          "label": "Title"
         },
         "customCssClasses": {
-          "label": ""
+          "label": "Custom CSS classes"
         },
         "borderColor": {
           "label": "Border colour"
@@ -1302,38 +1302,38 @@
       }
     },
     "remove": {
-      "title": "",
-      "message": ""
+      "title": "Remove item",
+      "message": "Are you sure you want to remove this item?"
     }
   },
   "widget": {
     "app": {
-      "name": "",
-      "description": "",
+      "name": "App",
+      "description": "Embeds an app into the board.",
       "option": {
         "appId": {
-          "label": ""
+          "label": "Choose app"
         },
         "openInNewTab": {
-          "label": ""
+          "label": "Open in new tab"
         },
         "showTitle": {
-          "label": ""
+          "label": "Show app name"
         },
         "pingEnabled": {
-          "label": ""
+          "label": "Enable status check"
         },
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
-            "row": "",
-            "row-reverse": "",
-            "column": "",
-            "column-reverse": ""
+            "row": "Horizontal",
+            "row-reverse": "Horizontal (reversed)",
+            "column": "Vertical",
+            "column-reverse": "Vertical (reversed)"
           }
         },
         "descriptionDisplayMode": {
-          "label": "",
+          "label": "Description display mode",
           "description": "",
           "option": {
             "normal": "",
@@ -4443,36 +4443,36 @@
           "title": "",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Search engine created",
+              "message": "The search engine was created successfully"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Search engine not created",
+              "message": "The search engine could not be created"
             }
           }
         },
         "edit": {
-          "title": "",
+          "title": "Edit search engine",
           "notification": {
             "success": {
-              "title": "",
-              "message": ""
+              "title": "Changes applied successfully",
+              "message": "The search engine was saved successfully"
             },
             "error": {
-              "title": "",
-              "message": ""
+              "title": "Unable to apply changes",
+              "message": "The search engine could not be saved"
             }
           },
-          "configControl": "",
+          "configControl": "Configuration",
           "searchEngineType": {
-            "generic": "",
-            "fromIntegration": ""
+            "generic": "Generic",
+            "fromIntegration": "From integration"
           }
         },
         "delete": {
-          "title": "",
-          "message": "",
+          "title": "Delete search engine",
+          "message": "Are you sure you want to delete the search engine {name}?",
           "notification": {
             "success": {
               "title": "Search engine deleted",
