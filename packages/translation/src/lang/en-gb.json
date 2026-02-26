@@ -1334,36 +1334,36 @@
         },
         "descriptionDisplayMode": {
           "label": "Description display mode",
-          "description": "",
+          "description": "Choose how to display the app description",
           "option": {
-            "normal": "",
-            "tooltip": "",
-            "hidden": ""
+            "normal": "Within widget",
+            "tooltip": "As tooltip",
+            "hidden": "Hidden"
           }
         }
       },
       "error": {
         "notFound": {
-          "label": "",
-          "tooltip": ""
+          "label": "No app",
+          "tooltip": "You have no valid app selected"
         }
       }
     },
     "bookmarks": {
-      "name": "",
-      "description": "",
+      "name": "Bookmarks",
+      "description": "Displays multiple app links",
       "option": {
         "title": {
-          "label": ""
+          "label": "Title"
         },
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
               "label": ""
@@ -4316,52 +4316,52 @@
         }
       },
       "page": {
-        "help": "",
+        "help": "Search for pages",
         "group": {
           "page": {
-            "title": "",
+            "title": "Pages",
             "option": {
               "manageHome": {
-                "label": ""
+                "label": "Manage home page"
               },
               "manageBoard": {
-                "label": ""
+                "label": "Manage boards"
               },
               "manageApp": {
-                "label": ""
+                "label": "Manage apps"
               },
               "manageIntegration": {
-                "label": ""
+                "label": "Manage integrations"
               },
               "manageSearchEngine": {
-                "label": ""
+                "label": "Manage search engines"
               },
               "manageMedia": {
-                "label": ""
+                "label": "Manage medias"
               },
               "manageUser": {
-                "label": ""
+                "label": "Manage users"
               },
               "manageInvite": {
-                "label": ""
+                "label": "Manage invites"
               },
               "manageGroup": {
-                "label": ""
+                "label": "Manage groups"
               },
               "manageDocker": {
-                "label": ""
+                "label": "Manage docker"
               },
               "manageApi": {
-                "label": ""
+                "label": "Swagger API"
               },
               "manageLog": {
-                "label": ""
+                "label": "View logs"
               },
               "manageTask": {
-                "label": ""
+                "label": "Manage tasks"
               },
               "manageSettings": {
-                "label": ""
+                "label": "Global settings"
               },
               "about": {
                 "label": ""
