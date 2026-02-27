@@ -15,6 +15,7 @@ import { EmbyIntegration } from "../emby/emby-integration";
 import { GitHubContainerRegistryIntegration } from "../github-container-registry/github-container-registry-integration";
 import { GithubIntegration } from "../github/github-integration";
 import { GitlabIntegration } from "../gitlab/gitlab-integration";
+import { GlancesIntegration } from "../glances/glances-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { ICalIntegration } from "../ical/ical-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
@@ -105,6 +106,7 @@ export const integrationCreators = {
   truenas: TrueNasIntegration,
   unraid: UnraidIntegration,
   coolify: CoolifyIntegration,
+  glances: GlancesIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

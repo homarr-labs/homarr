@@ -16,6 +16,7 @@ export { SonarrIntegration } from "./media-organizer/sonarr/sonarr-integration";
 export { NextcloudIntegration } from "./nextcloud/nextcloud.integration";
 export { NTFYIntegration } from "./ntfy/ntfy-integration";
 export { OpenMediaVaultIntegration } from "./openmediavault/openmediavault-integration";
+export { GlancesIntegration } from "./glances/glances-integration";
 export { OverseerrIntegration } from "./overseerr/overseerr-integration";
 export { PiHoleIntegrationV5 } from "./pi-hole/v5/pi-hole-integration-v5";
 export { PiHoleIntegrationV6 } from "./pi-hole/v6/pi-hole-integration-v6";

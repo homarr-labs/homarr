@@ -178,6 +178,13 @@ export const integrationDefs = {
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/dash-dot"),
   },
+  glances: {
+    name: "Glances",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/glances.svg",
+    category: ["healthMonitoring"],
+    documentationUrl: null,
+  },
   tdarr: {
     name: "Tdarr",
     secretKinds: [[], ["apiKey"]],
