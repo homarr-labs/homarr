@@ -45,13 +45,13 @@ const logger = createLogger({ module: "integrationRouter" });
 export const integrationRouter = createTRPCRouter({
   all: protectedProcedure.query(async ({ ctx }) => {
     const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-      where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+      where: eq(groupMembers.userId, ctx.session.user.id),
     });
 
     const integrations = await ctx.db.query.integrations.findMany({
       with: {
         userPermissions: {
-          where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
+          where: eq(integrationUserPermissions.userId, ctx.session.user.id),
         },
         groupPermissions: {
           where: inArray(
@@ -87,13 +87,13 @@ export const integrationRouter = createTRPCRouter({
   }),
   allThatSupportSearch: protectedProcedure.query(async ({ ctx }) => {
     const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-      where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+      where: eq(groupMembers.userId, ctx.session.user.id),
     });
 
     const integrationsFromDb = await ctx.db.query.integrations.findMany({
       with: {
         userPermissions: {
-          where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
+          where: eq(integrationUserPermissions.userId, ctx.session.user.id),
         },
         groupPermissions: {
           where: inArray(
@@ -141,7 +141,7 @@ export const integrationRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
-        where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
+        where: eq(groupMembers.userId, ctx.session.user.id),
       });
 
       const intergrationKinds = getIntegrationKindsByCategory(input.category);
@@ -149,7 +149,7 @@ export const integrationRouter = createTRPCRouter({
       const integrationsFromDb = await ctx.db.query.integrations.findMany({
         with: {
           userPermissions: {
-            where: eq(integrationUserPermissions.userId, ctx.session?.user.id ?? ""),
+            where: eq(integrationUserPermissions.userId, ctx.session.user.id),
           },
           groupPermissions: {
             where: inArray(
