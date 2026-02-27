@@ -43,7 +43,7 @@ import { mapTestConnectionError } from "./map-test-connection-error";
 const logger = createLogger({ module: "integrationRouter" });
 
 export const integrationRouter = createTRPCRouter({
-  all: publicProcedure.query(async ({ ctx }) => {
+  all: protectedProcedure.query(async ({ ctx }) => {
     const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
       where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
     });
@@ -85,7 +85,7 @@ export const integrationRouter = createTRPCRouter({
           integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
       );
   }),
-  allThatSupportSearch: publicProcedure.query(async ({ ctx }) => {
+  allThatSupportSearch: protectedProcedure.query(async ({ ctx }) => {
     const groupsOfCurrentUser = await ctx.db.query.groupMembers.findMany({
       where: eq(groupMembers.userId, ctx.session?.user.id ?? ""),
     });
@@ -133,7 +133,7 @@ export const integrationRouter = createTRPCRouter({
           integrationKinds.indexOf(integrationA.kind) - integrationKinds.indexOf(integrationB.kind),
       );
   }),
-  allOfGivenCategory: publicProcedure
+  allOfGivenCategory: protectedProcedure
     .input(
       z.object({
         category: z.enum(integrationCategories),
