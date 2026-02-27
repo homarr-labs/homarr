@@ -5,6 +5,7 @@ export { DelugeIntegration } from "./download-client/deluge/deluge-integration";
 export { NzbGetIntegration } from "./download-client/nzbget/nzbget-integration";
 export { QBitTorrentIntegration } from "./download-client/qbittorrent/qbittorrent-integration";
 export { SabnzbdIntegration } from "./download-client/sabnzbd/sabnzbd-integration";
+export { SlskdIntegration } from "./download-client/slskd/slskd-integration";
 export { TransmissionIntegration } from "./download-client/transmission/transmission-integration";
 export { HomeAssistantIntegration } from "./homeassistant/homeassistant-integration";
 export { JellyfinIntegration } from "./jellyfin/jellyfin-integration";
