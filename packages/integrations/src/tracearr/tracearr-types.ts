@@ -1,16 +1,22 @@
-export interface TracearrServerStatus {
-  id: string;
-  name: string;
-  type: "plex" | "jellyfin" | "emby";
-  online: boolean;
-  activeStreams: number;
-}
+import { z } from "zod";
 
-export interface TracearrHealthResponse {
-  status: "ok";
-  timestamp: string;
-  servers: TracearrServerStatus[];
-}
+export const tracearrServerStatusSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  type: z.union([z.literal("plex"), z.literal("jellyfin"), z.literal("emby")]),
+  online: z.boolean(),
+  activeStreams: z.number(),
+});
+
+export type TracearrServerStatus = z.infer<typeof tracearrServerStatusSchema>;
+
+export const tracearrHealthResponseSchema = z.object({
+  status: z.literal("ok"),
+  timestamp: z.string(),
+  servers: z.array(tracearrServerStatusSchema),
+});
+
+export type TracearrHealthResponse = z.infer<typeof tracearrHealthResponseSchema>;
 
 export interface TracearrStatsResponse {
   activeStreams: number;

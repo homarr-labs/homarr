@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { ImageProxy } from "@homarr/image-proxy";
@@ -7,6 +5,7 @@ import { ImageProxy } from "@homarr/image-proxy";
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
+import { tracearrHealthResponseSchema } from "./tracearr-types";
 import type {
   TracearrDashboardData,
   TracearrHealthResponse,
@@ -15,20 +14,6 @@ import type {
   TracearrStreamsResponse,
   TracearrViolationsResponse,
 } from "./tracearr-types";
-
-const TracearrHealthResponseSchema = z.object({
-  status: z.literal("ok"),
-  timestamp: z.string(),
-  servers: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-      type: z.union([z.literal("plex"), z.literal("jellyfin"), z.literal("emby")]),
-      online: z.boolean(),
-      activeStreams: z.number(),
-    }),
-  ),
-});
 
 export class TracearrIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -58,7 +43,7 @@ export class TracearrIntegration extends Integration {
       throw new ResponseError(response);
     }
 
-    return TracearrHealthResponseSchema.parse(await response.json()) as TracearrHealthResponse;
+    return tracearrHealthResponseSchema.parse(await response.json());
   }
 
   /**
@@ -95,18 +80,20 @@ export class TracearrIntegration extends Integration {
     const json = (await response.json()) as TracearrStreamsResponse;
     const imageProxy = new ImageProxy();
 
-    await Promise.all(
-      json.data.map(async (stream) => {
-        if (stream.userAvatarUrl) {
-          stream.userAvatarUrl = await this.proxyImageAsync(imageProxy, stream.userAvatarUrl, stream.id, "avatar");
-        }
-        if (stream.posterUrl) {
-          stream.posterUrl = await this.proxyImageAsync(imageProxy, stream.posterUrl, stream.id, "poster");
-        }
-      }),
-    );
-
-    return json;
+    return {
+      ...json,
+      data: await Promise.all(
+        json.data.map(async (stream) => {
+          if (stream.userAvatarUrl) {
+            stream.userAvatarUrl = await this.proxyImageAsync(imageProxy, stream.userAvatarUrl, stream.id, "avatar");
+          }
+          if (stream.posterUrl) {
+            stream.posterUrl = await this.proxyImageAsync(imageProxy, stream.posterUrl, stream.id, "poster");
+          }
+          return stream;
+        }),
+      ),
+    };
   }
 
   /**
@@ -129,18 +116,20 @@ export class TracearrIntegration extends Integration {
     const json = (await response.json()) as TracearrViolationsResponse;
     const imageProxy = new ImageProxy();
 
-    await Promise.all(
-      json.data.map(async (violation) => {
-        violation.user.avatarUrl = await this.proxyImageAsync(
-          imageProxy,
-          violation.user.avatarUrl,
-          violation.user.id,
-          "avatar",
-        );
-      }),
-    );
-
-    return json;
+    return {
+      ...json,
+      data: await Promise.all(
+        json.data.map(async (violation) => {
+          violation.user.avatarUrl = await this.proxyImageAsync(
+            imageProxy,
+            violation.user.avatarUrl,
+            violation.user.id,
+            "avatar",
+          );
+          return violation;
+        }),
+      ),
+    };
   }
 
   /**
@@ -163,18 +152,20 @@ export class TracearrIntegration extends Integration {
     const json = (await response.json()) as TracearrHistoryResponse;
     const imageProxy = new ImageProxy();
 
-    await Promise.all(
-      json.data.map(async (session) => {
-        session.user.avatarUrl = await this.proxyImageAsync(
-          imageProxy,
-          session.user.avatarUrl,
-          session.user.id,
-          "avatar",
-        );
-      }),
-    );
-
-    return json;
+    return {
+      ...json,
+      data: await Promise.all(
+        json.data.map(async (session) => {
+          session.user.avatarUrl = await this.proxyImageAsync(
+            imageProxy,
+            session.user.avatarUrl,
+            session.user.id,
+            "avatar",
+          );
+          return session;
+        }),
+      ),
+    };
   }
 
   /**
