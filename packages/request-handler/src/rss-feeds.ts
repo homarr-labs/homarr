@@ -108,7 +108,7 @@ const getFirstMediaProperty = (feedObject: object) => {
  * We extend the feed with custom properties.
  * This interface adds properties on top of the default ones.
  */
-interface ExtendedFeedEntry extends FeedEntry {
+export interface ExtendedFeedEntry extends FeedEntry {
   enclosure?: string;
 }
 
