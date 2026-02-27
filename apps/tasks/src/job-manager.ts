@@ -31,6 +31,10 @@ export class JobManager implements IJobManager {
     if (!validateCron(cron)) {
       throw new Error(`Invalid cron expression: ${cron}`);
     }
+    if (job.preventCustomInterval && cron !== job.cronExpression) {
+      throw new Error(`Custom cron expressions are not allowed for job ${name}`);
+    }
+
     await this.updateConfigurationAsync(name, { cronExpression: cron });
     await this.jobGroup.getTask(name)?.destroy();
 
@@ -100,7 +104,13 @@ export class JobManager implements IJobManager {
   }
 
   public async getAllAsync(): Promise<
-    { name: JobGroupKeys; cron: string; preventManualExecution: boolean; isEnabled: boolean }[]
+    {
+      name: JobGroupKeys;
+      cron: string;
+      preventManualExecution: boolean;
+      preventCustomInterval: boolean;
+      isEnabled: boolean;
+    }[]
   > {
     const configurations = await this.db.query.cronJobConfigurations.findMany();
 
@@ -110,6 +120,7 @@ export class JobManager implements IJobManager {
         name,
         cron: config?.cronExpression ?? job.cronExpression,
         preventManualExecution: job.preventManualExecution,
+        preventCustomInterval: job.preventCustomInterval,
         isEnabled: config?.isEnabled ?? true,
       };
     });

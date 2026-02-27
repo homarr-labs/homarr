@@ -1138,9 +1138,9 @@
     "dangerZone": "危险",
     "noResults": "未找到结果",
     "unsavedChanges": "你有未保存的更改 ！",
-    "servers": "",
-    "applications": "",
-    "services": "",
+    "servers": "服务",
+    "applications": "应用",
+    "services": "服务",
     "preview": {
       "show": "显示预览",
       "hide": "隐藏预览"
@@ -1964,36 +1964,36 @@
       }
     },
     "coolify": {
-      "name": "",
-      "description": "",
+      "name": "Coolify",
+      "description": "您的 Coolify 实例及其服务器和应用一览",
       "option": {
         "showServers": {
-          "label": ""
+          "label": "显示服务"
         },
         "showApplications": {
-          "label": ""
+          "label": "显示应用程序"
         },
         "showServices": {
-          "label": ""
+          "label": "显示服务"
         }
       },
       "empty": {
-        "servers": "",
-        "applications": "",
-        "services": ""
+        "servers": "未找到服务",
+        "applications": "未找到应用程序",
+        "services": "未找到服务"
       },
       "footer": {
-        "updated": ""
+        "updated": "已更新 {when}"
       },
       "error": {
-        "noIntegration": "",
-        "internalServerError": ""
+        "noIntegration": "未配置 Coolify 集成",
+        "internalServerError": "获取 Coolify 数据失败"
       },
       "server": {
-        "buildServer": ""
+        "buildServer": "编译"
       },
       "instances": {
-        "title": ""
+        "title": "实例"
       }
     },
     "common": {
@@ -2646,32 +2646,32 @@
       }
     },
     "systemDisks": {
-      "name": "",
-      "description": "",
+      "name": "系统磁盘",
+      "description": "您系统的磁盘使用",
       "option": {
         "showTemperatureIfAvailable": {
-          "label": ""
+          "label": "如果可用则显示温度"
         },
         "displayMode": {
-          "label": "",
+          "label": "显示模式",
           "option": {
             "percentage": {
-              "label": ""
+              "label": "百分比 (例如76%)"
             },
             "absolute": {
-              "label": ""
+              "label": "绝对值 (例如，800GB / 1TB)"
             },
             "free": {
-              "label": ""
+              "label": "空闲空间百分比(例如24%空闲)"
             }
           }
         },
         "showBackgroundBar": {
-          "label": ""
+          "label": "显示背景使用栏"
         }
       },
       "status": {
-        "unhealthy": ""
+        "unhealthy": "异常"
       }
     }
   },
@@ -3305,7 +3305,7 @@
             "title": "分析",
             "general": {
               "title": "发送匿名分析",
-              "text": "Homarr 将使用开源软件 Umami 发送匿名分析。它从不收集任何个人信息，因此完全符合 GDPR 和 CCPA 要求。我们鼓励您启用分析，因为它可以帮助我们的开源团队识别问题并确定待办事项的优先级。"
+              "text": "Homarr 将使用开源软件 Umami 发送匿名分析数据。启用后，我们会收集：Homarr 版本、数据库类型（MySQL/PostgreSQL/SQLite）、Docker/Kubernetes 状态、已启用的身份验证方法以及各项功能的数量。所有数据均为匿名且汇总收集——绝不收集任何个人信息、URL、名称或可识别数据。这有助于我们的开源团队了解使用模式并确定开发优先级。"
             },
             "widgetData": {
               "title": "组件数据",
