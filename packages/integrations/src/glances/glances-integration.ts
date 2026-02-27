@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { z } from "zod/v4";
 
+import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 
 import type { IntegrationInput, IntegrationTestingInput } from "../base/integration";
@@ -63,11 +64,21 @@ export class GlancesIntegration extends Integration implements ISystemHealthMoni
 
   private async getGlancesVersionAsync() {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/4/version"));
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
     return await response.text();
   }
 
   private async getAllStatsAsync() {
     const response = await fetchWithTrustedCertificatesAsync(this.url("/api/4/all"));
+
+    if (!response.ok) {
+      throw new ResponseError(response);
+    }
+
     return allSchema.parseAsync(await response.json());
   }
 
@@ -112,10 +123,10 @@ const allSchema = z.object({
   uptime: z
     .string()
     .regex(new RegExp(regex))
-    .transform((x) => {
-      const match = regex.exec(x);
+    .transform((uptime) => {
+      const match = regex.exec(uptime);
       if (!match?.groups) {
-        throw new Error(`Unable to parse uptime value '${x}' with regex.`);
+        throw new Error(`Unable to parse uptime value '${uptime}' with regex.`);
       }
 
       const days = "days" in match.groups ? Number(match.groups.days) : undefined;
