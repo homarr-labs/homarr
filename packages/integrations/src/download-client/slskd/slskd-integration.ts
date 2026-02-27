@@ -6,10 +6,8 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 import { createLogger } from "@homarr/core/infrastructure/logs";
 import { ErrorWithMetadata } from "@homarr/core/infrastructure/logs/error";
 
-import { HandleIntegrationErrors } from "../../base/errors/decorator";
-import { integrationOFetchHttpErrorHandler } from "../../base/errors/http";
-import { Integration } from "../../base/integration";
 import type { IntegrationTestingInput } from "../../base/integration";
+import { Integration } from "../../base/integration";
 import { TestConnectionError } from "../../base/test-connection/test-connection-error";
 import type { TestingResult } from "../../base/test-connection/test-connection-service";
 import type { DownloadClientJobsAndStatus } from "../../interfaces/downloads/download-client-data";
@@ -50,7 +48,6 @@ const logger = createLogger({ module: "slskd-integration" });
  * Implementation of the Slskd application for Soulseek https://github.com/slskd/slskd
  * Slskd integration cannot pause or stop downloads, it can only list downloads.
  */
-@HandleIntegrationErrors([integrationOFetchHttpErrorHandler])
 export class SlskdIntegration extends Integration implements IDownloadClientIntegration {
   // eslint-disable-next-line no-restricted-syntax
   public pauseQueueAsync(): Promise<void> {
