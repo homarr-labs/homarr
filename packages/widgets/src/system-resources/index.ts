@@ -14,7 +14,7 @@ const labelDisplayModeOptions = {
 
 export const { definition, componentLoader } = createWidgetDefinition("systemResources", {
   icon: IconGraphFilled,
-  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid"],
+  supportedIntegrations: ["dashDot", "openmediavault", "truenas", "unraid", "glances"],
   createOptions() {
     return optionsBuilder.from((factory) => ({
       hasShadow: factory.switch({ defaultValue: true }),

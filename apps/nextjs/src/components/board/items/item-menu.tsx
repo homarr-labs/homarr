@@ -14,16 +14,22 @@ import type { SectionItem } from "~/app/[locale]/boards/_types";
 import { useSectionContext } from "../sections/section-context";
 import { useItemActions } from "./item-actions";
 import { ItemMoveModal } from "./item-move-modal";
+import { useSession } from "@homarr/auth/client";
 
-export const BoardItemMenu = ({
-  offset,
-  item,
-  resetErrorBoundary,
-}: {
-  offset: number;
+interface BoardItemMenuProps {
+ offset: number;
   item: SectionItem;
   resetErrorBoundary?: () => void;
-}) => {
+}
+
+export const BoardItemMenu = (props: BoardItemMenuProps) => {
+  const {data: session} = useSession();
+  if (!session) return null;
+
+  return <BoardItemMenuInner {...props} />;
+};
+
+const BoardItemMenuInner = ({ offset, item, resetErrorBoundary }: BoardItemMenuProps) => {
   const refResetErrorBoundaryOnNextRender = useRef(false);
   const tItem = useScopedI18n("item");
   const t = useI18n();
@@ -130,4 +136,4 @@ export const BoardItemMenu = ({
       </Menu.Dropdown>
     </Menu>
   );
-};
+}

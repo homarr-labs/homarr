@@ -73,6 +73,14 @@ export const integrationDefs = {
     category: ["downloadClient", "torrent", "miscellaneous"],
     documentationUrl: createDocumentationLink("/docs/integrations/aria2"),
   },
+  slskd: {
+    name: "Slskd",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/slskd.svg",
+    category: ["downloadClient", "miscellaneous"],
+    // @ts-expect-error - docs page will be created when integration is merged
+    documentationUrl: createDocumentationLink("/docs/integrations/slskd"),
+  },
   sonarr: {
     name: "Sonarr",
     secretKinds: [["apiKey"]],
@@ -177,6 +185,13 @@ export const integrationDefs = {
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/png/dashdot.png",
     category: ["healthMonitoring"],
     documentationUrl: createDocumentationLink("/docs/integrations/dash-dot"),
+  },
+  glances: {
+    name: "Glances",
+    secretKinds: [[]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/glances.svg",
+    category: ["healthMonitoring"],
+    documentationUrl: null,
   },
   tdarr: {
     name: "Tdarr",
