@@ -49,14 +49,14 @@ export const healthMonitoringRouter = createTRPCRouter({
       });
     }),
   getClusterHealthStatus: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "proxmox", "mock"))
+    .concat(createOneIntegrationMiddleware("query", "proxmox", "incus", "mock"))
     .query(async ({ ctx }) => {
       const innerHandler = clusterInfoRequestHandler.handler(ctx.integration, {});
       const { data } = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
       return data;
     }),
   subscribeClusterHealthStatus: publicProcedure
-    .concat(createOneIntegrationMiddleware("query", "proxmox", "mock"))
+    .concat(createOneIntegrationMiddleware("query", "proxmox", "incus", "mock"))
     .subscription(({ ctx }) => {
       return observable<ProxmoxClusterInfo>((emit) => {
         const unsubscribes: (() => void)[] = [];

@@ -15,7 +15,7 @@ import { SystemHealthMonitoring } from "./system-health";
 dayjs.extend(duration);
 
 const isClusterIntegration = (integration: { kind: IntegrationKind }) =>
-  integration.kind === "proxmox" || integration.kind === "mock";
+  integration.kind === "proxmox" || integration.kind === "incus" || integration.kind === "mock";
 
 export default function HealthMonitoringWidget(props: WidgetComponentProps<"healthMonitoring">) {
   const [integrations] = clientApi.integration.byIds.useSuspenseQuery(props.integrationIds);
@@ -29,7 +29,7 @@ export default function HealthMonitoringWidget(props: WidgetComponentProps<"heal
 
   const otherIntegrationIds = integrations
     // We want to have the mock integration also in the system tab, so we use it for both
-    .filter((integration) => integration.kind !== "proxmox")
+    .filter((integration) => integration.kind !== "proxmox" && integration.kind !== "incus")
     .map((integration) => integration.id);
   if (otherIntegrationIds.length === 0) {
     return <ClusterHealthMonitoring {...props} integrationId={clusterIntegrationId} />;

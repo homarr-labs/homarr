@@ -4,5 +4,8 @@ export {
   createCertificateAgentAsync,
   createCustomCheckServerIdentity,
   createHttpsAgentAsync,
+  createMtlsCertificateAgentAsync,
+  fetchWithMtlsAsync,
   fetchWithTrustedCertificatesAsync,
 } from "./request";
+export type { MtlsOptions } from "./request";

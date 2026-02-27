@@ -19,6 +19,7 @@ export const appRouter = createTRPCRouter({
   onboard: lazy(() => import("./router/onboard/onboard-router").then((mod) => mod.onboardRouter)),
   home: lazy(() => import("./router/home").then((mod) => mod.homeRouter)),
   docker: lazy(() => import("./router/docker/docker-router").then((mod) => mod.dockerRouter)),
+  incus: lazy(() => import("./router/incus/incus-router").then((mod) => mod.incusRouter)),
   kubernetes: lazy(() => import("./router/kubernetes/router/kubernetes-router").then((mod) => mod.kubernetesRouter)),
   serverSettings: lazy(() => import("./router/serverSettings").then((mod) => mod.serverSettingsRouter)),
   cronJobs: lazy(() => import("./router/cron-jobs").then((mod) => mod.cronJobsRouter)),

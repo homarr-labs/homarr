@@ -65,31 +65,31 @@ export const { definition, componentLoader } = createWidgetDefinition("healthMon
         fahrenheit: {
           shouldHide(_, integrationKinds) {
             // File system is only shown on system health tab
-            return integrationKinds.every((kind) => kind === "proxmox") || integrationKinds.length === 0;
+            return integrationKinds.every((kind) => kind === "proxmox" || kind === "incus") || integrationKinds.length === 0;
           },
         },
         fileSystem: {
           shouldHide(_, integrationKinds) {
             // File system is only shown on system health tab
-            return integrationKinds.every((kind) => kind === "proxmox") || integrationKinds.length === 0;
+            return integrationKinds.every((kind) => kind === "proxmox" || kind === "incus") || integrationKinds.length === 0;
           },
         },
         showUptime: {
           shouldHide(_, integrationKinds) {
             // Uptime is only shown on cluster health tab
-            return !integrationKinds.includes("proxmox");
+            return !integrationKinds.includes("proxmox") && !integrationKinds.includes("incus");
           },
         },
         sectionIndicatorRequirement: {
           shouldHide(_, integrationKinds) {
             // Section indicator requirement is only shown on cluster health tab
-            return !integrationKinds.includes("proxmox");
+            return !integrationKinds.includes("proxmox") && !integrationKinds.includes("incus");
           },
         },
         visibleClusterSections: {
           shouldHide(_, integrationKinds) {
             // Cluster sections are only shown on cluster health tab
-            return !integrationKinds.includes("proxmox");
+            return !integrationKinds.includes("proxmox") && !integrationKinds.includes("incus");
           },
         },
       },

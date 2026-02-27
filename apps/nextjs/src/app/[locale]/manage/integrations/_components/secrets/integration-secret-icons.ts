@@ -1,4 +1,5 @@
 import {
+  IconCertificate,
   IconCode,
   IconGrid3x3,
   IconKey,
@@ -28,4 +29,5 @@ export const integrationSecretIcons = {
   githubAppId: IconCode,
   githubInstallationId: IconPlug,
   privateKey: IconKey,
+  clientCertificate: IconCertificate,
 } satisfies Record<IntegrationSecretKind, TablerIcon>;

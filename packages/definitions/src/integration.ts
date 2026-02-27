@@ -15,6 +15,7 @@ export const integrationSecretKindObject = {
   opnsenseApiSecret: { isPublic: false, multiline: false },
   url: { isPublic: false, multiline: false },
   privateKey: { isPublic: false, multiline: true },
+  clientCertificate: { isPublic: false, multiline: true },
   githubAppId: { isPublic: true, multiline: false },
   githubInstallationId: { isPublic: true, multiline: false },
 } satisfies Record<string, { isPublic: boolean; multiline: boolean }>;
@@ -312,6 +313,14 @@ export const integrationDefs = {
     category: ["healthMonitoring"],
     // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/coolify"),
+  },
+  incus: {
+    name: "Incus",
+    secretKinds: [["clientCertificate", "privateKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/incus.svg",
+    category: ["healthMonitoring"],
+    // @ts-expect-error - docs page will be created when integration is merged
+    documentationUrl: createDocumentationLink("/docs/integrations/incus"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {

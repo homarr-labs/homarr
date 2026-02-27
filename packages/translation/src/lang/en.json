@@ -993,6 +993,10 @@
         "privateKey": {
           "label": "Private key",
           "newLabel": "New private key"
+        },
+        "clientCertificate": {
+          "label": "Client certificate",
+          "newLabel": "New client certificate"
         }
       }
     },
@@ -3066,6 +3070,7 @@
           "label": "Tools",
           "items": {
             "docker": "Docker",
+            "incus": "Incus",
             "kubernetes": "Kubernetes",
             "logs": "Logs",
             "api": "API",
@@ -3744,6 +3749,133 @@
       "internalServerError": "Failed to fetch Docker containers"
     }
   },
+  "incus": {
+    "title": "Incus Instances",
+    "selectIntegration": "Select Incus Server",
+    "noIntegration": "No Incus integrations configured",
+    "table": {
+      "updated": "Updated {when}",
+      "search": "Search {count} instances",
+      "selected": "{selectCount} of {totalCount} instances selected",
+      "footer": "Total {count} instances"
+    },
+    "field": {
+      "name": {
+        "label": "Name"
+      },
+      "type": {
+        "label": "Type",
+        "option": {
+          "container": "Container",
+          "virtual-machine": "Virtual Machine"
+        }
+      },
+      "state": {
+        "label": "State",
+        "option": {
+          "Running": "Running",
+          "Stopped": "Stopped",
+          "Frozen": "Frozen",
+          "Error": "Error",
+          "Starting": "Starting",
+          "Stopping": "Stopping"
+        }
+      },
+      "description": {
+        "label": "Description"
+      },
+      "location": {
+        "label": "Node"
+      },
+      "createdAt": {
+        "label": "Created"
+      }
+    },
+    "action": {
+      "title": "Actions",
+      "start": {
+        "label": "Start",
+        "notification": {
+          "success": {
+            "title": "Instances started",
+            "message": "The instances were started successfully"
+          },
+          "error": {
+            "title": "Instances not started",
+            "message": "The instances could not be started"
+          }
+        }
+      },
+      "stop": {
+        "label": "Stop",
+        "notification": {
+          "success": {
+            "title": "Instances stopped",
+            "message": "The instances were stopped successfully"
+          },
+          "error": {
+            "title": "Instances not stopped",
+            "message": "The instances could not be stopped"
+          }
+        }
+      },
+      "restart": {
+        "label": "Restart",
+        "notification": {
+          "success": {
+            "title": "Instances restarted",
+            "message": "The instances were restarted successfully"
+          },
+          "error": {
+            "title": "Instances not restarted",
+            "message": "The instances could not be restarted"
+          }
+        }
+      },
+      "freeze": {
+        "label": "Freeze",
+        "notification": {
+          "success": {
+            "title": "Instances frozen",
+            "message": "The instances were frozen successfully"
+          },
+          "error": {
+            "title": "Instances not frozen",
+            "message": "The instances could not be frozen"
+          }
+        }
+      },
+      "unfreeze": {
+        "label": "Unfreeze",
+        "notification": {
+          "success": {
+            "title": "Instances unfrozen",
+            "message": "The instances were unfrozen successfully"
+          },
+          "error": {
+            "title": "Instances not unfrozen",
+            "message": "The instances could not be unfrozen"
+          }
+        }
+      },
+      "refresh": {
+        "label": "Refresh",
+        "notification": {
+          "success": {
+            "title": "Instances refreshed",
+            "message": "You are now viewing the most recent data"
+          },
+          "error": {
+            "title": "Instances not refreshed",
+            "message": "Something went wrong while refreshing the instances"
+          }
+        }
+      }
+    },
+    "error": {
+      "internalServerError": "Failed to fetch Incus instances"
+    }
+  },
   "kubernetes": {
     "cluster": {
       "title": "Cluster Dashboard",
@@ -4071,6 +4203,9 @@
         },
         "docker": {
           "label": "Docker"
+        },
+        "incus": {
+          "label": "Incus"
         },
         "kubernetes": {
           "label": "Kubernetes",

@@ -19,6 +19,7 @@ import {
   IconPhotoFilled,
   IconPointerFilled,
   IconSearch,
+  IconServer,
   IconSettingsFilled,
   IconUserFilled,
   IconUsers,
@@ -115,6 +116,12 @@ export default async function ManageLayout({ children }: PropsWithChildren) {
           icon: IconBrandDocker,
           href: "/manage/tools/docker",
           hidden: !(session?.user.permissions.includes("admin") && env.ENABLE_DOCKER),
+        },
+        {
+          label: "Incus",
+          icon: IconServer,
+          href: "/manage/tools/incus",
+          hidden: !session?.user.permissions.includes("admin"),
         },
         {
           label: t("items.tools.items.kubernetes"),
