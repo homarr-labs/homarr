@@ -33,7 +33,7 @@ const getWebSocketProtocol = () => {
 
 const constructWebsocketUrl = () => {
   if (typeof window === "undefined") {
-    return `${getWebSocketProtocol()}://localhost:${env.NODE_ENV === "development" ? "3000" : "3001"}/websockets`;
+    return `${getWebSocketProtocol()}://localhost:3000/websockets`;
   }
 
   if (env.NODE_ENV === "development") {
