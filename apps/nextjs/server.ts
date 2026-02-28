@@ -1,4 +1,8 @@
+// Must be imported first to set up globalThis.AsyncLocalStorage for Next.js
+import "next/dist/server/node-environment-baseline";
+
 import { createServer } from "http";
+import path from "path";
 import next from "next";
 import { parse } from "url";
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
@@ -15,8 +19,10 @@ const logger = createLogger({ module: "customServer" });
 const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOSTNAME || "localhost";
 const port = parseInt(process.env.PORT || "3000", 10);
+// Resolve the directory of this file so Next.js can find the app/pages dirs
+const dir = path.resolve(__dirname);
 
-const app = next({ dev, hostname, port });
+const app = next({ dev, hostname, port, dir });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
