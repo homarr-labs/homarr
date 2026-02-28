@@ -21,6 +21,7 @@ import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integra
 import { ICalIntegration } from "../ical/ical-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
+import { SeerrIntegration } from "../seerr/seerr-integration";
 import { LinuxServerIOIntegration } from "../linuxserverio/linuxserverio-integration";
 import { LidarrIntegration } from "../media-organizer/lidarr/lidarr-integration";
 import { RadarrIntegration } from "../media-organizer/radarr/radarr-integration";
@@ -82,6 +83,7 @@ export const integrationCreators = {
   slskd: SlskdIntegration,
   aria2: Aria2Integration,
   jellyseerr: JellyseerrIntegration,
+  seerr: SeerrIntegration,
   overseerr: OverseerrIntegration,
   prowlarr: ProwlarrIntegration,
   openmediavault: OpenMediaVaultIntegration,
