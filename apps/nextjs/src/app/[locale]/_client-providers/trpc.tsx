@@ -32,13 +32,12 @@ const getWebSocketProtocol = () => {
 };
 
 const constructWebsocketUrl = () => {
-  const fallback = `${getWebSocketProtocol()}://localhost:3001/websockets`;
   if (typeof window === "undefined") {
-    return fallback;
+    return `${getWebSocketProtocol()}://localhost:${env.NODE_ENV === "development" ? "3000" : "3001"}/websockets`;
   }
 
   if (env.NODE_ENV === "development") {
-    return fallback;
+    return `${getWebSocketProtocol()}://localhost:3000/websockets`;
   }
 
   return `${getWebSocketProtocol()}://${window.location.hostname}:${window.location.port}/websockets`;

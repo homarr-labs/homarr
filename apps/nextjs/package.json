@@ -4,12 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm with-env next build",
+    "build": "pnpm with-env next build && pnpm build:custom-server",
+    "build:custom-server": "esbuild server.ts --bundle --platform=node --outfile=customServer.cjs --external:bcrypt --external:@opentelemetry/api --external:deasync --external:cpu-features --loader:.html=text --loader:.scss=text --loader:.node=text",
     "clean": "git clean -xdf .next .turbo node_modules",
-    "dev": "pnpm with-env next dev",
+    "dev": "pnpm with-env tsx ./server.ts",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "start": "pnpm with-env next start",
+    "start": "pnpm with-env node customServer.cjs",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
@@ -87,6 +88,7 @@
     "superjson": "2.2.6",
     "swagger-ui-react": "^5.31.2",
     "use-deep-compare-effect": "^1.8.1",
+    "ws": "^8.19.0",
     "zod": "^4.2.1"
   },
   "devDependencies": {
@@ -99,10 +101,13 @@
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@types/swagger-ui-react": "^5.18.0",
+    "@types/ws": "^8.18.1",
     "concurrently": "^9.2.1",
+    "esbuild": "^0.27.3",
     "eslint": "^9.39.3",
     "node-loader": "^2.1.0",
     "prettier": "^3.8.1",
+    "tsx": "4.20.4",
     "typescript": "^5.9.3"
   }
 }

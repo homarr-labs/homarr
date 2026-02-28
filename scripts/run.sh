@@ -48,16 +48,14 @@ fi
 node apps/tasks/tasks.cjs &
 TASKS_PID=$!
 
-node apps/websocket/wssServer.cjs &
-WSS_PID=$!
-
-node apps/nextjs/server.js &
+# WebSocket server is now integrated into the custom Next.js server
+node apps/nextjs/customServer.cjs &
 NEXTJS_PID=$!
 
 # Function to handle SIGTERM and shut down services
 terminate() {
     echo "Received SIGTERM. Shutting down..."
-    kill -TERM $NGINX_PID $TASKS_PID $WSS_PID $NEXTJS_PID 2>/dev/null
+    kill -TERM $NGINX_PID $TASKS_PID $NEXTJS_PID 2>/dev/null
     wait
     # kill redis-server last because of logging of other services and only if $REDIS_PID is set
     if [ -n "$REDIS_PID" ]; then
