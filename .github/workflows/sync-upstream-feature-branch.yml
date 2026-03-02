@@ -1,0 +1,34 @@
+name: Sync Upstream Feature Branch
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Every day at 00:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout fork branch
+        uses: actions/checkout@v6
+        with:
+          ref: feature/Adding-Anchor-Note-Widget-2
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge upstream dev into feature branch
+        run: |
+          git remote add upstream https://github.com/homarr-labs/homarr.git
+          git fetch upstream dev
+          git merge --no-edit upstream/dev
+
+      - name: Push changes to fork
+        run: git push origin feature/Adding-Anchor-Note-Widget-2
