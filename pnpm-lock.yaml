@@ -1217,8 +1217,8 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../common
       fast-xml-parser:
-        specifier: ^5.3.7
-        version: 5.3.8
+        specifier: ^5.4.1
+        version: 5.4.1
       zod:
         specifier: ^4.2.1
         version: 4.2.1
@@ -6861,12 +6861,11 @@ packages:
   fast-uri@3.1.0:
     resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
 
-  fast-xml-parser@5.3.8:
-    resolution: {integrity: sha512-53jIF4N6u/pxvaL1eb/hEZts/cFLWZ92eCfLrNyCI0k38lettCG/Bs40W9pPwoPXyHQlKu2OUbQtiEIZK/J6Vw==}
-    hasBin: true
+  fast-xml-builder@1.0.0:
+    resolution: {integrity: sha512-fpZuDogrAgnyt9oDDz+5DBz0zgPdPZz6D4IR7iESxRXElrlGTRkHJ9eEt+SACRJwT0FNFrt71DFQIUFBJfX/uQ==}
 
-  fast-xml-parser@5.3.9:
-    resolution: {integrity: sha512-zU0KUuO9U+fLGduTDdxQ6qsQLIxRg4EK5AMduwBNGNCSfCGRSbNS7OpH343NFQlLDg1jxoH68JSbOPAGksIGvg==}
+  fast-xml-parser@5.4.1:
+    resolution: {integrity: sha512-BQ30U1mKkvXQXXkAGcuyUA/GA26oEB7NzOtsxCDtyu62sjGw5QraKFhx2Em3WQNjPw9PG6MQ9yuIIgkSDfGu5A==}
     hasBin: true
 
   faster-babel-types@0.1.0:
@@ -11667,7 +11666,7 @@ snapshots:
     dependencies:
       '@ndaidong/bellajs': 12.0.1
       cross-fetch: 4.1.0
-      fast-xml-parser: 5.3.9
+      fast-xml-parser: 5.4.1
       html-entities: 2.6.0
     transitivePeerDependencies:
       - encoding
@@ -15962,12 +15961,11 @@ snapshots:
 
   fast-uri@3.1.0: {}
 
-  fast-xml-parser@5.3.8:
-    dependencies:
-      strnum: 2.1.2
+  fast-xml-builder@1.0.0: {}
 
-  fast-xml-parser@5.3.9:
+  fast-xml-parser@5.4.1:
     dependencies:
+      fast-xml-builder: 1.0.0
       strnum: 2.1.2
 
   faster-babel-types@0.1.0(@babel/types@7.26.0):
