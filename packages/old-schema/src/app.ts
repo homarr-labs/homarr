@@ -32,7 +32,6 @@ const integrationSchema = z.enum([
   "prowlarr",
   "sabnzbd",
   "jellyseerr",
-  "seerr",
   "overseerr",
   "deluge",
   "qBittorrent",
