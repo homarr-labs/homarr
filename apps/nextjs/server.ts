@@ -300,7 +300,7 @@ app.prepare().then(async () => {
     logger.info("SIGTERM");
     wssHandler.broadcastReconnectNotification();
     wss.close();
-    tasksServer.close();
+    tasksServer.close().catch((err) => logger.error("Failed to close tasks server", err));
     server.close();
   });
 });
