@@ -139,9 +139,18 @@ importers:
       '@homarr/core':
         specifier: workspace:^0.1.0
         version: link:../../packages/core
+      '@homarr/cron-job-api':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/cron-job-api
       '@homarr/cron-job-status':
         specifier: workspace:^0.1.0
         version: link:../../packages/cron-job-status
+      '@homarr/cron-jobs':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/cron-jobs
+      '@homarr/cron-jobs-core':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/cron-jobs-core
       '@homarr/db':
         specifier: workspace:^0.1.0
         version: link:../../packages/db
@@ -184,9 +193,15 @@ importers:
       '@homarr/old-schema':
         specifier: workspace:^0.1.0
         version: link:../../packages/old-schema
+      '@homarr/ping':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/ping
       '@homarr/redis':
         specifier: workspace:^0.1.0
         version: link:../../packages/redis
+      '@homarr/request-handler':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/request-handler
       '@homarr/server-settings':
         specifier: workspace:^0.1.0
         version: link:../../packages/server-settings
@@ -277,6 +292,9 @@ importers:
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
+      fastify:
+        specifier: ^5.7.4
+        version: 5.7.4
       flag-icons:
         specifier: ^7.5.0
         version: 7.5.0
