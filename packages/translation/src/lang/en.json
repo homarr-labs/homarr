@@ -2636,6 +2636,18 @@
       "name": "Network Controller Summary",
       "description": "Displays the summary of a Network Controller (like UniFi Controller)"
     },
+    "uptimeKuma": {
+      "name": "Uptime Kuma",
+      "description": "Show statuses of a chosen set of Uptime Kuma health checks",
+      "option": {
+        "checkIds": {
+          "label": "Health checks",
+          "add": "Add health check",
+          "noResults": "No checks found"
+        }
+      },
+      "noChecks": "No checks selected"
+    },
     "networkControllerStatus": {
       "card": {
         "variants": {

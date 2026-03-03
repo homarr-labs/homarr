@@ -29,6 +29,7 @@ import { ReadarrIntegration } from "../media-organizer/readarr/readarr-integrati
 import { SonarrIntegration } from "../media-organizer/sonarr/sonarr-integration";
 import { TdarrIntegration } from "../media-transcoding/tdarr-integration";
 import { MockIntegration } from "../mock/mock-integration";
+import { UptimeKumaIntegration } from "../uptime-kuma/uptime-kuma-integration";
 import { NextcloudIntegration } from "../nextcloud/nextcloud.integration";
 import { NPMIntegration } from "../npm/npm-integration";
 import { NTFYIntegration } from "../ntfy/ntfy-integration";
@@ -115,6 +116,7 @@ export const integrationCreators = {
   tracearr: TracearrIntegration,
   glances: GlancesIntegration,
   immich: ImmichIntegration,
+  uptimeKuma: UptimeKumaIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

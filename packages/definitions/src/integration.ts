@@ -350,6 +350,13 @@ export const integrationDefs = {
     // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/tracearr"),
   },
+  uptimeKuma: {
+    name: "Uptime Kuma",
+    secretKinds: [[], ["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/uptime-kuma.svg",
+    category: ["healthMonitoring"],
+    documentationUrl: createDocumentationLink("/docs/integrations/uptime-kuma"),
+  },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
   mock: {
     name: "Mock",

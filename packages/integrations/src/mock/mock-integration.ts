@@ -15,7 +15,9 @@ import type { IMediaServerIntegration } from "../interfaces/media-server/media-s
 import type { IMediaTranscodingIntegration } from "../interfaces/media-transcoding/media-transcoding-integration";
 import type { NetworkControllerSummaryIntegration } from "../interfaces/network-controller-summary/network-controller-summary-integration";
 import type { ISmartHomeIntegration } from "../interfaces/smart-home/smart-home-integration";
+import type { IUptimeKumaIntegration } from "../interfaces/uptime-kuma/uptime-kuma-integration";
 import { CalendarMockService } from "./data/calendar";
+import { UptimeKumaMockService } from "./data/uptime-kuma";
 import { ClusterHealthMonitoringMockService } from "./data/cluster-health-monitoring";
 import { DnsHoleMockService } from "./data/dns-hole";
 import { DownloadClientMockService } from "./data/download";
@@ -43,6 +45,7 @@ export class MockIntegration
     IMediaServerIntegration,
     IMediaTranscodingIntegration,
     NetworkControllerSummaryIntegration,
+    IUptimeKumaIntegration,
     ISmartHomeIntegration
 {
   private static readonly dnsHole = new DnsHoleMockService();
@@ -56,6 +59,7 @@ export class MockIntegration
   private static readonly mediaServer = new MediaServerMockService();
   private static readonly mediaTranscoding = new MediaTranscodingMockService();
   private static readonly networkController = new NetworkControllerSummaryMockService();
+  private static readonly uptimeKuma = new UptimeKumaMockService();
   private static readonly notifications = new NotificationsMockService();
   private static readonly smartHome = new SmartHomeMockService();
 
@@ -115,6 +119,10 @@ export class MockIntegration
   getNetworkSummaryAsync = MockIntegration.networkController.getNetworkSummaryAsync.bind(
     MockIntegration.networkController,
   );
+
+  // UptimeKumaIntegration
+  listChecksAsync = MockIntegration.uptimeKuma.listChecksAsync.bind(MockIntegration.uptimeKuma);
+  getCheckAsync = MockIntegration.uptimeKuma.getCheckAsync.bind(MockIntegration.uptimeKuma);
 
   // NotificationsIntegration
   getNotificationsAsync = MockIntegration.notifications.getNotificationsAsync.bind(MockIntegration.notifications);
