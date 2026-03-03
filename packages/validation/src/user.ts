@@ -147,3 +147,27 @@ export const userFirstDayOfWeekSchema = z.object({
 export const userPingIconsEnabledSchema = z.object({
   pingIconsEnabled: z.boolean(),
 });
+
+export const createPasswordSchema = (settings?: { minPasswordLength?: number; requireNumberInPassword?: boolean }) => {
+  const minLength = settings?.minPasswordLength ?? 8;
+  const requireNumber = settings?.requireNumberInPassword ?? true;
+
+  const checks = [
+    (value: string) => value.length >= minLength,
+    (value: string) => /[a-z]/.test(value),
+    (value: string) => /[A-Z]/.test(value),
+    ...(requireNumber ? [(value: string) => /\d/.test(value)] : []),
+    (value: string) => /[$&+,:;=?@#|'<>.^*()%!\-~`"_/\\[\]{}]/.test(value),
+  ];
+
+  return z
+    .string()
+    .min(minLength)
+    .max(255)
+    .refine((value) => checks.every((check) => check(value)), {
+      params: createCustomErrorParams({
+        key: "passwordRequirements",
+        params: {},
+      }),
+    });
+};
