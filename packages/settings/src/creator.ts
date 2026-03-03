@@ -11,7 +11,7 @@ export type SettingsContextProps = Pick<
   | "pingIconsEnabled"
 > &
   Pick<ServerSettings["board"], "enableStatusByDefault" | "forceDisableStatus"> &
-  Pick<ServerSettings["user"], "enableGravatar">;
+  Pick<ServerSettings["user"], "enableGravatar" | "requireNumberInPassword" | "minPasswordLength">;
 
 export interface PublicServerSettings {
   search: Pick<ServerSettings["search"], "defaultSearchEngineId">;
@@ -19,7 +19,7 @@ export interface PublicServerSettings {
     ServerSettings["board"],
     "homeBoardId" | "mobileHomeBoardId" | "enableStatusByDefault" | "forceDisableStatus"
   >;
-  user: Pick<ServerSettings["user"], "enableGravatar">;
+  user: Pick<ServerSettings["user"], "enableGravatar" | "requireNumberInPassword" | "minPasswordLength">;
 }
 
 export type UserSettings = Pick<

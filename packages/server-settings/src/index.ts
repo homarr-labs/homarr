@@ -34,6 +34,8 @@ export const defaultServerSettings = {
   },
   user: {
     enableGravatar: true,
+    requireNumberInPassword: true,
+    minPasswordLength: 8,
   },
   appearance: {
     defaultColorScheme: "light" as ColorScheme,

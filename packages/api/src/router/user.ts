@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
+import { getServerSettingByKeyAsync } from "@homarr/db/queries";
 
 import { createSaltAsync, hashPasswordAsync } from "@homarr/auth";
 import { createId } from "@homarr/common";
@@ -41,12 +42,31 @@ import { changeSearchPreferencesAsync, changeSearchPreferencesInputSchema } from
 
 const logger = createLogger({ module: "userRouter" });
 
+const validatePasswordWithSettings = (
+  password: string,
+  settings: { minPasswordLength?: number; requireNumberInPassword?: boolean } | null,
+) => {
+  if (!settings) return;
+  if (typeof settings.minPasswordLength === "number") {
+    if (password.length < settings.minPasswordLength) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: `Password must be at least ${settings.minPasswordLength} characters long` });
+    }
+  }
+  if (settings.requireNumberInPassword) {
+    if (!/\d/.test(password)) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: `Password must contain at least one number` });
+    }
+  }
+};
+
 export const userRouter = createTRPCRouter({
   initUser: onboardingProcedure
     .requiresStep("user")
     .input(userInitSchema)
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
+      const userSettings = await getServerSettingByKeyAsync(ctx.db, "user");
+      validatePasswordWithSettings(input.password, userSettings as any);
 
       const maxPosition = await getMaxGroupPositionAsync(ctx.db);
       const userId = await createUserAsync(ctx.db, input);
@@ -90,6 +110,9 @@ export const userRouter = createTRPCRouter({
 
       await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
 
+      const userSettings = await getServerSettingByKeyAsync(ctx.db, "user");
+      validatePasswordWithSettings(input.password, userSettings as any);
+
       await createUserAsync(ctx.db, input);
 
       // Delete invite as it's used
@@ -103,6 +126,9 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       throwIfCredentialsDisabled();
       await checkUsernameAlreadyTakenAndThrowAsync(ctx.db, "credentials", input.username);
+
+      const userSettings = await getServerSettingByKeyAsync(ctx.db, "user");
+      validatePasswordWithSettings(input.password, userSettings as any);
 
       const userId = await createUserAsync(ctx.db, input);
 
