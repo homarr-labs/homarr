@@ -1,7 +1,7 @@
 import { IconGraphFilled } from "@tabler/icons-react";
 
-import { createWidgetDefinition } from "../definition";
-import { optionsBuilder } from "../options";
+import { createWidgetDefinition } from "../../definition";
+import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("immich-serverStats", {
   icon: IconGraphFilled,

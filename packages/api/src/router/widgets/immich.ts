@@ -1,34 +1,25 @@
-import { observable } from "@trpc/server/observable";
 import { z } from "zod/v4";
 
 import { getIntegrationKindsByCategory } from "@homarr/definitions";
-import type { ImmichAlbum, ImmichServerStats } from "@homarr/integrations";
-import { ImmichIntegration } from "@homarr/integrations";
+import {
+  immichAlbumRequestHandler,
+  immichAlbumsRequestHandler,
+  immichStatsRequestHandler,
+} from "@homarr/request-handler/immich";
 
 import type { IntegrationAction } from "../../middlewares/integration";
-import { createManyIntegrationMiddleware } from "../../middlewares/integration";
+import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 
 const createImmichIntegrationMiddleware = (action: IntegrationAction) =>
-  createManyIntegrationMiddleware(action, ...getIntegrationKindsByCategory("mediaService"));
+  createOneIntegrationMiddleware(action, ...getIntegrationKindsByCategory("photoService"));
 
 export const immichRouter = createTRPCRouter({
-  getServerStats: publicProcedure
-    .concat(createImmichIntegrationMiddleware("query"))
-    .query(async ({ ctx }) => {
-      const immichIntegration = ctx.integrations[0];
-      if (!immichIntegration || !(immichIntegration instanceof ImmichIntegration)) {
-        throw new Error("Immich integration not found");
-      }
-
-      const stats = await immichIntegration.getServerStatsAsync();
-      return {
-        userCount: stats.userCount,
-        photoCount: stats.photoCount,
-        videoCount: stats.videoCount,
-        totalLibraryUsageInBytes: stats.totalLibraryUsageInBytes,
-      } as ImmichServerStats;
-    }),
+  getServerStats: publicProcedure.concat(createImmichIntegrationMiddleware("query")).query(async ({ ctx }) => {
+    const innerHandler = immichStatsRequestHandler.handler(ctx.integration, {});
+    const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+    return data.data;
+  }),
 
   getAlbum: publicProcedure
     .concat(createImmichIntegrationMiddleware("query"))
@@ -38,23 +29,14 @@ export const immichRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const immichIntegration = ctx.integrations[0];
-      if (!immichIntegration || !(immichIntegration instanceof ImmichIntegration)) {
-        throw new Error("Immich integration not found");
-      }
-
-      const album = await immichIntegration.getAlbumAsync(input.albumId);
-      return album as ImmichAlbum;
+      const innerHandler = immichAlbumRequestHandler.handler(ctx.integration, { albumId: input.albumId });
+      const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+      return data.data;
     }),
 
-  getAlbums: publicProcedure
-    .concat(createImmichIntegrationMiddleware("query"))
-    .query(async ({ ctx }) => {
-      const immichIntegration = ctx.integrations[0];
-      if (!immichIntegration || !(immichIntegration instanceof ImmichIntegration)) {
-        throw new Error("Immich integration not found");
-      }
-
-      return await immichIntegration.getAlbumsAsync();
-    }),
+  getAlbums: publicProcedure.concat(createImmichIntegrationMiddleware("query")).query(async ({ ctx }) => {
+    const innerHandler = immichAlbumsRequestHandler.handler(ctx.integration, {});
+    const data = await innerHandler.getCachedOrUpdatedDataAsync({ forceUpdate: false });
+    return data.data;
+  }),
 });

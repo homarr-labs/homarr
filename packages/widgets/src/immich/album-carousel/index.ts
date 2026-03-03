@@ -1,7 +1,8 @@
 import { IconPhoto } from "@tabler/icons-react";
+import z from "zod";
 
-import { createWidgetDefinition } from "../definition";
-import { optionsBuilder } from "../options";
+import { createWidgetDefinition } from "../../definition";
+import { optionsBuilder } from "../../options";
 
 export const { definition, componentLoader } = createWidgetDefinition("immich-albumCarousel", {
   icon: IconPhoto,
@@ -15,8 +16,7 @@ export const { definition, componentLoader } = createWidgetDefinition("immich-al
       }),
       rotationIntervalSeconds: factory.number({
         defaultValue: 5,
-        min: 1,
-        max: 3600,
+        validate: z.number().min(1).max(3600),
         withDescription: true,
       }),
       showPhotoInfo: factory.switch({

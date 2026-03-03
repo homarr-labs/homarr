@@ -55,6 +55,7 @@ export type {
 } from "./interfaces/media-transcoding/media-transcoding-types";
 export type { ReleasesRepository, ReleaseResponse } from "./interfaces/releases-providers/releases-providers-types";
 export type { Notification } from "./interfaces/notifications/notification-types";
+export type { ImmichServerStats, ImmichAlbum, ImmichAsset } from "./immich/immich-integration";
 
 // Schemas
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";

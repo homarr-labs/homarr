@@ -1,10 +1,12 @@
 "use client";
 
+import React from "react";
 import { Group, Stack, Text } from "@mantine/core";
-import { IconDatabase, IconFileTypeSvg, IconPhoto, IconVideo } from "@tabler/icons-react";
+import { IconDatabase, IconPhoto, IconUsers, IconVideo } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { humanFileSize } from "@homarr/common";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 import classes from "./component.module.css";
@@ -13,47 +15,35 @@ export default function ImmichServerStatsWidget({
   integrationIds,
   options,
 }: WidgetComponentProps<"immich-serverStats">) {
-  const t = useScopedI18n("widget.immich.serverStats");
+  const t = useI18n();
   const [stats] = clientApi.widget.immich.getServerStats.useSuspenseQuery({
-    integrationIds,
+    integrationId: integrationIds[0] ?? "",
   });
-
-  const formatBytes = (bytes: number): string => {
-    if (bytes === 0) return "0 B";
-    const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB", "TB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
-  };
 
   return (
     <Stack gap="md" h="100%" p="md">
-      {options.showUsers && stats.userCount !== undefined && (
-        <StatItem
-          icon={<IconFileTypeSvg size={20} />}
-          label={t("users")}
-          value={stats.userCount.toString()}
-        />
+      {options.showUsers && (
+        <StatItem icon={<IconUsers size={20} />} label={t("widget.immich-serverStats.users")} value={stats.userCount} />
       )}
-      {options.showPhotos && stats.photoCount !== undefined && (
+      {options.showPhotos && (
         <StatItem
           icon={<IconPhoto size={20} />}
-          label={t("photos")}
-          value={stats.photoCount.toString()}
+          label={t("widget.immich-serverStats.photos")}
+          value={stats.photoCount}
         />
       )}
-      {options.showVideos && stats.videoCount !== undefined && (
+      {options.showVideos && (
         <StatItem
           icon={<IconVideo size={20} />}
-          label={t("videos")}
-          value={stats.videoCount.toString()}
+          label={t("widget.immich-serverStats.videos")}
+          value={stats.videoCount}
         />
       )}
-      {options.showStorage && stats.totalLibraryUsageInBytes !== undefined && (
+      {options.showStorage && (
         <StatItem
           icon={<IconDatabase size={20} />}
-          label={t("storage")}
-          value={formatBytes(stats.totalLibraryUsageInBytes)}
+          label={t("widget.immich-serverStats.storage")}
+          value={humanFileSize(stats.totalLibraryUsageInBytes)}
         />
       )}
     </Stack>
@@ -63,7 +53,7 @@ export default function ImmichServerStatsWidget({
 interface StatItemProps {
   icon: React.ReactNode;
   label: string;
-  value: string;
+  value: string | number;
 }
 
 function StatItem({ icon, label, value }: StatItemProps) {

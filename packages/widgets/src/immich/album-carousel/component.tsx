@@ -1,11 +1,12 @@
 "use client";
 
+import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
-import { Box, Center, Group, Stack, Text } from "@mantine/core";
+import { Box, Center, Group, Image, Stack, Text } from "@mantine/core";
 import { IconAlertCircle, IconCalendar } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
-import { useScopedI18n } from "@homarr/translation/client";
+import { useI18n } from "@homarr/translation/client";
 
 import type { WidgetComponentProps } from "../../definition";
 import classes from "./component.module.css";
@@ -14,7 +15,6 @@ export default function ImmichAlbumCarouselWidget({
   integrationIds,
   options,
 }: WidgetComponentProps<"immich-albumCarousel">) {
-  const t = useScopedI18n("widget.immich.albumCarousel");
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   if (!options.albumId) {
@@ -22,11 +22,11 @@ export default function ImmichAlbumCarouselWidget({
   }
 
   const [album] = clientApi.widget.immich.getAlbum.useSuspenseQuery({
-    integrationIds,
+    integrationId: integrationIds[0] ?? "",
     albumId: options.albumId,
   });
 
-  if (!album.assets || album.assets.length === 0) {
+  if (album.assets.length === 0) {
     return <NoPhotosInAlbum />;
   }
 
@@ -48,14 +48,15 @@ export default function ImmichAlbumCarouselWidget({
 }
 
 interface CarouselProps {
-  assets: Array<{
+  assets: {
     id: string;
     deviceAssetId: string;
     originalPath: string;
     fileModifiedAt: string;
-  }>;
+    publicLink: string;
+  }[];
   currentIndex: number;
-  setCurrentIndex: (index: number) => void;
+  setCurrentIndex: Dispatch<SetStateAction<number>>;
   rotationInterval: number;
   showPhotoInfo: boolean;
 }
@@ -69,21 +70,12 @@ function Carousel({ assets, currentIndex, setCurrentIndex, rotationInterval, sho
     return () => clearInterval(interval);
   }, [assets.length, rotationInterval, setCurrentIndex]);
 
-  const currentAsset = assets[currentIndex];
-  const imageUrl = `/api/immich/${currentAsset.id}/thumbnail`;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const currentAsset = assets[currentIndex]!;
 
   return (
     <Box w="100%" h="100%" className={classes.carouselContainer}>
-      <Box
-        component="img"
-        src={imageUrl}
-        alt="Album photo"
-        className={classes.carouselImage}
-        onError={(e) => {
-          const img = e.currentTarget as HTMLImageElement;
-          img.style.display = "none";
-        }}
-      />
+      <Image src={currentAsset.publicLink} alt="Album photo" className={classes.carouselImage} />
 
       {showPhotoInfo && (
         <Stack gap="xs" className={classes.photoInfo} p="md">
@@ -96,29 +88,18 @@ function Carousel({ assets, currentIndex, setCurrentIndex, rotationInterval, sho
           </Text>
         </Stack>
       )}
-
-      <Group gap="xs" className={classes.dots} justify="center" p="sm">
-        {assets.map((_, index) => (
-          <Box
-            key={index}
-            className={classes.dot}
-            data-active={index === currentIndex}
-            onClick={() => setCurrentIndex(index)}
-          />
-        ))}
-      </Group>
     </Box>
   );
 }
 
 function NoAlbumSelected() {
-  const t = useScopedI18n("widget.immich.albumCarousel");
+  const t = useI18n();
   return (
     <Center h="100%">
       <Stack align="center" gap="xs">
         <IconAlertCircle size={32} />
         <Text size="sm" fw={500}>
-          {t("error.noAlbumSelected")}
+          {t("widget.immich-albumCarousel.noAlbumSelected")}
         </Text>
       </Stack>
     </Center>
@@ -126,13 +107,13 @@ function NoAlbumSelected() {
 }
 
 function NoPhotosInAlbum() {
-  const t = useScopedI18n("widget.immich.albumCarousel");
+  const t = useI18n();
   return (
     <Center h="100%">
       <Stack align="center" gap="xs">
         <IconAlertCircle size={32} />
         <Text size="sm" fw={500}>
-          {t("error.noPhotos")}
+          {t("widget.immich-albumCarousel.noPhotos")}
         </Text>
       </Stack>
     </Center>

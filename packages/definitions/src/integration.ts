@@ -339,7 +339,8 @@ export const integrationDefs = {
     name: "Immich",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/immich.svg",
-    category: ["mediaService"],
+    category: ["photoService"],
+    // @ts-expect-error TS2345
     documentationUrl: createDocumentationLink("/docs/integrations/immich"),
   },
   // This integration only returns mock data, it is used during development (but can also be used in production by directly going to the create page)
@@ -428,6 +429,7 @@ export const integrationCategories = [
   "releasesProvider",
   "notifications",
   "firewall",
+  "photoService",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];
