@@ -21,6 +21,8 @@ import * as firewall from "./firewall";
 import * as healthMonitoring from "./health-monitoring";
 import * as iframe from "./iframe";
 import type { WidgetImportRecord } from "./import";
+import * as immichAlbumCarousel from "./immich/album-carousel";
+import * as immichServerStats from "./immich/server-stats";
 import * as indexerManager from "./indexer-manager";
 import * as mediaReleases from "./media-releases";
 import * as mediaRequestsList from "./media-requests/list";
@@ -79,6 +81,8 @@ export const widgetImports = {
   systemResources,
   coolify,
   systemDisks,
+  "immich-serverStats": immichServerStats,
+  "immich-albumCarousel": immichAlbumCarousel,
 } satisfies WidgetImportRecord;
 
 export type WidgetImports = typeof widgetImports;
