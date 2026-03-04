@@ -1366,40 +1366,40 @@
               "label": "Vertical"
             },
             "grid": {
-              "label": ""
+              "label": "Grid"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "Grid horizontal"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "Hide title"
         },
         "hideIcon": {
-          "label": ""
+          "label": "Hide icons"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Hide hostnames"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Open in new tab"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Bookmarks",
+          "add": "Add bookmark"
         }
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "DNS Hole Summary",
+      "description": "Displays the summary of your DNS Hole",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
               "label": ""

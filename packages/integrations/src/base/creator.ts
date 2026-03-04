@@ -39,6 +39,7 @@ import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { QuayIntegration } from "../quay/quay-integration";
+import { SeerrIntegration } from "../seerr/seerr-integration";
 import { TracearrIntegration } from "../tracearr/tracearr-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
@@ -83,6 +84,7 @@ export const integrationCreators = {
   slskd: SlskdIntegration,
   aria2: Aria2Integration,
   jellyseerr: JellyseerrIntegration,
+  seerr: SeerrIntegration,
   overseerr: OverseerrIntegration,
   prowlarr: ProwlarrIntegration,
   openmediavault: OpenMediaVaultIntegration,
