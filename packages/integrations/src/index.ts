@@ -20,6 +20,7 @@ export { NTFYIntegration } from "./ntfy/ntfy-integration";
 export { OpenMediaVaultIntegration } from "./openmediavault/openmediavault-integration";
 export { GlancesIntegration } from "./glances/glances-integration";
 export { OverseerrIntegration } from "./overseerr/overseerr-integration";
+export { SeerrIntegration } from "./seerr/seerr-integration";
 export { PiHoleIntegrationV5 } from "./pi-hole/v5/pi-hole-integration-v5";
 export { PiHoleIntegrationV6 } from "./pi-hole/v6/pi-hole-integration-v6";
 export { PlexIntegration } from "./plex/plex-integration";

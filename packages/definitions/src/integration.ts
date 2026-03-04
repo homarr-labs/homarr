@@ -143,6 +143,14 @@ export const integrationDefs = {
     category: ["mediaSearch", "mediaRequest", "search"],
     documentationUrl: createDocumentationLink("/docs/integrations/jellyseerr"),
   },
+  seerr: {
+    name: "Seerr",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/seerr.svg",
+    category: ["mediaSearch", "mediaRequest", "search"],
+    // @ts-expect-error - docs page will be created when integration is merged
+    documentationUrl: createDocumentationLink("/docs/integrations/seerr"),
+  },
   overseerr: {
     name: "Overseerr",
     secretKinds: [["apiKey"]],
