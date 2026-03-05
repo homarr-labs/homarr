@@ -8,7 +8,7 @@ overrides:
   '@babel/helpers@<7.26.10': '>=7.28.6'
   '@babel/runtime@<7.26.10': '>=7.28.6'
   axios@>=1.0.0 <1.8.2: '>=1.13.6'
-  brace-expansion@>=2.0.0 <=2.0.1: '>=5.0.3'
+  brace-expansion@>=2.0.0 <=2.0.1: '>=5.0.4'
   brace-expansion@>=1.0.0 <=1.1.11: '>=5.0.4'
   esbuild@<=0.24.2: '>=0.27.3'
   form-data@>=4.0.0 <4.0.4: '>=4.0.5'
@@ -5692,10 +5692,6 @@ packages:
   brace-expansion@5.0.2:
     resolution: {integrity: sha512-Pdk8c9poy+YhOgVWw1JNN22/HcivgKWwpxKq04M/jTmHyCZn12WPJebZxdjSa5TmBqISrUSgNYU3eRORljfCCw==}
     engines: {node: 20 || >=22}
-
-  brace-expansion@5.0.3:
-    resolution: {integrity: sha512-fy6KJm2RawA5RcHkLa1z/ScpBeA762UF9KmZQxwIbDtRJrgLzM10depAiEQ+CXYcoiqW1/m96OAAoke2nE9EeA==}
-    engines: {node: 18 || 20 || >=22}
 
   brace-expansion@5.0.4:
     resolution: {integrity: sha512-h+DEnpVvxmfVefa4jFbCf5HdH5YMDXRsmKflpf1pILZWRFlTbJpxeU55nJl4Smt5HQaGzg1o6RHFPJaOqnmBDg==}
@@ -14645,10 +14641,6 @@ snapshots:
     dependencies:
       balanced-match: 4.0.2
 
-  brace-expansion@5.0.3:
-    dependencies:
-      balanced-match: 4.0.2
-
   brace-expansion@5.0.4:
     dependencies:
       balanced-match: 4.0.2
@@ -17491,11 +17483,11 @@ snapshots:
 
   minimatch@5.1.6:
     dependencies:
-      brace-expansion: 5.0.3
+      brace-expansion: 5.0.4
 
   minimatch@9.0.5:
     dependencies:
-      brace-expansion: 5.0.3
+      brace-expansion: 5.0.4
 
   minimist@1.2.8: {}
 
