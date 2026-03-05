@@ -900,7 +900,7 @@ importers:
         version: 0.2.9
       drizzle-orm:
         specifier: ^0.45.1
-        version: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.2)(gel@2.0.0)(mysql2@3.18.2(@types/node@24.11.0))(pg@8.19.0)
+        version: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.18.0)(better-sqlite3@12.6.2)(gel@2.0.0)(mysql2@3.18.2(@types/node@24.11.0))(pg@8.19.0)
       ioredis:
         specifier: 5.10.0
         version: 5.10.0
@@ -933,8 +933,8 @@ importers:
         specifier: 7.6.13
         version: 7.6.13
       '@types/pg':
-        specifier: ^8.16.0
-        version: 8.16.0
+        specifier: ^8.18.0
+        version: 8.18.0
       eslint:
         specifier: ^9.39.3
         version: 9.39.3
@@ -1163,10 +1163,10 @@ importers:
         version: 0.31.9
       drizzle-orm:
         specifier: ^0.45.1
-        version: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.2)(gel@2.0.0)(mysql2@3.18.2(@types/node@24.11.0))(pg@8.19.0)
+        version: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.18.0)(better-sqlite3@12.6.2)(gel@2.0.0)(mysql2@3.18.2(@types/node@24.11.0))(pg@8.19.0)
       drizzle-zod:
         specifier: ^0.8.3
-        version: 0.8.3(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.2)(gel@2.0.0)(mysql2@3.18.2(@types/node@24.11.0))(pg@8.19.0))(zod@4.2.1)
+        version: 0.8.3(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.18.0)(better-sqlite3@12.6.2)(gel@2.0.0)(mysql2@3.18.2(@types/node@24.11.0))(pg@8.19.0))(zod@4.2.1)
       mysql2:
         specifier: 3.18.2
         version: 3.18.2(@types/node@24.11.0)
@@ -1190,8 +1190,8 @@ importers:
         specifier: 7.6.13
         version: 7.6.13
       '@types/pg':
-        specifier: ^8.16.0
-        version: 8.16.0
+        specifier: ^8.18.0
+        version: 8.18.0
       dotenv-cli:
         specifier: ^11.0.0
         version: 11.0.0
@@ -5050,8 +5050,8 @@ packages:
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
 
-  '@types/pg@8.16.0':
-    resolution: {integrity: sha512-RmhMd/wD+CF8Dfo+cVIy3RR5cl8CyfXQ0tGgW6XBL8L4LM/UTEbNXYRbLwU6w+CgrKBNbrQWt4FUtTfaU5jSYQ==}
+  '@types/pg@8.18.0':
+    resolution: {integrity: sha512-gT+oueVQkqnj6ajGJXblFR4iavIXWsGAFCk3dP4Kki5+a9R4NMt0JARdk6s8cUKcfUoqP5dAtDSLU8xYUTFV+Q==}
 
   '@types/prismjs@1.26.6':
     resolution: {integrity: sha512-vqlvI7qlMvcCBbVe0AKAb4f97//Hy0EBTaiW8AalRnG/xAN5zOiWWyrNqNXeq8+KAuvRewjCVY1+IPxk4RdNYw==}
@@ -8780,9 +8780,6 @@ packages:
     resolution: {integrity: sha512-eIJ0DES8BLaziFHW7VgJEBPi5hg3Nyng5iKpYtj3wbcAUV9A1wLgWiY7ajf/f/oO1wfxt83phXPY8Emztg7ITg==}
     peerDependencies:
       pg: '>=8.0'
-
-  pg-protocol@1.10.3:
-    resolution: {integrity: sha512-6DIBgBQaTKDJyxnXaLiLR8wBpQQcGWuAESkRBX/t6OwA8YsqP+iVSiond2EDy6Y/dsGk8rh/jtax3js5NeV7JQ==}
 
   pg-protocol@1.12.0:
     resolution: {integrity: sha512-uOANXNRACNdElMXJ0tPz6RBM0XQ61nONGAwlt8da5zs/iUOOCLBQOHSXnrC6fMsvtjxbOJrZZl5IScGv+7mpbg==}
@@ -13853,10 +13850,10 @@ snapshots:
 
   '@types/normalize-package-data@2.4.4': {}
 
-  '@types/pg@8.16.0':
+  '@types/pg@8.18.0':
     dependencies:
       '@types/node': 24.11.0
-      pg-protocol: 1.10.3
+      pg-protocol: 1.12.0
       pg-types: 2.2.0
 
   '@types/prismjs@1.26.6': {}
@@ -15307,19 +15304,19 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.2)(gel@2.0.0)(mysql2@3.18.2(@types/node@24.11.0))(pg@8.19.0):
+  drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.18.0)(better-sqlite3@12.6.2)(gel@2.0.0)(mysql2@3.18.2(@types/node@24.11.0))(pg@8.19.0):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
       '@types/better-sqlite3': 7.6.13
-      '@types/pg': 8.16.0
+      '@types/pg': 8.18.0
       better-sqlite3: 12.6.2
       gel: 2.0.0
       mysql2: 3.18.2(@types/node@24.11.0)
       pg: 8.19.0
 
-  drizzle-zod@0.8.3(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.2)(gel@2.0.0)(mysql2@3.18.2(@types/node@24.11.0))(pg@8.19.0))(zod@4.2.1):
+  drizzle-zod@0.8.3(drizzle-orm@0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.18.0)(better-sqlite3@12.6.2)(gel@2.0.0)(mysql2@3.18.2(@types/node@24.11.0))(pg@8.19.0))(zod@4.2.1):
     dependencies:
-      drizzle-orm: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.16.0)(better-sqlite3@12.6.2)(gel@2.0.0)(mysql2@3.18.2(@types/node@24.11.0))(pg@8.19.0)
+      drizzle-orm: 0.45.1(@libsql/client-wasm@0.14.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.18.0)(better-sqlite3@12.6.2)(gel@2.0.0)(mysql2@3.18.2(@types/node@24.11.0))(pg@8.19.0)
       zod: 4.2.1
 
   dunder-proto@1.0.1:
@@ -18009,8 +18006,6 @@ snapshots:
   pg-pool@3.12.0(pg@8.19.0):
     dependencies:
       pg: 8.19.0
-
-  pg-protocol@1.10.3: {}
 
   pg-protocol@1.12.0: {}
 
