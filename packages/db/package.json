@@ -56,8 +56,8 @@
     "drizzle-kit": "^0.31.9",
     "drizzle-orm": "^0.45.1",
     "drizzle-zod": "^0.8.3",
-    "mysql2": "3.17.4",
-    "pg": "^8.18.0",
+    "mysql2": "3.18.2",
+    "pg": "^8.19.0",
     "superjson": "2.2.6"
   },
   "devDependencies": {
@@ -65,7 +65,7 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.13",
-    "@types/pg": "^8.16.0",
+    "@types/pg": "^8.18.0",
     "dotenv-cli": "^11.0.0",
     "esbuild": "^0.27.3",
     "eslint": "^9.39.3",
