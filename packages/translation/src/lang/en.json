@@ -3414,6 +3414,9 @@
             "minecraftServerStatus": {
               "label": "Minecraft server status"
             },
+            "timetable": {
+              "label": "Timetable"
+            },
             "iconsUpdater": {
               "label": "Icons Updater"
             },
