@@ -8,7 +8,7 @@ import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import type { TimetableIntegration } from "../interfaces/timetable/timetable-integration";
-import type { Stadion, Timetable, TimetableOptions } from "../interfaces/timetable/timetable-types";
+import type { Station, Timetable, TimetableOptions } from "../interfaces/timetable/timetable-types";
 
 const supportedStationTypes = ["bus", "tram", "train", "ship", "cablecar", "funicular", "chairlift"];
 
@@ -31,7 +31,7 @@ export class SearchChIntegration extends Integration implements TimetableIntegra
    * @returns A list of stations matching the search query.
    * @docs https://search.ch/fahrplan/api/help
    */
-  public async searchStationsAsync(query: string): Promise<Stadion[]> {
+  public async searchStationsAsync(query: string): Promise<Station[]> {
     const response = await fetchWithTrustedCertificatesAsync(
       this.url("/timetable/api/completion.json", {
         term: query,

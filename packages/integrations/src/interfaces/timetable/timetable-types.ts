@@ -1,6 +1,6 @@
 import z from "zod";
 
-export interface Stadion {
+export interface Station {
   id: string;
   name: string;
 }
