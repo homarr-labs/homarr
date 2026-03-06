@@ -54,7 +54,7 @@ const TimetableWidgetInner = ({ station, integrationId }: TimetableWidgetInnerPr
               {dayjs(entry.timestamp).format("HH:mm")}{" "}
               {entry.delay >= 1 && (
                 <Text size="sm" span c="red">
-                  +{entry.delay}'
+                  +{entry.delay}&apos;
                 </Text>
               )}
             </Text>

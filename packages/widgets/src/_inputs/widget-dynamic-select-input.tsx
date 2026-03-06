@@ -72,7 +72,7 @@ export const WidgetDynamicSelectInput = ({ property, kind, options }: CommonWidg
         );
       }}
       description={options.withDescription ? tWidget("description") : undefined}
-      searchable={true}
+      searchable
       {...inputProps}
       value={value?.value ?? null}
       onChange={(value) =>
