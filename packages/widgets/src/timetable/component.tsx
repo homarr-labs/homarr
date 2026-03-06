@@ -11,9 +11,10 @@ export default function TimetableWidget({ options, integrationIds }: WidgetCompo
   // It will always have at least one integration as otherwise the NoIntegrationSelectedError would be thrown in item-content.tsx
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const integrationId = integrationIds[0]!;
+  const t = useScopedI18n("widget.timetable");
 
   if (!options.station) {
-    return <Center>No station selected.</Center>;
+    return <Center h="100%">{t("noStation")}</Center>;
   }
 
   return <TimetableWidgetInner station={options.station} integrationId={integrationId} />;

@@ -1529,6 +1529,7 @@
       "name": "Timetable",
       "description": "Displays departure times for a station",
       "title": "Departures {station}",
+      "noStation": "No station selected",
       "option": {
         "station": {
           "label": "Station"
