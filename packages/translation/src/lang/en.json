@@ -1525,6 +1525,16 @@
         "offline": "Offline"
       }
     },
+    "timetable": {
+      "name": "Timetable",
+      "description": "Displays departure times for a station",
+      "title": "Departures {station}",
+      "option": {
+        "station": {
+          "label": "Station"
+        }
+      }
+    },
     "notebook": {
       "name": "Notebook",
       "description": "A simple notebook widget that supports markdown",
