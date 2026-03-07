@@ -1,7 +1,7 @@
-import { createHash } from "node:crypto";
-import bcrypt from "bcrypt";
+import { createHmac, hkdfSync } from "node:crypto";
 
 import { createId } from "@homarr/common";
+import { env } from "@homarr/common/env";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -10,31 +10,19 @@ import { createGetSetChannel } from "@homarr/redis";
 
 const logger = createLogger({ module: "imageProxy" });
 
-const createHashChannel = (hash: `${string}.${string}`) => createGetSetChannel<string>(`image-proxy:hash:${hash}`);
+/**
+ * Generate secure key for image-proxy from encryption key
+ */
+const IMAGE_PROXY_KEY = Buffer.from(hkdfSync("sha256", env.SECRET_ENCRYPTION_KEY, "", "image-proxy", 32));
+
+const createHmacChannel = (hmac: `${string}.${string}`) => createGetSetChannel<string>(`image-proxy:hmac:${hmac}`);
 const createUrlByIdChannel = (id: string) =>
   createGetSetChannel<{
     url: `${string}.${string}`;
     headers: `${string}.${string}`;
   }>(`image-proxy:url:${id}`);
-const saltChannel = createGetSetChannel<string>("image-proxy:salt");
 
 export class ImageProxy {
-  private static salt: string | null = null;
-  private async getOrCreateSaltAsync(): Promise<string> {
-    if (ImageProxy.salt) return ImageProxy.salt;
-    const existingSalt = await saltChannel.getAsync();
-    if (existingSalt) {
-      ImageProxy.salt = existingSalt;
-      return existingSalt;
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    logger.debug("Generated new salt for image proxy", { salt });
-    ImageProxy.salt = salt;
-    await saltChannel.setAsync(salt);
-    return salt;
-  }
-
   public async createImageAsync(url: string, headers?: Record<string, string>): Promise<string> {
     const existingId = await this.getExistingIdAsync(url, headers);
     if (existingId) {
@@ -107,20 +95,18 @@ export class ImageProxy {
   }
 
   private async getExistingIdAsync(url: string, headers: Record<string, string> | undefined): Promise<string | null> {
-    const salt = await this.getOrCreateSaltAsync();
-    const urlHash = await this.hashAsync(url, salt);
-    const headerHash = await this.hashAsync(JSON.stringify(headers ?? null), salt);
+    const urlHash = this.hashSecret(url);
+    const headerHash = this.hashSecret(JSON.stringify(headers ?? null));
 
-    const channel = createHashChannel(`${urlHash}.${headerHash}`);
+    const channel = createHmacChannel(`${urlHash}.${headerHash}`);
     return await channel.getAsync();
   }
 
   private async storeImageAsync(id: string, url: string, headers: Record<string, string> | undefined): Promise<void> {
-    const salt = await this.getOrCreateSaltAsync();
-    const urlHash = await this.hashAsync(url, salt);
-    const headerHash = await this.hashAsync(JSON.stringify(headers ?? null), salt);
+    const urlHash = this.hashSecret(url);
+    const headerHash = this.hashSecret(JSON.stringify(headers ?? null));
 
-    const hashChannel = createHashChannel(`${urlHash}.${headerHash}`);
+    const hashChannel = createHmacChannel(`${urlHash}.${headerHash}`);
     const urlHeaderChannel = createUrlByIdChannel(id);
     await urlHeaderChannel.setAsync({
       url: encryptSecret(url),
@@ -135,13 +121,8 @@ export class ImageProxy {
     });
   }
 
-  /**
-   * Bcrypt only supports strings up to 72 characters, therefore we normalize it first with SHA-256 (64 characters)
-   * to ensure we can hash any URL and headers combination without losing uniqueness.
-   */
-  private async hashAsync(value: string, salt: string): Promise<string> {
-    const normalized = createHash("sha256").update(value).digest("hex");
-    return await bcrypt.hash(normalized, salt);
+  private hashSecret(value: string): string {
+    return createHmac("sha256", IMAGE_PROXY_KEY).update(value).digest("hex");
   }
 
   private redactUrl(url: string): string {
