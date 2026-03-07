@@ -10,11 +10,6 @@ import { createGetSetChannel } from "@homarr/redis";
 
 const logger = createLogger({ module: "imageProxy" });
 
-/**
- * Generate secure key for image-proxy from encryption key
- */
-const IMAGE_PROXY_KEY = Buffer.from(hkdfSync("sha256", env.SECRET_ENCRYPTION_KEY, "", "image-proxy", 32));
-
 const createHmacChannel = (hmac: `${string}.${string}`) => createGetSetChannel<string>(`image-proxy:hmac:${hmac}`);
 const createUrlByIdChannel = (id: string) =>
   createGetSetChannel<{
@@ -23,6 +18,16 @@ const createUrlByIdChannel = (id: string) =>
   }>(`image-proxy:url:${id}`);
 
 export class ImageProxy {
+  private static hmacKey: Buffer<ArrayBuffer> | null = null;
+
+  /**
+   * Generate secure key for image-proxy from encryption key
+   */
+  private static getHmacKey(): Buffer<ArrayBuffer> {
+    this.hmacKey ??= Buffer.from(hkdfSync("sha256", env.SECRET_ENCRYPTION_KEY, "", "image-proxy", 32));
+    return this.hmacKey;
+  }
+
   public async createImageAsync(url: string, headers?: Record<string, string>): Promise<string> {
     const existingId = await this.getExistingIdAsync(url, headers);
     if (existingId) {
@@ -122,7 +127,7 @@ export class ImageProxy {
   }
 
   private hashSecret(value: string): string {
-    return createHmac("sha256", IMAGE_PROXY_KEY).update(value).digest("hex");
+    return createHmac("sha256", ImageProxy.getHmacKey()).update(value).digest("hex");
   }
 
   private redactUrl(url: string): string {
