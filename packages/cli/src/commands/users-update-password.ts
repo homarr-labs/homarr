@@ -24,8 +24,8 @@ export const usersUpdatePassword = command({
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const user = await db.query.users.findFirst({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       where: options.id ? eq(users.id, options.id) : eq(users.name, options.username!),
     });
 
