@@ -81,6 +81,22 @@ export default function StockPriceWidget({ options, width, height }: WidgetCompo
           {t(`option.timeRange.option.${options.timeRange}.label`)}
         </Text>
       )}
+
+      <Stack pos="absolute" top={10} left={10}>
+        <Text size="xl" fw={700} lh="0.715">
+          {stockValuesChange > 0 ? (
+            <IconTrendingUp size="1.5rem" color={theme.colors.green[7]} />
+          ) : (
+            <IconTrendingDown size="1.5rem" color={theme.colors.red[7]} />
+          )}
+          {data.symbol}
+        </Text>
+        {width > 280 && height > 280 && (
+          <Text size="md" lh="1">
+            {data.shortName}
+          </Text>
+        )}
+      </Stack>
     </Flex>
   );
 }
