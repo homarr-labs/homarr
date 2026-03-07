@@ -1,4 +1,5 @@
-import { createHash, randomBytes } from "node:crypto";
+import { createHash } from "node:crypto";
+import bcrypt from "bcrypt";
 
 import { createId } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
@@ -27,7 +28,7 @@ export class ImageProxy {
       return existingSalt;
     }
 
-    const salt = randomBytes(32).toString("hex");
+    const salt = await bcrypt.genSalt(10);
     logger.debug("Generated new salt for image proxy", { salt });
     ImageProxy.salt = salt;
     await saltChannel.setAsync(salt);
@@ -107,8 +108,8 @@ export class ImageProxy {
 
   private async getExistingIdAsync(url: string, headers: Record<string, string> | undefined): Promise<string | null> {
     const salt = await this.getOrCreateSaltAsync();
-    const urlHash = this.createDeterministicHash(url, salt);
-    const headerHash = this.createDeterministicHash(JSON.stringify(headers ?? null), salt);
+    const urlHash = await this.hashAsync(url, salt);
+    const headerHash = await this.hashAsync(JSON.stringify(headers ?? null), salt);
 
     const channel = createHashChannel(`${urlHash}.${headerHash}`);
     return await channel.getAsync();
@@ -116,8 +117,8 @@ export class ImageProxy {
 
   private async storeImageAsync(id: string, url: string, headers: Record<string, string> | undefined): Promise<void> {
     const salt = await this.getOrCreateSaltAsync();
-    const urlHash = this.createDeterministicHash(url, salt);
-    const headerHash = this.createDeterministicHash(JSON.stringify(headers ?? null), salt);
+    const urlHash = await this.hashAsync(url, salt);
+    const headerHash = await this.hashAsync(JSON.stringify(headers ?? null), salt);
 
     const hashChannel = createHashChannel(`${urlHash}.${headerHash}`);
     const urlHeaderChannel = createUrlByIdChannel(id);
@@ -134,8 +135,13 @@ export class ImageProxy {
     });
   }
 
-  private createDeterministicHash(value: string, salt: string): string {
-    return createHash("sha256").update(`${salt}:${value}`).digest("hex");
+  /**
+   * Bcrypt only supports strings up to 72 characters, therefore we normalize it first with SHA-256 (64 characters)
+   * to ensure we can hash any URL and headers combination without losing uniqueness.
+   */
+  private async hashAsync(value: string, salt: string): Promise<string> {
+    const normalized = createHash("sha256").update(value).digest("hex");
+    return await bcrypt.hash(normalized, salt);
   }
 
   private redactUrl(url: string): string {
