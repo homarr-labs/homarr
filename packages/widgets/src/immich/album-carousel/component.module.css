@@ -1,0 +1,52 @@
+.carouselContainer {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--mantine-color-gray-9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carouselImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: var(--mantine-color-gray-8);
+}
+
+.photoInfo {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: white;
+  border-radius: 0;
+}
+
+.dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &[data-active="true"] {
+    background-color: rgba(255, 255, 255, 1);
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+}
