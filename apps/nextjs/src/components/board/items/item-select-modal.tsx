@@ -103,8 +103,8 @@ const WidgetItem = ({
               {item.description}
             </Text>
           </Stack>
-          <SupportedIntegrations integrations={item.supportedIntegrations} />
-          <Button onClick={onSelect} variant="light" size="xs" mt="auto" radius="md" fullWidth>
+          <SupportedIntegrations mt="auto" integrations={item.supportedIntegrations} />
+          <Button onClick={onSelect} variant="light" size="xs" radius="md" fullWidth>
             {t(`item.create.addToBoard`)}
           </Button>
         </Stack>
@@ -113,7 +113,12 @@ const WidgetItem = ({
   );
 };
 
-const SupportedIntegrations = ({ integrations }: { integrations: IntegrationKind[] }) => {
+interface SupportedIntegrationsProps {
+  integrations: IntegrationKind[];
+  mt: string;
+}
+
+const SupportedIntegrations = ({ integrations, mt }: SupportedIntegrationsProps) => {
   if (integrations.length === 0) {
     return null;
   }
@@ -123,7 +128,7 @@ const SupportedIntegrations = ({ integrations }: { integrations: IntegrationKind
   const moreCount = integrations.length - countToShow;
 
   return (
-    <Center>
+    <Center mt={mt}>
       <Tooltip.Group openDelay={300} closeDelay={100}>
         <Group gap={2}>
           {integrations.slice(0, countToShow).map((integration) => (
