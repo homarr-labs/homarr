@@ -1,29 +1,37 @@
-export interface AnchorNotesListInput extends Record<string, unknown> {
+import { z } from "zod/v4";
+
+export type AnchorNotesListInput = {
   search?: string;
   tagId?: string;
   limit?: number;
-}
+};
 
-export type AnchorNotePermission = "owner" | "viewer" | "editor";
+export const anchorNotePermissionSchema = z.enum(["owner", "viewer", "editor"]);
+export type AnchorNotePermission = z.infer<typeof anchorNotePermissionSchema>;
 
-export interface AnchorNoteSummary {
-  id: string;
-  title: string;
-  updatedAt: string;
-  isPinned: boolean;
-  tagIds: string[];
-  permission: AnchorNotePermission;
-}
+export const anchorNoteSummarySchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  updatedAt: z.string(),
+  isPinned: z.boolean(),
+  tagIds: z.array(z.string()),
+  permission: anchorNotePermissionSchema,
+});
+export type AnchorNoteSummary = z.infer<typeof anchorNoteSummarySchema>;
 
-export interface AnchorNote extends AnchorNoteSummary {
-  content?: string | null;
-  createdAt: string;
-  isArchived: boolean;
-  background?: string | null;
-  userId: string;
-}
+export const anchorNoteSchema = anchorNoteSummarySchema.extend({
+  content: z.string().nullable().optional(),
+  createdAt: z.string(),
+  isArchived: z.boolean(),
+  background: z.string().nullable().optional(),
+  userId: z.string(),
+});
+export type AnchorNote = z.infer<typeof anchorNoteSchema>;
 
-export interface AnchorNoteUpdateInput {
-  title?: string;
-  content?: string;
-}
+export const anchorNoteSummaryListSchema = z.array(anchorNoteSummarySchema);
+
+export const anchorNoteUpdateInputSchema = z.object({
+  title: z.string().optional(),
+  content: z.string().optional(),
+});
+export type AnchorNoteUpdateInput = z.infer<typeof anchorNoteUpdateInputSchema>;

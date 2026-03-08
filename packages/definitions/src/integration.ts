@@ -315,7 +315,7 @@ export const integrationDefs = {
   anchor: {
     name: "Anchor",
     secretKinds: [["apiKey"]],
-    iconUrl: "https://raw.githubusercontent.com/zhfahim/anchor/main/web/public/icons/anchor_icon.png",
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/anchor.svg",
     category: ["miscellaneous"],
     documentationUrl: null,
   },

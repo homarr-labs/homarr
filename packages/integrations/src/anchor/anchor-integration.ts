@@ -1,5 +1,4 @@
 import type { fetch as undiciFetch } from "undici";
-import { z } from "zod/v4";
 
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
@@ -7,28 +6,14 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { AnchorNote, AnchorNotesListInput, AnchorNoteSummary, AnchorNoteUpdateInput } from "./anchor-types";
-
-const anchorNotePermissionSchema = z.enum(["owner", "viewer", "editor"]);
-
-const anchorNoteSummarySchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  updatedAt: z.string(),
-  isPinned: z.boolean(),
-  tagIds: z.array(z.string()),
-  permission: anchorNotePermissionSchema,
-});
-
-const anchorNoteSchema = anchorNoteSummarySchema.extend({
-  content: z.string().nullable().optional(),
-  createdAt: z.string(),
-  isArchived: z.boolean(),
-  background: z.string().nullable().optional(),
-  userId: z.string(),
-});
-
-const anchorNoteSummaryListSchema = z.array(anchorNoteSummarySchema);
+import {
+  anchorNoteSchema,
+  anchorNoteSummaryListSchema,
+  type AnchorNote,
+  type AnchorNotesListInput,
+  type AnchorNoteSummary,
+  type AnchorNoteUpdateInput,
+} from "./anchor-types";
 
 export class AnchorIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
