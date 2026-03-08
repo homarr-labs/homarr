@@ -2325,6 +2325,10 @@ importers:
         version: 19.2.4(react@19.2.4)
       react-markdown:
         specifier: ^10.1.0
+        version: 10.1.0(@types/react@19.2.13)(react@19.2.4)
+      react-quill-new:
+        specifier: ^3.7.0
+        version: 3.8.3(quill-delta@5.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
         version: 10.1.0(@types/react@19.2.14)(react@19.2.4)
       react-quill-new:
         specifier: ^3.7.0
