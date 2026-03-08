@@ -148,7 +148,6 @@ export const integrationDefs = {
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/seerr.svg",
     category: ["mediaSearch", "mediaRequest", "search"],
-    // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/seerr"),
   },
   overseerr: {
@@ -335,6 +334,14 @@ export const integrationDefs = {
     // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/coolify"),
   },
+  immich: {
+    name: "Immich",
+    secretKinds: [["apiKey"]],
+    iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/immich.svg",
+    category: ["photoService"],
+    // @ts-expect-error TS2345
+    documentationUrl: createDocumentationLink("/docs/integrations/immich"),
+  },
   tracearr: {
     name: "Tracearr",
     secretKinds: [["apiKey"]],
@@ -430,6 +437,7 @@ export const integrationCategories = [
   "releasesProvider",
   "notifications",
   "firewall",
+  "photoService",
   "mediaMonitoring",
 ] as const;
 

@@ -19,6 +19,7 @@ import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { GlancesIntegration } from "../glances/glances-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { ICalIntegration } from "../ical/ical-integration";
+import { ImmichIntegration } from "../immich/immich-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { LinuxServerIOIntegration } from "../linuxserverio/linuxserverio-integration";
@@ -113,6 +114,7 @@ export const integrationCreators = {
   coolify: CoolifyIntegration,
   tracearr: TracearrIntegration,
   glances: GlancesIntegration,
+  immich: ImmichIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

@@ -2147,6 +2147,52 @@
         }
       }
     },
+    "immich-serverStats": {
+      "name": "Immich Server Stats",
+      "description": "Information about your Immich instance",
+      "option": {
+        "showUsers": {
+          "label": "Show users",
+          "description": "Show count of users on your instance"
+        },
+        "showPhotos": {
+          "label": "Show photos",
+          "description": "Show count of photos on your instance"
+        },
+        "showVideos": {
+          "label": "Show videos",
+          "description": "Show count of videos on your instance"
+        },
+        "showStorage": {
+          "label": "Show storage",
+          "description": "Show the total amount of storage used"
+        }
+      },
+      "users": "Users",
+      "photos": "Photos",
+      "videos": "Videos",
+      "storage": "Used Storage"
+    },
+    "immich-albumCarousel": {
+      "name": "Immich Album",
+      "option": {
+        "albumId": {
+          "label": "Album ID",
+          "description": "This is a unique ID which refers to your Immich album. You can find this id by opening an album and copying the unique string from the URL, for example 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+        },
+        "rotationIntervalSeconds": {
+          "label": "Interval in seconds",
+          "description": "Rotate between pictures in the album every X seconds. Must be at least 1. Must be below 3600."
+        },
+        "showPhotoInfo": {
+          "label": "Show photo info",
+          "description": "Display date of the picture and the current index at the bottom of the slideshow"
+        }
+      },
+      "description": "Slideshow of pictures in your Immich album",
+      "noAlbumSelected": "No album selected, edit widget and choose an album",
+      "noPhotos": "No photos in this album"
+    },
     "downloads": {
       "name": "Download Client",
       "description": "Allows you to view and manage your Downloads from both Torrent and Usenet clients.",
