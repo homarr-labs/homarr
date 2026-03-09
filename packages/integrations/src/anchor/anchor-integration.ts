@@ -2,19 +2,16 @@ import type { fetch as undiciFetch } from "undici";
 
 import { ResponseError } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import {
-  anchorNoteSchema,
-  anchorNoteSummaryListSchema,
-  type AnchorNote,
-  type AnchorNotesListInput,
-  type AnchorNoteSummary,
-  type AnchorNoteUpdateInput,
-} from "./anchor-types";
+import { anchorNoteSchema, anchorNoteSummaryListSchema } from "./anchor-types";
+import type { AnchorNote, AnchorNotesListInput, AnchorNoteSummary, AnchorNoteUpdateInput } from "./anchor-types";
+
+const logger = createLogger({ module: "anchorIntegration" });
 
 export class AnchorIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
@@ -49,6 +46,9 @@ export class AnchorIntegration extends Integration {
       method: "PATCH",
       body: updateData,
     });
+    if (response === null) {
+      return this.getNoteAsync(noteId);
+    }
     return anchorNoteSchema.parse(response);
   }
 
@@ -77,6 +77,17 @@ export class AnchorIntegration extends Integration {
     });
 
     if (!response.ok) {
+      let errorBody: string | null = null;
+      try {
+        errorBody = await response.text();
+      } catch {
+        errorBody = null;
+      }
+      logger.warn("Anchor request failed", {
+        statusCode: response.status,
+        url,
+        errorBody: errorBody ? errorBody.slice(0, 200) : null,
+      });
       throw new ResponseError(response);
     }
 
@@ -103,5 +114,5 @@ const buildListQuery = (input: AnchorNotesListInput) => {
     queryParams.limit = input.limit.toString();
   }
 
-  return Object.keys(queryParams).length >= 1 ? queryParams : undefined;
+  return Object.keys(queryParams).length > 0 ? queryParams : undefined;
 };

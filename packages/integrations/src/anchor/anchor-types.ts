@@ -31,11 +31,13 @@ export type AnchorNote = z.infer<typeof anchorNoteSchema>;
 
 export const anchorNoteSummaryListSchema = z.array(anchorNoteSummarySchema);
 
-export const anchorNoteUpdateInputSchema = z.object({
-  noteId: z.string(),
-  title: z.string().optional(),
-  content: z.string().optional(),
-}).refine((value) => value.title !== undefined || value.content !== undefined, {
-  message: "At least one field to update must be provided",
-});
+export const anchorNoteUpdateInputSchema = z
+  .object({
+    noteId: z.string(),
+    title: z.string().optional(),
+    content: z.string().optional(),
+  })
+  .refine((value) => value.title !== undefined || value.content !== undefined, {
+    message: "At least one field to update must be provided",
+  });
 export type AnchorNoteUpdateInput = z.infer<typeof anchorNoteUpdateInputSchema>;

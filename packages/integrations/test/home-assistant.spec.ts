@@ -51,7 +51,7 @@ describe("Home Assistant integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 30_000); // Timeout of 30 seconds
+  }, 60_000); // Timeout of 60 seconds
   test("Test connection should fail with wrong credentials", async () => {
     // Arrange
     const startedContainer = await prepareHomeAssistantContainerAsync();
@@ -69,7 +69,7 @@ describe("Home Assistant integration", () => {
 
     // Cleanup
     await startedContainer.stop();
-  }, 30_000); // Timeout of 30 seconds
+  }, 60_000); // Timeout of 60 seconds
 });
 
 const prepareHomeAssistantContainerAsync = async () => {
@@ -77,6 +77,7 @@ const prepareHomeAssistantContainerAsync = async () => {
   const startedContainer = await homeAssistantContainer.start();
   await startedContainer.exec(["unzip", "-o", "/tmp/config.zip", "-d", "/config"]);
   await startedContainer.restart();
+  await waitForHomeAssistantAsync(startedContainer);
   return startedContainer;
 };
 
@@ -90,14 +91,13 @@ const createHomeAssistantContainer = () => {
         },
       ])
       .withPrivilegedMode()
-      .withExposedPorts(8123)
+      .withExposedPorts(HOME_ASSISTANT_PORT)
       // This has to be a page that is not redirected (or a status code has to be defined withStatusCode(statusCode))
-      .withWaitStrategy(Wait.forHttp("/onboarding.html", 8123))
+      .withWaitStrategy(Wait.forHttp("/onboarding.html", HOME_ASSISTANT_PORT))
   );
 };
 
 const createHomeAssistantIntegration = (container: StartedTestContainer, apiKeyOverride?: string) => {
-  console.log("Creating Home Assistant integration...");
   return new HomeAssistantIntegration({
     id: "1",
     decryptedSecrets: [
@@ -107,7 +107,29 @@ const createHomeAssistantIntegration = (container: StartedTestContainer, apiKeyO
       },
     ],
     name: "Home assistant",
-    url: `http://${container.getHost()}:${container.getMappedPort(8123)}`,
+    url: `http://${container.getHost()}:${container.getMappedPort(HOME_ASSISTANT_PORT)}`,
     externalUrl: null,
   });
+};
+
+const waitForHomeAssistantAsync = async (container: StartedTestContainer) => {
+  const timeoutMs = 45_000;
+  const pollIntervalMs = 1_000;
+  const readyUrl = `http://${container.getHost()}:${container.getMappedPort(HOME_ASSISTANT_PORT)}/onboarding.html`;
+  const timeoutAt = Date.now() + timeoutMs;
+
+  while (Date.now() < timeoutAt) {
+    try {
+      const response = await fetch(readyUrl);
+      if (response.ok) return;
+    } catch {
+      // Keep polling until timeout.
+    }
+
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, pollIntervalMs);
+    });
+  }
+
+  throw new Error(`Home Assistant did not become ready after restart: ${readyUrl}`);
 };

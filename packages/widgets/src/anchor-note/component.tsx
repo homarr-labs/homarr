@@ -1,9 +1,11 @@
 "use client";
 
-import { startTransition, type ComponentProps, useCallback, useEffect, useMemo, useState } from "react";
+import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
+import type { ComponentProps } from "react";
 import dynamic from "next/dynamic";
 import { Button, Center, Group, Stack, Text, TextInput } from "@mantine/core";
-import { Quill, type DeltaStatic } from "react-quill-new";
+import { Quill } from "react-quill-new";
+import type { DeltaStatic } from "react-quill-new";
 import type ReactQuillComponent from "react-quill-new";
 import { z } from "zod/v4";
 
@@ -33,7 +35,9 @@ const quillDeltaSchema = z.object({
 
 type QuillDelta = z.infer<typeof quillDeltaSchema>;
 
-const DeltaConstructor = Quill.import("delta") as new (ops?: QuillDelta["ops"] | { ops: QuillDelta["ops"] }) => DeltaStatic;
+const DeltaConstructor = Quill.import("delta") as new (
+  ops?: QuillDelta["ops"] | { ops: QuillDelta["ops"] },
+) => DeltaStatic;
 
 const quillModules = {
   toolbar: [
@@ -105,6 +109,15 @@ const canEditPermission = (permission: AnchorNotePermission) => {
   return permission === "owner" || permission === "editor";
 };
 
+const isForbiddenError = (error: unknown): boolean => {
+  if (typeof error !== "object" || error === null) return false;
+
+  const data = (error as { data?: unknown }).data;
+  if (typeof data !== "object" || data === null) return false;
+
+  return (data as { code?: unknown }).code === "FORBIDDEN";
+};
+
 export default function AnchorNoteWidget({ options, integrationIds }: WidgetComponentProps<"anchorNote">) {
   const t = useScopedI18n("widget.anchorNote");
   const noteId = options.noteId.trim();
@@ -159,7 +172,7 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
     });
   }, [isEditing, note.content, note.title]);
 
-  const canEdit = useMemo(() => canEditPermission(note.permission), [note.permission]);
+  const canEdit = canEditPermission(note.permission);
   const isViewer = note.permission === "viewer";
   const updatedAt = useMemo(() => new Date(note.updatedAt), [note.updatedAt]);
   const updatedAtRelative = useTimeAgo(updatedAt, 30000);
@@ -220,20 +233,24 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
         content: draftContent,
       },
       {
-        async onSuccess() {
-          await refetch();
-          startTransition(() => {
-            setSaveError(null);
-            setIsEditing(false);
-          });
-        },
-        async onError(error) {
-          if (error.data?.code === "FORBIDDEN") {
+        onSuccess() {
+          void (async () => {
             await refetch();
             startTransition(() => {
-              setSaveError(t("saveForbidden"));
+              setSaveError(null);
               setIsEditing(false);
             });
+          })();
+        },
+        onError(error) {
+          if (isForbiddenError(error)) {
+            void (async () => {
+              await refetch();
+              startTransition(() => {
+                setSaveError(t("saveForbidden"));
+                setIsEditing(false);
+              });
+            })();
             return;
           }
 
@@ -243,18 +260,7 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
         },
       },
     );
-  }, [
-    canEdit,
-    draftContent,
-    draftTitle,
-    hasChanges,
-    integrationId,
-    note.title,
-    noteId,
-    refetch,
-    t,
-    updateNoteAsync,
-  ]);
+  }, [canEdit, draftContent, draftTitle, hasChanges, integrationId, note.title, noteId, refetch, t, updateNoteAsync]);
 
   return (
     <Stack h="100%" gap="xs" p="sm">

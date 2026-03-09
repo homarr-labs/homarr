@@ -437,6 +437,7 @@ export const integrationCategories = [
   "notifications",
   "firewall",
   "photoService",
+  "notes",
 ] as const;
 
 export type IntegrationCategory = (typeof integrationCategories)[number];
