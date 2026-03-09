@@ -1,17 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { isDateWithin } from "../date";
 
 describe("isDateWithin", () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-01-15T12:00:00.000Z"));
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it("should return true for a date within the specified hours", () => {
     const date = new Date();
     date.setHours(date.getHours() - 20);

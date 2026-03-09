@@ -7,8 +7,14 @@ import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
 import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
-import type { AnchorNote, AnchorNotesListInput, AnchorNoteSummary, AnchorNoteUpdateInput } from "./anchor-types";
-import { anchorNoteSchema, anchorNoteSummaryListSchema } from "./anchor-types";
+import {
+  anchorNoteSchema,
+  anchorNoteSummaryListSchema,
+  type AnchorNote,
+  type AnchorNotesListInput,
+  type AnchorNoteSummary,
+  type AnchorNoteUpdateInput,
+} from "./anchor-types";
 
 export class AnchorIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {

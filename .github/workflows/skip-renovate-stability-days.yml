@@ -7,7 +7,7 @@ on:
 
 jobs:
   skip-stability-days:
-    if: ${{ !startsWith(github.head_ref, 'renovate/') && github.event.pull_request.head.repo.full_name == github.repository }}
+    if: ${{ !startsWith(github.head_ref, 'renovate/') }}
     name: Skip Stability Days
     runs-on: ubuntu-latest
     timeout-minutes: 1
