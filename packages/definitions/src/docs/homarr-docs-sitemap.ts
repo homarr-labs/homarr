@@ -185,6 +185,7 @@ export type HomarrDocumentationPath =
   | "/docs/integrations/radarr"
   | "/docs/integrations/readarr"
   | "/docs/integrations/sabnzbd"
+  | "/docs/integrations/seerr"
   | "/docs/integrations/slskd"
   | "/docs/integrations/sonarr"
   | "/docs/integrations/tdarr"

@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import { createHash, randomBytes } from "node:crypto";
 
 import { createId } from "@homarr/common";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
@@ -27,7 +27,7 @@ export class ImageProxy {
       return existingSalt;
     }
 
-    const salt = await bcrypt.genSalt(10);
+    const salt = randomBytes(32).toString("hex");
     logger.debug("Generated new salt for image proxy", { salt });
     ImageProxy.salt = salt;
     await saltChannel.setAsync(salt);
@@ -107,8 +107,8 @@ export class ImageProxy {
 
   private async getExistingIdAsync(url: string, headers: Record<string, string> | undefined): Promise<string | null> {
     const salt = await this.getOrCreateSaltAsync();
-    const urlHash = await bcrypt.hash(url, salt);
-    const headerHash = await bcrypt.hash(JSON.stringify(headers ?? null), salt);
+    const urlHash = this.createDeterministicHash(url, salt);
+    const headerHash = this.createDeterministicHash(JSON.stringify(headers ?? null), salt);
 
     const channel = createHashChannel(`${urlHash}.${headerHash}`);
     return await channel.getAsync();
@@ -116,8 +116,8 @@ export class ImageProxy {
 
   private async storeImageAsync(id: string, url: string, headers: Record<string, string> | undefined): Promise<void> {
     const salt = await this.getOrCreateSaltAsync();
-    const urlHash = await bcrypt.hash(url, salt);
-    const headerHash = await bcrypt.hash(JSON.stringify(headers ?? null), salt);
+    const urlHash = this.createDeterministicHash(url, salt);
+    const headerHash = this.createDeterministicHash(JSON.stringify(headers ?? null), salt);
 
     const hashChannel = createHashChannel(`${urlHash}.${headerHash}`);
     const urlHeaderChannel = createUrlByIdChannel(id);
@@ -132,6 +132,10 @@ export class ImageProxy {
       url: this.redactUrl(url),
       headers: this.redactHeaders(headers ?? null),
     });
+  }
+
+  private createDeterministicHash(value: string, salt: string): string {
+    return createHash("sha256").update(`${salt}:${value}`).digest("hex");
   }
 
   private redactUrl(url: string): string {

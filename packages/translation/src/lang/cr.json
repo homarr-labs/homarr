@@ -2091,6 +2091,52 @@
         }
       }
     },
+    "immich-serverStats": {
+      "name": "crwdns3880:0crwdne3880:0",
+      "description": "crwdns3882:0crwdne3882:0",
+      "option": {
+        "showUsers": {
+          "label": "crwdns3884:0crwdne3884:0",
+          "description": "crwdns3886:0crwdne3886:0"
+        },
+        "showPhotos": {
+          "label": "crwdns3888:0crwdne3888:0",
+          "description": "crwdns3890:0crwdne3890:0"
+        },
+        "showVideos": {
+          "label": "crwdns3892:0crwdne3892:0",
+          "description": "crwdns3894:0crwdne3894:0"
+        },
+        "showStorage": {
+          "label": "crwdns3896:0crwdne3896:0",
+          "description": "crwdns3898:0crwdne3898:0"
+        }
+      },
+      "users": "crwdns3900:0crwdne3900:0",
+      "photos": "crwdns3902:0crwdne3902:0",
+      "videos": "crwdns3904:0crwdne3904:0",
+      "storage": "crwdns3906:0crwdne3906:0"
+    },
+    "immich-albumCarousel": {
+      "name": "crwdns3908:0crwdne3908:0",
+      "option": {
+        "albumId": {
+          "label": "crwdns3910:0crwdne3910:0",
+          "description": "crwdns3912:0crwdne3912:0"
+        },
+        "rotationIntervalSeconds": {
+          "label": "crwdns3914:0crwdne3914:0",
+          "description": "crwdns3916:0crwdne3916:0"
+        },
+        "showPhotoInfo": {
+          "label": "crwdns3918:0crwdne3918:0",
+          "description": "crwdns3920:0crwdne3920:0"
+        }
+      },
+      "description": "crwdns3922:0crwdne3922:0",
+      "noAlbumSelected": "crwdns3924:0crwdne3924:0",
+      "noPhotos": "crwdns3926:0crwdne3926:0"
+    },
     "downloads": {
       "name": "crwdns1170:0crwdne1170:0",
       "description": "crwdns1172:0crwdne1172:0",

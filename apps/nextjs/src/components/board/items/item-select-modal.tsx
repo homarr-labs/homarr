@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
-import { Button, Card, Center, Grid, Input, Stack, Text } from "@mantine/core";
+import { Avatar, Button, Card, Center, Grid, Group, Input, Stack, Text, Tooltip } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 
 import { objectEntries } from "@homarr/common";
-import type { WidgetKind } from "@homarr/definitions";
+import { getIconUrl, getIntegrationName } from "@homarr/definitions";
+import type { IntegrationKind, WidgetKind } from "@homarr/definitions";
 import { createModal } from "@homarr/modals";
 import { useI18n } from "@homarr/translation/client";
 import type { TablerIcon } from "@homarr/ui";
@@ -21,6 +22,10 @@ export const ItemSelectModal = createModal<void>(({ actions }) => {
       objectEntries(widgetImports)
         .map(([kind, value]) => ({
           kind,
+          supportedIntegrations:
+            "supportedIntegrations" in value.definition
+              ? value.definition.supportedIntegrations.filter((integration) => integration !== "mock")
+              : [],
           icon: value.definition.icon,
           name: t(`widget.${kind}.name`),
           description: t(`widget.${kind}.description`),
@@ -74,6 +79,7 @@ const WidgetItem = ({
 }: {
   item: {
     kind: WidgetKind;
+    supportedIntegrations: IntegrationKind[];
     name: string;
     description: string;
     icon: TablerIcon;
@@ -97,11 +103,57 @@ const WidgetItem = ({
               {item.description}
             </Text>
           </Stack>
-          <Button onClick={onSelect} variant="light" size="xs" mt="auto" radius="md" fullWidth>
+          <SupportedIntegrations mt="auto" integrations={item.supportedIntegrations} />
+          <Button onClick={onSelect} variant="light" size="xs" radius="md" fullWidth>
             {t(`item.create.addToBoard`)}
           </Button>
         </Stack>
       </Card>
     </Grid.Col>
+  );
+};
+
+interface SupportedIntegrationsProps {
+  integrations: IntegrationKind[];
+  mt: string;
+}
+
+const SupportedIntegrations = ({ integrations, mt }: SupportedIntegrationsProps) => {
+  if (integrations.length === 0) {
+    return null;
+  }
+
+  // When there are 8 or more integrations, we show 6 and a "+X" avatar. Otherwise, we show all integrations.
+  const countToShow = integrations.length >= 8 ? 6 : 7;
+  const moreCount = integrations.length - countToShow;
+
+  return (
+    <Center mt={mt}>
+      <Tooltip.Group openDelay={300} closeDelay={100}>
+        <Group gap={2}>
+          {integrations.slice(0, countToShow).map((integration) => (
+            <Tooltip key={integration} label={getIntegrationName(integration)} withArrow>
+              <Avatar src={getIconUrl(integration)} size="xs" radius="xl" />
+            </Tooltip>
+          ))}
+          {moreCount > 0 && (
+            <Tooltip
+              withArrow
+              label={
+                <>
+                  {integrations.slice(countToShow).map((integration) => (
+                    <div key={integration}>{getIntegrationName(integration)}</div>
+                  ))}
+                </>
+              }
+            >
+              <Avatar radius="xl" size="xs">
+                +{moreCount}
+              </Avatar>
+            </Tooltip>
+          )}
+        </Group>
+      </Tooltip.Group>
+    </Center>
   );
 };
