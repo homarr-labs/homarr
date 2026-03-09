@@ -97,5 +97,5 @@ const buildListQuery = (input: AnchorNotesListInput) => {
     queryParams.limit = input.limit.toString();
   }
 
-  return Object.keys(queryParams).length >= 1 ? queryParams : undefined;
+  return Object.keys(queryParams).length > 0 ? queryParams : undefined;
 };

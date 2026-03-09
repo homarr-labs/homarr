@@ -163,7 +163,7 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
     });
   }, [isEditing, note.content, note.title]);
 
-  const canEdit = useMemo(() => canEditPermission(note.permission), [note.permission]);
+  const canEdit = canEditPermission(note.permission);
   const isViewer = note.permission === "viewer";
   const updatedAt = useMemo(() => new Date(note.updatedAt), [note.updatedAt]);
   const updatedAtRelative = useTimeAgo(updatedAt, 30000);

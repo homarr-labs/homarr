@@ -17,11 +17,7 @@ export const anchorNotesRouter = createTRPCRouter({
     .concat(createOneIntegrationMiddleware("query", "anchor"))
     .input(anchorNotesListInputSchema)
     .query(async ({ ctx, input }) => {
-      const handler = anchorNotesListRequestHandler.handler(ctx.integration, {
-        search: input.search,
-        tagId: input.tagId,
-        limit: input.limit ?? 50,
-      });
+      const handler = anchorNotesListRequestHandler.handler(ctx.integration, { ...input, limit: input.limit ?? 50 });
 
       const { data } = await handler.getCachedOrUpdatedDataAsync({
         forceUpdate: false,
