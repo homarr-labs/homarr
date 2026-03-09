@@ -1,9 +1,11 @@
 "use client";
 
-import { startTransition, type ComponentProps, useCallback, useEffect, useMemo, useState } from "react";
+import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
+import type { ComponentProps } from "react";
 import dynamic from "next/dynamic";
 import { Button, Center, Group, Stack, Text, TextInput } from "@mantine/core";
-import { Quill, type DeltaStatic } from "react-quill-new";
+import { Quill } from "react-quill-new";
+import type { DeltaStatic } from "react-quill-new";
 import type ReactQuillComponent from "react-quill-new";
 import { z } from "zod/v4";
 
@@ -33,7 +35,9 @@ const quillDeltaSchema = z.object({
 
 type QuillDelta = z.infer<typeof quillDeltaSchema>;
 
-const DeltaConstructor = Quill.import("delta") as new (ops?: QuillDelta["ops"] | { ops: QuillDelta["ops"] }) => DeltaStatic;
+const DeltaConstructor = Quill.import("delta") as new (
+  ops?: QuillDelta["ops"] | { ops: QuillDelta["ops"] },
+) => DeltaStatic;
 
 const quillModules = {
   toolbar: [
@@ -220,19 +224,21 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
         content: draftContent,
       },
       {
-        async onSuccess() {
-          await refetch();
-          startTransition(() => {
-            setSaveError(null);
-            setIsEditing(false);
+        onSuccess() {
+          void refetch().then(() => {
+            startTransition(() => {
+              setSaveError(null);
+              setIsEditing(false);
+            });
           });
         },
-        async onError(error) {
+        onError(error) {
           if (error.data?.code === "FORBIDDEN") {
-            await refetch();
-            startTransition(() => {
-              setSaveError(t("saveForbidden"));
-              setIsEditing(false);
+            void refetch().then(() => {
+              startTransition(() => {
+                setSaveError(t("saveForbidden"));
+                setIsEditing(false);
+              });
             });
             return;
           }
@@ -243,18 +249,7 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
         },
       },
     );
-  }, [
-    canEdit,
-    draftContent,
-    draftTitle,
-    hasChanges,
-    integrationId,
-    note.title,
-    noteId,
-    refetch,
-    t,
-    updateNoteAsync,
-  ]);
+  }, [canEdit, draftContent, draftTitle, hasChanges, integrationId, note.title, noteId, refetch, t, updateNoteAsync]);
 
   return (
     <Stack h="100%" gap="xs" p="sm">

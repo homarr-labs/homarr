@@ -3,13 +3,19 @@ import { PostgreSqlContainer } from "@testcontainers/postgresql";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Pool } from "pg";
-import { describe, test } from "vitest";
+import { getContainerRuntimeClient, ImageName } from "testcontainers";
+import { beforeAll, describe, test } from "vitest";
 
 import { DB_CASING } from "@homarr/core/infrastructure/db/constants";
 
 import * as pgSchema from "../schema/postgresql";
 
 describe("PostgreSql Migration", () => {
+  beforeAll(async () => {
+    const containerRuntimeClient = await getContainerRuntimeClient();
+    await containerRuntimeClient.image.pull(ImageName.fromString("postgres:latest"));
+  }, 120_000);
+
   test("should add all tables and keys specified in migration files", async () => {
     const container = new PostgreSqlContainer("postgres:latest");
     const postgreSqlContainer = await container.start();
@@ -44,5 +50,5 @@ describe("PostgreSql Migration", () => {
     await pool.end();
     // Stop the container
     await postgreSqlContainer.stop();
-  }, 40_000);
+  }, 90_000);
 });

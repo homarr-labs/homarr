@@ -29,12 +29,13 @@ vi.mock("@homarr/core/infrastructure/certificates", async (importActual) => {
 });
 
 const DEFAULT_PASSWORD = "12341234";
-const DEFAULT_API_KEY = "3b1434980677dcf53fa8c4a611db3b1f0f88478790097515c0abb539102778b9"; // Some hash generated from password
+const DEFAULT_API_KEY = "3b1434980677dcf53fa8c4a611db3b1f0f88478790097515c0abb539102778b9";
 
 describe("Pi-hole v5 integration", () => {
   test("getSummaryAsync should return summary from pi-hole", async () => {
     // Arrange
     const piholeContainer = await createPiHoleV5Container(DEFAULT_PASSWORD).start();
+    await waitForPiHoleV5SummaryReadyAsync(piholeContainer, DEFAULT_API_KEY);
     const piHoleIntegration = createPiHoleIntegrationV5(piholeContainer, DEFAULT_API_KEY);
 
     // Act
@@ -53,6 +54,7 @@ describe("Pi-hole v5 integration", () => {
   test("testConnectionAsync should be successful", async () => {
     // Arrange
     const piholeContainer = await createPiHoleV5Container(DEFAULT_PASSWORD).start();
+    await waitForPiHoleV5SummaryReadyAsync(piholeContainer, DEFAULT_API_KEY);
     const piHoleIntegration = createPiHoleIntegrationV5(piholeContainer, DEFAULT_API_KEY);
 
     // Act
@@ -68,6 +70,7 @@ describe("Pi-hole v5 integration", () => {
   test("testConnectionAsync should fail with unauthorized for wrong credentials", async () => {
     // Arrange
     const piholeContainer = await createPiHoleV5Container(DEFAULT_PASSWORD).start();
+    await waitForPiHoleV5SummaryReadyAsync(piholeContainer, DEFAULT_API_KEY);
     const piHoleIntegration = createPiHoleIntegrationV5(piholeContainer, "wrong-api-key");
 
     // Act
@@ -205,6 +208,33 @@ const createPiHoleV5Container = (password: string) => {
     })
     .withExposedPorts(80)
     .withWaitStrategy(Wait.forLogMessage("Pi-hole Enabled"));
+};
+
+const waitForPiHoleV5SummaryReadyAsync = async (container: StartedTestContainer, apiKey: string) => {
+  const timeoutMs = 30_000;
+  const url = `http://${container.getHost()}:${container.getMappedPort(80)}/admin/api.php?summaryRaw&auth=${apiKey}`;
+  const timeoutAt = Date.now() + timeoutMs;
+
+  while (Date.now() < timeoutAt) {
+    const response = await fetch(url);
+    const data = (await response.json()) as unknown;
+
+    const isReady =
+      response.ok &&
+      typeof data === "object" &&
+      data !== null &&
+      !Array.isArray(data) &&
+      "status" in data &&
+      "dns_queries_today" in data;
+
+    if (isReady) {
+      return;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 1_000));
+  }
+
+  throw new Error("Pi-hole v5 summary API did not become ready in time");
 };
 
 const createPiHoleIntegrationV5 = (container: StartedTestContainer, apiKey: string) => {
