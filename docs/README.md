@@ -356,12 +356,6 @@
   <br/>  
   <p align="center">Unraid</p>
 </a>
-<td align="center">
-<a href="https://github.com/ZhFahim/anchor" target="_blank" rel="noreferrer noopener">
-  <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/anchor.svg" alt="Unraid" width="90" height="90" />
-  <br/>  
-  <p align="center">Anchor</p>
-</a>
 </td></tr>
 </tbody>
 </table>
