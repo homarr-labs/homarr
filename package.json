@@ -47,7 +47,7 @@
     "@vitejs/plugin-react": "^5.1.4",
     "@vitest/coverage-v8": "^4.0.18",
     "@vitest/ui": "^4.0.18",
-    "conventional-changelog-conventionalcommits": "^9.2.0",
+    "conventional-changelog-conventionalcommits": "^9.3.0",
     "cross-env": "^10.1.0",
     "jsdom": "^28.1.0",
     "json5": "^2.2.3",
