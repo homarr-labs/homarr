@@ -1,10 +1,11 @@
 import { z } from "zod/v4";
 
-export type AnchorNotesListInput = {
-  search?: string;
-  tagId?: string;
-  limit?: number;
-};
+export const anchorNotesListInputSchema = z.object({
+  search: z.string().optional(),
+  tagId: z.string().optional(),
+  limit: z.number().min(1).max(200).optional(),
+});
+export type AnchorNotesListInput = z.infer<typeof anchorNotesListInputSchema>;
 
 export const anchorNotePermissionSchema = z.enum(["owner", "viewer", "editor"]);
 export type AnchorNotePermission = z.infer<typeof anchorNotePermissionSchema>;
@@ -31,7 +32,10 @@ export type AnchorNote = z.infer<typeof anchorNoteSchema>;
 export const anchorNoteSummaryListSchema = z.array(anchorNoteSummarySchema);
 
 export const anchorNoteUpdateInputSchema = z.object({
+  noteId: z.string(),
   title: z.string().optional(),
   content: z.string().optional(),
+}).refine((value) => value.title !== undefined || value.content !== undefined, {
+  message: "At least one field to update must be provided",
 });
 export type AnchorNoteUpdateInput = z.infer<typeof anchorNoteUpdateInputSchema>;

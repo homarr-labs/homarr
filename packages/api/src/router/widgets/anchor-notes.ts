@@ -2,35 +2,20 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { ResponseError } from "@homarr/common/server";
-import { createIntegrationAsync } from "@homarr/integrations";
+import { anchorNotesListInputSchema, anchorNoteUpdateInputSchema, createIntegrationAsync } from "@homarr/integrations";
 import { anchorNoteRequestHandler, anchorNotesListRequestHandler } from "@homarr/request-handler/anchor-notes";
 
 import { createOneIntegrationMiddleware } from "../../middlewares/integration";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../../trpc";
 
-const listNotesInput = z.object({
-  search: z.string().optional(),
-  tagId: z.string().optional(),
-  limit: z.number().min(1).max(200).optional(),
-});
-
 const noteIdInput = z.object({
   noteId: z.string(),
 });
 
-const updateNoteInput = noteIdInput
-  .extend({
-    title: z.string().optional(),
-    content: z.string().optional(),
-  })
-  .refine((value) => value.title !== undefined || value.content !== undefined, {
-    message: "At least one field to update must be provided",
-  });
-
 export const anchorNotesRouter = createTRPCRouter({
   listNotes: publicProcedure
     .concat(createOneIntegrationMiddleware("query", "anchor"))
-    .input(listNotesInput)
+    .input(anchorNotesListInputSchema)
     .query(async ({ ctx, input }) => {
       const handler = anchorNotesListRequestHandler.handler(ctx.integration, {
         search: input.search,
@@ -58,15 +43,12 @@ export const anchorNotesRouter = createTRPCRouter({
     }),
   updateNote: protectedProcedure
     .concat(createOneIntegrationMiddleware("interact", "anchor"))
-    .input(updateNoteInput)
+    .input(anchorNoteUpdateInputSchema)
     .mutation(async ({ ctx, input }) => {
       const integrationInstance = await createIntegrationAsync(ctx.integration);
 
       try {
-        const updatedNote = await integrationInstance.updateNoteAsync(input.noteId, {
-          title: input.title,
-          content: input.content,
-        });
+        const updatedNote = await integrationInstance.updateNoteAsync(input);
 
         const noteHandler = anchorNoteRequestHandler.handler(ctx.integration, { noteId: input.noteId });
         await noteHandler.invalidateAsync();

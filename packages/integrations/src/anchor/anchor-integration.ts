@@ -5,6 +5,7 @@ import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/h
 
 import type { IntegrationTestingInput } from "../base/integration";
 import { Integration } from "../base/integration";
+import { TestConnectionError } from "../base/test-connection/test-connection-error";
 import type { TestingResult } from "../base/test-connection/test-connection-service";
 import {
   anchorNoteSchema,
@@ -17,10 +18,15 @@ import {
 
 export class AnchorIntegration extends Integration {
   protected async testingAsync(input: IntegrationTestingInput): Promise<TestingResult> {
-    const response = await this.requestAsync(input.fetchAsync, "/api/notes", {
-      queryParams: { limit: "1" },
+    const response = await input.fetchAsync(this.url("/api/notes", { limit: 1 }), {
+      headers: {
+        Authorization: `Bearer ${this.getSecretValue("apiKey")}`,
+      },
     });
-    anchorNoteSummaryListSchema.parse(response);
+
+    if (!response.ok) return TestConnectionError.StatusResult(response);
+
+    anchorNoteSummaryListSchema.parse(await response.json());
     return { success: true };
   }
 
@@ -37,10 +43,11 @@ export class AnchorIntegration extends Integration {
     return anchorNoteSchema.parse(response);
   }
 
-  public async updateNoteAsync(noteId: string, input: AnchorNoteUpdateInput): Promise<AnchorNote> {
+  public async updateNoteAsync(input: AnchorNoteUpdateInput): Promise<AnchorNote> {
+    const { noteId, ...updateData } = input;
     const response = await this.requestAsync(fetchWithTrustedCertificatesAsync, `/api/notes/${noteId}`, {
       method: "PATCH",
-      body: input,
+      body: updateData,
     });
     return anchorNoteSchema.parse(response);
   }

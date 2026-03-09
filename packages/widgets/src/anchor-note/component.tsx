@@ -3,7 +3,6 @@
 import { startTransition, type ComponentProps, useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { Button, Center, Group, Stack, Text, TextInput } from "@mantine/core";
-import { TRPCClientError } from "@trpc/client";
 import { Quill, type DeltaStatic } from "react-quill-new";
 import type ReactQuillComponent from "react-quill-new";
 import { z } from "zod/v4";
@@ -21,7 +20,7 @@ import "./anchor-note.css";
 type ReactQuillProps = ComponentProps<typeof ReactQuillComponent>;
 type ReactQuillOnChange = NonNullable<ReactQuillProps["onChange"]>;
 
-const ReactQuill = dynamic<ReactQuillProps>(async () => (await import("react-quill-new")).default, { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 const quillDeltaOperationSchema = z.object({
   insert: z.unknown().optional(),
@@ -213,30 +212,37 @@ const AnchorNoteWidgetContent = ({ options, integrationId, noteId }: AnchorNoteW
       return;
     }
 
-    try {
-      await updateNoteAsync({
+    await updateNoteAsync(
+      {
         integrationId,
         noteId,
         title: normalizedTitle,
         content: draftContent,
-      });
-      await refetch();
-      startTransition(() => {
-        setSaveError(null);
-        setIsEditing(false);
-      });
-    } catch (mutationError) {
-      if (mutationError instanceof TRPCClientError && mutationError.data?.code === "FORBIDDEN") {
-        await refetch();
-        startTransition(() => {
-          setSaveError(t("saveForbidden"));
-          setIsEditing(false);
-        });
-        return;
-      }
+      },
+      {
+        async onSuccess() {
+          await refetch();
+          startTransition(() => {
+            setSaveError(null);
+            setIsEditing(false);
+          });
+        },
+        async onError(error) {
+          if (error.data?.code === "FORBIDDEN") {
+            await refetch();
+            startTransition(() => {
+              setSaveError(t("saveForbidden"));
+              setIsEditing(false);
+            });
+            return;
+          }
 
-      setSaveError(t("saveFailed"));
-    }
+          startTransition(() => {
+            setSaveError(t("saveFailed"));
+          });
+        },
+      },
+    );
   }, [
     canEdit,
     draftContent,

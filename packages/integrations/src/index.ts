@@ -66,6 +66,8 @@ export type {
 } from "./anchor/anchor-types";
 
 // Schemas
+export { anchorNotesListInputSchema } from "./anchor/anchor-types";
+export { anchorNoteUpdateInputSchema } from "./anchor/anchor-types";
 export { downloadClientItemSchema } from "./interfaces/downloads/download-client-items";
 
 // Helpers
