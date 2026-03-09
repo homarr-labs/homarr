@@ -14,7 +14,7 @@ export const anchorNotesListRequestHandler = createCachedIntegrationRequestHandl
   cacheDuration: dayjs.duration(15, "seconds"),
   async requestAsync(integration, input) {
     const instance = await createIntegrationAsync(integration);
-    return instance.listNotesAsync(input);
+    return await instance.listNotesAsync(input);
   },
 });
 
@@ -24,7 +24,7 @@ export const anchorNoteRequestHandler = createCachedIntegrationRequestHandler<An
     cacheDuration: dayjs.duration(15, "seconds"),
     async requestAsync(integration, input) {
       const instance = await createIntegrationAsync(integration);
-      return instance.getNoteAsync(input.noteId);
+      return await instance.getNoteAsync(input.noteId);
     },
   },
 );

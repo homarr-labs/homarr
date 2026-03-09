@@ -14,7 +14,7 @@ import { useFormContext } from "./form";
 export const WidgetAnchorNoteInput = ({ property, kind, options }: CommonWidgetInputProps<"anchorNote">) => {
   const t = useI18n();
   const tWidget = useWidgetInputTranslation(kind, property);
-  const tAnchor = useScopedI18n("widget.anchorNote");
+  const tAnchor = useScopedI18n("widget.anchorNote") as (key: string) => string;
   const form = useFormContext();
 
   const integrationId = form.values.integrationIds[0];
