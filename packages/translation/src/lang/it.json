@@ -2091,6 +2091,52 @@
         }
       }
     },
+    "immich-serverStats": {
+      "name": "Statistiche Server Immich",
+      "description": "Informazioni sulla tua istanza Immich",
+      "option": {
+        "showUsers": {
+          "label": "Mostra utenti",
+          "description": "Mostra il conteggio degli utenti sulla tua istanza"
+        },
+        "showPhotos": {
+          "label": "Mostra foto",
+          "description": "Mostra il conteggio delle foto sulla tua istanza"
+        },
+        "showVideos": {
+          "label": "Mostra video",
+          "description": "Mostra il conteggio dei video sulla tua istanza"
+        },
+        "showStorage": {
+          "label": "Mostra spazio di archiviazione",
+          "description": "Visualizza la quantità totale di memoria utilizzata"
+        }
+      },
+      "users": "Utenti",
+      "photos": "Foto",
+      "videos": "Video",
+      "storage": "Spazio utilizzato"
+    },
+    "immich-albumCarousel": {
+      "name": "Album Immich",
+      "option": {
+        "albumId": {
+          "label": "ID Album",
+          "description": "Si tratta di un ID univoco che si riferisce al tuo album Immich. Puoi trovare questo id aprendo un album e copiando la stringa univoca dall'URL, ad esempio 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
+        },
+        "rotationIntervalSeconds": {
+          "label": "Intervallo in secondi",
+          "description": "Ruota le immagini nell'album ogni X secondi. Deve essere almeno 1. Deve essere inferiore a 3600."
+        },
+        "showPhotoInfo": {
+          "label": "Mostra informazioni foto",
+          "description": "Visualizza la data dell'immagine e l'indice corrente nella parte inferiore della presentazione"
+        }
+      },
+      "description": "Presentazione delle immagini nel tuo album Immich",
+      "noAlbumSelected": "Nessun album selezionato, modifica il widget e scegli un album",
+      "noPhotos": "Nessuna foto in questo album"
+    },
     "downloads": {
       "name": "Scarica Client",
       "description": "Ti consente di visualizzare e gestire i tuoi download dai client Torrent e Usenet.",
