@@ -2092,50 +2092,50 @@
       }
     },
     "immich-serverStats": {
-      "name": "",
-      "description": "",
+      "name": "Статистика сервера Immich",
+      "description": "Информация о вашем экземпляре Immich",
       "option": {
         "showUsers": {
-          "label": "",
-          "description": ""
+          "label": "Показать пользователей",
+          "description": "Показать количество пользователей на вашем экземпляре"
         },
         "showPhotos": {
-          "label": "",
-          "description": ""
+          "label": "Показать фото",
+          "description": "Показать количество фотографий на вашем экземпляре"
         },
         "showVideos": {
-          "label": "",
-          "description": ""
+          "label": "Показать видео",
+          "description": "Показать количество видео на вашем экземпляре"
         },
         "showStorage": {
-          "label": "",
-          "description": ""
+          "label": "Показать хранилище",
+          "description": "Показать общий объём используемого хранилища"
         }
       },
-      "users": "",
-      "photos": "",
-      "videos": "",
-      "storage": ""
+      "users": "Пользователи",
+      "photos": "Фото",
+      "videos": "Видео",
+      "storage": "Занято"
     },
     "immich-albumCarousel": {
-      "name": "",
+      "name": "Альбом Immich",
       "option": {
         "albumId": {
-          "label": "",
-          "description": ""
+          "label": "ID альбома",
+          "description": "Уникальный идентификатор вашего альбома Immich. Его можно найти, открыв альбом и скопировав уникальную строку из URL, например 'a21aca09-9f05-47dc-b1a1-7b53c547226e'"
         },
         "rotationIntervalSeconds": {
-          "label": "",
-          "description": ""
+          "label": "Интервал в секундах",
+          "description": "Переключать фотографии в альбоме каждые X секунд. Минимум 1. Максимум 3600."
         },
         "showPhotoInfo": {
-          "label": "",
-          "description": ""
+          "label": "Показать информацию о фото",
+          "description": "Отображать дату снимка и текущий номер в нижней части слайд-шоу"
         }
       },
-      "description": "",
-      "noAlbumSelected": "",
-      "noPhotos": ""
+      "description": "Слайд-шоу фотографий из вашего альбома Immich",
+      "noAlbumSelected": "Альбом не выбран — отредактируйте виджет и выберите альбом",
+      "noPhotos": "В этом альбоме нет фотографий"
     },
     "downloads": {
       "name": "Загрузки",
