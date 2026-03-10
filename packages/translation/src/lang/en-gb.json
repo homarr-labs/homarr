@@ -1402,10 +1402,10 @@
               "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
-              "label": ""
+              "label": "Grid"
             }
           }
         },
@@ -1414,19 +1414,19 @@
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "Failed to fetch DNS Hole Summary",
+        "integrationsDisconnected": "No data available, all integrations disconnected"
       },
       "data": {
-        "adsBlockedToday": "",
-        "adsBlockedTodayPercentage": "",
-        "dnsQueriesToday": "",
-        "domainsBeingBlocked": ""
+        "adsBlockedToday": "Blocked today",
+        "adsBlockedTodayPercentage": "Blocked today",
+        "dnsQueriesToday": "Queries today",
+        "domainsBeingBlocked": "Domains on blocklist"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked"
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "DNS Hole Controls",
       "description": "Control PiHole or AdGuard from your dashboard",
       "option": {
         "layout": {
@@ -1469,85 +1469,85 @@
       "description": "Displays the current date and time.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Custom Title/City display",
+          "description": "Show off a custom title or the name of the city/country on top of the clock."
         },
         "customTitle": {
-          "label": ""
+          "label": "Title"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24-hour format",
+          "description": "Use 24-hour format instead of 12-hour format"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Display seconds"
         },
         "useCustomTimezone": {
           "label": " "
         },
         "timezone": {
-          "label": "",
-          "description": ""
+          "label": "Time zone",
+          "description": "Choose the time zone following the IANA standard"
         },
         "showDate": {
-          "label": ""
+          "label": "Show the date"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Date Format",
+          "description": "How the date should look like"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Custom time format",
+          "description": "Use ISO 8601 to format time (this will override other options)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Custom date format",
+          "description": "Use ISO 8601 to format date (this will override other options)"
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Minecraft Server Status",
+      "description": "Displays the status of a Minecraft server",
       "option": {
         "title": {
-          "label": ""
+          "label": "Title"
         },
         "domain": {
-          "label": ""
+          "label": "Server address"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Bedrock server"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "Online",
+        "offline": "Offline"
       }
     },
     "notebook": {
-      "name": "",
-      "description": "",
+      "name": "Notebook",
+      "description": "A simple notebook widget that supports markdown",
       "option": {
         "showToolbar": {
-          "label": ""
+          "label": "Show the toolbar to help you write markdown"
         },
         "allowReadOnlyCheck": {
-          "label": ""
+          "label": "Allow check in read only mode"
         },
         "content": {
-          "label": ""
+          "label": "The content of the notebook"
         }
       },
       "controls": {
-        "bold": "",
-        "italic": "",
-        "strikethrough": "",
-        "underline": "",
+        "bold": "Bold",
+        "italic": "Italic",
+        "strikethrough": "Strikethrough",
+        "underline": "Underline",
         "colorText": "Colour text",
         "colorHighlight": "Coloured highlight text",
-        "code": "",
-        "clear": "",
+        "code": "Code",
+        "clear": "Clear formatting",
         "heading": "",
         "align": "",
         "blockquote": "",
@@ -4481,12 +4481,12 @@
           "title": "",
           "noResults": {
             "title": "",
-            "action": ""
+            "action": "Create your first search engine"
           },
-          "interactive": ""
+          "interactive": "Interactive, uses an integration"
         },
         "create": {
-          "title": "",
+          "title": "New search engine",
           "notification": {
             "success": {
               "title": "Search engine created",
