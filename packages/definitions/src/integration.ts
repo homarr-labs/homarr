@@ -346,7 +346,7 @@ export const integrationDefs = {
     name: "Tracearr",
     secretKinds: [["apiKey"]],
     iconUrl: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons@master/svg/tracearr.svg",
-    category: ["mediaMonitoring"],
+    category: ["healthMonitoring"],
     // @ts-expect-error - docs page will be created when integration is merged
     documentationUrl: createDocumentationLink("/docs/integrations/tracearr"),
   },
@@ -361,7 +361,6 @@ export const integrationDefs = {
       "downloadClient",
       "healthMonitoring",
       "indexerManager",
-      "mediaMonitoring",
       "mediaRelease",
       "mediaRequest",
       "mediaService",
