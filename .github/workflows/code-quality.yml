@@ -100,9 +100,17 @@ jobs:
           SKIP_ENV_VALIDATION: true
       - name: Install playwright browsers
         run: pnpm exec playwright install chromium
+      - name: Create screenshot directory
+        run: mkdir -p screenshots
       - name: Run E2E Tests
         shell: bash
         run: pnpm test:e2e
+      - name: Upload screenshots
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-screenshots
+          path: screenshots
 
   build:
     runs-on: ubuntu-latest
