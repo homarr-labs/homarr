@@ -1,11 +1,14 @@
 import { isProviderEnabled } from "@homarr/auth/server";
 import { objectEntries } from "@homarr/common";
 import type { MaybePromise } from "@homarr/common/types";
+import { createLogger } from "@homarr/core/infrastructure/logs";
 import type { Database } from "@homarr/db";
 import { eq } from "@homarr/db";
 import { groups, onboarding } from "@homarr/db/schema";
 import type { OnboardingStep } from "@homarr/definitions";
 import { credentialsAdminGroup } from "@homarr/definitions";
+
+const logger = createLogger({ module: "onboarding-queries" });
 
 export const nextOnboardingStepAsync = async (db: Database, preferredStep: OnboardingStep | undefined) => {
   const { current } = await getOnboardingOrFallbackAsync(db);
@@ -20,10 +23,12 @@ export const nextOnboardingStepAsync = async (db: Database, preferredStep: Onboa
     if (typeof condition === "boolean" && !condition) continue;
     if (typeof condition === "function" && !(await condition(db))) continue;
 
+    logger.info(`Moving onboarding from step ${current} to ${nextStep}`);
     await db.update(onboarding).set({
       previousStep: current,
       step: nextStep,
     });
+
     return;
   }
 };
