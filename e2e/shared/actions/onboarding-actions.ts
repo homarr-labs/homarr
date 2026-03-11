@@ -3,6 +3,7 @@ import type { Page } from "playwright";
 
 import * as sqliteSchema from "../../../packages/db/schema/sqlite";
 import type { SqliteDatabase } from "../e2e-db";
+import { waitForSelectorOrScreenshotAsync } from "../utils";
 
 export class OnboardingActions {
   private readonly page: Page;
@@ -32,7 +33,7 @@ export class OnboardingActions {
   }
 
   public async processUserStepAsync(input: { username: string; password: string; confirmPassword: string }) {
-    await this.page.waitForSelector("text=administrator user");
+    await waitForSelectorOrScreenshotAsync(this.page, "text=administrator user");
 
     await this.page.getByLabel("Username").fill(input.username);
     await this.page.getByLabel("Password", { exact: true }).fill(input.password);
@@ -42,13 +43,13 @@ export class OnboardingActions {
   }
 
   public async processExternalGroupStepAsync(input: { name: string }) {
-    await this.page.waitForSelector("text=external provider");
+    await waitForSelectorOrScreenshotAsync(this.page, "text=external provider");
     await this.page.locator("input").fill(input.name);
     await this.page.locator("css=button[type='submit']").click();
   }
 
   public async processSettingsStepAsync() {
-    await this.page.waitForSelector("text=Analytics");
+    await waitForSelectorOrScreenshotAsync(this.page, "text=Analytics");
     await this.page.locator("css=button[type='submit']").click();
   }
 }

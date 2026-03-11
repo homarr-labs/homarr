@@ -6,6 +6,7 @@ import * as sqliteSchema from "../../../packages/db/schema/sqlite";
 import { OnboardingStep } from "../../../packages/definitions/src";
 import { credentialsAdminGroup } from "../../../packages/definitions/src/group";
 import type { SqliteDatabase } from "../e2e-db";
+import { waitForSelectorOrScreenshotAsync } from "../utils";
 
 export class OnboardingAssertions {
   private readonly page: Page;
@@ -57,6 +58,6 @@ export class OnboardingAssertions {
   }
 
   public async assertFinishStepVisibleAsync() {
-    await this.page.waitForSelector("text=completed the setup", { timeout: 5000 });
+    await waitForSelectorOrScreenshotAsync(this.page, "text=completed the setup");
   }
 }
