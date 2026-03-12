@@ -1548,145 +1548,145 @@
         "colorHighlight": "Coloured highlight text",
         "code": "Code",
         "clear": "Clear formatting",
-        "heading": "",
-        "align": "",
-        "blockquote": "",
-        "horizontalLine": "",
-        "bulletList": "",
-        "orderedList": "",
-        "checkList": "",
-        "increaseIndent": "",
-        "decreaseIndent": "",
-        "link": "",
-        "unlink": "",
-        "image": "",
-        "addTable": "",
-        "deleteTable": "",
+        "heading": "Heading {level}",
+        "align": "Align text: {position}",
+        "blockquote": "Blockquote",
+        "horizontalLine": "Horizontal line",
+        "bulletList": "Bullet list",
+        "orderedList": "Ordered list",
+        "checkList": "Check list",
+        "increaseIndent": "Increase Indent",
+        "decreaseIndent": "Decrease Indent",
+        "link": "Link",
+        "unlink": "Remove link",
+        "image": "Embed Image",
+        "addTable": "Add table",
+        "deleteTable": "Delete Table",
         "colorCell": "Colour cell",
-        "mergeCell": "",
-        "addColumnLeft": "",
-        "addColumnRight": "",
-        "deleteColumn": "",
-        "addRowTop": "",
-        "addRowBelow": "",
-        "deleteRow": ""
+        "mergeCell": "Toggle cell merging",
+        "addColumnLeft": "Add column before",
+        "addColumnRight": "Add column after",
+        "deleteColumn": "Delete column",
+        "addRowTop": "Add row before",
+        "addRowBelow": "Add row after",
+        "deleteRow": "Delete row"
       },
       "align": {
-        "left": "",
-        "center": "",
-        "right": ""
+        "left": "Left",
+        "center": "Centre",
+        "right": "Right"
       },
       "popover": {
         "clearColor": "Clear colour",
-        "source": "",
-        "widthPlaceholder": "",
-        "columns": "",
-        "rows": "",
-        "width": "",
-        "height": ""
+        "source": "Source",
+        "widthPlaceholder": "Value in % or pixels",
+        "columns": "Columns",
+        "rows": "Rows",
+        "width": "Width",
+        "height": "Height"
       },
-      "placeholder": "",
+      "placeholder": "Start writing your notes",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Dismiss changes?",
+        "message": "You have unsaved changes in your notebook. Are you sure you want to discard them?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Discard changes",
+          "keepEditing": "Keep editing"
         }
       }
     },
     "iframe": {
-      "name": "",
-      "description": "",
+      "name": "iFrame",
+      "description": "Embed any content from the Internet. Some websites may restrict access.",
       "option": {
         "embedUrl": {
-          "label": ""
+          "label": "Embed URL"
         },
         "allowFullScreen": {
-          "label": ""
+          "label": "Allow full screen"
         },
         "allowTransparency": {
-          "label": ""
+          "label": "Allow transparency"
         },
         "allowScrolling": {
-          "label": ""
+          "label": "Allow scrolling"
         },
         "allowPayment": {
-          "label": ""
+          "label": "Allow payment"
         },
         "allowAutoPlay": {
-          "label": ""
+          "label": "Allow auto play"
         },
         "allowMicrophone": {
-          "label": ""
+          "label": "Allow microphone"
         },
         "allowCamera": {
-          "label": ""
+          "label": "Allow camera"
         },
         "allowGeolocation": {
-          "label": ""
+          "label": "Allow geolocation"
         }
       },
       "error": {
-        "noUrl": "",
-        "unsupportedProtocol": "",
-        "noBrowerSupport": ""
+        "noUrl": "No iFrame URL provided",
+        "unsupportedProtocol": "The URL provided is using an unsupported protocol. Please use one of ({supportedProtocols})",
+        "noBrowerSupport": "Your Browser does not support iframes. Please update your browser."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Entity State",
+      "description": "Display the state of an entity and toggle it optionally",
       "option": {
         "entityId": {
-          "label": ""
+          "label": "Entity ID"
         },
         "displayName": {
-          "label": ""
+          "label": "Display-name"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Entity Unit"
         },
         "clickable": {
-          "label": ""
+          "label": "Clickable"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Execute Automation",
+      "description": "Trigger an automation with one click",
       "option": {
         "displayName": {
-          "label": ""
+          "label": "Display name"
         },
         "automationId": {
-          "label": ""
+          "label": "Automation ID"
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "Run {name}"
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Stock Price",
+      "description": "Displays the current stock price of a company",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Stock symbol"
         },
         "timeRange": {
-          "label": "",
+          "label": "Time Range",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 Day"
             },
             "5d": {
-              "label": ""
+              "label": "5 Day"
             },
             "1mo": {
-              "label": ""
+              "label": "1 Month"
             },
             "3mo": {
-              "label": ""
+              "label": "3 Months"
             },
             "6mo": {
               "label": ""
@@ -1816,9 +1816,9 @@
         "fog": "",
         "drizzle": "",
         "freezingDrizzle": "",
-        "rain": "",
-        "freezingRain": "",
-        "snowFall": "",
+        "rain": "Rain",
+        "freezingRain": "Freezing rain",
+        "snowFall": "Snow fall",
         "snowGrains": "",
         "rainShowers": "",
         "snowShowers": "",
@@ -4357,7 +4357,7 @@
             }
           },
           "local": {
-            "title": ""
+            "title": "Local results"
           }
         }
       },
@@ -4410,50 +4410,50 @@
                 "label": "Global settings"
               },
               "about": {
-                "label": ""
+                "label": "About"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Home board"
               },
               "preferences": {
-                "label": ""
+                "label": "Your preferences"
               }
             }
           }
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "Search for users or groups",
         "group": {
           "user": {
-            "title": "",
+            "title": "Users",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Show user details"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Select an action for the user"
               }
             }
           },
           "group": {
-            "title": "",
+            "title": "Groups",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Show group details"
                 },
                 "manageMember": {
-                  "label": ""
+                  "label": "Manage members"
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "Manage permissions"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Select an action for the group"
               }
             }
           }
@@ -4461,26 +4461,26 @@
       }
     },
     "engine": {
-      "search": "",
+      "search": "Find a search engine",
       "field": {
         "name": {
-          "label": ""
+          "label": "Name"
         },
         "short": {
-          "label": ""
+          "label": "Short"
         },
         "urlTemplate": {
-          "label": ""
+          "label": "URL search template"
         },
         "description": {
-          "label": ""
+          "label": "Description"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Search engines",
           "noResults": {
-            "title": "",
+            "title": "There are no search engines yet",
             "action": "Create your first search engine"
           },
           "interactive": "Interactive, uses an integration"
