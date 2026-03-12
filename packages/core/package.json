@@ -54,7 +54,7 @@
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.13",
     "@types/pg": "^8.18.0",
-    "eslint": "^9.39.3",
+    "eslint": "^9.39.4",
     "typescript": "^5.9.3"
   }
 }
