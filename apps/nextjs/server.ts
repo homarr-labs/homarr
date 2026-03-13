@@ -296,7 +296,10 @@ app.prepare().then(async () => {
 
   server.once("error", (err) => {
     logger.error(new ErrorWithMetadata("Server error", {}, { cause: err }));
-    process.exit(1);
+    wssHandler.broadcastReconnectNotification();
+    wss.close();
+    tasksServer.close().catch((closeError) => logger.error("Failed to close tasks server", closeError));
+    server.close(() => process.exit(1));
   });
 
   server.listen(port, () => {
