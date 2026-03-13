@@ -213,5 +213,5 @@ export const IconPicker = ({
 const localizationPathRegex = new RegExp(`^/?(${supportedLanguages.join("|")})(/.*)?$`, "i" /* ignore casing */);
 const shouldShowPreview = (value: string | null): value is string => {
   if (!value) return false;
-  return !localizationPathRegex.exec(value);
+  return !localizationPathRegex.test(value);
 };
