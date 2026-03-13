@@ -22,6 +22,7 @@ import { IconUpload } from "@tabler/icons-react";
 
 import { clientApi } from "@homarr/api/client";
 import { useSession } from "@homarr/auth/client";
+import { supportedLanguages } from "@homarr/translation";
 import { useScopedI18n } from "@homarr/translation/client";
 
 import { UploadMedia } from "../upload-media/upload-media";
@@ -137,7 +138,9 @@ export const IconPicker = ({
           <InputBase
             flex={1}
             rightSection={<Combobox.Chevron />}
-            leftSection={previewUrl ? <img src={previewUrl} alt="" style={{ width: 20, height: 20 }} /> : null}
+            leftSection={
+              shouldShowPreview(previewUrl) ? <img src={previewUrl} alt="" style={{ width: 20, height: 20 }} /> : null
+            }
             value={search}
             onChange={(event) => {
               combobox.openDropdown();
@@ -203,4 +206,12 @@ export const IconPicker = ({
       </Combobox.Dropdown>
     </Combobox>
   );
+};
+
+// This regex is used to prevent loading a preview like en or /en which would trigger a language change
+// See https://github.com/homarr-labs/homarr/issues/3070
+const localizationPathRegex = new RegExp(`^/?(${supportedLanguages.join("|")})(/.*)?$`);
+const shouldShowPreview = (value: string | null): value is string => {
+  if (!value) return false;
+  return !localizationPathRegex.exec(value);
 };
