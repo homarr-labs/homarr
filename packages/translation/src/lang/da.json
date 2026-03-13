@@ -2091,6 +2091,52 @@
         }
       }
     },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
+    },
     "downloads": {
       "name": "Download Klient",
       "description": "Giver dig mulighed for at se og administrere dine downloads fra både Torrent og Usenet klienter.",

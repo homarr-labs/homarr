@@ -1366,46 +1366,46 @@
               "label": "Vertical"
             },
             "grid": {
-              "label": ""
+              "label": "Grid"
             },
             "gridHorizontal": {
-              "label": ""
+              "label": "Grid horizontal"
             }
           }
         },
         "hideTitle": {
-          "label": ""
+          "label": "Hide title"
         },
         "hideIcon": {
-          "label": ""
+          "label": "Hide icons"
         },
         "hideHostname": {
-          "label": ""
+          "label": "Hide hostnames"
         },
         "openNewTab": {
-          "label": ""
+          "label": "Open in new tab"
         },
         "items": {
-          "label": "",
-          "add": ""
+          "label": "Bookmarks",
+          "add": "Add bookmark"
         }
       }
     },
     "dnsHoleSummary": {
-      "name": "",
-      "description": "",
+      "name": "DNS Hole Summary",
+      "description": "Displays the summary of your DNS Hole",
       "option": {
         "layout": {
-          "label": "",
+          "label": "Layout",
           "option": {
             "row": {
-              "label": ""
+              "label": "Horizontal"
             },
             "column": {
-              "label": ""
+              "label": "Vertical"
             },
             "grid": {
-              "label": ""
+              "label": "Grid"
             }
           }
         },
@@ -1414,19 +1414,19 @@
         }
       },
       "error": {
-        "internalServerError": "",
-        "integrationsDisconnected": ""
+        "internalServerError": "Failed to fetch DNS Hole Summary",
+        "integrationsDisconnected": "No data available, all integrations disconnected"
       },
       "data": {
-        "adsBlockedToday": "",
-        "adsBlockedTodayPercentage": "",
-        "dnsQueriesToday": "",
-        "domainsBeingBlocked": ""
+        "adsBlockedToday": "Blocked today",
+        "adsBlockedTodayPercentage": "Blocked today",
+        "dnsQueriesToday": "Queries today",
+        "domainsBeingBlocked": "Domains on blocklist"
       },
-      "domainsTooltip": ""
+      "domainsTooltip": "Due to multiple integrations Homarr can't calculate the exact number of domains being blocked"
     },
     "dnsHoleControls": {
-      "name": "",
+      "name": "DNS Hole Controls",
       "description": "Control PiHole or AdGuard from your dashboard",
       "option": {
         "layout": {
@@ -1469,224 +1469,224 @@
       "description": "Displays the current date and time.",
       "option": {
         "customTitleToggle": {
-          "label": "",
-          "description": ""
+          "label": "Custom Title/City display",
+          "description": "Show off a custom title or the name of the city/country on top of the clock."
         },
         "customTitle": {
-          "label": ""
+          "label": "Title"
         },
         "is24HourFormat": {
-          "label": "",
-          "description": ""
+          "label": "24-hour format",
+          "description": "Use 24-hour format instead of 12-hour format"
         },
         "showSeconds": {
-          "label": ""
+          "label": "Display seconds"
         },
         "useCustomTimezone": {
           "label": " "
         },
         "timezone": {
-          "label": "",
-          "description": ""
+          "label": "Time zone",
+          "description": "Choose the time zone following the IANA standard"
         },
         "showDate": {
-          "label": ""
+          "label": "Show the date"
         },
         "dateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Date Format",
+          "description": "How the date should look like"
         },
         "customTimeFormat": {
-          "label": "",
-          "description": ""
+          "label": "Custom time format",
+          "description": "Use ISO 8601 to format time (this will override other options)"
         },
         "customDateFormat": {
-          "label": "",
-          "description": ""
+          "label": "Custom date format",
+          "description": "Use ISO 8601 to format date (this will override other options)"
         }
       }
     },
     "minecraftServerStatus": {
-      "name": "",
-      "description": "",
+      "name": "Minecraft Server Status",
+      "description": "Displays the status of a Minecraft server",
       "option": {
         "title": {
-          "label": ""
+          "label": "Title"
         },
         "domain": {
-          "label": ""
+          "label": "Server address"
         },
         "isBedrockServer": {
-          "label": ""
+          "label": "Bedrock server"
         }
       },
       "status": {
-        "online": "",
-        "offline": ""
+        "online": "Online",
+        "offline": "Offline"
       }
     },
     "notebook": {
-      "name": "",
-      "description": "",
+      "name": "Notebook",
+      "description": "A simple notebook widget that supports markdown",
       "option": {
         "showToolbar": {
-          "label": ""
+          "label": "Show the toolbar to help you write markdown"
         },
         "allowReadOnlyCheck": {
-          "label": ""
+          "label": "Allow check in read only mode"
         },
         "content": {
-          "label": ""
+          "label": "The content of the notebook"
         }
       },
       "controls": {
-        "bold": "",
-        "italic": "",
-        "strikethrough": "",
-        "underline": "",
+        "bold": "Bold",
+        "italic": "Italic",
+        "strikethrough": "Strikethrough",
+        "underline": "Underline",
         "colorText": "Colour text",
         "colorHighlight": "Coloured highlight text",
-        "code": "",
-        "clear": "",
-        "heading": "",
-        "align": "",
-        "blockquote": "",
-        "horizontalLine": "",
-        "bulletList": "",
-        "orderedList": "",
-        "checkList": "",
-        "increaseIndent": "",
-        "decreaseIndent": "",
-        "link": "",
-        "unlink": "",
-        "image": "",
-        "addTable": "",
-        "deleteTable": "",
+        "code": "Code",
+        "clear": "Clear formatting",
+        "heading": "Heading {level}",
+        "align": "Align text: {position}",
+        "blockquote": "Blockquote",
+        "horizontalLine": "Horizontal line",
+        "bulletList": "Bullet list",
+        "orderedList": "Ordered list",
+        "checkList": "Check list",
+        "increaseIndent": "Increase Indent",
+        "decreaseIndent": "Decrease Indent",
+        "link": "Link",
+        "unlink": "Remove link",
+        "image": "Embed Image",
+        "addTable": "Add table",
+        "deleteTable": "Delete Table",
         "colorCell": "Colour cell",
-        "mergeCell": "",
-        "addColumnLeft": "",
-        "addColumnRight": "",
-        "deleteColumn": "",
-        "addRowTop": "",
-        "addRowBelow": "",
-        "deleteRow": ""
+        "mergeCell": "Toggle cell merging",
+        "addColumnLeft": "Add column before",
+        "addColumnRight": "Add column after",
+        "deleteColumn": "Delete column",
+        "addRowTop": "Add row before",
+        "addRowBelow": "Add row after",
+        "deleteRow": "Delete row"
       },
       "align": {
-        "left": "",
-        "center": "",
-        "right": ""
+        "left": "Left",
+        "center": "Centre",
+        "right": "Right"
       },
       "popover": {
         "clearColor": "Clear colour",
-        "source": "",
-        "widthPlaceholder": "",
-        "columns": "",
-        "rows": "",
-        "width": "",
-        "height": ""
+        "source": "Source",
+        "widthPlaceholder": "Value in % or pixels",
+        "columns": "Columns",
+        "rows": "Rows",
+        "width": "Width",
+        "height": "Height"
       },
-      "placeholder": "",
+      "placeholder": "Start writing your notes",
       "dismiss": {
-        "title": "",
-        "message": "",
+        "title": "Dismiss changes?",
+        "message": "You have unsaved changes in your notebook. Are you sure you want to discard them?",
         "action": {
-          "discard": "",
-          "keepEditing": ""
+          "discard": "Discard changes",
+          "keepEditing": "Keep editing"
         }
       }
     },
     "iframe": {
-      "name": "",
-      "description": "",
+      "name": "iFrame",
+      "description": "Embed any content from the Internet. Some websites may restrict access.",
       "option": {
         "embedUrl": {
-          "label": ""
+          "label": "Embed URL"
         },
         "allowFullScreen": {
-          "label": ""
+          "label": "Allow full screen"
         },
         "allowTransparency": {
-          "label": ""
+          "label": "Allow transparency"
         },
         "allowScrolling": {
-          "label": ""
+          "label": "Allow scrolling"
         },
         "allowPayment": {
-          "label": ""
+          "label": "Allow payment"
         },
         "allowAutoPlay": {
-          "label": ""
+          "label": "Allow auto play"
         },
         "allowMicrophone": {
-          "label": ""
+          "label": "Allow microphone"
         },
         "allowCamera": {
-          "label": ""
+          "label": "Allow camera"
         },
         "allowGeolocation": {
-          "label": ""
+          "label": "Allow geolocation"
         }
       },
       "error": {
-        "noUrl": "",
-        "unsupportedProtocol": "",
-        "noBrowerSupport": ""
+        "noUrl": "No iFrame URL provided",
+        "unsupportedProtocol": "The URL provided is using an unsupported protocol. Please use one of ({supportedProtocols})",
+        "noBrowerSupport": "Your Browser does not support iframes. Please update your browser."
       }
     },
     "smartHome-entityState": {
-      "name": "",
-      "description": "",
+      "name": "Entity State",
+      "description": "Display the state of an entity and toggle it optionally",
       "option": {
         "entityId": {
-          "label": ""
+          "label": "Entity ID"
         },
         "displayName": {
-          "label": ""
+          "label": "Display-name"
         },
         "entityUnit": {
-          "label": ""
+          "label": "Entity Unit"
         },
         "clickable": {
-          "label": ""
+          "label": "Clickable"
         }
       }
     },
     "smartHome-executeAutomation": {
-      "name": "",
-      "description": "",
+      "name": "Execute Automation",
+      "description": "Trigger an automation with one click",
       "option": {
         "displayName": {
-          "label": ""
+          "label": "Display name"
         },
         "automationId": {
-          "label": ""
+          "label": "Automation ID"
         }
       },
       "spotlightAction": {
-        "run": ""
+        "run": "Run {name}"
       }
     },
     "stockPrice": {
-      "name": "",
-      "description": "",
+      "name": "Stock Price",
+      "description": "Displays the current stock price of a company",
       "option": {
         "stock": {
-          "label": ""
+          "label": "Stock symbol"
         },
         "timeRange": {
-          "label": "",
+          "label": "Time Range",
           "option": {
             "1d": {
-              "label": ""
+              "label": "1 Day"
             },
             "5d": {
-              "label": ""
+              "label": "5 Day"
             },
             "1mo": {
-              "label": ""
+              "label": "1 Month"
             },
             "3mo": {
-              "label": ""
+              "label": "3 Months"
             },
             "6mo": {
               "label": ""
@@ -1816,9 +1816,9 @@
         "fog": "",
         "drizzle": "",
         "freezingDrizzle": "",
-        "rain": "",
-        "freezingRain": "",
-        "snowFall": "",
+        "rain": "Rain",
+        "freezingRain": "Freezing rain",
+        "snowFall": "Snow fall",
         "snowGrains": "",
         "rainShowers": "",
         "snowShowers": "",
@@ -2090,6 +2090,52 @@
           }
         }
       }
+    },
+    "immich-serverStats": {
+      "name": "",
+      "description": "",
+      "option": {
+        "showUsers": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotos": {
+          "label": "",
+          "description": ""
+        },
+        "showVideos": {
+          "label": "",
+          "description": ""
+        },
+        "showStorage": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "users": "",
+      "photos": "",
+      "videos": "",
+      "storage": ""
+    },
+    "immich-albumCarousel": {
+      "name": "",
+      "option": {
+        "albumId": {
+          "label": "",
+          "description": ""
+        },
+        "rotationIntervalSeconds": {
+          "label": "",
+          "description": ""
+        },
+        "showPhotoInfo": {
+          "label": "",
+          "description": ""
+        }
+      },
+      "description": "",
+      "noAlbumSelected": "",
+      "noPhotos": ""
     },
     "downloads": {
       "name": "",
@@ -4311,7 +4357,7 @@
             }
           },
           "local": {
-            "title": ""
+            "title": "Local results"
           }
         }
       },
@@ -4364,50 +4410,50 @@
                 "label": "Global settings"
               },
               "about": {
-                "label": ""
+                "label": "About"
               },
               "homeBoard": {
-                "label": ""
+                "label": "Home board"
               },
               "preferences": {
-                "label": ""
+                "label": "Your preferences"
               }
             }
           }
         }
       },
       "userGroup": {
-        "help": "",
+        "help": "Search for users or groups",
         "group": {
           "user": {
-            "title": "",
+            "title": "Users",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Show user details"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Select an action for the user"
               }
             }
           },
           "group": {
-            "title": "",
+            "title": "Groups",
             "children": {
               "action": {
                 "detail": {
-                  "label": ""
+                  "label": "Show group details"
                 },
                 "manageMember": {
-                  "label": ""
+                  "label": "Manage members"
                 },
                 "managePermission": {
-                  "label": ""
+                  "label": "Manage permissions"
                 }
               },
               "detail": {
-                "title": ""
+                "title": "Select an action for the group"
               }
             }
           }
@@ -4415,32 +4461,32 @@
       }
     },
     "engine": {
-      "search": "",
+      "search": "Find a search engine",
       "field": {
         "name": {
-          "label": ""
+          "label": "Name"
         },
         "short": {
-          "label": ""
+          "label": "Short"
         },
         "urlTemplate": {
-          "label": ""
+          "label": "URL search template"
         },
         "description": {
-          "label": ""
+          "label": "Description"
         }
       },
       "page": {
         "list": {
-          "title": "",
+          "title": "Search engines",
           "noResults": {
-            "title": "",
-            "action": ""
+            "title": "There are no search engines yet",
+            "action": "Create your first search engine"
           },
-          "interactive": ""
+          "interactive": "Interactive, uses an integration"
         },
         "create": {
-          "title": "",
+          "title": "New search engine",
           "notification": {
             "success": {
               "title": "Search engine created",

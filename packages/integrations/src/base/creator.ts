@@ -19,6 +19,7 @@ import { GitlabIntegration } from "../gitlab/gitlab-integration";
 import { GlancesIntegration } from "../glances/glances-integration";
 import { HomeAssistantIntegration } from "../homeassistant/homeassistant-integration";
 import { ICalIntegration } from "../ical/ical-integration";
+import { ImmichIntegration } from "../immich/immich-integration";
 import { JellyfinIntegration } from "../jellyfin/jellyfin-integration";
 import { JellyseerrIntegration } from "../jellyseerr/jellyseerr-integration";
 import { LinuxServerIOIntegration } from "../linuxserverio/linuxserverio-integration";
@@ -39,6 +40,7 @@ import { PlexIntegration } from "../plex/plex-integration";
 import { ProwlarrIntegration } from "../prowlarr/prowlarr-integration";
 import { ProxmoxIntegration } from "../proxmox/proxmox-integration";
 import { QuayIntegration } from "../quay/quay-integration";
+import { SeerrIntegration } from "../seerr/seerr-integration";
 import { TrueNasIntegration } from "../truenas/truenas-integration";
 import { UnifiControllerIntegration } from "../unifi-controller/unifi-controller-integration";
 import { UnraidIntegration } from "../unraid/unraid-integration";
@@ -82,6 +84,7 @@ export const integrationCreators = {
   slskd: SlskdIntegration,
   aria2: Aria2Integration,
   jellyseerr: JellyseerrIntegration,
+  seerr: SeerrIntegration,
   overseerr: OverseerrIntegration,
   prowlarr: ProwlarrIntegration,
   openmediavault: OpenMediaVaultIntegration,
@@ -109,6 +112,7 @@ export const integrationCreators = {
   unraid: UnraidIntegration,
   coolify: CoolifyIntegration,
   glances: GlancesIntegration,
+  immich: ImmichIntegration,
 } satisfies Record<IntegrationKind, IntegrationInstance | [(input: IntegrationInput) => Promise<Integration>]>;
 
 type IntegrationInstanceOfKind<TKind extends keyof typeof integrationCreators> = {

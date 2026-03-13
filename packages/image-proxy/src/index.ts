@@ -1,6 +1,7 @@
-import bcrypt from "bcrypt";
+import { createHmac, hkdfSync } from "node:crypto";
 
 import { createId } from "@homarr/common";
+import { env } from "@homarr/common/env";
 import { decryptSecret, encryptSecret } from "@homarr/common/server";
 import { fetchWithTrustedCertificatesAsync } from "@homarr/core/infrastructure/http";
 import { createLogger } from "@homarr/core/infrastructure/logs";
@@ -9,29 +10,22 @@ import { createGetSetChannel } from "@homarr/redis";
 
 const logger = createLogger({ module: "imageProxy" });
 
-const createHashChannel = (hash: `${string}.${string}`) => createGetSetChannel<string>(`image-proxy:hash:${hash}`);
+const createHmacChannel = (hmac: `${string}.${string}`) => createGetSetChannel<string>(`image-proxy:hmac:${hmac}`);
 const createUrlByIdChannel = (id: string) =>
   createGetSetChannel<{
     url: `${string}.${string}`;
     headers: `${string}.${string}`;
   }>(`image-proxy:url:${id}`);
-const saltChannel = createGetSetChannel<string>("image-proxy:salt");
 
 export class ImageProxy {
-  private static salt: string | null = null;
-  private async getOrCreateSaltAsync(): Promise<string> {
-    if (ImageProxy.salt) return ImageProxy.salt;
-    const existingSalt = await saltChannel.getAsync();
-    if (existingSalt) {
-      ImageProxy.salt = existingSalt;
-      return existingSalt;
-    }
+  private static hmacKey: Buffer<ArrayBuffer> | null = null;
 
-    const salt = await bcrypt.genSalt(10);
-    logger.debug("Generated new salt for image proxy", { salt });
-    ImageProxy.salt = salt;
-    await saltChannel.setAsync(salt);
-    return salt;
+  /**
+   * Generate secure key for image-proxy from encryption key
+   */
+  private static getHmacKey(): Buffer<ArrayBuffer> {
+    this.hmacKey ??= Buffer.from(hkdfSync("sha256", env.SECRET_ENCRYPTION_KEY, "", "image-proxy", 32));
+    return this.hmacKey;
   }
 
   public async createImageAsync(url: string, headers?: Record<string, string>): Promise<string> {
@@ -106,20 +100,18 @@ export class ImageProxy {
   }
 
   private async getExistingIdAsync(url: string, headers: Record<string, string> | undefined): Promise<string | null> {
-    const salt = await this.getOrCreateSaltAsync();
-    const urlHash = await bcrypt.hash(url, salt);
-    const headerHash = await bcrypt.hash(JSON.stringify(headers ?? null), salt);
+    const urlHash = this.hashSecret(url);
+    const headerHash = this.hashSecret(JSON.stringify(headers ?? null));
 
-    const channel = createHashChannel(`${urlHash}.${headerHash}`);
+    const channel = createHmacChannel(`${urlHash}.${headerHash}`);
     return await channel.getAsync();
   }
 
   private async storeImageAsync(id: string, url: string, headers: Record<string, string> | undefined): Promise<void> {
-    const salt = await this.getOrCreateSaltAsync();
-    const urlHash = await bcrypt.hash(url, salt);
-    const headerHash = await bcrypt.hash(JSON.stringify(headers ?? null), salt);
+    const urlHash = this.hashSecret(url);
+    const headerHash = this.hashSecret(JSON.stringify(headers ?? null));
 
-    const hashChannel = createHashChannel(`${urlHash}.${headerHash}`);
+    const hashChannel = createHmacChannel(`${urlHash}.${headerHash}`);
     const urlHeaderChannel = createUrlByIdChannel(id);
     await urlHeaderChannel.setAsync({
       url: encryptSecret(url),
@@ -132,6 +124,10 @@ export class ImageProxy {
       url: this.redactUrl(url),
       headers: this.redactHeaders(headers ?? null),
     });
+  }
+
+  private hashSecret(value: string): string {
+    return createHmac("sha256", ImageProxy.getHmacKey()).update(value).digest("hex");
   }
 
   private redactUrl(url: string): string {

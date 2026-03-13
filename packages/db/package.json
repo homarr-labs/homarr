@@ -47,7 +47,7 @@
     "@homarr/core": "workspace:^0.1.0",
     "@homarr/definitions": "workspace:^0.1.0",
     "@homarr/server-settings": "workspace:^0.1.0",
-    "@mantine/core": "^8.3.15",
+    "@mantine/core": "^8.3.16",
     "@paralleldrive/cuid2": "^3.3.0",
     "@testcontainers/mysql": "^11.12.0",
     "@testcontainers/postgresql": "^11.12.0",
@@ -56,8 +56,8 @@
     "drizzle-kit": "^0.31.9",
     "drizzle-orm": "^0.45.1",
     "drizzle-zod": "^0.8.3",
-    "mysql2": "3.17.4",
-    "pg": "^8.18.0",
+    "mysql2": "3.19.0",
+    "pg": "^8.20.0",
     "superjson": "2.2.6"
   },
   "devDependencies": {
@@ -65,10 +65,10 @@
     "@homarr/prettier-config": "workspace:^0.1.0",
     "@homarr/tsconfig": "workspace:^0.1.0",
     "@types/better-sqlite3": "7.6.13",
-    "@types/pg": "^8.16.0",
+    "@types/pg": "^8.18.0",
     "dotenv-cli": "^11.0.0",
     "esbuild": "^0.27.3",
-    "eslint": "^9.39.3",
+    "eslint": "^9.39.4",
     "prettier": "^3.8.1",
     "tsx": "4.20.4",
     "typescript": "^5.9.3"
