@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Button, Grid, Group, Loader, Stack, TextInput } from "@mantine/core";
-import { useDebouncedValue, useDocumentTitle, useFavicon } from "@mantine/hooks";
+import { useDebouncedValue, useDocumentTitle } from "@mantine/hooks";
 
 import { useUpdateBoard } from "@homarr/boards/updater";
 import { useZodForm } from "@homarr/form";
@@ -53,7 +53,6 @@ export const GeneralSettingsContent = ({ board }: Props) => {
   );
 
   useLogoPreview(form.values.logoImageUrl);
-  useFaviconPreview(form.values.faviconImageUrl);
   const metaTitleStatus = useMetaTitlePreview(form.values.metaTitle);
 
   // Cleanup for not applied changes of the page title and logo image URL
@@ -144,9 +143,4 @@ const useMetaTitlePreview = (title: string | null) => {
   return {
     isPending: (title ?? "") !== metaTitleDebounced,
   };
-};
-
-const useFaviconPreview = (url: string | null) => {
-  const [faviconDebounced] = useDebouncedValue(url ?? "", 500);
-  useFavicon(faviconDebounced);
 };
