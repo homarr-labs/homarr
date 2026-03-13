@@ -10,6 +10,7 @@ import { IconPicker } from "@homarr/forms-collection";
 import { useI18n } from "@homarr/translation/client";
 import { boardSavePartialSettingsSchema } from "@homarr/validation/board";
 
+import { homarrLogoPath } from "~/components/layout/logo/homarr-logo";
 import { createMetaTitle } from "~/metadata";
 import type { Board } from "../../_types";
 import { useSavePartialSettingsMutation } from "./_shared";
@@ -74,6 +75,7 @@ export const GeneralSettingsContent = ({ board }: Props) => {
           pageTitle: values.pageTitle,
           logoImageUrl: values.logoImageUrl,
         };
+        updateFavicon(values.faviconImageUrl ?? homarrLogoPath);
         savePartialSettings({
           id: board.id,
           ...values,
@@ -143,4 +145,10 @@ const useMetaTitlePreview = (title: string | null) => {
   return {
     isPending: (title ?? "") !== metaTitleDebounced,
   };
+};
+
+const updateFavicon = (url: string) => {
+  const link: HTMLLinkElement | null = document.querySelector('link[rel="icon"]');
+  if (!link) return;
+  link.href = url;
 };
