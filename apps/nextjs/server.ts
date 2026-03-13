@@ -226,6 +226,7 @@ const dir = path.resolve(__dirname);
 
 const app = next({ dev, hostname, port, dir });
 const handle = app.getRequestHandler();
+const upgradeHandler = app.getUpgradeHandler();
 
 app.prepare().then(async () => {
   const server = createServer((req, res) => {
@@ -271,12 +272,15 @@ app.prepare().then(async () => {
     },
   });
 
-  // Handle WebSocket upgrade requests on /websockets path
+  // Handle upgrade requests: route /websockets to our WS server,
+  // delegate everything else (e.g. HMR _next/webpack-hmr) to Next.js
   server.on("upgrade", (req, socket, head) => {
     if (req.url?.startsWith("/websockets")) {
       wss.handleUpgrade(req, socket, head, (ws) => {
         wss.emit("connection", ws, req);
       });
+    } else {
+      upgradeHandler(req, socket, head);
     }
   });
 
@@ -290,6 +294,11 @@ app.prepare().then(async () => {
   // Start the integrated tasks/cron server
   const tasksServer = await startTasksServer();
 
+  server.once("error", (err) => {
+    logger.error(new ErrorWithMetadata("Server error", {}, { cause: err }));
+    process.exit(1);
+  });
+
   server.listen(port, () => {
     logger.info(`✅ Custom server ready on http://${hostname}:${port}`);
     logger.info(`✅ WebSocket Server integrated on ws://${hostname}:${port}/websockets`);
@@ -300,7 +309,7 @@ app.prepare().then(async () => {
     logger.info("SIGTERM");
     wssHandler.broadcastReconnectNotification();
     wss.close();
-    tasksServer.close().catch((err) => logger.error("Failed to close tasks server", err));
+    tasksServer.close().catch((closeError) => logger.error("Failed to close tasks server", closeError));
     server.close();
   });
 });
