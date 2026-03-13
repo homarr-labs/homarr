@@ -210,7 +210,7 @@ export const IconPicker = ({
 
 // This regex is used to prevent loading a preview like en or /en which would trigger a language change
 // See https://github.com/homarr-labs/homarr/issues/3070
-const localizationPathRegex = new RegExp(`^/?(${supportedLanguages.join("|")})(/.*)?$`);
+const localizationPathRegex = new RegExp(`^/?(${supportedLanguages.join("|")})(/.*)?$`, "i" /* ignore casing */);
 const shouldShowPreview = (value: string | null): value is string => {
   if (!value) return false;
   return !localizationPathRegex.exec(value);
